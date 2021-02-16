@@ -24,15 +24,15 @@ export NB_SERVER_PORT=6789
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    ==  0                                                       ]]
-  [[ "${output}"    =~  \<\!DOCTYPE\ html\>                                     ]]
+  [[ "${status}"    ==  0                                                   ]]
+  [[ "${output}"    =~  \<\!DOCTYPE\ html\>                                 ]]
 
   # TODO: .org / org mode titles in pandoc HTML output?
-  # [[ "${output}"    =~  \<h1\ id=\"title-one\"\>Title\ One\</h1\>               ]]
+  # [[ "${output}"    =~  \<h1\ id=\"title-one\"\>Title\ One\</h1\>           ]]
 
   [[ "${output}"    =~  \
-      \<p\>Example\ content.\ \[\[\<a\ href=\"http://localhost:6789/home:1\"\>  ]]
-  [[ "${output}"    =~  Example\ Title\</a\>\]\]\</p\>                          ]]
+      \<p\>Example\ content.\ \<a\ href=\"http://localhost:6789/home:1\"\>  ]]
+  [[ "${output}"    =~  \[\[Example\ Title\]\]\</a\>\</p\>                  ]]
 }
 
 @test "'browse <folder-id>/<id>' serves the rendered HTML page with wiki-style links resolved to internal web server URLs." {

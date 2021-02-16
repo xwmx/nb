@@ -8328,7 +8328,7 @@ _resolve_links() {
               )
               ;;
             *\.org)
-              _links+=("[[[[http://localhost:${NB_SERVER_PORT}/${_id_selector:-}][${_selector:-}]]]]")
+              _links+=("[[http://localhost:${NB_SERVER_PORT}/${_id_selector:-}][[[${_selector:-}]]]]")
               ;;
             *)
               _links+=("[[${_selector:-}]]")
@@ -8361,7 +8361,7 @@ _resolve_links() {
             _links+=("<a href=\"file://${_link_path:-}\">[[${_label:-}]]</a>")
             ;;
           *\.org)
-            _links+=("[[[[file://${_link_path:-}][${_label:-}]]]]")
+            _links+=("[[file://${_link_path:-}][[[${_label:-}]]]]")
             ;;
           *)
             _links+=("[[${_selector:-}]]")
@@ -13543,11 +13543,20 @@ Can't show archives. Export archive and expand to edit.\\n"
           local _linked_temp_file_path=
           _linked_temp_file_path="$(_temp file ".org" --touch)"
 
-          _resolve_links                      \
-            "${_target_path}" "${_notebook_path}" >> "${_linked_temp_file_path}"
+          # NOTE: avoid pandoc bug with brackets in org link descriptions
+          _resolve_links                          \
+            "${_target_path}" "${_notebook_path}" \
+            | sed -E                              \
+              -e "s/\]\[\[\[/\]\[••/g"            \
+              -e "s/\]\]\]\]/••\]\]/g"            \
+            >> "${_linked_temp_file_path}"
 
-          _pandoc "${_linked_temp_file_path}" \
-            --render-to-html >> "${_rendered_temp_file_path}"
+          _pandoc "${_linked_temp_file_path}"     \
+            --render-to-html                      \
+            | sed -E                              \
+              -e "s/>••/>\[\[/g"                  \
+              -e "s/••</\]\]</g"                  \
+            >> "${_rendered_temp_file_path}"
         else # render to HTML before resolving [[wiki-style links]]
           local _unlinked_temp_file_path=
           _unlinked_temp_file_path="$(_temp file ".html" --touch)"
@@ -14152,12 +14161,20 @@ HEREDOC
       local _linked_temp_file_path=
       _linked_temp_file_path="$(_temp file ".org" --touch)"
 
+      # NOTE: avoid pandoc bug with brackets in org link descriptions
       _resolve_links "${_source_path}" "${_notebook_path}"  \
-        --browse >> "${_linked_temp_file_path}"
+            --browse                                        \
+            | sed -E                                        \
+              -e "s/\]\[\[\[/\]\[••/g"                      \
+              -e "s/\]\]\]\]/••\]\]/g"                      \
+              >> "${_linked_temp_file_path}"
 
       _pandoc "${_linked_temp_file_path}"                   \
         --include-before-body="${_header_temp_path}"        \
-        --render-to-html
+        --render-to-html                                    \
+        | sed -E                                            \
+          -e "s/>••/>\[\[/g"                                \
+          -e "s/••</\]\]</g"
     else # render before resolving [[wiki-style links]]
       local _unlinked_temp_file_path=
       _unlinked_temp_file_path="$(_temp file ".html" --touch)"

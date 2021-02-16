@@ -192,10 +192,10 @@ load test_helper
   [[ "${status}"  -eq 0                 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-    "Selector link one: \[\[\[\[http://localhost:6789/home:2/1\]\[home:2/1\]\]\]\] •"
+    "Selector link one: \[\[http://localhost:6789/home:2/1\]\[\[\[home:2/1\]\]\]\] •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Selector link two: \[\[\[\[http://localhost:6789/home:3\]\[Root Title One\]\]\]\] •"
+    "Selector link two: \[\[http://localhost:6789/home:3\]\[\[\[Root Title One\]\]\]\] •"
 
   printf "%s\\n" "${output}" | grep -q \
     "Org mode link: \[\[http://example.com\]\] •"
@@ -241,10 +241,10 @@ load test_helper
   [[ "${status}"  -eq 0                 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-    "Selector link one: \[\[\[\[file://${NB_DIR}/home/Example Folder/Example Nested File One.md\]\[Example Nested Title One\]\]\]\] •"
+    "Selector link one: \[\[file://${NB_DIR}/home/Example Folder/Example Nested File One.md\]\[\[\[Example Nested Title One\]\]\]\] •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Selector link two: \[\[\[\[file://${NB_DIR}/home/Root File One.md\]\[Root Title One\]\]\]\] •"
+    "Selector link two: \[\[file://${NB_DIR}/home/Root File One.md\]\[\[\[Root Title One\]\]\]\] •"
 
   printf "%s\\n" "${output}" | grep -q \
     "Org mode link: \[\[http://example.com\]\] •"
