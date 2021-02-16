@@ -3465,7 +3465,8 @@ Usage:
   nb bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
   nb bookmark search <query>
   nb browse [<notebook>:][<id> | <filename> | <title> | <path>]
-            [-g | --gui] [--notebooks] [--print] [-s | --serve]
+            [-g | --gui] [--notebooks] [--print] [--query <query>]
+            [-s | --serve]
   nb completions (check | install [-d | --download] | uninstall)
   nb count [<notebook>:][<relative-path>]
   nb delete [<notebook>:](<id> | <filename> | <path> | <title>)...
@@ -3892,13 +3893,15 @@ Shortcut Alias: `b`
 ```text
 Usage:
   nb browse [<notebook>:][<id> | <filename> | <title> | <path>]
-            [-g | --gui] [--notebooks] [--print] [-s | --serve]
+            [-g | --gui] [--notebooks] [--print] [--query <query>]
+            [-s | --serve]
 
 Options:
-  -g, --gui     Open in the system's primary GUI web browser.
-  --notebooks   Browse notebooks.
-  --print       Print to standard output.
-  -s, --serve   Start the web application server.
+  -g, --gui         Open in the system's primary GUI web browser.
+  --notebooks       Browse notebooks.
+  --print           Print to standard output.
+  --query <query>
+  -s, --serve       Start the web application server.
 
 Description:
   Browse and view linked notes, bookmarks, notebooks, folders, and other
