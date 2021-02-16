@@ -12485,11 +12485,15 @@ _search() {
              [[ "${_last_path}" == "${_path}" ]]  &&
              [[ ! "${_path}" =~ .index$       ]]
           then
+            [[ -n "${_path}" ]] && _last_path="${_path}"
+
             continue
           fi
 
           if [[ "${_path}" =~ \.pindex$ ]]
           then
+            [[ -n "${_path}" ]] && _last_path="${_path}"
+
             continue
           fi
 
@@ -12560,12 +12564,18 @@ _search() {
               continue
             fi
 
-            if ((_per_page))
+            if ((_per_page)) &&
+               {
+                 [[ "${_last_path}" != "${_path}" ]] ||
+                 [[ "${_path}"      =~ \.index$   ]]
+               }
             then
               _paginated_count=$((_paginated_count+1))
 
               if [[ "${_paginated_count}"   -le "${_pagination_min}"  ]]
               then
+                [[ -n "${_path}" ]] && _last_path="${_path}"
+
                 continue
               elif [[ "${_paginated_count}" -gt "${_pagination_max}"  ]]
               then
@@ -14027,7 +14037,21 @@ _browse() {
 <p class="search-spacer"><br></p>
 HEREDOC
 
-      cat
+      local _pagination_count=0
+
+      local __line=
+      while read -r __line
+      do
+        printf "%s\\n" "${__line:-}"
+
+        _pagination_count="$((_pagination_count+1))"
+      done
+
+      if [[ -n "${_query:-}"                              ]] &&
+         [[ "${_pagination_count}" -lt "${_per_page:-0}"  ]]
+      then
+        _print_next=0
+      fi
 
       if ((_print_prev)) || ((_print_next))
       then

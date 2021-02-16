@@ -140,7 +140,8 @@ export _S=" "
       then
         "${_NB}" add "File ${__number}.md" --title "Title ${__number}"
       else
-        "${_NB}" add "File ${__number}.md" --title "Title ${__number}" --content "abcde"
+        "${_NB}" add "File ${__number}.md" --title "Title ${__number}" \
+          --content "abcde${_NEWLINE}${_NEWLINE}abcde"
       fi
     done
   }
