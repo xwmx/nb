@@ -626,7 +626,7 @@ title: Ideas
 ```
 
 [Org](https://orgmode.org/) and [LaTeX](https://www.latex-project.org/)
-titles are recognized on `.org` and `.latex` files:
+titles are recognized in `.org` and `.latex` files:
 
 ```org
 #+TITLE: Example Org Title
