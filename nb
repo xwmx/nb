@@ -7809,6 +7809,9 @@ Can't edit archives. Export archive and expand to edit.\\n"
 
   local _editor_command="${EDITOR}"
 
+  # turn on case-insensitive matching
+  shopt -s nocasematch
+
   if ((_wait)) &&
      [[ "${EDITOR}" =~ gvim|mvim ]]
   then
@@ -7824,14 +7827,32 @@ Can't edit archives. Export archive and expand to edit.\\n"
   then
     cd "${_file_path}" && "${_editor_command:-}"
   else
-    if [[ "${EDITOR}" =~ [t|T]ypora ]] &&
-       [[ ! -f "${_file_path:-}"    ]]
+    if [[ "${EDITOR}" =~ typora   ]] &&
+       [[ ! -f "${_file_path:-}"  ]]
     then
       touch "${_file_path:-}"
     fi
 
     eval "${_editor_command} \"${_file_path}\""
+
+    if [[ "${EDITOR}" =~ typora|open\ -a ]]
+    then
+      printf "Editing with %s\\n" "$(_color_primary "${EDITOR}")"
+
+      while true
+      do
+        read -n 1 -s -r -p "Press any key to save changes and exit..."
+
+        printf "\\n"
+        break
+      done
+    fi
   fi
+
+  # turn off case-insensitive matching
+  shopt -u nocasematch
+
+  return 0
 }
 
 # _encrypt_file()
