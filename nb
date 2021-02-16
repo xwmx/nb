@@ -14702,8 +14702,7 @@ HEREDOC
 
   # configure pagination
 
-  if ! ((_browse_notebooks))  &&
-     ! ((_open_gui))          &&
+  if ! ((_open_gui))          &&
      ! _web_browser --gui     &&
      ! ((_only_serve))
   then
