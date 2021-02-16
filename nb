@@ -14161,7 +14161,7 @@ HEREDOC
         local _url_path="${_notebook_name}:"
 
         local i=
-        for ((i=0; i < "${#_selector_folders[@]:-}"; i++))
+        for ((i=0; i < "${#_selector_folders[@]}"; i++))
         do
           _url_path+="${_selector_folder_ids[i]:-}/"
 
