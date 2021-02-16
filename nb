@@ -1076,6 +1076,11 @@ trap "exit"           INT
 ###############################################################################
 # --------------------------------------------------------------------------- #
 
+# $_BT
+#
+# Assign backtick with ANSI-C quoting for string building.
+_BT=$'`'
+
 # $_COLUMNS
 #
 # The terminal width in number of columns (characters).
@@ -8215,11 +8220,9 @@ HEREDOC
       local _code_block_temp_path=
       _code_block_temp_path="$(_temp file ".md" --touch)"
 
-      printf "\`\`\`%s\\n%s\\n\`\`\`\\n"  \
-        "${_source_path##*\.}"            \
+      printf "${_BT}${_BT}${_BT}%s\\n%s\\n${_BT}${_BT}${_BT}\\n"  \
+        "${_source_path##*\.}"                                    \
         "$(cat "${_source_path:-}")" >> "${_code_block_temp_path:-}"
-
-      # \`"
 
       _pandoc_arguments+=("${_code_block_temp_path:-}")
     else
@@ -9770,9 +9773,9 @@ Check the Wayback Machine for an archived version instead? $(_color_brackets "y/
     if ((_save_source))
     then
       _bookmark_content+="${_NEWLINE}## Source${_NEWLINE}"
-      _bookmark_content+="${_NEWLINE}\`\`\`html${_NEWLINE}" # \`"
+      _bookmark_content+="${_NEWLINE}${_BT}${_BT}${_BT}html${_NEWLINE}"
       _bookmark_content+="$(cat "${_temp_file}")"
-      _bookmark_content+="${_NEWLINE}\`\`\`${_NEWLINE}"     # \`"
+      _bookmark_content+="${_NEWLINE}${_BT}${_BT}${_BT}${_NEWLINE}"
     fi
   fi
 
