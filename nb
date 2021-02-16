@@ -1972,14 +1972,15 @@ _wrap() {
 # _list_files()
 #
 # Usage:
-#   _list_files <path> [--sort] [--reverse] [--type <type>]
+#   _list_files <path> [--reverse] [--sort] [--standard-input] [--type <type>]
 #
 # Description:
-#   List files in the current notebook.
+#   List files in the current notebook or filenames from standard input.
 _list_files() {
   local _path=
   local _reverse=0
   local _sort=0
+  local _read_from_standard_input=0
   local _type=
 
   while ((${#}))
@@ -1993,6 +1994,9 @@ _list_files() {
         ;;
       --sort)
         _sort=1
+        ;;
+      --standard-input)
+        _read_from_standard_input=1
         ;;
       --type)
         if _option_value_is_present "${__val:-}"
@@ -2019,7 +2023,10 @@ _list_files() {
     _path="$(_notebooks current --path)"
   fi
 
-  if ((_sort))
+  if ((_read_from_standard_input)) && _piped_input
+  then
+    cat
+  elif ((_sort))
   then
     cat "${_path}/.index"
   else
@@ -4466,9 +4473,7 @@ _list() {
 
   local _pinned_basenames=()
 
-  if ((_with_pinned))                     &&
-     [[ -z "${_filter_pattern:-}"     ]]  &&
-     [[ -z "${_type:-}"               ]]
+  if ((_with_pinned))
   then
     # Search-Based Pinning
     #
@@ -4540,7 +4545,9 @@ _list() {
     else
       if ((_with_pinned)) && ((${#_pinned_basenames[@]}))
       then
-        printf "%s\\n" "${_pinned_basenames[@]:-}"
+        printf "%s\\n" "${_pinned_basenames[@]:-}" \
+          | _list_files "${_list_path}" "${_list_files_options[@]:-}" \
+              --standard-input || :
       fi
 
       if ! ((_only_pinned))
@@ -4632,6 +4639,21 @@ _list() {
         shopt -u nocasematch
       fi
 
+
+      local _pinned=0
+
+      if ((_with_pinned))
+      then
+        if _contains "${__basename}" "${_pinned_basenames[@]:-}"
+        then
+          _pinned=1
+          _pinned_basenames_seen+=("${__basename}")
+        elif ((_only_pinned))
+        then
+          continue
+        fi
+      fi
+
       if [[ -n "${_limit:-}" ]] && [[ "${_printed_count}" -ge "${_limit}" ]]
       then # the limit has been reached
         if [[ -n "${_filter_pattern:-}" ]]
@@ -4639,9 +4661,14 @@ _list() {
           # keep looking for matches to count total
           continue
         else
-          _filenames_count="$(
-            _count "${_list_path}" "${_list_files_options[@]:-}"
-          )"
+          if ((_only_pinned))
+          then
+            _filenames_count="${#_pinned_basenames[@]}"
+          else
+            _filenames_count="$(
+              _count "${_list_path}" "${_list_files_options[@]:-}"
+            )"
+          fi
 
           break
         fi
@@ -4674,11 +4701,9 @@ _list() {
 
       if ((_print_indicators))
       then
-        if ((_with_pinned)) &&
-           _contains "${__basename}" "${_pinned_basenames[@]:-}"
+        if ((_with_pinned)) && ((_pinned))
         then
           _indicators+="${_NB_INDICATOR_PINNED:-}"
-          _pinned_basenames_seen+=("${__basename}")
         fi
 
         # TODO: `show --indicators` duplicated for performance
@@ -4849,7 +4874,6 @@ ${_TPUT_SGR0}"
             "${_matches}"
           return 0
         fi
-
       elif [[ "${_filenames_count}" -gt "${_limit}" ]] &&
            [[ "${_printed_count}"   -ge "${_limit}" ]]
       then
@@ -4904,14 +4928,25 @@ Add a bookmark:
 Help information:
   $(_color_primary "${_ME} help bookmark")
 HEREDOC
-        elif [[ -n "${_type:-}" ]]
+        elif [[ -n "${_type:-}" ]] || ((_only_pinned))
         then
           if _contains "${_type}" "bookmarks" "documents" "images" "videos" "folders"
           then
             _type="$(printf "%s\\n" "${_type}" | sed -e 's/s$//')"
           fi
 
-          cat <<HEREDOC
+          if ((_only_pinned))
+          then
+            cat <<HEREDOC
+0 pinned ${_type:+"${_type} "}items.
+
+Pin an item:
+  $(_color_primary "${_ME} pin ${_maybe_id_path_context:-}<id>")
+Help information:
+  $(_color_primary "${_ME} help")
+HEREDOC
+          else
+            cat <<HEREDOC
 0 ${_type} files.
 
 Import a file:
@@ -4919,16 +4954,7 @@ Import a file:
 Help information:
   $(_color_primary "${_ME} help import")
 HEREDOC
-        elif ((_only_pinned))
-        then
-          cat <<HEREDOC
-0 pinned items.
-
-Pin an item:
-  $(_color_primary "${_ME} pin ${_maybe_id_path_context:-}<id>")
-Help information:
-  $(_color_primary "${_ME} help")
-HEREDOC
+          fi
         else
           cat <<HEREDOC
 0 items.

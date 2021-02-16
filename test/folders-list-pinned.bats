@@ -6,6 +6,89 @@ export NB_PINNED_PATTERN="#pinned"
 
 # --pinned ####################################################################
 
+@test "'NB_PINNED_PATTERN list --pinned --type' filters by type." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "File One.md"     \
+      --title     "Title One"       \
+      --content   "Content one."
+
+    "${_NB}" add  "File Two.md"     \
+      --title     "Title Two"       \
+      --content   "Content two."
+
+    "${_NB}" add  "Example Folder" --type "folder"
+
+    "${_NB}" add  "File Three.md"   \
+      --title     "Title Three"     \
+      --content   "Content Three."
+
+    "${_NB}" add  "Sample Folder" --type "folder"
+
+    "${_NB}" add  "File Four.md"    \
+      --title     "Title Four"      \
+      --content   "Content Four."
+
+    "${_NB}" add  "Demo Folder" --type "folder"
+
+
+    "${_NB}" pin 2
+    "${_NB}" pin 3
+    "${_NB}" pin 5
+    "${_NB}" pin 6
+  }
+
+  run "${_NB}" list --pinned
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 0                                 ]]
+  [[    "${#lines[@]}"  -eq 4                                 ]]
+
+  [[    "${lines[0]}"   =~  [.*2*].*\ 📌\ Title\ Two          ]]
+  [[    "${lines[1]}"   =~  [.*3*].*\ 📌\ 📂\ Example\ Folder ]]
+  [[    "${lines[2]}"   =~  [.*5*].*\ 📌\ 📂\ Sample\ Folder  ]]
+  [[    "${lines[3]}"   =~  [.*6*].*\ 📌\ Title\ Four         ]]
+
+  run "${_NB}" list --pinned --type folder
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 0                                 ]]
+  [[    "${#lines[@]}"  -eq 2                                 ]]
+
+  [[    "${lines[0]}"   =~  [.*3*].*\ 📌\ 📂\ Example\ Folder ]]
+  [[    "${lines[1]}"   =~  [.*5*].*\ 📌\ 📂\ Sample\ Folder  ]]
+
+  run "${_NB}" list --pinned --type md
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 0                                 ]]
+  [[    "${#lines[@]}"  -eq 2                                 ]]
+
+  [[    "${lines[0]}"   =~  [.*2*].*\ 📌\ Title\ Two          ]]
+  [[    "${lines[1]}"   =~  [.*6*].*\ 📌\ Title\ Four         ]]
+
+  run "${_NB}" list --pinned --type example-type
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 0                                 ]]
+  [[    "${#lines[@]}"  -eq 5                                 ]]
+
+  [[    "${lines[0]}"   =~  0\ pinned\ example-type\ items.   ]]
+  [[    "${lines[1]}"   =~  Pin\ an\ item:                    ]]
+  [[    "${lines[2]}"   =~  nb\ pin\ \<id\>                   ]]
+  [[    "${lines[3]}"   =~  Help\ information:                ]]
+  [[    "${lines[4]}"   =~  nb\ help                          ]]
+}
+
 @test "'NB_PINNED_PATTERN list --pinned' only shows pins." {
   {
     "${_NB}" init
@@ -282,7 +365,7 @@ export NB_PINNED_PATTERN="#pinned"
           [.*home:Example\\\ Folder/4*].*\ 📂\ Sample\ Folder   ]]
 }
 
-@test "'NB_PINNED_PATTERN list --with-pinned' only shows pins when filter pattern is blank." {
+@test "'NB_PINNED_PATTERN list --with-pinned' filters pinned and unpinned items by filter pattern." {
   {
     "${_NB}" init
 
@@ -338,8 +421,8 @@ export NB_PINNED_PATTERN="#pinned"
   [[    "${status}"     -eq 0                             ]]
   [[    "${#lines[@]}"  -eq 3                             ]]
 
-  [[    "${lines[0]}"   =~  [.*3*].*\ root\ three         ]]
-  [[    "${lines[1]}"   =~  [.*2*].*\ root\ two           ]]
+  [[    "${lines[0]}"   =~  [.*3*].*\ 📌\ root\ three     ]]
+  [[    "${lines[1]}"   =~  [.*2*].*\ 📌\ root\ two       ]]
   [[    "${lines[2]}"   =~  [.*1*].*\ root\ one           ]]
 
   run "${_NB}" list Example\ Folder/ --with-pinned
@@ -368,11 +451,11 @@ export NB_PINNED_PATTERN="#pinned"
   [[    "${#lines[@]}"  -eq 3                             ]]
 
   [[    "${lines[0]}"   =~  \
-          [.*Example\\\ Folder/3.*].*\ nested\ three      ]]
+          [.*Example\\\ Folder/1.*].*\ 📌\ nested\ one    ]]
   [[    "${lines[1]}"   =~  \
-          [.*Example\\\ Folder/2.*].*\ nested\ two        ]]
+          [.*Example\\\ Folder/3.*].*\ 📌\ nested\ three  ]]
   [[    "${lines[2]}"   =~  \
-          [.*Example\\\ Folder/1.*].*\ nested\ one        ]]
+          [.*Example\\\ Folder/2.*].*\ nested\ two        ]]
 
   # switch notebooks
 
@@ -400,8 +483,8 @@ export NB_PINNED_PATTERN="#pinned"
   [[    "${status}"     -eq 0                                   ]]
   [[    "${#lines[@]}"  -eq 3                                   ]]
 
-  [[    "${lines[0]}"   =~  [.*home:3*].*\ root\ three          ]]
-  [[    "${lines[1]}"   =~  [.*home:2*].*\ root\ two            ]]
+  [[    "${lines[0]}"   =~  [.*home:3*].*\ 📌\ root\ three      ]]
+  [[    "${lines[1]}"   =~  [.*home:2*].*\ 📌\ root\ two        ]]
   [[    "${lines[2]}"   =~  [.*home:1*].*\ root\ one            ]]
 
   run "${_NB}" list home:Example\ Folder/ --with-pinned
@@ -430,11 +513,11 @@ export NB_PINNED_PATTERN="#pinned"
   [[    "${#lines[@]}"  -eq 3                                   ]]
 
   [[    "${lines[0]}"   =~  \
-          [.*home:Example\\\ Folder/3.*].*\ nested\ three       ]]
+          [.*home:Example\\\ Folder/1.*].*\ 📌\ nested\ one     ]]
   [[    "${lines[1]}"   =~  \
-          [.*home:Example\\\ Folder/2.*].*\ nested\ two         ]]
+          [.*home:Example\\\ Folder/3.*].*\ 📌\ nested\ three   ]]
   [[    "${lines[2]}"   =~  \
-          [.*home:Example\\\ Folder/1.*].*\ nested\ one         ]]
+          [.*home:Example\\\ Folder/2.*].*\ nested\ two         ]]
 }
 
 @test "'NB_PINNED_PATTERN list [<folder>/] --with-pinned --limit' (slash) respects limit." {
@@ -497,7 +580,6 @@ export NB_PINNED_PATTERN="#pinned"
   [[    "${lines[1]}"   =~  \
           [.*2*].*\ 📌\ root\ two                                 ]]
   [[    "${lines[2]}"   =~  2\ omitted.\ 4\ total.                ]]
-
 
   run "${_NB}" list --with-pinned --limit 3
 
