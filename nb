@@ -14592,7 +14592,7 @@ HEREDOC
 
     if [[ "${_request_uri}" =~ --query=([^&]+) ]]
     then
-      _query="${BASH_REMATCH[1]}"
+      _query="${BASH_REMATCH[1]//%23/\#}"
     fi
 
     local _request_uri_base="${_request_uri%\?--*}" # strip parameters
@@ -14792,7 +14792,7 @@ HEREDOC
   if [[ -n "${_search_query:-}" ]]
   then
     _arguments+=("--query" "${_search_query}")
-    _request_url+="?--query=${_search_query}"
+    _request_url+="?--query=${_search_query//#/%23}"
   fi
 
   # configure pagination

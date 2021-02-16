@@ -76,6 +76,31 @@ export _S=" "
 
 # query #######################################################################
 
+@test "'browse --container --query' with tag performs search." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md" --title "Title One" --content "Content one."
+    "${_NB}" add "File Two.md" --title "Title Two" --content "Content #abcde two."
+  }
+
+  run "${_NB}" browse --container --query "#abcde"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq  0         ]]
+
+  [[ !  "${output}"   =~ Title\ One ]]
+
+  [[    "${output}"   =~  \
+    \<p\>\<a\ href=\"http://localhost:6789/home:2\?--page=.*--per-page=.*--terminal\"\ class=\"list-item\"\> ]]
+  [[    "${output}"   =~   \
+    class=\"list-item\"\>\<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>     ]]
+  [[    "${output}"   =~   \
+    identifier\"\>2\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Two\</a\>\<br\>\</p\>  ]]
+}
+
 @test "'browse --container --query' performs search." {
   {
     "${_NB}" init
