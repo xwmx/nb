@@ -13862,6 +13862,7 @@ _browse() {
     local _current_page=1
     local _pagination_arguments=()
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
+    local _query=
     local _target_path=
     local _terminal_browser=0
 
