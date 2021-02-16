@@ -13524,68 +13524,66 @@ Can't show archives. Export archive and expand to edit.\\n"
          _command_exists "pandoc"   &&
          _web_browser --check
     then
+      local _rendered_temp_file_path=
+      _rendered_temp_file_path="$(_temp file ".html" --touch)"
+
+      if [[ "${_target_path}" =~ \.org ]]
+      then # resolve  org mode [[wiki-style links]] before rendering to HTML
+        local _linked_temp_file_path=
+        _linked_temp_file_path="$(_temp file ".org" --touch)"
+
+        # NOTE: avoid pandoc bug with brackets in org link descriptions
+        _resolve_links                          \
+          "${_target_path}" "${_notebook_path}" \
+          | sed -E                              \
+            -e "s/\]\[\[\[/\]\[••/g"            \
+            -e "s/\]\]\]\]/••\]\]/g"            \
+          >> "${_linked_temp_file_path}"
+
+        _pandoc "${_linked_temp_file_path}"     \
+          --render-to-html                      \
+          | sed -E                              \
+            -e "s/>••/>\[\[/g"                  \
+            -e "s/••</\]\]</g"                  \
+          >> "${_rendered_temp_file_path}"
+      else # render to HTML before resolving [[wiki-style links]]
+        local _unlinked_temp_file_path=
+        _unlinked_temp_file_path="$(_temp file ".html" --touch)"
+
+        _pandoc "${_target_path}"           \
+          --render-to-html >> "${_unlinked_temp_file_path}"
+
+        _resolve_links                      \
+          "${_unlinked_temp_file_path}" "${_notebook_path}" >> "${_rendered_temp_file_path}"
+      fi
+
       if ((_print_output))
       then
         if ((_COLOR_ENABLED))
         then
-          pandoc "${_target_path}" 2>/dev/null | _web_browser --dump
+          cat "${_rendered_temp_file_path}" | _web_browser --dump
         else
-          pandoc "${_target_path}" 2>/dev/null
+          cat "${_rendered_temp_file_path}"
         fi
+      elif _web_browser --gui
+      then
+        (_web_browser "file://${_rendered_temp_file_path:-}") &
+
+        printf "Serving: %s\\n" "$(_color_primary "${_rendered_temp_file_path}")"
+
+        while true
+        do
+          read -n 1 -s -r -p "Press any key to quit..."
+
+          printf "\\n"
+
+          exit 0
+        done
       else
-        local _rendered_temp_file_path=
-        _rendered_temp_file_path="$(_temp file ".html" --touch)"
-
-        if [[ "${_target_path}" =~ \.org ]]
-        then # resolve  org mode [[wiki-style links]] before rendering to HTML
-          local _linked_temp_file_path=
-          _linked_temp_file_path="$(_temp file ".org" --touch)"
-
-          # NOTE: avoid pandoc bug with brackets in org link descriptions
-          _resolve_links                          \
-            "${_target_path}" "${_notebook_path}" \
-            | sed -E                              \
-              -e "s/\]\[\[\[/\]\[••/g"            \
-              -e "s/\]\]\]\]/••\]\]/g"            \
-            >> "${_linked_temp_file_path}"
-
-          _pandoc "${_linked_temp_file_path}"     \
-            --render-to-html                      \
-            | sed -E                              \
-              -e "s/>••/>\[\[/g"                  \
-              -e "s/••</\]\]</g"                  \
-            >> "${_rendered_temp_file_path}"
-        else # render to HTML before resolving [[wiki-style links]]
-          local _unlinked_temp_file_path=
-          _unlinked_temp_file_path="$(_temp file ".html" --touch)"
-
-          _pandoc "${_target_path}"           \
-            --render-to-html >> "${_unlinked_temp_file_path}"
-
-          _resolve_links                      \
-            "${_unlinked_temp_file_path}" "${_notebook_path}" >> "${_rendered_temp_file_path}"
-        fi
-
-        if _web_browser --gui
-        then
-          (_web_browser "file://${_rendered_temp_file_path:-}") &
-
-          printf "Serving: %s\\n" "$(_color_primary "${_rendered_temp_file_path}")"
-
-          while true
-          do
-            read -n 1 -s -r -p "Press any key to quit..."
-
-            printf "\\n"
-
-            exit 0
-          done
-        else
-          _web_browser "file://${_rendered_temp_file_path:-}"
-        fi
-
-        rm -f "${_rendered_temp_file_path:?}"
+        _web_browser "file://${_rendered_temp_file_path:-}"
       fi
+
+      rm -f "${_rendered_temp_file_path:?}"
     else # default
       if ((_print_output))
       then # `show --print [--no-color]`
