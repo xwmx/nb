@@ -1622,8 +1622,10 @@ See [`bookmark help`](#bookmark-help) for more information.
 
 *Version 6.0.0-alpha*
 
-Notes, bookmarks, files in text-based formats, and Word documents can
-contain links to other items using
+Notes, bookmarks, files in text-based formats,
+[Open Document](https://en.wikipedia.org/wiki/OpenDocument) `.odt`
+documents,
+and Word `.docx` documents can contain links to other items using
 <a href="#-linking">[[wiki-style links]]</a>,
 making `nb` a powerful terminal-first platform for
 [Zettelkasten](https://en.wikipedia.org/wiki/Zettelkasten) and

@@ -4,7 +4,80 @@ load test_helper
 
 export NB_SERVER_PORT=6789
 
-# items #######################################################################
+# .odt ########################################################################
+
+@test "'browse' with .odt file serves the rendered HTML page with wiki-style links resolved to internal web server URLs." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example File.md"                 \
+      --title     "Example Title"                   \
+      --content   "Example content."
+
+    "${_NB}" add  "Example Folder/File One.md"      \
+      --title     "Title One"                       \
+      --content   "Example content. [[Example Title]]"
+
+    cat "${NB_DIR}/home/Example Folder/File One.md" \
+      | pandoc --from markdown --to odt             \
+      | "${_NB}" add "Example Folder/File One.odt"
+
+    [[ -f "${NB_DIR}/home/Example Folder/File One.odt" ]]
+  }
+
+  run "${_NB}" browse 2/2 --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    ==  0                                                       ]]
+  [[ "${output}"    =~  \<\!DOCTYPE\ html\>                                     ]]
+
+  [[ "${output}"    =~  \
+      \<h1\ id=\"title-one\"\>\<span\ id=\"anchor\"\>\</span\>Title\ One\</h1\> ]]
+
+  [[ "${output}"    =~  \
+      \<p\>Example\ content.\ \<a\ href=\"http://localhost:6789/home:1\"\>      ]]
+  [[ "${output}"    =~  \[\[Example\ Title\]\]\</a\>\</p\>                      ]]
+}
+
+# .docx #######################################################################
+
+@test "'browse' with .docx file serves the rendered HTML page with wiki-style links resolved to internal web server URLs." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example File.md"                 \
+      --title     "Example Title"                   \
+      --content   "Example content."
+
+    "${_NB}" add  "Example Folder/File One.md"      \
+      --title     "Title One"                       \
+      --content   "Example content. [[Example Title]]"
+
+    cat "${NB_DIR}/home/Example Folder/File One.md" \
+      | pandoc --from markdown --to docx            \
+      | "${_NB}" add "Example Folder/File One.docx"
+
+    [[ -f "${NB_DIR}/home/Example Folder/File One.docx" ]]
+  }
+
+  run "${_NB}" browse 2/2 --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    ==  0                                                   ]]
+  [[ "${output}"    =~  \<\!DOCTYPE\ html\>                                 ]]
+
+  [[ "${output}"    =~  \<h1\ id=\"title-one\"\>Title\ One\</h1\>           ]]
+
+  [[ "${output}"    =~  \
+      \<p\>Example\ content.\ \<a\ href=\"http://localhost:6789/home:1\"\>  ]]
+  [[ "${output}"    =~  \[\[Example\ Title\]\]\</a\>\</p\>                  ]]
+}
+
+# .org ########################################################################
 
 @test "'browse' with .org file serves the rendered HTML page with wiki-style links resolved to internal web server URLs." {
   {
@@ -34,6 +107,8 @@ export NB_SERVER_PORT=6789
       \<p\>Example\ content.\ \<a\ href=\"http://localhost:6789/home:1\"\>  ]]
   [[ "${output}"    =~  \[\[Example\ Title\]\]\</a\>\</p\>                  ]]
 }
+
+# markdown ####################################################################
 
 @test "'browse <folder-id>/<id>' serves the rendered HTML page with wiki-style links resolved to internal web server URLs." {
   {

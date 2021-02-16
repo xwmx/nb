@@ -13315,7 +13315,7 @@ Can't show archives. Export archive and expand to edit.\\n"
   if ! _file_is_text "${_target_path}"    &&
      ! {
        ((_render))                        &&
-       [[ "${_target_path:-}" =~ \.docx$|\.epub  ]]
+       [[ "${_target_path:-}" =~ \.docx$|\.epub$|\.odt$ ]]
      }
   then
     if [[ -d "${_target_path}"        ]]  &&
@@ -14481,7 +14481,7 @@ HEREDOC
           _browse_render_container  "${_arguments[@]:-}"  >> "${_temp_file}"
         else
           if _file_is_text "${_selector_path:-}" ||
-             [[ "${_selector_path:-}" =~ \.docx$|\.epub$ ]]
+             [[ "${_selector_path:-}" =~ \.docx$|\.epub$|\.odt$ ]]
           then
             _browse_render_item     "${_arguments[@]:-}"  >> "${_temp_file}"
           elif _file_is_encrypted "${_selector_path:-}"
