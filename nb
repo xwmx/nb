@@ -14135,9 +14135,9 @@ HEREDOC
         local _url_path="${_notebook_name}:"
 
         local i=
-        for ((i=0; i < "${#_selector_folders[@]}"; i++))
+        for ((i=0; i < "${#_selector_folders[@]:-}"; i++))
         do
-          _url_path+="${_selector_folder_ids[i]}/"
+          _url_path+="${_selector_folder_ids[i]:-}/"
 
           _header_content+="\
  [${_selector_folders[i]}](http://localhost:${NB_SERVER_PORT}/${_url_path}${_url_params:-})"
@@ -14151,7 +14151,7 @@ HEREDOC
 
     if [[ -f "${_item_path:-}" ]]
     then
-      if [[ -z "${_selector_folders[*]}" ]]
+      if [[ -z "${_selector_folders[*]:-}" ]]
       then
         _header_content+=" <span class=\"dim\">:</span>"
       fi
