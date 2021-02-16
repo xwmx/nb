@@ -13800,7 +13800,7 @@ Options:
   -g, --gui         Open in the system's primary GUI web browser.
   --notebooks       Browse notebooks.
   --print           Print to standard output.
-  --query <query>
+  --query <query>   Open to the search results for <query>.
   -s, --serve       Start the web application server.
 
 Description:
