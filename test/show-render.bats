@@ -4,7 +4,7 @@ load test_helper
 
 # links #######################################################################
 
-@test "'show --for-browse' properly resolves titled wiki-style links." {
+@test "'show --render' properly resolves titled wiki-style links." {
   {
     "${_NB}" init
 
@@ -35,7 +35,7 @@ HEREDOC
     "${_NB}" use "Sample Notebook"
   }
 
-  run "${_NB}" show home:1 --for-browse
+  run "${_NB}" show home:1 --render --print --raw
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -43,16 +43,16 @@ HEREDOC
   [[ "${status}" -eq 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-    'one: <a href="http://localhost:6789/home:2">\[\[Root Title Two\]\]</a>'
+    "one: <a href=\"file://${NB_DIR}/home/File Two.md\">\[\[Root Title Two\]\]</a>"
 
   printf "%s\\n" "${output}" | grep -q \
-    'example <a href="http://localhost:6789/Example Notebook:1/1">\[\[Example Notebook:Example Folder/1\]\]</a> content'
+    "example <a href=\"file://${NB_DIR}/Example Notebook/Example Folder/File One.md\">\[\[Example Nested Title One\]\]</a> content"
 
   printf "%s\\n" "${output}" | grep -q \
-    'content <a href="http://localhost:6789/home:3/1">\[\[3/1\]\]</a> here'
+    "content <a href=\"file://${NB_DIR}/home/Sample Folder/File One.md\">\[\[Sample Nested Title Two\]\]</a> here"
 }
 
-@test "'show --for-browse' properly resolves titled wiki-style links and skips links with non-resolving selectors." {
+@test "'show --render' properly resolves titled wiki-style links and skips links with non-resolving selectors." {
   {
     "${_NB}" init
 
@@ -83,7 +83,7 @@ HEREDOC
     "${_NB}" use "Sample Notebook"
   }
 
-  run "${_NB}" show home:1 --for-browse
+  run "${_NB}" show home:1 --render --print --raw
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -91,15 +91,15 @@ HEREDOC
   [[ "${status}" -eq 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-    'one: <a href="http://localhost:6789/home:2">\[\[Root Title Two\]\]</a>'
+    "one: <a href=\"file://${NB_DIR}/home/File Two.md\">\[\[Root Title Two\]\]</a>"
 
   printf "%s\\n" "${output}" | grep -q \
-    'example <a href="http://localhost:6789/Example Notebook:1/1">\[\[Example Notebook:Example Folder/1\]\]</a> content'
+    "example <a href=\"file://${NB_DIR}/Example Notebook/Example Folder/File One.md\">\[\[Example Nested Title One\]\]</a> content"
 
   printf "%s\\n" "${output}" | grep -q 'content \[\[2/1\]\] here'
 }
 
-@test "'show --for-browse' properly resolves duplicated wiki-style links." {
+@test "'show --render' properly resolves duplicated wiki-style links." {
   {
     "${_NB}" init
 
@@ -119,7 +119,7 @@ HEREDOC
       --content   "Nested content one."
   }
 
-  run "${_NB}" show 1 --for-browse
+  run "${_NB}" show 1 --render --print --raw
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -127,14 +127,13 @@ HEREDOC
   [[ "${status}" -eq 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-    'link one: <a href="http://localhost:6789/Example Notebook:1/1">\[\[Example Notebook:Example Folder/1\]\]</a>'
-
+   "link one: <a href=\"file://${NB_DIR}/Example Notebook/Example Folder/File One.md\">\[\[Nested Title One\]\]</a>"
 
   printf "%s\\n" "${output}" | grep -q -v\
-    'example <a href="http://localhost:6789/Example Notebook:1/1">\[\[Example Notebook:Example Folder/1\]\]</a>'
+    "example <a href=\"file://${NB_DIR}/Example Notebook/Example Folder/File One.md\">\[\[Nested Title One\]\]</a>"
 }
 
-@test "'show --for-browse' resolves wiki-style links." {
+@test "'show --render' resolves wiki-style links." {
   {
     "${_NB}" init
 
@@ -178,7 +177,7 @@ HEREDOC
       --content   "Nested content two."
   }
 
-  run "${_NB}" show 1 --for-browse
+  run "${_NB}" show 1 --render --print --raw
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -186,13 +185,13 @@ HEREDOC
   [[ "${status}" -eq 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-    '<a href="http://localhost:6789/home:3/1">\[\[Sample Folder/Nested Title One\]\]</a>'
+    "<a href=\"file://${NB_DIR}/home/Sample Folder/File One.md\">\[\[Nested Title One\]\]</a>"
 
   printf "%s\\n" "${output}" | grep -q \
-    '<a href="http://localhost:6789/Example Notebook:2">\[\[Example Notebook:File Two.md\]\]</a>'
+    "<a href=\"file://${NB_DIR}/Example Notebook/File Two.md\">\[\[Root Title Two\]\]</a>"
 
   printf "%s\\n" "${output}" | grep -q \
-    '<a href="http://localhost:6789/Example Notebook:3/1">\[\[Example Notebook:Example Folder/1\]\]</a>'
+    "<a href=\"file://${NB_DIR}/Example Notebook/Example Folder/File One.md\">\[\[Nested Title One\]\]</a>"
 }
 
 # --render, --print, and --raw ################################################
