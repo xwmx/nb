@@ -13199,7 +13199,7 @@ _show() {
       fi
 
       return 0
-    els
+    else
       _warn printf "Not found: %s\\n" "$(_color_primary "${_selector}")"
       return 1
     fi
