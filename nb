@@ -13530,11 +13530,12 @@ Can't show archives. Export archive and expand to edit.\\n"
         local _unlinked_temp_file_path=
         _unlinked_temp_file_path="$(_temp file ".html" --touch)"
 
-        _pandoc "${_target_path}"           \
+        _pandoc "${_target_path}"               \
           --render-to-html >> "${_unlinked_temp_file_path}"
 
-        _resolve_links                      \
-          "${_unlinked_temp_file_path}" "${_notebook_path}" >> "${_rendered_temp_file_path}"
+        _resolve_links                          \
+          "${_unlinked_temp_file_path}"         \
+          "${_notebook_path}" >> "${_rendered_temp_file_path}"
       fi
 
       if ((_print_output))
