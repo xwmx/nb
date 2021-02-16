@@ -13533,8 +13533,6 @@ Can't show archives. Export archive and expand to edit.\\n"
           pandoc "${_target_path}" 2>/dev/null
         fi
       else
-        cd "${_CURRENT_WORKING_DIR}"
-
         local _rendered_temp_file_path=
         _rendered_temp_file_path="$(_temp file ".html" --touch)"
 
