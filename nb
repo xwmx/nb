@@ -14117,7 +14117,7 @@ HEREDOC
           _url_path+="${_selector_folder_ids[i]}/"
 
           _header_content+="\
- [${_selector_folders[i]}](http://localhost:${NB_SERVER_PORT}/${_url_path}${_url_params:-}) <span class=\"dim\">/</a>"
+ [${_selector_folders[i]}](http://localhost:${NB_SERVER_PORT}/${_url_path}${_url_params:-}) <span class=\"dim\">/</span>"
         done
       fi
     fi
