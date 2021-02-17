@@ -8148,10 +8148,10 @@ _pandoc() {
     return 0
   fi
 
-  local _app_styles_temp_path=
-  _app_styles_temp_path="$(_temp file ".html" --touch)"
+  local _html_head_temp_path=
+  _html_head_temp_path="$(_temp file ".html" --touch)"
 
-  cat <<HEREDOC >> "${_app_styles_temp_path}"
+  cat <<HEREDOC >> "${_html_head_temp_path}"
 <style>
 html {
   background-color: #1a1a1a;
@@ -8275,6 +8275,14 @@ div.sourceCode {
   background-color: transparent;
 }
 </style>
+<script>
+// hide broken images
+document.addEventListener("DOMContentLoaded", function(event) {
+  document.querySelectorAll('img').forEach(function(img) {
+    img.onerror = function() { this.style.display = 'none'; };
+  })
+});
+</script>
 HEREDOC
 
   if [[ -n "${_source_path:-}" ]]
@@ -8304,18 +8312,18 @@ HEREDOC
   fi
 
   {
-    pandoc                                            \
-      --include-in-header="${_app_styles_temp_path}"  \
-      --to=html                                       \
-      --standalone                                    \
-      --metadata title="nb"                           \
-      "${_pandoc_arguments[@]:-}"                     \
+    pandoc                                          \
+      --include-in-header="${_html_head_temp_path}" \
+      --to=html                                     \
+      --standalone                                  \
+      --metadata title="nb"                         \
+      "${_pandoc_arguments[@]:-}"                   \
       2>/dev/null
   } | {
     sed -e '/<h1 class="title"/d' -e '/title-block-header/d'
   }
 
-  rm -f "${_app_styles_temp_path:?}"
+  rm -f "${_html_head_temp_path:?}"
 }
 
 # _resolve_links()
