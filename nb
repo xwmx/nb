@@ -13641,14 +13641,14 @@ Can't show archives. Export archive and expand to edit.\\n"
           | sed -E                              \
             -e "s/\]\[\[\[/\]\[••/g"            \
             -e "s/\]\]\]\]/••\]\]/g"            \
-          >> "${_linked_temp_file_path}"
+              >> "${_linked_temp_file_path}"
 
         _pandoc "${_linked_temp_file_path}"     \
           --render-to-html                      \
           | sed -E                              \
             -e "s/>••/>\[\[/g"                  \
             -e "s/••</\]\]</g"                  \
-          >> "${_rendered_temp_file_path}"
+              >> "${_rendered_temp_file_path}"
       else # render to HTML before resolving [[wiki-style links]]
         local _unlinked_temp_file_path=
         _unlinked_temp_file_path="$(_temp file ".html" --touch)"
@@ -14301,11 +14301,11 @@ HEREDOC
 
       # NOTE: avoid pandoc bug with brackets in org link descriptions
       _resolve_links "${_source_path}" "${_notebook_path}"  \
-            --browse                                        \
-            | sed -E                                        \
-              -e "s/\]\[\[\[/\]\[••/g"                      \
-              -e "s/\]\]\]\]/••\]\]/g"                      \
-              >> "${_linked_temp_file_path}"
+        --browse                                            \
+        | sed -E                                            \
+          -e "s/\]\[\[\[/\]\[••/g"                          \
+          -e "s/\]\]\]\]/••\]\]/g"                          \
+            >> "${_linked_temp_file_path}"
 
       _pandoc "${_linked_temp_file_path}"                   \
         --include-before-body="${_header_temp_path}"        \
