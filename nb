@@ -8637,9 +8637,14 @@ _web_browser() {
 
       "${_web_browser_command[@]:-}" "${_arguments[@]:-}"
       return 0
-    elif [[ "${_web_browser_command[*]:-}" =~ elinks ]]
+    elif [[ "${_web_browser_command[*]:-}" =~ links   ]]
     then
       ((_dump)) && _arguments+=("-dump")
+
+      if [[ ! "${_web_browser_command[*]}" =~ elinks  ]]
+      then # links
+        _arguments+=("-html-assume-codepage" "Unicode UTF-8")
+      fi
 
       if [[ -n "${_url:-}" ]]
       then
@@ -14388,7 +14393,7 @@ HEREDOC
             "${__name}"                           \
             "${_url_params:-}"
         elif ((_terminal_browser)) &&
-             [[ "${#_test_line}" -gt "$((_COLUMNS - 1))" ]]
+             [[ "${#_test_line}" -gt "$((_COLUMNS - 4))" ]]
         then
           printf "<br>\\n"
 
@@ -14564,9 +14569,10 @@ HEREDOC
 
       # turn on case-insensitive matching
       shopt -s nocasematch
-      if [[ "${_http_header_line}"      =~ User-Agent       ]]
+      if [[ "${_http_header_line}"      =~ User-Agent     ]]
       then
-        if [[ ! "${_http_header_line}"  =~ Lynx|w3m|ELinks  ]]
+
+        if [[ ! "${_http_header_line}"  =~ Lynx|w3m|Links ]]
         then
           _terminal_browser=0
           _looking_for_user_agent=0
@@ -14805,9 +14811,12 @@ HEREDOC
      ! _web_browser --gui     &&
      ! ((_only_serve))
   then
-    if [[ -z "${_browse_per_page:-}" ]]
+    if [[ -z "${_browse_per_page:-}"  ]]
     then # set per page based on terminal height
-      if [[ "${BROWSER:-}" =~ lynx ]]
+      if [[ "${BROWSER:-}" =~ links   ]]
+      then
+        _browse_per_page="$(($(tput lines) - 9))"
+      elif [[ "${BROWSER:-}" =~ lynx  ]]
       then
         _browse_per_page="$(($(tput lines) - 10))"
       else
