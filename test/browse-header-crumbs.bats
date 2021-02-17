@@ -21,9 +21,10 @@ load test_helper
   [[ "${status}"    == 0 ]]
 
   [[ "${output}"    =~ \
-        \<h1\ class=\"header-crumbs\"\>\[\<span\ class=\"dim\"\>❯\</span\>nb\]\(http://localhost:6789/\?--page.*\)\ .*·.*\  ]]
-  [[ "${output}"    =~ \ .*·.*\ \[home\]\(http://localhost:6789/home:\?--page=.*\)\ .*:.*\              ]]
-  [[ "${output}"    =~ \ .*:.*\ .*1.*                                                                   ]]
+\<h1\ class=\"header-crumbs\"\>\<a\ href=\"http://localhost:6789/\?--page.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>\ \<span\ class=\"dim\"\>·\</span\>\  ]]
+  [[ "${output}"    =~ \
+\ \<span\ class=\"dim\"\>·\</span\>\ \<a\ href=\"http://localhost:6789/home:\?--page=.*\"\>home\</a\>\ \<span\ class=\"dim\"\>:\</span\>\                     ]]
+  [[ "${output}"    =~ \<span\ class=\"dim\"\>:\</span\>\ \<span\ class=\"dim\"\>1\</span\>\</h1\>                                                            ]]
 }
 
 @test "'browse <notebook>:<folder-id>/<folder-id>/<file-id>' displays header crumbs with id with file." {
@@ -43,11 +44,14 @@ load test_helper
   [[ "${status}"    == 0 ]]
 
   [[ "${output}"    =~ \
-        \<h1\ class=\"header-crumbs\"\>\[\<span\ class=\"dim\"\>❯\</span\>nb\]\(http://localhost:6789/\?--page.*\)\ .*·.*\  ]]
-  [[ "${output}"    =~ \ .*·.*\ \[home\]\(http://localhost:6789/home:\?--page=.*\)\ .*:.*\              ]]
-  [[ "${output}"    =~ \ .*:.*\ \[Example\ Folder\]\(http://localhost:6789/home:1/\?--page=.*\)\ .*/.*  ]]
-  [[ "${output}"    =~ \ .*/.*\ \[Sample\ Folder\]\(http://localhost:6789/home:1/1/\?--page=.*\)\ .*/.* ]]
-  [[ "${output}"    =~ \ .*/.*\ .*1.*                                                                   ]]
+\<h1\ class=\"header-crumbs\"\>\<a\ href=\"http://localhost:6789/\?--page.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>\ \<span\ class=\"dim\"\>·\</span\>\  ]]
+  [[ "${output}"    =~ \
+\ \<span\ class=\"dim\"\>·\</span\>\ \<a\ href=\"http://localhost:6789/home:\?--page=.*\"\>home\</a\>\ \<span\ class=\"dim\"\>:\</span\>\                     ]]
+  [[ "${output}"    =~ \
+\ \<span\ class=\"dim\"\>:\</span\>\ \<a\ href=\"http://localhost:6789/home:1/\?--page=.*\"\>Example\ Folder\</a\>\ \<span\ class=\"dim\"\>/\</span\>\        ]]
+  [[ "${output}"    =~ \
+\ \<span\ class=\"dim\"\>/\</span\>\ \<a\ href=\"http://localhost:6789/home:1/1/\?--page=.*\"\>Sample\ Folder\</a\>\ \<span\ class=\"dim\"\>/\</span\>\       ]]
+  [[ "${output}"    =~ \<span\ class=\"dim\"\>/\</span\>\ \<span\ class=\"dim\"\>1\</span\>\</h1\>                                                            ]]
 }
 
 @test "'browse <notebook>:<folder-id>/<file-id>' displays header crumbs with folder." {
@@ -67,9 +71,13 @@ load test_helper
   [[ "${status}"    == 0 ]]
 
   [[ "${output}"    =~ \
-        \<h1\ class=\"header-crumbs\"\>\[\<span\ class=\"dim\"\>❯\</span\>nb\]\(http://localhost:6789/\?--page.*\)\ .*·.*\  ]]
-  [[ "${output}"    =~ \ .*·.*\ \[home\]\(http://localhost:6789/home:\?--page=.*\)\ .*:.*\              ]]
-  [[ "${output}"    =~ \ .*:.*\ \[Example\ Folder\]\(http://localhost:6789/home:1/\?--page=.*\)\ .*/.*  ]]
+\<h1\ class=\"header-crumbs\"\>\<a\ href=\"http://localhost:6789/\?--page.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>\ \<span\ class=\"dim\"\>·\</span\>\  ]]
+  [[ "${output}"    =~ \
+\ \<span\ class=\"dim\"\>·\</span\>\ \<a\ href=\"http://localhost:6789/home:\?--page=.*\"\>home\</a\>\ \<span\ class=\"dim\"\>:\</span\>\                     ]]
+  [[ "${output}"    =~ \
+\ \<span\ class=\"dim\"\>:\</span\>\ \<a\ href=\"http://localhost:6789/home:1/\?--page=.*\"\>Example\ Folder\</a\>\ \<span\ class=\"dim\"\>/\</span\>\        ]]
+  [[ "${output}"    =~ \
+\ \<span\ class=\"dim\"\>/\</span\>\ \<span\ class=\"dim\"\>1\</span\>\</h1\>                                                                                 ]]
 }
 
 @test "'browse <notebook>:<folder-id>/<folder-id>' displays header crumbs with folder." {
@@ -92,19 +100,21 @@ load test_helper
   [[ "${status}"    == 0 ]]
 
   [[ "${output}"    =~ \
-        \<h1\ class=\"header-crumbs\"\>\[\<span\ class=\"dim\"\>❯\</span\>nb\]\(http://localhost:6789/\?--page.*\)\ .*·.*\  ]]
-  [[ "${output}"    =~ \ .*·.*\ \[home\]\(http://localhost:6789/home:\?--page=.*\)\ .*:.*\              ]]
-  [[ "${output}"    =~ \ .*:.*\ \[Example\ Folder\]\(http://localhost:6789/home:1/\?--page=.*\)\ .*/.*  ]]
-  [[ "${output}"    =~ \ .*/.*\ \[Sample\ Folder\]\(http://localhost:6789/home:1/1/\?--page=.*\)\ .*/.* ]]
+\<h1\ class=\"header-crumbs\"\>\<a\ href=\"http://localhost:6789/\?--page.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>\ \<span\ class=\"dim\"\>·\</span\>\  ]]
+  [[ "${output}"    =~ \
+\ \<span\ class=\"dim\"\>·\</span\>\ \<a\ href=\"http://localhost:6789/home:\?--page=.*\"\>home\</a\>\ \<span\ class=\"dim\"\>:\</span\>\                     ]]
+  [[ "${output}"    =~ \
+\ \<span\ class=\"dim\"\>:\</span\>\ \<a\ href=\"http://localhost:6789/home:1/\?--page=.*\"\>Example\ Folder\</a\>\ \<span\ class=\"dim\"\>/\</span\>\        ]]
+  [[ "${output}"    =~ \
+\ \<span\ class=\"dim\"\>/\</span\>\ \<a\ href=\"http://localhost:6789/home:1/1/\?--page=.*\"\>Sample\ Folder\</a\>\ \<span\ class=\"dim\"\>/\</span\>\</h1\> ]]
 
   run "${_NB}" browse home:1/1/ --print
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    == 0                                ]]
-
-  [[ "${output}"    =~ \<h1\ class=\"header-crumbs\"\>  ]]
+  [[ "${status}"    == 0                                                                            ]]
+  [[ "${output}"    =~ \<h1\ class=\"header-crumbs\"\ id=\"nb-home-example-folder-sample-folder\"\> ]]
 }
 
 @test "'browse <notebook-path>/<folder>/<filename>' displays header crumbs with folder and id for file." {
@@ -124,10 +134,13 @@ load test_helper
   [[ "${status}"    == 0  ]]
 
   [[ "${output}"    =~ \
-        \<h1\ class=\"header-crumbs\"\>\[\<span\ class=\"dim\"\>❯\</span\>nb\]\(http://localhost:6789/\?--page.*\)\ .*·.*\  ]]
-  [[ "${output}"    =~ \ .*·.*\ \[home\]\(http://localhost:6789/home:\?--page=.*\)\ .*:.*\              ]]
-  [[ "${output}"    =~ \ .*:.*\ \[Example\ Folder\]\(http://localhost:6789/home:1/\?--page=.*\)\ .*/.*  ]]
-  [[ "${output}"    =~ \ .*/.*\ .*1.*                                                                   ]]
+\<h1\ class=\"header-crumbs\"\>\<a\ href=\"http://localhost:6789/\?--page.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>\ \<span\ class=\"dim\"\>·\</span\>\  ]]
+  [[ "${output}"    =~ \
+\ \<span\ class=\"dim\"\>·\</span\>\ \<a\ href=\"http://localhost:6789/home:\?--page=.*\"\>home\</a\>\ \<span\ class=\"dim\"\>:\</span\>\                     ]]
+  [[ "${output}"    =~ \
+\ \<span\ class=\"dim\"\>:\</span\>\ \<a\ href=\"http://localhost:6789/home:1/\?--page=.*\"\>Example\ Folder\</a\>\ \<span\ class=\"dim\"\>/\</span\>\        ]]
+  [[ "${output}"    =~ \
+\ \<span\ class=\"dim\"\>/\</span\>\ \<span\ class=\"dim\"\>1\</span\>\</h1\>                                                                                 ]]
 }
 
 @test "'browse <notebook-path>/<folder>' displays header crumbs with folder." {
@@ -147,7 +160,9 @@ load test_helper
   [[ "${status}"    == 0 ]]
 
   [[ "${output}"    =~ \
-        \<h1\ class=\"header-crumbs\"\>\[\<span\ class=\"dim\"\>❯\</span\>nb\]\(http://localhost:6789/\?--page.*\)\ .*·.*\  ]]
-  [[ "${output}"    =~ \ .*·.*\ \[home\]\(http://localhost:6789/home:\?--page=.*\)\ .*:.*\              ]]
-  [[ "${output}"    =~ \ .*:.*\ \[Example\ Folder\]\(http://localhost:6789/home:1/\?--page=.*\)\ .*/.*  ]]
+\<h1\ class=\"header-crumbs\"\>\<a\ href=\"http://localhost:6789/\?--page.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>\ \<span\ class=\"dim\"\>·\</span\>\  ]]
+  [[ "${output}"    =~ \
+\ \<span\ class=\"dim\"\>·\</span\>\ \<a\ href=\"http://localhost:6789/home:\?--page=.*\"\>home\</a\>\ \<span\ class=\"dim\"\>:\</span\>\                     ]]
+  [[ "${output}"    =~ \
+\ \<span\ class=\"dim\"\>:\</span\>\ \<a\ href=\"http://localhost:6789/home:1/\?--page=.*\"\>Example\ Folder\</a\>\ \<span\ class=\"dim\"\>/\</span\>\</h1\>  ]]
 }

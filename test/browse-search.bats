@@ -29,11 +29,11 @@ export _S=" "
   [[ !  "${output}"   =~ Title\ One                       ]]
 
   [[ !  "${output}"   =~  \
-    \<p\>\<a\ href=\"http://localhost:6789/2\"\ class=\"list-item\"\>                         ]]
+    \<p\>\<a\ href=\"http://localhost:6789/2\"\ class=\"list-item\"\>                     ]]
   [[ !  "${output}"   =~   \
-    class=\"list-item\"\>\<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>     ]]
+    class=\"list-item\"\>\<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\> ]]
   [[ !  "${output}"   =~   \
-    identifier\"\>2\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Two\</a\>\<br\>\</p\>  ]]
+    identifier\"\>2\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Two\</a\>\<br\ /\> ]]
 }
 
 # search form #################################################################
@@ -96,9 +96,9 @@ export _S=" "
   [[    "${output}"   =~  \
     \<p\>\<a\ href=\"http://localhost:6789/home:2\?--page=.*--per-page=.*--terminal\"\ class=\"list-item\"\> ]]
   [[    "${output}"   =~   \
-    class=\"list-item\"\>\<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>     ]]
+    class=\"list-item\"\>\<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\> ]]
   [[    "${output}"   =~   \
-    identifier\"\>2\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Two\</a\>\<br\>\</p\>  ]]
+    identifier\"\>2\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Two\</a\>\<br\ /\> ]]
 }
 
 @test "'browse --container --query' performs search." {
@@ -121,9 +121,9 @@ export _S=" "
   [[    "${output}"   =~  \
     \<p\>\<a\ href=\"http://localhost:6789/home:2\?--page=.*--per-page=.*--terminal\"\ class=\"list-item\"\> ]]
   [[    "${output}"   =~   \
-    class=\"list-item\"\>\<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>     ]]
+    class=\"list-item\"\>\<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\> ]]
   [[    "${output}"   =~   \
-    identifier\"\>2\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Two\</a\>\<br\>\</p\>  ]]
+    identifier\"\>2\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Two\</a\>\<br\ /\> ]]
 }
 
 @test "'browse --query' performs search." {
@@ -144,11 +144,11 @@ export _S=" "
   [[ !  "${output}"   =~ Title\ One ]]
 
   [[    "${output}"  =~   \
-    \<p\>\<a\ href=\"http://localhost:6789/home:2\"\ class=\"list-item\"\>                    ]]
+    \<p\>\<a\ href=\"http://localhost:6789/home:2\"\ class=\"list-item\"\>                ]]
   [[    "${output}"  =~   \
-    class=\"list-item\"\>\<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>     ]]
+    class=\"list-item\"\>\<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\> ]]
   [[    "${output}"  =~   \
-    identifier\"\>2\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Two\</a\>\<br\>\</p\>  ]]
+    identifier\"\>2\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Two\</a\>\<br\ /\> ]]
 }
 
 @test "'browse --query' performs paginated search." {

@@ -8300,7 +8300,7 @@ HEREDOC
       _pandoc_arguments+=("${_source_path:-}")
     fi
   else
-    _pandoc_arguments+=("--from=markdown")
+    _pandoc_arguments+=("--from=markdown+raw_html")
   fi
 
   {
@@ -13993,11 +13993,27 @@ _browse() {
         _item_selector="${_item_selector#[}"
         _item_selector="${_item_selector//\\/}"
 
-        local _display_item="${__list_item//\\\ /&nbsp;}"
-        _display_item="${_display_item//\ /&nbsp;}"
+        local _display_item="${__list_item:-}"
+
+        _display_item="$(
+          printf "%s\\n" "${_display_item}" \
+            | sed                           \
+              -e 's/\&/\&amp;/g'            \
+              -e 's/#/\&#35;/g'             \
+              -e 's/\$/\&#36;/g'            \
+              -e 's/(/\&#40;/g'             \
+              -e 's/)/\&#41;/g'             \
+              -e 's/</\&#60;/g'             \
+              -e 's/>/\&#62;/g'             \
+              -e 's/@/\&#64;/g'             \
+              -e 's/\\\ / /g'               \
+              -e 's/\ / /g'                 \
+              -e 's/\$/\&#36;/g'
+        )"
+
         # shellcheck disable=SC2140
-        _display_item="${_display_item/\[/<span class="dim">\[</span><span class="identifier">}"
-        _display_item="${_display_item/\]/</span><span class="dim">\]</span>}"
+        _display_item="${_display_item/\[/<span class="dim"\>\[</span><span class="identifier">}"
+        _display_item="${_display_item/\]/</span\><span class="dim">\]</span>}"
 
         local _url_params=
         _url_params="$(_get_id_selector "${_item_selector}" --notebook)"
@@ -14007,8 +14023,10 @@ _browse() {
           _url_params+="?--page=${_current_page}&--per-page=${_per_page}&--terminal"
         fi
 
-        printf "%s\\n" \
-          "[${_display_item}](http://localhost:${NB_SERVER_PORT}/${_url_params:-}){.list-item}<br>"
+        printf "<a href=\"http://localhost:%s/%s\" class=\"list-item\">%s</a><br>\\n" \
+          "${NB_SERVER_PORT}"                                                         \
+          "${_url_params:-}"                                                          \
+          "${_display_item}"
       done
     } | {
       local _list_count=
@@ -14035,7 +14053,7 @@ _browse() {
       printf "%s\\n" "$(_browse_render_header "${_pagination_arguments[@]:-}")"
 
       cat <<HEREDOC
-<div>
+<p>
   <form accept-charset="UTF-8" action="/${_link_selector}" id="search" method="get">
     <label for="search-input">search:</label>
     <input
@@ -14051,8 +14069,7 @@ _browse() {
     <input type="hidden" name="--page"      value="${_current_page}">
     <input type="hidden" name="--per-page"  value="${_per_page}">
   </form>
-</div>
-<p class="search-spacer"><br></p>
+</p>
 HEREDOC
 
       local _pagination_count=0
@@ -14073,7 +14090,7 @@ HEREDOC
 
       if ((_print_prev)) || ((_print_next))
       then
-        printf "\\n"
+        printf "<p class=\"pagination\">\\n"
       fi
 
       local _params="--per-page=${_per_page}"
@@ -14085,11 +14102,12 @@ HEREDOC
 
       if ((_print_prev))
       then
-        printf                                                    \
-          "[❮ prev](http://localhost:%s/%s?--page=%s&${_params})" \
-          "${NB_SERVER_PORT}"                                     \
-          "${_link_selector}"                                     \
-          "$((_current_page - 1))"
+        printf                                                          \
+          "<a href=\"http://localhost:%s/%s?--page=%s&%s\">❮ prev</a>"  \
+          "${NB_SERVER_PORT}"                                           \
+          "${_link_selector}"                                           \
+          "$((_current_page - 1))"                                      \
+          "${_params:-}"
       fi
 
       if ((_print_prev)) && ((_print_next))
@@ -14099,19 +14117,20 @@ HEREDOC
 
       if ((_print_next))
       then
-        printf                                                    \
-          "[next ❯](http://localhost:%s/%s?--page=%s&${_params})" \
-          "${NB_SERVER_PORT}"                                     \
-          "${_link_selector}"                                     \
-          "$((_current_page + 1))"
+        printf                                                          \
+          "<a href=\"http://localhost:%s/%s?--page=%s&%s\">next ❯</a>"  \
+          "${NB_SERVER_PORT}"                                           \
+          "${_link_selector}"                                           \
+          "$((_current_page + 1))"                                      \
+          "${_params:-}"
       fi
 
       if ((_print_prev)) || ((_print_next))
       then
-        printf "\\n"
+        printf "</p>\\n"
       fi
     } | {
-      _pandoc --render-to-html
+      _pandoc --from=html+raw_html --render-to-html
     }
   }
 
@@ -14147,7 +14166,8 @@ HEREDOC
       _url_params+="?--page=${_current_page}&--per-page=${_per_page}&--terminal"
     fi
 
-    local _header_content="[<span class=\"dim\">❯</span>nb](http://localhost:${NB_SERVER_PORT}/${_url_params:-})"
+    local _header_content="\
+<a href=\"http://localhost:${NB_SERVER_PORT}/${_url_params:-}\"><span class=\"dim\">❯</span>nb</a>"
     _header_content+=" <span class=\"dim\">·</span>"
 
     if [[ -z "${_selector:-}" ]]
@@ -14172,7 +14192,7 @@ HEREDOC
       _notebooks select "${_notebook_path}"
 
       _header_content+="\
- [${_notebook_name}](http://localhost:${NB_SERVER_PORT}/${_notebook_name}:${_url_params:-})"
+ <a href=\"http://localhost:${NB_SERVER_PORT}/${_notebook_name}:${_url_params:-}\">${_notebook_name}</a>"
 
       local _relative_folder_path=
       local _selector_relative_folder_path=
@@ -14236,7 +14256,7 @@ HEREDOC
           _url_path+="${_selector_folder_ids[i]:-}/"
 
           _header_content+="\
- [${_selector_folders[i]}](http://localhost:${NB_SERVER_PORT}/${_url_path}${_url_params:-})"
+ <a href=\"http://localhost:${NB_SERVER_PORT}/${_url_path}${_url_params:-}\">${_selector_folders[i]}</a>"
           _header_content+=" <span class=\"dim\">/</span>"
         done
       fi
