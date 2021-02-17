@@ -8201,14 +8201,12 @@ hr {
   background-color: #4d4d4d;
 }
 
-tbody {
-  border-bottom:  1px solid #4d4d4d;
-  border-top:     1px solid #4d4d4d;
-}
-
-th {
-  border-top: 1px solid #4d4d4d;
-}
+table       { border-color: transparent;          }
+td > table  { margin: 0;                          }
+col         { width: auto !important;             }
+tbody       { border-bottom:  1px solid #4d4d4d;  }
+th          { border-top: 1px solid #4d4d4d;      }
+td          { padding: 0 0 1rem 0;                }
 
 .list-item  {
   display:        inline-block;
