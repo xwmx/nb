@@ -8532,11 +8532,12 @@ _resolve_links() {
 #   0 (success, true)  If a terminal browser is available.
 #   1 (error,  false)  if not.
 _web_browser() {
-  local _web_browser_command=()
+  local _arguments=()
   local _check=0
   local _check_gui=0
   local _dump=0
   local _url=
+  local _web_browser_command=()
 
   local __arg=
   for   __arg in "${@:-}"
