@@ -8594,6 +8594,11 @@ _web_browser() {
 
   if ((_check))
   then
+    if ((_dump)) && [[ -n "${_web_browser_command[*]:-}" ]]
+    then
+      printf "%s\\n" "${_web_browser_command[*]:-}"
+    fi
+
     return 0
   fi
 
@@ -14382,6 +14387,13 @@ HEREDOC
           _test_line+=" x ${__name}"
         fi
 
+        local _max_columns="$((_COLUMNS - 1))"
+
+        if [[ "$(_web_browser --check --print)" =~ ^links|[^e]links ]]
+        then
+          _max_columns="$((_COLUMNS - 4))"
+        fi
+
         if [[ -z "${_test_line:-}" ]]
         then
           _test_line="${__name}"
@@ -14393,7 +14405,7 @@ HEREDOC
             "${__name}"                           \
             "${_url_params:-}"
         elif ((_terminal_browser)) &&
-             [[ "${#_test_line}" -gt "$((_COLUMNS - 4))" ]]
+             [[ "${#_test_line}" -gt "${_max_columns:-1}" ]]
         then
           printf "<br>\\n"
 
