@@ -166,6 +166,7 @@ Also supported for various enhancements:
 [`highlight`](http://www.andre-simon.de/doku/highlight/en/highlight.php),
 [`imgcat`](https://www.iterm2.com/documentation-images.html),
 [kitty's `icat` kitten](https://sw.kovidgoyal.net/kitty/kittens/icat.html),
+[Links](https://en.wikipedia.org/wiki/Links_(web_browser)),
 [Lynx](https://en.wikipedia.org/wiki/Lynx_(web_browser)),
 [Midnight Commander](https://en.wikipedia.org/wiki/Midnight_Commander),
 [`mpg123`](https://en.wikipedia.org/wiki/Mpg123),
@@ -1049,7 +1050,7 @@ option to render the note to HTML and open it in your terminal browser:
 
 ```bash
 nb show example.md --render
-# opens example.md as an HTML page in w3m or lynx
+# opens example.md as an HTML page in w3m, links, or lynx
 ```
 
 `nb show` also supports previewing other file types in the terminal,
@@ -1078,7 +1079,8 @@ tools include:
   - [Pandoc](https://pandoc.org/)
 - EPUB ebooks:
   - [Pandoc](https://pandoc.org/) with
-    [`w3m`](https://en.wikipedia.org/wiki/W3m) or
+    [`w3m`](https://en.wikipedia.org/wiki/W3m),
+    [`links`](https://en.wikipedia.org/wiki/Links_(web_browser)), or
     [`lynx`](https://en.wikipedia.org/wiki/Lynx_(web_browser))
 
 When using `nb show` with other file types or if the above tools are not
@@ -1477,7 +1479,8 @@ nb example:open 12
 
 [`nb peek`](#peek) (alias: `preview`) opens the bookmarked page
 in your terminal web browser, such as
-[w3m](https://en.wikipedia.org/wiki/W3m) or
+[w3m](https://en.wikipedia.org/wiki/W3m),
+[Links](https://en.wikipedia.org/wiki/Links_(web_browser)), or
 [Lynx](https://en.wikipedia.org/wiki/Lynx_(web_browser)):
 
 ```bash
@@ -1507,15 +1510,18 @@ environment variable, assigned in `~/.bashrc`, `~/.zshrc`, or similar:
 export BROWSER=lynx
 ```
 
-When `$BROWSER` is not set, `nb` looks for `w3m` and `lynx` and uses the
-first one it finds.
+When `$BROWSER` is not set, `nb` looks for
+[`w3m`](https://en.wikipedia.org/wiki/W3m),
+[`links`](https://en.wikipedia.org/wiki/Links_(web_browser)), and
+[`lynx`](https://en.wikipedia.org/wiki/Lynx_(web_browser))
+and uses the first one it finds.
 
 `$BROWSER` can also be used to easy specify the terminal browser for an
 individual command:
 
 ```bash
-> BROWSER=lynx nb 12 peek
-# opens the URL from bookmark 12 in lynx
+> BROWSER=links nb 12 peek
+# opens the URL from bookmark 12 in links
 
 > BROWSER=w3m nb 12 peek
 # opens the URL from bookmark 12 in w3m
@@ -1708,6 +1714,7 @@ pinned items, with each list item linked. `nb browse` is designed to make
 it easy to navigate using only the keyboard within the terminal.
 
 `nb browse` opens in [w3m](https://en.wikipedia.org/wiki/W3m) (recommended),
+[Links](https://en.wikipedia.org/wiki/Links_\(web_browser\)),
 [Lynx](https://en.wikipedia.org/wiki/Lynx_\(web_browser\)), or in the
 browser set in the `$BROWSER` environment variable.
 
@@ -3858,9 +3865,9 @@ Description:
   When readability-cli [2] is install, markup is cleaned up to focus on
   content.
 
-  `peek` opens the page in `w3m` [3] or `lynx` [4] when available.
-  To specify a preferred browser, set the `$BROWSER` environment variable
-  in your .bashrc, .zshrc, or equivalent, e.g., `export BROWSER="lynx"`.
+  `peek` opens the page in `w3m` [3], `links` [4], or `lynx` [5] when
+  available. To specify a preferred browser, set the `$BROWSER` environment
+  variable in your .bashrc, .zshrc, or equivalent, e.g.: export BROWSER="links"
 
   Bookmarks are identified by the `.bookmark.md` file extension. The
   bookmark URL is the first URL in the file within "<" and ">" characters:
@@ -3870,7 +3877,8 @@ Description:
     1. https://pandoc.org/
     2. https://gitlab.com/gardenappl/readability-cli
     3. https://en.wikipedia.org/wiki/W3m
-    4. https://en.wikipedia.org/wiki/Lynx_(web_browser)
+    4. https://en.wikipedia.org/wiki/Links_(web_browser)
+    5. https://en.wikipedia.org/wiki/Lynx_(web_browser)
 
 Examples:
   nb https://example.com
@@ -3921,13 +3929,14 @@ Description:
     # link to the item titled "Example Title" in the "demo" notebook
     [[demo:Example Title]]
 
-  `browse` supports `w3m` [1] (recommended) and `lynx` [2] and
-  depends on `ncat` [3] and `pandoc` [4]:
+  `browse` supports `w3m` [1] (recommended), `links` [2], and `lynx` [3]
+  and depends on `ncat` [4] and `pandoc` [5]:
 
     1. https://en.wikipedia.org/wiki/W3m
-    2. https://en.wikipedia.org/wiki/Lynx_(web_browser)
-    3. https://nmap.org/ncat/
-    4. https://pandoc.org/
+    2. https://en.wikipedia.org/wiki/Links_(web_browser)
+    3. https://en.wikipedia.org/wiki/Lynx_(web_browser)
+    4. https://nmap.org/ncat/
+    5. https://pandoc.org/
 
 Examples:
   nb browse
@@ -5035,19 +5044,21 @@ Description:
   To skip the pager and print to standard output, use the `-p` / `--print`
   option.
 
-  `-r` / `--render` automatically uses either `w3m` [2] or `lynx` [3].
-  To specify a preferred browser, set the `$BROWSER` environment variable
-  in your .bashrc, .zshrc, or equivalent, e.g., `export BROWSER="lynx"`.
+  `-r` / `--render` automatically uses either `w3m` [2], `links` [3],
+  or `lynx` [4]. To specify a preferred browser, set the `$BROWSER`
+  environment variable in your .bashrc, .zshrc, or equivalent, e.g.,
+  `export BROWSER="links"`.
 
-  If `bat` [4], `highlight` [5], or Pygments [6] is installed, notes are
+  If `bat` [5], `highlight` [6], or Pygments [7] is installed, notes are
   printed with syntax highlighting.
 
     1. https://pandoc.org/
     2. https://en.wikipedia.org/wiki/W3m
-    3. https://en.wikipedia.org/wiki/Lynx_(web_browser)
-    4. https://github.com/sharkdp/bat
-    5. http://www.andre-simon.de/doku/highlight/en/highlight.php
-    6. https://pygments.org/
+    3. https://en.wikipedia.org/wiki/Links_(web_browser)
+    4. https://en.wikipedia.org/wiki/Lynx_(web_browser)
+    5. https://github.com/sharkdp/bat
+    6. http://www.andre-simon.de/doku/highlight/en/highlight.php
+    7. https://pygments.org/
 
 Examples:
   nb show 1
