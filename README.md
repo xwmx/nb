@@ -1640,6 +1640,107 @@ Perform a full text search of bookmarks and archived page content:
 
 See [`bookmark help`](#bookmark-help) for more information.
 
+### #tagging
+
+Notes and bookmarks can be using the `--tags` option available on `add` and
+when saving bookmarks. Tags are converted into hashtags:
+
+```bash
+nb add --title "Example Title" "Example note content." --tags tag1,tag2
+```
+
+```markdown
+# Example Title
+
+#tag1 #tag2
+
+Example note content.
+```
+
+```bash
+nb https://example.com --tags tag1,tag2
+```
+
+```markdown
+# Example Title (example.com)
+
+<https://example.com>
+
+## Description
+
+Example description.
+
+## Tags
+
+#tag1 #tag2
+
+## Content
+
+Example Title
+=============
+
+This domain is for use in illustrative examples in documents. You may
+use this domain in literature without prior coordination or asking for
+permission.
+
+[More information\...](https://www.iana.org/domains/example)
+```
+
+Tagged items can be searched with with [`nb search` / `nb q`](#search):
+
+```bash
+# search for items in the current notebook tagged with "#tag1"
+nb search "#tag1"
+
+# search for items in any notebook that are tagged with both "#tag1" AND "#tag2"
+nb q "#tag1" "#tag2" --all
+
+# search for items in the current notebook tagged with either #tag1 OR #tag2
+nb q "#tag1|#tag2"
+
+# search for items in the current notebook tagged with either #tag1 OR #tag2, long option
+nb q "#tag1" --or "#tag2"
+```
+
+Tags can be browsed with [`nb browse`](#browse). Open `nb browse` to the list
+of all item sharing a tag with the `-q` / `--query` option:
+
+```bash
+> nb browse --query "#tag2"
+❯nb · example
+
+search: [#tag2               ]
+
+[pack:321] Example Title
+[pack:654] Sample Title
+[pack:789] Demo Title
+```
+
+Tags in notes, bookmarks, files in text-based formats, Word `.docx` documents,
+and [Open Document](https://en.wikipedia.org/wiki/OpenDocument) `.odt`
+files are rendered as internal links to the list of items in the
+notebook sharing that tag, making it easy to browse within a subject
+area with a well-structed [taxonomy](#notebooks-tags-and-taxonomy).
+
+```bash
+❯nb · example : 321
+
+Example Title
+
+#tag1 #tag2
+
+Example content.
+
+More example content:
+- one
+- two
+- three
+```
+
+For more information about searching tags, see
+[Search](#-search) and [`nb search`](#search). For more information
+about browsing, see [Browsing](#-browsing) and [`nb browse`](#browse).
+
 ### 🔗 Linking
 
 *Version 6.0.0-alpha*
