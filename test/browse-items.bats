@@ -6,14 +6,14 @@ export NB_SERVER_PORT=6789
 
 # img tags ####################################################################
 
-@test "'browse' strips img tags." {
+@test "'browse' strips <img> tags." {
   {
     "${_NB}" init
 
     "${_NB}" add                  \
       --title     "Example Title" \
       --content   "$(<<HEREDOC cat
-Example link one: ![Example Image One](/not-valid-1.png)
+Example image one: ![Example Image One](/not-valid-1.png)
 
 More example ![Example Image Two](/not-valid-2.png) content ![Example Image Three](/not-valid-3.png) here.
 HEREDOC
@@ -29,7 +29,7 @@ HEREDOC
   [[ "${output}"    =~  \<\!DOCTYPE\ html\>                             ]]
 
   [[    "${output}"    =~  \<h1\ class=\"header-crumbs\"\>              ]]
-  [[    "${output}"    =~  \<p\>Example\ link\ one:\ \</p\>             ]]
+  [[    "${output}"    =~  \<p\>Example\ image\ one:\ \</p\>            ]]
   [[    "${output}"    =~  \<p\>More\ example\ \ content\ \ here.\</p\> ]]
 
   [[ !  "${output}"    =~  \<img                                        ]]
