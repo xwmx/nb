@@ -4,6 +4,37 @@ load test_helper
 
 export NB_SERVER_PORT=6789
 
+# img tags ####################################################################
+
+@test "'browse' strips img tags." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add                  \
+      --title     "Example Title" \
+      --content   "$(<<HEREDOC cat
+Example link one: ![Example Image One](/not-valid-1.png)
+
+More example ![Example Image Two](/not-valid-2.png) content ![Example Image Three](/not-valid-3.png) here.
+HEREDOC
+)"
+  }
+
+  run "${_NB}" browse 1 --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    ==  0                                               ]]
+  [[ "${output}"    =~  \<\!DOCTYPE\ html\>                             ]]
+
+  [[    "${output}"    =~  \<h1\ class=\"header-crumbs\"\>              ]]
+  [[    "${output}"    =~  \<p\>Example\ link\ one:\ \</p\>             ]]
+  [[    "${output}"    =~  \<p\>More\ example\ \ content\ \ here.\</p\> ]]
+
+  [[ !  "${output}"    =~  \<img                                        ]]
+}
+
 # code ########################################################################
 
 @test "'browse' with .bash file serves file in a code block." {

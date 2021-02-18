@@ -8318,7 +8318,10 @@ HEREDOC
       "${_pandoc_arguments[@]:-}"                   \
       2>/dev/null
   } | {
-    sed -e '/<h1 class="title"/d' -e '/title-block-header/d'
+    sed                           \
+      -e '/<h1 class="title"/d'   \
+      -e '/title-block-header/d'  \
+      -e 's/<img[^>]*>//g'
   }
 
   rm -f "${_html_head_temp_path:?}"
