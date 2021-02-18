@@ -1700,7 +1700,7 @@ bookmarks, notebooks, folders, and other items using the terminal or
 GUI web brower.
 
 `nb browse` includes an embedded, terminal-first web application that
-renders <a href="#-linking">[[wiki-style links]]</a>
+renders <a href="#-linking">[[wiki-style links]]</a> and #tags
 as internal links, enabling you to browse your notes and notebooks in web
 browsers, including seamlessly browsing to and from the offsite links in
 bookmarks and notes.
@@ -3932,9 +3932,9 @@ Description:
   items using the terminal or GUI web brower.
 
   `browse` includes an embedded, terminal-first web application that
-  renders [[wiki-style links]] as internal links, enabling you to browse
-  your notes and notebooks in your terminal web browser, as well as
-  seamlessly browse to and from the offsite links in bookmarks and notes.
+  renders [[wiki-style links]] and #tags as internal links, enabling you
+  to browse your notes and notebooks in your terminal web browser, as well
+  as seamlessly browse to and from the offsite links in bookmarks and notes.
 
   To link to a note or bookmark from another, include the selector for the
   target item within double square brackets anywhere in the linking document:
