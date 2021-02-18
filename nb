@@ -13433,58 +13433,55 @@ Can't show archives. Export archive and expand to edit.\\n"
   # turn on case-insensitive matching
   shopt -s nocasematch
 
-  if ! _file_is_text "${_target_path}"    &&
+  if ! _file_is_text "${_target_path}"      &&
      ! {
-       ((_render))                        &&
+       ((_render))                          &&
        [[ "${_target_path:-}" =~ \.docx$|\.epub$|\.odt$ ]]
      }
   then
-    if [[ -d "${_target_path}"        ]]  &&
-       _command_exists "ncat"             &&
-       _command_exists "pandoc"           &&
-       _web_browser --check
+    if [[ -d "${_target_path}"          ]]
     then
-      cd "${_CURRENT_WORKING_DIR}"
+      if _command_exists "ncat"             &&
+         _command_exists "pandoc"           &&
+         _web_browser --check
+      then
+        cd "${_CURRENT_WORKING_DIR}"
 
-      _defer "_browse" "${_target_path}/"
-      return 0
-    elif [[ -d "${_target_path}"      ]]  &&
-       _command_exists "ranger"           &&
-       {
-         [[ -z "${_tool}"             ]]  ||
-         [[ "${_tool}" == "ranger"    ]]
-       }
-    then
-      ranger "${_target_path}"
-    elif [[ -d "${_target_path}"      ]]  &&
-         _command_exists "mc"             &&
-         {
-           [[ -z "${_tool}"           ]]  ||
-           [[ "${_tool}" == "mc"      ]]
-         }
-    then
-      mc "${_target_path}"
-    elif [[ -d "${_target_path}"      ]]  &&
-         _command_exists "vifm"           &&
-         {
-           [[ -z "${_tool}"           ]]  ||
-           [[ "${_tool}" == "vifm"    ]]
-         }
-    then
-      vifm "${_target_path}"
-    elif [[ -d "${_target_path}"      ]]  &&
-         _command_exists "exa"            &&
-         {
-           [[ -z "${_tool}"           ]]  ||
-           [[ "${_tool}" == "exa"     ]]
-         }
-    then
-      exa -lah --git "${_target_path}"
-    elif [[ -d "${_target_path}"      ]]
-    then
-      # gnu || bsd
-      ls -lah --color=always "${_target_path}" 2>/dev/null ||
-        ls -lah -G "${_target_path}"
+        _defer "_browse" "${_target_path}/"
+        return 0
+      elif _command_exists "ranger"         &&
+           {
+             [[ -z "${_tool}"           ]]  ||
+             [[ "${_tool}" == "ranger"  ]]
+           }
+      then
+        ranger "${_target_path}"
+      elif _command_exists "mc"             &&
+           {
+             [[ -z "${_tool}"           ]]  ||
+             [[ "${_tool}" == "mc"      ]]
+           }
+      then
+        mc "${_target_path}"
+      elif _command_exists "vifm"           &&
+           {
+             [[ -z "${_tool}"           ]]  ||
+             [[ "${_tool}" == "vifm"    ]]
+           }
+      then
+        vifm "${_target_path}"
+      elif _command_exists "exa"            &&
+           {
+             [[ -z "${_tool}"           ]]  ||
+             [[ "${_tool}" == "exa"     ]]
+           }
+      then
+        exa -lah --git "${_target_path}"
+      else
+        # gnu || bsd
+        ls -lah --color=always "${_target_path}" 2>/dev/null ||
+          ls -lah -G "${_target_path}"
+      fi
     elif _command_exists "imgcat"                 &&
          _file_is_image "${_target_path}"         &&
          [[ ! "${_target_path}" =~ afphoto$   ]]  &&
