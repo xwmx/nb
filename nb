@@ -9706,10 +9706,11 @@ Check the Wayback Machine for an archived version instead? $(_color_brackets "y/
         cat "${_temp_file}"                               \
           | grep -o -E -i '.*<title[^>]*>[^<]*</title>'   \
           | head -n 1                                     \
-          | sed 's/.*<title[^>]*>//'                      \
-          | sed 's/.*<TITLE[^>]*>//'                      \
-          | sed 's/<\/title>.*//'                         \
-          | sed 's/<\/TITLE>.*//'
+          | sed                                           \
+            -e 's/.*<title[^>]*>//'                       \
+            -e 's/.*<TITLE[^>]*>//'                       \
+            -e 's/<\/title>.*//'                          \
+            -e 's/<\/TITLE>.*//'
       )" || : # TODO: pipeline returns error status but still returns title
     fi
 
@@ -13722,11 +13723,9 @@ Can't show archives. Export archive and expand to edit.\\n"
         # NOTE: Temp character is U+241F (unit separator)
         # https://graphemica.com/%E2%90%9F
         cat "${_target_path}"                                       \
-          | sed 's/^- /-␟/g'                                        \
-          | sed 's/^\* /\*␟/g'                                      \
+          | sed -e 's/^- /-␟/g' -e 's/^\* /\*␟/g'                   \
           | fold -s -w "${_COLUMNS}"                                \
-          | sed 's/^-␟/- /g'                                        \
-          | sed 's/^\*␟/\* /g'                                      \
+          | sed -e 's/^-␟/- /g' -e 's/^\*␟/\* /g'                   \
           | _highlight_syntax_if_available "${_target_extension:-}" \
           | _pager
       fi
