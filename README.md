@@ -303,6 +303,7 @@ the latest version using the [`nb update`](#update) subcommand.
   <a href="#viewing-notes">Viewing</a> •
   <a href="#deleting-notes">Deleting</a> •
   <a href="#-bookmarks">Bookmarks</a> •
+  <a href="#-tagging">Tagging</a> •
   <a href="#-linking">Linking</a> •
   <a href="#-browsing">Browsing</a> •
   <a href="#-folders">Folders</a> •
@@ -1640,10 +1641,10 @@ Perform a full text search of bookmarks and archived page content:
 
 See [`bookmark help`](#bookmark-help) for more information.
 
-### #tagging
+### 🏷 Tagging
 
-Notes and bookmarks can be using the `--tags` option available on `add` and
-when saving bookmarks. Tags are converted into hashtags:
+Notes and bookmarks can be using the `--tags` option available on `add`,
+`nb <url>`, and `nb bookmark`. Tags are converted into hashtags:
 
 ```bash
 nb add --title "Example Title" "Example note content." --tags tag1,tag2
