@@ -4640,7 +4640,6 @@ _list() {
         shopt -u nocasematch
       fi
 
-
       local _pinned=0
 
       if ((_with_pinned))
@@ -14348,7 +14347,6 @@ HEREDOC
 
       shift
     done
-
 
     local _url_params=
 
