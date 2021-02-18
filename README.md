@@ -1045,6 +1045,22 @@ go to* "Settings" -> "Advanced" -> "Scroll wheel sends arrow keys when in
 alternate screen mode" *and change it to* "Yes".
 *[More info](https://stackoverflow.com/a/37610820)*
 
+Use the `-p` / `--print` option to print to standard output with syntax
+highlighting:
+
+```bash
+> nb show 123 --print
+# Example Title
+
+Example content:
+
+- one
+- two
+- three
+```
+
+Use `nb show --print --no-color` to print without syntax highlighting.
+
 When [Pandoc](https://pandoc.org/) is available, use the `-r` / `--render`
 option to render the note to HTML and open it in your terminal browser:
 
