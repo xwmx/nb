@@ -13463,98 +13463,100 @@ Can't show archives. Export archive and expand to edit.\\n"
         exa -lah --git "${_target_path}"
       else
         # gnu || bsd
-        ls -lah --color=always "${_target_path}" 2>/dev/null ||
+        ls -lah --color=always "${_target_path}" 2>/dev/null  ||
           ls -lah -G "${_target_path}"
       fi
-    elif _command_exists "imgcat"                       &&
-         _file_is_image "${_target_path}"               &&
-         [[ !   "${_target_path}"   =~ afphoto$     ]]  &&
-         [[ !   "${_target_path}"   =~ svg$         ]]  &&
-         [[ -n  "${TERM_PROGRAM:-}"                 ]]  &&
-         [[     "${TERM_PROGRAM}"   == "iTerm.app"  ]]  &&
-         [[     "${_tool:-imgcat}"  == "imgcat"     ]]
+    elif _command_exists "imgcat"                     &&
+         _file_is_image "${_target_path}"             &&
+         [[ ! "${_target_path}"   =~ \.afphoto$   ]]  &&
+         [[ ! "${_target_path}"   =~ \.svg$       ]]  &&
+         [[   "${TERM_PROGRAM:-}" == "iTerm.app"  ]]  &&
+         [[   "${_tool:-imgcat}"  == "imgcat"     ]]
     then
-      imgcat "${_target_path}" \
-        | if _command_exists "less"   &&  ! ((_print_output))
-          then
-            less -r --prompt="$(_less_prompt)"
-          else
-            cat
-          fi
-    elif _command_exists "magick"                   &&
-         _file_is_image "${_target_path}"           &&
-         [[ ! "${_target_path}" =~ afphoto$     ]]  &&
+      imgcat "${_target_path}"  | {
+        if _command_exists "less"   &&  ! ((_print_output))
+        then
+          less -r --prompt="$(_less_prompt)"
+        else
+          cat
+        fi
+      }
+    elif _command_exists "magick"                     &&
+         _file_is_image "${_target_path}"             &&
+         [[ ! "${_target_path}"   =~ afphoto$     ]]  &&
          {
            # Detect sixel support. Via: https://git.io/JfCel
            IFS=";" read -ra __reply -s -t 1 -d "c" -p $'\e[c' >&2
 
-           [[ "${__reply[*]}"       =~ 4        ]]  ||
-           [[ "$TERM"               == yaft*    ]]
+           [[ "${__reply[*]}"     =~ 4            ]]  ||
+           [[ "$TERM"             == yaft*        ]]
          } && {
-           [[  "${_tool:-magick}"   == "magick" ]]
+           [[ "${_tool:-magick}"  == "magick"     ]]
          }
       then
-      magick "${_target_path}" sixel:- \
-        | if _command_exists "less"   &&  ! ((_print_output))
-          then
-            less -r --prompt="$(_less_prompt)"
-          else
-            cat
-          fi
-    elif [[ -n  "${KITTY_WINDOW_ID:-}"          ]]  &&
-         _file_is_image "${_target_path}"           &&
-         [[     "${_tool:-icat}"   == "icat"    ]]
+      magick "${_target_path}" sixel:-  | {
+        if _command_exists "less" &&    ! ((_print_output))
+        then
+          less -r --prompt="$(_less_prompt)"
+        else
+          cat
+        fi
+      }
+    elif [[ -n  "${KITTY_WINDOW_ID:-}"            ]]  &&
+         _file_is_image "${_target_path}"             &&
+         [[     "${_tool:-icat}"  == "icat"       ]]
     then
-      kitty +kitten icat "${_target_path}"  \
-        | if _command_exists "less" && ! ((_print_output))
-          then
-            less -r --prompt="$(_less_prompt)"
-          else
-            cat
-          fi
-    elif _command_exists "mplayer"                  &&
-         _file_is_audio "${_target_path}"           &&
-         [[ "${_tool:-mplayer}" == "mplayer"    ]]
+      kitty +kitten icat "${_target_path}"  | {
+        if _command_exists "less" &&  ! ((_print_output))
+        then
+          less -r --prompt="$(_less_prompt)"
+        else
+          cat
+        fi
+      }
+    elif _command_exists "mplayer"                    &&
+         _file_is_audio "${_target_path}"             &&
+         [[ "${_tool:-mplayer}"   == "mplayer"    ]]
     then
       printf "Playing audio. Press %s to quit.\\n" "$(_color_primary "Ctrl-C")"
       mplayer "${_target_path}"
-    elif _command_exists "afplay"                   &&
-         _file_is_audio "${_target_path}"           &&
-         [[ "${_tool:-afplay}" == "afplay"      ]]
+    elif _command_exists "afplay"                     &&
+         _file_is_audio "${_target_path}"             &&
+         [[ "${_tool:-afplay}"    == "afplay"     ]]
     then
       printf "Playing audio. Press %s to quit.\\n" "$(_color_primary "Ctrl-C")"
       afplay "${_target_path}"
-    elif _command_exists "mpg123"                   &&
-         _file_is_audio "${_target_path}"           &&
-         [[ "${_tool:-afplay}" == "afplay"      ]]  &&
-         [[ "${_target_path}" =~ mp1$|mp2$|mp3$ ]]  &&
-         [[ "${_tool:-mpg123}" == "mpg123"      ]]
+    elif _command_exists "mpg123"                     &&
+         _file_is_audio "${_target_path}"             &&
+         [[ "${_tool:-afplay}"    == "afplay"     ]]  &&
+         [[ "${_target_path}"     =~ mp[1|2|3]$   ]]  &&
+         [[ "${_tool:-mpg123}"    == "mpg123"     ]]
     then
       printf "Playing audio. Press %s to quit.\\n" "$(_color_primary "Ctrl-C")"
       mpg123 "${_target_path}"
-    elif _command_exists "ffplay"                   &&
-         _file_is_audio "${_target_path}"           &&
-         [[ "${_tool:-ffplay}" == "ffplay"      ]]
+    elif _command_exists "ffplay"                     &&
+         _file_is_audio "${_target_path}"             &&
+         [[ "${_tool:-ffplay}"    == "ffplay"     ]]
     then
       printf "Playing audio. Press %s to quit.\\n" "$(_color_primary "Ctrl-C")"
       ffplay -loglevel quiet "${_target_path}"
-    elif _command_exists "termpdf.py"     &&
-         [[ "${_target_path}" =~ pdf$ ]]  &&
-         [[ -n "${KITTY_WINDOW_ID:-}" ]]
+    elif _command_exists "termpdf.py"                 &&
+         [[     "${_target_path}" =~ pdf$         ]]  &&
+         [[ -n  "${KITTY_WINDOW_ID:-}"            ]]
     then
       termpdf.py "${_target_path}"
-    elif _command_exists "pdftotext"      &&
-         [[ "${_target_path}" =~ pdf$ ]]
+    elif _command_exists "pdftotext"                  &&
+         [[     "${_target_path}" =~ pdf$         ]]
     then
-      pdftotext "${_target_path}" -   \
-        | tr -d '\014'                \
-        | if ! ((_print_output))
-          then
-            _pager
-          else
-            cat
-          fi
-    elif [[ "${_target_path}" =~ docx$ ]] &&
+      pdftotext "${_target_path}" - | tr -d '\014'  | {
+        if ! ((_print_output))
+        then
+          _pager
+        else
+          cat
+        fi
+      }
+    elif [[ "${_target_path}" =~ docx$  ]]  &&
          _command_exists "pandoc"
     then
       pandoc --from docx --to markdown "${_target_path}"        \
@@ -13566,8 +13568,8 @@ Can't show archives. Export archive and expand to edit.\\n"
           else
             cat
           fi
-    elif [[ "${_target_path}" =~ epub$ ]] &&
-         _command_exists "pandoc"         &&
+    elif [[ "${_target_path}" =~ epub$  ]]  &&
+         _command_exists "pandoc"           &&
          _web_browser --check
     then
       pandoc        \
