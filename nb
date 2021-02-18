@@ -8458,22 +8458,12 @@ _resolve_links() {
       then
         _links+=("[[${_selector}]]")
       else
-        local _title=
-        _title="$(_show "${_selector}" --title 2>/dev/null || :)"
-
-        local _label="${_title:-}"
-
-        if [[ -z "${_label:-}" ]]
-        then
-          _label="${_selector:-}"
-        fi
-
         case "${_file_path:-}" in
           *\.html)
-            _links+=("<a href=\"file://${_link_path:-}\">[[${_label:-}]]</a>")
+            _links+=("<a href=\"file://${_link_path:-}\">[[${_selector:-}]]</a>")
             ;;
           *\.org)
-            _links+=("[[file://${_link_path:-}][[[${_label:-}]]]]")
+            _links+=("[[file://${_link_path:-}][[[${_selector:-}]]]]")
             ;;
           *)
             _links+=("[[${_selector:-}]]")
