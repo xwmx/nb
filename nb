@@ -8339,10 +8339,11 @@ HEREDOC
 #   local filesystem. With --browse, links are created with htt://
 #   URLs for the internal web server.
 _resolve_links() {
+  local _file_path=
   local _for_browsing=0
   local _links=()
   local _matches=()
-  local _file_path=
+  local _notebook_name=
 
   local __arg=
   for   __arg in "${@:-}"
@@ -8408,10 +8409,9 @@ _resolve_links() {
     then
       if [[ -n "${_selector:-}" ]]
       then
-        local _notebook_name=
         local _query_selector=
 
-        if [[ "${_selector:-}" =~ : ]]
+        if [[ "${_selector:-}" =~ : ]] && [[ ! "${_selector:-}" =~ :// ]]
         then
           _notebook_name="${_selector%%:*}"
           _query_selector="${_selector}"
@@ -8508,7 +8508,43 @@ _resolve_links() {
     fi
   done
 
-  sed "${_sed_arguments[@]:-}" "${_file_path}"
+  {
+    sed "${_sed_arguments[@]:-}" "${_file_path}"
+  } | {
+    if ! ((_for_browsing))
+    then
+      cat
+
+      return 0
+    else
+      _resolve_links_pattern() {
+        local _capture_group="${1:-1}"
+        local _pattern=
+        local _replacement_url="http:\/\/localhost:${NB_SERVER_PORT}\/"
+        _replacement_url+="${_notebook_name:-}:?--query=%23\\${_capture_group}"
+
+        case "${_file_path:-}" in
+          *\.html)
+            _pattern="<a\ href=\"${_replacement_url:-}\">\#\\${_capture_group}<\/a>"
+            ;;
+          *\.org)
+            _pattern="[[${_replacement_url:-}][\#\\${_capture_group}]]"
+            ;;
+          *)
+            _pattern="\#\\${_capture_group}"
+            ;;
+        esac
+
+        printf "%s\\n" "${_pattern}"
+      }
+
+      sed -E \
+        -e "s/^\#([A-Za-z0-9]+)$/$(_resolve_links_pattern "1")/g"               \
+        -e "s/([^[])\#([A-Za-z0-9]+)$/\1$(_resolve_links_pattern "2")/g"        \
+        -e "s/^\#([A-Za-z0-9]+)([^]])/$(_resolve_links_pattern "1")\2/g"        \
+        -e "s/([^[])\#([A-Za-z0-9]+)([^]])/\1$(_resolve_links_pattern "2")\3/g"
+    fi
+  }
 }
 
 # _web_browser()

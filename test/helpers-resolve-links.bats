@@ -52,13 +52,16 @@ load test_helper
 
 # .html #######################################################################
 
-@test "'_resolve_links --browse' resolves [[wiki-style links]] in .html files to .html links to local web server URLs." {
+@test "'_resolve_links --browse' resolves [[wiki-style links]] and tags in .html files to .html links to local web server URLs." {
   {
     "${_NB}" init
 
     declare _content=
     _content+="Selector link one: [[home:2/1]] • "
     _content+="Selector link two: [[Root Title One]] • "
+    _content+="Tag one: #tag1 • "
+    _content+="Tag two: #tag2 • "
+    _content+="${_NEWLINE}${_NEWLINE}#tag3${_NEWLINE}${_NEWLINE}"
 
     "${_NB}" add  "Sample Folder/Sample Nested File One.md"   \
       --title     "Sample Nested Title One"                   \
@@ -102,15 +105,27 @@ load test_helper
 
   printf "%s\\n" "${output}" | grep -q \
     "Selector link two: <a href=\"http://localhost:6789/home:3\">\[\[Root Title One\]\]</a> •"
+
+  printf "%s\\n" "${output}" | grep -q \
+    "Tag one: <a href=\"http://localhost:6789/home:?--query=%23tag1\">#tag1</a> •"
+
+  printf "%s\\n" "${output}" | grep -q \
+    "Tag two: <a href=\"http://localhost:6789/home:?--query=%23tag2\">#tag2</a> •"
+
+  printf "%s\\n" "${output}" | grep -q \
+    "<p><a href=\"http://localhost:6789/home:?--query=%23tag3\">#tag3</a></p>"
 }
 
-@test "'_resolve_links' resolves [[wiki-style links]] in .html files to .html links to local file URLs." {
+@test "'_resolve_links' resolves [[wiki-style links]] in .html files to .html links to local file URLs without linking tags." {
   {
     "${_NB}" init
 
     declare _content=
     _content+="Selector link one: [[home:2/1]] • "
     _content+="Selector link two: [[Root Title One]] • "
+    _content+="Tag one: #tag1 • "
+    _content+="Tag two: #tag2 • "
+    _content+="${_NEWLINE}${_NEWLINE}#tag3${_NEWLINE}${_NEWLINE}"
 
     "${_NB}" add  "Sample Folder/Sample Nested File One.md"   \
       --title     "Sample Nested Title One"                   \
@@ -153,20 +168,33 @@ load test_helper
 
   printf "%s\\n" "${output}" | grep -q \
     "Selector link two: <a href=\"file://${NB_DIR}/home/Root File One.md\">\[\[Root Title One\]\]</a> •"
+
+  printf "%s\\n" "${output}" | grep -q \
+    "Tag one: #tag1 •"
+
+  printf "%s\\n" "${output}" | grep -q \
+    "Tag two: #tag2 •"
+
+  printf "%s\\n" "${output}" | grep -q \
+    "<p>#tag3</p>"
 }
 
 # .org ########################################################################
 
-@test "'_resolve_links --browse' resolves [[wiki-style links]] in .org files to .org links to local web server URLs." {
+@test "'_resolve_links --browse' resolves [[wiki-style links]] and #tags in .org files to .org links to local web server URLs." {
   {
     "${_NB}" init
 
     declare _content=
     _content+="Selector link one: [[home:2/1]] • "
     _content+="Selector link two: [[Root Title One]] • "
+    _content+="Tag one: #tag1 • "
+    _content+="Tag two: #tag2 • "
     _content+="Org mode link: [[http://example.com]] • "
     _content+="Org mode link with description: [[http://example.com][Example Description]] • "
     _content+="Internal Org mode link: [[#sample]] • "
+
+    _content+="${_NEWLINE}${_NEWLINE}#tag3${_NEWLINE}${_NEWLINE}"
 
     "${_NB}" add  "Sample Folder/Sample Nested File One.org"  \
       --title     "Example Org Mode Title"                    \
@@ -198,6 +226,12 @@ load test_helper
     "Selector link two: \[\[http://localhost:6789/home:3\]\[\[\[Root Title One\]\]\]\] •"
 
   printf "%s\\n" "${output}" | grep -q \
+    "Tag one: \[\[http://localhost:6789/home:?--query=%23tag1\]\[#tag1\]\] •"
+
+  printf "%s\\n" "${output}" | grep -q \
+    "Tag two: \[\[http://localhost:6789/home:?--query=%23tag2\]\[#tag2\]\] •"
+
+  printf "%s\\n" "${output}" | grep -q \
     "Org mode link: \[\[http://example.com\]\] •"
 
   printf "%s\\n" "${output}" | grep -q \
@@ -205,6 +239,9 @@ load test_helper
 
   printf "%s\\n" "${output}" | grep -q \
     "Internal Org mode link: \[\[#sample\]\] •"
+
+  printf "%s\\n" "${output}" | grep -q \
+    "^\[\[http://localhost:6789/home:?--query=%23tag3\]\[#tag3\]\]$"
 }
 
 @test "'_resolve_links' resolves [[wiki-style links]] in .org files to .org links to local file URLs." {
@@ -214,9 +251,13 @@ load test_helper
     declare _content=
     _content+="Selector link one: [[home:2/1]] • "
     _content+="Selector link two: [[Root Title One]] • "
+    _content+="Tag one: #tag1 • "
+    _content+="Tag two: #tag2 • "
     _content+="Org mode link: [[http://example.com]] • "
     _content+="Org mode link with description: [[http://example.com][Example Description]] • "
     _content+="Internal Org mode link: [[#sample]] • "
+
+    _content+="${_NEWLINE}${_NEWLINE}#tag3${_NEWLINE}${_NEWLINE}"
 
     "${_NB}" add  "Sample Folder/Sample Nested File One.org"  \
       --title     "Example Org Mode Title"                    \
@@ -247,6 +288,12 @@ load test_helper
     "Selector link two: \[\[file://${NB_DIR}/home/Root File One.md\]\[\[\[Root Title One\]\]\]\] •"
 
   printf "%s\\n" "${output}" | grep -q \
+    "Tag one: #tag1 •"
+
+  printf "%s\\n" "${output}" | grep -q \
+    "Tag two: #tag2 •"
+
+  printf "%s\\n" "${output}" | grep -q \
     "Org mode link: \[\[http://example.com\]\] •"
 
   printf "%s\\n" "${output}" | grep -q \
@@ -254,4 +301,7 @@ load test_helper
 
   printf "%s\\n" "${output}" | grep -q \
     "Internal Org mode link: \[\[#sample\]\] •"
+
+  printf "%s\\n" "${output}" | grep -q \
+    "^#tag3$"
 }
