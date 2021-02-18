@@ -149,7 +149,7 @@ load test_helper
   [[ "${status}"  -eq 0                 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-    "Selector link one: <a href=\"file://${NB_DIR}/home/Example Folder/Example Nested File One.md\">\[\[Example Nested Title One\]\]</a> •"
+    "Selector link one: <a href=\"file://${NB_DIR}/home/Example Folder/Example Nested File One.md\">\[\[home:2/1\]\]</a> •"
 
   printf "%s\\n" "${output}" | grep -q \
     "Selector link two: <a href=\"file://${NB_DIR}/home/Root File One.md\">\[\[Root Title One\]\]</a> •"
@@ -241,7 +241,7 @@ load test_helper
   [[ "${status}"  -eq 0                 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-    "Selector link one: \[\[file://${NB_DIR}/home/Example Folder/Example Nested File One.md\]\[\[\[Example Nested Title One\]\]\]\] •"
+    "Selector link one: \[\[file://${NB_DIR}/home/Example Folder/Example Nested File One.md\]\[\[\[home:2/1\]\]\]\] •"
 
   printf "%s\\n" "${output}" | grep -q \
     "Selector link two: \[\[file://${NB_DIR}/home/Root File One.md\]\[\[\[Root Title One\]\]\]\] •"
