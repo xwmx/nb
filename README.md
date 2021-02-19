@@ -1935,7 +1935,7 @@ knowledge management modeled around a few key features:
 
 - Notes are taken liberally on index cards.
 - Each note is numbered for easy reference.
-- Index cards organized into boxes.
+- Index cards are organized into boxes.
 - Index cards can reference other index cards.
 - Cards can include tags and other metadata.
 
@@ -1943,15 +1943,15 @@ Since `nb` works directly on plain-text files organized in normal system
 directories in normal git repositories, `nb` is a very close digital analogue
 to physical zettelkasten note-taking.
 
-|    Zettelkasten   |                       `nb`                      |
-|:-----------------:|:-----------------------------------------------:|
-| index cards       | [notes](#-notes) and [bookmarks](#-bookmarks)   |
-| numbering         | ids and [selectors](#selectors)                 |
-| slipboxes         | [notebooks](#-notebooks)                        |
-| tags              | [#tags](#-tagging)                              |
-| metadata          | YAML front matter                               |
-| cross-references  |  <a href="#-linking">[[wiki-style linking]]</a> |
-| fast note-taking  | [`nb add` / `nb a`](#adding-notes)              |
+|    Zettelkasten   |                       `nb`                    |
+|:-----------------:|:---------------------------------------------:|
+| index cards       | [notes](#-notes) and [bookmarks](#-bookmarks) |
+| numbering         | ids and [selectors](#selectors)               |
+| slipboxes         | [notebooks](#-notebooks)                      |
+| tags              | [#tags](#-tagging)                            |
+| metadata          | YAML front matter                             |
+| cross-references  |  <a href="#-linking">[[wiki-style links]]</a> |
+| fast note-taking  | [`nb add` / `nb a`](#adding-notes)            |
 
 For more information about Zettelkasten, see
 [Wikipedia](https://en.wikipedia.org/wiki/Zettelkasten).
