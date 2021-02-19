@@ -8359,30 +8359,14 @@ _resolve_links() {
   #        [--page <page> --per-page <limit> --terminal]
   _resolve_links_tag_link_pattern() {
     local _capture_group="${1:-1}"
+    local _query_string="${2:-}"
+    local _replacement_url="http:\/\/localhost:${NB_SERVER_PORT}\/${_notebook_path##*/}:"
 
-    shift
-
-    local _page=
-    local _per_page=
-    local _terminal=0
-
-    while ((${#}))
-    do
-      case "${1:-}" in
-        --page)     _page="${2:?}"      && shift  ;;
-        --per*)     _per_page="${2:?}"  && shift  ;;
-        --terminal) _terminal=1                   ;;
-      esac
-
-      shift
-    done
-
-    local _replacement_url="http:\/\/localhost:${NB_SERVER_PORT}\/"
-    _replacement_url+="${_notebook_path##*/}:?--query=%23\\${_capture_group}"
-
-    if ((_terminal)) && [[ -n "${_page:-}" ]] && [[ -n "${_per_page:-}" ]]
+    if [[ -n "${_query_string:-}" ]]
     then
-      _replacement_url+="\&--page=${_page}\&--per-page=${_per_page}"
+      _replacement_url+="${_query_string}\&--query=%23\\${_capture_group}"
+    else
+      _replacement_url+="?--query=%23\\${_capture_group}"
     fi
 
     local _pattern=
@@ -8407,14 +8391,14 @@ _resolve_links() {
   local _links=()
   local _matches=()
   local _notebook_name=
-  local _pagination_arguments=()
+  local _pagination_parameters=()
 
   while ((${#}))
   do
     case "${1:-}" in
       --browse)       _for_browsing=1                                     ;;
-      --page|--per*)  _pagination_arguments+=("${1:-}" "${2:-}") && shift ;;
-      --terminal)     _pagination_arguments+=("${1:-}")                   ;;
+      --page|--per*)  _pagination_parameters+=("${1:-}=${2:-}") && shift  ;;
+      --terminal)     _pagination_parameters+=("${1:-}")                  ;;
       *)
         if [[   -z "${_file_path:-}"      ]]
         then
@@ -8433,6 +8417,13 @@ _resolve_links() {
   [[ ! -d "${_notebook_path:-}" ]] && return 1
 
   cd "${_file_path%/*}"
+
+  local _query_string=
+
+  if [[ -n "${_pagination_parameters[*]-}" ]]
+  then
+    _query_string="?$(_join "\&" "${_pagination_parameters[@]:-}")"
+  fi
 
   local _repo_path=
   _repo_path="$(git rev-parse --show-toplevel 2>/dev/null || :)"
@@ -8500,12 +8491,12 @@ _resolve_links() {
           case "${_file_path:-}" in
             *\.html)
               _links+=(
-"<a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}\">[[${_selector:-}]]</a>"
+"<a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_query_string:-}\">[[${_selector:-}]]</a>"
               )
               ;;
             *\.org)
               _links+=(
-"[[http://localhost:${NB_SERVER_PORT}/${_id_selector:-}][[[${_selector:-}]]]]"
+"[[http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_query_string:-}][[[${_selector:-}]]]]"
               )
               ;;
             *)
@@ -8575,7 +8566,7 @@ _resolve_links() {
     else
       local _pattern_2=
       _pattern_2="$(
-        _resolve_links_tag_link_pattern "2" "${_pagination_arguments[@]}"
+        _resolve_links_tag_link_pattern "2" "${_query_string:-}"
       )"
 
       if [[ "${_file_path:-}" =~ \.html ]]
@@ -8591,7 +8582,7 @@ _resolve_links() {
       else
         local _pattern_1=
         _pattern_1="$(
-          _resolve_links_tag_link_pattern "1" "${_pagination_arguments[@]}"
+          _resolve_links_tag_link_pattern "1" "${_query_string:-}"
         )"
 
         sed -E    \
