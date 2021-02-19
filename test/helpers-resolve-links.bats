@@ -59,8 +59,8 @@ load test_helper
     declare _content=
     _content+="Selector link one: [[home:2/1]] • "
     _content+="Selector link two: [[Root Title One]] • "
-    _content+="Tag one: #tag1 • "
-    _content+="Tag two: #tag2 • "
+    _content+="Tag one: #tag_1 • "
+    _content+="Tag two: #tag-2 • "
     _content+="${_NEWLINE}${_NEWLINE}#tag3${_NEWLINE}${_NEWLINE}"
 
     "${_NB}" add  "Sample Folder/Sample Nested File One.md"   \
@@ -107,10 +107,10 @@ load test_helper
     "Selector link two: <a href=\"http://localhost:6789/home:3\">\[\[Root Title One\]\]</a> •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Tag one: <a href=\"http://localhost:6789/home:?--query=%23tag1\">#tag1</a> •"
+    "Tag one: <a href=\"http://localhost:6789/home:?--query=%23tag_1\">#tag_1</a> •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Tag two: <a href=\"http://localhost:6789/home:?--query=%23tag2\">#tag2</a> •"
+    "Tag two: <a href=\"http://localhost:6789/home:?--query=%23tag-2\">#tag-2</a> •"
 
   printf "%s\\n" "${output}" | grep -q \
     "<p><a href=\"http://localhost:6789/home:?--query=%23tag3\">#tag3</a></p>"
@@ -123,8 +123,8 @@ load test_helper
     declare _content=
     _content+="Selector link one: [[home:2/1]] • "
     _content+="Selector link two: [[Root Title One]] • "
-    _content+="Tag one: #tag1 • "
-    _content+="Tag two: #tag2 • "
+    _content+="Tag one: #tag_1 • "
+    _content+="Tag two: #tag-2 • "
     _content+="${_NEWLINE}${_NEWLINE}#tag3${_NEWLINE}${_NEWLINE}"
 
     "${_NB}" add  "Sample Folder/Sample Nested File One.md"   \
@@ -170,10 +170,10 @@ load test_helper
     "Selector link two: <a href=\"file://${NB_DIR}/home/Root File One.md\">\[\[Root Title One\]\]</a> •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Tag one: #tag1 •"
+    "Tag one: #tag_1 •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Tag two: #tag2 •"
+    "Tag two: #tag-2 •"
 
   printf "%s\\n" "${output}" | grep -q \
     "<p>#tag3</p>"
@@ -188,8 +188,8 @@ load test_helper
     declare _content=
     _content+="Selector link one: [[home:2/1]] • "
     _content+="Selector link two: [[Root Title One]] • "
-    _content+="Tag one: #tag1 • "
-    _content+="Tag two: #tag2 • "
+    _content+="Tag one: #tag_1 • "
+    _content+="Tag two: #tag-2 • "
     _content+="Org mode link: [[http://example.com]] • "
     _content+="Org mode link with description: [[http://example.com][Example Description]] • "
     _content+="Internal Org mode link: [[#sample]] • "
@@ -226,10 +226,10 @@ load test_helper
     "Selector link two: \[\[http://localhost:6789/home:3\]\[\[\[Root Title One\]\]\]\] •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Tag one: \[\[http://localhost:6789/home:?--query=%23tag1\]\[#tag1\]\] •"
+    "Tag one: \[\[http://localhost:6789/home:?--query=%23tag_1\]\[#tag_1\]\] •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Tag two: \[\[http://localhost:6789/home:?--query=%23tag2\]\[#tag2\]\] •"
+    "Tag two: \[\[http://localhost:6789/home:?--query=%23tag-2\]\[#tag-2\]\] •"
 
   printf "%s\\n" "${output}" | grep -q \
     "Org mode link: \[\[http://example.com\]\] •"
@@ -251,8 +251,8 @@ load test_helper
     declare _content=
     _content+="Selector link one: [[home:2/1]] • "
     _content+="Selector link two: [[Root Title One]] • "
-    _content+="Tag one: #tag1 • "
-    _content+="Tag two: #tag2 • "
+    _content+="Tag one: #tag_1 • "
+    _content+="Tag two: #tag-2 • "
     _content+="Org mode link: [[http://example.com]] • "
     _content+="Org mode link with description: [[http://example.com][Example Description]] • "
     _content+="Internal Org mode link: [[#sample]] • "
@@ -288,10 +288,10 @@ load test_helper
     "Selector link two: \[\[file://${NB_DIR}/home/Root File One.md\]\[\[\[Root Title One\]\]\]\] •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Tag one: #tag1 •"
+    "Tag one: #tag_1 •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Tag two: #tag2 •"
+    "Tag two: #tag-2 •"
 
   printf "%s\\n" "${output}" | grep -q \
     "Org mode link: \[\[http://example.com\]\] •"
