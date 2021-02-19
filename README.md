@@ -1931,14 +1931,14 @@ Zettelkasten (German: "slipbox") is a method of note-taking and personal
 knowledge management modeled around a few key features:
 
 - Notes are taken liberally on index cards.
-- Each note is numbered for east reference.
+- Each note is numbered for easy reference.
 - Index cards organized into boxes.
-- Index cars reference other index cards.
+- Index cards can reference other index cards.
 - Cards can include tags and other metadata.
 
 Since `nb` works directly on plain-text files organized in normal system
 directories in normal git repositories, it is a very close digital analogue
-to physical zettelkasten note taking.
+to physical zettelkasten note taking. Perhaps even the closest possible .
 
 |    Zettelkasten   |                       `nb`                      |
 |:-----------------:|:-----------------------------------------------:|
@@ -1950,7 +1950,8 @@ to physical zettelkasten note taking.
 | cross-references  |  <a href="#-linking">[[wiki-style linking]]</a> |
 | fast note-taking  | [`nb add` / `nb a`](#adding-notes)              |
 
-For more information, see [Wikipedia](https://en.wikipedia.org/wiki/Zettelkasten).
+For more information about Zettelkasten, see
+[Wikipedia](https://en.wikipedia.org/wiki/Zettelkasten).
 
 ### 📂 Folders
 
