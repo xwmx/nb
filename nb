@@ -14797,7 +14797,7 @@ HEREDOC
         _browse_respond
         exit 0
         ;;
-      -q|--query|--search)
+      q|-q|--query|--search)
         _search_query="$(_option_get_value "${1:-}" "${2:-}")"
         shift
         ;;
