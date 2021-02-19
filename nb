@@ -8540,8 +8540,14 @@ _resolve_links() {
 
       if [[ "${_file_path:-}" =~ \.html ]]
       then
-        sed -E \
-          -e "s/([^[])\#([A-Za-z0-9_\-]+)([^]])/\1$(_resolve_links_pattern "2")\3/g"
+        if grep -q "<\/body>" "${_file_path:-}"
+        then
+          sed -E \
+            -e "/<body>/,/<\/body>/ s/([^[])\#([A-Za-z0-9_\-]+)/\1$(_resolve_links_pattern "2")/g"
+        else
+          sed -E \
+            -e "s/([^[])\#([A-Za-z0-9_\-]+)/\1$(_resolve_links_pattern "2")/g"
+        fi
       else
         sed -E                                                                        \
           -e "s/^\#([A-Za-z0-9_\-]+)$/$(_resolve_links_pattern "1")/g"                \
