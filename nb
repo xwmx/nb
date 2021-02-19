@@ -8420,7 +8420,7 @@ _resolve_links() {
 
   local _query_string=
 
-  if [[ -n "${_pagination_parameters[*]-}" ]]
+  if [[ -n "${_pagination_parameters[*]:-}" ]]
   then
     _query_string="?$(_join "\&" "${_pagination_parameters[@]:-}")"
   fi
