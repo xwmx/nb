@@ -19,10 +19,10 @@ and knowledge base application with:
 
 - plain-text data storage,
 - [encryption](#password-protected-encrypted-notes-and-bookmarks),
-- [filtering](#listing-notes), [pinning](#-pinning), and [search](#-search),
+- [filtering](#listing-notes), [pinning](#-pinning), [tagging][#-tagging], and [search](#-search),
 - [Git](https://git-scm.com/)-backed [versioning](#-revision-history) and [syncing](#-git-sync),
 - [Pandoc](https://pandoc.org/)-backed [conversion](#%EF%B8%8F-import--export),
-- <a href="#-linking">[[wiki-style linking]]</a> and terminal-first [browsing](#-browsing),
+- <a href="#-linking">[[wiki-style linking]]</a> with terminal-first [browsing](#-browsing),
 - global and local [notebooks](#-notebooks),
 - customizable [color themes](#-color-themes),
 - extensibility through [plugins](#-plugins),
@@ -1711,8 +1711,8 @@ nb q "#tag1" --or "#tag2"
 ```
 
 Linked tags can be browsed with [`nb browse`](#browse), providing
-another dimension of browsability in the terminal, complimenting
-<a href="#-linking">[[wiki-style linking]]</a>.
+another dimension of browsability in terminal and GUI web browers,
+complimenting <a href="#-linking">[[wiki-style linking]]</a>.
 
 Tags in notes, bookmarks, files in text-based formats, Word `.docx` documents,
 and [Open Document](https://en.wikipedia.org/wiki/OpenDocument) `.odt`
@@ -1773,7 +1773,7 @@ and [Open Document](https://en.wikipedia.org/wiki/OpenDocument) `.odt`
 files can reference other items using
 <a href="#-linking">[[wiki-style links]]</a>, making `nb` a powerful
 terminal-first platform for
-[Zettelkasten](https://en.wikipedia.org/wiki/Zettelkasten)
+[Zettelkasten](#-zettelkasten)
 and other link-based note-taking methods.
 
 To add a link from a note or bookmark to another in the same notebook,
@@ -1820,11 +1820,12 @@ For more information about identifying items, see [Selectors](#selectors).
 *Version 6.0.0-alpha*
 
 Use [`nb browse`](#browse) to browse, view, and search linked notes,
-bookmarks, notebooks, folders, and other items using the terminal or
+bookmarks, notebooks, folders, and other items using a terminal or
 GUI web brower.
 
 `nb browse` includes an embedded, terminal-first web application that
-renders <a href="#-linking">[[wiki-style links]]</a> and #tags
+renders <a href="#-linking">[[wiki-style links]]</a> and
+[#tags](#-tagging)
 as internal links, enabling you to browse your notes and notebooks in web
 browsers, including seamlessly browsing to and from the offsite links in
 bookmarks and notes.
@@ -1922,6 +1923,33 @@ nb br sample: -g
 ```
 
 For more information, see [`nb browse`](#browse).
+
+### 🗂 Zettelkasten
+
+Zettelkasten (German: slipbox) is a method of note-taking and personal
+knowledge management modeled around a few key features:
+
+- Notes are taken liberally on index cards.
+- Each note is numbered for east reference.
+- Index cards organized into boxes.
+- Index cars reference other index cards.
+- Cards can include tags and other metadata.
+
+Since `nb` works directly on plain-text files organized in normal system
+directories in normal git repositories, it is a very close digital analogue
+to physical zettelkasten note taking.
+
+|    Zettelkasten   |                       `nb`                      |
+|:-----------------:|:-----------------------------------------------:|
+| index cards       | [notes](#-notes) and [bookmarks](#-bookmarks)   |
+| Numbering         | ids and [selectors](#selectors)                 |
+| slipboxes         | [notebooks](#-notebooks)                        |
+| tags              | [#tags](#-tagging)                              |
+| Metadata          | YAML front matter                               |
+| Cross-references  |  <a href="#-linking">[[wiki-style linking]]</a> |
+| Fast note-taking  | [`nb add` / `nb a`](#adding-notes)              |
+
+For more information, see [Wikipedia](https://en.wikipedia.org/wiki/Zettelkasten).
 
 ### 📂 Folders
 
