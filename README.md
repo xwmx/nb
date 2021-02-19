@@ -1643,11 +1643,12 @@ See [`bookmark help`](#bookmark-help) for more information.
 
 ### 🏷 Tagging
 
-Notes and bookmarks can be tagged using the `--tags` option, available
-with [`nb add`](#add), [`nb <url>`](#nb-help), and
-[`nb bookmark`](#bookmark).
-
-Tags are converted into hashtags:
+`nb` recognizes hashtags defined anywhere within a text document.
+Notes and bookmarks can be tagged when created using the
+`--tags <tag1>,<tag2>...` option, available with
+[`nb add`](#add), [`nb <url>`](#nb-help), and
+[`nb bookmark`](#bookmark). `--tags` takes a comma-separated list of
+tags, converts them to hashtags, and adds them to the document:
 
 ```bash
 nb add --title "Example Title" "Example note content." --tags tag1,tag2
@@ -1690,35 +1691,28 @@ permission.
 [More information\...](https://www.iana.org/domains/example)
 ```
 
-Tagged items can be searched with with [`nb search` / `nb q`](#search):
+Tagged items can be searched with [`nb search` / `nb q`](#search):
 
 ```bash
-# search for items in the current notebook tagged with "#tag1"
-nb search "#tag1"
+# search for items in any notebook tagged with "#tag1"
+nb search "#tag1" --all
 
-# search for items in any notebook that are tagged with both "#tag1" AND "#tag2"
-nb q "#tag1" "#tag2" --all
+# search for items in the current notebook tagged with both "#tag1" AND "#tag2"
+nb q "#tag1" "#tag2"
 
-# search for items in the current notebook tagged with either #tag1 OR #tag2
+# search for items in the current notebook tagged with both "#tag1" AND "#tag2", long option
+nb q "#tag1" --and "#tag2"
+
+# search for items in the current notebook tagged with either "#tag1" OR "#tag2"
 nb q "#tag1|#tag2"
 
-# search for items in the current notebook tagged with either #tag1 OR #tag2, long option
+# search for items in the current notebook tagged with either "#tag1" OR "#tag2", long option
 nb q "#tag1" --or "#tag2"
 ```
 
-Linked tags can be browsed with [`nb browse`](#browse). Open `nb browse` to
-the list of all items sharing a tag using the `-q` / `--query` option:
-
-```bash
-> nb browse --query "#tag2"
-❯nb · example
-
-search: [#tag2               ]
-
-[pack:321] Example Title
-[pack:654] Sample Title
-[pack:789] Demo Title
-```
+Linked tags can be browsed with [`nb browse`](#browse), providing
+another dimension of terminal-first browsability complimenting
+<a href="#-linking">[[wiki-style linking]]</a>.
 
 Tags in notes, bookmarks, files in text-based formats, Word `.docx` documents,
 and [Open Document](https://en.wikipedia.org/wiki/OpenDocument) `.odt`
@@ -1738,6 +1732,30 @@ More example content:
 - one
 - two
 - three
+```
+
+To open `nb browse` to the list of all items sharing a tag using the
+`-q` / `--query` option:
+
+```bash
+> nb browse --query "#tag2"
+❯nb · example
+
+search: [#tag2               ]
+
+[example:321] Example Title
+[example:654] Sample Title
+[example:789] Demo Title
+
+# shortcut alias and short option
+> nb br -q "#tag2"
+❯nb · example
+
+search: [#tag2               ]
+
+[example:321] Example Title
+[example:654] Sample Title
+[example:789] Demo Title
 ```
 
 For more information about searching tags, see
