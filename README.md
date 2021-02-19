@@ -306,6 +306,7 @@ the latest version using the [`nb update`](#update) subcommand.
   <a href="#-tagging">Tagging</a> •
   <a href="#-linking">Linking</a> •
   <a href="#-browsing">Browsing</a> •
+  <a href="#-zettelkasten">Zettelkasten</a> •
   <a href="#-folders">Folders</a> •
   <a href="#-pinning">Pinning</a> •
   <a href="#-search">Search</a> •
@@ -1926,7 +1927,7 @@ For more information, see [`nb browse`](#browse).
 
 ### 🗂 Zettelkasten
 
-Zettelkasten (German: slipbox) is a method of note-taking and personal
+Zettelkasten (German: "slipbox") is a method of note-taking and personal
 knowledge management modeled around a few key features:
 
 - Notes are taken liberally on index cards.
@@ -1942,12 +1943,12 @@ to physical zettelkasten note taking.
 |    Zettelkasten   |                       `nb`                      |
 |:-----------------:|:-----------------------------------------------:|
 | index cards       | [notes](#-notes) and [bookmarks](#-bookmarks)   |
-| Numbering         | ids and [selectors](#selectors)                 |
+| numbering         | ids and [selectors](#selectors)                 |
 | slipboxes         | [notebooks](#-notebooks)                        |
 | tags              | [#tags](#-tagging)                              |
-| Metadata          | YAML front matter                               |
-| Cross-references  |  <a href="#-linking">[[wiki-style linking]]</a> |
-| Fast note-taking  | [`nb add` / `nb a`](#adding-notes)              |
+| metadata          | YAML front matter                               |
+| cross-references  |  <a href="#-linking">[[wiki-style linking]]</a> |
+| fast note-taking  | [`nb add` / `nb a`](#adding-notes)              |
 
 For more information, see [Wikipedia](https://en.wikipedia.org/wiki/Zettelkasten).
 
