@@ -1651,7 +1651,7 @@ Notes and bookmarks can be tagged when created using the
 tags, converts them to hashtags, and adds them to the document:
 
 ```bash
-nb add --title "Example Title" "Example note content." --tags tag1,tag2
+> nb add --title "Example Title" "Example note content." --tags tag1,tag2
 ```
 
 ```markdown
@@ -1663,7 +1663,7 @@ Example note content.
 ```
 
 ```bash
-nb https://example.com --tags tag1,tag2
+> nb https://example.com --tags tag1,tag2
 ```
 
 ```markdown
@@ -1726,7 +1726,7 @@ Example Title
 
 #tag1 #tag2
 
-Example content.
+Example content with link to [[Sample Title]].
 
 More example content:
 - one
@@ -1864,11 +1864,18 @@ for the item, folder, or notebook:
 ```bash
 # open the item titled "Example Title" in the folder named "Sample" in the "example" notebook
 > nb browse example:Sample/Example\ Title
-❯nb · example : Sample /
+❯nb · example : Sample / 987
 
 Example Title
 
-Example content.
+#tag1 #tag2
+
+Example content with link to [[Demo Title]].
+
+More example content:
+- one
+- two
+- three
 ```
 
 The `nb browse` interface includes breadcrumbs that can be used to
