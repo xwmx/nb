@@ -1643,9 +1643,9 @@ See [`bookmark help`](#bookmark-help) for more information.
 
 ### 🏷 Tagging
 
-Notes and bookmarks can be tagged using the `--tags` option which is
-available with [`nb add`](#add), [`nb <url>`](#nb-help),
-and [`nb bookmark`](#bookmark).
+Notes and bookmarks can be tagged using the `--tags` option, available
+with [`nb add`](#add), [`nb <url>`](#nb-help), and
+[`nb bookmark`](#bookmark).
 
 Tags are converted into hashtags:
 
