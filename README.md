@@ -1649,7 +1649,10 @@ Notes and bookmarks can be tagged when they are created
 using the `--tags <tag1>,<tag2>...` option, which is available with
 [`nb add`](#add), [`nb <url>`](#nb-help), and
 [`nb bookmark`](#bookmark). `--tags` takes a comma-separated list of
-tags, converts them to hashtags, and adds them to the document:
+tags, converts them to hashtags, and adds them to the document.
+
+Tags added to notes with `nb add --tags` are placed between the title
+and body text:
 
 ```bash
 > nb add --title "Example Title" "Example note content." --tags tag1,tag2
@@ -1662,6 +1665,9 @@ tags, converts them to hashtags, and adds them to the document:
 
 Example note content.
 ```
+
+Tags added to bookmarks with `nb <url> --tags` and `nb bookmark <url> --tags`
+are placed in a "Tags" section:
 
 ```bash
 > nb https://example.com --tags tag1,tag2
@@ -1855,8 +1861,12 @@ search: [                    ]
 ```
 
 Items are displayed using the same format as `nb` and `nb ls`, including
-pinned items, with each list item linked. `nb browse` is designed to make
-it easy to navigate using only the keyboard within the terminal.
+pinned items, with each list item linked. Lists are automatically paginated
+to fit the height the terminal window.
+
+`nb browse` is designed to make it easy to navigate within terminal
+browsers using only keyboard commands, with mouse interactions also
+supported.
 
 `nb browse` opens in [w3m](https://en.wikipedia.org/wiki/W3m) (recommended),
 [Links](https://en.wikipedia.org/wiki/Links_\(web_browser\)),
