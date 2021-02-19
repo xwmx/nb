@@ -1938,7 +1938,7 @@ knowledge management modeled around a few key features:
 
 Since `nb` works directly on plain-text files organized in normal system
 directories in normal git repositories, it is a very close digital analogue
-to physical zettelkasten note taking. Perhaps even the closest possible .
+to physical zettelkasten note taking.
 
 |    Zettelkasten   |                       `nb`                      |
 |:-----------------:|:-----------------------------------------------:|
