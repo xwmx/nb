@@ -1711,7 +1711,7 @@ nb q "#tag1" --or "#tag2"
 ```
 
 Linked tags can be browsed with [`nb browse`](#browse), providing
-another dimension of terminal-first browsability complimenting
+another dimension of browsability in the terminal, complimenting
 <a href="#-linking">[[wiki-style linking]]</a>.
 
 Tags in notes, bookmarks, files in text-based formats, Word `.docx` documents,
@@ -1760,7 +1760,7 @@ search: [#tag2               ]
 [example:789] Demo Title
 ```
 
-For more information about searching tags, see
+For more information about full-text search, see
 [Search](#-search) and [`nb search`](#search). For more information
 about browsing, see [Browsing](#-browsing) and [`nb browse`](#browse).
 
