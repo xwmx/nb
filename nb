@@ -8488,16 +8488,15 @@ _resolve_links() {
         then
           _links+=("[[${_selector:-}]]")
         else
+          local _target_url="http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_query_string:-}"
+
           case "${_file_path:-}" in
             *\.html)
-              _links+=(
-"<a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_query_string:-}\">[[${_selector:-}]]</a>"
+              _links+=("<a href=\"${_target_url:-}\">[[${_selector:-}]]</a>"
               )
               ;;
             *\.org)
-              _links+=(
-"[[http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_query_string:-}][[[${_selector:-}]]]]"
-              )
+              _links+=("[[${_target_url:-}][[[${_selector:-}]]]]")
               ;;
             *)
               _links+=("[[${_selector:-}]]")
