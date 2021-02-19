@@ -1695,8 +1695,11 @@ permission.
 Tagged items can be searched with [`nb search` / `nb q`](#search):
 
 ```bash
-# search for items in any notebook tagged with "#tag1"
-nb search "#tag1" --all
+# search for and list items in any notebook tagged with "#tag1"
+nb search "#tag1" --all --list
+
+# search for and list items in any notebook tagged with "#tag1", shortcut and short options
+nb q "#tag1" -al
 
 # search for items in the current notebook tagged with both "#tag1" AND "#tag2"
 nb q "#tag1" "#tag2"
@@ -1937,8 +1940,8 @@ knowledge management modeled around a few key features:
 - Cards can include tags and other metadata.
 
 Since `nb` works directly on plain-text files organized in normal system
-directories in normal git repositories, it is a very close digital analogue
-to physical zettelkasten note taking.
+directories in normal git repositories, `nb` is a very close digital analogue
+to physical zettelkasten note-taking.
 
 |    Zettelkasten   |                       `nb`                      |
 |:-----------------:|:-----------------------------------------------:|
