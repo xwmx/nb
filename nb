@@ -8331,9 +8331,14 @@ HEREDOC
 # Usage:
 #   _resolve_links <path> <notebook-path> [--browse]
 #
+# Options:
+#   --browse  Render for browsing and link #tags.
+#
 # Description:
-#   Read the file at <path>, resolve all [[wiki-style links]], wrap each
+#   Read the file at <path>, resolve all [[wiki-style links]] and wrap each
 #   one in a link to the target item, then print the updated file contents.
+#   When the --browse option is specified, #tags are linked to the search
+#   page for each tag.
 #
 #   By default, links are created with file:// URLs to the item on the
 #   local filesystem. With --browse, links are created with htt://
