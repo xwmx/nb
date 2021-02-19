@@ -3412,7 +3412,7 @@ $(_color_primary "Usage:")
   ${_ME} bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
   ${_ME} bookmark search <query>
   ${_ME} browse [<notebook>:][<id> | <filename> | <title> | <path>]
-            [-g | --gui] [--notebooks] [--print] [--query <query>]
+            [-g | --gui] [--notebooks] [--print] [-q | --query <query>]
             [-s | --serve]
   ${_ME} completions (check | install [-d | --download] | uninstall)
   ${_ME} count [<notebook>:][<relative-path>]
@@ -13811,15 +13811,15 @@ _call_deferred_command --group 2
 describe "browse" <<HEREDOC
 Usage:
   ${_ME} browse [<notebook>:][<id> | <filename> | <title> | <path>]
-            [-g | --gui] [--notebooks] [--print] [--query <query>]
+            [-g | --gui] [--notebooks] [--print] [-q | --query <query>]
             [-s | --serve]
 
 Options:
-  -g, --gui         Open in the system's primary GUI web browser.
-  --notebooks       Browse notebooks.
-  --print           Print to standard output.
-  --query <query>   Open to the search results for <query>.
-  -s, --serve       Start the web application server.
+  -g, --gui             Open in the system's primary GUI web browser.
+  --notebooks           Browse notebooks.
+  --print               Print to standard output.
+  -q, --query <query>   Open to the search results for <query>.
+  -s, --serve           Start the web application server.
 
 Description:
   Browse and view linked notes, bookmarks, notebooks, folders, and other

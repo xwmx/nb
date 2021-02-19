@@ -1734,11 +1734,13 @@ More example content:
 - three
 ```
 
-To open `nb browse` to the list of all items sharing a tag using the
-`-q` / `--query` option:
+Use the `-q` / `--query` option to open `nb browse` to the list of all
+items in the current notebook or a specified notebook or folder
+that share a tag:
 
 ```bash
-> nb browse --query "#tag2"
+# open to a list of items tagged with "#tag2" in the "example" notebook
+> nb browse example: --query "#tag2"
 ❯nb · example
 
 search: [#tag2               ]
@@ -1748,7 +1750,7 @@ search: [#tag2               ]
 [example:789] Demo Title
 
 # shortcut alias and short option
-> nb br -q "#tag2"
+> nb br example: -q "#tag2"
 ❯nb · example
 
 search: [#tag2               ]
@@ -3610,7 +3612,7 @@ Usage:
   nb bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
   nb bookmark search <query>
   nb browse [<notebook>:][<id> | <filename> | <title> | <path>]
-            [-g | --gui] [--notebooks] [--print] [--query <query>]
+            [-g | --gui] [--notebooks] [--print] [-q | --query <query>]
             [-s | --serve]
   nb completions (check | install [-d | --download] | uninstall)
   nb count [<notebook>:][<relative-path>]
@@ -4039,15 +4041,15 @@ Shortcut Alias: `b`
 ```text
 Usage:
   nb browse [<notebook>:][<id> | <filename> | <title> | <path>]
-            [-g | --gui] [--notebooks] [--print] [--query <query>]
+            [-g | --gui] [--notebooks] [--print] [-q | --query <query>]
             [-s | --serve]
 
 Options:
-  -g, --gui         Open in the system's primary GUI web browser.
-  --notebooks       Browse notebooks.
-  --print           Print to standard output.
-  --query <query>   Open to the search results for <query>.
-  -s, --serve       Start the web application server.
+  -g, --gui             Open in the system's primary GUI web browser.
+  --notebooks           Browse notebooks.
+  --print               Print to standard output.
+  -q, --query <query>   Open to the search results for <query>.
+  -s, --serve           Start the web application server.
 
 Description:
   Browse and view linked notes, bookmarks, notebooks, folders, and other
