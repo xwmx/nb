@@ -8521,7 +8521,7 @@ _resolve_links() {
         local _capture_group="${1:-1}"
         local _pattern=
         local _replacement_url="http:\/\/localhost:${NB_SERVER_PORT}\/"
-        _replacement_url+="${_notebook_name:-}:?--query=%23\\${_capture_group}"
+        _replacement_url+="${_notebook_path##*/}:?--query=%23\\${_capture_group}"
 
         case "${_file_path:-}" in
           *\.html)
