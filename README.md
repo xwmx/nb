@@ -1643,8 +1643,11 @@ See [`bookmark help`](#bookmark-help) for more information.
 
 ### 🏷 Tagging
 
-Notes and bookmarks can be using the `--tags` option available on `add`,
-`nb <url>`, and `nb bookmark`. Tags are converted into hashtags:
+Notes and bookmarks can be tagged using the `--tags` option which is
+available with [`nb add`](#add), [`nb <url>`](#nb-help),
+and [`nb bookmark`](#bookmark).
+
+Tags are converted into hashtags:
 
 ```bash
 nb add --title "Example Title" "Example note content." --tags tag1,tag2
@@ -1703,8 +1706,8 @@ nb q "#tag1|#tag2"
 nb q "#tag1" --or "#tag2"
 ```
 
-Tags can be browsed with [`nb browse`](#browse). Open `nb browse` to the list
-of all item sharing a tag with the `-q` / `--query` option:
+Linked tags can be browsed with [`nb browse`](#browse). Open `nb browse` to
+the list of all items sharing a tag using the `-q` / `--query` option:
 
 ```bash
 > nb browse --query "#tag2"
@@ -1719,9 +1722,8 @@ search: [#tag2               ]
 
 Tags in notes, bookmarks, files in text-based formats, Word `.docx` documents,
 and [Open Document](https://en.wikipedia.org/wiki/OpenDocument) `.odt`
-files are rendered as internal links to the list of items in the
-notebook sharing that tag, making it easy to browse within a subject
-area with a well-structed [taxonomy](#notebooks-tags-and-taxonomy).
+files are rendered as links to the list of items in the notebook sharing
+that tag:
 
 ```bash
 ❯nb · example : 321
