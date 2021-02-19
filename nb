@@ -8349,24 +8349,26 @@ _resolve_links() {
   local _links=()
   local _matches=()
   local _notebook_name=
+  local _pagination_arguments=()
 
-  local __arg=
-  for   __arg in "${@:-}"
+  while ((${#}))
   do
-    case "${__arg:-}" in
-      --browse)
-        _for_browsing=1
-        ;;
+    case "${1:-}" in
+      --browse)       _for_browsing=1                                     ;;
+      --page|--per*)  _pagination_arguments+=("${1:-}" "${2:-}") && shift ;;
+      --terminal)     _pagination_arguments+=("${1:-}")                   ;;
       *)
         if [[   -z "${_file_path:-}"      ]]
         then
-          _file_path="${__arg:-}"
+          _file_path="${1:-}"
         elif [[ -z "${_notebook_path:-}"  ]]
         then
-          _notebook_path="${__arg:-}"
+          _notebook_path="${1:-}"
         fi
         ;;
     esac
+
+    shift
   done
 
   [[ ! -f "${_file_path:-}"     ]] && return 1
@@ -8522,11 +8524,37 @@ _resolve_links() {
 
       return 0
     else
+      # Usage: _resolve_links_pattern <capture-group-number>
+      #        [--page <page> --per-page <limit>] [--terminal]
       _resolve_links_pattern() {
         local _capture_group="${1:-1}"
-        local _pattern=
+
+        shift
+
+        local _page=
+        local _per_page=
+        local _terminal=0
+
+        while ((${#}))
+        do
+          case "${1:-}" in
+            --page)     _page="${2:?}"      && shift  ;;
+            --per*)     _per_page="${2:?}"  && shift  ;;
+            --terminal) _terminal=1                   ;;
+          esac
+
+          shift
+        done
+
         local _replacement_url="http:\/\/localhost:${NB_SERVER_PORT}\/"
         _replacement_url+="${_notebook_path##*/}:?--query=%23\\${_capture_group}"
+
+        if ((_terminal)) && [[ -n "${_page:-}" ]] && [[ -n "${_per_page:-}" ]]
+        then
+          _replacement_url+="\&--page=${_page}\&--per-page=${_per_page}"
+        fi
+
+        local _pattern=
 
         case "${_file_path:-}" in
           *\.html)
@@ -8543,22 +8571,28 @@ _resolve_links() {
         printf "%s\\n" "${_pattern}"
       }
 
+      local _pattern_2=
+      _pattern_2="$(_resolve_links_pattern "2" "${_pagination_arguments[@]}")"
+
       if [[ "${_file_path:-}" =~ \.html ]]
       then
         if grep -q "<\/body>" "${_file_path:-}"
         then
-          sed -E \
-            -e "/<body>/,/<\/body>/ s/([^[])\#([A-Za-z0-9_\-]+)/\1$(_resolve_links_pattern "2")/g"
+          sed -E  \
+            -e "/<body>/,/<\/body>/ s/([^[])\#([A-Za-z0-9_\-]+)/\1${_pattern_2}/g"
         else
-          sed -E \
-            -e "s/([^[])\#([A-Za-z0-9_\-]+)/\1$(_resolve_links_pattern "2")/g"
+          sed -E  \
+            -e "s/([^[])\#([A-Za-z0-9_\-]+)/\1${_pattern_2}/g"
         fi
       else
-        sed -E                                                                        \
-          -e "s/^\#([A-Za-z0-9_\-]+)$/$(_resolve_links_pattern "1")/g"                \
-          -e "s/([^[])\#([A-Za-z0-9_\-]+)$/\1$(_resolve_links_pattern "2")/g"         \
-          -e "s/^\#([A-Za-z0-9_\-]+)([^]])/$(_resolve_links_pattern "1")\2/g"         \
-          -e "s/([^[])\#([A-Za-z0-9_\-]+)([^]])/\1$(_resolve_links_pattern "2")\3/g"
+        local _pattern_1=
+        _pattern_1="$(_resolve_links_pattern "1" "${_pagination_arguments[@]}")"
+
+        sed -E    \
+          -e "s/^\#([A-Za-z0-9_\-]+)$/${_pattern_1}/g"                \
+          -e "s/([^[])\#([A-Za-z0-9_\-]+)$/\1${_pattern_2}/g"         \
+          -e "s/^\#([A-Za-z0-9_\-]+)([^]])/${_pattern_1}\2/g"         \
+          -e "s/([^[])\#([A-Za-z0-9_\-]+)([^]])/\1${_pattern_2}\3/g"
       fi
     fi
   }
@@ -14302,13 +14336,21 @@ HEREDOC
   #   Render an item to HTML with links resolved to internal web server.
   _browse_render_item() {
     local _header_arguments=()
+    local _pagination_arguments=()
     local _selector=
 
     while ((${#}))
     do
       case "${1:-}" in
-        --page|--per*)  _header_arguments+=("${1:?}" "${2:?}") && shift ;;
-        --terminal)     _header_arguments+=("--terminal")               ;;
+        --page|--per*)
+          _pagination_arguments+=("${1:?}" "${2:?}")
+          _header_arguments+=("${1:?}" "${2:?}")
+          shift
+          ;;
+        --terminal)
+          _pagination_arguments+=("--terminal")
+          _header_arguments+=("--terminal")
+          ;;
         *)
           _selector="${1:-}"
           _header_arguments+=("${_selector}")
@@ -14339,7 +14381,9 @@ HEREDOC
       _linked_temp_file_path="$(_temp file ".org" --touch)"
 
       # NOTE: avoid pandoc bug with brackets in org link descriptions
-      _resolve_links "${_source_path}" "${_notebook_path}"  \
+      _resolve_links "${_source_path}"                      \
+        "${_notebook_path}"                                 \
+        "${_pagination_arguments[@]:-}"                     \
         --browse                                            \
         | sed -E                                            \
           -e "s/\]\[\[\[/\]\[••/g"                          \
@@ -14360,7 +14404,10 @@ HEREDOC
         --include-before-body="${_header_temp_path}"        \
         --render-to-html >> "${_unlinked_temp_file_path}"
 
-      _resolve_links "${_unlinked_temp_file_path}" "${_notebook_path}" --browse
+      _resolve_links "${_unlinked_temp_file_path}"          \
+        "${_notebook_path}"                                 \
+        "${_pagination_arguments[@]:-}"                     \
+        --browse
     fi
 
     return 0
