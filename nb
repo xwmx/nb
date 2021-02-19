@@ -6654,7 +6654,7 @@ HEREDOC
           fi
           ;;
         *)
-          if [[ -z "${_selector}" ]]
+          if [[ -z "${_selector}"   ]]
           then
             _selector="${__arg}"
           fi
@@ -6664,7 +6664,7 @@ HEREDOC
       shift
     done
 
-    if [[ -z "${_selector:-}"      ]]
+    if [[ -z "${_selector:-}"       ]]
     then
       _exit_1 _help "notebooks"
     elif [[ "${_selector:-}" =~ ^/  ]]
@@ -6680,7 +6680,7 @@ HEREDOC
         _maybe_notebook_path="${_maybe_notebook_path%/*}"
       done
 
-      if [[ -n "${_maybe_notebook_path:-}" ]]
+      if [[ -n "${_maybe_notebook_path:-}"  ]]
       then
         if [[ -n "${_local_notebook_path:-}"                          ]] &&
            [[ "${_maybe_notebook_path}" == "${_local_notebook_path}"  ]]
@@ -6694,7 +6694,7 @@ HEREDOC
     then
       local _selector_notebook="${_selector%%:*}"
 
-      if [[ -n "${_selector_notebook:-}" ]]
+      if [[ -n "${_selector_notebook:-}"    ]]
       then
         if [[ "${_selector_notebook:-}" == "local"  ]] &&
            [[ -n "${_local_notebook_path:-}"        ]]
@@ -7342,11 +7342,11 @@ do
       elif _notebooks current --selected
       then
         _ARGUMENTS+=("${__opt}")
-      elif [[ "${_SUBCOMMAND:-}" == "move" ]] &&
+      elif [[ "${_SUBCOMMAND:-}" == "move"    ]] &&
            ((${#_ARGUMENTS[@]}))
       then
         _ARGUMENTS+=("${__opt}")
-      elif [[ "${_SUBCOMMAND:-}" == "delete" ]]
+      elif [[ "${_SUBCOMMAND:-}" == "delete"  ]]
       then
         _ARGUMENTS+=("${__opt}")
       else
@@ -8004,22 +8004,22 @@ _get_unique_relative_path() {
   local _target_basename=
   local _unique_path=
 
-  if [[ -z "${_file_name:-}" ]]
+  if [[ -z "${_file_name:-}"    ]]
   then
     _file_name="$(date "+%Y%m%d%H%M%S")"
   fi
 
-  if [[ "${_file_path:-}" =~ / ]]
+  if [[ "${_file_path:-}" =~ /  ]]
   then
     _folder_path="${_file_path%\/*}"
   fi
 
-  if [[ "${_file_basename:-}" =~ ^\. ]]
+  if [[ "${_file_basename:-}" =~ ^\.  ]]
   then
     local _file_type="${_file_basename#*.}"
 
     _target_basename="${_file_name}.${_file_type}"
-  elif [[ -n "${_file_basename:-}" ]]
+  elif [[ -n "${_file_basename:-}"    ]]
   then
     _target_basename="${_file_basename}"
   else
@@ -15561,7 +15561,7 @@ _settings() {
     elif [[ "${1}" == "--id" ]]
     then
       _get_id=1
-      [[ -z "${2:-}" ]] && return 1
+      [[ -z "${2:-}"  ]] && return 1
       _id_or_name="${2:-}"
     else
       _id_or_name="${1}"
@@ -16287,8 +16287,8 @@ HEREDOC
       then
         eval "${_normalized_input}"
       elif _command_name="$(
-        printf "%s\\n" "${_normalized_input}" \
-          | grep --only-matching --color=never \
+        printf "%s\\n" "${_normalized_input}"   \
+          | grep --only-matching --color=never  \
               -e '^code'    \
               -e '^emacs'   \
               -e '^gvim'    \
