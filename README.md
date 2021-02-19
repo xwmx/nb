@@ -1930,7 +1930,7 @@ For more information, see [`nb browse`](#browse).
 
 ### 🗂 Zettelkasten
 
-Zettelkasten (German: "slipbox") is a method of note-taking and personal
+Zettelkasten (German: "slip box") is a method of note-taking and personal
 knowledge management modeled around a few key features:
 
 - Notes are taken liberally on index cards.
@@ -1947,7 +1947,7 @@ to physical zettelkasten note-taking.
 |:-----------------:|:---------------------------------------------:|
 | index cards       | [notes](#-notes) and [bookmarks](#-bookmarks) |
 | numbering         | ids and [selectors](#selectors)               |
-| slipboxes         | [notebooks](#-notebooks)                      |
+| slip boxes        | [notebooks](#-notebooks)                      |
 | tags              | [#tags](#-tagging)                            |
 | metadata          | YAML front matter                             |
 | cross-references  |  <a href="#-linking">[[wiki-style links]]</a> |
