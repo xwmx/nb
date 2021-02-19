@@ -19,7 +19,7 @@ and knowledge base application with:
 
 - plain-text data storage,
 - [encryption](#password-protected-encrypted-notes-and-bookmarks),
-- [filtering](#listing-notes), [pinning](#-pinning), [tagging][#-tagging], and [search](#-search),
+- [filtering](#listing-notes), [pinning](#-pinning), [tagging](#-tagging), and [search](#-search),
 - [Git](https://git-scm.com/)-backed [versioning](#-revision-history) and [syncing](#-git-sync),
 - [Pandoc](https://pandoc.org/)-backed [conversion](#%EF%B8%8F-import--export),
 - <a href="#-linking">[[wiki-style linking]]</a> with terminal-first [browsing](#-browsing),
