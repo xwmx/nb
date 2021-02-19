@@ -1667,7 +1667,7 @@ Example note content.
 ```
 
 Tags added to bookmarks with `nb <url> --tags` and `nb bookmark <url> --tags`
-are placed in a "Tags" section:
+are placed in a _Tags_ section:
 
 ```bash
 > nb https://example.com --tags tag1,tag2
@@ -1720,9 +1720,9 @@ nb q "#tag1|#tag2"
 nb q "#tag1" --or "#tag2"
 ```
 
-Linked tags can be browsed with [`nb browse`](#browse), providing
-another dimension of browsability in terminal and GUI web browers,
-complimenting <a href="#-linking">[[wiki-style linking]]</a>.
+Linked tags can be [browsed](#-browsing) with [`nb browse`](#browse),
+providing another dimension of browsability in terminal and GUI web
+browers, complimenting <a href="#-linking">[[wiki-style linking]]</a>.
 
 Tags in notes, bookmarks, files in text-based formats, Word `.docx` documents,
 and [Open Document](https://en.wikipedia.org/wiki/OpenDocument) `.odt`
@@ -1903,8 +1903,8 @@ are easily accessible directly in the terminal, providing a
 convenient, distraction-free approach for browsing collections
 of bookmarks.
 
-To open `nb browse` in the system's primary web browser, use `nb browse
---gui` / `nb browse -g`:
+To open `nb browse` in the system's primary GUI web browser, use
+`nb browse --gui` / `nb browse -g`:
 
 ```bash
 # open the item with id 123 in the "sample" notebook in the system's primary GUI browser
