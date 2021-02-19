@@ -8344,6 +8344,64 @@ HEREDOC
 #   local filesystem. With --browse, links are created with htt://
 #   URLs for the internal web server.
 _resolve_links() {
+  # Usage: _resolve_links_escape_link_component <string>
+  _resolve_links_escape_link_component() {
+    printf "%s\\n" "${1:-}" \
+      | sed                 \
+        -e 's/\//\\\//g'    \
+        -e 's/\[/\\\[/g'    \
+        -e 's/\]/\\\]/g'    \
+        -e 's/(/\\(/g'      \
+        -e 's/)/\\)/g'
+  }
+
+  # Usage: _resolve_links_tag_link_pattern <capture-group-number>
+  #        [--page <page> --per-page <limit> --terminal]
+  _resolve_links_tag_link_pattern() {
+    local _capture_group="${1:-1}"
+
+    shift
+
+    local _page=
+    local _per_page=
+    local _terminal=0
+
+    while ((${#}))
+    do
+      case "${1:-}" in
+        --page)     _page="${2:?}"      && shift  ;;
+        --per*)     _per_page="${2:?}"  && shift  ;;
+        --terminal) _terminal=1                   ;;
+      esac
+
+      shift
+    done
+
+    local _replacement_url="http:\/\/localhost:${NB_SERVER_PORT}\/"
+    _replacement_url+="${_notebook_path##*/}:?--query=%23\\${_capture_group}"
+
+    if ((_terminal)) && [[ -n "${_page:-}" ]] && [[ -n "${_per_page:-}" ]]
+    then
+      _replacement_url+="\&--page=${_page}\&--per-page=${_per_page}"
+    fi
+
+    local _pattern=
+
+    case "${_file_path:-}" in
+      *\.html)
+        _pattern="<a\ href=\"${_replacement_url:-}\">\#\\${_capture_group}<\/a>"
+        ;;
+      *\.org)
+        _pattern="[[${_replacement_url:-}][\#\\${_capture_group}]]"
+        ;;
+      *)
+        _pattern="\#\\${_capture_group}"
+        ;;
+    esac
+
+    printf "%s\\n" "${_pattern}"
+  }
+
   local _file_path=
   local _for_browsing=0
   local _links=()
@@ -8442,11 +8500,13 @@ _resolve_links() {
           case "${_file_path:-}" in
             *\.html)
               _links+=(
-                "<a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}\">[[${_selector:-}]]</a>"
+"<a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}\">[[${_selector:-}]]</a>"
               )
               ;;
             *\.org)
-              _links+=("[[http://localhost:${NB_SERVER_PORT}/${_id_selector:-}][[[${_selector:-}]]]]")
+              _links+=(
+"[[http://localhost:${NB_SERVER_PORT}/${_id_selector:-}][[[${_selector:-}]]]]"
+              )
               ;;
             *)
               _links+=("[[${_selector:-}]]")
@@ -8478,17 +8538,6 @@ _resolve_links() {
       fi
     fi
   done
-
-  # Usage: _resolve_links_escape_link_component <string>
-  _resolve_links_escape_link_component() {
-    printf "%s\\n" "${1:-}" \
-      | sed                 \
-        -e 's/\//\\\//g'    \
-        -e 's/\[/\\\[/g'    \
-        -e 's/\]/\\\]/g'    \
-        -e 's/(/\\(/g'      \
-        -e 's/)/\\)/g'
-  }
 
   local _sed_arguments=()
   local _seen_matches=()
@@ -8524,55 +8573,10 @@ _resolve_links() {
 
       return 0
     else
-      # Usage: _resolve_links_pattern <capture-group-number>
-      #        [--page <page> --per-page <limit>] [--terminal]
-      _resolve_links_pattern() {
-        local _capture_group="${1:-1}"
-
-        shift
-
-        local _page=
-        local _per_page=
-        local _terminal=0
-
-        while ((${#}))
-        do
-          case "${1:-}" in
-            --page)     _page="${2:?}"      && shift  ;;
-            --per*)     _per_page="${2:?}"  && shift  ;;
-            --terminal) _terminal=1                   ;;
-          esac
-
-          shift
-        done
-
-        local _replacement_url="http:\/\/localhost:${NB_SERVER_PORT}\/"
-        _replacement_url+="${_notebook_path##*/}:?--query=%23\\${_capture_group}"
-
-        if ((_terminal)) && [[ -n "${_page:-}" ]] && [[ -n "${_per_page:-}" ]]
-        then
-          _replacement_url+="\&--page=${_page}\&--per-page=${_per_page}"
-        fi
-
-        local _pattern=
-
-        case "${_file_path:-}" in
-          *\.html)
-            _pattern="<a\ href=\"${_replacement_url:-}\">\#\\${_capture_group}<\/a>"
-            ;;
-          *\.org)
-            _pattern="[[${_replacement_url:-}][\#\\${_capture_group}]]"
-            ;;
-          *)
-            _pattern="\#\\${_capture_group}"
-            ;;
-        esac
-
-        printf "%s\\n" "${_pattern}"
-      }
-
       local _pattern_2=
-      _pattern_2="$(_resolve_links_pattern "2" "${_pagination_arguments[@]}")"
+      _pattern_2="$(
+        _resolve_links_tag_link_pattern "2" "${_pagination_arguments[@]}"
+      )"
 
       if [[ "${_file_path:-}" =~ \.html ]]
       then
@@ -8586,7 +8590,9 @@ _resolve_links() {
         fi
       else
         local _pattern_1=
-        _pattern_1="$(_resolve_links_pattern "1" "${_pagination_arguments[@]}")"
+        _pattern_1="$(
+          _resolve_links_tag_link_pattern "1" "${_pagination_arguments[@]}"
+        )"
 
         sed -E    \
           -e "s/^\#([A-Za-z0-9_\-]+)$/${_pattern_1}/g"                \
