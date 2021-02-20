@@ -8280,6 +8280,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   })
 });
 </script>
+<meta name="referrer" content="no-referrer" />
 HEREDOC
 
   if [[ -n "${_source_path:-}" ]]
@@ -8320,7 +8321,8 @@ HEREDOC
     sed                           \
       -e '/<h1 class="title"/d'   \
       -e '/title-block-header/d'  \
-      -e 's/<img[^>]*>//g'
+      -e 's/<img[^>]*>//g'        \
+      -e "s/<a\ /<a\ rel=\"noopener\ noreferrer\"\ /g"
   }
 
   rm -f "${_html_head_temp_path:?}"
