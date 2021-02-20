@@ -1928,14 +1928,14 @@ https://daringfireball.net/projects/markdown/
 
 Related
 
-- <https://en.wikipedia.org/wiki/Markdown>
+  • https://en.wikipedia.org/wiki/Markdown
 
 Comments
 
 See also:
 
-- [[text:formats/org]]
-- [[cli:apps/nb]]
+  • [[text:formats/org]]
+  • [[cli:apps/nb]]
 
 Tags
 
