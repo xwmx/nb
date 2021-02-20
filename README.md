@@ -1926,6 +1926,17 @@ Daring Fireball: Markdown (daringfireball.net)
 
 https://daringfireball.net/projects/markdown/
 
+Related
+
+- <https://en.wikipedia.org/wiki/Markdown>
+
+Comments
+
+See also:
+
+- [[text:formats/org]]
+- [[cli:apps/nb]]
+
 Tags
 
 #markup #plain-text
