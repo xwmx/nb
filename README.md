@@ -1862,7 +1862,7 @@ search: [                    ]
 
 Items are displayed using the same format as `nb` and `nb ls`, including
 pinned items, with each list item linked. Lists are automatically paginated
-to fit the height the terminal window.
+to fit the height of the terminal window.
 
 `nb browse` is designed to make it easy to navigate within terminal
 browsers using only keyboard commands, with mouse interactions also
