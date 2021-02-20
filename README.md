@@ -1878,8 +1878,8 @@ for the item, folder, or notebook:
 
 ```bash
 # open the item titled "Example Title" in the folder named "Sample" in the "example" notebook
-> nb browse example:Sample/Example\ Title
-❯nb · example : Sample / 987
+> nb browse example:sample/Example\ Title
+❯nb · example : sample / 987
 
 Example Title
 
@@ -1897,11 +1897,44 @@ The `nb browse` interface includes breadcrumbs that can be used to
 quickly navigate to back to parent folders, the current notebook, or
 jump to other notebooks.
 
+```bash
+> nb browse example:sample/demo/
+❯nb · example : sample / demo /
+
+search: [                    ]
+
+[example:sample/demo/5] Title Five
+[example:sample/demo/4] Title Four
+[example:sample/demo/3] Title Three
+[example:sample/demo/2] Title Two
+[example:sample/demo/1] Title One
+```
+
 `nb browse` is particularly useful for [bookmarks](#-bookmarks). Cached
 content is rendered in the web browser, and internal and external links
 are easily accessible directly in the terminal, providing a
 convenient, distraction-free approach for browsing collections
 of bookmarks.
+
+```text
+❯nb · cli : apps / git / 123
+
+Introduction · Tig - Text-mode interface for Git (jonas.github.io)
+
+https://jonas.github.io/tig/
+
+Tags
+
+#git #dev #tools
+
+Content
+
+Introduction · Tig - Text-mode interface for Git
+
+Tig is an ncurses-based text-mode interface for git. It functions mainly as a Git
+repository browser, but can also assist in staging changes for commit at chunk level and
+act as a pager for output from various Git commands.
+```
 
 To open `nb browse` in the system's primary GUI web browser, use
 `nb browse --gui` / `nb browse -g`:
@@ -1995,7 +2028,8 @@ nb add example/demo --type folder
 ```
 
 To list the items in a folder, pass the folder relative path to
-`nb`, `nb ls`, or `nb list` with a trailing slash:
+`nb`, [`nb ls`](#ls), [`nb list`](#list), or [`nb browse`](#browse)
+with a trailing slash:
 
 ```bash
 > nb example/demo/
@@ -2055,12 +2089,29 @@ nb add example:sample/demo/
 nb edit example:sample/demo/3
 ```
 
+[Browse](#-browsing) starting at any folder with [`nb browse`](#browse):
+
+```bash
+> nb browse example:sample/demo/
+❯nb · example : sample / demo /
+
+search: [                    ]
+
+[example:sample/demo/5] Title Five
+[example:sample/demo/4] Title Four
+[example:sample/demo/3] Title Three
+[example:sample/demo/2] Title Two
+[example:sample/demo/1] Title One
+```
+
+For more information about identifying folders, see [Selectors](#selectors).
+
 ### 📌 Pinning
 
 *Version 6.0.0-alpha*
 
-Items can be pinned so they appear first in `nb`, `nb ls`, and `nb
-browse`:
+Items can be pinned so they appear first in `nb`, [`nb ls`](#ls), and
+[`nb browse`](#browse):
 
 ```bash
 > nb
