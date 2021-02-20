@@ -1903,9 +1903,10 @@ Example Title
 Example content with link to [[Demo Title]].
 
 More example content:
-- one
-- two
-- three
+
+  • one
+  • two
+  • three
 ```
 
 The `nb browse` interface includes breadcrumbs that can be used to
