@@ -1920,24 +1920,29 @@ convenient, distraction-free approach for browsing collections
 of bookmarks.
 
 ```bash
-> nb browse cli:apps/git/123
-❯nb · cli : apps / git / 123
+> nb browse text:formats/markdown/123
+❯nb · text : formats / markdown / 123
+Daring Fireball: Markdown (daringfireball.net)
 
-Introduction · Tig - Text-mode interface for Git (jonas.github.io)
-
-https://jonas.github.io/tig/
+https://daringfireball.net/projects/markdown/
 
 Tags
 
-#git #dev #tools
+#markup #plain-text
 
 Content
 
-Introduction · Tig - Text-mode interface for Git
+Daring Fireball: Markdown
 
-Tig is an ncurses-based text-mode interface for git. It functions mainly as a Git
-repository browser, but can also assist in staging changes for commit at chunk level and
-act as a pager for output from various Git commands.
+Download
+
+Markdown 1.0.1 (18 KB) — 17 Dec 2004
+
+Introduction
+
+Markdown is a text-to-HTML conversion tool for web writers. Markdown allows
+you to write using an easy-to-read, easy-to-write plain text format, then
+convert it to structurally valid XHTML (or HTML).
 ```
 
 To open `nb browse` in the system's primary GUI web browser, use
