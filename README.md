@@ -1864,6 +1864,21 @@ Items are displayed using the same format as `nb` and `nb ls`, including
 pinned items, with each list item linked. Lists are automatically paginated
 to fit the height of the terminal window.
 
+```bash
+> nb browse example:sample/demo/
+❯nb · example : sample / demo /
+
+search: [                    ]
+
+[example:sample/demo/7] Title Seven
+[example:sample/demo/6] Title Six
+[example:sample/demo/5] Title Five
+[example:sample/demo/4] Title Four
+[example:sample/demo/3] Title Three
+
+next ❯
+```
+
 `nb browse` is designed to make it easy to navigate within terminal
 browsers using only keyboard commands, with mouse interactions also
 supported.
@@ -1897,20 +1912,6 @@ The `nb browse` interface includes breadcrumbs that can be used to
 quickly navigate to back to parent folders, the current notebook, or
 jump to other notebooks.
 
-```bash
-> nb browse example:sample/demo/
-❯nb · example : sample / demo /
-
-search: [                    ]
-
-[example:sample/demo/7] Title Seven
-[example:sample/demo/6] Title Six
-[example:sample/demo/5] Title Five
-[example:sample/demo/4] Title Four
-[example:sample/demo/3] Title Three
-
-next ❯
-```
 
 `nb browse` is particularly useful for [bookmarks](#-bookmarks). Cached
 content is rendered in the web browser, and internal and external links
