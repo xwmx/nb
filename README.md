@@ -1903,11 +1903,13 @@ jump to other notebooks.
 
 search: [                    ]
 
+[example:sample/demo/7] Title Seven
+[example:sample/demo/6] Title Six
 [example:sample/demo/5] Title Five
 [example:sample/demo/4] Title Four
 [example:sample/demo/3] Title Three
-[example:sample/demo/2] Title Two
-[example:sample/demo/1] Title One
+
+next ❯
 ```
 
 `nb browse` is particularly useful for [bookmarks](#-bookmarks). Cached
@@ -1916,7 +1918,8 @@ are easily accessible directly in the terminal, providing a
 convenient, distraction-free approach for browsing collections
 of bookmarks.
 
-```text
+```bash
+> nb browse cli:apps/git/123
 ❯nb · cli : apps / git / 123
 
 Introduction · Tig - Text-mode interface for Git (jonas.github.io)
