@@ -14184,12 +14184,11 @@ HEREDOC
   # _browse_render_header()
   #
   # Usage:
-  #   _browse_render_header <selector>
+  #   _browse_render_header <selector> [--per-page <limit>] [--terminal]
   #
   # Description:
   #   Print a context-aware, linked Markdown header.
   _browse_render_header() {
-    local _current_page=1
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
     local _selector=
     local _terminal_browser=0
@@ -14197,10 +14196,10 @@ HEREDOC
     while ((${#}))
     do
       case "${1:-}" in
-        --page)     _current_page="${2:?}"  && shift  ;;
-        --per*)     _per_page="${2:?}"      && shift  ;;
-        --terminal) _terminal_browser=1               ;;
-        *)          _selector="${1:-}"                ;;
+        --page)     _option_value_is_present "${2:-}" && shift  ;;
+        --per*)     _per_page="${2:?}"                && shift  ;;
+        --terminal) _terminal_browser=1                         ;;
+        *)          _selector="${1:-}"                          ;;
       esac
 
       shift
@@ -14210,7 +14209,7 @@ HEREDOC
 
     if ((_terminal_browser))
     then
-      _url_params+="?--page=${_current_page}&--per-page=${_per_page}&--terminal"
+      _url_params+="?--per-page=${_per_page}&--terminal"
     fi
 
     local _header_content="\
@@ -14328,7 +14327,7 @@ HEREDOC
   # _browse_render_item()
   #
   # Usage:
-  #   _browse_render_item <path>
+  #   _browse_render_item <path> [--per-page <limit>] [--terminal]
   #
   # Description:
   #   Render an item to HTML with links resolved to internal web server.
@@ -14340,7 +14339,10 @@ HEREDOC
     while ((${#}))
     do
       case "${1:-}" in
-        --page|--per*)
+        --page)
+          _option_value_is_present "${2:-}" && shift
+          ;;
+        --per-page)
           _pagination_arguments+=("${1:?}" "${2:?}")
           _header_arguments+=("${1:?}" "${2:?}")
           shift
@@ -14414,12 +14416,11 @@ HEREDOC
   # _browse_render_notebooks()
   #
   # Usage:
-  #   _browse_render_notebooks [--terminal]
+  #   _browse_render_notebooks [--per-page] [--terminal]
   #
   # Description:
   #   Print an HTML page listing notebooks.
   _browse_render_notebooks() {
-    local _current_page=1
     local _pagination_arguments=()
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
     local _terminal_browser=0
@@ -14428,9 +14429,7 @@ HEREDOC
     do
       case "${1:-}" in
         --page)
-          _current_page="${2:?}"
-          _pagination_arguments+=("${1:-}" "${2:?}")
-          shift
+          _option_value_is_present "${2:-}" && shift
           ;;
         --per*)
           _per_page="${2:?}"
@@ -14450,7 +14449,7 @@ HEREDOC
 
     if ((_terminal_browser))
     then
-      _url_params+="?--page=${_current_page}&--per-page=${_per_page}&--terminal"
+      _url_params+="?--per-page=${_per_page}&--terminal"
     fi
 
     local _notebook_names=()
@@ -14681,21 +14680,21 @@ HEREDOC
 
     local _page_number=1
 
-    if [[ "${_request_uri}" =~ --page=([0-9]+) ]]
+    if [[ "${_request_uri}" =~ --page=([0-9]+)      ]]
     then
       _page_number="${BASH_REMATCH[1]}"
     fi
 
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
 
-    if [[ "${_request_uri}" =~ --per-page=([0-9]+) ]]
+    if [[ "${_request_uri}" =~ --per-page=([0-9]+)  ]]
     then
       _per_page="${BASH_REMATCH[1]}"
     fi
 
     local _query=
 
-    if [[ "${_request_uri}" =~ --query=([^&]+) ]]
+    if [[ "${_request_uri}" =~ --query=([^&]+)      ]]
     then
       _query="${BASH_REMATCH[1]//%23/\#}"
     fi
@@ -14712,10 +14711,13 @@ HEREDOC
 
     local _arguments=()
 
+    if [[ -n "${_per_page:-}"           ]]
+    then
+      _arguments+=("--per-page" "${_per_page}")
+    fi
+
     if ((_terminal_browser))
     then
-      _arguments+=("--page"     "${_page_number}")
-      _arguments+=("--per-page" "${_per_page}")
       _arguments+=("--terminal")
     fi
 
@@ -14731,11 +14733,20 @@ HEREDOC
         _browse_respond_with 404
       else
         _arguments+=("${_selector_path}")
-        _arguments+=("--page"     "${_page_number}")
-        _arguments+=("--per-page" "${_per_page}")
 
         if [[ -d "${_selector_path:-}"  ]]
         then
+          if [[ -n "${_page_number:-}"  ]]
+          then
+            _arguments+=("--page" "${_page_number}")
+          fi
+
+          if [[ -n "${_per_page:-}"     ]] &&
+             ! _contains "--per-page" "${_arguments[@]:-}"
+          then
+            _arguments+=("--per-page" "${_per_page}")
+          fi
+
           if [[ -n "${_query:-}"        ]]
           then
             _arguments+=("--query" "${_query}")
@@ -14746,10 +14757,10 @@ HEREDOC
           if _file_is_text "${_selector_path:-}" ||
              [[ "${_selector_path:-}" =~ \.docx$|\.epub$|\.odt$ ]]
           then
-            _browse_render_item     "${_arguments[@]:-}"  >> "${_temp_file}"
+            _browse_render_item   "${_arguments[@]:-}"    >> "${_temp_file}"
           elif _file_is_encrypted "${_selector_path:-}"
           then
-            _browse_respond_with 415 \
+            _browse_respond_with 415    \
               "415 $(_browse_http_response_message 415): File is encrypted."
           else
             _browse_respond_with 415
@@ -14805,7 +14816,7 @@ HEREDOC
   }
 
   local _browse_notebooks=0
-  local _browse_page=1
+  local _target_page=
   local _browse_per_page=
   local _only_serve=0
   local _open_gui=0
@@ -14839,7 +14850,7 @@ HEREDOC
         _browse_notebooks=1
         ;;
       --page)
-        _browse_page="$(_option_get_value "${1:-}" "${2:-}")"
+        _target_page="$(_option_get_value "${1:-}" "${2:-}")"
         shift
         ;;
       --per*page)
@@ -14921,7 +14932,7 @@ HEREDOC
 
     if [[ -n "${_browse_per_page:-}" ]]
     then
-      _arguments+=("--page" "${_browse_page}" "--per-page" "${_browse_per_page}")
+      _arguments+=( "--per-page" "${_browse_per_page}")
       _arguments+=("--terminal")
 
       if [[ "${_request_url:-}" =~ \?--query= ]]
@@ -14931,7 +14942,13 @@ HEREDOC
         _request_url+="?"
       fi
 
-      _request_url+="--page=${_browse_page}&--per-page=${_browse_per_page}"
+      _request_url+="--per-page=${_browse_per_page}"
+    fi
+
+    if [[ -n "${_target_page:-}" ]]
+    then
+      _argument+=("--page" "${_target_page:-}")
+      _request_url+="&--page=${_target_page}"
     fi
   fi
 
