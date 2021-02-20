@@ -274,10 +274,10 @@ Example content with [a link](https://example.test) and *formatting*."
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"  -eq 0                                                 ]]
-  [[ "${output}"  =~  \<!DOCTYPE\ html\>                                ]]
-  [[ "${output}"  =~  \<h1\ id=\"example-title\"\>Example\ Title\</h1\> ]]
-  [[ "${output}"  =~  \<p\>Example\ content\ with\                      ]]
-  [[ "${output}"  =~  \<a\ href=\"https://example.test\"\>a\ link\</a\> ]]
-  [[ "${output}"  =~  and\ \<em\>formatting\</em\>.\</p\>               ]]
+  [[ "${status}"  -eq 0                                                   ]]
+  [[ "${output}"  =~  \<!DOCTYPE\ html\>                                  ]]
+  [[ "${output}"  =~  \<h1\ id=\"example-title\"\>Example\ Title\</h1\>   ]]
+  [[ "${output}"  =~  \<p\>Example\ content\ with\                        ]]
+  [[ "${output}"  =~  \<a.*\ href=\"https://example.test\"\>a\ link\</a\> ]]
+  [[ "${output}"  =~  and\ \<em\>formatting\</em\>.\</p\>                 ]]
 }

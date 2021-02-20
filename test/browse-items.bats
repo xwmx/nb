@@ -54,9 +54,9 @@ HEREDOC
 
   [[ "${output}"    =~  \<h1\ class=\"header-crumbs\"\>     ]]
   [[ "${output}"    =~  \
-      \<a\ href=\"http://localhost:6789/\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>           ]]
+      \<a.*\ href=\"http://localhost:6789/\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>           ]]
   [[ "${output}"    =~  \
-      \<span\ class=\"dim\"\>·\</span\>\ \<a\ href=\"http://localhost:6789/home:\"\>home\</a\>  ]]
+      \<span\ class=\"dim\"\>·\</span\>\ \<a.*\ href=\"http://localhost:6789/home:\"\>home\</a\>  ]]
 
   [[ "${output}"    =~  \<div\ class=\"sourceCode\"         ]]
   [[ "${output}"    =~  \<pre\ class=\"sourceCode\ bash\"\> ]]
@@ -80,9 +80,9 @@ HEREDOC
 
   [[ "${output}"    =~  \<h1\ class=\"header-crumbs\"\>     ]]
   [[ "${output}"    =~  \
-      \<a\ href=\"http://localhost:6789/\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>           ]]
+      \<a.*\ href=\"http://localhost:6789/\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>           ]]
   [[ "${output}"    =~  \
-      \<span\ class=\"dim\"\>·\</span\>\ \<a\ href=\"http://localhost:6789/home:\"\>home\</a\>  ]]
+      \<span\ class=\"dim\"\>·\</span\>\ \<a.*\ href=\"http://localhost:6789/home:\"\>home\</a\>  ]]
 
   [[ "${output}"    =~  \<div\ class=\"sourceCode\"         ]]
   [[ "${output}"    =~  \<pre\ class=\"sourceCode\ js\"\>   ]]
@@ -115,15 +115,15 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    ==  0                                                       ]]
-  [[ "${output}"    =~  \<\!DOCTYPE\ html\>                                     ]]
+  [[ "${status}"    ==  0                                                         ]]
+  [[ "${output}"    =~  \<\!DOCTYPE\ html\>                                       ]]
 
   [[ "${output}"    =~  \
-\<h1\ id=\"title-one\"\>\<span\ id=\"anchor\"\>\</span\>Title\ One\</h1\>       ]]
+\<h1\ id=\"title-one\"\>\<span\ id=\"anchor\"\>\</span\>Title\ One\</h1\>         ]]
 
   [[ "${output}"    =~  \
-\<p\>Example\ content.\ \<a\ href=\"http://localhost:6789/home:1\?--page.*\"\>  ]]
-  [[ "${output}"    =~  \[\[Example\ Title\]\]\</a\>\</p\>                      ]]
+\<p\>Example\ content.\ \<a.*\ href=\"http://localhost:6789/home:1\?--page.*\"\>  ]]
+  [[ "${output}"    =~  \[\[Example\ Title\]\]\</a\>\</p\>                        ]]
 }
 
 # .docx #######################################################################
@@ -152,14 +152,14 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    ==  0                                                       ]]
-  [[ "${output}"    =~  \<\!DOCTYPE\ html\>                                     ]]
+  [[ "${status}"    ==  0                                                         ]]
+  [[ "${output}"    =~  \<\!DOCTYPE\ html\>                                       ]]
 
-  [[ "${output}"    =~  \<h1\ id=\"title-one\"\>Title\ One\</h1\>               ]]
+  [[ "${output}"    =~  \<h1\ id=\"title-one\"\>Title\ One\</h1\>                 ]]
 
   [[ "${output}"    =~  \
-\<p\>Example\ content.\ \<a\ href=\"http://localhost:6789/home:1\?--page.*\"\>  ]]
-  [[ "${output}"    =~  \[\[Example\ Title\]\]\</a\>\</p\>                      ]]
+\<p\>Example\ content.\ \<a.*\ href=\"http://localhost:6789/home:1\?--page.*\"\>  ]]
+  [[ "${output}"    =~  \[\[Example\ Title\]\]\</a\>\</p\>                        ]]
 }
 
 # .org ########################################################################
@@ -182,15 +182,15 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    ==  0                                                       ]]
-  [[ "${output}"    =~  \<\!DOCTYPE\ html\>                                     ]]
+  [[ "${status}"    ==  0                                                         ]]
+  [[ "${output}"    =~  \<\!DOCTYPE\ html\>                                       ]]
 
   # TODO: .org / org mode titles in pandoc HTML output?
-  # [[ "${output}"    =~  \<h1\ id=\"title-one\"\>Title\ One\</h1\>               ]]
+  # [[ "${output}"    =~  \<h1\ id=\"title-one\"\>Title\ One\</h1\>                 ]]
 
   [[ "${output}"    =~  \
-\<p\>Example\ content.\ \<a\ href=\"http://localhost:6789/home:1\?--page.*\"\>  ]]
-  [[ "${output}"    =~  \[\[Example\ Title\]\]\</a\>\</p\>                      ]]
+\<p\>Example\ content.\ \<a.*\ href=\"http://localhost:6789/home:1\?--page.*\"\>  ]]
+  [[ "${output}"    =~  \[\[Example\ Title\]\]\</a\>\</p\>                        ]]
 }
 
 # markdown ####################################################################
@@ -213,14 +213,14 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    ==  0                                                       ]]
-  [[ "${output}"    =~  \<\!DOCTYPE\ html\>                                     ]]
+  [[ "${status}"    ==  0                                                         ]]
+  [[ "${output}"    =~  \<\!DOCTYPE\ html\>                                       ]]
 
-  [[ "${output}"    =~  \<h1\ id=\"title-one\"\>Title\ One\</h1\>               ]]
+  [[ "${output}"    =~  \<h1\ id=\"title-one\"\>Title\ One\</h1\>                 ]]
 
   [[ "${output}"    =~  \
-\<p\>Example\ content.\ \<a\ href=\"http://localhost:6789/home:1\?--page.*\"\>  ]]
-  [[ "${output}"    =~  \[\[Example\ Title\]\]\</a\>\</p\>                      ]]
+\<p\>Example\ content.\ \<a.*\ href=\"http://localhost:6789/home:1\?--page.*\"\>  ]]
+  [[ "${output}"    =~  \[\[Example\ Title\]\]\</a\>\</p\>                        ]]
 }
 
 @test "'browse <folder-name>/<id>' serves the rendered HTML page with wiki-style links resolved to internal web server URLs." {
@@ -241,14 +241,14 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    ==  0                                                       ]]
-  [[ "${output}"    =~  \<\!DOCTYPE\ html\>                                     ]]
+  [[ "${status}"    ==  0                                                         ]]
+  [[ "${output}"    =~  \<\!DOCTYPE\ html\>                                       ]]
 
-  [[ "${output}"    =~  \<h1\ id=\"title-one\"\>Title\ One\</h1\>               ]]
+  [[ "${output}"    =~  \<h1\ id=\"title-one\"\>Title\ One\</h1\>                 ]]
 
   [[ "${output}"    =~  \
-\<p\>Example\ content.\ \<a\ href=\"http://localhost:6789/home:1\?--page.*\"\>  ]]
-  [[ "${output}"    =~  \[\[Example\ Title\]\]\</a\>\</p\>                      ]]
+\<p\>Example\ content.\ \<a.*\ href=\"http://localhost:6789/home:1\?--page.*\"\>  ]]
+  [[ "${output}"    =~  \[\[Example\ Title\]\]\</a\>\</p\>                        ]]
 }
 
 @test "'browse <item-selector>' properly resolves titled wiki-style links." {
@@ -290,13 +290,13 @@ HEREDOC
   [[ "${status}" -eq 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-    'one: <a href="http://localhost:6789/home:2?--page.*">\[\[Root Title Two\]\]</a>'
+    'one: <a.* href="http://localhost:6789/home:2?--page.*">\[\[Root Title Two\]\]</a>'
 
   printf "%s\\n" "${output}" | grep -q \
-    'example <a href="http://localhost:6789/Example Notebook:1/1?--page.*">\[\[Example Notebook:Example Folder/1\]\]</a> content'
+    'example <a.* href="http://localhost:6789/Example Notebook:1/1?--page.*">\[\[Example Notebook:Example Folder/1\]\]</a> content'
 
   printf "%s\\n" "${output}" | grep -q \
-    'content <a href="http://localhost:6789/home:3/1?--page.*">\[\[3/1\]\]</a> here'
+    'content <a.* href="http://localhost:6789/home:3/1?--page.*">\[\[3/1\]\]</a> here'
 }
 
 @test "'browse <item-selector>' properly resolves titled wiki-style links and skips links with non-resolving selectors." {
@@ -338,10 +338,10 @@ HEREDOC
   [[ "${status}" -eq 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-    'one: <a href="http://localhost:6789/home:2?--page.*">\[\[Root Title Two\]\]</a>'
+    'one: <a.* href="http://localhost:6789/home:2?--page.*">\[\[Root Title Two\]\]</a>'
 
   printf "%s\\n" "${output}" | grep -q \
-    'example <a href="http://localhost:6789/Example Notebook:1/1?--page.*">\[\[Example Notebook:Example Folder/1\]\]</a> content'
+    'example <a.* href="http://localhost:6789/Example Notebook:1/1?--page.*">\[\[Example Notebook:Example Folder/1\]\]</a> content'
 
   printf "%s\\n" "${output}" | grep -q 'content \[\[2/1\]\] here'
 }
@@ -374,11 +374,11 @@ HEREDOC
   [[ "${status}" -eq 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-    'link one: <a href="http://localhost:6789/Example Notebook:1/1?--page.*">\[\[Example Notebook:Example Folder/1\]\]</a>'
+    'link one: <a.* href="http://localhost:6789/Example Notebook:1/1?--page.*">\[\[Example Notebook:Example Folder/1\]\]</a>'
 
 
   printf "%s\\n" "${output}" | grep -q -v\
-    'example <a href="http://localhost:6789/Example Notebook:1/1?--page.*">\[\[Example Notebook:Example Folder/1\]\]</a>'
+    'example <a.* href="http://localhost:6789/Example Notebook:1/1?--page.*">\[\[Example Notebook:Example Folder/1\]\]</a>'
 }
 
 @test "'browse <selector>' resolves wiki-style links in a different arrangement." {
@@ -433,11 +433,11 @@ HEREDOC
   [[ "${status}" -eq 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-    '<a href="http://localhost:6789/home:3/1?--page.*">\[\[Sample Folder/Nested Title One\]\]</a>'
+    '<a.* href="http://localhost:6789/home:3/1?--page.*">\[\[Sample Folder/Nested Title One\]\]</a>'
 
   printf "%s\\n" "${output}" | grep -q \
-    '<a href="http://localhost:6789/Example Notebook:2?--page.*">\[\[Example Notebook:File Two.md\]\]</a>'
+    '<a.* href="http://localhost:6789/Example Notebook:2?--page.*">\[\[Example Notebook:File Two.md\]\]</a>'
 
   printf "%s\\n" "${output}" | grep -q \
-    '<a href="http://localhost:6789/Example Notebook:3/1?--page.*">\[\[Example Notebook:Example Folder/1\]\]</a>'
+    '<a.* href="http://localhost:6789/Example Notebook:3/1?--page.*">\[\[Example Notebook:Example Folder/1\]\]</a>'
 }

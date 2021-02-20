@@ -102,19 +102,19 @@ load test_helper
   [[ "${status}"  -eq 0                 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-    "Selector link one: <a href=\"http://localhost:6789/home:2/1?--page=123&--per-page=2&--terminal\">\[\[home:2/1\]\]</a> •"
+    "Selector link one: <a.* href=\"http://localhost:6789/home:2/1?--page=123&--per-page=2&--terminal\">\[\[home:2/1\]\]</a> •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Selector link two: <a href=\"http://localhost:6789/home:3?--page=123&--per-page=2&--terminal\">\[\[Root Title One\]\]</a> •"
+    "Selector link two: <a.* href=\"http://localhost:6789/home:3?--page=123&--per-page=2&--terminal\">\[\[Root Title One\]\]</a> •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Tag one: <a href=\"http://localhost:6789/home:?--page=123&--per-page=2&--terminal&--query=%23tag_1\">#tag_1</a> •"
+    "Tag one: <a.* href=\"http://localhost:6789/home:?--page=123&--per-page=2&--terminal&--query=%23tag_1\">#tag_1</a> •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Tag two: <a href=\"http://localhost:6789/home:?--page=123&--per-page=2&--terminal&--query=%23tag-2\">#tag-2</a> •"
+    "Tag two: <a.* href=\"http://localhost:6789/home:?--page=123&--per-page=2&--terminal&--query=%23tag-2\">#tag-2</a> •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "<p><a href=\"http://localhost:6789/home:?--page=123&--per-page=2&--terminal&--query=%23tag3\">#tag3</a></p>"
+    "<p><a.* href=\"http://localhost:6789/home:?--page=123&--per-page=2&--terminal&--query=%23tag3\">#tag3</a></p>"
 }
 
 @test "'_resolve_links --browse' resolves [[wiki-style links]] and tags in partial .html files to .html links to local web server URLs." {
@@ -166,19 +166,19 @@ load test_helper
   [[ "${status}"  -eq 0                 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-    "Selector link one: <a href=\"http://localhost:6789/home:2/1\">\[\[home:2/1\]\]</a> •"
+    "Selector link one: <a.* href=\"http://localhost:6789/home:2/1\">\[\[home:2/1\]\]</a> •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Selector link two: <a href=\"http://localhost:6789/home:3\">\[\[Root Title One\]\]</a> •"
+    "Selector link two: <a.* href=\"http://localhost:6789/home:3\">\[\[Root Title One\]\]</a> •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Tag one: <a href=\"http://localhost:6789/home:?--query=%23tag_1\">#tag_1</a> •"
+    "Tag one: <a.* href=\"http://localhost:6789/home:?--query=%23tag_1\">#tag_1</a> •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Tag two: <a href=\"http://localhost:6789/home:?--query=%23tag-2\">#tag-2</a> •"
+    "Tag two: <a.* href=\"http://localhost:6789/home:?--query=%23tag-2\">#tag-2</a> •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "<p><a href=\"http://localhost:6789/home:?--query=%23tag3\">#tag3</a></p>"
+    "<p><a.* href=\"http://localhost:6789/home:?--query=%23tag3\">#tag3</a></p>"
 }
 
 @test "'_resolve_links --browse' resolves [[wiki-style links]] and tags in standalone .html files to .html links to local web server URLs without altering CSS values." {
@@ -231,19 +231,19 @@ load test_helper
   [[ "${status}"  -eq 0                 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-    "Selector link one: <a href=\"http://localhost:6789/home:2/1\">\[\[home:2/1\]\]</a> •"
+    "Selector link one: <a.* href=\"http://localhost:6789/home:2/1\">\[\[home:2/1\]\]</a> •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Selector link two: <a href=\"http://localhost:6789/home:3\">\[\[Root Title One\]\]</a> •"
+    "Selector link two: <a.* href=\"http://localhost:6789/home:3\">\[\[Root Title One\]\]</a> •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Tag one: <a href=\"http://localhost:6789/home:?--query=%23tag_1\">#tag_1</a> •"
+    "Tag one: <a.* href=\"http://localhost:6789/home:?--query=%23tag_1\">#tag_1</a> •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Tag two: <a href=\"http://localhost:6789/home:?--query=%23tag-2\">#tag-2</a> •"
+    "Tag two: <a.* href=\"http://localhost:6789/home:?--query=%23tag-2\">#tag-2</a> •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "<p><a href=\"http://localhost:6789/home:?--query=%23tag3\">#tag3</a></p>"
+    "<p><a.* href=\"http://localhost:6789/home:?--query=%23tag3\">#tag3</a></p>"
 
   printf "%s\\n" "${output}" | grep -q \
     "color: \#1a1a1a;"
@@ -297,10 +297,10 @@ load test_helper
   [[ "${status}"  -eq 0                 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-    "Selector link one: <a href=\"file://${NB_DIR}/home/Example Folder/Example Nested File One.md\">\[\[home:2/1\]\]</a> •"
+    "Selector link one: <a.* href=\"file://${NB_DIR}/home/Example Folder/Example Nested File One.md\">\[\[home:2/1\]\]</a> •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Selector link two: <a href=\"file://${NB_DIR}/home/Root File One.md\">\[\[Root Title One\]\]</a> •"
+    "Selector link two: <a.* href=\"file://${NB_DIR}/home/Root File One.md\">\[\[Root Title One\]\]</a> •"
 
   printf "%s\\n" "${output}" | grep -q \
     "Tag one: #tag_1 •"
@@ -361,10 +361,10 @@ load test_helper
   [[ "${status}"  -eq 0                 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-    "Selector link one: <a href=\"file://${NB_DIR}/home/Example Folder/Example Nested File One.md\">\[\[home:2/1\]\]</a> •"
+    "Selector link one: <a.* href=\"file://${NB_DIR}/home/Example Folder/Example Nested File One.md\">\[\[home:2/1\]\]</a> •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Selector link two: <a href=\"file://${NB_DIR}/home/Root File One.md\">\[\[Root Title One\]\]</a> •"
+    "Selector link two: <a.* href=\"file://${NB_DIR}/home/Root File One.md\">\[\[Root Title One\]\]</a> •"
 
   printf "%s\\n" "${output}" | grep -q \
     "Tag one: #tag_1 •"
