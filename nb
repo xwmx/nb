@@ -8357,8 +8357,7 @@ _resolve_links() {
         -e 's/)/\\)/g'
   }
 
-  # Usage: _resolve_links_tag_link_pattern <capture-group-number>
-  #        [--page <page> --per-page <limit> --terminal]
+  # Usage: _resolve_links_tag_link_pattern <capture-group-number> [<query-string>]
   _resolve_links_tag_link_pattern() {
     local _capture_group="${1:-1}"
     local _query_string="${2:-}"
@@ -8393,14 +8392,16 @@ _resolve_links() {
   local _links=()
   local _matches=()
   local _notebook_name=
-  local _pagination_parameters=()
+  local _per_page=
+  local _terminal=0
 
   while ((${#}))
   do
     case "${1:-}" in
-      --browse)       _for_browsing=1                                     ;;
-      --page|--per*)  _pagination_parameters+=("${1:-}=${2:-}") && shift  ;;
-      --terminal)     _pagination_parameters+=("${1:-}")                  ;;
+      --browse)   _for_browsing=1                             ;;
+      --per-page) _per_page="${2:?}"                && shift  ;;
+      --page)     _option_value_is_present "${2:-}" && shift  ;;
+      --terminal) _terminal=1                                 ;;
       *)
         if [[   -z "${_file_path:-}"      ]]
         then
@@ -8422,9 +8423,9 @@ _resolve_links() {
 
   local _query_string=
 
-  if [[ -n "${_pagination_parameters[*]:-}" ]]
+  if ((_terminal)) && [[ -n "${_per_page:-}" ]]
   then
-    _query_string="?$(_join "\&" "${_pagination_parameters[@]:-}")"
+    _query_string="?--per-page=${_per_page:-}\&--terminal"
   fi
 
   local _repo_path=
@@ -14067,7 +14068,7 @@ _browse() {
 
         if ((_terminal_browser))
         then
-          _url_params+="?--page=${_current_page}&--per-page=${_per_page}&--terminal"
+          _url_params+="?--per-page=${_per_page}&--terminal"
         fi
 
         printf "<a href=\"http://localhost:%s/%s\" class=\"list-item\">%s</a><br>\\n" \
@@ -14141,6 +14142,11 @@ HEREDOC
       fi
 
       local _params="--per-page=${_per_page}"
+
+      if ((_terminal_browser))
+      then
+        _params+="&--terminal"
+      fi
 
       if [[ -n "${_query:-}" ]]
       then
@@ -14423,7 +14429,6 @@ HEREDOC
   _browse_render_notebooks() {
     local _pagination_arguments=()
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
-    local _terminal_browser=0
 
     while ((${#}))
     do
@@ -14437,8 +14442,7 @@ HEREDOC
           shift
           ;;
         --terminal)
-          _terminal_browser=1
-          _pagination_arguments+=("${1:-}")
+          _pagination_arguments+=("--terminal")
           ;;
       esac
 
@@ -14447,7 +14451,7 @@ HEREDOC
 
     local _url_params=
 
-    if ((_terminal_browser))
+    if _contains "--terminal" "${_pagination_arguments[@]:-}"
     then
       _url_params+="?--per-page=${_per_page}&--terminal"
     fi
@@ -14456,7 +14460,7 @@ HEREDOC
     _notebook_names=($(_notebooks --names --unarchived --no-color))
 
     {
-      printf "%s\\n" "$(_browse_render_header)"
+      printf "%s\\n" "$(_browse_render_header "${_pagination_arguments[@]:-}")"
 
       local _separator="<span class=\"dim\">·</span>"
       local _test_line=
@@ -14661,6 +14665,8 @@ HEREDOC
       local _http_header_line=
       read -r _http_header_line
 
+      # detect browser type
+
       # turn on case-insensitive matching
       shopt -s nocasematch
       if [[ "${_http_header_line}"      =~ User-Agent     ]]
@@ -14677,6 +14683,20 @@ HEREDOC
       # turn off case-insensitive matching
       shopt -u nocasematch
     done
+
+    # detect presence of parameters overriding browser type
+
+    if [[ "${_request_uri}" =~ --terminal           ]]
+    then
+      _terminal_browser=1
+    fi
+
+    if [[ "${_request_uri}" =~ --gui                ]]
+    then
+      _terminal_browser=0
+    fi
+
+    # retrieve pagination and query values from parameters
 
     local _page_number=1
 
@@ -14698,6 +14718,8 @@ HEREDOC
     then
       _query="${BASH_REMATCH[1]//%23/\#}"
     fi
+
+    # prepare response
 
     local _request_uri_base="${_request_uri%\?--*}" # strip parameters
 
@@ -14816,7 +14838,6 @@ HEREDOC
   }
 
   local _browse_notebooks=0
-  local _target_page=
   local _browse_per_page=
   local _only_serve=0
   local _open_gui=0
@@ -14827,6 +14848,7 @@ HEREDOC
   local _print_output=0
   local _search_query=
   local _selector=
+  local _target_page=
 
   while ((${#}))
   do
@@ -14913,9 +14935,11 @@ HEREDOC
 
   # configure pagination
 
-  if ! ((_open_gui))          &&
-     ! _web_browser --gui     &&
-     ! ((_only_serve))
+  if ! {
+        ((_open_gui))       ||
+        _web_browser --gui  ||
+        ((_only_serve))
+      }
   then
     if [[ -z "${_browse_per_page:-}"  ]]
     then # set per page based on terminal height
@@ -14942,7 +14966,7 @@ HEREDOC
         _request_url+="?"
       fi
 
-      _request_url+="--per-page=${_browse_per_page}"
+      _request_url+="--per-page=${_browse_per_page}&--terminal"
     fi
 
     if [[ -n "${_target_page:-}" ]]
