@@ -14,8 +14,6 @@ export _S=" "
     do
       "${_NB}" add "File ${__number}.md" --title "Title ${__number}"
     done
-
-    declare _params="?--per-page=4&amp;--terminal"
   }
 
   run "${_NB}" browse --print --per-page 4
