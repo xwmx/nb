@@ -8038,6 +8038,64 @@ _get_unique_relative_path() {
   printf "%s" "${_unique_path#${_notebook_path}/}"
 }
 
+# _get_uri()
+#
+# Usage:
+#   _get_uri <string> [--encode | --decode]
+#
+# Description:
+#   Encode or decode a URI.
+_get_uri() {
+  # Usage: _get_uri_decode <string>
+  _get_uri_decode() {
+    local _decoding="${1//'%25'/%}"
+    _decoding="${_decoding//'%20'/ }"
+    _decoding="${_decoding//'%22'/\"}"
+    _decoding="${_decoding//'%23'/\#}"
+    _decoding="${_decoding//'%24'/$}"
+    _decoding="${_decoding//'%26'/&}"
+    _decoding="${_decoding//'%2B'/+}"
+    _decoding="${_decoding//'%2C'/,}"
+    _decoding="${_decoding//'%2F'//}"
+    _decoding="${_decoding//'%3A'/:}"
+    _decoding="${_decoding//'%3B'/;}"
+    _decoding="${_decoding//'%3D'/=}"
+    _decoding="${_decoding//'%3F'/?}"
+    _decoding="${_decoding//'%40'/@}"
+    _decoding="${_decoding//'%5B'/[}"
+    local _decoded="${_decoding//'%5D'/]}"
+
+    printf "%s\\n" "${_decoded:-}"
+  }
+
+  # Usage: _get_uri_encode <string>
+  _get_uri_encode() {
+    local _encoding="${1//'%'/%25}"
+    _encoding="${_encoding//' '/%20}"
+    _encoding="${_encoding//'"'/%22}"
+    _encoding="${_encoding//'#'/%23}"
+    _encoding="${_encoding//'$'/%24}"
+    _encoding="${_encoding//'&'/%26}"
+    _encoding="${_encoding//'+'/%2B}"
+    _encoding="${_encoding//','/%2C}"
+    _encoding="${_encoding//'/'/%2F}"
+    _encoding="${_encoding//':'/%3A}"
+    _encoding="${_encoding//';'/%3B}"
+    _encoding="${_encoding//'='/%3D}"
+    _encoding="${_encoding//'?'/%3F}"
+    _encoding="${_encoding//'@'/%40}"
+    _encoding="${_encoding//'['/%5B}"
+    local _encoded="${_encoding//']'/%5D}"
+
+    printf "%s\\n" "${_encoded:-}"
+  }
+
+  case "${1:-}" in
+    http%3A%2F*|https%3A%2F*) _get_uri_decode "${1:-}"  ;;
+    http://*|https://*)       _get_uri_encode "${1:-}"  ;;
+  esac
+}
+
 # _get_unique_path()
 #
 # Usage:
@@ -15167,6 +15225,9 @@ _helpers() {
       ;;
     *email)
       _string_is_email                "${_options[@]:-}"
+      ;;
+    *uri*)
+      _get_uri                        "${_options[@]:-}"
       ;;
     *url)
       _string_is_url                  "${_options[@]:-}"
