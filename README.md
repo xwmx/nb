@@ -450,8 +450,8 @@ Added: [10] example_title.md "Example Title"
 ```
 
 Tags can be added with the `--tags <tag1>,<tag2>...` option, which takes
-a comma separated list of tags, converts them to hashtags, and inserts
-them between the title and content:
+a comma separated list of tags, converts them to
+[`#hashtags`](#-tagging), and inserts them between the title and content:
 
 ```bash
 > nb add "Example content." --title "Tagged Example" --tags tag1,tag2
@@ -1339,7 +1339,7 @@ permission.
 ```
 
 Bookmarks can be tagged using the `-t` / `--tags` option. Tags are converted
-into hashtags:
+into [`#hashtags`](#-tagging):
 
 ```bash
 nb https://example.com --tags tag1,tag2
@@ -1644,12 +1644,13 @@ See [`bookmark help`](#bookmark-help) for more information.
 
 ### 🏷 Tagging
 
-`nb` recognizes hashtags defined anywhere within a text document.
-Notes and bookmarks can be tagged when they are created
+`nb` recognizes [`#hashtags`](#-tagging) defined anywhere within a
+text document. Notes and bookmarks can be tagged when they are created
 using the `--tags <tag1>,<tag2>...` option, which is available with
 [`nb add`](#add), [`nb <url>`](#nb-help), and
 [`nb bookmark`](#bookmark). `--tags` takes a comma-separated list of
-tags, converts them to hashtags, and adds them to the document.
+tags, converts them to [`#hashtags`](#-tagging), and adds them to the
+document.
 
 Tags added to notes with `nb add --tags` are placed between the title
 and body text:
@@ -2186,9 +2187,9 @@ home
 ```
 
 `nb` can also be configured to pin notes that contain a specified
-hashtag or other search pattern. To enable tag / search-based pinning,
-set the `$NB_PINNED_PATTERN` environment variable to the desired tag
-or pattern.
+[`#hashtag`](#-tagging) or other search pattern. To enable tag / search-based
+pinning, set the `$NB_PINNED_PATTERN` environment variable to the desired
+[`#tag`](#-tagging) or pattern.
 
 For example, to treat all items tagged with `#pinned` as pinned items,
 add the following line to your `~/.nbrc` file, which can be opened in
@@ -5721,7 +5722,7 @@ bookmarked resource.
 
 `Optional`
 
-A list of tags represented as hashtags separated by individual spaces.
+A list of tags represented as `#hashtags` separated by individual spaces.
 
 ##### `## Content`
 
