@@ -8671,10 +8671,10 @@ _resolve_links() {
         if grep -q "<\/body>" "${_file_path:-}"
         then
           sed -E  \
-            -e "/<body>/,/<\/body>/ s/([^[])\#([A-Za-z0-9_\-]+)/\1${_pattern_2}/g"
+            -e "/<body>/,/<\/body>/ s/([>|\ ])\#([A-Za-z0-9_\-]+)/\1${_pattern_2}/g"
         else
           sed -E  \
-            -e "s/([^[])\#([A-Za-z0-9_\-]+)/\1${_pattern_2}/g"
+            -e "s/([>|\ ])\#([A-Za-z0-9_\-]+)/\1${_pattern_2}/g"
         fi
       else
         local _pattern_1=
@@ -8683,10 +8683,10 @@ _resolve_links() {
         )"
 
         sed -E    \
-          -e "s/^\#([A-Za-z0-9_\-]+)$/${_pattern_1}/g"                \
-          -e "s/([^[])\#([A-Za-z0-9_\-]+)$/\1${_pattern_2}/g"         \
-          -e "s/^\#([A-Za-z0-9_\-]+)([^]])/${_pattern_1}\2/g"         \
-          -e "s/([^[])\#([A-Za-z0-9_\-]+)([^]])/\1${_pattern_2}\3/g"
+          -e "s/^\#([A-Za-z0-9_\-]+)$/${_pattern_1}/g"                  \
+          -e "s/([>|\ ])\#([A-Za-z0-9_\-]+)$/\1${_pattern_2}/g"         \
+          -e "s/^\#([A-Za-z0-9_\-]+)([<|\ ])/${_pattern_1}\2/g"         \
+          -e "s/([>|\ ])\#([A-Za-z0-9_\-]+)([<|\ ])/\1${_pattern_2}\3/g"
       fi
     fi
   }
