@@ -14839,6 +14839,7 @@ HEREDOC
 
   local _browse_notebooks=0
   local _browse_per_page=
+  local _force_terminal_request=0
   local _only_serve=0
   local _open_gui=0
   local _print_browse_container=0
@@ -14893,6 +14894,9 @@ HEREDOC
       -s|--serve*)
         _only_serve=1
         ;;
+      --terminal)
+        _force_terminal_request=1
+        ;;
       *)
         _selector="${1:-}"
         ;;
@@ -14935,9 +14939,10 @@ HEREDOC
 
   # configure pagination
 
-  if ! {
-        ((_open_gui))       ||
-        _web_browser --gui  ||
+  if ((_force_terminal_request))  ||
+     ! {
+        ((_open_gui))             ||
+        _web_browser --gui        ||
         ((_only_serve))
       }
   then
