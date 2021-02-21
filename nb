@@ -8780,6 +8780,7 @@ _web_browser() {
       fi
 
       _arguments+=("-nomargins")
+      _arguments+=("-noreferer")
       _arguments+=("-notitle")
 
       "${_web_browser_command[@]:-}" "${_arguments[@]:-}"
