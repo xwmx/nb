@@ -13932,7 +13932,7 @@ Options:
 
 Description:
   Browse and view linked notes, bookmarks, notebooks, folders, and other
-  items using the terminal or GUI web brower.
+  items using the terminal or GUI web browser.
 
   \`browse\` includes an embedded, terminal-first web application that
   renders [[wiki-style links]] and #tags as internal links, enabling you

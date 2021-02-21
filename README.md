@@ -1723,7 +1723,7 @@ nb q "#tag1" --or "#tag2"
 
 Linked tags can be [browsed](#-browsing) with [`nb browse`](#browse),
 providing another dimension of browsability in terminal and GUI web
-browers, complimenting <a href="#-linking">[[wiki-style linking]]</a>.
+browsers, complimenting <a href="#-linking">[[wiki-style linking]]</a>.
 
 Tags in notes, bookmarks, files in text-based formats, Word `.docx` documents,
 and [Open Document](https://en.wikipedia.org/wiki/OpenDocument) `.odt`
@@ -1832,7 +1832,7 @@ For more information about identifying items, see [Selectors](#selectors).
 
 Use [`nb browse`](#browse) to browse, view, and search linked notes,
 bookmarks, notebooks, folders, and other items using a terminal or
-GUI web brower.
+GUI web browser.
 
 `nb browse` includes an embedded, terminal-first web application that
 renders <a href="#-linking">[[wiki-style links]]</a> and
@@ -4176,7 +4176,7 @@ Options:
 
 Description:
   Browse and view linked notes, bookmarks, notebooks, folders, and other
-  items using the terminal or GUI web brower.
+  items using the terminal or GUI web browser.
 
   `browse` includes an embedded, terminal-first web application that
   renders [[wiki-style links]] and #tags as internal links, enabling you
