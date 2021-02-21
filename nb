@@ -8554,8 +8554,10 @@ _resolve_links() {
 
     if ((_for_browsing))
     then
-      if [[ -n "${_selector:-}" ]]
+      if [[ -z "${_selector:-}" ]]
       then
+        _links+=("${__match}")
+      else
         local _query_selector=
 
         if [[ "${_selector:-}" =~ : ]] && [[ ! "${_selector:-}" =~ :// ]]
@@ -8594,8 +8596,6 @@ _resolve_links() {
               ;;
           esac
         fi
-      else
-        _links+=("${__match}")
       fi
     else
       local _link_path=
