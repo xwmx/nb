@@ -66,13 +66,13 @@ export _S=" "
   [[ "${status}"  ==  0 ]]
 
   [[ "${output}"  =~  \
-href=\"http://localhost:6789/\?--per-page=.*\&amp\;--terminal\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>          ]]
+href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>         ]]
   [[ "${output}"  =~  \
-\<h1\ class=\"header-crumbs\"\ id=\"nb-home-example-folder\"\>.*\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\&amp\;--terminal\"\> ]]
+\<h1\ class=\"header-crumbs\"\ id=\"nb-home-example-folder\"\>.*\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\"\> ]]
   [[ "${output}"  =~  \
-.*·.*\ \<a.*\ href=\"http://localhost:6789/home:\?--per-page=.*\&amp\;--terminal\"\>home\</a\>\ .*:.*\              ]]
+.*·.*\ \<a.*\ href=\"http://localhost:6789/home:\?--per-page=.*\"\>home\</a\>\ .*:.*\             ]]
   [[ "${output}"  =~  \
-\<a.*\ href=\"http://localhost:6789/home:1/\?--per-page=.*\&amp\;--terminal\"\>Example\ Folder\</a\>\ .*/.*\</h1\>  ]]
+\<a.*\ href=\"http://localhost:6789/home:1/\?--per-page=.*\"\>Example\ Folder\</a\>\ .*/.*\</h1\> ]]
 
   [[ "${output}"  =~  0\ items. ]]
 
@@ -84,16 +84,16 @@ href=\"http://localhost:6789/\?--per-page=.*\&amp\;--terminal\"\>\<span\ class=\
   [[ "${status}"  ==  0 ]]
 
   [[ "${output}"  =~  \
-\<h1\ class=\"header-crumbs\"\ id=\"nb-home-1\"\>\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\&amp\;--terminal\"\>\<span\  ]]
+\<h1\ class=\"header-crumbs\"\ id=\"nb-home-1\"\>\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\   ]]
   [[ "${output}"  =~  \
 \<span\ class=\"dim\"\>❯\</span\>nb\</a\>                               ]]
   [[ "${output}"  =~  \
-.*·.*\ \<a.*\ href=\"http://localhost:6789/home:\?--per-page=.*\&amp\;--terminal\"\>home\</a\>\ .*:.*\  ]]
+.*·.*\ \<a.*\ href=\"http://localhost:6789/home:\?--per-page=.*\"\>home\</a\>\ .*:.*\   ]]
   [[ "${output}"  =~  \
-\<a.*\ href=\"http://localhost:6789/home:2/\?--per-page=.*\&amp\;--terminal\"\>1\</a\>\ .*/.*\</h1\>    ]]
+\<a.*\ href=\"http://localhost:6789/home:2/\?--per-page=.*\"\>1\</a\>\ .*/.*\</h1\>     ]]
 
   [[ "${output}"  =~  \
-\<p\>\<a.*\ href=\"http://localhost:6789/home:2/1\?--per-page=.*\&amp\;--terminal\"\ class=\"list-item\"\>.*\[.*1/1.*\].*   ]]
+\<p\>\<a.*\ href=\"http://localhost:6789/home:2/1\?--per-page=.*\"\ class=\"list-item\"\>.*\[.*1/1.*\].*  ]]
   [[ "${output}"  =~  \
 class=\"list-item\"\>.*\[.*1/1.*\].*${_S}File${_S}One.md\</a\>\<br\ /\> ]]
 }
@@ -141,11 +141,11 @@ class=\"list-item\"\>.*\[.*1/1.*\].*${_S}File${_S}One.md\</a\>\<br\ /\> ]]
   [[ "${status}"  ==  0 ]]
 
   [[ "${output}"  =~  \
-\<h1\ class=\"header-crumbs\"\ id=\"nb-home-example-folder\"\>\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\&amp\;--terminal\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\> ]]
+\<h1\ class=\"header-crumbs\"\ id=\"nb-home-example-folder\"\>\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\> ]]
   [[ "${output}"  =~  \
-.*·.*\ \<a.*\ href=\"http://localhost:6789/home:\?--per-page=.*\&amp\;--terminal\"\>home\</a\>\ .*:.*\              ]]
+.*·.*\ \<a.*\ href=\"http://localhost:6789/home:\?--per-page=.*\"\>home\</a\>\ .*:.*\              ]]
   [[ "${output}"  =~  \
-\<a.*\ href=\"http://localhost:6789/home:1/\?--per-page=.*\&amp\;--terminal\"\>Example\ Folder\</a\>\ .*/.*\</h1\>  ]]
+\<a.*\ href=\"http://localhost:6789/home:1/\?--per-page=.*\"\>Example\ Folder\</a\>\ .*/.*\</h1\>  ]]
 
   [[ "${output}"  =~  0\ items. ]]
 }
@@ -165,9 +165,9 @@ class=\"list-item\"\>.*\[.*1/1.*\].*${_S}File${_S}One.md\</a\>\<br\ /\> ]]
   [[ "${status}"  ==  0 ]]
 
   [[ "${output}"  =~  \
-\<h1\ class=\"header-crumbs\"\ id=\"nb-example-notebook\"\>\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\&amp\;--terminal\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>  ]]
+\<h1\ class=\"header-crumbs\"\ id=\"nb-example-notebook\"\>\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>  ]]
   [[ "${output}"  =~  \
-.*·.*\ \<a.*\ href=\"http://localhost:6789/Example%20Notebook:\?--per-page=.*\&amp\;--terminal\"\>Example\ Notebook\</a\>.*\</h1\>  ]]
+.*·.*\ \<a.*\ href=\"http://localhost:6789/Example%20Notebook:\?--per-page=.*\"\>Example\ Notebook\</a\>.*\</h1\>  ]]
 
   [[ "${output}"  =~  0\ items. ]]
 }
@@ -194,22 +194,22 @@ class=\"list-item\"\>.*\[.*1/1.*\].*${_S}File${_S}One.md\</a\>\<br\ /\> ]]
   [[ "${output}"  =~  \
 \<h1\ class=\"header-crumbs\"\>           ]]
   [[ "${output}"  =~  \
-\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\&--terminal\"\>\<span\                       ]]
+\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\                      ]]
   [[ "${output}"  =~  \
 \<span\ class=\"dim\"\>❯\</span\>nb\</a\>\ .*·.*\ \<span\ class=\"dim\"\>notebooks\</span\>.*\</h1\>  ]]
 
 
   [[ "${output}"  =~  \
-\<p\>\<a.*\ href=\"http://localhost:6789/One:\?--per-page=.*\&amp\;--terminal\"\>One\</a\>\ .*·.*\    ]]
+\<p\>\<a.*\ href=\"http://localhost:6789/One:\?--per-page=.*\"\>One\</a\>\ .*·.*\   ]]
 
   [[ "${output}"  =~  \
-\<a.*\ href=\"http://localhost:6789/Two:\?--per-page=.*\&amp\;--terminal\"\>Two\</a\>\ .*·.*\         ]]
+\<a.*\ href=\"http://localhost:6789/Two:\?--per-page=.*\"\>Two\</a\>\ .*·.*\        ]]
 
   [[ "${output}"  =~  \
-\<a.*\ href=\"http://localhost:6789/Three:\?--per-page=.*\&amp\;--terminal\"\>Three\</a\>\ .*·.*\     ]]
+\<a.*\ href=\"http://localhost:6789/Three:\?--per-page=.*\"\>Three\</a\>\ .*·.*\    ]]
 
   [[ "${output}"  =~  \
-\<a.*\ href=\"http://localhost:6789/home:\?--per-page=.*\&amp\;--terminal\"\>home\</a\>\</p\>         ]]
+\<a.*\ href=\"http://localhost:6789/home:\?--per-page=.*\"\>home\</a\>\</p\>        ]]
 }
 
 @test "'browse' with no arguments serves the current notebook contents as a rendered HTML page with links to internal web server URLs." {
@@ -237,22 +237,23 @@ class=\"list-item\"\>.*\[.*1/1.*\].*${_S}File${_S}One.md\</a\>\<br\ /\> ]]
   [[ "${output}"  =~  \<\!DOCTYPE\ html\>                           ]]
 
   [[ "${output}"  =~  \
-\<h1\ class=\"header-crumbs\"\ id=\"nb-home\"\>.*\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\&amp\;--terminal\"\> ]]
+\<h1\ class=\"header-crumbs\"\ id=\"nb-home\"\>.*\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\"\> ]]
   [[ "${output}"  =~  \
-href=\"http://localhost:6789/\?--per-page=.*\&amp\;--terminal\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>  ]]
-  [[ "${output}"  =~ .*·.*\ \<a.*\ href=\"http://localhost:6789/home:\?--per-page=.*\&amp\;--terminal\"\>home\</a\>.*\</h1\>      ]]
+href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\> ]]
+  [[ "${output}"  =~  \
+.*·.*\ \<a.*\ href=\"http://localhost:6789/home:\?--per-page=.*\"\>home\</a\>.*\</h1\>    ]]
 
   [[ "${output}"  =~  \
-\<p\>\<a.*\ href=\"http://localhost:6789/home:3\?--per-page=.*\&amp\;--terminal\"\ class=\"list-item\"\>        ]]
-  [[ "${output}"  =~  .*\[.*home:3.*\].*${_S}📂${_S}Example${_S}Folder\</a\>\<br\ /\> ]]
+\<p\>\<a.*\ href=\"http://localhost:6789/home:3\?--per-page=.*\"\ class=\"list-item\"\>   ]]
+  [[ "${output}"  =~  .*\[.*home:3.*\].*${_S}📂${_S}Example${_S}Folder\</a\>\<br\ /\>     ]]
 
   [[ "${output}"  =~  \
-\<a.*\ href=\"http://localhost:6789/home:2\?--per-page=.*\&amp\;--terminal\"\ class=\"list-item\"\>             ]]
-  [[ "${output}"  =~  .*\[.*home:2.*\].*${_S}Title${_S}Two\</a\>\<br\ /\>             ]]
+\<a.*\ href=\"http://localhost:6789/home:2\?--per-page=.*\"\ class=\"list-item\"\>        ]]
+  [[ "${output}"  =~  .*\[.*home:2.*\].*${_S}Title${_S}Two\</a\>\<br\ /\>                 ]]
 
   [[ "${output}"  =~  \
-\<a.*\ href=\"http://localhost:6789/home:1\?--per-page=.*\&amp\;--terminal\"\ class=\"list-item\"\>             ]]
-  [[ "${output}"  =~  .*\[.*home:1.*\].*${_S}Title${_S}One\</a\>\<br\ /\>             ]]
+\<a.*\ href=\"http://localhost:6789/home:1\?--per-page=.*\"\ class=\"list-item\"\>        ]]
+  [[ "${output}"  =~  .*\[.*home:1.*\].*${_S}Title${_S}One\</a\>\<br\ /\>                 ]]
 }
 
 @test "'browse <folder-selector>/' (slash) serves the list as rendered HTML with links to internal web server URLs." {
@@ -276,19 +277,19 @@ href=\"http://localhost:6789/\?--per-page=.*\&amp\;--terminal\"\>\<span\ class=\
   [[ "${status}"  ==  0 ]]
 
   [[ "${output}"  =~  \
-\<h1\ class=\"header-crumbs\"\ id=\"nb-home-example-folder\"\>.*\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\&amp\;--terminal\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\> ]]
+\<h1\ class=\"header-crumbs\"\ id=\"nb-home-example-folder\"\>.*\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>  ]]
   [[ "${output}"  =~  \
-.*·.*\ \<a.*\ href=\"http://localhost:6789/home:\?--per-page=.*\&amp\;--terminal\"\>home\</a\>\ .*:.*\              ]]
+.*·.*\ \<a.*\ href=\"http://localhost:6789/home:\?--per-page=.*\"\>home\</a\>\ .*:.*\             ]]
   [[ "${output}"  =~  \
-\<a.*\ href=\"http://localhost:6789/home:1/\?--per-page=.*\&amp\;--terminal\"\>Example\ Folder\</a\>\ .*/.*\</h1\>  ]]
+\<a.*\ href=\"http://localhost:6789/home:1/\?--per-page=.*\"\>Example\ Folder\</a\>\ .*/.*\</h1\> ]]
 
   [[ "${output}"  =~  \
-\<p\>\<a.*\ href=\"http://localhost:6789/home:1/2\?--per-page=.*\&amp\;--terminal\"\ class=\"list-item\"\>          ]]
-  [[ "${output}"  =~  .*\[.*Example${_S}Folder/2.*\].*${_S}Title${_S}Two\</a\>\<br\ /\>   ]]
+\<p\>\<a.*\ href=\"http://localhost:6789/home:1/2\?--per-page=.*\"\ class=\"list-item\"\>         ]]
+  [[ "${output}"  =~  .*\[.*Example${_S}Folder/2.*\].*${_S}Title${_S}Two\</a\>\<br\ /\>           ]]
 
   [[ "${output}"  =~  \
-\<a.*\ href=\"http://localhost:6789/home:1/1\?--per-page=.*\&amp\;--terminal\"\ class=\"list-item\"\>               ]]
-  [[ "${output}"  =~  .*\[.*Example${_S}Folder/1.*\].*${_S}Title${_S}One\</a\>\<br\ /\>   ]]
+\<a.*\ href=\"http://localhost:6789/home:1/1\?--per-page=.*\"\ class=\"list-item\"\>              ]]
+  [[ "${output}"  =~  .*\[.*Example${_S}Folder/1.*\].*${_S}Title${_S}One\</a\>\<br\ /\>           ]]
 }
 
 @test "'browse <folder-selector>' (no slash) serves the list as rendered HTML with links to internal web server URLs." {
@@ -312,19 +313,19 @@ href=\"http://localhost:6789/\?--per-page=.*\&amp\;--terminal\"\>\<span\ class=\
   [[ "${status}"  ==  0 ]]
 
   [[ "${output}"  =~  \
-\<h1\ class=\"header-crumbs\"\ id=\"nb-home-example-folder\"\>\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\&amp\;--terminal\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\> ]]
+\<h1\ class=\"header-crumbs\"\ id=\"nb-home-example-folder\"\>\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>  ]]
   [[ "${output}"  =~  \
-.*·.*\ \<a.*\ href=\"http://localhost:6789/home:\?--per-page=.*\&amp\;--terminal\"\>home\</a\>\ .*:.*\              ]]
+.*·.*\ \<a.*\ href=\"http://localhost:6789/home:\?--per-page=.*\"\>home\</a\>\ .*:.*\             ]]
   [[ "${output}"  =~  \
-\<a.*\ href=\"http://localhost:6789/home:1/\?--per-page=.*\&amp\;--terminal\"\>Example\ Folder\</a\>\ .*/.*\</h1\>  ]]
+\<a.*\ href=\"http://localhost:6789/home:1/\?--per-page=.*\"\>Example\ Folder\</a\>\ .*/.*\</h1\> ]]
 
   [[ "${output}"  =~  \
-\<p\>\<a.*\ href=\"http://localhost:6789/home:1/2\?--per-page=.*\&amp\;--terminal\"\ class=\"list-item\"\>          ]]
-  [[ "${output}"  =~  .*\[.*Example${_S}Folder/2.*\].*${_S}Title${_S}Two\</a\>\<br\ /\>   ]]
+\<p\>\<a.*\ href=\"http://localhost:6789/home:1/2\?--per-page=.*\"\ class=\"list-item\"\>         ]]
+  [[ "${output}"  =~  .*\[.*Example${_S}Folder/2.*\].*${_S}Title${_S}Two\</a\>\<br\ /\>           ]]
 
   [[ "${output}"  =~  \
-\<a.*\ href=\"http://localhost:6789/home:1/1\?--per-page=.*\&amp\;--terminal\"\ class=\"list-item\"\>               ]]
-  [[ "${output}"  =~  .*\[.*Example${_S}Folder/1.*\].*${_S}Title${_S}One\</a\>\<br\ /\>   ]]
+\<a.*\ href=\"http://localhost:6789/home:1/1\?--per-page=.*\"\ class=\"list-item\"\>              ]]
+  [[ "${output}"  =~  .*\[.*Example${_S}Folder/1.*\].*${_S}Title${_S}One\</a\>\<br\ /\>           ]]
 }
 
 @test "'browse <notebook>:' serves the notebook contents as rendered HTML with links to internal web server URLs." {
@@ -350,15 +351,15 @@ href=\"http://localhost:6789/\?--per-page=.*\&amp\;--terminal\"\>\<span\ class=\
   [[ "${status}"  ==  0 ]]
 
   [[ "${output}"  =~  \
-\<h1\ class=\"header-crumbs\"\ id=\"nb-example-notebook\"\>\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\&amp\;--terminal\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>  ]]
+\<h1\ class=\"header-crumbs\"\ id=\"nb-example-notebook\"\>\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\> ]]
   [[ "${output}"  =~  \
-.*·.*\ \<a.*\ href=\"http://localhost:6789/Example%20Notebook:\?--per-page=.*\&amp\;--terminal\"\>Example\ Notebook\</a\>\</h1\>  ]]
+.*·.*\ \<a.*\ href=\"http://localhost:6789/Example%20Notebook:\?--per-page=.*\"\>Example\ Notebook\</a\>\</h1\> ]]
 
   [[ "${output}"  =~  \
-\<p\>\<a.*\ href=\"http://localhost:6789/Example%20Notebook:2\?--per-page=.*\&amp\;--terminal\"\ class=\"list-item\"\>  ]]
-  [[ "${output}"  =~  .*\[.*Example${_S}Notebook:2.*\].*${_S}Title${_S}Two\</a\>\<br\ /\>     ]]
+\<p\>\<a.*\ href=\"http://localhost:6789/Example%20Notebook:2\?--per-page=.*\"\ class=\"list-item\"\> ]]
+  [[ "${output}"  =~  .*\[.*Example${_S}Notebook:2.*\].*${_S}Title${_S}Two\</a\>\<br\ /\>             ]]
 
   [[ "${output}"  =~  \
-\<a.*\ href=\"http://localhost:6789/Example%20Notebook:1\?--per-page=.*\&amp\;--terminal\"\ class=\"list-item\"\>       ]]
-  [[ "${output}"  =~  .*\[.*Example${_S}Notebook:1.*\].*${_S}Title${_S}One\</a\>\<br\ /\>     ]]
+\<a.*\ href=\"http://localhost:6789/Example%20Notebook:1\?--per-page=.*\"\ class=\"list-item\"\>      ]]
+  [[ "${output}"  =~  .*\[.*Example${_S}Notebook:1.*\].*${_S}Title${_S}One\</a\>\<br\ /\>             ]]
 }

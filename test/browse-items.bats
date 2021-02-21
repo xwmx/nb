@@ -55,10 +55,10 @@ HEREDOC
   [[ "${output}"    =~  \<h1\ class=\"header-crumbs\"\>     ]]
 
   printf "%s\\n" "${output}" | grep -q \
-'<a.* href="http://localhost:6789/?--per-page=.*--terminal"><span class="dim">❯</span>nb</a>'
+'<a.* href="http://localhost:6789/?--per-page=.*"><span class="dim">❯</span>nb</a>'
 
   printf "%s\\n" "${output}" | grep -q \
-'<span class="dim">·</span> <a.* href="http://localhost:6789/home:?--per-page=.*--terminal">home</a\>'
+'<span class="dim">·</span> <a.* href="http://localhost:6789/home:?--per-page=.*">home</a\>'
 
   [[ "${output}"    =~  \<div\ class=\"sourceCode\"         ]]
   [[ "${output}"    =~  \<pre\ class=\"sourceCode\ bash\"\> ]]
@@ -83,10 +83,10 @@ HEREDOC
   [[ "${output}"    =~  \<h1\ class=\"header-crumbs\"\>     ]]
 
   printf "%s\\n" "${output}" | grep -q \
-'<a.* href="http://localhost:6789/?--per-page=.*--terminal"><span class="dim">❯</span>nb</a>'
+'<a.* href="http://localhost:6789/?--per-page=.*"><span class="dim">❯</span>nb</a>'
 
   printf "%s\\n" "${output}" | grep -q \
-'<span class="dim">·</span> <a.* href="http://localhost:6789/home:?--per-page=.*--terminal">home</a\>'
+'<span class="dim">·</span> <a.* href="http://localhost:6789/home:?--per-page=.*">home</a\>'
 
   [[ "${output}"    =~  \<div\ class=\"sourceCode\"         ]]
   [[ "${output}"    =~  \<pre\ class=\"sourceCode\ js\"\>   ]]

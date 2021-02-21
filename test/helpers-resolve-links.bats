@@ -102,19 +102,19 @@ load test_helper
   [[ "${status}"  -eq 0                 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-    "Selector link one: <a.* href=\"http://localhost:6789/home:2/1?--per-page=2&--terminal\">\[\[home:2/1\]\]</a> •"
+    "Selector link one: <a.* href=\"http://localhost:6789/home:2/1?--per-page=2\">\[\[home:2/1\]\]</a> •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Selector link two: <a.* href=\"http://localhost:6789/home:3?--per-page=2&--terminal\">\[\[Root Title One\]\]</a> •"
+    "Selector link two: <a.* href=\"http://localhost:6789/home:3?--per-page=2\">\[\[Root Title One\]\]</a> •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Tag one: <a.* href=\"http://localhost:6789/home:?--per-page=2&--terminal&--query=%23tag_1\">#tag_1</a> •"
+    "Tag one: <a.* href=\"http://localhost:6789/home:?--per-page=2&--query=%23tag_1\">#tag_1</a> •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Tag two: <a.* href=\"http://localhost:6789/home:?--per-page=2&--terminal&--query=%23tag-2\">#tag-2</a> •"
+    "Tag two: <a.* href=\"http://localhost:6789/home:?--per-page=2&--query=%23tag-2\">#tag-2</a> •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "<p><a.* href=\"http://localhost:6789/home:?--per-page=2&--terminal&--query=%23tag3\">#tag3</a></p>"
+    "<p><a.* href=\"http://localhost:6789/home:?--per-page=2&--query=%23tag3\">#tag3</a></p>"
 }
 
 @test "'_resolve_links --browse' resolves [[wiki-style links]] and tags in partial .html files to .html links to local web server URLs." {
@@ -421,16 +421,16 @@ load test_helper
   [[ "${status}"  -eq 0                 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-    "Selector link one: \[\[http://localhost:6789/home:2/1?--per-page=2&--terminal\]\[\[\[home:2/1\]\]\]\] •"
+    "Selector link one: \[\[http://localhost:6789/home:2/1?--per-page=2\]\[\[\[home:2/1\]\]\]\] •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Selector link two: \[\[http://localhost:6789/home:3?--per-page=2&--terminal\]\[\[\[Root Title One\]\]\]\] •"
+    "Selector link two: \[\[http://localhost:6789/home:3?--per-page=2\]\[\[\[Root Title One\]\]\]\] •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Tag one: \[\[http://localhost:6789/home:?--per-page=2&--terminal&--query=%23tag_1\]\[#tag_1\]\] •"
+    "Tag one: \[\[http://localhost:6789/home:?--per-page=2&--query=%23tag_1\]\[#tag_1\]\] •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Tag two: \[\[http://localhost:6789/home:?--per-page=2&--terminal&--query=%23tag-2\]\[#tag-2\]\] •"
+    "Tag two: \[\[http://localhost:6789/home:?--per-page=2&--query=%23tag-2\]\[#tag-2\]\] •"
 
   printf "%s\\n" "${output}" | grep -q \
     "Org mode link: \[\[http://example.com\]\] •"
@@ -442,7 +442,7 @@ load test_helper
     "Internal Org mode link: \[\[#sample\]\] •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "^\[\[http://localhost:6789/home:?--per-page=2&--terminal&--query=%23tag3\]\[#tag3\]\]$"
+    "^\[\[http://localhost:6789/home:?--per-page=2&--query=%23tag3\]\[#tag3\]\]$"
 }
 
 @test "'_resolve_links --browse' resolves [[wiki-style links]] and #tags in .org files to .org links to local web server URLs." {

@@ -8425,7 +8425,7 @@ _resolve_links() {
 
   if ((_terminal)) && [[ -n "${_per_page:-}" ]]
   then
-    _query_string="?--per-page=${_per_page:-}\&--terminal"
+    _query_string="?--per-page=${_per_page:-}"
   fi
 
   local _repo_path=
@@ -14068,7 +14068,7 @@ _browse() {
 
         if ((_terminal_browser))
         then
-          _url_params+="?--per-page=${_per_page}&--terminal"
+          _url_params+="?--per-page=${_per_page}"
         fi
 
         printf "<a href=\"http://localhost:%s/%s\" class=\"list-item\">%s</a><br>\\n" \
@@ -14143,11 +14143,6 @@ HEREDOC
 
       local _params="--per-page=${_per_page}"
 
-      if ((_terminal_browser))
-      then
-        _params+="&--terminal"
-      fi
-
       if [[ -n "${_query:-}" ]]
       then
         _params+="&--query=${_query}"
@@ -14215,7 +14210,7 @@ HEREDOC
 
     if ((_terminal_browser))
     then
-      _url_params+="?--per-page=${_per_page}&--terminal"
+      _url_params+="?--per-page=${_per_page}"
     fi
 
     local _header_content="\
@@ -14453,7 +14448,7 @@ HEREDOC
 
     if _contains "--terminal" "${_pagination_arguments[@]:-}"
     then
-      _url_params+="?--per-page=${_per_page}&--terminal"
+      _url_params+="?--per-page=${_per_page}"
     fi
 
     local _notebook_names=()
