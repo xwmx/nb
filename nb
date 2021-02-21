@@ -8475,36 +8475,6 @@ _resolve_links() {
     sed "${_sed_arguments[@]:-}" "${_file_path}"
   }
 
-  # Usage: _resolve_links_tag_link_pattern <capture-group-number> [<query-string>]
-  _resolve_links_tag_link_pattern() {
-    local _capture_group="${1:-1}"
-    local _query_string="${2:-}"
-    local _replacement_url="http:\/\/localhost:${NB_SERVER_PORT}\/${_notebook_path##*/}:"
-
-    if [[ -n "${_query_string:-}" ]]
-    then
-      _replacement_url+="${_query_string}\&--query=%23\\${_capture_group}"
-    else
-      _replacement_url+="?--query=%23\\${_capture_group}"
-    fi
-
-    local _pattern=
-
-    case "${_file_path:-}" in
-      *\.html)
-        _pattern="<a\ href=\"${_replacement_url:-}\">\#\\${_capture_group}<\/a>"
-        ;;
-      *\.org)
-        _pattern="[[${_replacement_url:-}][\#\\${_capture_group}]]"
-        ;;
-      *)
-        _pattern="\#\\${_capture_group}"
-        ;;
-    esac
-
-    printf "%s\\n" "${_pattern}"
-  }
-
   local _file_path=
   local _for_browsing=0
   local _links=()
@@ -8661,29 +8631,31 @@ _resolve_links() {
     else
       # link #hashtags to internal search URLs
 
-      local _pattern_2=
-      _pattern_2="$(
-        _resolve_links_tag_link_pattern "2" "${_query_string:-}"
-      )"
+      local _replacement_url="http:\/\/localhost:${NB_SERVER_PORT}\/${_notebook_path##*/}:"
+
+      case "${_query_string:-}" in
+        '') _replacement_url+="?--query=%23\\2"                             ;;
+        *)  _replacement_url+="${_query_string}\&--query=%23\\2"            ;;
+      esac
+
+      local _pattern=
+
+      case "${_file_path:-}" in
+        *\.html)  _pattern="<a\ href=\"${_replacement_url:-}\">\#\\2<\/a>"  ;;
+        *\.org)   _pattern="[[${_replacement_url:-}][\#\\2]]"               ;;
+        *)        _pattern="\#\\2"                                          ;;
+      esac
 
       if [[ "${_file_path:-}" =~ \.html ]]
       then
         if grep -q "<\/body>" "${_file_path:-}"
         then
-          sed -E  \
-            -e "/<body>/,/<\/body>/ s/([>|\ ])\#([A-Za-z0-9_\-]+)/\1${_pattern_2}/g"
+          sed -E -e "/<body>/,/<\/body>/ s/([>|\ ])\#([A-Za-z0-9_\-]+)/\1${_pattern}/g"
         else
-          sed -E  \
-            -e "s/([>|\ ])\#([A-Za-z0-9_\-]+)/\1${_pattern_2}/g"
+          sed -E -e "s/([>|\ ])\#([A-Za-z0-9_\-]+)/\1${_pattern}/g"
         fi
       else
-        local _pattern_1=
-        _pattern_1="$(
-          _resolve_links_tag_link_pattern "1" "${_query_string:-}"
-        )"
-
-        sed -E    \
-          -e "s/(^|[>|\ ])\#([A-Za-z0-9_\-]+)/\1${_pattern_2}/g"
+        sed -E -e "s/(^|[>|\ ])\#([A-Za-z0-9_\-]+)/\1${_pattern}/g"
       fi
     fi
   }
