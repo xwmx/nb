@@ -8423,6 +8423,27 @@ _resolve_links() {
         -e 's/)/\\)/g'
   }
 
+  # Usage: _resolve_links_get_matches <repo-path> <file-path> <pattern>
+  _resolve_links_get_matches() {
+    local _repo_path="${1:?}"
+    local _file_path="${2:?}"
+    local _pattern="${3:?}"
+
+    cd "${_repo_path:-}" || return 0
+
+    GIT_PAGER='' git -C "${_repo_path}" \
+      grep                              \
+      --no-index                        \
+      --color=never                     \
+      --extended-regexp                 \
+      -h                                \
+      --only-matching                   \
+      --text                            \
+      -e "${_pattern}"                  \
+      "${_file_path}"                   \
+      2>/dev/null || :
+  }
+
   # _resolve_links_replace()
   #
   # Usage:
@@ -8544,19 +8565,10 @@ _resolve_links() {
     local _matches=()
 
     _matches=($(
-      cd "${_repo_path:-}" || return 0
-
-      GIT_PAGER='' git -C "${_repo_path:-}" \
-        grep                                \
-        --no-index                          \
-        --color=never                       \
-        --extended-regexp                   \
-        -h                                  \
-        --only-matching                     \
-        --text                              \
-        -e "\[\[[^\[]+\]\]"                 \
-        "${_file_path}"                     \
-        2>/dev/null || :
+      _resolve_links_get_matches  \
+        "${_repo_path:-}"         \
+        "${_file_path}"           \
+        "\[\[[^\[]+\]\]"
     ))
 
     local __match=
