@@ -8483,7 +8483,6 @@ _resolve_links() {
   local _file_path=
   local _for_browsing=0
   local _links=()
-  local _matches=()
   local _notebook_name=
   local _per_page=
   local _terminal=0
@@ -8533,68 +8532,94 @@ _resolve_links() {
     git init &>/dev/null
   fi
 
-  _matches=($(
-    cd "${_repo_path:-}" || return 0
+  {
+    # resolve and link [[wiki-style links]]
 
-    GIT_PAGER='' git -C "${_repo_path:-}" \
-      grep                                \
-      --no-index                          \
-      --color=never                       \
-      --extended-regexp                   \
-      -h                                  \
-      --only-matching                     \
-      --text                              \
-      -e "\[\[[^\[]+\]\]"                 \
-      "${_file_path}"                     \
-      2>/dev/null || :
-  ))
+    local _matches=()
 
-  local __match=
-  for   __match in "${_matches[@]:-}"
-  do
-    [[ -z "${__match:-}" ]] && continue
+    _matches=($(
+      cd "${_repo_path:-}" || return 0
 
-    local _selector="${__match#[[}"
-    _selector="${_selector%]]}"
+      GIT_PAGER='' git -C "${_repo_path:-}" \
+        grep                                \
+        --no-index                          \
+        --color=never                       \
+        --extended-regexp                   \
+        -h                                  \
+        --only-matching                     \
+        --text                              \
+        -e "\[\[[^\[]+\]\]"                 \
+        "${_file_path}"                     \
+        2>/dev/null || :
+    ))
 
-    if ((_for_browsing))
-    then
-      if [[ -z "${_selector:-}" ]]
+    local __match=
+    for   __match in "${_matches[@]:-}"
+    do
+      [[ -z "${__match:-}" ]] && continue
+
+      local _selector="${__match#[[}"
+      _selector="${_selector%]]}"
+
+      if ((_for_browsing))
       then
-        _links+=("${__match}")
-      else
-        local _query_selector=
-
-        if [[ "${_selector:-}" =~ : ]] && [[ ! "${_selector:-}" =~ :// ]]
+        if [[ -z "${_selector:-}" ]]
         then
-          _notebook_name="${_selector%%:*}"
-          _query_selector="${_selector}"
+          _links+=("${__match}")
         else
-          _notebook_name="${_notebook_path##*/}"
-          _query_selector="${_notebook_name}:${_selector}"
+          local _query_selector=
+
+          if [[ "${_selector:-}" =~ : ]] && [[ ! "${_selector:-}" =~ :// ]]
+          then
+            _notebook_name="${_selector%%:*}"
+            _query_selector="${_selector}"
+          else
+            _notebook_name="${_notebook_path##*/}"
+            _query_selector="${_notebook_name}:${_selector}"
+          fi
+
+          local _selector_path=
+          _selector_path="$(_selector_resolve_path "${_query_selector:-}")"
+
+          local _id_selector=
+          _id_selector="$(
+            _get_id_selector "${_notebook_name}:${_selector_path}" 2>/dev/null || :
+          )"
+
+          if [[ -n "${_selector#*:}" ]] && [[ -z "${_selector_path:-}" ]]
+          then
+            _links+=("[[${_selector:-}]]")
+          else
+            local _target_url="http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_query_string:-}"
+
+            case "${_file_path:-}" in
+              *\.html)
+                _links+=("<a href=\"${_target_url:-}\">[[${_selector:-}]]</a>"
+                )
+                ;;
+              *\.org)
+                _links+=("[[${_target_url:-}][[[${_selector:-}]]]]")
+                ;;
+              *)
+                _links+=("[[${_selector:-}]]")
+                ;;
+            esac
+          fi
         fi
+      else
+        local _link_path=
+        _link_path="$(_show "${_selector}" --path 2>/dev/null || :)"
 
-        local _selector_path=
-        _selector_path="$(_selector_resolve_path "${_query_selector:-}")"
-
-        local _id_selector=
-        _id_selector="$(
-          _get_id_selector "${_notebook_name}:${_selector_path}" 2>/dev/null || :
-        )"
-
-        if [[ -n "${_selector#*:}" ]] && [[ -z "${_selector_path:-}" ]]
+        if [[ -z "${_link_path:-}" ]]
         then
-          _links+=("[[${_selector:-}]]")
+          _links+=("[[${_selector}]]")
         else
-          local _target_url="http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_query_string:-}"
-
           case "${_file_path:-}" in
             *\.html)
-              _links+=("<a href=\"${_target_url:-}\">[[${_selector:-}]]</a>"
-              )
+              _links+=("<a href=\"file://${_link_path:-}\">[[${_selector:-}]]</a>")
               ;;
             *\.org)
-              _links+=("[[${_target_url:-}][[[${_selector:-}]]]]")
+              _links+=("[[file://${_link_path:-}][[[${_selector:-}]]]]")
               ;;
             *)
               _links+=("[[${_selector:-}]]")
@@ -8602,40 +8627,18 @@ _resolve_links() {
           esac
         fi
       fi
-    else
-      local _link_path=
-      _link_path="$(_show "${_selector}" --path 2>/dev/null || :)"
+    done
 
-      if [[ -z "${_link_path:-}" ]]
-      then
-        _links+=("[[${_selector}]]")
-      else
-        case "${_file_path:-}" in
-          *\.html)
-            _links+=("<a href=\"file://${_link_path:-}\">[[${_selector:-}]]</a>")
-            ;;
-          *\.org)
-            _links+=("[[file://${_link_path:-}][[[${_selector:-}]]]]")
-            ;;
-          *)
-            _links+=("[[${_selector:-}]]")
-            ;;
-        esac
-      fi
-    fi
-  done
-
-  {
     _resolve_links_replace "${_file_path}" "${_matches[@]}" --- "${_links[@]}"
   } | {
+    # link #hashtags to internal search URLs
+
     if ! ((_for_browsing))
     then
       cat
 
       return 0
     else
-      # link #hashtags to internal search URLs
-
       local _replacement_url="http:\/\/localhost:${NB_SERVER_PORT}\/${_notebook_path##*/}:"
 
       case "${_query_string:-}" in
