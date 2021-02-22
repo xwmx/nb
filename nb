@@ -164,14 +164,14 @@ _contains() {
   return 1
 }
 
-# _resolve_link()
+# _resolve_symlink()
 #
 # Usage:
-#   _resolve_link <path>
+#   _resolve_symlink <path>
 #
 # Description:
 #   Resolve the real path, or as close as poassible, for a symbolic link.
-_resolve_link() {
+_resolve_symlink() {
   if hash "realpath" 2>/dev/null
   then
     realpath "${@:-}"
@@ -368,7 +368,7 @@ export NBRC_PATH="${NBRC_PATH:-"${HOME}/.nbrc"}"
 # Handle symlinked NBRC_PATH.
 if [[ -L "${NBRC_PATH}" ]]
 then
-  NBRC_PATH="$(_resolve_link "${NBRC_PATH}")"
+  NBRC_PATH="$(_resolve_symlink "${NBRC_PATH}")"
 fi
 
 # Source rc file.
@@ -389,7 +389,7 @@ export NB_DIR="${NB_DIR:-"${HOME}/.nb"}"
 # Handle symlinked NB_DIR.
 if [[ -L "${NB_DIR:-}"  ]]
 then
-  NB_DIR="$(_resolve_link "${NB_DIR}")"
+  NB_DIR="$(_resolve_symlink "${NB_DIR}")"
 fi
 
 # Validate that NB_DIR exists and is writable.
@@ -10191,7 +10191,7 @@ _completions() {
 
     if [[ -L "${_my_path}" ]]
     then
-      _my_path="$(_resolve_link "${_my_path}")"
+      _my_path="$(_resolve_symlink "${_my_path}")"
     fi
 
     local _my_dir=
@@ -16699,7 +16699,7 @@ _update() {
   if [[ -n "${_current_path}" ]] &&
      [[ -L "${_current_path}" ]]
   then
-    _current_path="$(_resolve_link "${_current_path}")"
+    _current_path="$(_resolve_symlink "${_current_path}")"
   fi
 
   if hash npm 2>/dev/null         &&
