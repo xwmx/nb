@@ -11,7 +11,7 @@ load test_helper
   [[ "${status}"  -eq 0                             ]]
   [[ "${output}"  ==  "http%3A%2F%2Fexample.com"    ]]
 
-  run "${_NB}" helpers get-uri encode https://example.com
+  run "${_NB}" helpers get-uri --encode https://example.com
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -29,7 +29,7 @@ load test_helper
   [[ "${status}"  -eq 0                           ]]
   [[ "${output}"  ==  "http://example.com"        ]]
 
-  run "${_NB}" helpers get-uri decode https%3A%2F%2Fexample.com
+  run "${_NB}" helpers get-uri --decode https%3A%2F%2Fexample.com
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
