@@ -8633,7 +8633,7 @@ _resolve_links() {
       fi
     done
 
-    _resolve_links_replace "${_file_path}" "${_matches[@]}" --- "${_links[@]}"
+    _resolve_links_replace "${_file_path}" "${_matches[@]:-}" --- "${_links[@]:-}"
   } | {
     # link #hashtags to internal search URLs
 
