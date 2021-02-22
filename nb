@@ -8423,14 +8423,18 @@ _resolve_links() {
   # _resolve_links_replace()
   #
   # Usage:
-  #   _resolve_links_replace <file-path> <matches> --- <links>
+  #   _resolve_links_replace <file-path> <match>... --- <replacement>...
+  #
+  # Description:
+  #   Read file at <file-path>, replace each <match> with the corresponding
+  #   <replacement>, and print to standard output.
   _resolve_links_replace() {
     local _file_path="${1:?}"
 
     shift
 
-    local _links=()
     local _matches=()
+    local _replacements=()
     local _separator_seen=0
 
     while ((${#}))
@@ -8443,7 +8447,7 @@ _resolve_links() {
         then
           _matches+=("${1:-}")
         else
-          _links+=("${1:-}")
+          _replacements+=("${1:-}")
         fi
       fi
 
@@ -8453,26 +8457,26 @@ _resolve_links() {
     local _sed_arguments=()
     local _seen_matches=()
 
-    [[ "${#_matches[@]}" != "${#_links[@]}" ]] && return 1
+    [[ "${#_matches[@]}" != "${#_replacements[@]}" ]] && return 1
 
     local i=0
-    for ((i=0; i < "${#_links[@]}"; i++))
+    for ((i=0; i < "${#_replacements[@]}"; i++))
     do
       local _escaped_match=
       _escaped_match="$(
         _resolve_links_escape_link_component "${_matches[i]:-}"
       )"
 
-      local _escaped_link=
-      _escaped_link="$(
-        _resolve_links_escape_link_component "${_links[i]:-}"
+      local _escaped_replacement=
+      _escaped_replacement="$(
+        _resolve_links_escape_link_component "${_replacements[i]:-}"
       )"
 
-      if [[ -n "${_escaped_match:-}"  ]] &&
-         [[ -n "${_escaped_link:-}"   ]] &&
+      if [[ -n "${_escaped_match:-}"        ]] &&
+         [[ -n "${_escaped_replacement:-}"  ]] &&
          ! _contains "${_escaped_match}" "${_seen_matches[@]:-}"
       then
-        _sed_arguments+=("-e" "s/${_escaped_match}/${_escaped_link}/g")
+        _sed_arguments+=("-e" "s/${_escaped_match}/${_escaped_replacement}/g")
         _seen_matches+=("${_escaped_match}")
       fi
     done
