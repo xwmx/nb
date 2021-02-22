@@ -63,7 +63,9 @@ load test_helper
     _content+="Tag two: #tag-2 • "
     _content+="Tag not valid: 123#not-valid-tag • "
     _content+="${_NEWLINE}${_NEWLINE}#tag3${_NEWLINE}${_NEWLINE}"
-    _content+="${_NEWLINE}#tag4 #tag5 #tag6 #tag7${_NEWLINE}"
+    _content+="#tag4 #tag5 #tag6 #tag7${_NEWLINE}${_NEWLINE}"
+    _content+="[Example Outbound Link One](http://example.com) • "
+    _content+="[Example Outbound Link Two](https://test.test) • "
 
     "${_NB}" add  "Sample Folder/Sample Nested File One.md"   \
       --title     "Sample Nested Title One"                   \
@@ -104,37 +106,43 @@ load test_helper
   [[ "${status}"  -eq 0                 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-    "Selector link one: <a.* href=\"http://localhost:6789/home:2/1?--per-page=2\">\[\[home:2/1\]\]</a> •"
+"Selector link one: <a.* href=\"http://localhost:6789/home:2/1?--per-page=2\">\[\[home:2/1\]\]</a> •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Selector link two: <a.* href=\"http://localhost:6789/home:3?--per-page=2\">\[\[Root Title One\]\]</a> •"
+"Selector link two: <a.* href=\"http://localhost:6789/home:3?--per-page=2\">\[\[Root Title One\]\]</a> •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Tag one: <a.* href=\"http://localhost:6789/home:?--per-page=2&--query=%23tag_1\">#tag_1</a> •"
+"Tag one: <a.* href=\"http://localhost:6789/home:?--per-page=2&--query=%23tag_1\">#tag_1</a> •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Tag two: <a.* href=\"http://localhost:6789/home:?--per-page=2&--query=%23tag-2\">#tag-2</a> •"
+"Tag two: <a.* href=\"http://localhost:6789/home:?--per-page=2&--query=%23tag-2\">#tag-2</a> •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Tag not valid: 123#not-valid-tag •"
+"Tag not valid: 123#not-valid-tag •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "<p><a.* href=\"http://localhost:6789/home:?--per-page=2&--query=%23tag3\">#tag3</a></p>"
+"<p><a.* href=\"http://localhost:6789/home:?--per-page=2&--query=%23tag3\">#tag3</a></p>"
 
   printf "%s\\n" "${output}" | grep -q \
-    "<p><a.* href=\"http://localhost:6789/home:?--per-page=2&--query=%23tag4\">#tag4</a> "
+"<p><a.* href=\"http://localhost:6789/home:?--per-page=2&--query=%23tag4\">#tag4</a> "
 
   printf "%s\\n" "${output}" | grep -q \
-    " <a.* href=\"http://localhost:6789/home:?--per-page=2&--query=%23tag5\">#tag5</a> "
+" <a.* href=\"http://localhost:6789/home:?--per-page=2&--query=%23tag5\">#tag5</a> "
 
   printf "%s\\n" "${output}" | grep -q \
-    " <a.* href=\"http://localhost:6789/home:?--per-page=2&--query=%23tag6\">#tag6</a> "
+" <a.* href=\"http://localhost:6789/home:?--per-page=2&--query=%23tag6\">#tag6</a> "
 
   printf "%s\\n" "${output}" | grep -q \
-    " <a.* href=\"http://localhost:6789/home:?--per-page=2&--query=%23tag7\">#tag7</a></p>"
+" <a.* href=\"http://localhost:6789/home:?--per-page=2&--query=%23tag7\">#tag7</a></p>"
+
+  printf "%s\\n" "${output}" | grep -q \
+"<p><a.* href=\"http://localhost:6789?--url=http%3A%2F%2Fexample.com\">Example Outbound Link One</a> •"
+
+  printf "%s\\n" "${output}" | grep -q \
+"<a.* href=\"http://localhost:6789?--url=https%3A%2F%2Ftest.test\">Example Outbound Link Two</a> •</p>"
 }
 
-@test "'_resolve_links --browse' resolves [[wiki-style links]] and tags in partial .html files to .html links to local web server URLs." {
+@test "'_resolve_links --browse' resolves [[wiki-style links]], tags, and outbound links in partial .html files to .html links to local web server URLs." {
   {
     "${_NB}" init
 
@@ -145,7 +153,9 @@ load test_helper
     _content+="Tag two: #tag-2 • "
     _content+="Tag not valid: 123#not-valid-tag • "
     _content+="${_NEWLINE}${_NEWLINE}#tag3${_NEWLINE}${_NEWLINE}"
-    _content+="${_NEWLINE}#tag4 #tag5 #tag6 #tag7${_NEWLINE}"
+    _content+="#tag4 #tag5 #tag6 #tag7${_NEWLINE}${_NEWLINE}"
+    _content+="[Example Outbound Link One](http://example.com) • "
+    _content+="[Example Outbound Link Two](https://test.test) • "
 
     "${_NB}" add  "Sample Folder/Sample Nested File One.md"   \
       --title     "Sample Nested Title One"                   \
@@ -185,37 +195,43 @@ load test_helper
   [[ "${status}"  -eq 0                 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-    "Selector link one: <a.* href=\"http://localhost:6789/home:2/1\">\[\[home:2/1\]\]</a> •"
+"Selector link one: <a.* href=\"http://localhost:6789/home:2/1\">\[\[home:2/1\]\]</a> •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Selector link two: <a.* href=\"http://localhost:6789/home:3\">\[\[Root Title One\]\]</a> •"
+"Selector link two: <a.* href=\"http://localhost:6789/home:3\">\[\[Root Title One\]\]</a> •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Tag one: <a.* href=\"http://localhost:6789/home:?--query=%23tag_1\">#tag_1</a> •"
+"Tag one: <a.* href=\"http://localhost:6789/home:?--query=%23tag_1\">#tag_1</a> •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Tag two: <a.* href=\"http://localhost:6789/home:?--query=%23tag-2\">#tag-2</a> •"
+"Tag two: <a.* href=\"http://localhost:6789/home:?--query=%23tag-2\">#tag-2</a> •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Tag not valid: 123#not-valid-tag •"
+"Tag not valid: 123#not-valid-tag •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "<p><a.* href=\"http://localhost:6789/home:?--query=%23tag3\">#tag3</a></p>"
+"<p><a.* href=\"http://localhost:6789/home:?--query=%23tag3\">#tag3</a></p>"
 
   printf "%s\\n" "${output}" | grep -q \
-    "<p><a.* href=\"http://localhost:6789/home:?--query=%23tag4\">#tag4</a> "
+"<p><a.* href=\"http://localhost:6789/home:?--query=%23tag4\">#tag4</a> "
 
   printf "%s\\n" "${output}" | grep -q \
-    " <a.* href=\"http://localhost:6789/home:?--query=%23tag5\">#tag5</a> "
+" <a.* href=\"http://localhost:6789/home:?--query=%23tag5\">#tag5</a> "
 
   printf "%s\\n" "${output}" | grep -q \
-    " <a.* href=\"http://localhost:6789/home:?--query=%23tag6\">#tag6</a> "
+" <a.* href=\"http://localhost:6789/home:?--query=%23tag6\">#tag6</a> "
 
   printf "%s\\n" "${output}" | grep -q \
-    " <a.* href=\"http://localhost:6789/home:?--query=%23tag7\">#tag7</a></p>"
+" <a.* href=\"http://localhost:6789/home:?--query=%23tag7\">#tag7</a></p>"
+
+  printf "%s\\n" "${output}" | grep -q \
+"<p><a.* href=\"http://localhost:6789?--url=http%3A%2F%2Fexample.com\">Example Outbound Link One</a> •"
+
+  printf "%s\\n" "${output}" | grep -q \
+"<a href=\"http://localhost:6789?--url=https%3A%2F%2Ftest.test\">Example Outbound Link Two</a> •</p>"
 }
 
-@test "'_resolve_links --browse' resolves [[wiki-style links]] and tags in standalone .html files to .html links to local web server URLs without altering CSS values." {
+@test "'_resolve_links --browse' resolves [[wiki-style links]], tags, and outbound links in standalone .html files to .html links to local web server URLs without altering CSS values." {
   {
     "${_NB}" init
 
@@ -226,7 +242,9 @@ load test_helper
     _content+="Tag two: #tag-2 • "
     _content+="Tag not valid: 123#not-valid-tag • "
     _content+="${_NEWLINE}${_NEWLINE}#tag3${_NEWLINE}${_NEWLINE}"
-    _content+="${_NEWLINE}#tag4 #tag5 #tag6 #tag7${_NEWLINE}"
+    _content+="#tag4 #tag5 #tag6 #tag7${_NEWLINE}${_NEWLINE}"
+    _content+="[Example Outbound Link One](http://example.com) • "
+    _content+="[Example Outbound Link Two](https://test.test) • "
 
     "${_NB}" add  "Sample Folder/Sample Nested File One.md"   \
       --title     "Sample Nested Title One"                   \
@@ -298,9 +316,15 @@ load test_helper
 
   printf "%s\\n" "${output}" | grep -q \
     " <a.* href=\"http://localhost:6789/home:?--query=%23tag7\">#tag7</a></p>"
+
+  printf "%s\\n" "${output}" | grep -q \
+"<p><a.* href=\"http://localhost:6789?--url=http%3A%2F%2Fexample.com\">Example Outbound Link One</a> •"
+
+  printf "%s\\n" "${output}" | grep -q \
+"<a.* href=\"http://localhost:6789?--url=https%3A%2F%2Ftest.test\">Example Outbound Link Two</a> •</p>"
 }
 
-@test "'_resolve_links' resolves [[wiki-style links]] in partial .html files to .html links to local file URLs without linking tags." {
+@test "'_resolve_links' resolves [[wiki-style links]], tags, and outbound links in partial .html files to .html links to local file URLs without linking tags or outbound URLs." {
   {
     "${_NB}" init
 
@@ -311,7 +335,9 @@ load test_helper
     _content+="Tag two: #tag-2 • "
     _content+="Tag not valid: 123#not-valid-tag • "
     _content+="${_NEWLINE}${_NEWLINE}#tag3${_NEWLINE}${_NEWLINE}"
-    _content+="${_NEWLINE}#tag4 #tag5 #tag6 #tag7${_NEWLINE}"
+    _content+="#tag4 #tag5 #tag6 #tag7${_NEWLINE}${_NEWLINE}"
+    _content+="[Example Outbound Link One](http://example.com) • "
+    _content+="[Example Outbound Link Two](https://test.test) • "
 
     "${_NB}" add  "Sample Folder/Sample Nested File One.md"   \
       --title     "Sample Nested Title One"                   \
@@ -369,9 +395,15 @@ load test_helper
 
   printf "%s\\n" "${output}" | grep -q \
     "<p>#tag4 #tag5 #tag6 #tag7</p>"
+
+  printf "%s\\n" "${output}" | grep -q \
+"<p><a.* href=\"http://example.com\">Example Outbound Link One</a> •"
+
+  printf "%s\\n" "${output}" | grep -q \
+"<a.* href=\"https://test.test\">Example Outbound Link Two</a> •</p>"
 }
 
-@test "'_resolve_links' resolves [[wiki-style links]] in standalone .html files to .html links to local file URLs without linking tags or altering CSS values." {
+@test "'_resolve_links' resolves [[wiki-style links]] in standalone .html files to .html links to local file URLs without linking tags or outbound URLs or altering CSS values." {
   {
     "${_NB}" init
 
@@ -382,7 +414,9 @@ load test_helper
     _content+="Tag two: #tag-2 • "
     _content+="Tag not valid: 123#not-valid-tag • "
     _content+="${_NEWLINE}${_NEWLINE}#tag3${_NEWLINE}${_NEWLINE}"
-    _content+="${_NEWLINE}#tag4 #tag5 #tag6 #tag7${_NEWLINE}"
+    _content+="#tag4 #tag5 #tag6 #tag7${_NEWLINE}${_NEWLINE}"
+    _content+="[Example Outbound Link One](http://example.com) • "
+    _content+="[Example Outbound Link Two](https://test.test) • "
 
     "${_NB}" add  "Sample Folder/Sample Nested File One.md"   \
       --title     "Sample Nested Title One"                   \
@@ -444,6 +478,12 @@ load test_helper
 
   printf "%s\\n" "${output}" | grep -q \
     "<p>#tag4 #tag5 #tag6 #tag7</p>"
+
+  printf "%s\\n" "${output}" | grep -q \
+"<p><a.* href=\"http://example.com\">Example Outbound Link One</a> •"
+
+  printf "%s\\n" "${output}" | grep -q \
+"<a.* href=\"https://test.test\">Example Outbound Link Two</a> •</p>"
 }
 
 # .org ########################################################################

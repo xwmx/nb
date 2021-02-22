@@ -8046,7 +8046,7 @@ _get_unique_relative_path() {
 # _get_uri()
 #
 # Usage:
-#   _get_uri <string> [--encode | --decode]
+#   _get_uri [--encode | --decode] <string>
 #
 # Description:
 #   Encode or decode a URI.
@@ -8098,7 +8098,8 @@ _get_uri() {
   }
 
   case "${1:-}" in
-    decode|encode)            _get_uri        "${2:-}"  ;;
+    --decode)                 _get_uri_decode "${2:-}"  ;;
+    --encode)                 _get_uri_encode "${2:-}"  ;;
     http%3A%2F*|https%3A%2F*) _get_uri_decode "${1:-}"  ;;
     http://*|https://*)       _get_uri_encode "${1:-}"  ;;
   esac
@@ -8423,11 +8424,24 @@ _resolve_links() {
         -e 's/)/\\)/g'
   }
 
-  # Usage: _resolve_links_get_matches <repo-path> <file-path> <pattern>
+  # Usage: _resolve_links_get_matches <file-path> <pattern>
   _resolve_links_get_matches() {
-    local _repo_path="${1:?}"
-    local _file_path="${2:?}"
-    local _pattern="${3:?}"
+    local _file_path="${1:?}"
+    local _pattern="${2:?}"
+
+    cd "${_file_path%/*}"
+
+    local _repo_path=
+    _repo_path="$(git rev-parse --show-toplevel 2>/dev/null || :)"
+
+    if [[ -z "${_repo_path:-}"                        ]] &&
+       [[ "${_file_path:-}" =~ ^${_NB_TEMP_DIRECTORY} ]]
+    then # initialize temp directory as git repo to enable `git grep`
+      _repo_path="${_NB_TEMP_DIRECTORY}"
+      cd "${_repo_path:-}"
+
+      git init &>/dev/null
+    fi
 
     cd "${_repo_path:-}" || return 0
 
@@ -8546,18 +8560,6 @@ _resolve_links() {
     _query_string="?--per-page=${_per_page:-}"
   fi
 
-  local _repo_path=
-  _repo_path="$(git rev-parse --show-toplevel 2>/dev/null || :)"
-
-  if [[ -z "${_repo_path:-}"                        ]] &&
-     [[ "${_file_path:-}" =~ ^${_NB_TEMP_DIRECTORY} ]]
-  then # initialize temp directory as git repo to enable `git grep`
-    _repo_path="${_NB_TEMP_DIRECTORY}"
-    cd "${_repo_path:-}"
-
-    git init &>/dev/null
-  fi
-
   {
     # resolve and link [[wiki-style links]]
 
@@ -8565,10 +8567,7 @@ _resolve_links() {
     local _matches=()
 
     _matches=($(
-      _resolve_links_get_matches  \
-        "${_repo_path:-}"         \
-        "${_file_path}"           \
-        "\[\[[^\[]+\]\]"
+      _resolve_links_get_matches "${_file_path}" "\[\[[^\[]+\]\]"
     ))
 
     local __match=
@@ -8648,15 +8647,15 @@ _resolve_links() {
       fi
     done
 
-    _resolve_links_replace "${_file_path}" "${_matches[@]:-}" --- "${_links[@]:-}"
+    _resolve_links_replace  \
+      "${_file_path}"       \
+      "${_matches[@]:-}" --- "${_links[@]:-}"
   } | {
     # link #hashtags to internal search URLs
 
     if ! ((_for_browsing))
     then
       cat
-
-      return 0
     else
       local _replacement_url="http:\/\/localhost:${NB_SERVER_PORT}\/${_notebook_path##*/}:"
 
@@ -8684,6 +8683,66 @@ _resolve_links() {
       else
         sed -E -e "s/(^|[>|\ ])\#([A-Za-z0-9_\-]+)/\1${_pattern}/g"
       fi
+    fi
+  } | {
+    # rewrite outbound links to use an exit page
+
+    if ! ((_for_browsing))
+    then
+      cat
+    else
+      local _file_extension="${_file_path##*\.}"
+
+      local _temp_file_path=
+      _temp_file_path="$(_temp file ".${_file_extension:-}" --touch)"
+
+      cat >> "${_temp_file_path}"
+
+      local _outbound_url_pattern=
+
+      case "${_file_extension:-}" in
+        org)  _outbound_url_pattern="\[\[https?://[^\]]+"     ;;
+        html) _outbound_url_pattern="href=\"https?://[^\"]+"  ;;
+      esac
+
+      local _outbound_url_matches=()
+      _outbound_url_matches=($(
+        _resolve_links_get_matches  \
+          "${_temp_file_path}"      \
+          "${_outbound_url_pattern:-}"
+      ))
+
+      local _matches=()
+      local _replacements=()
+
+      local __match=
+      for   __match in "${_outbound_url_matches[@]:-}"
+      do
+        [[ -z "${__match:-}" ]] && continue
+
+        if [[ "${__match}" =~ https?://localhost ]]
+        then
+          continue
+        fi
+
+        _matches+=("${__match}")
+
+        case "${_file_extension:-}" in
+          org)  local _target_url="${__match#\[\[}"     ;;
+          html) local _target_url="${__match#href=\"}"  ;;
+        esac
+
+        local _encoded_url=
+        _encoded_url="$(_get_uri --encode "${_target_url}")"
+
+        _replacements+=(
+          "href=\"http://localhost:${NB_SERVER_PORT}?--url=${_encoded_url:-}"
+        )
+      done
+
+      _resolve_links_replace  \
+        "${_temp_file_path}"  \
+        "${_matches[@]:-}" --- "${_replacements[@]:-}"
     fi
   }
 }
@@ -14012,6 +14071,7 @@ _browse() {
 
     case "${_status_code}" in
       200) printf "OK\\n"                     ;;
+      307) printf "Temporary Redirect\\n"     ;;
       400) printf "Bad Request\\n"            ;;
       403) printf "Forbidden\\n"              ;;
       404) printf "Not Found\\n"              ;;
@@ -14641,6 +14701,10 @@ HEREDOC
       # then
       #   _response_headers+=("Content-Length: ${_content_length}")
       # fi
+    elif [[ "${_status_code:-}" == "307" ]]
+    then
+      _only_headers=1
+      _response_headers+=("Location: $(_get_uri --decode "${2:-}")")
     else
       _string="${2:-}"
 
@@ -14751,6 +14815,11 @@ HEREDOC
       # turn off case-insensitive matching
       shopt -u nocasematch
     done
+
+    if [[ "${_request_uri}" =~ --url=(.*)           ]]
+    then
+      _browse_respond_with 307 "${BASH_REMATCH[1]}"
+    fi
 
     # detect presence of parameters overriding browser type
 
