@@ -611,7 +611,7 @@ title is displayed instead of the filename and first line.
 
 Markdown titles can be defined within a note using
 [either Markdown `h1` style](https://daringfireball.net/projects/markdown/syntax#header)
-or [YAML front matter](https://jekyllrb.com/docs/front-matter/):
+or [YAML front matter](#front-matter):
 
 ```markdown
 # Example Title
@@ -3623,9 +3623,10 @@ and [`.archived` files](https://github.com/xwmx/nb#archived-notebooks).
 #### Front Matter
 
 User-defined metadata can be added to notes in `nb` using ["front
-matter"](https://jekyllrb.com/docs/front-matter/). Front matter simple,
-human accessible, future-proof, and well supported in tools for working with
-markdown.
+matter"](https://jekyllrb.com/docs/front-matter/). Front matter is a
+simple, human accessible, and future-proof method for defining metadata
+fields in plain text and is well supported in tools for working with
+Markdown.
 
 Front matter is defined within a Markdown file with triple-dashed lines
 (`---`) indicating the start and end of the block, with each field represented
@@ -3636,7 +3637,7 @@ by a key name with a colon followed by the value:
 ---
 title: Example Title
 author: xwmx
-year: 2001
+year: 2021
 ---
 
 Example content.
