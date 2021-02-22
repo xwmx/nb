@@ -42,20 +42,22 @@ export _S=" "
   [[ "${output}"  =~ \<\!DOCTYPE\ html\>                    ]]
 
   printf "%s\\n" "${output}" | grep       -q  \
-'<h1 class="header-crumbs" id="nb-home"><a.* href="http://localhost:6789/?--per-page=2"><span class="dim">❯</span>nb</a>'
+"<h1 class=\"header-crumbs\" id=\"nb-home\"><a.* href=\"http://localhost:6789/?--per-page=2\">"
   printf "%s\\n" "${output}" | grep       -q  \
-'<span class="dim">·</span> <a.* href="http://localhost:6789/home:?--per-page=2">home</a></h1>'
+"id=\"nb-home\"><a.* href=\"http://localhost:6789/?--per-page=2\"><span class=\"dim\">❯</span>nb</a>"
+  printf "%s\\n" "${output}" | grep       -q  \
+"<span class=\"dim\">·</span> <a.* href=\"http://localhost:6789/home:?--per-page=2\">home</a></h1>"
 
   printf "%s\\n" "${output}" | grep       -q  \
-'http://localhost:6789/home:10?--per-page=2" class="list-item">'
+"http://localhost:6789/home:10?--per-page=2\" class=\"list-item\">"
   printf "%s\\n" "${output}" | grep       -q  \
-'http://localhost:6789/home:9?--per-page=2" class="list-item">'
+"http://localhost:6789/home:9?--per-page=2\" class=\"list-item\">"
 
   printf "%s\\n" "${output}" | grep   -v  -q  \
-'http://localhost:6789/home:8?--per-page=2" class="list-item">'
+"http://localhost:6789/home:8?--per-page=2\" class=\"list-item\">"
 
   printf "%s\\n" "${output}" | grep       -q  \
-'http://localhost:6789/home:?--page=2&amp;--per-page=2">next ❯'
+"http://localhost:6789/home:?--page=2&amp;--per-page=2\">next ❯"
 
   run "${_NB}" browse 1 --print --per-page 2 --terminal
 
@@ -66,18 +68,18 @@ export _S=" "
   [[ "${output}"  =~ \<\!DOCTYPE\ html\>                    ]]
 
   printf "%s\\n" "${output}" | grep       -q  \
-'<h1 class="header-crumbs">'
+"<h1 class=\"header-crumbs\">"
   printf "%s\\n" "${output}" | grep       -q  \
-'<a.* href="http://localhost:6789/?--per-page=2"><span class="dim">❯</span>nb</a>'
+"<a.* href=\"http://localhost:6789/?--per-page=2\"><span class=\"dim\">❯</span>nb</a>"
   printf "%s\\n" "${output}" | grep       -q  \
-'<span class="dim">·</span> <a.* href="http://localhost:6789/home:?--per-page=2">home</a>'
+"<span class=\"dim\">·</span> <a.* href=\"http://localhost:6789/home:?--per-page=2\">home</a>"
   printf "%s\\n" "${output}" | grep       -q  \
-'home</a> <span class="dim">:</span> <span class="dim">1</span>'
+"home</a> <span class=\"dim\">:</span> <span class=\"dim\">1</span>"
 
   printf "%s\\n" "${output}" | grep       -q  \
-'<a href="http://localhost:6789/home:2?--per-page=2">\[\[Title Two\]\]</a>'
+"<a href=\"http://localhost:6789/home:2?--per-page=2\">\[\[Title Two\]\]</a>"
   printf "%s\\n" "${output}" | grep       -q  \
-'<a href="http://localhost:6789/home:?--per-page=2&--query=%23example">#example</a></p>'
+"<a href=\"http://localhost:6789/home:?--per-page=2&--query=%23example\">#example</a></p>"
 
   run "${_NB}" browse --notebooks --print --per-page 2 --terminal
 
@@ -88,18 +90,20 @@ export _S=" "
   [[ "${output}"  =~ \<\!DOCTYPE\ html\>                    ]]
 
   printf "%s\\n" "${output}" | grep       -q  \
-'<h1 class="header-crumbs">'
+"<h1 class=\"header-crumbs\">"
   printf "%s\\n" "${output}" | grep       -q  \
-'<a.* href="http://localhost:6789/?--per-page=2"><span class="dim">❯</span>nb</a>'
+"<a.* href=\"http://localhost:6789/?--per-page=2\"><span class=\"dim\">❯</span>nb</a>"
   printf "%s\\n" "${output}" | grep       -q  \
-'<span class="dim">·</span> <span class="dim">notebooks</span>'
+"<span class=\"dim\">·</span> <span class=\"dim\">notebooks</span>"
 
   printf "%s\\n" "${output}" | grep       -q  \
-'<p><a.*href="http://localhost:6789/Demo%20Notebook:?--per-page=2">Demo Notebook</a>'
+"<p><a.*href=\"http://localhost:6789/Demo%20Notebook:?--per-page=2\">Demo${_S}Notebook</a> <span"
   printf "%s\\n" "${output}" | grep       -q  \
-'<p><a.*href="http://localhost:6789/Example%20Notebook:?--per-page=2">Example Notebook</a>'
+"span> <a.*href=\"http://localhost:6789/Example%20Notebook:?--per-page=2\">Example${_S}Notebook</a> <span"
   printf "%s\\n" "${output}" | grep       -q  \
-'<p><a.*href="http://localhost:6789/Sample%20Notebook:?--per-page=2">Sample Notebook</a>'
+"span> <a.*href=\"http://localhost:6789/Sample%20Notebook:?--per-page=2\">Sample${_S}Notebook</a> <span"
+  printf "%s\\n" "${output}" | grep       -q  \
+"span> <a.*href=\"http://localhost:6789/home:?--per-page=2\">home</a></p>"
 }
 
 @test "'browse' paginates lists." {

@@ -1086,6 +1086,11 @@ _BT=$'`'
 # The terminal width in number of columns (characters).
 _COLUMNS="$(tput cols)"
 
+# $_NBSP
+#
+# Unicode non-breaking space.
+_NBSP=" "
+
 # $_NEWLINE
 #
 # Assign newline with ANSI-C quoting for string building.
@@ -14522,43 +14527,20 @@ HEREDOC
     {
       printf "%s\\n" "$(_browse_render_header "${_pagination_arguments[@]:-}")"
 
+      local _first=1
       local _separator="<span class=\"dim\">·</span>"
       local _test_line=
 
       local __name=
       for   __name in "${_notebook_names[@]:-}"
       do
-        if [[ -n "${_test_line:-}" ]]
+        if ((_first))
         then
-          _test_line+=" x ${__name}"
-        fi
-
-        local _max_columns="$((_COLUMNS - 1))"
-
-        if [[ "$(_web_browser --check --print)" =~ ^links|[^e]links ]]
-        then
-          _max_columns="$((_COLUMNS - 4))"
-        fi
-
-        if [[ -z "${_test_line:-}" ]]
-        then
-          _test_line="${__name}"
+          _first=0
 
           printf --                               \
             "[%s](http://localhost:%s/%s:%s)"     \
-            "${__name}"                           \
-            "${NB_SERVER_PORT}"                   \
-            "${__name}"                           \
-            "${_url_params:-}"
-        elif ((_terminal_browser)) &&
-             [[ "${#_test_line}" -gt "${_max_columns:-1}" ]]
-        then
-          printf "<br>\\n"
-
-          _test_line="${__name}"
-          printf --                               \
-            "[%s](http://localhost:%s/%s:%s)"     \
-            "${__name}"                           \
+            "${__name//\ /${_NBSP}}"              \
             "${NB_SERVER_PORT}"                   \
             "${__name}"                           \
             "${_url_params:-}"
@@ -14566,7 +14548,7 @@ HEREDOC
           printf --                               \
             " %s [%s](http://localhost:%s/%s:%s)" \
             "${_separator}"                       \
-            "${__name}"                           \
+            "${__name//\ /${_NBSP}}"              \
             "${NB_SERVER_PORT}"                   \
             "${__name}"                           \
             "${_url_params:-}"
