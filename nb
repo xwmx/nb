@@ -8401,17 +8401,18 @@ HEREDOC
 #   _resolve_links <path> <notebook-path> [--browse]
 #
 # Options:
-#   --browse  Render for browsing and link #tags.
+#   --browse  Link to web server, link #tags, and redirect outbound links.
 #
 # Description:
 #   Read the file at <path>, resolve all [[wiki-style links]] and wrap each
 #   one in a link to the target item, then print the updated file contents.
 #   When the --browse option is specified, #tags are linked to the search
-#   page for each tag.
+#   page for each tag and outbound links are updated to redirect through the
+#   root level of the app to avoid leaking information via the referer header.
 #
 #   By default, links are created with file:// URLs to the item on the
-#   local filesystem. With --browse, links are created with htt://
-#   URLs for the internal web server.
+#   local filesystem. With --browse, links are created with http:// URLs
+#   for the internal web server.
 _resolve_links() {
   # Usage: _resolve_links_escape_link_component <string>
   _resolve_links_escape_link_component() {
