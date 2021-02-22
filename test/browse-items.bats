@@ -25,8 +25,8 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    ==  0                                               ]]
-  [[ "${output}"    =~  \<\!DOCTYPE\ html\>                             ]]
+  [[    "${status}"    ==  0                                            ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                          ]]
 
   [[    "${output}"    =~  \<h1\ class=\"header-crumbs\"\>              ]]
   [[    "${output}"    =~  \<p\>Example\ image\ one:\ \</p\>            ]]
