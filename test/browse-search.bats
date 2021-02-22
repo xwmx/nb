@@ -22,18 +22,13 @@ export _S=" "
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"  -eq  0                               ]]
+  [[    "${status}"  -eq  0 ]]
 
-  [[    "${output}"   =~ Not\ found:\ non-matching-query  ]]
+  printf "%s\\n" "${output}" | grep   -q \
+    "Not found: non-matching-query"
 
-  [[ !  "${output}"   =~ Title\ One                       ]]
-
-  [[ !  "${output}"   =~  \
-\<p\>\<a.*\ href=\"http://localhost:6789/2\"\ class=\"list-item\"\>                   ]]
-  [[ !  "${output}"   =~   \
-class=\"list-item\"\>\<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\> ]]
-  [[ !  "${output}"   =~   \
-identifier\"\>2\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Two\</a\>\<br\ /\> ]]
+  printf "%s\\n" "${output}" | grep   -q \
+    "placeholder=\"search\" type=\"text\" value=\"non-matching-query\">"
 }
 
 # search form #################################################################
@@ -141,14 +136,51 @@ identifier\"\>2\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Two\</a\>\<
 
   [[    "${status}"  -eq  0         ]]
 
-  [[ !  "${output}"   =~ Title\ One ]]
+  printf "%s\\n" "${output}" | grep -v  -q \
+    "Title One"
 
-  [[    "${output}"  =~   \
-\<p\>\<a.*\ href=\"http://localhost:6789/home:2\?--per-page=.*\"\ class=\"list-item\"\> ]]
-  [[    "${output}"  =~   \
-class=\"list-item\"\>\<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>   ]]
-  [[    "${output}"  =~   \
-identifier\"\>2\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Two\</a\>\<br\ /\>   ]]
+  printf "%s\\n" "${output}" | grep     -q \
+    "placeholder=\"search\" type=\"text\" value=\"abcde\">"
+
+  printf "%s\\n" "${output}" | grep     -q \
+    "<p><a.* href=\"http://localhost:6789/home:2?--per-page=.*\" class=\"list-item\">"
+
+  printf "%s\\n" "${output}" | grep     -q \
+    "class=\"list-item\"><span class=\"dim\">\[</span><span class=\"identifier\">"
+
+  printf "%s\\n" "${output}" | grep     -q \
+    "identifier\">2</span><span class=\"dim\">\]</span> Title Two</a><br />"
+}
+
+@test "'browse --query <#hashtag>' performs search." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md" --title "Title One" --content "Content one."
+    "${_NB}" add "File Two.md" --title "Title Two" --content "Content #abcde two."
+  }
+
+  run "${_NB}" browse --query "#abcde" --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq  0         ]]
+
+  printf "%s\\n" "${output}" | grep -v  -q \
+    "Title One"
+
+  printf "%s\\n" "${output}" | grep     -q \
+    "placeholder=\"search\" type=\"text\" value=\"#abcde\">"
+
+  printf "%s\\n" "${output}" | grep     -q \
+    "<p><a.* href=\"http://localhost:6789/home:2?--per-page=.*\" class=\"list-item\">"
+
+  printf "%s\\n" "${output}" | grep     -q \
+    "class=\"list-item\"><span class=\"dim\">\[</span><span class=\"identifier\">"
+
+  printf "%s\\n" "${output}" | grep     -q \
+    "identifier\">2</span><span class=\"dim\">\]</span> Title Two</a><br />"
 }
 
 @test "'browse --query' performs paginated search." {
