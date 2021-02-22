@@ -8075,6 +8075,8 @@ _get_uri() {
 
   # Usage: _get_uri_encode <string>
   _get_uri_encode() {
+    local _slash=$'/' # macOS bash support
+
     local _encoding="${1//'%'/%25}"
     _encoding="${_encoding//' '/%20}"
     _encoding="${_encoding//'"'/%22}"
@@ -8083,7 +8085,7 @@ _get_uri() {
     _encoding="${_encoding//'&'/%26}"
     _encoding="${_encoding//'+'/%2B}"
     _encoding="${_encoding//','/%2C}"
-    _encoding="${_encoding//'/'/%2F}"
+    _encoding="${_encoding//${_slash}/%2F}"
     _encoding="${_encoding//':'/%3A}"
     _encoding="${_encoding//';'/%3B}"
     _encoding="${_encoding//'='/%3D}"
