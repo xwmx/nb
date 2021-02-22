@@ -1967,7 +1967,7 @@ nb browse sample:123 --gui
 ```
 
 `nb browse` includes a search field that can be used for easy searches
-in the current notebook or folder when browsing. For full-featured
+in the current notebook or folder while browsing. For full-featured
 search, see [Search](#-search) and [`nb search`](#search).
 
 `nb browse` depends on [`ncat`](https://nmap.org/ncat/) and
@@ -1975,6 +1975,21 @@ search, see [Search](#-search) and [`nb search`](#search).
 current note will be rendered and links go to unrendered, original files.
 If neither `pandoc` nor `ncat` is available, `nb` falls back to
 [`nb show`](#show).
+
+##### `browse` Privacy
+
+Terminal web browsers don't use JavaScript, so visits are not visible to
+many web analytics tools. `nb browse` includes a number of additional
+features to enhance privacy and avoid leaking information:
+
+- Page content is cached locally within each bookmark file, making it readable
+  in a terminal or GUI browser without visiting the original website.
+- `<img>` tags in bookmarked content are removed to avoid requests.
+- Outbound links are automatically rewritten to use an
+  [exit page strategy](https://geekthis.net/post/hide-http-referer-headers/#exit-page-redirect)
+  to mitigate leaking information via the referer header.
+- All pages include the `<meta name="referrer" content="no-referrer" />` tag.
+- Links include a `rel="noopener noreferrer"` attribute.
 
 ##### Shortcut Alias: `br`
 
@@ -2014,7 +2029,7 @@ to physical zettelkasten note-taking.
 | numbering         | ids and [selectors](#selectors)               |
 | slip boxes        | [notebooks](#-notebooks)                      |
 | tags              | [#tags](#-tagging)                            |
-| metadata          | YAML front matter                             |
+| metadata          | [front matter](#front-matter)                 |
 | cross-references  |  <a href="#-linking">[[wiki-style links]]</a> |
 | fast note-taking  | [`nb add` / `nb a`](#adding-notes)            |
 
@@ -3589,6 +3604,59 @@ for a practical example using both [`show <selector> --filename`](#show) and
 [`notebooks current --path`](#notebooks) along with other
 subcommands called using their underscore-prefixed function names.
 
+### Metadata
+
+Metadata in `nb` is primarily derived from git, the filesystem, and file
+content, treating git and the filesystem like overlapping document databases.
+For example, displayed timestamps are derived from
+[`git log`](https://git-scm.com/docs/git-log), with [`nb show --added`](#show)
+displaying the datetime of the first commit containing the file and
+[`nb show --updated`](#show) displaying the datetime of the last commit in
+which the file was modified.
+
+`nb` also uses plain-text files to store ids and state information in
+git, including
+[`.index` files](https://github.com/xwmx/nb#index-files),
+[`.pindex` files](https://github.com/xwmx/nb#pindex-files),
+and [`.archived` files](https://github.com/xwmx/nb#archived-notebooks).
+
+#### Front Matter
+
+User-defined metadata can be added to notes in `nb` using ["front
+matter"](https://jekyllrb.com/docs/front-matter/). Front matter simple,
+human accessible, future-proof, and well supported in tools for working with
+markdown.
+
+Front matter is defined within a Markdown file with triple-dashed lines
+(`---`) indicating the start and end of the block, with each field represented
+by a key name with a colon followed by the value:
+
+
+```markdown
+---
+title: Example Title
+author: xwmx
+year: 2001
+---
+
+Example content.
+
+More example content:
+
+- one
+- two
+- three
+```
+
+Any metadata can be placed in the front matter block. `nb` currently
+ignores all fields with the exception of the `title:` field, which is
+used for listing, filtering, and selecting items, when present.
+
+The simple `key: value` syntax is suitable for many metadata fields.
+More complex data can be defined using additional
+[YAML](https://en.wikipedia.org/wiki/YAML)
+capabilities.
+
 ### > `nb` Interactive Shell
 
 `nb` has an interactive shell that can be started with
@@ -3818,7 +3886,7 @@ Usage:
 Subcommands:
   (default)    List notes and notebooks. This is an alias for `nb ls`.
                When a <url> is provided, create a new bookmark.
-  add          Add a note, folder, or a file of a specified type.
+  add          Add a note, folder, or file.
   bookmark     Add, open, list, and search bookmarks.
   browse       Browse and view linked items in the terminal web browser.
   completions  Install and uninstall completion scripts.
