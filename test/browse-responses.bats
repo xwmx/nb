@@ -19,6 +19,8 @@ export NB_SERVER_PORT=6789
       --listen                          \
       --source-port "6789"              \
       2>/dev/null) &
+
+    sleep 1
   }
 
   run curl -I -s "http://localhost:6789/?url=http%3A%2F%2Fexample.test"
