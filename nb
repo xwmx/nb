@@ -13827,6 +13827,8 @@ Can't show archives. Export archive and expand to edit.\\n"
          _command_exists "pandoc"   &&
          _web_browser --check
     then
+      cd "${_CURRENT_WORKING_DIR}"
+
       local _browse_arguments=("${_target_path}")
       ((_print_output)) && _browse_arguments+=("--print")
 
