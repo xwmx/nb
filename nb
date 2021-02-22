@@ -8486,8 +8486,6 @@ _resolve_links() {
 
   local _file_path=
   local _for_browsing=0
-  local _links=()
-  local _notebook_name=
   local _per_page=
   local _terminal=0
 
@@ -8539,6 +8537,7 @@ _resolve_links() {
   {
     # resolve and link [[wiki-style links]]
 
+    local _links=()
     local _matches=()
 
     _matches=($(
@@ -8571,6 +8570,7 @@ _resolve_links() {
         then
           _links+=("${__match}")
         else
+          local _notebook_name=
           local _query_selector=
 
           if [[ "${_selector:-}" =~ : ]] && [[ ! "${_selector:-}" =~ :// ]]
