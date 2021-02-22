@@ -3799,10 +3799,10 @@ Usage:
   nb settings (get | show | unset) (<name> | <number>)
   nb settings set (<name> | <number>) <value>
   nb shell [<subcommand> [<options>...] | --clear-history]
-  nb show (<id> | <filename> | <path> | <title>) [[-a | --added] |
-          --filename | --id | --info-line | --path | [-p | --print]
-          [-r | --render] | --title | --type [<type>] | [-u | --updated]]
-          [--no-color]
+  nb show [<notebook>:](<id> | <filename> | <path> | <title>)
+          [[-a | --added] | [-b | --browse] | --filename | --id | --info-line |
+          --path | [-p | --print] [-r | --render] | --title | --type [<type>] |
+          [-u | --updated]] [--no-color]
   nb show <notebook>
   nb subcommands [add <name>...] [alias <name> <alias>]
                  [describe <name> <usage>]
@@ -5258,14 +5258,15 @@ Example:
 
 ```text
 Usage:
-  nb show (<id> | <filename> | <path> | <title>) [[-a | --added] |
-          --filename | --id | --info-line | --path | [-p | --print]
-          [-r | --render] | --title | --type [<type>] | [-u | --updated]]
-          [--no-color]
+  nb show [<notebook>:](<id> | <filename> | <path> | <title>)
+          [[-a | --added] | [-b | --browse] | --filename | --id | --info-line |
+          --path | [-p | --print] [-r | --render] | --title | --type [<type>] |
+          [-u | --updated]] [--no-color]
   nb show <notebook>
 
 Options:
   -a, --added      Print the date and time when the item was added.
+  -b, --browse     Open the item with `nb browse`.
   --filename       Print the filename of the item.
   --id             Print the id number of the item.
   --info-line      Print the id, filename, and title of the item.
