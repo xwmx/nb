@@ -136,10 +136,10 @@ load test_helper
 " <a.* href=\"http://localhost:6789/home:?--per-page=2&--query=%23tag7\">#tag7</a></p>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<p><a.* href=\"http://localhost:6789?--url=http%3A%2F%2Fexample.com\">Example Outbound Link One</a> •"
+"<p><a.* href=\"http://localhost:6789?url=http%3A%2F%2Fexample.com\">Example Outbound Link One</a> •"
 
   printf "%s\\n" "${output}" | grep -q \
-"<a.* href=\"http://localhost:6789?--url=https%3A%2F%2Ftest.test\">Example Outbound Link Two</a> •</p>"
+"<a.* href=\"http://localhost:6789?url=https%3A%2F%2Ftest.test\">Example Outbound Link Two</a> •</p>"
 }
 
 @test "'_resolve_links --browse' resolves [[wiki-style links]], tags, and outbound links in partial .html files to .html links to local web server URLs." {
@@ -225,10 +225,10 @@ load test_helper
 " <a.* href=\"http://localhost:6789/home:?--query=%23tag7\">#tag7</a></p>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<p><a.* href=\"http://localhost:6789?--url=http%3A%2F%2Fexample.com\">Example Outbound Link One</a> •"
+"<p><a.* href=\"http://localhost:6789?url=http%3A%2F%2Fexample.com\">Example Outbound Link One</a> •"
 
   printf "%s\\n" "${output}" | grep -q \
-"<a href=\"http://localhost:6789?--url=https%3A%2F%2Ftest.test\">Example Outbound Link Two</a> •</p>"
+"<a href=\"http://localhost:6789?url=https%3A%2F%2Ftest.test\">Example Outbound Link Two</a> •</p>"
 }
 
 @test "'_resolve_links --browse' resolves [[wiki-style links]], tags, and outbound links in standalone .html files to .html links to local web server URLs without altering CSS values." {
@@ -318,10 +318,10 @@ load test_helper
     " <a.* href=\"http://localhost:6789/home:?--query=%23tag7\">#tag7</a></p>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<p><a.* href=\"http://localhost:6789?--url=http%3A%2F%2Fexample.com\">Example Outbound Link One</a> •"
+"<p><a.* href=\"http://localhost:6789?url=http%3A%2F%2Fexample.com\">Example Outbound Link One</a> •"
 
   printf "%s\\n" "${output}" | grep -q \
-"<a.* href=\"http://localhost:6789?--url=https%3A%2F%2Ftest.test\">Example Outbound Link Two</a> •</p>"
+"<a.* href=\"http://localhost:6789?url=https%3A%2F%2Ftest.test\">Example Outbound Link Two</a> •</p>"
 }
 
 @test "'_resolve_links' resolves [[wiki-style links]], tags, and outbound links in partial .html files to .html links to local file URLs without linking tags or outbound URLs." {

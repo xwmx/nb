@@ -6,7 +6,7 @@ export NB_SERVER_PORT=6789
 
 # 307 #########################################################################
 
-@test "'browse' with --url param responds with 307 redirect." {
+@test "'browse' with 'url=<url>' param responds with 307 redirect." {
   {
     "${_NB}" init
 
@@ -21,7 +21,7 @@ export NB_SERVER_PORT=6789
       2>/dev/null) &
   }
 
-  run curl -I -s "http://localhost:6789/?--url=http%3A%2F%2Fexample.test"
+  run curl -I -s "http://localhost:6789/?url=http%3A%2F%2Fexample.test"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"

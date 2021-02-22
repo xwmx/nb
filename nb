@@ -8736,7 +8736,7 @@ _resolve_links() {
         _encoded_url="$(_get_uri --encode "${_target_url}")"
 
         _replacements+=(
-          "href=\"http://localhost:${NB_SERVER_PORT}?--url=${_encoded_url:-}"
+          "href=\"http://localhost:${NB_SERVER_PORT}?url=${_encoded_url:-}"
         )
       done
 
@@ -14816,7 +14816,7 @@ HEREDOC
       shopt -u nocasematch
     done
 
-    if [[ "${_request_uri}" =~ --url=(.*)           ]]
+    if [[ "${_request_uri}" =~ \?url=(.*)           ]]
     then
       _browse_respond_with 307 "${BASH_REMATCH[1]}"
     fi
