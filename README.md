@@ -146,13 +146,20 @@ Linux / Unix environments. `nb` also checks the environment for some
 additional optional tools and uses them to enhance the experience whenever
 they are available.
 
-Recommended:
+Recommended, Version 6.0.0-alpha:
 
 - [`bat`](https://github.com/sharkdp/bat)
-- [Pandoc](https://pandoc.org/)
-- [`rg` / ripgrep](https://github.com/BurntSushi/ripgrep)
+- [`ncat`](https://nmap.org/ncat/)
+- [`pandoc`](https://pandoc.org/)
 - [`tig`](https://github.com/jonas/tig)
 - [`w3m`](https://en.wikipedia.org/wiki/W3m)
+
+Version 5.7.8:
+[`bat`](https://github.com/sharkdp/bat),
+[`pandoc`](https://pandoc.org/),
+[`rg`](https://github.com/BurntSushi/ripgrep),
+[`tig`](https://github.com/jonas/tig),
+[`w3m`](https://en.wikipedia.org/wiki/W3m),
 
 Also supported for various enhancements:
 
@@ -178,13 +185,14 @@ Also supported for various enhancements:
 [Pygments](https://pygments.org/),
 [Ranger](https://ranger.github.io/),
 [readability-cli](https://gitlab.com/gardenappl/readability-cli),
+[`rg` / ripgrep](https://github.com/BurntSushi/ripgrep),
 [`rga` / ripgrep-all](https://github.com/phiresky/ripgrep-all),
 [`termpdf.py`](https://github.com/dsanson/termpdf.py),
 [vifm](https://vifm.info/)
 
 #### macOS / Homebrew
 
-To install with [Homebrew](https://brew.sh/):
+To install version 5.7.8 with [Homebrew](https://brew.sh/):
 
 ```bash
 brew tap xwmx/taps
@@ -198,7 +206,7 @@ above and completion scripts for Bash and Zsh.
 
 ##### npm
 
-To install with [npm](https://www.npmjs.com/package/nb.sh):
+To install version 5.7.8 with [npm](https://www.npmjs.com/package/nb.sh):
 
 ```bash
 npm install -g nb.sh
@@ -1830,13 +1838,13 @@ For more information about identifying items, see [Selectors](#selectors).
 
 *Version 6.0.0-alpha*
 
-Use [`nb browse`](#browse) to browse, view, and search linked notes,
-bookmarks, notebooks, folders, and other items using a terminal or
-GUI web browser.
+Use [`nb browse`](#browse) (shortcut: `nb br`) to browse, view, and search
+linked notes, bookmarks, notebooks, folders, and other items using a terminal
+or GUI web browser.
 
 `nb browse` includes an embedded, terminal-first web application that
 renders <a href="#-linking">[[wiki-style links]]</a> and
-[#tags](#-tagging)
+[#hashtags](#-tagging)
 as internal links, enabling you to browse your notes and notebooks in web
 browsers, including seamlessly browsing to and from the offsite links in
 bookmarks and notes.
@@ -1890,7 +1898,7 @@ supported.
 browser set in the `$BROWSER` environment variable.
 
 To open a specific item in `nb browse`, pass the [selector](#selectors)
-for the item, folder, or notebook:
+for the item, folder, or notebook to `nb browse`:
 
 ```bash
 # open the item titled "Example Title" in the folder named "Sample" in the "example" notebook
@@ -1910,10 +1918,12 @@ More example content:
   • three
 ```
 
+Items can also be browsed with [`nb show --browse`](#show) /
+[`nb show -b`](#show), which behaves identically.
+
 The `nb browse` interface includes breadcrumbs that can be used to
 quickly navigate to back to parent folders, the current notebook, or
 jump to other notebooks.
-
 
 `nb browse` is particularly useful for [bookmarks](#-bookmarks). Cached
 content is rendered in the web browser, and internal and external links
@@ -1986,10 +1996,12 @@ features to enhance privacy and avoid leaking information:
   in a terminal or GUI browser without visiting the original website.
 - `<img>` tags in bookmarked content are removed to avoid requests.
 - Outbound links are automatically rewritten to use an
-  [exit page strategy](https://geekthis.net/post/hide-http-referer-headers/#exit-page-redirect)
-  to mitigate leaking information via the referer header.
+  [exit page redirect](https://geekthis.net/post/hide-http-referer-headers/#exit-page-redirect)
+  to mitigate leaking information via the
+  [referer header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referer).
 - All pages include the `<meta name="referrer" content="no-referrer" />` tag.
 - Links include a `rel="noopener noreferrer"` attribute.
+- `lynx` is opened with the `-noreferer` option.
 
 ##### Shortcut Alias: `br`
 
@@ -3649,9 +3661,9 @@ More example content:
 - three
 ```
 
-Any metadata can be placed in the front matter block. `nb` currently
-ignores all fields with the exception of the `title:` field, which is
-used for listing, filtering, and selecting items, when present.
+Any metadata can be placed in the front matter block. `nb` uses the
+`title:` field for listing, filtering, and selecting items, if one is
+present, and ignores any other fields.
 
 The simple `key: value` syntax is suitable for many metadata fields.
 More complex data can be defined using additional
