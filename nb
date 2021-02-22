@@ -8098,6 +8098,7 @@ _get_uri() {
   }
 
   case "${1:-}" in
+    decode|encode)            _get_uri        "${2:-}"  ;;
     http%3A%2F*|https%3A%2F*) _get_uri_decode "${1:-}"  ;;
     http://*|https://*)       _get_uri_encode "${1:-}"  ;;
   esac
