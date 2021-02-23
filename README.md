@@ -2349,7 +2349,7 @@ nb q "example|sample"
 nb q "example" --or "sample"
 ```
 
-`--or` and `--and` queries can be used together to create complex queries:
+`--or` and `--and` queries can be used together:
 
 ```bash
 nb q "example" --or "sample" --and "demo"
@@ -4996,8 +4996,7 @@ Description:
   Multiple query arguments are treated as AND queries, returning items that
   match all queries. AND queries can also be specified with the --and <query>
   option. The --or <query> option can be used to specify an OR query,
-  returning items that match at least one of the queries. --or and --and
-  queries can be used together to create complex queries.
+  returning items that match at least one of the queries.
 
   `nb search` is powered by Git's built-in `git grep` tool. `nb` also
   supports performing searches with alternative search tools using the
