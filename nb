@@ -8425,10 +8425,9 @@ _resolve_links() {
         -e 's/)/\\)/g'
   }
 
-  # Usage: _resolve_links_get_matches <file-path> <pattern>
+  # Usage: <input> | _resolve_links_get_matches <pattern>
   _resolve_links_get_matches() {
-    local _file_path="${1:?}"
-    local _pattern="${2:?}"
+    local _pattern="${1:?}"
 
     if _command_exists "rg"
     then
@@ -8438,7 +8437,6 @@ _resolve_links() {
         --only-matching   \
         --text            \
         -e "${_pattern}"  \
-        "${_file_path}"   \
         2>/dev/null || :
     else
       grep                \
@@ -8447,8 +8445,7 @@ _resolve_links() {
         -h                \
         --only-matching   \
         --text            \
-        -e "${_pattern}"  \
-        "${_file_path}"
+        -e "${_pattern}"
     fi
   }
 
@@ -8561,7 +8558,7 @@ _resolve_links() {
     local _matches=()
 
     _matches=($(
-      _resolve_links_get_matches "${_file_path}" "\[\[[^\[]+\]\]"
+      _resolve_links_get_matches  "\[\[[^\[]+\]\]" < "${_file_path}"
     ))
 
     local __match=
@@ -8702,8 +8699,7 @@ _resolve_links() {
       local _outbound_url_matches=()
       _outbound_url_matches=($(
         _resolve_links_get_matches  \
-          "${_temp_file_path}"      \
-          "${_outbound_url_pattern:-}"
+          "${_outbound_url_pattern:-}" < "${_temp_file_path}"
       ))
 
       local _matches=()
