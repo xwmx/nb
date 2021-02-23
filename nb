@@ -8185,30 +8185,44 @@ _option_get_tags() {
 # Description:
 #   An internal interface for pandoc. https://pandoc.org/
 _pandoc() {
+  local _from=
   local _pandoc_arguments=("--highlight-style=zenburn")
   local _render_to_html=0
   local _source_path=
 
-  local __arg=
-  for   __arg in "${@:-}"
+  while ((${#}))
   do
-    case "${__arg:-}" in
-      "")         :                   ;;
-      --render*)  _render_to_html=1   ;;
-      *)
+    case "${1:-}" in
+      "")
+        :
+        ;;
+      --from)
+        _from="${2:?}"
+        shift
+        ;;
+      --render*)
+        _render_to_html=1
+        ;;
+      [^-]*)
         if [[ -z "${_source_path:-}"  ]]
         then
-          _source_path="${__arg:-}"
+          _source_path="${1:-}"
         else
-          _pandoc_arguments+=("${__arg:-}")
+          _pandoc_arguments+=("${1:-}")
         fi
         ;;
+      *)
+        _pandoc_arguments+=("${1:-}")
+        ;;
     esac
+
+    shift
   done
 
   if ! ((_render_to_html))
   then
-    _pandoc_arguments+=("${_source_path:-}")
+    [[ -n "${_source_path:-}" ]] && _pandoc_arguments+=("${_source_path:-}")
+    [[ -n "${_from:-}"        ]] && _pandoc_arguments+=("--from=${_from:-}")
 
     pandoc "${_pandoc_arguments[@]:-}"
     return 0
@@ -8355,24 +8369,32 @@ HEREDOC
     local _code_extensions=()
 
     _code_extensions+=(
-      $(pandoc --list-highlight-languages | sed -e "/latex/d" -e "/markdown/d")
+      $(pandoc --list-highlight-languages | sed -e "/html/d" -e "/latex/d" -e "/markdown/d")
       bib hs haml js jsx py rb rs sass scss sh vim yml
     )
 
-    if _contains "${_source_path##*\.}" "${_code_extensions[@]:-}"
+    local _source_extension="${_source_path##*\.}"
+
+    if _contains "${_source_extension}" "${_code_extensions[@]:-}"
     then
       local _code_block_temp_path=
       _code_block_temp_path="$(_temp file ".md" --touch)"
 
       printf "${_BT}${_BT}${_BT}%s\\n%s\\n${_BT}${_BT}${_BT}\\n"  \
-        "${_source_path##*\.}"                                    \
+        "${_source_extension}"                                    \
         "$(cat "${_source_path:-}")" >> "${_code_block_temp_path:-}"
 
       _pandoc_arguments+=("${_code_block_temp_path:-}")
     else
       _pandoc_arguments+=("${_source_path:-}")
     fi
-  else
+  fi
+
+  if [[ -n "${_from:-}"           ]]
+  then
+    _pandoc_arguments+=("--from=${_from:-}")
+  elif [[ -z "${_source_path:-}"  ]]
+  then
     _pandoc_arguments+=("--from=markdown+raw_html")
   fi
 
@@ -8398,13 +8420,14 @@ HEREDOC
 # _resolve_links()
 #
 # Usage:
-#   _resolve_links <path> <notebook-path> [--browse]
+#   <input> | _resolve_links <notebook-path> [--browse] [--per-page <limit>]
+#                            [--terminal] [--type <type>]
 #
 # Options:
 #   --browse  Link to web server, link #tags, and redirect outbound links.
 #
 # Description:
-#   Read the file at <path>, resolve all [[wiki-style links]] and wrap each
+#   Read standard input, resolve all [[wiki-style links]] and wrap each
 #   one in a link to the target item, then print the updated file contents.
 #   When the --browse option is specified, #tags are linked to the search
 #   page for each tag and outbound links are updated to redirect through the
@@ -8510,10 +8533,10 @@ _resolve_links() {
     sed "${_sed_arguments[@]:-}"
   }
 
-  local _file_path=
   local _for_browsing=0
   local _per_page=
   local _terminal=0
+  local _input_type="html"
 
   while ((${#}))
   do
@@ -8522,11 +8545,9 @@ _resolve_links() {
       --per-page) _per_page="${2:?}"                && shift  ;;
       --page)     _option_value_is_present "${2:-}" && shift  ;;
       --terminal) _terminal=1                                 ;;
+      --type)     _input_type="${2:?}"              && shift  ;;
       *)
-        if [[   -z "${_file_path:-}"      ]]
-        then
-          _file_path="${1:-}"
-        elif [[ -z "${_notebook_path:-}"  ]]
+        if [[ -z "${_notebook_path:-}"  ]]
         then
           _notebook_path="${1:-}"
         fi
@@ -8536,10 +8557,7 @@ _resolve_links() {
     shift
   done
 
-  [[ ! -f "${_file_path:-}"     ]] && return 1
   [[ ! -d "${_notebook_path:-}" ]] && return 1
-
-  cd "${_file_path%/*}"
 
   local _query_string=
 
@@ -8548,11 +8566,16 @@ _resolve_links() {
     _query_string="?--per-page=${_per_page:-}"
   fi
 
+  local _input_temp_file_path=
+  _input_temp_file_path="$(_temp file ".${_input_type}" --touch)"
+
+  cat >> "${_input_temp_file_path}"
+
   {
     # resolve and link [[wiki-style links]]
 
     {
-      cat "${_file_path}"
+      cat "${_input_temp_file_path}"
     } | {
       _resolve_links_get_matches  "\[\[[^\[]+\]\]"
     } | {
@@ -8601,12 +8624,12 @@ _resolve_links() {
             else
               local _target_url="http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_query_string:-}"
 
-              case "${_file_path:-}" in
-                *\.html)
+              case "${_input_type:-}" in
+                html)
                   _links+=("<a href=\"${_target_url:-}\">[[${_selector:-}]]</a>"
                   )
                   ;;
-                *\.org)
+                org)
                   _links+=("[[${_target_url:-}][[[${_selector:-}]]]]")
                   ;;
                 *)
@@ -8623,11 +8646,11 @@ _resolve_links() {
           then
             _links+=("[[${_selector}]]")
           else
-            case "${_file_path:-}" in
-              *\.html)
+            case "${_input_type:-}" in
+              html)
                 _links+=("<a href=\"file://${_link_path:-}\">[[${_selector:-}]]</a>")
                 ;;
-              *\.org)
+              org)
                 _links+=("[[file://${_link_path:-}][[[${_selector:-}]]]]")
                 ;;
               *)
@@ -8639,7 +8662,7 @@ _resolve_links() {
       done
 
       _resolve_links_replace  \
-        "${_matches[@]:-}" --- "${_links[@]:-}" < "${_file_path}"
+        "${_matches[@]:-}" --- "${_links[@]:-}" < "${_input_temp_file_path}"
     }
   } | {
     # link #hashtags to internal search URLs
@@ -8651,21 +8674,21 @@ _resolve_links() {
       local _replacement_url="http:\/\/localhost:${NB_SERVER_PORT}\/${_notebook_path##*/}:"
 
       case "${_query_string:-}" in
-        '') _replacement_url+="?--query=%23\\2"                             ;;
-        *)  _replacement_url+="${_query_string}\&--query=%23\\2"            ;;
+        '') _replacement_url+="?--query=%23\\2"                         ;;
+        *)  _replacement_url+="${_query_string}\&--query=%23\\2"        ;;
       esac
 
       local _pattern=
 
-      case "${_file_path:-}" in
-        *\.html)  _pattern="<a\ href=\"${_replacement_url:-}\">\#\\2<\/a>"  ;;
-        *\.org)   _pattern="[[${_replacement_url:-}][\#\\2]]"               ;;
-        *)        _pattern="\#\\2"                                          ;;
+      case "${_input_type:-}" in
+        html) _pattern="<a\ href=\"${_replacement_url:-}\">\#\\2<\/a>"  ;;
+        org)  _pattern="[[${_replacement_url:-}][\#\\2]]"               ;;
+        *)    _pattern="\#\\2"                                          ;;
       esac
 
-      if [[ "${_file_path:-}" =~ \.html ]]
+      if [[ "${_input_type:-}" == "html" ]]
       then
-        if grep -q "<\/body>" "${_file_path:-}"
+        if grep -q "<\/body>" "${_input_temp_file_path}"
         then
           sed -E -e "/<body>/,/<\/body>/ s/([>|\ ])\#([A-Za-z0-9_\-]+)/\1${_pattern}/g"
         else
@@ -8682,16 +8705,14 @@ _resolve_links() {
     then
       cat
     else
-      local _file_extension="${_file_path##*\.}"
-
       local _temp_file_path=
-      _temp_file_path="$(_temp file ".${_file_extension:-}" --touch)"
+      _temp_file_path="$(_temp file ".${_input_type:-}" --touch)"
 
       cat >> "${_temp_file_path}"
 
       local _outbound_url_pattern=
 
-      case "${_file_extension:-}" in
+      case "${_input_type:-}" in
         org)  _outbound_url_pattern="\[\[https?://[^]]+"      ;;
         html) _outbound_url_pattern="href=\"https?://[^\"]+"  ;;
       esac
@@ -8716,7 +8737,7 @@ _resolve_links() {
 
           _matches+=("${__match}")
 
-          case "${_file_extension:-}" in
+          case "${_input_type:-}" in
             org)  local _target_url="${__match#\[\[}"     ;;
             html) local _target_url="${__match#href=\"}"  ;;
           esac
@@ -8727,7 +8748,7 @@ _resolve_links() {
           local _replacement_url="http://localhost:${NB_SERVER_PORT}?url=${_encoded_url}"
           local _replacement="${_replacement_url}"
 
-          case "${_file_extension:-}" in
+          case "${_input_type:-}" in
             org)
               if [[ "${__match:-}" =~ ^\[\[ ]]
               then
@@ -13847,33 +13868,29 @@ Can't show archives. Export archive and expand to edit.\\n"
 
       if [[ "${_target_path}" =~ \.org ]]
       then # resolve  org mode [[wiki-style links]] before rendering to HTML
-        local _linked_temp_file_path=
-        _linked_temp_file_path="$(_temp file ".org" --touch)"
-
         # NOTE: avoid pandoc bug with brackets in org link descriptions
-        _resolve_links                          \
-          "${_target_path}" "${_notebook_path}" \
-          | sed -E                              \
-            -e "s/\]\[\[\[/\]\[••/g"            \
-            -e "s/\]\]\]\]/••\]\]/g"            \
-              >> "${_linked_temp_file_path}"
-
-        _pandoc "${_linked_temp_file_path}"     \
-          --render-to-html                      \
-          | sed -E                              \
-            -e "s/>••/>\[\[/g"                  \
-            -e "s/••</\]\]</g"                  \
-              >> "${_rendered_temp_file_path}"
+        {
+          cat "${_target_path}"
+        } | {
+          _resolve_links                \
+            "${_notebook_path}"         \
+            --type org                  \
+            | sed -E                    \
+              -e "s/\]\[\[\[/\]\[••/g"  \
+              -e "s/\]\]\]\]/••\]\]/g"  \
+            | _pandoc                   \
+              --from org                \
+              --render-to-html          \
+            | sed -E                    \
+              -e "s/>••/>\[\[/g"        \
+              -e "s/••</\]\]</g"        \
+                >> "${_rendered_temp_file_path}"
+        }
       else # render to HTML before resolving [[wiki-style links]]
-        local _unlinked_temp_file_path=
-        _unlinked_temp_file_path="$(_temp file ".html" --touch)"
-
-        _pandoc "${_target_path}"               \
-          --render-to-html >> "${_unlinked_temp_file_path}"
-
-        _resolve_links                          \
-          "${_unlinked_temp_file_path}"         \
-          "${_notebook_path}" >> "${_rendered_temp_file_path}"
+        _pandoc "${_target_path}"       \
+          --render-to-html              \
+          | _resolve_links              \
+            "${_notebook_path}" >> "${_rendered_temp_file_path}"
       fi
 
       if ((_print_output))
@@ -14341,7 +14358,7 @@ HEREDOC
         printf "</p>\\n"
       fi
     } | {
-      _pandoc --from=html+raw_html --render-to-html
+      _pandoc --from html+raw_html --render-to-html
     }
   }
 
@@ -14541,37 +14558,34 @@ HEREDOC
 
     if [[ "${_source_path:-}" =~ \.org$ ]]
     then # resolve org mode [[wiki-style links]] before rendering to HTML
-      local _linked_temp_file_path=
-      _linked_temp_file_path="$(_temp file ".org" --touch)"
-
       # NOTE: avoid pandoc bug with brackets in org link descriptions
-      _resolve_links "${_source_path}"                      \
-        "${_notebook_path}"                                 \
-        "${_pagination_arguments[@]:-}"                     \
-        --browse                                            \
-        | sed -E                                            \
-          -e "s/\]\[\[\[/\]\[••/g"                          \
-          -e "s/\]\]\]\]/••\]\]/g"                          \
-            >> "${_linked_temp_file_path}"
-
-      _pandoc "${_linked_temp_file_path}"                   \
-        --include-before-body="${_header_temp_path}"        \
-        --render-to-html                                    \
-        | sed -E                                            \
-          -e "s/>••/>\[\[/g"                                \
-          -e "s/••</\]\]</g"
+      {
+        cat "${_source_path}"
+      } | {
+        _resolve_links                                    \
+          "${_notebook_path}"                             \
+          "${_pagination_arguments[@]:-}"                 \
+          --browse                                        \
+          --type org                                      \
+          | sed -E                                        \
+            -e "s/\]\[\[\[/\]\[••/g"                      \
+            -e "s/\]\]\]\]/••\]\]/g"                      \
+          | _pandoc                                       \
+            --include-before-body="${_header_temp_path}"  \
+            --from org                                    \
+            --render-to-html                              \
+          | sed -E                                        \
+            -e "s/>••/>\[\[/g"                            \
+            -e "s/••</\]\]</g"
+      }
     else # render before resolving [[wiki-style links]]
-      local _unlinked_temp_file_path=
-      _unlinked_temp_file_path="$(_temp file ".html" --touch)"
-
-      _pandoc "${_source_path}"                             \
-        --include-before-body="${_header_temp_path}"        \
-        --render-to-html >> "${_unlinked_temp_file_path}"
-
-      _resolve_links "${_unlinked_temp_file_path}"          \
-        "${_notebook_path}"                                 \
-        "${_pagination_arguments[@]:-}"                     \
-        --browse
+      _pandoc "${_source_path}"                           \
+        --include-before-body="${_header_temp_path}"      \
+        --render-to-html                                  \
+        | _resolve_links                                  \
+          "${_notebook_path}"                             \
+          "${_pagination_arguments[@]:-}"                 \
+          --browse
     fi
 
     return 0
