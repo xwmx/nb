@@ -8551,7 +8551,9 @@ _resolve_links() {
     # resolve and link [[wiki-style links]]
 
     {
-      _resolve_links_get_matches  "\[\[[^\[]+\]\]" < "${_file_path}"
+      cat "${_file_path}"
+    } | {
+      _resolve_links_get_matches  "\[\[[^\[]+\]\]"
     } | {
       local _links=()
       local _matches=()
@@ -8694,8 +8696,9 @@ _resolve_links() {
       esac
 
       {
-        _resolve_links_get_matches  \
-          "${_outbound_url_pattern:-}" < "${_temp_file_path}"
+        cat "${_temp_file_path}"
+      } | {
+        _resolve_links_get_matches "${_outbound_url_pattern:-}"
       } | {
         local _matches=()
         local _replacements=()
