@@ -8445,7 +8445,8 @@ _resolve_links() {
         -h                \
         --only-matching   \
         --text            \
-        -e "${_pattern}"
+        -e "${_pattern}"  \
+        2>/dev/null || :
     fi
   }
 
