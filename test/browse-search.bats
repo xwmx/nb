@@ -7,6 +7,67 @@ export NB_SERVER_PORT=6789
 # non-breaking space
 export _S=" "
 
+# normalization ###############################################################
+
+@test "'browse --container --query' with spaces performs search." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md" --title "Title One" --content "Content one."
+    "${_NB}" add "File Two.md" --title "Title Two" --content "Content abcd efgh two."
+
+    (ncat                               \
+      --exec "${_NB} browse --respond"  \
+      --listen                          \
+      --source-port "6789"              \
+      2>/dev/null) &
+
+    sleep 1
+  }
+
+  run curl -s "http://localhost:6789/home:?--query=abcd%20efgh"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq  0         ]]
+
+  [[ !  "${output}"   =~ Title\ One ]]
+
+  [[    "${output}"   =~  \
+\<p\>\<a.*\ href=\"http://localhost:6789/home:2\?--per-page=.*\"\ class=\"list-item\"\> ]]
+  [[    "${output}"   =~   \
+class=\"list-item\"\>\<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>   ]]
+  [[    "${output}"   =~   \
+identifier\"\>2\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Two\</a\>\<br\ /\>   ]]
+
+  {
+    (ncat                               \
+      --exec "${_NB} browse --respond"  \
+      --listen                          \
+      --source-port "6789"              \
+      2>/dev/null) &
+
+    sleep 1
+  }
+
+  run curl -s "http://localhost:6789/home:?--query=abcd+efgh"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq  0         ]]
+
+  [[ !  "${output}"   =~ Title\ One ]]
+
+  [[    "${output}"   =~  \
+\<p\>\<a.*\ href=\"http://localhost:6789/home:2\?--per-page=.*\"\ class=\"list-item\"\> ]]
+  [[    "${output}"   =~   \
+class=\"list-item\"\>\<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>   ]]
+  [[    "${output}"   =~   \
+identifier\"\>2\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Two\</a\>\<br\ /\>   ]]
+}
+
 # no matches ##################################################################
 
 @test "'browse --container --query' with no match displays page with message." {

@@ -14875,7 +14875,10 @@ HEREDOC
     if [[ "${_request_uri}" =~ --query=([^&]+)      ]]
     then
       local _hash=$'#'
-      _query="${BASH_REMATCH[1]//%23/${_hash}}"
+      _query="${BASH_REMATCH[1]}"
+      _query="${_query//%23/${_hash}}"
+      _query="${_query//%20/ }"
+      _query="${_query//+/ }"
     fi
 
     # prepare response
