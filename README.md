@@ -146,20 +146,14 @@ Linux / Unix environments. `nb` also checks the environment for some
 additional optional tools and uses them to enhance the experience whenever
 they are available.
 
-Recommended, Version 6.0.0-alpha:
+Recommended:
 
 - [`bat`](https://github.com/sharkdp/bat)
 - [`ncat`](https://nmap.org/ncat/)
 - [`pandoc`](https://pandoc.org/)
+- [`rg`](https://github.com/BurntSushi/ripgrep)
 - [`tig`](https://github.com/jonas/tig)
 - [`w3m`](https://en.wikipedia.org/wiki/W3m)
-
-Version 5.7.8:
-[`bat`](https://github.com/sharkdp/bat),
-[`pandoc`](https://pandoc.org/),
-[`rg`](https://github.com/BurntSushi/ripgrep),
-[`tig`](https://github.com/jonas/tig),
-[`w3m`](https://en.wikipedia.org/wiki/W3m),
 
 Also supported for various enhancements:
 
@@ -185,7 +179,6 @@ Also supported for various enhancements:
 [Pygments](https://pygments.org/),
 [Ranger](https://ranger.github.io/),
 [readability-cli](https://gitlab.com/gardenappl/readability-cli),
-[`rg` / ripgrep](https://github.com/BurntSushi/ripgrep),
 [`rga` / ripgrep-all](https://github.com/phiresky/ripgrep-all),
 [`termpdf.py`](https://github.com/dsanson/termpdf.py),
 [vifm](https://vifm.info/)
@@ -1982,7 +1975,9 @@ search, see [Search](#-search) and [`nb search`](#search).
 
 `nb browse` depends on [`ncat`](https://nmap.org/ncat/) and
 [`pandoc`](https://pandoc.org/). When only `pandoc` is available, the
-current note will be rendered and links go to unrendered, original files.
+current note will be rendered and
+<a href="#-linking">[[wiki-style links]]</a>
+go to unrendered, original files.
 If neither `pandoc` nor `ncat` is available, `nb` falls back to
 [`nb show`](#show).
 
