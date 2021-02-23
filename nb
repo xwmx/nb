@@ -8742,8 +8742,25 @@ _resolve_links() {
             html) local _target_url="${__match#href=\"}"  ;;
           esac
 
-          local _encoded_url=
-          _encoded_url="$(_get_uri --encode "${_target_url}")"
+          # NOTE: skip _get_uri() for performance
+          local _slash=$'/' # macOS bash support
+
+          local _encoding="${_target_url//'%'/%25}"
+          _encoding="${_encoding//' '/%20}"
+          _encoding="${_encoding//'"'/%22}"
+          _encoding="${_encoding//'#'/%23}"
+          _encoding="${_encoding//'$'/%24}"
+          _encoding="${_encoding//'&'/%26}"
+          _encoding="${_encoding//'+'/%2B}"
+          _encoding="${_encoding//','/%2C}"
+          _encoding="${_encoding//${_slash}/%2F}"
+          _encoding="${_encoding//':'/%3A}"
+          _encoding="${_encoding//';'/%3B}"
+          _encoding="${_encoding//'='/%3D}"
+          _encoding="${_encoding//'?'/%3F}"
+          _encoding="${_encoding//'@'/%40}"
+          _encoding="${_encoding//'['/%5B}"
+          local _encoded_url="${_encoding//']'/%5D}"
 
           local _replacement_url="http://localhost:${NB_SERVER_PORT}?url=${_encoded_url}"
           local _replacement="${_replacement_url}"
