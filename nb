@@ -8452,16 +8452,12 @@ _resolve_links() {
   # _resolve_links_replace()
   #
   # Usage:
-  #   _resolve_links_replace <file-path> <match>... --- <replacement>...
+  #   <input> | _resolve_links_replace <match>... --- <replacement>...
   #
   # Description:
-  #   Read file at <file-path>, replace each <match> with the corresponding
+  #   Read standard input, replace each <match> with the corresponding
   #   <replacement>, and print to standard output.
   _resolve_links_replace() {
-    local _file_path="${1:?}"
-
-    shift
-
     local _matches=()
     local _replacements=()
     local _separator_seen=0
@@ -8510,7 +8506,7 @@ _resolve_links() {
       fi
     done
 
-    sed "${_sed_arguments[@]:-}" "${_file_path}"
+    sed "${_sed_arguments[@]:-}"
   }
 
   local _file_path=
@@ -8640,8 +8636,7 @@ _resolve_links() {
       done
 
       _resolve_links_replace  \
-        "${_file_path}"       \
-        "${_matches[@]:-}" --- "${_links[@]:-}"
+        "${_matches[@]:-}" --- "${_links[@]:-}" < "${_file_path}"
     }
   } | {
     # link #hashtags to internal search URLs
@@ -8744,8 +8739,7 @@ _resolve_links() {
         done
 
         _resolve_links_replace  \
-          "${_temp_file_path}"  \
-          "${_matches[@]:-}" --- "${_replacements[@]:-}"
+          "${_matches[@]:-}" --- "${_replacements[@]:-}" < "${_temp_file_path}"
       }
     fi
   }
