@@ -530,43 +530,43 @@ load test_helper
   [[ "${status}"  -eq 0                 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-    "Selector link one: \[\[http://localhost:6789/home:2/1?--per-page=2\]\[\[\[home:2/1\]\]\]\] •"
+"Selector link one: \[\[http://localhost:6789/home:2/1?--per-page=2\]\[\[\[home:2/1\]\]\]\] •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Selector link two: \[\[http://localhost:6789/home:3?--per-page=2\]\[\[\[Root Title One\]\]\]\] •"
+"Selector link two: \[\[http://localhost:6789/home:3?--per-page=2\]\[\[\[Root Title One\]\]\]\] •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Tag one: \[\[http://localhost:6789/home:?--per-page=2&--query=%23tag_1\]\[#tag_1\]\] •"
+"Tag one: \[\[http://localhost:6789/home:?--per-page=2&--query=%23tag_1\]\[#tag_1\]\] •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Tag two: \[\[http://localhost:6789/home:?--per-page=2&--query=%23tag-2\]\[#tag-2\]\] •"
+"Tag two: \[\[http://localhost:6789/home:?--per-page=2&--query=%23tag-2\]\[#tag-2\]\] •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Tag not valid: 123#not-valid-tag •"
+"Tag not valid: 123#not-valid-tag •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Org mode link: \[\[http://example.com\]\] •"
+"Org mode link: \[\[http://localhost:6789?url=http%3A%2F%2Fexample.com\]\] •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Org mode link with description: \[\[http://example.com\]\[Example Description\]\] •"
+"Org mode link with description: \[\[http://localhost:6789?url=http%3A%2F%2Fexample.com\]\[Example Description\]\] •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Internal Org mode link: \[\[#sample\]\] •"
+"Internal Org mode link: \[\[#sample\]\] •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "^\[\[http://localhost:6789/home:?--per-page=2&--query=%23tag3\]\[#tag3\]\]$"
+"^\[\[http://localhost:6789/home:?--per-page=2&--query=%23tag3\]\[#tag3\]\]$"
 
   printf "%s\\n" "${output}" | grep -q \
-    "^\[\[http://localhost:6789/home:?--per-page=2&--query=%23tag4\]\[#tag4\]\] "
+"^\[\[http://localhost:6789/home:?--per-page=2&--query=%23tag4\]\[#tag4\]\] "
 
   printf "%s\\n" "${output}" | grep -q \
-    " \[\[http://localhost:6789/home:?--per-page=2&--query=%23tag5\]\[#tag5\]\] "
+" \[\[http://localhost:6789/home:?--per-page=2&--query=%23tag5\]\[#tag5\]\] "
 
   printf "%s\\n" "${output}" | grep -q \
-    " \[\[http://localhost:6789/home:?--per-page=2&--query=%23tag6\]\[#tag6\]\] "
+" \[\[http://localhost:6789/home:?--per-page=2&--query=%23tag6\]\[#tag6\]\] "
 
   printf "%s\\n" "${output}" | grep -q \
-    " \[\[http://localhost:6789/home:?--per-page=2&--query=%23tag7\]\[#tag7\]\]$"
+" \[\[http://localhost:6789/home:?--per-page=2&--query=%23tag7\]\[#tag7\]\]$"
 }
 
 @test "'_resolve_links --browse' resolves [[wiki-style links]] and #tags in .org files to .org links to local web server URLs." {
@@ -610,43 +610,43 @@ load test_helper
   [[ "${status}"  -eq 0                 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-    "Selector link one: \[\[http://localhost:6789/home:2/1\]\[\[\[home:2/1\]\]\]\] •"
+"Selector link one: \[\[http://localhost:6789/home:2/1\]\[\[\[home:2/1\]\]\]\] •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Selector link two: \[\[http://localhost:6789/home:3\]\[\[\[Root Title One\]\]\]\] •"
+"Selector link two: \[\[http://localhost:6789/home:3\]\[\[\[Root Title One\]\]\]\] •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Tag one: \[\[http://localhost:6789/home:?--query=%23tag_1\]\[#tag_1\]\] •"
+"Tag one: \[\[http://localhost:6789/home:?--query=%23tag_1\]\[#tag_1\]\] •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Tag two: \[\[http://localhost:6789/home:?--query=%23tag-2\]\[#tag-2\]\] •"
+"Tag two: \[\[http://localhost:6789/home:?--query=%23tag-2\]\[#tag-2\]\] •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Tag not valid: 123#not-valid-tag •"
+"Tag not valid: 123#not-valid-tag •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Org mode link: \[\[http://example.com\]\] •"
+"Org mode link: \[\[http://localhost:6789?url=http%3A%2F%2Fexample.com\]\] •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Org mode link with description: \[\[http://example.com\]\[Example Description\]\] •"
+"Org mode link with description: \[\[http://localhost:6789?url=http%3A%2F%2Fexample.com\]\[Example Description\]\] •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Internal Org mode link: \[\[#sample\]\] •"
+"Internal Org mode link: \[\[#sample\]\] •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "^\[\[http://localhost:6789/home:?--query=%23tag3\]\[#tag3\]\]$"
+"^\[\[http://localhost:6789/home:?--query=%23tag3\]\[#tag3\]\]$"
 
   printf "%s\\n" "${output}" | grep -q \
-    "^\[\[http://localhost:6789/home:?--query=%23tag4\]\[#tag4\]\] "
+"^\[\[http://localhost:6789/home:?--query=%23tag4\]\[#tag4\]\] "
 
   printf "%s\\n" "${output}" | grep -q \
-    " \[\[http://localhost:6789/home:?--query=%23tag5\]\[#tag5\]\] "
+" \[\[http://localhost:6789/home:?--query=%23tag5\]\[#tag5\]\] "
 
   printf "%s\\n" "${output}" | grep -q \
-    " \[\[http://localhost:6789/home:?--query=%23tag6\]\[#tag6\]\] "
+" \[\[http://localhost:6789/home:?--query=%23tag6\]\[#tag6\]\] "
 
   printf "%s\\n" "${output}" | grep -q \
-    " \[\[http://localhost:6789/home:?--query=%23tag7\]\[#tag7\]\]$"
+" \[\[http://localhost:6789/home:?--query=%23tag7\]\[#tag7\]\]$"
 }
 
 @test "'_resolve_links' resolves [[wiki-style links]] in .org files to .org links to local file URLs." {
@@ -689,32 +689,32 @@ load test_helper
   [[ "${status}"  -eq 0                 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-    "Selector link one: \[\[file://${NB_DIR}/home/Example Folder/Example Nested File One.md\]\[\[\[home:2/1\]\]\]\] •"
+"Selector link one: \[\[file://${NB_DIR}/home/Example Folder/Example Nested File One.md\]\[\[\[home:2/1\]\]\]\] •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Selector link two: \[\[file://${NB_DIR}/home/Root File One.md\]\[\[\[Root Title One\]\]\]\] •"
+"Selector link two: \[\[file://${NB_DIR}/home/Root File One.md\]\[\[\[Root Title One\]\]\]\] •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Tag one: #tag_1 •"
+"Tag one: #tag_1 •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Tag two: #tag-2 •"
+"Tag two: #tag-2 •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Tag not valid: 123#not-valid-tag •"
+"Tag not valid: 123#not-valid-tag •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Org mode link: \[\[http://example.com\]\] •"
+"Org mode link: \[\[http://example.com\]\] •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Org mode link with description: \[\[http://example.com\]\[Example Description\]\] •"
+"Org mode link with description: \[\[http://example.com\]\[Example Description\]\] •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "Internal Org mode link: \[\[#sample\]\] •"
+"Internal Org mode link: \[\[#sample\]\] •"
 
   printf "%s\\n" "${output}" | grep -q \
-    "^#tag3$"
+"^#tag3$"
 
   printf "%s\\n" "${output}" | grep -q \
-    "^#tag4 #tag5 #tag6 #tag7$"
+"^#tag4 #tag5 #tag6 #tag7$"
 }

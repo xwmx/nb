@@ -8430,33 +8430,26 @@ _resolve_links() {
     local _file_path="${1:?}"
     local _pattern="${2:?}"
 
-    cd "${_file_path%/*}"
-
-    local _repo_path=
-    _repo_path="$(git rev-parse --show-toplevel 2>/dev/null || :)"
-
-    if [[ -z "${_repo_path:-}"                        ]] &&
-       [[ "${_file_path:-}" =~ ^${_NB_TEMP_DIRECTORY} ]]
-    then # initialize temp directory as git repo to enable `git grep`
-      _repo_path="${_NB_TEMP_DIRECTORY}"
-      cd "${_repo_path:-}"
-
-      git init &>/dev/null
+    if _command_exists "rg"
+    then
+      rg                  \
+        --color=never     \
+        --no-filename     \
+        --only-matching   \
+        --text            \
+        -e "${_pattern}"  \
+        "${_file_path}"   \
+        2>/dev/null || :
+    else
+      grep                \
+        --color=never     \
+        --extended-regexp \
+        -h                \
+        --only-matching   \
+        --text            \
+        -e "${_pattern}"  \
+        "${_file_path}"
     fi
-
-    cd "${_repo_path:-}" || return 0
-
-    GIT_PAGER='' git -C "${_repo_path}" \
-      grep                              \
-      --no-index                        \
-      --color=never                     \
-      --extended-regexp                 \
-      -h                                \
-      --only-matching                   \
-      --text                            \
-      -e "${_pattern}"                  \
-      "${_file_path}"                   \
-      2>/dev/null || :
   }
 
   # _resolve_links_replace()
@@ -8702,7 +8695,7 @@ _resolve_links() {
       local _outbound_url_pattern=
 
       case "${_file_extension:-}" in
-        org)  _outbound_url_pattern="\[\[https?://[^\]]+"     ;;
+        org)  _outbound_url_pattern="\[\[https?://[^]]+"      ;;
         html) _outbound_url_pattern="href=\"https?://[^\"]+"  ;;
       esac
 
@@ -8736,9 +8729,22 @@ _resolve_links() {
         local _encoded_url=
         _encoded_url="$(_get_uri --encode "${_target_url}")"
 
-        _replacements+=(
-          "href=\"http://localhost:${NB_SERVER_PORT}?url=${_encoded_url:-}"
-        )
+        local _replacement_url="http://localhost:${NB_SERVER_PORT}?url=${_encoded_url}"
+        local _replacement="${_replacement_url}"
+
+        case "${_file_extension:-}" in
+          org)
+            if [[ "${__match:-}" =~ ^\[\[ ]]
+            then
+              _replacement="[[${_replacement}"
+            fi
+            ;;
+          html)
+            _replacement="href=\"${_replacement}"
+            ;;
+        esac
+
+        _replacements+=("${_replacement:-}")
       done
 
       _resolve_links_replace  \
