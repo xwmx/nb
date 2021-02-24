@@ -8791,7 +8791,7 @@ _resolve_links() {
           _escaped_replacement="${_escaped_replacement//\]/\\]}"
           _escaped_replacement="${_escaped_replacement//\(/\(}"
           _escaped_replacement="${_escaped_replacement//\)/\)}"
-_warn echo "${_escaped_match} -- ${_escaped_replacement}"
+
           if [[ -n "${_escaped_match:-}"        ]] &&
              [[ -n "${_escaped_replacement:-}"  ]] &&
              ! _contains "${_escaped_match}" "${_seen_matches[@]:-}"
