@@ -8441,17 +8441,6 @@ HEREDOC
 #   local filesystem. With --browse, links are created with http:// URLs
 #   for the internal web server.
 _resolve_links() {
-  # Usage: _resolve_links_escape_link_component <string>
-  _resolve_links_escape_link_component() {
-    printf "%s\\n" "${1:-}" \
-      | sed                 \
-        -e 's/\//\\\//g'    \
-        -e 's/\[/\\\[/g'    \
-        -e 's/\]/\\\]/g'    \
-        -e 's/(/\\(/g'      \
-        -e 's/)/\\)/g'
-  }
-
   # Usage: <input> | _resolve_links_get_matches <pattern>
   _resolve_links_get_matches() {
     local _arguments=()
@@ -8483,66 +8472,6 @@ _resolve_links() {
         "${_arguments[@]:-}"  \
         2>/dev/null || :
     fi
-  }
-
-  # _resolve_links_replace()
-  #
-  # Usage:
-  #   <input> | _resolve_links_replace <match>... --- <replacement>...
-  #
-  # Description:
-  #   Read standard input, replace each <match> with the corresponding
-  #   <replacement>, and print to standard output.
-  _resolve_links_replace() {
-    local _matches=()
-    local _replacements=()
-    local _separator_seen=0
-
-    while ((${#}))
-    do
-      if [[ "${1:-}" =~ ^--- ]]
-      then
-        _separator_seen=1
-      else
-        if ! ((_separator_seen))
-        then
-          _matches+=("${1:-}")
-        else
-          _replacements+=("${1:-}")
-        fi
-      fi
-
-      shift
-    done
-
-    local _sed_arguments=()
-    local _seen_matches=()
-
-    [[ "${#_matches[@]}" != "${#_replacements[@]}" ]] && return 1
-
-    local i=0
-    for ((i=0; i < "${#_replacements[@]}"; i++))
-    do
-      local _escaped_match=
-      _escaped_match="$(
-        _resolve_links_escape_link_component "${_matches[i]:-}"
-      )"
-
-      local _escaped_replacement=
-      _escaped_replacement="$(
-        _resolve_links_escape_link_component "${_replacements[i]:-}"
-      )"
-
-      if [[ -n "${_escaped_match:-}"        ]] &&
-         [[ -n "${_escaped_replacement:-}"  ]] &&
-         ! _contains "${_escaped_match}" "${_seen_matches[@]:-}"
-      then
-        _sed_arguments+=("-e" "s/${_escaped_match}/${_escaped_replacement}/g")
-        _seen_matches+=("${_escaped_match}")
-      fi
-    done
-
-    sed "${_sed_arguments[@]:-}"
   }
 
   local _for_browsing=0
@@ -8593,7 +8522,6 @@ _resolve_links() {
       while read -r __match
       do
         local _link=
-        local _match=
 
         [[ -z "${__match:-}" ]] && continue
 
