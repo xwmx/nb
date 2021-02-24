@@ -8747,6 +8747,7 @@ _resolve_links() {
           esac
 
           # NOTE: skip _get_uri() for performance
+          # use ${_SLASH} for macOS bash support
 
           local _encoding="${_target_url//'%'/%25}"
           _encoding="${_encoding//' '/%20}"
@@ -8756,7 +8757,7 @@ _resolve_links() {
           _encoding="${_encoding//'&'/%26}"
           _encoding="${_encoding//'+'/%2B}"
           _encoding="${_encoding//','/%2C}"
-          _encoding="${_encoding//${_SLASH}/%2F}" # macOS bash support
+          _encoding="${_encoding//${_SLASH}/%2F}"
           _encoding="${_encoding//':'/%3A}"
           _encoding="${_encoding//';'/%3B}"
           _encoding="${_encoding//'='/%3D}"
@@ -8780,13 +8781,13 @@ _resolve_links() {
               ;;
           esac
 
-          local _escaped_match="${__match//${_SLASH}/\\/}" # macOS bash support
+          local _escaped_match="${__match//${_SLASH}/\\/}"
           _escaped_match="${_escaped_match//\[/\\[}"
           _escaped_match="${_escaped_match//\]/\\]}"
           _escaped_match="${_escaped_match//\(/\(}"
           _escaped_match="${_escaped_match//\)/\)}"
 
-          local _escaped_replacement="${_replacement//${_SLASH}/\\/}" # macOS bash support
+          local _escaped_replacement="${_replacement//${_SLASH}/\\/}"
           _escaped_replacement="${_escaped_replacement//\[/\\[}"
           _escaped_replacement="${_escaped_replacement//\]/\\]}"
           _escaped_replacement="${_escaped_replacement//\(/\(}"
