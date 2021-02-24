@@ -13846,30 +13846,33 @@ Can't show archives. Export archive and expand to edit.\\n"
       _rendered_temp_file_path="$(_temp file ".html" --touch)"
 
       if [[ "${_target_path}" =~ \.org ]]
-      then # resolve  org mode [[wiki-style links]] before rendering to HTML
-        # NOTE: avoid pandoc bug with brackets in org link descriptions
+      then # resolve Org [[wiki-style links]] before rendering to HTML
         {
           cat "${_target_path}"
         } | {
-          _resolve_links                \
-            "${_notebook_path}"         \
-            --type org                  \
-            | sed -E                    \
-              -e "s/\]\[\[\[/\]\[••/g"  \
-              -e "s/\]\]\]\]/••\]\]/g"  \
-            | _pandoc                   \
-              --from org                \
-              --render-to-html          \
-            | sed -E                    \
-              -e "s/>••/>\[\[/g"        \
-              -e "s/••</\]\]</g"        \
-                >> "${_rendered_temp_file_path}"
+          _resolve_links "${_notebook_path}" --type org
+        } | {
+          # avoid pandoc bug with brackets in Org link descriptions
+          sed -E                      \
+            -e "s/\]\[\[\[/\]\[••/g"  \
+            -e "s/\]\]\]\]/••\]\]/g"  \
+          | _pandoc                   \
+            --from org                \
+            --render-to-html          \
+          | sed -E                    \
+            -e "s/>••/>\[\[/g"        \
+            -e "s/••</\]\]</g"
+        } | {
+         cat >> "${_rendered_temp_file_path}"
         }
-      else # render to HTML before resolving [[wiki-style links]]
-        _pandoc "${_target_path}"       \
-          --render-to-html              \
-          | _resolve_links              \
-            "${_notebook_path}" >> "${_rendered_temp_file_path}"
+      else # render non-Org to HTML before resolving [[wiki-style links]]
+        {
+          _pandoc "${_target_path}" --render-to-html
+        } | {
+          _resolve_links "${_notebook_path}"
+        } | {
+          cat >> "${_rendered_temp_file_path}"
+        }
       fi
 
       if ((_print_output))
@@ -14588,35 +14591,39 @@ HEREDOC
     )"
 
     if [[ "${_source_path:-}" =~ \.org$ ]]
-    then # resolve org mode [[wiki-style links]] before rendering to HTML
-      # NOTE: avoid pandoc bug with brackets in org link descriptions
+    then # resolve Org [[wiki-style links]] before rendering to HTML
       {
         cat "${_source_path}"
       } | {
-        _resolve_links                                    \
-          "${_notebook_path}"                             \
-          "${_pagination_arguments[@]:-}"                 \
-          --browse                                        \
-          --type org                                      \
-          | sed -E                                        \
-            -e "s/\]\[\[\[/\]\[••/g"                      \
-            -e "s/\]\]\]\]/••\]\]/g"                      \
-          | _pandoc                                       \
-            --include-before-body="${_header_temp_path}"  \
-            --from org                                    \
-            --render-to-html                              \
-          | sed -E                                        \
-            -e "s/>••/>\[\[/g"                            \
-            -e "s/••</\]\]</g"
+        _resolve_links                                  \
+          "${_notebook_path}"                           \
+          "${_pagination_arguments[@]:-}"               \
+          --browse                                      \
+          --type org
+      } | {
+        # avoid pandoc bug with brackets in Org link descriptions
+        sed -E                                          \
+          -e "s/\]\[\[\[/\]\[••/g"                      \
+          -e "s/\]\]\]\]/••\]\]/g"                      \
+        | _pandoc                                       \
+          --include-before-body="${_header_temp_path}"  \
+          --from org                                    \
+          --render-to-html                              \
+        | sed -E                                        \
+          -e "s/>••/>\[\[/g"                            \
+          -e "s/••</\]\]</g"
       }
-    else # render before resolving [[wiki-style links]]
-      _pandoc "${_source_path}"                           \
-        --include-before-body="${_header_temp_path}"      \
-        --render-to-html                                  \
-        | _resolve_links                                  \
-          "${_notebook_path}"                             \
-          "${_pagination_arguments[@]:-}"                 \
+    else # render non-Org to HTML before resolving [[wiki-style links]]
+      {
+        _pandoc "${_source_path}"                       \
+          --include-before-body="${_header_temp_path}"  \
+          --render-to-html
+      } | {
+        _resolve_links                                  \
+          "${_notebook_path}"                           \
+          "${_pagination_arguments[@]:-}"               \
           --browse
+      }
     fi
 
     return 0
