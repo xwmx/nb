@@ -8353,6 +8353,34 @@ label[for=search-input] {
   to    { opacity: 0; }
 }
 
+input[type="submit"] {
+  background:       none;
+  border:           none;
+  color:            #6EB3D7;
+  outline:          0 solid #1a1a1a;
+  padding:          0;
+}
+
+input[type="submit"]:active {
+  border-bottom:    1px solid #bae7ff;
+  color:            #bae7ff;
+}
+
+input[type="submit"]:hover {
+  border-bottom:    1px solid #6EB3D7;
+}
+
+textarea {
+  background-color: #1a1a1a;
+  border:           none;
+  border-bottom:    1px dashed #626480;
+  border-top:       1px dashed #626480;
+  color:            #e6e6e6;
+  font-size:        16px;
+  outline:          0 solid #1a1a1a;
+  padding:          2rem 0;
+}
+
 div.sourceCode {
   background-color: transparent;
 }
@@ -14528,17 +14556,44 @@ HEREDOC
       shift
     done
 
+    local _content=
+    _content="$(_show "${_source_path}" --print --no-color)"
+
+    local _form_action_selector=
+    _form_action_selector="$(_get_id_selector "${_source_path}")"
+
+    local _columns=70
+    local _rows=30
     local _url_params=
 
     if _contains "--terminal" "${_pagination_arguments[@]:-}"
     then
-      _url_params+="?--per-page=${_per_page}"
+      _columns="$((_COLUMNS - 3))"
+      _url_params+="&--per-page=${_per_page}"
+
+      _rows="$((_per_page + 2))"
     fi
 
     {
       printf "%s\\n" "$(_browse_render_header "${_header_arguments[@]:-}")"
 
-      printf "\\n\\nEdit.\\n"
+      # TODO: https://stackoverflow.com/a/15844977
+      cat <<HEREDOC
+<form
+  action="/${_form_action_selector:-}?--edit${_url_params:-}"
+  accept-charset="UTF-8"
+  method="post">
+  <textarea
+    id="content"
+    name="content"
+    rows="${_rows}"
+    cols="${_columns}">
+${_content}
+  </textarea>
+  <br><br>
+  <input type="submit" value="Save & Close">
+</form>
+HEREDOC
     } | {
       _pandoc --render-to-html || :
     }
@@ -14994,7 +15049,12 @@ HEREDOC
           then
             if ((_edit))
             then
-              _browse_render_edit   "${_arguments[@]:-}"  >> "${_temp_file}"
+              if [[ "${_request_method}" == "POST" ]]
+              then
+                _browse_update_item "${_arguments[@]:-}"
+              else
+                _browse_render_edit "${_arguments[@]:-}"  >> "${_temp_file}"
+              fi
             else
               _browse_render_item   "${_arguments[@]:-}"  >> "${_temp_file}"
             fi
@@ -15010,11 +15070,15 @@ HEREDOC
     fi
 
     case "${_request_method}" in
+      GET)
+        _browse_respond_with 200 "${_temp_file}"
+        ;;
       HEAD)
         _browse_respond_with 200 "${_temp_file}" --headers
         ;;
-      GET)
-        _browse_respond_with 200 "${_temp_file}"
+      POST)
+        _browse_respond_with 307 \
+          "http://localhost:${NB_SERVER_PORT}/${_target_selector//' '/%20}"
         ;;
       *)
         _browse_respond_with 405
@@ -15055,6 +15119,70 @@ HEREDOC
     sleep 0.05
   }
 
+  # _browse_update_item()
+  #
+  # Usage:
+  #   _browse_update_item <path> [--per-page <limit>] [--terminal]
+  #
+  # Description:
+  #   Update the content of item at <path>.
+  _browse_update_item() {
+    local _header_arguments=()
+    local _pagination_arguments=()
+    local _per_page="${NB_BROWSE_PER_PAGE:-30}"
+    local _source_path=
+
+    while ((${#}))
+    do
+      case "${1:-}" in
+        --page)
+          _option_value_is_present "${2:-}" && shift
+          ;;
+        --per-page)
+          _per_page="${2:?}"
+          _pagination_arguments+=("${1:?}" "${2:?}")
+          _header_arguments+=("${1:?}" "${2:?}")
+          shift
+          ;;
+        --terminal)
+          _pagination_arguments+=("--terminal")
+          _header_arguments+=("--terminal")
+          ;;
+        *)
+          _source_path="${1:-}"
+          _header_arguments+=("${_source_path}")
+          ;;
+      esac
+
+      shift
+    done
+
+    local _url_params=
+
+    if _contains "--terminal" "${_pagination_arguments[@]:-}"
+    then
+      _url_params+="?--per-page=${_per_page}"
+    fi
+
+    {
+      local _temp_file_path=
+      _temp_file_path="$(_temp file ".html" --touch)"
+
+      {
+        printf "TODO: update item\\n"
+      } | {
+        _pandoc --render-to-html
+      } | {
+        cat >> "${_temp_file_path}"
+      }
+
+      _browse_respond_with 200 "${_temp_file_path}"
+    }
+
+    # printf "example\\n" | _edit "${_source_path}" --overwrite ||
+    #   _browse_respond_with 500
+  }
+
   local _browse_notebooks=0
   local _browse_per_page=
   local _edit=0
@@ -15066,6 +15194,7 @@ HEREDOC
   local _print_browse_item=0
   local _print_headers=0
   local _print_output=0
+  local _print_render_edit=0
   local _search_query=
   local _selector=
   local _target_page=
@@ -15073,7 +15202,7 @@ HEREDOC
   while ((${#}))
   do
     case "${1:-}" in
-      --container)
+      --*container)
         _print_browse_container=1
         ;;
       --edit)
@@ -15082,13 +15211,13 @@ HEREDOC
       -g|--gui)
         _open_gui=1
         ;;
-      --header)
+      --*header)
         _print_browse_header=1
         ;;
       --headers)
         _print_headers=1
         ;;
-      --item)
+      --*item)
         _print_browse_item=1
         ;;
       --notebooks)
@@ -15104,6 +15233,9 @@ HEREDOC
         ;;
       -p|--print)
         _print_output=1
+        ;;
+      --render*edit)
+        _print_render_edit=1
         ;;
       --respond)
         _browse_respond
@@ -15231,6 +15363,13 @@ HEREDOC
   if ((_print_browse_item))
   then
     _browse_render_item "${_arguments[@]:-}"
+
+    exit 0
+  fi
+
+  if ((_print_render_edit))
+  then
+    _browse_render_edit "${_arguments[@]:-}"
 
     exit 0
   fi

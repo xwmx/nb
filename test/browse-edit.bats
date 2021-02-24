@@ -21,7 +21,7 @@ export _S=" "
 
   [[    "${status}"  -eq 0        ]]
 
-  [[    "${output}"  =~  ❯nb.*\ ·\ .*home.*\ :\ 1 ]]
-  [[    "${output}"  =~  Edit\.                   ]]
+  [[    "${output}"  =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1 ]]
+  [[    "${output}"  =~  \<form\ action=\"/home:1\?--edit           ]]
 }
 
