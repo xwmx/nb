@@ -8454,25 +8454,33 @@ _resolve_links() {
 
   # Usage: <input> | _resolve_links_get_matches <pattern>
   _resolve_links_get_matches() {
-    local _pattern="${1:?}"
+    local _arguments=()
+
+    case "${1:-}" in
+      '') return 1 ;;
+      *)
+        _arguments+=("-e" "${1:?}")
+        [[ -n "${2:-}" ]] && _arguments+=("${2:-}")
+        ;;
+    esac
 
     if _command_exists "rg"
     then
-      rg                  \
-        --color=never     \
-        --no-filename     \
-        --only-matching   \
-        --text            \
-        -e "${_pattern}"  \
+      rg                      \
+        --color=never         \
+        --no-filename         \
+        --only-matching       \
+        --text                \
+        "${_arguments[@]:-}"  \
         2>/dev/null || :
     else
-      grep                \
-        --color=never     \
-        --extended-regexp \
-        -h                \
-        --only-matching   \
-        --text            \
-        -e "${_pattern}"  \
+      grep                    \
+        --color=never         \
+        --extended-regexp     \
+        -h                    \
+        --only-matching       \
+        --text                \
+        "${_arguments[@]:-}"  \
         2>/dev/null || :
     fi
   }
@@ -8579,9 +8587,7 @@ _resolve_links() {
     # resolve and link [[wiki-style links]]
 
     {
-      cat "${_input_temp_file_path}"
-    } | {
-      _resolve_links_get_matches  "\[\[[^\[]+\]\]"
+      _resolve_links_get_matches  "\[\[[^\[]+\]\]" "${_input_temp_file_path}"
     } | {
       local _links=()
       local _matches=()
@@ -8722,9 +8728,9 @@ _resolve_links() {
       esac
 
       {
-        cat "${_temp_file_path}"
-      } | {
-        _resolve_links_get_matches "${_outbound_url_pattern:-}"
+        _resolve_links_get_matches      \
+          "${_outbound_url_pattern:-}"  \
+          "${_input_temp_file_path}"
       } | {
         local _matches=()
         local _replacements=()
