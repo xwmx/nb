@@ -15031,7 +15031,7 @@ HEREDOC
 
     _temp pid "${_pid}"
 
-    sleep 0.5
+    sleep 0.05
   }
 
   local _browse_notebooks=0
