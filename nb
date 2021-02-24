@@ -8443,7 +8443,7 @@ HEREDOC
 #   local filesystem. With --browse, links are created with http:// URLs
 #   for the internal web server.
 _resolve_links() {
-  # Usage: <input> | _resolve_links_get_matches <pattern>
+  # Usage: <input> | _resolve_links_get_matches <pattern> [<path>]
   _resolve_links_get_matches() {
     local _arguments=()
 
