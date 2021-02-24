@@ -8370,12 +8370,14 @@ HEREDOC
 
   if [[ -n "${_source_path:-}" ]]
   then
-    local _code_extensions=()
-
-    _code_extensions+=(
-      $(pandoc --list-highlight-languages | sed -e "/html/d" -e "/latex/d" -e "/markdown/d")
+    local _code_extensions=(
       bib hs haml js jsx py rb rs sass scss sh vim yml
     )
+
+    _code_extensions+=($(
+      pandoc --list-highlight-languages \
+        | sed -e "/html/d" -e "/latex/d" -e "/markdown/d"
+    ))
 
     local _source_extension="${_source_path##*\.}"
 
