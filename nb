@@ -14202,21 +14202,17 @@ _browse() {
 
         local _display_item="${__list_item:-}"
 
-        _display_item="$(
-          printf "%s\\n" "${_display_item}" \
-            | sed                           \
-              -e 's/\&/\&amp;/g'            \
-              -e 's/#/\&#35;/g'             \
-              -e 's/\$/\&#36;/g'            \
-              -e 's/(/\&#40;/g'             \
-              -e 's/)/\&#41;/g'             \
-              -e 's/</\&#60;/g'             \
-              -e 's/>/\&#62;/g'             \
-              -e 's/@/\&#64;/g'             \
-              -e 's/\\\ / /g'               \
-              -e 's/\ / /g'                 \
-              -e 's/\$/\&#36;/g'
-        )"
+        _display_item="${_display_item//'&'/&amp;}"
+        _display_item="${_display_item//'#'/&\#35;}"
+        _display_item="${_display_item//'$'/&\#36;}"
+        _display_item="${_display_item//'('/&\#40;}"
+        _display_item="${_display_item//')'/&\#41;}"
+        _display_item="${_display_item//'<'/&\#60;}"
+        _display_item="${_display_item//'>'/&\#62;}"
+        _display_item="${_display_item//'@'/&\#64;}"
+        _display_item="${_display_item//${_SLASH}\ /${_NBSP}}"
+        _display_item="${_display_item//' '/${_NBSP}}"
+        _display_item="${_display_item//'$'/&\#64;}"
 
         # shellcheck disable=SC2140
         _display_item="${_display_item/\[/<span class="dim">[</span><span class="identifier">}"
