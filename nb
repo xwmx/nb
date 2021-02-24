@@ -8715,11 +8715,6 @@ _resolve_links() {
     then
       cat
     else
-      local _temp_file_path=
-      _temp_file_path="$(_temp file ".${_input_type:-}" --touch)"
-
-      cat >> "${_temp_file_path}"
-
       local _outbound_url_pattern=
 
       case "${_input_type:-}" in
@@ -8803,10 +8798,9 @@ _resolve_links() {
           _sed_arguments+=("-e" "s/${_escaped_match}/${_escaped_replacement}/g")
           _seen_matches+=("${_escaped_match}")
         fi
-
       done
 
-      sed "${_sed_arguments[@]:-}" "${_temp_file_path}"
+      sed "${_sed_arguments[@]:-}"
     fi
   }
 }
