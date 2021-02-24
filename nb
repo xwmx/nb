@@ -14875,6 +14875,8 @@ HEREDOC
       shopt -u nocasematch
     done
 
+    # redirect outbound URLs
+
     if [[ "${_request_uri}" =~ \?url=(.*)           ]]
     then
       _browse_respond_with 307 "${BASH_REMATCH[1]}"
