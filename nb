@@ -8666,8 +8666,6 @@ _resolve_links() {
         html) _outbound_url_pattern="href=\"https?://[^\"]+"  ;;
       esac
 
-      local _matches=()
-      local _replacements=()
       local _sed_arguments=()
       local _seen_matches=()
 
