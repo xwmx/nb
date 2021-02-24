@@ -14536,7 +14536,9 @@ HEREDOC
     fi
 
     {
-      printf "%s\\n" "$(_browse_render_header "${_pagination_arguments[@]:-}")"
+      printf "%s\\n" "$(_browse_render_header "${_header_arguments[@]:-}")"
+
+      printf "\\n\\nEdit.\\n"
     } | {
       _pandoc --render-to-html || :
     }
@@ -14921,6 +14923,15 @@ HEREDOC
       _query="${_query//+/ }"
     fi
 
+    # detect edit
+
+    local _edit=0
+
+    if [[ "${_request_uri}" =~ --edit   ]]
+    then
+      _edit=1
+    fi
+
     # prepare response
 
     local _request_uri_base="${_request_uri%\?--*}" # strip parameters
@@ -14981,7 +14992,12 @@ HEREDOC
           if _file_is_text "${_selector_path:-}" ||
              [[ "${_selector_path:-}" =~ \.docx$|\.epub$|\.odt$ ]]
           then
-            _browse_render_item   "${_arguments[@]:-}"    >> "${_temp_file}"
+            if ((_edit))
+            then
+              _browse_render_edit   "${_arguments[@]:-}"  >> "${_temp_file}"
+            else
+              _browse_render_item   "${_arguments[@]:-}"  >> "${_temp_file}"
+            fi
           elif _file_is_encrypted "${_selector_path:-}"
           then
             _browse_respond_with 415    \
@@ -15041,6 +15057,7 @@ HEREDOC
 
   local _browse_notebooks=0
   local _browse_per_page=
+  local _edit=0
   local _force_terminal_request=0
   local _only_serve=0
   local _open_gui=0
@@ -15058,6 +15075,9 @@ HEREDOC
     case "${1:-}" in
       --container)
         _print_browse_container=1
+        ;;
+      --edit)
+        _edit=1
         ;;
       -g|--gui)
         _open_gui=1
@@ -15130,13 +15150,19 @@ HEREDOC
     exit 0
   fi
 
-  local _request_url_base="http://localhost:${NB_SERVER_PORT}/"
-  local _request_url="http://localhost:${NB_SERVER_PORT}/${_selector:-}"
+  # build initial request URL parameters and arguments
+
+  local _url_params=()
 
   if [[ -n "${_search_query:-}" ]]
   then
     _arguments+=("--query" "${_search_query}")
-    _request_url+="?--query=${_search_query//#/%23}"
+    _url_params+=("--query=${_search_query//#/%23}")
+  fi
+
+  if ((_edit))
+  then
+    _url_params+=("--edit")
   fi
 
   # configure pagination
@@ -15163,25 +15189,31 @@ HEREDOC
 
     if [[ -n "${_browse_per_page:-}" ]]
     then
-      _arguments+=( "--per-page" "${_browse_per_page}")
+      _arguments+=("--per-page" "${_browse_per_page}")
       _arguments+=("--terminal")
 
-      if [[ "${_request_url:-}" =~ \?--query= ]]
-      then
-        _request_url+="&"
-      else
-        _request_url+="?"
-      fi
-
-      _request_url+="--per-page=${_browse_per_page}&--terminal"
+      _url_params+=("--per-page=${_browse_per_page}")
+      _url_params+=("--terminal")
     fi
 
     if [[ -n "${_target_page:-}" ]]
     then
-      _argument+=("--page" "${_target_page:-}")
-      _request_url+="&--page=${_target_page}"
+      _arguments+=("--page" "${_target_page:-}")
+      _url_params+=("--page=${_target_page}")
     fi
   fi
+
+  # build initial request URL
+
+  local _request_url_base="http://localhost:${NB_SERVER_PORT}"
+  local _request_url="${_request_url_base}/${_selector:-}"
+
+  if ((${#_url_params[@]}))
+  then
+    _request_url+="?$(_join "&" "${_url_params[@]}")"
+  fi
+
+  # call functions directly
 
   if ((_print_browse_header))
   then
