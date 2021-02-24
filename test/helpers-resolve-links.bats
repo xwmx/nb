@@ -468,7 +468,7 @@ load test_helper
     _content+="Tag two: #tag-2 • "
     _content+="Tag not valid: 123#not-valid-tag • "
     _content+="Org mode link: [[http://example.com]] • "
-    _content+="Org mode link with description: [[http://example.com][Example Description]] • "
+    _content+="Org mode link with description: [[http://example.com][Example Description (more)]] • "
     _content+="Internal Org mode link: [[#sample]] • "
 
     _content+="${_NEWLINE}${_NEWLINE}#tag3${_NEWLINE}${_NEWLINE}"
@@ -518,7 +518,7 @@ load test_helper
 "Org mode link: \[\[http://localhost:6789?url=http%3A%2F%2Fexample.com\]\] •"
 
     printf "%s\\n" "${output}" | grep -q \
-"Org mode link with description: \[\[http://localhost:6789?url=http%3A%2F%2Fexample.com\]\[Example Description\]\] •"
+"Org mode link with description: \[\[http://localhost:6789?url=http%3A%2F%2Fexample.com\]\[Example Description (more)\]\] •"
 
     printf "%s\\n" "${output}" | grep -q \
 "Internal Org mode link: \[\[#sample\]\] •"
@@ -551,7 +551,7 @@ load test_helper
     _content+="Tag two: #tag-2 • "
     _content+="Tag not valid: 123#not-valid-tag • "
     _content+="Org mode link: [[http://example.com]] • "
-    _content+="Org mode link with description: [[http://example.com][Example Description]] • "
+    _content+="Org mode link with description: [[http://example.com][Example Description (more)]] • "
     _content+="Internal Org mode link: [[#sample]] • "
 
     _content+="${_NEWLINE}${_NEWLINE}#tag3${_NEWLINE}${_NEWLINE}"
@@ -597,7 +597,7 @@ load test_helper
 "Org mode link: \[\[http://localhost:6789?url=http%3A%2F%2Fexample.com\]\] •"
 
     printf "%s\\n" "${output}" | grep -q \
-"Org mode link with description: \[\[http://localhost:6789?url=http%3A%2F%2Fexample.com\]\[Example Description\]\] •"
+"Org mode link with description: \[\[http://localhost:6789?url=http%3A%2F%2Fexample.com\]\[Example Description (more)\]\] •"
 
     printf "%s\\n" "${output}" | grep -q \
 "Internal Org mode link: \[\[#sample\]\] •"
@@ -630,7 +630,7 @@ load test_helper
     _content+="Tag two: #tag-2 • "
     _content+="Tag not valid: 123#not-valid-tag • "
     _content+="Org mode link: [[http://example.com]] • "
-    _content+="Org mode link with description: [[http://example.com][Example Description]] • "
+    _content+="Org mode link with description: [[http://example.com][Example Description (more)]] • "
     _content+="Internal Org mode link: [[#sample]] • "
 
     _content+="${_NEWLINE}${_NEWLINE}#tag3${_NEWLINE}${_NEWLINE}"
@@ -676,7 +676,7 @@ load test_helper
 "Org mode link: \[\[http://example.com\]\] •"
 
     printf "%s\\n" "${output}" | grep -q \
-"Org mode link with description: \[\[http://example.com\]\[Example Description\]\] •"
+"Org mode link with description: \[\[http://example.com\]\[Example Description (more)\]\] •"
 
     printf "%s\\n" "${output}" | grep -q \
 "Internal Org mode link: \[\[#sample\]\] •"
