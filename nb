@@ -8589,15 +8589,13 @@ _resolve_links() {
     {
       _resolve_links_get_matches  "\[\[[^\[]+\]\]" "${_input_temp_file_path}"
     } | {
-      local _links=()
-      local _matches=()
-
       local __match=
       while read -r __match
       do
-        [[ -z "${__match:-}" ]] && continue
+        local _link=
+        local _match=
 
-        _matches+=("${__match}")
+        [[ -z "${__match:-}" ]] && continue
 
         local _selector="${__match#[[}"
         _selector="${_selector%]]}"
@@ -8606,7 +8604,7 @@ _resolve_links() {
         then
           if [[ -z "${_selector:-}" ]]
           then
-            _links+=("${__match}")
+            _link="${__match}"
           else
             local _notebook_name=
             local _query_selector=
@@ -8630,20 +8628,19 @@ _resolve_links() {
 
             if [[ -n "${_selector#*:}" ]] && [[ -z "${_selector_path:-}" ]]
             then
-              _links+=("[[${_selector:-}]]")
+              _link="[[${_selector:-}]]"
             else
               local _target_url="http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_query_string:-}"
 
               case "${_input_type:-}" in
                 html)
-                  _links+=("<a href=\"${_target_url:-}\">[[${_selector:-}]]</a>"
-                  )
+                  _link="<a href=\"${_target_url:-}\">[[${_selector:-}]]</a>"
                   ;;
                 org)
-                  _links+=("[[${_target_url:-}][[[${_selector:-}]]]]")
+                  _link="[[${_target_url:-}][[[${_selector:-}]]]]"
                   ;;
                 *)
-                  _links+=("[[${_selector:-}]]")
+                  _link="[[${_selector:-}]]"
                   ;;
               esac
             fi
@@ -8654,25 +8651,44 @@ _resolve_links() {
 
           if [[ -z "${_link_path:-}" ]]
           then
-            _links+=("[[${_selector}]]")
+            _link="[[${_selector}]]"
           else
             case "${_input_type:-}" in
               html)
-                _links+=("<a href=\"file://${_link_path:-}\">[[${_selector:-}]]</a>")
+                _link="<a href=\"file://${_link_path:-}\">[[${_selector:-}]]</a>"
                 ;;
               org)
-                _links+=("[[file://${_link_path:-}][[[${_selector:-}]]]]")
+                _link="[[file://${_link_path:-}][[[${_selector:-}]]]]"
                 ;;
               *)
-                _links+=("[[${_selector:-}]]")
+                _link="[[${_selector:-}]]"
                 ;;
             esac
           fi
         fi
+
+        local _escaped_match="${__match//${_SLASH}/\\/}"
+        _escaped_match="${_escaped_match//\[/\\[}"
+        _escaped_match="${_escaped_match//\]/\\]}"
+        _escaped_match="${_escaped_match//\(/\(}"
+        _escaped_match="${_escaped_match//\)/\)}"
+
+        local _escaped_replacement="${_link//${_SLASH}/\\/}"
+        _escaped_replacement="${_escaped_replacement//\[/\\[}"
+        _escaped_replacement="${_escaped_replacement//\]/\\]}"
+        _escaped_replacement="${_escaped_replacement//\(/\(}"
+        _escaped_replacement="${_escaped_replacement//\)/\)}"
+
+        if [[ -n "${_escaped_match:-}"        ]] &&
+           [[ -n "${_escaped_replacement:-}"  ]] &&
+           ! _contains "${_escaped_match}" "${_seen_matches[@]:-}"
+        then
+          _sed_arguments+=("-e" "s/${_escaped_match}/${_escaped_replacement}/g")
+          _seen_matches+=("${_escaped_match}")
+        fi
       done
 
-      _resolve_links_replace  \
-        "${_matches[@]:-}" --- "${_links[@]:-}" < "${_input_temp_file_path}"
+      sed "${_sed_arguments[@]:-}" "${_input_temp_file_path}"
     }
   } | {
     # link #hashtags to internal search URLs
