@@ -14860,10 +14860,10 @@ HEREDOC
 
       # turn on case-insensitive matching
       shopt -s nocasematch
-      if [[ "${_http_header_line}"      =~ User-Agent     ]]
+      if [[ "${_http_header_line}"      =~ User-Agent           ]]
       then
 
-        if [[ ! "${_http_header_line}"  =~ Lynx|w3m|Links ]]
+        if [[ ! "${_http_header_line}"  =~ curl|Links|Lynx|w3m  ]]
         then
           _terminal_browser=0
           _looking_for_user_agent=0
