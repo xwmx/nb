@@ -1086,6 +1086,11 @@ _BT=$'`'
 # The terminal width in number of columns (characters).
 _COLUMNS="$(tput cols)"
 
+# $_FILE_TYPES
+#
+# An array of supported aggregate file types.
+_FILE_TYPES=(archive audio bookmark document folder image text video)
+
 # $_NBSP
 #
 # Unicode non-breaking space.
@@ -1096,10 +1101,11 @@ _NBSP=" "
 # Assign newline with ANSI-C quoting for string building.
 _NEWLINE=$'\n'
 
-# $_FILE_TYPES
+# $_SLASH
 #
-# An array of supported aggregate file types.
-_FILE_TYPES=(archive audio bookmark document folder image text video)
+# Assign slash with ANSI-C quoting for string building support for macOS Bash
+# string substitution.
+_SLASH=$'/'
 
 # _alias_subcommand()
 #
@@ -8075,8 +8081,6 @@ _get_uri() {
 
   # Usage: _get_uri_encode <string>
   _get_uri_encode() {
-    local _slash=$'/' # macOS bash support
-
     local _encoding="${1//'%'/%25}"
     _encoding="${_encoding//' '/%20}"
     _encoding="${_encoding//'"'/%22}"
@@ -8085,7 +8089,7 @@ _get_uri() {
     _encoding="${_encoding//'&'/%26}"
     _encoding="${_encoding//'+'/%2B}"
     _encoding="${_encoding//','/%2C}"
-    _encoding="${_encoding//${_slash}/%2F}"
+    _encoding="${_encoding//${_SLASH}/%2F}"
     _encoding="${_encoding//':'/%3A}"
     _encoding="${_encoding//';'/%3B}"
     _encoding="${_encoding//'='/%3D}"
@@ -8724,6 +8728,8 @@ _resolve_links() {
       } | {
         local _matches=()
         local _replacements=()
+        local _sed_arguments=()
+        local _seen_matches=()
 
         local __match=
         while read -r __match
@@ -8735,15 +8741,12 @@ _resolve_links() {
             continue
           fi
 
-          _matches+=("${__match}")
-
           case "${_input_type:-}" in
             org)  local _target_url="${__match#\[\[}"     ;;
             html) local _target_url="${__match#href=\"}"  ;;
           esac
 
           # NOTE: skip _get_uri() for performance
-          local _slash=$'/' # macOS bash support
 
           local _encoding="${_target_url//'%'/%25}"
           _encoding="${_encoding//' '/%20}"
@@ -8753,7 +8756,7 @@ _resolve_links() {
           _encoding="${_encoding//'&'/%26}"
           _encoding="${_encoding//'+'/%2B}"
           _encoding="${_encoding//','/%2C}"
-          _encoding="${_encoding//${_slash}/%2F}"
+          _encoding="${_encoding//${_SLASH}/%2F}" # macOS bash support
           _encoding="${_encoding//':'/%3A}"
           _encoding="${_encoding//';'/%3B}"
           _encoding="${_encoding//'='/%3D}"
@@ -8777,11 +8780,29 @@ _resolve_links() {
               ;;
           esac
 
-          _replacements+=("${_replacement:-}")
+          local _escaped_match="${__match//${_SLASH}/\\/}" # macOS bash support
+          _escaped_match="${_escaped_match//\[/\[}"
+          _escaped_match="${_escaped_match//\]/\]}"
+          _escaped_match="${_escaped_match//\(/\(}"
+          _escaped_match="${_escaped_match//\)/\)}"
+
+          local _escaped_replacement="${_replacement//${_SLASH}/\\/}" # macOS bash support
+          _replacement="${_escaped_replacement//\[/\[}"
+          _replacement="${_escaped_replacement//\]/\]}"
+          _replacement="${_escaped_replacement//\(/\(}"
+          _replacement="${_escaped_replacement//\)/\)}"
+
+          if [[ -n "${_escaped_match:-}"        ]] &&
+             [[ -n "${_escaped_replacement:-}"  ]] &&
+             ! _contains "${_escaped_match}" "${_seen_matches[@]:-}"
+          then
+            _sed_arguments+=("-e" "s/${_escaped_match}/${_escaped_replacement}/g")
+            _seen_matches+=("${_escaped_match}")
+          fi
+
         done
 
-        _resolve_links_replace  \
-          "${_matches[@]:-}" --- "${_replacements[@]:-}" < "${_temp_file_path}"
+        sed "${_sed_arguments[@]:-}" "${_temp_file_path}"
       }
     fi
   }
