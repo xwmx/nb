@@ -178,9 +178,14 @@ class=\"list-item\"\>.*\[.*1/1.*\].*${_S}File${_S}One.md\</a\>\<br\ /\> ]]
   {
     "${_NB}" init
 
-    "${_NB}" notebooks add "One"
-    "${_NB}" notebooks add "Two"
-    "${_NB}" notebooks add "Three"
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" notebooks add "Sample Notebook"
+    "${_NB}" notebooks add "Test Notebook"
+
+    "${_NB}" notebooks rename "home" "Demo Notebook"
+
+    [[    -d "${NB_DIR}/Demo Notebook"  ]]
+    [[ !  -e "${NB_DIR}/home"           ]]
   }
 
   run "${_NB}" browse --notebooks --print
@@ -198,18 +203,17 @@ class=\"list-item\"\>.*\[.*1/1.*\].*${_S}File${_S}One.md\</a\>\<br\ /\> ]]
   [[ "${output}"  =~  \
 \<span\ class=\"dim\"\>❯\</span\>nb\</a\>\ .*·.*\ \<span\ class=\"dim\"\>notebooks\</span\>.*\</h1\>  ]]
 
+  printf "%s\\n" "${output}" | grep   -q \
+"<p><a.* href=\"http://localhost:6789/Demo%20Notebook:?--per-page=.*\">Demo${_S}Notebook</a> .*·.*"
 
-  [[ "${output}"  =~  \
-\<p\>\<a.*\ href=\"http://localhost:6789/One:\?--per-page=.*\"\>One\</a\>\ .*·.*\   ]]
+  printf "%s\\n" "${output}" | grep   -q \
+"<a.* href=\"http://localhost:6789/Example%20Notebook:?--per-page=.*\">Example${_S}Notebook</a> .*·.*"
 
-  [[ "${output}"  =~  \
-\<a.*\ href=\"http://localhost:6789/Two:\?--per-page=.*\"\>Two\</a\>\ .*·.*\        ]]
+  printf "%s\\n" "${output}" | grep   -q \
+"<a.* href=\"http://localhost:6789/Sample%20Notebook:?--per-page=.*\">Sample${_S}Notebook</a> .*·.*"
 
-  [[ "${output}"  =~  \
-\<a.*\ href=\"http://localhost:6789/Three:\?--per-page=.*\"\>Three\</a\>\ .*·.*\    ]]
-
-  [[ "${output}"  =~  \
-\<a.*\ href=\"http://localhost:6789/home:\?--per-page=.*\"\>home\</a\>\</p\>        ]]
+  printf "%s\\n" "${output}" | grep   -q \
+"<a.* href=\"http://localhost:6789/Test%20Notebook:?--per-page=.*\">Test${_S}Notebook</a></p>"
 }
 
 @test "'browse' with no arguments serves the current notebook contents as a rendered HTML page with links to internal web server URLs." {

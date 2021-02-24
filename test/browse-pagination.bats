@@ -5,7 +5,7 @@ load test_helper
 # non-breaking space
 export _S=" "
 
-@test "'browse' includes pagination on links." {
+@test "'browse' includes pagination on links on listing page." {
   {
     "${_NB}" init
 
@@ -30,7 +30,12 @@ export _S=" "
 
     "${_NB}" notebooks add "Example Notebook"
     "${_NB}" notebooks add "Sample Notebook"
-    "${_NB}" notebooks add "Demo Notebook"
+    "${_NB}" notebooks add "Test Notebook"
+
+    "${_NB}" notebooks rename "home" "Demo Notebook"
+
+    [[    -d "${NB_DIR}/Demo Notebook"  ]]
+    [[ !  -e "${NB_DIR}/home"           ]]
   }
 
   run "${_NB}" browse --print --per-page 2 --terminal
@@ -42,22 +47,56 @@ export _S=" "
   [[ "${output}"  =~ \<\!DOCTYPE\ html\>                    ]]
 
   printf "%s\\n" "${output}" | grep       -q  \
-"<h1 class=\"header-crumbs\" id=\"nb-home\"><a.* href=\"http://localhost:6789/?--per-page=2\">"
+"<h1 class=\"header-crumbs\" id=\"nb-demo-notebook\"><a.* href=\"http://localhost:6789/?--per-page=2\">"
   printf "%s\\n" "${output}" | grep       -q  \
-"id=\"nb-home\"><a.* href=\"http://localhost:6789/?--per-page=2\"><span class=\"dim\">❯</span>nb</a>"
+"id=\"nb-demo-notebook\"><a.* href=\"http://localhost:6789/?--per-page=2\"><span class=\"dim\">❯</span>nb</a>"
   printf "%s\\n" "${output}" | grep       -q  \
-"<span class=\"dim\">·</span> <a.* href=\"http://localhost:6789/home:?--per-page=2\">home</a></h1>"
+"<span class=\"dim\">·</span> <a.* href=\"http://localhost:6789/Demo%20Notebook:?--per-page=2\">Demo Notebook</a></h1>"
 
   printf "%s\\n" "${output}" | grep       -q  \
-"http://localhost:6789/home:10?--per-page=2\" class=\"list-item\">"
+"http://localhost:6789/Demo%20Notebook:10?--per-page=2\" class=\"list-item\">"
   printf "%s\\n" "${output}" | grep       -q  \
-"http://localhost:6789/home:9?--per-page=2\" class=\"list-item\">"
+"http://localhost:6789/Demo%20Notebook:9?--per-page=2\" class=\"list-item\">"
 
   printf "%s\\n" "${output}" | grep   -v  -q  \
-"http://localhost:6789/home:8?--per-page=2\" class=\"list-item\">"
+"http://localhost:6789/Demo%20Notebook:8?--per-page=2\" class=\"list-item\">"
 
   printf "%s\\n" "${output}" | grep       -q  \
-"http://localhost:6789/home:?--page=2&amp;--per-page=2\">next ❯"
+"http://localhost:6789/Demo%20Notebook:?--page=2&amp;--per-page=2\">next ❯"
+}
+
+@test "'browse' includes pagination on links on item page." {
+  {
+    "${_NB}" init
+
+    declare __number=
+    for     __number in One Two Three Four Five Six Seven Eight Nine Ten
+    do
+      declare _content="Example content."
+
+      case "${__number}" in
+        One)
+          _content+=" [[Title Two]] • #example"
+          ;;
+        Two|Three|Six|Seven|Nine)
+          _content+=" #example"
+          ;;
+      esac
+
+      "${_NB}" add  "File ${__number}.md" \
+        --title     "Title ${__number}"   \
+        --content   "${_content}"
+    done
+
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" notebooks add "Sample Notebook"
+    "${_NB}" notebooks add "Test Notebook"
+
+    "${_NB}" notebooks rename "home" "Demo Notebook"
+
+    [[    -d "${NB_DIR}/Demo Notebook"  ]]
+    [[ !  -e "${NB_DIR}/home"           ]]
+  }
 
   run "${_NB}" browse 1 --print --per-page 2 --terminal
 
@@ -72,14 +111,48 @@ export _S=" "
   printf "%s\\n" "${output}" | grep       -q  \
 "<a.* href=\"http://localhost:6789/?--per-page=2\"><span class=\"dim\">❯</span>nb</a>"
   printf "%s\\n" "${output}" | grep       -q  \
-"<span class=\"dim\">·</span> <a.* href=\"http://localhost:6789/home:?--per-page=2\">home</a>"
+"<span class=\"dim\">·</span> <a.* href=\"http://localhost:6789/Demo Notebook:?--per-page=2\">Demo Notebook</a>"
   printf "%s\\n" "${output}" | grep       -q  \
-"home</a> <span class=\"dim\">:</span> <span class=\"dim\">1</span>"
+"Demo Notebook</a> <span class=\"dim\">:</span> <span class=\"dim\">1</span>"
 
   printf "%s\\n" "${output}" | grep       -q  \
-"<a href=\"http://localhost:6789/home:2?--per-page=2\">\[\[Title Two\]\]</a>"
+"<a href=\"http://localhost:6789/Demo Notebook:2?--per-page=2\">\[\[Title Two\]\]</a>"
   printf "%s\\n" "${output}" | grep       -q  \
-"<a href=\"http://localhost:6789/home:?--per-page=2&--query=%23example\">#example</a></p>"
+"<a href=\"http://localhost:6789/Demo Notebook:?--per-page=2&--query=%23example\">#example</a></p>"
+}
+
+@test "'browse' includes pagination on links on notebooks page." {
+  {
+    "${_NB}" init
+
+    declare __number=
+    for     __number in One Two Three Four Five Six Seven Eight Nine Ten
+    do
+      declare _content="Example content."
+
+      case "${__number}" in
+        One)
+          _content+=" [[Title Two]] • #example"
+          ;;
+        Two|Three|Six|Seven|Nine)
+          _content+=" #example"
+          ;;
+      esac
+
+      "${_NB}" add  "File ${__number}.md" \
+        --title     "Title ${__number}"   \
+        --content   "${_content}"
+    done
+
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" notebooks add "Sample Notebook"
+    "${_NB}" notebooks add "Test Notebook"
+
+    "${_NB}" notebooks rename "home" "Demo Notebook"
+
+    [[    -d "${NB_DIR}/Demo Notebook"  ]]
+    [[ !  -e "${NB_DIR}/home"           ]]
+  }
 
   run "${_NB}" browse --notebooks --print --per-page 2 --terminal
 
@@ -103,7 +176,7 @@ export _S=" "
   printf "%s\\n" "${output}" | grep       -q  \
 "span> <a.*href=\"http://localhost:6789/Sample%20Notebook:?--per-page=2\">Sample${_S}Notebook</a> <span"
   printf "%s\\n" "${output}" | grep       -q  \
-"span> <a.*href=\"http://localhost:6789/home:?--per-page=2\">home</a></p>"
+"span> <a.*href=\"http://localhost:6789/Test%20Notebook:?--per-page=2\">Test${_S}Notebook</a></p>"
 }
 
 @test "'browse' paginates lists." {
