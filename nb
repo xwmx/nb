@@ -14553,7 +14553,7 @@ HEREDOC
   _browse_render_item() {
     local _header_arguments=()
     local _pagination_arguments=()
-    local _selector=
+    local _source_path=
 
     while ((${#}))
     do
@@ -14571,8 +14571,8 @@ HEREDOC
           _header_arguments+=("--terminal")
           ;;
         *)
-          _selector="${1:-}"
-          _header_arguments+=("${_selector}")
+          _source_path="${1:-}"
+          _header_arguments+=("${_source_path}")
           ;;
       esac
 
@@ -14587,12 +14587,9 @@ HEREDOC
 
     local _notebook_path=
     _notebook_path="$(
-      _notebooks show "${_selector:-}" --path 2>/dev/null ||
+      _notebooks show "${_source_path:-}" --path 2>/dev/null ||
         _notebooks current --path
     )"
-
-    local _source_path=
-    _source_path="$(_show "${_selector:-}" --path)"
 
     if [[ "${_source_path:-}" =~ \.org$ ]]
     then # resolve org mode [[wiki-style links]] before rendering to HTML
