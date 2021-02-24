@@ -8515,111 +8515,7 @@ _resolve_links() {
   cat >> "${_input_temp_file_path}"
 
   {
-    # resolve and link [[wiki-style links]]
-
-    {
-      _resolve_links_get_matches  "\[\[[^\[]+\]\]" "${_input_temp_file_path}"
-    } | {
-      local __match=
-      while read -r __match
-      do
-        local _link=
-
-        [[ -z "${__match:-}" ]] && continue
-
-        local _selector="${__match#[[}"
-        _selector="${_selector%]]}"
-
-        if ((_for_browsing))
-        then
-          if [[ -z "${_selector:-}" ]]
-          then
-            _link="${__match}"
-          else
-            local _notebook_name=
-            local _query_selector=
-
-            if [[ "${_selector:-}" =~ : ]] && [[ ! "${_selector:-}" =~ :// ]]
-            then
-              _notebook_name="${_selector%%:*}"
-              _query_selector="${_selector}"
-            else
-              _notebook_name="${_notebook_path##*/}"
-              _query_selector="${_notebook_name}:${_selector}"
-            fi
-
-            local _selector_path=
-            _selector_path="$(_selector_resolve_path "${_query_selector:-}")"
-
-            local _id_selector=
-            _id_selector="$(
-              _get_id_selector "${_notebook_name}:${_selector_path}" 2>/dev/null || :
-            )"
-
-            if [[ -n "${_selector#*:}" ]] && [[ -z "${_selector_path:-}" ]]
-            then
-              _link="[[${_selector:-}]]"
-            else
-              local _target_url="http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_query_string:-}"
-
-              case "${_input_type:-}" in
-                html)
-                  _link="<a href=\"${_target_url:-}\">[[${_selector:-}]]</a>"
-                  ;;
-                org)
-                  _link="[[${_target_url:-}][[[${_selector:-}]]]]"
-                  ;;
-                *)
-                  _link="[[${_selector:-}]]"
-                  ;;
-              esac
-            fi
-          fi
-        else
-          local _link_path=
-          _link_path="$(_show "${_selector}" --path 2>/dev/null || :)"
-
-          if [[ -z "${_link_path:-}" ]]
-          then
-            _link="[[${_selector}]]"
-          else
-            case "${_input_type:-}" in
-              html)
-                _link="<a href=\"file://${_link_path:-}\">[[${_selector:-}]]</a>"
-                ;;
-              org)
-                _link="[[file://${_link_path:-}][[[${_selector:-}]]]]"
-                ;;
-              *)
-                _link="[[${_selector:-}]]"
-                ;;
-            esac
-          fi
-        fi
-
-        local _escaped_match="${__match//${_SLASH}/\\/}"
-        _escaped_match="${_escaped_match//\[/\\[}"
-        _escaped_match="${_escaped_match//\]/\\]}"
-        _escaped_match="${_escaped_match//\(/\(}"
-        _escaped_match="${_escaped_match//\)/\)}"
-
-        local _escaped_replacement="${_link//${_SLASH}/\\/}"
-        _escaped_replacement="${_escaped_replacement//\[/\\[}"
-        _escaped_replacement="${_escaped_replacement//\]/\\]}"
-        _escaped_replacement="${_escaped_replacement//\(/\(}"
-        _escaped_replacement="${_escaped_replacement//\)/\)}"
-
-        if [[ -n "${_escaped_match:-}"        ]] &&
-           [[ -n "${_escaped_replacement:-}"  ]] &&
-           ! _contains "${_escaped_match}" "${_seen_matches[@]:-}"
-        then
-          _sed_arguments+=("-e" "s/${_escaped_match}/${_escaped_replacement}/g")
-          _seen_matches+=("${_escaped_match}")
-        fi
-      done
-
-      sed "${_sed_arguments[@]:-}" "${_input_temp_file_path}"
-    }
+    cat "${_input_temp_file_path}"
   } | {
     # link #hashtags to internal search URLs
 
@@ -8654,6 +8550,110 @@ _resolve_links() {
         sed -E -e "s/(^|[>|\ ])\#([A-Za-z0-9_\-]+)/\1${_pattern}/g"
       fi
     fi
+  } | {
+    # resolve and link [[wiki-style links]]
+
+    local __match=
+    for   __match in  $(_resolve_links_get_matches  \
+                        "\[\[[^\[]+\]\]"            \
+                        "${_input_temp_file_path}")
+    do
+      local _link=
+
+      [[ -z "${__match:-}" ]] && continue
+
+      local _selector="${__match#[[}"
+      _selector="${_selector%]]}"
+
+      if ((_for_browsing))
+      then
+        if [[ -z "${_selector:-}" ]]
+        then
+          _link="${__match}"
+        else
+          local _notebook_name=
+          local _query_selector=
+
+          if [[ "${_selector:-}" =~ : ]] && [[ ! "${_selector:-}" =~ :// ]]
+          then
+            _notebook_name="${_selector%%:*}"
+            _query_selector="${_selector}"
+          else
+            _notebook_name="${_notebook_path##*/}"
+            _query_selector="${_notebook_name}:${_selector}"
+          fi
+
+          local _selector_path=
+          _selector_path="$(_selector_resolve_path "${_query_selector:-}")"
+
+          local _id_selector=
+          _id_selector="$(
+            _get_id_selector "${_notebook_name}:${_selector_path}" 2>/dev/null || :
+          )"
+
+          if [[ -n "${_selector#*:}" ]] && [[ -z "${_selector_path:-}" ]]
+          then
+            _link="[[${_selector:-}]]"
+          else
+            local _target_url="http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_query_string:-}"
+
+            case "${_input_type:-}" in
+              html)
+                _link="<a href=\"${_target_url:-}\">[[${_selector:-}]]</a>"
+                ;;
+              org)
+                _link="[[${_target_url:-}][[[${_selector:-}]]]]"
+                ;;
+              *)
+                _link="[[${_selector:-}]]"
+                ;;
+            esac
+          fi
+        fi
+      else
+        local _link_path=
+        _link_path="$(_show "${_selector}" --path 2>/dev/null || :)"
+
+        if [[ -z "${_link_path:-}" ]]
+        then
+          _link="[[${_selector}]]"
+        else
+          case "${_input_type:-}" in
+            html)
+              _link="<a href=\"file://${_link_path:-}\">[[${_selector:-}]]</a>"
+              ;;
+            org)
+              _link="[[file://${_link_path:-}][[[${_selector:-}]]]]"
+              ;;
+            *)
+              _link="[[${_selector:-}]]"
+              ;;
+          esac
+        fi
+      fi
+
+      local _escaped_match="${__match//${_SLASH}/\\/}"
+      _escaped_match="${_escaped_match//\[/\\[}"
+      _escaped_match="${_escaped_match//\]/\\]}"
+      _escaped_match="${_escaped_match//\(/\(}"
+      _escaped_match="${_escaped_match//\)/\)}"
+
+      local _escaped_replacement="${_link//${_SLASH}/\\/}"
+      _escaped_replacement="${_escaped_replacement//\[/\\[}"
+      _escaped_replacement="${_escaped_replacement//\]/\\]}"
+      _escaped_replacement="${_escaped_replacement//\(/\(}"
+      _escaped_replacement="${_escaped_replacement//\)/\)}"
+
+      if [[ -n "${_escaped_match:-}"        ]] &&
+         [[ -n "${_escaped_replacement:-}"  ]] &&
+         ! _contains "${_escaped_match}" "${_seen_matches[@]:-}"
+      then
+        _sed_arguments+=("-e" "s/${_escaped_match}/${_escaped_replacement}/g")
+        _seen_matches+=("${_escaped_match}")
+      fi
+    done
+
+    sed "${_sed_arguments[@]:-}"
   } | {
     # rewrite outbound links to use an exit page
 
