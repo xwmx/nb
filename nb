@@ -15100,13 +15100,18 @@ HEREDOC
   _browse_serve() {
     # Usage: _browse_serve_run
     _browse_serve_run() {
+      local _tool="ncat"
+
       while true
       do
-        ncat                                    \
-          --exec "${_MY_PATH} browse --respond" \
-          --listen                              \
-          --source-port "${NB_SERVER_PORT}"     \
-          2>/dev/null
+        case "${_tool:-}" in
+          ncat)
+            ncat                                    \
+              --exec "${_MY_PATH} browse --respond" \
+              --listen                              \
+              --source-port "${NB_SERVER_PORT}"
+            ;;
+        esac
       done
     }
 
