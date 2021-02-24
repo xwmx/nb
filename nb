@@ -14202,17 +14202,24 @@ _browse() {
 
         local _display_item="${__list_item:-}"
 
+        local _35="&#35;"
+        local _36="&#36;"
+        local _40="&#40;"
+        local _41="&#41;"
+        local _60="&#60;"
+        local _62="&#62;"
+        local _64="&#64;"
+
         _display_item="${_display_item//'&'/&amp;}"
-        _display_item="${_display_item//'#'/&#35;}"
-        _display_item="${_display_item//'$'/&#36;}"
-        _display_item="${_display_item//'('/&#40;}"
-        _display_item="${_display_item//')'/&#41;}"
-        _display_item="${_display_item//'<'/&#60;}"
-        _display_item="${_display_item//'>'/&#62;}"
-        _display_item="${_display_item//'@'/&#64;}"
+        _display_item="${_display_item//'#'/${_35}}"
+        _display_item="${_display_item//'$'/${_36}}"
+        _display_item="${_display_item//'('/${_40}}"
+        _display_item="${_display_item//')'/${_41}}"
+        _display_item="${_display_item//'<'/${_60}}"
+        _display_item="${_display_item//'>'/${_62}}"
+        _display_item="${_display_item//'@'/${_64}}"
         _display_item="${_display_item//\\\ /${_NBSP}}"
         _display_item="${_display_item//' '/${_NBSP}}"
-        _display_item="${_display_item//'$'/&#64;}"
 
         # shellcheck disable=SC2140
         _display_item="${_display_item/\[/<span class="dim">[</span><span class="identifier">}"
