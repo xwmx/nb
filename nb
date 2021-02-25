@@ -14926,29 +14926,25 @@ HEREDOC
       read -r __request_line
 
       if ((_looking_for_user_agent))  &&
-         [[ "${__request_line:-}"     =~ User-Agent           ]]
+         [[ "${__request_line:-}"     =~ User-Agent         ]]
       then # detect browser type
         # turn on case-insensitive matching
         shopt -s nocasematch
-        if [[ "${__request_line}"     =~ User-Agent           ]]
+        if [[ ! "${__request_line}" =~ curl|Links|Lynx|w3m  ]]
         then
-
-          if [[ ! "${__request_line}" =~ curl|Links|Lynx|w3m  ]]
-          then
-            _terminal_browser=0
-            _looking_for_user_agent=0
-          fi
+          _terminal_browser=0
+          _looking_for_user_agent=0
         fi
         # turn off case-insensitive matching
         shopt -u nocasematch
       elif ((_looking_for_content_length)) &&
-           [[ "${__request_line:-}"   =~ Content-Length       ]]
+           [[ "${__request_line:-}"   =~ Content-Length     ]]
       then # assign content length
         _content_length="${__request_line##*: }"
         _content_length="${_content_length%%$'\r'}"
 
         _looking_for_content_length=0
-      elif [[ -z "${__request_line%%$'\r'}"                   ]]
+      elif [[ -z "${__request_line%%$'\r'}"                 ]]
       then
         _looking_for_end_of_headers=0
         break
