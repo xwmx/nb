@@ -15378,7 +15378,7 @@ HEREDOC
       fi
     fi
 
-    if [[ -n "${_browse_per_page:-}" ]]
+    if [[ -n "${_browse_per_page:-}"  ]]
     then
       _arguments+=("--per-page" "${_browse_per_page}")
       _arguments+=("--terminal")
@@ -15387,13 +15387,13 @@ HEREDOC
       _url_params+=("--terminal")
     fi
 
-    if [[ -n "${_browse_columns:-}" ]]
+    if [[ -n "${_browse_columns:-}"   ]]
     then
       _arguments+=("--columns" "${_browse_columns}")
       _url_params+=("--columns=${_browse_columns}")
     fi
 
-    if [[ -n "${_target_page:-}" ]]
+    if [[ -n "${_target_page:-}"      ]]
     then
       _arguments+=("--page" "${_target_page:-}")
       _url_params+=("--page=${_target_page}")
