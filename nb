@@ -15200,43 +15200,26 @@ HEREDOC
   # _browse_update_item()
   #
   # Usage:
-  #   _browse_update_item <path> [--per-page <limit>] [--terminal]
+  #   _browse_update_item <path> --message-body <message-body>
   #
   # Description:
   #   Update the content of item at <path>.
   _browse_update_item() {
-    local _columns="${NB_BROWSE_COLUMNS:-70}"
     local _message_body=
-    local _header_arguments=()
-    local _pagination_arguments=()
-    local _per_page="${NB_BROWSE_PER_PAGE:-30}"
     local _source_path=
 
     while ((${#}))
     do
       case "${1:-}" in
-        --col*)
-          _columns="${2:?}"
-          _pagination_arguments+=("${1:?}" "${2:?}")
-          _header_arguments+=("${1:?}" "${2:?}")
-          shift
+        --col*|--page|--per*page)
+          _option_value_is_present "${2:-}" && shift
           ;;
         --message*body)
           _message_body="$(_option_get_value "${1:-}" "${2:-}")"
           shift
           ;;
-        --page)
-          _option_value_is_present "${2:-}" && shift
-          ;;
-        --per-page)
-          _per_page="${2:?}"
-          _pagination_arguments+=("${1:?}" "${2:?}")
-          _header_arguments+=("${1:?}" "${2:?}")
-          shift
-          ;;
         --terminal)
-          _pagination_arguments+=("--terminal")
-          _header_arguments+=("--terminal")
+          :
           ;;
         *)
           _source_path="${1:-}"
@@ -15261,9 +15244,9 @@ HEREDOC
     then
       # https://stackoverflow.com/a/37840948
       local _decoding_body="${_message_body//+/ }"
-      local _decoded_body="$(echo -e "${_decoding_body//%/\\x}")"
+      _decoding_body="$(echo -e "${_decoding_body//%/\\x}")"
 
-      _updated_content="${_decoded_body#content=}"
+      _updated_content="${_decoding_body#content=}"
       _updated_content="${_updated_content%$'\r'}"
       _updated_content="${_updated_content%$'\n'}"
 
