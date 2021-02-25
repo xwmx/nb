@@ -14439,6 +14439,10 @@ HEREDOC
     local _form_action_selector=
     _form_action_selector="$(_get_id_selector "${_source_path}")"
 
+    local _last_saved_at=
+    _last_saved_at="$(_show "${_source_path}" --updated)"
+    _last_saved_at="${_last_saved_at% -[0-9][0-9][0-9][0-9]}"
+
     local _text_area_columns="${_columns:-}"
     local _rows=30
     local _url_params=
@@ -14467,7 +14471,9 @@ HEREDOC
     rows="${_rows}"
     cols="${_text_area_columns}">${_content}</textarea>
   <br><br>
-  <input type="submit" value="Save">
+  <input
+    type="submit"
+    value="Save"> <span class="dim">·</span> <span class="dim">Last: ${_last_saved_at}</span>
 </form>
 HEREDOC
     } | {
