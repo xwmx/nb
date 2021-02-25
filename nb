@@ -14410,6 +14410,8 @@ HEREDOC
       case "${1:-}" in
         --col*)
           _columns="$(_option_get_value "${1:-}" "${2:-}")"
+          _pagination_arguments+=("${1:?}" "${2:?}")
+          _header_arguments+=("${1:?}" "${2:?}")
           shift
           ;;
         --page)
@@ -14446,10 +14448,11 @@ HEREDOC
 
     if _contains "--terminal" "${_pagination_arguments[@]:-}"
     then
-      _text_area_columns="$((_text_area_columns - 3))"
       _url_params+="&--per-page=${_per_page}"
-
       _rows="$((_per_page + 2))"
+
+      _url_params+="&--columns=${_columns}"
+      _text_area_columns="$((_text_area_columns - 3))"
     fi
 
     {

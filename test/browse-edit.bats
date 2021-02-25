@@ -9,7 +9,7 @@ export _S=" "
 
 # GET #########################################################################
 
-@test "GET to --edit URL with --columns parameter uses value for textarea." {
+@test "GET to --edit URL with --columns parameter uses value for textarea, form URL parameters, and header links." {
   {
     "${_NB}" init
 
@@ -61,7 +61,12 @@ export _S=" "
 
   [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1  ]]
 
+  printf "%s\\n" "${output}" | grep -q \
+    "href=\"http://localhost:6789/?--per-page=30&--columns=20\"><span class=\"dim\">❯</span>nb</a> "
+
   printf "%s\\n" "${output}" | grep -q "cols=\"17\"># Example Title"
+  printf "%s\\n" "${output}" | grep -q \
+    "<form action=\"/home:1?--edit&amp;--per-page=30&amp;--columns=20"
 }
 
 @test "GET to --edit URL without --columns parameter uses default value for textarea." {
