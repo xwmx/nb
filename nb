@@ -14996,10 +14996,12 @@ HEREDOC
     fi
 
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
+    local _render_function_arguments=()
 
     if [[ "${_request_uri}"     =~ --per-page=([0-9]+)  ]]
     then
       _per_page="${BASH_REMATCH[1]}"
+      _render_function_arguments+=("--per-page" "${_per_page}")
     fi
 
     # retrieve pagination and query values from parameters
@@ -15035,13 +15037,6 @@ HEREDOC
 
     _target_selector="${_target_selector//"\%20"/ }"
     _target_selector="${_target_selector//"%20"/ }"
-
-    local _render_function_arguments=()
-
-    if [[ -n "${_per_page:-}"             ]]
-    then
-      _render_function_arguments+=("--per-page" "${_per_page}")
-    fi
 
     local _response_url_params=
 
