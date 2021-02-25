@@ -7,6 +7,90 @@ export NB_SERVER_PORT=6789
 # non-breaking space
 export _S=" "
 
+# columns #####################################################################
+
+@test "GET to container URL with no --columns param truncates using the default column value." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add                    \
+      "Example File.md"             \
+       --content "Example content." \
+--title "\
+abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
+
+    (ncat                                   \
+      --exec "${_NB} browse --respond"      \
+      --listen                              \
+      --source-port "6789"                  \
+      2>/dev/null) &
+
+    sleep 1
+  }
+
+  run curl -sS -D - "http://localhost:6789/home:?--gui"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[    "${status}"  -eq 0                        ]]
+
+  # Prints output:
+
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 200\ OK         ]]
+  [[ "${lines[1]}"  =~  Date:\ .*                 ]]
+  [[ "${lines[2]}"  =~  Expires:\ .*              ]]
+  [[ "${lines[3]}"  =~  Server:\ nb               ]]
+  [[ "${lines[4]}"  =~  Content-Type:\ text/html  ]]
+
+  [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home    ]]
+
+  [[ "${output}"    =~  abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefg…  ]]
+}
+
+@test "GET to container URL with --columns param truncates using the provided value." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add                    \
+      "Example File.md"             \
+       --content "Example content." \
+--title "\
+abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
+
+    (ncat                                   \
+      --exec "${_NB} browse --respond"      \
+      --listen                              \
+      --source-port "6789"                  \
+      2>/dev/null) &
+
+    sleep 1
+  }
+
+  run curl -sS -D - "http://localhost:6789/home:?--columns=20"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[    "${status}"  -eq 0                        ]]
+
+  # Prints output:
+
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 200\ OK         ]]
+  [[ "${lines[1]}"  =~  Date:\ .*                 ]]
+  [[ "${lines[2]}"  =~  Expires:\ .*              ]]
+  [[ "${lines[3]}"  =~  Server:\ nb               ]]
+  [[ "${lines[4]}"  =~  Content-Type:\ text/html  ]]
+
+  [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home    ]]
+
+  [[ "${output}"    =~  abcdefghi…  ]]
+}
+
 # empty #######################################################################
 
 @test "'browse <folder-selector>/' (slash) with empty folder prints message and header." {

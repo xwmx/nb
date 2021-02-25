@@ -14132,7 +14132,7 @@ _browse() {
   # Description:
   #   Render a notebook or folder as an HTML page.
   _browse_render_container() {
-    local _columns="${NB_BROWSE_PER_PAGE:-70}"
+    local _columns="${NB_BROWSE_COLUMNS:-70}"
     local _current_page=1
     local _pagination_arguments=()
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
@@ -14208,11 +14208,13 @@ _browse() {
           *links*)  _truncate_length="$((_columns - 5))"  ;;
           *)        _truncate_length="$((_columns - 1))"  ;;
         esac
+      else
+        _truncate_length="$((_columns - 1))"
       fi
 
       while read -r __list_item
       do
-        if ((_terminal_browser))
+        if [[ -n "${_truncate_length:-}" ]]
         then
           local _list_item_length="${#__list_item}"
           local _list_item_visible_length=
