@@ -15331,7 +15331,7 @@ HEREDOC
       --*container)
         _print_browse_container=1
         ;;
-      --edit)
+      -e|--edit)
         _edit=1
         ;;
       -g|--gui)
