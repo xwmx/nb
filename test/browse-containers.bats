@@ -9,7 +9,8 @@ export _S=" "
 
 # columns #####################################################################
 
-@test "GET to container URL with no --columns param truncates using the default column value." {
+@test "GET to container URL with no --columns param and GUI request truncates using the default column value and omits --column param from links." {
+
   {
     "${_NB}" init
 
@@ -48,6 +49,10 @@ abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
   [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home    ]]
 
   [[ "${output}"    =~  abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefg…  ]]
+
+  printf "%s\\n" "${output}" \
+    | grep -q "href=\"http://localhost:6789/home:1\" class=\"list-item\""
+
 }
 
 @test "GET to container URL with --columns param truncates using the provided value." {
@@ -88,7 +93,10 @@ abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
 
   [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home    ]]
 
-  [[ "${output}"    =~  abcdefghi…  ]]
+  [[ "${output}"    =~  abcdefghi…                ]]
+
+  printf "%s\\n" "${output}" \
+    | grep -q "href=\"http://localhost:6789/home:1?--per-page=.*&amp;--columns=20\" class=\"list-item\""
 }
 
 # empty #######################################################################

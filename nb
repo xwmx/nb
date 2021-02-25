@@ -14145,6 +14145,7 @@ _browse() {
       case "${1:-}" in
         --col*)
           _columns="$(_option_get_value "${1:-}" "${2:-}")"
+          _pagination_arguments+=("${1:-}" "${2:?}")
           shift
           ;;
         --page)
@@ -14276,7 +14277,7 @@ _browse() {
 
         if ((_terminal_browser))
         then
-          _url_params+="?--per-page=${_per_page}"
+          _url_params+="?--per-page=${_per_page}&--columns=${_columns}"
         fi
 
         printf "<a href=\"http://localhost:%s/%s\" class=\"list-item\">%s</a><br>\\n" \
