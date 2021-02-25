@@ -15205,6 +15205,7 @@ HEREDOC
   # Description:
   #   Update the content of item at <path>.
   _browse_update_item() {
+    local _columns="${NB_BROWSE_COLUMNS:-70}"
     local _message_body=
     local _header_arguments=()
     local _pagination_arguments=()
@@ -15214,6 +15215,12 @@ HEREDOC
     while ((${#}))
     do
       case "${1:-}" in
+        --col*)
+          _columns="${2:?}"
+          _pagination_arguments+=("${1:?}" "${2:?}")
+          _header_arguments+=("${1:?}" "${2:?}")
+          shift
+          ;;
         --message*body)
           _message_body="$(_option_get_value "${1:-}" "${2:-}")"
           shift
