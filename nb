@@ -14398,7 +14398,6 @@ HEREDOC
   #   Print an HTML page for editing a text file.
   _browse_render_edit() {
     local _columns="${NB_BROWSE_COLUMNS:-70}"
-    local _header_arguments=()
     local _pagination_arguments=()
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
     local _source_path=
@@ -14409,7 +14408,6 @@ HEREDOC
         --col*)
           _columns="$(_option_get_value "${1:-}" "${2:-}")"
           _pagination_arguments+=("${1:?}" "${2:?}")
-          _header_arguments+=("${1:?}" "${2:?}")
           shift
           ;;
         --page)
@@ -14418,16 +14416,13 @@ HEREDOC
         --per-page)
           _per_page="${2:?}"
           _pagination_arguments+=("${1:?}" "${2:?}")
-          _header_arguments+=("${1:?}" "${2:?}")
           shift
           ;;
         --terminal)
           _pagination_arguments+=("--terminal")
-          _header_arguments+=("--terminal")
           ;;
         *)
           _source_path="${1:-}"
-          _header_arguments+=("${_source_path}")
           ;;
       esac
 
@@ -14458,7 +14453,12 @@ HEREDOC
     fi
 
     {
-      printf "%s\\n" "$(_browse_render_header "${_header_arguments[@]:-}")"
+      printf "%s\\n" "$(
+        _browse_render_header             \
+          "${_source_path}"               \
+          "${_pagination_arguments[@]:-}" \
+          --edit
+      )"
 
       # TODO: https://stackoverflow.com/a/15844977
       cat <<HEREDOC
@@ -14491,6 +14491,8 @@ HEREDOC
   # Description:
   #   Print a context-aware, linked Markdown header.
   _browse_render_header() {
+    local _bullet="·"
+    local _editing=0
     local _per_page="${NB_BROWSE_COLUMNS:-70}"
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
     local _selector=
@@ -14499,7 +14501,9 @@ HEREDOC
     while ((${#}))
     do
       case "${1:-}" in
+        '')         :                                           ;;
         --col*)     _columns="${2:?}"                 && shift  ;;
+        --edit)     _editing=1                                  ;;
         --page)     _option_value_is_present "${2:-}" && shift  ;;
         --per*)     _per_page="${2:?}"                && shift  ;;
         --terminal) _terminal_browser=1                         ;;
@@ -14518,7 +14522,7 @@ HEREDOC
 
     local _header_content="\
 <a href=\"http://localhost:${NB_SERVER_PORT}/${_url_params:-}\"><span class=\"dim\">❯</span>nb</a>"
-    _header_content+=" <span class=\"dim\">·</span>"
+    _header_content+=" <span class=\"dim\">${_bullet}</span>"
 
     if [[ -z "${_selector:-}" ]]
     then
@@ -14622,7 +14626,39 @@ HEREDOC
         _header_content+=" <span class=\"dim\">:</span>"
       fi
 
-      _header_content+=" <span class=\"dim\">$(_show "${_selector:-}" --id)</span>"
+      local _id_selector=
+      _id_selector="$(_get_id_selector "${_selector:-}" --notebook)"
+
+      local _selector_id="${_id_selector#*:}"
+      _selector_id="${_selector_id##*/}"
+
+      if ((_editing))
+      then
+          _header_content+="\
+ <a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_params:-}\">${_selector_id:-}</a>"
+
+        _header_content+=" <span class=\"dim\">${_bullet}</span>"
+        _header_content+=" <span class=\"dim\">Editing</span>"
+      else
+        _header_content+=" <span class=\"dim\">${_selector_id:-}</span>"
+
+        if _file_is_text "${_selector:-}"
+        then
+          _header_content+=" <span class=\"dim\">${_bullet}</span>"
+          _header_content+=" <span class=\"dim\">[</span>"
+
+          if [[ -z "${_url_params:-}" ]]
+          then
+            _url_params="?--edit"
+          else
+            _url_params+="&--edit"
+          fi
+
+          _header_content+="\
+<a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_params:-}\">edit</a>"
+          _header_content+="<span class=\"dim\">]</span>"
+        fi
+      fi
     fi
 
     printf "<h1 class=\"header-crumbs\">%s</h1>\\n\\n" "${_header_content:-}"
@@ -15383,6 +15419,7 @@ HEREDOC
 
   if ((_edit))
   then
+    _arguments+=("--edit")
     _url_params+=("--edit")
   fi
 
