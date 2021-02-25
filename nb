@@ -14957,7 +14957,7 @@ HEREDOC
 
     # get message body
 
-    local _post_content=
+    local _message_body=
 
     if [[ "${_request_method}" == "POST" ]]
     then
