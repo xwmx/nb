@@ -14925,7 +14925,7 @@ HEREDOC
       local   __request_line=
       read -r __request_line
 
-      if ((_looking_for_user_agent)) &&
+      if ((_looking_for_user_agent))  &&
          [[ "${__request_line:-}"     =~ User-Agent           ]]
       then # detect browser type
         # turn on case-insensitive matching
@@ -14948,7 +14948,7 @@ HEREDOC
         _content_length="${_content_length%%$'\r'}"
 
         _looking_for_content_length=0
-      elif [[ -z "${__request_line%%$'\r'}" ]]
+      elif [[ -z "${__request_line%%$'\r'}"                   ]]
       then
         _looking_for_end_of_headers=0
         break
@@ -14959,26 +14959,26 @@ HEREDOC
 
     local _message_body=
 
-    if [[ "${_request_method}" == "POST" ]]
+    if [[ "${_request_method}"  == "POST"               ]]
     then
       read -r -n "${_content_length}" _message_body
     fi
 
     # redirect outbound URLs
 
-    if [[ "${_request_uri}" =~ \?url=(.*)           ]]
+    if [[ "${_request_uri}"     =~ \?url=(.*)           ]]
     then
       _browse_respond_with 307 "${BASH_REMATCH[1]}"
     fi
 
     # detect presence of parameters overriding browser type
 
-    if [[ "${_request_uri}" =~ --terminal           ]]
+    if [[ "${_request_uri}"     =~ --terminal           ]]
     then
       _terminal_browser=1
     fi
 
-    if [[ "${_request_uri}" =~ --gui                ]]
+    if [[ "${_request_uri}"     =~ --gui                ]]
     then
       _terminal_browser=0
     fi
@@ -14987,21 +14987,21 @@ HEREDOC
 
     local _page_number=1
 
-    if [[ "${_request_uri}" =~ --page=([0-9]+)      ]]
+    if [[ "${_request_uri}"     =~ --page=([0-9]+)      ]]
     then
       _page_number="${BASH_REMATCH[1]}"
     fi
 
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
 
-    if [[ "${_request_uri}" =~ --per-page=([0-9]+)  ]]
+    if [[ "${_request_uri}"     =~ --per-page=([0-9]+)  ]]
     then
       _per_page="${BASH_REMATCH[1]}"
     fi
 
     local _query=
 
-    if [[ "${_request_uri}" =~ --query=([^&]+)      ]]
+    if [[ "${_request_uri}"     =~ --query=([^&]+)      ]]
     then
       local _hash=$'#'
       _query="${BASH_REMATCH[1]}"
@@ -15014,7 +15014,7 @@ HEREDOC
 
     local _edit=0
 
-    if [[ "${_request_uri}" =~ --edit   ]]
+    if [[ "${_request_uri}"     =~ --edit               ]]
     then
       _edit=1
     fi
@@ -15033,7 +15033,7 @@ HEREDOC
 
     local _arguments=()
 
-    if [[ -n "${_per_page:-}"           ]]
+    if [[ -n "${_per_page:-}"             ]]
     then
       _arguments+=("--per-page" "${_per_page}")
     fi
@@ -15046,45 +15046,45 @@ HEREDOC
       _url_params+="?--per-page=${_per_page}"
     fi
 
-    if [[ -z "${_target_selector:-}"    ]]
+    if [[ -z "${_target_selector:-}"      ]]
     then
       _browse_render_notebooks "${_arguments[@]:-}" >> "${_temp_file}"
     else
       local _selector_path=
       _selector_path="$(_show "${_target_selector%%\?*}" --path 2>/dev/null || :)"
 
-      if [[   -z "${_selector_path:-}"  ]]
+      if [[   -z "${_selector_path:-}"    ]]
       then
         _browse_respond_with 404
       else
         _arguments+=("${_selector_path}")
 
-        if [[ -d "${_selector_path:-}"  ]]
+        if [[ -d "${_selector_path:-}"    ]]
         then
-          if [[ -n "${_page_number:-}"  ]]
+          if [[ -n "${_page_number:-}"    ]]
           then
             _arguments+=("--page" "${_page_number}")
           fi
 
-          if [[ -n "${_per_page:-}"     ]] &&
+          if [[ -n "${_per_page:-}"       ]]  &&
              ! _contains "--per-page" "${_arguments[@]:-}"
           then
             _arguments+=("--per-page" "${_per_page}")
           fi
 
-          if [[ -n "${_query:-}"        ]]
+          if [[ -n "${_query:-}"          ]]
           then
             _arguments+=("--query" "${_query}")
           fi
 
           _browse_render_container  "${_arguments[@]:-}"  >> "${_temp_file}"
         else
-          if _file_is_text "${_selector_path:-}" ||
-             [[ "${_selector_path:-}" =~ \.docx$|\.epub$|\.odt$ ]]
+          if _file_is_text "${_selector_path:-}"                    ||
+             [[ "${_selector_path:-}"     =~ \.docx$|\.epub$|\.odt$ ]]
           then
             if ((_edit))
             then
-              if [[ "${_request_method}" == "POST" ]]
+              if [[ "${_request_method}"  == "POST"                 ]]
               then
                 _browse_update_item "${_arguments[@]:-}" --message-body "${_message_body:-}"
               fi
@@ -15095,7 +15095,7 @@ HEREDOC
             fi
           elif _file_is_encrypted "${_selector_path:-}"
           then
-            _browse_respond_with 415    \
+            _browse_respond_with 415      \
               "415 $(_browse_http_response_message 415): File is encrypted."
           else
             _browse_respond_with 415

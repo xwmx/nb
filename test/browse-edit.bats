@@ -13,10 +13,10 @@ export _S=" "
 
     "${_NB}" add "Example File.md" --title "Example Title" --content "Example content."
 
-    (ncat                               \
-      --exec "${_NB} browse --respond"  \
-      --listen                          \
-      --source-port "6789"              \
+    (ncat                                   \
+      --exec "${_NB} browse --respond"      \
+      --listen                              \
+      --source-port "6789"                  \
       2>/dev/null) &
 
     sleep 1
@@ -29,7 +29,7 @@ export _S=" "
 
   # Returns status 0:
 
-  [[    "${status}"  -eq 0        ]]
+  [[    "${status}"  -eq 0                  ]]
 
   # Does not update file:
 
@@ -43,7 +43,7 @@ export _S=" "
 
   printf "git log --stat:\\n%s\\n" "$(git log --stat)"
 
-  while [[ -n "$(git status --porcelain)" ]]
+  while [[ -n "$(git status --porcelain)"   ]]
   do
     sleep 1
   done
@@ -57,20 +57,20 @@ export _S=" "
   [[ "${lines[3]}"  =~  Server:\ nb                           ]]
   [[ "${lines[4]}"  =~  Content-Type:\ text/html              ]]
 
-  [[    "${output}"  =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1 ]]
-  [[    "${output}"  =~  \<form\ action=\"/home:1\?--edit     ]]
+  [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1  ]]
+  [[ "${output}"    =~  \<form\ action=\"/home:1\?--edit      ]]
 }
 
-@test "POST to --edit URL updates the note and prints form." {
+@test "POST to --edit URL updates the note and prints form."  {
   {
     "${_NB}" init
 
     "${_NB}" add "Example File.md" --title "Example Title" --content "Example content."
 
-    (ncat                               \
-      --exec "${_NB} browse --respond"  \
-      --listen                          \
-      --source-port "6789"              \
+    (ncat                                   \
+      --exec "${_NB} browse --respond"      \
+      --listen                              \
+      --source-port "6789"                  \
       2>/dev/null) &
 
     sleep 1
@@ -83,7 +83,7 @@ export _S=" "
 
   # Returns status 0:
 
-  [[    "${status}"  -eq 0        ]]
+  [[    "${status}"  -eq 0                  ]]
 
   # Updates file:
 
@@ -97,7 +97,7 @@ export _S=" "
 
   printf "git log --stat:\\n%s\\n" "$(git log --stat)"
 
-  while [[ -n "$(git status --porcelain)" ]]
+  while [[ -n "$(git status --porcelain)"   ]]
   do
     sleep 1
   done
@@ -111,8 +111,8 @@ export _S=" "
   [[ "${lines[3]}"  =~  Server:\ nb                           ]]
   [[ "${lines[4]}"  =~  Content-Type:\ text/html              ]]
 
-  [[    "${output}"  =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1 ]]
-  [[    "${output}"  =~  \<form\ action=\"/home:1\?--edit     ]]
+  [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1  ]]
+  [[ "${output}"    =~  \<form\ action=\"/home:1\?--edit      ]]
 }
 
 
@@ -128,7 +128,7 @@ export _S=" "
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"  -eq 0        ]]
+  [[    "${status}"  -eq 0                                    ]]
 
   [[    "${output}"  =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1 ]]
   [[    "${output}"  =~  \<form\ action=\"/home:1\?--edit     ]]
