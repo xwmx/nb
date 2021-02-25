@@ -14483,6 +14483,7 @@ HEREDOC
   # Description:
   #   Print a context-aware, linked Markdown header.
   _browse_render_header() {
+    local _per_page="${NB_BROWSE_COLUMNS:-70}"
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
     local _selector=
     local _terminal_browser=0
@@ -14490,6 +14491,7 @@ HEREDOC
     while ((${#}))
     do
       case "${1:-}" in
+        --col*)     _columns="${2:?}"                 && shift  ;;
         --page)     _option_value_is_present "${2:-}" && shift  ;;
         --per*)     _per_page="${2:?}"                && shift  ;;
         --terminal) _terminal_browser=1                         ;;
@@ -14503,7 +14505,7 @@ HEREDOC
 
     if ((_terminal_browser))
     then
-      _url_params+="?--per-page=${_per_page}"
+      _url_params+="?--per-page=${_per_page}&--columns=${_columns}"
     fi
 
     local _header_content="\

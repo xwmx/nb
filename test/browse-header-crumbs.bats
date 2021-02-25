@@ -20,11 +20,14 @@ load test_helper
 
   [[ "${status}"    == 0 ]]
 
-  [[ "${output}"    =~ \
-\<h1\ class=\"header-crumbs\"\>\<a\ href=\"http://localhost:6789/\?--per-page.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>\ \<span\ class=\"dim\"\>·\</span\>\  ]]
-  [[ "${output}"    =~ \
-\ \<span\ class=\"dim\"\>·\</span\>\ \<a\ href=\"http://localhost:6789/home:\?--per-page=.*\"\>home\</a\>\ \<span\ class=\"dim\"\>:\</span\>\                     ]]
-  [[ "${output}"    =~ \<span\ class=\"dim\"\>:\</span\>\ \<span\ class=\"dim\"\>1\</span\>\</h1\>                                                                ]]
+  printf "%s\\n" "${output}" | grep -q \
+"<h1 class=\"header-crumbs\"><a href=\"http://localhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span>"
+
+  printf "%s\\n" "${output}" | grep -q \
+" <span class=\"dim\">·</span> <a href=\"http://localhost:6789/home:?--per-page=.*&--columns=.*\">home</a> <span class=\"dim\">:</span"
+
+  printf "%s\\n" "${output}" | grep -q \
+" <span class=\"dim\">:</span> <span class=\"dim\">1</span></h1"
 }
 
 @test "'browse <notebook>:<folder-id>/<folder-id>/<file-id>' displays header crumbs with id with file." {
@@ -43,15 +46,20 @@ load test_helper
 
   [[ "${status}"    == 0 ]]
 
-  [[ "${output}"    =~ \
-\<h1\ class=\"header-crumbs\"\>\<a\ href=\"http://localhost:6789/\?--per-page.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>\ \<span\ class=\"dim\"\>·\</span\>\  ]]
-  [[ "${output}"    =~ \
-\ \<span\ class=\"dim\"\>·\</span\>\ \<a\ href=\"http://localhost:6789/home:\?--per-page=.*\"\>home\</a\>\ \<span\ class=\"dim\"\>:\</span\>\                     ]]
-  [[ "${output}"    =~ \
-\ \<span\ class=\"dim\"\>:\</span\>\ \<a\ href=\"http://localhost:6789/home:1/\?--per-page=.*\"\>Example\ Folder\</a\>\ \<span\ class=\"dim\"\>/\</span\>\        ]]
-  [[ "${output}"    =~ \
-\ \<span\ class=\"dim\"\>/\</span\>\ \<a\ href=\"http://localhost:6789/home:1/1/\?--per-page=.*\"\>Sample\ Folder\</a\>\ \<span\ class=\"dim\"\>/\</span\>\       ]]
-  [[ "${output}"    =~ \<span\ class=\"dim\"\>/\</span\>\ \<span\ class=\"dim\"\>1\</span\>\</h1\>                                                                ]]
+  printf "%s\\n" "${output}" | grep -q \
+"<h1 class=\"header-crumbs\"><a href=\"http://localhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> "
+
+  printf "%s\\n" "${output}" | grep -q \
+" <span class=\"dim\">·</span> <a href=\"http://localhost:6789/home:?--per-page=.*&--columns=.*\">home</a> <span class=\"dim\">:</span> "
+
+  printf "%s\\n" "${output}" | grep -q \
+" <span class=\"dim\">:</span> <a href=\"http://localhost:6789/home:1/?--per-page=.*&--columns=.*\">Example Folder</a> <span class=\"dim\">/</span> "
+
+  printf "%s\\n" "${output}" | grep -q \
+" <span class=\"dim\">/</span> <a href=\"http://localhost:6789/home:1/1/?--per-page=.*&--columns=.*\">Sample Folder</a> <span class=\"dim\">/</span> "
+
+  printf "%s\\n" "${output}" | grep -q \
+" <span class=\"dim\">/</span> <span class=\"dim\">1</span></h1>"
 }
 
 @test "'browse <notebook>:<folder-id>/<file-id>' displays header crumbs with folder." {
