@@ -9,7 +9,7 @@ export _S=" "
 
 # GET #########################################################################
 
-@test "GET to --edit URL updates the note and prints form." {
+@test "GET to --edit URL prints form without updating note." {
   {
     "${_NB}" init
 
