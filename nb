@@ -8505,6 +8505,7 @@ _resolve_links() {
     fi
   }
 
+  local _columns="${NB_BROWSE_COLUMNS:-70}"
   local _for_browsing=0
   local _per_page=
   local _terminal=0
@@ -8513,6 +8514,7 @@ _resolve_links() {
   while ((${#}))
   do
     case "${1:-}" in
+      --col*)     _columns="${2:?}"                 && shift  ;;
       --browse)   _for_browsing=1                             ;;
       --per-page) _per_page="${2:?}"                && shift  ;;
       --page)     _option_value_is_present "${2:-}" && shift  ;;
@@ -8531,11 +8533,11 @@ _resolve_links() {
 
   [[ ! -d "${_notebook_path:-}" ]] && return 1
 
-  local _query_string=
+  local _url_params_pattern=
 
-  if ((_terminal)) && [[ -n "${_per_page:-}" ]]
+  if ((_terminal))
   then
-    _query_string="?--per-page=${_per_page:-}"
+    _url_params_pattern="?--per-page=${_per_page:-}\&--columns=${_columns:-}"
   fi
 
   local _input_temp_file_path=
@@ -8554,9 +8556,9 @@ _resolve_links() {
     else
       local _replacement_url="http:\/\/localhost:${NB_SERVER_PORT}\/${_notebook_path##*/}:"
 
-      case "${_query_string:-}" in
+      case "${_url_params_pattern:-}" in
         '') _replacement_url+="?--query=%23\\2"                         ;;
-        *)  _replacement_url+="${_query_string}\&--query=%23\\2"        ;;
+        *)  _replacement_url+="${_url_params_pattern}\&--query=%23\\2"  ;;
       esac
 
       local _pattern=
@@ -8624,7 +8626,7 @@ _resolve_links() {
           then
             _link="[[${_selector:-}]]"
           else
-            local _target_url="http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_query_string:-}"
+            local _target_url="http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_params_pattern:-}"
 
             case "${_input_type:-}" in
               html)
@@ -14092,11 +14094,6 @@ Examples:
 Shortcut Alias: \`br\`
 HEREDOC
 _browse() {
-  # $NB_BROWSE_COLUMNS
-  #
-  # The number of columns to display.
-  export NB_BROWSE_COLUMNS="${NB_BROWSE_COLUMNS:-70}"
-
   # Inspired by bashttpd: https://github.com/avleen/bashttpd
 
   # _browse_http_response_message()
@@ -14631,28 +14628,30 @@ HEREDOC
   # Description:
   #   Render an item to HTML with links resolved to internal web server.
   _browse_render_item() {
-    local _header_arguments=()
+    local _columns="${NB_BROWSE_COLUMNS:-70}"
     local _pagination_arguments=()
     local _source_path=
 
     while ((${#}))
     do
       case "${1:-}" in
+        --col*)
+          _columns="$(_option_get_value "${1:-}" "${2:-}")"
+          _pagination_arguments+=("${1:-}" "${2:?}")
+          shift
+          ;;
         --page)
           _option_value_is_present "${2:-}" && shift
           ;;
         --per-page)
           _pagination_arguments+=("${1:?}" "${2:?}")
-          _header_arguments+=("${1:?}" "${2:?}")
           shift
           ;;
         --terminal)
           _pagination_arguments+=("--terminal")
-          _header_arguments+=("--terminal")
           ;;
         *)
           _source_path="${1:-}"
-          _header_arguments+=("${_source_path}")
           ;;
       esac
 
@@ -14662,7 +14661,7 @@ HEREDOC
     local _header_temp_path=
     _header_temp_path="$(_temp file ".html" --touch)"
 
-    _browse_render_header "${_header_arguments[@]:-}"         \
+    _browse_render_header "${_source_path}" "${_pagination_arguments[@]:-}" \
       | pandoc --from markdown --to html >> "${_header_temp_path}"
 
     local _notebook_path=

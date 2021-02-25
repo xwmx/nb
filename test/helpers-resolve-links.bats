@@ -74,34 +74,34 @@ load test_helper
     [[ "${status}"  -eq 0                 ]]
 
     printf "%s\\n" "${output}" | grep -q \
-"Selector link one: <a.* href=\"http://localhost:6789/home:2/1?--per-page=2\">\[\[home:2/1\]\]</a> •"
+"Selector link one: <a.* href=\"http://localhost:6789/home:2/1?--per-page=2&--columns=70\">\[\[home:2/1\]\]</a> •"
 
     printf "%s\\n" "${output}" | grep -q \
-"Selector link two: <a.* href=\"http://localhost:6789/home:3?--per-page=2\">\[\[Root Title One\]\]</a> •"
+"Selector link two: <a.* href=\"http://localhost:6789/home:3?--per-page=2&--columns=70\">\[\[Root Title One\]\]</a> •"
 
     printf "%s\\n" "${output}" | grep -q \
-"Tag one: <a.* href=\"http://localhost:6789/home:?--per-page=2&--query=%23tag_1\">#tag_1</a> •"
+"Tag one: <a.* href=\"http://localhost:6789/home:?--per-page=2&--columns=70&--query=%23tag_1\">#tag_1</a> •"
 
     printf "%s\\n" "${output}" | grep -q \
-"Tag two: <a.* href=\"http://localhost:6789/home:?--per-page=2&--query=%23tag-2\">#tag-2</a> •"
+"Tag two: <a.* href=\"http://localhost:6789/home:?--per-page=2&--columns=70&--query=%23tag-2\">#tag-2</a> •"
 
     printf "%s\\n" "${output}" | grep -q \
 "Tag not valid: 123#not-valid-tag •"
 
     printf "%s\\n" "${output}" | grep -q \
-"<p><a.* href=\"http://localhost:6789/home:?--per-page=2&--query=%23tag3\">#tag3</a></p>"
+"<p><a.* href=\"http://localhost:6789/home:?--per-page=2&--columns=70&--query=%23tag3\">#tag3</a></p>"
 
     printf "%s\\n" "${output}" | grep -q \
-"<p><a.* href=\"http://localhost:6789/home:?--per-page=2&--query=%23tag4\">#tag4</a> "
+"<p><a.* href=\"http://localhost:6789/home:?--per-page=2&--columns=70&--query=%23tag4\">#tag4</a> "
 
     printf "%s\\n" "${output}" | grep -q \
-" <a.* href=\"http://localhost:6789/home:?--per-page=2&--query=%23tag5\">#tag5</a> "
+" <a.* href=\"http://localhost:6789/home:?--per-page=2&--columns=70&--query=%23tag5\">#tag5</a> "
 
     printf "%s\\n" "${output}" | grep -q \
-" <a.* href=\"http://localhost:6789/home:?--per-page=2&--query=%23tag6\">#tag6</a> "
+" <a.* href=\"http://localhost:6789/home:?--per-page=2&--columns=70&--query=%23tag6\">#tag6</a> "
 
     printf "%s\\n" "${output}" | grep -q \
-" <a.* href=\"http://localhost:6789/home:?--per-page=2&--query=%23tag7\">#tag7</a></p>"
+" <a.* href=\"http://localhost:6789/home:?--per-page=2&--columns=70&--query=%23tag7\">#tag7</a></p>"
 
     printf "%s\\n" "${output}" | grep -q \
 "<p><a.* href=\"http://localhost:6789?url=http%3A%2F%2Fexample.com\">Example Outbound Link One</a> •"
@@ -500,16 +500,16 @@ load test_helper
     [[ "${status}"  -eq 0                 ]]
 
     printf "%s\\n" "${output}" | grep -q \
-"Selector link one: \[\[http://localhost:6789/home:2/1?--per-page=2\]\[\[\[home:2/1\]\]\]\] •"
+"Selector link one: \[\[http://localhost:6789/home:2/1?--per-page=2&--columns=70\]\[\[\[home:2/1\]\]\]\] •"
 
     printf "%s\\n" "${output}" | grep -q \
-"Selector link two: \[\[http://localhost:6789/home:3?--per-page=2\]\[\[\[Root Title One\]\]\]\] •"
+"Selector link two: \[\[http://localhost:6789/home:3?--per-page=2&--columns=70\]\[\[\[Root Title One\]\]\]\] •"
 
     printf "%s\\n" "${output}" | grep -q \
-"Tag one: \[\[http://localhost:6789/home:?--per-page=2&--query=%23tag_1\]\[#tag_1\]\] •"
+"Tag one: \[\[http://localhost:6789/home:?--per-page=2&--columns=70&--query=%23tag_1\]\[#tag_1\]\] •"
 
     printf "%s\\n" "${output}" | grep -q \
-"Tag two: \[\[http://localhost:6789/home:?--per-page=2&--query=%23tag-2\]\[#tag-2\]\] •"
+"Tag two: \[\[http://localhost:6789/home:?--per-page=2&--columns=70&--query=%23tag-2\]\[#tag-2\]\] •"
 
     printf "%s\\n" "${output}" | grep -q \
 "Tag not valid: 123#not-valid-tag •"
@@ -524,19 +524,19 @@ load test_helper
 "Internal Org mode link: \[\[#sample\]\] •"
 
     printf "%s\\n" "${output}" | grep -q \
-"^\[\[http://localhost:6789/home:?--per-page=2&--query=%23tag3\]\[#tag3\]\]$"
+"^\[\[http://localhost:6789/home:?--per-page=2&--columns=70&--query=%23tag3\]\[#tag3\]\]$"
 
     printf "%s\\n" "${output}" | grep -q \
-"^\[\[http://localhost:6789/home:?--per-page=2&--query=%23tag4\]\[#tag4\]\] "
+"^\[\[http://localhost:6789/home:?--per-page=2&--columns=70&--query=%23tag4\]\[#tag4\]\] "
 
     printf "%s\\n" "${output}" | grep -q \
-" \[\[http://localhost:6789/home:?--per-page=2&--query=%23tag5\]\[#tag5\]\] "
+" \[\[http://localhost:6789/home:?--per-page=2&--columns=70&--query=%23tag5\]\[#tag5\]\] "
 
     printf "%s\\n" "${output}" | grep -q \
-" \[\[http://localhost:6789/home:?--per-page=2&--query=%23tag6\]\[#tag6\]\] "
+" \[\[http://localhost:6789/home:?--per-page=2&--columns=70&--query=%23tag6\]\[#tag6\]\] "
 
     printf "%s\\n" "${output}" | grep -q \
-" \[\[http://localhost:6789/home:?--per-page=2&--query=%23tag7\]\[#tag7\]\]$"
+" \[\[http://localhost:6789/home:?--per-page=2&--columns=70&--query=%23tag7\]\[#tag7\]\]$"
   }
 }
 
