@@ -1831,9 +1831,9 @@ For more information about identifying items, see [Selectors](#selectors).
 
 *Version 6.0.0-alpha*
 
-Use [`nb browse`](#browse) (shortcut: `nb br`) to browse, view, and search
-linked notes, bookmarks, notebooks, folders, and other items using a terminal
-or GUI web browser.
+Use [`nb browse`](#browse) (shortcut: `nb br`) to browse, view, edit,
+and search linked notes, bookmarks, notebooks, folders, and other items using
+a terminal or GUI web browser.
 
 `nb browse` includes an embedded, terminal-first web application that
 renders <a href="#-linking">[[wiki-style links]]</a> and
@@ -1926,7 +1926,7 @@ of bookmarks.
 
 ```bash
 > nb browse text:formats/markdown/123
-❯nb · text : formats / markdown / 123
+❯nb · text : formats / markdown / 123 · [edit]
 Daring Fireball: Markdown (daringfireball.net)
 
 https://daringfireball.net/projects/markdown/
@@ -1960,6 +1960,37 @@ Markdown is a text-to-HTML conversion tool for web writers. Markdown allows
 you to write using an easy-to-read, easy-to-write plain text format, then
 convert it to structurally valid XHTML (or HTML).
 ```
+
+Items can be edited within a terminal or GUI browser using the `edit`
+link on the item page or by opening the item with `nb browse --edit`,
+with the form resized to fit the current terminal window:
+
+```bash
+> nb browse text:formats/markdown/123 --edit
+❯nb · text : formats / markdown / 123 · Editing
+
+[# Daring Fireball: Markdown (daringfireball.net) ]
+[                                                 ]
+[<https://daringfireball.net/projects/markdown/>  ]
+[                                                 ]
+[## Related                                       ]
+[                                                 ]
+[- <https://example.com>                          ]
+[                                                 ]
+[## Comments                                      ]
+[                                                 ]
+[See also:                                        ]
+[                                                 ]
+[- [[text:formats/org]]                           ]
+[- [[cli:apps/nb]]                                ]
+[                                                 ]
+[## Content                                       ]
+[                                                 ]
+
+[Save] · Last: 2021-01-01 01:00:00
+```
+
+Terminal browsers can also be configured to use your editor.
 
 To open `nb browse` in the system's primary GUI web browser, use
 `nb browse --gui` / `nb browse -g`:
