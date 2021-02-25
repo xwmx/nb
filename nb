@@ -14377,6 +14377,85 @@ HEREDOC
     }
   }
 
+  # _browse_render_edit()
+  #
+  # Usage:
+  #   _browse_render_edit <path> [--per-page] [--terminal]
+  #
+  # Description:
+  #   Print an HTML page for editing a text file.
+  _browse_render_edit() {
+    local _header_arguments=()
+    local _pagination_arguments=()
+    local _per_page="${NB_BROWSE_PER_PAGE:-30}"
+    local _source_path=
+
+    while ((${#}))
+    do
+      case "${1:-}" in
+        --page)
+          _option_value_is_present "${2:-}" && shift
+          ;;
+        --per-page)
+          _per_page="${2:?}"
+          _pagination_arguments+=("${1:?}" "${2:?}")
+          _header_arguments+=("${1:?}" "${2:?}")
+          shift
+          ;;
+        --terminal)
+          _pagination_arguments+=("--terminal")
+          _header_arguments+=("--terminal")
+          ;;
+        *)
+          _source_path="${1:-}"
+          _header_arguments+=("${_source_path}")
+          ;;
+      esac
+
+      shift
+    done
+
+    local _content=
+    _content="$(_show "${_source_path}" --print --no-color)"
+
+    local _form_action_selector=
+    _form_action_selector="$(_get_id_selector "${_source_path}")"
+
+    local _columns=70
+    local _rows=30
+    local _url_params=
+
+    if _contains "--terminal" "${_pagination_arguments[@]:-}"
+    then
+      _columns="$((_COLUMNS - 3))"
+      _url_params+="&--per-page=${_per_page}"
+
+      _rows="$((_per_page + 2))"
+    fi
+
+    {
+      printf "%s\\n" "$(_browse_render_header "${_header_arguments[@]:-}")"
+
+      # TODO: https://stackoverflow.com/a/15844977
+      cat <<HEREDOC
+<form
+  action="/${_form_action_selector:-}?--edit${_url_params:-}"
+  accept-charset="UTF-8"
+  method="post">
+  <textarea
+    id="content"
+    name="content"
+    rows="${_rows}"
+    cols="${_columns}">${_content}</textarea>
+  <br><br>
+  <input type="submit" value="Save">
+</form>
+HEREDOC
+    } | {
+      _pandoc --render-to-html || :
+    }
+  }
+
   # _browse_render_header()
   #
   # Usage:
@@ -14518,85 +14597,6 @@ HEREDOC
     fi
 
     printf "<h1 class=\"header-crumbs\">%s</h1>\\n\\n" "${_header_content:-}"
-  }
-
-  # _browse_render_edit()
-  #
-  # Usage:
-  #   _browse_render_edit <path> [--per-page] [--terminal]
-  #
-  # Description:
-  #   Print an HTML page for editing a text file.
-  _browse_render_edit() {
-    local _header_arguments=()
-    local _pagination_arguments=()
-    local _per_page="${NB_BROWSE_PER_PAGE:-30}"
-    local _source_path=
-
-    while ((${#}))
-    do
-      case "${1:-}" in
-        --page)
-          _option_value_is_present "${2:-}" && shift
-          ;;
-        --per-page)
-          _per_page="${2:?}"
-          _pagination_arguments+=("${1:?}" "${2:?}")
-          _header_arguments+=("${1:?}" "${2:?}")
-          shift
-          ;;
-        --terminal)
-          _pagination_arguments+=("--terminal")
-          _header_arguments+=("--terminal")
-          ;;
-        *)
-          _source_path="${1:-}"
-          _header_arguments+=("${_source_path}")
-          ;;
-      esac
-
-      shift
-    done
-
-    local _content=
-    _content="$(_show "${_source_path}" --print --no-color)"
-
-    local _form_action_selector=
-    _form_action_selector="$(_get_id_selector "${_source_path}")"
-
-    local _columns=70
-    local _rows=30
-    local _url_params=
-
-    if _contains "--terminal" "${_pagination_arguments[@]:-}"
-    then
-      _columns="$((_COLUMNS - 3))"
-      _url_params+="&--per-page=${_per_page}"
-
-      _rows="$((_per_page + 2))"
-    fi
-
-    {
-      printf "%s\\n" "$(_browse_render_header "${_header_arguments[@]:-}")"
-
-      # TODO: https://stackoverflow.com/a/15844977
-      cat <<HEREDOC
-<form
-  action="/${_form_action_selector:-}?--edit${_url_params:-}"
-  accept-charset="UTF-8"
-  method="post">
-  <textarea
-    id="content"
-    name="content"
-    rows="${_rows}"
-    cols="${_columns}">${_content}</textarea>
-  <br><br>
-  <input type="submit" value="Save">
-</form>
-HEREDOC
-    } | {
-      _pandoc --render-to-html || :
-    }
   }
 
   # _browse_render_item()
