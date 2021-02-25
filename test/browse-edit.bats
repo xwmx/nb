@@ -7,6 +7,8 @@ export NB_SERVER_PORT=6789
 # non-breaking space
 export _S=" "
 
+# GET #########################################################################
+
 @test "GET to --edit URL updates the note and prints form." {
   {
     "${_NB}" init
@@ -60,6 +62,8 @@ export _S=" "
   [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1  ]]
   [[ "${output}"    =~  \<form\ action=\"/home:1\?--edit      ]]
 }
+
+# POST ########################################################################
 
 @test "POST to --edit URL updates the note and prints form."  {
   {
@@ -115,6 +119,7 @@ export _S=" "
   [[ "${output}"    =~  \<form\ action=\"/home:1\?--edit      ]]
 }
 
+# CLI #########################################################################
 
 @test "'browse --edit <selector>' opens the edit page in the browser." {
   {
