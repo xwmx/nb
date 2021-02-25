@@ -14979,7 +14979,14 @@ HEREDOC
       _terminal_browser=0
     fi
 
-    # retrieve pagination and query values from parameters
+    # detect dimensional parameters
+
+    local _columns=1
+
+    if [[ "${_request_uri}"     =~ --columns=([0-9]+)   ]]
+    then
+      _columns="${BASH_REMATCH[1]}"
+    fi
 
     local _page_number=1
 
@@ -14994,6 +15001,8 @@ HEREDOC
     then
       _per_page="${BASH_REMATCH[1]}"
     fi
+
+    # retrieve pagination and query values from parameters
 
     local _query=
 
@@ -15228,6 +15237,7 @@ HEREDOC
     fi
   }
 
+  local _browse_columns="${_COLUMNS}"
   local _browse_notebooks=0
   local _browse_per_page=
   local _edit=0
@@ -15247,6 +15257,10 @@ HEREDOC
   while ((${#}))
   do
     case "${1:-}" in
+      --col*)
+        _browse_columns="$(_option_get_value "${1:-}" "${2:-}")"
+        shift
+        ;;
       --*container)
         _print_browse_container=1
         ;;
@@ -15371,6 +15385,12 @@ HEREDOC
 
       _url_params+=("--per-page=${_browse_per_page}")
       _url_params+=("--terminal")
+    fi
+
+    if [[ -n "${_browse_columns:-}" ]]
+    then
+      _arguments+=("--columns" "${_browse_columns}")
+      _url_params+=("--columns=${_browse_columns}")
     fi
 
     if [[ -n "${_target_page:-}" ]]
