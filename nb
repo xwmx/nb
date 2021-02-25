@@ -8357,6 +8357,7 @@ input[type="submit"] {
   background:       none;
   border:           none;
   color:            #6EB3D7;
+  font-size:        1.25rem;
   outline:          0 solid #1a1a1a;
   padding:          0;
 }
@@ -8375,8 +8376,8 @@ textarea {
   border:           none;
   border-bottom:    1px dashed #626480;
   border-top:       1px dashed #626480;
-  color:            #e6e6e6;
-  font-size:        16px;
+  color:            #cccccc;
+  font-size:        1rem;
   outline:          0 solid #1a1a1a;
   padding:          2rem 0;
 }
