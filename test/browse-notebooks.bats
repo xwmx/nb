@@ -31,12 +31,18 @@ export _S=" "
   [[ "${status}"  ==  0                   ]]
   [[ "${output}"  =~  \<\!DOCTYPE\ html\> ]]
 
-  [[ "${output}"  =~  \
-\<h1\ class=\"header-crumbs\"\>           ]]
-  [[ "${output}"  =~  \
-\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\                      ]]
-  [[ "${output}"  =~  \
-\<span\ class=\"dim\"\>❯\</span\>nb\</a\>\ .*·.*\ \<span\ class=\"dim\"\>notebooks\</span\>.*\</h1\>  ]]
+
+  printf "%s\\n" "${output}" | grep   -q \
+"<h1 class=\"header-crumbs\">"
+
+  printf "%s\\n" "${output}" | grep   -q \
+"<a.* href=\"http://localhost:6789/?--per-page=.*&--columns=.*\"><span "
+
+  printf "%s\\n" "${output}" | grep   -q \
+"<span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> <span class=\"dim\">notebooks</span>"
+
+  printf "%s\\n" "${output}" | grep   -q \
+"</h1>"
 
   printf "%s\\n" "${output}" | grep   -q \
 "<p><a.* href=\"http://localhost:6789/Demo%20Notebook:?--per-page=.*\">Demo${_S}Notebook</a> .*·.*"
