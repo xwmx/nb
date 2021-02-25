@@ -3811,8 +3811,8 @@ Usage:
   nb bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
   nb bookmark search <query>
   nb browse [<notebook>:][<id> | <filename> | <title> | <path>]
-            [-g | --gui] [--notebooks] [--print] [-q | --query <query>]
-            [-s | --serve]
+            [-e | --edit] [-g | --gui] [--notebooks] [--print]
+            [-q | --query <query>] [-s | --serve]
   nb completions (check | install [-d | --download] | uninstall)
   nb count [<notebook>:][<relative-path>]
   nb delete [<notebook>:](<id> | <filename> | <path> | <title>)...
@@ -3896,7 +3896,7 @@ Subcommands:
                When a <url> is provided, create a new bookmark.
   add          Add a note, folder, or file.
   bookmark     Add, open, list, and search bookmarks.
-  browse       Browse and view linked items in the terminal web browser.
+  browse       Browse, view, and edit linked items in terminal and GUI browsers.
   completions  Install and uninstall completion scripts.
   count        Print the number of items in a notebook or folder.
   delete       Delete a note.
@@ -4240,10 +4240,11 @@ Shortcut Alias: `b`
 ```text
 Usage:
   nb browse [<notebook>:][<id> | <filename> | <title> | <path>]
-            [-g | --gui] [--notebooks] [--print] [-q | --query <query>]
-            [-s | --serve]
+            [-e | --edit] [-g | --gui] [--notebooks] [--print]
+            [-q | --query <query>] [-s | --serve]
 
 Options:
+  -e, --edit            Open the edit view for the item in the browser.
   -g, --gui             Open in the system's primary GUI web browser.
   --notebooks           Browse notebooks.
   --print               Print to standard output.
@@ -4251,8 +4252,8 @@ Options:
   -s, --serve           Start the web application server.
 
 Description:
-  Browse and view linked notes, bookmarks, notebooks, folders, and other
-  items using the terminal or GUI web browser.
+  Browse, view, and edit linked notes, bookmarks, notebooks, folders, and
+  other items using the terminal or GUI web browser.
 
   `browse` includes an embedded, terminal-first web application that
   renders [[wiki-style links]] and #tags as internal links, enabling you
