@@ -14905,32 +14905,68 @@ HEREDOC
       _browse_respond_with 400
     fi
 
+    # parse headers and message body
+
+    local _content_length=
+
+    case "${_request_method:-}" in
+      POST) local _looking_for_content_length=1 ;;
+      *)    local _looking_for_content_length=0 ;;
+    esac
+
+    local _looking_for_end_of_headers=1
     local _looking_for_user_agent=1
     local _terminal_browser=1
 
-    while ((_looking_for_user_agent))
+    while ((_looking_for_user_agent))     ||
+          ((_looking_for_content_length)) ||
+          ((_looking_for_end_of_headers))
     do
-      local _http_header_line=
-      read -r _http_header_line
+      local   __request_line=
+      read -r __request_line
 
-      # detect browser type
-
-      # turn on case-insensitive matching
-      shopt -s nocasematch
-      if [[ "${_http_header_line}"      =~ User-Agent           ]]
-      then
-
-        if [[ ! "${_http_header_line}"  =~ curl|Links|Lynx|w3m  ]]
+      if ((_looking_for_user_agent)) &&
+         [[ "${__request_line:-}"     =~ User-Agent           ]]
+      then # detect browser type
+        # turn on case-insensitive matching
+        shopt -s nocasematch
+        if [[ "${__request_line}"     =~ User-Agent           ]]
         then
-          _terminal_browser=0
-          _looking_for_user_agent=0
-        fi
 
+          if [[ ! "${__request_line}" =~ curl|Links|Lynx|w3m  ]]
+          then
+            _terminal_browser=0
+            _looking_for_user_agent=0
+          fi
+        fi
+        # turn off case-insensitive matching
+        shopt -u nocasematch
+      elif ((_looking_for_content_length)) &&
+           [[ "${__request_line:-}"   =~ Content-Length       ]]
+      then # assign content length
+        _content_length="${__request_line##*: }"
+        _content_length="${_content_length%%$'\r'}"
+
+        _looking_for_content_length=0
+      elif [[ -z "${__request_line%%$'\r'}" ]]
+      then
+        _looking_for_end_of_headers=0
         break
       fi
-      # turn off case-insensitive matching
-      shopt -u nocasematch
     done
+
+    local _post_content=
+
+    if [[ "${_request_method}" == "POST" ]]
+    then
+      read -r -n "${_content_length}" _message_body
+
+      # https://stackoverflow.com/a/37840948
+      local _decoding_body="${_message_body//+/ }"
+      _decoding_body="$(echo -e "${_decoding_body//%/\\x}")"
+
+      _post_content="${_decoding_body#content=}"
+    fi
 
     # redirect outbound URLs
 
@@ -15051,7 +15087,8 @@ HEREDOC
             then
               if [[ "${_request_method}" == "POST" ]]
               then
-                _browse_update_item "${_arguments[@]:-}"
+                _browse_update_item "${_arguments[@]:-}" \
+                  --content "${_post_content:-}"
               else
                 _browse_render_edit "${_arguments[@]:-}"  >> "${_temp_file}"
               fi
