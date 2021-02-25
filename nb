@@ -15036,24 +15036,24 @@ HEREDOC
     _target_selector="${_target_selector//"\%20"/ }"
     _target_selector="${_target_selector//"%20"/ }"
 
-    local _arguments=()
+    local _render_function_arguments=()
 
     if [[ -n "${_per_page:-}"             ]]
     then
-      _arguments+=("--per-page" "${_per_page}")
+      _render_function_arguments+=("--per-page" "${_per_page}")
     fi
 
     local _url_params=
 
     if ((_terminal_browser))
     then
-      _arguments+=("--terminal")
+      _render_function_arguments+=("--terminal")
       _url_params+="?--per-page=${_per_page}"
     fi
 
     if [[ -z "${_target_selector:-}"      ]]
     then
-      _browse_render_notebooks "${_arguments[@]:-}" >> "${_temp_file}"
+      _browse_render_notebooks "${_render_function_arguments[@]:-}" >> "${_temp_file}"
     else
       local _selector_path=
       _selector_path="$(_show "${_target_selector%%\?*}" --path 2>/dev/null || :)"
@@ -15062,27 +15062,28 @@ HEREDOC
       then
         _browse_respond_with 404
       else
-        _arguments+=("${_selector_path}")
+        _render_function_arguments+=("${_selector_path}")
 
         if [[ -d "${_selector_path:-}"    ]]
         then
           if [[ -n "${_page_number:-}"    ]]
           then
-            _arguments+=("--page" "${_page_number}")
+            _render_function_arguments+=("--page" "${_page_number}")
           fi
 
           if [[ -n "${_per_page:-}"       ]]  &&
-             ! _contains "--per-page" "${_arguments[@]:-}"
+             ! _contains "--per-page" "${_render_function_arguments[@]:-}"
           then
-            _arguments+=("--per-page" "${_per_page}")
+            _render_function_arguments+=("--per-page" "${_per_page}")
           fi
 
           if [[ -n "${_query:-}"          ]]
           then
-            _arguments+=("--query" "${_query}")
+            _render_function_arguments+=("--query" "${_query}")
           fi
 
-          _browse_render_container  "${_arguments[@]:-}"  >> "${_temp_file}"
+          _browse_render_container                      \
+            "${_render_function_arguments[@]:-}"        >> "${_temp_file}"
         else
           if _file_is_text "${_selector_path:-}"                    ||
              [[ "${_selector_path:-}"     =~ \.docx$|\.epub$|\.odt$ ]]
@@ -15091,16 +15092,20 @@ HEREDOC
             then
               if [[ "${_request_method}"  == "POST"                 ]]
               then
-                _browse_update_item "${_arguments[@]:-}" --message-body "${_message_body:-}"
+                _browse_update_item                     \
+                  "${_render_function_arguments[@]:-}"  \
+                  --message-body "${_message_body:-}"
               fi
 
-              _browse_render_edit "${_arguments[@]:-}"    >> "${_temp_file}"
+              _browse_render_edit     \
+                "${_render_function_arguments[@]:-}"    >> "${_temp_file}"
             else
-              _browse_render_item   "${_arguments[@]:-}"  >> "${_temp_file}"
+              _browse_render_item     \
+                "${_render_function_arguments[@]:-}"    >> "${_temp_file}"
             fi
           elif _file_is_encrypted "${_selector_path:-}"
           then
-            _browse_respond_with 415      \
+            _browse_respond_with 415  \
               "415 $(_browse_http_response_message 415): File is encrypted."
           else
             _browse_respond_with 415
