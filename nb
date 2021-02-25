@@ -14398,6 +14398,7 @@ HEREDOC
   # Description:
   #   Print an HTML page for editing a text file.
   _browse_render_edit() {
+    local _columns="${NB_BROWSE_COLUMNS:-70}"
     local _header_arguments=()
     local _pagination_arguments=()
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
@@ -14406,6 +14407,10 @@ HEREDOC
     while ((${#}))
     do
       case "${1:-}" in
+        --col*)
+          _columns="$(_option_get_value "${1:-}" "${2:-}")"
+          shift
+          ;;
         --page)
           _option_value_is_present "${2:-}" && shift
           ;;
@@ -14434,13 +14439,13 @@ HEREDOC
     local _form_action_selector=
     _form_action_selector="$(_get_id_selector "${_source_path}")"
 
-    local _columns=70
+    local _text_area_columns="${_columns:-}"
     local _rows=30
     local _url_params=
 
     if _contains "--terminal" "${_pagination_arguments[@]:-}"
     then
-      _columns="$((_COLUMNS - 3))"
+      _text_area_columns="$((_text_area_columns - 3))"
       _url_params+="&--per-page=${_per_page}"
 
       _rows="$((_per_page + 2))"
@@ -14459,7 +14464,7 @@ HEREDOC
     id="content"
     name="content"
     rows="${_rows}"
-    cols="${_columns}">${_content}</textarea>
+    cols="${_text_area_columns}">${_content}</textarea>
   <br><br>
   <input type="submit" value="Save">
 </form>
