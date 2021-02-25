@@ -14987,7 +14987,7 @@ HEREDOC
     if [[ "${_request_uri}"     =~ --columns=([0-9]+)   ]]
     then
       _columns="${BASH_REMATCH[1]}"
-      _render_function_arguments+=("--columns" "${_per_page}")
+      _render_function_arguments+=("--columns" "${_columns}")
     fi
 
     local _page_number=1
