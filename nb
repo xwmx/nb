@@ -14092,6 +14092,11 @@ Examples:
 Shortcut Alias: \`br\`
 HEREDOC
 _browse() {
+  # $NB_BROWSE_COLUMNS
+  #
+  # The number of columns to display.
+  export NB_BROWSE_COLUMNS="${NB_BROWSE_COLUMNS:-70}"
+
   # Inspired by bashttpd: https://github.com/avleen/bashttpd
 
   # _browse_http_response_message()
@@ -14127,6 +14132,7 @@ _browse() {
   # Description:
   #   Render a notebook or folder as an HTML page.
   _browse_render_container() {
+    local _columns="${NB_BROWSE_PER_PAGE:-70}"
     local _current_page=1
     local _pagination_arguments=()
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
@@ -14137,6 +14143,10 @@ _browse() {
     while ((${#}))
     do
       case "${1:-}" in
+        --col*)
+          _columns="$(_option_get_value "${1:-}" "${2:-}")"
+          shift
+          ;;
         --page)
           _current_page="${2:?}"
           _pagination_arguments+=("${1:-}" "${2:?}")
@@ -14193,9 +14203,10 @@ _browse() {
       if ((_terminal_browser))
       then
         case "${BROWSER:-}" in
-          *elinks*) _truncate_length="$((_COLUMNS - 20))" ;;
-          *lynx*)   _truncate_length="$((_COLUMNS - 10))" ;;
-          *)        _truncate_length="$((_COLUMNS - 1))"  ;;
+          # TODO: improve
+          *elinks*) _truncate_length="$((_columns - 23))" ;;
+          *links*)  _truncate_length="$((_columns - 5))"  ;;
+          *)        _truncate_length="$((_columns - 1))"  ;;
         esac
       fi
 
