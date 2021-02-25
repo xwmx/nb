@@ -15142,7 +15142,8 @@ HEREDOC
             ncat                                    \
               --exec "${_MY_PATH} browse --respond" \
               --listen                              \
-              --source-port "${NB_SERVER_PORT}"
+              --source-port "${NB_SERVER_PORT}"     \
+              2>/dev/null
             ;;
         esac
       done
