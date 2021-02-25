@@ -14105,6 +14105,7 @@ _browse() {
 
     case "${_status_code}" in
       200) printf "OK\\n"                     ;;
+      302) printf "Found\\n"                  ;;
       307) printf "Temporary Redirect\\n"     ;;
       400) printf "Bad Request\\n"            ;;
       403) printf "Forbidden\\n"              ;;
@@ -14587,11 +14588,9 @@ HEREDOC
     id="content"
     name="content"
     rows="${_rows}"
-    cols="${_columns}">
-${_content}
-  </textarea>
+    cols="${_columns}">${_content}</textarea>
   <br><br>
-  <input type="submit" value="Save & Close">
+  <input type="submit" value="Save">
 </form>
 HEREDOC
     } | {
@@ -14817,7 +14816,7 @@ HEREDOC
       # then
       #   _response_headers+=("Content-Length: ${_content_length}")
       # fi
-    elif [[ "${_status_code:-}" == "307" ]]
+    elif _contains "${_status_code:-}" "302" "307"
     then
       _only_headers=1
       _response_headers+=("Location: $(_get_uri --decode "${2:-}")")
@@ -14955,17 +14954,13 @@ HEREDOC
       fi
     done
 
+    # get message body
+
     local _post_content=
 
     if [[ "${_request_method}" == "POST" ]]
     then
       read -r -n "${_content_length}" _message_body
-
-      # https://stackoverflow.com/a/37840948
-      local _decoding_body="${_message_body//+/ }"
-      _decoding_body="$(echo -e "${_decoding_body//%/\\x}")"
-
-      _post_content="${_decoding_body#content=}"
     fi
 
     # redirect outbound URLs
@@ -15042,9 +15037,12 @@ HEREDOC
       _arguments+=("--per-page" "${_per_page}")
     fi
 
+    local _url_params=
+
     if ((_terminal_browser))
     then
       _arguments+=("--terminal")
+      _url_params+="?--per-page=${_per_page}"
     fi
 
     if [[ -z "${_target_selector:-}"    ]]
@@ -15087,11 +15085,10 @@ HEREDOC
             then
               if [[ "${_request_method}" == "POST" ]]
               then
-                _browse_update_item "${_arguments[@]:-}" \
-                  --content "${_post_content:-}"
-              else
-                _browse_render_edit "${_arguments[@]:-}"  >> "${_temp_file}"
+                _browse_update_item "${_arguments[@]:-}" --message-body "${_message_body:-}"
               fi
+
+              _browse_render_edit "${_arguments[@]:-}"    >> "${_temp_file}"
             else
               _browse_render_item   "${_arguments[@]:-}"  >> "${_temp_file}"
             fi
@@ -15114,8 +15111,10 @@ HEREDOC
         _browse_respond_with 200 "${_temp_file}" --headers
         ;;
       POST)
-        _browse_respond_with 307 \
-          "http://localhost:${NB_SERVER_PORT}/${_target_selector//' '/%20}"
+        _browse_respond_with 200 "${_temp_file}"
+        # TODO
+        # _browse_respond_with 302 \
+        #   "http://localhost:${NB_SERVER_PORT}/${_target_selector//' '/%20}${_url_params:-}"
         ;;
       *)
         _browse_respond_with 405
@@ -15169,6 +15168,7 @@ HEREDOC
   # Description:
   #   Update the content of item at <path>.
   _browse_update_item() {
+    local _message_body=
     local _header_arguments=()
     local _pagination_arguments=()
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
@@ -15177,6 +15177,10 @@ HEREDOC
     while ((${#}))
     do
       case "${1:-}" in
+        --message*body)
+          _message_body="$(_option_get_value "${1:-}" "${2:-}")"
+          shift
+          ;;
         --page)
           _option_value_is_present "${2:-}" && shift
           ;;
@@ -15199,30 +15203,31 @@ HEREDOC
       shift
     done
 
-    local _url_params=
+    [[ -z "${_source_path:-}" ]] && _browse_respond_with 404
 
-    if _contains "--terminal" "${_pagination_arguments[@]:-}"
+    local _notebook_path=
+    _notebook_path="$(
+      _notebooks show "${_source_path:-}" --path 2>/dev/null ||
+        _notebooks current --path
+    )"
+
+    local _updated_content=
+
+    if [[ "${_message_body:-}" =~ ^content= ]]
     then
-      _url_params+="?--per-page=${_per_page}"
+      # https://stackoverflow.com/a/37840948
+      local _decoding_body="${_message_body//+/ }"
+      _decoding_body="$(echo -e "${_decoding_body//%/\\x}")"
+
+      _updated_content="${_decoding_body#content=}"
+      _updated_content="${_updated_content%$'\r'}"
+      _updated_content="${_updated_content%$'\n'}"
+
+      printf "%s\\n" "${_updated_content:-}" > "${_source_path}"
+
+      _git checkpoint "${_notebook_path}" \
+        "[nb] Edit: ${_source_path#${_notebook_path}/}"
     fi
-
-    {
-      local _temp_file_path=
-      _temp_file_path="$(_temp file ".html" --touch)"
-
-      {
-        printf "TODO: update item\\n"
-      } | {
-        _pandoc --render-to-html
-      } | {
-        cat >> "${_temp_file_path}"
-      }
-
-      _browse_respond_with 200 "${_temp_file_path}"
-    }
-
-    # printf "example\\n" | _edit "${_source_path}" --overwrite ||
-    #   _browse_respond_with 500
   }
 
   local _browse_notebooks=0
