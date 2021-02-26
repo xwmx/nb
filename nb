@@ -15328,12 +15328,12 @@ HEREDOC
   local _force_terminal_request=0
   local _only_serve=0
   local _open_gui=0
-  local _print_browse_container=0
-  local _print_browse_header=0
-  local _print_browse_item=0
+  local _print_browse_render_container=0
+  local _print_browse_render_header=0
+  local _print_browse_render_item=0
   local _print_headers=0
   local _print_output=0
-  local _print_render_edit=0
+  local _print_browse_render_edit=0
   local _search_query=
   local _selector=
   local _target_page=
@@ -15346,7 +15346,7 @@ HEREDOC
         shift
         ;;
       --*container)
-        _print_browse_container=1
+        _print_browse_render_container=1
         ;;
       -e|--edit)
         _edit=1
@@ -15355,13 +15355,13 @@ HEREDOC
         _open_gui=1
         ;;
       --*header)
-        _print_browse_header=1
+        _print_browse_render_header=1
         ;;
       --headers)
         _print_headers=1
         ;;
       --*item)
-        _print_browse_item=1
+        _print_browse_render_item=1
         ;;
       --notebooks)
         _browse_notebooks=1
@@ -15378,7 +15378,7 @@ HEREDOC
         _print_output=1
         ;;
       --render*edit)
-        _print_render_edit=1
+        _print_browse_render_edit=1
         ;;
       --respond)
         _browse_respond
@@ -15497,27 +15497,27 @@ HEREDOC
 
   # call functions directly
 
-  if ((_print_browse_header))
+  if ((_print_browse_render_header))
   then
     _browse_render_header "${_arguments[@]:-}"
     exit 0
   fi
 
-  if ((_print_browse_container))
+  if ((_print_browse_render_container))
   then
     _browse_render_container "${_arguments[@]:-}"
 
     exit 0
   fi
 
-  if ((_print_browse_item))
+  if ((_print_browse_render_item))
   then
     _browse_render_item "${_arguments[@]:-}"
 
     exit 0
   fi
 
-  if ((_print_render_edit))
+  if ((_print_browse_render_edit))
   then
     _browse_render_edit "${_arguments[@]:-}"
 
