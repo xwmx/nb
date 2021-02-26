@@ -50,13 +50,13 @@ _nb_subcommands() {
     IFS=$'\n' _notebooks=($(nb notebooks --names --no-color --unarchived))
 
     local _filenames
-	#IFS=$'\n' _filenames=($(nb ls --filenames | cut -d ' ' -f 2))
-	# the field number is unknown : plain or encrypted files ?
-	# you need awk to get the last field
-	IFS=$'\n' _filenames=($(nb ls --filenames | awk '{print $NF}'))
+    #IFS=$'\n' _filenames=($(nb ls --filenames | cut -d ' ' -f 2))
+    # the field number is unknown : plain or encrypted files ?
+    # you need awk to get the last field
+    IFS=$'\n' _filenames=($(nb ls --filenames | awk '{print $NF}'))
 
     local _completions=()
-	IFS=$'\n' _completions=(${_commands[@]} ${_filenames[@]})
+    IFS=$'\n' _completions=(${_commands[@]} ${_filenames[@]})
 
     local _commands_cached=
     local _notebooks_cached=
@@ -72,13 +72,13 @@ _nb_subcommands() {
 
         if [[ "${_counter}" == 1 ]]
         then
-			IFS=$' ' _commands_cached=("${__line}")
+            IFS=$' ' _commands_cached=("${__line}")
         elif [[ "${_counter}" == 2 ]]
         then
-			IFS=$' ' _notebooks_cached=("${__line}")
+            IFS=$' ' _notebooks_cached=("${__line}")
         elif [[ "${_counter}" == 3 ]]
         then
-			IFS=$' ' _filenames_cached=("${__line}")
+            IFS=$' ' _filenames_cached=("${__line}")
         else
           break
         fi
@@ -174,8 +174,8 @@ _nb_subcommands() {
 
   if [[ "${?}" -eq 0 ]]
   then
-	compadd -- "${_completions_cached[@]}"
-	return 0
+    compadd -- "${_completions_cached[@]}"
+    return 0
   else
     return 1
   fi
