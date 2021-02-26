@@ -1926,7 +1926,7 @@ of bookmarks.
 
 ```bash
 > nb browse text:formats/markdown/123
-❯nb · text : formats / markdown / 123 · [edit]
+❯nb · text : formats / markdown / 123 · edit
 Daring Fireball: Markdown (daringfireball.net)
 
 https://daringfireball.net/projects/markdown/
