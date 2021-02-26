@@ -8184,7 +8184,7 @@ _option_get_tags() {
 # _pandoc()
 #
 # Usage:
-#   _pandoc [<path>] [--render-to-html] [<pandoc-option>...]
+#   [<input> |] _pandoc [<path>] [--render-to-html] [<pandoc-option>...]
 #
 # Description:
 #   An internal interface for pandoc. https://pandoc.org/
@@ -8450,6 +8450,410 @@ HEREDOC
   }
 
   rm -f "${_html_head_temp_path:?}"
+}
+
+# _render()
+#
+# Usage:
+#   [<input> |] _render [<path>] [<pandoc-option>...]
+_render() {
+  # Usage: _render_print_head
+  _render_print_head() {
+    cat <<HEREDOC
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>nb</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      word-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <style>
+  html {
+    background-color: #1a1a1a;
+    color:            #e6e6e6;
+    font-size:        16px;
+  }
+
+  html,
+  input {
+    font-family: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console, monospace;
+  }
+
+  body {
+    hyphens:    none;
+    max-width:  45rem;
+  }
+
+  h1 { font-size: 1.6rem;   }
+  h2 { font-size: 1.3rem;   }
+  h3 { font-size: 1.17rem;  }
+
+  a           { color: #6EB3D7; text-decoration: none;      }
+  a:hover     { color: #6EB3D7; text-decoration: underline; }
+  a:visited   { color: #6EB3D7; text-decoration: none;      }
+
+  .header-crumbs {
+    font-size:    1.4rem;
+    font-weight:  normal;
+  }
+
+  h1 a,
+  h1 a:hover,
+  h1 a:visited,
+  a.list-item,
+  a.list-item:hover,
+  a.list-item:visited {
+    color:            #e6e6e6;
+    text-decoration:  none;
+  }
+
+  blockquote {
+    border-left:  2px solid #4d4d4d;
+    color:        #606060;
+  }
+
+  hr {
+    background-color: #4d4d4d;
+  }
+
+  table       { border-color: transparent;          }
+  td > table  { margin: 0;                          }
+  col         { width: auto !important;             }
+  tbody       { border-bottom:  1px solid #4d4d4d;  }
+  th          { border-top: 1px solid #4d4d4d;      }
+  td          { padding: 0 0 1rem 0;                }
+
+  .list-item  {
+    display:        inline-block;
+    max-width:      45rem;
+    overflow:       hidden;
+    text-overflow:  ellipsis;
+    white-space:    nowrap;
+    vertical-align: top;
+  }
+
+  .dim        { color: #626480; }
+  .identifier { color: #6EB3D7; }
+
+  #search {
+    position: relative;
+  }
+
+  label[for=search-input] {
+    display: none;
+  }
+
+  #search-input {
+    background-color: #1a1a1a;
+    border:           none;
+    border-bottom:    1px solid #4d4d4d;
+    color:            #e6e6e6;
+    font-size:        1.2rem;
+    padding:          0.5rem;
+    width:            100%;
+  }
+
+  #search-input:focus {
+    outline: 0;
+  }
+
+  .search-spacer {
+    display: none;
+  }
+
+  #search	i {
+    animation-name:     blink;
+    animation-duration: 3000ms;
+    animation-iteration-count: infinite;
+    background-color:   #a6a659;
+    display: none;
+    height:   80%;
+    left:     5px;
+    opacity:  0.5;
+    position: absolute;
+    top:      10%;
+    width:    1em;
+  }
+
+  #search input:focus + i {
+    display: none;
+  }
+
+  @keyframes blink {
+    from  { opacity: 1; }
+    to    { opacity: 0; }
+  }
+
+  input[type="submit"] {
+    background:       none;
+    border:           none;
+    color:            #6EB3D7;
+    font-size:        1rem;
+    outline:          0 solid #1a1a1a;
+    padding:          0;
+  }
+
+  input[type="submit"]:active {
+    border-bottom:    1px solid #bae7ff;
+    color:            #bae7ff;
+  }
+
+  input[type="submit"]:hover {
+    border-bottom:    1px solid #6EB3D7;
+  }
+
+  textarea {
+    background-color: #1a1a1a;
+    border:           none;
+    border-bottom:    1px dashed #626480;
+    border-top:       1px dashed #626480;
+    color:            #cccccc;
+    font-size:        1rem;
+    outline:          0 solid #1a1a1a;
+    padding:          2rem 0;
+  }
+
+  div.sourceCode {
+    background-color: transparent;
+  }
+  </style>
+  <script>
+  // hide broken images
+  document.addEventListener("DOMContentLoaded", function(event) {
+    document.querySelectorAll('img').forEach(function(img) {
+      img.onerror = function() { this.style.display = 'none'; };
+    })
+  });
+  </script>
+  <meta name="referrer" content="no-referrer" />
+</head>
+<body>
+HEREDOC
+  }
+
+  local _from=
+  local _pandoc_arguments=("--highlight-style=zenburn")
+  local _input_file_path=
+  local _input_string=
+  local _use_pandoc=0
+
+  while ((${#}))
+  do
+    case "${1:-}" in
+      "")         :                             ;;
+      --from)     _from="${2:?}" && shift       ;;
+      --*pandoc)  _use_pandoc=1                 ;;
+      -*)         _pandoc_arguments+=("${1:-}") ;;
+      *)
+        if [[ -z "${_input_file_path:-}"  ]] &&
+           [[ -f "${1:-}"                 ]]
+        then
+          _input_file_path="${1:-}"
+        elif [[ -z "${_input_string:-}"   ]]
+        then
+          _input_string="${1:-}"
+        else
+          _pandoc_arguments+=("${1:-}")
+        fi
+        ;;
+    esac
+
+    shift
+  done
+
+  _render_print_head
+
+  if ((_use_pandoc)) && _command_exists "pandoc"
+  then
+    if [[ -n "${_from:-}"           ]]
+    then
+      _pandoc_arguments+=("--from=${_from:-}")
+    elif [[ -z "${_source_path:-}"  ]]
+    then
+      _pandoc_arguments+=("--from=markdown+raw_html")
+    fi
+
+    if [[ -n "${_input_file_path:-}"  ]]
+    then
+      pandoc "${_input_file_path:-}" "${_pandoc_arguments[@]:-}"
+    fi
+
+    if [[ -n "${_input_string}"       ]]
+    then
+      printf "%s\\n" "${_input_string}" | pandoc "${_pandoc_arguments[@]:-}"
+    fi
+
+    if _piped_input
+    then
+      pandoc "${_pandoc_arguments[@]:-}"
+    fi
+  else
+    if [[ -n "${_input_file_path:-}"  ]]
+    then
+      if _file_is_text "${_input_file_path}"
+      then
+        cat "${_input_file_path}"
+      else
+        cat <<HEREDOC
+File type not yet supported: ${_input_file_path##*.}
+HEREDOC
+      fi
+    fi
+
+    if [[ -n "${_input_string}"       ]]
+    then
+      printf "%s\\n" "${_input_string}"
+    fi
+
+    if _piped_input
+    then
+      cat
+    fi
+  fi
+
+  cat <<HEREDOC
+</body>
+</html>
+HEREDOC
 }
 
 # _resolve_links()
@@ -15680,6 +16084,9 @@ _helpers() {
       ;;
     *print*welcome|welcome)
       _print_welcome                  "${_options[@]:-}"
+      ;;
+    render)
+      _render                         "${_options[@]:-}"
       ;;
     resolve*links)
       _resolve_links                  "${_options[@]:-}"
