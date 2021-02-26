@@ -8834,7 +8834,7 @@ HEREDOC
         local _code_block_temp_path=
         _code_block_temp_path="$(_temp file ".html" --touch)"
 
-        printf "<code>\\n%s\\n</code>\\n"  \
+        printf "<code>\\n%s\\n</code>\\n"   \
           "$(cat "${_input_file_path:-}")" >> "${_code_block_temp_path:-}"
       fi
 
@@ -8847,30 +8847,32 @@ HEREDOC
     # body
     if ((_use_pandoc))
     then
-      if [[ -n "${_from:-}"           ]]
+      if [[ -n "${_from:-}"                 ]]
       then
         _pandoc_arguments+=("--from=${_from:-}")
-      elif [[ -z "${_prepared_file_path:-}"  ]]
+      elif [[ -z "${_prepared_file_path:-}" ]]
       then
         _pandoc_arguments+=("--from=markdown+raw_html")
       fi
 
-      if [[ -n "${_prepared_file_path:-}"  ]]
+      if [[ -n "${_prepared_file_path:-}"   ]]
       then
-        pandoc "${_prepared_file_path:-}" "${_pandoc_arguments[@]:-}"
+        pandoc "${_prepared_file_path:-}"   \
+          "${_pandoc_arguments[@]:-}" 2>/dev/null
       fi
 
-      if [[ -n "${_input_string}"       ]]
+      if [[ -n "${_input_string}"           ]]
       then
-        printf "%s\\n" "${_input_string}" | pandoc "${_pandoc_arguments[@]:-}"
+        printf "%s\\n" "${_input_string}"   \
+          | pandoc "${_pandoc_arguments[@]:-}" 2>/dev/null
       fi
 
       if _piped_input
       then
-        pandoc "${_pandoc_arguments[@]:-}"
+        pandoc "${_pandoc_arguments[@]:-}" 2>/dev/null
       fi
     else
-      if [[ -n "${_prepared_file_path:-}"  ]]
+      if [[ -n "${_prepared_file_path:-}"   ]]
       then
         if _file_is_text "${_prepared_file_path}"
         then
@@ -8882,7 +8884,7 @@ HEREDOC
         fi
       fi
 
-      if [[ -n "${_input_string}"       ]]
+      if [[ -n "${_input_string}"           ]]
       then
         printf "%s\\n" "${_input_string}"
       fi
