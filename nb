@@ -14186,14 +14186,14 @@ _browse() {
         _search "${_target_path}"         \
           "${_query}"                     \
           --no-color                      \
-          --per-page  "${_per_page}"      \
           --page      "${_current_page}"  \
+          --per-page  "${_per_page}"      \
           --list || :
       else
         _list "${_target_path}"           \
           --no-color                      \
-          --per-page  "${_per_page}"      \
           --page      "${_current_page}"  \
+          --per-page  "${_per_page}"      \
           --with-pinned
       fi
     } | {
