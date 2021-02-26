@@ -2,6 +2,64 @@
 
 load test_helper
 
+# img tags ####################################################################
+
+@test "'_render' strips <img> tags." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example File.html" \
+      --content   "$(<<HEREDOC cat
+<p>Example image one: <img src="/not-valid-1.png" alt="Example Image One" /></p>
+<p>More example <img src="/not-valid-2.png" alt="Example Image Two" /> content <img src="/not-valid-3.png" alt="Example Image Three" /> here.</p>
+HEREDOC
+)"
+  }
+
+  run "${_NB}" helpers render --pandoc "${NB_DIR}/home/Example File.html"
+
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                            ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                          ]]
+
+  [[    "${output}"    =~  \<p\>Example\ image\ one:\ \</p\>            ]]
+  [[    "${output}"    =~  \<p\>More\ example\ \ content\ \ here.\</p\> ]]
+
+  [[ !  "${output}"    =~  \<img                                        ]]
+}
+
+@test "'_render --pandoc' strips <img> tags." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example File.md" \
+      --title     "Example Title"   \
+      --content   "$(<<HEREDOC cat
+Example image one: ![Example Image One](/not-valid-1.png)
+
+More example ![Example Image Two](/not-valid-2.png) content ![Example Image Three](/not-valid-3.png) here.
+HEREDOC
+)"
+  }
+
+  run "${_NB}" helpers render --pandoc "${NB_DIR}/home/Example File.md"
+
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                            ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                          ]]
+
+  [[    "${output}"    =~  \<p\>Example\ image\ one:\ \</p\>            ]]
+  [[    "${output}"    =~  \<p\>More\ example\ \ content\ \ here.\</p\> ]]
+
+  [[ !  "${output}"    =~  \<img                                        ]]
+}
+
 # code ########################################################################
 
 @test "'_render' with .js file serves file in a code block." {
@@ -130,7 +188,7 @@ load test_helper
   printf "%s\\n" "${output}" | grep -q \
     "<h1 id=\"example-title\">Example Title</h1>"
   printf "%s\\n" "${output}" | grep -q \
-    "Example content with <em>formatting</em> and <a href=\"https://example.test\">a link</a>"
+    "Example content with <em>formatting</em> and <a rel=\"noopener noreferrer\" href=\"https://example.test\">a link</a>"
 }
 
 # without pandoc ##############################################################

@@ -8905,6 +8905,10 @@ HEREDOC
 </body>
 </html>
 HEREDOC
+  } | {
+    sed                     \
+      -e 's/<img[^>]*>//g'  \
+      -e "s/<a\ /<a\ rel=\"noopener\ noreferrer\"\ /g"
   }
 }
 
