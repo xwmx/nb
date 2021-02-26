@@ -8800,60 +8800,66 @@ HEREDOC
     shift
   done
 
-  _render_print_head
-
-  if ((_use_pandoc)) && _command_exists "pandoc"
-  then
-    if [[ -n "${_from:-}"           ]]
+  {
+    if ((_use_pandoc)) && _command_exists "pandoc"
     then
-      _pandoc_arguments+=("--from=${_from:-}")
-    elif [[ -z "${_source_path:-}"  ]]
-    then
-      _pandoc_arguments+=("--from=markdown+raw_html")
-    fi
-
-    if [[ -n "${_input_file_path:-}"  ]]
-    then
-      pandoc "${_input_file_path:-}" "${_pandoc_arguments[@]:-}"
-    fi
-
-    if [[ -n "${_input_string}"       ]]
-    then
-      printf "%s\\n" "${_input_string}" | pandoc "${_pandoc_arguments[@]:-}"
-    fi
-
-    if _piped_input
-    then
-      pandoc "${_pandoc_arguments[@]:-}"
-    fi
-  else
-    if [[ -n "${_input_file_path:-}"  ]]
-    then
-      if _file_is_text "${_input_file_path}"
+      if [[ -n "${_from:-}"           ]]
       then
-        cat "${_input_file_path}"
-      else
-        cat <<HEREDOC
+        _pandoc_arguments+=("--from=${_from:-}")
+      elif [[ -z "${_source_path:-}"  ]]
+      then
+        _pandoc_arguments+=("--from=markdown+raw_html")
+      fi
+
+      if [[ -n "${_input_file_path:-}"  ]]
+      then
+        pandoc "${_input_file_path:-}" "${_pandoc_arguments[@]:-}"
+      fi
+
+      if [[ -n "${_input_string}"       ]]
+      then
+        printf "%s\\n" "${_input_string}" | pandoc "${_pandoc_arguments[@]:-}"
+      fi
+
+      if _piped_input
+      then
+        pandoc "${_pandoc_arguments[@]:-}"
+      fi
+    else
+      if [[ -n "${_input_file_path:-}"  ]]
+      then
+        if _file_is_text "${_input_file_path}"
+        then
+          cat "${_input_file_path}"
+        else
+          cat <<HEREDOC
 File type not yet supported: ${_input_file_path##*.}
 HEREDOC
+        fi
+      fi
+
+      if [[ -n "${_input_string}"       ]]
+      then
+        printf "%s\\n" "${_input_string}"
+      fi
+
+      if _piped_input
+      then
+        cat
       fi
     fi
+  } | {
+    _render_print_head
 
-    if [[ -n "${_input_string}"       ]]
-    then
-      printf "%s\\n" "${_input_string}"
-    fi
+    cat
+  } | {
+    cat
 
-    if _piped_input
-    then
-      cat
-    fi
-  fi
-
-  cat <<HEREDOC
+    cat <<HEREDOC
 </body>
 </html>
 HEREDOC
+  }
 }
 
 # _resolve_links()
