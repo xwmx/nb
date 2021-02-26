@@ -14617,13 +14617,13 @@ HEREDOC
       fi
     fi
 
-    if [[ -z "${_selector_folders[*]:-}" ]] # TODO: && [[ -n "${_selector:-}" ]]
+    local _item_path=
+    _item_path="$(_show "${_selector:-}" --path 2>/dev/null || :)"
+
+    if [[ -z "${_selector_folders[*]:-}" ]] && [[ -n "${_item_path:-}" ]]
     then
       _header_content+=" <span class=\"dim\">:</span>"
     fi
-
-    local _item_path=
-    _item_path="$(_show "${_selector:-}" --path 2>/dev/null || :)"
 
     if [[ -f "${_item_path:-}" ]]
     then
