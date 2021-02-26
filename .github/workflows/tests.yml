@@ -42,10 +42,10 @@
 name: "nb · Test Suite"
 
 on:
-  push:
-    branches: [ master ]
   pull_request:
     branches: [ master ]
+  # push:
+  #   branches: [ master ]
 
 jobs:
   # NOTE: Turned off 2021-01-04 due to frequent errors.
