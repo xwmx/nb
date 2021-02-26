@@ -8800,21 +8800,64 @@ HEREDOC
     shift
   done
 
+  local _prepared_file_path="${_input_file_path:-}"
+
+  if ! _command_exists "pandoc"
+  then
+    _use_pandoc=0
+  fi
+
+  if [[ -n "${_input_file_path:-}" ]]
+  then
+    local _code_extensions=(
+      bib hs haml js jsx py rb rs sass scss sh vim yml
+    )
+
+    _code_extensions+=($(
+      pandoc --list-highlight-languages \
+        | sed -e "/html/d" -e "/latex/d" -e "/markdown/d"
+    ))
+
+    local _source_extension="${_input_file_path##*\.}"
+
+    if _contains "${_source_extension}" "${_code_extensions[@]:-}"
+    then
+      if ((_use_pandoc))
+      then
+        local _code_block_temp_path=
+        _code_block_temp_path="$(_temp file ".md" --touch)"
+
+        printf "${_BT}${_BT}${_BT}%s\\n%s\\n${_BT}${_BT}${_BT}\\n"  \
+          "${_source_extension}"                                    \
+          "$(cat "${_input_file_path:-}")" >> "${_code_block_temp_path:-}"
+      else
+        local _code_block_temp_path=
+        _code_block_temp_path="$(_temp file ".html" --touch)"
+
+        printf "<code>\\n%s\\n</code>\\n"  \
+          "$(cat "${_input_file_path:-}")" >> "${_code_block_temp_path:-}"
+      fi
+
+      _prepared_file_path="${_code_block_temp_path:-}"
+    fi
+  fi
+
+
   {
     # body
-    if ((_use_pandoc)) && _command_exists "pandoc"
+    if ((_use_pandoc))
     then
       if [[ -n "${_from:-}"           ]]
       then
         _pandoc_arguments+=("--from=${_from:-}")
-      elif [[ -z "${_source_path:-}"  ]]
+      elif [[ -z "${_prepared_file_path:-}"  ]]
       then
         _pandoc_arguments+=("--from=markdown+raw_html")
       fi
 
-      if [[ -n "${_input_file_path:-}"  ]]
+      if [[ -n "${_prepared_file_path:-}"  ]]
       then
-        pandoc "${_input_file_path:-}" "${_pandoc_arguments[@]:-}"
+        pandoc "${_prepared_file_path:-}" "${_pandoc_arguments[@]:-}"
       fi
 
       if [[ -n "${_input_string}"       ]]
@@ -8827,14 +8870,14 @@ HEREDOC
         pandoc "${_pandoc_arguments[@]:-}"
       fi
     else
-      if [[ -n "${_input_file_path:-}"  ]]
+      if [[ -n "${_prepared_file_path:-}"  ]]
       then
-        if _file_is_text "${_input_file_path}"
+        if _file_is_text "${_prepared_file_path}"
         then
-          cat "${_input_file_path}"
+          cat "${_prepared_file_path}"
         else
           cat <<HEREDOC
-File type not yet supported: ${_input_file_path##*.}
+File type not yet supported: ${_prepared_file_path##*.}
 HEREDOC
         fi
       fi
