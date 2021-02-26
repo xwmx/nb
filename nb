@@ -14945,7 +14945,7 @@ HEREDOC
 </form>
 HEREDOC
     } | {
-      _pandoc --render-to-html || :
+      _render
     }
   }
 

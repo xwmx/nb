@@ -66,7 +66,7 @@ export _S=" "
 
   printf "%s\\n" "${output}" | grep -q "cols=\"17\"># Example Title"
   printf "%s\\n" "${output}" | grep -q \
-    "<form action=\"/home:1?--edit&amp;--per-page=30&amp;--columns=20"
+    "<form${_NEWLINE}action=\"/home:1?--edit&--per-page=30--columns=20"
 
   printf "%s\\n" "${output}" | grep -q \
 "value=\"save\"> <span class=\"dim\">·</span> <span class=\"dim\">last: .*</span>"
@@ -122,7 +122,26 @@ export _S=" "
   [[ "${lines[3]}"  =~  Server:\ nb                           ]]
   [[ "${lines[4]}"  =~  Content-Type:\ text/html              ]]
 
-  [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1  ]]
+  printf "%s\\n" "${output}" | grep -q \
+"<h1 class=\"header-crumbs\"><a rel=\"noopener noreferrer\" href=\"http://lo"
+
+  printf "%s\\n" "${output}" | grep -q \
+"calhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"
+
+  printf "%s\\n" "${output}" | grep -q \
+" <span class=\"dim\">·</span> <a rel=\"noopener noreferrer\" href=\"http://lo"
+
+  printf "%s\\n" "${output}" | grep -q \
+"calhost:6789/home:?--per-page=.*&--columns=.*\">home</a> <span class=\"dim\""
+
+  printf "%s\\n" "${output}" | grep -q \
+">:</span> <a rel=\"noopener noreferrer\" href=\"http://localhost:6789/home:"
+
+  printf "%s\\n" "${output}" | grep -q \
+"1?--per-page=.*&--columns=.*\">1</a> <span class=\"dim\">·</span> <span cla"
+
+  printf "%s\\n" "${output}" | grep -q \
+"ss=\"dim\">editing</span></h1>"
 
   printf "%s\\n" "${output}" | grep -q "cols=\"67\"># Example Title"
 
@@ -174,14 +193,16 @@ export _S=" "
 
   # Prints output:
 
-  [[ "${lines[0]}"  =~  HTTP/1.0\ 200\ OK                     ]]
-  [[ "${lines[1]}"  =~  Date:\ .*                             ]]
-  [[ "${lines[2]}"  =~  Expires:\ .*                          ]]
-  [[ "${lines[3]}"  =~  Server:\ nb                           ]]
-  [[ "${lines[4]}"  =~  Content-Type:\ text/html              ]]
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 200\ OK                         ]]
+  [[ "${lines[1]}"  =~  Date:\ .*                                 ]]
+  [[ "${lines[2]}"  =~  Expires:\ .*                              ]]
+  [[ "${lines[3]}"  =~  Server:\ nb                               ]]
+  [[ "${lines[4]}"  =~  Content-Type:\ text/html                  ]]
 
-  [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1  ]]
-  [[ "${output}"    =~  \<form\ action=\"/home:1\?--edit      ]]
+  [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1      ]]
+
+  printf "%s\\n" "${output}" | grep -q \
+"<form${_NEWLINE}action=\"/home:1?--edit"
 
   printf "%s\\n" "${output}" | grep -q \
 "value=\"save\"> <span class=\"dim\">·</span> <span class=\"dim\">last: .*</span>"
@@ -240,7 +261,9 @@ export _S=" "
   [[ "${lines[4]}"  =~  Content-Type:\ text/html              ]]
 
   [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1  ]]
-  [[ "${output}"    =~  \<form\ action=\"/home:1\?--edit      ]]
+
+  printf "%s\\n" "${output}" | grep -q \
+"<form${_NEWLINE}action=\"/home:1?--edit"
 
   printf "%s\\n" "${output}" | grep -q \
 "value=\"save\"> <span class=\"dim\">·</span> <span class=\"dim\">last: .*</span>"
@@ -263,7 +286,9 @@ export _S=" "
   [[    "${status}"  -eq 0                                    ]]
 
   [[    "${output}"  =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1 ]]
-  [[    "${output}"  =~  \<form\ action=\"/home:1\?--edit     ]]
+
+  printf "%s\\n" "${output}" | grep -q \
+"<form${_NEWLINE}action=\"/home:1?--edit"
 
   printf "%s\\n" "${output}" | grep -q \
 "value=\"save\"> <span class=\"dim\">·</span> <span class=\"dim\">last: .*</span>"
