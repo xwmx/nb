@@ -1883,7 +1883,9 @@ next ❯
 
 `nb browse` is designed to make it easy to navigate within terminal
 browsers using only keyboard commands, with mouse interactions also
-supported.
+supported. The `nb browse` interface includes breadcrumbs that can be
+used to quickly navigate to back to parent folders, the current notebook,
+or jump to other notebooks.
 
 `nb browse` opens in [w3m](https://en.wikipedia.org/wiki/W3m) (recommended),
 [Links](https://en.wikipedia.org/wiki/Links_\(web_browser\)),
@@ -1913,10 +1915,6 @@ More example content:
 
 Items can also be browsed with [`nb show --browse`](#show) /
 [`nb show -b`](#show), which behaves identically.
-
-The `nb browse` interface includes breadcrumbs that can be used to
-quickly navigate to back to parent folders, the current notebook, or
-jump to other notebooks.
 
 `nb browse` is particularly useful for [bookmarks](#-bookmarks). Cached
 content is rendered in the web browser, and internal and external links
