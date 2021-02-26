@@ -8801,6 +8801,7 @@ HEREDOC
   done
 
   {
+    # body
     if ((_use_pandoc)) && _command_exists "pandoc"
     then
       if [[ -n "${_from:-}"           ]]
@@ -8849,10 +8850,12 @@ HEREDOC
       fi
     fi
   } | {
+    # head
     _render_print_head
 
     cat
   } | {
+    # footer / tail
     cat
 
     cat <<HEREDOC
