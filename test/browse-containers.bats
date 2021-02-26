@@ -96,7 +96,7 @@ abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
   [[ "${output}"    =~  abcdefghi…                ]]
 
   printf "%s\\n" "${output}" \
-    | grep -q "href=\"http://localhost:6789/home:1?--per-page=.*&amp;--columns=20\" class=\"list-item\""
+    | grep -q "href=\"http://localhost:6789/home:1?--per-page=.*&--columns=20\" class=\"list-item\""
 }
 
 # empty #######################################################################
@@ -116,7 +116,7 @@ abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
   [[ "${status}"  ==  0 ]]
 
   [[ "${output}"  =~  \
-\<h1\ class=\"header-crumbs\"\ id=\"nb-home-example-folder\"\>\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\> ]]
+\<h1\ class=\"header-crumbs\"\>\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\> ]]
   [[ "${output}"  =~  \
 .*·.*\ \<a.*\ href=\"http://localhost:6789/home:\?--per-page=.*\"\>home\</a\>\ .*:.*\              ]]
   [[ "${output}"  =~  \
@@ -140,7 +140,7 @@ abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
   [[ "${status}"  ==  0 ]]
 
   [[ "${output}"  =~  \
-\<h1\ class=\"header-crumbs\"\ id=\"nb-example-notebook\"\>\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>  ]]
+\<h1\ class=\"header-crumbs\"\>\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>  ]]
   [[ "${output}"  =~  \
 .*·.*\ \<a.*\ href=\"http://localhost:6789/Example%20Notebook:\?--per-page=.*\"\>Example\ Notebook\</a\>.*\</h1\>  ]]
 
@@ -174,23 +174,23 @@ abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
   [[ "${output}"  =~  \<\!DOCTYPE\ html\>                           ]]
 
   [[ "${output}"  =~  \
-\<h1\ class=\"header-crumbs\"\ id=\"nb-home\"\>.*\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\"\> ]]
+\<h1\ class=\"header-crumbs\"\>.*\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\"\>  ]]
   [[ "${output}"  =~  \
 href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\> ]]
   [[ "${output}"  =~  \
 .*·.*\ \<a.*\ href=\"http://localhost:6789/home:\?--per-page=.*\"\>home\</a\>.*\</h1\>    ]]
 
   [[ "${output}"  =~  \
-\<p\>\<a.*\ href=\"http://localhost:6789/home:3\?--per-page=.*\"\ class=\"list-item\"\>   ]]
-  [[ "${output}"  =~  .*\[.*home:3.*\].*${_S}📂${_S}Example${_S}Folder\</a\>\<br\ /\>     ]]
+\<a.*\ href=\"http://localhost:6789/home:3\?--per-page=.*\"\ class=\"list-item\"\>        ]]
+  [[ "${output}"  =~  .*\[.*home:3.*\].*${_S}📂${_S}Example${_S}Folder\</a\>\<br\>        ]]
 
   [[ "${output}"  =~  \
 \<a.*\ href=\"http://localhost:6789/home:2\?--per-page=.*\"\ class=\"list-item\"\>        ]]
-  [[ "${output}"  =~  .*\[.*home:2.*\].*${_S}Title${_S}Two\</a\>\<br\ /\>                 ]]
+  [[ "${output}"  =~  .*\[.*home:2.*\].*${_S}Title${_S}Two\</a\>\<br\>                    ]]
 
   [[ "${output}"  =~  \
 \<a.*\ href=\"http://localhost:6789/home:1\?--per-page=.*\"\ class=\"list-item\"\>        ]]
-  [[ "${output}"  =~  .*\[.*home:1.*\].*${_S}Title${_S}One\</a\>\<br\ /\>                 ]]
+  [[ "${output}"  =~  .*\[.*home:1.*\].*${_S}Title${_S}One\</a\>\<br\>                    ]]
 }
 
 @test "'browse <folder-selector>/' (slash) serves the list as rendered HTML with links to internal web server URLs." {
@@ -214,7 +214,7 @@ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</spa
   [[ "${status}"  ==  0 ]]
 
   printf "%s\\n" "${output}" | grep       -q  \
-"<h1 class=\"header-crumbs\" id=\"nb-home-example-folder\">.*<a.* href=\"http://localhost:6789/?--per-page=.*\"><span class=\"dim\">❯</span>nb</a>"
+"<h1 class=\"header-crumbs\">.*<a.* href=\"http://localhost:6789/?--per-page=.*\"><span class=\"dim\">❯</span>nb</a>"
 
   printf "%s\\n" "${output}" | grep       -q  \
 ".*·.* <a.* href=\"http://localhost:6789/home:?--per-page=.*\">home</a> .*:.*"
@@ -223,16 +223,16 @@ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</spa
 "<a.* href=\"http://localhost:6789/home:1/?--per-page=.*\">Example Folder</a> .*/.*</h1>"
 
   printf "%s\\n" "${output}" | grep       -q  \
-"<p><a.* href=\"http://localhost:6789/home:1/2?--per-page=.*\" class=\"list-item\">"
+"<a.* href=\"http://localhost:6789/home:1/2?--per-page=.*\" class=\"list-item\">"
 
   printf "%s\\n" "${output}" | grep       -q  \
-".*\[.*Example${_S}Folder/2.*\].*${_S}Title${_S}Two</a><br />"
+".*\[.*Example${_S}Folder/2.*\].*${_S}Title${_S}Two</a><br>"
 
   printf "%s\\n" "${output}" | grep       -q  \
 "<a.* href=\"http://localhost:6789/home:1/1?--per-page=.*\" class=\"list-item\">"
 
   printf "%s\\n" "${output}" | grep       -q  \
-".*\[.*Example${_S}Folder/1.*\].*${_S}Title${_S}One</a><br />"
+".*\[.*Example${_S}Folder/1.*\].*${_S}Title${_S}One</a><br>"
 }
 
 @test "'browse <folder-selector>' (no slash) serves the list as rendered HTML with links to internal web server URLs." {
@@ -256,19 +256,19 @@ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</spa
   [[ "${status}"  ==  0 ]]
 
   [[ "${output}"  =~  \
-\<h1\ class=\"header-crumbs\"\ id=\"nb-home-example-folder\"\>\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>  ]]
+\<h1\ class=\"header-crumbs\"\>\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>  ]]
   [[ "${output}"  =~  \
 .*·.*\ \<a.*\ href=\"http://localhost:6789/home:\?--per-page=.*\"\>home\</a\>\ .*:.*\             ]]
   [[ "${output}"  =~  \
 \<a.*\ href=\"http://localhost:6789/home:1/\?--per-page=.*\"\>Example\ Folder\</a\>\ .*/.*\</h1\> ]]
 
   [[ "${output}"  =~  \
-\<p\>\<a.*\ href=\"http://localhost:6789/home:1/2\?--per-page=.*\"\ class=\"list-item\"\>         ]]
-  [[ "${output}"  =~  .*\[.*Example${_S}Folder/2.*\].*${_S}Title${_S}Two\</a\>\<br\ /\>           ]]
+\<a.*\ href=\"http://localhost:6789/home:1/2\?--per-page=.*\"\ class=\"list-item\"\>              ]]
+  [[ "${output}"  =~  .*\[.*Example${_S}Folder/2.*\].*${_S}Title${_S}Two\</a\>\<br\>              ]]
 
   [[ "${output}"  =~  \
 \<a.*\ href=\"http://localhost:6789/home:1/1\?--per-page=.*\"\ class=\"list-item\"\>              ]]
-  [[ "${output}"  =~  .*\[.*Example${_S}Folder/1.*\].*${_S}Title${_S}One\</a\>\<br\ /\>           ]]
+  [[ "${output}"  =~  .*\[.*Example${_S}Folder/1.*\].*${_S}Title${_S}One\</a\>\<br\>              ]]
 }
 
 @test "'browse <notebook>:' serves the notebook contents as rendered HTML with links to internal web server URLs." {
@@ -294,15 +294,15 @@ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</spa
   [[ "${status}"  ==  0 ]]
 
   [[ "${output}"  =~  \
-\<h1\ class=\"header-crumbs\"\ id=\"nb-example-notebook\"\>\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\> ]]
+\<h1\ class=\"header-crumbs\"\>\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\> ]]
   [[ "${output}"  =~  \
 .*·.*\ \<a.*\ href=\"http://localhost:6789/Example%20Notebook:\?--per-page=.*\"\>Example\ Notebook\</a\>\</h1\> ]]
 
   [[ "${output}"  =~  \
-\<p\>\<a.*\ href=\"http://localhost:6789/Example%20Notebook:2\?--per-page=.*\"\ class=\"list-item\"\> ]]
-  [[ "${output}"  =~  .*\[.*Example${_S}Notebook:2.*\].*${_S}Title${_S}Two\</a\>\<br\ /\>             ]]
+\<a.*\ href=\"http://localhost:6789/Example%20Notebook:2\?--per-page=.*\"\ class=\"list-item\"\>  ]]
+  [[ "${output}"  =~  .*\[.*Example${_S}Notebook:2.*\].*${_S}Title${_S}Two\</a\>\<br\>            ]]
 
   [[ "${output}"  =~  \
-\<a.*\ href=\"http://localhost:6789/Example%20Notebook:1\?--per-page=.*\"\ class=\"list-item\"\>      ]]
-  [[ "${output}"  =~  .*\[.*Example${_S}Notebook:1.*\].*${_S}Title${_S}One\</a\>\<br\ /\>             ]]
+\<a.*\ href=\"http://localhost:6789/Example%20Notebook:1\?--per-page=.*\"\ class=\"list-item\"\>  ]]
+  [[ "${output}"  =~  .*\[.*Example${_S}Notebook:1.*\].*${_S}Title${_S}One\</a\>\<br\>            ]]
 }

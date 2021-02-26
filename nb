@@ -14734,6 +14734,7 @@ _browse() {
 
         local _url_params=
         _url_params="$(_get_id_selector "${_item_selector}" --notebook)"
+        _url_params="${_url_params//' '/%20}"
 
         if ((_terminal_browser))
         then
@@ -14770,24 +14771,25 @@ _browse() {
       printf "%s\\n" "$(_browse_render_header "${_pagination_arguments[@]:-}")"
 
       cat <<HEREDOC
-<p>
-  <form accept-charset="UTF-8" action="/${_link_selector}" id="search" method="get">
-    <label for="search-input">search:</label>
-    <input
-      autocapitalize="off"
-      autocomplete="off"
-      id="search-input"
-      name="--query"
-      placeholder="search"
-      type="text"
-      value="${_query:-}"
-    >
-    <i></i>
-    <input type="hidden" name="--page"      value="${_current_page}">
-    <input type="hidden" name="--per-page"  value="${_per_page}">
-  </form>
-</p>
+<form accept-charset="UTF-8" action="/${_link_selector}" id="search" method="get">
+  <label for="search-input">search:</label>
+  <input
+    autocapitalize="off"
+    autocomplete="off"
+    id="search-input"
+    name="--query"
+    placeholder="search"
+    type="text"
+    value="${_query:-}"
+  >
+  <i></i>
+  <input type="hidden" name="--page"      value="${_current_page}">
+  <input type="hidden" name="--per-page"  value="${_per_page}">
+</form>
+<br>
 HEREDOC
+
+      printf "<p>\\n"
 
       local _pagination_count=0
 
@@ -14798,6 +14800,8 @@ HEREDOC
 
         _pagination_count="$((_pagination_count+1))"
       done
+
+      printf "</p>\\n"
 
       if [[ -n "${_query:-}"                              ]] &&
          [[ "${_pagination_count}" -lt "${_per_page:-0}"  ]]
@@ -14847,7 +14851,7 @@ HEREDOC
         printf "</p>\\n"
       fi
     } | {
-      _pandoc --from html+raw_html --render-to-html
+      _render
     }
   }
 
@@ -15009,7 +15013,7 @@ HEREDOC
       _notebooks select "${_notebook_path}"
 
       _header_content+="\
- <a href=\"http://localhost:${NB_SERVER_PORT}/${_notebook_name}:${_url_params:-}\">${_notebook_name}</a>"
+ <a href=\"http://localhost:${NB_SERVER_PORT}/${_notebook_name//' '/%20}:${_url_params:-}\">${_notebook_name}</a>"
 
       local _relative_folder_path=
       local _selector_relative_folder_path=
