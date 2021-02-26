@@ -69,7 +69,7 @@ export _S=" "
     "<form action=\"/home:1?--edit&amp;--per-page=30&amp;--columns=20"
 
   printf "%s\\n" "${output}" | grep -q \
-"value=\"Save\"> <span class=\"dim\">·</span> <span class=\"dim\">Last: .*</span>"
+"value=\"save\"> <span class=\"dim\">·</span> <span class=\"dim\">last: .*</span>"
 }
 
 @test "GET to --edit URL without --columns parameter uses default value for textarea." {
@@ -127,7 +127,7 @@ export _S=" "
   printf "%s\\n" "${output}" | grep -q "cols=\"67\"># Example Title"
 
   printf "%s\\n" "${output}" | grep -q \
-"value=\"Save\"> <span class=\"dim\">·</span> <span class=\"dim\">Last: .*</span>"
+"value=\"save\"> <span class=\"dim\">·</span> <span class=\"dim\">last: .*</span>"
 }
 
 @test "GET to --edit URL prints form without updating note." {
@@ -184,7 +184,7 @@ export _S=" "
   [[ "${output}"    =~  \<form\ action=\"/home:1\?--edit      ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"value=\"Save\"> <span class=\"dim\">·</span> <span class=\"dim\">Last: .*</span>"
+"value=\"save\"> <span class=\"dim\">·</span> <span class=\"dim\">last: .*</span>"
 }
 
 # POST ########################################################################
@@ -243,7 +243,7 @@ export _S=" "
   [[ "${output}"    =~  \<form\ action=\"/home:1\?--edit      ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"value=\"Save\"> <span class=\"dim\">·</span> <span class=\"dim\">Last: .*</span>"
+"value=\"save\"> <span class=\"dim\">·</span> <span class=\"dim\">last: .*</span>"
 }
 
 # CLI #########################################################################
@@ -266,6 +266,6 @@ export _S=" "
   [[    "${output}"  =~  \<form\ action=\"/home:1\?--edit     ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"value=\"Save\"> <span class=\"dim\">·</span> <span class=\"dim\">Last: .*</span>"
+"value=\"save\"> <span class=\"dim\">·</span> <span class=\"dim\">last: .*</span>"
 }
 

@@ -1967,7 +1967,7 @@ with the form resized to fit the current terminal window:
 
 ```bash
 > nb browse text:formats/markdown/123 --edit
-❯nb · text : formats / markdown / 123 · Editing
+❯nb · text : formats / markdown / 123 · editing
 
 [# Daring Fireball: Markdown (daringfireball.net) ]
 [                                                 ]
@@ -1987,7 +1987,7 @@ with the form resized to fit the current terminal window:
 [## Content                                       ]
 [                                                 ]
 
-[Save] · Last: 2021-01-01 01:00:00
+[save] · last: 2021-01-01 01:00:00
 ```
 
 Terminal browsers can also be configured to use your editor.

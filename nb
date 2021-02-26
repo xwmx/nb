@@ -14475,7 +14475,7 @@ HEREDOC
   <br><br>
   <input
     type="submit"
-    value="Save"> <span class="dim">·</span> <span class="dim">Last: ${_last_saved_at}</span>
+    value="save"> <span class="dim">·</span> <span class="dim">last: ${_last_saved_at}</span>
 </form>
 HEREDOC
     } | {
@@ -14639,14 +14639,14 @@ HEREDOC
  <a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_params:-}\">${_selector_id:-}</a>"
 
         _header_content+=" <span class=\"dim\">${_bullet}</span>"
-        _header_content+=" <span class=\"dim\">Editing</span>"
+        _header_content+=" <span class=\"dim\">editing</span>"
       else
         _header_content+=" <span class=\"dim\">${_selector_id:-}</span>"
 
         if _file_is_text "${_selector:-}"
         then
           _header_content+=" <span class=\"dim\">${_bullet}</span>"
-          _header_content+=" <span class=\"dim\">[</span>"
+          # _header_content+=" <span class=\"dim\">[</span>"
 
           if [[ -z "${_url_params:-}" ]]
           then
@@ -14656,8 +14656,8 @@ HEREDOC
           fi
 
           _header_content+="\
-<a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_params:-}\">edit</a>"
-          _header_content+="<span class=\"dim\">]</span>"
+ <a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_params:-}\">edit</a>"
+          # _header_content+="<span class=\"dim\">]</span>"
         fi
       fi
     fi
