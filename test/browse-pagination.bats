@@ -5,8 +5,8 @@ load test_helper
 # non-breaking space
 export _S=" "
 
-# escaped &amp;
-export _AMP="\&amp\;"
+# configurable as escaped &amp; or &
+export _AMP="&"
 
 @test "'browse' includes pagination on links on listing page." {
   {
@@ -265,8 +265,9 @@ export _AMP="\&amp\;"
 
   # pagination links
 
+  [[    "${output}"  =~ \<p\ class=\"pagination\"\>      ]]
   [[    "${output}"  =~ \
-\<p\>\<a.*\ href=\"http://localhost:6789/home:\?--page=2\&amp\;--per-page=4${_AMP}--columns=.*\"\>next\ ❯\</a\>\</p\>  ]]
+\<a.*\ href=\"http://localhost:6789/home:\?--page=2${_AMP}--per-page=4${_AMP}--columns=.*\"\>next\ ❯\</a\>\</p\>  ]]
   [[ !  "${output}"  =~ ❮\ prev ]]
 
   # page 2
@@ -309,7 +310,7 @@ export _AMP="\&amp\;"
   # 6-3
 
   [[    "${output}"  =~  \
-\<p\>\<a.*\ href=\"http://localhost:6789/home:6\?--per-page=4${_AMP}--columns=.*\"\ class=\"list-item\"\>  ]]
+\<a.*\ href=\"http://localhost:6789/home:6\?--per-page=4${_AMP}--columns=.*\"\ class=\"list-item\"\>  ]]
   [[    "${output}"  =~  \
 .*\[.*home:6.*\].*${_S}${_S}Title${_S}Six\</a\>\<br\>    ]]
 
@@ -342,10 +343,11 @@ export _AMP="\&amp\;"
 
   # pagination links
 
+  [[    "${output}"  =~ \<p\ class=\"pagination\"\>      ]]
   [[    "${output}"  =~ \
-\<p\>\<a.*\ href=\"http://localhost:6789/home:\?--page=1\&amp\;--per-page=4${_AMP}--columns=.*\"\>❮\ prev\</a\>\ .*\·.*\   ]]
+\<a.*\ href=\"http://localhost:6789/home:\?--page=1${_AMP}--per-page=4${_AMP}--columns=.*\"\>❮\ prev\</a\>\ .*\·.*\   ]]
   [[    "${output}"  =~ \
-\<a.*\ href=\"http://localhost:6789/home:\?--page=3\&amp\;--per-page=4${_AMP}--columns=.*\"\>next\ ❯\</a\>\</p\>           ]]
+\<a.*\ href=\"http://localhost:6789/home:\?--page=3${_AMP}--per-page=4${_AMP}--columns=.*\"\>next\ ❯\</a\>\</p\>           ]]
 
   # page 3
 
@@ -409,7 +411,7 @@ export _AMP="\&amp\;"
   # 2-1
 
   [[    "${output}"  =~  \
-\<p\>\<a.*\ href=\"http://localhost:6789/home:2\?--per-page=4${_AMP}--columns=.*\"\ class=\"list-item\"\>  ]]
+\<a.*\ href=\"http://localhost:6789/home:2\?--per-page=4${_AMP}--columns=.*\"\ class=\"list-item\"\>  ]]
   [[    "${output}"  =~  \
 .*\[.*home:2.*\].*${_S}${_S}Title${_S}Two\</a\>\<br\>    ]]
 
@@ -420,8 +422,9 @@ export _AMP="\&amp\;"
 
   # pagination links
 
+  [[    "${output}"  =~ \<p\ class=\"pagination\"\>      ]]
   [[    "${output}"  =~ \
-\<p\>\<a.*\ href=\"http://localhost:6789/home:\?--page=2\&amp\;--per-page=4${_AMP}--columns=.*\"\>❮\ prev\</a\>\</p\>  ]]
+\<a.*\ href=\"http://localhost:6789/home:\?--page=2${_AMP}--per-page=4${_AMP}--columns=.*\"\>❮\ prev\</a\>\</p\>  ]]
   [[ !  "${output}"  =~ next\ ❯ ]]
 
   # page with list of items under pagination limit
@@ -435,7 +438,7 @@ export _AMP="\&amp\;"
   [[ "${output}"  =~ \<\!DOCTYPE\ html\>                    ]]
 
   [[ "${output}"  =~ \
-\<h1\ class=\"header-crumbs\"\ id=\"nb-home\"\>\<a.*\ href=\"http://localhost:6789/\?--per-page=11${_AMP}--columns=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\> ]]
+\<h1\ class=\"header-crumbs\"\>\<a.*\ href=\"http://localhost:6789/\?--per-page=11${_AMP}--columns=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\> ]]
   [[ "${output}"  =~ \
 .*·.*\ \<a.*\ href=\"http://localhost:6789/home:\?--per-page=11${_AMP}--columns=.*\"\>home\</a\>.*\</h1\>    ]]
 
@@ -495,6 +498,7 @@ export _AMP="\&amp\;"
 
   # pagination links
 
-  [[ !  "${output}"  =~ ❮\ prev ]]
-  [[ !  "${output}"  =~ next\ ❯ ]]
+  [[ !  "${output}"  =~ \<p\ class=\"pagination\"\> ]]
+  [[ !  "${output}"  =~ ❮\ prev                     ]]
+  [[ !  "${output}"  =~ next\ ❯                     ]]
 }
