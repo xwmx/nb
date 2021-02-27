@@ -8855,44 +8855,52 @@ HEREDOC
         _pandoc_arguments+=("--from=markdown+raw_html")
       fi
 
-      if [[ -n "${_prepared_file_path:-}"   ]]
-      then
-        pandoc "${_prepared_file_path:-}"   \
-          "${_pandoc_arguments[@]:-}" 2>/dev/null
-      fi
-
-      if [[ -n "${_input_string}"           ]]
-      then
-        printf "%s\\n" "${_input_string}"   \
-          | pandoc "${_pandoc_arguments[@]:-}" 2>/dev/null
-      fi
-
-      if _piped_input
-      then
-        pandoc "${_pandoc_arguments[@]:-}" 2>/dev/null
-      fi
-    else
-      if [[ -n "${_prepared_file_path:-}"   ]]
-      then
-        if _file_is_text "${_prepared_file_path}"
+      {
+        if _piped_input
         then
-          cat "${_prepared_file_path}"
-        else
-          cat <<HEREDOC
+          pandoc "${_pandoc_arguments[@]:-}" 2>/dev/null
+        fi
+
+        if [[ -n "${_prepared_file_path:-}" ]]
+        then
+          pandoc "${_prepared_file_path:-}" \
+            "${_pandoc_arguments[@]:-}" 2>/dev/null
+        fi
+      } | {
+        if [[ -n "${_input_string}"         ]]
+        then
+          printf "%s\\n" "${_input_string}" \
+            | pandoc "${_pandoc_arguments[@]:-}" 2>/dev/null
+        fi
+
+        cat
+      }
+    else
+      {
+        if _piped_input
+        then
+          cat
+        fi
+
+        if [[ -n "${_prepared_file_path:-}" ]]
+        then
+          if _file_is_text "${_prepared_file_path}"
+          then
+            cat "${_prepared_file_path}"
+          else
+            cat <<HEREDOC
 File type not yet supported: ${_prepared_file_path##*.}
 HEREDOC
+          fi
         fi
-      fi
+      } | {
+        if [[ -n "${_input_string}"         ]]
+        then
+          printf "%s\\n" "${_input_string}"
+        fi
 
-      if [[ -n "${_input_string}"           ]]
-      then
-        printf "%s\\n" "${_input_string}"
-      fi
-
-      if _piped_input
-      then
         cat
-      fi
+      }
     fi
   } | {
     # head
@@ -15195,47 +15203,45 @@ HEREDOC
         _notebooks current --path
     )"
 
-    if [[ "${_source_path:-}" =~ \.org$ ]]
+    if [[ "${_source_path:-}" =~ \.org$   ]]
     then # resolve Org [[wiki-style links]] before rendering to HTML
       {
         cat "${_source_path}"
       } | {
-        _resolve_links                                  \
-          "${_notebook_path}"                           \
-          "${_pagination_arguments[@]:-}"               \
-          --browse                                      \
+        _resolve_links                    \
+          "${_notebook_path}"             \
+          "${_pagination_arguments[@]:-}" \
+          --browse                        \
           --type org
       } | {
         # avoid pandoc bug with brackets in Org link descriptions
-        sed -E                                          \
-            -e "s/\]\[\[\[/\]\[••/g"                    \
+        sed -E                            \
+            -e "s/\]\[\[\[/\]\[••/g"      \
             -e "s/\]\]\]\]/••\]\]/g"
       } | {
-        _browse_render_header "${_source_path}" "${_pagination_arguments[@]:-}"
+        _browse_render_header \
+          "${_source_path}"   \
+          "${_pagination_arguments[@]:-}"
 
         cat
       } | {
         _render --from org --pandoc
       } | {
-        sed -E                                          \
-            -e "s/>••/>\[\[/g"                          \
+        sed -E                            \
+            -e "s/>••/>\[\[/g"            \
             -e "s/••</\]\]</g"
       }
     else # render non-Org to HTML before resolving [[wiki-style links]]
       {
-        local _header_temp_path=
-        _header_temp_path="$(_temp file ".html" --touch)"
-
-        _browse_render_header "${_source_path}"         \
-          "${_pagination_arguments[@]:-}"  >> "${_header_temp_path}"
-
-        _pandoc "${_source_path}"                       \
-          --include-before-body="${_header_temp_path}"  \
-          --render-to-html
+        _browse_render_header \
+          "${_source_path}"   \
+          "${_pagination_arguments[@]:-}"
       } | {
-        _resolve_links                                  \
-          "${_notebook_path}"                           \
-          "${_pagination_arguments[@]:-}"               \
+        _render "${_source_path}" --pandoc
+      } | {
+        _resolve_links                    \
+          "${_notebook_path}"             \
+          "${_pagination_arguments[@]:-}" \
           --browse
       }
     fi
