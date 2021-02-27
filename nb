@@ -15281,6 +15281,18 @@ HEREDOC
       _browse_respond_with 302 "${BASH_REMATCH[1]}"
     fi
 
+    # TODO: redirect wikilinks
+
+    # if [[ "${_request_uri}"   =~ \?--wikilinks=(.*)     ]]
+    # then
+    #   local _wikilink_target_url=
+    #   _wikilink_target_url="$(
+    #     _browse_redirect_wikilink "${BASH_REMATCH[1]}"
+    #   )"
+
+    #   _browse_respond_with 302 "${_wikilink_target_url}"
+    # fi
+
     # detect presence of parameters overriding browser type
 
     if [[ "${_request_uri}"     =~ --terminal           ]]
