@@ -28,14 +28,14 @@ export NB_SERVER_PORT=6789
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    ==  0                                   ]]
-  [[ "${#lines[@]}" ==  5                                   ]]
+  [[ "${status}"    ==  0                               ]]
+  [[ "${#lines[@]}" ==  5                               ]]
 
-  [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Temporary\ Redirect  ]]
-  [[ "${lines[1]}"  =~  Date:\ .*                           ]]
-  [[ "${lines[2]}"  =~  Expires:\ .*                        ]]
-  [[ "${lines[3]}"  =~  Server:\ nb                         ]]
-  [[ "${lines[4]}"  =~  Location:\ http://example.test      ]]
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Found            ]]
+  [[ "${lines[1]}"  =~  Date:\ .*                       ]]
+  [[ "${lines[2]}"  =~  Expires:\ .*                    ]]
+  [[ "${lines[3]}"  =~  Server:\ nb                     ]]
+  [[ "${lines[4]}"  =~  Location:\ http://example.test  ]]
 }
 
 # 404 #########################################################################
