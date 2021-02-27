@@ -15078,6 +15078,7 @@ HEREDOC
   #
   # Usage:
   #   _browse_respond_with <status-code> [<path> | <string>] [--headers]
+  #                        [--standard-input]
   #
   # Options:
   #   --headers  Only print headers.
@@ -15089,6 +15090,7 @@ HEREDOC
     local _only_headers=0
     local _path=
     local _status_code="${1:-}"
+    local _read_from_standard_input=0
     local _string=
 
     local _date=
@@ -15106,6 +15108,9 @@ HEREDOC
       case "${__arg:-}" in
         --*header*)
           _only_headers=1
+          ;;
+        --standard*input)
+          _read_from_standard_input=1
           ;;
         *)
           if [[     "${__arg:-}" =~ ^/  ]] &&
@@ -15155,7 +15160,10 @@ HEREDOC
     then
       printf "\\r\\n"
       {
-        if [[ -n "${_string:-}"     ]]
+        if ((_read_from_standard_input))
+        then
+          cat
+        elif [[ -n "${_string:-}"     ]]
         then
           printf "%s\\n" "${_string}" | _render
         elif [[ "${_path:-}" =~ ^/  ]]
