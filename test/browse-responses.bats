@@ -4,9 +4,9 @@ load test_helper
 
 export NB_SERVER_PORT=6789
 
-# 307 #########################################################################
+# 302 #########################################################################
 
-@test "'browse' with 'url=<url>' param responds with 307 redirect." {
+@test "'browse' with 'url=<url>' param responds with 302 redirect." {
   {
     "${_NB}" init
 
@@ -31,7 +31,7 @@ export NB_SERVER_PORT=6789
   [[ "${status}"    ==  0                                   ]]
   [[ "${#lines[@]}" ==  5                                   ]]
 
-  [[ "${lines[0]}"  =~  HTTP/1.0\ 307\ Temporary\ Redirect  ]]
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Temporary\ Redirect  ]]
   [[ "${lines[1]}"  =~  Date:\ .*                           ]]
   [[ "${lines[2]}"  =~  Expires:\ .*                        ]]
   [[ "${lines[3]}"  =~  Server:\ nb                         ]]

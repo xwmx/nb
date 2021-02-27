@@ -14310,7 +14310,6 @@ _browse() {
     case "${_status_code}" in
       200) printf "OK\\n"                     ;;
       302) printf "Found\\n"                  ;;
-      307) printf "Temporary Redirect\\n"     ;;
       400) printf "Bad Request\\n"            ;;
       403) printf "Forbidden\\n"              ;;
       404) printf "Not Found\\n"              ;;
@@ -15131,7 +15130,7 @@ HEREDOC
       # then
       #   _response_headers+=("Content-Length: ${_content_length}")
       # fi
-    elif _contains "${_status_code:-}" "302" "307"
+    elif _contains "${_status_code:-}" "302"
     then
       _only_headers=1
       _response_headers+=("Location: $(_get_uri --decode "${2:-}")")
@@ -15279,7 +15278,7 @@ HEREDOC
 
     if [[ "${_request_uri}"     =~ \?url=(.*)           ]]
     then
-      _browse_respond_with 307 "${BASH_REMATCH[1]}"
+      _browse_respond_with 302 "${BASH_REMATCH[1]}"
     fi
 
     # detect presence of parameters overriding browser type
