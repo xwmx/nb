@@ -68,7 +68,7 @@ export _S=" "
   [[ "${output}"  =~  \
 href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>         ]]
   [[ "${output}"  =~  \
-\<h1\ class=\"header-crumbs\"\ id=\"nb-home-example-folder\"\>.*\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\"\> ]]
+\<h1\ class=\"header-crumbs\"\>.*\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\"\>          ]]
   [[ "${output}"  =~  \
 .*·.*\ \<a.*\ href=\"http://localhost:6789/home:\?--per-page=.*\"\>home\</a\>\ .*:.*\             ]]
   [[ "${output}"  =~  \
@@ -84,7 +84,7 @@ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</spa
   [[ "${status}"  ==  0 ]]
 
   [[ "${output}"  =~  \
-\<h1\ class=\"header-crumbs\"\ id=\"nb-home-1\"\>\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\   ]]
+\<h1\ class=\"header-crumbs\"\>\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\     ]]
   [[ "${output}"  =~  \
 \<span\ class=\"dim\"\>❯\</span\>nb\</a\>                               ]]
   [[ "${output}"  =~  \
@@ -93,9 +93,9 @@ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</spa
 \<a.*\ href=\"http://localhost:6789/home:2/\?--per-page=.*\"\>1\</a\>\ .*/.*\</h1\>     ]]
 
   [[ "${output}"  =~  \
-\<p\>\<a.*\ href=\"http://localhost:6789/home:2/1\?--per-page=.*\"\ class=\"list-item\"\>.*\[.*1/1.*\].*  ]]
+\<a.*\ href=\"http://localhost:6789/home:2/1\?--per-page=.*\"\ class=\"list-item\"\>.*\[.*1/1.*\].*  ]]
   [[ "${output}"  =~  \
-class=\"list-item\"\>.*\[.*1/1.*\].*${_S}File${_S}One.md\</a\>\<br\ /\> ]]
+class=\"list-item\"\>.*\[.*1/1.*\].*${_S}File${_S}One.md\</a\>\<br\>    ]]
 }
 
 # headers #######################################################################

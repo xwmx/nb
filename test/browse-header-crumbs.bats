@@ -227,7 +227,7 @@ load test_helper
   [[ "${status}"    == 0  ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<h1 class=\"header-crumbs\" id=\"nb-home-example-folder-sample-folder\">"
+"<h1 class=\"header-crumbs\">"
 }
 
 @test "'browse <notebook-path>/<folder>/<filename>' displays header crumbs with folder and id for file." {

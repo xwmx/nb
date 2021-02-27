@@ -8842,7 +8842,6 @@ HEREDOC
     fi
   fi
 
-
   {
     # body
     if ((_use_pandoc))
@@ -8904,6 +8903,7 @@ HEREDOC
     cat
 
     cat <<HEREDOC
+
 </body>
 </html>
 HEREDOC
@@ -9026,9 +9026,9 @@ _resolve_links() {
       local _pattern=
 
       case "${_input_type:-}" in
-        html) _pattern="<a\ href=\"${_replacement_url:-}\">\#\\2<\/a>"  ;;
-        org)  _pattern="[[${_replacement_url:-}][\#\\2]]"               ;;
-        *)    _pattern="\#\\2"                                          ;;
+        html) _pattern="<a\ href=\"${_replacement_url//' '/%20}\">\#\\2<\/a>" ;;
+        org)  _pattern="[[${_replacement_url//' '/%20}][\#\\2]]"              ;;
+        *)    _pattern="\#\\2"                                                ;;
       esac
 
       if [[ "${_input_type:-}" == "html" ]]
@@ -9088,11 +9088,11 @@ _resolve_links() {
           then
             _link="[[${_selector:-}]]"
           else
-            local _target_url="http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_params_pattern:-}"
+            local _target_url="http://localhost:${NB_SERVER_PORT}/${_id_selector}${_url_params_pattern:-}"
 
             case "${_input_type:-}" in
               html)
-                _link="<a href=\"${_target_url:-}\">[[${_selector:-}]]</a>"
+                _link="<a href=\"${_target_url//' '/%20}\">[[${_selector:-}]]</a>"
                 ;;
               org)
                 _link="[[${_target_url:-}][[[${_selector:-}]]]]"
@@ -9113,7 +9113,7 @@ _resolve_links() {
         else
           case "${_input_type:-}" in
             html)
-              _link="<a href=\"file://${_link_path:-}\">[[${_selector:-}]]</a>"
+              _link="<a href=\"file://${_link_path//' '/%20}\">[[${_selector:-}]]</a>"
               ;;
             org)
               _link="[[file://${_link_path:-}][[[${_selector:-}]]]]"
@@ -14729,8 +14729,8 @@ _browse() {
         _display_item="${_display_item//' '/${_NBSP}}"
 
         # shellcheck disable=SC2140
-        _display_item="${_display_item/\[/<span class="dim">[</span><span class="identifier">}"
-        _display_item="${_display_item/\]/</span><span class="dim">]</span>}"
+        _display_item="${_display_item/\[/<span class=\"dim\">[</span><span class=\"identifier\">}"
+        _display_item="${_display_item/\]/</span><span class=\"dim\">]</span>}"
 
         local _url_params=
         _url_params="$(_get_id_selector "${_item_selector}" --notebook)"
@@ -14752,6 +14752,7 @@ _browse() {
 
       local _link_selector=
       _link_selector="$(_get_id_selector "${_target_path%/}")"
+      _link_selector="${_link_selector//' '/%20}"
 
       local _print_prev=0
 
@@ -15299,24 +15300,24 @@ HEREDOC
         then
           _first=0
 
-          printf --                               \
-            "[%s](http://localhost:%s/%s:%s)"     \
-            "${__name//\ /${_NBSP}}"              \
-            "${NB_SERVER_PORT}"                   \
-            "${__name}"                           \
-            "${_url_params:-}"
+          printf --                                             \
+            "<a href=\"http://localhost:%s/%s:%s\">%s</a>"      \
+            "${NB_SERVER_PORT}"                                 \
+            "${__name//' '/%20}"                                \
+            "${_url_params:-}"                                  \
+            "${__name//\ /${_NBSP}}"
         else
-          printf --                               \
-            " %s [%s](http://localhost:%s/%s:%s)" \
-            "${_separator}"                       \
-            "${__name//\ /${_NBSP}}"              \
-            "${NB_SERVER_PORT}"                   \
-            "${__name}"                           \
-            "${_url_params:-}"
+          printf --                                             \
+            " %s <a href=\"http://localhost:%s/%s:%s\">%s</a>"  \
+            "${_separator}"                                     \
+            "${NB_SERVER_PORT}"                                 \
+            "${__name//' '/%20}"                                \
+            "${_url_params:-}"                                  \
+            "${__name//\ /${_NBSP}}"
         fi
       done
     } | {
-      _pandoc --render-to-html || :
+      _render
     }
   }
 

@@ -310,7 +310,7 @@ HEREDOC
     'one: <a.* href="http://localhost:6789/home:2?--per-page.*&--columns=.*">\[\[Root Title Two\]\]</a>'
 
   printf "%s\\n" "${output}" | grep -q \
-    'example <a.* href="http://localhost:6789/Example Notebook:1/1?--per-page.*&--columns=.*">\[\[Example Notebook:Example Folder/1\]\]</a> content'
+    'example <a.* href="http://localhost:6789/Example%20Notebook:1/1?--per-page.*&--columns=.*">\[\[Example Notebook:Example Folder/1\]\]</a> content'
 
   printf "%s\\n" "${output}" | grep -q \
     'content <a.* href="http://localhost:6789/home:3/1?--per-page.*&--columns=.*">\[\[3/1\]\]</a> here'
@@ -358,7 +358,7 @@ HEREDOC
     'one: <a.* href="http://localhost:6789/home:2?--per-page.*&--columns=.*">\[\[Root Title Two\]\]</a>'
 
   printf "%s\\n" "${output}" | grep -q \
-    'example <a.* href="http://localhost:6789/Example Notebook:1/1?--per-page.*&--columns=.*">\[\[Example Notebook:Example Folder/1\]\]</a> content'
+    'example <a.* href="http://localhost:6789/Example%20Notebook:1/1?--per-page.*&--columns=.*">\[\[Example Notebook:Example Folder/1\]\]</a> content'
 
   printf "%s\\n" "${output}" | grep -q 'content \[\[2/1\]\] here'
 }
@@ -391,11 +391,11 @@ HEREDOC
   [[ "${status}" -eq 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-    'link one: <a.* href="http://localhost:6789/Example Notebook:1/1?--per-page.*&--columns=.*">\[\[Example Notebook:Example Folder/1\]\]</a>'
+    'link one: <a.* href="http://localhost:6789/Example%20Notebook:1/1?--per-page.*&--columns=.*">\[\[Example Notebook:Example Folder/1\]\]</a>'
 
 
   printf "%s\\n" "${output}" | grep -q -v\
-    'example <a.* href="http://localhost:6789/Example Notebook:1/1?--per-page.*&--columns=.*">\[\[Example Notebook:Example Folder/1\]\]</a>'
+    'example <a.* href="http://localhost:6789/Example%20Notebook:1/1?--per-page.*&--columns=.*">\[\[Example Notebook:Example Folder/1\]\]</a>'
 }
 
 @test "'browse <selector>' resolves wiki-style links in a different arrangement." {
@@ -453,8 +453,8 @@ HEREDOC
     '<a.* href="http://localhost:6789/home:3/1?--per-page.*&--columns=.*">\[\[Sample Folder/Nested Title One\]\]</a>'
 
   printf "%s\\n" "${output}" | grep -q \
-    '<a.* href="http://localhost:6789/Example Notebook:2?--per-page.*&--columns=.*">\[\[Example Notebook:File Two.md\]\]</a>'
+    '<a.* href="http://localhost:6789/Example%20Notebook:2?--per-page.*&--columns=.*">\[\[Example Notebook:File Two.md\]\]</a>'
 
   printf "%s\\n" "${output}" | grep -q \
-    '<a.* href="http://localhost:6789/Example Notebook:3/1?--per-page.*&--columns=.*">\[\[Example Notebook:Example Folder/1\]\]</a>'
+    '<a.* href="http://localhost:6789/Example%20Notebook:3/1?--per-page.*&--columns=.*">\[\[Example Notebook:Example Folder/1\]\]</a>'
 }

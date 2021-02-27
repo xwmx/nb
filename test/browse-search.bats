@@ -35,11 +35,11 @@ export _S=" "
   [[ !  "${output}"   =~ Title\ One ]]
 
   [[    "${output}"   =~  \
-\<p\>\<a.*\ href=\"http://localhost:6789/home:2\?--per-page=.*\"\ class=\"list-item\"\> ]]
+\<a.*\ href=\"http://localhost:6789/home:2\?--per-page=.*\"\ class=\"list-item\"\>    ]]
   [[    "${output}"   =~   \
-class=\"list-item\"\>\<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>   ]]
+class=\"list-item\"\>\<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\> ]]
   [[    "${output}"   =~   \
-identifier\"\>2\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Two\</a\>\<br\ /\>   ]]
+identifier\"\>2\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Two\</a\>\<br\>    ]]
 
   {
     (ncat                               \
@@ -61,11 +61,11 @@ identifier\"\>2\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Two\</a\>\<
   [[ !  "${output}"   =~ Title\ One ]]
 
   [[    "${output}"   =~  \
-\<p\>\<a.*\ href=\"http://localhost:6789/home:2\?--per-page=.*\"\ class=\"list-item\"\> ]]
+\<a.*\ href=\"http://localhost:6789/home:2\?--per-page=.*\"\ class=\"list-item\"\>    ]]
   [[    "${output}"   =~   \
-class=\"list-item\"\>\<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>   ]]
+class=\"list-item\"\>\<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\> ]]
   [[    "${output}"   =~   \
-identifier\"\>2\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Two\</a\>\<br\ /\>   ]]
+identifier\"\>2\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Two\</a\>\<br\>    ]]
 }
 
 # no matches ##################################################################
@@ -89,7 +89,7 @@ identifier\"\>2\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Two\</a\>\<
     "Not found: non-matching-query"
 
   printf "%s\\n" "${output}" | grep   -q \
-    "placeholder=\"search\" type=\"text\" value=\"non-matching-query\">"
+    "placeholder=\"search\"${_NEWLINE}type=\"text\"${_NEWLINE}value=\"non-matching-query\">"
 }
 
 # search form #################################################################
@@ -150,11 +150,11 @@ identifier\"\>2\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Two\</a\>\<
   [[ !  "${output}"   =~ Title\ One ]]
 
   [[    "${output}"   =~  \
-\<p\>\<a.*\ href=\"http://localhost:6789/home:2\?--per-page=.*\"\ class=\"list-item\"\> ]]
+\<a.*\ href=\"http://localhost:6789/home:2\?--per-page=.*\"\ class=\"list-item\"\>    ]]
   [[    "${output}"   =~   \
-class=\"list-item\"\>\<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>   ]]
+class=\"list-item\"\>\<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\> ]]
   [[    "${output}"   =~   \
-identifier\"\>2\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Two\</a\>\<br\ /\>   ]]
+identifier\"\>2\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Two\</a\>\<br\>    ]]
 }
 
 @test "'browse --container --query' performs search." {
@@ -175,11 +175,11 @@ identifier\"\>2\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Two\</a\>\<
   [[ !  "${output}"   =~ Title\ One ]]
 
   [[    "${output}"   =~  \
-\<p\>\<a.*\ href=\"http://localhost:6789/home:2\?--per-page=.*\"\ class=\"list-item\"\> ]]
+\<a.*\ href=\"http://localhost:6789/home:2\?--per-page=.*\"\ class=\"list-item\"\>    ]]
   [[    "${output}"   =~   \
-class=\"list-item\"\>\<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>   ]]
+class=\"list-item\"\>\<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\> ]]
   [[    "${output}"   =~   \
-identifier\"\>2\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Two\</a\>\<br\ /\>   ]]
+identifier\"\>2\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Two\</a\>\<br\>    ]]
 }
 
 @test "'browse --query' performs search." {
@@ -201,16 +201,16 @@ identifier\"\>2\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Two\</a\>\<
     "Title One"
 
   printf "%s\\n" "${output}" | grep     -q \
-    "placeholder=\"search\" type=\"text\" value=\"abcde\">"
+    "placeholder=\"search\"${_NEWLINE}type=\"text\"${_NEWLINE}value=\"abcde\">"
 
   printf "%s\\n" "${output}" | grep     -q \
-    "<p><a.* href=\"http://localhost:6789/home:2?--per-page=.*\" class=\"list-item\">"
+    "<a.* href=\"http://localhost:6789/home:2?--per-page=.*\" class=\"list-item\">"
 
   printf "%s\\n" "${output}" | grep     -q \
     "class=\"list-item\"><span class=\"dim\">\[</span><span class=\"identifier\">"
 
   printf "%s\\n" "${output}" | grep     -q \
-    "identifier\">2</span><span class=\"dim\">\]</span> Title Two</a><br />"
+    "identifier\">2</span><span class=\"dim\">\]</span> Title Two</a><br>"
 }
 
 @test "'browse --query <#hashtag>' performs search." {
@@ -232,16 +232,16 @@ identifier\"\>2\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Two\</a\>\<
     "Title One"
 
   printf "%s\\n" "${output}" | grep     -q \
-    "placeholder=\"search\" type=\"text\" value=\"#abcde\">"
+    "placeholder=\"search\"${_NEWLINE}type=\"text\"${_NEWLINE}value=\"#abcde\">"
 
   printf "%s\\n" "${output}" | grep     -q \
-    "<p><a.* href=\"http://localhost:6789/home:2?--per-page=.*\" class=\"list-item\">"
+    "<a.* href=\"http://localhost:6789/home:2?--per-page=.*\" class=\"list-item\">"
 
   printf "%s\\n" "${output}" | grep     -q \
     "class=\"list-item\"><span class=\"dim\">\[</span><span class=\"identifier\">"
 
   printf "%s\\n" "${output}" | grep     -q \
-    "identifier\">2</span><span class=\"dim\">\]</span> Title Two</a><br />"
+    "identifier\">2</span><span class=\"dim\">\]</span> Title Two</a><br>"
 }
 
 @test "'browse --query' performs paginated search." {
