@@ -276,6 +276,8 @@ export _S=" "
     "${_NB}" init
 
     "${_NB}" add --title "Example Title" --content "Example content."
+
+    sleep 1
   }
 
   run "${_NB}" browse 1 --edit --print

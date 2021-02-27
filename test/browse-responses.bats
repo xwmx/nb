@@ -43,6 +43,8 @@ export NB_SERVER_PORT=6789
 @test "'browse' renders 404 when not found." {
   {
     "${_NB}" init
+
+    sleep 1
   }
 
   run "${_NB}" browse no-matching-selector --print
@@ -64,6 +66,8 @@ export NB_SERVER_PORT=6789
     "${_NB}" init
 
     "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/example.pdf"
+
+    sleep 1
   }
 
   run "${_NB}" browse 1 --print
@@ -87,6 +91,8 @@ export NB_SERVER_PORT=6789
       --content "Example content."                \
       --encrypt                                   \
       --password password
+
+    sleep 1
   }
 
   run "${_NB}" browse 1 --print
@@ -109,6 +115,8 @@ export NB_SERVER_PORT=6789
       --content "Example content."                \
       --encrypt                                   \
       --password password
+
+    sleep 1
   }
 
   run "${_NB}" browse 1/1 --print

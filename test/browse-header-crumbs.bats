@@ -21,6 +21,8 @@ load test_helper
       | "${_NB}" add "Example Folder/File One.odt"
 
     [[ -f "${NB_DIR}/home/Example Folder/File One.odt" ]]
+
+    sleep 1
   }
 
   run "${_NB}" browse 2/2 --print

@@ -12,6 +12,8 @@ export _S=" "
 @test "'browse' sets HTML title." {
   {
     "${_NB}" init
+
+    sleep 1
   }
 
   run "${_NB}" browse --print
@@ -31,6 +33,8 @@ export _S=" "
 @test "'browse' includes application styles." {
   {
     "${_NB}" init
+
+    sleep 1
   }
 
   run "${_NB}" browse --print
@@ -56,6 +60,8 @@ export _S=" "
 
     [[ -d "${NB_DIR}/home/Example Folder" ]]
     [[ -f "${NB_DIR}/home/1/File One.md"  ]]
+
+    sleep 1
   }
 
   run "${_NB}" browse 1/ --print
@@ -107,6 +113,8 @@ class=\"list-item\"\>.*\[.*1/1.*\].*${_S}File${_S}One.md\</a\>\<br\>    ]]
     "${_NB}" add  "Example File.md"             \
       --title     "Example Title"               \
       --content   "Example content."
+
+    sleep 1
   }
 
   run "${_NB}" browse 1 --print --headers
