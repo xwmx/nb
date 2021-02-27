@@ -41,6 +41,7 @@ export _AMP="&"
     [[ !  -e "${NB_DIR}/home"           ]]
   }
 
+  sleep 1
   run "${_NB}" browse --print --per-page 2 --terminal
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -101,6 +102,7 @@ export _AMP="&"
     [[ !  -e "${NB_DIR}/home"           ]]
   }
 
+  sleep 1
   run "${_NB}" browse 1 --print --per-page 2 --terminal
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -157,6 +159,7 @@ export _AMP="&"
     [[ !  -e "${NB_DIR}/home"           ]]
   }
 
+  sleep 1
   run "${_NB}" browse --notebooks --print --per-page 2 --terminal
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -193,6 +196,7 @@ export _AMP="&"
     done
   }
 
+  sleep 1
   run "${_NB}" browse --print --per-page 4
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -272,6 +276,7 @@ export _AMP="&"
 
   # page 2
 
+  sleep 1
   run "${_NB}" browse --print --per-page 4 --page 2
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -351,6 +356,7 @@ export _AMP="&"
 
   # page 3
 
+  sleep 1
   run "${_NB}" browse --print --per-page 4 --page 3
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -429,6 +435,7 @@ export _AMP="&"
 
   # page with list of items under pagination limit
 
+  sleep 1
   run "${_NB}" browse --print --per-page 11
 
   printf "\${status}: '%s'\\n" "${status}"
