@@ -14507,8 +14507,6 @@ _browse() {
         _print_next=1
       fi
 
-      printf "%s\\n" "$(_browse_render_header "${_pagination_arguments[@]:-}")"
-
       cat <<HEREDOC
 <form accept-charset="UTF-8" action="/${_link_selector}" id="search" method="get">
   <label for="search-input">search:</label>
@@ -14590,6 +14588,10 @@ HEREDOC
         printf "</p>\\n"
       fi
     } | {
+      printf "%s\\n" "$(_browse_render_header "${_pagination_arguments[@]:-}")"
+
+      cat
+    } | {
       _render
     }
   }
@@ -14659,13 +14661,6 @@ HEREDOC
     fi
 
     {
-      printf "%s\\n" "$(
-        _browse_render_header             \
-          "${_source_path}"               \
-          "${_pagination_arguments[@]:-}" \
-          --edit
-      )"
-
       # TODO: https://stackoverflow.com/a/15844977
       cat <<HEREDOC
 <form
@@ -14683,6 +14678,15 @@ HEREDOC
     value="save"> <span class="dim">·</span> <span class="dim">last: ${_last_saved_at}</span>
 </form>
 HEREDOC
+    } | {
+      printf "%s\\n" "$(
+        _browse_render_header             \
+          "${_source_path}"               \
+          "${_pagination_arguments[@]:-}" \
+          --edit
+      )"
+
+      cat
     } | {
       _render
     }
@@ -14948,9 +14952,11 @@ HEREDOC
             -e "s/\]\[\[\[/\]\[••/g"      \
             -e "s/\]\]\]\]/••\]\]/g"
       } | {
-      _browse_render_header               \
-          "${_source_path}"               \
-          "${_pagination_arguments[@]:-}"
+        printf "%s\\n" "$(
+          _browse_render_header           \
+            "${_source_path}"             \
+            "${_pagination_arguments[@]:-}"
+        )"
 
         cat
       } | {
@@ -14962,9 +14968,11 @@ HEREDOC
       }
     else # render non-Org to HTML before resolving [[wiki-style links]]
       {
-        _browse_render_header             \
-          "${_source_path}"               \
-          "${_pagination_arguments[@]:-}"
+        printf "%s\\n" "$(
+          _browse_render_header           \
+            "${_source_path}"             \
+            "${_pagination_arguments[@]:-}"
+        )"
       } | {
         _render "${_source_path}" --pandoc
       } | {
@@ -15026,8 +15034,6 @@ HEREDOC
     _notebook_names=($(_notebooks --names --unarchived --no-color))
 
     {
-      printf "%s\\n" "$(_browse_render_header "${_pagination_arguments[@]:-}")"
-
       printf "<p>"
 
       local _first=1
@@ -15059,7 +15065,11 @@ HEREDOC
 
       done
 
-      printf "</p>"
+      printf "</p>\\n"
+    } | {
+      printf "%s\\n" "$(_browse_render_header "${_pagination_arguments[@]:-}")"
+
+      cat
     } | {
       _render
     }
@@ -15541,11 +15551,12 @@ HEREDOC
   local _only_serve=0
   local _open_gui=0
   local _print_browse_render_container=0
+  local _print_browse_render_edit=0
   local _print_browse_render_header=0
   local _print_browse_render_item=0
+  local _print_browse_render_notebooks=0
   local _print_headers=0
   local _print_output=0
-  local _print_browse_render_edit=0
   local _search_query=
   local _selector=
   local _target_page=
@@ -15592,6 +15603,9 @@ HEREDOC
       --render*edit)
         _print_browse_render_edit=1
         ;;
+      --render*notebooks)
+        _print_browse_render_notebooks=1
+        ;;
       --respond)
         _browse_respond
         exit 0
@@ -15614,14 +15628,15 @@ HEREDOC
     shift
   done
 
-  if [[ -z "${_selector:-}" ]] && ! ((_browse_notebooks))
+  if [[ -z "${_selector:-}" ]]  &&
+     ! ((_browse_notebooks))    && ! ((_print_browse_render_notebooks))
   then
     _selector="$(_notebooks current --name --no-color):"
   fi
 
   local _arguments=()
 
-  if ! ((_browse_notebooks))
+  if ! ((_browse_notebooks)) && ! ((_print_browse_render_notebooks))
   then
     _arguments+=("$(
       _show "${_selector:-}" --path 2>/dev/null || :
@@ -15722,6 +15737,13 @@ HEREDOC
     exit 0
   fi
 
+  if ((_print_browse_render_edit))
+  then
+    _browse_render_edit "${_arguments[@]:-}"
+
+    exit 0
+  fi
+
   if ((_print_browse_render_item))
   then
     _browse_render_item "${_arguments[@]:-}"
@@ -15729,9 +15751,9 @@ HEREDOC
     exit 0
   fi
 
-  if ((_print_browse_render_edit))
+  if ((_print_browse_render_notebooks))
   then
-    _browse_render_edit "${_arguments[@]:-}"
+    _browse_render_notebooks "${_arguments[@]:-}"
 
     exit 0
   fi
