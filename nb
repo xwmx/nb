@@ -15290,6 +15290,8 @@ HEREDOC
     {
       printf "%s\\n" "$(_browse_render_header "${_pagination_arguments[@]:-}")"
 
+      printf "<p>"
+
       local _first=1
       local _separator="<span class=\"dim\">·</span>"
       local _test_line=
@@ -15316,7 +15318,10 @@ HEREDOC
             "${_url_params:-}"                                  \
             "${__name//\ /${_NBSP}}"
         fi
+
       done
+
+      printf "</p>"
     } | {
       _render
     }

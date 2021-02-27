@@ -45,16 +45,16 @@ export _S=" "
 "</h1>"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<p><a.* href=\"http://localhost:6789/Demo%20Notebook:?--per-page=.*&amp;--columns=.*\">Demo${_S}Notebook</a> .*·.*"
+"<p><a.* href=\"http://localhost:6789/Demo%20Notebook:?--per-page=.*&--columns=.*\">Demo${_S}Notebook</a> .*·.*"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<a.* href=\"http://localhost:6789/Example%20Notebook:?--per-page=.*&amp;--columns=.*\">Example${_S}Notebook</a> .*·.*"
+"<a.* href=\"http://localhost:6789/Example%20Notebook:?--per-page=.*&--columns=.*\">Example${_S}Notebook</a> .*·.*"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<a.* href=\"http://localhost:6789/Sample%20Notebook:?--per-page=.*&amp;--columns=.*\">Sample${_S}Notebook</a> .*·.*"
+"<a.* href=\"http://localhost:6789/Sample%20Notebook:?--per-page=.*&--columns=.*\">Sample${_S}Notebook</a> .*·.*"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<a.* href=\"http://localhost:6789/Test%20Notebook:?--per-page=.*&amp;--columns=.*\">Test${_S}Notebook</a></p>"
+"<a.* href=\"http://localhost:6789/Test%20Notebook:?--per-page=.*&--columns=.*\">Test${_S}Notebook</a></p>"
 }
 
 @test "GET to 'browse --notebooks' URL serves the list of unarchived notebooks as a rendered HTML page with links to internal web server URLs without dimensional parameters." {
