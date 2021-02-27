@@ -14948,8 +14948,8 @@ HEREDOC
             -e "s/\]\[\[\[/\]\[••/g"      \
             -e "s/\]\]\]\]/••\]\]/g"
       } | {
-        _browse_render_header \
-          "${_source_path}"   \
+      _browse_render_header               \
+          "${_source_path}"               \
           "${_pagination_arguments[@]:-}"
 
         cat
@@ -14962,8 +14962,8 @@ HEREDOC
       }
     else # render non-Org to HTML before resolving [[wiki-style links]]
       {
-        _browse_render_header \
-          "${_source_path}"   \
+        _browse_render_header             \
+          "${_source_path}"               \
           "${_pagination_arguments[@]:-}"
       } | {
         _render "${_source_path}" --pandoc
