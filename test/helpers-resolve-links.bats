@@ -344,10 +344,10 @@ load test_helper
     [[ "${status}"  -eq 0                 ]]
 
     printf "%s\\n" "${output}" | grep -q \
-      "Selector link one: <a.* href=\"file://${NB_DIR}/home/Example Folder/Example Nested File One.md\">\[\[home:2/1\]\]</a> •"
+      "Selector link one: <a.* href=\"file://${NB_DIR}/home/Example%20Folder/Example%20Nested%20File%20One.md\">\[\[home:2/1\]\]</a> •"
 
     printf "%s\\n" "${output}" | grep -q \
-      "Selector link two: <a.* href=\"file://${NB_DIR}/home/Root File One.md\">\[\[Root Title One\]\]</a> •"
+      "Selector link two: <a.* href=\"file://${NB_DIR}/home/Root%20File%20One.md\">\[\[Root Title One\]\]</a> •"
 
     printf "%s\\n" "${output}" | grep -q \
       "Tag one: #tag_1 •"
@@ -424,10 +424,10 @@ load test_helper
     [[ "${status}"  -eq 0                 ]]
 
     printf "%s\\n" "${output}" | grep -q \
-      "Selector link one: <a.* href=\"file://${NB_DIR}/home/Example Folder/Example Nested File One.md\">\[\[home:2/1\]\]</a> •"
+      "Selector link one: <a.* href=\"file://${NB_DIR}/home/Example%20Folder/Example%20Nested%20File%20One.md\">\[\[home:2/1\]\]</a> •"
 
     printf "%s\\n" "${output}" | grep -q \
-      "Selector link two: <a.* href=\"file://${NB_DIR}/home/Root File One.md\">\[\[Root Title One\]\]</a> •"
+      "Selector link two: <a.* href=\"file://${NB_DIR}/home/Root%20File%20One.md\">\[\[Root Title One\]\]</a> •"
 
     printf "%s\\n" "${output}" | grep -q \
       "Tag one: #tag_1 •"
@@ -658,10 +658,10 @@ load test_helper
     [[ "${status}"  -eq 0                 ]]
 
     printf "%s\\n" "${output}" | grep -q \
-"Selector link one: \[\[file://${NB_DIR}/home/Example Folder/Example Nested File One.md\]\[\[\[home:2/1\]\]\]\] •"
+"Selector link one: \[\[file://${NB_DIR}/home/Example%20Folder/Example%20Nested%20File%20One.md\]\[\[\[home:2/1\]\]\]\] •"
 
     printf "%s\\n" "${output}" | grep -q \
-"Selector link two: \[\[file://${NB_DIR}/home/Root File One.md\]\[\[\[Root Title One\]\]\]\] •"
+"Selector link two: \[\[file://${NB_DIR}/home/Root%20File%20One.md\]\[\[\[Root Title One\]\]\]\] •"
 
     printf "%s\\n" "${output}" | grep -q \
 "Tag one: #tag_1 •"
