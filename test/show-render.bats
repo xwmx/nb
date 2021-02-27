@@ -2,6 +2,39 @@
 
 load test_helper
 
+# .org ########################################################################
+
+@test "'browse' with .org file renders an HTML page with wiki-style links resolved to file URLs." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example File.md"             \
+      --title     "Example Title"               \
+      --content   "Example content."
+
+    "${_NB}" add  "Example Folder/File One.org" \
+      --title     "Title One"                   \
+      --content   "Example content. [[Example Title]]"
+  }
+
+  run "${_NB}" show 2/1 --render --print --raw
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    ==  0                   ]]
+  [[ "${output}"    =~  \<\!DOCTYPE\ html\> ]]
+
+  # TODO: .org / org mode titles in pandoc HTML output?
+  # [[ "${output}"    =~  \<h1\ id=\"title-one\"\>Title\ One\</h1\>                     ]]
+
+  printf "%s\\n" "${output}" | grep -q \
+"<p>Example content. <a.* href=\"file://${NB_DIR}/home/Example%20File.md\">"
+
+  printf "%s\\n" "${output}" | grep -q \
+"\[\[Example Title\]\]</a></p>"
+}
+
 # links #######################################################################
 
 @test "'show --render' properly resolves titled wiki-style links." {

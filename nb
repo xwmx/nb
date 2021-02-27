@@ -8780,10 +8780,10 @@ HEREDOC
   while ((${#}))
   do
     case "${1:-}" in
-      "")         :                             ;;
-      --from)     _from="${2:?}" && shift       ;;
-      --*pandoc)  _use_pandoc=1                 ;;
-      -*)         _pandoc_arguments+=("${1:-}") ;;
+      "")         :                                         ;;
+      --from)     _from="${2:?}" && _use_pandoc=1 && shift  ;;
+      --*pandoc)  _use_pandoc=1                             ;;
+      -*)         _pandoc_arguments+=("${1:-}")             ;;
       *)
         if [[ -z "${_input_file_path:-}"  ]] &&
            [[ -f "${1:-}"                 ]]
@@ -9117,7 +9117,7 @@ _resolve_links() {
               _link="<a href=\"file://${_link_path//' '/%20}\">[[${_selector:-}]]</a>"
               ;;
             org)
-              _link="[[file://${_link_path:-}][[[${_selector:-}]]]]"
+              _link="[[file://${_link_path//' '/%20}][[[${_selector:-}]]]]"
               ;;
             *)
               _link="[[${_selector:-}]]"
@@ -14351,9 +14351,7 @@ Can't show archives. Export archive and expand to edit.\\n"
               -e "s/\]\[\[\[/\]\[••/g"  \
               -e "s/\]\]\]\]/••\]\]/g"
         } | {
-          _pandoc                       \
-            --from org                  \
-            --render-to-html
+          _render --from org --pandoc
         } | {
           sed -E                        \
               -e "s/>••/>\[\[/g"        \
@@ -14363,7 +14361,7 @@ Can't show archives. Export archive and expand to edit.\\n"
         }
       else # render non-Org to HTML before resolving [[wiki-style links]]
         {
-          _pandoc "${_target_path}" --render-to-html
+          _render "${_target_path}" --pandoc
         } | {
           _resolve_links "${_notebook_path}"
         } | {
