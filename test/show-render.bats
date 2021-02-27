@@ -43,13 +43,13 @@ HEREDOC
   [[ "${status}" -eq 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-    "one: <a href=\"file://${NB_DIR}/home/File Two.md\">\[\[Root Title Two\]\]</a>"
+    "one: <a href=\"file://${NB_DIR}/home/File%20Two.md\">\[\[Root Title Two\]\]</a>"
 
   printf "%s\\n" "${output}" | grep -q \
-    "example <a href=\"file://${NB_DIR}/Example Notebook/Example Folder/File One.md\">\[\[Example\ Notebook:Example\ Folder/1\]\]</a> content"
+    "example <a href=\"file://${NB_DIR}/Example%20Notebook/Example%20Folder/File%20One.md\">\[\[Example\ Notebook:Example\ Folder/1\]\]</a> content"
 
   printf "%s\\n" "${output}" | grep -q \
-    "content <a href=\"file://${NB_DIR}/home/Sample Folder/File One.md\">\[\[3/1\]\]</a> here"
+    "content <a href=\"file://${NB_DIR}/home/Sample%20Folder/File%20One.md\">\[\[3/1\]\]</a> here"
 }
 
 @test "'show --render' properly resolves titled wiki-style links and skips links with non-resolving selectors." {
@@ -91,10 +91,10 @@ HEREDOC
   [[ "${status}" -eq 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-    "one: <a href=\"file://${NB_DIR}/home/File Two.md\">\[\[Root Title Two\]\]</a>"
+    "one: <a href=\"file://${NB_DIR}/home/File%20Two.md\">\[\[Root Title Two\]\]</a>"
 
   printf "%s\\n" "${output}" | grep -q \
-    "example <a href=\"file://${NB_DIR}/Example Notebook/Example Folder/File One.md\">\[\[Example\ Notebook:Example\ Folder/1\]\]</a> content"
+    "example <a href=\"file://${NB_DIR}/Example%20Notebook/Example%20Folder/File%20One.md\">\[\[Example\ Notebook:Example\ Folder/1\]\]</a> content"
 
   printf "%s\\n" "${output}" | grep -q 'content \[\[2/1\]\] here'
 }
@@ -127,10 +127,10 @@ HEREDOC
   [[ "${status}" -eq 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-   "link one: <a href=\"file://${NB_DIR}/Example Notebook/Example Folder/File One.md\">\[\[Example\ Notebook:Example\ Folder/1\]\]</a>"
+   "link one: <a href=\"file://${NB_DIR}/Example%20Notebook/Example%20Folder/File%20One.md\">\[\[Example\ Notebook:Example\ Folder/1\]\]</a>"
 
   printf "%s\\n" "${output}" | grep -q -v\
-    "example <a href=\"file://${NB_DIR}/Example Notebook/Example Folder/File One.md\">\[\[Example\ Notebook:Example\ Folder/1\]\]</a>"
+    "example <a href=\"file://${NB_DIR}/Example%20Notebook/Example%20Folder/File%20One.md\">\[\[Example\ Notebook:Example\ Folder/1\]\]</a>"
 }
 
 @test "'show --render' resolves wiki-style links." {
@@ -185,13 +185,13 @@ HEREDOC
   [[ "${status}" -eq 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-    "<a href=\"file://${NB_DIR}/home/Sample Folder/File One.md\">\[\[Sample\ Folder/Nested\ Title\ One\]\]</a>"
+    "<a href=\"file://${NB_DIR}/home/Sample%20Folder/File%20One.md\">\[\[Sample\ Folder/Nested\ Title\ One\]\]</a>"
 
   printf "%s\\n" "${output}" | grep -q \
-    "<a href=\"file://${NB_DIR}/Example Notebook/File Two.md\">\[\[Example\ Notebook:File\ Two.md\]\]</a>"
+    "<a href=\"file://${NB_DIR}/Example%20Notebook/File%20Two.md\">\[\[Example\ Notebook:File\ Two.md\]\]</a>"
 
   printf "%s\\n" "${output}" | grep -q \
-    "<a href=\"file://${NB_DIR}/Example Notebook/Example Folder/File One.md\">\[\[Example\ Notebook:Example\ Folder/1\]\]</a>"
+    "<a href=\"file://${NB_DIR}/Example%20Notebook/Example%20Folder/File%20One.md\">\[\[Example\ Notebook:Example\ Folder/1\]\]</a>"
 }
 
 # --render, --print, and --raw ################################################
