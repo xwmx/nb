@@ -15405,14 +15405,15 @@ HEREDOC
       {
         if [[ -n "${_string:-}"     ]]
         then
-          printf "%s\\n" "${_string}" | _pandoc --render-to-html
+          printf "%s\\n" "${_string}" | _render
         elif [[ "${_path:-}" =~ ^/  ]]
         then
           cat "${_path}"
         else
-          printf "%s\\n" \
-            "${_status_code} $(_browse_http_response_message "${_status_code}")" \
-            | _pandoc --render-to-html
+          printf "%s %s\\n"                                       \
+            "${_status_code}"                                     \
+            "$(_browse_http_response_message "${_status_code}")"  \
+            | _render
         fi
       } | {
         local __line=
