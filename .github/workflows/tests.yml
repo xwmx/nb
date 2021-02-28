@@ -104,8 +104,8 @@ jobs:
       # - name: "Run nb.go bats test"
       #   run: unbuffer bats test
   test-ubuntu-latest:
-    name: "Test: Ubuntu Latest"
-    runs-on: ubuntu-latest
+    name: "Test: Ubuntu 20.04"
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v1
       - name: "Setup"
