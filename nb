@@ -14967,6 +14967,12 @@ HEREDOC
             -e "s/\]\[\[\[/\]\[••/g"      \
             -e "s/\]\]\]\]/••\]\]/g"
       } | {
+        pandoc --from org --to html
+      } | {
+        sed -E                            \
+            -e "s/>••/>\[\[/g"            \
+            -e "s/••</\]\]</g"
+      } | {
         printf "%s\\n" "$(
           _browse_render_header           \
             "${_source_path}"             \
@@ -14975,11 +14981,7 @@ HEREDOC
 
         cat
       } | {
-        _render --from org --pandoc
-      } | {
-        sed -E                            \
-            -e "s/>••/>\[\[/g"            \
-            -e "s/••</\]\]</g"
+        _render
       }
     else # render non-Org to HTML before resolving [[wiki-style links]]
       {

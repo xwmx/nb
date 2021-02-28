@@ -6,180 +6,180 @@ export NB_SERVER_PORT=6789
 
 # img tags ####################################################################
 
-@test "'browse' strips <img> tags." {
-  {
-    "${_NB}" init
+# @test "'browse' strips <img> tags." {
+#   {
+#     "${_NB}" init
 
-    "${_NB}" add                  \
-      --title     "Example Title" \
-      --content   "$(<<HEREDOC cat
-Example image one: ![Example Image One](/not-valid-1.png)
+#     "${_NB}" add                  \
+#       --title     "Example Title" \
+#       --content   "$(<<HEREDOC cat
+# Example image one: ![Example Image One](/not-valid-1.png)
 
-More example ![Example Image Two](/not-valid-2.png) content ![Example Image Three](/not-valid-3.png) here.
-HEREDOC
-)"
+# More example ![Example Image Two](/not-valid-2.png) content ![Example Image Three](/not-valid-3.png) here.
+# HEREDOC
+# )"
 
-    sleep 1
-  }
+#     sleep 1
+#   }
 
-  run "${_NB}" browse 1 --print
+#   run "${_NB}" browse 1 --print
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+#   printf "\${status}: '%s'\\n" "${status}"
+#   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"    ==  0                                            ]]
-  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                          ]]
+#   [[    "${status}"    ==  0                                            ]]
+#   [[    "${output}"    =~  \<\!DOCTYPE\ html\>                          ]]
 
-  [[    "${output}"    =~  \<h1\ class=\"header-crumbs\"\>              ]]
-  [[    "${output}"    =~  \<p\>Example\ image\ one:\ \</p\>            ]]
-  [[    "${output}"    =~  \<p\>More\ example\ \ content\ \ here.\</p\> ]]
+#   [[    "${output}"    =~  \<h1\ class=\"header-crumbs\"\>              ]]
+#   [[    "${output}"    =~  \<p\>Example\ image\ one:\ \</p\>            ]]
+#   [[    "${output}"    =~  \<p\>More\ example\ \ content\ \ here.\</p\> ]]
 
-  [[ !  "${output}"    =~  \<img                                        ]]
-}
+#   [[ !  "${output}"    =~  \<img                                        ]]
+# }
 
-# code ########################################################################
+# # code ########################################################################
 
-@test "'browse' with .bash file serves file in a code block." {
-  {
-    "${_NB}" init
+# @test "'browse' with .bash file serves file in a code block." {
+#   {
+#     "${_NB}" init
 
-    "${_NB}" add  "Example File.bash" --content "echo \"hello\""
+#     "${_NB}" add  "Example File.bash" --content "echo \"hello\""
 
-    sleep 1
-  }
+#     sleep 1
+#   }
 
-  run "${_NB}" browse 1 --print
+#   run "${_NB}" browse 1 --print
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+#   printf "\${status}: '%s'\\n" "${status}"
+#   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    ==  0                                   ]]
-  [[ "${output}"    =~  \<\!DOCTYPE\ html\>                 ]]
+#   [[ "${status}"    ==  0                                   ]]
+#   [[ "${output}"    =~  \<\!DOCTYPE\ html\>                 ]]
 
-  [[ "${output}"    =~  \<h1\ class=\"header-crumbs\"\>     ]]
+#   [[ "${output}"    =~  \<h1\ class=\"header-crumbs\"\>     ]]
 
-  printf "%s\\n" "${output}" | grep -q \
-'<a.* href="http://localhost:6789/?--per-page=.*"><span class="dim">❯</span>nb</a>'
+#   printf "%s\\n" "${output}" | grep -q \
+# '<a.* href="http://localhost:6789/?--per-page=.*"><span class="dim">❯</span>nb</a>'
 
-  printf "%s\\n" "${output}" | grep -q \
-'<span class="dim">·</span> <a.* href="http://localhost:6789/home:?--per-page=.*">home</a\>'
+#   printf "%s\\n" "${output}" | grep -q \
+# '<span class="dim">·</span> <a.* href="http://localhost:6789/home:?--per-page=.*">home</a\>'
 
-  [[ "${output}"    =~  \<div\ class=\"sourceCode\"         ]]
-  [[ "${output}"    =~  \<pre\ class=\"sourceCode\ bash\"\> ]]
-  [[ "${output}"    =~  \&quot\;hello\&quot\;               ]]
-}
+#   [[ "${output}"    =~  \<div\ class=\"sourceCode\"         ]]
+#   [[ "${output}"    =~  \<pre\ class=\"sourceCode\ bash\"\> ]]
+#   [[ "${output}"    =~  \&quot\;hello\&quot\;               ]]
+# }
 
-@test "'browse' with .js file serves file in a code block." {
-  {
-    "${_NB}" init
+# @test "'browse' with .js file serves file in a code block." {
+#   {
+#     "${_NB}" init
 
-    "${_NB}" add  "Example File.js" --content "console.log(\"hello\");"
+#     "${_NB}" add  "Example File.js" --content "console.log(\"hello\");"
 
-    sleep 1
-  }
+#     sleep 1
+#   }
 
-  run "${_NB}" browse 1 --print
+#   run "${_NB}" browse 1 --print
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+#   printf "\${status}: '%s'\\n" "${status}"
+#   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    ==  0                                   ]]
-  [[ "${output}"    =~  \<\!DOCTYPE\ html\>                 ]]
+#   [[ "${status}"    ==  0                                   ]]
+#   [[ "${output}"    =~  \<\!DOCTYPE\ html\>                 ]]
 
-  [[ "${output}"    =~  \<h1\ class=\"header-crumbs\"\>     ]]
+#   [[ "${output}"    =~  \<h1\ class=\"header-crumbs\"\>     ]]
 
-  printf "%s\\n" "${output}" | grep -q \
-'<a.* href="http://localhost:6789/?--per-page=.*"><span class="dim">❯</span>nb</a>'
+#   printf "%s\\n" "${output}" | grep -q \
+# '<a.* href="http://localhost:6789/?--per-page=.*"><span class="dim">❯</span>nb</a>'
 
-  printf "%s\\n" "${output}" | grep -q \
-'<span class="dim">·</span> <a.* href="http://localhost:6789/home:?--per-page=.*">home</a\>'
+#   printf "%s\\n" "${output}" | grep -q \
+# '<span class="dim">·</span> <a.* href="http://localhost:6789/home:?--per-page=.*">home</a\>'
 
-  [[ "${output}"    =~  \<div\ class=\"sourceCode\"         ]]
-  [[ "${output}"    =~  \<pre\ class=\"sourceCode\ js\"\>   ]]
-  [[ "${output}"    =~  \&quot\;hello\&quot\;               ]]
-}
+#   [[ "${output}"    =~  \<div\ class=\"sourceCode\"         ]]
+#   [[ "${output}"    =~  \<pre\ class=\"sourceCode\ js\"\>   ]]
+#   [[ "${output}"    =~  \&quot\;hello\&quot\;               ]]
+# }
 
-# .odt ########################################################################
+# # .odt ########################################################################
 
-@test "'browse' with .odt file serves the rendered HTML page with wiki-style links resolved to internal web server URLs." {
-  {
-    "${_NB}" init
+# @test "'browse' with .odt file serves the rendered HTML page with wiki-style links resolved to internal web server URLs." {
+#   {
+#     "${_NB}" init
 
-    "${_NB}" add  "Example File.md"                 \
-      --title     "Example Title"                   \
-      --content   "Example content."
+#     "${_NB}" add  "Example File.md"                 \
+#       --title     "Example Title"                   \
+#       --content   "Example content."
 
-    "${_NB}" add  "Example Folder/File One.md"      \
-      --title     "Title One"                       \
-      --content   "Example content. [[Example Title]]"
+#     "${_NB}" add  "Example Folder/File One.md"      \
+#       --title     "Title One"                       \
+#       --content   "Example content. [[Example Title]]"
 
-    cat "${NB_DIR}/home/Example Folder/File One.md" \
-      | pandoc --from markdown --to odt             \
-      | "${_NB}" add "Example Folder/File One.odt"
+#     cat "${NB_DIR}/home/Example Folder/File One.md" \
+#       | pandoc --from markdown --to odt             \
+#       | "${_NB}" add "Example Folder/File One.odt"
 
-    [[ -f "${NB_DIR}/home/Example Folder/File One.odt" ]]
+#     [[ -f "${NB_DIR}/home/Example Folder/File One.odt" ]]
 
-    sleep 1
-  }
+#     sleep 1
+#   }
 
-  run "${_NB}" browse 2/2 --print
+#   run "${_NB}" browse 2/2 --print
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+#   printf "\${status}: '%s'\\n" "${status}"
+#   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    ==  0                   ]]
-  [[ "${output}"    =~  \<\!DOCTYPE\ html\> ]]
+#   [[ "${status}"    ==  0                   ]]
+#   [[ "${output}"    =~  \<\!DOCTYPE\ html\> ]]
 
-  printf "%s\\n" "${output}" | grep -q \
-"<h1 id=\"title-one\"><span id=\"anchor\"></span>Title One</h1>"
+#   printf "%s\\n" "${output}" | grep -q \
+# "<h1 id=\"title-one\"><span id=\"anchor\"></span>Title One</h1>"
 
-  printf "%s\\n" "${output}" | grep -q \
-"<p>Example content. <a.* href=\"http://localhost:6789/home:Example Title?--per-page=.*&--columns=.*\">"
+#   printf "%s\\n" "${output}" | grep -q \
+# "<p>Example content. <a.* href=\"http://localhost:6789/home:Example Title?--per-page=.*&--columns=.*\">"
 
-  printf "%s\\n" "${output}" | grep -q \
-"\[\[Example Title\]\]</a></p>"
-}
+#   printf "%s\\n" "${output}" | grep -q \
+# "\[\[Example Title\]\]</a></p>"
+# }
 
-# .docx #######################################################################
+# # .docx #######################################################################
 
-@test "'browse' with .docx file serves the rendered HTML page with wiki-style links resolved to internal web server URLs." {
-  {
-    "${_NB}" init
+# @test "'browse' with .docx file serves the rendered HTML page with wiki-style links resolved to internal web server URLs." {
+#   {
+#     "${_NB}" init
 
-    "${_NB}" add  "Example File.md"                 \
-      --title     "Example Title"                   \
-      --content   "Example content."
+#     "${_NB}" add  "Example File.md"                 \
+#       --title     "Example Title"                   \
+#       --content   "Example content."
 
-    "${_NB}" add  "Example Folder/File One.md"      \
-      --title     "Title One"                       \
-      --content   "Example content. [[Example Title]]"
+#     "${_NB}" add  "Example Folder/File One.md"      \
+#       --title     "Title One"                       \
+#       --content   "Example content. [[Example Title]]"
 
-    cat "${NB_DIR}/home/Example Folder/File One.md" \
-      | pandoc --from markdown --to docx            \
-      | "${_NB}" add "Example Folder/File One.docx"
+#     cat "${NB_DIR}/home/Example Folder/File One.md" \
+#       | pandoc --from markdown --to docx            \
+#       | "${_NB}" add "Example Folder/File One.docx"
 
-    [[ -f "${NB_DIR}/home/Example Folder/File One.docx" ]]
+#     [[ -f "${NB_DIR}/home/Example Folder/File One.docx" ]]
 
-    sleep 1
-  }
+#     sleep 1
+#   }
 
-  run "${_NB}" browse 2/2 --print
+#   run "${_NB}" browse 2/2 --print
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+#   printf "\${status}: '%s'\\n" "${status}"
+#   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    ==  0                   ]]
-  [[ "${output}"    =~  \<\!DOCTYPE\ html\> ]]
+#   [[ "${status}"    ==  0                   ]]
+#   [[ "${output}"    =~  \<\!DOCTYPE\ html\> ]]
 
-  printf "%s\\n" "${output}" | grep -q \
-"<h1 id=\"title-one\">Title One</h1>"
+#   printf "%s\\n" "${output}" | grep -q \
+# "<h1 id=\"title-one\">Title One</h1>"
 
-  printf "%s\\n" "${output}" | grep -q \
-"<p>Example content. <a.* href=\"http://localhost:6789/home:Example Title?--per-page=.*&--columns=.*\">"
+#   printf "%s\\n" "${output}" | grep -q \
+# "<p>Example content. <a.* href=\"http://localhost:6789/home:Example Title?--per-page=.*&--columns=.*\">"
 
-  printf "%s\\n" "${output}" | grep -q \
-"\[\[Example Title\]\]</a></p>"
-}
+#   printf "%s\\n" "${output}" | grep -q \
+# "\[\[Example Title\]\]</a></p>"
+# }
 
 # .org ########################################################################
 
@@ -208,6 +208,9 @@ HEREDOC
 
   # TODO: .org / org mode titles in pandoc HTML output?
   # [[ "${output}"    =~  \<h1\ id=\"title-one\"\>Title\ One\</h1\>                     ]]
+
+  printf "%s\\n" "${output}" | grep -q \
+"<h1 class=\"header-crumbs\">"
 
   printf "%s\\n" "${output}" | grep -q \
 "<p>Example content. <a.* href=\"http://localhost:6789/home:1?--per-page=.*&amp;--columns=.*\">"
