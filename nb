@@ -15391,6 +15391,8 @@ HEREDOC
     then
       _browse_render_notebooks "${_render_function_arguments[@]:-}" \
         | _browse_respond_with 200 --standard-input
+
+      return 0
     else
       local _selector_path=
       _selector_path="$(_show "${_target_selector%%\?*}" --path 2>/dev/null || :)"
@@ -15398,6 +15400,8 @@ HEREDOC
       if [[   -z "${_selector_path:-}"    ]]
       then
         _browse_respond_with 404
+
+        return 0
       else
         _render_function_arguments+=("${_selector_path}")
 
@@ -15421,6 +15425,8 @@ HEREDOC
 
           _browse_render_container "${_render_function_arguments[@]:-}" \
             | _browse_respond_with 200 --standard-input
+
+          return 0
         else
           if _file_is_text "${_selector_path:-}"                    ||
              [[ "${_selector_path:-}"     =~ \.docx$|\.epub$|\.odt$ ]]
@@ -15437,39 +15443,29 @@ HEREDOC
               _browse_render_edit                       \
                 "${_render_function_arguments[@]:-}"    \
                 | _browse_respond_with 200 --standard-input
+
+              return 0
             else
               _browse_render_item                       \
                 "${_render_function_arguments[@]:-}"    \
                 | _browse_respond_with 200 --standard-input
+
+              return 0
             fi
           elif _file_is_encrypted "${_selector_path:-}"
           then
             _browse_respond_with 415                    \
               "415 $(_browse_http_response_message 415): File is encrypted."
+
+            return 0
           else
             _browse_respond_with 415
+
+            return 0
           fi
         fi
       fi
     fi
-
-    case "${_request_method}" in
-      GET)
-        _browse_respond_with 200 "${_temp_file}"
-        ;;
-      HEAD)
-        _browse_respond_with 200 "${_temp_file}" --headers
-        ;;
-      POST)
-        _browse_respond_with 200 "${_temp_file}"
-        # TODO
-        # _browse_respond_with 302 \
-        #   "http://localhost:${NB_SERVER_PORT}/${_target_selector//' '/%20}${_response_url_params:-}"
-        ;;
-      *)
-        _browse_respond_with 405
-        ;;
-    esac
 
     # fall back to 500 response
 
