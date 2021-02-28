@@ -44,6 +44,7 @@ HEREDOC
     "${_NB}" init
 
     "${_NB}" add  "Example File.bash" --content "echo \"hello\""
+
     sleep 1
   }
 
