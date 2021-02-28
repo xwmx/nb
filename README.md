@@ -2386,8 +2386,7 @@ nb q "example" --or "sample" --and "demo"
 ```
 
 `nb search` leverages Git's powerful built-in
-[`git grep`](https://git-scm.com/docs/git-grep), which uses the git object
-cache to perform searches faster than other available tools. `nb` also
+[`git grep`](https://git-scm.com/docs/git-grep). `nb` also
 supports performing searches with alternative search tools using
 the `--utility <name>` option.
 
