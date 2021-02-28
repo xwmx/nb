@@ -15418,8 +15418,8 @@ HEREDOC
             _render_function_arguments+=("--query" "${_query}")
           fi
 
-          _browse_render_container                      \
-            "${_render_function_arguments[@]:-}"        >> "${_temp_file}"
+          _browse_render_container "${_render_function_arguments[@]:-}" \
+            | _browse_respond_with 200 --standard-input
         else
           if _file_is_text "${_selector_path:-}"                    ||
              [[ "${_selector_path:-}"     =~ \.docx$|\.epub$|\.odt$ ]]
