@@ -121,7 +121,7 @@ export _AMP="&"
 "Demo Notebook</a> <span class=\"dim\">:</span> <span class=\"dim\">1</span>"
 
   printf "%s\\n" "${output}" | grep       -q  \
-"<a href=\"http://localhost:6789/Demo%20Notebook:2?--per-page=2&--columns=.*\">\[\[Title Two\]\]</a>"
+"<a href=\"http://localhost:6789/Demo Notebook:Title Two?--per-page=2&--columns=.*\">\[\[Title Two\]\]</a>"
   printf "%s\\n" "${output}" | grep       -q  \
 "<a href=\"http://localhost:6789/Demo%20Notebook:?--per-page=2&--columns=.*&--query=%23example\">#example</a></p>"
 }
