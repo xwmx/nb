@@ -106,6 +106,8 @@ abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
     "${_NB}" init
 
     "${_NB}" add  "Example Folder" --type "folder"
+
+    sleep 1
   }
 
   run "${_NB}" browse Example\ Folder/ --print
@@ -130,6 +132,8 @@ abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
     "${_NB}" init
 
     "${_NB}" notebooks add "Example Notebook"
+
+    sleep 1
   }
 
   run "${_NB}" browse Example\ Notebook: --print
@@ -163,6 +167,8 @@ abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
 
     "${_NB}" add  "Example Folder"    \
       --type      "folder"
+
+    sleep 1
   }
 
   run "${_NB}" browse --print
@@ -204,6 +210,8 @@ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</spa
     "${_NB}" add  "Example Folder/File Two.md"  \
       --title     "Title Two"                   \
       --content   "Example content."
+
+    sleep 1
   }
 
   run "${_NB}" browse Example\ Folder/ --print
@@ -246,6 +254,8 @@ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</spa
     "${_NB}" add  "Example Folder/File Two.md"  \
       --title     "Title Two"                   \
       --content   "Example content."
+
+    sleep 1
   }
 
   run "${_NB}" browse Example\ Folder --print
@@ -284,6 +294,8 @@ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</spa
     "${_NB}" add  "Example Notebook:File Two.md"  \
       --title     "Title Two"                     \
       --content   "Example content."
+
+    sleep 1
   }
 
   run "${_NB}" browse Example\ Notebook: --print

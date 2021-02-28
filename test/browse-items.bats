@@ -18,6 +18,8 @@ Example image one: ![Example Image One](/not-valid-1.png)
 More example ![Example Image Two](/not-valid-2.png) content ![Example Image Three](/not-valid-3.png) here.
 HEREDOC
 )"
+
+    sleep 1
   }
 
   run "${_NB}" browse 1 --print
@@ -42,6 +44,7 @@ HEREDOC
     "${_NB}" init
 
     "${_NB}" add  "Example File.bash" --content "echo \"hello\""
+    sleep 1
   }
 
   run "${_NB}" browse 1 --print
@@ -70,6 +73,8 @@ HEREDOC
     "${_NB}" init
 
     "${_NB}" add  "Example File.js" --content "console.log(\"hello\");"
+
+    sleep 1
   }
 
   run "${_NB}" browse 1 --print
@@ -112,6 +117,8 @@ HEREDOC
       | "${_NB}" add "Example Folder/File One.odt"
 
     [[ -f "${NB_DIR}/home/Example Folder/File One.odt" ]]
+
+    sleep 1
   }
 
   run "${_NB}" browse 2/2 --print
@@ -151,6 +158,8 @@ HEREDOC
       | "${_NB}" add "Example Folder/File One.docx"
 
     [[ -f "${NB_DIR}/home/Example Folder/File One.docx" ]]
+
+    sleep 1
   }
 
   run "${_NB}" browse 2/2 --print
@@ -184,6 +193,8 @@ HEREDOC
     "${_NB}" add  "Example Folder/File One.org" \
       --title     "Title One"                   \
       --content   "Example content. [[Example Title]]"
+
+    sleep 1
   }
 
   run "${_NB}" browse 2/1 --print
@@ -217,6 +228,8 @@ HEREDOC
     "${_NB}" add  "Example Folder/File One.md"  \
       --title     "Title One"                   \
       --content   "Example content. [[Example Title]]"
+
+    sleep 1
   }
 
   run "${_NB}" browse 2/1 --print
@@ -297,6 +310,8 @@ HEREDOC
 
     "${_NB}" notebooks add "Sample Notebook"
     "${_NB}" use "Sample Notebook"
+
+    sleep 1
   }
 
   run "${_NB}" browse home:1 --print
@@ -345,6 +360,8 @@ HEREDOC
 
     "${_NB}" notebooks add "Sample Notebook"
     "${_NB}" use "Sample Notebook"
+
+    sleep 1
   }
 
   run "${_NB}" browse home:1 --print
@@ -381,6 +398,8 @@ HEREDOC
     "${_NB}" add  "Example Notebook:Example Folder/File One.md" \
       --title     "Nested Title One"                            \
       --content   "Nested content one."
+
+    sleep 1
   }
 
   run "${_NB}" browse 1 --print
@@ -440,6 +459,8 @@ HEREDOC
     "${_NB}" add  "Example Notebook:Example Folder/File Two.md" \
       --title     "Nested Title Two"                            \
       --content   "Nested content two."
+
+    sleep 1
   }
 
   run "${_NB}" browse 1 --print
