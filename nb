@@ -11091,7 +11091,7 @@ Please install %s manually. No .deb package available for %s."  \
     local _deb_path="${HOME}/${_deb_filename}"
 
     # handle bat version prefix in URL
-    [[ "${_name}" == "bat" ]] && _version="v${_version}"
+    [[ "${_name}" == "bat"  ]] && _version="v${_version}"
 
     wget                \
       -O "${_deb_path}" \
@@ -11177,7 +11177,7 @@ Please install %s manually. No .deb package available for %s."  \
 
         _env_install_deb "${_arguments[@]:-}"
       done
-    elif [[ -x "$(command -v dnf)" ]]
+    elif [[ -x "$(command -v dnf)"    ]]
     then
       : # TODO: dnf install
       _completions install --download
@@ -11309,10 +11309,10 @@ _export() {
         _force=1
         ;;
       *)
-        if [[ -z "${_selector:-}" ]]
+        if [[ -z "${_selector:-}"   ]]
         then
           _selector="${__arg}"
-        elif ! ((_pandoc_only)) && [[ -z "${_target_path:-}" ]]
+        elif ! ((_pandoc_only)) &&  [[ -z "${_target_path:-}" ]]
         then
           _target_path="${__arg}"
         else
@@ -11348,7 +11348,7 @@ _export() {
   then
     if _command_exists 'pandoc'
     then
-      if [[ -n "${_args[*]:-}"  ]]
+      if [[ -n "${_args[*]:-}"    ]]
       then
         pandoc "${_notebook_path}/${_relative_path}" "${_args[@]:-}"
       else
@@ -11398,7 +11398,7 @@ $(_color_primary "Overwrite existing file?") $(_color_brackets "y/N") " __yn
     if _command_exists 'pandoc' &&
        [[ "${_source_file_type}" != "${_target_file_type}" ]]
     then
-      if [[ -n "${_args[*]:-}" ]]
+      if [[ -n "${_args[*]:-}"    ]]
       then
         pandoc                                    \
           -o "${_target_path}"                    \
@@ -11406,9 +11406,9 @@ $(_color_primary "Overwrite existing file?") $(_color_brackets "y/N") " __yn
           "${_notebook_path}/${_relative_path}"   \
           "${_args[@]:-}"
       else
-        pandoc                  \
-          -o "${_target_path}"  \
-          --standalone          \
+        pandoc                    \
+          -o "${_target_path}"    \
+          --standalone            \
           "${_notebook_path}/${_relative_path}"
       fi
     else
@@ -11463,9 +11463,9 @@ _history() {
     esac
   done
 
-  if [[ -n "${_selector:-}" ]]
+  if [[ -n "${_selector:-}"       ]]
   then
-    if [[ "${_selector}" =~ :$ ]] ||
+    if [[ "${_selector}" =~ :$    ]] ||
        ! _relative_path="$(_show "${_selector}" --relative-path 2>/dev/null)"
     then
       if ! _notebook_path="$(_notebooks show "${_selector}" --path 2>/dev/null)"
@@ -11475,7 +11475,7 @@ _history() {
     fi
   fi
 
-  if [[ -z "${_notebook_path:-}" ]]
+  if [[ -z "${_notebook_path:-}"  ]]
   then
     _notebook_path="$(_notebooks current --path)"
   fi
@@ -11489,7 +11489,7 @@ _history() {
     _log_command="tig --all"
   fi
 
-  if [[ -n "${_relative_path:-}" ]] && [[ -e "${_notebook_path}/${_relative_path}" ]]
+  if [[ -n "${_relative_path:-}"  ]] && [[ -e "${_notebook_path}/${_relative_path}" ]]
   then
     eval "${_log_command} -- \"${_relative_path}\""
   else
@@ -11560,7 +11560,7 @@ _import() {
       if [[ "${_selector_path}" =~ /$                 ]] ||
          [[ -d "${_notebook_path}/${_selector_path}"  ]]
       then
-        if [[ ! "${_selector_path}" =~ /$ ]]
+        if [[ ! "${_selector_path}" =~ /$   ]]
         then
           _selector_path="${_selector_path}/"
         fi
@@ -11570,7 +11570,7 @@ _import() {
         )"
 
         _target_relative_path="${_target_folder_relative_path}/${_source_basename}"
-      elif [[ "${_selector_path}" =~ /  ]]
+      elif [[ "${_selector_path}" =~ /      ]]
       then
         _target_folder_relative_path="$(
           _selector_resolve_folders "${_selector_path}" --build
