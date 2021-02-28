@@ -15389,7 +15389,8 @@ HEREDOC
 
     if [[ -z "${_target_selector:-}"      ]]
     then
-      _browse_render_notebooks "${_render_function_arguments[@]:-}" >> "${_temp_file}"
+      _browse_render_notebooks "${_render_function_arguments[@]:-}" \
+        | _browse_respond_with 200 --standard-input
     else
       local _selector_path=
       _selector_path="$(_show "${_target_selector%%\?*}" --path 2>/dev/null || :)"
@@ -15433,16 +15434,17 @@ HEREDOC
                   --message-body "${_message_body:-}"
               fi
 
-              _browse_render_edit     \
-                "${_render_function_arguments[@]:-}"    >> "${_temp_file}"
+              _browse_render_edit                       \
+                "${_render_function_arguments[@]:-}"    \
+                | _browse_respond_with 200 --standard-input
             else
-              _browse_render_item                     \
-                "${_render_function_arguments[@]:-}"  \
+              _browse_render_item                       \
+                "${_render_function_arguments[@]:-}"    \
                 | _browse_respond_with 200 --standard-input
             fi
           elif _file_is_encrypted "${_selector_path:-}"
           then
-            _browse_respond_with 415  \
+            _browse_respond_with 415                    \
               "415 $(_browse_http_response_message 415): File is encrypted."
           else
             _browse_respond_with 415
