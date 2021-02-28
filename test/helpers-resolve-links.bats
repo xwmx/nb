@@ -77,7 +77,7 @@ load test_helper
 "Selector link one: <a.* href=\"http://localhost:6789/home:2/1?--per-page=2&--columns=70\">\[\[home:2/1\]\]</a> •"
 
     printf "%s\\n" "${output}" | grep -q \
-"Selector link two: <a.* href=\"http://localhost:6789/home:3?--per-page=2&--columns=70\">\[\[Root Title One\]\]</a> •"
+"Selector link two: <a.* href=\"http://localhost:6789/home:Root Title One?--per-page=2&--columns=70\">\[\[Root Title One\]\]</a> •"
 
     printf "%s\\n" "${output}" | grep -q \
 "Tag one: <a.* href=\"http://localhost:6789/home:?--per-page=2&--columns=70&--query=%23tag_1\">#tag_1</a> •"
@@ -167,7 +167,7 @@ load test_helper
 "Selector link one: <a.* href=\"http://localhost:6789/home:2/1\">\[\[home:2/1\]\]</a> •"
 
     printf "%s\\n" "${output}" | grep -q \
-"Selector link two: <a.* href=\"http://localhost:6789/home:3\">\[\[Root Title One\]\]</a> •"
+"Selector link two: <a.* href=\"http://localhost:6789/home:Root Title One\">\[\[Root Title One\]\]</a> •"
 
     printf "%s\\n" "${output}" | grep -q \
 "Tag one: <a.* href=\"http://localhost:6789/home:?--query=%23tag_1\">#tag_1</a> •"
@@ -256,7 +256,7 @@ load test_helper
       "Selector link one: <a.* href=\"http://localhost:6789/home:2/1\">\[\[home:2/1\]\]</a> •"
 
     printf "%s\\n" "${output}" | grep -q \
-      "Selector link two: <a.* href=\"http://localhost:6789/home:3\">\[\[Root Title One\]\]</a> •"
+      "Selector link two: <a.* href=\"http://localhost:6789/home:Root Title One\">\[\[Root Title One\]\]</a> •"
 
     printf "%s\\n" "${output}" | grep -q \
       "Tag one: <a.* href=\"http://localhost:6789/home:?--query=%23tag_1\">#tag_1</a> •"
