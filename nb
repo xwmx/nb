@@ -15552,8 +15552,7 @@ HEREDOC
       _decoding_body="$(echo -e "${_decoding_body//%/\\x}")"
 
       _updated_content="${_decoding_body#content=}"
-      _updated_content="${_updated_content%$'\r'}"
-      _updated_content="${_updated_content%$'\n'}"
+      _updated_content="${_updated_content//$'\r'}"
 
       printf "%s\\n" "${_updated_content:-}" > "${_source_path}"
 
