@@ -305,10 +305,14 @@ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</spa
 
   [[ "${status}"  ==  0 ]]
 
-  [[ "${output}"  =~  \
-\<h1\ class=\"header-crumbs\"\>\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\> ]]
-  [[ "${output}"  =~  \
-.*·.*\ \<a.*\ href=\"http://localhost:6789/Example%20Notebook:\?--per-page=.*\"\>Example\ Notebook\</a\>\</h1\> ]]
+  printf "%s\\n" "${output}" | grep -q \
+"<h1 class=\"header-crumbs\"><a.* href=\"http://localhost:6789/?--per-page=.*\"><span class=\"dim\">❯</span>nb</a>"
+
+  printf "%s\\n" "${output}" | grep -q \
+".*·.* <a.* href=\"http://localhost:6789/Example%20Notebook:?--per-page=.*\">Example Notebook</a> <span "
+
+  printf "%s\\n" "${output}" | grep -q \
+"class=\"dim\">:</span> <a rel=\"noopener noreferrer\" href=\"http://localhost:6789/Example Notebook:?--per-page=42&--columns=.*&--add\">+</a></h1>"
 
   [[ "${output}"  =~  \
 \<a.*\ href=\"http://localhost:6789/Example%20Notebook:2\?--per-page=.*\"\ class=\"list-item\"\>  ]]
