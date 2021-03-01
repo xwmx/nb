@@ -15753,12 +15753,7 @@ HEREDOC
   local _force_terminal_request=0
   local _only_serve=0
   local _open_gui=0
-  local _print_browse_render_add=0
-  local _print_browse_render_container=0
-  local _print_browse_render_edit=0
-  local _print_browse_render_header=0
-  local _print_browse_render_item=0
-  local _print_browse_render_notebooks=0
+  local _print_browse_render_function=
   local _print_headers=0
   local _print_output=0
   local _search_query=
@@ -15776,7 +15771,7 @@ HEREDOC
         shift
         ;;
       --*container)
-        _print_browse_render_container=1
+        _print_browse_render_function="container"
         ;;
       -e|--edit)
         _action="edit"
@@ -15785,13 +15780,13 @@ HEREDOC
         _open_gui=1
         ;;
       --*header)
-        _print_browse_render_header=1
+        _print_browse_render_function="header"
         ;;
       --headers)
         _print_headers=1
         ;;
       --*item)
-        _print_browse_render_item=1
+        _print_browse_render_function="item"
         ;;
       --notebooks)
         _browse_notebooks=1
@@ -15808,13 +15803,13 @@ HEREDOC
         _print_output=1
         ;;
       --render*add)
-        _print_browse_render_add=1
+        _print_browse_render_function="add"
         ;;
       --render*edit)
-        _print_browse_render_edit=1
+        _print_browse_render_function="edit"
         ;;
       --render*notebooks)
-        _print_browse_render_notebooks=1
+        _print_browse_render_function="notebooks"
         ;;
       --respond)
         _browse_respond
@@ -15838,15 +15833,17 @@ HEREDOC
     shift
   done
 
-  if [[ -z "${_selector:-}" ]]  &&
-     ! ((_browse_notebooks))    && ! ((_print_browse_render_notebooks))
+  if   [[ -z "${_selector:-}" ]]  &&
+     ! ((_browse_notebooks))      &&
+     ! [[ "${_print_browse_render_function}" == "notebooks" ]]
   then
     _selector="$(_notebooks current --name --no-color):"
   fi
 
   local _arguments=()
 
-  if ! ((_browse_notebooks)) && ! ((_print_browse_render_notebooks))
+  if ! ((_browse_notebooks))      &&
+     ! [[ "${_print_browse_render_function}" == "notebooks" ]]
   then
     _arguments+=("$(
       _show "${_selector:-}" --path 2>/dev/null || :
@@ -15934,44 +15931,18 @@ HEREDOC
 
   # call functions directly
 
-  if ((_print_browse_render_add))
+  if [[ -n "${_print_browse_render_function:-}" ]]
   then
-    _browse_render_add "${_arguments[@]:-}"
-    exit 0
-  fi
+    case "${_print_browse_render_function:-}" in
+      add)        _browse_render_add        "${_arguments[@]:-}" ;;
+      container)  _browse_render_container  "${_arguments[@]:-}" ;;
+      edit)       _browse_render_edit       "${_arguments[@]:-}" ;;
+      header)     _browse_render_header     "${_arguments[@]:-}" ;;
+      item)       _browse_render_item       "${_arguments[@]:-}" ;;
+      notebooks)  _browse_render_notebooks  "${_arguments[@]:-}" ;;
+    esac
 
-  if ((_print_browse_render_header))
-  then
-    _browse_render_header "${_arguments[@]:-}"
-    exit 0
-  fi
-
-  if ((_print_browse_render_container))
-  then
-    _browse_render_container "${_arguments[@]:-}"
-
-    exit 0
-  fi
-
-  if ((_print_browse_render_edit))
-  then
-    _browse_render_edit "${_arguments[@]:-}"
-
-    exit 0
-  fi
-
-  if ((_print_browse_render_item))
-  then
-    _browse_render_item "${_arguments[@]:-}"
-
-    exit 0
-  fi
-
-  if ((_print_browse_render_notebooks))
-  then
-    _browse_render_notebooks "${_arguments[@]:-}"
-
-    exit 0
+    return 0
   fi
 
   # start server
