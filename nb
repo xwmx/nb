@@ -14970,18 +14970,18 @@ HEREDOC
 <a href=\"http://localhost:${NB_SERVER_PORT}/${_url_params:-}\"><span class=\"dim\">❯</span>nb</a>"
     _header_content+=" <span class=\"dim\">${_bullet}</span>"
 
-    if [[ -z "${_selector:-}" ]]
+    if [[ -z "${_selector:-}"       ]]
     then
       _header_content+=" <span class=\"dim\">notebooks</span>"
     else
       local _notebook_name=
 
-      if [[ "${_selector}" =~ :|^/ ]]
+      if [[ "${_selector}" =~ :|^/  ]]
       then
         _notebook_name="$(_notebooks show "${_selector}" --name)"
       fi
 
-      if [[ -z "${_notebook_name}" ]]
+      if [[ -z "${_notebook_name}"  ]]
       then
         _notebook_name="$(_notebooks current --name)"
       fi
@@ -14998,7 +14998,7 @@ HEREDOC
       local _relative_folder_path=
       local _selector_relative_folder_path=
 
-      if [[ "${_selector}" =~ ^/  ]]
+      if [[ "${_selector}" =~ ^/    ]]
       then
         local _relative_path="${_selector#${_notebook_path}/}"
 
@@ -15007,7 +15007,7 @@ HEREDOC
           _relative_path=
         fi
 
-        if [[ -d "${_selector}"   ]]
+        if [[ -d "${_selector}"     ]]
         then
           _relative_folder_path="${_relative_path:-}"
         else
@@ -15027,8 +15027,8 @@ HEREDOC
         )"
       fi
 
-      if [[ -n "${_relative_folder_path:-}"                    ]] &&
-         [[ -d "${_notebook_path}/${_relative_folder_path}"    ]]
+      if [[ -n "${_relative_folder_path:-}"                  ]] &&
+         [[ -d "${_notebook_path}/${_relative_folder_path}"  ]]
       then
         local _selector_folders=()
         IFS='/' read -ra _selector_folders < <(
@@ -15072,7 +15072,7 @@ HEREDOC
       local _selector_id="${_id_selector#*:}"
       _selector_id="${_selector_id##*/}"
 
-      if [[ "${_action:-}" == "edit" ]]
+      if [[ "${_action:-}" == "edit"  ]]
       then
           _header_content+="\
  <a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_params:-}\">${_selector_id:-}</a>"
@@ -15080,7 +15080,7 @@ HEREDOC
         _header_content+=" <span class=\"dim\">${_bullet}</span>"
         _header_content+=" <span class=\"dim\">editing</span>"
 
-        if [[ -z "${_url_params:-}" ]]
+        if [[ -z "${_url_params:-}"   ]]
         then
           _url_params="?"
         else
