@@ -14545,7 +14545,7 @@ HEREDOC
         _browse_render_header             \
           "${_container_path}"            \
           "${_pagination_arguments[@]:-}" \
-          --edit
+          --add
       )"
 
       cat
@@ -14935,8 +14935,8 @@ HEREDOC
   # Description:
   #   Print a context-aware, linked Markdown header.
   _browse_render_header() {
+    local _action=
     local _bullet="·"
-    local _editing=0
     local _per_page="${NB_BROWSE_COLUMNS:-70}"
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
     local _selector=
@@ -14945,9 +14945,11 @@ HEREDOC
     while ((${#}))
     do
       case "${1:-}" in
-        '')         :                                           ;;
+        '') : ;;
+        --add|--delete|--edit)
+          _action="${1#--}"
+          ;;
         --col*)     _columns="${2:?}"                 && shift  ;;
-        --edit)     _editing=1                                  ;;
         --page)     _option_value_is_present "${2:-}" && shift  ;;
         --per*)     _per_page="${2:?}"                && shift  ;;
         --terminal) _terminal_browser=1                         ;;
@@ -14991,6 +14993,7 @@ HEREDOC
 
       _header_content+="\
  <a href=\"http://localhost:${NB_SERVER_PORT}/${_notebook_name//' '/%20}:${_url_params:-}\">${_notebook_name}</a>"
+      _header_content+=" <span class=\"dim\">:</span>"
 
       local _relative_folder_path=
       local _selector_relative_folder_path=
@@ -15027,8 +15030,6 @@ HEREDOC
       if [[ -n "${_relative_folder_path:-}"                    ]] &&
          [[ -d "${_notebook_path}/${_relative_folder_path}"    ]]
       then
-        _header_content+=" <span class=\"dim\">:</span>"
-
         local _selector_folders=()
         IFS='/' read -ra _selector_folders < <(
           printf "%s\\n" "${_relative_folder_path}"
@@ -15063,11 +15064,6 @@ HEREDOC
     local _item_path=
     _item_path="$(_show "${_selector:-}" --path 2>/dev/null || :)"
 
-    if [[ -z "${_selector_folders[*]:-}" ]] && [[ -n "${_item_path:-}" ]]
-    then
-      _header_content+=" <span class=\"dim\">:</span>"
-    fi
-
     if [[ -f "${_item_path:-}" ]]
     then
       local _id_selector=
@@ -15076,7 +15072,7 @@ HEREDOC
       local _selector_id="${_id_selector#*:}"
       _selector_id="${_selector_id##*/}"
 
-      if ((_editing))
+      if [[ "${_action:-}" == "edit" ]]
       then
           _header_content+="\
  <a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_params:-}\">${_selector_id:-}</a>"
@@ -15084,43 +15080,63 @@ HEREDOC
         _header_content+=" <span class=\"dim\">${_bullet}</span>"
         _header_content+=" <span class=\"dim\">editing</span>"
 
-        # TODO
-#        _header_content+=" <span class=\"dim\">${_bullet}</span>"
-#        _header_content+="\
-# <a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_params:-}&--delete\">x</a>"
-#        _header_content+=" <span class=\"dim\">|</span> "
+        if [[ -z "${_url_params:-}" ]]
+        then
+          _url_params="?"
+        else
+          _url_params+="&"
+        fi
+
+       _header_content+=" <span class=\"dim\">${_bullet}</span>"
+       _header_content+="\
+ <a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_params:-}--delete\">x</a>"
+       _header_content+=" <span class=\"dim\">|</span> "
       else
         _header_content+=" <span class=\"dim\">${_selector_id:-}</span>"
 
-        if _file_is_text "${_selector:-}"
+        if ! _file_is_text "${_selector:-}"
         then
+          _header_content+=" <span class=\"dim\">|</span> "
+        else
           _header_content+=" <span class=\"dim\">${_bullet}</span>"
 
           if [[ -z "${_url_params:-}" ]]
           then
-            _url_params="?--edit"
+            _url_params="?"
           else
-            _url_params+="&--edit"
+            _url_params+="&"
           fi
 
           _header_content+="\
- <a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_params:-}\">edit</a>"
+ <a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_params:-}--edit\">edit</a>"
 
           # TODO
-#          _header_content+=" <span class=\"dim\">${_bullet}</span>"
-#          _header_content+="\
-# <a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_params:-'?--n=b'}&--delete\">x</a>"
-#          _header_content+=" <span class=\"dim\">|</span> "
+         _header_content+=" <span class=\"dim\">${_bullet}</span>"
+         _header_content+="\
+ <a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_params:-}--delete\">x</a>"
+         _header_content+=" <span class=\"dim\">|</span>"
 
         fi
       fi
     fi
-      # TODO
-#    if [[ -n "${_selector:-}" ]]
-#    then
-#      _header_content+="\
-# <a href=\"http://localhost:${NB_SERVER_PORT}/${_notebook_name}:${_folder_id_path:-}${_url_params:-'?--n=b'}&--add\">new</a>"
-#    fi
+
+    if [[ -n "${_selector:-}"       ]]
+    then
+      if [[ "${_action:-}" == "add" ]]
+      then
+        _header_content+=" +"
+      else
+        if [[ -z "${_url_params:-}" ]]
+        then
+          _url_params="?"
+        else
+          _url_params+="&"
+        fi
+
+        _header_content+="\
+ <a href=\"http://localhost:${NB_SERVER_PORT}/${_notebook_name}:${_folder_id_path:-}${_url_params:-}--add\">+</a>"
+      fi
+    fi
 
     printf "<h1 class=\"header-crumbs\">%s</h1>\\n\\n" "${_header_content:-}"
   }

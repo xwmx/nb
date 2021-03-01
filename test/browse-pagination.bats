@@ -55,7 +55,13 @@ export _AMP="&"
   printf "%s\\n" "${output}" | grep       -q  \
 "><a.* href=\"http://localhost:6789/?--per-page=2&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"
   printf "%s\\n" "${output}" | grep       -q  \
-"<span class=\"dim\">·</span> <a.* href=\"http://localhost:6789/Demo%20Notebook:?--per-page=2&--columns=.*\">Demo Notebook</a></h1>"
+"<span class=\"dim\">·</span> <a.* href=\"http://localhost:6789/Demo%20Notebook:?--per-page=2&--columns=.*\">"
+
+  printf "%s\\n" "${output}" | grep       -q  \
+"Demo Notebook</a> <span class=\"dim\">:</span> <a rel=\"noopener noreferrer\" href=\"http://local"
+
+  printf "%s\\n" "${output}" | grep       -q  \
+"host:6789/Demo Notebook:?--per-page=2&--columns=.*&--add\">+</a></h1>"
 
   printf "%s\\n" "${output}" | grep       -q  \
 "http://localhost:6789/Demo%20Notebook:10?--per-page=2&--columns=.*\" class=\"list-item\">"
@@ -209,7 +215,10 @@ export _AMP="&"
 '<h1 class="header-crumbs"><a.* href="http://localhost:6789/?--per-page=4&--columns=.*"><span class="dim">❯</span>nb</a>'
 
   printf "%s\\n" "${output}" | grep -q \
-'<span class="dim">·</span> <a.* href="http://localhost:6789/home:?--per-page=4&--columns=.*">home</a></h1>'
+"<span class=\"dim\">·</span> <a.* href=\"http://localhost:6789/home:?--per-page=4&--columns=.*\">home</a> <span "
+
+  printf "%s\\n" "${output}" | grep -q \
+"class=\"dim\">:</span> <a rel=\"noopener noreferrer\" href=\"http://localhost:6789/home:?--per-page=4&--columns=.*&--add\">+</a></h1>"
 
   # 10-7
 
