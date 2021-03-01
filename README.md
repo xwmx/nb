@@ -3322,7 +3322,7 @@ To turn off an indicator, assign the variable to an empty string:
 
 ```bash
 export NB_INDICATOR_TODO=""
-``
+```
 
 Available indicator variables with default values:
 
