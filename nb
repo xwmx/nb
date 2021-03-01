@@ -15427,7 +15427,7 @@ HEREDOC
     local __response_header=
     for   __response_header in "${_response_headers[@]:-}"
     do
-      [[ -n "${__response_header:-}" ]] || continue
+      [[ -n "${__response_header:-}"  ]] || continue
 
       printf "%s\\r\\n" "${__response_header:-}"
     done
@@ -15442,7 +15442,7 @@ HEREDOC
         elif [[ -n "${_string:-}"     ]]
         then
           printf "%s\\n" "${_string}" | _render
-        elif [[ "${_path:-}" =~ ^/  ]]
+        elif [[ "${_path:-}" =~ ^/    ]]
         then
           cat "${_path}"
         else
