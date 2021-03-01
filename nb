@@ -14335,6 +14335,65 @@ _browse() {
     esac
   }
 
+  # _browse_item_update()
+  #
+  # Usage:
+  #   _browse_item_update <path> --message-body <message-body>
+  #
+  # Description:
+  #   Update the content of item at <path>.
+  _browse_item_update() {
+    local _message_body=
+    local _source_path=
+
+    while ((${#}))
+    do
+      case "${1:-}" in
+        --col*|--page|--per*page)
+          _option_value_is_present "${2:-}" && shift
+          ;;
+        --message*body)
+          _message_body="$(_option_get_value "${1:-}" "${2:-}")"
+          shift
+          ;;
+        --terminal)
+          :
+          ;;
+        *)
+          _source_path="${1:-}"
+          _header_arguments+=("${_source_path}")
+          ;;
+      esac
+
+      shift
+    done
+
+    [[ -z "${_source_path:-}" ]] && _browse_respond_with 404
+
+    local _notebook_path=
+    _notebook_path="$(
+      _notebooks show "${_source_path:-}" --path 2>/dev/null ||
+        _notebooks current --path
+    )"
+
+    local _updated_content=
+
+    if [[ "${_message_body:-}" =~ ^content= ]]
+    then
+      # https://stackoverflow.com/a/37840948
+      local _decoding_body="${_message_body//+/ }"
+      _decoding_body="$(echo -e "${_decoding_body//%/\\x}")"
+
+      _updated_content="${_decoding_body#content=}"
+      _updated_content="${_updated_content//$'\r'}"
+
+      printf "%s\\n" "${_updated_content:-}" > "${_source_path}"
+
+      _git checkpoint "${_notebook_path}" \
+        "[nb] Edit: ${_source_path#${_notebook_path}/}"
+    fi
+  }
+
   # _browse_render_container()
   #
   # Usage:
@@ -15321,7 +15380,7 @@ HEREDOC
             then
               if [[ "${_request_method}"  == "POST"                 ]]
               then
-                _browse_update_item                     \
+                _browse_item_update                     \
                   "${_render_function_arguments[@]:-}"  \
                   --message-body "${_message_body:-}"
               fi
@@ -15512,65 +15571,6 @@ HEREDOC
     _temp pid "${_pid}"
 
     sleep 0.05
-  }
-
-  # _browse_update_item()
-  #
-  # Usage:
-  #   _browse_update_item <path> --message-body <message-body>
-  #
-  # Description:
-  #   Update the content of item at <path>.
-  _browse_update_item() {
-    local _message_body=
-    local _source_path=
-
-    while ((${#}))
-    do
-      case "${1:-}" in
-        --col*|--page|--per*page)
-          _option_value_is_present "${2:-}" && shift
-          ;;
-        --message*body)
-          _message_body="$(_option_get_value "${1:-}" "${2:-}")"
-          shift
-          ;;
-        --terminal)
-          :
-          ;;
-        *)
-          _source_path="${1:-}"
-          _header_arguments+=("${_source_path}")
-          ;;
-      esac
-
-      shift
-    done
-
-    [[ -z "${_source_path:-}" ]] && _browse_respond_with 404
-
-    local _notebook_path=
-    _notebook_path="$(
-      _notebooks show "${_source_path:-}" --path 2>/dev/null ||
-        _notebooks current --path
-    )"
-
-    local _updated_content=
-
-    if [[ "${_message_body:-}" =~ ^content= ]]
-    then
-      # https://stackoverflow.com/a/37840948
-      local _decoding_body="${_message_body//+/ }"
-      _decoding_body="$(echo -e "${_decoding_body//%/\\x}")"
-
-      _updated_content="${_decoding_body#content=}"
-      _updated_content="${_updated_content//$'\r'}"
-
-      printf "%s\\n" "${_updated_content:-}" > "${_source_path}"
-
-      _git checkpoint "${_notebook_path}" \
-        "[nb] Edit: ${_source_path#${_notebook_path}/}"
-    fi
   }
 
   local _browse_columns="${_COLUMNS}"
