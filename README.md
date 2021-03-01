@@ -2250,8 +2250,8 @@ your editor with `nb settings edit`:
 export NB_PINNED_PATTERN="#pinned"
 ```
 
-All indicator icons in `nb` can be customized, so to
-use a different character as the pindicator, simply add a line
+All [indicator icons](#indicators) in `nb` can be customized, so
+to use a different character as the pindicator, simply add a line
 like the following to your `~/.nbrc` file:
 
 ```bash
@@ -3017,8 +3017,8 @@ nb import https://example.com/example.pdf
 nb open example.pdf
 ```
 
-Some imported file types have indicators to make them easier to identify in
-lists:
+Some imported file types have [indicators](#indicators) to make them easier
+to identify in lists:
 
 ```bash
 > nb
@@ -3302,6 +3302,35 @@ To view a table of available colors and numbers, run:
 
 ```bash
 nb set colors
+```
+
+#### Indicators
+
+`nb` uses emoji characters to represent information about files in
+lists. These characters are referred to internally as "indicators" and
+can be customized by assigning a different character to the indicator's
+environment variable in your `~/.nbrc` file.
+
+For example, to use a different indicator for pinned items, add a line
+like the following to your `~/.nbrc` file:
+
+```bash
+export NB_INDICATOR_PINNED="✨"
+```
+
+Available indicator variables with default values:
+
+```bash
+export  NB_INDICATOR_AUDIO="🔉"
+export  NB_INDICATOR_BOOKMARK="🔖"
+export  NB_INDICATOR_DOCUMENT="📄"
+export  NB_INDICATOR_EBOOK="📖"
+export  NB_INDICATOR_ENCRYPTED="🔒"
+export  NB_INDICATOR_FOLDER="📂"
+export  NB_INDICATOR_IMAGE="🌄"
+export  NB_INDICATOR_PINNED="📌"
+export  NB_INDICATOR_TODO="✅"
+export  NB_INDICATOR_VIDEO="📹"
 ```
 
 #### Syntax Highlighting Theme
