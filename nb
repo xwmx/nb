@@ -14389,16 +14389,19 @@ _browse() {
 
     if [[ "${_message_body:-}"  =~ ^content=  ]]
     then
-      # https://stackoverflow.com/a/37840948
-      local _decoding_body="${_message_body//+/ }"
-      _decoding_body="$(echo -e "${_decoding_body//%/\\x}")"
-
-      local _content="${_decoding_body#content=}"
-      _content="${_content//$'\r'}"
+      local _processing_content="${_message_body#content=}"
+      _processing_content="$(
+        printf "%b" "$(
+          # https://unix.stackexchange.com/a/187256
+          printf "%s\\n" "${_processing_content:-}" | sed 's@+@ @g;s@%@\\x@g'
+        )"
+      )"
+      local _processed_content="${_processing_content//$'\r'}"
 
       local _new_info_line=
       _new_info_line="$(
-        printf "%s\\n" "${_content:-}" | _add "${_id_selector}" --no-color
+        printf "%s\\n" "${_processed_content:-}" \
+          | _add "${_id_selector}" --no-color
       )"
 
       local _new_selector="${_new_info_line#*[}"
@@ -14451,14 +14454,16 @@ _browse() {
 
     if [[ "${_message_body:-}" =~ ^content= ]]
     then
-      # https://stackoverflow.com/a/37840948
-      local _decoding_body="${_message_body//+/ }"
-      _decoding_body="$(echo -e "${_decoding_body//%/\\x}")"
+      local _processing_content="${_message_body#content=}"
+      _processing_content="$(
+        printf "%b" "$(
+          # https://unix.stackexchange.com/a/187256
+          printf "%s\\n" "${_processing_content:-}" | sed 's@+@ @g;s@%@\\x@g'
+        )"
+      )"
+      local _processed_content="${_processing_content//$'\r'}"
 
-      local _updated_content="${_decoding_body#content=}"
-      _updated_content="${_updated_content//$'\r'}"
-
-      printf "%s\\n" "${_updated_content:-}" > "${_source_path}"
+      printf "%s\\n" "${_processed_content:-}" > "${_source_path}"
 
       _git checkpoint "${_notebook_path}" \
         "[nb] Edit: ${_source_path#${_notebook_path}/}"

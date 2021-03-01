@@ -185,10 +185,10 @@ export _S=" "
 "ss=\"dim\">editing</span> <span class=\"dim\">·</span> <a rel=\"noopener noreferrer\" "
 
   printf "%s\\n" "${output}" | grep -q \
-"href=\"http://localhost:6789/home:1?--per-page=30&--columns=70&--delete\">x</a> <span class=\"dim\">|</span>  <a "
+"href=\"http://localhost:6789/home:1?--per-page=30&--columns=.*&--delete\">x</a> <span class=\"dim\">|</span>  <a "
 
   printf "%s\\n" "${output}" | grep -q \
-"rel=\"noopener noreferrer\" href=\"http://localhost:6789/home:?--per-page=30&--columns=70&--add\">+</a></h1>"
+"rel=\"noopener noreferrer\" href=\"http://localhost:6789/home:?--per-page=30&--columns=.*&--add\">+</a></h1>"
 
   printf "%s\\n" "${output}" | grep -q "cols=\"67\"># Example Title"
 
