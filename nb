@@ -9269,6 +9269,9 @@ _add() {
         )"
         shift
         ;;
+      --no*color)
+        _COLOR_ENABLED=0
+        ;;
       --password)
         _password="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
@@ -14335,6 +14338,76 @@ _browse() {
     esac
   }
 
+  # _browse_item_create()
+  #
+  # Usage:
+  #   _browse_item_add <container-path> --message-body <message-body>
+  #
+  # Description:
+  #   Add a new item in the folder or notebook at <container-path>.
+  _browse_item_create() {
+    local _message_body=
+    local _container_path=
+
+    while ((${#}))
+    do
+      case "${1:-}" in
+        --col*|--page|--per*page)
+          _option_value_is_present "${2:-}" && shift
+          ;;
+        --message*body)
+          _message_body="$(_option_get_value "${1:-}" "${2:-}")"
+          shift
+          ;;
+        --terminal)
+          :
+          ;;
+        *)
+          _container_path="${1:-}"
+          _header_arguments+=("${_container_path}")
+          ;;
+      esac
+
+      shift
+    done
+
+    [[ -z "${_container_path:-}" ]] && _browse_respond_with 404
+
+    local _notebook_path=
+    _notebook_path="$(
+      _notebooks show "${_container_path:-}" --path 2>/dev/null ||
+        _notebooks current --path
+    )"
+
+    local _id_selector=
+    _id_selector="$(_get_id_selector "${_container_path:-}" --notebook)"
+
+    if [[ ! "${_id_selector:-}" =~ :$|/$      ]]
+    then
+      _id_selector="${_id_selector}/"
+    fi
+
+    if [[ "${_message_body:-}"  =~ ^content=  ]]
+    then
+      # https://stackoverflow.com/a/37840948
+      local _decoding_body="${_message_body//+/ }"
+      _decoding_body="$(echo -e "${_decoding_body//%/\\x}")"
+
+      local _content="${_decoding_body#content=}"
+      _content="${_content//$'\r'}"
+
+      local _new_info_line=
+      _new_info_line="$(
+        printf "%s\\n" "${_content:-}" | _add "${_id_selector}" --no-color
+      )"
+
+      local _new_selector="${_new_info_line#*[}"
+      _new_selector="${_new_selector%%]*}"
+
+      printf "%s\\n" "${_new_selector}"
+    fi
+  }
+
   # _browse_item_update()
   #
   # Usage:
@@ -14376,15 +14449,13 @@ _browse() {
         _notebooks current --path
     )"
 
-    local _updated_content=
-
     if [[ "${_message_body:-}" =~ ^content= ]]
     then
       # https://stackoverflow.com/a/37840948
       local _decoding_body="${_message_body//+/ }"
       _decoding_body="$(echo -e "${_decoding_body//%/\\x}")"
 
-      _updated_content="${_decoding_body#content=}"
+      local _updated_content="${_decoding_body#content=}"
       _updated_content="${_updated_content//$'\r'}"
 
       printf "%s\\n" "${_updated_content:-}" > "${_source_path}"
@@ -14392,6 +14463,95 @@ _browse() {
       _git checkpoint "${_notebook_path}" \
         "[nb] Edit: ${_source_path#${_notebook_path}/}"
     fi
+  }
+
+  # _browse_render_add()
+  #
+  # Usage:
+  #   _browse_render_add [--columns <columns>] [--per-page <limit>]
+  #                      [--terminal]
+  #
+  # Description:
+  #   Print an HTML page for creating a text file.
+  _browse_render_add() {
+    local _columns="${NB_BROWSE_COLUMNS:-70}"
+    local _pagination_arguments=()
+    local _per_page="${NB_BROWSE_PER_PAGE:-30}"
+    local _container_path=
+
+    while ((${#}))
+    do
+      case "${1:-}" in
+        --col*)
+          _columns="$(_option_get_value "${1:-}" "${2:-}")"
+          _pagination_arguments+=("${1:?}" "${2:?}")
+          shift
+          ;;
+        --page)
+          _option_value_is_present "${2:-}" && shift
+          ;;
+        --per-page)
+          _per_page="${2:?}"
+          _pagination_arguments+=("${1:?}" "${2:?}")
+          shift
+          ;;
+        --terminal)
+          _pagination_arguments+=("--terminal")
+          ;;
+        *)
+          _container_path="${1:-}"
+          ;;
+      esac
+
+      shift
+    done
+
+    local _form_action_selector=
+    _form_action_selector="$(_get_id_selector "${_container_path}")"
+
+    local _text_area_columns="${_columns:-}"
+    local _rows=30
+    local _url_params=
+
+    if _contains "--terminal" "${_pagination_arguments[@]:-}"
+    then
+      _url_params+="&--per-page=${_per_page}"
+      _rows="$((_per_page + 2))"
+
+      _url_params+="&--columns=${_columns}"
+      _text_area_columns="$((_text_area_columns - 3))"
+    fi
+
+    {
+      # TODO: https://stackoverflow.com/a/15844977
+      cat <<HEREDOC
+<form
+  action="/${_form_action_selector}?--add${_url_params:-}"
+  accept-charset="UTF-8"
+  method="post">
+  <textarea
+    id="content"
+    name="content"
+    rows="${_rows}"
+    cols="${_text_area_columns}"></textarea>
+  <br><br>
+  <input
+    type="submit"
+    value="add">
+</form>
+HEREDOC
+    } | {
+      printf "%s\\n" "$(
+        _browse_render_header             \
+          "${_container_path}"            \
+          "${_pagination_arguments[@]:-}" \
+          --edit
+      )"
+
+      cat
+    } | {
+      _render
+    }
   }
 
   # _browse_render_container()
@@ -15301,12 +15461,12 @@ HEREDOC
 
     # detect edit
 
-    local _edit=0
+    local _action=
 
-    if [[ "${_request_uri}"     =~ --edit               ]]
-    then
-      _edit=1
-    fi
+    case "${_request_uri}" in
+      *--add*)  _action="add"   ;;
+      *--edit*) _action="edit"  ;;
+    esac
 
     # prepare response
 
@@ -15352,51 +15512,77 @@ HEREDOC
 
         if [[ -d "${_selector_path:-}"    ]]
         then
-          if [[ -n "${_page_number:-}"    ]]
+          if [[ "${_action:-}" == "add"   ]]
           then
-            _render_function_arguments+=("--page" "${_page_number}")
-          fi
-
-          if [[ -n "${_per_page:-}"       ]]  &&
-             ! _contains "--per-page" "${_render_function_arguments[@]:-}"
-          then
-            _render_function_arguments+=("--per-page" "${_per_page}")
-          fi
-
-          if [[ -n "${_query:-}"          ]]
-          then
-            _render_function_arguments+=("--query" "${_query}")
-          fi
-
-          _browse_render_container "${_render_function_arguments[@]:-}" \
-            | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
-
-          return 0
-        else
-          if _file_is_text "${_selector_path:-}"                    ||
-             [[ "${_selector_path:-}"     =~ \.docx$|\.epub$|\.odt$ ]]
-          then
-            if ((_edit)) && _file_is_text "${_selector_path:-}"
-            then
-              if [[ "${_request_method}"  == "POST"                 ]]
-              then
-                _browse_item_update                     \
+            case "${_request_method:-}" in
+              GET)
+                _browse_render_add                      \
                   "${_render_function_arguments[@]:-}"  \
-                  --message-body "${_message_body:-}"
-              fi
+                  | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
+                ;;
+              POST)
+                local _new_selector=
+                _new_selector="$(
+                  _browse_item_create                     \
+                    "${_render_function_arguments[@]:-}"  \
+                    --message-body "${_message_body:-}"
+                )"
 
-              _browse_render_edit                       \
-                "${_render_function_arguments[@]:-}"    \
-                | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
+                _browse_respond_with 302 \
+                  "http://localhost:${NB_SERVER_PORT}/${_new_selector}${_response_url_params:-}"
 
-              return 0
-            else
-              _browse_render_item                       \
-                "${_render_function_arguments[@]:-}"    \
-                | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
+                return 0
+                ;;
+            esac
 
-              return 0
+            return 0
+          else
+            if [[ -n "${_page_number:-}"  ]]
+            then
+              _render_function_arguments+=("--page" "${_page_number}")
             fi
+
+            if [[ -n "${_query:-}"        ]]
+            then
+              _render_function_arguments+=("--query" "${_query}")
+            fi
+
+            _browse_render_container "${_render_function_arguments[@]:-}" \
+              | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
+
+            return 0
+          fi
+        else
+          if [[ "${_action:-}" =~ edit|delete   ]]  &&
+             _file_is_text "${_selector_path:-}"
+          then
+            case "${_action}" in
+              delete)
+                : # TODO
+                ;;
+              edit)
+                if [[ "${_request_method}"  == "POST"     ]]
+                then
+                  _browse_item_update                     \
+                    "${_render_function_arguments[@]:-}"  \
+                    --message-body "${_message_body:-}"
+                fi
+
+                _browse_render_edit                       \
+                  "${_render_function_arguments[@]:-}"    \
+                  | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
+
+                return 0
+                ;;
+              esac
+          elif _file_is_text "${_selector_path:-}"                    ||
+               [[ "${_selector_path:-}"     =~ \.docx$|\.epub$|\.odt$ ]]
+          then
+            _browse_render_item                       \
+              "${_render_function_arguments[@]:-}"    \
+              | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
+
+            return 0
           elif _file_is_encrypted "${_selector_path:-}"
           then
             _browse_respond_with 415                    \
@@ -15530,7 +15716,7 @@ HEREDOC
       }
     fi
 
-    if [[ "${1:-}" -eq 200 ]]
+    if _contains "${1:-}" "200" "302"
     then
       exit 0
     else
@@ -15560,13 +15746,14 @@ HEREDOC
     sleep 0.05
   }
 
+  local _action=
   local _browse_columns="${_COLUMNS}"
   local _browse_notebooks=0
   local _browse_per_page=
-  local _edit=0
   local _force_terminal_request=0
   local _only_serve=0
   local _open_gui=0
+  local _print_browse_render_add=0
   local _print_browse_render_container=0
   local _print_browse_render_edit=0
   local _print_browse_render_header=0
@@ -15581,6 +15768,9 @@ HEREDOC
   while ((${#}))
   do
     case "${1:-}" in
+      -a|--add|--create|--new)
+        _action="add"
+        ;;
       --col*)
         _browse_columns="$(_option_get_value "${1:-}" "${2:-}")"
         shift
@@ -15589,7 +15779,7 @@ HEREDOC
         _print_browse_render_container=1
         ;;
       -e|--edit)
-        _edit=1
+        _action="edit"
         ;;
       -g|--gui)
         _open_gui=1
@@ -15616,6 +15806,9 @@ HEREDOC
         ;;
       -p|--print)
         _print_output=1
+        ;;
+      --render*add)
+        _print_browse_render_add=1
         ;;
       --render*edit)
         _print_browse_render_edit=1
@@ -15679,10 +15872,10 @@ HEREDOC
     _url_params+=("--query=${_search_query//#/%23}")
   fi
 
-  if ((_edit))
+  if [[ -n "${_action:-}" ]]
   then
-    _arguments+=("--edit")
-    _url_params+=("--edit")
+    _arguments+=("--${_action}")
+    _url_params+=("--${_action}")
   fi
 
   # configure pagination
@@ -15740,6 +15933,12 @@ HEREDOC
   fi
 
   # call functions directly
+
+  if ((_print_browse_render_add))
+  then
+    _browse_render_add "${_arguments[@]:-}"
+    exit 0
+  fi
 
   if ((_print_browse_render_header))
   then
