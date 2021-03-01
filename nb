@@ -15092,124 +15092,6 @@ HEREDOC
     }
   }
 
-  # _browse_respond_with()
-  #
-  # Usage:
-  #   _browse_respond_with <status-code> [<path> | <string>] [--headers]
-  #                        [--standard-input]
-  #
-  # Options:
-  #   --headers  Only print headers.
-  #
-  # Description:
-  #   Send a response with <status-code> as status and an optional <file>
-  #   or <string>, then exit with 0 for status 200 and 1 for all others.
-  _browse_respond_with() {
-    local _only_headers=0
-    local _path=
-    local _status_code="${1:-}"
-    local _read_from_standard_input=0
-    local _string=
-
-    local _date=
-    _date=$(date +"%a, %d %b %Y %H:%M:%S %Z")
-
-    local _response_headers=(
-         "Date: ${_date}"
-      "Expires: ${_date}"
-       "Server: nb"
-    )
-
-    local __arg=
-    for   __arg in "${@:-}"
-    do
-      case "${__arg:-}" in
-        --*header*)
-          _only_headers=1
-          ;;
-        --standard*input)
-          _read_from_standard_input=1
-          ;;
-        *)
-          if [[     "${__arg:-}" =~ ^/  ]] &&
-             [[ -f  "${__arg:-}"        ]]
-          then
-            _path="${__arg:-}"
-          fi
-          ;;
-      esac
-    done
-
-    if [[ -n "${_path:-}" ]]
-    then
-      _response_headers+=("Content-Type: $(file -b --mime-type "${_path}")")
-
-      # NOTE: Content length appears to be incorrect, since received content
-      # is truncated. TODO: Get correct content length.
-      # local _content_length=
-      # _content_length="$(wc -c < "${_path}")"
-
-      # if [[ -n "${_content_length:-}" ]]
-      # then
-      #   _response_headers+=("Content-Length: ${_content_length}")
-      # fi
-    elif _contains "${_status_code:-}" "302"
-    then
-      _only_headers=1
-      _response_headers+=("Location: $(_get_uri --decode "${2:-}")")
-    else
-      _string="${2:-}"
-
-      _response_headers+=("Content-Type: text/html")
-    fi
-
-    printf "%s\\r\\n" \
-      "HTTP/1.0 ${_status_code} $(_browse_http_response_message "${_status_code}")"
-
-    local __response_header=
-    for   __response_header in "${_response_headers[@]:-}"
-    do
-      [[ -n "${__response_header:-}" ]] || continue
-
-      printf "%s\\r\\n" "${__response_header:-}"
-    done
-
-    if ! ((_only_headers))
-    then
-      printf "\\r\\n"
-      {
-        if ((_read_from_standard_input))
-        then
-          cat
-        elif [[ -n "${_string:-}"     ]]
-        then
-          printf "%s\\n" "${_string}" | _render
-        elif [[ "${_path:-}" =~ ^/  ]]
-        then
-          cat "${_path}"
-        else
-          printf "%s %s\\n"                                       \
-            "${_status_code}"                                     \
-            "$(_browse_http_response_message "${_status_code}")"  \
-            | _render
-        fi
-      } | {
-        local __line=
-        while read -r __line
-        do
-          printf "%s\\r\\n" "${__line}"
-        done
-      }
-    fi
-
-    if [[ "${1:-}" -eq 200 ]]
-    then
-      exit 0
-    else
-      exit 1
-    fi
-  }
-
   # _browse_respond()
   #
   # Usage:
@@ -15466,6 +15348,124 @@ HEREDOC
     # fall back to 500 response
 
     _browse_respond_with 500
+  }
+
+  # _browse_respond_with()
+  #
+  # Usage:
+  #   _browse_respond_with <status-code> [<path> | <string>] [--headers]
+  #                        [--standard-input]
+  #
+  # Options:
+  #   --headers  Only print headers.
+  #
+  # Description:
+  #   Send a response with <status-code> as status and an optional <file>
+  #   or <string>, then exit with 0 for status 200 and 1 for all others.
+  _browse_respond_with() {
+    local _only_headers=0
+    local _path=
+    local _status_code="${1:-}"
+    local _read_from_standard_input=0
+    local _string=
+
+    local _date=
+    _date=$(date +"%a, %d %b %Y %H:%M:%S %Z")
+
+    local _response_headers=(
+         "Date: ${_date}"
+      "Expires: ${_date}"
+       "Server: nb"
+    )
+
+    local __arg=
+    for   __arg in "${@:-}"
+    do
+      case "${__arg:-}" in
+        --*header*)
+          _only_headers=1
+          ;;
+        --standard*input)
+          _read_from_standard_input=1
+          ;;
+        *)
+          if [[     "${__arg:-}" =~ ^/  ]] &&
+             [[ -f  "${__arg:-}"        ]]
+          then
+            _path="${__arg:-}"
+          fi
+          ;;
+      esac
+    done
+
+    if [[ -n "${_path:-}" ]]
+    then
+      _response_headers+=("Content-Type: $(file -b --mime-type "${_path}")")
+
+      # NOTE: Content length appears to be incorrect, since received content
+      # is truncated. TODO: Get correct content length.
+      # local _content_length=
+      # _content_length="$(wc -c < "${_path}")"
+
+      # if [[ -n "${_content_length:-}" ]]
+      # then
+      #   _response_headers+=("Content-Length: ${_content_length}")
+      # fi
+    elif _contains "${_status_code:-}" "302"
+    then
+      _only_headers=1
+      _response_headers+=("Location: $(_get_uri --decode "${2:-}")")
+    else
+      _string="${2:-}"
+
+      _response_headers+=("Content-Type: text/html")
+    fi
+
+    printf "%s\\r\\n" \
+      "HTTP/1.0 ${_status_code} $(_browse_http_response_message "${_status_code}")"
+
+    local __response_header=
+    for   __response_header in "${_response_headers[@]:-}"
+    do
+      [[ -n "${__response_header:-}" ]] || continue
+
+      printf "%s\\r\\n" "${__response_header:-}"
+    done
+
+    if ! ((_only_headers))
+    then
+      printf "\\r\\n"
+      {
+        if ((_read_from_standard_input))
+        then
+          cat
+        elif [[ -n "${_string:-}"     ]]
+        then
+          printf "%s\\n" "${_string}" | _render
+        elif [[ "${_path:-}" =~ ^/  ]]
+        then
+          cat "${_path}"
+        else
+          printf "%s %s\\n"                                       \
+            "${_status_code}"                                     \
+            "$(_browse_http_response_message "${_status_code}")"  \
+            | _render
+        fi
+      } | {
+        local __line=
+        while read -r __line
+        do
+          printf "%s\\r\\n" "${__line}"
+        done
+      }
+    fi
+
+    if [[ "${1:-}" -eq 200 ]]
+    then
+      exit 0
+    else
+      exit 1
+    fi
   }
 
   # _browse_serve()
