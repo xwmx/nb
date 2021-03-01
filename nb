@@ -15317,7 +15317,7 @@ HEREDOC
           if _file_is_text "${_selector_path:-}"                    ||
              [[ "${_selector_path:-}"     =~ \.docx$|\.epub$|\.odt$ ]]
           then
-            if ((_edit))
+            if ((_edit)) && _file_is_text "${_selector_path:-}"
             then
               if [[ "${_request_method}"  == "POST"                 ]]
               then

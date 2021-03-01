@@ -9,6 +9,47 @@ export _S=" "
 
 # GET #########################################################################
 
+@test "GET to --edit URL with .odt file renders item without form." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example Folder/File One.md"      \
+      --title     "Title One"                       \
+      --content   "Example content. [[Example Title]]"
+
+    cat "${NB_DIR}/home/Example Folder/File One.md" \
+      | pandoc --from markdown --to odt             \
+      | "${_NB}" add "Example Folder/File One.odt"
+
+    [[ -f "${NB_DIR}/home/Example Folder/File One.odt" ]]
+
+    sleep 1
+
+    (ncat                                   \
+      --exec "${_NB} browse --respond"      \
+      --listen                              \
+      --source-port "6789"                  \
+      2>/dev/null) &
+
+    sleep 1
+  }
+
+  run curl -sS -D - "http://localhost:6789/home:1/2?--edit&--columns=20"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[    "${status}"  -eq 0    ]]
+
+  printf "%s\\n" "${output}"  | grep -v -q \
+    "<p>Example content. <a"
+
+  printf "%s\\n" "${output}"  | grep -v -q \
+    "<form${_NEWLINE}action=\"/home:1?--edit&--per-page=30--columns=20"
+}
+
 @test "GET to --edit URL with --columns parameter uses value for textarea, form URL parameters, and header links." {
   {
     "${_NB}" init
