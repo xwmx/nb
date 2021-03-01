@@ -1018,7 +1018,7 @@ _temp() {
       do
         [[ -n "${__pid:-}" ]] || continue
 
-        kill "${__pid}" 2>/dev/null
+        kill "${__pid}" 2>/dev/null || :
       done
       ;;
     directory)
