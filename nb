@@ -15546,25 +15546,12 @@ HEREDOC
   # Description:
   #   Start the HTTP server in the brackground.
   _browse_serve() {
-    # Usage: _browse_serve_run
-    _browse_serve_run() {
-      local _tool="ncat"
-
-      while true
-      do
-        case "${_tool:-}" in
-          ncat)
-            ncat                                    \
-              --exec "${_MY_PATH} browse --respond" \
-              --listen                              \
-              --source-port "${NB_SERVER_PORT}"     \
-              2>/dev/null
-            ;;
-        esac
-      done
-    }
-
-    (_browse_serve_run  || :) &
+    (ncat                                   \
+      --exec "${_MY_PATH} browse --respond" \
+      --keep-open                           \
+      --listen                              \
+      --source-port "${NB_SERVER_PORT}"     \
+      2>/dev/null) &
 
     local _pid="${!}"
 
