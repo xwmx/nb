@@ -3309,7 +3309,8 @@ nb set colors
 `nb` uses emoji characters to represent information about files in
 lists. These characters are referred to internally as "indicators" and
 can be customized by assigning a different character to the indicator's
-environment variable in your `~/.nbrc` file.
+environment variable in your `~/.nbrc` file, which can be opened with
+[`nb settings edit`](#settings).
 
 For example, to use a different indicator for pinned items, add a line
 like the following to your `~/.nbrc` file:
