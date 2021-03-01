@@ -15271,6 +15271,8 @@ HEREDOC
       HEAD) _respond_with_200_arguments+=("--headers")
     esac
 
+    # respond
+
     if [[ -z "${_target_selector:-}"      ]]
     then
       _browse_render_notebooks "${_render_function_arguments[@]:-}" \
