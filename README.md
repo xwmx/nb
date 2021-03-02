@@ -1850,7 +1850,7 @@ bookmarks and notes.
 
 ```bash
 > nb browse
-❯nb · home
+❯nb · home : +
 
 search: [                    ]
 
@@ -1874,7 +1874,7 @@ to fit the height of the terminal window.
 
 ```bash
 > nb browse example:sample/demo/
-❯nb · example : sample / demo /
+❯nb · example : sample / demo / +
 
 search: [                    ]
 
@@ -1904,7 +1904,7 @@ for the item, folder, or notebook to `nb browse`:
 ```bash
 # open the item titled "Example Title" in the folder named "Sample" in the "example" notebook
 > nb browse example:sample/Example\ Title
-❯nb · example : sample / 987
+❯nb · example : sample / 987 · edit · x | +
 
 Example Title
 
@@ -1930,7 +1930,7 @@ of bookmarks.
 
 ```bash
 > nb browse text:formats/markdown/123
-❯nb · text : formats / markdown / 123 · edit
+❯nb · text : formats / markdown / 123 · edit · x | +
 Daring Fireball: Markdown (daringfireball.net)
 
 https://daringfireball.net/projects/markdown/
@@ -1971,25 +1971,25 @@ with the form resized to fit the current terminal window:
 
 ```bash
 > nb browse text:formats/markdown/123 --edit
-❯nb · text : formats / markdown / 123 · editing
+❯nb · text : formats / markdown / 123 · editing · x | +
 
-[# Daring Fireball: Markdown (daringfireball.net) ]
-[                                                 ]
-[<https://daringfireball.net/projects/markdown/>  ]
-[                                                 ]
-[## Related                                       ]
-[                                                 ]
-[- <https://example.com>                          ]
-[                                                 ]
-[## Comments                                      ]
-[                                                 ]
-[See also:                                        ]
-[                                                 ]
-[- [[text:formats/org]]                           ]
-[- [[cli:apps/nb]]                                ]
-[                                                 ]
-[## Content                                       ]
-[                                                 ]
+[# Daring Fireball: Markdown (daringfireball.net)     ]
+[                                                     ]
+[<https://daringfireball.net/projects/markdown/>      ]
+[                                                     ]
+[## Related                                           ]
+[                                                     ]
+[- <https://example.com>                              ]
+[                                                     ]
+[## Comments                                          ]
+[                                                     ]
+[See also:                                            ]
+[                                                     ]
+[- [[text:formats/org]]                               ]
+[- [[cli:apps/nb]]                                    ]
+[                                                     ]
+[## Content                                           ]
+[                                                     ]
 
 [save] · last: 2021-01-01 01:00:00
 ```
