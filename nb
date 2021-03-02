@@ -4181,6 +4181,8 @@ _list() {
   local _per_page=0
   local _print_excerpt=0
   local _print_indicators=1
+  local _recursive=0
+  local _recursive_arguments=()
   local _reverse=0
   local _selector_arguments=()
   local _sort=0
@@ -4199,29 +4201,37 @@ _list() {
         ;;
       -e|--excerpt)
         _print_excerpt=1
+        _recursive_arguments+=("--excerpt")
+
         if _option_value_is_present "${__val:-}"
         then
           _excerpt_length="${__val:-}"
+          _recursive_arguments+=("${__val:-}")
           shift
         fi
         ;;
       --filename*)
         _list_filenames=1
+        _recursive_arguments+=("--filenames")
         ;;
       --*empty)
         _error_on_empty=1
+        _recursive_arguments+=("--error-on-empty")
         ;;
       --no*color)
         _COLOR_ENABLED=0
         ;;
       --no-id*|--noid*|--no*index)
         _no_id=1
+        _recursive_arguments+=("--no-id")
         ;;
       --no*indicator*|--no*icon*|--no*emoji*|--no*unicode*)
         _print_indicators=0
+        _recursive_arguments+=("--no-indicators")
         ;;
       --no*wrap|--truncate)
         _line_wrap=0
+        _recursive_arguments+=("--no-wrap")
         ;;
       -n|--limit|--num|--number)
         if _option_value_is_present "${__val:-}"
@@ -4240,6 +4250,7 @@ _list() {
         ;;
       --path*)
         _list_paths=1
+        _recursive_arguments+=("--paths")
         ;;
       --per*)
         _per_page="$(_option_get_value "${__arg}" "${__val:-}")"
@@ -4248,6 +4259,10 @@ _list() {
       --pinned)
         _only_pinned=1
         _with_pinned=1
+        _recursive_arguments+=("--pinned")
+        ;;
+      --recursive|--tree)
+        _recursive=1
         ;;
       -s|--sort)
         _sort=1
@@ -4445,7 +4460,7 @@ _list() {
 
   local _list_path="${_notebook_path}"
 
-  # display variables
+  # context variables
 
   local _maybe_id_path_context=
   local _maybe_id_path_context_padded_left=
@@ -4483,6 +4498,30 @@ _list() {
     _maybe_id_path_context_padded_right="${_maybe_id_path_context} "
 
     _maybe_selector_context="${_selected_notebook_escaped_name}:${_maybe_selector_context}"
+  fi
+
+  # recursive
+
+  # TODO: support --limit and any other loop-dependent features
+
+  _recursive_arguments+=("${_list_files_options[@]:-}")
+
+  if ((_recursive))
+  then
+    {
+      find "${_list_path}" -type d -not -path '*/\.*'
+    } | {
+      local         __folder_path=
+      while read -r __folder_path
+      do
+        [[ -z "${__folder_path:-}"                    ]] && continue
+        [[    "${__folder_path:-}" == "${_list_path}" ]] && continue
+
+        _list "${__folder_path}/"         \
+          "${_recursive_arguments[@]:-}"  \
+          --error-on-empty 2>/dev/null  || :
+      done
+    }
   fi
 
   # pinning
