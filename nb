@@ -14411,6 +14411,38 @@ _browse() {
     fi
   }
 
+  # _browse_item_delete()
+  #
+  # Usage:
+  #   _browse_item_delete <path>
+  #
+  # Description:
+  #   Delete the item at <path>.
+  _browse_item_delete() {
+    local _source_path=
+
+    while ((${#}))
+    do
+      case "${1:-}" in
+        --col*|--page|--per*page)
+          _option_value_is_present "${2:-}" && shift
+          ;;
+        --terminal)
+          :
+          ;;
+        *)
+          _source_path="${1:-}"
+          ;;
+      esac
+
+      shift
+    done
+
+    [[ -z "${_source_path:-}" ]] && _browse_respond_with 404
+
+    _delete "${_source_path:-}" --force
+  }
+
   # _browse_item_update()
   #
   # Usage:
@@ -14835,6 +14867,91 @@ HEREDOC
     }
   }
 
+  # _browse_render_delete()
+  #
+  # Usage:
+  #   _browse_render_delete <path> [--columns <columns>] [--per-page <limit>]
+  #                         [--terminal]
+  #
+  # Description:
+  #   Print an form for deleting an item
+  _browse_render_delete() {
+    local _columns="${NB_BROWSE_COLUMNS:-70}"
+    local _pagination_arguments=()
+    local _per_page="${NB_BROWSE_PER_PAGE:-30}"
+    local _source_path=
+
+    while ((${#}))
+    do
+      case "${1:-}" in
+        --col*)
+          _columns="$(_option_get_value "${1:-}" "${2:-}")"
+          _pagination_arguments+=("${1:?}" "${2:?}")
+          shift
+          ;;
+        --page)
+          _option_value_is_present "${2:-}" && shift
+          ;;
+        --per-page)
+          _per_page="${2:?}"
+          _pagination_arguments+=("${1:?}" "${2:?}")
+          shift
+          ;;
+        --terminal)
+          _pagination_arguments+=("--terminal")
+          ;;
+        *)
+          _source_path="${1:-}"
+          ;;
+      esac
+
+      shift
+    done
+
+    local _info_line=
+    _info_line="$(_show "${_source_path}" --info-line --no-color)"
+
+    local _id_selector=
+    _id_selector="$(_get_id_selector "${_source_path}")"
+
+    local _url_params=
+
+    if _contains "--terminal" "${_pagination_arguments[@]:-}"
+    then
+      _url_params+="&--per-page=${_per_page}"
+      _url_params+="&--columns=${_columns}"
+    fi
+
+    {
+      # TODO: https://stackoverflow.com/a/15844977
+      cat <<HEREDOC
+<h2>Deleting:</h2>
+
+<p><a href="http://localhost:${NB_SERVER_PORT}/${_id_selector}${_url_params/&/?}">${_info_line:-}</a></p>
+<br>
+<form
+  action="/${_id_selector:-}?--delete${_url_params:-}"
+  accept-charset="UTF-8"
+  method="post">
+  <input
+    type="submit"
+    value="delete">
+</form>
+HEREDOC
+    } | {
+      printf "%s\\n" "$(
+        _browse_render_header             \
+          "${_source_path}"               \
+          "${_pagination_arguments[@]:-}" \
+          --delete
+      )"
+
+      cat
+    } | {
+      _render
+    }
+  }
+
   # _browse_render_edit()
   #
   # Usage:
@@ -15077,7 +15194,7 @@ HEREDOC
       local _selector_id="${_id_selector#*:}"
       _selector_id="${_selector_id##*/}"
 
-      if [[ "${_action:-}" == "edit"  ]]
+      if [[ "${_action:-}" == "edit"      ]]
       then
           _header_content+="\
  <a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_params:-}\">${_selector_id:-}</a>"
@@ -15085,7 +15202,7 @@ HEREDOC
         _header_content+=" <span class=\"dim\">${_bullet}</span>"
         _header_content+=" <span class=\"dim\">editing</span>"
 
-        if [[ -z "${_url_params:-}"   ]]
+        if [[ -z "${_url_params:-}"       ]]
         then
           _url_params="?"
         else
@@ -15096,6 +15213,26 @@ HEREDOC
        _header_content+="\
  <a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_params:-}--delete\">x</a>"
        _header_content+=" <span class=\"dim\">|</span> "
+      elif [[ "${_action:-}" == "delete"  ]]
+      then
+          _header_content+="\
+ <a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_params:-}\">${_selector_id:-}</a>"
+
+          _header_content+=" <span class=\"dim\">${_bullet}</span>"
+
+          if [[ -z "${_url_params:-}"     ]]
+          then
+            _url_params="?"
+          else
+            _url_params+="&"
+          fi
+
+          _header_content+="\
+ <a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_params:-}--edit\">edit</a>"
+
+       _header_content+=" <span class=\"dim\">${_bullet}</span>"
+        _header_content+=" <span class=\"dim\">x</span>"
+       _header_content+=" <span class=\"dim\">|</span> "
       else
         _header_content+=" <span class=\"dim\">${_selector_id:-}</span>"
 
@@ -15105,7 +15242,7 @@ HEREDOC
         else
           _header_content+=" <span class=\"dim\">${_bullet}</span>"
 
-          if [[ -z "${_url_params:-}" ]]
+          if [[ -z "${_url_params:-}"     ]]
           then
             _url_params="?"
           else
@@ -15417,7 +15554,8 @@ HEREDOC
 
     local _message_body=
 
-    if [[ "${_request_method}"  == "POST"               ]]
+    if [[ "${_request_method}"  == "POST"               ]]    &&
+       ((${_content_length:-0}))
     then
       read -r -n "${_content_length}" _message_body
     fi
@@ -15485,8 +15623,9 @@ HEREDOC
     local _action=
 
     case "${_request_uri}" in
-      *--add*)  _action="add"   ;;
-      *--edit*) _action="edit"  ;;
+      *--add*)    _action="add"     ;;
+      *--delete*) _action="delete"  ;;
+      *--edit*)   _action="edit"    ;;
     esac
 
     # prepare response
@@ -15508,7 +15647,7 @@ HEREDOC
     local _respond_with_200_arguments=("--standard_input")
 
     case "${_request_method}" in
-      HEAD) _respond_with_200_arguments+=("--headers")
+      HEAD) _respond_with_200_arguments+=("--headers") ;;
     esac
 
     # respond
@@ -15574,33 +15713,49 @@ HEREDOC
             return 0
           fi
         else
-          if [[ "${_action:-}" =~ edit|delete   ]]  &&
-             _file_is_text "${_selector_path:-}"
+          if [[ "${_action:-}" == "delete"  ]]
           then
-            case "${_action}" in
-              delete)
-                : # TODO
-                ;;
-              edit)
-                if [[ "${_request_method}"  == "POST"     ]]
-                then
-                  _browse_item_update                     \
-                    "${_render_function_arguments[@]:-}"  \
-                    --message-body "${_message_body:-}"
-                fi
-
-                _browse_render_edit                       \
-                  "${_render_function_arguments[@]:-}"    \
+            case "${_request_method:-}" in
+              GET)
+                _browse_render_delete                   \
+                  "${_render_function_arguments[@]:-}"  \
                   | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
-
-                return 0
                 ;;
-              esac
+              POST)
+                local _container_id_selector=
+                _container_id_selector="$(
+                  _get_id_selector "${_selector_path%/*}" --notebook
+                )"
+
+                _browse_item_delete                     \
+                  "${_render_function_arguments[@]:-}"  &>/dev/null
+
+                _browse_respond_with 302                \
+"http://localhost:${NB_SERVER_PORT}/${_container_id_selector}${_response_url_params:-}"
+                ;;
+            esac
+
+            return 0
+          elif [[ "${_action:-}" == "edit"  ]]  &&
+               _file_is_text "${_selector_path:-}"
+          then
+            if [[ "${_request_method}"  == "POST"       ]]
+            then
+              _browse_item_update                       \
+                "${_render_function_arguments[@]:-}"    \
+                --message-body "${_message_body:-}"
+            fi
+
+            _browse_render_edit                         \
+              "${_render_function_arguments[@]:-}"      \
+              | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
+
+            return 0
           elif _file_is_text "${_selector_path:-}"                    ||
                [[ "${_selector_path:-}"     =~ \.docx$|\.epub$|\.odt$ ]]
           then
-            _browse_render_item                       \
-              "${_render_function_arguments[@]:-}"    \
+            _browse_render_item                         \
+              "${_render_function_arguments[@]:-}"      \
               | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
 
             return 0
@@ -15794,6 +15949,9 @@ HEREDOC
       --*container)
         _print_browse_render_function="container"
         ;;
+      -d|--delete)
+        _action="delete"
+        ;;
       -e|--edit)
         _action="edit"
         ;;
@@ -15825,6 +15983,9 @@ HEREDOC
         ;;
       --render*add)
         _print_browse_render_function="add"
+        ;;
+      --render*delete)
+        _print_browse_render_function="delete"
         ;;
       --render*edit)
         _print_browse_render_function="edit"
@@ -15957,6 +16118,7 @@ HEREDOC
     case "${_print_browse_render_function:-}" in
       add)        _browse_render_add        "${_arguments[@]:-}" ;;
       container)  _browse_render_container  "${_arguments[@]:-}" ;;
+      delete)     _browse_render_delete     "${_arguments[@]:-}" ;;
       edit)       _browse_render_edit       "${_arguments[@]:-}" ;;
       header)     _browse_render_header     "${_arguments[@]:-}" ;;
       item)       _browse_render_item       "${_arguments[@]:-}" ;;
