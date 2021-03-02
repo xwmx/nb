@@ -3875,7 +3875,7 @@ Usage:
   nb bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
   nb bookmark search <query>
   nb browse [<notebook>:][<id> | <filename> | <title> | <path>]
-            [-a | --add] [-d | --delete] [-e | --edit] [-g | --gui]
+            [[-a | --add] | [-d | --delete] | [-e | --edit]] [-g | --gui]
             [--notebooks] [--print] [-q | --query <query>] [-s | --serve]
   nb completions (check | install [-d | --download] | uninstall)
   nb count [<notebook>:][<relative-path>]
@@ -4304,12 +4304,13 @@ Shortcut Alias: `b`
 ```text
 Usage:
   nb browse [<notebook>:][<id> | <filename> | <title> | <path>]
-            [-a | --add] [-d | --delete] [-e | --edit] [-g | --gui]
+            [[-a | --add] | [-d | --delete] | [-e | --edit]] [-g | --gui]
             [--notebooks] [--print] [-q | --query <query>] [-s | --serve]
 
 Options:
   -a, --add             Open the add view in the browser.
   -d, --delete          Open the delete view in the browser.
+  -e, --edit            Open the edit view for the item in the browser.
   -g, --gui             Open in the system's primary GUI web browser.
   --notebooks           Browse notebooks.
   --print               Print to standard output.

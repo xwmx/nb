@@ -3423,7 +3423,7 @@ $(_color_primary "Usage:")
   ${_ME} bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
   ${_ME} bookmark search <query>
   ${_ME} browse [<notebook>:][<id> | <filename> | <title> | <path>]
-            [-a | --add] [-d | --delete] [-e | --edit] [-g | --gui]
+            [[-a | --add] | [-d | --delete] | [-e | --edit]] [-g | --gui]
             [--notebooks] [--print] [-q | --query <query>] [-s | --serve]
   ${_ME} completions (check | install [-d | --download] | uninstall)
   ${_ME} count [<notebook>:][<relative-path>]
@@ -14266,7 +14266,7 @@ _call_deferred_command --group 2
 describe "browse" <<HEREDOC
 Usage:
   ${_ME} browse [<notebook>:][<id> | <filename> | <title> | <path>]
-            [-a | --add] [-d | --delete] [-e | --edit] [-g | --gui]
+            [[-a | --add] | [-d | --delete] | [-e | --edit]] [-g | --gui]
             [--notebooks] [--print] [-q | --query <query>] [-s | --serve]
 
 Options:
