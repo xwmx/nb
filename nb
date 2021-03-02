@@ -4437,6 +4437,12 @@ _list() {
     return 1
   fi
 
+  local _list_files_options=()
+
+  [[ -n "${_type:-}" ]] && _list_files_options+=("--type" "${_type}")
+  ((_reverse))          && _list_files_options+=("--reverse")
+  ((_sort))             && _list_files_options+=("--sort")
+
   local _list_path="${_notebook_path}"
 
   local _maybe_id_path_context=
@@ -4476,12 +4482,6 @@ _list() {
 
     _maybe_selector_context="${_selected_notebook_escaped_name}:${_maybe_selector_context}"
   fi
-
-  local _list_files_options=()
-
-  [[ -n "${_type:-}" ]] && _list_files_options+=("--type" "${_type}")
-  ((_reverse))          && _list_files_options+=("--reverse")
-  ((_sort))             && _list_files_options+=("--sort")
 
   local _pinned_basenames=()
 
