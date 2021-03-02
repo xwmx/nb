@@ -2210,10 +2210,15 @@ current note will be rendered and
 <a href="#-linking">[[wiki-style links]]</a>
 go to unrendered, original files. If only `ncat` is available, files in
 plain text formats with be rendered with original markup and document
-file types are not rendered in HTML. ailable, `nb` falls back to
-the default behavior of [`nb show`](#show).
+file types are not rendered in HTML. If neither `ncat` nor `pandoc` is
+avaailable, `nb` falls back to the default behavior of [`nb show`](#show).
 
 ##### `browse` Privacy
+
+Nb browse is completely local and self contained within nb, from the CSS
+all the way down through the HTTP request parsing and response building,
+with no imports, frameworks, or third party code outside of the few binary
+dependencies.
 
 Terminal web browsers don't use JavaScript, so visits are not visible to
 many web analytics tools. `nb browse` includes a number of additional
