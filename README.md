@@ -585,6 +585,38 @@ nb new "Example note content."
 nb create --title "Example Note Title"
 ```
 
+##### Adding with `browse`
+
+Items can also be added within terminal and GUI web browsers with
+`nb browse --add` / `nb browse -a`:
+
+```bash
+> nb browse --add
+❯nb · home : +
+
+[                                                     ]
+[                                                     ]
+[                                                     ]
+[                                                     ]
+[                                                     ]
+[                                                     ]
+[                                                     ]
+[                                                     ]
+[                                                     ]
+[                                                     ]
+[                                                     ]
+[                                                     ]
+[                                                     ]
+[                                                     ]
+[                                                     ]
+[                                                     ]
+[                                                     ]
+
+[add]
+```
+
+For more information, see [Browsing](#-browsing).
+
 #### Listing & Filtering
 
 To list notes and notebooks, run [`nb ls`](#ls):
@@ -905,6 +937,28 @@ notes without the notebook list and with no limit by default:
 For more information about options for listing notes, run [`nb help ls`](#ls)
 and [`nb help list`](#list).
 
+##### Listing with `browse`
+
+Items can be listed within terminal and GUI web browsers with
+`nb browse` / `nb br`:
+
+```bash
+> nb browse example:sample/demo/
+❯nb · example : sample / demo / +
+
+search: [                    ]
+
+[example:sample/demo/7] Title Seven
+[example:sample/demo/6] Title Six
+[example:sample/demo/5] Title Five
+[example:sample/demo/4] Title Four
+[example:sample/demo/3] Title Three
+
+next ❯
+```
+
+For more information, see [Browsing](#-browsing).
+
 #### Editing
 
 You can edit an item in your editor by passing its id, filename, or title
@@ -993,6 +1047,38 @@ nb example:e 12
 ```
 
 For `nb edit` help information, run [`nb help edit`](#edit).
+
+##### Editing with `browse`
+
+Items can be edited within terminal and GUI web browsers with
+`nb browse --edit` / `nb br -e`:
+
+```bash
+> nb browse text:formats/markdown/123 --edit
+❯nb · text : formats / markdown / 123 · editing · x | +
+
+[# Daring Fireball: Markdown (daringfireball.net)     ]
+[                                                     ]
+[<https://daringfireball.net/projects/markdown/>      ]
+[                                                     ]
+[## Related                                           ]
+[                                                     ]
+[- <https://example.com>                              ]
+[                                                     ]
+[## Comments                                          ]
+[                                                     ]
+[See also:                                            ]
+[                                                     ]
+[- [[text:formats/org]]                               ]
+[- [[cli:apps/nb]]                                    ]
+[                                                     ]
+[## Content                                           ]
+[                                                     ]
+
+[save] · last: 2021-01-01 01:00:00
+```
+
+For more information, see [Browsing](#-browsing).
 
 #### Viewing
 
@@ -1169,6 +1255,50 @@ nb view "A Document Title"
 nb 3 view
 ```
 
+##### Viewing with `browse`
+
+Items can be viewed within terminal and GUI web browsers using
+`nb browse` / `nb br`:
+
+```bash
+> nb browse text:formats/markdown/123
+❯nb · text : formats / markdown / 123 · edit · x | +
+Daring Fireball: Markdown (daringfireball.net)
+
+https://daringfireball.net/projects/markdown/
+
+Related
+
+  • https://en.wikipedia.org/wiki/Markdown
+
+Comments
+
+See also:
+
+  • [[text:formats/org]]
+  • [[cli:apps/nb]]
+
+Tags
+
+#markup #plain-text
+
+Content
+
+Daring Fireball: Markdown
+
+Download
+
+Markdown 1.0.1 (18 KB) — 17 Dec 2004
+
+Introduction
+
+Markdown is a text-to-HTML conversion tool for web writers. Markdown allows
+you to write using an easy-to-read, easy-to-write plain text format, then
+convert it to structurally valid XHTML (or HTML).
+```
+
+For more information, see [Browsing](#-browsing).
+
 #### Deleting
 
 To delete one or more notes, pass any number of ids, filenames, titles,
@@ -1238,6 +1368,26 @@ nb example:d 12
 ```
 
 For `nb delete` help information, run [`nb help delete`](#delete).
+
+##### Deleting with `browse`
+
+Items can be deleted within terminal and GUI web browsers using
+`nb browse --delete` / `nb br -d`:
+
+```bash
+> nb browse --delete example:4
+❯nb · example : 4 · edit · x | +
+
+                    deleting
+
+    [4] example_file.md "Example Title"
+
+                    [delete]
+
+
+```
+
+For more information, see [Browsing](#-browsing).
 
 ### 🔖 Bookmarks
 
@@ -1966,8 +2116,9 @@ convert it to structurally valid XHTML (or HTML).
 ```
 
 Items can be edited within a terminal or GUI browser using the `edit`
-link on the item page or by opening the item with `nb browse --edit`,
-with the form resized to fit the current terminal window:
+link on the item page or by opening the item with `nb browse --edit` /
+`nb browse -e`, which automatically resizes the form to fit the current
+terminal window:
 
 ```bash
 > nb browse text:formats/markdown/123 --edit
@@ -1996,8 +2147,53 @@ with the form resized to fit the current terminal window:
 
 Terminal browsers can also be configured to use your editor.
 
-To open `nb browse` in the system's primary GUI web browser, use
-`nb browse --gui` / `nb browse -g`:
+Add an item within the browser using the `+` link or `nb browse --add` /
+`nb browse -a`. Pass a notebook or folder selector to create a new
+note in that location:
+
+```bash
+> nb browse text:formats/ --add
+❯nb · text : formats / +
+
+[                                                     ]
+[                                                     ]
+[                                                     ]
+[                                                     ]
+[                                                     ]
+[                                                     ]
+[                                                     ]
+[                                                     ]
+[                                                     ]
+[                                                     ]
+[                                                     ]
+[                                                     ]
+[                                                     ]
+[                                                     ]
+[                                                     ]
+[                                                     ]
+[                                                     ]
+
+[add]
+```
+
+Use the `x` link or `nb browse --delete` / `nb browse -d` to delete an
+item:
+
+```bash
+> nb browse --delete example:4
+❯nb · example : 4 · edit · x | +
+
+                    deleting
+
+    [4] example_file.md "Example Title"
+
+                    [delete]
+
+
+```
+
+To open any `nb browse` view in the system's primary GUI web browser,
+add the `nb browse --gui` / `nb browse -g` option:
 
 ```bash
 # open the item with id 123 in the "sample" notebook in the system's primary GUI browser
@@ -2422,6 +2618,25 @@ nb sample:q "example"
 ```
 
 For more information about search, see [`nb help search`](#search).
+
+##### Searching with `browse`
+
+Searches can be performed within terminal and GUI web browsers using
+`nb browse --query` / `nb br -q`:
+
+```bash
+> nb browse --query "#example"
+❯nb · home : +
+
+search: [#example             ]
+
+[example:sample/demo/7]   Title Seven
+[example:sample/demo/32]  Title Thirty-Two
+[example:sample/demo/56]  Title Fifty-Six
+[example:sample/demo/135] Title One Hundred and Thirty-Five
+```
+
+For more information, see [Browsing](#-browsing).
 
 ### 🗒 Revision History
 
