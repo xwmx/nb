@@ -14927,18 +14927,26 @@ HEREDOC
     {
       # TODO: https://stackoverflow.com/a/15844977
       cat <<HEREDOC
-<h2>Deleting:</h2>
+<h2 align="center">deleting</h2>
 
-<p><a href="http://localhost:${NB_SERVER_PORT}/${_id_selector}${_url_params/&/?}">${_info_line:-}</a></p>
-<br>
+<p align="center">
+  <a href="http://localhost:${NB_SERVER_PORT}/${_id_selector}${_url_params/&/?}">${_info_line:-}</a>
+</p>
+<p align="center" class="dim">
+  This item will still be available in git history.
+</p>
+<div align="center">
 <form
   action="/${_id_selector:-}?--delete${_url_params:-}"
+  align="center"
   accept-charset="UTF-8"
   method="post">
   <input
+    align="center"
     type="submit"
     value="delete">
 </form>
+</div>
 HEREDOC
     } | {
       printf "%s\\n" "$(

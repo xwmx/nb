@@ -65,10 +65,10 @@ export _S=" "
 "href=\"http://localhost:6789/?--per-page=30&--columns=20\"><span class=\"dim\">❯</span>nb</a> "
 
   printf "%s\\n" "${output}" | grep -q \
-"<h2>Deleting:</h2>"
+"<h2 align=\"center\">deleting</h2>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<p><a rel=\"noopener noreferrer\" href=\"http://localhost:6789/home:1?--per-page=.*&--columns=.*\">\[1\] Example\\\ File.md \"Example Title\"</a></p>"
+"<p align=\"center\">${_NEWLINE}  <a rel=\"noopener noreferrer\" href=\"http://localhost:6789/home:1?--per-page=.*&--columns=.*\">\[1\] Example\\\ File.md \"Example Title\"</a>${_NEWLINE}</p>"
 
   printf "%s\\n" "${output}" | grep -q \
 "action=\"/home:1?--delete&--per-page=.*&--columns=.*\""
@@ -211,10 +211,10 @@ export _S=" "
 "href=\"http://localhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a> "
 
   printf "%s\\n" "${output}" | grep -q \
-"<h2>Deleting:</h2>"
+"<h2 align=\"center\">deleting</h2>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<p><a rel=\"noopener noreferrer\" href=\"http://localhost:6789/home:1?--per-page=.*&--columns=.*\">\[1\] Example\\\ File.md \"Example Title\"</a></p>"
+"<p align=\"center\">${_NEWLINE}<a rel=\"noopener noreferrer\" href=\"http://localhost:6789/home:1?--per-page=.*&--columns=.*\">\[1\] Example\\\ File.md \"Example Title\"</a>${_NEWLINE}</p>"
 
   printf "%s\\n" "${output}" | grep -q \
 "action=\"/home:1?--delete&--per-page=.*&--columns=.*\""
