@@ -4590,6 +4590,8 @@ _list() {
 
     local __basename=
 
+    # begin main loop
+
     while read -r __basename
     do
       [[ -z "${__basename:-}" ]] && continue
@@ -4865,6 +4867,8 @@ ${_TPUT_SGR0}"
 
       _printed_count=$((_printed_count+1))
     done
+
+    # end main loop
 
     if [[ -n "${_limit:-}" ]]
     then
