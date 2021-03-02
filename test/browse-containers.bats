@@ -312,7 +312,7 @@ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</spa
 ".*·.* <a.* href=\"http://localhost:6789/Example%20Notebook:?--per-page=.*\">Example Notebook</a> <span "
 
   printf "%s\\n" "${output}" | grep -q \
-"class=\"dim\">:</span> <a rel=\"noopener noreferrer\" href=\"http://localhost:6789/Example Notebook:?--per-page=42&--columns=.*&--add\">+</a></h1>"
+"class=\"dim\">:</span> <a rel=\"noopener noreferrer\" href=\"http://localhost:6789/Example Notebook:?--per-page=.*&--columns=.*&--add\">+</a></h1>"
 
   [[ "${output}"  =~  \
 \<a.*\ href=\"http://localhost:6789/Example%20Notebook:2\?--per-page=.*\"\ class=\"list-item\"\>  ]]
