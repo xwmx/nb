@@ -2636,10 +2636,10 @@ Searches can be performed within terminal and GUI web browsers using
 
 search: [#example             ]
 
-[example:sample/demo/7]   Title Seven
-[example:sample/demo/32]  Title Thirty-Two
-[example:sample/demo/56]  Title Fifty-Six
-[example:sample/demo/135] Title One Hundred and Thirty-Five
+[home:7]   Title Seven
+[home:32]  Title Thirty-Two
+[home:56]  Title Fifty-Six
+[home:135] Title One Hundred and Thirty-Five
 ```
 
 For more information, see [Browsing](#-browsing).
