@@ -244,16 +244,16 @@ export _S=" "
 
 # CLI #########################################################################
 
-@test "'browse --edit <selector>' opens the edit page in the browser." {
+@test "'browse --add <selector>' opens the add page in the browser." {
   {
     "${_NB}" init
 
-    "${_NB}" add --title "Example Title" --content "Example content."
+    "${_NB}" add "Example Folder" --type "folder"
 
     sleep 1
   }
 
-  run "${_NB}" browse 1 --edit --print
+  run "${_NB}" browse Example\ Folder/ --add --print
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -263,9 +263,23 @@ export _S=" "
   [[    "${output}"  =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<form${_NEWLINE}action=\"/home:1?--edit"
+"<h1 class=\"header-crumbs\"><a rel=\"noopener noreferrer\" href=\"http://lo"
 
   printf "%s\\n" "${output}" | grep -q \
-"value=\"save\"> <span class=\"dim\">·</span> <span class=\"dim\">last: .*</span>"
+"calhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"
+
+  printf "%s\\n" "${output}" | grep -q \
+" <span class=\"dim\">·</span> <a rel=\"noopener noreferrer\" href=\"http://lo"
+
+  printf "%s\\n" "${output}" | grep -q \
+"calhost:6789/home:?--per-page=.*&--columns=.*\">home</a>"
+
+  printf "%s\\n" "${output}" | grep -q "cols=\".*\">"
+
+  printf "%s\\n" "${output}" | grep -q \
+"action=\"/home:1?--add&--per-page=.*&--columns=.*\""
+
+  printf "%s\\n" "${output}" | grep -q \
+"value=\"add\">"
 }
 
