@@ -19,7 +19,7 @@ and knowledge base application with:
 
 - plain-text data storage,
 - [encryption](#password-protected-encrypted-notes-and-bookmarks),
-- [filtering](#listing-notes), [pinning](#-pinning), [#tagging](#-tagging), and [search](#-search),
+- [filtering](#listing--filtering), [pinning](#-pinning), [#tagging](#-tagging), and [search](#-search),
 - [Git](https://git-scm.com/)-backed [versioning](#-revision-history) and [syncing](#-git-sync),
 - [Pandoc](https://pandoc.org/)-backed [conversion](#%EF%B8%8F-import--export),
 - <a href="#-linking">[[wiki-style linking]]</a> with terminal-first [browsing](#-browsing),
@@ -299,10 +299,10 @@ the latest version using the [`nb update`](#update) subcommand.
 <p align="center">
   <a href="#-notes">Notes</a> •
   <a href="#adding-notes">Adding</a> •
-  <a href="#listing-notes">Listing</a> •
-  <a href="#editing-notes">Editing</a> •
-  <a href="#viewing-notes">Viewing</a> •
-  <a href="#deleting-notes">Deleting</a> •
+  <a href="#listing--filtering">Listing</a> •
+  <a href="#editing">Editing</a> •
+  <a href="#viewing">Viewing</a> •
+  <a href="#deleting">Deleting</a> •
   <a href="#-bookmarks">Bookmarks</a> •
   <a href="#-tagging">Tagging</a> •
   <a href="#-linking">Linking</a> •
@@ -348,7 +348,7 @@ By default, notebooks and notes are global (at `~/.nb`), so they are always avai
 
 ### 📝 Notes
 
-#### Adding Notes
+#### Adding
 
 Use [`nb add`](#add) to create new notes:
 
@@ -585,7 +585,7 @@ nb new "Example note content."
 nb create --title "Example Note Title"
 ```
 
-#### Listing Notes
+#### Listing & Filtering
 
 To list notes and notebooks, run [`nb ls`](#ls):
 
@@ -905,9 +905,9 @@ notes without the notebook list and with no limit by default:
 For more information about options for listing notes, run [`nb help ls`](#ls)
 and [`nb help list`](#list).
 
-#### Editing Notes
+#### Editing
 
-You can edit a note in your editor by passing its id, filename, or title
+You can edit an item in your editor by passing its id, filename, or title
 to [`nb edit`](#edit):
 
 ```bash
@@ -994,9 +994,9 @@ nb example:e 12
 
 For `nb edit` help information, run [`nb help edit`](#edit).
 
-#### Viewing Notes
+#### Viewing
 
-Notes can be viewed using [`nb show`](#show):
+Notes and other items can be viewed using [`nb show`](#show):
 
 ```bash
 # show note by id
@@ -1169,32 +1169,38 @@ nb view "A Document Title"
 nb 3 view
 ```
 
-#### Deleting Notes
+#### Deleting
 
-To delete a note, pass its id, filename, or title to
-[`nb delete`](#delete):
+To delete one or more notes, pass any number of ids, filenames, titles,
+and other [selectors](#selectors) to [`nb delete`](#delete):
 
 ```bash
-# delete note by id
+# delete item by id
 nb delete 3
 
-# delete note by filename
+# delete item by filename
 nb delete example.md
 
-# delete note by title
+# delete item by title
 nb delete "A Document Title"
 
-# delete note by id, alternative
+# delete item by id, alternative
 nb 3 delete
 
-# delete note 12 in the notebook named "example"
+# delete item 12 in the notebook named "example"
 nb delete example:12
 
-# delete note 12 in the notebook named "example", alternative
+# delete item 12 in the notebook named "example", alternative
 nb example:12 delete
 
-# show note 12 in the notebook named "example", alternative
+# delete item 12 in the notebook named "example", alternative
 nb example:delete 12
+
+# delete item 345 in the folder named "example"
+nb delete example/345
+
+# delete items with the ids 89, 56, and 21
+nb delete 89 56 21
 ```
 
 By default, `nb delete` will display a confirmation prompt. To skip, use the
