@@ -604,13 +604,6 @@ Items can also be added within terminal and GUI web browsers using
 [                                                     ]
 [                                                     ]
 [                                                     ]
-[                                                     ]
-[                                                     ]
-[                                                     ]
-[                                                     ]
-[                                                     ]
-[                                                     ]
-[                                                     ]
 
 [add]
 ```
@@ -2165,13 +2158,7 @@ note in that location:
 [                                                     ]
 [                                                     ]
 [                                                     ]
-[                                                     ]
-[                                                     ]
-[                                                     ]
-[                                                     ]
-[                                                     ]
-[                                                     ]
-[                                                     ]
+
 
 [add]
 ```
@@ -2215,10 +2202,10 @@ available, `nb` falls back to the default behavior of [`nb show`](#show).
 
 ##### `browse` Privacy
 
-`nb browse` is completely local and self contained within `nb`, from the
+`nb browse` is completely local and self-contained within `nb`, from the
 CSS all the way down through the HTTP request parsing and response building,
 with no imports, frameworks, or third-party code outside of the few binary
-dependencies.
+dependencies (`bash`, `git`, `ncat`, `pandoc`).
 
 Terminal web browsers don't use JavaScript, so visits are not visible to
 many web analytics tools. `nb browse` includes a number of additional
