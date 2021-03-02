@@ -2183,11 +2183,11 @@ item:
 > nb browse --delete example:4
 ❯nb · example : 4 · edit · x | +
 
-                    deleting
+                deleting
 
-    [4] example_file.md "Example Title"
+[4] example_file.md "Example Title"
 
-                    [delete]
+                [delete]
 
 
 ```
@@ -2215,9 +2215,9 @@ available, `nb` falls back to the default behavior of [`nb show`](#show).
 
 ##### `browse` Privacy
 
-Nb browse is completely local and self contained within nb, from the CSS
-all the way down through the HTTP request parsing and response building,
-with no imports, frameworks, or third party code outside of the few binary
+`nb browse` is completely local and self contained within `nb`, from the
+CSS all the way down through the HTTP request parsing and response building,
+with no imports, frameworks, or third-party code outside of the few binary
 dependencies.
 
 Terminal web browsers don't use JavaScript, so visits are not visible to
