@@ -3310,6 +3310,20 @@ To view a table of available colors and numbers, run:
 nb set colors
 ```
 
+#### Syntax Highlighting Theme
+
+`nb` displays files with syntax highlighting when
+[`bat`](https://github.com/sharkdp/bat),
+[`highlight`](http://www.andre-simon.de/doku/highlight/en/highlight.php),
+or
+[Pygments](https://pygments.org/)
+is installed.
+
+When `bat` is installed, syntax highlighting color themes are
+available for both light and dark terminal backgrounds.
+To view a list of available themes and set the syntax highlighting color
+theme, use [`nb set syntax_theme`](#syntax_theme).
+
 #### Indicators
 
 `nb` uses emoji characters to represent information about files in
@@ -3345,20 +3359,6 @@ export  NB_INDICATOR_PINNED="📌"
 export  NB_INDICATOR_TODO="✅"
 export  NB_INDICATOR_VIDEO="📹"
 ```
-
-#### Syntax Highlighting Theme
-
-`nb` displays files with syntax highlighting when
-[`bat`](https://github.com/sharkdp/bat),
-[`highlight`](http://www.andre-simon.de/doku/highlight/en/highlight.php),
-or
-[Pygments](https://pygments.org/)
-is installed.
-
-When `bat` is installed, syntax highlighting color themes are
-available for both light and dark terminal backgrounds.
-To view a list of available themes and set the syntax highlighting color
-theme, use [`nb set syntax_theme`](#syntax_theme).
 
 ### $ Shell Theme Support
 
