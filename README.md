@@ -2211,7 +2211,7 @@ current note will be rendered and
 go to unrendered, original files. If only `ncat` is available, files in
 plain text formats with be rendered with original markup and document
 file types are not rendered in HTML. If neither `ncat` nor `pandoc` is
-avaailable, `nb` falls back to the default behavior of [`nb show`](#show).
+available, `nb` falls back to the default behavior of [`nb show`](#show).
 
 ##### `browse` Privacy
 
