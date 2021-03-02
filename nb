@@ -4445,6 +4445,8 @@ _list() {
 
   local _list_path="${_notebook_path}"
 
+  # display variables
+
   local _maybe_id_path_context=
   local _maybe_id_path_context_padded_left=
   local _maybe_id_path_context_padded_right=
@@ -4482,6 +4484,8 @@ _list() {
 
     _maybe_selector_context="${_selected_notebook_escaped_name}:${_maybe_selector_context}"
   fi
+
+  # pinning
 
   local _pinned_basenames=()
 
@@ -4870,7 +4874,7 @@ ${_TPUT_SGR0}"
 
     # end main loop
 
-    if [[ -n "${_limit:-}" ]]
+    if [[   -n "${_limit:-}"          ]]
     then
       if [[ -n "${_filter_pattern:-}" ]]
       then
@@ -4883,9 +4887,9 @@ ${_TPUT_SGR0}"
 
           [[ "${_omitted_count}" -eq 1 ]] && _label="match"
 
-          printf "%s %s omitted. %s total.\\n"  \
-            "${_omitted_count}"                 \
-            "${_label}"                         \
+          printf "%s %s omitted. %s total.\\n"    \
+            "${_omitted_count}"                   \
+            "${_label}"                           \
             "${_matches}"
           return 0
         fi
