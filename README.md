@@ -298,7 +298,7 @@ the latest version using the [`nb update`](#update) subcommand.
 
 <p align="center">
   <a href="#-notes">Notes</a> •
-  <a href="#adding-notes">Adding</a> •
+  <a href="#adding">Adding</a> •
   <a href="#listing--filtering">Listing</a> •
   <a href="#editing">Editing</a> •
   <a href="#viewing">Viewing</a> •
