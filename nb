@@ -15707,12 +15707,12 @@ HEREDOC
 
             return 0
           else
-            if [[ -n "${_page_number:-}"  ]]
+            if [[ -n "${_page_number:-}"    ]]
             then
               _render_function_arguments+=("--page" "${_page_number}")
             fi
 
-            if [[ -n "${_query:-}"        ]]
+            if [[ -n "${_query:-}"          ]]
             then
               _render_function_arguments+=("--query" "${_query}")
             fi
