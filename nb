@@ -5185,6 +5185,7 @@ _ls() {
       "${_ME} open ${_maybe_selector_scope}<id>"
       "${_ME} list ${_maybe_selector_scope}"
       "${_ME} search ${_maybe_selector_scope} <query>"
+      "${_ME} browse${_maybe_selector_scope_padded_left}"
       "${_notebook_command}"
       "${_ME} settings"
       "${_ME} help"
@@ -5202,6 +5203,7 @@ _ls() {
       "$(_color_secondary "${_commands_raw[8]}")"
       "$(_color_secondary "${_commands_raw[9]}")"
       "$(_color_secondary "${_commands_raw[10]}")"
+      "$(_color_secondary "${_commands_raw[11]}")"
     )
 
     _wrap off
