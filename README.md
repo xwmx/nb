@@ -587,8 +587,8 @@ nb create --title "Example Note Title"
 
 ##### Adding with `browse`
 
-Items can also be added within terminal and GUI web browsers with
-`nb browse --add` / `nb browse -a`:
+Items can also be added within terminal and GUI web browsers using
+[`nb browse --add`](#browse) / [`nb br -a`](#browse):
 
 ```bash
 > nb browse --add
@@ -939,8 +939,8 @@ and [`nb help list`](#list).
 
 ##### Listing with `browse`
 
-Items can be listed within terminal and GUI web browsers with
-`nb browse` / `nb br`:
+Items can be listed within terminal and GUI web browsers using
+[`nb browse`](#browse) / [`nb br`](#browse):
 
 ```bash
 > nb browse example:sample/demo/
@@ -1050,8 +1050,8 @@ For `nb edit` help information, run [`nb help edit`](#edit).
 
 ##### Editing with `browse`
 
-Items can be edited within terminal and GUI web browsers with
-`nb browse --edit` / `nb br -e`:
+Items can be edited within terminal and GUI web browsers using
+[`nb browse --edit`](#browse) / [`nb br -e`](#browse):
 
 ```bash
 > nb browse text:formats/markdown/123 --edit
@@ -1258,7 +1258,7 @@ nb 3 view
 ##### Viewing with `browse`
 
 Items can be viewed within terminal and GUI web browsers using
-`nb browse` / `nb br`:
+[`nb browse`](#browse) / [`nb br`](#browse):
 
 ```bash
 > nb browse text:formats/markdown/123
@@ -1372,7 +1372,7 @@ For `nb delete` help information, run [`nb help delete`](#delete).
 ##### Deleting with `browse`
 
 Items can be deleted within terminal and GUI web browsers using
-`nb browse --delete` / `nb br -d`:
+[`nb browse --delete`](#browse) / [`nb br -d`](#browse):
 
 ```bash
 > nb browse --delete example:4
@@ -2070,7 +2070,7 @@ More example content:
 ```
 
 Items can also be browsed with [`nb show --browse`](#show) /
-[`nb show -b`](#show), which behaves identically.
+[`nb s -b`](#show), which behaves identically.
 
 `nb browse` is particularly useful for [bookmarks](#-bookmarks). Cached
 content is rendered in the web browser, and internal and external links
@@ -2117,7 +2117,7 @@ convert it to structurally valid XHTML (or HTML).
 
 Items can be edited within a terminal or GUI browser using the `edit`
 link on the item page or by opening the item with `nb browse --edit` /
-`nb browse -e`, which automatically resizes the form to fit the current
+`nb br -e`, which automatically resizes the form to fit the current
 terminal window:
 
 ```bash
@@ -2148,7 +2148,7 @@ terminal window:
 Terminal browsers can also be configured to use your editor.
 
 Add an item within the browser using the `+` link or `nb browse --add` /
-`nb browse -a`. Pass a notebook or folder selector to create a new
+`nb br -a`. Pass a notebook or folder selector to create a new
 note in that location:
 
 ```bash
@@ -2176,7 +2176,7 @@ note in that location:
 [add]
 ```
 
-Use the `x` link or `nb browse --delete` / `nb browse -d` to delete an
+Use the `x` link or `nb browse --delete` / `nb br -d` to delete an
 item:
 
 ```bash
@@ -2193,7 +2193,7 @@ item:
 ```
 
 To open any `nb browse` view in the system's primary GUI web browser,
-add the `nb browse --gui` / `nb browse -g` option:
+add the `nb browse --gui` / `nb br -g` option:
 
 ```bash
 # open the item with id 123 in the "sample" notebook in the system's primary GUI browser
@@ -2208,9 +2208,10 @@ search, see [Search](#-search) and [`nb search`](#search).
 [`pandoc`](https://pandoc.org/). When only `pandoc` is available, the
 current note will be rendered and
 <a href="#-linking">[[wiki-style links]]</a>
-go to unrendered, original files.
-If neither `pandoc` nor `ncat` is available, `nb` falls back to
-[`nb show`](#show).
+go to unrendered, original files. If only `ncat` is available, files in
+plain text formats with be rendered with original markup and document
+file types are not rendered in HTML. ailable, `nb` falls back to
+the default behavior of [`nb show`](#show).
 
 ##### `browse` Privacy
 
