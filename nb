@@ -15268,7 +15268,7 @@ HEREDOC
     then
       if [[ "${_action:-}" == "add" ]]
       then
-        _header_content+=" +"
+        _header_content+=" <span class=\"dim\">+</span>"
       else
         if [[ -z "${_url_params:-}" ]]
         then

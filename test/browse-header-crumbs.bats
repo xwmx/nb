@@ -31,7 +31,7 @@ load test_helper
 " <span class=\"dim\">/</span> <a href=\"http://localhost:6789/home:1/1/?--per-page=.*&--columns=.*\">Sample Folder</a> <span class=\"dim\">/</span> "
 
   printf "%s\\n" "${output}" | grep -q \
-" <span class=\"dim\">/</span> +</h1>"
+" <span class=\"dim\">/</span> <span class=\"dim\">+</span></h1>"
 }
 
 # --edit ######################################################################
