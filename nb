@@ -14930,7 +14930,7 @@ HEREDOC
 <h2 align="center">deleting</h2>
 
 <p align="center">
-  <a href="http://localhost:${NB_SERVER_PORT}/${_id_selector}${_url_params/&/?}">${_info_line:-}</a>
+  <a href="http://localhost:${NB_SERVER_PORT}/${_id_selector}${_url_params/&/?}">${_info_line//'\ '/ }</a>
 </p>
 <p align="center" class="dim">
   This item will still be available in git history.
