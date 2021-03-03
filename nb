@@ -8254,7 +8254,8 @@ html {
 }
 
 html,
-input {
+input,
+textarea {
   font-family: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console, monospace;
 }
 
@@ -8492,14 +8493,15 @@ input[type="submit"]:hover {
 }
 
 textarea {
-  background-color: #1a1a1a;
+  background-color: #1d1d1d;
   border:           none;
-  border-bottom:    1px dashed #626480;
-  border-top:       1px dashed #626480;
-  color:            #cccccc;
+  border-bottom:    1px solid #2c2c2c;
+  border-top:       1px solid #2c2c2c;
+  color:            #dddddd;
   font-size:        1rem;
-  outline:          0 solid #1a1a1a;
-  padding:          2rem 0;
+  line-height:      1.5;
+  outline:          1px solid #242424;
+  padding:          1rem;
 }
 
 div.sourceCode {
