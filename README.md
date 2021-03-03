@@ -2262,7 +2262,7 @@ to physical zettelkasten note-taking.
 | tags              | [#tags](#-tagging)                            |
 | metadata          | [front matter](#front-matter)                 |
 | cross-references  |  <a href="#-linking">[[wiki-style links]]</a> |
-| fast note-taking  | [`nb add` / `nb a`](#adding-notes)            |
+| fast note-taking  | [`nb add` / `nb a`](#adding)                  |
 
 For more information about Zettelkasten, see
 [Wikipedia](https://en.wikipedia.org/wiki/Zettelkasten).
