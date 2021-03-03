@@ -14144,7 +14144,7 @@ Can't show archives. Export archive and expand to edit.\\n"
       local _rendered_temp_file_path=
       _rendered_temp_file_path="$(_temp file ".html" --touch)"
 
-      if [[ "${_target_path}" =~ \.org ]]
+      if [[ "${_target_path}" =~ \.org  ]]
       then # resolve Org [[wiki-style links]] before rendering to HTML
         {
           cat "${_target_path}"
