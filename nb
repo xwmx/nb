@@ -14787,7 +14787,7 @@ HEREDOC
           *)        _truncate_length="$((_columns - 1))"  ;;
         esac
       else
-        _truncate_length="$((_columns - 1))"
+        _truncate_length="$((_columns + 6))"
       fi
 
       while read -r __list_item
@@ -14807,7 +14807,7 @@ HEREDOC
 
           if [[ "${_list_item_visible_length}" -ge "${_adjusted_truncate_length}" ]]
           then
-            __list_item="${__list_item:0:$((_adjusted_truncate_length - 3))}..."
+            __list_item="${__list_item:0:$((_adjusted_truncate_length))}…"
           fi
         fi
 
