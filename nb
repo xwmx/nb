@@ -8310,14 +8310,12 @@ h6  { font-weight:  normal; }
 
 p   { margin:       1em 0;  }
 
-a           { color: #6EB3D7; text-decoration: none;      }
-a:hover     { color: #6EB3D7; text-decoration: underline; }
-a:visited   { color: #6EB3D7; text-decoration: none;      }
+a           { color:    #6EB3D7; text-decoration: none;       }
+a:hover     { color:    #6EB3D7; text-decoration: underline;  }
+a:visited   { color:    #6EB3D7; text-decoration: none;       }
 
-.header-crumbs {
-  font-size:    1.4rem;
-  font-weight:  normal;
-}
+:focus                  { outline:  1px solid #2d2d2d;        }
+body.using-mouse :focus { outline:  none;                     }
 
 h1 a,
 h1 a:hover,
@@ -8413,13 +8411,18 @@ header {
   text-align: center;
 }
 
+.header-crumbs {
+  font-size:        1.4rem;
+  font-weight:      normal;
+}
+
 .list-item  {
-  display:        inline-block;
-  max-width:      45rem;
-  overflow:       hidden;
-  text-overflow:  ellipsis;
-  white-space:    nowrap;
-  vertical-align: top;
+  display:          inline-block;
+  max-width:        45rem;
+  overflow:         hidden;
+  text-overflow:    ellipsis;
+  white-space:      nowrap;
+  vertical-align:   top;
 }
 
 .dim        { color: #626480; }
@@ -8480,12 +8483,16 @@ input[type="submit"] {
   color:            #6EB3D7;
   font-size:        1rem;
   outline:          0 solid #1a1a1a;
-  padding:          0;
+  padding:          1rem;
 }
 
 input[type="submit"]:active {
   border-bottom:    1px solid #bae7ff;
   color:            #bae7ff;
+}
+
+input[type="submit"]:focus {
+  outline:          1px solid #2d2d2d;
 }
 
 input[type="submit"]:hover {
@@ -8543,6 +8550,18 @@ document.addEventListener("DOMContentLoaded", function(event) {
   document.querySelectorAll('img').forEach(function(img) {
     img.onerror = function() { this.style.display = 'none'; };
   })
+});
+
+// let the document know when the mouse is being used
+document.addEventListener('mousedown', function() {
+  document.body.classList.add('using-mouse');
+});
+
+// re-enable focus styling when <tab> is pressed
+document.addEventListener('keydown', function(event) {
+  if (event.keyCode === 9) {
+    document.body.classList.remove('using-mouse');
+  }
 });
 </script>
 <meta name="referrer" content="no-referrer" />
