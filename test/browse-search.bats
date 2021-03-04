@@ -213,6 +213,80 @@ identifier\"\>2\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Two\</a\>\<
     "identifier\">2</span><span class=\"dim\">\]</span> Title Two</a><br>"
 }
 
+@test "'browse --query \"<#hashtag>|<#hashtag>\"' performs OR search." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md"    --title "Title One"   --content "Content one."
+    "${_NB}" add "File Two.md"    --title "Title Two"   --content "Content #xyz two."
+    "${_NB}" add "File Three.md"  --title "Title Three" --content "Content #abcde three. #xyz"
+    "${_NB}" add "File Four.md"   --title "Title Four"  --content "Content #abcde four."
+    "${_NB}" add "File Five.md"   --title "Title Five"  --content "Content #xyz five. #abcde"
+  }
+
+
+  run "${_NB}" browse --query "#xyz|#abcde" --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq  0    ]]
+
+  [[    "${output}" =~ value=\"\&#35\;xyz|\&#35\;abcde\"  ]]
+
+  [[    "${output}" =~ \
+\<a.*\ href=\"http://localhost:6789/home:5\?--per-page=.*\&--columns=.*\"\ class=\"list-item\"\>\<span\  ]]
+
+  [[    "${output}" =~ \
+\<a.*\ href=\"http://localhost:6789/home:4\?--per-page=.*\&--columns=.*\"\ class=\"list-item\"\>\<span\  ]]
+
+  [[    "${output}" =~ \
+\<a.*\ href=\"http://localhost:6789/home:3\?--per-page=.*\&--columns=.*\"\ class=\"list-item\"\>\<span\  ]]
+
+  [[    "${output}" =~ \
+\<a.*\ href=\"http://localhost:6789/home:2\?--per-page=.*\&--columns=.*\"\ class=\"list-item\"\>\<span\  ]]
+
+  [[ !  "${output}" =~ \
+\<a.*\ href=\"http://localhost:6789/home:1\?--per-page=.*\&--columns=.*\"\ class=\"list-item\"\>\<span\  ]]
+
+}
+
+@test "'browse --query <#hashtag> <#hashtag>' performs AND search." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md"    --title "Title One"   --content "Content one."
+    "${_NB}" add "File Two.md"    --title "Title Two"   --content "Content #xyz two."
+    "${_NB}" add "File Three.md"  --title "Title Three" --content "Content #abcde three. #xyz"
+    "${_NB}" add "File Four.md"   --title "Title Four"  --content "Content #abcde four."
+    "${_NB}" add "File Five.md"   --title "Title Five"  --content "Content #xyz five. #abcde"
+  }
+
+  run "${_NB}" browse --query "#xyz #abcde" --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq  0                               ]]
+
+  [[    "${output}" =~ value=\"\&#35\;xyz\ \&#35\;abcde\" ]]
+
+  [[    "${output}" =~ \
+\<a.*\ href=\"http://localhost:6789/home:5\?--per-page=.*\&--columns=.*\"\ class=\"list-item\"\>\<span\  ]]
+
+  [[ !  "${output}" =~ \
+\<a.*\ href=\"http://localhost:6789/home:4\?--per-page=.*\&--columns=.*\"\ class=\"list-item\"\>\<span\  ]]
+
+  [[ !  "${output}" =~ \
+\<a.*\ href=\"http://localhost:6789/home:3\?--per-page=.*\&--columns=.*\"\ class=\"list-item\"\>\<span\  ]]
+
+  [[    "${output}" =~ \
+\<a.*\ href=\"http://localhost:6789/home:2\?--per-page=.*\&--columns=.*\"\ class=\"list-item\"\>\<span\  ]]
+
+  [[ !  "${output}" =~ \
+\<a.*\ href=\"http://localhost:6789/home:1\?--per-page=.*\&--columns=.*\"\ class=\"list-item\"\>\<span\  ]]
+}
+
 @test "'browse --query <#hashtag>' performs search." {
   {
     "${_NB}" init

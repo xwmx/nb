@@ -14729,13 +14729,40 @@ HEREDOC
       _target_path="$(_notebooks current --path)"
     fi
 
+    local _escaped_query=
+
+    if [[ -n "${_query:-}" ]]
+    then
+      local _query_arguments=()
+      _query_arguments=($(
+        printf "%s" "${_query}" | xargs -n 1 printf "%s\\n"
+      ))
+
+      _escaped_query="$(
+        sed                     \
+          -e 's/&/\&amp;/g'     \
+          -e 's/</\&lt;/g'      \
+          -e 's/>/\&gt;/g'      \
+          -e 's/"/\&quot;/g'    \
+          -e 's/#/\&35;/g'      \
+          -e 's/'"'"'/\&#39;/g' <<<"${_query}"
+      )"
+    fi
+
     [[ ! "${_target_path}" =~ /$ ]] && _target_path="${_target_path}/"
+
+    local _url_params=
+
+    if ((_terminal_browser))
+    then
+      _url_params+="?--per-page=${_per_page}&--columns=${_columns}"
+    fi
 
     {
       if [[ -n "${_query:-}" ]]
       then
         _search "${_target_path}"         \
-          "${_query}"                     \
+          "${_query_arguments[@]:-}"      \
           --no-color                      \
           --page      "${_current_page}"  \
           --per-page  "${_per_page}"      \
@@ -14764,7 +14791,8 @@ HEREDOC
 
       while read -r __list_item
       do
-        if [[ -n "${_truncate_length:-}" ]]
+        if [[ -n "${_truncate_length:-}"          ]] &&
+           [[ ! "${__list_item:-}" =~ Not\ found  ]]
         then
           local _list_item_length="${#__list_item}"
           local _list_item_visible_length=
@@ -14778,17 +14806,17 @@ HEREDOC
 
           if [[ "${_list_item_visible_length}" -ge "${_adjusted_truncate_length}" ]]
           then
-            __list_item="${__list_item:0:$((_adjusted_truncate_length - 1))}…"
+            __list_item="${__list_item:0:$((_adjusted_truncate_length - 3))}..."
           fi
         fi
 
-        if [[   "${__list_item:-}" =~ ^0\ items. ]]
+        if [[   "${__list_item:-}" =~ ^0\ items.  ]]
         then
-          printf "%s<br>\\n" "${__list_item}"
+          printf "%s\\n<br>\\n" "${__list_item}"
           break
-        elif [[ "${__list_item:-}" =~ Not\ found ]]
+        elif [[ "${__list_item:-}" =~ Not\ found  ]]
         then
-          printf "%s<br>\\n" "${__list_item//\ in*:/:}"
+          printf "%s\\n<br>\\n" "${__list_item//\ in*:/:}"
           break
         fi
 
@@ -14821,27 +14849,23 @@ HEREDOC
         _display_item="${_display_item/\[/<span class=\"dim\">[</span><span class=\"identifier\">}"
         _display_item="${_display_item/\]/</span><span class=\"dim\">]</span>}"
 
-        local _url_params=
-        _url_params="$(_get_id_selector "${_item_selector}" --notebook)"
-        _url_params="${_url_params//' '/%20}"
+        local _link_selector=
+        _link_selector="$(_get_id_selector "${_item_selector}" --notebook)"
+        _link_selector="${_link_selector//' '/%20}"
 
-        if ((_terminal_browser))
-        then
-          _url_params+="?--per-page=${_per_page}&--columns=${_columns}"
-        fi
-
-        printf "<a href=\"http://localhost:%s/%s\" class=\"list-item\">%s</a><br>\\n" \
-          "${NB_SERVER_PORT}"                                                         \
-          "${_url_params:-}"                                                          \
-          "${_display_item}"
+        printf "<a href=\"http://localhost:%s/%s%s\" class=\"list-item\">%s</a><br>\\n" \
+          "${NB_SERVER_PORT}"                                                           \
+          "${_link_selector:-}"                                                         \
+          "${_url_params:-}"                                                            \
+          "${_display_item:-}"
       done
     } | {
       local _list_count=
       _list_count="$(_count "${_target_path}")"
 
-      local _link_selector=
-      _link_selector="$(_get_id_selector "${_target_path%/}")"
-      _link_selector="${_link_selector//' '/%20}"
+      local _current_selector=
+      _current_selector="$(_get_id_selector "${_target_path%/}")"
+      _current_selector="${_current_selector//' '/%20}"
 
       local _print_prev=0
 
@@ -14859,7 +14883,7 @@ HEREDOC
       fi
 
       cat <<HEREDOC
-<form accept-charset="UTF-8" action="/${_link_selector}" id="search" method="get">
+<form accept-charset="UTF-8" action="/${_current_selector}${_url_params:-}" id="search" method="get">
   <label for="search-input">search:</label>
   <input
     autocapitalize="off"
@@ -14868,7 +14892,7 @@ HEREDOC
     name="--query"
     placeholder="search"
     type="text"
-    value="${_query:-}"
+    value="${_escaped_query}"
   >
   <i></i>
   <input type="hidden" name="--page"      value="${_current_page}">
@@ -14884,7 +14908,7 @@ HEREDOC
       local __line=
       while read -r __line
       do
-        printf "%s\\n" "${__line:-}"
+        printf "%s\\n" "${__line}"
 
         _pagination_count="$((_pagination_count+1))"
       done
@@ -14906,7 +14930,7 @@ HEREDOC
 
       if [[ -n "${_query:-}" ]]
       then
-        _params+="&--query=${_query}"
+        _url_params+="&--query=${_query}"
       fi
 
       if ((_print_prev))
@@ -14914,9 +14938,9 @@ HEREDOC
         printf                                                          \
           "<a href=\"http://localhost:%s/%s?--page=%s&%s\">❮ prev</a>"  \
           "${NB_SERVER_PORT}"                                           \
-          "${_link_selector}"                                           \
+          "${_current_selector}"                                        \
           "$((_current_page - 1))"                                      \
-          "${_params:-}"
+          "${_url_params:-}"
       fi
 
       if ((_print_prev)) && ((_print_next))
@@ -14929,9 +14953,9 @@ HEREDOC
         printf                                                          \
           "<a href=\"http://localhost:%s/%s?--page=%s&%s\">next ❯</a>"  \
           "${NB_SERVER_PORT}"                                           \
-          "${_link_selector}"                                           \
+          "${_current_selector}"                                        \
           "$((_current_page + 1))"                                      \
-          "${_params:-}"
+          "${_url_params:-}"
       fi
 
       if ((_print_prev)) || ((_print_next))
@@ -15699,11 +15723,13 @@ HEREDOC
 
     if [[ "${_request_uri}"     =~ --query=([^&]+)      ]]
     then
-      local _hash=$'#'
-      _query="${BASH_REMATCH[1]}"
-      _query="${_query//%23/${_hash}}"
-      _query="${_query//%20/ }"
-      _query="${_query//+/ }"
+      _query="${BASH_REMATCH[1]//%20/ }"
+      _query="$(
+        printf "%b" "$(
+          # https://unix.stackexchange.com/a/187256
+          printf "%s\\n" "${_query//$'\r'}" | sed 's@+@ @g;s@%@\\x@g'
+        )"
+      )"
     fi
 
     # detect edit
@@ -16136,7 +16162,10 @@ HEREDOC
   if [[ -n "${_search_query:-}" ]]
   then
     _arguments+=("--query" "${_search_query}")
-    _url_params+=("--query=${_search_query//#/%23}")
+
+    local _escaped_query=
+    _escaped_query="$(_get_uri --encode "${_search_query}")"
+    _url_params+=("--query=${_escaped_query}")
   fi
 
   if [[ -n "${_action:-}" ]]

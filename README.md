@@ -2186,9 +2186,11 @@ add the `nb browse --gui` / `nb br -g` option:
 nb browse sample:123 --gui
 ```
 
-`nb browse` includes a search field that can be used for easy searches
-in the current notebook or folder while browsing. For full-featured
-search, see [Search](#-search) and [`nb search`](#search).
+`nb browse` includes a search field powered by [`nb search`](#search) that
+can be used to search the current notebook or folder. Search queries are
+treated as command line arguments for `nb search`, providing the ability to
+perform `AND` and `OR` queries. For more information about search options,
+see [Search](#-search) and [`nb search`](#search).
 
 `nb browse` depends on [`ncat`](https://nmap.org/ncat/) and
 [`pandoc`](https://pandoc.org/). When only `pandoc` is available, the
