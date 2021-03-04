@@ -14927,8 +14927,6 @@ HEREDOC
         printf "<p class=\"pagination\">\\n"
       fi
 
-      local _params="--per-page=${_per_page}&--columns="${_columns}
-
       if [[ -n "${_query:-}" ]]
       then
         _url_params+="&--query=${_query}"
