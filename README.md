@@ -2189,8 +2189,33 @@ nb browse sample:123 --gui
 `nb browse` includes a search field powered by [`nb search`](#search) that
 can be used to search the current notebook or folder. Search queries are
 treated as command line arguments for `nb search`, providing the ability to
-perform `AND` and `OR` queries. For more information about search options,
-see [Search](#-search) and [`nb search`](#search).
+perform `AND` and `OR` queries. Use the `-q` / `--query`
+option to open `nb browse` to the results page for a search:
+
+```bash
+# open to a list of items tagged with "#tag2" in the "example" notebook
+> nb browse --query "#tag2"
+❯nb · example
+
+search: [#tag2               ]
+
+[home:321] Example Title
+[home:654] Sample Title
+[home:789] Demo Title
+
+# using shortcut alias and short option
+> nb br -q "#tag2"
+❯nb · example
+
+search: [#tag2               ]
+
+[home:321] Example Title
+[home:654] Sample Title
+[home:789] Demo Title
+```
+
+For more information about search options, see [Search](#-search) and
+[`nb search`](#search).
 
 `nb browse` depends on [`ncat`](https://nmap.org/ncat/) and
 [`pandoc`](https://pandoc.org/). When only `pandoc` is available, the
