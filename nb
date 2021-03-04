@@ -2421,7 +2421,7 @@ _selector_resolve_path() {
         _skip_titles=1
         ;;
       [^-]*)
-        if [[ -z "${_selector:-}" ]]
+        if [[ -z "${_selector:-}"   ]]
         then
           _selector="${__arg%/}" # strip trailing /
         else
@@ -2431,7 +2431,7 @@ _selector_resolve_path() {
     esac
   done
 
-  if [[ -n "${_selector}" ]]
+  if [[ -n "${_selector}"           ]]
   then
     if [[ -z "${_notebook_path:-}"  ]] &&
        [[ "${_selector}" =~ :|^/    ]]
@@ -2441,7 +2441,7 @@ _selector_resolve_path() {
       )"
     fi
 
-    if [[ -z "${_notebook_path:-}" ]]
+    if [[ -z "${_notebook_path:-}"  ]]
     then
       _notebook_path="$(
         _notebooks current --path 2>/dev/null || :
