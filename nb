@@ -14939,7 +14939,7 @@ HEREDOC
           "${NB_SERVER_PORT}"                                           \
           "${_current_selector}"                                        \
           "$((_current_page - 1))"                                      \
-          "${_url_params:-}"
+          "${_url_params#$'?'}"
       fi
 
       if ((_print_prev)) && ((_print_next))
@@ -14954,7 +14954,7 @@ HEREDOC
           "${NB_SERVER_PORT}"                                           \
           "${_current_selector}"                                        \
           "$((_current_page + 1))"                                      \
-          "${_url_params:-}"
+          "${_url_params#$'?'}"
       fi
 
       if ((_print_prev)) || ((_print_next))
