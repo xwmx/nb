@@ -8414,6 +8414,7 @@ header {
 .header-crumbs {
   font-size:        1.4rem;
   font-weight:      normal;
+  margin-top:       0;
 }
 
 .item-list {
