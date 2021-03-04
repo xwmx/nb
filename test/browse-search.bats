@@ -277,10 +277,10 @@ identifier\"\>2\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Two\</a\>\<
   [[ !  "${output}" =~ \
 \<a.*\ href=\"http://localhost:6789/home:4\?--per-page=.*\&--columns=.*\"\ class=\"list-item\"\>\<span\  ]]
 
-  [[ !  "${output}" =~ \
+  [[    "${output}" =~ \
 \<a.*\ href=\"http://localhost:6789/home:3\?--per-page=.*\&--columns=.*\"\ class=\"list-item\"\>\<span\  ]]
 
-  [[    "${output}" =~ \
+  [[ !  "${output}" =~ \
 \<a.*\ href=\"http://localhost:6789/home:2\?--per-page=.*\&--columns=.*\"\ class=\"list-item\"\>\<span\  ]]
 
   [[ !  "${output}" =~ \
