@@ -8416,6 +8416,10 @@ header {
   font-weight:      normal;
 }
 
+.item-list {
+  margin-top:       0;
+}
+
 .list-item  {
   display:          inline-block;
   max-width:        45rem;
@@ -14869,7 +14873,7 @@ HEREDOC
 <br>
 HEREDOC
 
-      printf "<p>\\n"
+      printf "<p class=\"item-list\">\\n"
 
       local _pagination_count=0
 
