@@ -8481,6 +8481,10 @@ label[for=search-input] {
   to    { opacity: 0; }
 }
 
+form br {
+  display: none;
+}
+
 input[type="submit"] {
   background:       none;
   border:           none;
