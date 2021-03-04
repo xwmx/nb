@@ -230,9 +230,9 @@ identifier\"\>2\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Two\</a\>\<
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"  -eq  0    ]]
+  [[    "${status}"  -eq  0                               ]]
 
-  [[    "${output}" =~ value=\"\&#35\;xyz|\&#35\;abcde\"  ]]
+  [[    "${output}" =~ value=\"\&#35\;xyz\|\&#35\;abcde\" ]]
 
   [[    "${output}" =~ \
 \<a.*\ href=\"http://localhost:6789/home:5\?--per-page=.*\&--columns=.*\"\ class=\"list-item\"\>\<span\  ]]
