@@ -8262,9 +8262,6 @@ textarea {
 body {
   font-kerning:   normal;
   hyphens:        none;
-  margin:         0 auto;
-  max-width:      45rem;
-  padding:        50px;
   text-rendering: optimizeLegibility;
   word-wrap:      break-word;
 }
@@ -8320,6 +8317,9 @@ body.using-mouse :focus { outline:  none;                     }
 h1 a,
 h1 a:hover,
 h1 a:visited,
+nav a,
+nav a:hover,
+nav a:visited,
 a.list-item,
 a.list-item:hover,
 a.list-item:visited {
@@ -8403,18 +8403,35 @@ table caption {
 }
 
 col {
-  width: auto !important;
+  width:          auto !important;
 }
 
 header {
-  margin-bottom: 4em;
-  text-align: center;
+  margin-bottom:  4em;
+  text-align:     center;
 }
 
 .header-crumbs {
-  font-size:        1.4rem;
-  font-weight:      normal;
-  margin-top:       0;
+  font-size:      1.4rem;
+  font-weight:    normal;
+  margin:         0;
+  padding-top:    2rem;
+  text-align:     center;
+}
+
+.header-crumbs h1 {
+  display:        inline-block;
+  font-weight:    normal;
+  margin:         0;
+  min-width:      45rem;
+  padding:        0;
+  text-align:     left;
+}
+
+.main {
+  margin:         0 auto;
+  max-width:      45rem;
+  padding:        2rem;
 }
 
 .item-list {
@@ -8583,12 +8600,14 @@ HEREDOC
   local _pandoc_arguments=("--highlight-style=zenburn")
   local _input_file_path=
   local _input_string=
+  local _only_body=0
   local _use_pandoc=0
 
   while ((${#}))
   do
     case "${1:-}" in
       "")         :                                         ;;
+      --body)     _only_body=1                              ;;
       --from)     _from="${2:?}" && _use_pandoc=1 && shift  ;;
       --*pandoc)  _use_pandoc=1                             ;;
       -*)         _pandoc_arguments+=("${1:-}")             ;;
@@ -8712,18 +8731,23 @@ HEREDOC
     fi
   } | {
     # head
-    _render_print_head
+    if ! ((_only_body))
+    then
+      _render_print_head
+    fi
 
     cat
   } | {
     # footer / tail
     cat
 
-    cat <<HEREDOC
-
+    if ! ((_only_body))
+    then
+        cat <<HEREDOC
 </body>
 </html>
 HEREDOC
+    fi
   } | {
     sed                     \
       -e 's/<img[^>]*>//g'  \
@@ -14666,7 +14690,11 @@ HEREDOC
           --add
       )"
 
+      printf "<div class=\"main\">\\n"
+
       cat
+
+      printf "</div>\\n"
     } | {
       _render
     }
@@ -14964,7 +14992,12 @@ HEREDOC
     } | {
       printf "%s\\n" "$(_browse_render_header "${_pagination_arguments[@]:-}")"
 
+
+      printf "<div class=\"main\">\\n"
+
       cat
+
+      printf "</div>\\n"
     } | {
       _render
     }
@@ -15059,7 +15092,11 @@ HEREDOC
           --delete
       )"
 
+      printf "<div class=\"main\">\\n"
+
       cat
+
+      printf "</div>\\n"
     } | {
       _render
     }
@@ -15155,7 +15192,11 @@ HEREDOC
           --edit
       )"
 
+      printf "<div class=\"main\">\\n"
+
       cat
+
+      printf "</div>\\n"
     } | {
       _render
     }
@@ -15393,7 +15434,7 @@ HEREDOC
       fi
     fi
 
-    printf "<h1 class=\"header-crumbs\">%s</h1>\\n\\n" "${_header_content:-}"
+    printf "<nav class=\"header-crumbs\"><h1>%s</h1></nav>\\n\\n" "${_header_content:-}"
   }
 
   # _browse_render_item()
@@ -15469,24 +15510,36 @@ HEREDOC
             "${_pagination_arguments[@]:-}"
         )"
 
+        printf "<div class=\"main\">\\n"
+
         cat
+
+        print "</div>"
       } | {
         _render
       }
     else # render non-Org to HTML before resolving [[wiki-style links]]
       {
+        printf "" | _render "${_source_path}" --pandoc --body
+      } | {
         printf "%s\\n" "$(
           _browse_render_header           \
             "${_source_path}"             \
             "${_pagination_arguments[@]:-}"
         )"
-      } | {
-        _render "${_source_path}" --pandoc
+
+        printf "<div class=\"main\">\\n"
+
+        cat
+
+        print "</div>"
       } | {
         _resolve_links                    \
           "${_notebook_path}"             \
           "${_pagination_arguments[@]:-}" \
           --browse
+      } | {
+        _render
       }
     fi
 
@@ -15576,7 +15629,11 @@ HEREDOC
     } | {
       printf "%s\\n" "$(_browse_render_header "${_pagination_arguments[@]:-}")"
 
+      printf "<div class=\"main\">\\n"
+
       cat
+
+      printf "</div>"
     } | {
       _render
     }

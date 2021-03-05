@@ -164,7 +164,7 @@ export _S=" "
   [[ "${lines[4]}"  =~  Content-Type:\ text/html              ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<h1 class=\"header-crumbs\"><a rel=\"noopener noreferrer\" href=\"http://lo"
+"<nav class=\"header-crumbs\"><h1><a rel=\"noopener noreferrer\" href=\"http://lo"
 
   printf "%s\\n" "${output}" | grep -q \
 "calhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"

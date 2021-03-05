@@ -222,7 +222,7 @@ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</spa
   [[ "${status}"  ==  0 ]]
 
   printf "%s\\n" "${output}" | grep       -q  \
-"<h1 class=\"header-crumbs\">.*<a.* href=\"http://localhost:6789/?--per-page=.*\"><span class=\"dim\">❯</span>nb</a>"
+"<nav class=\"header-crumbs\"><h1>.*<a.* href=\"http://localhost:6789/?--per-page=.*\"><span class=\"dim\">❯</span>nb</a>"
 
   printf "%s\\n" "${output}" | grep       -q  \
 ".*·.* <a.* href=\"http://localhost:6789/home:?--per-page=.*\">home</a> .*:.*"
@@ -266,7 +266,7 @@ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</spa
   [[ "${status}"  ==  0 ]]
 
   [[ "${output}"  =~  \
-\<h1\ class=\"header-crumbs\"\>\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>  ]]
+\<nav\ class=\"header-crumbs\"\>\<h1\>\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>  ]]
   [[ "${output}"  =~  \
 .*·.*\ \<a.*\ href=\"http://localhost:6789/home:\?--per-page=.*\"\>home\</a\>\ .*:.*\             ]]
   [[ "${output}"  =~  \
@@ -306,7 +306,7 @@ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</spa
   [[ "${status}"  ==  0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<h1 class=\"header-crumbs\"><a.* href=\"http://localhost:6789/?--per-page=.*\"><span class=\"dim\">❯</span>nb</a>"
+"<nav class=\"header-crumbs\"><h1><a.* href=\"http://localhost:6789/?--per-page=.*\"><span class=\"dim\">❯</span>nb</a>"
 
   printf "%s\\n" "${output}" | grep -q \
 ".*·.* <a.* href=\"http://localhost:6789/Example%20Notebook:?--per-page=.*\">Example Notebook</a> <span "

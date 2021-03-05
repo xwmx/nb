@@ -51,7 +51,7 @@ export _AMP="&"
   [[ "${output}"  =~ \<\!DOCTYPE\ html\>                    ]]
 
   printf "%s\\n" "${output}" | grep       -q  \
-"<h1 class=\"header-crumbs\"><a.* href=\"http://localhost:6789/?--per-page=2&--columns=.*\">"
+"<nav class=\"header-crumbs\"><h1><a.* href=\"http://localhost:6789/?--per-page=2&--columns=.*\">"
   printf "%s\\n" "${output}" | grep       -q  \
 "><a.* href=\"http://localhost:6789/?--per-page=2&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"
   printf "%s\\n" "${output}" | grep       -q  \
@@ -118,7 +118,7 @@ export _AMP="&"
   [[ "${output}"  =~ \<\!DOCTYPE\ html\>                    ]]
 
   printf "%s\\n" "${output}" | grep       -q  \
-"<h1 class=\"header-crumbs\">"
+"<nav class=\"header-crumbs\"><h1>"
   printf "%s\\n" "${output}" | grep       -q  \
 "<a.* href=\"http://localhost:6789/?--per-page=2&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"
   printf "%s\\n" "${output}" | grep       -q  \
@@ -127,9 +127,9 @@ export _AMP="&"
 "Demo Notebook</a> <span class=\"dim\">:</span> <span class=\"dim\">1</span>"
 
   printf "%s\\n" "${output}" | grep       -q  \
-"<a href=\"http://localhost:6789/Demo Notebook:Title Two?--per-page=2&--columns=.*\">\[\[Title Two\]\]</a>"
+"<a.* href=\"http://localhost:6789/Demo Notebook:Title Two?--per-page=2&--columns=.*\">\[\[Title Two\]\]</a>"
   printf "%s\\n" "${output}" | grep       -q  \
-"<a href=\"http://localhost:6789/Demo%20Notebook:?--per-page=2&--columns=.*&--query=%23example\">#example</a></p>"
+"<a.* href=\"http://localhost:6789/Demo%20Notebook:?--per-page=2&--columns=.*&--query=%23example\">#example</a></p>"
 }
 
 @test "'browse' includes pagination on links on notebooks page." {
@@ -175,7 +175,7 @@ export _AMP="&"
   [[ "${output}"  =~ \<\!DOCTYPE\ html\>                    ]]
 
   printf "%s\\n" "${output}" | grep       -q  \
-"<h1 class=\"header-crumbs\">"
+"<nav class=\"header-crumbs\"><h1>"
   printf "%s\\n" "${output}" | grep       -q  \
 "<a.* href=\"http://localhost:6789/?--per-page=2&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"
   printf "%s\\n" "${output}" | grep       -q  \
@@ -212,7 +212,7 @@ export _AMP="&"
   [[ "${output}"  =~ \<\!DOCTYPE\ html\>                    ]]
 
   printf "%s\\n" "${output}" | grep -q \
-'<h1 class="header-crumbs"><a.* href="http://localhost:6789/?--per-page=4&--columns=.*"><span class="dim">❯</span>nb</a>'
+'<nav class="header-crumbs"><h1><a.* href="http://localhost:6789/?--per-page=4&--columns=.*"><span class="dim">❯</span>nb</a>'
 
   printf "%s\\n" "${output}" | grep -q \
 "<span class=\"dim\">·</span> <a.* href=\"http://localhost:6789/home:?--per-page=4&--columns=.*\">home</a> <span "
@@ -295,7 +295,7 @@ export _AMP="&"
   [[ "${output}"  =~ \<\!DOCTYPE\ html\>                    ]]
 
   [[ "${output}"  =~ \
-\<h1\ class=\"header-crumbs\"\>.*\<a.*\ href=\"http://localhost:6789/\?--per-page=4${_AMP}--columns=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>  ]]
+\<nav\ class=\"header-crumbs\"\>\<h1\>.*\<a.*\ href=\"http://localhost:6789/\?--per-page=4${_AMP}--columns=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>  ]]
   [[ "${output}"  =~ \
 .*·.*\ \<a.*\ href=\"http://localhost:6789/home:\?--per-page=4${_AMP}--columns=.*\"\>home\</a\>.*\</h1\>   ]]
 
@@ -375,7 +375,7 @@ export _AMP="&"
   [[ "${output}"  =~ \<\!DOCTYPE\ html\>                    ]]
 
   [[ "${output}"  =~ \
-\<h1\ class=\"header-crumbs\"\>.*\<a.*\ href=\"http://localhost:6789/\?--per-page=4${_AMP}--columns=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>  ]]
+\<nav\ class=\"header-crumbs\"\>\<h1\>.*\<a.*\ href=\"http://localhost:6789/\?--per-page=4${_AMP}--columns=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>  ]]
   [[ "${output}"  =~ \
 .*·.*\ \<a.*\ href=\"http://localhost:6789/home:\?--per-page=4${_AMP}--columns=.*\"\>home\</a\>.*\</h1\>   ]]
 
@@ -454,7 +454,7 @@ export _AMP="&"
   [[ "${output}"  =~ \<\!DOCTYPE\ html\>                    ]]
 
   [[ "${output}"  =~ \
-\<h1\ class=\"header-crumbs\"\>\<a.*\ href=\"http://localhost:6789/\?--per-page=11${_AMP}--columns=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\> ]]
+\<nav\ class=\"header-crumbs\"\>\<h1\>\<a.*\ href=\"http://localhost:6789/\?--per-page=11${_AMP}--columns=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\> ]]
   [[ "${output}"  =~ \
 .*·.*\ \<a.*\ href=\"http://localhost:6789/home:\?--per-page=11${_AMP}--columns=.*\"\>home\</a\>.*\</h1\>    ]]
 

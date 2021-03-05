@@ -33,7 +33,7 @@ export _S=" "
 
 
   printf "%s\\n" "${output}" | grep   -q \
-"<h1 class=\"header-crumbs\">"
+"<nav class=\"header-crumbs\"><h1>"
 
   printf "%s\\n" "${output}" | grep   -q \
 "<a.* href=\"http://localhost:6789/?--per-page=.*&--columns=.*\"><span "
@@ -90,7 +90,7 @@ export _S=" "
 
 
   printf "%s\\n" "${output}" | grep   -q \
-"<h1 class=\"header-crumbs\">"
+"<nav class=\"header-crumbs\"><h1>"
 
   printf "%s\\n" "${output}" | grep   -q \
 "<a.* href=\"http://localhost:6789/\"><span "

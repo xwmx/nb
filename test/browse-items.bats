@@ -30,7 +30,7 @@ HEREDOC
   [[    "${status}"    ==  0                                            ]]
   [[    "${output}"    =~  \<\!DOCTYPE\ html\>                          ]]
 
-  [[    "${output}"    =~  \<h1\ class=\"header-crumbs\"\>              ]]
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>       ]]
   [[    "${output}"    =~  \<p\>Example\ image\ one:\ \</p\>            ]]
   [[    "${output}"    =~  \<p\>More\ example\ \ content\ \ here.\</p\> ]]
 
@@ -53,10 +53,10 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    ==  0                                   ]]
-  [[ "${output}"    =~  \<\!DOCTYPE\ html\>                 ]]
+  [[ "${status}"    ==  0                                       ]]
+  [[ "${output}"    =~  \<\!DOCTYPE\ html\>                     ]]
 
-  [[ "${output}"    =~  \<h1\ class=\"header-crumbs\"\>     ]]
+  [[ "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>  ]]
 
   printf "%s\\n" "${output}" | grep -q \
 '<a.* href="http://localhost:6789/?--per-page=.*"><span class="dim">❯</span>nb</a>'
@@ -64,9 +64,9 @@ HEREDOC
   printf "%s\\n" "${output}" | grep -q \
 '<span class="dim">·</span> <a.* href="http://localhost:6789/home:?--per-page=.*">home</a\>'
 
-  [[ "${output}"    =~  \<div\ class=\"sourceCode\"         ]]
-  [[ "${output}"    =~  \<pre\ class=\"sourceCode\ bash\"\> ]]
-  [[ "${output}"    =~  \&quot\;hello\&quot\;               ]]
+  [[ "${output}"    =~  \<div\ class=\"sourceCode\"             ]]
+  [[ "${output}"    =~  \<pre\ class=\"sourceCode\ bash\"\>     ]]
+  [[ "${output}"    =~  \&quot\;hello\&quot\;                   ]]
 }
 
 @test "'browse' with .js file serves file in a code block." {
@@ -83,10 +83,10 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    ==  0                                   ]]
-  [[ "${output}"    =~  \<\!DOCTYPE\ html\>                 ]]
+  [[ "${status}"    ==  0                                       ]]
+  [[ "${output}"    =~  \<\!DOCTYPE\ html\>                     ]]
 
-  [[ "${output}"    =~  \<h1\ class=\"header-crumbs\"\>     ]]
+  [[ "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>  ]]
 
   printf "%s\\n" "${output}" | grep -q \
 '<a.* href="http://localhost:6789/?--per-page=.*"><span class="dim">❯</span>nb</a>'
@@ -94,9 +94,9 @@ HEREDOC
   printf "%s\\n" "${output}" | grep -q \
 '<span class="dim">·</span> <a.* href="http://localhost:6789/home:?--per-page=.*">home</a\>'
 
-  [[ "${output}"    =~  \<div\ class=\"sourceCode\"         ]]
-  [[ "${output}"    =~  \<pre\ class=\"sourceCode\ js\"\>   ]]
-  [[ "${output}"    =~  \&quot\;hello\&quot\;               ]]
+  [[ "${output}"    =~  \<div\ class=\"sourceCode\"             ]]
+  [[ "${output}"    =~  \<pre\ class=\"sourceCode\ js\"\>       ]]
+  [[ "${output}"    =~  \&quot\;hello\&quot\;                   ]]
 }
 
 # .odt ########################################################################
@@ -210,7 +210,7 @@ HEREDOC
   # [[ "${output}"    =~  \<h1\ id=\"title-one\"\>Title\ One\</h1\>                     ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<h1 class=\"header-crumbs\">"
+"<nav class=\"header-crumbs\"><h1>"
 
   printf "%s\\n" "${output}" | grep -q \
 "<p>Example content. <a.* href=\"http://localhost:6789/home:1?--per-page=.*&amp;--columns=.*\">"

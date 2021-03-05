@@ -19,7 +19,7 @@ load test_helper
   [[ "${status}"    == 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<h1 class=\"header-crumbs\"><a href=\"http://localhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> "
+"<nav class=\"header-crumbs\"><h1><a href=\"http://localhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> "
 
   printf "%s\\n" "${output}" | grep -q \
 " <span class=\"dim\">·</span> <a href=\"http://localhost:6789/home:?--per-page=.*&--columns=.*\">home</a> <span class=\"dim\">:</span> "
@@ -96,7 +96,7 @@ load test_helper
   [[ "${status}"    == 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<h1 class=\"header-crumbs\"><a href=\"http://localhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> "
+"<nav class=\"header-crumbs\"><h1><a href=\"http://localhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> "
 
   printf "%s\\n" "${output}" | grep -q \
 " <span class=\"dim\">·</span> <a href=\"http://localhost:6789/home:?--per-page=.*&--columns=.*\">home</a> <span class=\"dim\">:</span> "
@@ -139,7 +139,7 @@ load test_helper
   [[ "${status}"    == 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<h1 class=\"header-crumbs\"><a href=\"http://localhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span>"
+"<nav class=\"header-crumbs\"><h1><a href=\"http://localhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span>"
 
   printf "%s\\n" "${output}" | grep -q \
 " <span class=\"dim\">·</span> <a href=\"http://localhost:6789/home:?--per-page=.*&--columns=.*\">home</a> <span class=\"dim\">:</span"
@@ -178,7 +178,7 @@ load test_helper
   [[ "${status}"    == 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<h1 class=\"header-crumbs\"><a href=\"http://localhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> "
+"<nav class=\"header-crumbs\"><h1><a href=\"http://localhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> "
 
   printf "%s\\n" "${output}" | grep -q \
 " <span class=\"dim\">·</span> <a href=\"http://localhost:6789/home:?--per-page=.*&--columns=.*\">home</a> <span class=\"dim\">:</span> "
@@ -223,7 +223,7 @@ load test_helper
 
 
   printf "%s\\n" "${output}" | grep -q \
-"<h1 class=\"header-crumbs\"><a href=\"http://localhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> "
+"<nav class=\"header-crumbs\"><h1><a href=\"http://localhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> "
 
   printf "%s\\n" "${output}" | grep -q \
 " <span class=\"dim\">·</span> <a href=\"http://localhost:6789/home:?--per-page=.*&--columns=.*\">home</a> <span class=\"dim\">:</span> "
@@ -267,7 +267,7 @@ load test_helper
   [[ "${status}"    == 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<h1 class=\"header-crumbs\"><a href=\"http://localhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> "
+"<nav class=\"header-crumbs\"><h1><a href=\"http://localhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> "
 
   printf "%s\\n" "${output}" | grep -q \
 " <span class=\"dim\">·</span> <a href=\"http://localhost:6789/home:?--per-page=.*&--columns=.*\">home</a> <span class=\"dim\">:</span> "
@@ -289,7 +289,7 @@ load test_helper
   [[ "${status}"    == 0  ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<h1 class=\"header-crumbs\">"
+"<nav class=\"header-crumbs\"><h1>"
 }
 
 @test "'browse <notebook-path>/<folder>/<filename>' displays header crumbs with folder and id for file." {
@@ -309,7 +309,7 @@ load test_helper
   [[ "${status}"    == 0  ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<h1 class=\"header-crumbs\"><a href=\"http://localhost:6789/?--per-page.*\"><span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> "
+"<nav class=\"header-crumbs\"><h1><a href=\"http://localhost:6789/?--per-page.*\"><span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> "
 
   printf "%s\\n" "${output}" | grep -q \
 " <span class=\"dim\">·</span> <a href=\"http://localhost:6789/home:?--per-page=.*&--columns=.*\">home</a> <span class=\"dim\">:</span> "
@@ -351,7 +351,7 @@ load test_helper
   [[ "${status}"    == 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<h1 class=\"header-crumbs\"><a href=\"http://localhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> "
+"<nav class=\"header-crumbs\"><h1><a href=\"http://localhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> "
 
   printf "%s\\n" "${output}" | grep -q \
 " <span class=\"dim\">·</span> <a href=\"http://localhost:6789/home:?--per-page=.*&--columns=.*\">home</a> <span class=\"dim\">:</span> "
