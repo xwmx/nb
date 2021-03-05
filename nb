@@ -8529,7 +8529,8 @@ input[type="submit"]:hover {
   border-bottom:    1px solid #6EB3D7;
 }
 
-textarea {
+textarea,
+.ace_editor {
   background-color: #1d1d1d;
   border:           none;
   border-bottom:    1px solid #2c2c2c;
@@ -8539,6 +8540,10 @@ textarea {
   line-height:      1.5;
   outline:          1px solid #242424;
   padding:          1rem;
+}
+
+.ace_content {
+  padding: 1rem;
 }
 
 div.sourceCode {
@@ -8747,7 +8752,53 @@ HEREDOC
 
     if ! ((_only_body))
     then
-        cat <<HEREDOC
+      if ((${NB_ACE_ENABLED:-0}))
+      then
+        cat <<'HEREDOC'
+<script src="/--ace/ace.js"></script>
+<script>
+  var editorInit = function initializeAceEditor() {
+    var textarea = document.querySelector('textarea');
+
+    var editDiv = document.createElement('div');
+    editDiv.setAttribute(
+      "style",
+      "height:" + textarea.clientHeight + "px;" +
+      "width:"  + textarea.clientWidth  + "px;"
+    )
+    editDiv.style.height      = textarea.clientHeight + "px";
+    editDiv.style.width       = textarea.clientWidth  + "px";
+    editDiv.classList.add(textarea.classList[0]);
+
+    textarea.parentNode.insertBefore(editDiv, textarea);
+
+    textarea.style.display    = 'none';
+
+    var editor = ace.edit(editDiv, { autoScrollEditorIntoView: true });
+    editor.renderer.setShowGutter(false);
+    editor.getSession().setValue(textarea.value);
+
+    var mode = "markdown";
+    editor.getSession().setMode('ace/mode/' + mode);
+    editor.setTheme('ace/theme/twilight');
+
+    textarea.form.addEventListener('submit', function() {
+      textarea.value = editor.getSession().getValue();
+    })
+  }
+
+  (function() {
+    if (document.readyState !== "loading") {
+      setTimeout(editorInit, 0);
+    } else {
+      document.addEventListener("DOMContentLoaded", editorInit);
+    }
+  }());
+</script>
+HEREDOC
+      fi
+
+      cat <<HEREDOC
 </body>
 </html>
 HEREDOC
@@ -11315,6 +11366,21 @@ Please install %s manually. No .deb package available for %s."  \
       else
         _completions install --download
       fi
+
+      # install ace editor
+
+      if ((${NB_ACE_ENABLED:-0})) && [[ ! -e "${NB_DIR}/.assets/ace-builds" ]]
+      then
+        if [[ ! -e "${NB_DIR}/.assets" ]]
+        then
+          mkdir "${NB_DIR}/.assets"
+        fi
+
+        cd "${NB_DIR}/.assets"
+
+        git clone https://github.com/ajaxorg/ace-builds.git
+      fi
+
       ;;
     uninstall)
       _completions uninstall
@@ -14679,10 +14745,12 @@ _browse() {
   accept-charset="UTF-8"
   method="post">
   <textarea
+    class="content"
     id="content"
     name="content"
     rows="${_rows}"
     cols="${_text_area_columns}"></textarea>
+  <div id="editor"></div>
   <br><br>
   <input
     type="submit"
@@ -15181,10 +15249,12 @@ HEREDOC
   accept-charset="UTF-8"
   method="post">
   <textarea
+    class="content"
     id="content"
     name="content"
     rows="${_rows}"
     cols="${_text_area_columns}">${_content}</textarea>
+  <div id="editor"></div>
   <br><br>
   <input
     type="submit"
@@ -15726,6 +15796,15 @@ HEREDOC
         break
       fi
     done
+
+    if [[ "${_request_uri}"     =~ /--ace/.*            ]]
+    then
+      local _target_relative_path="${_request_uri#/--ace/}"
+
+      _browse_respond_with 200 \
+        "${NB_DIR}/.assets/ace-builds/src-min-noconflict/${_target_relative_path}"
+    fi
+
 
     # get message body
 
