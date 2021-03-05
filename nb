@@ -11238,133 +11238,136 @@ Please install %s manually. No .deb package available for %s."  \
   }
 
   local _subcommand="${1:-}"
-  if [[ -n "${_subcommand:-}" ]] && [[ "${_subcommand}" == "install" ]]
-  then
-    # packages: curl pandoc pygments w3m ripgrep tig
-    if [[ -x "$(command -v apk)" ]]
-    then
-      _completions install --download
 
-      apk add --no-cache  \
-        bash-completion   \
-        curl              \
-        pandoc            \
-        py3-pygments      \
-        ripgrep           \
-        tig               \
-        w3m
-    elif [[ -x "$(command -v apt-get)" ]]
-    then
-      _completions install --download
+  case "${_subcommand}" in
+    install)
+      # packages: curl pandoc pygments w3m ripgrep tig
+      if [[ -x "$(command -v apk)" ]]
+      then
+        _completions install --download
 
-      local _apt_packages=()
-      local _deb_packages=()
-      local _dependencies=(
-        bash-completion
-        bat
-        curl
-        ncat
-        pandoc
-        python3-pygments
-        ripgrep
-        tig
-        w3m
-      )
+        apk add --no-cache  \
+          bash-completion   \
+          curl              \
+          pandoc            \
+          py3-pygments      \
+          ripgrep           \
+          tig               \
+          w3m
+      elif [[ -x "$(command -v apt-get)" ]]
+      then
+        _completions install --download
 
-      [[ "$(cat /etc/os-release)" =~ ubuntu|debian ]] || return 1
+        local _apt_packages=()
+        local _deb_packages=()
+        local _dependencies=(
+          bash-completion
+          bat
+          curl
+          ncat
+          pandoc
+          python3-pygments
+          ripgrep
+          tig
+          w3m
+        )
 
-      apt-get update
+        [[ "$(cat /etc/os-release)" =~ ubuntu|debian ]] || return 1
 
-      local __package=
-      for   __package in "${_dependencies[@]}"
-      do
-        if ! _command_exists "${__package}" &&
-           apt-cache show "${__package}" | grep -q "Package: ^${__package}"
-        then
-          _apt_packages+=("${__package}")
-        fi
-      done
+        apt-get update
 
-      apt-get install -y "${_apt_packages[@]:-}"
+        local __package=
+        for   __package in "${_dependencies[@]}"
+        do
+          if ! _command_exists "${__package}" &&
+             apt-cache show "${__package}" | grep -q "Package: ^${__package}"
+          then
+            _apt_packages+=("${__package}")
+          fi
+        done
 
-      # force install of bat
-      apt-get install -y bat -o Dpkg::Options::="--force-overwrite"
+        apt-get install -y "${_apt_packages[@]:-}"
 
-      _command_exists "rg"      ||
-        _deb_packages+=("ripgrep 12.1.1 BurntSushi/ripgrep")
-      _command_exists "batcat"  ||
-        _deb_packages+=("bat 0.16.0 sharkdp/bat")
+        # force install of bat
+        apt-get install -y bat -o Dpkg::Options::="--force-overwrite"
 
-      local __package=
-      for   __package in "${_deb_packages[@]}"
-      do
-        local _arguments
-        IFS=' ' read -ra _arguments <<< "${__package:-}"
+        _command_exists "rg"      ||
+          _deb_packages+=("ripgrep 12.1.1 BurntSushi/ripgrep")
+        _command_exists "batcat"  ||
+          _deb_packages+=("bat 0.16.0 sharkdp/bat")
 
-        _env_install_deb "${_arguments[@]:-}"
-      done
-    elif [[ -x "$(command -v dnf)"    ]]
-    then
-      : # TODO: dnf install
-      _completions install --download
-    elif [[ -x "$(command -v zypper)" ]]
-    then
-      : # TODO: zypper install
-      _completions install --download
-    else
-      _completions install --download
-    fi
-  elif [[ -n "${_subcommand:-}" ]] && [[ "${_subcommand}" == "uninstall" ]]
-  then
-    _completions uninstall
-  else
-    printf "_ME=%s\\n" "${_ME:-}"
-    printf "_MY_PATH=%s\\n" "${_MY_PATH:-}"
-    printf "NB_NOTEBOOK_PATH=%s\\n" "${NB_NOTEBOOK_PATH:-}"
-    printf "BROWSER=%s\\n" "${BROWSER:-}"
-    printf "EDITOR=%s\\n" "${EDITOR:-}"
-    printf "PAGER=%s\\n" "${PAGER:-}"
-    printf "NB_AUTO_SYNC=%s\\n" "${NB_AUTO_SYNC:-}"
-    printf "NB_DIR=%s\\n" "${NB_DIR:-}"
-    printf "NB_DEFAULT_EXTENSION=%s\\n" "${NB_DEFAULT_EXTENSION:-}"
-    printf "NB_ENCRYPTION_TOOL=%s\\n" "${NB_ENCRYPTION_TOOL:-}"
-    printf "NB_COLOR_PRIMARY=%s\\n" "${NB_COLOR_PRIMARY:-}"
-    printf "NB_COLOR_SECONDARY=%s\\n" "${NB_COLOR_SECONDARY:-}"
-    printf "NB_COLOR_THEME=%s\\n" "${NB_COLOR_THEME:-}"
-    printf "NB_FOOTER=%s\\n" "${NB_FOOTER:-}"
-    printf "NB_HEADER=%s\\n" "${NB_HEADER:-}"
-    printf "NB_LIMIT=%s\\n"  "${NB_LIMIT:-}"
-    printf "NB_SYNTAX_THEME=%s\\n"  "${NB_SYNTAX_THEME:-}"
-    printf "NBRC_PATH=%s\\n" "${NBRC_PATH:-}"
-    printf "ack:        %s\\n" "$(command -v ack)"
-    printf "ag:         %s\\n" "$(command -v ag)"
-    printf "bat:        %s\\n" "$(command -v bat)"
-    printf "code:       %s\\n" "$(command -v code)"
-    printf "curl:       %s\\n" "$(command -v curl)"
-    printf "emacs:      %s\\n" "$(command -v emacs)"
-    printf "git:        %s\\n" "$(command -v git)"
-    printf "gvim:       %s\\n" "$(command -v gvim)"
-    printf "gpg:        %s\\n" "$(command -v gpg)"
-    printf "highlight:  %s\\n" "$(command -v highlight)"
-    printf "less:       %s\\n" "$(command -v less)"
-    printf "lynx:       %s\\n" "$(command -v lynx)"
-    printf "macdown:    %s\\n" "$(command -v macdown)"
-    printf "mate:       %s\\n" "$(command -v mate)"
-    printf "mvim:       %s\\n" "$(command -v mvim)"
-    printf "nano:       %s\\n" "$(command -v nano)"
-    printf "nvim:       %s\\n" "$(command -v nvim)"
-    printf "openssl:    %s\\n" "$(command -v openssl)"
-    printf "pandoc:     %s\\n" "$(command -v pandoc)"
-    printf "pygments:   %s\\n" "$(command -v pygmentize)"
-    printf "readable:   %s\\n" "$(command -v readable)"
-    printf "rg:         %s\\n" "$(command -v rg)"
-    printf "subl:       %s\\n" "$(command -v subl)"
-    printf "tig:        %s\\n" "$(command -v tig)"
-    printf "w3m:        %s\\n" "$(command -v w3m)"
-    printf "vim:        %s\\n" "$(command -v vim)"
-    printf "bash --version: %s\\n" "$(bash --version | head -1)"
-    printf "uname -a: %s\\n" "$(uname -a)"
-  fi
+        local __package=
+        for   __package in "${_deb_packages[@]}"
+        do
+          local _arguments
+          IFS=' ' read -ra _arguments <<< "${__package:-}"
+
+          _env_install_deb "${_arguments[@]:-}"
+        done
+      elif [[ -x "$(command -v dnf)"    ]]
+      then
+        : # TODO: dnf install
+        _completions install --download
+      elif [[ -x "$(command -v zypper)" ]]
+      then
+        : # TODO: zypper install
+        _completions install --download
+      else
+        _completions install --download
+      fi
+      ;;
+    uninstall)
+      _completions uninstall
+      ;;
+    *)
+      printf "_ME=%s\\n" "${_ME:-}"
+      printf "_MY_PATH=%s\\n" "${_MY_PATH:-}"
+      printf "NB_NOTEBOOK_PATH=%s\\n" "${NB_NOTEBOOK_PATH:-}"
+      printf "BROWSER=%s\\n" "${BROWSER:-}"
+      printf "EDITOR=%s\\n" "${EDITOR:-}"
+      printf "PAGER=%s\\n" "${PAGER:-}"
+      printf "NB_AUTO_SYNC=%s\\n" "${NB_AUTO_SYNC:-}"
+      printf "NB_DIR=%s\\n" "${NB_DIR:-}"
+      printf "NB_DEFAULT_EXTENSION=%s\\n" "${NB_DEFAULT_EXTENSION:-}"
+      printf "NB_ENCRYPTION_TOOL=%s\\n" "${NB_ENCRYPTION_TOOL:-}"
+      printf "NB_COLOR_PRIMARY=%s\\n" "${NB_COLOR_PRIMARY:-}"
+      printf "NB_COLOR_SECONDARY=%s\\n" "${NB_COLOR_SECONDARY:-}"
+      printf "NB_COLOR_THEME=%s\\n" "${NB_COLOR_THEME:-}"
+      printf "NB_FOOTER=%s\\n" "${NB_FOOTER:-}"
+      printf "NB_HEADER=%s\\n" "${NB_HEADER:-}"
+      printf "NB_LIMIT=%s\\n"  "${NB_LIMIT:-}"
+      printf "NB_SYNTAX_THEME=%s\\n"  "${NB_SYNTAX_THEME:-}"
+      printf "NBRC_PATH=%s\\n" "${NBRC_PATH:-}"
+      printf "ack:        %s\\n" "$(command -v ack)"
+      printf "ag:         %s\\n" "$(command -v ag)"
+      printf "bat:        %s\\n" "$(command -v bat)"
+      printf "code:       %s\\n" "$(command -v code)"
+      printf "curl:       %s\\n" "$(command -v curl)"
+      printf "emacs:      %s\\n" "$(command -v emacs)"
+      printf "git:        %s\\n" "$(command -v git)"
+      printf "gvim:       %s\\n" "$(command -v gvim)"
+      printf "gpg:        %s\\n" "$(command -v gpg)"
+      printf "highlight:  %s\\n" "$(command -v highlight)"
+      printf "less:       %s\\n" "$(command -v less)"
+      printf "lynx:       %s\\n" "$(command -v lynx)"
+      printf "macdown:    %s\\n" "$(command -v macdown)"
+      printf "mate:       %s\\n" "$(command -v mate)"
+      printf "mvim:       %s\\n" "$(command -v mvim)"
+      printf "nano:       %s\\n" "$(command -v nano)"
+      printf "nvim:       %s\\n" "$(command -v nvim)"
+      printf "openssl:    %s\\n" "$(command -v openssl)"
+      printf "pandoc:     %s\\n" "$(command -v pandoc)"
+      printf "pygments:   %s\\n" "$(command -v pygmentize)"
+      printf "readable:   %s\\n" "$(command -v readable)"
+      printf "rg:         %s\\n" "$(command -v rg)"
+      printf "subl:       %s\\n" "$(command -v subl)"
+      printf "tig:        %s\\n" "$(command -v tig)"
+      printf "w3m:        %s\\n" "$(command -v w3m)"
+      printf "vim:        %s\\n" "$(command -v vim)"
+      printf "bash --version: %s\\n" "$(bash --version | head -1)"
+      printf "uname -a: %s\\n" "$(uname -a)"
+      ;;
+  esac
 }
 
 # export ############################################################### export
