@@ -8411,6 +8411,10 @@ header {
   text-align:     center;
 }
 
+.center {
+  text-align: center;
+}
+
 .header-crumbs {
   font-size:      1.4rem;
   font-weight:    normal;
@@ -16050,9 +16054,10 @@ HEREDOC
         then
           cat "${_path}"
         else
-          printf "%s %s\\n"                                       \
-            "${_status_code}"                                     \
-            "$(_browse_http_response_message "${_status_code}")"  \
+          printf                                                            \
+            "<div class=\"main\"><h1 class=\"center\">%s %s</h1></div>\\n"  \
+            "${_status_code}"                                               \
+            "$(_browse_http_response_message "${_status_code}")"            \
             | _render
         fi
       } | {
