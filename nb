@@ -8790,6 +8790,11 @@ HEREDOC
     then
       if ((${NB_ACE_ENABLED:-0}))
       then
+        if [[ ! -e "${NB_DIR}/.assets/ace-builds" ]]
+        then
+          _env install --ace
+        fi
+
         cat <<'HEREDOC'
 <script src="/--ace/ace.js"></script>
 <script>
@@ -11328,79 +11333,82 @@ Please install %s manually. No .deb package available for %s."  \
 
   case "${_subcommand}" in
     install)
-      # packages: curl pandoc pygments w3m ripgrep tig
-      if [[ -x "$(command -v apk)" ]]
-      then
-        _completions install --download
+      if [[ ! "${2:-}" == "--ace" ]]
+      then # skip to next section if `_env install --ace`
+        # packages: curl pandoc pygments w3m ripgrep tig
+        if [[ -x "$(command -v apk)" ]]
+        then
+          _completions install --download
 
-        apk add --no-cache  \
-          bash-completion   \
-          curl              \
-          pandoc            \
-          py3-pygments      \
-          ripgrep           \
-          tig               \
-          w3m
-      elif [[ -x "$(command -v apt-get)" ]]
-      then
-        _completions install --download
+          apk add --no-cache  \
+            bash-completion   \
+            curl              \
+            pandoc            \
+            py3-pygments      \
+            ripgrep           \
+            tig               \
+            w3m
+        elif [[ -x "$(command -v apt-get)" ]]
+        then
+          _completions install --download
 
-        local _apt_packages=()
-        local _deb_packages=()
-        local _dependencies=(
-          bash-completion
-          bat
-          curl
-          ncat
-          pandoc
-          python3-pygments
-          ripgrep
-          tig
-          w3m
-        )
+          local _apt_packages=()
+          local _deb_packages=()
+          local _dependencies=(
+            bash-completion
+            bat
+            curl
+            ncat
+            pandoc
+            python3-pygments
+            ripgrep
+            tig
+            w3m
+          )
 
-        [[ "$(cat /etc/os-release)" =~ ubuntu|debian ]] || return 1
+          [[ "$(cat /etc/os-release)" =~ ubuntu|debian ]] || return 1
 
-        apt-get update
+          apt-get update
 
-        local __package=
-        for   __package in "${_dependencies[@]}"
-        do
-          if ! _command_exists "${__package}" &&
-             apt-cache show "${__package}" | grep -q "Package: ^${__package}"
-          then
-            _apt_packages+=("${__package}")
-          fi
-        done
+          local __package=
+          for   __package in "${_dependencies[@]}"
+          do
+            if ! _command_exists "${__package}" &&
+               apt-cache show "${__package}" | grep -q "Package: ^${__package}"
+            then
+              _apt_packages+=("${__package}")
+            fi
+          done
 
-        apt-get install -y "${_apt_packages[@]:-}"
+          apt-get install -y "${_apt_packages[@]:-}"
 
-        # force install of bat
-        apt-get install -y bat -o Dpkg::Options::="--force-overwrite"
+          # force install of bat
+          apt-get install -y bat -o Dpkg::Options::="--force-overwrite"
 
-        _command_exists "rg"      ||
-          _deb_packages+=("ripgrep 12.1.1 BurntSushi/ripgrep")
-        _command_exists "batcat"  ||
-          _deb_packages+=("bat 0.16.0 sharkdp/bat")
+          _command_exists "rg"      ||
+            _deb_packages+=("ripgrep 12.1.1 BurntSushi/ripgrep")
+          _command_exists "batcat"  ||
+            _deb_packages+=("bat 0.16.0 sharkdp/bat")
 
-        local __package=
-        for   __package in "${_deb_packages[@]}"
-        do
-          local _arguments
-          IFS=' ' read -ra _arguments <<< "${__package:-}"
+          local __package=
+          for   __package in "${_deb_packages[@]}"
+          do
+            local _arguments
+            IFS=' ' read -ra _arguments <<< "${__package:-}"
 
-          _env_install_deb "${_arguments[@]:-}"
-        done
-      elif [[ -x "$(command -v dnf)"    ]]
-      then
-        : # TODO: dnf install
-        _completions install --download
-      elif [[ -x "$(command -v zypper)" ]]
-      then
-        : # TODO: zypper install
-        _completions install --download
-      else
-        _completions install --download
+            _env_install_deb "${_arguments[@]:-}"
+          done
+        elif [[ -x "$(command -v dnf)"    ]]
+        then
+          : # TODO: dnf install
+          _completions install --download
+        elif [[ -x "$(command -v zypper)" ]]
+        then
+          : # TODO: zypper install
+          _completions install --download
+        else
+          _completions install --download
+        fi
       fi
 
       # install ace editor
@@ -11412,7 +11420,8 @@ Please install %s manually. No .deb package available for %s."  \
           mkdir "${NB_DIR}/.assets"
         fi
 
-        cd "${NB_DIR}/.assets"
+        cd "${NB_DIR}/.assets" ||
+          _exit_1 printf "Unable to \`cd\` to %s\\n" "${NB_DIR}/.assets"
 
         git clone https://github.com/ajaxorg/ace-builds.git
       fi
