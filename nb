@@ -14750,7 +14750,6 @@ _browse() {
     name="content"
     rows="${_rows}"
     cols="${_text_area_columns}"></textarea>
-  <div id="editor"></div>
   <br><br>
   <input
     type="submit"
@@ -15254,7 +15253,6 @@ HEREDOC
     name="content"
     rows="${_rows}"
     cols="${_text_area_columns}">${_content}</textarea>
-  <div id="editor"></div>
   <br><br>
   <input
     type="submit"
