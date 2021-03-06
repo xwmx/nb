@@ -7,6 +7,38 @@ export NB_SERVER_PORT=6789
 # non-breaking space
 export _S=" "
 
+# --raw #######################################################################
+
+@test "GET to --raw URL serves raw markdown file." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example Folder/Example File.md"  \
+    --title       "Example Title"                   \
+    --content     "Example content."
+
+    (ncat                               \
+      --exec "${_NB} browse --respond"  \
+      --listen                          \
+      --source-port "6789"              \
+      2>/dev/null) &
+
+    sleep 1
+  }
+
+  run curl -sS -D - "http://localhost:6789/--raw/home/Example%20Folder/Example%20File.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0                         ]]
+
+  [[ "${output}"  =~  Content-Type:\ text/plain ]]
+
+  [[ "${output}"  =~  \#\ Example\ Title        ]]
+  [[ "${output}"  =~  Example\ content.         ]]
+}
+
 # title #######################################################################
 
 @test "'browse' sets HTML title." {

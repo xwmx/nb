@@ -15795,15 +15795,6 @@ HEREDOC
       fi
     done
 
-    if [[ "${_request_uri}"     =~ /--ace/.*            ]]
-    then
-      local _target_relative_path="${_request_uri#/--ace/}"
-
-      _browse_respond_with 200 \
-        "${NB_DIR}/.assets/ace-builds/src-min-noconflict/${_target_relative_path}"
-    fi
-
-
     # get message body
 
     local _message_body=
@@ -15812,6 +15803,38 @@ HEREDOC
        ((${_content_length:-0}))
     then
       read -r -n "${_content_length}" _message_body
+    fi
+
+    # serve ace editor files
+
+    if [[ "${_request_uri}"     =~ /--ace/.*            ]]
+    then
+      local _target_relative_path="${_request_uri#/--ace/}"
+
+      _browse_respond_with 200 \
+        "${NB_DIR}/.assets/ace-builds/src-min-noconflict/${_target_relative_path}"
+
+      return 0
+    fi
+
+    # serve raw files
+
+    if [[ "${_request_uri}"     =~ /--raw/.*            ]]
+    then
+      local _target_relative_path_with_notebook="${_request_uri#/--raw/}"
+
+      _target_relative_path_with_notebook="$(
+        printf "%b" "$(
+          # https://unix.stackexchange.com/a/187256
+          printf "%s\\n" "${_target_relative_path_with_notebook:-}" \
+            | sed 's@+@ @g;s@%@\\x@g'
+        )"
+      )"
+
+      _browse_respond_with 200 \
+        "${NB_DIR}/${_target_relative_path_with_notebook}"
+
+      return 0
     fi
 
     # redirect outbound URLs
