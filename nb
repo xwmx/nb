@@ -8762,12 +8762,12 @@ HEREDOC
 
     var editDiv = document.createElement('div');
     editDiv.setAttribute(
-      "style",
-      "height:" + textarea.clientHeight + "px;" +
-      "width:"  + textarea.clientWidth  + "px;"
+      'style',
+      'height:' + textarea.clientHeight + 'px;' +
+      'width:'  + textarea.clientWidth  + 'px;'
     )
-    editDiv.style.height      = textarea.clientHeight + "px";
-    editDiv.style.width       = textarea.clientWidth  + "px";
+    editDiv.style.height      = textarea.clientHeight + 'px';
+    editDiv.style.width       = textarea.clientWidth  + 'px';
     editDiv.classList.add(textarea.classList[0]);
 
     textarea.parentNode.insertBefore(editDiv, textarea);
@@ -8778,7 +8778,7 @@ HEREDOC
     editor.renderer.setShowGutter(false);
     editor.getSession().setValue(textarea.value);
 
-    var mode = "markdown";
+    var mode = 'markdown';
     editor.getSession().setMode('ace/mode/' + mode);
     editor.setTheme('ace/theme/twilight');
 
@@ -8788,10 +8788,10 @@ HEREDOC
   }
 
   (function() {
-    if (document.readyState !== "loading") {
+    if (document.readyState !== 'loading') {
       setTimeout(editorInit, 0);
     } else {
-      document.addEventListener("DOMContentLoaded", editorInit);
+      document.addEventListener('DOMContentLoaded', editorInit);
     }
   }());
 </script>
