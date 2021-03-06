@@ -114,7 +114,7 @@ load test_helper
 "<span class=\"dim\">·</span> <span class=\"dim\">editing</span> <span class=\"dim\">·</span> <a href=\"http://local"
 
   printf "%s\\n" "${output}" | grep -q \
-"host:6789/home:1/1/1?--per-page=.*&--columns=.*&--delete\">x</a> <span class=\"dim\">\|</span> <a "
+"host:6789/home:1/1/1?--per-page=.*&--columns=.*&--delete\">-</a> <span class=\"dim\">\|</span> <a "
 
   printf "%s\\n" "${output}" | grep -q \
 "href=\"http://localhost:6789/home:1/1/?--per-page=.*&--columns=.*&--add\">+</a></h1>"
@@ -155,7 +155,7 @@ load test_helper
 
 
   printf "%s\\n" "${output}" | grep -q \
-"href=\"http://localhost:6789/home:1?--per-page=.*&--columns=.*&--delete\">x</a> <span class=\"dim\">\|</span> <a "
+"href=\"http://localhost:6789/home:1?--per-page=.*&--columns=.*&--delete\">-</a> <span class=\"dim\">\|</span> <a "
 
   printf "%s\\n" "${output}" | grep -q \
 "href=\"http://localhost:6789/home:?--per-page=.*&--columns=.*&--add\">+</a></h1>"
@@ -199,7 +199,7 @@ load test_helper
 "<a href=\"http://localhost:6789/home:1/1/1?--per-page=.*&--columns=.*&--edit\">edit</a> <span class=\"dim\">·</span> <a "
 
   printf "%s\\n" "${output}" | grep -q \
-"href=\"http://localhost:6789/home:1/1/1?--per-page=.*&--columns=.*&--delete\">x</a> <span class=\"dim\">\|</span> <a "
+"href=\"http://localhost:6789/home:1/1/1?--per-page=.*&--columns=.*&--delete\">-</a> <span class=\"dim\">\|</span> <a "
 
   printf "%s\\n" "${output}" | grep -q \
 "href=\"http://localhost:6789/home:1/1/?--per-page=.*&--columns=.*&--add\">+</a></h1>"
@@ -241,7 +241,7 @@ load test_helper
 "<a href=\"http://localhost:6789/home:1/1?--per-page=.*&--columns=.*&--edit\">edit</a> <span class=\"dim\">·</span> <a "
 
   printf "%s\\n" "${output}" | grep -q \
-"href=\"http://localhost:6789/home:1/1?--per-page=.*&--columns=.*&--delete\">x</a> <span class=\"dim\">|</span> <a "
+"href=\"http://localhost:6789/home:1/1?--per-page=.*&--columns=.*&--delete\">-</a> <span class=\"dim\">|</span> <a "
 
   printf "%s\\n" "${output}" | grep -q \
 "href=\"http://localhost:6789/home:1/?--per-page=.*&--columns=.*&--add\">+</a></h1>"
@@ -328,7 +328,7 @@ load test_helper
 "<a href=\"http://localhost:6789/home:1/1?--per-page=.*&--columns=.*&--edit\">edit</a> <span class=\"dim\">·</span> <a "
 
   printf "%s\\n" "${output}" | grep -q \
-"href=\"http://localhost:6789/home:1/1?--per-page=.*&--columns=.*&--delete\">x</a> <span class=\"dim\">\|</span> <a "
+"href=\"http://localhost:6789/home:1/1?--per-page=.*&--columns=.*&--delete\">-</a> <span class=\"dim\">\|</span> <a "
 
   printf "%s\\n" "${output}" | grep -q \
 "href=\"http://localhost:6789/home:1/?--per-page=.*&--columns=.*&&--add\">+</a></h1>"

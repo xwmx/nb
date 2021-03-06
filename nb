@@ -15440,7 +15440,7 @@ HEREDOC
 
        _header_content+=" <span class=\"dim\">${_bullet}</span>"
        _header_content+="\
- <a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_params:-}--delete\">x</a>"
+ <a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_params:-}--delete\">-</a>"
        _header_content+=" <span class=\"dim\">|</span> "
       elif [[ "${_action:-}" == "delete"  ]]
       then
@@ -15460,7 +15460,7 @@ HEREDOC
  <a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_params:-}--edit\">edit</a>"
 
        _header_content+=" <span class=\"dim\">${_bullet}</span>"
-        _header_content+=" <span class=\"dim\">x</span>"
+        _header_content+=" <span class=\"dim\">-</span>"
        _header_content+=" <span class=\"dim\">|</span> "
       else
         _header_content+=" <span class=\"dim\">${_selector_id:-}</span>"
@@ -15484,7 +15484,7 @@ HEREDOC
           # TODO
          _header_content+=" <span class=\"dim\">${_bullet}</span>"
          _header_content+="\
- <a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_params:-}--delete\">x</a>"
+ <a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_params:-}--delete\">-</a>"
          _header_content+=" <span class=\"dim\">|</span>"
 
         fi

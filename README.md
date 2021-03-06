@@ -2047,7 +2047,7 @@ for the item, folder, or notebook to `nb browse`:
 ```bash
 # open the item titled "Example Title" in the folder named "Sample" in the "example" notebook
 > nb browse example:sample/Example\ Title
-❯nb · example : sample / 987 · edit · x | +
+❯nb · example : sample / 987 · edit · - | +
 
 Example Title
 
@@ -2073,7 +2073,7 @@ of bookmarks.
 
 ```bash
 > nb browse text:formats/markdown/123
-❯nb · text : formats / markdown / 123 · edit · x | +
+❯nb · text : formats / markdown / 123 · edit · - | +
 Daring Fireball: Markdown (daringfireball.net)
 
 https://daringfireball.net/projects/markdown/
@@ -2115,7 +2115,7 @@ terminal window:
 
 ```bash
 > nb browse text:formats/markdown/123 --edit
-❯nb · text : formats / markdown / 123 · editing · x | +
+❯nb · text : formats / markdown / 123 · editing · - | +
 
 [# Daring Fireball: Markdown (daringfireball.net)     ]
 [                                                     ]
@@ -2167,7 +2167,7 @@ item:
 
 ```bash
 > nb browse --delete example:4
-❯nb · example : 4 · edit · x | +
+❯nb · example : 4 · edit · - | +
 
                 deleting
 
