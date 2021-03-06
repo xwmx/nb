@@ -8416,7 +8416,7 @@ header {
 }
 
 .header-crumbs {
-  font-size:      1.4rem;
+  font-size:      1.2rem;
   font-weight:    normal;
   margin:         0;
   padding-top:    2rem;
@@ -8425,6 +8425,7 @@ header {
 
 .header-crumbs h1 {
   display:        inline-block;
+  font-size:      1.2rem;
   font-weight:    normal;
   margin:         0;
   min-width:      45rem;
