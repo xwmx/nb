@@ -8519,6 +8519,7 @@ input[type="submit"] {
   border:           none;
   color:            #6EB3D7;
   font-size:        1rem;
+  margin-top:       1rem;
   outline:          0 solid #1a1a1a;
   padding:          1rem;
 }
@@ -8540,14 +8541,15 @@ textarea,
 .ace_editor {
   background-color: #1d1d1d;
   border:           none;
-  /* border-bottom:    1px solid #2c2c2c; */
-  /* border-top:       1px solid #2c2c2c; */
   border:           1rem solid #1d1d1d;
+  box-sizing:       border-box;
   color:            #dddddd;
   font-size:        1rem;
   line-height:      1.5;
   outline:          1px solid #242424;
-  /* padding:          1rem; */
+  padding:          0;
+  vertical-align:   top;
+  width:            100%;
 }
 
 .ace-twilight .ace_print-margin {
@@ -8818,11 +8820,11 @@ HEREDOC
 
       editDiv.setAttribute(
         'style',
-        'height:' + textarea.offsetHeight - 30 + 'px;' +
-        'width:'  + textarea.offsetWidth  - 30 + 'px;'
+        'height:' + textarea.offsetHeight + 'px;' +
+        'width:'  + textarea.offsetWidth  + 'px;'
       )
-      editDiv.style.height      = textarea.offsetHeight - 30 + 'px';
-      editDiv.style.width       = textarea.offsetWidth  - 30 + 'px';
+      editDiv.style.height      = textarea.offsetHeight + 'px';
+      editDiv.style.width       = textarea.offsetWidth  + 'px';
       editDiv.classList.add(textarea.classList[0]);
 
       textarea.parentNode.insertBefore(editDiv, textarea);
