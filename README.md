@@ -1048,7 +1048,7 @@ Items can be edited within terminal and GUI web browsers using
 
 ```bash
 > nb browse text:formats/markdown/123 --edit
-❯nb · text : formats / markdown / 123 · editing · x | +
+❯nb · text : formats / markdown / 123 · editing · - | +
 
 [# Daring Fireball: Markdown (daringfireball.net)     ]
 [                                                     ]
@@ -1255,7 +1255,7 @@ Items can be viewed within terminal and GUI web browsers using
 
 ```bash
 > nb browse text:formats/markdown/123
-❯nb · text : formats / markdown / 123 · edit · x | +
+❯nb · text : formats / markdown / 123 · edit · - | +
 Daring Fireball: Markdown (daringfireball.net)
 
 https://daringfireball.net/projects/markdown/
@@ -1369,7 +1369,7 @@ Items can be deleted within terminal and GUI web browsers using
 
 ```bash
 > nb browse --delete example:4
-❯nb · example : 4 · edit · x | +
+❯nb · example : 4 · edit · - | +
 
                     deleting
 
@@ -2162,7 +2162,7 @@ note in that location:
 [add]
 ```
 
-Use the `x` link or `nb browse --delete` / `nb br -d` to delete an
+Use the `-` link or `nb browse --delete` / `nb br -d` to delete an
 item:
 
 ```bash
