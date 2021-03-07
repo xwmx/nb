@@ -8646,6 +8646,7 @@ HEREDOC
   local _input_file_path=
   local _input_string=
   local _only_body=0
+  local _source_extension="${NB_DEFAULT_EXTENSION:-'md'}"
   local _use_pandoc=0
 
   while ((${#}))
@@ -8655,6 +8656,7 @@ HEREDOC
       --body)     _only_body=1                              ;;
       --from)     _from="${2:?}" && _use_pandoc=1 && shift  ;;
       --*pandoc)  _use_pandoc=1                             ;;
+      --source*)  _source_extension="${2:?}"      && shift  ;;
       -*)         _pandoc_arguments+=("${1:-}")             ;;
       *)
         if [[ -z "${_input_file_path:-}"  ]] &&
@@ -8795,37 +8797,44 @@ HEREDOC
           _env install --ace
         fi
 
-        cat <<'HEREDOC'
+        cat <<HEREDOC
 <script src="/--ace/ace.js"></script>
+<script src="/--ace/ext-modelist.js"></script>
 <script>
   var editorInit = function initializeAceEditor() {
+    var aceModeList = ace.require("ace/ext/modelist");
+
     var textarea = document.querySelector('textarea');
 
-    var editDiv = document.createElement('div');
-    editDiv.setAttribute(
-      'style',
-      'height:' + textarea.clientHeight + 'px;' +
-      'width:'  + textarea.clientWidth  + 'px;'
-    )
-    editDiv.style.height      = textarea.clientHeight + 'px';
-    editDiv.style.width       = textarea.clientWidth  + 'px';
-    editDiv.classList.add(textarea.classList[0]);
+    if (textarea !== null) {
+      var editDiv = document.createElement('div');
 
-    textarea.parentNode.insertBefore(editDiv, textarea);
+      editDiv.setAttribute(
+        'style',
+        'height:' + textarea.clientHeight + 'px;' +
+        'width:'  + textarea.clientWidth  + 'px;'
+      )
+      editDiv.style.height      = textarea.clientHeight + 'px';
+      editDiv.style.width       = textarea.clientWidth  + 'px';
+      editDiv.classList.add(textarea.classList[0]);
 
-    textarea.style.display    = 'none';
+      textarea.parentNode.insertBefore(editDiv, textarea);
 
-    var editor = ace.edit(editDiv, { autoScrollEditorIntoView: true });
-    editor.renderer.setShowGutter(false);
-    editor.getSession().setValue(textarea.value);
+      textarea.style.display    = 'none';
 
-    var mode = 'markdown';
-    editor.getSession().setMode('ace/mode/' + mode);
-    editor.setTheme('ace/theme/twilight');
+      var editor = ace.edit(editDiv, { autoScrollEditorIntoView: true });
+      editor.renderer.setShowGutter(false);
+      editor.getSession().setValue(textarea.value);
 
-    textarea.form.addEventListener('submit', function() {
-      textarea.value = editor.getSession().getValue();
-    })
+      var mode = aceModeList.getModeForPath('example.${_source_extension:-'md'}').mode;
+      editor.getSession().setMode(mode);
+
+      editor.setTheme('ace/theme/twilight');
+
+      textarea.form.addEventListener('submit', function() {
+        textarea.value = editor.getSession().getValue();
+      })
+    }
   }
 
   (function() {
@@ -14815,7 +14824,7 @@ HEREDOC
 
       printf "</div>\\n"
     } | {
-      _render
+      _render --source-extension "${NB_DEFAULT_EXTENSION:-'md'}"
     }
   }
 
@@ -15318,7 +15327,7 @@ HEREDOC
 
       printf "</div>\\n"
     } | {
-      _render
+      _render --source-extension "${_source_path##*.}"
     }
   }
 

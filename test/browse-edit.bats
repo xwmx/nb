@@ -7,6 +7,128 @@ export NB_SERVER_PORT=6789
 # non-breaking space
 export _S=" "
 
+# ace editor ##################################################################
+
+@test "GET to --edit URL with Ace enabled and non-default extension includes initialization with updated mode." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example Folder/File One.js"  \
+      --content   "console.log('example');"
+
+    printf "export NB_ACE_ENABLED=1\\n" >> "${NBRC_PATH}"
+
+    (ncat                                       \
+      --exec "${_NB} browse --respond"          \
+      --listen                                  \
+      --source-port "6789"                      \
+      2>/dev/null) &
+
+    sleep 1
+  }
+
+  run curl -sS -D - "http://localhost:6789/home:1/1?--edit&--columns=20"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq 0    ]]
+
+  # Prints output:
+
+  [[    "${lines[0]}"  =~  HTTP/1.0\ 200\ OK                                  ]]
+  [[    "${lines[1]}"  =~  Date:\ .*                                          ]]
+  [[    "${lines[2]}"  =~  Expires:\ .*                                       ]]
+  [[    "${lines[3]}"  =~  Server:\ nb                                        ]]
+  [[    "${lines[4]}"  =~  Content-Type:\ text/html                           ]]
+
+  [[    "${output}"    =~ action=\"/home:1/1?--edit                           ]]
+
+  [[    "${output}"    =~ initializeAceEditor                                 ]]
+  [[    "${output}"    =~ aceModeList\.getModeForPath\(\'example.js\'\)\.mode ]]
+}
+
+@test "GET to --edit URL with Ace un-enabled does not include initialization." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example Folder/File One.md"  \
+      --title     "Title One"                   \
+      --content   "Example content."
+
+    printf "export NB_ACE_ENABLED=0\\n" >> "${NBRC_PATH}"
+
+    (ncat                                       \
+      --exec "${_NB} browse --respond"          \
+      --listen                                  \
+      --source-port "6789"                      \
+      2>/dev/null) &
+
+    sleep 1
+  }
+
+  run curl -sS -D - "http://localhost:6789/home:1/1?--edit&--columns=20"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq 0    ]]
+
+  # Prints output:
+
+  [[    "${lines[0]}"  =~  HTTP/1.0\ 200\ OK                                  ]]
+  [[    "${lines[1]}"  =~  Date:\ .*                                          ]]
+  [[    "${lines[2]}"  =~  Expires:\ .*                                       ]]
+  [[    "${lines[3]}"  =~  Server:\ nb                                        ]]
+  [[    "${lines[4]}"  =~  Content-Type:\ text/html                           ]]
+
+  [[    "${output}"    =~ action=\"/home:1/1?--edit                           ]]
+
+
+  [[ !  "${output}"    =~ initializeAceEditor                                 ]]
+  [[ !  "${output}"    =~ aceModeList\.getModeForPath\(\'example.md\'\)\.mode ]]
+}
+
+@test "GET to --edit URL with Ace enabled includes initialization with default mode." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example Folder/File One.md"  \
+      --title     "Title One"                   \
+      --content   "Example content. [[Example Title]]"
+
+    printf "export NB_ACE_ENABLED=1\\n" >> "${NBRC_PATH}"
+
+    (ncat                                       \
+      --exec "${_NB} browse --respond"          \
+      --listen                                  \
+      --source-port "6789"                      \
+      2>/dev/null) &
+
+    sleep 1
+  }
+
+  run curl -sS -D - "http://localhost:6789/home:1/1?--edit&--columns=20"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq 0    ]]
+
+  # Prints output:
+
+  [[    "${lines[0]}"  =~  HTTP/1.0\ 200\ OK                                  ]]
+  [[    "${lines[1]}"  =~  Date:\ .*                                          ]]
+  [[    "${lines[2]}"  =~  Expires:\ .*                                       ]]
+  [[    "${lines[3]}"  =~  Server:\ nb                                        ]]
+  [[    "${lines[4]}"  =~  Content-Type:\ text/html                           ]]
+
+  [[    "${output}"    =~ action=\"/home:1/1?--edit                           ]]
+
+  [[    "${output}"    =~ initializeAceEditor                                 ]]
+  [[    "${output}"    =~ aceModeList\.getModeForPath\(\'example.md\'\)\.mode ]]
+}
+
 # GET #########################################################################
 
 @test "GET to --edit URL with .odt file renders item without form." {
@@ -22,8 +144,6 @@ export _S=" "
       | "${_NB}" add "Example Folder/File One.odt"
 
     [[ -f "${NB_DIR}/home/Example Folder/File One.odt" ]]
-
-    sleep 1
 
     (ncat                                   \
       --exec "${_NB} browse --respond"      \
