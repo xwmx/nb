@@ -2218,10 +2218,10 @@ search: [#tag2               ]
 For more information about search options, see [Search](#-search) and
 [`nb search`](#search).
 
-##### Ace Editor Integration
+##### Ace Editor
 
-[Ace](https://ace.c9.io/) is a text editor for the web that enables
-advanced text editing functionality including block selection and syntax
+[Ace](https://ace.c9.io/) is a text editor for GUI web browsers that enables
+advanced text editing functionality, including block selection and syntax
 highlighting.
 
 To use Ace as the editor for `nb browse --gui`, add the following line to
@@ -2254,7 +2254,7 @@ CSS all the way down through the HTTP request parsing and response building,
 with no imports, libraries, frameworks, or third-party code outside of the
 few binary dependencies (`bash`, `git`, `ncat`, `pandoc`), the
 Linux / Unix environment, and the optional [Ace
-editor](#ace-editor-integration).
+editor](#ace-editor).
 
 Terminal web browsers don't use JavaScript, so visits are not visible to
 many web analytics tools. `nb browse` includes a number of additional
