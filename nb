@@ -8552,6 +8552,10 @@ textarea,
   width:            100%;
 }
 
+.ace_scroller.ace_scroll-left {
+  box-shadow: initial !important;
+}
+
 .ace-twilight .ace_print-margin {
   background: none;
 }
