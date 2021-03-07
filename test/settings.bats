@@ -354,8 +354,13 @@ skip "Determine how to test interactive prompt."
   {
     "${_NB}" init
     "${_NB}" settings set color_secondary 42
-    [[ "$(cat "${NBRC_PATH}")" =~ NB_COLOR_SECONDARY  ]]
-    [[ "$(cat "${NBRC_PATH}")" =~ 42                  ]]
+
+    printf ".nbrc: '%s'\\n" "$(cat "${NBRC_PATH}")"
+    cat "${NBRC_PATH}" | wc -l
+
+    [[ "$(cat "${NBRC_PATH}")"          =~  NB_COLOR_SECONDARY  ]]
+    [[ "$(cat "${NBRC_PATH}")"          =~  42                  ]]
+    [[ "$(cat "${NBRC_PATH}" | wc -l)"  -eq 16                  ]]
   }
 
   run "${_NB}" settings set color_secondary unset
@@ -364,19 +369,22 @@ skip "Determine how to test interactive prompt."
   printf "\${output}: '%s'\\n" "${output}"
   printf ".nbrc: '%s'\\n" "$(cat "${NBRC_PATH}")"
 
-  [[ ${status} -eq 0                                  ]]
-  [[ "${output}" =~ NB_COLOR_SECONDARY                ]]
-  [[ "${output}" =~ restored                          ]]
-  [[ "${output}" =~ 8                                 ]]
-  [[ ! "$(cat "${NBRC_PATH}")" =~ NB_COLOR_SECONDARY  ]]
+  [[    "${status}"             -eq 0                           ]]
+  [[    "${output}"             =~  NB_COLOR_SECONDARY          ]]
+  [[    "${output}"             =~  restored                    ]]
+  [[    "${output}"             =~  8                           ]]
+  [[ !  "$(cat "${NBRC_PATH}")" =~  NB_COLOR_SECONDARY          ]]
+  [[    "$(cat "${NBRC_PATH}" | wc -l)"   -eq 14                ]]
 }
 
 @test "'settings set' with 'default' value unsets and exits." {
   {
     "${_NB}" init
     "${_NB}" settings set color_secondary 42
-    [[ "$(cat "${NBRC_PATH}")" =~ NB_COLOR_SECONDARY  ]]
-    [[ "$(cat "${NBRC_PATH}")" =~ 42                  ]]
+
+    [[ "$(cat "${NBRC_PATH}")"          =~  NB_COLOR_SECONDARY  ]]
+    [[ "$(cat "${NBRC_PATH}")"          =~  42                  ]]
+    [[ "$(cat "${NBRC_PATH}" | wc -l)"  -eq 16                  ]]
   }
 
   run "${_NB}" settings set color_secondary default
@@ -385,19 +393,22 @@ skip "Determine how to test interactive prompt."
   printf "\${output}: '%s'\\n" "${output}"
   printf ".nbrc: '%s'\\n" "$(cat "${NBRC_PATH}")"
 
-  [[ ${status} -eq 0                                  ]]
-  [[ "${output}" =~ NB_COLOR_SECONDARY                ]]
-  [[ "${output}" =~ restored                          ]]
-  [[ "${output}" =~ 8                                 ]]
-  [[ ! "$(cat "${NBRC_PATH}")" =~ NB_COLOR_SECONDARY  ]]
+  [[    "${status}"                     -eq 0                   ]]
+  [[    "${output}"                     =~  NB_COLOR_SECONDARY  ]]
+  [[    "${output}"                     =~  restored            ]]
+  [[    "${output}"                     =~  8                   ]]
+  [[ !  "$(cat "${NBRC_PATH}")"         =~  NB_COLOR_SECONDARY  ]]
+  [[    "$(cat "${NBRC_PATH}" | wc -l)" -eq 14                  ]]
 }
 
 @test "'settings set' with 'reset' value unsets and exits." {
   {
     "${_NB}" init
     "${_NB}" settings set color_secondary 42
-    [[ "$(cat "${NBRC_PATH}")" =~ NB_COLOR_SECONDARY  ]]
-    [[ "$(cat "${NBRC_PATH}")" =~ 42                  ]]
+
+    [[ "$(cat "${NBRC_PATH}")"          =~  NB_COLOR_SECONDARY  ]]
+    [[ "$(cat "${NBRC_PATH}")"          =~  42                  ]]
+    [[ "$(cat "${NBRC_PATH}" | wc -l)"  -eq 16                  ]]
   }
 
   run "${_NB}" settings set color_secondary reset
@@ -406,11 +417,12 @@ skip "Determine how to test interactive prompt."
   printf "\${output}: '%s'\\n" "${output}"
   printf ".nbrc: '%s'\\n" "$(cat "${NBRC_PATH}")"
 
-  [[ ${status} -eq 0                                  ]]
-  [[ "${output}" =~ NB_COLOR_SECONDARY                ]]
-  [[ "${output}" =~ restored                          ]]
-  [[ "${output}" =~ 8                                 ]]
-  [[ ! "$(cat "${NBRC_PATH}")" =~ NB_COLOR_SECONDARY  ]]
+  [[    "${status}"                     -eq 0                   ]]
+  [[    "${output}"                     =~  NB_COLOR_SECONDARY  ]]
+  [[    "${output}"                     =~  restored            ]]
+  [[    "${output}"                     =~  8                   ]]
+  [[ !  "$(cat "${NBRC_PATH}")"         =~  NB_COLOR_SECONDARY  ]]
+  [[    "$(cat "${NBRC_PATH}" | wc -l)" -eq 14                  ]]
 }
 
 # `set NB_AUTO_SYNC` #######################################################

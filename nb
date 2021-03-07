@@ -17342,10 +17342,10 @@ HEREDOC
     local _setting_name=
     local _default_value=
 
-    _setting_name="$(_settings_identify "${1:-}")"      &&
-      _sed_i                                            \
-        -e "s/^export ${_setting_name}.*Added by.*$//g" \
-        -e "s/^export ${_setting_name}.*Set by.*$//g"   \
+    _setting_name="$(_settings_identify "${1:-}")"    &&
+      _sed_i                                          \
+        -e "/^export ${_setting_name}.*Added by.*$/d" \
+        -e "/^export ${_setting_name}.*Set by.*$/d"   \
         "${NBRC_PATH}" &&
         {
           _stripped=$(<"${NBRC_PATH}")
