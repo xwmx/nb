@@ -2217,6 +2217,26 @@ search: [#tag2               ]
 For more information about search options, see [Search](#-search) and
 [`nb search`](#search).
 
+##### Ace Editor Integration
+
+[Ace](https://ace.c9.io/) is a text editor for the web that enables
+advanced text editing functionality including block selection and syntax
+highlighting.
+
+To use Ace as the editor for `nb browse --gui`, add the following line to
+your `~/.nbrc` file:
+
+```bash
+export NB_ACE_ENABLED=1
+```
+
+The next time a form is loaded in `nb browse`, `nb` will automatically
+download (from [GitHub](https://github.com/ajaxorg/ace-builds/)),
+install, and enable the Ace editor in `nb browse --gui --edit`
+and `nb browse --gui --add`.
+
+##### `browse` Portability
+
 `nb browse` depends on [`ncat`](https://nmap.org/ncat/) and
 [`pandoc`](https://pandoc.org/). When only `pandoc` is available, the
 current note will be rendered and
@@ -2231,8 +2251,9 @@ available, `nb` falls back to the default behavior of [`nb show`](#show).
 `nb browse` is completely local and self-contained within `nb`, from the
 CSS all the way down through the HTTP request parsing and response building,
 with no imports, libraries, frameworks, or third-party code outside of the
-few binary dependencies (`bash`, `git`, `ncat`, `pandoc`) and the
-Linux / Unix environment.
+few binary dependencies (`bash`, `git`, `ncat`, `pandoc`), the
+Linux / Unix environment, and the optional [Ace
+editor](#ace-editor-integration).
 
 Terminal web browsers don't use JavaScript, so visits are not visible to
 many web analytics tools. `nb browse` includes a number of additional
