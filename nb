@@ -8814,8 +8814,8 @@ HEREDOC
         'height:' + textarea.clientHeight + 'px;' +
         'width:'  + textarea.clientWidth  + 'px;'
       )
-      editDiv.style.height      = textarea.clientHeight + 'px';
-      editDiv.style.width       = textarea.clientWidth  + 'px';
+      editDiv.style.height      = textarea.offsetHeight - 30 + 'px';
+      editDiv.style.width       = textarea.offsetWidth  - 30 + 'px';
       editDiv.classList.add(textarea.classList[0]);
 
       textarea.parentNode.insertBefore(editDiv, textarea);
