@@ -8647,7 +8647,7 @@ HEREDOC
   local _input_file_path=
   local _input_string=
   local _only_body=0
-  local _source_extension="${NB_DEFAULT_EXTENSION:-'md'}"
+  local _source_extension="${NB_DEFAULT_EXTENSION:-md}"
   local _use_pandoc=0
 
   while ((${#}))
@@ -8813,7 +8813,7 @@ HEREDOC
       editDiv.setAttribute(
         'style',
         'height:' + textarea.offsetHeight - 30 + 'px;' +
-        'width:'  + textarea.offsetWidth  - 30  + 'px;'
+        'width:'  + textarea.offsetWidth  - 30 + 'px;'
       )
       editDiv.style.height      = textarea.offsetHeight - 30 + 'px';
       editDiv.style.width       = textarea.offsetWidth  - 30 + 'px';
@@ -8829,11 +8829,11 @@ HEREDOC
       editor.renderer.setShowGutter(false);
       editor.getSession().setValue(textarea.value);
 
-      var mode = aceModeList.getModeForPath('example.${_source_extension:-'md'}').mode;
+      var mode = aceModeList.getModeForPath('example.${_source_extension:-md}').mode;
       editor.getSession().setMode(mode);
 
-      if (${_souce_extension:-'md'} === 'md') {
-        editor.session.setUseWrapMode(true);
+      if ('${_source_extension:-md}' === 'md') {
+        editor.getSession().setUseWrapMode(true);
       }
 
       editor.setTheme('ace/theme/twilight');
@@ -14831,7 +14831,7 @@ HEREDOC
 
       printf "</div>\\n"
     } | {
-      _render --source-extension "${NB_DEFAULT_EXTENSION:-'md'}"
+      _render --source-extension "${NB_DEFAULT_EXTENSION:-md}"
     }
   }
 
