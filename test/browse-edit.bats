@@ -42,7 +42,7 @@ export _S=" "
   [[    "${lines[3]}"  =~  Server:\ nb                                        ]]
   [[    "${lines[4]}"  =~  Content-Type:\ text/html                           ]]
 
-  [[    "${output}"    =~ action=\"/home:1/1?--edit                           ]]
+  [[    "${output}"    =~ action=\"/home:1/1\?--edit                          ]]
 
   [[    "${output}"    =~ initializeAceEditor                                 ]]
   [[    "${output}"    =~ aceModeList\.getModeForPath\(\'example.js\'\)\.mode ]]
@@ -82,7 +82,7 @@ export _S=" "
   [[    "${lines[3]}"  =~  Server:\ nb                                        ]]
   [[    "${lines[4]}"  =~  Content-Type:\ text/html                           ]]
 
-  [[    "${output}"    =~ action=\"/home:1/1?--edit                           ]]
+  [[    "${output}"    =~ action=\"/home:1/1\?--edit                          ]]
 
 
   [[ !  "${output}"    =~ initializeAceEditor                                 ]]
@@ -123,7 +123,7 @@ export _S=" "
   [[    "${lines[3]}"  =~  Server:\ nb                                        ]]
   [[    "${lines[4]}"  =~  Content-Type:\ text/html                           ]]
 
-  [[    "${output}"    =~ action=\"/home:1/1?--edit                           ]]
+  [[    "${output}"    =~ action=\"/home:1/1\?--edit                          ]]
 
   [[    "${output}"    =~ initializeAceEditor                                 ]]
   [[    "${output}"    =~ aceModeList\.getModeForPath\(\'example.md\'\)\.mode ]]
