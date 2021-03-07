@@ -9,6 +9,47 @@ export _S=" "
 
 # ace editor ##################################################################
 
+@test "GET to --edit URL with Ace enabled sets the theme with \$NB_ACE_THEME." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example Folder/File One.js"  \
+      --content   "console.log('example');"
+
+    printf "export NB_ACE_ENABLED=1\\n"           >> "${NBRC_PATH}"
+    printf "export NB_ACE_THEME=\"ambiance\"\\n"  >> "${NBRC_PATH}"
+    printf "export NB_TESTING=1\\n"               >> "${NBRC_PATH}"
+
+    (ncat                                       \
+      --exec "${_NB} browse --respond"          \
+      --listen                                  \
+      --source-port "6789"                      \
+      2>/dev/null) &
+
+    sleep 1
+  }
+
+  run curl -sS -D - "http://localhost:6789/home:1/1?--edit&--columns=20"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq 0    ]]
+
+  # Prints output:
+
+  [[    "${lines[0]}"  =~  HTTP/1.0\ 200\ OK                              ]]
+  [[    "${lines[1]}"  =~  Date:\ .*                                      ]]
+  [[    "${lines[2]}"  =~  Expires:\ .*                                   ]]
+  [[    "${lines[3]}"  =~  Server:\ nb                                    ]]
+  [[    "${lines[4]}"  =~  Content-Type:\ text/html                       ]]
+
+  [[    "${output}"    =~ action=\"/home:1/1\?--edit                      ]]
+
+  [[    "${output}"    =~ initializeAceEditor                             ]]
+  [[    "${output}"    =~ editor\.setTheme\(\'ace\/theme\/ambiance\'\)\;  ]]
+}
+
 @test "GET to --edit URL with Ace enabled and non-default extension includes initialization with updated mode." {
   {
     "${_NB}" init
@@ -91,7 +132,7 @@ export _S=" "
   [[ !  "${output}"    =~ aceModeList\.getModeForPath\(\'example.md\'\)\.mode ]]
 }
 
-@test "GET to --edit URL with Ace enabled includes initialization with default mode." {
+@test "GET to --edit URL with Ace enabled includes initialization with default mode and theme." {
   {
     "${_NB}" init
 
@@ -120,16 +161,17 @@ export _S=" "
 
   # Prints output:
 
-  [[    "${lines[0]}"  =~  HTTP/1.0\ 200\ OK                                  ]]
-  [[    "${lines[1]}"  =~  Date:\ .*                                          ]]
-  [[    "${lines[2]}"  =~  Expires:\ .*                                       ]]
-  [[    "${lines[3]}"  =~  Server:\ nb                                        ]]
-  [[    "${lines[4]}"  =~  Content-Type:\ text/html                           ]]
+  [[    "${lines[0]}"  =~ HTTP/1.0\ 200\ OK                                   ]]
+  [[    "${lines[1]}"  =~ Date:\ .*                                           ]]
+  [[    "${lines[2]}"  =~ Expires:\ .*                                        ]]
+  [[    "${lines[3]}"  =~ Server:\ nb                                         ]]
+  [[    "${lines[4]}"  =~ Content-Type:\ text/html                            ]]
 
   [[    "${output}"    =~ action=\"/home:1/1\?--edit                          ]]
 
   [[    "${output}"    =~ initializeAceEditor                                 ]]
   [[    "${output}"    =~ aceModeList\.getModeForPath\(\'example.md\'\)\.mode ]]
+  [[    "${output}"    =~ editor\.setTheme\(\'ace\/theme\/twilight\'\)\;      ]]
 }
 
 # GET #########################################################################
