@@ -8838,6 +8838,7 @@ HEREDOC
       var editor = ace.edit(editDiv, {
         autoScrollEditorIntoView: true
       });
+      editor.setShowPrintMargin(false);
       editor.renderer.setShowGutter(false);
       editor.getSession().setValue(textarea.value);
 
