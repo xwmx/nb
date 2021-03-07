@@ -8311,8 +8311,14 @@ a           { color:    #6EB3D7; text-decoration: none;       }
 a:hover     { color:    #6EB3D7; text-decoration: underline;  }
 a:visited   { color:    #6EB3D7; text-decoration: none;       }
 
-:focus                  { outline:  1px solid #2d2d2d;        }
-body.using-mouse :focus { outline:  none;                     }
+:focus {
+  outline:  1px solid #2d2d2d;
+}
+
+body.using-mouse a:focus,
+body.using-mouse input:focus {
+  outline:  none;
+}
 
 h1 a,
 h1 a:hover,
@@ -8536,12 +8542,12 @@ textarea,
   border:           none;
   /* border-bottom:    1px solid #2c2c2c; */
   /* border-top:       1px solid #2c2c2c; */
-  border: 1rem solid rgb(29, 29, 29);
+  border:           1rem solid #1d1d1d;
   color:            #dddddd;
   font-size:        1rem;
   line-height:      1.5;
   outline:          1px solid #242424;
-  padding:          1rem;
+  /* padding:          1rem; */
 }
 
 .ace-twilight .ace_print-margin {
