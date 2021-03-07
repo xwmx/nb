@@ -8544,7 +8544,7 @@ textarea,
   border:           1rem solid #1d1d1d;
   box-sizing:       border-box;
   color:            #dddddd;
-  font-size:        1rem;
+  font-size:        0.875rem;
   line-height:      1.5;
   outline:          1px solid #242424;
   padding:          0;
