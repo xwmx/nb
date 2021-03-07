@@ -14,7 +14,7 @@
 
 <br>
 
-`nb` is a command line note-taking, bookmarking, archiving,
+`nb` is a command line and local web note-taking, bookmarking, archiving,
 and knowledge base application with:
 
 - plain-text data storage,
@@ -22,7 +22,8 @@ and knowledge base application with:
 - [filtering](#listing--filtering), [pinning](#-pinning), [#tagging](#-tagging), and [search](#-search),
 - [Git](https://git-scm.com/)-backed [versioning](#-revision-history) and [syncing](#-git-sync),
 - [Pandoc](https://pandoc.org/)-backed [conversion](#%EF%B8%8F-import--export),
-- <a href="#-linking">[[wiki-style linking]]</a> with terminal-first [browsing](#-browsing),
+- <a href="#-linking">[[wiki-style linking]]</a>,
+- terminal and GUI web [browsing](#-browsing),
 - global and local [notebooks](#-notebooks),
 - customizable [color themes](#-color-themes),
 - extensibility through [plugins](#-plugins),
