@@ -170,11 +170,11 @@ export _S=" "
     "<form${_NEWLINE}action=\"/home:1?--edit&--per-page=30--columns=20"
 }
 
-@test "GET to --edit URL with --columns parameter uses value for textarea, form URL parameters, and header links." {
+@test "GET to --edit URL with --columns parameter uses value for textarea, form URL parameters, and header links and retains leading tab." {
   {
     "${_NB}" init
 
-    "${_NB}" add "Example File.md" --title "Example Title" --content "Example content."
+    "${_NB}" add "Example File.md" --title "Example Title" --content "	Example content."
 
     (ncat                                   \
       --exec "${_NB} browse --respond"      \
@@ -198,7 +198,7 @@ export _S=" "
 
   diff                                      \
     <(cat "${NB_DIR}/home/Example File.md") \
-    <(printf "# Example Title\\n\\nExample content.\\n")
+    <(printf "# Example Title\\n\\n	Example content.\\n")
 
   # Does not create git commit:
 
@@ -233,11 +233,11 @@ export _S=" "
 "value=\"save\"> <span class=\"dim\">·</span> <span class=\"dim\">last: .*</span>"
 }
 
-@test "GET to --edit URL without --columns parameter uses default value for textarea." {
+@test "GET to --edit URL without --columns parameter uses default value for textarea and retains leading tab." {
   {
     "${_NB}" init
 
-    "${_NB}" add "Example File.md" --title "Example Title" --content "Example content."
+    "${_NB}" add "Example File.md" --title "Example Title" --content "	Example content."
 
     (ncat                                   \
       --exec "${_NB} browse --respond"      \
@@ -261,7 +261,7 @@ export _S=" "
 
   diff                                      \
     <(cat "${NB_DIR}/home/Example File.md") \
-    <(printf "# Example Title\\n\\nExample content.\\n")
+    <(printf "# Example Title\\n\\n	Example content.\\n")
 
   # Does not create git commit:
 

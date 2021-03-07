@@ -16225,8 +16225,8 @@ HEREDOC
             | _render
         fi
       } | {
-        local __line=
-        while read -r __line
+        local               __line=
+        while IFS= read -r  __line
         do
           printf "%s\\r\\n" "${__line}"
         done
