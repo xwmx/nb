@@ -17,6 +17,7 @@ export _S=" "
       --content   "console.log('example');"
 
     printf "export NB_ACE_ENABLED=1\\n" >> "${NBRC_PATH}"
+    printf "export NB_TESTING=1\\n"     >> "${NBRC_PATH}"
 
     (ncat                                       \
       --exec "${_NB} browse --respond"          \
@@ -57,6 +58,7 @@ export _S=" "
       --content   "Example content."
 
     printf "export NB_ACE_ENABLED=0\\n" >> "${NBRC_PATH}"
+    printf "export NB_TESTING=1\\n"     >> "${NBRC_PATH}"
 
     (ncat                                       \
       --exec "${_NB} browse --respond"          \
@@ -98,6 +100,7 @@ export _S=" "
       --content   "Example content. [[Example Title]]"
 
     printf "export NB_ACE_ENABLED=1\\n" >> "${NBRC_PATH}"
+    printf "export NB_TESTING=1\\n"     >> "${NBRC_PATH}"
 
     (ncat                                       \
       --exec "${_NB} browse --respond"          \

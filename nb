@@ -8793,7 +8793,7 @@ HEREDOC
     then
       if ((${NB_ACE_ENABLED:-0}))
       then
-        if [[ ! -e "${NB_DIR}/.assets/ace-builds" ]]
+        if [[ ! -e "${NB_DIR}/.assets/ace-builds" ]] && ! ((${NB_TESTING:-0}))
         then
           _env install --ace
         fi
