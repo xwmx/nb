@@ -23,7 +23,7 @@ and knowledge base application with:
 - [Git](https://git-scm.com/)-backed [versioning](#-revision-history) and [syncing](#-git-sync),
 - [Pandoc](https://pandoc.org/)-backed [conversion](#%EF%B8%8F-import--export),
 - <a href="#-linking">[[wiki-style linking]]</a>,
-- terminal and GUI web [browsing](#-browsing),
+- terminal and GUI web [browsing](#-browsing) and editing,
 - global and local [notebooks](#-notebooks),
 - customizable [color themes](#-color-themes),
 - extensibility through [plugins](#-plugins),
@@ -37,8 +37,9 @@ and [LaTeX](https://www.latex-project.org/),
 can work with files in any format, can import and export notes to many
 document formats, and can create private, password-protected encrypted
 notes and bookmarks. With `nb`, you can write notes using Vim, Emacs,
-VS Code, Sublime Text, and any other text editor you like. `nb` works in
-any standard Linux / Unix environment, including macOS and Windows via WSL.
+VS Code, Sublime Text, and any other text editor you like, as well as
+terminal and GUI web browsers. `nb` works in any standard Linux / Unix
+environment, including macOS and Windows via WSL.
 [Optional dependencies](#optional) can be installed to enhance functionality,
 but `nb` works great without them.
 
