@@ -3480,8 +3480,8 @@ $(_color_primary "Usage:")
   ${_ME} remote [remove | set <url> [-f | --force]]
   ${_ME} run <command> [<arguments>...]
   ${_ME} search <query>... [-a | --all] [--and <query>] [--or <query>]
-            [-l | --list]  [--path] [-t <type> | --type <type> | --<type>]
-            [--utility <name>]
+            [-l | --list]  [--path] [--tags] [-t <type> | --type <type> |
+            --<type>] [--utility <name>]
   ${_ME} set [<name> [<value>] | <number> [<value>]]
   ${_ME} settings [colors [<number> | themes] | edit | list [--long]]
   ${_ME} settings (get | show | unset) (<name> | <number>)
@@ -4269,6 +4269,10 @@ _list() {
         ;;
       -r|--reverse)
         _reverse=1
+        ;;
+      --tags|--hashtags)
+        _search "${@:-}"
+        return 0
         ;;
       --titles)
         : # Do nothing. This is the default behavior.
@@ -12582,8 +12586,8 @@ _alias_subcommand "run" "r"
 describe "search" <<HEREDOC
 Usage:
   ${_ME} search <query>... [-a | --all] [--and <query>] [--or <query>]
-            [-l | --list]  [--path] [-t <type> | --type <type> | --<type>]
-            [--utility <name>]
+            [-l | --list]  [--path] [--tags] [-t <type> | --type <type> |
+            --<type>] [--utility <name>]
 
 Options:
   -a, --all                     Search all unarchived notebooks.
@@ -12592,6 +12596,7 @@ Options:
                                 each matching file, without the excerpt.
   --or <query>                  Add an OR query.
   --path                        Print the full path for each matching file.
+  --tags                        Search for and list all #hashtags.
   -t, --type <type>, --<type>   Search items of <type>. <type> can be a file
                                 extension or one of the following types:
                                 note, bookmark, document, archive, image,
@@ -12665,6 +12670,7 @@ _search() {
   local _print_paths=0
   local _query=
   local _search_args=()
+  local _search_tags=0
   local _search_utility=
   local _selectors=()
   local _sort=0
@@ -12717,6 +12723,9 @@ _search() {
         ;;
       -s|--sort)
         _sort=1
+        ;;
+      --tags|--hashtags)
+        _search_tags=1
         ;;
       --*tool|--*utility)
         _search_utility="$(_option_get_value "${__arg}" "${__val:-}")"
@@ -12827,14 +12836,63 @@ _search() {
     fi
   done
 
-  if [[ -z "${_and_queries[*]:-}" ]]
-  then
-    _exit_1 _help "search"
-  fi
-
   if [[ -z "${_target_paths[*]:-}" ]]
   then
     _target_paths=("${_current_notebook_path}")
+  fi
+
+  if ((_search_tags))
+  then
+    {
+      local __target_path=
+      for   __target_path in "${_target_paths[@]:-}"
+      do
+        [[ -n "${__target_path:-}" ]] || continue
+
+        GIT_PAGER='' git            \
+          -C "${__target_path}"     \
+          grep                      \
+          --color=never             \
+          --extended-regexp         \
+          -h                        \
+          -I                        \
+          --ignore-case             \
+          --only-matching           \
+          -e '^#[A-Za-z0-9_-]+\s'   \
+          -e '\s#[A-Za-z0-9_-]+\s'  \
+          -e '\s#[A-Za-z0-9_-]+$'   \
+          "${__target_path}" 2>/dev/null || continue
+      done
+
+      return 0
+    } | {
+      local _seen_matches=()
+
+      local         __match=
+      while read -r __match
+      do
+        local _normalized_match="${__match#"${__match%%[![:space:]]*}"}"
+        _normalized_match="${_normalized_match%"${_normalized_match##*[![:space:]]}"}"
+
+        if ! _contains "${_normalized_match}" "${_seen_matches[@]:-}"
+        then
+          printf "%s\\n" "${_normalized_match:-}"
+          _seen_matches+=("${_normalized_match:-}")
+        fi
+      done
+
+      if ! ((${#_seen_matches}))
+      then
+        printf "No #hashtags found.\\n"
+      fi
+    }
+
+    return 0
+  fi
+
+  if [[ -z "${_and_queries[*]:-}" ]]
+  then
+    _exit_1 _help "search"
   fi
 
   local _queries=()

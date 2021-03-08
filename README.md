@@ -4196,8 +4196,8 @@ Usage:
   nb remote [remove | set <url> [-f | --force]]
   nb run <command> [<arguments>...]
   nb search <query>... [-a | --all] [--and <query>] [--or <query>]
-            [-l | --list]  [--path] [-t <type> | --type <type> | --<type>]
-            [--utility <name>]
+            [-l | --list]  [--path] [--tags] [-t <type> | --type <type> |
+            --<type>] [--utility <name>]
   nb set [<name> [<value>] | <number> [<value>]]
   nb settings [colors [<number> | themes] | edit | list [--long]]
   nb settings (get | show | unset) (<name> | <number>)
@@ -5305,8 +5305,8 @@ Examples:
 ```text
 Usage:
   nb search <query>... [-a | --all] [--and <query>] [--or <query>]
-            [-l | --list]  [--path] [-t <type> | --type <type> | --<type>]
-            [--utility <name>]
+            [-l | --list]  [--path] [--tags] [-t <type> | --type <type> |
+            --<type>] [--utility <name>]
 
 Options:
   -a, --all                     Search all unarchived notebooks.
@@ -5315,6 +5315,7 @@ Options:
                                 each matching file, without the excerpt.
   --or <query>                  Add an OR query.
   --path                        Print the full path for each matching file.
+  --tags                        Search for and list all #hashtags.
   -t, --type <type>, --<type>   Search items of <type>. <type> can be a file
                                 extension or one of the following types:
                                 note, bookmark, document, archive, image,

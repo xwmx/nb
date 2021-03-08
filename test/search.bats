@@ -58,6 +58,57 @@ _search_all_setup() {
   [[ "${lines[1]}"  =~  nb\ search\ \<query\> ]]
 }
 
+# --tags ######################################################################
+
+@test "'search --tags' lists all unique tags in the current notebook, and in all notebooks with --all." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "File One.md"   \
+      --title     "Title One"     \
+      --content   "Sample Content One #tag1 Sample Phrase."
+
+    "${_NB}" add  "File Two.md"   \
+      --title     "Title Two"     \
+      --content   "Example Content Two #tag3 Example #tag1 Phrase."
+
+    "${_NB}" add  "File Three.md" \
+      --title     "Title Three"   \
+      --content   "Example Content Three #tag4 Example Phrase."
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" add  "File One.md"   \
+      --title     "Title One"     \
+      --content   "Sample Content One #other-tag1 Sample Phrase."
+  }
+
+  run "${_NB}" search --tags
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0       ]]
+  [[ "${#lines[@]}" -eq 3       ]]
+
+  [[ "${lines[0]}"  =~  \#tag1  ]]
+  [[ "${lines[1]}"  =~  \#tag4  ]]
+  [[ "${lines[2]}"  =~  \#tag3  ]]
+
+  run "${_NB}" search --tags --all
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0           ]]
+  [[ "${#lines[@]}" -eq 4           ]]
+
+  [[ "${lines[0]}"  =~  \#othertag1 ]]
+  [[ "${lines[1]}"  =~  \#tag1      ]]
+  [[ "${lines[2]}"  =~  \#tag4      ]]
+  [[ "${lines[3]}"  =~  \#tag3      ]]
+}
+
 # aliases #####################################################################
 
 @test "'q <query>' exits with status 0 and prints output." {
