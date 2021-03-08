@@ -4169,7 +4169,7 @@ Usage:
   nb ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
         [-n <limit> | --limit <limit> | --<limit>] [--no-footer] [--no-header]
         [--no-id] [--no-indicator] [-p | --pager] [--paths] [-s | --sort]
-        [-r | --reverse] [-t <type> | --type <type> | --<type>]
+        [-r | --reverse] [--tags] [-t <type> | --type <type> | --<type>]
         [<id> | <filename> | <path> | <title> | <query>]
   nb move [<notebook>:](<id> | <filename> | <path> | <title>) [-f | --force]
           ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note)
@@ -4962,7 +4962,7 @@ Usage:
   nb ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
         [-n <limit> | --limit <limit> | --<limit>] [--no-footer] [--no-header]
         [--no-id] [--no-indicator] [-p | --pager] [--paths] [-s | --sort]
-        [-r | --reverse] [-t <type> | --type <type> | --<type>]
+        [-r | --reverse] [--tags] [-t <type> | --type <type> | --<type>]
         [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
@@ -4981,6 +4981,7 @@ Options:
   --paths                         Print the full path to each item.
   -s, --sort                      Order notes by id.
   -r, --reverse                   List items in reverse order.
+  --tags                          List tags in the notebook or folder.
   -t, --type <type>, --<type>     List items of <type>. <type> can be a file
                                   extension or one of the following types:
                                   archive, audio, book, bookmark, document,

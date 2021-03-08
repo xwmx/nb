@@ -2,9 +2,7 @@
 
 load test_helper
 
-# `search` ####################################################################
-
-_setup_search_tags() {
+_setup_tagged_items() {
   "${_NB}" init
 
   "${_NB}" add  "File One.md"                       \
@@ -34,9 +32,131 @@ _setup_search_tags() {
     --content   "Sample Content One #other-tag1 Sample Phrase."
 }
 
+# `nb` (`ls`) #################################################################
+
+@test "'<folder>/ --tags' lists all unique tags in <folder>." {
+  {
+    _setup_tagged_items
+  }
+
+  run "${_NB}" Example\ Folder/ --tags
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0             ]]
+  [[ "${#lines[@]}" -eq 2             ]]
+
+  [[ "${lines[0]}"  =~  \#nested-tag1 ]]
+  [[ "${lines[1]}"  =~  \#nested-tag2 ]]
+}
+
+@test "'--tags' lists all unique tags in the current notebook." {
+  {
+    _setup_tagged_items
+  }
+
+  run "${_NB}" --tags
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0             ]]
+  [[ "${#lines[@]}" -eq 5             ]]
+
+  [[ "${lines[0]}"  =~  \#nested-tag1 ]]
+  [[ "${lines[1]}"  =~  \#nested-tag2 ]]
+  [[ "${lines[2]}"  =~  \#tag1        ]]
+  [[ "${lines[3]}"  =~  \#tag2        ]]
+  [[ "${lines[4]}"  =~  \#tag3        ]]
+}
+
+@test "'--tags --all' lists all unique tags in all notebooks." {
+  {
+    _setup_tagged_items
+  }
+
+  run "${_NB}" --tags --all
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0             ]]
+  [[ "${#lines[@]}" -eq 6             ]]
+
+  [[ "${lines[0]}"  =~  \#other-tag1  ]]
+  [[ "${lines[1]}"  =~  \#nested-tag1 ]]
+  [[ "${lines[2]}"  =~  \#nested-tag2 ]]
+  [[ "${lines[3]}"  =~  \#tag1        ]]
+  [[ "${lines[4]}"  =~  \#tag2        ]]
+  [[ "${lines[5]}"  =~  \#tag3        ]]
+}
+
+# `list` ######################################################################
+
+@test "'list <folder>/ --tags' lists all unique tags in <folder>." {
+  {
+    _setup_tagged_items
+  }
+
+  run "${_NB}" list Example\ Folder/ --tags
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0             ]]
+  [[ "${#lines[@]}" -eq 2             ]]
+
+  [[ "${lines[0]}"  =~  \#nested-tag1 ]]
+  [[ "${lines[1]}"  =~  \#nested-tag2 ]]
+}
+
+@test "'list --tags' lists all unique tags in the current notebook." {
+  {
+    _setup_tagged_items
+  }
+
+  run "${_NB}" list --tags
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0             ]]
+  [[ "${#lines[@]}" -eq 5             ]]
+
+  [[ "${lines[0]}"  =~  \#nested-tag1 ]]
+  [[ "${lines[1]}"  =~  \#nested-tag2 ]]
+  [[ "${lines[2]}"  =~  \#tag1        ]]
+  [[ "${lines[3]}"  =~  \#tag2        ]]
+  [[ "${lines[4]}"  =~  \#tag3        ]]
+}
+
+@test "'list --tags --all' lists all unique tags in all notebooks." {
+  {
+    _setup_tagged_items
+  }
+
+  run "${_NB}" list --tags --all
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0             ]]
+  [[ "${#lines[@]}" -eq 6             ]]
+
+  [[ "${lines[0]}"  =~  \#other-tag1  ]]
+  [[ "${lines[1]}"  =~  \#nested-tag1 ]]
+  [[ "${lines[2]}"  =~  \#nested-tag2 ]]
+  [[ "${lines[3]}"  =~  \#tag1        ]]
+  [[ "${lines[4]}"  =~  \#tag2        ]]
+  [[ "${lines[5]}"  =~  \#tag3        ]]
+}
+
+# `search` ####################################################################
+
 @test "'search <folder>/ --tags' lists all unique tags in <folder>." {
   {
-    _setup_search_tags
+    _setup_tagged_items
   }
 
   run "${_NB}" search Example\ Folder/ --tags
@@ -53,7 +173,7 @@ _setup_search_tags() {
 
 @test "'search --tags' lists all unique tags in the current notebook." {
   {
-    _setup_search_tags
+    _setup_tagged_items
   }
 
   run "${_NB}" search --tags
@@ -73,7 +193,7 @@ _setup_search_tags() {
 
 @test "'search --tags --all' lists all unique tags in all notebooks." {
   {
-    _setup_search_tags
+    _setup_tagged_items
   }
 
   run "${_NB}" search --tags --all

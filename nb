@@ -3453,7 +3453,7 @@ $(_color_primary "Usage:")
   ${_ME} ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
         [-n <limit> | --limit <limit> | --<limit>] [--no-footer] [--no-header]
         [--no-id] [--no-indicator] [-p | --pager] [--paths] [-s | --sort]
-        [-r | --reverse] [-t <type> | --type <type> | --<type>]
+        [-r | --reverse] [--tags] [-t <type> | --type <type> | --<type>]
         [<id> | <filename> | <path> | <title> | <query>]
   ${_ME} move [<notebook>:](<id> | <filename> | <path> | <title>) [-f | --force]
           ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note)
@@ -4272,7 +4272,7 @@ _list() {
         _reverse=1
         ;;
       --tags|--hashtags)
-        _search "${@:-}"
+        _search "${_selector_arguments[@]:-}" "${@:-}"
         return 0
         ;;
       --titles)
@@ -5058,7 +5058,7 @@ Usage:
   ${_ME} ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
         [-n <limit> | --limit <limit> | --<limit>] [--no-footer] [--no-header]
         [--no-id] [--no-indicator] [-p | --pager] [--paths] [-s | --sort]
-        [-r | --reverse] [-t <type> | --type <type> | --<type>]
+        [-r | --reverse] [--tags] [-t <type> | --type <type> | --<type>]
         [<id> | <filename> | <path> | <title> | <query>]
 
 Options:
@@ -5077,6 +5077,7 @@ Options:
   --paths                         Print the full path to each item.
   -s, --sort                      Order notes by id.
   -r, --reverse                   List items in reverse order.
+  --tags                          List tags in the notebook or folder.
   -t, --type <type>, --<type>     List items of <type>. <type> can be a file
                                   extension or one of the following types:
                                   note, book, bookmark, document, archive,
@@ -5500,6 +5501,9 @@ _ls() {
       --no*header)
         NB_HEADER=0
         ;;
+      --tags)
+        _delegate_arguments+=("${__arg}")
+        ;;
       -t|--type)
         _maybe_type="$(_option_get_value "${__arg}" "${__val:-}")"
         _arguments+=("${__arg}" "${__val:-}")
@@ -5576,6 +5580,11 @@ _ls() {
             _defer "_add" "${_arguments[@]:-}" "${_delegate_arguments[@]:-}"
             return 0
           fi
+          ;;
+        --tags)
+          ((_all)) && _delegate_arguments+=("--all")
+          _defer "_list"  "${_arguments[@]:-}" "${_delegate_arguments[@]:-}"
+          return 0
           ;;
         *)
           if [[ -n "${_arguments[i]:-}" ]]
