@@ -12914,6 +12914,11 @@ _search() {
         _normalized_match="${_normalized_match#"${_normalized_match%%[![:space:]]*}"}"
         _normalized_match="${_normalized_match%"${_normalized_match##*[![:space:]]}"}"
 
+        if [[ "${_last_relative_path:-}" != "${_relative_path:-}" ]]
+        then
+          _last_line_number=
+        fi
+
         if [[ "${_normalized_match:-}" =~ \
               \#\#\ Content|\#\#\ Source|\#\#\ Page\ Content ]]
         then
@@ -12923,7 +12928,7 @@ _search() {
           continue
         fi
 
-        if [[ "${_last_relative_path:-/123}"  == "${_relative_path:-/456}"  ]] &&
+        if [[ "${_last_relative_path:-/123}"  ==  "${_relative_path:-/456}" ]] &&
            [[ "${_last_line_number:-9999999}" -lt "${_line_number:-0}"      ]]
         then
           continue

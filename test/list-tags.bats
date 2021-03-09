@@ -14,6 +14,10 @@ _setup_tagged_items() {
     --content   "$(cat <<HEREDOC
 Example Content Two #tag3 Example #tag1 Phrase.
 
+More content.
+
+#low-tag
+
 ## Content
 
 #content-tag
@@ -76,13 +80,14 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}"    -eq 0             ]]
-  [[ "${#lines[@]}" -eq 5             ]]
+  [[ "${#lines[@]}" -eq 6             ]]
 
   [[ "${lines[0]}"  =~  \#nested-tag1 ]]
   [[ "${lines[1]}"  =~  \#nested-tag2 ]]
   [[ "${lines[2]}"  =~  \#tag1        ]]
   [[ "${lines[3]}"  =~  \#tag2        ]]
   [[ "${lines[4]}"  =~  \#tag3        ]]
+  [[ "${lines[5]}"  =~  \#low-tag     ]]
 }
 
 @test "'--tags --all' lists all unique tags in all notebooks." {
@@ -96,13 +101,14 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}"    -eq 0             ]]
-  [[ "${#lines[@]}" -eq 6             ]]
+  [[ "${#lines[@]}" -eq 7             ]]
 
   [[ "${lines[0]}"  =~  \#other-tag1  ]]
   [[ "${lines[1]}"  =~  \#nested-tag1 ]]
   [[ "${lines[2]}"  =~  \#nested-tag2 ]]
   [[ "${lines[3]}"  =~  \#tag1        ]]
   [[ "${lines[4]}"  =~  \#tag2        ]]
+  [[ "${lines[6]}"  =~  \#low-tag     ]]
   [[ "${lines[5]}"  =~  \#tag3        ]]
 }
 
@@ -136,13 +142,14 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}"    -eq 0             ]]
-  [[ "${#lines[@]}" -eq 5             ]]
+  [[ "${#lines[@]}" -eq 6             ]]
 
   [[ "${lines[0]}"  =~  \#nested-tag1 ]]
   [[ "${lines[1]}"  =~  \#nested-tag2 ]]
   [[ "${lines[2]}"  =~  \#tag1        ]]
   [[ "${lines[3]}"  =~  \#tag2        ]]
   [[ "${lines[4]}"  =~  \#tag3        ]]
+  [[ "${lines[5]}"  =~  \#low-tag     ]]
 }
 
 @test "'list --tags --all' lists all unique tags in all notebooks." {
@@ -156,7 +163,7 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}"    -eq 0             ]]
-  [[ "${#lines[@]}" -eq 6             ]]
+  [[ "${#lines[@]}" -eq 7             ]]
 
   [[ "${lines[0]}"  =~  \#other-tag1  ]]
   [[ "${lines[1]}"  =~  \#nested-tag1 ]]
@@ -164,6 +171,7 @@ HEREDOC
   [[ "${lines[3]}"  =~  \#tag1        ]]
   [[ "${lines[4]}"  =~  \#tag2        ]]
   [[ "${lines[5]}"  =~  \#tag3        ]]
+  [[ "${lines[6]}"  =~  \#low-tag     ]]
 }
 
 # `search` ####################################################################
@@ -196,13 +204,14 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}"    -eq 0             ]]
-  [[ "${#lines[@]}" -eq 5             ]]
+  [[ "${#lines[@]}" -eq 6             ]]
 
   [[ "${lines[0]}"  =~  \#nested-tag1 ]]
   [[ "${lines[1]}"  =~  \#nested-tag2 ]]
   [[ "${lines[2]}"  =~  \#tag1        ]]
   [[ "${lines[3]}"  =~  \#tag2        ]]
   [[ "${lines[4]}"  =~  \#tag3        ]]
+  [[ "${lines[5]}"  =~  \#low-tag     ]]
 }
 
 @test "'search --tags --all' lists all unique tags in all notebooks." {
@@ -216,7 +225,7 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}"    -eq 0             ]]
-  [[ "${#lines[@]}" -eq 6             ]]
+  [[ "${#lines[@]}" -eq 7             ]]
 
   [[ "${lines[0]}"  =~  \#other-tag1  ]]
   [[ "${lines[1]}"  =~  \#nested-tag1 ]]
@@ -224,4 +233,5 @@ HEREDOC
   [[ "${lines[3]}"  =~  \#tag1        ]]
   [[ "${lines[4]}"  =~  \#tag2        ]]
   [[ "${lines[5]}"  =~  \#tag3        ]]
+  [[ "${lines[6]}"  =~  \#low-tag     ]]
 }
