@@ -11,11 +11,25 @@ _setup_tagged_items() {
 
   "${_NB}" add  "File Two.md"                       \
     --title     "Title Two"                         \
-    --content   "Example Content Two #tag3 Example #tag1 Phrase."
+    --content   "$(cat <<HEREDOC
+Example Content Two #tag3 Example #tag1 Phrase.
+
+## Content
+
+#content-tag
+HEREDOC
+)"
 
   "${_NB}" add  "File Three.md"                     \
     --title     "Title Three"                       \
-    --content   "Example Content Three #tag2 Example Phrase."
+    --content   "$(cat <<HEREDOC
+Example Content Three #tag2 Example Phrase.
+
+## Source
+
+#source-tag
+HEREDOC
+)"
 
   "${_NB}" add  "Example Folder/Nested File One.md" \
     --title     "Title One"                         \

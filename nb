@@ -12851,39 +12851,81 @@ _search() {
     _target_paths=("${_current_notebook_path}")
   fi
 
+  local _xargs=("-0")
+
+  if xargs --help &> /dev/null
+  then # GNU (BSD does this by default)
+    _xargs+=("--no-run-if-empty")
+  fi
+
   if ((_search_tags))
   then
+    local _git_grep_arguments=(
+      "grep"
+      "--color=never"
+      "--extended-regexp"
+      "-I"
+      "--ignore-case"
+      "--only-matching"
+      -e '^#[A-Za-z0-9_-]+\s'
+      -e '\s#[A-Za-z0-9_-]+\s'
+      -e '\s#[A-Za-z0-9_-]+$'
+      -e '^#[A-Za-z0-9_-]+$'
+    )
+
     {
       local __target_path=
       for   __target_path in "${_target_paths[@]:-}"
       do
         [[ -n "${__target_path:-}" ]] || continue
 
-        GIT_PAGER='' git            \
-          -C "${__target_path}"     \
-          grep                      \
-          --color=never             \
-          --extended-regexp         \
-          -h                        \
-          -I                        \
-          --ignore-case             \
-          --only-matching           \
-          -e '^#[A-Za-z0-9_-]+\s'   \
-          -e '\s#[A-Za-z0-9_-]+\s'  \
-          -e '\s#[A-Za-z0-9_-]+$'   \
-          -e '^#[A-Za-z0-9_-]+$'    \
-          "${__target_path}" 2>/dev/null || continue
+        {
+          GIT_PAGER='' git -C "${__target_path}"  \
+            "${_git_grep_arguments[@]:-}"         \
+            --files-with-matches                  \
+            --null \
+            "${__target_path}" 2>/dev/null || true
+        } | {
+          GIT_PAGER='' xargs "${_xargs[@]}"       \
+            git -C "${__target_path}"             \
+            "${_git_grep_arguments[@]:-}"         \
+            -e "## Content"                       \
+            -e "## Page Content"                  \
+            -e "## Source"                        \
+            --line-number 2>/dev/null || true
+        }
       done
-
-      return 0
     } | {
+      local _last_line_number=
+      local _last_relative_path=
       local _seen_matches=()
 
       local         __match=
       while read -r __match
       do
-        local _normalized_match="${__match#"${__match%%[![:space:]]*}"}"
+        local _line_number="${__match%:*}"
+        _line_number="${_line_number#*:}"
+
+        local _relative_path="${__match%%:*}"
+
+        local _normalized_match="${__match##*:}"
+        _normalized_match="${_normalized_match#"${_normalized_match%%[![:space:]]*}"}"
         _normalized_match="${_normalized_match%"${_normalized_match##*[![:space:]]}"}"
+
+        if [[ "${_normalized_match:-}" =~ \
+              \#\#\ Content|\#\#\ Source|\#\#\ Page\ Content ]]
+        then
+          _last_line_number="${_line_number}"
+          _last_relative_path="${_relative_path}"
+
+          continue
+        fi
+
+        if [[ "${_last_relative_path:-/123}"  == "${_relative_path:-/456}"  ]] &&
+           [[ "${_last_line_number:-9999999}" -lt "${_line_number:-0}"      ]]
+        then
+          continue
+        fi
 
         if ! _contains "${_normalized_match}" "${_seen_matches[@]:-}"
         then
@@ -13147,13 +13189,6 @@ _search() {
              [[ "${#_arguments[@]}" -le 1 ]]
           then
             _search_paths+=("${__target_path%\/*}/.index")
-          fi
-
-          local _xargs=("-0")
-
-          if xargs --help &> /dev/null
-          then # GNU (BSD does this by default)
-            _xargs+=("--no-run-if-empty")
           fi
 
           if [[ "${#_queries[@]}" -le 1 ]]
