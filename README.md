@@ -2172,11 +2172,11 @@ item:
 > nb browse --delete example:4
 ❯nb · example : 4 · edit · - | +
 
-                deleting
+              deleting
 
 [4] example_file.md "Example Title"
 
-                [delete]
+              [delete]
 
 
 ```
