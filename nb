@@ -12883,8 +12883,9 @@ _search() {
           GIT_PAGER='' git -C "${__target_path}"  \
             "${_git_grep_arguments[@]:-}"         \
             --files-with-matches                  \
-            --null \
-            "${__target_path}" 2>/dev/null || true
+            --null                                \
+            "${__target_path}"                    \
+            2>/dev/null || true
         } | {
           GIT_PAGER='' xargs "${_xargs[@]}"       \
             git -C "${__target_path}"             \
@@ -12892,7 +12893,8 @@ _search() {
             -e "## Content"                       \
             -e "## Page Content"                  \
             -e "## Source"                        \
-            --line-number 2>/dev/null || true
+            --line-number                         \
+            2>/dev/null || true
         }
       done
     } | {
