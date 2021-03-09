@@ -8863,7 +8863,7 @@ HEREDOC
         editor.getSession().setUseWrapMode(true);
       }
 
-      editor.setTheme('ace/theme/${NB_ACE_THEME:-nord_dark}');
+      editor.setTheme('ace/theme/${NB_ACE_THEME:-twilight}');
 
       textarea.form.addEventListener('submit', function() {
         textarea.value = editor.getSession().getValue();

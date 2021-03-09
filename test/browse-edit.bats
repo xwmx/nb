@@ -171,7 +171,7 @@ export _S=" "
 
   [[    "${output}"    =~ initializeAceEditor                                 ]]
   [[    "${output}"    =~ aceModeList\.getModeForPath\(\'example.md\'\)\.mode ]]
-  [[    "${output}"    =~ editor\.setTheme\(\'ace\/theme\/nord_dark\'\)\;     ]]
+  [[    "${output}"    =~ editor\.setTheme\(\'ace\/theme\/twilight\'\)\;      ]]
 }
 
 # GET #########################################################################
