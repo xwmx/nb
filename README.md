@@ -333,7 +333,7 @@ repository and will be included in version 6.0.0.</em>
 </p>
 
 <p align="center">
-  <em><a href="https://github.com/xwmx/nb/tree/5.7.8#nb">Version 5.7.8 Documentation</a></em>
+  <em><a href="https://xwmx.github.io/nb/">Version 5.7.8 Documentation</a></em>
 </p>
 
 To get started, simply run:
@@ -2245,9 +2245,9 @@ and `nb browse --gui --add`.
 current note will be rendered and
 <a href="#-linking">[[wiki-style links]]</a>
 go to unrendered, original files. If only `ncat` is available, files in
-plain text formats with be rendered with original markup and document
-file types are not rendered in HTML. If neither `ncat` nor `pandoc` is
-available, `nb` falls back to the default behavior of [`nb show`](#show).
+plain text formats are rendered with the original markup unconverted.
+If neither `ncat` nor `pandoc` is available, `nb` falls back to the
+default behavior of [`nb show`](#show).
 
 ##### `browse` Privacy
 
