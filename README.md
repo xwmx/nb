@@ -2014,8 +2014,8 @@ search: [                    ]
 ```
 
 Items are displayed using the same format as `nb` and `nb ls`, including
-pinned items, with each list item linked. Lists are automatically paginated
-to fit the height of the terminal window.
+[pinned](#-pinning) items, with each list item linked. Lists are
+automatically paginated to fit the height of the terminal window.
 
 ```bash
 > nb browse example:sample/demo/
@@ -6241,9 +6241,9 @@ Description:
 
 Any folder may contain an optional plain text file named `.pindex`
 containing a list of basenames from that folder, one per line, that should
-be treated as "pinned", meaning they appear first in some list operations
-like `nb` and `nb ls`. Entires are added to a `.pindex` file with
-[`nb pin`](#pin) and removed with [`nb unpin`](#unpin).
+be treated as "[pinned](#-pinning)", meaning they appear first in some
+list operationsn including `nb` and `nb ls`. Entires are added to a
+`.pindex` file with [`nb pin`](#pin) and removed with [`nb unpin`](#unpin).
 
 #### Archived Notebooks
 
