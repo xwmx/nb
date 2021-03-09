@@ -9,9 +9,13 @@ _setup_tagged_items() {
     --title     "Title One"                         \
     --content   "Sample Content One #tag1 Sample Phrase."
 
-  "${_NB}" add  "File Two.md"                       \
+  "${_NB}" add  "File Two.bookmark.md"              \
     --title     "Title Two"                         \
     --content   "$(cat <<HEREDOC
+Example Title with #title-tag and #123
+
+## Comment
+
 Example Content Two #tag3 Example #tag1 Phrase.
 
 More content.
@@ -24,10 +28,14 @@ More content.
 HEREDOC
 )"
 
-  "${_NB}" add  "File Three.md"                     \
+  "${_NB}" add  "File Three.bookmark.md"            \
     --title     "Title Three"                       \
     --content   "$(cat <<HEREDOC
-Example Content Three #tag2 Example Phrase.
+Example Content Three #out-of-bounds-tag Example Phrase.
+
+## Tags
+
+#tag2
 
 ## Source
 

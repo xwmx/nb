@@ -12890,6 +12890,8 @@ _search() {
           GIT_PAGER='' xargs "${_xargs[@]}"       \
             git -C "${__target_path}"             \
             "${_git_grep_arguments[@]:-}"         \
+            -e "## Comment"                       \
+            -e "## Tags"                          \
             -e "## Content"                       \
             -e "## Page Content"                  \
             -e "## Source"                        \
@@ -12898,9 +12900,10 @@ _search() {
         }
       done
     } | {
-      local _last_line_number=
+      local _end_line_number=
       local _last_relative_path=
       local _seen_matches=()
+      local _start_line_number=
 
       local         __match=
       while read -r __match
@@ -12916,20 +12919,33 @@ _search() {
 
         if [[ "${_last_relative_path:-}" != "${_relative_path:-}" ]]
         then
-          _last_line_number=
+          _end_line_number=
+          _start_line_number=
         fi
 
-        if [[ "${_normalized_match:-}" =~ \
-              \#\#\ Content|\#\#\ Source|\#\#\ Page\ Content ]]
+        if [[ "${_relative_path:-}" =~ \.bookmark\.md$            ]]
         then
-          _last_line_number="${_line_number}"
-          _last_relative_path="${_relative_path}"
+          if [[ "${_normalized_match:-}" =~ \
+                  \#\#\ Content|\#\#\ Source|\#\#\ Page\ Content          ]]
+          then
+            _end_line_number="${_line_number}"
+            _last_relative_path="${_relative_path}"
 
-          continue
-        fi
+            continue
+          elif [[ "${_normalized_match:-}" =~ \#\#\ Comment|\#\#\ Tags    ]]
+          then
+            _start_line_number="${_line_number}"
+            _last_relative_path="${_relative_path}"
 
-        if [[ "${_last_relative_path:-/123}"  ==  "${_relative_path:-/456}" ]] &&
-           [[ "${_last_line_number:-9999999}" -lt "${_line_number:-0}"      ]]
+            continue
+          fi
+
+          if [[ "${_start_line_number:-999999}" -gt "${_line_number:-0}"  ]]  ||
+             [[ "${_end_line_number:-9999999}"  -lt "${_line_number:-0}"  ]]
+          then
+            continue
+          fi
+        elif [[ "${_normalized_match:-}" =~ ^## ]]
         then
           continue
         fi
