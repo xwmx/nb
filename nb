@@ -5910,7 +5910,7 @@ _notebooks() {
 
     local _repo_url="${2:-}"
 
-    if [[ -n "${_repo_url}" ]]
+    if [[ -n "${_repo_url}"       ]]
     then
       git clone "${_repo_url}" "${NB_DIR}/${_name}"   &&
         printf "%s\\n" "${_name}" > "${NB_DIR}/.current"
@@ -5929,7 +5929,7 @@ _notebooks() {
 
     [[ ! -d "${NB_DIR}" ]] && return 0
 
-    if [[ -z "${1:-}" ]]
+    if [[ -z "${1:-}"   ]]
     then
       _notebook_list=($(ls -1 "${NB_DIR}"))
     fi
@@ -6132,7 +6132,7 @@ Please type $(_color_primary "${_name}") to confirm: " __response
         local __notebook=
         for   __notebook in "${_notebook_names[@]:-}"
         do
-          if [[ "${__notebook}" != "$(_notebooks current)" ]]
+          if [[ "${__notebook}" != "$(_notebooks current)"  ]]
           then
             _notebooks use "${__notebook}"
             break
@@ -6174,7 +6174,7 @@ Please type $(_color_primary "${_name}") to confirm: " __response
 
     local _target_path="${2:-}"
 
-    if [[ -n "${_target_path:-}" ]] && [[ ! "${_target_path}" =~ ^/ ]]
+    if [[ -n "${_target_path:-}"    ]] && [[ ! "${_target_path}" =~ ^/ ]]
     then
       _target_path="${_CURRENT_WORKING_DIR}/${_target_path}"
     fi
@@ -6207,7 +6207,7 @@ Please type $(_color_primary "${_name}") to confirm: " __response
   _notebooks_import() {
     local _path="${1:-}"
 
-    if [[ -z "${_path:-}" ]]
+    if [[ -z "${_path:-}"     ]]
     then
       _exit_1 _help "notebooks"
     fi
@@ -6215,19 +6215,19 @@ Please type $(_color_primary "${_name}") to confirm: " __response
     local _basename=
     _basename="$(basename "${_path}")"
 
-    if [[ ! "${_path}" =~ ^/ ]]
+    if [[ ! "${_path}" =~ ^/  ]]
     then
       _path="${_CURRENT_WORKING_DIR}/${_path}"
     fi
 
-    if [[ ! -d "${_path}" ]]
+    if [[ ! -d "${_path}"     ]]
     then
       _exit_1 printf "Not a directory: %s" "$(_color_primary "${_path}")"
     fi
 
     local _target_basename="${2:-}"
 
-    if [[ -z "${_target_basename:-}" ]]
+    if [[ -z "${_target_basename:-}"  ]]
     then
       _target_basename="${_basename}"
     fi
@@ -6258,7 +6258,7 @@ Please type $(_color_primary "${_name}") to confirm: " __response
       if _string_is_url "${__arg}" && [[ -z "${_remote_url:-}" ]]
       then
         _remote_url="${__arg}"
-      elif [[ -z "${_path:-}" ]]
+      elif [[ -z "${_path:-}"   ]]
       then
         _path="${__arg}"
       fi
@@ -6271,17 +6271,17 @@ Please type $(_color_primary "${_name}") to confirm: " __response
         "$(_help "notebooks")"
     fi
 
-    if [[ -n "${_path:-}" ]]
+    if [[ -n "${_path:-}"       ]]
     then
-      if [[ ! "${_path}" =~ ^/ ]]
+      if [[ ! "${_path}" =~ ^/  ]]
       then
         _path="${_CURRENT_WORKING_DIR}/${_path}"
       fi
 
-      if [[ ! -e "${_path}" ]]
+      if [[ ! -e "${_path}"     ]]
       then
         mkdir -p "${_path}"
-      elif [[ -f "${_path}" ]]
+      elif [[ -f "${_path}"     ]]
       then
         _exit_1 printf "File already exists: %s\\n" "$(_color_primary "${_path}")"
       fi
@@ -6289,12 +6289,12 @@ Please type $(_color_primary "${_name}") to confirm: " __response
       _path="${_CURRENT_WORKING_DIR}"
     fi
 
-    if [[ -d "${_path}"       ]] &&
-       [[ -d "${_path}/.git"  ]]
+    if [[ -d "${_path}"           ]] &&
+       [[ -d "${_path}/.git"      ]]
     then
       local _error_message=
 
-      if [[ -f "${_path}/.index" ]]
+      if [[ -f "${_path}/.index"  ]]
       then
         _error_message="Notebook exists: $(_color_primary "${_path}")"
       else
@@ -6517,7 +6517,7 @@ Please type $(_color_primary "${_name}") to confirm: " __response
     local _notebook_name="${2%:}"
     local _notebook_path=
 
-    if [[ -n "${_notebook_name:-}" ]]
+    if [[ -n "${_notebook_name:-}"  ]]
     then
       _notebooks_validate_name "${_notebook_name}"
 
@@ -6527,23 +6527,23 @@ Please type $(_color_primary "${_name}") to confirm: " __response
       _notebook_path="$(_notebooks current --path)"
     fi
 
-    if [[ -z "${_notebook_name:-}" ]]
+    if [[ -z "${_notebook_name:-}"  ]]
     then
       _exit_1 printf "Unable to determine notebook name.\\n"
     fi
 
-    if [[ -z "${_notebook_path:-}" ]]
+    if [[ -z "${_notebook_path:-}"  ]]
     then
       _exit_1 printf "Unable to determine notebook path.\\n"
     fi
 
-    if [[ -z "${_subcommand}" ]]
+    if [[ -z "${_subcommand}"       ]]
     then
       printf "%s\\n" "${_notebook_name}"
       return 0
     fi
 
-    if [[ "${_subcommand:-}" =~ ^open$|^o$ ]]
+    if [[ "${_subcommand:-}" =~ ^open$|^o$    ]]
     then
       if _command_exists "xdg-open"
       then
@@ -6556,7 +6556,7 @@ Please type $(_color_primary "${_name}") to confirm: " __response
           "%s doesn't know how to open directories on your system.\\n" \
           "$(_color_primary "${_ME}")"
       fi
-    elif [[ "${_subcommand:-}" =~ ^peek$|^p$ ]]
+    elif [[ "${_subcommand:-}" =~ ^peek$|^p$  ]]
     then
       if _command_exists "ranger"
       then
@@ -6580,16 +6580,16 @@ Please type $(_color_primary "${_name}") to confirm: " __response
 
       if [[ "${_subcommand}" == "archive" ]]
       then
-        if [[ ! -e "${_dotfile_path}" ]]
+        if [[ ! -e "${_dotfile_path}"     ]]
         then
           touch "${_dotfile_path}" &&
             _git checkpoint "${_notebook_path}" "[nb] Archived"
         fi
 
         printf "%s archived.\\n" "$(_color_primary "${_notebook_name}")"
-      elif [[ "${_subcommand}" == "status" ]]
+      elif [[ "${_subcommand}" == "status"    ]]
       then
-        if [[ -e "${_dotfile_path}" ]]
+        if [[ -e "${_dotfile_path}"           ]]
         then
           printf "%s is archived.\\n" "$(_color_primary "${_notebook_name}")"
         else
@@ -6597,7 +6597,7 @@ Please type $(_color_primary "${_name}") to confirm: " __response
         fi
       elif [[ "${_subcommand}" == "unarchive" ]]
       then
-        if [[ -e "${_dotfile_path}" ]]
+        if [[ -e "${_dotfile_path}"           ]]
         then
           rm "${_dotfile_path:?}" &&
             _git checkpoint "${_notebook_path}" "[nb] Unarchived"
@@ -6619,10 +6619,10 @@ Please type $(_color_primary "${_name}") to confirm: " __response
     _notebooks_validate_name "${_old}"
     _notebooks_validate_name "${_new}"
 
-    if [[ -z "${_old}" ]] || [[ -z "${_new}" ]]
+    if [[ -z "${_old}" ]] || [[ -z "${_new}"  ]]
     then
       _exit_1 _help notebooks
-    elif [[ -n "${_LOCAL_NOTEBOOK_PATH:-}" ]]
+    elif [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"    ]]
     then
       if [[ "${_old}" == "local" ]] || [[ "${_new}" == "local" ]]
       then
@@ -6630,11 +6630,11 @@ Please type $(_color_primary "${_name}") to confirm: " __response
 "local" refers to the local notebook and can not be renamed.
 HEREDOC
       fi
-    elif [[ ! -d "${NB_DIR}/${_old}" ]]
+    elif [[ ! -d "${NB_DIR}/${_old}"  ]]
     then
-      _exit_1 printf "%s is not a valid notebook name.\\n" \
+      _exit_1 printf "%s is not a valid notebook name.\\n"        \
         "$(_color_primary "${_old}")"
-    elif [[ -e "${NB_DIR}/${_new}" ]]
+    elif [[ -e "${NB_DIR}/${_new}"    ]]
     then
       _exit_1 printf "A notebook named \"%s\" already exists.\\n" \
         "$(_color_primary "${_new}")"
@@ -6661,7 +6661,7 @@ HEREDOC
   _notebooks_select() {
     local _selector="${1:-}"
 
-    if [[ -z "${_selector:-}" ]]
+    if [[ -z "${_selector:-}"       ]]
     then
       _exit_1 _help "notebooks"
     fi
@@ -6671,7 +6671,7 @@ HEREDOC
       _notebooks_show "${_selector:-}" --path 2>/dev/null || :
     )"
 
-    if [[ -n "${_notebook_path:-}" ]]
+    if [[ -n "${_notebook_path:-}"  ]]
     then
       NB_NOTEBOOK_PATH="${_notebook_path}"
       return 0
@@ -12780,21 +12780,21 @@ _search() {
   do
     local _maybe_path=
 
-    if [[ -z "${_arguments[i]:-}" ]]
+    if [[ -z "${_arguments[i]:-}"     ]]
     then
       continue
-    elif [[ "${_arguments[i]}" =~ :$ ]]
+    elif [[ "${_arguments[i]}" =~ :$  ]]
     then
       _maybe_path="$(
         _notebooks show "${_arguments[i]}" --path 2>/dev/null || :
       )"
 
-      if [[ -n "${_maybe_path:-}" ]]
+      if [[ -n "${_maybe_path:-}"     ]]
       then
         _notebooks select "${_arguments[i]}"
       fi
     else
-      if [[ "${_arguments[i]}" =~ ^/ ]]
+      if [[ "${_arguments[i]}" =~ ^/  ]]
       then
         _maybe_path="${_arguments[i]%/}"
       else
@@ -12815,9 +12815,9 @@ _search() {
     then
       local _query_argument="${_arguments[i]:-}"
 
-      if [[ "${_query_argument:-}"  =~ ^[^/]*/$ ]]
+      if [[ "${_query_argument:-}"    =~ ^[^/]*/$   ]]
       then
-        if [[ -d "${_maybe_path:-}" ]]
+        if [[ -d "${_maybe_path:-}"   ]]
         then
           _query_argument=
         else
@@ -12833,11 +12833,11 @@ _search() {
       fi
     fi
 
-    if [[ -n "${_maybe_path:-}"         ]] &&
-       [[ -z "${_target_paths[*]:-}"    ]] &&
+    if [[ -n "${_maybe_path:-}"       ]] &&
+       [[ -z "${_target_paths[*]:-}"  ]] &&
        {
-         _notebooks current --selected     ||
-         [[ "${#_arguments[@]}" -gt 1   ]] ||
+         _notebooks current --selected   ||
+         [[ "${#_arguments[@]}" -gt 1 ]] ||
          ((_search_tags))
        }
     then
@@ -12846,7 +12846,7 @@ _search() {
     fi
   done
 
-  if [[ -z "${_target_paths[*]:-}" ]]
+  if [[ -z "${_target_paths[*]:-}"    ]]
   then
     _target_paths=("${_current_notebook_path}")
   fi
@@ -13348,14 +13348,14 @@ _search() {
 
           if ((_only_list))                       &&
              [[ "${_last_path}" == "${_path}" ]]  &&
-             [[ ! "${_path}" =~ .index$       ]]
+             [[ ! "${_path}"    =~ .index$    ]]
           then
             [[ -n "${_path}" ]] && _last_path="${_path}"
 
             continue
           fi
 
-          if [[ "${_path}" =~ \.pindex$ ]]
+          if [[ "${_path}"      =~ \.pindex$  ]]
           then
             [[ -n "${_path}" ]] && _last_path="${_path}"
 
@@ -13364,9 +13364,9 @@ _search() {
 
           if [[ "${_last_path}" != "${_path}" ]]
           then
-            if [[ -n "${_type:-}" ]]
+            if [[ -n "${_type:-}"             ]]
             then
-              if [[ "${_path}" =~ ${_type}$ ]]
+              if [[ "${_path}"  =~ ${_type}$  ]]
               then
                 _skip=0
               elif {
