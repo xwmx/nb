@@ -2038,7 +2038,8 @@ supported. The `nb browse` interface includes breadcrumbs that can be
 used to quickly navigate to back to parent folders, the current notebook,
 or jump to other notebooks.
 
-`nb browse` opens in [w3m](https://en.wikipedia.org/wiki/W3m) (recommended),
+`nb browse` opens in [w3m](https://en.wikipedia.org/wiki/W3m) (currently
+the primary terminal reference browser for `nb`),
 [Links](https://en.wikipedia.org/wiki/Links_\(web_browser\)),
 [Lynx](https://en.wikipedia.org/wiki/Lynx_\(web_browser\)), or in the
 browser set in the `$BROWSER` environment variable.
