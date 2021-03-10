@@ -4206,8 +4206,8 @@ Usage:
   nb shell [<subcommand> [<options>...] | --clear-history]
   nb show [<notebook>:](<id> | <filename> | <path> | <title>)
           [[-a | --added] | [-b | --browse] | --filename | --id | --info-line |
-          --path | [-p | --print] [-r | --render] | --title | --type [<type>] |
-          [-u | --updated]] [--no-color]
+          --path | [-p | --print] | --relative-path | [-r | --render] |
+          --title | --type [<type>] | [-u | --updated]] [--no-color]
   nb show <notebook>
   nb subcommands [add <name>...] [alias <name> <alias>]
                  [describe <name> <usage>]
@@ -5669,8 +5669,8 @@ Example:
 Usage:
   nb show [<notebook>:](<id> | <filename> | <path> | <title>)
           [[-a | --added] | [-b | --browse] | --filename | --id | --info-line |
-          --path | [-p | --print] [-r | --render] | --title | --type [<type>] |
-          [-u | --updated]] [--no-color]
+          --path | [-p | --print] | --relative-path | [-r | --render] |
+          --title | --type [<type>] | [-u | --updated]] [--no-color]
   nb show <notebook>
 
 Options:
@@ -5682,6 +5682,7 @@ Options:
   --no-color       Show without syntax highlighting.
   --path           Print the full path of the item.
   -p, --print      Print to standard output / terminal.
+  --relative-path  Print the item's path relative within the notebook.
   -r, --render     Use `pandoc` [1] to render the file to HTML and display
                    in the terminal web browser. If either `pandoc` or a
                    browser are unavailable, `-r` / `--render` is ignored.
