@@ -8716,10 +8716,10 @@ code span.op { color: #f0efd0; } /* Operator */
 code span.ot { color: #efef8f; } /* Other */
 code span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
 code span.sc { color: #dca3a3; } /* SpecialChar */
-code span.ss { color: #cc9393; } /* SpecialString */
-code span.st { color: #cc9393; } /* String */
+code span.ss { color: #93a5cc; } /* SpecialString */
+code span.st { color: #93a5cc; } /* String */
 code span.va { } /* Variable */
-code span.vs { color: #cc9393; } /* VerbatimString */
+code span.vs { color: #93a5cc; } /* VerbatimString */
 code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
 </style>
 
