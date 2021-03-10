@@ -5218,6 +5218,7 @@ _ls() {
     _wrap on
     printf "\\n"
 
+    local i=
     for ((i=0; i < "${#_commands_raw[@]}"; i++))
     do
       if [[ -z "${_footer_test_line}" ]]
@@ -5562,8 +5563,7 @@ _ls() {
 
   if ((${#_delegate_arguments[@]}))
   then
-    local i=0
-
+    local i=
     for ((i=0; i < "${#_delegate_arguments[@]}"; i++))
     do
       case "${_delegate_arguments[i]:-}" in
@@ -6405,6 +6405,7 @@ Please type $(_color_primary "${_name}") to confirm: " __response
       done
     fi
 
+    local i=
     for ((i=0; i < "${#_notebook_names[@]}"; i++))
     do
       if [[ -e "${_notebook_paths[i]}/.git" ]]
@@ -9549,11 +9550,11 @@ _add() {
     store tech top tk tv uk us vip wang website work xyz
   )
 
-  local i
   local _selector_filename=
   local _selector_content=
   local _selector_folder_relative_path=
 
+  local i=
   for ((i=0; i < "${#_arguments[@]}"; i++))
   do
     local _argument_content=
@@ -12774,8 +12775,7 @@ _search() {
     _target_paths=($(_notebooks --paths --unarchived))
   fi
 
-  local i
-
+  local i=
   for ((i=0; i < "${#_arguments[@]}"; i++))
   do
     local _maybe_path=
@@ -13287,8 +13287,7 @@ _search() {
               } | {
                 if [[ "${__search_group}" == "index" ]]
                 then
-                  local i
-
+                  local i=
                   for ((i=0; i < "${#_queries[@]}"; i++))
                   do
                     [[ -n "${_queries[i]:-}" ]] || continue
@@ -13701,8 +13700,7 @@ _search() {
         then
           _query_message="${_query}"
         else
-          local i
-
+          local i=
           for ((i=0; i < "${#_queries[@]}"; i++))
           do
             if ((i))
@@ -17240,8 +17238,7 @@ _settings() {
         printf "\\n"
       fi
     else
-      local i
-
+      local i=
       for ((i=0; i < 256; i++))
       do
         if ((i)) && ! ((i % 16))
