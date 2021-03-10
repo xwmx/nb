@@ -12976,7 +12976,7 @@ _search() {
   local __and_query=
   for   __and_query in "${_and_queries[@]:-}"
   do
-    [[ -n "${__and_query:-}" ]] || continue
+    [[ -n "${__and_query:-}"    ]] || continue
 
     if ((${#_or_queries[@]}))
     then
