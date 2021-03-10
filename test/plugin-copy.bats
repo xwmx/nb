@@ -2,6 +2,98 @@
 
 load test_helper
 
+# `copy <folder>` #############################################################
+
+@test "'copy <folder>' with folder copies folder." {
+  {
+    "${_NB}" init
+    "${_NB}" add  "Example Folder/Sample Folder/Example File.md"  \
+        --title   "Example Title"                                 \
+        --content "Example content."
+
+    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
+
+    [[ "${status}" == 0 ]]
+  }
+
+  run "${_NB}" copy "Example Folder/Sample Folder"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Prints output:
+
+  [[ "${status}"    == 0                                    ]]
+  [[ "${lines[0]}"  =~ Added                                ]]
+  [[ "${lines[0]}"  =~ Example\\\ Folder/Sample\\\ Folder-1 ]]
+
+  # Copies folder with contents:
+
+  diff                                                                      \
+    <(cat "${NB_DIR}/home/Example Folder/Sample Folder/Example File.md")    \
+    <(cat "${NB_DIR}/home/Example Folder/Sample Folder-1/Example File.md")
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add: Example Folder/Sample Folder-1'
+
+  # Adds to .index
+
+  diff                                              \
+    <(cat "${NB_DIR}/home/Example Folder/.index")   \
+    <(printf "Sample Folder\\nSample Folder-1\\n")
+}
+
+@test "'copy <folder>/<filename>' with text file copies file." {
+  {
+    "${_NB}" init
+    "${_NB}" add  "Example Folder/Example File.md"  \
+        --title   "Example Title"                   \
+        --content "Example content."
+
+    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
+
+    [[ "${status}" == 0 ]]
+  }
+
+  run "${_NB}" copy "Example Folder/Example File.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Prints output:
+
+  [[ "${status}" == 0                                         ]]
+  [[ "${lines[0]}" =~ Added                                   ]]
+  [[ "${lines[0]}" =~ Example\\\ Folder/Example\\\ File-1.md  ]]
+
+  # Copies file:
+
+  diff                                                        \
+    <(cat "${NB_DIR}/home/Example Folder/Example File.md")    \
+    <(cat "${NB_DIR}/home/Example Folder/Example File-1.md")
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add: Example Folder/Example File-1.md'
+
+  # Adds to .index
+
+  diff                                                        \
+    <(cat "${NB_DIR}/home/Example Folder/.index")             \
+    <(printf "Example File.md\\nExample File-1.md\\n")
+}
+
 # `copy <name>` ###############################################################
 
 @test "'copy <name>' with text file copies file." {
@@ -166,32 +258,6 @@ load test_helper
   [[ "${lines[0]}" =~ Not\ found  ]]
 
   _files=($(ls "${NB_DIR}/home/"))
-  [[ "${#_files[@]}" == 1 ]]
-}
-
-# `copy <directory>` ##########################################################
-
-@test "'copy <directory>' exits with error message." {
-  _setup() {
-    "${_NB}" init
-
-    cp -R "${NB_TEST_BASE_PATH}/fixtures/Example Folder" "${NB_DIR}/home/example"
-
-    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
-
-    [[ "${status}" == 0 ]]
-  }; _setup
-
-  run "${_NB}" copy "example"
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[ "${status}" == 1               ]]
-  [[ "${lines[0]}" =~ Not\ a\ file  ]]
-
-  _files=($(ls "${NB_DIR}/home/"))
-
   [[ "${#_files[@]}" == 1 ]]
 }
 
