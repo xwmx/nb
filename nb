@@ -8679,10 +8679,10 @@ HEREDOC
   # )
 
   local _from=
-  local _pandoc_arguments=("--highlight-style=zenburn")
   local _input_file_path=
   local _input_string=
   local _only_body=0
+  local _pandoc_arguments=("--highlight-style=zenburn")
   local _source_extension="${NB_DEFAULT_EXTENSION:-md}"
   local _use_pandoc=0
 
