@@ -8300,8 +8300,10 @@ _render() {
     printf "%s\\n" "${_prepared_file_path:-}"
   }
 
-  # Usage: _render_print_head
+  # Usage: _render_print_head [<color>]
   _render_print_head() {
+    local _theme_color="${1:-#6EB3D7}"
+
     cat <<HEREDOC
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
@@ -8372,9 +8374,9 @@ h6  { font-weight:  normal; }
 
 p   { margin:       1em 0;  }
 
-a           { color:    #6EB3D7; text-decoration: none;       }
-a:hover     { color:    #6EB3D7; text-decoration: underline;  }
-a:visited   { color:    #6EB3D7; text-decoration: none;       }
+a           { color:    ${_theme_color}; text-decoration: none;       }
+a:hover     { color:    ${_theme_color}; text-decoration: underline;  }
+a:visited   { color:    ${_theme_color}; text-decoration: none;       }
 
 :focus {
   outline:  1px solid #2d2d2d;
@@ -8524,7 +8526,7 @@ header {
 }
 
 .dim        { color: #626480; }
-.identifier { color: #6EB3D7; }
+.identifier { color: ${_theme_color}; }
 
 #search {
   position: relative;
@@ -8582,7 +8584,7 @@ form br {
 input[type="submit"] {
   background:       none;
   border:           none;
-  color:            #6EB3D7;
+  color:            ${_theme_color};
   font-size:        1rem;
   margin-top:       1rem;
   outline:          0 solid #1a1a1a;
@@ -8599,7 +8601,7 @@ input[type="submit"]:focus {
 }
 
 input[type="submit"]:hover {
-  border-bottom:    1px solid #6EB3D7;
+  border-bottom:    1px solid ${_theme_color};
 }
 
 textarea,
