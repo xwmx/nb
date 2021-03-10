@@ -8300,7 +8300,7 @@ _render() {
     printf "%s\\n" "${_prepared_file_path:-}"
   }
 
-  # Usage: _render_print_head [<input-file-path>]
+  # Usage: _render_print_head
   _render_print_head() {
     cat <<HEREDOC
 <!DOCTYPE html>
