@@ -12912,13 +12912,14 @@ _search() {
         _normalized_match="${_normalized_match#"${_normalized_match%%[![:space:]]*}"}"
         _normalized_match="${_normalized_match%"${_normalized_match##*[![:space:]]}"}"
 
-        if [[ "${_last_relative_path:-}"      != "${_relative_path:-}"  ]]
-        then
-          _skip=1
-        fi
-
         if [[ "${_relative_path:-}"           =~ \.bookmark\.md$        ]]
         then
+          if [[ "${_last_relative_path:-}"    != "${_relative_path:-}"  ]]
+          then
+            _skip=1
+            _last_relative_path="${_relative_path}"
+          fi
+
           if [[ "${_normalized_match:-}"      =~ ^##                    ]]
           then
             if [[ "${_normalized_match:-}"    =~ Comment|Tags           ]]
@@ -12928,8 +12929,6 @@ _search() {
             then
               _skip=1
             fi
-
-            _last_relative_path="${_relative_path}"
 
             continue
           fi
