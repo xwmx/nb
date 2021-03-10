@@ -12879,22 +12879,30 @@ _search() {
       do
         [[ -n "${__target_path:-}" ]] || continue
 
+        if [[ -d "${__target_path:-}" ]]
+        then
+          local _target_folder_path="${__target_path:-}"
+        else
+          local _target_folder_path="${__target_path%/*}"
+        fi
+
         {
-          GIT_PAGER='' git -C "${__target_path}"  \
-            "${_git_grep_arguments[@]:-}"         \
-            --files-with-matches                  \
-            --null                                \
-            "${__target_path}"                    \
+          GIT_PAGER=''                        \
+            git -C "${_target_folder_path}"   \
+            "${_git_grep_arguments[@]:-}"     \
+            --files-with-matches              \
+            --null                            \
+            "${__target_path}"                \
             2>/dev/null || true
         } | {
-          GIT_PAGER='' xargs "${_xargs[@]}"       \
-            git -C "${__target_path}"             \
-            "${_git_grep_arguments[@]:-}"         \
-            -e "## Comment"                       \
-            -e "## Tags"                          \
-            -e "## Content"                       \
-            -e "## Page Content"                  \
-            -e "## Source"                        \
+          GIT_PAGER='' xargs "${_xargs[@]}"   \
+            git -C "${_target_folder_path}"   \
+            "${_git_grep_arguments[@]:-}"     \
+            -e "## Comment"                   \
+            -e "## Tags"                      \
+            -e "## Content"                   \
+            -e "## Page Content"              \
+            -e "## Source"                    \
             2>/dev/null || true
         }
       done

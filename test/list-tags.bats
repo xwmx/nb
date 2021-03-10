@@ -60,6 +60,24 @@ HEREDOC
 
 # `nb` (`ls`) #################################################################
 
+@test "'<item> --tags' lists all unique, readable tags in <item>." {
+  {
+    _setup_tagged_items
+  }
+
+  run "${_NB}" 2 --tags
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0             ]]
+  [[ "${#lines[@]}" -eq 3             ]]
+
+  [[ "${lines[0]}"  =~  \#tag3        ]]
+  [[ "${lines[1]}"  =~  \#tag1        ]]
+  [[ "${lines[2]}"  =~  \#low-tag     ]]
+}
+
 @test "'<folder>/ --tags' lists all unique tags in <folder>." {
   {
     _setup_tagged_items
@@ -122,6 +140,24 @@ HEREDOC
 
 # `list` ######################################################################
 
+@test "'list <item> --tags' lists all unique, readable tags in <item>." {
+  {
+    _setup_tagged_items
+  }
+
+  run "${_NB}" list 2 --tags
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0             ]]
+  [[ "${#lines[@]}" -eq 3             ]]
+
+  [[ "${lines[0]}"  =~  \#tag3        ]]
+  [[ "${lines[1]}"  =~  \#tag1        ]]
+  [[ "${lines[2]}"  =~  \#low-tag     ]]
+}
+
 @test "'list <folder>/ --tags' lists all unique tags in <folder>." {
   {
     _setup_tagged_items
@@ -183,6 +219,24 @@ HEREDOC
 }
 
 # `search` ####################################################################
+
+@test "'search <item> --tags' lists all unique, readable tags in <item>." {
+  {
+    _setup_tagged_items
+  }
+
+  run "${_NB}" search 2 --tags
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0             ]]
+  [[ "${#lines[@]}" -eq 3             ]]
+
+  [[ "${lines[0]}"  =~  \#tag3        ]]
+  [[ "${lines[1]}"  =~  \#tag1        ]]
+  [[ "${lines[2]}"  =~  \#low-tag     ]]
+}
 
 @test "'search <folder>/ --tags' lists all unique tags in <folder>." {
   {
