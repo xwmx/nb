@@ -4,6 +4,38 @@ load test_helper
 
 export NB_SERVER_PORT=6789
 
+# syntax highlighting #########################################################
+
+@test "'browse <item>' includes syntax highlighting." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "example.rb" --content  "puts \"Hello World\""
+
+    sleep 1
+  }
+
+  run "${_NB}" browse 1 --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                            ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                          ]]
+
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>       ]]
+
+  [[    "${output}"    =~  pre\ \>\ code.sourceCode                     ]]
+
+  [[    "${output}"    =~  \
+\<div\ class=\"sourceCode\"\ id=\"cb1\"\>\<pre\ class=\"sourceCode\ rb\"\>\<code\  ]]
+
+  [[    "${output}"    =~  \<code\ class=\"sourceCode\ ruby\"\>         ]]
+
+  [[    "${output}"    =~  \
+\<span\ class=\"fu\"\>puts\</span\>\ \<span\ class=\"st\"\>\&quot\;Hello\ World\&quot\;\</span\> ]]
+}
+
 # img tags ####################################################################
 
 @test "'browse' strips <img> tags." {

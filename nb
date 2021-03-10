@@ -8249,7 +8249,8 @@ _option_get_tags() {
 #
 # Usage:
 #   [<input> |] _render [<path>] [--body] [--from] [--pandoc]
-#                       [--source-extension] [<pandoc-option>...]
+#                       [--source-extension] [--syntax <path>]
+#                       [<pandoc-option>...]
 #
 # Options:
 #   --body              Only render body, without <head> and <body> opening
@@ -8258,10 +8259,99 @@ _option_get_tags() {
 #   --pandoc            Use pandoc to convert file.
 #   --source-extension  The extension of the original file. Used to select
 #                       syntax mode in Ace.
+#   --syntax <path>     Include pandoc syntax styles for file at <path>.
 _render() {
-  # Usage: _render_print_head
+  # Usage: _render_prepare_file_format <path> <pandoc-enabled>
+  _render_prepare_file() {
+    local _input_file_path="${1:?}"
+    local _prepared_file_path="${_input_file_path:-}"
+    local _use_pandoc="${2:-0}"
+
+    local _code_extensions=(
+      bib hs haml js jsx py rb rs sass scss sh vim yml
+    )
+
+    _code_extensions+=($(
+      pandoc --list-highlight-languages \
+        | sed -e "/html/d" -e "/latex/d" -e "/markdown/d"
+    ))
+
+    local _source_extension="${_input_file_path##*\.}"
+
+    if _contains "${_source_extension}" "${_code_extensions[@]:-}"
+    then
+      if ((_use_pandoc))
+      then
+        local _code_block_temp_path=
+        _code_block_temp_path="$(_temp file ".md" --touch)"
+
+        printf "${_BT}${_BT}${_BT}%s\\n%s\\n${_BT}${_BT}${_BT}\\n"  \
+          "${_source_extension}"                                    \
+          "$(cat "${_input_file_path:-}")" >> "${_code_block_temp_path:-}"
+      else
+        local _code_block_temp_path=
+        _code_block_temp_path="$(_temp file ".html" --touch)"
+
+        printf "<code>\\n%s\\n</code>\\n"   \
+          "$(cat "${_input_file_path:-}")" >> "${_code_block_temp_path:-}"
+      fi
+
+      _prepared_file_path="${_code_block_temp_path:-}"
+    fi
+
+    printf "%s\\n" "${_prepared_file_path:-}"
+  }
+
+  # Usage: _render_syntax_styles <path>
+  _render_syntax_styles() {
+    local _input_file_path="${1:?}"
+    local _prepared_file_path="${_input_file_path:-}"
+
+    {
+      _prepared_file_path="$(
+        _render_prepare_file "${_input_file_path:-}" "1"
+      )"
+
+      pandoc "${_prepared_file_path}" --standalone 2>/dev/null
+    } | {
+      local _in_syntax_styles=0
+
+      local               __line=
+      while IFS= read -r  __line || [[ -n "${__line:-}" ]]
+      do
+        if [[ "${__line:-}"   =~ ul\.task-list\{list-style:\ none\;\} ]]
+        then
+          _in_syntax_styles=1
+
+          printf "<style>\\n"
+
+          continue
+        elif [[ "${__line:-}" =~ \.display\.math\{display:\ block     ]]
+        then
+          _in_syntax_styles=0
+
+          printf "</style>\\n"
+
+          break
+        fi
+
+        if ((_in_syntax_styles))
+        then
+          printf "%s\\n" "${__line:-}"
+        fi
+      done
+    }
+  }
+
+  # Usage: _render_print_head [<input-file-path>]
   _render_print_head() {
-    cat <<HEREDOC
+    {
+      if [[ -f "${1:-}" ]]
+      then
+        _render_syntax_styles "${1:-}"
+      fi
+    } | {
+      cat <<HEREDOC
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
@@ -8617,6 +8707,12 @@ span.smallcaps      { font-variant: small-caps;   }
 span.underline      { text-decoration: underline; }
 ul.task-list        { list-style: none;           }
 </style>
+HEREDOC
+
+      # syntax styles
+      cat
+
+      cat <<HEREDOC
 <script>
 // hide broken images
 document.addEventListener("DOMContentLoaded", function(event) {
@@ -8641,6 +8737,7 @@ document.addEventListener('keydown', function(event) {
 </head>
 <body>
 HEREDOC
+    }
   }
 
   # local _ansi_hex_values=(
@@ -8679,6 +8776,7 @@ HEREDOC
   # )
 
   local _from=
+  local _syntax_input_file_path=
   local _input_file_path=
   local _input_string=
   local _only_body=0
@@ -8689,12 +8787,13 @@ HEREDOC
   while ((${#}))
   do
     case "${1:-}" in
-      "")         :                                         ;;
-      --body)     _only_body=1                              ;;
-      --from)     _from="${2:?}" && _use_pandoc=1 && shift  ;;
-      --*pandoc)  _use_pandoc=1                             ;;
-      --source*)  _source_extension="${2:?}"      && shift  ;;
-      -*)         _pandoc_arguments+=("${1:-}")             ;;
+      "")         :                                           ;;
+      --body)     _only_body=1                                ;;
+      --from)     _from="${2:?}" && _use_pandoc=1   && shift  ;;
+      --*pandoc)  _use_pandoc=1                               ;;
+      --source*)  _source_extension="${2:?}"        && shift  ;;
+      --syntax*)  _syntax_input_file_path="${2:?}"  && shift  ;;
+      -*)         _pandoc_arguments+=("${1:-}")               ;;
       *)
         if [[ -z "${_input_file_path:-}"  ]] &&
            [[ -f "${1:-}"                 ]]
@@ -8721,47 +8820,19 @@ HEREDOC
 
   if [[ -n "${_input_file_path:-}" ]]
   then
-    local _code_extensions=(
-      bib hs haml js jsx py rb rs sass scss sh vim yml
-    )
-
-    _code_extensions+=($(
-      pandoc --list-highlight-languages \
-        | sed -e "/html/d" -e "/latex/d" -e "/markdown/d"
-    ))
-
-    local _source_extension="${_input_file_path##*\.}"
-
-    if _contains "${_source_extension}" "${_code_extensions[@]:-}"
-    then
-      if ((_use_pandoc))
-      then
-        local _code_block_temp_path=
-        _code_block_temp_path="$(_temp file ".md" --touch)"
-
-        printf "${_BT}${_BT}${_BT}%s\\n%s\\n${_BT}${_BT}${_BT}\\n"  \
-          "${_source_extension}"                                    \
-          "$(cat "${_input_file_path:-}")" >> "${_code_block_temp_path:-}"
-      else
-        local _code_block_temp_path=
-        _code_block_temp_path="$(_temp file ".html" --touch)"
-
-        printf "<code>\\n%s\\n</code>\\n"   \
-          "$(cat "${_input_file_path:-}")" >> "${_code_block_temp_path:-}"
-      fi
-
-      _prepared_file_path="${_code_block_temp_path:-}"
-    fi
+    _prepared_file_path="$(
+      _render_prepare_file "${_input_file_path:-}" "${_use_pandoc:-0}"
+    )"
   fi
 
   {
     # body
     if ((_use_pandoc))
     then
-      if [[ -n "${_from:-}"                 ]]
+      if [[ -n "${_from:-}"                   ]]
       then
         _pandoc_arguments+=("--from=${_from:-}")
-      elif [[ -z "${_prepared_file_path:-}" ]]
+      elif [[ -z "${_prepared_file_path:-}"   ]]
       then
         _pandoc_arguments+=("--from=markdown+raw_html")
       fi
@@ -8769,19 +8840,25 @@ HEREDOC
       {
         if _piped_input
         then
-          pandoc "${_pandoc_arguments[@]:-}" 2>/dev/null
+          pandoc                              \
+            "${_pandoc_arguments[@]:-}"       \
+            2>/dev/null
         fi
 
-        if [[ -n "${_prepared_file_path:-}" ]]
+        if [[ -n "${_prepared_file_path:-}"   ]]
         then
-          pandoc "${_prepared_file_path:-}" \
-            "${_pandoc_arguments[@]:-}" 2>/dev/null
+          pandoc                              \
+            "${_prepared_file_path:-}"        \
+            "${_pandoc_arguments[@]:-}"       \
+            2>/dev/null
         fi
       } | {
-        if [[ -n "${_input_string}"         ]]
+        if [[ -n "${_input_string}"           ]]
         then
-          printf "%s\\n" "${_input_string}" \
-            | pandoc "${_pandoc_arguments[@]:-}" 2>/dev/null
+          printf "%s\\n" "${_input_string}"   \
+            | pandoc                          \
+                "${_pandoc_arguments[@]:-}"   \
+                2>/dev/null
         fi
 
         cat
@@ -8817,7 +8894,12 @@ HEREDOC
     # head
     if ! ((_only_body))
     then
-      _render_print_head
+      if [[ -n "${_syntax_input_file_path:-}" ]]
+      then
+        _render_print_head "${_syntax_input_file_path:-}"
+      else
+        _render_print_head
+      fi
     fi
 
     cat
@@ -14492,19 +14574,23 @@ Can't show archives. Export archive and expand to edit.\\n"
               -e "s/\]\[\[\[/\]\[••/g"  \
               -e "s/\]\]\]\]/••\]\]/g"
         } | {
-          _render --from org --pandoc
+          pandoc --from org --to html
         } | {
           sed -E                        \
               -e "s/>••/>\[\[/g"        \
               -e "s/••</\]\]</g"
         } | {
+          _render --syntax "${_target_path}"
+        } | {
           cat >> "${_rendered_temp_file_path}"
         }
       else # render non-Org to HTML before resolving [[wiki-style links]]
         {
-          _render "${_target_path}" --pandoc
+          _render "${_target_path}" --pandoc --body
         } | {
           _resolve_links "${_notebook_path}"
+        } | {
+          _render --syntax "${_target_path}"
         } | {
           cat >> "${_rendered_temp_file_path}"
         }
@@ -15800,7 +15886,7 @@ HEREDOC
 
         print "</div>"
       } | {
-        _render
+        _render --syntax "${_source_path}"
       }
     else # render non-Org to HTML before resolving [[wiki-style links]]
       {
@@ -15823,7 +15909,7 @@ HEREDOC
           "${_pagination_arguments[@]:-}" \
           --browse
       } | {
-        _render
+        _render --syntax "${_source_path}"
       }
     fi
 
