@@ -12895,44 +12895,38 @@ _search() {
             -e "## Content"                       \
             -e "## Page Content"                  \
             -e "## Source"                        \
-            --line-number                         \
             2>/dev/null || true
         }
       done
     } | {
-      local _end_line_number=
       local _last_relative_path=
       local _seen_matches=()
-      local _start_line_number=
+      local _skip=1
 
       local         __match=
       while read -r __match
       do
-        local _line_number="${__match%:*}"
-        _line_number="${_line_number#*:}"
-
-        local _relative_path="${__match%%:*}"
+        local _relative_path="${__match%:*}"
 
         local _normalized_match="${__match##*:}"
         _normalized_match="${_normalized_match#"${_normalized_match%%[![:space:]]*}"}"
         _normalized_match="${_normalized_match%"${_normalized_match##*[![:space:]]}"}"
 
-        if [[ "${_last_relative_path:-}"        != "${_relative_path:-}"  ]]
+        if [[ "${_last_relative_path:-}"      != "${_relative_path:-}"  ]]
         then
-          _end_line_number=
-          _start_line_number=
+          _skip=1
         fi
 
-        if [[ "${_relative_path:-}"             =~ \.bookmark\.md$        ]]
+        if [[ "${_relative_path:-}"           =~ \.bookmark\.md$        ]]
         then
-          if [[ "${_normalized_match:-}"        =~ ^##                    ]]
+          if [[ "${_normalized_match:-}"      =~ ^##                    ]]
           then
-            if [[ "${_normalized_match:-}"      =~ Comment|Tags           ]]
+            if [[ "${_normalized_match:-}"    =~ Comment|Tags           ]]
             then
-              _start_line_number="${_line_number}"
-            elif [[ "${_normalized_match:-}"    =~ Content|Source         ]]
+              _skip=0
+            elif [[ "${_normalized_match:-}"  =~ Content|Source         ]]
             then
-              _end_line_number="${_line_number}"
+              _skip=1
             fi
 
             _last_relative_path="${_relative_path}"
@@ -12940,12 +12934,11 @@ _search() {
             continue
           fi
 
-          if [[ "${_start_line_number:-999999}" -gt "${_line_number:-0}"  ]]  ||
-             [[ "${_end_line_number:-9999999}"  -lt "${_line_number:-0}"  ]]
+          if ((_skip))
           then
             continue
           fi
-        elif [[ "${_normalized_match:-}" =~ ^## ]]
+        elif [[ "${_normalized_match:-}"      =~ ^##                    ]]
         then
           continue
         fi
