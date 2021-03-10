@@ -8339,10 +8339,34 @@ _render() {
 
     local _theme_color="${1:-#6EB3D7}"
 
-    if [[ "${NB_COLOR_PRIMARY}" -lt 256 ]] &&
-       [[ "${NB_COLOR_PRIMARY}" !=  69  ]]
+    if [[ "${NB_COLOR_PRIMARY}" -lt 256 ]]
     then
-      _theme_color="#${_ansi_hex_values[${NB_COLOR_PRIMARY}]}"
+      local _current_segment=
+      local _hex_color="${_ansi_hex_values[${NB_COLOR_PRIMARY}]}"
+      local _theme_color="#"
+
+      local i=
+      for ((i=0; i < "${#_hex_color}"; i++))
+      do
+        _current_segment+="${_hex_color:${i}:1}"
+
+        if [[ "${#_current_segment}" -lt 2 ]]
+        then
+          continue
+        else
+          local _int_value=
+          _int_value="$(printf "%d\\n" "0x${_current_segment}")"
+
+          local _modified_int_value=
+          _modified_int_value="$((_int_value + 40))"
+
+          [[ "${_modified_int_value}" -gt 255 ]] && _modified_int_value=255
+
+          _theme_color+="$(printf "%x\\n" "${_modified_int_value}")"
+
+          _current_segment=
+        fi
+      done
     fi
 
     cat <<HEREDOC
