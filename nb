@@ -8248,7 +8248,16 @@ _option_get_tags() {
 # _render()
 #
 # Usage:
-#   [<input> |] _render [<path>] [<pandoc-option>...]
+#   [<input> |] _render [<path>] [--body] [--from] [--pandoc]
+#                       [--source-extension] [<pandoc-option>...]
+#
+# Options:
+#   --body              Only render body, without <head> and <body> opening
+#                       or closing tags.
+#   --from              The format to convert content from.
+#   --pandoc            Use pandoc to convert file.
+#   --source-extension  The extension of the original file. Used to select
+#                       syntax mode in Ace.
 _render() {
   # Usage: _render_print_head
   _render_print_head() {
