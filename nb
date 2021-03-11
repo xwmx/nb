@@ -16245,8 +16245,8 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
           then
             case "${_request_method:-}" in
               GET)
-                _browse_render_add                      \
-                  "${_render_function_arguments[@]:-}"  \
+                _browse_render_add                        \
+                  "${_render_function_arguments[@]:-}"    \
                   | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
                 ;;
               POST)
@@ -16257,7 +16257,7 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
                     --message-body "${_message_body:-}"
                 )"
 
-                _browse_respond_with 302 \
+                _browse_respond_with 302                  \
                   "http://localhost:${NB_SERVER_PORT}/${_new_selector}${_response_url_params:-}"
 
                 return 0
