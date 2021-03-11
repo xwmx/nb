@@ -1445,7 +1445,7 @@ _get_content() {
     local _only_title=0
   fi
 
-  if [[ -z "${_path}" ]]
+  if [[   -z "${_path}" ]]
   then
     return 1
   elif [[ -e "${_path}" ]]
@@ -1464,9 +1464,9 @@ _get_content() {
 
     if [[ "${_path}" =~ \.md$|\.markdown$ ]]
     then
-      while IFS= read -r __line || [[ -n "${__line:-}" ]]
+      while IFS= read -r __line || [[ -n "${__line:-}"      ]]
       do
-        if [[ "${__line}" =~ ^([[:space:]]*#[[:space:]]+) ]] &&
+        if [[ "${__line}" =~ ^([[:space:]]*#[[:space:]]+)   ]] &&
            ! ((_in_code_block))
         then # line starts with an atx-style H1
           _title="${__line#${BASH_REMATCH[1]}}"
@@ -1486,7 +1486,7 @@ _get_content() {
           #   )"
 
           break
-        elif [[ "${__line}" =~ ^---$ ]]
+        elif [[ "${__line}" =~ ^---$    ]]
         then # start or end of front matter block
           if ((_in_front_matter))
           then
@@ -1494,7 +1494,7 @@ _get_content() {
           else
             _in_front_matter=1
           fi
-        elif [[ "${__line}" =~ ^\`\`\` ]]
+        elif [[ "${__line}" =~ ^\`\`\`  ]]
         then # start or end of code block
           if ((_in_code_block))
           then
@@ -1508,7 +1508,7 @@ _get_content() {
           break
         elif ! ((_in_front_matter)) && ! ((_in_code_block))
         then
-          if [[ -z "${_maybe_title}" ]] && [[ -n "${__line}" ]]
+          if [[ -z "${_maybe_title}" ]] && [[ -n "${__line}"    ]]
           then  # potential setext-style H1
             _maybe_title="${__line}"
           elif [[ -n "${_maybe_title}"              ]] &&
@@ -1518,11 +1518,11 @@ _get_content() {
               printf "%s\\n" "${_maybe_title}" | sed 's/^[[:space:]]*//'
             )"
             break
-          elif [[ -n "${_maybe_title}" ]]
+          elif [[ -n "${_maybe_title}"          ]]
           then # in normal content, title not found
             if ! ((_only_title))
             then
-              if [[ "${#_maybe_title}" -gt 500 ]]
+              if [[ "${#_maybe_title}" -gt 500  ]]
               then
                 _first_line="${_maybe_title:0:500}..."
               else
@@ -1530,7 +1530,7 @@ _get_content() {
               fi
             fi
 
-            if [[ ! "${_maybe_title}" =~ ^\[ ]]
+            if [[ ! "${_maybe_title}"  =~ ^\[   ]]
             then # only break with first non-link line
               break
             fi
@@ -1539,13 +1539,13 @@ _get_content() {
           fi
         fi
       done < "${_path}"
-    elif [[ "${_path}" =~ \.latex$|\.tex$ ]]
+    elif [[ "${_path}"    =~ \.latex$|\.tex$    ]]
     then
       while IFS= read -r __line || [[ -n "${__line}" ]]
       do
         _counter="$((_counter+1))"
 
-        if [[ "${__line}" =~  ^\\title\{ ]]
+        if [[ "${__line}" =~  ^\\title\{        ]]
         then
           _title="$(
             printf "%s\\n" "${__line}" | sed 's/\\title{\(.*\)}/\1/'
