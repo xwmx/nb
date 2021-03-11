@@ -331,7 +331,7 @@ load test_helper
 "href=\"http://localhost:6789/home:1/1?--per-page=.*&--columns=.*&--delete\">-</a> <span class=\"dim\">\|</span> <a "
 
   printf "%s\\n" "${output}" | grep -q \
-"href=\"http://localhost:6789/home:1/?--per-page=.*&--columns=.*&&--add\">+</a></h1>"
+"href=\"http://localhost:6789/home:1/?--per-page=.*&--columns=.*&--add\">+</a></h1>"
 }
 
 @test "'browse <notebook-path>/<folder>' displays header crumbs with folder." {
