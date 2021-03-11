@@ -15733,7 +15733,7 @@ HEREDOC
     if [[ -f "${_item_path:-}" ]]
     then
       local _raw_url="\
-http://localhost:${NB_SERVER_PORT}/--raw/${_item_path#${NB_DIR}/}"
+http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
 
       local _id_selector=
       _id_selector="$(_get_id_selector "${_selector:-}" --notebook)"
@@ -16133,9 +16133,9 @@ http://localhost:${NB_SERVER_PORT}/--raw/${_item_path#${NB_DIR}/}"
 
     # serve raw files
 
-    if [[ "${_request_uri}"     =~ /--raw/.*            ]]
+    if [[ "${_request_uri}"     =~ /--original/.*       ]]
     then
-      local _target_relative_path_with_notebook="${_request_uri#/--raw/}"
+      local _target_relative_path_with_notebook="${_request_uri#/--original/}"
 
       _target_relative_path_with_notebook="$(
         printf "%b" "$(

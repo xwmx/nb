@@ -7,9 +7,9 @@ export NB_SERVER_PORT=6789
 # non-breaking space
 export _S=" "
 
-# --raw #######################################################################
+# --original ##################################################################
 
-@test "GET to --raw URL serves raw markdown file." {
+@test "GET to --original URL serves original markdown file." {
   {
     "${_NB}" init
 
@@ -26,7 +26,7 @@ export _S=" "
     sleep 1
   }
 
-  run curl -sS -D - "http://localhost:6789/--raw/home/Example%20Folder/Example%20File.md"
+  run curl -sS -D - "http://localhost:6789/--original/home/Example%20Folder/Example%20File.md"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
