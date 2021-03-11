@@ -5909,6 +5909,27 @@ Description:
     Requirement: every note in the notebook must have a title.
 ```
 
+#### `clip`
+
+```text
+Usage:
+  nb clip [<notebook>:][<id> | <filename> | <path> | <title> | <extension>]
+
+Description:
+  Save the clipboard contents and copy contents of text or markdown items to
+  the clipboard.
+
+  When called with no arguments or when no matching file is found, the text
+  content on the clipboard is saved to a new file, pending a prompt.
+
+Examples:
+  # copy the content of item 123 to the clipboard
+  nb clip 123
+
+  # save the clipboard contents to a new file with a `.js` file extension
+  nb clip .js
+```
+
 #### `copy`
 
 ```text

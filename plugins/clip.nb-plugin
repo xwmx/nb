@@ -13,51 +13,89 @@ _subcommands add "clip"
 # Define help and usage text with `_subcommands describe <subcommand> <usage>`.
 _subcommands describe "clip" <<HEREDOC
 Usage:
-  nb clip (<id> | <filename> | <path> | <title>)
+  nb clip [<notebook>:][<id> | <filename> | <path> | <title> | <extension>]
 
 Description:
-  Copy contents of a text or markdown item to the clipboard.
+  Save the clipboard contents and copy contents of text or markdown items to
+  the clipboard.
 
-Alias: \`clip\`
+  When called with no arguments or when no matching file is found, the text
+  content on the clipboard is saved to a new file, pending a prompt.
+
+Examples:
+  # copy the content of item 123 to the clipboard
+  nb clip 123
+
+  # save the clipboard contents to a new file with a \`.js\` file extension
+  nb clip .js
 HEREDOC
 
 # Define the subcommand as a function, named with a leading underscore.
 _clip() {
-  # The selector argument can be an <id>, <filename>, <path>, or <title>, with
-  # or without a preceeding notebook name. Examples:
-  #   1
-  #   example.md
-  #   title
-  #   /path/to/example.md
-  #   notebook:1
-  #   notebook:example.md
-  #   notebook:title
-  #   notebook:/path/to/example.md
-  local _selector="${1:-}"
+  local _force=0
+  local _selector=
 
-  # Check for the presence of a selector, exiting and printing help if not
-  # found:
-  if [[ -z "${_selector:-}" ]]
+  for __arg in "${@:-}"
+  do
+    case "${__arg:-}" in
+      '')       :                     ;;
+      --force)  _force=1              ;;
+      *)        _selector="${__arg}"  ;;
+    esac
+  done
+
+  local _source_relative_path=
+
+  if [[ -n "${_selector:-}" ]]
   then
-    _help "clip"
-    exit 1
+    _source_relative_path="$(
+      _show "${_selector:-}" --relative-path 2>/dev/null || :
+    )"
   fi
 
-  # Get the relative path using the selector:
-  local _source_relative_path
-  _source_relative_path="$(_show "${_selector}" --relative-path)"
-
-  # Get the current notebook path:
   local _notebook_path
   _notebook_path="$(_notebooks current --path)"
 
-  # Validate that the selector represents a valid file:
-  if [[ -z "${_source_relative_path:-}"                      ]] ||
-     [[ ! -e "${_notebook_path}/${_source_relative_path}"    ]]
+  if [[ -z    "${_source_relative_path:-}"                    ]] ||
+     [[ ! -e  "${_notebook_path}/${_source_relative_path}"    ]]
   then
-    printf "Not found: %s\\n" "${_selector}"
-    exit 1
-  elif [[ ! -f "${_notebook_path}/${_source_relative_path}"  ]]
+    printf                              \
+      "Saving clipboard contents%s.\\n" \
+      "${_selector:+" to $(_color_primary "${_selector}")"}"
+
+    if ! ((_force))
+    then
+      while true
+      do
+        IFS='' read -r -e -d $'\n' -p "\
+$(  _color_primary "Proceed?")  $(_color_brackets "y/N") " __yn
+
+        case ${__yn} in
+          [Yy]*)
+            break
+            ;;
+          *)
+            printf "Exiting...\\n"
+            exit 0
+            ;;
+        esac
+      done
+    fi
+
+    {
+      if _command_exists "xclip" && [[ ! "${OSTYPE}" =~ ^darwin ]]
+      then
+        xclip -o
+      elif _command_exists "pbpaste"
+      then
+        pbpaste
+      fi
+    } | {
+      _add "${_selector}"
+    }
+
+    return 0
+  elif [[ ! -f "${_notebook_path}/${_source_relative_path}"   ]]
   then
     printf "Not a file: %s\\n" "${_selector}"
     exit 1
@@ -69,14 +107,11 @@ _clip() {
     if _command_exists "xclip" && [[ ! "${OSTYPE}" =~ ^darwin ]]
     then
       cat "${_notebook_path}/${_source_relative_path}" | xclip -sel clip
-    else
+    elif _command_exists "pbcopy"
+    then
       cat "${_notebook_path}/${_source_relative_path}" | pbcopy
     fi && printf "Copied $(_color_primary "${_source_relative_path}") contents to clipboard.%s\\n"
   else
     _exit_1 printf "Not a text or markdown file.%s\\n"
   fi
 }
-
-# Use `_subcommands alias` to define a full alias with linked help / usage.
-# Aliases also have to be added with `_subcommands add <name>`.
-_subcommands alias "clip"
