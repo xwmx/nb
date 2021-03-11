@@ -8555,7 +8555,7 @@ header {
 .main {
   margin:         0 auto;
   max-width:      45rem;
-  padding:        2rem;
+  padding:        1rem 2rem 2rem;
 }
 
 .item-list {
