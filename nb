@@ -15732,57 +15732,84 @@ HEREDOC
 
     if [[ -f "${_item_path:-}" ]]
     then
+      local _raw_url="\
+http://localhost:${NB_SERVER_PORT}/--raw/${_item_path#${NB_DIR}/}"
+
       local _id_selector=
       _id_selector="$(_get_id_selector "${_selector:-}" --notebook)"
 
       local _selector_id="${_id_selector#*:}"
       _selector_id="${_selector_id##*/}"
 
-      if [[ "${_action:-}" == "edit"      ]]
+      if _contains "${_action:-}" "edit" "delete"
       then
-          _header_content+="\
+        _header_content+="\
  <a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_params:-}\">${_selector_id:-}</a>"
+      elif [[ "${_action:-}" != "add" ]]
+      then
+        _header_content+=" <span class=\"dim\">${_selector_id:-}</span>"
+      fi
 
+      _header_content+=" <span class=\"dim\">${_bullet}</span>"
+      _header_content+=" <a href=\"${_raw_url}\">↓</a>"
+
+      if [[ "${_action:-}" == "edit" ]]
+      then
         _header_content+=" <span class=\"dim\">${_bullet}</span>"
         _header_content+=" <span class=\"dim\">editing</span>"
-
-        _header_content+=" <span class=\"dim\">${_bullet}</span>"
-       _header_content+="\
- <a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_params_ext:-}--delete\">-</a>"
-       _header_content+=" <span class=\"dim\">|</span> "
-      elif [[ "${_action:-}" == "delete"  ]]
-      then
-          _header_content+="\
- <a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_params:-}\">${_selector_id:-}</a>"
-
-          _header_content+=" <span class=\"dim\">${_bullet}</span>"
-
-          _header_content+="\
- <a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_params_ext:-}--edit\">edit</a>"
-
-       _header_content+=" <span class=\"dim\">${_bullet}</span>"
-       _header_content+=" <span class=\"dim\">-</span>"
-       _header_content+=" <span class=\"dim\">|</span> "
       else
-        _header_content+=" <span class=\"dim\">${_selector_id:-}</span>"
-
-        if ! _file_is_text "${_selector:-}"
-        then
-          _header_content+=" <span class=\"dim\">|</span> "
-        else
-          _header_content+=" <span class=\"dim\">${_bullet}</span>"
-
-          _header_content+="\
+        _header_content+=" <span class=\"dim\">${_bullet}</span>"
+        _header_content+="\
  <a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_params_ext:-}--edit\">edit</a>"
-
-          # TODO
-         _header_content+=" <span class=\"dim\">${_bullet}</span>"
-         _header_content+="\
- <a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_params_ext:-}--delete\">-</a>"
-         _header_content+=" <span class=\"dim\">|</span>"
-
-        fi
       fi
+
+      if [[ "${_action:-}" == "delete" ]]
+      then
+        _header_content+=" <span class=\"dim\">${_bullet}</span>"
+        _header_content+=" <span class=\"dim\">-</span>"
+        _header_content+=" <span class=\"dim\">|</span>"
+      else
+        _header_content+=" <span class=\"dim\">${_bullet}</span>"
+        _header_content+="\
+ <a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_params_ext:-}--delete\">-</a>"
+        _header_content+=" <span class=\"dim\">|</span>"
+      fi
+
+
+ #      elif [[ "${_action:-}" == "delete"  ]]
+ #      then
+ #        _header_content+="\
+ # <a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_params:-}\">${_selector_id:-}</a>"
+
+ #        _header_content+=" <span class=\"dim\">${_bullet}</span>"
+ #        _header_content+=" <a href=\"${_raw_url}\">↓</a>"
+ #        _header_content+=" <span class=\"dim\">${_bullet}</span>"
+ #        _header_content+="\
+ # <a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_params_ext:-}--edit\">edit</a>"
+
+ #       _header_content+=" <span class=\"dim\">${_bullet}</span>"
+ #       _header_content+=" <span class=\"dim\">-</span>"
+ #       _header_content+=" <span class=\"dim\">|</span> "
+ #      else
+ #        _header_content+=" <span class=\"dim\">${_selector_id:-}</span>"
+
+ #        if ! _file_is_text "${_selector:-}"
+ #        then
+ #          _header_content+=" <span class=\"dim\">|</span> "
+ #        else
+ #          _header_content+=" <span class=\"dim\">${_bullet}</span>"
+
+ #          _header_content+="\
+ # <a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_params_ext:-}--edit\">edit</a>"
+
+ #          # TODO
+ #         _header_content+=" <span class=\"dim\">${_bullet}</span>"
+ #         _header_content+="\
+ # <a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_params_ext:-}--delete\">-</a>"
+ #         _header_content+=" <span class=\"dim\">|</span>"
+
+ #        fi
+ #      fi
     fi
 
     if [[ -n "${_selector:-}"       ]]
