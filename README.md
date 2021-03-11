@@ -1050,25 +1050,25 @@ Items can be edited within terminal and GUI web browsers using
 
 ```bash
 > nb browse text:formats/markdown/123 --edit
-❯nb · text : formats / markdown / 123 · editing · - | +
+❯nb · text : formats / markdown / 123 · ↓ · editing · - | +
 
-[# Daring Fireball: Markdown (daringfireball.net)     ]
-[                                                     ]
-[<https://daringfireball.net/projects/markdown/>      ]
-[                                                     ]
-[## Related                                           ]
-[                                                     ]
-[- <https://example.com>                              ]
-[                                                     ]
-[## Comments                                          ]
-[                                                     ]
-[See also:                                            ]
-[                                                     ]
-[- [[text:formats/org]]                               ]
-[- [[cli:apps/nb]]                                    ]
-[                                                     ]
-[## Content                                           ]
-[                                                     ]
+[# Daring Fireball: Markdown (daringfireball.net)         ]
+[                                                         ]
+[<https://daringfireball.net/projects/markdown/>          ]
+[                                                         ]
+[## Related                                               ]
+[                                                         ]
+[- <https://example.com>                                  ]
+[                                                         ]
+[## Comments                                              ]
+[                                                         ]
+[See also:                                                ]
+[                                                         ]
+[- [[text:formats/org]]                                   ]
+[- [[cli:apps/nb]]                                        ]
+[                                                         ]
+[## Content                                               ]
+[                                                         ]
 
 [save] · last: 2021-01-01 01:00:00
 ```
@@ -1257,7 +1257,7 @@ Items can be viewed within terminal and GUI web browsers using
 
 ```bash
 > nb browse text:formats/markdown/123
-❯nb · text : formats / markdown / 123 · edit · - | +
+❯nb · text : formats / markdown / 123 · ↓ · edit · - | +
 Daring Fireball: Markdown (daringfireball.net)
 
 https://daringfireball.net/projects/markdown/
@@ -1371,7 +1371,7 @@ Items can be deleted within terminal and GUI web browsers using
 
 ```bash
 > nb browse --delete example:4
-❯nb · example : 4 · edit · - | +
+❯nb · example : 4 · ↓ · edit · - | +
 
                     deleting
 
@@ -2111,13 +2111,16 @@ you to write using an easy-to-read, easy-to-write plain text format, then
 convert it to structurally valid XHTML (or HTML).
 ```
 
-Use the down arrow (`↓`) link to download the original file in its
-original format.
+Notes, bookmarks, files in text-based formats, source code,
+Word `.docx` documents, and
+[Open Document](https://en.wikipedia.org/wiki/OpenDocument) `.odt`
+files are converted into HTML and rendered in the browser. Use the down
+arrow (`↓`) link to view or download the original file.
 
-Items can be edited within a terminal or GUI browser using the `edit`
-link on the item page or by opening the item with `nb browse --edit` /
-`nb br -e`, which automatically resizes the form to fit the current
-terminal window:
+Items in text formats can be edited within a terminal or GUI browser using
+the `edit` link on the item page or by opening the item with
+`nb browse --edit` / `nb br -e`, which automatically resizes the form to fit
+the current terminal window:
 
 ```bash
 > nb browse text:formats/markdown/123 --edit
@@ -2173,7 +2176,7 @@ item:
 
 ```bash
 > nb browse --delete example:4
-❯nb · example : 4 · edit · - | +
+❯nb · example : 4 · ↓ · edit · - | +
 
               deleting
 
