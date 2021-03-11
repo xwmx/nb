@@ -5882,6 +5882,7 @@ Description:
 
 <p align="center">
   <a href="#backlink">backlink</a> •
+  <a href="#clip">clip</a> •
   <a href="#copy">copy</a> •
   <a href="#ebook">ebook</a> •
   <a href="#example">example</a>
