@@ -9178,7 +9178,7 @@ _resolve_links() {
           fi
         done
       } | {
-         sed -E                                                     \
+         sed -E                                                       \
 -e "/^•linkable•/ s/\[\[([^#])([^]]*)\]\]/${_replacement_pattern}/g"  \
 -e "/^•linkable•/ s/${_notebookless_pattern}/${_notebookless_replacement_pattern}/g"
       } | {
