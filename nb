@@ -9140,16 +9140,20 @@ _resolve_links() {
     if ((_for_browsing)) && [[ "${_input_type:-}" == "html" ]]
     then
       local _notebook_name="${_notebook_path#${NB_DIR}/}"
-      local _url_pattern="http:\/\/localhost:${NB_SERVER_PORT}\/\1${_url_params_pattern:-}"
 
+      local _url_pattern="http:\/\/localhost:${NB_SERVER_PORT}\/\1${_url_params_pattern:-}"
       local _replacement_pattern="<a\ href=\"${_url_pattern}\">[[\1]]<\/a>"
 
       local _notebookless_pattern="localhost:${NB_SERVER_PORT}\/([^:?]+)([\?\"])"
       local _notebookless_replacement_pattern="localhost:${NB_SERVER_PORT}\/${_notebook_name}:\1\2"
 
-      sed -E                                          \
--e "s/\[\[([^#][^]]+)\]\]/${_replacement_pattern}/g"  \
--e "/<div class=\"main\">/,/<\/body>/ s/${_notebookless_pattern}/${_notebookless_replacement_pattern}/g"
+      local _root_link_pattern="localhost:6789\/[^\"]+\"><span class=\"dim\">❯"
+      local _root_link_replacement_pattern="localhost:6789\/\"><span class=\"dim\">❯"
+
+      sed -E                                                            \
+-e "s/\[\[([^#][^]]+)\]\]/${_replacement_pattern}/g"                    \
+-e "s/${_notebookless_pattern}/${_notebookless_replacement_pattern}/g"  \
+-e "/<nav>/,/<\/nav>/ s/${_root_link_pattern}/${_root_link_replacement_pattern}/g"
     else
       local __match=
       for   __match in  $(_resolve_links_get_matches  \
