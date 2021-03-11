@@ -16230,7 +16230,7 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
       )"
     fi
 
-    # detect edit
+    # detect action
 
     local _action=
 
