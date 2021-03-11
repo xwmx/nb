@@ -9141,8 +9141,8 @@ _resolve_links() {
     # resolve and link [[wiki-style links]]
     # TODO: HTML uses `sed` streaming replacement. The current Org
     # implementation uses querying to ensure link is not an
-    # outbound URL, which requires a `sed` implementation. The match
-    # replacement code supports both HTML and Org, with HTML unused.
+    # outbound URL, which requires a separate matching operation. The
+    # match replacement code supports both HTML and Org, with HTML unused.
 
     if ((_for_browsing)) && [[ "${_input_type:-}" == "html" ]]
     then
