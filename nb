@@ -9174,7 +9174,7 @@ _resolve_links() {
       local _notebookless_pattern="localhost:${NB_SERVER_PORT}\/([^:?\"-]+)([\?\"])"
       local _notebookless_replacement_pattern="localhost:${NB_SERVER_PORT}\/${_notebook_name}:\1\2"
 
-      local _replacements_enabled=1
+      local _linkable=1
 
       {
         local __line=
@@ -9182,10 +9182,10 @@ _resolve_links() {
         do
           if [[ "${__line:-}" =~ \<nav\>|\<code\>      ]]
           then
-            _replacements_enabled=0
+            _linkable=0
           fi
 
-          if ((_replacements_enabled))
+          if ((_linkable))
           then
             printf "•linkable•%s\\n" "${__line:-}"
           else
@@ -9194,7 +9194,7 @@ _resolve_links() {
 
           if [[ "${__line:-}" =~ \<\/nav\>|\<\/code\>  ]]
           then
-            _replacements_enabled=1
+            _linkable=1
           fi
         done
       } | {
