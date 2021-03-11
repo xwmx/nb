@@ -8397,8 +8397,8 @@ body {
   }
 
   h2, h3, p {
-    orphans:  3;
-    widows:   3;
+    orphans:          3;
+    widows:           3;
   }
 
   h2, h3, h4 {
@@ -8419,13 +8419,13 @@ h5, h6 {
   font-style: italic;
 }
 
-h6  { font-weight:    normal; }
+h6  {  font-weight:   normal; }
 
 p         { margin:   1em 0;  }
 
-a         { color:    ${_color_primary_hex}; text-decoration: none;       }
-a:hover   { color:    ${_color_primary_hex}; text-decoration: underline;  }
-a:visited { color:    ${_color_primary_hex}; text-decoration: none;       }
+a         {  color:   ${_color_primary_hex}; text-decoration: none;       }
+a:hover   {  color:   ${_color_primary_hex}; text-decoration: underline;  }
+a:visited {  color:   ${_color_primary_hex}; text-decoration: none;       }
 
 :focus {
   outline:            1px solid #2d2d2d;
