@@ -8890,7 +8890,7 @@ HEREDOC
           cat
         fi
 
-        if [[ -n "${_prepared_file_path:-}" ]]
+        if [[ -n "${_prepared_file_path:-}"   ]]
         then
           if _file_is_text "${_prepared_file_path}"
           then
@@ -8902,7 +8902,7 @@ HEREDOC
           fi
         fi
       } | {
-        if [[ -n "${_input_string}"         ]]
+        if [[ -n "${_input_string}"           ]]
         then
           printf "%s\\n" "${_input_string}"
         fi
