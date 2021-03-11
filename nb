@@ -8371,7 +8371,13 @@ _render() {
       done
 
       # https://stackoverflow.com/a/20820649
-      local _amount=0.3
+      local _amount=0.2
+
+      case "${NB_COLOR_PRIMARY}" in
+        40)     _amount=0.5 ;;
+        69|162) _amount=0.05 ;;
+        227)    _amount=0.2  ;;
+      esac
 
       _luma="$(
         printf "(0.3 * %s) + (0.6 * %s) + (0.1 * %s)\\n" \
