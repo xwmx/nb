@@ -9144,9 +9144,12 @@ _resolve_links() {
 
       local _replacement_pattern="<a\ href=\"${_url_pattern}\">[[\1]]<\/a>"
 
-      sed -E                                                  \
-        -e "s/\[\[([^#][^]]+)\]\]/${_replacement_pattern}/g"  \
-        -e "s/localhost:${NB_SERVER_PORT}\/([^:?]+)([\?\"])/localhost:${NB_SERVER_PORT}\/${_notebook_name}:\1\2/g"
+      local _notebookless_pattern="localhost:${NB_SERVER_PORT}\/([^:?]+)([\?\"])"
+      local _notebookless_replacement_pattern="localhost:${NB_SERVER_PORT}\/${_notebook_name}:\1\2"
+
+      sed -E                                          \
+-e "s/\[\[([^#][^]]+)\]\]/${_replacement_pattern}/g"  \
+-e "/<div class=\"main\">/,/<\/body>/ s/${_notebookless_pattern}/${_notebookless_replacement_pattern}/g"
     else
       local __match=
       for   __match in  $(_resolve_links_get_matches  \

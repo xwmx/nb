@@ -4,6 +4,44 @@ load test_helper
 
 export NB_SERVER_PORT=6789
 
+# edge cases ##################################################################
+
+@test "'browse <folder-id>/<id>' serves the rendered HTML page with [[wiki-style links]] resolved to internal web server URLs without altering home link." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example File.md"             \
+      --title     "Example Title"               \
+      --content   "Example content."
+
+    "${_NB}" add  "Example Folder/File One.md"  \
+      --title     "Title One"                   \
+      --content   "Example content. [[Example Title]]"
+
+    sleep 1
+  }
+
+  run "${_NB}" browse 2/1 --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    ==  0                   ]]
+  [[ "${output}"    =~  \<\!DOCTYPE\ html\> ]]
+
+  printf "%s\\n" "${output}" | grep -q \
+"<h1 id=\"title-one\">Title One</h1>"
+
+  printf "%s\\n" "${output}" | grep -q \
+"<a.* href=\"http://localhost:6789/?--per-page.*&--columns.*\"><span class=\"dim\">❯</span>nb</a>"
+
+  printf "%s\\n" "${output}" | grep -q \
+"<p>Example content. <a.* href=\"http://localhost:6789/home:Example Title?--per-page=.*&--columns=.*\">"
+
+  printf "%s\\n" "${output}" | grep -q \
+"\[\[Example Title\]\]</a></p>"
+}
+
 # syntax highlighting #########################################################
 
 @test "'browse <item>' includes syntax highlighting." {
@@ -133,7 +171,7 @@ HEREDOC
 
 # .odt ########################################################################
 
-@test "'browse' with .odt file serves the rendered HTML page with wiki-style links resolved to internal web server URLs." {
+@test "'browse' with .odt file serves the rendered HTML page with [[wiki-style links]] resolved to internal web server URLs." {
   {
     "${_NB}" init
 
@@ -174,7 +212,7 @@ HEREDOC
 
 # .docx #######################################################################
 
-@test "'browse' with .docx file serves the rendered HTML page with wiki-style links resolved to internal web server URLs." {
+@test "'browse' with .docx file serves the rendered HTML page with [[wiki-style links]] resolved to internal web server URLs." {
   {
     "${_NB}" init
 
@@ -215,7 +253,7 @@ HEREDOC
 
 # .org ########################################################################
 
-@test "'browse' with .org file serves the rendered HTML page with wiki-style links resolved to internal web server URLs." {
+@test "'browse' with .org file serves the rendered HTML page with [[wiki-style links]] resolved to internal web server URLs." {
   {
     "${_NB}" init
 
@@ -253,7 +291,7 @@ HEREDOC
 
 # markdown ####################################################################
 
-@test "'browse <folder-id>/<id>' serves the rendered HTML page with wiki-style links resolved to internal web server URLs." {
+@test "'browse <folder-id>/<id>' serves the rendered HTML page with [[wiki-style links]] resolved to internal web server URLs." {
   {
     "${_NB}" init
 
@@ -286,7 +324,7 @@ HEREDOC
 "\[\[Example Title\]\]</a></p>"
 }
 
-@test "'browse <folder-name>/<id>' serves the rendered HTML page with wiki-style links resolved to internal web server URLs." {
+@test "'browse <folder-name>/<id>' serves the rendered HTML page with [[wiki-style links]] resolved to internal web server URLs." {
   {
     "${_NB}" init
 
@@ -317,7 +355,7 @@ HEREDOC
 "\[\[Example Title\]\]</a></p>"
 }
 
-@test "'browse <item-selector>' properly resolves titled wiki-style links." {
+@test "'browse <item-selector>' properly resolves titled [[wiki-style links]]." {
   {
     "${_NB}" init
 
@@ -367,7 +405,7 @@ HEREDOC
     'content <a.* href="http://localhost:6789/home:3/1?--per-page.*&--columns=.*">\[\[3/1\]\]</a> here'
 }
 
-@test "'browse <item-selector>' properly resolves titled wiki-style links and skips links with non-resolving selectors." {
+@test "'browse <item-selector>' properly resolves titled [[wiki-style links]] and skips links with non-resolving selectors." {
   {
     "${_NB}" init
 
@@ -417,7 +455,7 @@ HEREDOC
     'content <a.* href="http://localhost:6789/home:2/1?--per-page.*&--columns=.*">\[\[2/1\]\]</a> here'
 }
 
-@test "'browse <selector>' properly resolves duplicated wiki-style links in HTML." {
+@test "'browse <selector>' properly resolves duplicated [[wiki-style links]] in HTML." {
   {
     "${_NB}" init
 
@@ -454,7 +492,7 @@ HEREDOC
     'example <a.* href="http://localhost:6789/Example Notebook:Example Folder/1?--per-page.*&--columns=.*">\[\[Example Notebook:Example Folder/1\]\]</a>'
 }
 
-@test "'browse <selector>' resolves wiki-style links in a different arrangement in HTML." {
+@test "'browse <selector>' resolves [[wiki-style links]] in a different arrangement in HTML." {
   {
     "${_NB}" init
 
