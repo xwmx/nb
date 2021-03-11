@@ -9151,7 +9151,7 @@ _resolve_links() {
       local _url_pattern="http:\/\/localhost:${NB_SERVER_PORT}\/\1${_url_params_pattern:-}"
       local _replacement_pattern="<a\ href=\"${_url_pattern}\">[[\1]]<\/a>"
 
-      local _notebookless_pattern="localhost:${NB_SERVER_PORT}\/([^:?-]+)([\?\"])"
+      local _notebookless_pattern="localhost:${NB_SERVER_PORT}\/([^:?\"-]+)([\?\"])"
       local _notebookless_replacement_pattern="localhost:${NB_SERVER_PORT}\/${_notebook_name}:\1\2"
 
       local _root_link_pattern="localhost:6789\/[^\"]+\"><span class=\"dim\">❯"
