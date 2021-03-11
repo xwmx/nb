@@ -3450,11 +3450,12 @@ $(_color_primary "Usage:")
           [--no-indicator] [-p | --pager] [--paths] [-s | --sort]
           [-r | --reverse] [--tags] [-t <type> | --type <type> | --<type>]
           [<id> | <filename> | <path> | <title> | <query>]
-  ${_ME} ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
-        [-n <limit> | --limit <limit> | --<limit>] [--no-footer] [--no-header]
-        [--no-id] [--no-indicator] [-p | --pager] [--paths] [-s | --sort]
-        [-r | --reverse] [--tags] [-t <type> | --type <type> | --<type>]
-        [<id> | <filename> | <path> | <title> | <query>]
+  ${_ME} ls [-a | --all] [-b | --browse] [-e [<length>] | --excerpt [<length>]]
+        [--filenames] [-g | --gui] [-n <limit> | --limit <limit> | --<limit>]
+        [--no-footer] [--no-header] [--no-id] [--no-indicator] [-p | --pager]
+        [--paths] [-s | --sort] [-r | --reverse] [--tags]
+        [-t <type> | --type <type> | --<type>]
+        [<notebook>:][<id> | <filename> | <path> | <title> | <query>]
   ${_ME} move [<notebook>:](<id> | <filename> | <path> | <title>) [-f | --force]
           ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note)
   ${_ME} notebooks [<name>] [--archived] [--global] [--local] [--names]
@@ -5055,18 +5056,23 @@ HEREDOC
 
 describe "ls" <<HEREDOC
 Usage:
-  ${_ME} ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
-        [-n <limit> | --limit <limit> | --<limit>] [--no-footer] [--no-header]
-        [--no-id] [--no-indicator] [-p | --pager] [--paths] [-s | --sort]
-        [-r | --reverse] [--tags] [-t <type> | --type <type> | --<type>]
-        [<id> | <filename> | <path> | <title> | <query>]
+  ${_ME} ls [-a | --all] [-b | --browse] [-e [<length>] | --excerpt [<length>]]
+        [--filenames] [-g | --gui] [-n <limit> | --limit <limit> | --<limit>]
+        [--no-footer] [--no-header] [--no-id] [--no-indicator] [-p | --pager]
+        [--paths] [-s | --sort] [-r | --reverse] [--tags]
+        [-t <type> | --type <type> | --<type>]
+        [<notebook>:][<id> | <filename> | <path> | <title> | <query>]
 
 Options:
   -a, --all                       Print all items in the notebook. Equivalent
                                   to no limit.
+  -b, --browse                    Open the specified item or current notebook
+                                  with \`browse\` in a terminal web browser.
   -e, --excerpt [<length>]        Print an excerpt <length> lines long under
                                   each note's filename [default: 3].
   --filenames                     Print the filename for each note.
+  -g, --gui                       Open the specified item or current notebook
+                                  with \`browse\` in a GUI web browser.
   -n, --limit <limit>, --<limit>  The maximum number of listed items.
                                   [default: 20]
   --no-header                     Print without header.
@@ -5451,6 +5457,7 @@ _ls() {
 
   local _all=0
   local _arguments=()
+  local _delegate_to_browse=0
   local _delegate_arguments=()
   local _fast_exit=0
   local _filter_patterns=()
@@ -5476,6 +5483,9 @@ _ls() {
       --auto*align|--centered|--justified|--plain)
         _header_flags+=("${__arg}")
         ;;
+      -b|--browse)
+        _delegate_to_browse=1
+        ;;
       --content|--title)
         if _option_value_is_present "${__val:-}"
         then
@@ -5485,6 +5495,10 @@ _ls() {
         ;;
       --*exit*)
         _fast_exit=1
+        ;;
+      -g|--gui)
+        _delegate_to_browse=1
+        _delegate_arguments+=("${__arg}")
         ;;
       -n|--limit|--num|--number)
         _limit="$(_option_get_value "${__arg}" "${__val:-}")"
@@ -5561,39 +5575,45 @@ _ls() {
 
   # Delegate to `add` or `show` when detected.
 
-  if ((${#_delegate_arguments[@]}))
+  if ((${#_delegate_arguments[@]})) || ((_delegate_to_browse))
   then
-    local i=
-    for ((i=0; i < "${#_delegate_arguments[@]}"; i++))
-    do
-      case "${_delegate_arguments[i]:-}" in
-        --added|--updated)
-          if [[ -n "${_selector:-}" ]]
-          then
-            _defer "_show" "${_arguments[@]:-}" "${_delegate_arguments[@]:-}"
+    if ((_delegate_to_browse))
+    then
+      _defer "_browse" "${_arguments[@]:-}" "${_delegate_arguments[@]:-}"
+      return 0
+    else
+      local i=
+      for ((i=0; i < "${#_delegate_arguments[@]}"; i++))
+      do
+        case "${_delegate_arguments[i]:-}" in
+          --added|--updated)
+            if [[ -n "${_selector:-}" ]]
+            then
+              _defer "_show" "${_arguments[@]:-}" "${_delegate_arguments[@]:-}"
+              return 0
+            fi
+            ;;
+          --content|--title)
+            if _option_value_is_present "${_delegate_arguments[$((i+1))]:-}"
+            then
+              _defer "_add" "${_arguments[@]:-}" "${_delegate_arguments[@]:-}"
+              return 0
+            fi
+            ;;
+          --tags)
+            ((_all)) && _delegate_arguments+=("--all")
+            _defer "_list"  "${_arguments[@]:-}" "${_delegate_arguments[@]:-}"
             return 0
-          fi
-          ;;
-        --content|--title)
-          if _option_value_is_present "${_delegate_arguments[$((i+1))]:-}"
-          then
-            _defer "_add" "${_arguments[@]:-}" "${_delegate_arguments[@]:-}"
-            return 0
-          fi
-          ;;
-        --tags)
-          ((_all)) && _delegate_arguments+=("--all")
-          _defer "_list"  "${_arguments[@]:-}" "${_delegate_arguments[@]:-}"
-          return 0
-          ;;
-        *)
-          if [[ -n "${_arguments[i]:-}" ]]
-          then
-            _arguments+=("${_arguments[i]:-}")
-          fi
-          ;;
-      esac
-    done
+            ;;
+          *)
+            if [[ -n "${_arguments[i]:-}" ]]
+            then
+              _arguments+=("${_arguments[i]:-}")
+            fi
+            ;;
+        esac
+      done
+    fi
   fi
 
   # Build list options.
@@ -16601,7 +16621,10 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
         _force_terminal_request=1
         ;;
       *)
-        _selector="${1:-}"
+        if [[ -z "${_selector:-}" ]]
+        then
+          _selector="${1:-}"
+        fi
         ;;
     esac
 

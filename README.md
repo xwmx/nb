@@ -4173,11 +4173,12 @@ Usage:
           [--no-indicator] [-p | --pager] [--paths] [-s | --sort]
           [-r | --reverse] [--tags] [-t <type> | --type <type> | --<type>]
           [<id> | <filename> | <path> | <title> | <query>]
-  nb ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
-        [-n <limit> | --limit <limit> | --<limit>] [--no-footer] [--no-header]
-        [--no-id] [--no-indicator] [-p | --pager] [--paths] [-s | --sort]
-        [-r | --reverse] [--tags] [-t <type> | --type <type> | --<type>]
-        [<id> | <filename> | <path> | <title> | <query>]
+  nb ls [-a | --all] [-b | --browse] [-e [<length>] | --excerpt [<length>]]
+        [--filenames] [-g | --gui] [-n <limit> | --limit <limit> | --<limit>]
+        [--no-footer] [--no-header] [--no-id] [--no-indicator] [-p | --pager]
+        [--paths] [-s | --sort] [-r | --reverse] [--tags]
+        [-t <type> | --type <type> | --<type>]
+        [<notebook>:][<id> | <filename> | <path> | <title> | <query>]
   nb move [<notebook>:](<id> | <filename> | <path> | <title>) [-f | --force]
           ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note)
   nb notebooks [<name>] [--archived] [--global] [--local] [--names]
@@ -4966,18 +4967,23 @@ Examples:
 
 ```text
 Usage:
-  nb ls [-a | --all] [-e [<length>] | --excerpt [<length>]] [--filenames]
-        [-n <limit> | --limit <limit> | --<limit>] [--no-footer] [--no-header]
-        [--no-id] [--no-indicator] [-p | --pager] [--paths] [-s | --sort]
-        [-r | --reverse] [--tags] [-t <type> | --type <type> | --<type>]
-        [<id> | <filename> | <path> | <title> | <query>]
+  nb ls [-a | --all] [-b | --browse] [-e [<length>] | --excerpt [<length>]]
+        [--filenames] [-g | --gui] [-n <limit> | --limit <limit> | --<limit>]
+        [--no-footer] [--no-header] [--no-id] [--no-indicator] [-p | --pager]
+        [--paths] [-s | --sort] [-r | --reverse] [--tags]
+        [-t <type> | --type <type> | --<type>]
+        [<notebook>:][<id> | <filename> | <path> | <title> | <query>]
 
 Options:
   -a, --all                       Print all items in the notebook. Equivalent
                                   to no limit.
+  -b, --browse                    Open the specified item or current notebook
+                                  with `browse` in a terminal web browser.
   -e, --excerpt [<length>]        Print an excerpt <length> lines long under
                                   each note's filename [default: 3].
   --filenames                     Print the filename for each note.
+  -g, --gui                       Open the specified item or current notebook
+                                  with `browse` in a GUI web browser.
   -n, --limit <limit>, --<limit>  The maximum number of listed items.
                                   [default: 20]
   --no-header                     Print without header.
