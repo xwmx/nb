@@ -8337,82 +8337,17 @@ _render() {
       'a8a8a8' 'b2b2b2' 'bcbcbc' 'c6c6c6' 'd0d0d0' 'dadada' 'e4e4e4' 'eeeeee'
     )
 
-    local _theme_color="${1:-#6EB3D7}"
+    local _theme_color="${1:-#7593eb}"
 
     if [[ "${NB_COLOR_PRIMARY}" -lt 256 ]]
     then
-      local _hex_color="${_ansi_hex_values[${NB_COLOR_PRIMARY}]}"
-      local _theme_color="#"
+      local _theme_color="#${_ansi_hex_values[${NB_COLOR_PRIMARY}]}"
 
-      local _b=
-      local _b_int=
-      local _g=
-      local _g_int=
-      local _r=
-      local _r_int=
-
-      local i=
-      for ((i=0; i < "${#_hex_color}"; i++))
-      do
-        case "${i}" in
-          0|1)
-            _r+="${_hex_color:${i}:1}"
-            ((${#_r} - 1)) && _r_int="$(printf "%d\\n" "0x${_r}")"
-          ;;
-          2|3)
-            _g+="${_hex_color:${i}:1}"
-            ((${#_g} - 1)) && _g_int="$(printf "%d\\n" "0x${_g}")"
-            ;;
-          4|5)
-            _b+="${_hex_color:${i}:1}"
-            ((${#_b} - 1)) && _b_int="$(printf "%d\\n" "0x${_b}")"
-            ;;
-        esac
-      done
-
-      # https://stackoverflow.com/a/20820649
-      local _amount=0.2
-
-      case "${NB_COLOR_PRIMARY}" in
-        40)     _amount=0.5 ;;
-        69|162) _amount=0.05 ;;
-        227)    _amount=0.2  ;;
+      # desaturate select colors
+      case "${_theme_color}" in
+        \#5f87ff) _theme_color="#7593eb" ;;
+        \#ffff5f) _theme_color="#ebeb75" ;;
       esac
-
-      _luma="$(
-        printf "(0.3 * %s) + (0.6 * %s) + (0.1 * %s)\\n" \
-          "${_r_int}"                                    \
-          "${_g_int}"                                    \
-          "${_b_int}"                                    \
-          | bc
-      )"
-
-      local __segment=
-      for   __segment in "${_r_int}" "${_g_int}" "${_b_int}"
-      do
-        [[ -n "${__segment:-}" ]] || continue
-
-        _theme_color+="$(
-          printf "%02x\\n" "$(
-            {
-              printf "%s + %s * (%s + %s)\\n" \
-                "${__segment}"                \
-                "${_amount}"                  \
-                "${_luma}"                    \
-                "${__segment}"
-            } | bc | {
-              local   _result=
-              read -r _result
-
-              _result="${_result%.*}"
-
-              [[ "${_result}" -gt 255 ]] && _result=255
-
-              printf "%s\\n" "${_result}"
-            }
-          )"
-        )"
-      done
     fi
 
     cat <<HEREDOC
