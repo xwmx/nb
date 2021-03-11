@@ -16,6 +16,7 @@ export _S=" "
     "${_NB}" add  "Example Folder/File One.js"  \
       --content   "console.log('example');"
 
+    # shellcheck disable=2129
     printf "export NB_ACE_ENABLED=1\\n"           >> "${NBRC_PATH}"
     printf "export NB_ACE_THEME=\"ambiance\"\\n"  >> "${NBRC_PATH}"
     printf "export NB_TESTING=1\\n"               >> "${NBRC_PATH}"
@@ -344,13 +345,16 @@ export _S=" "
 ">:</span> <a rel=\"noopener noreferrer\" href=\"http://localhost:6789/home:"
 
   printf "%s\\n" "${output}" | grep -q \
-"1?--per-page=.*&--columns=.*\">1</a> <span class=\"dim\">·</span> <span cla"
+"1?--per-page=.*&--columns=.*\">1</a> <span class=\"dim\">·</span> <a.* "
+
+  printf "%s\\n" "${output}" | grep -q \
+"rel=\"noopener noreferrer\" href=\"http://localhost:6789/--original/home/Example File.md\">↓</a> <span class=\"dim\">·</span> <span cl"
 
   printf "%s\\n" "${output}" | grep -q \
 "ss=\"dim\">editing</span> <span class=\"dim\">·</span> <a rel=\"noopener noreferrer\" "
 
   printf "%s\\n" "${output}" | grep -q \
-"href=\"http://localhost:6789/home:1?--per-page=30&--columns=.*&--delete\">-</a> <span class=\"dim\">|</span>  <a "
+"href=\"http://localhost:6789/home:1?--per-page=30&--columns=.*&--delete\">-</a> <span class=\"dim\">|</span> <a "
 
   printf "%s\\n" "${output}" | grep -q \
 "rel=\"noopener noreferrer\" href=\"http://localhost:6789/home:?--per-page=30&--columns=.*&--add\">+</a></h1>"
@@ -507,4 +511,3 @@ export _S=" "
   printf "%s\\n" "${output}" | grep -q \
 "value=\"save\"> <span class=\"dim\">·</span> <span class=\"dim\">last: .*</span>"
 }
-
