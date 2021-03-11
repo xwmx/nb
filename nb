@@ -8384,8 +8384,7 @@ _render() {
       local __segment=
       for   __segment in "${_r_int}" "${_g_int}" "${_b_int}"
       do
-        [[ -n "${__segment:-}"        ]] || continue
-        [[    "${__segment}" -gt 255  ]] && __segment=255
+        [[ -n "${__segment:-}" ]] || continue
 
         _theme_color+="$(
           printf "%02x\\n" "$(
