@@ -8341,31 +8341,72 @@ _render() {
 
     if [[ "${NB_COLOR_PRIMARY}" -lt 256 ]]
     then
-      local _current_segment=
       local _hex_color="${_ansi_hex_values[${NB_COLOR_PRIMARY}]}"
       local _theme_color="#"
+
+      local _b=
+      local _b_int=
+      local _g=
+      local _g_int=
+      local _r=
+      local _r_int=
 
       local i=
       for ((i=0; i < "${#_hex_color}"; i++))
       do
-        _current_segment+="${_hex_color:${i}:1}"
+        case "${i}" in
+          0|1)
+            _r+="${_hex_color:${i}:1}"
+            ((${#_r} - 1)) && _r_int="$(printf "%d\\n" "0x${_r}")"
+          ;;
+          2|3)
+            _g+="${_hex_color:${i}:1}"
+            ((${#_g} - 1)) && _g_int="$(printf "%d\\n" "0x${_g}")"
+            ;;
+          4|5)
+            _b+="${_hex_color:${i}:1}"
+            ((${#_b} - 1)) && _b_int="$(printf "%d\\n" "0x${_b}")"
+            ;;
+        esac
+      done
 
-        if [[ "${#_current_segment}" -lt 2 ]]
-        then
-          continue
-        else
-          local _int_value=
-          _int_value="$(printf "%d\\n" "0x${_current_segment}")"
+      # https://stackoverflow.com/a/20820649
+      local _amount=0.3
 
-          local _modified_int_value=
-          _modified_int_value="$((_int_value + 40))"
+      _luma="$(
+        printf "(0.3 * %s) + (0.6 * %s) + (0.1 * %s)\\n" \
+          "${_r_int}"                                    \
+          "${_g_int}"                                    \
+          "${_b_int}"                                    \
+          | bc
+      )"
 
-          [[ "${_modified_int_value}" -gt 255 ]] && _modified_int_value=255
+      local __segment=
+      for   __segment in "${_r_int}" "${_g_int}" "${_b_int}"
+      do
+        [[ -n "${__segment:-}"        ]] || continue
+        [[    "${__segment}" -gt 255  ]] && __segment=255
 
-          _theme_color+="$(printf "%x\\n" "${_modified_int_value}")"
+        _theme_color+="$(
+          printf "%02x\\n" "$(
+            {
+              printf "%s + %s * (%s + %s)\\n" \
+                "${__segment}"                \
+                "${_amount}"                  \
+                "${_luma}"                    \
+                "${__segment}"
+            } | bc | {
+              local   _result=
+              read -r _result
 
-          _current_segment=
-        fi
+              _result="${_result%.*}"
+
+              [[ "${_result}" -gt 255 ]] && _result=255
+
+              printf "%s\\n" "${_result}"
+            }
+          )"
+        )"
       done
     fi
 
