@@ -8337,16 +8337,16 @@ _render() {
       'a8a8a8' 'b2b2b2' 'bcbcbc' 'c6c6c6' 'd0d0d0' 'dadada' 'e4e4e4' 'eeeeee'
     )
 
-    local _theme_color="${1:-#7593eb}"
+    local _color_primary_hex="${1:-#7593eb}"
 
     if [[ "${NB_COLOR_PRIMARY}" -lt 256 ]]
     then
-      local _theme_color="#${_ansi_hex_values[${NB_COLOR_PRIMARY}]}"
+      local _color_primary_hex="#${_ansi_hex_values[${NB_COLOR_PRIMARY}]}"
 
       # desaturate select colors
-      case "${_theme_color}" in
-        \#5f87ff) _theme_color="#7593eb" ;;
-        \#ffff5f) _theme_color="#ebeb75" ;;
+      case "${_color_primary_hex}" in
+        \#5f87ff) _color_primary_hex="#7593eb" ;;
+        \#ffff5f) _color_primary_hex="#ebeb75" ;;
       esac
     fi
 
@@ -8420,9 +8420,9 @@ h6  { font-weight:  normal; }
 
 p   { margin:       1em 0;  }
 
-a           { color:    ${_theme_color}; text-decoration: none;       }
-a:hover     { color:    ${_theme_color}; text-decoration: underline;  }
-a:visited   { color:    ${_theme_color}; text-decoration: none;       }
+a           { color:    ${_color_primary_hex}; text-decoration: none;       }
+a:hover     { color:    ${_color_primary_hex}; text-decoration: underline;  }
+a:visited   { color:    ${_color_primary_hex}; text-decoration: none;       }
 
 :focus {
   outline:  1px solid #2d2d2d;
@@ -8572,7 +8572,7 @@ header {
 }
 
 .dim        { color: #626480; }
-.identifier { color: ${_theme_color}; }
+.identifier { color: ${_color_primary_hex}; }
 
 #search {
   position: relative;
@@ -8630,7 +8630,7 @@ form br {
 input[type="submit"] {
   background:       none;
   border:           none;
-  color:            ${_theme_color};
+  color:            ${_color_primary_hex};
   font-size:        1rem;
   margin-top:       1rem;
   outline:          0 solid #1a1a1a;
@@ -8647,7 +8647,7 @@ input[type="submit"]:focus {
 }
 
 input[type="submit"]:hover {
-  border-bottom:    1px solid ${_theme_color};
+  border-bottom:    1px solid ${_color_primary_hex};
 }
 
 textarea,
