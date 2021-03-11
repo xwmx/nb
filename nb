@@ -8300,7 +8300,7 @@ _render() {
     printf "%s\\n" "${_prepared_file_path:-}"
   }
 
-  # Usage: _render_print_head [<color>]
+  # Usage: _render_print_head
   _render_print_head() {
     local _ansi_hex_values=(
       '000000' '800000' '008000' '808000' '000080' '800080' '008080' 'c0c0c0'
@@ -8337,11 +8337,14 @@ _render() {
       'a8a8a8' 'b2b2b2' 'bcbcbc' 'c6c6c6' 'd0d0d0' 'dadada' 'e4e4e4' 'eeeeee'
     )
 
-    local _color_primary_hex="${1:-#7593eb}"
+    local _color_primary_hex="#7593eb"
+    # TODO
+    # local _color_secondary_hex=
 
     if [[ "${NB_COLOR_PRIMARY}" -lt 256 ]]
     then
-      local _color_primary_hex="#${_ansi_hex_values[${NB_COLOR_PRIMARY}]}"
+      _color_primary_hex="#${_ansi_hex_values[${NB_COLOR_PRIMARY}]}"
+      # _color_secondary_hex="#${_ansi_hex_values[${NB_COLOR_SECONDARY}]}"
 
       # desaturate select colors
       case "${_color_primary_hex}" in
