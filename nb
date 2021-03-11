@@ -15608,11 +15608,11 @@ HEREDOC
   #                         [--per-page <limit>] [--terminal]
   #
   # Description:
-  #   Print a context-aware, linked Markdown header.
+  #   Print a context-aware, linked nav header.
   _browse_render_header() {
     local _action=
     local _bullet="·"
-    local _per_page="${NB_BROWSE_COLUMNS:-70}"
+    local _columns="${NB_BROWSE_COLUMNS:-70}"
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
     local _selector=
     local _terminal_browser=0
