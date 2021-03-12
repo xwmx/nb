@@ -16170,6 +16170,8 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
       return 0
     fi
 
+    # query string
+
     local _query_string=
 
     if [[ "${_request_uri:-}" =~ \? ]]
@@ -16182,7 +16184,7 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
     local _page_number=1
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
     local _query=
-    local _render_function_arguments=()
+    local _render_function_options=()
     local _request_parameters=()
 
     if [[ -n "${_query_string:-}" ]]
@@ -16201,7 +16203,7 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
             ;;
           --columns=*)
             _columns="${__parameter#*=}"
-            _render_function_arguments+=("--columns" "${_columns}")
+            _render_function_options+=("--columns" "${_columns}")
             ;;
           --gui)
             _terminal_browser=0
@@ -16211,7 +16213,7 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
             ;;
           --per*page=*)
             _per_page="${__parameter#*=}"
-            _render_function_arguments+=("--per-page" "${_per_page}")
+            _render_function_options+=("--per-page" "${_per_page}")
             ;;
           --query=*)
             _query="${__parameter#*=}"
@@ -16226,12 +16228,12 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
             _terminal_browser=1
             ;;
           -*)
-            _render_function_arguments+=("${__parameter%=*}")
+            _render_function_options+=("${__parameter%=*}")
 
             if [[ "${__parameter:-}" =~ \= ]]
             then
               local _value="${__parameter#*=}"
-              _render_function_arguments+=("$(
+              _render_function_options+=("$(
                 printf "%b" "$(
                   # https://unix.stackexchange.com/a/187256
                   printf "%s\\n" "${_value//$'\r'}" | sed 's@+@ @g;s@%@\\x@g'
@@ -16255,7 +16257,7 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
 
     if ((_terminal_browser))
     then
-      _render_function_arguments+=("--terminal")
+      _render_function_options+=("--terminal")
       _response_url_params+="?--per-page=${_per_page}"
     fi
 
@@ -16269,7 +16271,7 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
 
     if [[ -z "${_target_selector:-}"      ]]
     then
-      _browse_render_notebooks "${_render_function_arguments[@]:-}" \
+      _browse_render_notebooks "${_render_function_options[@]:-}" \
         | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
 
       return 0
@@ -16283,7 +16285,7 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
 
         return 0
       else
-        _render_function_arguments+=("${_selector_path}")
+        _render_function_options+=("${_selector_path}")
 
         if [[ -d "${_selector_path:-}"    ]]
         then
@@ -16291,19 +16293,19 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
           then
             case "${_request_method:-}" in
               GET)
-                _browse_render_add                        \
-                  "${_render_function_arguments[@]:-}"    \
+                _browse_render_add                      \
+                  "${_render_function_options[@]:-}"    \
                   | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
                 ;;
               POST)
                 local _new_selector=
                 _new_selector="$(
-                  _browse_item_create                     \
-                    "${_render_function_arguments[@]:-}"  \
+                  _browse_item_create                   \
+                    "${_render_function_options[@]:-}"  \
                     --message-body "${_message_body:-}"
                 )"
 
-                _browse_respond_with 302                  \
+                _browse_respond_with 302                \
                   "http://localhost:${NB_SERVER_PORT}/${_new_selector}${_response_url_params:-}"
 
                 return 0
@@ -16314,15 +16316,15 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
           else
             if [[ -n "${_page_number:-}"    ]]
             then
-              _render_function_arguments+=("--page" "${_page_number}")
+              _render_function_options+=("--page" "${_page_number}")
             fi
 
             if [[ -n "${_query:-}"          ]]
             then
-              _render_function_arguments+=("--query" "${_query}")
+              _render_function_options+=("--query" "${_query}")
             fi
 
-            _browse_render_container "${_render_function_arguments[@]:-}" \
+            _browse_render_container "${_render_function_options[@]:-}" \
               | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
 
             return 0
@@ -16333,7 +16335,7 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
             case "${_request_method:-}" in
               GET)
                 _browse_render_delete                   \
-                  "${_render_function_arguments[@]:-}"  \
+                  "${_render_function_options[@]:-}"    \
                   | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
                 ;;
               POST)
@@ -16343,7 +16345,7 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
                 )"
 
                 _browse_item_delete                     \
-                  "${_render_function_arguments[@]:-}"  &>/dev/null
+                  "${_render_function_options[@]:-}"  &>/dev/null
 
                 _browse_respond_with 302                \
 "http://localhost:${NB_SERVER_PORT}/${_container_id_selector}${_response_url_params:-}"
@@ -16357,12 +16359,12 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
             if [[ "${_request_method}"  == "POST"       ]]
             then
               _browse_item_update                       \
-                "${_render_function_arguments[@]:-}"    \
+                "${_render_function_options[@]:-}"      \
                 --message-body "${_message_body:-}"
             fi
 
             _browse_render_edit                         \
-              "${_render_function_arguments[@]:-}"      \
+              "${_render_function_options[@]:-}"        \
               | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
 
             return 0
@@ -16370,7 +16372,7 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
                [[ "${_selector_path:-}"     =~ \.docx$|\.epub$|\.odt$ ]]
           then
             _browse_render_item                         \
-              "${_render_function_arguments[@]:-}"      \
+              "${_render_function_options[@]:-}"        \
               | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
 
             return 0
