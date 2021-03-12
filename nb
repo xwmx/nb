@@ -9471,7 +9471,7 @@ _web_browser() {
   then
     shopt -s nocasematch
 
-    if [[ "${_web_browser_command[*]}" =~ firefox|chrom|brave ]]
+    if [[ "${_web_browser_command[*]}" =~ firefox|chrom|brave|edg ]]
     then
       return 0
     else
