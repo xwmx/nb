@@ -7,6 +7,94 @@ export NB_SERVER_PORT=6789
 # non-breaking space
 export _S=" "
 
+# CLI #########################################################################
+
+@test "'browse --add <selector>' includes add options as hidden form fields." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder" --type "folder"
+
+    sleep 1
+  }
+
+  run "${_NB}" browse Example\ Folder/ --add --print  \
+    --title     "Example Title"                       \
+    --filename  "Example File.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq 0                                    ]]
+
+  [[    "${output}"  =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1 ]]
+
+  printf "%s\\n" "${output}" | grep -q \
+"<nav class=\"header-crumbs\"><h1><a rel=\"noopener noreferrer\" href=\"http://lo"
+
+  printf "%s\\n" "${output}" | grep -q \
+"calhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"
+
+  printf "%s\\n" "${output}" | grep -q \
+" <span class=\"dim\">·</span> <a rel=\"noopener noreferrer\" href=\"http://lo"
+
+  printf "%s\\n" "${output}" | grep -q \
+"calhost:6789/home:?--per-page=.*&--columns=.*\">home</a>"
+
+  printf "%s\\n" "${output}" | grep -q "cols=\".*\">"
+
+  printf "%s\\n" "${output}" | grep -q \
+"action=\"/home:1?--add&--per-page=.*&--columns=.*\""
+
+  printf "%s\\n" "${output}" | grep -q \
+"value=\"add\">"
+
+  printf "%s\\n" "${output}" | grep -q \
+"<input type=\"hidden\" name=\"--title\" value=\"Example Title\">"
+
+  printf "%s\\n" "${output}" | grep -q \
+"<input type=\"hidden\" name=\"--filename\" value=\"Example File.md\">"
+}
+
+@test "'browse --add <selector>' opens the add page in the browser." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder" --type "folder"
+
+    sleep 1
+  }
+
+  run "${_NB}" browse Example\ Folder/ --add --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq 0                                    ]]
+
+  [[    "${output}"  =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1 ]]
+
+  printf "%s\\n" "${output}" | grep -q \
+"<nav class=\"header-crumbs\"><h1><a rel=\"noopener noreferrer\" href=\"http://lo"
+
+  printf "%s\\n" "${output}" | grep -q \
+"calhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"
+
+  printf "%s\\n" "${output}" | grep -q \
+" <span class=\"dim\">·</span> <a rel=\"noopener noreferrer\" href=\"http://lo"
+
+  printf "%s\\n" "${output}" | grep -q \
+"calhost:6789/home:?--per-page=.*&--columns=.*\">home</a>"
+
+  printf "%s\\n" "${output}" | grep -q "cols=\".*\">"
+
+  printf "%s\\n" "${output}" | grep -q \
+"action=\"/home:1?--add&--per-page=.*&--columns=.*\""
+
+  printf "%s\\n" "${output}" | grep -q \
+"value=\"add\">"
+}
+
 # POST ########################################################################
 
 @test "POST to --add URL creates note and redirects."  {
@@ -288,45 +376,3 @@ HEREDOC
   printf "%s\\n" "${output}" | grep -q \
 "value=\"add\">"
 }
-
-# CLI #########################################################################
-
-@test "'browse --add <selector>' opens the add page in the browser." {
-  {
-    "${_NB}" init
-
-    "${_NB}" add "Example Folder" --type "folder"
-
-    sleep 1
-  }
-
-  run "${_NB}" browse Example\ Folder/ --add --print
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[    "${status}"  -eq 0                                    ]]
-
-  [[    "${output}"  =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1 ]]
-
-  printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><h1><a rel=\"noopener noreferrer\" href=\"http://lo"
-
-  printf "%s\\n" "${output}" | grep -q \
-"calhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"
-
-  printf "%s\\n" "${output}" | grep -q \
-" <span class=\"dim\">·</span> <a rel=\"noopener noreferrer\" href=\"http://lo"
-
-  printf "%s\\n" "${output}" | grep -q \
-"calhost:6789/home:?--per-page=.*&--columns=.*\">home</a>"
-
-  printf "%s\\n" "${output}" | grep -q "cols=\".*\">"
-
-  printf "%s\\n" "${output}" | grep -q \
-"action=\"/home:1?--add&--per-page=.*&--columns=.*\""
-
-  printf "%s\\n" "${output}" | grep -q \
-"value=\"add\">"
-}
-
