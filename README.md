@@ -4145,14 +4145,14 @@ Usage:
   nb bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   nb bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
   nb bookmark search <query>
-  nb browse [<notebook>:][<id> | <filename> | <title> | <path>]
+  nb browse [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
             [-g | --gui] [--notebooks] [--print] [-q | --query <query>]
             [-s | --serve]
-  nb browse add [<notebook>:][<filename> | <path>] [-c <content> |
+  nb browse add [<notebook>:][<folder-path>/][<filename>] [-c <content> |
             --content <content>] [-f <filename> | --filename <filename>]
             [--tags <tag1>,<tag2>...] [-t <title> | --title <title>]
-  nb browse delete [<notebook>:][<id> | <filename> | <title> | <path>]
-  nb browse edit [<notebook>:][<id> | <filename> | <title> | <path>]
+  nb browse delete [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
+  nb browse edit [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
   nb browse serve
   nb completions (check | install [-d | --download] | uninstall)
   nb count [<notebook>:][<relative-path>]
@@ -4581,14 +4581,14 @@ Shortcut Alias: `b`
 
 ```text
 Usage:
-  nb browse [<notebook>:][<id> | <filename> | <title> | <path>]
+  nb browse [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
             [-g | --gui] [--notebooks] [--print] [-q | --query <query>]
             [-s | --serve]
-  nb browse add [<notebook>:][<filename> | <path>] [-c <content> |
+  nb browse add [<notebook>:][<folder-path>/][<filename>] [-c <content> |
             --content <content>] [-f <filename> | --filename <filename>]
             [--tags <tag1>,<tag2>...] [-t <title> | --title <title>]
-  nb browse delete [<notebook>:][<id> | <filename> | <title> | <path>]
-  nb browse edit [<notebook>:][<id> | <filename> | <title> | <path>]
+  nb browse delete [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
+  nb browse edit [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
   nb browse serve
 
 Subcommands:

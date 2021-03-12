@@ -3422,14 +3422,14 @@ $(_color_primary "Usage:")
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   ${_ME} bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
   ${_ME} bookmark search <query>
-  ${_ME} browse [<notebook>:][<id> | <filename> | <title> | <path>]
+  ${_ME} browse [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
             [-g | --gui] [--notebooks] [--print] [-q | --query <query>]
             [-s | --serve]
-  ${_ME} browse add [<notebook>:][<filename> | <path>] [-c <content> |
+  ${_ME} browse add [<notebook>:][<folder-path>/][<filename>] [-c <content> |
             --content <content>] [-f <filename> | --filename <filename>]
             [--tags <tag1>,<tag2>...] [-t <title> | --title <title>]
-  ${_ME} browse delete [<notebook>:][<id> | <filename> | <title> | <path>]
-  ${_ME} browse edit [<notebook>:][<id> | <filename> | <title> | <path>]
+  ${_ME} browse delete [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
+  ${_ME} browse edit [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
   ${_ME} browse serve
   ${_ME} completions (check | install [-d | --download] | uninstall)
   ${_ME} count [<notebook>:][<relative-path>]
@@ -14814,14 +14814,14 @@ _call_deferred_command --group 2
 
 describe "browse" <<HEREDOC
 Usage:
-  ${_ME} browse [<notebook>:][<id> | <filename> | <title> | <path>]
+  ${_ME} browse [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
             [-g | --gui] [--notebooks] [--print] [-q | --query <query>]
             [-s | --serve]
-  ${_ME} browse add [<notebook>:][<filename> | <path>] [-c <content> |
+  ${_ME} browse add [<notebook>:][<folder-path>/][<filename>] [-c <content> |
             --content <content>] [-f <filename> | --filename <filename>]
             [--tags <tag1>,<tag2>...] [-t <title> | --title <title>]
-  ${_ME} browse delete [<notebook>:][<id> | <filename> | <title> | <path>]
-  ${_ME} browse edit [<notebook>:][<id> | <filename> | <title> | <path>]
+  ${_ME} browse delete [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
+  ${_ME} browse edit [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
   ${_ME} browse serve
 
 Subcommands:
