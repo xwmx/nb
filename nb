@@ -15168,16 +15168,18 @@ _browse() {
 
     local _container_path=
 
-    if [[ -d "${_selector}" ]] && [[ "${_selector}" =~ ^/ ]]
+    if [[ "${_selector}" =~ ^/      ]]
     then
-      _container_path="${_selector:-}"
-    elif [[ "${_selector}" =~ ^/ ]]
-    then
-      _browse_respond_with 302 \
+      if [[ -d "${_selector}"       ]]
+      then
+        _container_path="${_selector:-}"
+      else
+        _browse_respond_with 302 \
 "http://localhost:${NB_SERVER_PORT}/$(_get_id_selector "${_container_path}"  --notebook)"
-    elif [[ -n "${_selector:-}" ]]
+      fi
+    elif [[ -n "${_selector:-}"     ]]
     then
-      if [[ "${_selector:-}" =~ / ]]
+      if [[ "${_selector:-}"  =~ /  ]]
       then
         _container_path="$(_show "${_selector%/*}" --path 2>/dev/null || :)"
 
@@ -15236,16 +15238,16 @@ _browse() {
       fi
     fi
 
-    if [[ -n "${_tag_list:-}" ]]
+    if [[ -n "${_tag_list:-}"     ]]
     then
-      [[ -n "${_form_content:-}" ]] && _form_content+="${_NEWLINE}"
+      [[ -n "${_form_content:-}"  ]] && _form_content+="${_NEWLINE}"
 
       _form_content+="${_tag_list:-}${_NEWLINE}"
     fi
 
-    if [[ -n "${_content:-}" ]]
+    if [[ -n "${_content:-}"      ]]
     then
-      [[ -n "${_form_content:-}" ]] && _form_content+="${_NEWLINE}"
+      [[ -n "${_form_content:-}"  ]] && _form_content+="${_NEWLINE}"
 
       _form_content+="${_content:-}${_NEWLINE}"
     fi
@@ -15257,16 +15259,16 @@ _browse() {
   action="/${_form_action_selector}?--add${_url_params:-}"
   accept-charset="UTF-8"
   method="post">
-  <textarea
-    class="content"
-    id="content"
-    name="content"
-    rows="${_rows}"
-    cols="${_text_area_columns}">${_form_content:-}</textarea>
-  <br><br>
-  <input
-    type="submit"
-    value="add">
+<textarea
+  class="content"
+  id="content"
+  name="content"
+  rows="${_rows}"
+  cols="${_text_area_columns}">${_form_content:-}</textarea>
+<br><br>
+<input
+  type="submit"
+  value="add">
 $(_browse_render_option_fields "${_subcommand_options[@]:-}")
 </form>
 HEREDOC
@@ -15500,20 +15502,23 @@ HEREDOC
       fi
 
       cat <<HEREDOC
-<form accept-charset="UTF-8" action="/${_current_selector}${_url_params:-}" id="search" method="get">
-  <label for="search-input">search:</label>
-  <input
-    autocapitalize="off"
-    autocomplete="off"
-    id="search-input"
-    name="--query"
-    placeholder="search"
-    type="text"
-    value="${_escaped_query}"
-  >
-  <i></i>
-  <input type="hidden" name="--page"      value="${_current_page}">
-  <input type="hidden" name="--per-page"  value="${_per_page}">
+<form
+  accept-charset="UTF-8"
+  action="/${_current_selector}${_url_params:-}"
+  id="search"
+  method="get">
+<label for="search-input">search:</label>
+<input
+  autocapitalize="off"
+  autocomplete="off"
+  id="search-input"
+  name="--query"
+  placeholder="search"
+  type="text"
+  value="${_escaped_query}">
+<i></i>
+<input type="hidden" name="--page"      value="${_current_page}">
+<input type="hidden" name="--per-page"  value="${_per_page}">
 </form>
 <br>
 HEREDOC
@@ -15651,9 +15656,9 @@ HEREDOC
 <h2 align="center">deleting</h2>
 
 <p align="center">
-  <a href="http://localhost:${NB_SERVER_PORT}/${_id_selector}${_url_params/&/?}">
-    ${_info_line//'\ '/ }
-  </a>
+<a href="http://localhost:${NB_SERVER_PORT}/${_id_selector}${_url_params/&/?}">
+${_info_line//'\ '/ }
+</a>
 </p>
 <p align="center" class="dim">
   This item will still be available in git history.
@@ -15664,10 +15669,10 @@ HEREDOC
   align="center"
   accept-charset="UTF-8"
   method="post">
-  <input
-    align="center"
-    type="submit"
-    value="delete">
+<input
+  align="center"
+  type="submit"
+  value="delete">
 </form>
 </div>
 HEREDOC
@@ -15766,16 +15771,16 @@ HEREDOC
   action="/${_form_action_selector:-}?--edit${_url_params:-}"
   accept-charset="UTF-8"
   method="post">
-  <textarea
-    class="content"
-    id="content"
-    name="content"
-    rows="${_rows}"
-    cols="${_text_area_columns}">${_content}</textarea>
-  <br><br>
-  <input
-    type="submit"
-    value="save"> <span class="dim">·</span> <span class="dim">last: ${_last_saved_at}</span>
+<textarea
+  class="content"
+  id="content"
+  name="content"
+  rows="${_rows}"
+  cols="${_text_area_columns}">${_content}</textarea>
+<br><br>
+<input
+  type="submit"
+  value="save"> <span class="dim">·</span> <span class="dim">last: ${_last_saved_at}</span>
 $(_browse_render_option_fields "${_subcommand_options[@]:-}")
 </form>
 HEREDOC
@@ -16369,7 +16374,7 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
     local _render_function_options=()
     local _request_parameters=()
 
-    if [[ -n "${_query_string:-}" ]]
+    if [[ -n "${_query_string:-}"   ]]
     then
       IFS='&' read -r -a _request_parameters <<< "${_query_string}"
 
@@ -16451,7 +16456,7 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
 
     # respond
 
-    if [[ -z "${_target_selector:-}"      ]]
+    if [[ -z "${_target_selector:-}"  ]]
     then
       _browse_render_notebooks "${_render_function_options[@]:-}" \
         | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
