@@ -3413,7 +3413,7 @@ $(_color_primary "Usage:")
          [--type <type>]
   ${_ME} add folder [<name>]
   ${_ME} bookmark [<ls options>...]
-  ${_ME} bookmark [<notebook>:][<folder-path>] <url>
+  ${_ME} bookmark [<notebook>:][<folder-path>/] <url>
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
               [-f <filename> | --filename <filename>] [-q | --quote]
               [-r <url> | --related <url>]... [--save-source] [--skip-content]
@@ -10088,7 +10088,7 @@ _alias_subcommand "add" "new"
 describe "bookmark" <<HEREDOC
 Usage:
   ${_ME} bookmark [<ls options>...]
-  ${_ME} bookmark [<notebook>:][<folder-path>] <url>
+  ${_ME} bookmark [<notebook>:][<folder-path>/] <url>
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
               [-f <filename> | --filename <filename>] [-q | --quote]
               [-r <url> | --related <url>]... [--save-source] [--skip-content]

@@ -4136,7 +4136,7 @@ Usage:
          [--type <type>]
   nb add folder [<name>]
   nb bookmark [<ls options>...]
-  nb bookmark [<notebook>:][<folder-path>] <url>
+  nb bookmark [<notebook>:][<folder-path>/] <url>
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
               [-f <filename> | --filename <filename>] [-q | --quote]
               [-r <url> | --related <url>]... [--save-source] [--skip-content]
@@ -4492,7 +4492,7 @@ Shortcut Alias: `a`
 ```text
 Usage:
   nb bookmark [<ls options>...]
-  nb bookmark [<notebook>:][<folder-path>] <url>
+  nb bookmark [<notebook>:][<folder-path>/] <url>
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
               [-f <filename> | --filename <filename>] [-q | --quote]
               [-r <url> | --related <url>]... [--save-source] [--skip-content]
