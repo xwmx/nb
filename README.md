@@ -590,10 +590,10 @@ nb create --title "Example Note Title"
 ##### Adding with `browse`
 
 Items can also be added within terminal and GUI web browsers using
-[`nb browse --add`](#browse) / [`nb br -a`](#browse):
+[`nb browse add`](#browse) / [`nb br a`](#browse):
 
 ```bash
-> nb browse --add
+> nb browse add
 ❯nb · home : +
 
 [                                                     ]
@@ -1046,10 +1046,10 @@ For `nb edit` help information, run [`nb help edit`](#edit).
 ##### Editing with `browse`
 
 Items can be edited within terminal and GUI web browsers using
-[`nb browse --edit`](#browse) / [`nb br -e`](#browse):
+[`nb browse edit`](#browse) / [`nb br e`](#browse):
 
 ```bash
-> nb browse text:formats/markdown/123 --edit
+> nb browse text:formats/markdown/123 edit
 ❯nb · text : formats / markdown / 123 · ↓ · editing · - | +
 
 [# Daring Fireball: Markdown (daringfireball.net)         ]
@@ -1367,17 +1367,17 @@ For `nb delete` help information, run [`nb help delete`](#delete).
 ##### Deleting with `browse`
 
 Items can be deleted within terminal and GUI web browsers using
-[`nb browse --delete`](#browse) / [`nb br -d`](#browse):
+[`nb browse delete`](#browse) / [`nb br d`](#browse):
 
 ```bash
-> nb browse --delete example:4
+> nb browse delete example:4
 ❯nb · example : 4 · ↓ · edit · - | +
 
-                    deleting
+                deleting
 
-    [4] example_file.md "Example Title"
+[4] example_file.md "Example Title"
 
-                    [delete]
+                [delete]
 
 
 ```
@@ -2119,11 +2119,11 @@ arrow (`↓`) link to view or download the original file.
 
 Items in text formats can be edited within a terminal or GUI browser using
 the `edit` link on the item page or by opening the item with
-`nb browse --edit` / `nb br -e`, which automatically resizes the form to fit
+`nb browse edit` / `nb br e`, which automatically resizes the form to fit
 the current terminal window:
 
 ```bash
-> nb browse text:formats/markdown/123 --edit
+> nb browse text:formats/markdown/123 edit
 ❯nb · text : formats / markdown / 123 · ↓ · editing · - | +
 
 [# Daring Fireball: Markdown (daringfireball.net)         ]
@@ -2149,12 +2149,12 @@ the current terminal window:
 
 Terminal browsers can also be configured to use your editor.
 
-Add an item within the browser using the `+` link or `nb browse --add` /
-`nb br -a`. Pass a notebook or folder selector to create a new
+Add an item within the browser using the `+` link or `nb browse add` /
+`nb br a`. Pass a notebook or folder selector to create a new
 note in that location:
 
 ```bash
-> nb browse text:formats/ --add
+> nb browse text:formats/ add
 ❯nb · text : formats / +
 
 [                                                     ]
@@ -2171,11 +2171,11 @@ note in that location:
 [add]
 ```
 
-Use the `-` link or `nb browse --delete` / `nb br -d` to delete an
+Use the `-` link or `nb browse delete` / `nb br d` to delete an
 item:
 
 ```bash
-> nb browse --delete example:4
+> nb browse delete example:4
 ❯nb · example : 4 · ↓ · edit · - | +
 
               deleting
@@ -2241,8 +2241,8 @@ export NB_ACE_ENABLED=1
 
 The next time a form is loaded in `nb browse`, `nb` will automatically
 download (from [GitHub](https://github.com/ajaxorg/ace-builds/)),
-install, and enable the Ace editor in `nb browse --gui --edit`
-and `nb browse --gui --add`.
+install, and enable the Ace editor in `nb browse edit --gui`
+and `nb browse add --gui`.
 
 ##### `browse` Portability
 
