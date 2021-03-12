@@ -7,6 +7,46 @@ export NB_SERVER_PORT=6789
 # non-breaking space
 export _S=" "
 
+# option parameters ###########################################################
+
+@test "GET to --add URL with option parameters adds hidden form fields." {
+  {
+    "${_NB}" init
+
+    (ncat                                   \
+      --exec "${_NB} browse --respond"      \
+      --listen                              \
+      --source-port "6789"                  \
+      2>/dev/null) &
+
+    sleep 1
+  }
+
+  run curl -sS -D - "http://localhost:6789/home:?--add&--example&-x&abcdefg&--sample=demo-value"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq 0    ]]
+
+  # Prints output:
+
+  [[    "${lines[0]}"  =~ HTTP/1.0\ 200\ OK                               ]]
+  [[    "${lines[1]}"  =~ Date:\ .*                                       ]]
+  [[    "${lines[2]}"  =~ Expires:\ .*                                    ]]
+  [[    "${lines[3]}"  =~ Server:\ nb                                     ]]
+  [[    "${lines[4]}"  =~ Content-Type:\ text/html                        ]]
+
+  [[    "${output}"    =~ action=\"/home:\?--add                          ]]
+
+  [[    "${output}"    =~ \<input\ type=\"hidden\"\ name=\"--example\"\>  ]]
+  [[    "${output}"    =~ \<input\ type=\"hidden\"\ name=\"-x\"\>         ]]
+  [[    "${output}"    =~ \
+\<input\ type=\"hidden\"\ name=\"--sample\"\ value=\"demo-value\"\>       ]]
+
+  [[ !  "${output}"    =~ \<input\ type=\"hidden\"\ name=\"abcdefg\"\>    ]]
+}
+
 # GET #########################################################################
 
 @test "GET to --add URL with --columns parameter uses value for textarea, form URL parameters, and header links." {

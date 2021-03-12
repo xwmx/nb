@@ -15060,6 +15060,7 @@ _browse() {
     local _pagination_options=()
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
     local _container_path=
+    local _subcommand_options=()
 
     while ((${#}))
     do
@@ -15081,7 +15082,12 @@ _browse() {
           _pagination_options+=("--terminal")
           ;;
         *)
-          _container_path="${1:-}"
+          if [[ -z "${_container_path:-}" ]] && [[ "${1:-}" =~ ^/ ]]
+          then
+            _container_path="${1:-}"
+          else
+            _subcommand_options+=("${1:-}")
+          fi
           ;;
       esac
 
@@ -15121,6 +15127,7 @@ _browse() {
   <input
     type="submit"
     value="add">
+$(_browse_render_option_fields "${_subcommand_options[@]:-}")
 </form>
 HEREDOC
     } | {
@@ -15556,6 +15563,7 @@ HEREDOC
     local _pagination_options=()
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
     local _source_path=
+    local _subcommand_options=()
 
     while ((${#}))
     do
@@ -15577,7 +15585,12 @@ HEREDOC
           _pagination_options+=("--terminal")
           ;;
         *)
-          _source_path="${1:-}"
+          if [[ -z "${_source_path:-}" ]] && [[ "${1:-}" =~ ^/ ]]
+          then
+            _source_path="${1:-}"
+          else
+            _subcommand_options+=("${1:-}")
+          fi
           ;;
       esac
 
@@ -15624,6 +15637,7 @@ HEREDOC
   <input
     type="submit"
     value="save"> <span class="dim">·</span> <span class="dim">last: ${_last_saved_at}</span>
+$(_browse_render_option_fields "${_subcommand_options[@]:-}")
 </form>
 HEREDOC
     } | {
@@ -16045,6 +16059,34 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
     } | {
       _render
     }
+  }
+
+  # _browse_render_option_fields
+  #
+  # Usage:
+  #   _browse_render_option_fields <option>...
+  #
+  # Description:
+  #   Render a series of hidden form fields for the given options.
+  _browse_render_option_fields() {
+    local _subcommand_options=("${@:-}")
+
+    local i=
+    for ((i=0; i < "${#_subcommand_options[@]}"; i++))
+    do
+      if [[   "${_subcommand_options[i]}"           =~ \--  ]] &&
+         [[ ! "${_subcommand_options[$((i+1))]:--}" =~ ^-   ]]
+      then
+        printf "<input type=\"hidden\" name=\"%s\" value=\"%s\">\\n"  \
+          "${_subcommand_options[i]}"                                 \
+          "${_subcommand_options[$((i+1))]}"
+
+        i="$((i+1))"
+      else
+        printf "<input type=\"hidden\" name=\"%s\">\\n"               \
+          "${_subcommand_options[i]}"
+      fi
+    done
   }
 
   # _browse_respond()
