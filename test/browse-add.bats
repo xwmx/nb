@@ -7,7 +7,121 @@ export NB_SERVER_PORT=6789
 # non-breaking space
 export _S=" "
 
+# POST ########################################################################
+
+@test "POST to --add URL creates note and redirects."  {
+  {
+    "${_NB}" init
+
+    (ncat                                   \
+      --exec "${_NB} browse --respond"      \
+      --listen                              \
+      --source-port "6789"                  \
+      2>/dev/null) &
+
+    sleep 1
+  }
+
+  run curl -sS -D - --data                                                            \
+    "content=Example%20content.&--title=Example%20Title&--filename=Example%20File.md" \
+    "http://localhost:6789/home:?--add"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[    "${status}"  -eq 0                  ]]
+
+  # Creates file:
+
+  [[ -f "${NB_DIR}/home/Example File.md" ]]
+
+  diff                                      \
+    <(cat "${NB_DIR}/home/Example File.md") \
+    <(cat <<HEREDOC
+# Example Title
+
+Example content.
+HEREDOC
+)
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
+  while [[ -n "$(git status --porcelain)"   ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  # Prints output:
+
+  [[ "${#lines[@]}" -eq 5                                                     ]]
+
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Found                                  ]]
+  [[ "${lines[1]}"  =~  Date:\ .*                                             ]]
+  [[ "${lines[2]}"  =~  Expires:\ .*                                          ]]
+  [[ "${lines[3]}"  =~  Server:\ nb                                           ]]
+  [[ "${lines[4]}"  =~  Location:\ http:\/\/localhost:6789\/1\?--per-page=30  ]]
+}
+
 # CLI #########################################################################
+
+@test "'browse --add <item-selector>' creates new file with populated content and selector filename field." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder" --type "folder"
+
+    sleep 1
+  }
+
+  run "${_NB}" browse Example\ Folder/Example File.md --add --print \
+    --title     "Example Title"                                     \
+    --filename  "Example File.md"                                   \
+    --content   "Example content."                                  \
+    --tags      tag1,tag2
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq 0                                    ]]
+
+  [[    "${output}"  =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1 ]]
+
+  printf "%s\\n" "${output}" | grep -q \
+"<nav class=\"header-crumbs\"><h1><a rel=\"noopener noreferrer\" href=\"http://lo"
+
+  printf "%s\\n" "${output}" | grep -q \
+"calhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"
+
+  printf "%s\\n" "${output}" | grep -q \
+" <span class=\"dim\">·</span> <a rel=\"noopener noreferrer\" href=\"http://lo"
+
+  printf "%s\\n" "${output}" | grep -q \
+"calhost:6789/home:?--per-page=.*&--columns=.*\">home</a>"
+
+  printf "%s\\n" "${output}" | grep -q "cols=\".*\">"
+
+  printf "%s\\n" "${output}" | grep -q \
+"action=\"/home:1?--add&--per-page=.*&--columns=.*\""
+
+  printf "%s\\n" "${output}" | grep -q \
+"value=\"add\">"
+
+  printf "%s\\n" "${output}" | grep -q \
+"cols=\".*\"># Example Title${_NEWLINE}${_NEWLINE}#tag1 #tag2${_NEWLINE}${_NEWLINE}Example content.${_NEWLINE}</textarea>"
+
+  printf "%s\\n" "${output}" | grep -q -v \
+"<input type=\"hidden\" name=\"--title\""
+
+  printf "%s\\n" "${output}" | grep -q \
+"<input type=\"hidden\" name=\"--filename\" value=\"Example File.md\">"
+}
 
 @test "'browse --add <folder-selector>/' includes add options as pre-filled content hidden form fields." {
   {
@@ -98,68 +212,6 @@ export _S=" "
 
   printf "%s\\n" "${output}" | grep -q \
 "value=\"add\">"
-}
-
-# POST ########################################################################
-
-@test "POST to --add URL creates note and redirects."  {
-  {
-    "${_NB}" init
-
-    (ncat                                   \
-      --exec "${_NB} browse --respond"      \
-      --listen                              \
-      --source-port "6789"                  \
-      2>/dev/null) &
-
-    sleep 1
-  }
-
-  run curl -sS -D - --data                                                            \
-    "content=Example%20content.&--title=Example%20Title&--filename=Example%20File.md" \
-    "http://localhost:6789/home:?--add"
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  # Returns status 0:
-
-  [[    "${status}"  -eq 0                  ]]
-
-  # Creates file:
-
-  [[ -f "${NB_DIR}/home/Example File.md" ]]
-
-  diff                                      \
-    <(cat "${NB_DIR}/home/Example File.md") \
-    <(cat <<HEREDOC
-# Example Title
-
-Example content.
-HEREDOC
-)
-
-  # Creates git commit:
-
-  cd "${NB_DIR}/home" || return 1
-
-  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
-
-  while [[ -n "$(git status --porcelain)"   ]]
-  do
-    sleep 1
-  done
-  git log | grep -q '\[nb\] Add'
-
-  # Prints output:
-
-  [[ "${#lines[@]}" -eq 5                                                     ]]
-
-  [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Found                                  ]]
-  [[ "${lines[1]}"  =~  Date:\ .*                                             ]]
-  [[ "${lines[2]}"  =~  Expires:\ .*                                          ]]
-  [[ "${lines[3]}"  =~  Server:\ nb                                           ]]
-  [[ "${lines[4]}"  =~  Location:\ http:\/\/localhost:6789\/1\?--per-page=30  ]]
 }
 
 # option parameters ###########################################################

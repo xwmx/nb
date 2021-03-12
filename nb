@@ -14937,7 +14937,6 @@ _browse() {
       _id_selector="${_id_selector}/"
     fi
 
-
     local _fields=()
     IFS='&' read -r -a _fields <<< "${_message_body}"
 
@@ -15103,11 +15102,11 @@ _browse() {
   #   Print an HTML page for creating a text file.
   _browse_render_add() {
     local _columns="${NB_BROWSE_COLUMNS:-70}"
-    local _container_path=
     local _content=
     local _filename=
     local _pagination_options=()
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
+    local _selector=
     local _subcommand_options=()
     local _tag_list=
     local _target_type=
@@ -15155,9 +15154,9 @@ _browse() {
           shift
           ;;
         *)
-          if [[ -z "${_container_path:-}" ]] && [[ "${1:-}" =~ ^/ ]]
+          if [[ -z "${_selector:-}" ]]
           then
-            _container_path="${1:-}"
+            _selector="${1:-}"
           else
             _subcommand_options+=("${1:-}")
           fi
@@ -15167,8 +15166,45 @@ _browse() {
       shift
     done
 
+    local _container_path=
+
+    if [[ -d "${_selector}" ]] && [[ "${_selector}" =~ ^/ ]]
+    then
+      _container_path="${_selector:-}"
+    elif [[ "${_selector}" =~ ^/ ]]
+    then
+      _browse_respond_with 302 \
+"http://localhost:${NB_SERVER_PORT}/$(_get_id_selector "${_container_path}"  --notebook)"
+    elif [[ -n "${_selector:-}" ]]
+    then
+      if [[ "${_selector:-}" =~ / ]]
+      then
+        _container_path="$(_show "${_selector%/*}" --path 2>/dev/null || :)"
+
+        if ! _contains --filename "${_subcommand_options[@]:-}"
+        then
+          _subcommand_options+=("--filename" "${_selector##*/}")
+        fi
+      elif [[ "${_selector:-}" =~ : ]]
+      then
+        _container_path="$(_show "${_selector%:*}:" --path 2>/dev/null || :)"
+
+        if ! _contains --filename "${_subcommand_options[@]:-}"
+        then
+          _subcommand_options+=("--filename" "${_selector#*:}")
+        fi
+      else
+        _container_path="$(_notebooks current --path 2>/dev/null || :)"
+
+        if ! _contains --filename "${_subcommand_options[@]:-}"
+        then
+          _subcommand_options+=("--filename" "${_selector}")
+        fi
+      fi
+    fi
+
     local _form_action_selector=
-    _form_action_selector="$(_get_id_selector "${_container_path}")"
+    _form_action_selector="$(_get_id_selector "${_container_path}" --notebook)"
 
     local _text_area_columns="${_columns:-}"
     local _rows=30
@@ -15543,7 +15579,6 @@ HEREDOC
       fi
     } | {
       printf "%s\\n" "$(_browse_render_header "${_pagination_options[@]:-}")"
-
 
       printf "<div class=\"main\">\\n"
 
@@ -16186,7 +16221,8 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
           "${_subcommand_options[$((i+1))]}"
 
         i="$((i+1))"
-      else
+      elif [[ -n "${_subcommand_options[i]:-}" ]]
+      then
         printf "<input type=\"hidden\" name=\"%s\">\\n"               \
           "${_subcommand_options[i]}"
       fi
@@ -16425,7 +16461,37 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
       local _selector_path=
       _selector_path="$(_show "${_target_selector%%\?*}" --path 2>/dev/null || :)"
 
-      if [[   -z "${_selector_path:-}"    ]]
+      if [[ "${_action:-}" == "add"   ]]
+      then
+        case "${_request_method:-}" in
+          GET)
+            _render_function_options+=(
+              "${_selector_path:-"${_target_selector:-}"}"
+            )
+
+            _browse_render_add                      \
+              "${_render_function_options[@]:-}"    \
+              | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
+            ;;
+          POST)
+            _render_function_options+=("${_selector_path}")
+
+            local _new_selector=
+            _new_selector="$(
+              _browse_item_create                   \
+                "${_render_function_options[@]:-}"  \
+                --message-body "${_message_body:-}"
+            )"
+
+            _browse_respond_with 302                \
+              "http://localhost:${NB_SERVER_PORT}/${_new_selector}${_response_url_params:-}"
+
+            return 0
+            ;;
+        esac
+
+        return 0
+      elif [[   -z "${_selector_path:-}"    ]]
       then
         _browse_respond_with 404
 
@@ -16433,48 +16499,22 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
       else
         _render_function_options+=("${_selector_path}")
 
-        if [[ -d "${_selector_path:-}"    ]]
+        if [[ -d "${_selector_path:-}"      ]]
         then
-          if [[ "${_action:-}" == "add"   ]]
+          if [[ -n "${_page_number:-}"      ]]
           then
-            case "${_request_method:-}" in
-              GET)
-                _browse_render_add                      \
-                  "${_render_function_options[@]:-}"    \
-                  | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
-                ;;
-              POST)
-                local _new_selector=
-                _new_selector="$(
-                  _browse_item_create                   \
-                    "${_render_function_options[@]:-}"  \
-                    --message-body "${_message_body:-}"
-                )"
-
-                _browse_respond_with 302                \
-                  "http://localhost:${NB_SERVER_PORT}/${_new_selector}${_response_url_params:-}"
-
-                return 0
-                ;;
-            esac
-
-            return 0
-          else
-            if [[ -n "${_page_number:-}"    ]]
-            then
-              _render_function_options+=("--page" "${_page_number}")
-            fi
-
-            if [[ -n "${_query:-}"          ]]
-            then
-              _render_function_options+=("--query" "${_query}")
-            fi
-
-            _browse_render_container "${_render_function_options[@]:-}" \
-              | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
-
-            return 0
+            _render_function_options+=("--page" "${_page_number}")
           fi
+
+          if [[ -n "${_query:-}"            ]]
+          then
+            _render_function_options+=("--query" "${_query}")
+          fi
+
+          _browse_render_container "${_render_function_options[@]:-}" \
+            | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
+
+          return 0
         else
           if [[ "${_action:-}" == "delete"  ]]
           then
