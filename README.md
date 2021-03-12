@@ -4146,8 +4146,14 @@ Usage:
   nb bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
   nb bookmark search <query>
   nb browse [<notebook>:][<id> | <filename> | <title> | <path>]
-            [[-a | --add] | [-d | --delete] | [-e | --edit]] [-g | --gui]
-            [--notebooks] [--print] [-q | --query <query>] [-s | --serve]
+            [-g | --gui] [--notebooks] [--print] [-q | --query <query>]
+            [-s | --serve]
+  nb browse add [<notebook>:][<filename> | <path>] [-c <content> |
+            --content <content>] [-f <filename> | --filename <filename>]
+            [--tags <tag1>,<tag2>...] [-t <title> | --title <title>]
+  nb browse delete [<notebook>:][<id> | <filename> | <title> | <path>]
+  nb browse edit [<notebook>:][<id> | <filename> | <title> | <path>]
+  nb browse serve
   nb completions (check | install [-d | --download] | uninstall)
   nb count [<notebook>:][<relative-path>]
   nb delete [<notebook>:](<id> | <filename> | <path> | <title>)...
@@ -4576,18 +4582,36 @@ Shortcut Alias: `b`
 ```text
 Usage:
   nb browse [<notebook>:][<id> | <filename> | <title> | <path>]
-            [[-a | --add] | [-d | --delete] | [-e | --edit]] [-g | --gui]
-            [--notebooks] [--print] [-q | --query <query>] [-s | --serve]
+            [-g | --gui] [--notebooks] [--print] [-q | --query <query>]
+            [-s | --serve]
+  nb browse add [<notebook>:][<filename> | <path>] [-c <content> |
+            --content <content>] [-f <filename> | --filename <filename>]
+            [--tags <tag1>,<tag2>...] [-t <title> | --title <title>]
+  nb browse delete [<notebook>:][<id> | <filename> | <title> | <path>]
+  nb browse edit [<notebook>:][<id> | <filename> | <title> | <path>]
+  nb browse serve
+
+Subcommands:
+  (default)  Open a notebook, folder, or item in the terminal or GUI web browser.
+  add        Open the add view in the browser.
+             Shortcut Alias: `a`
+  delete     Open the delete view in the browser.
+             Shortcut Alias: `d`
+  edit       Open the edit view in the browser.
+             Shortcut Alias: `e`
+  serve      Start the `browse` server.
+             Shortcut Alias: `s`
 
 Options:
-  -a, --add             Open the add view in the browser.
-  -d, --delete          Open the delete view in the browser.
-  -e, --edit            Open the edit view for the item in the browser.
-  -g, --gui             Open in the system's primary GUI web browser.
-  --notebooks           Browse notebooks.
-  --print               Print to standard output.
-  -q, --query <query>   Open to the search results for <query>.
-  -s, --serve           Start the web application server.
+  -c, --content <content>      Add content to the new note.
+  -f, --filename <filename>    Specify a filename for the new note.
+  -g, --gui                    Open in the system's primary GUI web browser.
+  --notebooks                  Browse notebooks.
+  --print                      Print to standard output.
+  -q, --query <query>          Open to the search results for <query>.
+  -s, --serve                  Start the web application server.
+  -t, --tags <tag1>,<tag2>...  A comma-separated list of tags.
+  -t, --title <title>          Add a title to the new note.
 
 Description:
   Browse, view, and edit linked notes, bookmarks, notebooks, folders, and
