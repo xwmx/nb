@@ -4158,7 +4158,7 @@ Usage:
   nb count [<notebook>:][<relative-path>]
   nb delete [<notebook>:](<id> | <filename> | <path> | <title>)...
             [-f | --force]
-  nb edit (<id> | <filename> | <path> | <title>)
+  nb edit ([<notebook>:][<folder-path>/] [<id> | <filename> | <title>])
           [-c <content> | --content <content>] [--edit]
           [-e <editor> | --editor <editor>] [--overwrite] [--prepend]
   nb export (<id> | <filename> | <path> | <title>) <path> [-f | --force]
@@ -4708,7 +4708,7 @@ Shortcut Alias: `d`
 
 ```text
 Usage:
-  nb edit (<id> | <filename> | <path> | <title>)
+  nb edit ([<notebook>:][<folder-path>/] [<id> | <filename> | <title>])
           [-c <content> | --content <content>] [--edit]
           [-e <editor> | --editor <editor>] [--overwrite] [--prepend]
 

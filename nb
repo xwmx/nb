@@ -3435,7 +3435,7 @@ $(_color_primary "Usage:")
   ${_ME} count [<notebook>:][<relative-path>]
   ${_ME} delete [<notebook>:](<id> | <filename> | <path> | <title>)...
             [-f | --force]
-  ${_ME} edit (<id> | <filename> | <path> | <title>)
+  ${_ME} edit ([<notebook>:][<folder-path>/] [<id> | <filename> | <title>])
           [-c <content> | --content <content>] [--edit]
           [-e <editor> | --editor <editor>] [--overwrite] [--prepend]
   ${_ME} export (<id> | <filename> | <path> | <title>) <path> [-f | --force]
@@ -11243,7 +11243,7 @@ _alias_subcommand "delete" "d"
 
 describe "edit" <<HEREDOC
 Usage:
-  ${_ME} edit (<id> | <filename> | <path> | <title>)
+  ${_ME} edit ([<notebook>:][<folder-path>/] [<id> | <filename> | <title>])
           [-c <content> | --content <content>] [--edit]
           [-e <editor> | --editor <editor>] [--overwrite] [--prepend]
 
