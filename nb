@@ -15104,9 +15104,14 @@ _browse() {
   _browse_render_add() {
     local _columns="${NB_BROWSE_COLUMNS:-70}"
     local _container_path=
+    local _content=
+    local _filename=
     local _pagination_options=()
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
     local _subcommand_options=()
+    local _tag_list=
+    local _target_type=
+    local _title=
 
     while ((${#}))
     do
@@ -15114,6 +15119,15 @@ _browse() {
         --col*)
           _columns="$(_option_get_value "${1:-}" "${2:-}")"
           _pagination_options+=("${1:?}" "${2:?}")
+          shift
+          ;;
+        -c|--content)
+          _content="$(_option_get_value "${1:-}" "${2:-}")"
+          shift
+          ;;
+        -f|--filename)
+          _filename="$(_option_get_value "${1:-}" "${2:-}")"
+          _subcommand_options+=("${1:-}" "${2:-}")
           shift
           ;;
         --page)
@@ -15124,8 +15138,21 @@ _browse() {
           _pagination_options+=("${1:?}" "${2:?}")
           shift
           ;;
+        --tags)
+          _tag_list="$(_option_get_tags "${1:-}" "${2:-}")"
+          shift
+          ;;
         --terminal)
           _pagination_options+=("--terminal")
+          ;;
+        -t|--title)
+          _title="$(_option_get_value "${1:-}" "${2:-}")"
+          shift
+          ;;
+        --type)
+          _target_type="$(_option_get_value "${1:-}" "${2:-}")"
+          _subcommand_options+=("${1:-}" "${2:-}")
+          shift
           ;;
         *)
           if [[ -z "${_container_path:-}" ]] && [[ "${1:-}" =~ ^/ ]]
@@ -15156,6 +15183,37 @@ _browse() {
       _text_area_columns="$((_text_area_columns - 3))"
     fi
 
+    if [[ "${_target_type:-not-folder}" != "folder" ]]
+    then
+      _target_type="${NB_DEFAULT_EXTENSION:-}"
+    fi
+
+    local _form_content=
+
+    if [[ -n  "${_title:-}"                 ]]
+    then
+      if [[   "${_target_type:-}" == "org"  ]]
+      then
+        _form_content+="#+TITLE: ${_title}${_NEWLINE}"
+      else
+        _form_content+="# ${_title}${_NEWLINE}"
+      fi
+    fi
+
+    if [[ -n "${_tag_list:-}" ]]
+    then
+      [[ -n "${_form_content:-}" ]] && _form_content+="${_NEWLINE}"
+
+      _form_content+="${_tag_list:-}${_NEWLINE}"
+    fi
+
+    if [[ -n "${_content:-}" ]]
+    then
+      [[ -n "${_form_content:-}" ]] && _form_content+="${_NEWLINE}"
+
+      _form_content+="${_content:-}${_NEWLINE}"
+    fi
+
     {
       # TODO: https://stackoverflow.com/a/15844977
       cat <<HEREDOC
@@ -15168,7 +15226,7 @@ _browse() {
     id="content"
     name="content"
     rows="${_rows}"
-    cols="${_text_area_columns}"></textarea>
+    cols="${_text_area_columns}">${_form_content:-}</textarea>
   <br><br>
   <input
     type="submit"

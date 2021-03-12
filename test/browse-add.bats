@@ -9,7 +9,7 @@ export _S=" "
 
 # CLI #########################################################################
 
-@test "'browse --add <selector>' includes add options as hidden form fields." {
+@test "'browse --add <folder-selector>/' includes add options as pre-filled content hidden form fields." {
   {
     "${_NB}" init
 
@@ -20,7 +20,9 @@ export _S=" "
 
   run "${_NB}" browse Example\ Folder/ --add --print  \
     --title     "Example Title"                       \
-    --filename  "Example File.md"
+    --filename  "Example File.md"                     \
+    --content   "Example content."                    \
+    --tags      tag1,tag2
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -50,7 +52,10 @@ export _S=" "
 "value=\"add\">"
 
   printf "%s\\n" "${output}" | grep -q \
-"<input type=\"hidden\" name=\"--title\" value=\"Example Title\">"
+"cols=\".*\"># Example Title${_NEWLINE}${_NEWLINE}#tag1 #tag2${_NEWLINE}${_NEWLINE}Example content.${_NEWLINE}</textarea>"
+
+  printf "%s\\n" "${output}" | grep -q -v \
+"<input type=\"hidden\" name=\"--title\""
 
   printf "%s\\n" "${output}" | grep -q \
 "<input type=\"hidden\" name=\"--filename\" value=\"Example File.md\">"
