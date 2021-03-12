@@ -3406,7 +3406,7 @@ $(_color_primary "Usage:")
   ${_ME}
   ${_ME} [<ls options>...] [<id> | <filename> | <path> | <title> | <notebook>]
   ${_ME} [<url>] [<bookmark options>...]
-  ${_ME} add [<notebook>:][<filename> | <folder-path> | <content>]
+  ${_ME} [<notebook>:][<folder-path>/][<filename>] [<content>]
          [-c <content> | --content <content>] [--edit] [-e | --encrypt]
          [-f <filename> | --filename <filename>] [--folder <folder-path>]
          [--tags <tag1>,<tag2>...] [-t <title> | --title <title>]
@@ -9575,7 +9575,7 @@ _web_browser() {
 
 describe "add" <<HEREDOC
 Usage:
-  ${_ME} add [<notebook>:][<filename> | <folder-path> | <content>]
+  ${_ME} add [<notebook>:][<folder-path>/][<filename>] [<content>]
          [-c <content> | --content <content>] [--edit] [-e | --encrypt]
          [-f <filename> | --filename <filename>] [--folder <folder-path>]
          [--tags <tag1>,<tag2>...] [-t <title> | --title <title>]

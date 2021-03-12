@@ -4129,7 +4129,7 @@ Usage:
   nb
   nb [<ls options>...] [<id> | <filename> | <path> | <title> | <notebook>]
   nb [<url>] [<bookmark options>...]
-  nb add [<notebook>:][<filename> | <folder-path> | <content>]
+  nb add [<notebook>:][<folder-path>/][<filename>] [<content>]
          [-c <content> | --content <content>] [--edit] [-e | --encrypt]
          [-f <filename> | --filename <filename>] [--folder <folder-path>]
          [--tags <tag1>,<tag2>...] [-t <title> | --title <title>]
@@ -4428,7 +4428,7 @@ For more information, see: `nb help`.
 
 ```text
 Usage:
-  nb add [<notebook>:][<filename> | <folder-path> | <content>]
+  nb add [<notebook>:][<folder-path>/][<filename>] [<content>]
          [-c <content> | --content <content>] [--edit] [-e | --encrypt]
          [-f <filename> | --filename <filename>] [--folder <folder-path>]
          [--tags <tag1>,<tag2>...] [-t <title> | --title <title>]
