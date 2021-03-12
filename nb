@@ -16550,6 +16550,7 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
   local _print_output=0
   local _search_query=
   local _selector=
+  local _subcommand_arguments=()
   local _target_page=
 
   while ((${#}))
@@ -16623,6 +16624,15 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
       --terminal)
         _force_terminal_request=1
         ;;
+      -*)
+        _subcommand_arguments+=("${1:-}")
+
+        if [[ "${1:-}" =~ ^-- ]] && _option_value_is_present "${2:-}"
+        then
+          _subcommand_arguments+=("${2:-}")
+          shift
+        fi
+        ;;
       *)
         if [[ -z "${_selector:-}" ]]
         then
@@ -16678,6 +16688,29 @@ HEREDOC
     _arguments+=("--${_action}")
     _url_params+=("--${_action}")
   fi
+
+  local i=
+  for ((i=0; i < "${#_subcommand_arguments[@]}"; i++))
+  do
+    [[ -z "${#_subcommand_arguments[i]}" ]] && continue
+
+    _arguments+=("${_subcommand_arguments[i]:-}")
+
+    if [[   "${_subcommand_arguments[i]}"           =~ \--  ]] &&
+       [[ ! "${_subcommand_arguments[$((i+1))]:--}" =~ ^-   ]]
+    then
+      local _field="${_subcommand_arguments[i]:-}"
+      local _value="${_subcommand_arguments[$((i+1))]:--}"
+
+      _arguments+=("${_field}" "${_value}")
+      _url_params+=("${_field}=$(_get_uri --encode "${_value}")")
+
+      i="$((i+1))"
+    else
+      _arguments+=("${_subcommand_arguments[i]:-}")
+      _url_params+=("${_subcommand_arguments[i]:-}")
+    fi
+  done
 
   # configure pagination
 
