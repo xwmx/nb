@@ -15057,7 +15057,7 @@ _browse() {
   #   Print an HTML page for creating a text file.
   _browse_render_add() {
     local _columns="${NB_BROWSE_COLUMNS:-70}"
-    local _pagination_arguments=()
+    local _pagination_options=()
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
     local _container_path=
 
@@ -15066,7 +15066,7 @@ _browse() {
       case "${1:-}" in
         --col*)
           _columns="$(_option_get_value "${1:-}" "${2:-}")"
-          _pagination_arguments+=("${1:?}" "${2:?}")
+          _pagination_options+=("${1:?}" "${2:?}")
           shift
           ;;
         --page)
@@ -15074,11 +15074,11 @@ _browse() {
           ;;
         --per-page)
           _per_page="${2:?}"
-          _pagination_arguments+=("${1:?}" "${2:?}")
+          _pagination_options+=("${1:?}" "${2:?}")
           shift
           ;;
         --terminal)
-          _pagination_arguments+=("--terminal")
+          _pagination_options+=("--terminal")
           ;;
         *)
           _container_path="${1:-}"
@@ -15095,7 +15095,7 @@ _browse() {
     local _rows=30
     local _url_params=
 
-    if _contains "--terminal" "${_pagination_arguments[@]:-}"
+    if _contains "--terminal" "${_pagination_options[@]:-}"
     then
       _url_params+="&--per-page=${_per_page}"
       _rows="$((_per_page + 2))"
@@ -15125,9 +15125,9 @@ _browse() {
 HEREDOC
     } | {
       printf "%s\\n" "$(
-        _browse_render_header             \
-          "${_container_path}"            \
-          "${_pagination_arguments[@]:-}" \
+        _browse_render_header           \
+          "${_container_path}"          \
+          "${_pagination_options[@]:-}" \
           --add
       )"
 
@@ -15153,7 +15153,7 @@ HEREDOC
   _browse_render_container() {
     local _columns="${NB_BROWSE_COLUMNS:-70}"
     local _current_page=1
-    local _pagination_arguments=()
+    local _pagination_options=()
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
     local _query=
     local _target_path=
@@ -15164,17 +15164,17 @@ HEREDOC
       case "${1:-}" in
         --col*)
           _columns="$(_option_get_value "${1:-}" "${2:-}")"
-          _pagination_arguments+=("${1:-}" "${2:?}")
+          _pagination_options+=("${1:-}" "${2:?}")
           shift
           ;;
         --page)
           _current_page="${2:?}"
-          _pagination_arguments+=("${1:-}" "${2:?}")
+          _pagination_options+=("${1:-}" "${2:?}")
           shift
           ;;
         --per*)
           _per_page="${2:?}"
-          _pagination_arguments+=("${1:-}" "${2:?}")
+          _pagination_options+=("${1:-}" "${2:?}")
           shift
           ;;
         --query)
@@ -15183,11 +15183,11 @@ HEREDOC
           ;;
         --terminal)
           _terminal_browser=1
-          _pagination_arguments+=("${1:-}")
+          _pagination_options+=("${1:-}")
           ;;
         *)
           _target_path="${1:-}"
-          _pagination_arguments+=("${1:-}")
+          _pagination_options+=("${1:-}")
           ;;
       esac
 
@@ -15431,7 +15431,7 @@ HEREDOC
         printf "</p>\\n"
       fi
     } | {
-      printf "%s\\n" "$(_browse_render_header "${_pagination_arguments[@]:-}")"
+      printf "%s\\n" "$(_browse_render_header "${_pagination_options[@]:-}")"
 
 
       printf "<div class=\"main\">\\n"
@@ -15454,7 +15454,7 @@ HEREDOC
   #   Print an form for deleting an item
   _browse_render_delete() {
     local _columns="${NB_BROWSE_COLUMNS:-70}"
-    local _pagination_arguments=()
+    local _pagination_options=()
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
     local _source_path=
 
@@ -15463,7 +15463,7 @@ HEREDOC
       case "${1:-}" in
         --col*)
           _columns="$(_option_get_value "${1:-}" "${2:-}")"
-          _pagination_arguments+=("${1:?}" "${2:?}")
+          _pagination_options+=("${1:?}" "${2:?}")
           shift
           ;;
         --page)
@@ -15471,11 +15471,11 @@ HEREDOC
           ;;
         --per-page)
           _per_page="${2:?}"
-          _pagination_arguments+=("${1:?}" "${2:?}")
+          _pagination_options+=("${1:?}" "${2:?}")
           shift
           ;;
         --terminal)
-          _pagination_arguments+=("--terminal")
+          _pagination_options+=("--terminal")
           ;;
         *)
           _source_path="${1:-}"
@@ -15493,7 +15493,7 @@ HEREDOC
 
     local _url_params=
 
-    if _contains "--terminal" "${_pagination_arguments[@]:-}"
+    if _contains "--terminal" "${_pagination_options[@]:-}"
     then
       _url_params+="&--per-page=${_per_page}"
       _url_params+="&--columns=${_columns}"
@@ -15527,9 +15527,9 @@ HEREDOC
 HEREDOC
     } | {
       printf "%s\\n" "$(
-        _browse_render_header             \
-          "${_source_path}"               \
-          "${_pagination_arguments[@]:-}" \
+        _browse_render_header           \
+          "${_source_path}"             \
+          "${_pagination_options[@]:-}" \
           --delete
       )"
 
@@ -15553,7 +15553,7 @@ HEREDOC
   #   Print an HTML page for editing a text file.
   _browse_render_edit() {
     local _columns="${NB_BROWSE_COLUMNS:-70}"
-    local _pagination_arguments=()
+    local _pagination_options=()
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
     local _source_path=
 
@@ -15562,7 +15562,7 @@ HEREDOC
       case "${1:-}" in
         --col*)
           _columns="$(_option_get_value "${1:-}" "${2:-}")"
-          _pagination_arguments+=("${1:?}" "${2:?}")
+          _pagination_options+=("${1:?}" "${2:?}")
           shift
           ;;
         --page)
@@ -15570,11 +15570,11 @@ HEREDOC
           ;;
         --per-page)
           _per_page="${2:?}"
-          _pagination_arguments+=("${1:?}" "${2:?}")
+          _pagination_options+=("${1:?}" "${2:?}")
           shift
           ;;
         --terminal)
-          _pagination_arguments+=("--terminal")
+          _pagination_options+=("--terminal")
           ;;
         *)
           _source_path="${1:-}"
@@ -15598,7 +15598,7 @@ HEREDOC
     local _rows=30
     local _url_params=
 
-    if _contains "--terminal" "${_pagination_arguments[@]:-}"
+    if _contains "--terminal" "${_pagination_options[@]:-}"
     then
       _url_params+="&--per-page=${_per_page}"
       _rows="$((_per_page + 2))"
@@ -15628,9 +15628,9 @@ HEREDOC
 HEREDOC
     } | {
       printf "%s\\n" "$(
-        _browse_render_header             \
-          "${_source_path}"               \
-          "${_pagination_arguments[@]:-}" \
+        _browse_render_header           \
+          "${_source_path}"             \
+          "${_pagination_options[@]:-}" \
           --edit
       )"
 
@@ -15855,7 +15855,7 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
   #   Render an item to HTML with links resolved to internal web server.
   _browse_render_item() {
     local _columns="${NB_BROWSE_COLUMNS:-70}"
-    local _pagination_arguments=()
+    local _pagination_options=()
     local _source_path=
 
     while ((${#}))
@@ -15863,18 +15863,18 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
       case "${1:-}" in
         --col*)
           _columns="$(_option_get_value "${1:-}" "${2:-}")"
-          _pagination_arguments+=("${1:-}" "${2:?}")
+          _pagination_options+=("${1:-}" "${2:?}")
           shift
           ;;
         --page)
           _option_value_is_present "${2:-}" && shift
           ;;
         --per-page)
-          _pagination_arguments+=("${1:?}" "${2:?}")
+          _pagination_options+=("${1:?}" "${2:?}")
           shift
           ;;
         --terminal)
-          _pagination_arguments+=("--terminal")
+          _pagination_options+=("--terminal")
           ;;
         *)
           _source_path="${1:-}"
@@ -15897,7 +15897,7 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
       } | {
         _resolve_links                    \
           "${_notebook_path}"             \
-          "${_pagination_arguments[@]:-}" \
+          "${_pagination_options[@]:-}"   \
           --browse                        \
           --type org
       } | {
@@ -15915,7 +15915,7 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
         printf "%s\\n" "$(
           _browse_render_header           \
             "${_source_path}"             \
-            "${_pagination_arguments[@]:-}"
+            "${_pagination_options[@]:-}"
         )"
 
         printf "<div class=\"main\">\\n"
@@ -15933,7 +15933,7 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
         printf "%s\\n" "$(
           _browse_render_header           \
             "${_source_path}"             \
-            "${_pagination_arguments[@]:-}"
+            "${_pagination_options[@]:-}"
         )"
 
         printf "<div class=\"main\">\\n"
@@ -15944,7 +15944,7 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
       } | {
         _resolve_links                    \
           "${_notebook_path}"             \
-          "${_pagination_arguments[@]:-}" \
+          "${_pagination_options[@]:-}"   \
           --browse
       } | {
         _render
@@ -15964,7 +15964,7 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
   #   Print an HTML page listing notebooks.
   _browse_render_notebooks() {
     local _columns="${NB_BROWSE_COLUMNS:-70}"
-    local _pagination_arguments=()
+    local _pagination_options=()
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
 
     while ((${#}))
@@ -15972,7 +15972,7 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
       case "${1:-}" in
         --col*)
           _columns="$(_option_get_value "${1:-}" "${2:-}")"
-          _pagination_arguments+=("${1:-}" "${2:?}")
+          _pagination_options+=("${1:-}" "${2:?}")
           shift
           ;;
         --page)
@@ -15980,11 +15980,11 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
           ;;
         --per*)
           _per_page="${2:?}"
-          _pagination_arguments+=("${1:-}" "${2:?}")
+          _pagination_options+=("${1:-}" "${2:?}")
           shift
           ;;
         --terminal)
-          _pagination_arguments+=("--terminal")
+          _pagination_options+=("--terminal")
           ;;
       esac
 
@@ -15993,7 +15993,7 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
 
     local _url_params=
 
-    if _contains "--terminal" "${_pagination_arguments[@]:-}"
+    if _contains "--terminal" "${_pagination_options[@]:-}"
     then
       _url_params+="?--per-page=${_per_page}&--columns=${_columns}"
     fi
@@ -16035,7 +16035,7 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
 
       printf "</p>\\n"
     } | {
-      printf "%s\\n" "$(_browse_render_header "${_pagination_arguments[@]:-}")"
+      printf "%s\\n" "$(_browse_render_header "${_pagination_options[@]:-}")"
 
       printf "<div class=\"main\">\\n"
 
