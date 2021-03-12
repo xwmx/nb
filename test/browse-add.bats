@@ -7,6 +7,69 @@ export NB_SERVER_PORT=6789
 # non-breaking space
 export _S=" "
 
+# POST ########################################################################
+
+@test "POST to --add URL creates note and redirects."  {
+  {
+    "${_NB}" init
+
+    (ncat                                   \
+      --exec "${_NB} browse --respond"      \
+      --listen                              \
+      --source-port "6789"                  \
+      2>/dev/null) &
+
+    sleep 1
+  }
+
+  run curl -sS -D - --data                                                            \
+    "content=Example%20content.&--title=Example%20Title&--filename=Example%20File.md" \
+    "http://localhost:6789/home:?--add"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[    "${status}"  -eq 0                  ]]
+
+  # Creates file:
+
+
+  [[ -f "${NB_DIR}/home/Example File.md" ]]
+
+  diff                                      \
+    <(cat "${NB_DIR}/home/Example File.md")  \
+    <(cat <<HEREDOC
+# Example Title
+
+Example content.
+HEREDOC
+)
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
+  while [[ -n "$(git status --porcelain)"   ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  # Prints output:
+
+  [[ "${#lines[@]}" -eq 5                                                     ]]
+
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Found                                  ]]
+  [[ "${lines[1]}"  =~  Date:\ .*                                             ]]
+  [[ "${lines[2]}"  =~  Expires:\ .*                                          ]]
+  [[ "${lines[3]}"  =~  Server:\ nb                                           ]]
+  [[ "${lines[4]}"  =~  Location:\ http:\/\/localhost:6789\/1\?--per-page=30  ]]
+}
+
 # option parameters ###########################################################
 
 @test "GET to --add URL with option parameters adds hidden form fields." {
@@ -225,61 +288,6 @@ export _S=" "
 
   printf "%s\\n" "${output}" | grep -q \
 "value=\"add\">"
-}
-
-# POST ########################################################################
-
-@test "POST to --add URL creates note and redirects."  {
-  {
-    "${_NB}" init
-
-    (ncat                                   \
-      --exec "${_NB} browse --respond"      \
-      --listen                              \
-      --source-port "6789"                  \
-      2>/dev/null) &
-
-    sleep 1
-  }
-
-  run curl -sS -D - --data "content=Example" "http://localhost:6789/home:?--add"
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  # Returns status 0:
-
-  [[    "${status}"  -eq 0                  ]]
-
-  # Creates file:
-
-  declare _files=("$(ls "${NB_DIR}/home/")")
-
-  diff                                      \
-    <(cat "${NB_DIR}/home/${_files[0]:-}")  \
-    <(printf "Example\\n")
-
-  # Creates git commit:
-
-  cd "${NB_DIR}/home" || return 1
-
-  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
-
-  while [[ -n "$(git status --porcelain)"   ]]
-  do
-    sleep 1
-  done
-  git log | grep -q '\[nb\] Add'
-
-  # Prints output:
-
-  [[ "${#lines[@]}" -eq 5                                                     ]]
-
-  [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Found                                  ]]
-  [[ "${lines[1]}"  =~  Date:\ .*                                             ]]
-  [[ "${lines[2]}"  =~  Expires:\ .*                                          ]]
-  [[ "${lines[3]}"  =~  Server:\ nb                                           ]]
-  [[ "${lines[4]}"  =~  Location:\ http:\/\/localhost:6789\/1\?--per-page=30  ]]
 }
 
 # CLI #########################################################################

@@ -14891,8 +14891,8 @@ _browse() {
   # Description:
   #   Add a new item in the folder or notebook at <container-path>.
   _browse_item_create() {
-    local _message_body=
     local _container_path=
+    local _message_body=
 
     while ((${#}))
     do
@@ -15057,9 +15057,9 @@ _browse() {
   #   Print an HTML page for creating a text file.
   _browse_render_add() {
     local _columns="${NB_BROWSE_COLUMNS:-70}"
+    local _container_path=
     local _pagination_options=()
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
-    local _container_path=
     local _subcommand_options=()
 
     while ((${#}))
