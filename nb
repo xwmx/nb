@@ -2687,11 +2687,11 @@ desc() { describe "${@}"; }
 
 describe "count" <<HEREDOC
 Usage:
-  ${_ME} count [<notebook>:][<relative-path>]
+  ${_ME} count [<notebook>:][<folder-path>/]
 
 Description:
   Print the number of items in the first level of the current notebook,
-  <notebook>, or the folder at <relative-path>.
+  <notebook>, or the folder at <folder-path>.
 HEREDOC
 _count() {
   local _list_files_options=()
@@ -3432,7 +3432,7 @@ $(_color_primary "Usage:")
   ${_ME} browse edit [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
   ${_ME} browse serve
   ${_ME} completions (check | install [-d | --download] | uninstall)
-  ${_ME} count [<notebook>:][<relative-path>]
+  ${_ME} count [<notebook>:][<folder-path>/]
   ${_ME} delete [<notebook>:](<id> | <filename> | <path> | <title>)...
             [-f | --force]
   ${_ME} edit ([<notebook>:][<folder-path>/] [<id> | <filename> | <title>])

@@ -4155,7 +4155,7 @@ Usage:
   nb browse edit [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
   nb browse serve
   nb completions (check | install [-d | --download] | uninstall)
-  nb count [<notebook>:][<relative-path>]
+  nb count [<notebook>:][<folder-path>/]
   nb delete [<notebook>:](<id> | <filename> | <path> | <title>)...
             [-f | --force]
   nb edit ([<notebook>:][<folder-path>/] [<id> | <filename> | <title>])
@@ -4668,11 +4668,11 @@ Description:
 
 ```text
 Usage:
-  nb count [<notebook>:][<relative-path>]
+  nb count [<notebook>:][<folder-path>/]
 
 Description:
   Print the number of items in the first level of the current notebook,
-  <notebook>, or the folder at <relative-path>.
+  <notebook>, or the folder at <folder-path>.
 ```
 
 #### `delete`
