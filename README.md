@@ -4301,11 +4301,11 @@ Markdown files with Git-backed versioning and syncing.
 
 Usage:
   bookmark [<ls options>...]
-  bookmark <url> [-c <comment> | --comment <comment>] [--edit]
-              [-e | --encrypt] [-f <filename> | --filename <filename>]
-              [-q | --quote] [-r <url> | --related <url>]... [--save-source]
-              [--skip-content] [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...]
-              [--title <title>]
+  bookmark [<notebook>:][<folder-path>] <url>
+              [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
+              [-f <filename> | --filename <filename>] [-q | --quote]
+              [-r <url> | --related <url>]... [--save-source] [--skip-content]
+              [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...] [--title <title>]
   bookmark list [<list-options>...]
   bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
