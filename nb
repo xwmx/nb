@@ -16170,75 +16170,64 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
       return 0
     fi
 
-    # redirect outbound URLs
+    local _query_string=
 
-    if [[ "${_request_uri}"     =~ \?url=(.*)           ]]
+    if [[ "${_request_uri:-}" =~ \? ]]
     then
-      _browse_respond_with 302 "${BASH_REMATCH[1]}"
+      _query_string="${_request_uri#*\?}"
     fi
-
-    # detect presence of parameters overriding browser type
-
-    if [[ "${_request_uri}"     =~ --terminal           ]]
-    then
-      _terminal_browser=1
-    fi
-
-    if [[ "${_request_uri}"     =~ --gui                ]]
-    then
-      _terminal_browser=0
-    fi
-
-    # detect dimensional parameters
-
-    local _columns=1
-    local _render_function_arguments=()
-
-    if [[ "${_request_uri}"     =~ --columns=([0-9]+)   ]]
-    then
-      _columns="${BASH_REMATCH[1]}"
-      _render_function_arguments+=("--columns" "${_columns}")
-    fi
-
-    local _page_number=1
-
-    if [[ "${_request_uri}"     =~ --page=([0-9]+)      ]]
-    then
-      _page_number="${BASH_REMATCH[1]}"
-    fi
-
-    local _per_page="${NB_BROWSE_PER_PAGE:-30}"
-
-    if [[ "${_request_uri}"     =~ --per-page=([0-9]+)  ]]
-    then
-      _per_page="${BASH_REMATCH[1]}"
-      _render_function_arguments+=("--per-page" "${_per_page}")
-    fi
-
-    # retrieve pagination and query values from parameters
-
-    local _query=
-
-    if [[ "${_request_uri}"     =~ --query=([^&]+)      ]]
-    then
-      _query="${BASH_REMATCH[1]//%20/ }"
-      _query="$(
-        printf "%b" "$(
-          # https://unix.stackexchange.com/a/187256
-          printf "%s\\n" "${_query//$'\r'}" | sed 's@+@ @g;s@%@\\x@g'
-        )"
-      )"
-    fi
-
-    # detect action
 
     local _action=
+    local _columns=1
+    local _page_number=1
+    local _per_page="${NB_BROWSE_PER_PAGE:-30}"
+    local _query=
+    local _render_function_arguments=()
+    local _request_parameters=()
 
-    case "${_request_uri}" in
-      *--add*)    _action="add"     ;;
-      *--delete*) _action="delete"  ;;
-      *--edit*)   _action="edit"    ;;
-    esac
+    if [[ -n "${_query_string:-}" ]]
+    then
+      IFS='&' read -r -a _request_parameters <<< "${_query_string}"
+
+      local __parameter=
+      for   __parameter in "${_request_parameters[@]:-}"
+      do
+        case "${__parameter:-}" in
+          url=*)
+            _browse_respond_with 302 "${__parameter#*=}"
+            ;;
+          --add|--delete|--edit)
+            _action="${__parameter#--}"
+            ;;
+          --columns=*)
+            _columns="${__parameter#*=}"
+            _render_function_arguments+=("--columns" "${_columns}")
+            ;;
+          --gui)
+            _terminal_browser=0
+            ;;
+          --page=*)
+            _page_number="${__parameter#*=}"
+            ;;
+          --per*page=*)
+            _per_page="${__parameter#*=}"
+            _render_function_arguments+=("--per-page" "${_per_page}")
+            ;;
+          --query=*)
+            _query="${__parameter#*=}"
+            _query="$(
+              printf "%b" "$(
+                # https://unix.stackexchange.com/a/187256
+                printf "%s\\n" "${_query//$'\r'}" | sed 's@+@ @g;s@%@\\x@g'
+              )"
+            )"
+            ;;
+          --terminal)
+            _terminal_browser=1
+            ;;
+        esac
+      done
+    fi
 
     # prepare response
 
