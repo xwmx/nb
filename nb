@@ -16225,6 +16225,20 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
           --terminal)
             _terminal_browser=1
             ;;
+          -*)
+            _render_function_arguments+=("${__parameter%=*}")
+
+            if [[ "${__parameter:-}" =~ \= ]]
+            then
+              local _value="${__parameter#*=}"
+              _render_function_arguments+=("$(
+                printf "%b" "$(
+                  # https://unix.stackexchange.com/a/187256
+                  printf "%s\\n" "${_value//$'\r'}" | sed 's@+@ @g;s@%@\\x@g'
+                )"
+              )")
+            fi
+            ;;
         esac
       done
     fi
