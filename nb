@@ -3413,11 +3413,11 @@ $(_color_primary "Usage:")
          [--type <type>]
   ${_ME} add folder [<name>]
   ${_ME} bookmark [<ls options>...]
-  ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--edit]
-              [-e | --encrypt] [-f <filename> | --filename <filename>]
-              [-q | --quote] [-r <url> | --related <url>]... [--save-source]
-              [--skip-content] [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...]
-              [--title <title>]
+  ${_ME} bookmark [<notebook>:][<folder-path>] <url>
+              [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
+              [-f <filename> | --filename <filename>] [-q | --quote]
+              [-r <url> | --related <url>]... [--save-source] [--skip-content]
+              [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...] [--title <title>]
   ${_ME} bookmark [list [<list-options>...]]
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   ${_ME} bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
@@ -10088,11 +10088,11 @@ _alias_subcommand "add" "new"
 describe "bookmark" <<HEREDOC
 Usage:
   ${_ME} bookmark [<ls options>...]
-  ${_ME} bookmark <url> [-c <comment> | --comment <comment>] [--edit]
-              [-e | --encrypt] [-f <filename> | --filename <filename>]
-              [-q | --quote] [-r <url> | --related <url>]... [--save-source]
-              [--skip-content] [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...]
-              [--title <title>]
+  ${_ME} bookmark [<notebook>:][<folder-path>] <url>
+              [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
+              [-f <filename> | --filename <filename>] [-q | --quote]
+              [-r <url> | --related <url>]... [--save-source] [--skip-content]
+              [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...] [--title <title>]
   ${_ME} bookmark list [<list-options>...]
   ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   ${_ME} bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
