@@ -14893,6 +14893,7 @@ _browse() {
   _browse_item_create() {
     local _container_path=
     local _message_body=
+    local _subcommand_options=()
 
     while ((${#}))
     do
@@ -14908,8 +14909,12 @@ _browse() {
           :
           ;;
         *)
-          _container_path="${1:-}"
-          _header_arguments+=("${_container_path}")
+          if [[ -z "${_container_path:-}" ]] && [[ "${1:-}" =~ ^/ ]]
+          then
+            _container_path="${1:-}"
+          else
+            _subcommand_options+=("${1:-}")
+          fi
           ;;
       esac
 
@@ -14932,21 +14937,57 @@ _browse() {
       _id_selector="${_id_selector}/"
     fi
 
-    if [[ "${_message_body:-}"  =~ ^content=  ]]
+
+    local _fields=()
+    IFS='&' read -r -a _fields <<< "${_message_body}"
+
+    local _content=
+    local _add_options=()
+
+    local __field=
+    for   __field in "${_fields[@]:-}"
+    do
+      case "${__field:-}" in
+        content=*)
+          local _decoding_content="${__field#content=}"
+          _decoding_content="$(
+            printf "%b" "$(
+              # https://unix.stackexchange.com/a/187256
+              printf "%s\\n" "${_decoding_content:-}" | sed 's@+@ @g;s@%@\\x@g'
+            )"
+          )"
+          _content="${_decoding_content//$'\r'}"
+          ;;
+        *)
+          if [[ "${__field:-}" =~ \= ]]
+          then
+            _add_options+=("${__field%%=*}")
+
+            local _value="${__field#*=}"
+
+            _value="$(
+              printf "%b" "$(
+                # https://unix.stackexchange.com/a/187256
+                printf "%s\\n" "${_value:-}" | sed 's@+@ @g;s@%@\\x@g'
+              )"
+            )"
+            _value="${_value//$'\r'}"
+
+            _add_options+=("${_value:-}")
+          else
+            _add_options+=("${__field:-}")
+          fi
+          ;;
+      esac
+    done
+
+    if [[ -n "${_content:-}"  ]]
     then
-      local _processing_content="${_message_body#content=}"
-      _processing_content="$(
-        printf "%b" "$(
-          # https://unix.stackexchange.com/a/187256
-          printf "%s\\n" "${_processing_content:-}" | sed 's@+@ @g;s@%@\\x@g'
-        )"
-      )"
-      local _processed_content="${_processing_content//$'\r'}"
+      _add_options+=("${_id_selector}" "--no-color" "${_add_options[@]:-}")
 
       local _new_info_line=
       _new_info_line="$(
-        printf "%s\\n" "${_processed_content:-}" \
-          | _add "${_id_selector}" --no-color
+        printf "%s\\n" "${_content:-}" | _add "${_add_options[@]:-}"
       )"
 
       local _new_selector="${_new_info_line#*[}"
@@ -14998,6 +15039,7 @@ _browse() {
   _browse_item_update() {
     local _message_body=
     local _source_path=
+    local _subcommand_options=()
 
     while ((${#}))
     do
@@ -15013,8 +15055,12 @@ _browse() {
           :
           ;;
         *)
-          _source_path="${1:-}"
-          _header_arguments+=("${_source_path}")
+          if [[ -z "${_source_path:-}" ]] && [[ "${1:-}" =~ ^/ ]]
+          then
+            _source_path="${1:-}"
+          else
+            _subcommand_options+=("${1:-}")
+          fi
           ;;
       esac
 

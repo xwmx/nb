@@ -35,11 +35,10 @@ export _S=" "
 
   # Creates file:
 
-
   [[ -f "${NB_DIR}/home/Example File.md" ]]
 
   diff                                      \
-    <(cat "${NB_DIR}/home/Example File.md")  \
+    <(cat "${NB_DIR}/home/Example File.md") \
     <(cat <<HEREDOC
 # Example Title
 
