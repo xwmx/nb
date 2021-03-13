@@ -4205,7 +4205,6 @@ Usage:
             [--tags <tag1>,<tag2>...] [-t <title> | --title <title>]
   nb browse delete [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
   nb browse edit [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
-  nb browse serve
   nb completions (check | install [-d | --download] | uninstall)
   nb count [<notebook>:][<folder-path>/]
   nb delete [<notebook>:](<id> | <filename> | <path> | <title>)...
@@ -4641,7 +4640,6 @@ Usage:
             [--tags <tag1>,<tag2>...] [-t <title> | --title <title>]
   nb browse delete [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
   nb browse edit [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
-  nb browse serve
 
 Subcommands:
   (default)  Open a notebook, folder, or item in the terminal or GUI web browser.
@@ -4651,8 +4649,6 @@ Subcommands:
              Shortcut Alias: `d`
   edit       Open the edit view in the browser.
              Shortcut Alias: `e`
-  serve      Start the `browse` server.
-             Shortcut Alias: `s`
 
 Options:
   -c, --content <content>      Add content to the new note.

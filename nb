@@ -3430,7 +3430,6 @@ $(_color_primary "Usage:")
             [--tags <tag1>,<tag2>...] [-t <title> | --title <title>]
   ${_ME} browse delete [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
   ${_ME} browse edit [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
-  ${_ME} browse serve
   ${_ME} completions (check | install [-d | --download] | uninstall)
   ${_ME} count [<notebook>:][<folder-path>/]
   ${_ME} delete [<notebook>:](<id> | <filename> | <path> | <title>)...
@@ -14822,7 +14821,6 @@ Usage:
             [--tags <tag1>,<tag2>...] [-t <title> | --title <title>]
   ${_ME} browse delete [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
   ${_ME} browse edit [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
-  ${_ME} browse serve
 
 Subcommands:
   (default)  Open a notebook, folder, or item in the terminal or GUI web browser.
@@ -14832,8 +14830,6 @@ Subcommands:
              Shortcut Alias: \`d\`
   edit       Open the edit view in the browser.
              Shortcut Alias: \`e\`
-  serve      Start the \`browse\` server.
-             Shortcut Alias: \`s\`
 
 Options:
   -c, --content <content>      Add content to the new note.
