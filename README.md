@@ -4213,8 +4213,8 @@ Usage:
   nb browse add [<notebook>:][<folder-path>/][<filename>] [-c <content> |
             --content <content>] [-f <filename> | --filename <filename>]
             [--tags <tag1>,<tag2>...] [-t <title> | --title <title>]
-  nb browse delete [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
-  nb browse edit [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
+  nb browse delete ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+  nb browse edit ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
   nb completions (check | install [-d | --download] | uninstall)
   nb count [<notebook>:][<folder-path>/]
   nb delete ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])...
@@ -4225,7 +4225,7 @@ Usage:
   nb export ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             <path> [-f | --force] [<pandoc options>...]
   nb export notebook <name> [<path>]
-  nb export pandoc (<id> | <filename> | <path> | <title>)
+  nb export pandoc ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             [<pandoc options>...]
   nb git [checkpoint [<message>] | dirty]
   nb git <git-options>...
@@ -4239,13 +4239,13 @@ Usage:
           [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
           [--no-indicator] [-p | --pager] [--paths] [-s | --sort]
           [-r | --reverse] [--tags] [-t <type> | --type <type> | --<type>]
-          [<id> | <filename> | <path> | <title> | <query>]
+          [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
   nb ls [-a | --all] [-b | --browse] [-e [<length>] | --excerpt [<length>]]
         [--filenames] [-g | --gui] [-n <limit> | --limit <limit> | --<limit>]
         [--no-footer] [--no-header] [--no-id] [--no-indicator] [-p | --pager]
         [--paths] [-s | --sort] [-r | --reverse] [--tags]
         [-t <type> | --type <type> | --<type>]
-        [<notebook>:][<id> | <filename> | <path> | <title> | <query>]
+        [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
   nb move ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note)
           [-f | --force]
@@ -4271,7 +4271,8 @@ Usage:
   nb plugins uninstall <name> [--force]
   nb remote [remove | set <url> [-f | --force]]
   nb run <command> [<arguments>...]
-  nb search <query>... [-a | --all] [--and <query>] [--or <query>]
+  nb search ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+            <query>... [-a | --all] [--and <query>] [--or <query>]
             [-l | --list]  [--path] [-t <type> | --type <type> | --<type>]
             [--utility <name>]
   nb set [<name> [<value>] | <number> [<value>]]
@@ -4369,8 +4370,8 @@ Usage:
               [-r <url> | --related <url>]... [--save-source] [--skip-content]
               [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...] [--title <title>]
   bookmark list [<list-options>...]
-  bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
-  bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
+  bookmark (edit | delete | open | peek | url)
+              ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
   bookmark search <query>
 
 Options:
@@ -4560,8 +4561,8 @@ Usage:
               [-r <url> | --related <url>]... [--save-source] [--skip-content]
               [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...] [--title <title>]
   nb bookmark list [<list-options>...]
-  nb bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
-  nb bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
+  nb bookmark (edit | delete | open | peek | url)
+              ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
   nb bookmark search <query>
 
 Options:
@@ -4649,8 +4650,8 @@ Usage:
   nb browse add [<notebook>:][<folder-path>/][<filename>] [-c <content> |
             --content <content>] [-f <filename> | --filename <filename>]
             [--tags <tag1>,<tag2>...] [-t <title> | --title <title>]
-  nb browse delete [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
-  nb browse edit [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
+  nb browse delete ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+  nb browse edit ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
 
 Subcommands:
   (default)  Open a notebook, folder, or item in the terminal or GUI web browser.
@@ -4829,7 +4830,7 @@ Usage:
   nb export ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             <path> [-f | --force] [<pandoc options>...]
   nb export notebook <name> [<path>]
-  nb export pandoc (<id> | <filename> | <path> | <title>)
+  nb export pandoc ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             [<pandoc options>...]
 
 Options:
@@ -4998,7 +4999,7 @@ Usage:
           [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
           [--no-indicator] [-p | --pager] [--paths] [-s | --sort]
           [-r | --reverse] [--tags] [-t <type> | --type <type> | --<type>]
-          [<id> | <filename> | <path> | <title> | <query>]
+          [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
 
 Options:
   -e, --excerpt [<length>]        Print an excerpt <length> lines long under
@@ -5055,7 +5056,7 @@ Usage:
         [--no-footer] [--no-header] [--no-id] [--no-indicator] [-p | --pager]
         [--paths] [-s | --sort] [-r | --reverse] [--tags]
         [-t <type> | --type <type> | --<type>]
-        [<notebook>:][<id> | <filename> | <path> | <title> | <query>]
+        [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
 
 Options:
   -a, --all                       Print all items in the notebook. Equivalent
@@ -5403,7 +5404,8 @@ Examples:
 
 ```text
 Usage:
-  nb search <query>... [-a | --all] [--and <query>] [--or <query>]
+  nb search ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+            <query>... [-a | --all] [--and <query>] [--or <query>]
             [-l | --list]  [--path] [-t <type> | --type <type> | --<type>]
             [--utility <name>]
 
@@ -6025,7 +6027,7 @@ Examples:
 
 ```text
 Usage:
-  nb copy (<id> | <filename> | <path> | <title>)
+  nb copy ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
 
 Description:
   Create a copy of the specified item in the current notebook.

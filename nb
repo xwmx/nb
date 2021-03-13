@@ -3421,8 +3421,8 @@ $(_color_primary "Usage:")
               [-r <url> | --related <url>]... [--save-source] [--skip-content]
               [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...] [--title <title>]
   ${_ME} bookmark [list [<list-options>...]]
-  ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
-  ${_ME} bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
+  ${_ME} bookmark (edit | delete | open | peek | url)
+              ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
   ${_ME} bookmark search <query>
   ${_ME} browse [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
             [-g | --gui] [--notebooks] [--print] [-q | --query <query>]
@@ -3430,8 +3430,8 @@ $(_color_primary "Usage:")
   ${_ME} browse add [<notebook>:][<folder-path>/][<filename>] [-c <content> |
             --content <content>] [-f <filename> | --filename <filename>]
             [--tags <tag1>,<tag2>...] [-t <title> | --title <title>]
-  ${_ME} browse delete [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
-  ${_ME} browse edit [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
+  ${_ME} browse delete ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+  ${_ME} browse edit ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
   ${_ME} completions (check | install [-d | --download] | uninstall)
   ${_ME} count [<notebook>:][<folder-path>/]
   ${_ME} delete ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])...
@@ -3442,7 +3442,7 @@ $(_color_primary "Usage:")
   ${_ME} export ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             <path> [-f | --force] [<pandoc options>...]
   ${_ME} export notebook <name> [<path>]
-  ${_ME} export pandoc (<id> | <filename> | <path> | <title>)
+  ${_ME} export pandoc ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             [<pandoc options>...]
   ${_ME} git [checkpoint [<message>] | dirty]
   ${_ME} git <git-options>...
@@ -3488,7 +3488,8 @@ $(_color_primary "Usage:")
   ${_ME} plugins uninstall <name> [--force]
   ${_ME} remote [remove | set <url> [-f | --force]]
   ${_ME} run <command> [<arguments>...]
-  ${_ME} search <query>... [-a | --all] [--and <query>] [--or <query>]
+  ${_ME} search ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+            <query>... [-a | --all] [--and <query>] [--or <query>]
             [-l | --list]  [--path] [-t <type> | --type <type> | --<type>]
             [--utility <name>]
   ${_ME} set [<name> [<value>] | <number> [<value>]]
@@ -4131,7 +4132,7 @@ Usage:
           [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
           [--no-indicator] [-p | --pager] [--paths] [-s | --sort]
           [-r | --reverse] [--tags] [-t <type> | --type <type> | --<type>]
-          [<id> | <filename> | <path> | <title> | <query>]
+          [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
 
 Options:
   -e, --excerpt [<length>]        Print an excerpt <length> lines long under
@@ -5069,7 +5070,7 @@ Usage:
         [--no-footer] [--no-header] [--no-id] [--no-indicator] [-p | --pager]
         [--paths] [-s | --sort] [-r | --reverse] [--tags]
         [-t <type> | --type <type> | --<type>]
-        [<notebook>:][<id> | <filename> | <path> | <title> | <query>]
+        [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
 
 Options:
   -a, --all                       Print all items in the notebook. Equivalent
@@ -10112,8 +10113,8 @@ Usage:
               [-r <url> | --related <url>]... [--save-source] [--skip-content]
               [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...] [--title <title>]
   ${_ME} bookmark list [<list-options>...]
-  ${_ME} bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
-  ${_ME} bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
+  ${_ME} bookmark (edit | delete | open | peek | url)
+              ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
   ${_ME} bookmark search <query>
 
 Options:
@@ -11719,7 +11720,7 @@ Usage:
   ${_ME} export ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             <path> [-f | --force] [<pandoc options>...]
   ${_ME} export notebook <name> [<path>]
-  ${_ME} export pandoc (<id> | <filename> | <path> | <title>)
+  ${_ME} export pandoc ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             [<pandoc options>...]
 
 Options:
@@ -12784,7 +12785,8 @@ _alias_subcommand "run" "r"
 
 describe "search" <<HEREDOC
 Usage:
-  ${_ME} search <query>... [-a | --all] [--and <query>] [--or <query>]
+  ${_ME} search ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+            <query>... [-a | --all] [--and <query>] [--or <query>]
             [-l | --list]  [--path] [-t <type> | --type <type> | --<type>]
             [--utility <name>]
 
@@ -14839,8 +14841,8 @@ Usage:
   ${_ME} browse add [<notebook>:][<folder-path>/][<filename>] [-c <content> |
             --content <content>] [-f <filename> | --filename <filename>]
             [--tags <tag1>,<tag2>...] [-t <title> | --title <title>]
-  ${_ME} browse delete [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
-  ${_ME} browse edit [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
+  ${_ME} browse delete ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+  ${_ME} browse edit ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
 
 Subcommands:
   (default)  Open a notebook, folder, or item in the terminal or GUI web browser.

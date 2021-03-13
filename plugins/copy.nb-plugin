@@ -17,7 +17,7 @@ _subcommands add "duplicate"
 # Define help and usage text with `_subcommands describe <subcommand> <usage>`.
 _subcommands describe "copy" <<HEREDOC
 Usage:
-  nb copy (<id> | <filename> | <path> | <title>)
+  nb copy ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
 
 Description:
   Create a copy of the specified item in the current notebook.
