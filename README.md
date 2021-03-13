@@ -1817,13 +1817,16 @@ See [`bookmark help`](#bookmark-help) for more information.
 
 ### 🏷 Tagging
 
-`nb` recognizes [#hashtags](#-tagging) defined anywhere within a
-text document. Notes and bookmarks can be tagged when they are created
-using the `--tags <tag1>,<tag2>...` option, which is available with
-[`nb add`](#add), [`nb <url>`](#nb-help), and
-[`nb bookmark`](#bookmark). `--tags` takes a comma-separated list of
-tags, converts them to [#hashtags](#-tagging), and adds them to the
-document.
+`nb` recognizes [#hashtags](#-tagging) defined anywhere within a document.
+Notes and bookmarks can be tagged when they are created using the
+`--tags <tag1>,<tag2>...` option, which is available with
+[`nb add`](#add),
+[`nb <url>`](#nb-help),
+[`nb browse add`](#browse),
+and
+[`nb bookmark`](#bookmark).
+`--tags` takes a comma-separated list of tags, converts them to
+[#hashtags](#-tagging), and adds them to the document.
 
 Tags added to notes with `nb add --tags` are placed between the title
 and body text:
@@ -6350,7 +6353,7 @@ Description:
 Any folder may contain an optional plain text file named `.pindex`
 containing a list of basenames from that folder, one per line, that should
 be treated as "[pinned](#-pinning)", meaning they appear first in some
-list operationsn including `nb` and `nb ls`. Entires are added to a
+list operations, including `nb` and `nb ls`. Entires are added to a
 `.pindex` file with [`nb pin`](#pin) and removed with [`nb unpin`](#unpin).
 
 #### Archived Notebooks
