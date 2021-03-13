@@ -1464,7 +1464,8 @@ _get_content() {
 
     if [[ "${_path}" =~ \.md$|\.markdown$ ]]
     then
-      while IFS= read -r __line || [[ -n "${__line:-}"      ]]
+      local               __line=
+      while IFS= read -r  __line || [[ -n "${__line:-}"      ]]
       do
         if [[ "${__line}" =~ ^([[:space:]]*#[[:space:]]+)   ]] &&
            ! ((_in_code_block))
@@ -1541,7 +1542,8 @@ _get_content() {
       done < "${_path}"
     elif [[ "${_path}"    =~ \.latex$|\.tex$    ]]
     then
-      while IFS= read -r __line || [[ -n "${__line}" ]]
+      local               __line=
+      while IFS= read -r  __line || [[ -n "${__line}" ]]
       do
         _counter="$((_counter+1))"
 
@@ -1569,7 +1571,8 @@ _get_content() {
       done < "${_path}"
     elif [[ "${_path}" =~ \.org$ ]]
     then
-      while IFS= read -r __line || [[ -n "${__line}" ]]
+      local               __line=
+      while IFS= read -r  __line || [[ -n "${__line}" ]]
       do
         _counter="$((_counter+1))"
 
@@ -1602,7 +1605,8 @@ _get_content() {
     elif ! ((_only_title)) &&
          LC_ALL=C _contains "${_path##*.}" "${_TEXT_FILE_EXTENSIONS[@]}"
     then
-      while IFS= read -r __line || [[ -n "${__line:-}" ]]
+      local               __line=
+      while IFS= read -r  __line || [[ -n "${__line:-}" ]]
       do
         if [[ -n "${__line}" ]]
         then
@@ -2077,6 +2081,7 @@ _list_files() {
                 -e '\-bookmark\.'
           ;;
         folder|folders|directory|directories)
+          local         __line=
           while read -r __line
           do
             if [[ -d "${_path}/${__line}" ]]
@@ -2508,22 +2513,26 @@ _selector_resolve_path() {
         local _maybe_title="${_identifier##*\/}"
 
         _relative_path="$(
-          _list_files "${_folder_path}" \
-            | while read -r __filename || [[ -n "${__filename:-}" ]]
-              do
-                local _title=
-                _title="$(
-                  _get_content "${_folder_path}/${__filename}" --title
-                )"
+          {
+            _list_files "${_folder_path}"
+          } | {
+            local         __filename=
+            while read -r __filename || [[ -n "${__filename:-}" ]]
+            do
+              local _title=
+              _title="$(
+                _get_content "${_folder_path}/${__filename}" --title
+              )"
 
-                if [[ -n "${_title}"                    ]] &&
-                   [[ "${_title}" == "${_maybe_title}"  ]]
-                then
-                  local _full_path="${_folder_path}/${__filename}"
-                  printf "%s\\n" "${_full_path/"${_notebook_path}"\//}"
-                  break
-                fi
-              done
+              if [[ -n "${_title}"                    ]] &&
+                 [[ "${_title}" == "${_maybe_title}"  ]]
+              then
+                local _full_path="${_folder_path}/${__filename}"
+                printf "%s\\n" "${_full_path/"${_notebook_path}"\//}"
+                break
+              fi
+            done
+          }
         )"
       fi
     fi
@@ -2997,6 +3006,7 @@ HEREDOC
       then
         while true
         do
+          local __name=
           IFS='' read -r -e -d $'\n' -p "$(_color_primary "Name"): " __name
 
           if [[ -n "${__name}" ]]
@@ -3011,6 +3021,7 @@ HEREDOC
       then
         while true
         do
+          local __email=
           IFS='' read -r -e -d $'\n' -p "$(_color_primary "Email"): " __email
 
           if [[ -n "${__email}" ]]
@@ -4646,10 +4657,9 @@ _list() {
       _line_wrap=0
     fi
 
-    local __basename=
-
     # begin main loop
 
+    local         __basename=
     while read -r __basename
     do
       [[ -z "${__basename:-}" ]] && continue
@@ -5380,7 +5390,7 @@ _ls() {
       local _padding=
       local _test_line=
 
-      local __header_name=
+      local         __header_name=
       while read -r __header_name
       do
         local _maybe_highlighted_notebook_name=
@@ -6138,6 +6148,7 @@ HEREDOC
 
       while true
       do
+        local __response=
         IFS='' read -r -e -d $'\n' -p "\
 Please type $(_color_primary "${_name}") to confirm: " __response
 
@@ -9202,8 +9213,8 @@ _resolve_links() {
       local _linkable=1
 
       {
-        local __line=
-        while IFS= read -r __line
+        local               __line=
+        while IFS= read -r  __line
         do
           if [[ "${__line:-}" =~ \<nav|\<code     ]]
           then
@@ -9936,6 +9947,8 @@ _add() {
       then
         # request password without displaying it
         printf "%s: " "$(_color_primary "Password")"
+
+        local _password=
         IFS='' read -r -e -d $'\n' -s _password </dev/tty
         printf "\\n" # print newline to stop `read`
 
@@ -9948,6 +9961,8 @@ _add() {
 
         # request password without displaying it
         printf "%s: " "$(_color_primary "Confirm Password")"
+
+        local _password_confirmation=
         IFS='' read -r -e -d $'\n' -s _password_confirmation </dev/tty
         printf "\\n" # print newline to stop `read`
 
@@ -10452,6 +10467,8 @@ _bookmark() {
         then
           # request password without displaying it
           printf "%s: " "$(_color_primary "Password")"
+
+          local _password=
           IFS='' read -r -e -d $'\n' -s _password </dev/tty
           printf "\\n" # print newline to stop `read`
         fi
@@ -10486,6 +10503,7 @@ _bookmark() {
             "$(_color_primary "${_target_url}")"
           while true
           do
+            local __yn=
             IFS='' read -r -e -d $'\n' -p "\
 Check the Wayback Machine for an archived version instead? $(_color_brackets "y/N") " __yn
 
@@ -10701,7 +10719,8 @@ Check the Wayback Machine for an archived version instead? $(_color_brackets "y/
 
     local _counter=0
 
-    while IFS= read -r __line
+    local               __line=
+    while IFS= read -r  __line
     do
       if ! ((_counter))
       then
@@ -11188,6 +11207,7 @@ _delete() {
   then
     while true
     do
+      local __yn=
       IFS='' read -r -e -d $'\n' -p "\
 $(_color_primary "Proceed?")  $(_color_brackets "y/N") " __yn
 
@@ -11384,6 +11404,8 @@ _edit() {
       then
         # request password without displaying it
         printf "%s: " "$(_color_primary "Password")"
+
+        local _password=
         IFS='' read -r -e -d $'\n' -s _password </dev/tty
         printf "\\n" # print newline to stop `read`
       fi
@@ -11625,7 +11647,7 @@ Please install %s manually. No .deb package available for %s."  \
           local __package=
           for   __package in "${_deb_packages[@]}"
           do
-            local _arguments
+            local _arguments=()
             IFS=' ' read -ra _arguments <<< "${__package:-}"
 
             _env_install_deb "${_arguments[@]:-}"
@@ -11848,6 +11870,7 @@ _export() {
 
         while true
         do
+          local __yn=
           IFS='' read -r -e -d $'\n' -p "\
 $(_color_primary "Overwrite existing file?") $(_color_brackets "y/N") " __yn
 
@@ -12508,6 +12531,7 @@ _move() {
 
     while true
     do
+      local __yn=
       IFS='' read -r -e -d $'\n' -p "\
 $(_color_primary "Proceed?")  $(_color_brackets "y/N") " __yn
 
@@ -13522,6 +13546,7 @@ _search() {
         local _pagination_max="$((_page * _per_page))"
         local _pagination_min="$(((_page * _per_page) - _per_page))"
 
+        local         __line=
         while read -r __line
         do
           local _content_line_with_hit=
@@ -13850,7 +13875,8 @@ _search() {
       }
     done
   } | {
-    if read -r __search_output_line
+    local       __search_output_line=
+    if read -r  __search_output_line
     then # output is present
       # Print the test line then `cat` the rest.
       printf "%s\\n" "${__search_output_line:-}"
@@ -14463,6 +14489,8 @@ _show() {
     then
       # request password without displaying it
       printf "%s: " "$(_color_primary "Password")"
+
+      local _password=
       IFS='' read -r -e -d $'\n' -s _password </dev/tty
       printf "\\n" # print newline to stop `read`
     fi
@@ -14544,6 +14572,7 @@ Can't show archives. Export archive and expand to edit.\\n"
          [[ ! "${_target_path}"   =~ afphoto$     ]]  &&
          {
            # Detect sixel support. Via: https://git.io/JfCel
+           local __reply=
            IFS=";" read -ra __reply -s -t 1 -d "c" -p $'\e[c' >&2
 
            [[ "${__reply[*]}"     =~ 4            ]]  ||
@@ -15450,6 +15479,7 @@ HEREDOC
         _truncate_length="$((_columns + 6))"
       fi
 
+      local         __list_item=
       while read -r __list_item
       do
         if [[ -n "${_truncate_length:-}"          ]] &&
@@ -15569,7 +15599,7 @@ HEREDOC
 
       local _pagination_count=0
 
-      local __line=
+      local         __line=
       while read -r __line
       do
         printf "%s\\n" "${__line}"
@@ -17292,6 +17322,7 @@ _plugins() {
           then
             while true
             do
+              local __yn=
               IFS='' read -r -e -d $'\n' -p "\
 $(_color_primary "Reinstall?") $(_color_brackets "y/N") " __yn
 
@@ -17355,6 +17386,7 @@ $(_color_primary "${_plugin_path}")
 HEREDOC
         while true
         do
+          local __yn=
           IFS='' read -r -e -d $'\n' -p "\
 $(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
 
@@ -17484,6 +17516,7 @@ _remote() {
           do
             printf "Removing remote: %s\\n" "$(_color_primary "${_existing_url:-}")"
 
+            local __yn=
             IFS='' read -r -e -d $'\n' -p "\
 $(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
 
@@ -17543,6 +17576,7 @@ $(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
 
           _print_line "--------------"
 
+          local __yn=
           IFS='' read -r -e -d $'\n' -p "\
 $(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
 
@@ -17768,6 +17802,7 @@ HEREDOC
 
       while true
       do
+        local __setting=
         IFS='' read -r -e -d $'\n' -p "\
 $(_color_primary "Number or Name: ")" __setting
 
@@ -17808,6 +17843,7 @@ HEREDOC
 
     while true
     do
+      local __value=
       IFS='' read -r -e -d $'\n' -p "$(_color_primary "Value: ")" __value
 
       if [[ -n "${__value}" ]]
@@ -18377,6 +18413,7 @@ HEREDOC
     eval "\"${_MY_PATH}\" ${_initial_command}"
   fi
 
+  local __input=
   while IFS='' read -r -e -d $'\n' -p "${_prompt}" __input
   do
     history -s "${__input}"
@@ -18708,6 +18745,7 @@ HEREDOC
       do
         printf "Updating %s in place. " "$(_color_primary "${_ME}")"
 
+        local __yn=
         IFS='' read -r -e -d $'\n' -p "\
 $(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
 
