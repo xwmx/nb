@@ -3286,7 +3286,7 @@ _help() {
   for   __arg in "${@:-}"
   do
     case "${__arg}" in
-      +) _help "add" && return 0 ;;
+      +) _help "add"    && return 0 ;;
       -) _help "delete" && return 0 ;;
       --pager)
         _use_pager=1
