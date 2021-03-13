@@ -17465,16 +17465,16 @@ _remote() {
     esac
   done
 
-  local _notebook_path
+  local _notebook_path=
   _notebook_path="$(_notebooks current --path)"
 
-  if [[ "$(git -C "${_notebook_path}" remote get-url origin 2>/dev/null)" ]]
+  if [[ "$(git -C "${_notebook_path:-}" remote get-url origin 2>/dev/null)" ]]
   then
     _remote_exists=1
-    _existing_url="$(git -C "${_notebook_path}" remote get-url origin)"
+    _existing_url="$(git -C "${_notebook_path:-}" remote get-url origin)"
   fi
 
-  case "${_subcommand}" in
+  case "${_subcommand:-}" in
     remove|rm|unset)
       if ((_remote_exists))
       then
@@ -17482,7 +17482,7 @@ _remote() {
         then
           while true
           do
-            printf "Removing remote: %s\\n" "$(_color_primary "${_existing_url}")"
+            printf "Removing remote: %s\\n" "$(_color_primary "${_existing_url:-}")"
 
             IFS='' read -r -e -d $'\n' -p "\
 $(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
@@ -17499,16 +17499,16 @@ $(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
           done
         fi
 
-        git -C "${_notebook_path}" remote rm origin &&
-          printf "Removed remote: %s\\n"            \
-            "$(_color_primary "${_existing_url}")"  &&
+        git -C "${_notebook_path:-}" remote rm origin &&
+          printf "Removed remote: %s\\n"              \
+            "$(_color_primary "${_existing_url:-}")"  &&
               return 0
       else
         _exit_1 printf "No remote configured.\\n"
       fi
       ;;
     set|add)
-      if [[ -z "${_url}" ]]
+      if [[ -z "${_url:-}" ]]
       then
         _exit_1 _help "remote"
       fi
@@ -17525,7 +17525,7 @@ $(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
         do
           if ((_remote_exists))
           then
-            printf "Updating remote for: %s\\n" \
+            printf "Updating remote for: %s\\n"       \
               "$(_color_primary "$(_notebooks current --name)")"
 
             _print_line "Updating remote for: $(_notebooks current --name)"
@@ -17533,7 +17533,7 @@ $(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
             printf "From: %s\\n" "${_existing_url}"
             printf "To:   %s\\n" "$(_color_primary "${_url}")"
           else
-            printf "Adding remote to: %s\\n" \
+            printf "Adding remote to: %s\\n"          \
               "$(_color_primary "$(_notebooks current --name)")"
 
             _print_line "Adding remote to: $(_notebooks current --name)"
@@ -17942,41 +17942,41 @@ HEREDOC
         _warn printf "%s requires a value.\\n" "${1:-}" &&
           return 1
       fi
-    elif [[ "${1:-}" == 'NB_AUTO_SYNC'  ]] ||
-         [[ "${1:-}" == 'NB_FOOTER'     ]]
+    elif [[ "${1:-}" == 'NB_AUTO_SYNC'        ]] ||
+         [[ "${1:-}" == 'NB_FOOTER'           ]]
     then
-      if [[ "${2:-}" =~ ^0$|^1$         ]]
+      if [[ "${2:-}" =~ ^0$|^1$               ]]
       then
         return 0
       else
         _warn printf "%s must be either \"0\" or \"1\".\\n" "${1}" &&
           return 1
       fi
-    elif [[ "${1:-}" == 'NB_HEADER'     ]]
+    elif [[ "${1:-}" == 'NB_HEADER'           ]]
     then
-      if [[ "${2:-}" =~ ^0$|^1$|^2$|^3$ ]]
+      if [[ "${2:-}" =~ ^0$|^1$|^2$|^3$       ]]
       then
         return 0
       else
         _warn printf "%s must be \"0\", \"1\", \"2\", or \"3\".\\n" "${1}" &&
           return 1
       fi
-    elif [[ "${1:-}" == 'NB_LIMIT'      ]]
+    elif [[ "${1:-}" == 'NB_LIMIT'            ]]
     then
-      if [[ "${2:-}" =~ ^[0-9]+$        ]]
+      if [[ "${2:-}" =~ ^[0-9]+$              ]]
       then
         return 0
       else
         _warn printf "%s must be a number.\\n" "${1}" &&
           return 1
       fi
-    elif [[ "${1:-}" == 'NB_DIR'        ]]
+    elif [[ "${1:-}" == 'NB_DIR'              ]]
     then
-      if [[ -z "${2:-}"   ]] ||
-         [[ "${2}" == "/" ]] ||
+      if [[ -z  "${2:-}"                      ]] ||
+         [[ "${2}"   == "/"                   ]] ||
          {
-          [[ -e "${2}"   ]] &&
-          [[ ! -w "${2}" ]]
+           [[   -e "${2}"                     ]] &&
+           [[ ! -w "${2}"                     ]]
          }
       then
         _warn printf "\"%s\" is not a valid location for NB_DIR.\\n" "${2:-}" &&
@@ -18010,7 +18010,7 @@ HEREDOC
         _warn printf "%s must be one of the available themes.\\n" "${1}" &&
           return 1
       fi
-    elif [[ "${1:-}" == 'NB_SYNTAX_THEME' ]]
+    elif [[ "${1:-}" == 'NB_SYNTAX_THEME'     ]]
     then
       if ! hash bat 2>/dev/null
       then
@@ -18344,7 +18344,7 @@ _shell() {
   do
     case "${__arg}" in
       --clear-history)
-        if [[ -e "${HISTFILE}" ]]
+        if [[ -e "${HISTFILE}"  ]]
         then
           rm "${HISTFILE:?}"
           printf "History cleared.\\n"
@@ -18352,7 +18352,7 @@ _shell() {
         fi
         ;;
       *)
-        if [[ -n "${__arg}" ]]
+        if [[ -n "${__arg}"     ]]
         then
           _initial_command+=" ${__arg}"
         fi
