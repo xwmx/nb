@@ -352,7 +352,7 @@ By default, notebooks and notes are global (at `~/.nb`), so they are always avai
 
 #### Adding
 
-Use [`nb add`](#add) to create new notes:
+Use [`nb add`](#add) (shortcuts: `a`, `+`) to create new notes:
 
 ```bash
 # create a new note in your text editor
@@ -503,8 +503,8 @@ pb | nb add .js
 pb | nb a rust: .rs
 
 # save the clipboard contents as a Haskell file named "example.hs" in the
-# "snippets" notebook using the shortcut alias `a`
-pb | nb a snippets: example.hs
+# "snippets" notebook using the shortcut alias `+`
+pb | nb + snippets: example.hs
 ```
 
 Use [`nb show`](#show) to view code snippets with automatic syntax
@@ -516,7 +516,7 @@ with content from multiple input methods and sources using a single
 command:
 
 ```bash
-> pb | nb a "Argument content." \
+> pb | nb + "Argument content." \
     --title "Sample Title"      \
     --tags  tag1,tag2           \
     --content "Option content."
@@ -553,10 +553,10 @@ Encrypted notes can also be decrypted using the OpenSSL and GPG command
 line tools directly, so you aren't dependent on `nb` to decrypt your
 files.
 
-##### Shortcut Alias: `a`
+##### Shortcut Aliases: `a`, `+`
 
-`nb` includes single-character shortcuts for many commands, including
-`a` for `add`:
+`nb` includes shortcuts for many commands, including
+`a` and `+` for `add`:
 
 ```bash
 # create a new note in your text editor
@@ -566,10 +566,10 @@ nb a
 nb a example.md
 
 # create a new note containing "This is a note."
-nb a "This is a note."
+nb + "This is a note."
 
 # create a new note containing the clipboard contents with xclip
-xclip -o | nb a
+xclip -o | nb +
 
 # create a new note in the notebook named "example"
 nb example:a
@@ -977,8 +977,8 @@ For more information, see [Browsing](#-browsing).
 
 #### Editing
 
-You can edit an item in your editor by passing its id, filename, or title
-to [`nb edit`](#edit):
+You can edit an item in your editor with [`nb edit`](#edit)
+(shortcut: `e`):
 
 ```bash
 # edit note by id
@@ -1098,7 +1098,7 @@ For more information, see [Browsing](#-browsing).
 
 #### Viewing
 
-Notes and other items can be viewed using [`nb show`](#show):
+Notes and other items can be viewed using [`nb show`](#show) (shortcut: `s`):
 
 ```bash
 # show note by id
@@ -1318,7 +1318,8 @@ For more information, see [Browsing](#-browsing).
 #### Deleting
 
 To delete one or more notes, pass any number of ids, filenames, titles,
-and other [selectors](#selectors) to [`nb delete`](#delete):
+and other [selectors](#selectors) to [`nb delete`](#delete)
+(shortcuts: `d`, `-`):
 
 ```bash
 # delete item by id
@@ -1356,9 +1357,9 @@ By default, `nb delete` will display a confirmation prompt. To skip, use the
 nb delete 3 --force
 ```
 
-##### Shortcut Alias: `d`
+##### Shortcut Aliases: `d`, `-`
 
-`delete` has the alias `d`:
+`delete` has the aliases `d` and `-`:
 
 ```bash
 # delete note by id
@@ -1368,13 +1369,13 @@ nb d 3
 nb d example.md
 
 # delete note by title
-nb d "A Document Title"
+nb - "A Document Title"
 
 # delete note by id, alternative
 nb 3 d
 
 # delete note 12 in the notebook named "example"
-nb d example:12
+nb - example:12
 
 # delete note 12 in the notebook named "example", alternative
 nb example:12 d
@@ -1651,7 +1652,7 @@ Add: nb <url> Help: nb help bookmark
 
 `nb` provides multiple ways to view bookmarked web pages.
 
-[`nb open`](#open) opens the bookmarked page in your
+[`nb open`](#open) (shortcut: `o`) opens the bookmarked page in your
 system's primary web browser:
 
 ```bash
@@ -1668,8 +1669,8 @@ nb example:12 open
 nb example:open 12
 ```
 
-[`nb peek`](#peek) (alias: `preview`) opens the bookmarked page
-in your terminal web browser, such as
+[`nb peek`](#peek) (shortcut: `p`, alias: `preview`) opens the bookmarked
+page in your terminal web browser, such as
 [w3m](https://en.wikipedia.org/wiki/W3m),
 [Links](https://en.wikipedia.org/wiki/Links_(web_browser)), or
 [Lynx](https://en.wikipedia.org/wiki/Lynx_(web_browser)):
@@ -4114,20 +4115,23 @@ providing a streamlined, distraction-free approach for working with `nb`.
 
 ### Shortcut Aliases
 
-Several core `nb` subcommands have single-character aliases to make
+Several core `nb` subcommands have shortcut aliases to make
 them faster to work with:
 
 ```bash
 # `a` (add): add a new note named "example.md"
 nb a example.md
 
-# `b` (bookmark): list bookmarks
-nb b
+# `+` (add): add a new note titled "Example Title"
+nb + --title "Example Title"
 
-# `o` (open): open bookmark 12 in your web browser
+# `br` (browse): open the folder named "sample" in the web browser
+nb br sample/
+
+# `o` (open): open the URL from bookmark 12 in your web browser
 nb o 12
 
-# `p` (peek): open bookmark 6 in your terminal browser
+# `p` (peek): open the URL from bookmark 6 in your terminal browser
 nb p 6
 
 # `e` (edit): edit note 5
@@ -4135,6 +4139,9 @@ nb e 5
 
 # `d` (delete): delete note 19
 nb d 19
+
+# `d` (delete): delete note 123 in the notebook named "example:"
+nb - example:123
 
 # `s` (show): show note 27
 nb s 27
