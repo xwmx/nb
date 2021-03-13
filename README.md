@@ -4538,7 +4538,7 @@ Examples:
   nb example:a -t "Title"
 
 Aliases: `create`, `new`
-Shortcut Alias: `a`
+Shortcut Aliases: `a`, `+`
 ```
 
 #### `bookmark`
@@ -4647,9 +4647,9 @@ Usage:
 Subcommands:
   (default)  Open a notebook, folder, or item in the terminal or GUI web browser.
   add        Open the add view in the browser.
-             Shortcut Alias: `a`
+             Shortcut Aliases: `a`, `+`
   delete     Open the delete view in the browser.
-             Shortcut Alias: `d`
+             Shortcut Aliases: `d`, `-`
   edit       Open the edit view in the browser.
              Shortcut Alias: `e`
 
@@ -4752,7 +4752,7 @@ Examples:
   nb d example:12
   nb example:12 d
 
-Shortcut Alias: `d`
+Shortcut Aliases: `d`, `-`
 ```
 
 #### `edit`

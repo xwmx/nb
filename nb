@@ -3275,6 +3275,8 @@ _help() {
   for   __arg in "${@:-}"
   do
     case "${__arg}" in
+      +) _help "add" && return 0 ;;
+      -) _help "delete" && return 0 ;;
       --pager)
         _use_pager=1
         ;;
@@ -7388,6 +7390,22 @@ do
   shift
 
   case "${__opt}" in
+    -)
+      if [[ -z "${_SUBCOMMAND:-}" ]]
+      then
+        _SUBCOMMAND="delete"
+      else
+        _ARGUMENTS+=("${_SUBCOMMAND}")
+      fi
+      ;;
+    +)
+      if [[ -z "${_SUBCOMMAND:-}" ]]
+      then
+        _SUBCOMMAND="add"
+      else
+        _ARGUMENTS+=("${_SUBCOMMAND}")
+      fi
+      ;;
     -h|--help)
       case "${_SUBCOMMAND:-}" in
         git|run)
@@ -9630,7 +9648,7 @@ Examples:
   ${_ME} example:a -t "Title"
 
 Aliases: \`create\`, \`new\`
-Shortcut Alias: \`a\`
+Shortcut Aliases: \`a\`, \`+\`
 HEREDOC
 _add() {
   local _arguments=()
@@ -11100,7 +11118,7 @@ Examples:
   ${_ME} d example:12
   ${_ME} example:12 d
 
-Shortcut Alias: \`d\`
+Shortcut Aliases: \`d\`, \`-\`
 HEREDOC
 _delete() {
   local _force=0
@@ -14825,9 +14843,9 @@ Usage:
 Subcommands:
   (default)  Open a notebook, folder, or item in the terminal or GUI web browser.
   add        Open the add view in the browser.
-             Shortcut Alias: \`a\`
+             Shortcut Aliases: \`a\`, \`+\`
   delete     Open the delete view in the browser.
-             Shortcut Alias: \`d\`
+             Shortcut Aliases: \`d\`, \`-\`
   edit       Open the edit view in the browser.
              Shortcut Alias: \`e\`
 

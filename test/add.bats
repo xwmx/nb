@@ -1683,12 +1683,55 @@ HEREDOC
 
 # aliases ####################################################################
 
+@test "'+' creates new note." {
+  {
+    run "${_NB}" init
+  }
+
+  run "${_NB}" +                \
+    --title     "Example Title" \
+    --filename  "File One.md"   \
+    --content   "Content one."
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0      ]]
+
+  # Creates a new file:
+
+
+  [[ -f "${NB_DIR}/home/File One.md" ]]
+
+
+  diff \
+    <(cat "${NB_DIR}/home/File One.md") \
+    <(cat <<HEREDOC
+# Example Title
+
+Content one.
+HEREDOC
+)
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  printf "\$(git log): '%s'\n" "$(git log)"
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+}
+
 @test "'a' with no arguments creates new note file created with \$EDITOR." {
   {
     run "${_NB}" init
   }
 
-  run "${_NB}" add
+  run "${_NB}" a
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
