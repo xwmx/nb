@@ -7395,7 +7395,7 @@ do
       then
         _SUBCOMMAND="delete"
       else
-        _ARGUMENTS+=("${_SUBCOMMAND}")
+        _ARGUMENTS+=("delete")
       fi
       ;;
     +)
@@ -7403,7 +7403,7 @@ do
       then
         _SUBCOMMAND="add"
       else
-        _ARGUMENTS+=("${_SUBCOMMAND}")
+        _ARGUMENTS+=("add")
       fi
       ;;
     -h|--help)
