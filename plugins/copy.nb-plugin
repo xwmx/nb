@@ -56,7 +56,7 @@ _copy() {
   _notebook_path="$(_notebooks current --path)"
 
   # Validate that the selector represents a valid file:
-  if [[ -z "${_source_relative_path:-}"                   ]] ||
+  if [[   -z "${_source_relative_path:-}"                 ]] ||
      [[ ! -e "${_notebook_path}/${_source_relative_path}" ]]
   then
     printf "Not found: %s\\n" "${_selector}"

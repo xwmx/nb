@@ -76,7 +76,8 @@ _ebook() {
   local _prompt=0
   local _subcommand=
 
-  for __arg in "${@}"
+  local __arg=
+  for   __arg in "${@}"
   do
     case "${__arg}" in
       --force)
@@ -125,6 +126,7 @@ HEREDOC
       then
         while true
         do
+          local __yn=
           IFS='' read -r -e -d $'\n' -p "Proceed?  [y/N] " __yn
           case ${__yn} in
             [Yy]*)
@@ -199,10 +201,10 @@ HEREDOC
 
       local _pandoc_arguments=()
 
-      local _notebook_path
+      local _notebook_path=
       _notebook_path="$(_notebooks current --path)"
 
-      local _notebook_name
+      local _notebook_name=
       _notebook_name="$(_notebooks current --name)"
 
       local _stylesheet_path="${_notebook_path}/stylesheet.css"
@@ -232,12 +234,13 @@ HEREDOC
         exit 1
       fi
 
-      for __filename in "${_chapter_filenames[@]:-}"
+      local __filename=
+      for   __filename in "${_chapter_filenames[@]:-}"
       do
         _pandoc_arguments+=("${_notebook_path}/${__filename}")
       done
 
-      local _output_filename
+      local _output_filename=
       _output_filename="$(
         _notebooks current --filename "${_notebook_name}.epub"
       )"

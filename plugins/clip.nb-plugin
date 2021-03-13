@@ -35,7 +35,8 @@ _clip() {
   local _force=0
   local _selector=
 
-  for __arg in "${@:-}"
+  local __arg=
+  for   __arg in "${@:-}"
   do
     case "${__arg:-}" in
       '')       :                     ;;
@@ -53,10 +54,10 @@ _clip() {
     )"
   fi
 
-  local _notebook_path
+  local _notebook_path=
   _notebook_path="$(_notebooks current --path)"
 
-  if [[ -z    "${_source_relative_path:-}"                    ]] ||
+  if [[   -z  "${_source_relative_path:-}"                    ]] ||
      [[ ! -e  "${_notebook_path}/${_source_relative_path}"    ]]
   then
     printf "Saving clipboard contents...\\n"
@@ -65,6 +66,7 @@ _clip() {
     then
       while true
       do
+        local __yn=
         IFS='' read -r -e -d $'\n' -p "\
 $(_color_primary "Proceed?")  $(_color_brackets "y/N") " __yn
 
