@@ -610,6 +610,27 @@ Items can also be added within terminal and GUI web browsers using
 [add]
 ```
 
+`nb browse add` includes options for quickly pre-populating new notes
+with content:
+
+```bash
+> nb browse add --title "Example Title" --content "Example content." --tags tag1,tag2
+❯nb · home : +
+
+[# Example Title                                      ]
+[                                                     ]
+[#tag1 #tag2                                          ]
+[                                                     ]
+[Example content.                                     ]
+[                                                     ]
+[                                                     ]
+[                                                     ]
+[                                                     ]
+[                                                     ]
+
+[add]
+```
+
 For more information, see [Browsing](#-browsing).
 
 #### Listing & Filtering
@@ -2117,6 +2138,8 @@ Word `.docx` documents, and
 files are converted into HTML and rendered in the browser. Use the down
 arrow (`↓`) link to view or download the original file.
 
+#### `browse edit`
+
 Items in text formats can be edited within a terminal or GUI browser using
 the `edit` link on the item page or by opening the item with
 `nb browse edit` / `nb br e`, which automatically resizes the form to fit
@@ -2149,6 +2172,8 @@ the current terminal window:
 
 Terminal browsers can also be configured to use your editor.
 
+#### `browse add`
+
 Add an item within the browser using the `+` link or `nb browse add` /
 `nb br a`. Pass a notebook or folder selector to create a new
 note in that location:
@@ -2171,6 +2196,29 @@ note in that location:
 [add]
 ```
 
+`nb browse add` includes options for quickly pre-populating new notes
+with content:
+
+```bash
+> nb browse add --title "Example Title" --content "Example content." --tags tag1,tag2
+❯nb · home : +
+
+[# Example Title                                      ]
+[                                                     ]
+[#tag1 #tag2                                          ]
+[                                                     ]
+[Example content.                                     ]
+[                                                     ]
+[                                                     ]
+[                                                     ]
+[                                                     ]
+[                                                     ]
+
+[add]
+```
+
+#### `browse delete`
+
 Use the `-` link or `nb browse delete` / `nb br d` to delete an
 item:
 
@@ -2187,13 +2235,7 @@ item:
 
 ```
 
-To open any `nb browse` view in the system's primary GUI web browser,
-add the `nb browse --gui` / `nb br -g` option:
-
-```bash
-# open the item with id 123 in the "sample" notebook in the system's primary GUI browser
-nb browse sample:123 --gui
-```
+#### `browse` Search
 
 `nb browse` includes a search field powered by [`nb search`](#search) that
 can be used to search the current notebook or folder. Search queries are
@@ -2225,6 +2267,16 @@ search: [#tag2               ]
 
 For more information about search options, see [Search](#-search) and
 [`nb search`](#search).
+
+#### `browse --gui`
+
+To open any `nb browse` view in the system's primary GUI web browser,
+add the `nb browse --gui` / `nb br -g` option:
+
+```bash
+# open the item with id 123 in the "sample" notebook in the system's primary GUI browser
+nb browse sample:123 --gui
+```
 
 ##### Ace Editor
 
