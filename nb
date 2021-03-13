@@ -12095,10 +12095,10 @@ _import() {
   }
 
   local _convert=0
-  local _target_notebook_name=
   local _paths=()
-  local _subcommand=
   local _selector_path=
+  local _subcommand=
+  local _target_notebook_name=
   local _url=
 
   if _piped_input
