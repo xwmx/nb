@@ -59,16 +59,14 @@ _clip() {
   if [[ -z    "${_source_relative_path:-}"                    ]] ||
      [[ ! -e  "${_notebook_path}/${_source_relative_path}"    ]]
   then
-    printf                              \
-      "Saving clipboard contents%s.\\n" \
-      "${_selector:+" to $(_color_primary "${_selector}")"}"
+    printf "Saving clipboard contents...\\n"
 
     if ! ((_force))
     then
       while true
       do
         IFS='' read -r -e -d $'\n' -p "\
-$(  _color_primary "Proceed?")  $(_color_brackets "y/N") " __yn
+$(_color_primary "Proceed?")  $(_color_brackets "y/N") " __yn
 
         case ${__yn} in
           [Yy]*)
