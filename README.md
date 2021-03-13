@@ -2296,7 +2296,7 @@ download (from [GitHub](https://github.com/ajaxorg/ace-builds/)),
 install, and enable the Ace editor in `nb browse edit --gui`
 and `nb browse add --gui`.
 
-##### `browse` Portability
+#### `browse` Portability
 
 `nb browse` depends on [`ncat`](https://nmap.org/ncat/) and
 [`pandoc`](https://pandoc.org/). When only `pandoc` is available, the
@@ -2307,7 +2307,7 @@ plain text formats are rendered with the original markup unconverted.
 If neither `ncat` nor `pandoc` is available, `nb` falls back to the
 default behavior of [`nb show`](#show).
 
-##### `browse` Privacy
+#### `browse` Privacy
 
 `nb browse` is completely local and self-contained within `nb`, from the
 CSS all the way down through the HTTP request parsing and response building,
@@ -2331,7 +2331,7 @@ features to enhance privacy and avoid leaking information:
 - Links include a `rel="noopener noreferrer"` attribute.
 - `lynx` is opened with the `-noreferer` option.
 
-##### Shortcut Alias: `br`
+#### Shortcut Alias: `br`
 
 `nb browse` can also be used with the alias `br`:
 
