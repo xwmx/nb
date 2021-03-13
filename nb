@@ -16787,7 +16787,7 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
   #   _browse_serve
   #
   # Description:
-  #   Start the HTTP server in the brackground.
+  #   Start the HTTP server in the background.
   _browse_serve() {
     (ncat                                   \
       --exec "${_MY_PATH} browse --respond" \
