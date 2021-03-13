@@ -1124,7 +1124,7 @@ _alias_subcommand() {
     return 1
   fi
 
-  eval "describe \"${_alias}\" \"\$____describe_${_subcommand}\""
+  eval "describe \"${_alias}\" \"\$____DESCRIBE_${_subcommand}\""
   eval "_${_alias}() { _${_subcommand} \"\${@}\"; }"
 }
 
@@ -2645,7 +2645,7 @@ _string_is_url() {
 # <description> text can be passed as the second argument or as standard input.
 #
 # To make the <description> text available to other functions, `describe()`
-# assigns the text to a variable with the format `$____describe_<name>`.
+# assigns the text to a variable with the format `$____DESCRIBE_<name>`.
 #
 # When the `--get` option is used, the description for <name> is printed, if
 # one has been set.
@@ -2660,7 +2660,7 @@ describe() {
       _exit_1 printf "describe(): <description> required.\\n"
 
     local _name="${2:-}"
-    local _describe_var="____describe_${_name}"
+    local _describe_var="____DESCRIBE_${_name}"
 
     if [[ ! "${_name}" =~ ^\- ]] && [[ -n "${!_describe_var:-}" ]]
     then
@@ -2671,11 +2671,11 @@ describe() {
   else # set ------------------------------------------------------------------
     if [[ -n "${2:-}" ]]
     then # argument is present
-      read -r -d '' "____describe_${1}" <<HEREDOC
+      read -r -d '' "____DESCRIBE_${1}" <<HEREDOC
 ${2}
 HEREDOC
     else # no argument is present, so assume piped input
-      read -r -d '' "____describe_${1}"
+      read -r -d '' "____DESCRIBE_${1}"
     fi
   fi
   set -e
