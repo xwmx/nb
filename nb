@@ -16769,7 +16769,7 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
   while ((${#}))
   do
     case "${1:-}" in
-      a|add|-a|--add|--create|--new)
+      a|add|-a|--add|--create|--new|+)
         _action="add"
         ;;
       --col*)
@@ -16779,7 +16779,7 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
       --*container)
         _print_browse_render_function="container"
         ;;
-      d|delete|-d|--delete)
+      d|delete|-d|--delete|-)
         _action="delete"
         ;;
       e|edit|-e|--edit)
