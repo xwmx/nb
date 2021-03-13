@@ -17480,16 +17480,16 @@ _remote() {
   local __arg=
   for   __arg in "${@:-}"
   do
-    case "${__arg}" in
+    case "${__arg:-}" in
       -f|--force)
         _force=1
         ;;
       *)
-        if [[ -z "${_subcommand}" ]]
+        if [[   -z  "${_subcommand:-}"              ]]
         then
           _subcommand="${__arg}"
-        elif [[ "${_subcommand}" =~ ^set$|^add$ ]] &&
-             [[ -z "${_url}" ]]
+        elif [[     "${_subcommand}" =~ ^set$|^add$ ]] &&
+             [[ -z  "${_url:-}"                     ]]
         then
           _url="${__arg}"
         fi
@@ -18699,7 +18699,7 @@ _update() {
   local _current_path
   _current_path="${BASH_SOURCE[0]}"
 
-  if [[ -n "${_current_path}" ]] &&
+  if [[ -n "${_current_path}" ]]  &&
      [[ -L "${_current_path}" ]]
   then
     _current_path="$(_resolve_symlink "${_current_path}")"
@@ -18707,22 +18707,22 @@ _update() {
 
   if hash npm 2>/dev/null         &&
      npm list | grep -q notes.sh  &&
-     [[ "${_current_path}" =~ \/node\/|\/node_modules\/ ]]
+     [[ "${_current_path}"    =~ \/node\/|\/node_modules\/  ]]
   then # installed with npm
     cat <<HEREDOC
 Installed with npm. To update, run:
   npm update -g notes.sh
 HEREDOC
-  elif hash npm 2>/dev/null     &&
-       npm list | grep -q nb.sh &&
-       [[ "${_current_path}" =~ \/node\/|\/node_modules\/ ]]
+  elif hash npm 2>/dev/null       &&
+       npm list | grep -q nb.sh   &&
+       [[ "${_current_path}"  =~ \/node\/|\/node_modules\/  ]]
   then # installed with npm
     cat <<HEREDOC
 Installed with npm. To update, run:
   npm update -g nb.sh
 HEREDOC
-  elif [[ "${OSTYPE}" =~ ^darwin        ]] &&
-       [[ "${_current_path}" =~ Cellar  ]]
+  elif [[ "${OSTYPE}"         =~ ^darwin  ]] &&
+       [[ "${_current_path}"  =~ Cellar   ]]
   then
     cat <<HEREDOC
 Installed with Homebrew. To update, run:
