@@ -52,10 +52,10 @@ _search_all_setup() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 1                     ]]
+  [[ "${status}"    -eq 1           ]]
 
-  [[ "${lines[0]}"  =~  Usage\:               ]]
-  [[ "${lines[1]}"  =~  nb\ search\ \<query\> ]]
+  [[ "${lines[0]}"  =~  Usage\:     ]]
+  [[ "${lines[1]}"  =~  nb\ search  ]]
 }
 
 # aliases #####################################################################
@@ -772,6 +772,6 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[0]}" =~ Usage\:               ]]
-  [[ "${lines[1]}" =~ nb\ search\ \<query\> ]]
+  [[ "${lines[0]}" =~ Usage\:     ]]
+  [[ "${lines[1]}" =~ nb\ search  ]]
 }
