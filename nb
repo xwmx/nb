@@ -9205,7 +9205,7 @@ _resolve_links() {
         local __line=
         while IFS= read -r __line
         do
-          if [[ "${__line:-}" =~ \<nav\>|\<code\>      ]]
+          if [[ "${__line:-}" =~ \<nav|\<code     ]]
           then
             _linkable=0
           fi
@@ -9217,7 +9217,7 @@ _resolve_links() {
             printf "%s\\n" "${__line:-}"
           fi
 
-          if [[ "${__line:-}" =~ \<\/nav\>|\<\/code\>  ]]
+          if [[ "${__line:-}" =~ \<\/nav|\<\/code ]]
           then
             _linkable=1
           fi
