@@ -3408,7 +3408,7 @@ $(_color_primary "Usage:")
   ${_ME}
   ${_ME} [<ls options>...] [<id> | <filename> | <path> | <title> | <notebook>]
   ${_ME} [<url>] [<bookmark options>...]
-  ${_ME} [<notebook>:][<folder-path>/][<filename>] [<content>]
+  ${_ME} add [<notebook>:][<folder-path>/][<filename>] [<content>]
          [-c <content> | --content <content>] [--edit] [-e | --encrypt]
          [-f <filename> | --filename <filename>] [--folder <folder-path>]
          [--tags <tag1>,<tag2>...] [-t <title> | --title <title>]
@@ -3434,13 +3434,13 @@ $(_color_primary "Usage:")
   ${_ME} browse edit [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
   ${_ME} completions (check | install [-d | --download] | uninstall)
   ${_ME} count [<notebook>:][<folder-path>/]
-  ${_ME} delete [<notebook>:](<id> | <filename> | <path> | <title>)...
+  ${_ME} delete ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])...
             [-f | --force]
-  ${_ME} edit ([<notebook>:][<folder-path>/] [<id> | <filename> | <title>])
+  ${_ME} edit ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           [-c <content> | --content <content>] [--edit]
           [-e <editor> | --editor <editor>] [--overwrite] [--prepend]
-  ${_ME} export (<id> | <filename> | <path> | <title>) <path> [-f | --force]
-            [<pandoc options>...]
+  ${_ME} export ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+            <path> [-f | --force] [<pandoc options>...]
   ${_ME} export notebook <name> [<path>]
   ${_ME} export pandoc (<id> | <filename> | <path> | <title>)
             [<pandoc options>...]
@@ -3448,7 +3448,7 @@ $(_color_primary "Usage:")
   ${_ME} git <git-options>...
   ${_ME} help [<subcommand>] [-p | --print]
   ${_ME} help [-c | --colors] | [-r | --readme] | [-s | --short] [-p | --print]
-  ${_ME} history [<id> | <filename> | <path> | <title>]
+  ${_ME} history [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
   ${_ME} import [copy | download | move] (<path>... | <url>) [--convert]
   ${_ME} import notebook <path> [<name>]
   ${_ME} init [<remote-url>]
@@ -3463,8 +3463,9 @@ $(_color_primary "Usage:")
         [--paths] [-s | --sort] [-r | --reverse] [--tags]
         [-t <type> | --type <type> | --<type>]
         [<notebook>:][<id> | <filename> | <path> | <title> | <query>]
-  ${_ME} move [<notebook>:](<id> | <filename> | <path> | <title>) [-f | --force]
+  ${_ME} move ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note)
+          [-f | --force]
   ${_ME} notebooks [<name>] [--archived] [--global] [--local] [--names]
                [--paths] [--unarchived]
   ${_ME} notebooks add <name> [<remote-url>]
@@ -3479,9 +3480,9 @@ $(_color_primary "Usage:")
   ${_ME} notebooks show (<name> | <path> | <selector>) [--archived]
                     [--escaped | --name | --path | --filename [<filename>]]
   ${_ME} notebooks use <name>
-  ${_ME} open (<id> | <filename> | <path> | <title> | <notebook>)
-  ${_ME} peek (<id> | <filename> | <path> | <title> | <notebook>)
-  ${_ME} pin [<notebook>:](<id> | <filename> | <path> | <title>)
+  ${_ME} open ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+  ${_ME} peek ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+  ${_ME} pin  ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
   ${_ME} plugins [<name>] [--paths]
   ${_ME} plugins install [<path> | <url>] [--force]
   ${_ME} plugins uninstall <name> [--force]
@@ -3495,7 +3496,7 @@ $(_color_primary "Usage:")
   ${_ME} settings (get | show | unset) (<name> | <number>)
   ${_ME} settings set (<name> | <number>) <value>
   ${_ME} shell [<subcommand> [<options>...] | --clear-history]
-  ${_ME} show [<notebook>:](<id> | <filename> | <path> | <title>)
+  ${_ME} show ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           [[-a | --added] | [-b | --browse] | --filename | --id | --info-line |
           --path | [-p | --print] | --relative-path | [-r | --render] |
           --title | --type [<type>] | [-u | --updated]] [--no-color]
@@ -3503,7 +3504,7 @@ $(_color_primary "Usage:")
   ${_ME} subcommands [add <name>...] [alias <name> <alias>]
                  [describe <name> <usage>]
   ${_ME} sync [-a | --all]
-  ${_ME} unpin [<notebook>:](<id> | <filename> | <path> | <title>)
+  ${_ME} unpin ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
   ${_ME} update
   ${_ME} use <notebook>
   ${_ME} -i | --interactive [<subcommand> [<options>...]]
@@ -11096,7 +11097,7 @@ HEREDOC
 
 describe "delete" <<HEREDOC
 Usage:
-  ${_ME} delete [<notebook>:](<id> | <filename> | <path> | <title>)...
+  ${_ME} delete ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])...
             [-f | --force]
 
 Options:
@@ -11260,7 +11261,7 @@ _alias_subcommand "delete" "d"
 
 describe "edit" <<HEREDOC
 Usage:
-  ${_ME} edit ([<notebook>:][<folder-path>/] [<id> | <filename> | <title>])
+  ${_ME} edit ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           [-c <content> | --content <content>] [--edit]
           [-e <editor> | --editor <editor>] [--overwrite] [--prepend]
 
@@ -11715,8 +11716,8 @@ Please install %s manually. No .deb package available for %s."  \
 
 describe "export" <<HEREDOC
 Usage:
-  ${_ME} export (<id> | <filename> | <path> | <title>) <path> [-f | --force]
-            [<pandoc options>...]
+  ${_ME} export ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+            <path> [-f | --force] [<pandoc options>...]
   ${_ME} export notebook <name> [<path>]
   ${_ME} export pandoc (<id> | <filename> | <path> | <title>)
             [<pandoc options>...]
@@ -11893,7 +11894,7 @@ $(_color_primary "Overwrite existing file?") $(_color_brackets "y/N") " __yn
 
 describe "history" <<HEREDOC
 Usage:
-  ${_ME} history [<id> | <filename> | <path> | <title>]
+  ${_ME} history [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
 
 Description:
   Display notebook history using \`tig\` [1] (if available) or \`git log\`.
@@ -12278,8 +12279,9 @@ ${_url}
 
 describe "move" <<HEREDOC
 Usage:
-  ${_ME} move [<notebook>:](<id> | <filename> | <path> | <title>) [-f | --force]
+  ${_ME} move ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note)
+          [-f | --force]
 
 Options:
   -f, --force     Skip the confirmation prompt.
@@ -12608,7 +12610,7 @@ _alias_subcommand "open" "o"
 
 describe "peek" <<HEREDOC
 Usage:
-  ${_ME} peek (<id> | <filename> | <path> | <title> | <notebook>)
+  ${_ME} peek ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
 
 Description:
   View a note or notebook in the terminal. When the note is a bookmark, view
@@ -12656,7 +12658,7 @@ _alias_subcommand "peek" "preview"
 
 describe "pin" <<HEREDOC
 Usage:
-  ${_ME} pin [<notebook>:](<id> | <filename> | <path> | <title>)
+  ${_ME} pin ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
 
 Description:
   Pin an item so it appears first in lists.
@@ -13921,7 +13923,7 @@ _alias_subcommand "search" "grep"
 
 describe "show" <<HEREDOC
 Usage:
-  ${_ME} show [<notebook>:](<id> | <filename> | <path> | <title>)
+  ${_ME} show ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           [[-a | --added] | [-b | --browse] | --filename | --id | --info-line |
           --path | [-p | --print] | --relative-path | [-r | --render] |
           --title | --type [<type>] | [-u | --updated]] [--no-color]
@@ -14764,7 +14766,7 @@ _alias_subcommand "show" "view"
 
 describe "unpin" <<HEREDOC
 Usage:
-  ${_ME} unpin [<notebook>:](<id> | <filename> | <path> | <title>)
+  ${_ME} unpin ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
 
 Description:
   Unpin a pinned item.
