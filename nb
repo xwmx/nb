@@ -9532,7 +9532,7 @@ _web_browser() {
 
   # behaviors
 
-  if ! _piped_input && [[ -z "${_url:-}" ]]
+  if ! _piped_input && [[ -z "${_url:-}"        ]]
   then
     return 0
   else
