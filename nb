@@ -16155,7 +16155,7 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
 
         cat
 
-        print "</div>"
+        printf "</div>\\n"
       } | {
         _render
       }
@@ -16173,7 +16173,7 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
 
         cat
 
-        print "</div>"
+        printf "</div>\\n"
       } | {
         _resolve_links                    \
           "${_notebook_path}"             \
@@ -16274,7 +16274,7 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
 
       cat
 
-      printf "</div>"
+      printf "</div>\\n"
     } | {
       _render
     }
