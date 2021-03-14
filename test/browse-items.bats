@@ -7,6 +7,7 @@ export NB_SERVER_PORT=6789
 # .pdf ########################################################################
 
 @test "'browse' with .pdf file serves the rendered HTML page with [[wiki-style links]] resolved to internal web server URLs." {
+  hash "pdftotext" 2>/dev/null || skip
   {
     "${_NB}" init
 
