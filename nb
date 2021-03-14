@@ -8477,7 +8477,10 @@ h5, h6 {
 
 h6  {  font-weight:   normal; }
 
-p         { margin:   1em 0;  }
+p {
+  margin:             1em 0;
+  overflow:           hidden;
+}
 
 a         {  color:   ${_color_primary_hex}; text-decoration: none;       }
 a:hover   {  color:   ${_color_primary_hex}; text-decoration: underline;  }
