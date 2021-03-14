@@ -16161,7 +16161,18 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
       }
     else # render non-Org to HTML before resolving [[wiki-style links]]
       {
-        printf "" | _render "${_source_path}" --pandoc --body
+        if ((${NB_BROWSE_PDF_ENABLED:-0}))    &&
+           [[ "${_source_path}" =~ \.pdf  ]]  &&
+           _command_exists "pdftotext"
+        then
+          # TODO: spacing
+          # NOTE: add uniform newlines: `sed  '/^$/d' | sed G`
+          pdftotext "${_source_path}" - \
+            | tr -d '\014'                    \
+            | _render --from="md" --pandoc --body
+        else
+          printf "" | _render "${_source_path}" --pandoc --body
+        fi
       } | {
         printf "%s\\n" "$(
           _browse_render_header           \
@@ -16634,8 +16645,13 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
               | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
 
             return 0
-          elif _file_is_text "${_selector_path:-}"                    ||
-               [[ "${_selector_path:-}"     =~ \.docx$|\.epub$|\.odt$ ]]
+          elif _file_is_text "${_selector_path:-}"                        ||
+               [[ "${_selector_path:-}"     =~ \.docx$|\.epub$|\.odt$ ]]  ||
+               {
+                 ((${NB_BROWSE_PDF_ENABLED:-0}))                          &&
+                 [[ "${_selector_path}"    =~ \.pdf                   ]]  &&
+                 _command_exists "pdftotext"
+               }
           then
             _browse_render_item                         \
               "${_render_function_options[@]:-}"        \

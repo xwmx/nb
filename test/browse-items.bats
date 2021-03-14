@@ -4,6 +4,47 @@ load test_helper
 
 export NB_SERVER_PORT=6789
 
+# .pdf ########################################################################
+
+@test "'browse' with .pdf file serves the rendered HTML page with [[wiki-style links]] resolved to internal web server URLs." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example File.md"                         \
+      --title     "Example Title"                           \
+      --content   "Example content."
+
+    "${_NB}" import                                         \
+      "${NB_TEST_BASE_PATH}/fixtures/Example File.pdf"      \
+      "Example Folder/"
+
+    [[ -f "${NB_DIR}/home/Example Folder/Example File.pdf"  ]]
+
+    sleep 1
+  }
+
+  # TODO: improve
+  NB_BROWSE_PDF_ENABLED=1 run "${_NB}" browse 2/1 --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    ==  0                   ]]
+  [[ "${output}"    =~  \<\!DOCTYPE\ html\> ]]
+
+  printf "%s\\n" "${output}" | grep -q \
+"<p>Example PDF File"
+
+  printf "%s\\n" "${output}" | grep -q \
+"<a.* href=\"http://localhost:6789/home:1?--per-page=.*&--columns=.*\">\[\[home:1\]\]</a>"
+
+  printf "%s\\n" "${output}" | grep -q \
+"<a.* href=\"http://localhost:6789/home:1?--per-page=.*&--columns=.*&--query=%23tag1\">\#tag1</a>"
+
+  printf "%s\\n" "${output}" | grep -q \
+"<a.* href=\"http://localhost:6789/home:1?--per-page=.*&--columns=.*&--query=%23tag2\">\#tag2</a>"
+}
+
 # nb --browse / nb -b #########################################################
 
 @test "'nb --browse <folder-id>/<id>' serves the rendered HTML page with [[wiki-style links]] resolved to internal web server URLs." {
