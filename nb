@@ -13094,7 +13094,7 @@ _search() {
       local __target_path=
       for   __target_path in "${_target_paths[@]:-}"
       do
-        [[ -n "${__target_path:-}" ]] || continue
+        [[ -n "${__target_path:-}"    ]] || continue
 
         if [[ -d "${__target_path:-}" ]]
         then
@@ -13193,14 +13193,14 @@ _search() {
   local __and_query=
   for   __and_query in "${_and_queries[@]:-}"
   do
-    [[ -n "${__and_query:-}"    ]] || continue
+    [[ -n "${__and_query:-}"      ]] || continue
 
     if ((${#_or_queries[@]}))
     then
       local __or_query=
       for   __or_query in "${_or_queries[@]:-}"
       do
-        [[ -n "${__or_query:-}" ]] || continue
+        [[ -n "${__or_query:-}"   ]] || continue
 
         _queries+=("${__and_query}|${__or_query}")
       done
@@ -13362,7 +13362,7 @@ _search() {
 
           set +f
           {
-            if [[ -f "${__target_path:-}" ]]
+            if [[ -f "${__target_path:-}"     ]]
             then
               if [[ "${#_arguments[@]}" -le 1 ]]
               then
@@ -13372,7 +13372,7 @@ _search() {
               else
                 printf "%s" "${__target_path}"
               fi
-            elif [[ "${_max_depth}" == 1 ]]
+            elif [[ "${_max_depth}" == 1      ]]
             then
               # Print .index with null byte delimeter so it's included in
               # the list of files to search.
@@ -13431,7 +13431,7 @@ _search() {
             _search_paths+=("${__target_path%\/*}/.index")
           fi
 
-          if [[ "${#_queries[@]}" -le 1 ]]
+          if [[ "${#_queries[@]}"   -le 1 ]]
           then
             GIT_PAGER='' git -C "${_notebook_path}"     \
               grep                                      \
@@ -13466,14 +13466,14 @@ _search() {
                 local __and_query=
                 for   __and_query in "${_queries[@]:-}"
                 do
-                  [[ -n "${__and_query:-}" ]] || continue
+                  [[ -n "${__and_query:-}"    ]] || continue
 
                   _this_pipe=$(_temp file --touch) && {
                     rm -f   "${_this_pipe}"
                     mkfifo  "${_this_pipe}"
                   }
 
-                  if [[ -p "${_last_pipe:-}" ]]
+                  if [[ -p "${_last_pipe:-}"  ]]
                   then
                     <"${_last_pipe:-}" cat
                   else
