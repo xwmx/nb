@@ -3045,7 +3045,7 @@ HEREDOC
     local _notebook_path="${1:-}"
     local _prompt="${GIT_TERMINAL_PROMPT:-1}"
 
-    if [[ -z "${_notebook_path:-}" ]]
+    if [[ -z "${_notebook_path:-}"  ]]
     then
       _notebook_path="$(_notebooks current --path)"
     fi
@@ -3053,7 +3053,7 @@ HEREDOC
     local _remote_url=
 
     if ! _remote_url="$(git -C "${_notebook_path}" remote get-url origin 2>/dev/null)" ||
-       [[ -z "${_remote_url:-}" ]]
+       [[ -z "${_remote_url:-}"     ]]
     then
       return 0
     fi
@@ -3076,18 +3076,18 @@ HEREDOC
     local _git_branch=
     _git_branch="$(git -C "${_notebook_path}" rev-parse --abbrev-ref HEAD)"
 
-    if ! git -C "${_notebook_path}" show-branch \
+    if ! git -C "${_notebook_path}" show-branch         \
            "remotes/origin/${_git_branch}" > /dev/null 2>&1
     then
       local _remote_branch=
       _remote_branch="$(
-        git ls-remote --symref "${_remote_url:-}" HEAD \
+        git ls-remote --symref "${_remote_url:-}" HEAD  \
           | awk '/^ref:/ {sub(/refs\/heads\//, "", $2); print $2}'
       )"
 
       if [[ "${_git_branch:-}" != "${_remote_branch:-}" ]]
       then
-        git -C "${_notebook_path}" \
+        git -C "${_notebook_path}"                      \
           branch -m "${_git_branch:-}" "${_remote_branch:-}" &&
             _git_branch="${_remote_branch:-}"
       fi
