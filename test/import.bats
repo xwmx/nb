@@ -348,17 +348,17 @@ load test_helper
   printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
   printf "\${#_files[@]}: '%s'\\n" "${#_files[@]}"
 
-  [[ "${#_files[@]}" -eq 9                                    ]]
+  [[ "${#_files[@]}" -eq 10                                   ]]
 
   grep -q '# Example Title' "${NB_DIR}/home/Example Folder"/*
 
-  [[    -e "${_TMP_DIR}/fixtures/Example Folder"              ]]
+  [[    -d "${_TMP_DIR}/fixtures/Example Folder"              ]]
   [[    -d "${NB_DIR}/home/Example Folder"                    ]]
   [[    -f "${NB_DIR}/home/Example Folder/example.md"         ]]
   [[    -f "${NB_DIR}/home/Example Folder/example.com.html"   ]]
   [[    "${output}" =~ Example\ Folder                        ]]
 
-  [[    -e "${_TMP_DIR}/fixtures/bin"                         ]]
+  [[    -d "${_TMP_DIR}/fixtures/bin"                         ]]
   [[    -d "${NB_DIR}/home/bin"                               ]]
   [[    -f "${NB_DIR}/home/bin/bookmark"                      ]]
   [[    -f "${NB_DIR}/home/bin/mock_editor"                   ]]
@@ -543,7 +543,7 @@ load test_helper
   printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
   printf "\${#_files[@]}: '%s'\\n" "${#_files[@]}"
 
-  [[ "${#_files[@]}" -eq 9                                  ]]
+  [[ "${#_files[@]}" -eq 10                                 ]]
 
   grep -q '# Example Title' "${NB_DIR}/home/Example Folder"/*
 
