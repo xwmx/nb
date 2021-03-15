@@ -610,6 +610,14 @@ Items can also be added within terminal and GUI web browsers using
 [add]
 ```
 
+Pass a filename, relative path, and / or notebook name to create a new
+note at that location:
+
+```bash
+# open the add form in the browser to create the file "file.md" in the folder "example"
+nb browse add "example/file.md"
+```
+
 `nb browse add` includes options for quickly pre-populating new notes
 with content:
 
@@ -630,6 +638,9 @@ with content:
 
 [add]
 ```
+
+`nb browse add` can also be opened with
+[`nb add --browse`](#add) / [`nb a -b`](#add).
 
 For more information, see [Browsing](#-browsing).
 
