@@ -3,6 +3,60 @@
 
 load test_helper
 
+# --browse ####################################################################
+
+@test "'add --browse <item-selector>' creates new file with populated content and selector filename field." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder" --type "folder"
+
+    sleep 1
+  }
+
+  run "${_NB}" add --browse Example\ Folder/Example File.md --print \
+    --title     "Example Title"                                     \
+    --filename  "Example File.md"                                   \
+    --content   "Example content."                                  \
+    --tags      tag1,tag2
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq 0                                    ]]
+
+  [[    "${output}"  =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1 ]]
+
+  printf "%s\\n" "${output}" | grep -q \
+"<nav class=\"header-crumbs\"><h1><a rel=\"noopener noreferrer\" href=\"http://lo"
+
+  printf "%s\\n" "${output}" | grep -q \
+"calhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"
+
+  printf "%s\\n" "${output}" | grep -q \
+" <span class=\"dim\">·</span> <a rel=\"noopener noreferrer\" href=\"http://lo"
+
+  printf "%s\\n" "${output}" | grep -q \
+"calhost:6789/home:?--per-page=.*&--columns=.*\">home</a>"
+
+  printf "%s\\n" "${output}" | grep -q "cols=\".*\">"
+
+  printf "%s\\n" "${output}" | grep -q \
+"action=\"/home:1?--add&--per-page=.*&--columns=.*\""
+
+  printf "%s\\n" "${output}" | grep -q \
+"value=\"add\">"
+
+  printf "%s\\n" "${output}" | grep -q \
+"cols=\".*\"># Example Title${_NEWLINE}${_NEWLINE}#tag1 #tag2${_NEWLINE}${_NEWLINE}Example content.${_NEWLINE}</textarea>"
+
+  printf "%s\\n" "${output}" | grep -q -v \
+"<input type=\"hidden\" name=\"--title\""
+
+  printf "%s\\n" "${output}" | grep -q \
+"<input type=\"hidden\" name=\"--filename\" value=\"Example File.md\">"
+}
+
 # --title option ##############################################################
 
 @test "'add --title' with .org file creates file with .org title." {

@@ -4192,10 +4192,10 @@ Usage:
   nb [<ls options>...] [<id> | <filename> | <path> | <title> | <notebook>]
   nb [<url>] [<bookmark options>...]
   nb add [<notebook>:][<folder-path>/][<filename>] [<content>]
-         [-c <content> | --content <content>] [--edit] [-e | --encrypt]
-         [-f <filename> | --filename <filename>] [--folder <folder-path>]
-         [--tags <tag1>,<tag2>...] [-t <title> | --title <title>]
-         [--type <type>]
+         [-b | --browse] [-c <content> | --content <content>] [--edit]
+         [-e | --encrypt] [-f <filename> | --filename <filename>]
+         [--folder <folder-path>] [--tags <tag1>,<tag2>...]
+         [-t <title> | --title <title>] [--type <type>]
   nb add folder [<name>]
   nb bookmark [<ls options>...]
   nb bookmark [<notebook>:][<folder-path>/] <url>
@@ -4492,13 +4492,14 @@ For more information, see: `nb help`.
 ```text
 Usage:
   nb add [<notebook>:][<folder-path>/][<filename>] [<content>]
-         [-c <content> | --content <content>] [--edit] [-e | --encrypt]
-         [-f <filename> | --filename <filename>] [--folder <folder-path>]
-         [--tags <tag1>,<tag2>...] [-t <title> | --title <title>]
-         [--type <type>]
+         [-b | --browse] [-c <content> | --content <content>] [--edit]
+         [-e | --encrypt] [-f <filename> | --filename <filename>]
+         [--folder <folder-path>] [--tags <tag1>,<tag2>...]
+         [-t <title> | --title <title>] [--type <type>]
   nb add folder [<name>]
 
 Options:
+  -b, --browse                Add using a terminal or GUI web browser.
   -c, --content <content>     The content for the new note.
   --edit                      Open the note in the editor before saving when
                               content is piped or passed as an argument.

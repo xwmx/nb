@@ -3420,10 +3420,10 @@ $(_color_primary "Usage:")
   ${_ME} [<ls options>...] [<id> | <filename> | <path> | <title> | <notebook>]
   ${_ME} [<url>] [<bookmark options>...]
   ${_ME} add [<notebook>:][<folder-path>/][<filename>] [<content>]
-         [-c <content> | --content <content>] [--edit] [-e | --encrypt]
-         [-f <filename> | --filename <filename>] [--folder <folder-path>]
-         [--tags <tag1>,<tag2>...] [-t <title> | --title <title>]
-         [--type <type>]
+         [-b | --browse] [-c <content> | --content <content>] [--edit]
+         [-e | --encrypt] [-f <filename> | --filename <filename>]
+         [--folder <folder-path>] [--tags <tag1>,<tag2>...]
+         [-t <title> | --title <title>] [--type <type>]
   ${_ME} add folder [<name>]
   ${_ME} bookmark [<ls options>...]
   ${_ME} bookmark [<notebook>:][<folder-path>/] <url>
@@ -9609,13 +9609,14 @@ _web_browser() {
 describe "add" <<HEREDOC
 Usage:
   ${_ME} add [<notebook>:][<folder-path>/][<filename>] [<content>]
-         [-c <content> | --content <content>] [--edit] [-e | --encrypt]
-         [-f <filename> | --filename <filename>] [--folder <folder-path>]
-         [--tags <tag1>,<tag2>...] [-t <title> | --title <title>]
-         [--type <type>]
+         [-b | --browse] [-c <content> | --content <content>] [--edit]
+         [-e | --encrypt] [-f <filename> | --filename <filename>]
+         [--folder <folder-path>] [--tags <tag1>,<tag2>...]
+         [-t <title> | --title <title>] [--type <type>]
   ${_ME} add folder [<name>]
 
 Options:
+  -b, --browse                Add using a terminal or GUI web browser.
   -c, --content <content>     The content for the new note.
   --edit                      Open the note in the editor before saving when
                               content is piped or passed as an argument.
@@ -9668,6 +9669,8 @@ Shortcut Aliases: \`a\`, \`+\`
 HEREDOC
 _add() {
   local _arguments=()
+  local _browse=0
+  local _browse_arguments=()
   local _edit_before_commit=0
   local _encrypt=0
   local _file_type="${NB_DEFAULT_EXTENSION}"
@@ -9686,8 +9689,12 @@ _add() {
     local __val="${2:-}"
 
     case "${__arg}" in
+      -b|-br|--browse)
+        _browse=1
+        ;;
       -c|--content)
         _option_content="$(_option_get_value "${__arg}" "${__val:-}")"
+        _browse_arguments+=("${__arg}" "${__val:-}")
         shift
         ;;
       --edit)
@@ -9706,12 +9713,14 @@ _add() {
         ;;
       -f|--file*|--*path|--target*)
         _option_relative_path="$(_option_get_value "${__arg}" "${__val:-}")"
+        _browse_arguments+=("${__arg}" "${__val:-}")
         shift
         ;;
       --folder)
         _option_folder_relative_path="$(
           _option_get_value "${__arg}" "${__val:-}" | sed -e 's/\/$//'
         )"
+        _browse_arguments+=("${__arg}" "${_option_folder_relative_path:-}")
         shift
         ;;
       --no*color)
@@ -9723,19 +9732,23 @@ _add() {
         ;;
       --tag*)
         _tag_list="$(_option_get_tags "${__arg}" "${__val:-}")"
+        _browse_arguments+=("${__arg}" "${__val:-}")
         shift
         ;;
       -t|--title|--name)
         # TODO: Detect tag list for dynamic -t for --titles and --tags?
         _title="$(_option_get_value "${__arg}" "${__val:-}")"
+        _browse_arguments+=("${__arg}" "${__val:-}")
         shift
         ;;
       --type)
         _file_type="$(_option_get_value "${__arg}" "${__val:-}")"
+        _browse_arguments+=("${__arg}" "${__val:-}")
         shift
         ;;
       folder|directory)
         _file_type="folder"
+        _browse_arguments+=("${__arg}")
         ;;
       *)
         _arguments+=("${__arg:-}")
@@ -9744,6 +9757,13 @@ _add() {
 
     shift
   done
+
+  if ((_browse))
+  then
+    _defer "_browse" "add" "${_arguments[@]:-}" "${_browse_arguments[@]:-}"
+
+    return 0
+  fi
 
   local _common_tlds_excluding_text_file_extensions=(
     app agency au com company biz blog buzz ca cloud club de design dev cf ch
