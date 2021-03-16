@@ -1657,17 +1657,17 @@ _get_id_selector() {
 
   local _always_include_notebook=0
 
-  if [[ "${2:-}" == "--notebook" ]]
+  if [[ "${2:-}" == "--notebook"  ]]
   then
     _always_include_notebook=1
   fi
 
-  if [[ "${_selector:-}" =~ /$ ]]
+  if [[ "${_selector:-}" =~ /$    ]]
   then
     _trailing_slash=1
   fi
 
-  if [[ "${_selector:-}" =~ ^/  ]]
+  if [[ "${_selector:-}" =~ ^/    ]]
   then # selector is full path
     local _path_with_notebook="${_selector#${NB_DIR}/}"
     _notebook_name="${_path_with_notebook%%/*}"
@@ -1677,7 +1677,7 @@ _get_id_selector() {
       _selector_relative_path="${_path_with_notebook#*/}"
     fi
   else
-    if [[ "${_selector:-}" =~ : ]]
+    if [[ "${_selector:-}" =~ :   ]]
     then
       _notebook_name="${_selector%%:*}"
       _selector_relative_path="${_selector#*:}"
@@ -1715,7 +1715,7 @@ _get_id_selector() {
       local _segment_id=
 
       if [[ "${i}" -eq "$((${#_selector_segments[@]} - 1))" ]]
-      then
+      then # it's the last segment
         if [[ "${_selector_segments[i]:-}" =~ ^[0-9]+$      ]] &&
            ! ((_trailing_slash))
         then
@@ -1726,20 +1726,42 @@ _get_id_selector() {
       if [[ -z "${_segment_id:-}" ]]
       then
         _segment_id="$(
-          _index get_id "${_selector_segments[i]:-}" "${_parent_folder_path}"
+          _index get_id                   \
+            "${_selector_segments[i]:-}"  \
+            "${_parent_folder_path}"      || :
         )"
       fi
 
-      [[ -z "${_segment_id:-}"  ]] && return 1
+      local _segment_basename=
 
-      if [[ -z "${_id_path:-}"  ]]
+      if [[ -z "${_segment_id:-}"                           ]] &&
+         [[ "${_selector_segments[i]:-}"  =~ ^[0-9]+$       ]]
+      then
+        _segment_basename="$(
+          _index get_basename             \
+            "${_selector_segments[i]:-}"  \
+            "${_parent_folder_path}" 2>/dev/null || :
+        )"
+
+        if [[ -n "${_segment_basename:-}" ]]
+        then
+          _segment_id="${_selector_segments[i]:-}"
+        fi
+      fi
+
+      if [[ -z "${_segment_id:-}" ]]
+      then
+        return 1
+      fi
+
+      if [[ -z "${_id_path:-}"    ]]
       then
         _id_path+="${_segment_id}"
       else
         _id_path+="/${_segment_id}"
       fi
 
-      _parent_folder_path+="/${_selector_segments[i]:-}"
+      _parent_folder_path+="/${_segment_basename:-${_selector_segments[i]:-}}"
     done
   fi
 
@@ -16983,10 +17005,9 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
      ! [[ "${_print_browse_render_function:-}"  == "add"        ]]  &&
      ! [[ "${_print_browse_render_function:-}"  == "notebooks"  ]]
   then
-    # _arguments+=("$(
-    #   _show "${_selector:-}" --path 2>/dev/null || :
-    # )")
-    :
+    _arguments+=("$(
+      _show "${_selector:-}" --path 2>/dev/null || :
+    )")
   fi
 
   if ! _command_exists "ncat"
@@ -17086,39 +17107,36 @@ HEREDOC
 
   # build initial request URL
 
-  local _id_selector=
+  local _url_selector=
   local _request_url_base="http://localhost:${NB_SERVER_PORT}"
 
-# _warn printf "%s\\n" "${_selector:-}"
-  if [[     "${_action:-}"    == "add"  ]]
+  if [[ "${_action:-}"        == "add"  ]]
   then
     _arguments+=("--relative-path" "${_selector#*:}")
     _url_params+=("--relative-path=${_selector#*:}")
 
     if [[   "${_selector:-}"  =~ /      ]]
     then
-      _id_selector="$(_get_id_selector "${_selector%/*}" --notebook)"
+      _url_selector="$(_get_id_selector "${_selector%/*}" --notebook || :)"
     elif [[ "${_selector:-}"  =~ :      ]]
     then
-      _id_selector="$(_get_id_selector "${_selector%:*}" --notebook)"
+      _url_selector="$(_get_id_selector "${_selector%:*}" --notebook ||  :)"
     fi
 
-    if [[ -z "${_id_selector:-}"        ]]
+    if [[ -z "${_url_selector:-}"        ]]
     then
-      _id_selector="$(_notebooks current --name --no-color):"
+      _url_selector="$(_notebooks current --name --no-color):"
     fi
   else
-    _id_selector="$(_get_id_selector "${_selector:-}" --notebook)"
+    _url_selector="${_selector:-}"
   fi || :
 
-  local _request_url="${_request_url_base}/${_id_selector:-}"
-# _warn printf "%s\\n" "${_selector:-}"
-# _warn printf "%s\\n" "${_request_url:-}"
+  local _request_url="${_request_url_base}/${_url_selector:-}"
+
   if ((${#_url_params[@]}))
   then
     _request_url+="?$(_join "&" "${_url_params[@]:-}")"
   fi
-# _warn printf "%s\\n" "${_request_url:-}"
 
   # call functions directly
 

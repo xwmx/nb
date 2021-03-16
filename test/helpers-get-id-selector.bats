@@ -2,6 +2,30 @@
 
 load test_helper
 
+# selectors ###################################################################
+
+@test "'helpers get_id_selector <notebook>:<id>/<id>/<id>/<id>' exits with 0 and prints id selector." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example Folder/Sample Folder/Demo Folder/Example File.md"  \
+      --title     "one"                                                       \
+      --content   "Content one."
+  }
+
+  run "${_NB}" helpers  \
+    get_id_selector     \
+    "home:1/1/1/1"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0         ]]
+  [[   "${#lines[@]}" ==  1         ]]
+
+  [[   "${lines[0]}"  ==  "home:1/1/1/1" ]]
+}
+
 # conflicting id / name #######################################################
 
 @test "'helpers get_id_selector' favors id with conflicting id and folder name." {
