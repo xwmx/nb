@@ -4511,9 +4511,6 @@ _list() {
   # context variables
 
   local _maybe_id_path_context=
-  local _maybe_id_path_context_padded_left=
-  local _maybe_id_path_context_padded_right=
-
   local _maybe_selector_context=
 
   if [[ -n "${_folder_relative_path:-}" ]]
@@ -4528,8 +4525,6 @@ _list() {
     _maybe_id_path_context="$(
       _get_id_selector "${_folder_relative_path:-}/"
     )"
-    _maybe_id_path_context_padded_left=" ${_maybe_id_path_context}"
-    _maybe_id_path_context_padded_right="${_maybe_id_path_context} "
 
     _maybe_selector_context="${_folder_relative_path// /\\ }/"
   fi
@@ -4542,8 +4537,6 @@ _list() {
     )"
 
     _maybe_id_path_context="${_selected_notebook_escaped_name}:${_maybe_id_path_context:-}"
-    _maybe_id_path_context_padded_left=" ${_maybe_id_path_context}"
-    _maybe_id_path_context_padded_right="${_maybe_id_path_context} "
 
     _maybe_selector_context="${_selected_notebook_escaped_name}:${_maybe_selector_context}"
   fi
@@ -4633,8 +4626,6 @@ _list() {
   # ${_folder_relative_path}
   # ${_list_path}
   # ${_maybe_selector_context}
-  # ${_maybe_selector_context_padded_left}
-  # ${_maybe_selector_context_padded_right}
   # ${_pinned_basenames[@]}
   # ${_selector_arguments[@]}
   # ${_selector_basename}
@@ -5023,6 +5014,15 @@ ${_TPUT_SGR0}"
     if ! ((_filenames_count)) && [[ -z "${_filter_pattern:-}" ]]
     then
       {
+        local _maybe_id_path_context_padded_left=
+        local _maybe_id_path_context_padded_right=
+
+        if [[ -n "${_maybe_id_path_context:-}" ]]
+        then
+          _maybe_id_path_context_padded_left=" ${_maybe_id_path_context}"
+          _maybe_id_path_context_padded_right="${_maybe_id_path_context} "
+        fi
+
         if [[ "${_type}" =~ ^bookmark$|^bookmarks$ ]]
         then
           cat <<HEREDOC
