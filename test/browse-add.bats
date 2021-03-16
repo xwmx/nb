@@ -133,7 +133,60 @@ HEREDOC
 
 # CLI #########################################################################
 
-@test "'browse --add <item-selector>' creates new file with populated content and selector filename field." {
+@test "'browse --add <notebook>:<item-selector>' renders the 'add' form with populated content and selector filename field." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    sleep 1
+  }
+
+  run "${_NB}" browse                                 \
+    "Example Notebook:Example Folder/Example File.md" \
+    --add --print                                     \
+    --title     "Example Title"                       \
+    --content   "Example content."                    \
+    --tags      tag1,tag2
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq 0                                                  ]]
+
+  [[    "${output}"  =~  ❯.*nb.*\ .*·.*\ .*Example\ Notebook.*\ .*:.*\ .*1  ]]
+
+  printf "%s\\n" "${output}" | grep -q \
+"<nav class=\"header-crumbs\"><h1><a rel=\"noopener noreferrer\" href=\"http://lo"
+
+  printf "%s\\n" "${output}" | grep -q \
+"calhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"
+
+  printf "%s\\n" "${output}" | grep -q \
+" <span class=\"dim\">·</span> <a rel=\"noopener noreferrer\" href=\"http://lo"
+
+  printf "%s\\n" "${output}" | grep -q \
+"calhost:6789/Example%20Notebook:?--per-page=.*&--columns=.*\">Example Notebook</a>"
+
+  printf "%s\\n" "${output}" | grep -q "cols=\".*\">"
+
+  printf "%s\\n" "${output}" | grep -q \
+"action=\"/Example%20Notebook:?--add&--per-page=.*&--columns=.*\""
+
+  printf "%s\\n" "${output}" | grep -q \
+"value=\"add\">"
+
+  printf "%s\\n" "${output}" | grep -q \
+"cols=\".*\"># Example Title${_NEWLINE}${_NEWLINE}#tag1 #tag2${_NEWLINE}${_NEWLINE}Example content.${_NEWLINE}</textarea>"
+
+  printf "%s\\n" "${output}" | grep -q -v \
+"<input type=\"hidden\" name=\"--title\""
+
+  printf "%s\\n" "${output}" | grep -q \
+"<input type=\"hidden\" name=\"--relative-path\" value=\"Example Folder/Example File.md\">"
+}
+
+@test "'browse --add <item-selector>' renders the 'add' form with populated content and selector filename field." {
   {
     "${_NB}" init
 

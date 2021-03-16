@@ -15365,7 +15365,7 @@ _browse() {
       # TODO: https://stackoverflow.com/a/15844977
       cat <<HEREDOC
 <form
-  action="/${_form_action_selector}?--add${_url_params:-}"
+  action="/${_form_action_selector//' '/%20}?--add${_url_params:-}"
   accept-charset="UTF-8"
   method="post">
 <textarea
