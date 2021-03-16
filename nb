@@ -15957,7 +15957,8 @@ HEREDOC
         --page)     _option_value_is_present "${2:-}" && shift  ;;
         --per*)     _per_page="${2:?}"                && shift  ;;
         --terminal) _terminal_browser=1                         ;;
-        --relati*)  _option_value_is_present "${2:-}" && shift  ;;
+        --*)        _option_value_is_present "${2:-}" && shift  ;;
+        -*)         :                                           ;;
         *)          _selector="${1:-}"                          ;;
       esac
 
