@@ -7,6 +7,200 @@ export NB_SERVER_PORT=6789
 # non-breaking space
 export _S=" "
 
+# CLI #########################################################################
+
+@test "'browse --add <item-selector>' creates new file with populated content and selector filename field." {
+  {
+    "${_NB}" init
+
+    sleep 1
+  }
+
+  run "${_NB}" browse Example\ Folder/Example\ File.md --add --print  \
+    --title     "Example Title"                                       \
+    --content   "Example content."                                    \
+    --tags      tag1,tag2
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq 0                                    ]]
+
+  [[    "${output}"  =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1 ]]
+
+  printf "%s\\n" "${output}" | grep -q \
+"<nav class=\"header-crumbs\"><h1><a rel=\"noopener noreferrer\" href=\"http://lo"
+
+  printf "%s\\n" "${output}" | grep -q \
+"calhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"
+
+  printf "%s\\n" "${output}" | grep -q \
+" <span class=\"dim\">·</span> <a rel=\"noopener noreferrer\" href=\"http://lo"
+
+  printf "%s\\n" "${output}" | grep -q \
+"calhost:6789/home:?--per-page=.*&--columns=.*\">home</a>"
+
+  printf "%s\\n" "${output}" | grep -q "cols=\".*\">"
+
+  printf "%s\\n" "${output}" | grep -q \
+"action=\"/home:?--add&--per-page=.*&--columns=.*\""
+
+  printf "%s\\n" "${output}" | grep -q \
+"value=\"add\">"
+
+  printf "%s\\n" "${output}" | grep -q \
+"cols=\".*\"># Example Title${_NEWLINE}${_NEWLINE}#tag1 #tag2${_NEWLINE}${_NEWLINE}Example content.${_NEWLINE}</textarea>"
+
+  printf "%s\\n" "${output}" | grep -q -v \
+"<input type=\"hidden\" name=\"--title\""
+
+  printf "%s\\n" "${output}" | grep -q \
+"<input type=\"hidden\" name=\"--relative-path\" value=\"Example Folder/Example File.md\">"
+}
+
+@test "'browse --add <folder-selector>/ --filename <filename>' includes --relative-path <filename> hidden form field." {
+  # TODO: review behavior
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder" --type "folder"
+
+    sleep 1
+  }
+
+  run "${_NB}" browse Example\ Folder/ --add --print  \
+    --title     "Example Title"                       \
+    --filename  "Example File.md"                     \
+    --content   "Example content."                    \
+    --tags      tag1,tag2
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq 0                                    ]]
+
+  [[    "${output}"  =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1 ]]
+
+  printf "%s\\n" "${output}" | grep -q \
+"<nav class=\"header-crumbs\"><h1><a rel=\"noopener noreferrer\" href=\"http://lo"
+
+  printf "%s\\n" "${output}" | grep -q \
+"calhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"
+
+  printf "%s\\n" "${output}" | grep -q \
+" <span class=\"dim\">·</span> <a rel=\"noopener noreferrer\" href=\"http://lo"
+
+  printf "%s\\n" "${output}" | grep -q \
+"calhost:6789/home:?--per-page=.*&--columns=.*\">home</a>"
+
+  printf "%s\\n" "${output}" | grep -q "cols=\".*\">"
+
+  printf "%s\\n" "${output}" | grep -q \
+"action=\"/home:1?--add&--per-page=.*&--columns=.*\""
+
+  printf "%s\\n" "${output}" | grep -q \
+"value=\"add\">"
+
+  printf "%s\\n" "${output}" | grep -q \
+"cols=\".*\"># Example Title${_NEWLINE}${_NEWLINE}#tag1 #tag2${_NEWLINE}${_NEWLINE}Example content.${_NEWLINE}</textarea>"
+
+  printf "%s\\n" "${output}" | grep -q -v \
+"<input type=\"hidden\" name=\"--title\""
+
+  printf "%s\\n" "${output}" | grep -q \
+"<input type=\"hidden\" name=\"--relative-path\" value=\"Example File.md\">"
+}
+
+@test "'browse --add <folder-selector>/' includes add options as pre-filled content hidden form fields." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder" --type "folder"
+
+    sleep 1
+  }
+
+  run "${_NB}" browse Example\ Folder/Example\ File.md --add --print  \
+    --title     "Example Title"                                       \
+    --content   "Example content."                                    \
+    --tags      tag1,tag2
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq 0                                    ]]
+
+  [[    "${output}"  =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1 ]]
+
+  printf "%s\\n" "${output}" | grep -q \
+"<nav class=\"header-crumbs\"><h1><a rel=\"noopener noreferrer\" href=\"http://lo"
+
+  printf "%s\\n" "${output}" | grep -q \
+"calhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"
+
+  printf "%s\\n" "${output}" | grep -q \
+" <span class=\"dim\">·</span> <a rel=\"noopener noreferrer\" href=\"http://lo"
+
+  printf "%s\\n" "${output}" | grep -q \
+"calhost:6789/home:?--per-page=.*&--columns=.*\">home</a>"
+
+  printf "%s\\n" "${output}" | grep -q "cols=\".*\">"
+
+  printf "%s\\n" "${output}" | grep -q \
+"action=\"/home:1?--add&--per-page=.*&--columns=.*\""
+
+  printf "%s\\n" "${output}" | grep -q \
+"value=\"add\">"
+
+  printf "%s\\n" "${output}" | grep -q \
+"cols=\".*\"># Example Title${_NEWLINE}${_NEWLINE}#tag1 #tag2${_NEWLINE}${_NEWLINE}Example content.${_NEWLINE}</textarea>"
+
+  printf "%s\\n" "${output}" | grep -q -v \
+"<input type=\"hidden\" name=\"--title\""
+
+  printf "%s\\n" "${output}" | grep -q \
+"<input type=\"hidden\" name=\"--relative-path\" value=\"Example Folder/Example File.md\">"
+}
+
+@test "'browse --add <selector>' opens the add page in the browser." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder" --type "folder"
+
+    sleep 1
+  }
+
+  run "${_NB}" browse Example\ Folder/ --add --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq 0                                    ]]
+
+  [[    "${output}"  =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1 ]]
+
+  printf "%s\\n" "${output}" | grep -q \
+"<nav class=\"header-crumbs\"><h1><a rel=\"noopener noreferrer\" href=\"http://lo"
+
+  printf "%s\\n" "${output}" | grep -q \
+"calhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"
+
+  printf "%s\\n" "${output}" | grep -q \
+" <span class=\"dim\">·</span> <a rel=\"noopener noreferrer\" href=\"http://lo"
+
+  printf "%s\\n" "${output}" | grep -q \
+"calhost:6789/home:?--per-page=.*&--columns=.*\">home</a>"
+
+  printf "%s\\n" "${output}" | grep -q "cols=\".*\">"
+
+  printf "%s\\n" "${output}" | grep -q \
+"action=\"/home:1?--add&--per-page=.*&--columns=.*\""
+
+  printf "%s\\n" "${output}" | grep -q \
+"value=\"add\">"
+}
+
 # POST ########################################################################
 
 @test "POST to --add URL creates note and redirects."  {
@@ -67,151 +261,6 @@ HEREDOC
   [[ "${lines[2]}"  =~  Expires:\ .*                                          ]]
   [[ "${lines[3]}"  =~  Server:\ nb                                           ]]
   [[ "${lines[4]}"  =~  Location:\ http:\/\/localhost:6789\/1\?--per-page=30  ]]
-}
-
-# CLI #########################################################################
-
-@test "'browse --add <item-selector>' creates new file with populated content and selector filename field." {
-  {
-    "${_NB}" init
-
-    "${_NB}" add "Example Folder" --type "folder"
-
-    sleep 1
-  }
-
-  run "${_NB}" browse Example\ Folder/Example File.md --add --print \
-    --title     "Example Title"                                     \
-    --filename  "Example File.md"                                   \
-    --content   "Example content."                                  \
-    --tags      tag1,tag2
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[    "${status}"  -eq 0                                    ]]
-
-  [[    "${output}"  =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1 ]]
-
-  printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><h1><a rel=\"noopener noreferrer\" href=\"http://lo"
-
-  printf "%s\\n" "${output}" | grep -q \
-"calhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"
-
-  printf "%s\\n" "${output}" | grep -q \
-" <span class=\"dim\">·</span> <a rel=\"noopener noreferrer\" href=\"http://lo"
-
-  printf "%s\\n" "${output}" | grep -q \
-"calhost:6789/home:?--per-page=.*&--columns=.*\">home</a>"
-
-  printf "%s\\n" "${output}" | grep -q "cols=\".*\">"
-
-  printf "%s\\n" "${output}" | grep -q \
-"action=\"/home:1?--add&--per-page=.*&--columns=.*\""
-
-  printf "%s\\n" "${output}" | grep -q \
-"value=\"add\">"
-
-  printf "%s\\n" "${output}" | grep -q \
-"cols=\".*\"># Example Title${_NEWLINE}${_NEWLINE}#tag1 #tag2${_NEWLINE}${_NEWLINE}Example content.${_NEWLINE}</textarea>"
-
-  printf "%s\\n" "${output}" | grep -q -v \
-"<input type=\"hidden\" name=\"--title\""
-
-  printf "%s\\n" "${output}" | grep -q \
-"<input type=\"hidden\" name=\"--filename\" value=\"Example File.md\">"
-}
-
-@test "'browse --add <folder-selector>/' includes add options as pre-filled content hidden form fields." {
-  {
-    "${_NB}" init
-
-    "${_NB}" add "Example Folder" --type "folder"
-
-    sleep 1
-  }
-
-  run "${_NB}" browse Example\ Folder/ --add --print  \
-    --title     "Example Title"                       \
-    --filename  "Example File.md"                     \
-    --content   "Example content."                    \
-    --tags      tag1,tag2
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[    "${status}"  -eq 0                                    ]]
-
-  [[    "${output}"  =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1 ]]
-
-  printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><h1><a rel=\"noopener noreferrer\" href=\"http://lo"
-
-  printf "%s\\n" "${output}" | grep -q \
-"calhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"
-
-  printf "%s\\n" "${output}" | grep -q \
-" <span class=\"dim\">·</span> <a rel=\"noopener noreferrer\" href=\"http://lo"
-
-  printf "%s\\n" "${output}" | grep -q \
-"calhost:6789/home:?--per-page=.*&--columns=.*\">home</a>"
-
-  printf "%s\\n" "${output}" | grep -q "cols=\".*\">"
-
-  printf "%s\\n" "${output}" | grep -q \
-"action=\"/home:1?--add&--per-page=.*&--columns=.*\""
-
-  printf "%s\\n" "${output}" | grep -q \
-"value=\"add\">"
-
-  printf "%s\\n" "${output}" | grep -q \
-"cols=\".*\"># Example Title${_NEWLINE}${_NEWLINE}#tag1 #tag2${_NEWLINE}${_NEWLINE}Example content.${_NEWLINE}</textarea>"
-
-  printf "%s\\n" "${output}" | grep -q -v \
-"<input type=\"hidden\" name=\"--title\""
-
-  printf "%s\\n" "${output}" | grep -q \
-"<input type=\"hidden\" name=\"--filename\" value=\"Example File.md\">"
-}
-
-@test "'browse --add <selector>' opens the add page in the browser." {
-  {
-    "${_NB}" init
-
-    "${_NB}" add "Example Folder" --type "folder"
-
-    sleep 1
-  }
-
-  run "${_NB}" browse Example\ Folder/ --add --print
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[    "${status}"  -eq 0                                    ]]
-
-  [[    "${output}"  =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1 ]]
-
-  printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><h1><a rel=\"noopener noreferrer\" href=\"http://lo"
-
-  printf "%s\\n" "${output}" | grep -q \
-"calhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"
-
-  printf "%s\\n" "${output}" | grep -q \
-" <span class=\"dim\">·</span> <a rel=\"noopener noreferrer\" href=\"http://lo"
-
-  printf "%s\\n" "${output}" | grep -q \
-"calhost:6789/home:?--per-page=.*&--columns=.*\">home</a>"
-
-  printf "%s\\n" "${output}" | grep -q "cols=\".*\">"
-
-  printf "%s\\n" "${output}" | grep -q \
-"action=\"/home:1?--add&--per-page=.*&--columns=.*\""
-
-  printf "%s\\n" "${output}" | grep -q \
-"value=\"add\">"
 }
 
 # option parameters ###########################################################

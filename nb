@@ -14892,6 +14892,7 @@ Usage:
             [-s | --serve]
   ${_ME} browse add [<notebook>:][<folder-path>/][<filename>] [-c <content> |
             --content <content>] [-f <filename> | --filename <filename>]
+            [-r <relative-path> | --relative-path <relative-path>]
             [--tags <tag1>,<tag2>...] [-t <title> | --title <title>]
   ${_ME} browse delete ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
   ${_ME} browse edit ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
@@ -14906,15 +14907,19 @@ Subcommands:
              Shortcut Alias: \`e\`
 
 Options:
-  -c, --content <content>      Add content to the new note.
-  -f, --filename <filename>    Specify a filename for the new note.
-  -g, --gui                    Open in the system's primary GUI web browser.
-  --notebooks                  Browse notebooks.
-  --print                      Print to standard output.
-  -q, --query <query>          Open to the search results for <query>.
-  -s, --serve                  Start the web application server.
-  -t, --tags <tag1>,<tag2>...  A comma-separated list of tags.
-  -t, --title <title>          Add a title to the new note.
+  -c, --content <content>              Add content to the new note.
+  -f, --filename <filename>            Specify a filename for the new note.
+                                       Alias for -r / --relative-path.
+  -g, --gui                            Open in the system's primary GUI web
+                                       browser.
+  --notebooks                          Browse notebooks.
+  --print                              Print to standard output.
+  -q, --query <query>                  Open to the search results for <query>.
+  -r, --relative-path <relative-path>  Specify a relative path for the new note.
+                                       Alias for -f / --filename.
+  -s, --serve                          Start the web application server.
+  -t, --tags <tag1>,<tag2>...          A comma-separated list of tags.
+  -t, --title <title>                  Add a title to the new note.
 
 Description:
   Browse, view, and edit linked notes, bookmarks, notebooks, folders, and
@@ -15197,9 +15202,9 @@ _browse() {
   _browse_render_add() {
     local _columns="${NB_BROWSE_COLUMNS:-70}"
     local _content=
-    local _filename=
     local _pagination_options=()
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
+    local _relative_path=
     local _selector=
     local _subcommand_options=()
     local _tag_list=
@@ -15218,9 +15223,14 @@ _browse() {
           _content="$(_option_get_value "${1:-}" "${2:-}")"
           shift
           ;;
-        -f|--filename)
-          _filename="$(_option_get_value "${1:-}" "${2:-}")"
-          _subcommand_options+=("${1:-}" "${2:-}")
+        -f|--file*|--*path|--target*)
+          _relative_path="$(_option_get_value "${1:-}" "${2:-}")"
+
+          if ! _contains "--relative-path" "${_subcommand_options[@]:-}"
+          then
+            _subcommand_options+=("--relative-path" "${2:-}")
+          fi
+
           shift
           ;;
         --page)
@@ -15277,24 +15287,24 @@ _browse() {
       then
         _container_path="$(_show "${_selector%/*}" --path 2>/dev/null || :)"
 
-        if ! _contains --filename "${_subcommand_options[@]:-}"
+        if ! _contains --relative-path "${_subcommand_options[@]:-}"
         then
-          _subcommand_options+=("--filename" "${_selector##*/}")
+          _subcommand_options+=("--relative-path" "${_selector##*/}")
         fi
       elif [[ "${_selector:-}" =~ : ]]
       then
         _container_path="$(_show "${_selector%:*}:" --path 2>/dev/null || :)"
 
-        if ! _contains --filename "${_subcommand_options[@]:-}"
+        if ! _contains --relative-path "${_subcommand_options[@]:-}"
         then
-          _subcommand_options+=("--filename" "${_selector#*:}")
+          _subcommand_options+=("--relative-path" "${_selector#*:}")
         fi
       else
         _container_path="$(_notebooks current --path 2>/dev/null || :)"
 
-        if ! _contains --filename "${_subcommand_options[@]:-}"
+        if ! _contains --relative-path  "${_subcommand_options[@]:-}"
         then
-          _subcommand_options+=("--filename" "${_selector}")
+          _subcommand_options+=("--relative-path" "${_selector}")
         fi
       fi
     fi
@@ -16907,12 +16917,15 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
         ;;
       --render*add)
         _print_browse_render_function="add"
+        _action="add"
         ;;
       --render*delete)
         _print_browse_render_function="delete"
+        _action="delete"
         ;;
       --render*edit)
         _print_browse_render_function="edit"
+        _action="edit"
         ;;
       --render*notebooks)
         _print_browse_render_function="notebooks"
@@ -16960,12 +16973,15 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
 
   local _arguments=()
 
-  if ! ((_browse_notebooks))      &&
-     ! [[ "${_print_browse_render_function}" == "notebooks" ]]
+  if ! ((_browse_notebooks))                                        &&
+     ! [[ "${_action:-}"                        == "add"        ]]  &&
+     ! [[ "${_print_browse_render_function:-}"  == "add"        ]]  &&
+     ! [[ "${_print_browse_render_function:-}"  == "notebooks"  ]]
   then
-    _arguments+=("$(
-      _show "${_selector:-}" --path 2>/dev/null || :
-    )")
+    # _arguments+=("$(
+    #   _show "${_selector:-}" --path 2>/dev/null || :
+    # )")
+    :
   fi
 
   if ! _command_exists "ncat"
@@ -17065,13 +17081,39 @@ HEREDOC
 
   # build initial request URL
 
+  local _id_selector=
   local _request_url_base="http://localhost:${NB_SERVER_PORT}"
-  local _request_url="${_request_url_base}/${_selector:-}"
 
+# _warn printf "%s\\n" "${_selector:-}"
+  if [[     "${_action:-}"    == "add"  ]]
+  then
+    _arguments+=("--relative-path" "${_selector#*:}")
+    _url_params+=("--relative-path=${_selector#*:}")
+
+    if [[   "${_selector:-}"  =~ /      ]]
+    then
+      _id_selector="$(_get_id_selector "${_selector%/*}" --notebook)"
+    elif [[ "${_selector:-}"  =~ :      ]]
+    then
+      _id_selector="$(_get_id_selector "${_selector%:*}" --notebook)"
+    fi
+
+    if [[ -z "${_id_selector:-}"        ]]
+    then
+      _id_selector="$(_notebooks current --name --no-color):"
+    fi
+  else
+    _id_selector="$(_get_id_selector "${_selector:-}" --notebook)"
+  fi || :
+
+  local _request_url="${_request_url_base}/${_id_selector:-}"
+# _warn printf "%s\\n" "${_selector:-}"
+# _warn printf "%s\\n" "${_request_url:-}"
   if ((${#_url_params[@]}))
   then
-    _request_url+="?$(_join "&" "${_url_params[@]}")"
+    _request_url+="?$(_join "&" "${_url_params[@]:-}")"
   fi
+# _warn printf "%s\\n" "${_request_url:-}"
 
   # call functions directly
 
