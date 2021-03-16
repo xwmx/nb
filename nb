@@ -15117,6 +15117,7 @@ _browse() {
 
       local _new_selector="${_new_info_line#*[}"
       _new_selector="${_new_selector%%]*}"
+      _new_selector="${_new_selector//'\ '/ }"
 
       printf "%s\\n" "${_new_selector}"
     fi
@@ -16365,14 +16366,14 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
          [[ ! "${_subcommand_options[$((i+1))]:--}" =~ ^-   ]]
       then
         printf "<input type=\"hidden\" name=\"%s\" value=\"%s\">\\n"  \
-          "${_subcommand_options[i]}"                                 \
-          "${_subcommand_options[$((i+1))]}"
+          "$(_get_uri --encode "${_subcommand_options[i]}")"          \
+          "$(_get_uri --encode "${_subcommand_options[$((i+1))]}")"
 
         i="$((i+1))"
       elif [[ -n "${_subcommand_options[i]:-}" ]]
       then
         printf "<input type=\"hidden\" name=\"%s\">\\n"               \
-          "${_subcommand_options[i]}"
+          "$(_get_uri --encode "${_subcommand_options[i]}")"
       fi
     done
   }
@@ -16632,7 +16633,7 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
             )"
 
             _browse_respond_with 302                \
-              "http://localhost:${NB_SERVER_PORT}/${_new_selector}${_response_url_params:-}"
+"http://localhost:${NB_SERVER_PORT}/${_new_selector}${_response_url_params:-}"
 
             return 0
             ;;

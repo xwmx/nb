@@ -9,6 +9,72 @@ export _S=" "
 
 # POST ########################################################################
 
+@test "POST to --add URL accepts --relative-path with folder."  {
+  {
+    "${_NB}" init
+
+    "${_NB}" add folder "Example Folder"
+    "${_NB}" add folder "Sample Folder"
+
+    declare _data="content=Example%20content."
+    _data+="&--title=Example%20Title"
+    _data+="&--relative-path=Sample%20Folder%2FExample%20File.md"
+
+    (ncat                                   \
+      --exec "${_NB} browse --respond"      \
+      --listen                              \
+      --source-port "6789"                  \
+      2>/dev/null) &
+
+    sleep 1
+  }
+
+  run curl -sS -D - --data "${_data}" "http://localhost:6789/home:1/?--add"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[    "${status}"  -eq 0                                ]]
+
+  # Creates file:
+
+  [[ -f "${NB_DIR}/home/Sample Folder/Example File.md"    ]]
+
+  diff                                                    \
+    <(cat "${NB_DIR}/home/Sample Folder/Example File.md") \
+    <(cat <<HEREDOC
+# Example Title
+
+Example content.
+HEREDOC
+)
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
+  while [[ -n "$(git status --porcelain)"   ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  # Prints output:
+
+  [[ "${#lines[@]}" -eq 5                                           ]]
+
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Found                        ]]
+  [[ "${lines[1]}"  =~  Date:\ .*                                   ]]
+  [[ "${lines[2]}"  =~  Expires:\ .*                                ]]
+  [[ "${lines[3]}"  =~  Server:\ nb                                 ]]
+  [[ "${lines[4]}"  =~  \
+Location:\ http:\/\/localhost:6789\/Sample\ Folder/1\?--per-page=30 ]]
+}
+
 @test "POST to --add URL prefers --relative-path parameter."  {
   {
     "${_NB}" init
@@ -183,7 +249,7 @@ HEREDOC
 "<input type=\"hidden\" name=\"--title\""
 
   printf "%s\\n" "${output}" | grep -q \
-"<input type=\"hidden\" name=\"--relative-path\" value=\"Example Folder/Example File.md\">"
+"<input type=\"hidden\" name=\"--relative-path\" value=\"Example%20Folder%2FExample%20File.md\">"
 }
 
 @test "'browse --add <item-selector>' renders the 'add' form with populated content and selector filename field." {
@@ -232,7 +298,7 @@ HEREDOC
 "<input type=\"hidden\" name=\"--title\""
 
   printf "%s\\n" "${output}" | grep -q \
-"<input type=\"hidden\" name=\"--relative-path\" value=\"Example Folder/Example File.md\">"
+"<input type=\"hidden\" name=\"--relative-path\" value=\"Example%20Folder%2FExample%20File.md\">"
 }
 
 @test "'browse --add <folder-selector>/ --filename <filename>' includes --relative-path <filename> hidden form field." {
@@ -285,7 +351,7 @@ HEREDOC
 "<input type=\"hidden\" name=\"--title\""
 
   printf "%s\\n" "${output}" | grep -q \
-"<input type=\"hidden\" name=\"--relative-path\" value=\"Example File.md\">"
+"<input type=\"hidden\" name=\"--relative-path\" value=\"Example%20File.md\">"
 }
 
 @test "'browse --add <folder-selector>/' includes add options as pre-filled content hidden form fields." {
@@ -336,7 +402,7 @@ HEREDOC
 "<input type=\"hidden\" name=\"--title\""
 
   printf "%s\\n" "${output}" | grep -q \
-"<input type=\"hidden\" name=\"--relative-path\" value=\"Example Folder/Example File.md\">"
+"<input type=\"hidden\" name=\"--relative-path\" value=\"Example%20Folder%2FExample%20File.md\">"
 }
 
 @test "'browse --add <selector>' opens the add page in the browser." {
