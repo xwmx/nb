@@ -15081,7 +15081,12 @@ _browse() {
 
     if [[ -n "${_content:-}"  ]]
     then
-      _add_options+=("${_id_selector}" "--no-color" "${_add_options[@]:-}")
+      if ! _contains "--relative-path" "${_add_options[@]:-}"
+      then
+        _add_options+=("${_id_selector}")
+      fi
+
+      _add_options+=("--no-color" "${_add_options[@]:-}")
 
       local _new_info_line=
       _new_info_line="$(
