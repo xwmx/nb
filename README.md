@@ -4221,9 +4221,9 @@ Usage:
   nb browse [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
             [-g | --gui] [--notebooks] [--print] [-q | --query <query>]
             [-s | --serve]
-  nb browse add [<notebook>:][<folder-path>/][<filename>] [-c <content> |
-            --content <content>] [-f <filename> | --filename <filename>]
-            [--tags <tag1>,<tag2>...] [-t <title> | --title <title>]
+  nb browse add [<notebook>:][<folder-path>/][<filename>]
+            [-c <content> | --content <content>] [--tags <tag1>,<tag2>...]
+            [-t <title> | --title <title>]
   nb browse delete ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
   nb browse edit ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
   nb completions (check | install [-d | --download] | uninstall)
@@ -4659,10 +4659,9 @@ Usage:
   nb browse [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
             [-g | --gui] [--notebooks] [--print] [-q | --query <query>]
             [-s | --serve]
-  nb browse add [<notebook>:][<folder-path>/][<filename>] [-c <content> |
-            --content <content>] [-f <filename> | --filename <filename>]
-            [-r <relative-path> | --relative-path <relative-path>]
-            [--tags <tag1>,<tag2>...] [-t <title> | --title <title>]
+  nb browse add [<notebook>:][<folder-path>/][<filename>]
+            [-c <content> | --content <content>] [--tags <tag1>,<tag2>...]
+            [-t <title> | --title <title>]
   nb browse delete ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
   nb browse edit ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
 
@@ -4676,19 +4675,14 @@ Subcommands:
              Shortcut Alias: `e`
 
 Options:
-  -c, --content <content>              Add content to the new note.
-  -f, --filename <filename>            Specify a filename for the new note.
-                                       Alias for -r / --relative-path.
-  -g, --gui                            Open in the system's primary GUI web
-                                       browser.
-  --notebooks                          Browse notebooks.
-  --print                              Print to standard output.
-  -q, --query <query>                  Open to the search results for <query>.
-  -r, --relative-path <relative-path>  Specify a relative path for the new note.
-                                       Alias for -f / --filename.
-  -s, --serve                          Start the web application server.
-  -t, --tags <tag1>,<tag2>...          A comma-separated list of tags.
-  -t, --title <title>                  Add a title to the new note.
+  -c, --content <content>      Add content to the new note.
+  -g, --gui                    Open in the system's primary GUI web browser.
+  --notebooks                  Browse notebooks.
+  --print                      Print to standard output.
+  -q, --query <query>          Open to the search results for <query>.
+  -s, --serve                  Start the web application server.
+  -t, --tags <tag1>,<tag2>...  A comma-separated list of tags.
+  -t, --title <title>          Add a title to the new note.
 
 Description:
   Browse, view, and edit linked notes, bookmarks, notebooks, folders, and
