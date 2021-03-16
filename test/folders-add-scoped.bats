@@ -69,8 +69,8 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Added:                                ]]
-  [[ "${output}" =~ Example\\\ Folder/example-filename.md ]]
+  [[ "${output}" =~ Added:                              ]]
+  [[ "${output}" =~ Example\ Folder/example-filename.md ]]
 }
 
 # notebook:folder/ #####################################################################
@@ -150,8 +150,8 @@ load test_helper
 
   [[    "${output}" =~ Added:                                     ]]
   [[    "${output}" =~ 📂                                         ]]
-  [[    "${output}" =~ home:Example\\\ Folder/1                   ]]
-  [[    "${output}" =~ home:Example\\\ Folder/folder              ]]
+  [[    "${output}" =~ home:Example\ Folder/1                     ]]
+  [[    "${output}" =~ home:Example\ Folder/folder                ]]
   [[ !  "${output}" =~ \.                                         ]]
 }
 
@@ -223,8 +223,8 @@ load test_helper
   # Prints output:
 
   [[ "${output}" =~ Added:                                        ]]
-  [[ "${output}" =~ home:Example\\\ Folder/1                      ]]
-  [[ "${output}" =~ home:Example\\\ Folder/example-filename.md    ]]
+  [[ "${output}" =~ home:Example\ Folder/1                        ]]
+  [[ "${output}" =~ home:Example\ Folder/example-filename.md      ]]
 }
 
 @test "'add notebook:<folder>/' creates new note without errors." {
@@ -293,7 +293,7 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Added:                            ]]
-  [[ "${output}" =~ home:Example\\\ Folder/1          ]]
-  [[ "${output}" =~ home:Example\\\ Folder/[0-9]+.md  ]]
+  [[ "${output}" =~ Added:                          ]]
+  [[ "${output}" =~ home:Example\ Folder/1          ]]
+  [[ "${output}" =~ home:Example\ Folder/[0-9]+.md  ]]
 }

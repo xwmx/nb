@@ -4526,19 +4526,19 @@ _list() {
       _get_id_selector "${_folder_relative_path:-}/"
     )"
 
-    _maybe_selector_context="${_folder_relative_path// /\\ }/"
+    _maybe_selector_context="${_folder_relative_path:-}/"
   fi
 
   if _notebooks current --selected
   then
-    local _selected_notebook_escaped_name=
-    _selected_notebook_escaped_name="$(
-      _notebooks show "${_notebook_path}" --escaped --no-color
+    local _selected_notebook_name=
+    _selected_notebook_name="$(
+      _notebooks show "${_notebook_path}" --name --no-color
     )"
 
-    _maybe_id_path_context="${_selected_notebook_escaped_name}:${_maybe_id_path_context:-}"
+    _maybe_id_path_context="${_selected_notebook_name}:${_maybe_id_path_context:-}"
 
-    _maybe_selector_context="${_selected_notebook_escaped_name}:${_maybe_selector_context}"
+    _maybe_selector_context="${_selected_notebook_name}:${_maybe_selector_context}"
   fi
 
   # recursive
@@ -5019,8 +5019,9 @@ ${_TPUT_SGR0}"
 
         if [[ -n "${_maybe_id_path_context:-}" ]]
         then
-          _maybe_id_path_context_padded_left=" ${_maybe_id_path_context}"
-          _maybe_id_path_context_padded_right="${_maybe_id_path_context} "
+          _maybe_id_path_context="${_maybe_id_path_context//' '/\\ }"
+          _maybe_id_path_context_padded_left=" ${_maybe_id_path_context:-}"
+          _maybe_id_path_context_padded_right="${_maybe_id_path_context:-} "
         fi
 
         if [[ "${_type}" =~ ^bookmark$|^bookmarks$ ]]
@@ -5029,7 +5030,7 @@ ${_TPUT_SGR0}"
 0 bookmarks.
 
 Add a bookmark:
-  $(_color_primary "${_ME} ${_maybe_id_path_context_padded_right}<url>")
+  $(_color_primary "${_ME} ${_maybe_id_path_context_padded_right:-}<url>")
 Help information:
   $(_color_primary "${_ME} help bookmark")
 HEREDOC
@@ -5055,7 +5056,7 @@ HEREDOC
 0 ${_type} files.
 
 Import a file:
-  $(_color_primary "${_ME} import (<path> | <url>)${_maybe_id_path_context_padded_left}")
+  $(_color_primary "${_ME} import (<path> | <url>)${_maybe_id_path_context_padded_left:-}")
 Help information:
   $(_color_primary "${_ME} help import")
 HEREDOC
@@ -5065,11 +5066,11 @@ HEREDOC
 0 items.
 
 Add a note:
-  $(_color_primary "${_ME} add${_maybe_id_path_context_padded_left}")
+  $(_color_primary "${_ME} add${_maybe_id_path_context_padded_left:-}")
 Add a bookmark:
-  $(_color_primary "${_ME} ${_maybe_id_path_context_padded_right}<url>")
+  $(_color_primary "${_ME} ${_maybe_id_path_context_padded_right:-}<url>")
 Import a file:
-  $(_color_primary "${_ME} import (<path> | <url>)${_maybe_id_path_context_padded_left}")
+  $(_color_primary "${_ME} import (<path> | <url>)${_maybe_id_path_context_padded_left:-}")
 Help information:
   $(_color_primary "${_ME} help")
 HEREDOC
@@ -13755,7 +13756,7 @@ _search() {
             if [[ -n "${_relative_folder_path:-}" ]]
             then
               _max_id="$(_index get_max_id "${_folder_path}")"
-              _maybe_id_path="${_relative_folder_path// /\\ }/"
+              _maybe_id_path="${_relative_folder_path}/"
               _relative_path="${_relative_folder_path}/${_filename}"
             fi
 
@@ -13804,14 +13805,14 @@ _search() {
             if ((_all)) ||
                [[ "$(_notebooks current --global --path)" != "${_notebook_path}" ]]
             then
-              local _notebook_escaped_name=
-              _notebook_escaped_name="$(
-                _notebooks show "${_notebook_path}" --escaped --no-color
+              local _notebook_name=
+              _notebook_name="$(
+                _notebooks show "${_notebook_path}" --name --no-color
               )"
 
-              _info_line="[${_notebook_escaped_name}:${_maybe_id_path}${_id}] "
-              _info_line_color+="$(_color_brackets "${_notebook_escaped_name}:${_maybe_id_path}${_id}") "
-              _max_identifier="[${_notebook_escaped_name}:${_maybe_id_path}${_max_id}] "
+              _info_line="[${_notebook_name}:${_maybe_id_path}${_id}] "
+              _info_line_color+="$(_color_brackets "${_notebook_name}:${_maybe_id_path}${_id}") "
+              _max_identifier="[${_notebook_name}:${_maybe_id_path}${_max_id}] "
             else
               _info_line="[${_maybe_id_path}${_id}] "
               _info_line_color+="$(_color_brackets "${_maybe_id_path}${_id}") "
@@ -13937,7 +13938,7 @@ _search() {
 
         if [[ -n "${_selectors[0]:-}" ]]
         then
-          _search_selector="${_selectors[0]//\ /\\ }"
+          _search_selector="${_selectors[0]}"
 
           if [[ -f "${_target_paths[0]:-}"          ]] &&
              [[ "${_search_selector:-}" =~ /$       ]]
@@ -14445,27 +14446,21 @@ _show() {
       _id="$(_index get_id "${_basename}" "${_folder_path}")"
     fi
 
-    local _maybe_scoped_relative_path="${_relative_path// /\\ }"
-
-    local _escaped_relative_folder_path=
-
-    if [[ -n "${_relative_folder_path:-}" ]]
-    then
-      _escaped_relative_folder_path="${_relative_folder_path// /\\ }/"
-    fi
+    local _maybe_scoped_relative_path="${_relative_path}"
 
     local _maybe_scoped_id
-    _maybe_scoped_id="${_escaped_relative_folder_path}${_id}"
+    _maybe_scoped_id="${_relative_folder_path:+"${_relative_folder_path}/"}${_id}"
 
     if _notebooks current --selected ||
        [[ "${_notebook_path}" != "$(_notebooks current --path)" ]]
     then
-      local _notebook_escaped_name
-      _notebook_escaped_name="$(
-        _notebooks show "${_notebook_path}" --escaped --no-color
+      local _notebook_name
+      _notebook_name="$(
+        _notebooks show "${_notebook_path}" --name --no-color
       )"
-      _maybe_scoped_id="${_notebook_escaped_name}:${_maybe_scoped_id}"
-      _maybe_scoped_relative_path="${_notebook_escaped_name}:${_maybe_scoped_relative_path}"
+
+      _maybe_scoped_id="${_notebook_name}:${_maybe_scoped_id}"
+      _maybe_scoped_relative_path="${_notebook_name}:${_maybe_scoped_relative_path}"
     fi
   fi
 
@@ -17113,8 +17108,11 @@ HEREDOC
 
   if [[ "${_action:-}"        == "add"  ]]
   then
-    _arguments+=("--relative-path" "${_selector#*:}")
-    _url_params+=("--relative-path=${_selector#*:}")
+    local _encoded_selector=
+    _encoded_selector="$(_get_uri --encode "${_selector#*:}")"
+
+    _arguments+=("--relative-path" "${_encoded_selector:-}")
+    _url_params+=("--relative-path=${_encoded_selector:-}")
 
     if [[   "${_selector:-}"  =~ /      ]]
     then

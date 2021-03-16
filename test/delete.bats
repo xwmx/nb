@@ -142,41 +142,41 @@ load test_helper
   [[ "${lines[0]}"  =~ Deleting:  ]]
 
   [[ "${lines[1]}"  =~ \
-      .*[.*1.*].*\ .*Home\\\ File.md.*\ \"Example\ Title\ Home\"                      ]]
+      .*[.*1.*].*\ .*Home\ File.md.*\ \"Example\ Title\ Home\"                  ]]
 
   [[ "${lines[2]}"  =~ \
-      .*[.*Notebook\\\ One:Example\\\ Folder/1.*].*\ .*Notebook\\\ One                ]]
+      .*[.*Notebook\ One:Example\ Folder/1.*].*\ .*Notebook\ One                ]]
   [[ "${lines[2]}"  =~ \
-      Notebook\\\ One:Example\\\ Folder/Example\\\ File.md.*\ \"Example\ Title\ One\" ]]
+      Notebook\ One:Example\ Folder/Example\ File.md.*\ \"Example\ Title\ One\" ]]
 
   [[ "${lines[3]}"  =~ \
-      .*[.*Notebook\\\ Two:1.*].*\ .*Notebook\\\ Two:Sample\\\ File.md                ]]
+      .*[.*Notebook\ Two:1.*].*\ .*Notebook\ Two:Sample\ File.md                ]]
   [[ "${lines[3]}"  =~ \
-      Two:Sample\\\ File.md.*\ \"Example\ Title\ Two\"                                ]]
+      Two:Sample\ File.md.*\ \"Example\ Title\ Two\"                            ]]
 
   [[ "${lines[4]}"  =~ \
-      .*[.*Notebook\\\ Three:Demo\\\ Folder/1.*].*\ .*Notebook\\\ Three:Demo          ]]
+      .*[.*Notebook\ Three:Demo\ Folder/1.*].*\ .*Notebook\ Three:Demo          ]]
   [[ "${lines[4]}"  =~ \
-      Three:Demo\\\ Folder/Demo\\\ File.md.*\ \"Example\ Title\ Three\"               ]]
+      Three:Demo\ Folder/Demo\ File.md.*\ \"Example\ Title\ Three\"             ]]
 
   [[ "${lines[5]}"  =~ \
-      Deleted:\ .*[.*1.*].*\ .*Home\\\ File.md.*\ \"Example\ Title\ Home\"            ]]
+      Deleted:\ .*[.*1.*].*\ .*Home\ File.md.*\ \"Example\ Title\ Home\"        ]]
 
   [[ "${lines[6]}"  =~ \
-      Deleted:\ .*[.*Notebook\\\ One:Example\\\ Folder/1.*].*\ .*Notebook\\\ One      ]]
+      Deleted:\ .*[.*Notebook\ One:Example\ Folder/1.*].*\ .*Notebook\ One      ]]
   [[ "${lines[6]}"  =~ \
-      Notebook\\\ One:Example\\\ Folder/Example\\\ File.md.*\ \"Example\ Title\ One\" ]]
+      Notebook\ One:Example\ Folder/Example\ File.md.*\ \"Example\ Title\ One\" ]]
   [[ "${lines[7]}"  =~ \
-      Deleted:\ .*[.*Notebook\\\ Two:1.*].*\ .*Notebook\\\ Two:Sample\\\ File.md      ]]
+      Deleted:\ .*[.*Notebook\ Two:1.*].*\ .*Notebook\ Two:Sample\ File.md      ]]
   [[ "${lines[7]}"  =~ \
-      Two:Sample\\\ File.md.*\ \"Example\ Title\ Two\"                                ]]
+      Two:Sample\ File.md.*\ \"Example\ Title\ Two\"                            ]]
 
   [[ "${lines[8]}"  =~ \
-      Deleted:\ .*[.*Notebook\\\ Three:Demo\\\ Folder/1.*].*\ .*Notebook\\\           ]]
+      Deleted:\ .*[.*Notebook\ Three:Demo\ Folder/1.*].*\ .*Notebook\           ]]
   [[ "${lines[8]}"  =~ \
-      Folder/1.*].*\ .*Notebook\\\ Three:Demo                                         ]]
+      Folder/1.*].*\ .*Notebook\ Three:Demo                                     ]]
   [[ "${lines[8]}"  =~ \
-      Three:Demo\\\ Folder/Demo\\\ File.md.*\ \"Example\ Title\ Three\"               ]]
+      Three:Demo\ Folder/Demo\ File.md.*\ \"Example\ Title\ Three\"             ]]
 }
 
 # no argument #################################################################
@@ -660,9 +660,9 @@ load test_helper
 
   # Prints output:
 
-  [[ "${status}" -eq  0                         ]]
-  [[ "${output}" =~   Deleted:                  ]]
-  [[ "${output}" =~   1.*📂.*Example\\\ Folder  ]]
+  [[ "${status}" -eq  0                       ]]
+  [[ "${output}" =~   Deleted:                ]]
+  [[ "${output}" =~   1.*📂.*Example\ Folder  ]]
 }
 
 # help ########################################################################

@@ -487,9 +487,9 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to                     ]]
-  [[ "${output}" =~ destination:1                 ]]
-  [[ "${output}" =~ destination:Example\\\ Folder ]]
+  [[ "${output}" =~ Moved\ to                   ]]
+  [[ "${output}" =~ destination:1               ]]
+  [[ "${output}" =~ destination:Example\ Folder ]]
 }
 
 # local #######################################################################

@@ -107,9 +107,9 @@ _setup_folders_and_files() {
   [[ "${output}"    =~  3.*:.*example.*\ phrase ]]
 
   [[ "${output}"    =~  \
-      .*[.*Example\\\ Folder/Sample\\\ Folder/4.*].*\ Example\ Folder\ /\ Sample\ Folder\ /\ Four ]]
+.*[.*Example\ Folder/Sample\ Folder/4.*].*\ Example\ Folder\ /\ Sample\ Folder\ /\ Four ]]
   [[ "${output}"    =~  ---                     ]]
-  [[ "${output}"    =~  1.*:.*#\ .*Example.*\ Folder\ /\ Sample\ Folder\ /\ Four                  ]]
+  [[ "${output}"    =~  1.*:.*#\ .*Example.*\ Folder\ /\ Sample\ Folder\ /\ Four        ]]
 }
 
 @test "'search /path/to/<notebook>/' (slash, query) searches for <query> in <notebook> recursively." {
@@ -133,9 +133,9 @@ _setup_folders_and_files() {
   [[ "${output}"    =~  3.*:.*example.*\ phrase ]]
 
   [[ "${output}"    =~  \
-      .*[.*Example\\\ Folder/Sample\\\ Folder/4.*].*\ Example\ Folder\ /\ Sample\ Folder\ /\ Four ]]
+.*[.*Example\ Folder/Sample\ Folder/4.*].*\ Example\ Folder\ /\ Sample\ Folder\ /\ Four ]]
   [[ "${output}"    =~  ---                     ]]
-  [[ "${output}"    =~  1.*:.*#\ .*Example.*\ Folder\ /\ Sample\ Folder\ /\ Four                  ]]
+  [[ "${output}"    =~  1.*:.*#\ .*Example.*\ Folder\ /\ Sample\ Folder\ /\ Four        ]]
 }
 
 @test "'search /path/to/<folder>' (no slash, query) searches for <query> in <folder> recursively." {
@@ -157,9 +157,9 @@ _setup_folders_and_files() {
   [[ !  "${output}"    =~  .*[.*1.*].*\ Root\ One  ]]
 
   [[    "${output}"    =~  \
-      .*[.*Example\\\ Folder/Sample\\\ Folder/4.*].*\ Example\ Folder\ /\ Sample\ Folder\ /\ Four ]]
+.*[.*Example\ Folder/Sample\ Folder/4.*].*\ Example\ Folder\ /\ Sample\ Folder\ /\ Four ]]
   [[    "${output}"    =~  ---                     ]]
-  [[    "${output}"    =~  1.*:.*#\ .*Example.*\ Folder\ /\ Sample\ Folder\ /\ Four               ]]
+  [[    "${output}"    =~  1.*:.*#\ .*Example.*\ Folder\ /\ Sample\ Folder\ /\ Four     ]]
 }
 
 @test "'search /path/to/<folder>/' (slash, query) searches for <query> in <folder> recursively." {
@@ -181,9 +181,9 @@ _setup_folders_and_files() {
   [[ !  "${output}"    =~  .*[.*1.*].*\ Root\ One   ]]
 
   [[    "${output}"    =~  \
-      .*[.*Example\\\ Folder/Sample\\\ Folder/4.*].*\ Example\ Folder\ /\ Sample\ Folder\ /\ Four ]]
+.*[.*Example\ Folder/Sample\ Folder/4.*].*\ Example\ Folder\ /\ Sample\ Folder\ /\ Four ]]
   [[    "${output}"    =~  ---                      ]]
-  [[    "${output}"    =~  1.*:.*#\ .*Example.*\ Folder\ /\ Sample\ Folder\ /\ Four               ]]
+  [[    "${output}"    =~  1.*:.*#\ .*Example.*\ Folder\ /\ Sample\ Folder\ /\ Four     ]]
 }
 
 # <filename> and <folder> selectors ###########################################
@@ -207,12 +207,12 @@ _setup_folders_and_files() {
   [[ "${lines[2]}"  =~  Filename\ Match:\ .*File\ One.md  ]]
 
   [[ "${output}"    =~  \
-      Example\\\ Folder/1.*File\ One.md.*\ ·\ Example\ Folder\ /\ One ]]
+Example\ Folder/1.*File\ One.md.*\ ·\ Example\ Folder\ /\ One ]]
   [[ "${output}"    =~  ----------------                  ]]
   [[ "${lines[5]}"  =~  Filename\ Match:\ .*File\ One.md  ]]
 
   [[ "${output}"    =~  \
-      Example\\\ Folder/1.*File\ One.md.*\ ·\ Example\ Folder\ /\ Sample\ Folder\ /\ One ]]
+Example\ Folder/1.*File\ One.md.*\ ·\ Example\ Folder\ /\ Sample\ Folder\ /\ One ]]
   [[ "${output}"    =~  ----------------                  ]]
   [[ "${lines[8]}"  =~  Filename\ Match:\ .*File\ One.md  ]]
 }
@@ -236,12 +236,12 @@ _setup_folders_and_files() {
   [[ "${lines[2]}"  =~  Filename\ Match:\ .*File\ One.md  ]]
 
   [[ "${output}"    =~  \
-      Example\\\ Folder/1.*File\ One.md.*\ ·\ Example\ Folder\ /\ One ]]
+Example\ Folder/1.*File\ One.md.*\ ·\ Example\ Folder\ /\ One ]]
   [[ "${output}"    =~  ----------------                  ]]
   [[ "${lines[5]}"  =~  Filename\ Match:\ .*File\ One.md  ]]
 
   [[ "${output}"    =~  \
-      Example\\\ Folder/1.*File\ One.md.*\ ·\ Example\ Folder\ /\ Sample\ Folder\ /\ One ]]
+Example\ Folder/1.*File\ One.md.*\ ·\ Example\ Folder\ /\ Sample\ Folder\ /\ One ]]
   [[ "${output}"    =~  ----------------                  ]]
   [[ "${lines[8]}"  =~  Filename\ Match:\ .*File\ One.md  ]]
 }
@@ -258,22 +258,22 @@ _setup_folders_and_files() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"    -eq 0                                            ]]
+  [[    "${status}"    -eq 0                                          ]]
 
-  [[ !  "${output}"    =~  [^/]1[^/]*One                                ]]
+  [[ !  "${output}"    =~  [^/]1[^/]*One                              ]]
 
-  [[    "${output}"    =~  Example\\\ Folder/5.*\ 📂\ .*Sample\ Folder  ]]
-  [[    "${output}"    =~  ------------------------------------         ]]
-  [[    "${output}"    =~  Folder\ Name\ Match:\ .*Sample\ Folder       ]]
+  [[    "${output}"    =~  Example\ Folder/5.*\ 📂\ .*Sample\ Folder  ]]
+  [[    "${output}"    =~  ------------------------------------       ]]
+  [[    "${output}"    =~  Folder\ Name\ Match:\ .*Sample\ Folder     ]]
 
   [[    "${output}"    =~ \
-          Example\\\ Folder/Sample\\\ Folder/1.*Example\ Folder\ /\ Sample\ Folder\ /\ One   ]]
+          Example\ Folder/Sample\ Folder/1.*Example\ Folder\ /\ Sample\ Folder\ /\ One   ]]
   [[    "${output}"    =~ \
-          Example\\\ Folder/Sample\\\ Folder/2.*Example\ Folder\ /\ Sample\ Folder\ /\ Two   ]]
+          Example\ Folder/Sample\ Folder/2.*Example\ Folder\ /\ Sample\ Folder\ /\ Two   ]]
   [[    "${output}"    =~ \
-          Example\\\ Folder/Sample\\\ Folder/3.*Example\ Folder\ /\ Sample\ Folder\ /\ Three ]]
+          Example\ Folder/Sample\ Folder/3.*Example\ Folder\ /\ Sample\ Folder\ /\ Three ]]
   [[    "${output}"    =~ \
-          Example\\\ Folder/Sample\\\ Folder/4.*Example\ Folder\ /\ Sample\ Folder\ /\ Four  ]]
+          Example\ Folder/Sample\ Folder/4.*Example\ Folder\ /\ Sample\ Folder\ /\ Four  ]]
 }
 
 @test "'search <folder>' (no slash, no query) searches for <folder> in current notebook recursively with only matching folder names." {
@@ -299,8 +299,8 @@ _setup_folders_and_files() {
 
   [[    "${#lines[@]}" -eq 3                                          ]]
 
-  [[    "${output}"    =~  Example\\\ Folder/5.*\ 📂\ .*Demo\ Folder  ]]
-  [[    "${output}"    =~  [^-]----------------------------------[^-] ]]
+  [[    "${output}"    =~  Example\ Folder/5.*\ 📂\ .*Demo\ Folder    ]]
+  [[    "${output}"    =~  [^-]---------------------------------[^-]  ]]
   [[    "${output}"    =~  Folder\ Name\ Match:\ .*Demo\ Folder       ]]
 }
 
@@ -345,8 +345,8 @@ _setup_folders_and_files() {
 
   [[    "${#lines[@]}" -eq 3                                          ]]
 
-  [[    "${output}"    =~  Example\\\ Folder/5.*\ 📂\ .*Demo\ Folder  ]]
-  [[    "${output}"    =~  [^-]----------------------------------[^-] ]]
+  [[    "${output}"    =~  Example\ Folder/5.*\ 📂\ .*Demo\ Folder    ]]
+  [[    "${output}"    =~  [^-]---------------------------------[^-]  ]]
   [[    "${output}"    =~  Folder\ Name\ Match:\ .*Demo\ Folder       ]]
 }
 
@@ -385,17 +385,17 @@ _setup_folders_and_files() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"    -eq 0                                                                ]]
+  [[    "${status}"    -eq 0                                                            ]]
 
-  [[    "${#lines[@]}" -eq 6                                                                ]]
+  [[    "${#lines[@]}" -eq 6                                                            ]]
 
-  [[    "${output}"    =~  Example\\\ Folder/3.*Example\ Folder\ /\ Three                   ]]
-  [[    "${lines[1]}"  =~  ---------------                                                  ]]
-  [[    "${lines[2]}"  =~  12345                                                            ]]
+  [[    "${output}"    =~  Example\ Folder/3.*Example\ Folder\ /\ Three                 ]]
+  [[    "${lines[1]}"  =~  ---------------                                              ]]
+  [[    "${lines[2]}"  =~  12345                                                        ]]
   [[    "${output}"    =~  \
-          Example\\\ Folder/Sample\\\ Folder/2.*Example\ Folder\ /\ Sample\ Folder\ /\ Two  ]]
-  [[    "${lines[4]}"  =~  ---------------                                                  ]]
-  [[    "${lines[5]}"  =~  12345                                                            ]]
+          Example\ Folder/Sample\ Folder/2.*Example\ Folder\ /\ Sample\ Folder\ /\ Two  ]]
+  [[    "${lines[4]}"  =~  ---------------                                              ]]
+  [[    "${lines[5]}"  =~  12345                                                        ]]
 }
 
 # <notebook> selectors ########################################################
@@ -445,19 +445,19 @@ _setup_folders_and_files() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"    -eq 0                                                                ]]
+  [[    "${status}"    -eq 0                                                            ]]
 
-  [[    "${#lines[@]}" -eq 6                                                                ]]
+  [[    "${#lines[@]}" -eq 6                                                            ]]
 
-  [[ !  "${output}"    =~  Example\\\ Folder/2.*Example\ Folder\ /\ Two                     ]]
+  [[ !  "${output}"    =~  Example\ Folder/2.*Example\ Folder\ /\ Two                   ]]
 
-  [[    "${output}"    =~  Example\\\ Folder/3.*Example\ Folder\ /\ Three                   ]]
-  [[    "${lines[1]}"  =~  ---------------                                                  ]]
-  [[    "${lines[2]}"  =~  Not\ a\ Notebook                                                 ]]
+  [[    "${output}"    =~  Example\ Folder/3.*Example\ Folder\ /\ Three                 ]]
+  [[    "${lines[1]}"  =~  ---------------                                              ]]
+  [[    "${lines[2]}"  =~  Not\ a\ Notebook                                             ]]
   [[    "${output}"    =~  \
-          Example\\\ Folder/Sample\\\ Folder/2.*Example\ Folder\ /\ Sample\ Folder\ /\ Two  ]]
-  [[    "${lines[4]}"  =~  ---------------                                                  ]]
-  [[    "${lines[5]}"  =~  Not\ a\ Notebook                                                 ]]
+          Example\ Folder/Sample\ Folder/2.*Example\ Folder\ /\ Sample\ Folder\ /\ Two  ]]
+  [[    "${lines[4]}"  =~  ---------------                                              ]]
+  [[    "${lines[5]}"  =~  Not\ a\ Notebook                                             ]]
 }
 
 @test "'search <notebook>' (no query, no colon) with matching notebook searches for the string in <notebook> recursively." {
@@ -483,22 +483,22 @@ _setup_folders_and_files() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"    -eq 0                                                                ]]
+  [[    "${status}"    -eq 0                                                            ]]
 
-  [[    "${#lines[@]}" -eq 9                                                                ]]
+  [[    "${#lines[@]}" -eq 9                                                            ]]
 
-  [[    "${output}"    =~  Example\\\ Folder/3.*Example\ Folder\ /\ Three                   ]]
-  [[    "${lines[1]}"  =~  ---------------                                                  ]]
-  [[    "${lines[2]}"  =~  Example\ Notebook                                                ]]
+  [[    "${output}"    =~  Example\ Folder/3.*Example\ Folder\ /\ Three                 ]]
+  [[    "${lines[1]}"  =~  ---------------                                              ]]
+  [[    "${lines[2]}"  =~  Example\ Notebook                                            ]]
 
-  [[    "${output}"    =~  Example\\\ Folder/2.*Example\ Folder\ /\ Two                     ]]
-  [[    "${lines[4]}"  =~  ---------------                                                  ]]
-  [[    "${lines[5]}"  =~  Example\ Notebook                                                ]]
+  [[    "${output}"    =~  Example\ Folder/2.*Example\ Folder\ /\ Two                   ]]
+  [[    "${lines[4]}"  =~  ---------------                                              ]]
+  [[    "${lines[5]}"  =~  Example\ Notebook                                            ]]
 
   [[    "${output}"    =~  \
-          Example\\\ Folder/Sample\\\ Folder/2.*Example\ Folder\ /\ Sample\ Folder\ /\ Two  ]]
-  [[    "${lines[7]}"  =~  ---------------                                                  ]]
-  [[    "${lines[8]}"  =~  Example\ Notebook                                                ]]
+          Example\ Folder/Sample\ Folder/2.*Example\ Folder\ /\ Sample\ Folder\ /\ Two  ]]
+  [[    "${lines[7]}"  =~  ---------------                                              ]]
+  [[    "${lines[8]}"  =~  Example\ Notebook                                            ]]
 }
 
 @test "'search <notebook>:<filename>' (no slash, no space) searches for <filename> in <notebook> root." {
@@ -525,8 +525,8 @@ _setup_folders_and_files() {
   [[    "${lines[2]}" =~  Filename\ Match:\ .*File\ One.md      ]]
   [[ -z "${lines[3]}"                                           ]]
 
-  [[ !  "${output}"   =~  Example\\\ Folder                     ]]
-  [[ !  "${output}"   =~  Sample\\\ Folder                      ]]
+  [[ !  "${output}"   =~  Example\ Folder                     ]]
+  [[ !  "${output}"   =~  Sample\ Folder                      ]]
 }
 
 @test "'search <notebook>: <filename>' (no slash, space) searches for <filename> in <notebook> recursively." {
@@ -553,12 +553,12 @@ _setup_folders_and_files() {
   [[ "${lines[2]}"  =~  Filename\ Match:\ .*File\ One.md      ]]
 
   [[ "${output}"    =~  \
-      home:Example\\\ Folder/1.*File\ One.md.*\ ·\ Example\ Folder\ /\ One ]]
+      home:Example\ Folder/1.*File\ One.md.*\ ·\ Example\ Folder\ /\ One ]]
   [[ "${output}"    =~  ---------------------                 ]]
   [[ "${lines[5]}"  =~  Filename\ Match:\ .*File\ One.md      ]]
 
   [[ "${output}"    =~  \
-      home:Example\\\ Folder/1.*File\ One.md.*\ ·\ Example\ Folder\ /\ Sample\ Folder\ /\ One ]]
+      home:Example\ Folder/1.*File\ One.md.*\ ·\ Example\ Folder\ /\ Sample\ Folder\ /\ One ]]
   [[ "${output}"    =~  ---------------------                 ]]
   [[ "${lines[8]}"  =~  Filename\ Match:\ .*File\ One.md      ]]
 }
@@ -587,8 +587,8 @@ _setup_folders_and_files() {
   [[    "${lines[2]}" =~  Filename\ Match:\ .*File\ One.md      ]]
   [[ -z "${lines[3]}"                                           ]]
 
-  [[ !  "${output}"   =~  Example\\\ Folder                     ]]
-  [[ !  "${output}"   =~  Sample\\\ Folder                      ]]
+  [[ !  "${output}"   =~  Example\ Folder                       ]]
+  [[ !  "${output}"   =~  Sample\ Folder                        ]]
 }
 
 @test "'search <notebook>: <filename>/' (slash, space) searches for <filename> in <notebook> recursively." {
@@ -615,12 +615,12 @@ _setup_folders_and_files() {
   [[ "${lines[2]}"  =~  Filename\ Match:\ .*File\ One.md      ]]
 
   [[ "${output}"    =~  \
-      home:Example\\\ Folder/1.*File\ One.md.*\ ·\ Example\ Folder\ /\ One ]]
+      home:Example\ Folder/1.*File\ One.md.*\ ·\ Example\ Folder\ /\ One ]]
   [[ "${output}"    =~  ---------------------                 ]]
   [[ "${lines[5]}"  =~  Filename\ Match:\ .*File\ One.md      ]]
 
   [[ "${output}"    =~  \
-      home:Example\\\ Folder/1.*File\ One.md.*\ ·\ Example\ Folder\ /\ Sample\ Folder\ /\ One ]]
+      home:Example\ Folder/1.*File\ One.md.*\ ·\ Example\ Folder\ /\ Sample\ Folder\ /\ One ]]
   [[ "${output}"    =~  ---------------------                 ]]
   [[ "${lines[8]}"  =~  Filename\ Match:\ .*File\ One.md      ]]
 }
@@ -706,7 +706,7 @@ _setup_folders_and_files() {
   [[ "${lines[5]}"    =~  3                         ]]
   [[ "${lines[5]}"    =~  example\ phrase           ]]
 
-  [[ "${output}"      =~  home:Example\\\ Folder/Sample\\\ Folder/3     ]]
+  [[ "${output}"      =~  home:Example\ Folder/Sample\ Folder/3         ]]
   [[ "${output}"      =~  Example\ Folder\ /\ Sample\ Folder\ /\ Three  ]]
 
   [[ "${lines[7]}"    =~  ------------              ]]
@@ -714,7 +714,7 @@ _setup_folders_and_files() {
   [[ "${lines[8]}"    =~  3                         ]]
   [[ "${lines[8]}"    =~  example\ phrase           ]]
 
-  [[ "${output}"      =~  home:Example\\\ Folder/Sample\\\ Folder/1     ]]
+  [[ "${output}"      =~  home:Example\ Folder/Sample\ Folder/1         ]]
   [[ "${output}"      =~  Example\ Folder\ /\ Sample\ Folder\ /\ One    ]]
 
   [[ "${lines[10]}"   =~  ------------              ]]
@@ -722,14 +722,14 @@ _setup_folders_and_files() {
   [[ "${lines[11]}"   =~  3                         ]]
   [[ "${lines[11]}"   =~  example\ phrase           ]]
 
-  [[ "${output}"      =~ home:Example\\\ Folder/2.*Example\ Folder\ /\ Two    ]]
+  [[ "${output}"      =~ home:Example\ Folder/2.*Example\ Folder\ /\ Two    ]]
 
   [[ "${lines[13]}"   =~  ------------              ]]
   [[ "${#lines[13]}"  == "$((${#lines[12]} - 21))"  ]]
   [[ "${lines[14]}"   =~  3                         ]]
   [[ "${lines[14]}"   =~  example\ phrase           ]]
 
-  [[ "${output}"      =~  home:Example\\\ Folder/4.*Example\ Folder\ /\ Four  ]]
+  [[ "${output}"      =~  home:Example\ Folder/4.*Example\ Folder\ /\ Four  ]]
 
   [[ "${lines[16]}"   =~  ------------              ]]
   [[ "${#lines[16]}"  == "$((${#lines[15]} - 21))"  ]]
@@ -754,33 +754,33 @@ _setup_folders_and_files() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0                                                   ]]
+  [[ "${status}"    -eq 0                                                 ]]
 
-  [[ "${output}"    =~  home:Example\\\ Folder/Sample\\\ Folder/3           ]]
-  [[ "${output}"    =~  Example\ Folder\ /\ Sample\ Folder\ /\ Three        ]]
+  [[ "${output}"    =~  home:Example\ Folder/Sample\ Folder/3             ]]
+  [[ "${output}"    =~  Example\ Folder\ /\ Sample\ Folder\ /\ Three      ]]
 
-  [[ "${lines[1]}"  =~  -----------------------------                       ]]
-  [[ "${lines[2]}"  =~  3                                                   ]]
-  [[ "${lines[2]}"  =~  example\ phrase                                     ]]
+  [[ "${lines[1]}"  =~  -----------------------------                     ]]
+  [[ "${lines[2]}"  =~  3                                                 ]]
+  [[ "${lines[2]}"  =~  example\ phrase                                   ]]
 
-  [[ "${output}"    =~  home:Example\\\ Folder/Sample\\\ Folder/1           ]]
-  [[ "${output}"    =~  Example\ Folder\ /\ Sample\ Folder\ /\ One          ]]
+  [[ "${output}"    =~  home:Example\ Folder/Sample\ Folder/1             ]]
+  [[ "${output}"    =~  Example\ Folder\ /\ Sample\ Folder\ /\ One        ]]
 
-  [[ "${lines[4]}"  =~  -----------------------------                       ]]
-  [[ "${lines[5]}"  =~  3                                                   ]]
-  [[ "${lines[5]}"  =~  example\ phrase                                     ]]
+  [[ "${lines[4]}"  =~  -----------------------------                     ]]
+  [[ "${lines[5]}"  =~  3                                                 ]]
+  [[ "${lines[5]}"  =~  example\ phrase                                   ]]
 
-  [[ "${output}"    =~  home:Example\\\ Folder/2.*Example\ Folder\ /\ Two   ]]
+  [[ "${output}"    =~  home:Example\ Folder/2.*Example\ Folder\ /\ Two   ]]
 
-  [[ "${lines[7]}"  =~  -----------------------------                       ]]
-  [[ "${lines[8]}"  =~  3                                                   ]]
-  [[ "${lines[8]}"  =~  example\ phrase                                     ]]
+  [[ "${lines[7]}"  =~  -----------------------------                     ]]
+  [[ "${lines[8]}"  =~  3                                                 ]]
+  [[ "${lines[8]}"  =~  example\ phrase                                   ]]
 
-  [[ "${output}"    =~  home:Example\\\ Folder/4.*Example\ Folder\ /\ Four  ]]
+  [[ "${output}"    =~  home:Example\ Folder/4.*Example\ Folder\ /\ Four  ]]
 
-  [[ "${lines[10]}" =~  -----------------------------                       ]]
-  [[ "${lines[11]}" =~  3                                                   ]]
-  [[ "${lines[11]}" =~  example\ phrase                                     ]]
+  [[ "${lines[10]}" =~  -----------------------------                     ]]
+  [[ "${lines[11]}" =~  3                                                 ]]
+  [[ "${lines[11]}" =~  example\ phrase                                   ]]
 }
 
 @test "'search <query> <notebook>:<folder>' (no slash) searches within <folder> and subfolders in <notebook>." {
@@ -802,27 +802,27 @@ _setup_folders_and_files() {
 
   [[ "${status}"    -eq 0                                                   ]]
 
-  [[ "${output}"    =~  home:Example\\\ Folder/Sample\\\ Folder/3           ]]
+  [[ "${output}"    =~  home:Example\ Folder/Sample\ Folder/3           ]]
   [[ "${output}"    =~  Example\ Folder\ /\ Sample\ Folder\ /\ Three        ]]
 
   [[ "${lines[1]}"  =~  -----------------------------                       ]]
   [[ "${lines[2]}"  =~  3                                                   ]]
   [[ "${lines[2]}"  =~  example\ phrase                                     ]]
 
-  [[ "${output}"    =~  home:Example\\\ Folder/Sample\\\ Folder/1           ]]
+  [[ "${output}"    =~  home:Example\ Folder/Sample\ Folder/1           ]]
   [[ "${output}"    =~  Example\ Folder\ /\ Sample\ Folder\ /\ One          ]]
 
   [[ "${lines[4]}"  =~  -----------------------------                       ]]
   [[ "${lines[5]}"  =~  3                                                   ]]
   [[ "${lines[5]}"  =~  example\ phrase                                     ]]
 
-  [[ "${output}"    =~  home:Example\\\ Folder/2.*Example\ Folder\ /\ Two   ]]
+  [[ "${output}"    =~  home:Example\ Folder/2.*Example\ Folder\ /\ Two   ]]
 
   [[ "${lines[7]}"  =~  -----------------------------                       ]]
   [[ "${lines[8]}"  =~  3                                                   ]]
   [[ "${lines[8]}"  =~  example\ phrase                                     ]]
 
-  [[ "${output}"    =~  home:Example\\\ Folder/4.*Example\ Folder\ /\ Four  ]]
+  [[ "${output}"    =~  home:Example\ Folder/4.*Example\ Folder\ /\ Four  ]]
 
   [[ "${lines[10]}" =~  -----------------------------                       ]]
   [[ "${lines[11]}" =~  3                                                   ]]
@@ -859,7 +859,7 @@ _setup_folders_and_files() {
   [[    "${#lines[@]}"  -eq 1                     ]]
 
   [[ !  "${lines[0]}"   =~  example-1.bookmark.md ]]
-  [[    "${lines[0]}"   =~  Example\\\ Folder/6   ]]
+  [[    "${lines[0]}"   =~  Example\ Folder/6     ]]
   [[    "${lines[0]}"   =~  Example\ Title\ One   ]]
   [[    "${lines[0]}"   =~  \]\ 🔖                ]]
 
@@ -878,7 +878,7 @@ _setup_folders_and_files() {
   [[    "${#lines[@]}"  -eq 1                     ]]
 
   [[ !  "${lines[0]}"   =~  example-1.bookmark.md ]]
-  [[    "${lines[0]}"   =~  Example\\\ Folder/6   ]]
+  [[    "${lines[0]}"   =~  Example\ Folder/6   ]]
   [[    "${lines[0]}"   =~  Example\ Title\ One   ]]
   [[    "${lines[0]}"   =~  \]\ \ 🔖              ]]
 }
@@ -908,7 +908,7 @@ HEREDOC
 
   [[ !  "${output}" =~  Unindexed                                     ]]
 
-  [[    "${output}" =~  Example\\\ Folder/Sample\\\ Folder/3          ]]
+  [[    "${output}" =~  Example\ Folder/Sample\ Folder/3              ]]
   [[    "${output}" =~  Example\ Folder\ /\ Sample\ Folder\ /\ Three  ]]
 }
 
@@ -928,27 +928,27 @@ HEREDOC
 
   [[ "${status}"    -eq 0                                             ]]
 
-  [[ "${output}"    =~  Example\\\ Folder/Sample\\\ Folder/3          ]]
+  [[ "${output}"    =~  Example\ Folder/Sample\ Folder/3              ]]
   [[ "${output}"    =~  Example\ Folder\ /\ Sample\ Folder\ /\ Three  ]]
 
   [[ "${lines[1]}"  =~  -----------------------------                 ]]
   [[ "${lines[2]}"  =~  3                                             ]]
   [[ "${lines[2]}"  =~  example\ phrase                               ]]
 
-  [[ "${output}"    =~  Example\\\ Folder/Sample\\\ Folder/1          ]]
+  [[ "${output}"    =~  Example\ Folder/Sample\ Folder/1              ]]
   [[ "${output}"    =~  Example\ Folder\ /\ Sample\ Folder\ /\ One    ]]
 
   [[ "${lines[4]}"  =~  -----------------------------                 ]]
   [[ "${lines[5]}"  =~  3                                             ]]
   [[ "${lines[5]}"  =~  example\ phrase                               ]]
 
-  [[ "${output}"    =~  Example\\\ Folder/2.*Example\ Folder\ /\ Two  ]]
+  [[ "${output}"    =~  Example\ Folder/2.*Example\ Folder\ /\ Two    ]]
 
   [[ "${lines[7]}"  =~  -----------------------------                 ]]
   [[ "${lines[8]}"  =~  3                                             ]]
   [[ "${lines[8]}"  =~  example\ phrase                               ]]
 
-  [[ "${output}"    =~  Example\\\ Folder/4.*Example\ Folder\ /\ Four ]]
+  [[ "${output}"    =~  Example\ Folder/4.*Example\ Folder\ /\ Four   ]]
 
   [[ "${lines[10]}" =~  -----------------------------                 ]]
   [[ "${lines[11]}" =~  3                                             ]]
@@ -969,27 +969,27 @@ HEREDOC
 
   [[ "${status}"    -eq 0                                             ]]
 
-  [[ "${output}"    =~  Example\\\ Folder/Sample\\\ Folder/3          ]]
+  [[ "${output}"    =~  Example\ Folder/Sample\ Folder/3              ]]
   [[ "${output}"    =~  Example\ Folder\ /\ Sample\ Folder\ /\ Three  ]]
 
   [[ "${lines[1]}"  =~  -----------------------------                 ]]
   [[ "${lines[2]}"  =~  3                                             ]]
   [[ "${lines[2]}"  =~  example\ phrase                               ]]
 
-  [[ "${output}"    =~  Example\\\ Folder/Sample\\\ Folder/1          ]]
+  [[ "${output}"    =~  Example\ Folder/Sample\ Folder/1              ]]
   [[ "${output}"    =~  Example\ Folder\ /\ Sample\ Folder\ /\ One    ]]
 
   [[ "${lines[4]}"  =~  -----------------------------                 ]]
   [[ "${lines[5]}"  =~  3                                             ]]
   [[ "${lines[5]}"  =~  example\ phrase                               ]]
 
-  [[ "${output}"    =~  Example\\\ Folder/2.*Example\ Folder\ /\ Two  ]]
+  [[ "${output}"    =~  Example\ Folder/2.*Example\ Folder\ /\ Two    ]]
 
   [[ "${lines[7]}"  =~  -----------------------------                 ]]
   [[ "${lines[8]}"  =~  3                                             ]]
   [[ "${lines[8]}"  =~  example\ phrase                               ]]
 
-  [[ "${output}"    =~  Example\\\ Folder/4.*Example\ Folder\ /\ Four ]]
+  [[ "${output}"    =~  Example\ Folder/4.*Example\ Folder\ /\ Four   ]]
 
   [[ "${lines[10]}" =~  -----------------------------                 ]]
   [[ "${lines[11]}" =~  3                                             ]]
@@ -1012,14 +1012,14 @@ HEREDOC
 
   [[    "${status}"    -eq 0                              ]]
 
-  [[    "${lines[0]}"  =~  Example\\\ Folder/4            ]]
+  [[    "${lines[0]}"  =~  Example\ Folder/4              ]]
   [[    "${lines[0]}"  =~  Example\ Folder\ /\            ]]
   [[    "${lines[0]}"  =~  Two|Four                       ]]
   [[    "${lines[1]}"  =~  -----------------------------  ]]
   [[    "${lines[2]}"  =~  3                              ]]
   [[    "${lines[2]}"  =~  example\ phrase                ]]
 
-  [[    "${lines[3]}"  =~  Example\\\ Folder/2            ]]
+  [[    "${lines[3]}"  =~  Example\ Folder/2              ]]
   [[    "${lines[3]}"  =~  Example\ Folder\ /\            ]]
   [[    "${lines[3]}"  =~  Two|Four                       ]]
   [[    "${lines[4]}"  =~  -----------------------------  ]]
@@ -1043,14 +1043,14 @@ HEREDOC
 
   [[    "${status}"    -eq 0                              ]]
 
-  [[    "${lines[0]}"  =~  Example\\\ Folder/4            ]]
+  [[    "${lines[0]}"  =~  Example\ Folder/4              ]]
   [[    "${lines[0]}"  =~  Example\ Folder\ /\            ]]
   [[    "${lines[0]}"  =~  Two|Four                       ]]
   [[    "${lines[1]}"  =~  -----------------------------  ]]
   [[    "${lines[2]}"  =~  3                              ]]
   [[    "${lines[2]}"  =~  example\ phrase                ]]
 
-  [[    "${lines[3]}"  =~  Example\\\ Folder/2            ]]
+  [[    "${lines[3]}"  =~  Example\ Folder/2              ]]
   [[    "${lines[3]}"  =~  Example\ Folder\ /\            ]]
   [[    "${lines[3]}"  =~  Two|Four                       ]]
   [[    "${lines[4]}"  =~  -----------------------------  ]]
@@ -1086,27 +1086,27 @@ HEREDOC
 
   [[ "${status}"    -eq 0                                                       ]]
 
-  [[ "${output}"    =~  Example\\\ Folder/Sample\\\ Folder/3                    ]]
+  [[ "${output}"    =~  Example\ Folder/Sample\ Folder/3                        ]]
   [[ "${output}"    =~  Local\ /\ Example\ Folder\ /\ Sample\ Folder\ /\ Three  ]]
 
   [[ "${lines[1]}"  =~  -----------------------------                           ]]
   [[ "${lines[2]}"  =~  3                                                       ]]
   [[ "${lines[2]}"  =~  example\ phrase                                         ]]
 
-  [[ "${output}"    =~  Example\\\ Folder/Sample\\\ Folder/1                    ]]
+  [[ "${output}"    =~  Example\ Folder/Sample\ Folder/1                        ]]
   [[ "${output}"    =~  Local\ /\ Example\ Folder\ /\ Sample\ Folder\ /\ One    ]]
 
   [[ "${lines[4]}"  =~  -----------------------------                           ]]
   [[ "${lines[5]}"  =~  3                                                       ]]
   [[ "${lines[5]}"  =~  example\ phrase                                         ]]
 
-  [[ "${output}"    =~  Example\\\ Folder/2.*Local\ /\ Example\ Folder\ /\ Two  ]]
+  [[ "${output}"    =~  Example\ Folder/2.*Local\ /\ Example\ Folder\ /\ Two    ]]
 
   [[ "${lines[7]}"  =~  -----------------------------                           ]]
   [[ "${lines[8]}"  =~  3                                                       ]]
   [[ "${lines[8]}"  =~  example\ phrase                                         ]]
 
-  [[ "${output}"    =~  Example\\\ Folder/4.*Local\ /\ Example\ Folder\ /\ Four ]]
+  [[ "${output}"    =~  Example\ Folder/4.*Local\ /\ Example\ Folder\ /\ Four   ]]
 
   [[ "${lines[10]}" =~  -----------------------------                           ]]
   [[ "${lines[11]}" =~  3                                                       ]]
@@ -1137,27 +1137,27 @@ HEREDOC
 
   [[ "${status}"    -eq 0                                                       ]]
 
-  [[ "${output}"    =~  Example\\\ Folder/Sample\\\ Folder/3                    ]]
+  [[ "${output}"    =~  Example\ Folder/Sample\ Folder/3                        ]]
   [[ "${output}"    =~  Local\ /\ Example\ Folder\ /\ Sample\ Folder\ /\ Three  ]]
 
   [[ "${lines[1]}"  =~  -----------------------------                           ]]
   [[ "${lines[2]}"  =~  3                                                       ]]
   [[ "${lines[2]}"  =~  example\ phrase                                         ]]
 
-  [[ "${output}"    =~  Example\\\ Folder/Sample\\\ Folder/1                    ]]
+  [[ "${output}"    =~  Example\ Folder/Sample\ Folder/1                        ]]
   [[ "${output}"    =~  Local\ /\ Example\ Folder\ /\ Sample\ Folder\ /\ One    ]]
 
   [[ "${lines[4]}"  =~  -----------------------------                           ]]
   [[ "${lines[5]}"  =~  3                                                       ]]
   [[ "${lines[5]}"  =~  example\ phrase                                         ]]
 
-  [[ "${output}"    =~  Example\\\ Folder/2.*Local\ /\ Example\ Folder\ /\ Two  ]]
+  [[ "${output}"    =~  Example\ Folder/2.*Local\ /\ Example\ Folder\ /\ Two    ]]
 
   [[ "${lines[7]}"  =~  -----------------------------                           ]]
   [[ "${lines[8]}"  =~  3                                                       ]]
   [[ "${lines[8]}"  =~  example\ phrase                                         ]]
 
-  [[ "${output}"    =~  Example\\\ Folder/4.*Local\ /\ Example\ Folder\ /\ Four ]]
+  [[ "${output}"    =~  Example\ Folder/4.*Local\ /\ Example\ Folder\ /\ Four   ]]
 
   [[ "${lines[10]}" =~  -----------------------------                           ]]
   [[ "${lines[11]}" =~  3                                                       ]]
@@ -1178,10 +1178,10 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 1                                       ]]
-  [[ "${#lines[@]}" -eq 1                                       ]]
-  [[ "${output}"    =~  Not\ found\ in                          ]]
-  [[ "${output}"    =~  File\\\ One.md[^/].*:\ .*no-match-query ]]
+  [[ "${status}"    -eq 1                                     ]]
+  [[ "${#lines[@]}" -eq 1                                     ]]
+  [[ "${output}"    =~  Not\ found\ in                        ]]
+  [[ "${output}"    =~  File\ One.md[^/].*:\ .*no-match-query ]]
 }
 
 @test "'search <no-match-query> <filename>' (no slash, no space, query) exits with 1 and prints message." {
@@ -1196,10 +1196,10 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 1                                       ]]
-  [[ "${#lines[@]}" -eq 1                                       ]]
-  [[ "${output}"    =~  Not\ found\ in                          ]]
-  [[ "${output}"    =~  File\\\ One.md[^/].*:\ .*no-match-query ]]
+  [[ "${status}"    -eq 1                                     ]]
+  [[ "${#lines[@]}" -eq 1                                     ]]
+  [[ "${output}"    =~  Not\ found\ in                        ]]
+  [[ "${output}"    =~  File\ One.md[^/].*:\ .*no-match-query ]]
 }
 
 @test "'search <no-match-query> <folder>/' (slash, no space, query) exits with 1 and prints message." {
@@ -1214,10 +1214,10 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 1                                       ]]
-  [[ "${#lines[@]}" -eq 1                                       ]]
-  [[ "${output}"    =~  Not\ found\ in                          ]]
-  [[ "${output}"    =~  Example\\\ Folder/.*:\ .*no-match-query ]]
+  [[ "${status}"    -eq 1                                     ]]
+  [[ "${#lines[@]}" -eq 1                                     ]]
+  [[ "${output}"    =~  Not\ found\ in                        ]]
+  [[ "${output}"    =~  Example\ Folder/.*:\ .*no-match-query ]]
 }
 
 @test "'search <no-match-query> <folder>' (no slash, no space, query) exits with 1 and prints message." {
@@ -1232,10 +1232,10 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 1                                       ]]
-  [[ "${#lines[@]}" -eq 1                                       ]]
-  [[ "${output}"    =~  Not\ found\ in                          ]]
-  [[ "${output}"    =~  Example\\\ Folder/.*:\ .*no-match-query ]]
+  [[ "${status}"    -eq 1                                     ]]
+  [[ "${#lines[@]}" -eq 1                                     ]]
+  [[ "${output}"    =~  Not\ found\ in                        ]]
+  [[ "${output}"    =~  Example\ Folder/.*:\ .*no-match-query ]]
 }
 
 @test "'search <no-match-query> <notebook>:<folder>/' (slash, no space, query) exits with 1 and prints message." {
@@ -1255,10 +1255,10 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 1                                             ]]
-  [[ "${#lines[@]}" -eq 1                                             ]]
-  [[ "${output}"    =~  Not\ found\ in                                ]]
-  [[ "${output}"    =~  home:Example\\\ Folder/.*:\ .*no-match-query  ]]
+  [[ "${status}"    -eq 1                                           ]]
+  [[ "${#lines[@]}" -eq 1                                           ]]
+  [[ "${output}"    =~  Not\ found\ in                              ]]
+  [[ "${output}"    =~  home:Example\ Folder/.*:\ .*no-match-query  ]]
 }
 
 @test "'search <no-match-query> <notebook>:<folder>' (no slash, no space, query) exits with 1 and prints message." {
@@ -1278,10 +1278,10 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 1                                             ]]
-  [[ "${#lines[@]}" -eq 1                                             ]]
-  [[ "${output}"    =~  Not\ found\ in                                ]]
-  [[ "${output}"    =~  home:Example\\\ Folder/.*:\ .*no-match-query  ]]
+  [[ "${status}"    -eq 1                                           ]]
+  [[ "${#lines[@]}" -eq 1                                           ]]
+  [[ "${output}"    =~  Not\ found\ in                              ]]
+  [[ "${output}"    =~  home:Example\ Folder/.*:\ .*no-match-query  ]]
 }
 
 @test "'search <no-match-query> <notebook>:<folder-id>/' (slash, no space, query) exits with 1 and prints message." {
@@ -1369,9 +1369,9 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 1                     ]]
-  [[ "${#lines[@]}" -eq 1                     ]]
-  [[ "${output}"    =~  home.*:\ .*no-match-query  ]]
+  [[ "${status}"    -eq 1                         ]]
+  [[ "${#lines[@]}" -eq 1                         ]]
+  [[ "${output}"    =~  home.*:\ .*no-match-query ]]
 }
 
 @test "'search <notebook>:<no-match>' (no slash, no space, no query) exits with 1 and prints message." {

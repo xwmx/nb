@@ -58,8 +58,8 @@ load test_helper
   git log | grep -q '\[nb\] Import'
 
   # Prints output:
-  [[ "${output}" =~ Imported                      ]]
-  [[ "${output}" =~ Example\\\ Folder/example.md  ]]
+  [[ "${output}" =~ Imported                    ]]
+  [[ "${output}" =~ Example\ Folder/example.md  ]]
 }
 
 @test "'import <url> <folder>/<folder>' (no slash) with existing folder imports file." {
@@ -127,8 +127,8 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Imported                                      ]]
-  [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/example.md ]]
+  [[ "${output}" =~ Imported                                  ]]
+  [[ "${output}" =~ Example\ Folder/Sample\ Folder/example.md ]]
 }
 
 @test "'import <url> <folder>/' (slash) imports file." {
@@ -185,8 +185,8 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Imported                      ]]
-  [[ "${output}" =~ Example\\\ Folder/example.md  ]]
+  [[ "${output}" =~ Imported                    ]]
+  [[ "${output}" =~ Example\ Folder/example.md  ]]
 }
 
 @test "'import <url> <folder>/<folder>/' (slash) imports file." {
@@ -253,8 +253,8 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Imported                                      ]]
-  [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/example.md ]]
+  [[ "${output}" =~ Imported                                  ]]
+  [[ "${output}" =~ Example\ Folder/Sample\ Folder/example.md ]]
 }
 
 # import <url> <folder>/<filename> ###########################################
@@ -362,8 +362,8 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Imported                    ]]
-  [[ "${output}" =~ Example\\\ Folder/sample.md ]]
+  [[ "${output}" =~ Imported                  ]]
+  [[ "${output}" =~ Example\ Folder/sample.md ]]
 }
 
 @test "'import' with valid <url> and <folder>/<folder>/<filename> imports file." {
@@ -429,6 +429,6 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Imported                                      ]]
-  [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/sample.md  ]]
+  [[ "${output}" =~ Imported                                  ]]
+  [[ "${output}" =~ Example\ Folder/Sample\ Folder/sample.md  ]]
 }

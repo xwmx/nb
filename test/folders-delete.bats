@@ -134,10 +134,10 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Deleted:                                        ]]
-  [[ "${output}" =~ Example\\\ Folder/1                             ]]
-  [[ "${output}" =~ 🔖                                              ]]
-  [[ "${output}" =~ Example\\\ Folder/Example\\\ File.bookmark.md   ]]
+  [[ "${output}" =~ Deleted:                                    ]]
+  [[ "${output}" =~ Example\ Folder/1                           ]]
+  [[ "${output}" =~ 🔖                                          ]]
+  [[ "${output}" =~ Example\ Folder/Example\ File.bookmark.md   ]]
 }
 
 @test "'delete folder/folder/<filename>' deletes properly without errors." {
@@ -177,10 +177,10 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Deleted:                                                        ]]
-  [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/1                            ]]
-  [[ "${output}" =~ 🔖                                                              ]]
-  [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/Example\\\ File.bookmark.md  ]]
+  [[ "${output}" =~ Deleted:                                                  ]]
+  [[ "${output}" =~ Example\ Folder/Sample\ Folder/1                          ]]
+  [[ "${output}" =~ 🔖                                                        ]]
+  [[ "${output}" =~ Example\ Folder/Sample\ Folder/Example\ File.bookmark.md  ]]
 }
 
 @test "'delete notebook:folder/<filename>' deletes properly without errors." {
@@ -225,10 +225,10 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Deleted:                                            ]]
-  [[ "${output}" =~ home:Example\\\ Folder/1                            ]]
-  [[ "${output}" =~ 🔖                                                  ]]
-  [[ "${output}" =~ home:Example\\\ Folder/Example\\\ File.bookmark.md  ]]
+  [[ "${output}" =~ Deleted:                                        ]]
+  [[ "${output}" =~ home:Example\ Folder/1                          ]]
+  [[ "${output}" =~ 🔖                                              ]]
+  [[ "${output}" =~ home:Example\ Folder/Example\ File.bookmark.md  ]]
 }
 
 @test "'delete notebook:folder/folder/<filename>' deletes properly without errors." {
@@ -273,10 +273,10 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Deleted:                                                            ]]
-  [[ "${output}" =~ home:Example\\\ Folder/Sample\\\ Folder/1                           ]]
-  [[ "${output}" =~ 🔖                                                                  ]]
-  [[ "${output}" =~ home:Example\\\ Folder/Sample\\\ Folder/Example\\\ File.bookmark.md ]]
+  [[ "${output}" =~ Deleted:                                                      ]]
+  [[ "${output}" =~ home:Example\ Folder/Sample\ Folder/1                         ]]
+  [[ "${output}" =~ 🔖                                                            ]]
+  [[ "${output}" =~ home:Example\ Folder/Sample\ Folder/Example\ File.bookmark.md ]]
 }
 
 # <id> ########################################################################
@@ -318,10 +318,10 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Deleted:                                        ]]
-  [[ "${output}" =~ Example\\\ Folder/1                             ]]
-  [[ "${output}" =~ 🔖                                              ]]
-  [[ "${output}" =~ Example\\\ Folder/Example\\\ File.bookmark.md   ]]
+  [[ "${output}" =~ Deleted:                                    ]]
+  [[ "${output}" =~ Example\ Folder/1                           ]]
+  [[ "${output}" =~ 🔖                                          ]]
+  [[ "${output}" =~ Example\ Folder/Example\ File.bookmark.md   ]]
 }
 
 @test "'delete folder/folder/<id>' deletes properly without errors." {
@@ -361,10 +361,10 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Deleted:                                                        ]]
-  [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/1                            ]]
-  [[ "${output}" =~ 🔖                                                              ]]
-  [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/Example\\\ File.bookmark.md  ]]
+  [[ "${output}" =~ Deleted:                                                  ]]
+  [[ "${output}" =~ Example\ Folder/Sample\ Folder/1                          ]]
+  [[ "${output}" =~ 🔖                                                        ]]
+  [[ "${output}" =~ Example\ Folder/Sample\ Folder/Example\ File.bookmark.md  ]]
 }
 
 @test "'delete notebook:folder/<id>' deletes properly without errors." {
@@ -407,10 +407,10 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Deleted:                                            ]]
-  [[ "${output}" =~ home:Example\\\ Folder/1                            ]]
-  [[ "${output}" =~ 🔖                                                  ]]
-  [[ "${output}" =~ home:Example\\\ Folder/Example\\\ File.bookmark.md  ]]
+  [[ "${output}" =~ Deleted:                                        ]]
+  [[ "${output}" =~ home:Example\ Folder/1                          ]]
+  [[ "${output}" =~ 🔖                                              ]]
+  [[ "${output}" =~ home:Example\ Folder/Example\ File.bookmark.md  ]]
 }
 
 @test "'delete notebook:folder/folder/<id>' deletes properly without errors." {
@@ -453,10 +453,10 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Deleted:                                                            ]]
-  [[ "${output}" =~ home:Example\\\ Folder/Sample\\\ Folder/1                           ]]
-  [[ "${output}" =~ 🔖                                                                  ]]
-  [[ "${output}" =~ home:Example\\\ Folder/Sample\\\ Folder/Example\\\ File.bookmark.md ]]
+  [[ "${output}" =~ Deleted:                                                      ]]
+  [[ "${output}" =~ home:Example\ Folder/Sample\ Folder/1                         ]]
+  [[ "${output}" =~ 🔖                                                            ]]
+  [[ "${output}" =~ home:Example\ Folder/Sample\ Folder/Example\ File.bookmark.md ]]
 }
 
 # <title> #####################################################################
@@ -500,10 +500,10 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Deleted:                                        ]]
-  [[ "${output}" =~ Example\\\ Folder/1                             ]]
-  [[ "${output}" =~ 🔖                                              ]]
-  [[ "${output}" =~ Example\\\ Folder/Example\\\ File.bookmark.md   ]]
+  [[ "${output}" =~ Deleted:                                    ]]
+  [[ "${output}" =~ Example\ Folder/1                           ]]
+  [[ "${output}" =~ 🔖                                          ]]
+  [[ "${output}" =~ Example\ Folder/Example\ File.bookmark.md   ]]
 }
 
 @test "'delete folder/folder/<title>' deletes properly without errors." {
@@ -545,10 +545,10 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Deleted:                                                        ]]
-  [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/1                            ]]
-  [[ "${output}" =~ 🔖                                                              ]]
-  [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/Example\\\ File.bookmark.md  ]]
+  [[ "${output}" =~ Deleted:                                                    ]]
+  [[ "${output}" =~ Example\ Folder/Sample\ Folder/1                          ]]
+  [[ "${output}" =~ 🔖                                                        ]]
+  [[ "${output}" =~ Example\ Folder/Sample\ Folder/Example\ File.bookmark.md  ]]
 }
 
 @test "'delete notebook:folder/<title>' deletes properly without errors." {
@@ -595,10 +595,10 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Deleted:                                            ]]
-  [[ "${output}" =~ home:Example\\\ Folder/1                            ]]
-  [[ "${output}" =~ 🔖                                                  ]]
-  [[ "${output}" =~ home:Example\\\ Folder/Example\\\ File.bookmark.md  ]]
+  [[ "${output}" =~ Deleted:                                        ]]
+  [[ "${output}" =~ home:Example\ Folder/1                          ]]
+  [[ "${output}" =~ 🔖                                              ]]
+  [[ "${output}" =~ home:Example\ Folder/Example\ File.bookmark.md  ]]
 }
 
 @test "'delete notebook:folder/folder/<title>' deletes properly without errors." {
@@ -645,8 +645,8 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Deleted:                                                            ]]
-  [[ "${output}" =~ home:Example\\\ Folder/Sample\\\ Folder/1                           ]]
-  [[ "${output}" =~ 🔖                                                                  ]]
-  [[ "${output}" =~ home:Example\\\ Folder/Sample\\\ Folder/Example\\\ File.bookmark.md ]]
+  [[ "${output}" =~ Deleted:                                                      ]]
+  [[ "${output}" =~ home:Example\ Folder/Sample\ Folder/1                         ]]
+  [[ "${output}" =~ 🔖                                                            ]]
+  [[ "${output}" =~ home:Example\ Folder/Sample\ Folder/Example\ File.bookmark.md ]]
 }

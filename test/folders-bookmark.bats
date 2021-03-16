@@ -201,9 +201,9 @@ $(cat "${NB_TEST_BASE_PATH}/fixtures/example.com.md")"
 
   # Prints output:
 
-  [[ "${output}" =~ Added:                                      ]]
-  [[ "${output}" =~ [0-9]+                                      ]]
-  [[ "${output}" =~ Example\\\ Folder/[A-Za-z0-9]+.bookmark.md  ]]
+  [[ "${output}" =~ Added:                                    ]]
+  [[ "${output}" =~ [0-9]+                                    ]]
+  [[ "${output}" =~ Example\ Folder/[A-Za-z0-9]+.bookmark.md  ]]
 }
 
 @test "'bookmark <folder> <url>' (no slash) with valid <url> argument creates new bookmark at root level without errors." {
@@ -360,9 +360,9 @@ $(cat "${NB_TEST_BASE_PATH}/fixtures/example.com.md")"
 
   # Prints output:
 
-  [[ "${output}" =~ Added:                                      ]]
-  [[ "${output}" =~ [0-9]+                                      ]]
-  [[ "${output}" =~ Example\\\ Folder/[A-Za-z0-9]+.bookmark.md  ]]
+  [[ "${output}" =~ Added:                                    ]]
+  [[ "${output}" =~ [0-9]+                                    ]]
+  [[ "${output}" =~ Example\ Folder/[A-Za-z0-9]+.bookmark.md  ]]
 }
 
 @test "'bookmark <folder>/<folder>/ <url>' with valid <url> argument creates new bookmark and folder without errors." {
@@ -446,9 +446,9 @@ $(cat "${NB_TEST_BASE_PATH}/fixtures/example.com.md")"
 
   # Prints output:
 
-  [[ "${output}" =~ Added:                                                      ]]
-  [[ "${output}" =~ [0-9]+                                                      ]]
-  [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/[A-Za-z0-9]+.bookmark.md ]]
+  [[ "${output}" =~ Added:                                                  ]]
+  [[ "${output}" =~ [0-9]+                                                  ]]
+  [[ "${output}" =~ Example\ Folder/Sample\ Folder/[A-Za-z0-9]+.bookmark.md ]]
 }
 
 # <list option...> arguments ##################################################

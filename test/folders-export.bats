@@ -68,9 +68,9 @@ load test_helper
   # Prints output:
 
   [[ "${output}" =~ Exported:                                         ]]
-  [[ "${output}" =~ Example\\\ Folder/1                               ]]
+  [[ "${output}" =~ Example\ Folder/1                                 ]]
   [[ "${output}" =~ 🔖                                                ]]
-  [[ "${output}" =~ Example\\\ Folder/Example\\\ File.bookmark.md     ]]
+  [[ "${output}" =~ Example\ Folder/Example\ File.bookmark.md         ]]
   [[ "${output}" =~ ${_TMP_DIR}/example.md                            ]]
 }
 
@@ -103,11 +103,11 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Exported:                                                       ]]
-  [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/1                            ]]
-  [[ "${output}" =~ 🔖                                                              ]]
-  [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/Example\\\ File.bookmark.md  ]]
-  [[ "${output}" =~ ${_TMP_DIR}/example.md                                          ]]
+  [[ "${output}" =~ Exported:                                                 ]]
+  [[ "${output}" =~ Example\ Folder/Sample\ Folder/1                          ]]
+  [[ "${output}" =~ 🔖                                                        ]]
+  [[ "${output}" =~ Example\ Folder/Sample\ Folder/Example\ File.bookmark.md  ]]
+  [[ "${output}" =~ ${_TMP_DIR}/example.md                                    ]]
 }
 
 @test "'export notebook:folder/<filename>' exports properly without errors." {
@@ -143,11 +143,11 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Exported:                                           ]]
-  [[ "${output}" =~ home:Example\\\ Folder/1                            ]]
-  [[ "${output}" =~ 🔖                                                  ]]
-  [[ "${output}" =~ home:Example\\\ Folder/Example\\\ File.bookmark.md  ]]
-  [[ "${output}" =~ ${_TMP_DIR}/example.md                              ]]
+  [[ "${output}" =~ Exported:                                       ]]
+  [[ "${output}" =~ home:Example\ Folder/1                          ]]
+  [[ "${output}" =~ 🔖                                              ]]
+  [[ "${output}" =~ home:Example\ Folder/Example\ File.bookmark.md  ]]
+  [[ "${output}" =~ ${_TMP_DIR}/example.md                          ]]
 }
 
 @test "'export notebook:folder/folder/<filename>' exports properly without errors." {
@@ -185,11 +185,11 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Exported:                                                           ]]
-  [[ "${output}" =~ home:Example\\\ Folder/Sample\\\ Folder/1                           ]]
-  [[ "${output}" =~ 🔖                                                                  ]]
-  [[ "${output}" =~ home:Example\\\ Folder/Sample\\\ Folder/Example\\\ File.bookmark.md ]]
-  [[ "${output}" =~ ${_TMP_DIR}/example.md                                              ]]
+  [[ "${output}" =~ Exported:                                                     ]]
+  [[ "${output}" =~ home:Example\ Folder/Sample\ Folder/1                         ]]
+  [[ "${output}" =~ 🔖                                                            ]]
+  [[ "${output}" =~ home:Example\ Folder/Sample\ Folder/Example\ File.bookmark.md ]]
+  [[ "${output}" =~ ${_TMP_DIR}/example.md                                        ]]
 }
 
 # <id> ########################################################################
@@ -224,9 +224,9 @@ load test_helper
   # Prints output:
 
   [[ "${output}" =~ Exported:                                         ]]
-  [[ "${output}" =~ Example\\\ Folder/1                               ]]
+  [[ "${output}" =~ Example\ Folder/1                                 ]]
   [[ "${output}" =~ 🔖                                                ]]
-  [[ "${output}" =~ Example\\\ Folder/Example\\\ File.bookmark.md     ]]
+  [[ "${output}" =~ Example\ Folder/Example\ File.bookmark.md         ]]
   [[ "${output}" =~ ${_TMP_DIR}/example.md                            ]]
 }
 
@@ -259,11 +259,11 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Exported:                                                       ]]
-  [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/1                            ]]
-  [[ "${output}" =~ 🔖                                                              ]]
-  [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/Example\\\ File.bookmark.md  ]]
-  [[ "${output}" =~ ${_TMP_DIR}/example.md                                          ]]
+  [[ "${output}" =~ Exported:                                                 ]]
+  [[ "${output}" =~ Example\ Folder/Sample\ Folder/1                          ]]
+  [[ "${output}" =~ 🔖                                                        ]]
+  [[ "${output}" =~ Example\ Folder/Sample\ Folder/Example\ File.bookmark.md  ]]
+  [[ "${output}" =~ ${_TMP_DIR}/example.md                                    ]]
 }
 
 @test "'export notebook:folder/<id>' exports properly without errors." {
@@ -299,11 +299,11 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Exported:                                           ]]
-  [[ "${output}" =~ home:Example\\\ Folder/1                            ]]
-  [[ "${output}" =~ 🔖                                                  ]]
-  [[ "${output}" =~ home:Example\\\ Folder/Example\\\ File.bookmark.md  ]]
-  [[ "${output}" =~ ${_TMP_DIR}/example.md                              ]]
+  [[ "${output}" =~ Exported:                                       ]]
+  [[ "${output}" =~ home:Example\ Folder/1                          ]]
+  [[ "${output}" =~ 🔖                                              ]]
+  [[ "${output}" =~ home:Example\ Folder/Example\ File.bookmark.md  ]]
+  [[ "${output}" =~ ${_TMP_DIR}/example.md                          ]]
 }
 
 @test "'export notebook:folder/folder/<id>' exports properly without errors." {
@@ -339,11 +339,11 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Exported:                                                           ]]
-  [[ "${output}" =~ home:Example\\\ Folder/Sample\\\ Folder/1                           ]]
-  [[ "${output}" =~ 🔖                                                                  ]]
-  [[ "${output}" =~ home:Example\\\ Folder/Sample\\\ Folder/Example\\\ File.bookmark.md ]]
-  [[ "${output}" =~ ${_TMP_DIR}/example.md                                              ]]
+  [[ "${output}" =~ Exported:                                                     ]]
+  [[ "${output}" =~ home:Example\ Folder/Sample\ Folder/1                         ]]
+  [[ "${output}" =~ 🔖                                                            ]]
+  [[ "${output}" =~ home:Example\ Folder/Sample\ Folder/Example\ File.bookmark.md ]]
+  [[ "${output}" =~ ${_TMP_DIR}/example.md                                        ]]
 }
 
 # <title> #####################################################################
@@ -380,9 +380,9 @@ load test_helper
   # Prints output:
 
   [[ "${output}" =~ Exported:                                         ]]
-  [[ "${output}" =~ Example\\\ Folder/1                               ]]
+  [[ "${output}" =~ Example\ Folder/1                                 ]]
   [[ "${output}" =~ 🔖                                                ]]
-  [[ "${output}" =~ Example\\\ Folder/Example\\\ File.bookmark.md     ]]
+  [[ "${output}" =~ Example\ Folder/Example\ File.bookmark.md         ]]
   [[ "${output}" =~ ${_TMP_DIR}/example.md                            ]]
 }
 
@@ -418,11 +418,11 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Exported:                                                       ]]
-  [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/1                            ]]
-  [[ "${output}" =~ 🔖                                                              ]]
-  [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/Example\\\ File.bookmark.md  ]]
-  [[ "${output}" =~ ${_TMP_DIR}/example.md                                          ]]
+  [[ "${output}" =~ Exported:                                                 ]]
+  [[ "${output}" =~ Example\ Folder/Sample\ Folder/1                          ]]
+  [[ "${output}" =~ 🔖                                                        ]]
+  [[ "${output}" =~ Example\ Folder/Sample\ Folder/Example\ File.bookmark.md  ]]
+  [[ "${output}" =~ ${_TMP_DIR}/example.md                                    ]]
 }
 
 @test "'export notebook:folder/<title>' exports properly without errors." {
@@ -461,11 +461,11 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Exported:                                           ]]
-  [[ "${output}" =~ home:Example\\\ Folder/1                            ]]
-  [[ "${output}" =~ 🔖                                                  ]]
-  [[ "${output}" =~ home:Example\\\ Folder/Example\\\ File.bookmark.md  ]]
-  [[ "${output}" =~ ${_TMP_DIR}/example.md                              ]]
+  [[ "${output}" =~ Exported:                                       ]]
+  [[ "${output}" =~ home:Example\ Folder/1                          ]]
+  [[ "${output}" =~ 🔖                                              ]]
+  [[ "${output}" =~ home:Example\ Folder/Example\ File.bookmark.md  ]]
+  [[ "${output}" =~ ${_TMP_DIR}/example.md                          ]]
 }
 
 @test "'export notebook:folder/folder/<title>' exports properly without errors." {
@@ -504,9 +504,9 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Exported:                                                           ]]
-  [[ "${output}" =~ home:Example\\\ Folder/Sample\\\ Folder/1                           ]]
-  [[ "${output}" =~ 🔖                                                                  ]]
-  [[ "${output}" =~ home:Example\\\ Folder/Sample\\\ Folder/Example\\\ File.bookmark.md ]]
-  [[ "${output}" =~ ${_TMP_DIR}/example.md                                              ]]
+  [[ "${output}" =~ Exported:                                                     ]]
+  [[ "${output}" =~ home:Example\ Folder/Sample\ Folder/1                         ]]
+  [[ "${output}" =~ 🔖                                                            ]]
+  [[ "${output}" =~ home:Example\ Folder/Sample\ Folder/Example\ File.bookmark.md ]]
+  [[ "${output}" =~ ${_TMP_DIR}/example.md                                        ]]
 }

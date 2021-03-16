@@ -79,9 +79,9 @@ load test_helper
   [[   "${status}"    -eq 0     ]]
   [[   "${#lines[@]}" -eq 3     ]]
 
-  [[   "${lines[0]}"  =~  [.*Example\\\ Folder/3.*].*\ 🔖\ 🔒\ three.bookmark.md  ]]
-  [[   "${lines[1]}"  =~  [.*Example\\\ Folder/2.*].*\ 🔖\ two.bookmark.md        ]]
-  [[   "${lines[2]}"  =~  [.*Example\\\ Folder/1.*].*\ Title\ One                 ]]
+  [[   "${lines[0]}"  =~  [.*Example\ Folder/3.*].*\ 🔖\ 🔒\ three.bookmark.md  ]]
+  [[   "${lines[1]}"  =~  [.*Example\ Folder/2.*].*\ 🔖\ two.bookmark.md        ]]
+  [[   "${lines[2]}"  =~  [.*Example\ Folder/1.*].*\ Title\ One                 ]]
 
   # full path (slash)
 
@@ -94,11 +94,11 @@ load test_helper
   [[   "${#lines[@]}" -eq 3     ]]
 
   [[   "${lines[0]}"  =~  \
-          [.*Example\\\ Folder/3.*].*\ 🔖\ 🔒\ three.bookmark.md  ]]
+          [.*Example\ Folder/3.*].*\ 🔖\ 🔒\ three.bookmark.md  ]]
   [[   "${lines[1]}"  =~  \
-          [.*Example\\\ Folder/2.*].*\ 🔖\ two.bookmark.md        ]]
+          [.*Example\ Folder/2.*].*\ 🔖\ two.bookmark.md        ]]
   [[   "${lines[2]}"  =~  \
-          [.*Example\\\ Folder/1.*].*\ Title\ One                 ]]
+          [.*Example\ Folder/1.*].*\ Title\ One                 ]]
 }
 
 @test "'list /full/path/to/folder' (no slash) exits with 0 and lists folder item only." {
@@ -164,9 +164,9 @@ load test_helper
   [[   "${status}"    -eq 0     ]]
   [[   "${#lines[@]}" -eq 3     ]]
 
-  [[   "${lines[0]}"  =~  [.*Example\\\ Folder/3.*].*\ 🔖\ 🔒\ three.bookmark.md  ]]
-  [[   "${lines[1]}"  =~  [.*Example\\\ Folder/2.*].*\ 🔖\ two.bookmark.md        ]]
-  [[   "${lines[2]}"  =~  [.*Example\\\ Folder/1.*].*\ Title\ One                 ]]
+  [[   "${lines[0]}"  =~  [.*Example\ Folder/3.*].*\ 🔖\ 🔒\ three.bookmark.md  ]]
+  [[   "${lines[1]}"  =~  [.*Example\ Folder/2.*].*\ 🔖\ two.bookmark.md        ]]
+  [[   "${lines[2]}"  =~  [.*Example\ Folder/1.*].*\ Title\ One                 ]]
 
   # full path (slash)
 
@@ -179,11 +179,11 @@ load test_helper
   [[   "${#lines[@]}" -eq 3     ]]
 
   [[   "${lines[0]}"  =~  \
-          [.*Example\\\ Notebook:Example\\\ Folder/3.*].*\ 🔖\ 🔒\ three.bookmark.md  ]]
+          [.*Example\ Notebook:Example\ Folder/3.*].*\ 🔖\ 🔒\ three.bookmark.md  ]]
   [[   "${lines[1]}"  =~  \
-          [.*Example\\\ Notebook:Example\\\ Folder/2.*].*\ 🔖\ two.bookmark.md        ]]
+          [.*Example\ Notebook:Example\ Folder/2.*].*\ 🔖\ two.bookmark.md        ]]
   [[   "${lines[2]}"  =~  \
-          [.*Example\\\ Notebook:Example\\\ Folder/1.*].*\ Title\ One                 ]]
+          [.*Example\ Notebook:Example\ Folder/1.*].*\ Title\ One                 ]]
 }
 
 @test "'list /full/path/to/folder' (no slash) in diferrent notebook exits with 0 and lists folder item only." {
@@ -208,10 +208,10 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 0                                                   ]]
-  [[   "${#lines[@]}" -eq 1                                                   ]]
+  [[   "${status}"    -eq 0                                                 ]]
+  [[   "${#lines[@]}" -eq 1                                                 ]]
 
-  [[   "${lines[0]}"  =~  [.*Example\\\ Notebook:1.*].*\ 📂\ Example\ Folder  ]]
+  [[   "${lines[0]}"  =~  [.*Example\ Notebook:1.*].*\ 📂\ Example\ Folder  ]]
 
   # full path (no slash)
 
@@ -220,10 +220,10 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 0                                                   ]]
-  [[   "${#lines[@]}" -eq 1                                                   ]]
+  [[   "${status}"    -eq 0                                                 ]]
+  [[   "${#lines[@]}" -eq 1                                                 ]]
 
-  [[   "${lines[0]}"  =~  [.*Example\\\ Notebook:1.*].*\ 📂\ Example\ Folder  ]]
+  [[   "${lines[0]}"  =~  [.*Example\ Notebook:1.*].*\ 📂\ Example\ Folder  ]]
 }
 
 # empty #######################################################################
@@ -451,12 +451,12 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
   echo "${#lines[1]}"
 
-  [[    "${status}"     -eq 0                                               ]]
-  [[    "${#lines[@]}"  -eq 4                                               ]]
+  [[    "${status}"     -eq 0                                             ]]
+  [[    "${#lines[@]}"  -eq 4                                             ]]
 
-  [[    "${lines[0]}"   =~  Example\\\ Folder/Sample\\\ Folder/1.*one       ]]
-  [[    "${lines[1]}"   =~  [^-]--------------------------------------[^-]  ]]
-  [[    "${#lines[1]}"  =~  49                                              ]]
+  [[    "${lines[0]}"   =~  Example\ Folder/Sample\ Folder/1.*one         ]]
+  [[    "${lines[1]}"   =~  [^-]------------------------------------[^-]  ]]
+  [[    "${#lines[1]}"  =~  47                                            ]]
 }
 
 # filtering ###################################################################
@@ -492,42 +492,42 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"     -eq 0                                 ]]
-  [[    "${#lines[@]}"  -eq 1                                 ]]
+  [[    "${status}"     -eq 0                               ]]
+  [[    "${#lines[@]}"  -eq 1                               ]]
 
-  [[    "${lines[0]}"   =~  1.*root\ one                      ]]
+  [[    "${lines[0]}"   =~  1.*root\ one                    ]]
 
   run "${_NB}" list Example\ Folder/ one
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"     -eq 0                                 ]]
-  [[    "${#lines[@]}"  -eq 1                                 ]]
+  [[    "${status}"     -eq 0                               ]]
+  [[    "${#lines[@]}"  -eq 1                               ]]
 
-  [[    "${lines[0]}"   =~  Example\\\ Folder/1.*nested\ one  ]]
+  [[    "${lines[0]}"   =~  Example\ Folder/1.*nested\ one  ]]
 
   run "${_NB}" list Example\ Folder/ nested
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"     -eq 0                                 ]]
-  [[    "${#lines[@]}"  -eq 2                                 ]]
+  [[    "${status}"     -eq 0                               ]]
+  [[    "${#lines[@]}"  -eq 2                               ]]
 
-  [[    "${lines[0]}"   =~  Example\\\ Folder/2.*nested\ two  ]]
-  [[    "${lines[1]}"   =~  Example\\\ Folder/1.*nested\ one  ]]
+  [[    "${lines[0]}"   =~  Example\ Folder/2.*nested\ two  ]]
+  [[    "${lines[1]}"   =~  Example\ Folder/1.*nested\ one  ]]
 
   run "${_NB}" list Example\ Folder/ one two
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"     -eq 0                                 ]]
-  [[    "${#lines[@]}"  -eq 2                                 ]]
+  [[    "${status}"     -eq 0                               ]]
+  [[    "${#lines[@]}"  -eq 2                               ]]
 
-  [[    "${lines[0]}"   =~  Example\\\ Folder/2.*nested\ two  ]]
-  [[    "${lines[1]}"   =~  Example\\\ Folder/1.*nested\ one  ]]
+  [[    "${lines[0]}"   =~  Example\ Folder/2.*nested\ two  ]]
+  [[    "${lines[1]}"   =~  Example\ Folder/1.*nested\ one  ]]
 }
 
 @test "'list <folder> <pattern>...' (no slash) exits with 0 and treats folder as selector and filter pattern." {
@@ -864,11 +864,11 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 0                                                  ]]
+  [[   "${status}"    -eq 0                                            ]]
 
-  [[   "${lines[0]}"  =~ Example\\\ Folder/Sample\\\ Folder/Demo\\\ Folder/3 ]]
-  [[   "${lines[0]}"  =~ 🔖\ 🔒                                              ]]
-  [[   "${lines[0]}"  =~ three.bookmark.md.enc                               ]]
+  [[   "${lines[0]}"  =~ Example\ Folder/Sample\ Folder/Demo\ Folder/3 ]]
+  [[   "${lines[0]}"  =~ 🔖\ 🔒                                        ]]
+  [[   "${lines[0]}"  =~ three.bookmark.md.enc                         ]]
 }
 
 # list notebook:<id> ##########################################################
@@ -898,14 +898,14 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 0                                   ]]
+  [[   "${status}"    -eq 0                               ]]
 
-  [[   "${lines[0]}"  =~  [^/]home:Example\\\ Folder/3        ]]
-  [[ ! "${lines[0]}"  =~  Example\\\ Folder/Sample\\\ Folder  ]]
-  [[   "${lines[0]}"  =~  📂                                  ]]
+  [[   "${lines[0]}"  =~  [^/]home:Example\ Folder/3      ]]
+  [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder  ]]
+  [[   "${lines[0]}"  =~  📂                              ]]
 
-  [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder      ]]
-  [[   "${lines[0]}"  =~  Sample\ Folder                      ]]
+  [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder  ]]
+  [[   "${lines[0]}"  =~  Sample\ Folder                  ]]
 }
 
 @test "'list <id>/<folder>' exits with 0 and prints the folder/folder list item." {
@@ -928,14 +928,14 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 0                                   ]]
+  [[   "${status}"    -eq 0                               ]]
 
-  [[   "${lines[0]}"  =~  Example\\\ Folder/3                 ]]
-  [[ ! "${lines[0]}"  =~  Example\\\ Folder/Sample\\\ Folder  ]]
-  [[   "${lines[0]}"  =~  📂                                  ]]
+  [[   "${lines[0]}"  =~  Example\ Folder/3               ]]
+  [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder  ]]
+  [[   "${lines[0]}"  =~  📂                              ]]
 
-  [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder      ]]
-  [[   "${lines[0]}"  =~  Sample\ Folder                      ]]
+  [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder  ]]
+  [[   "${lines[0]}"  =~  Sample\ Folder                  ]]
 }
 
 # list <id>/ ##################################################################
@@ -1055,15 +1055,15 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 0                                                 ]]
+  [[   "${status}"    -eq 0                                           ]]
 
-  [[   "${lines[0]}"  =~  Example\\\ Folder/Sample\\\ Folder/3              ]]
-  [[ ! "${lines[0]}"  =~  Example\\\ Folder/Sample\\\ Folder/Demo\\\ Folder ]]
-  [[   "${lines[0]}"  =~  📂                                                ]]
+  [[   "${lines[0]}"  =~  Example\ Folder/Sample\ Folder/3            ]]
+  [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder/Demo\ Folder ]]
+  [[   "${lines[0]}"  =~  📂                                          ]]
 
-  [[ ! "${lines[0]}"  =~  Sample\ Folder/Demo\ Folder                       ]]
-  [[   "${lines[0]}"  =~  Demo\ Folder                                      ]]
-  [[   "${#lines[@]}" -eq 1                                                 ]]
+  [[ ! "${lines[0]}"  =~  Sample\ Folder/Demo\ Folder                 ]]
+  [[   "${lines[0]}"  =~  Demo\ Folder                                ]]
+  [[   "${#lines[@]}" -eq 1                                           ]]
 }
 
 @test "'list folder/folder' exits with 0 and prints the folder/folder list item." {
@@ -1088,8 +1088,8 @@ load test_helper
 
   [[   "${status}"    -eq 0                                   ]]
 
-  [[   "${lines[0]}"  =~  Example\\\ Folder/3                 ]]
-  [[ ! "${lines[0]}"  =~  Example\\\ Folder/Sample\\\ Folder  ]]
+  [[   "${lines[0]}"  =~  Example\ Folder/3                   ]]
+  [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder      ]]
   [[   "${lines[0]}"  =~  📂                                  ]]
 
   [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder      ]]
@@ -1125,7 +1125,6 @@ load test_helper
   [[ ! "${lines[2]}"  =~  🔖                ]]
   [[ ! "${lines[2]}"  =~  🔒                ]]
 
-  [[ ! "${lines[0]}"  =~  Example\\\ Folder ]]
   [[   "${lines[0]}"  =~  3                 ]]
   [[   "${lines[0]}"  =~  📂                ]]
   [[   "${lines[0]}"  =~  Example\ Folder   ]]

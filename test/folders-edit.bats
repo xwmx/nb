@@ -6,7 +6,7 @@ load test_helper
 
 @test "'edit folder/<filename>' with encrypted file edits properly without errors." {
   {
-    "${_NB}" init 
+    "${_NB}" init
 
     "${_NB}" add "Example Folder/Example File.bookmark.md"  \
       --content "<https://example.test>"                    \
@@ -53,10 +53,10 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Updated:                                          ]]
-  [[ "${output}" =~ Example\\\ Folder/1                               ]]
-  [[ "${output}" =~ 🔖\ 🔒                                            ]]
-  [[ "${output}" =~ Example\\\ Folder/Example\\\ File.bookmark.md.enc ]]
+  [[ "${output}" =~ Updated:                                      ]]
+  [[ "${output}" =~ Example\ Folder/1                             ]]
+  [[ "${output}" =~ 🔖\ 🔒                                        ]]
+  [[ "${output}" =~ Example\ Folder/Example\ File.bookmark.md.enc ]]
 }
 
 # error handling ##############################################################
@@ -136,10 +136,10 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Updated:                                        ]]
-  [[ "${output}" =~ Example\\\ Folder/1                             ]]
-  [[ "${output}" =~ 🔖                                              ]]
-  [[ "${output}" =~ Example\\\ Folder/Example\\\ File.bookmark.md   ]]
+  [[ "${output}" =~ Updated:                                    ]]
+  [[ "${output}" =~ Example\ Folder/1                           ]]
+  [[ "${output}" =~ 🔖                                          ]]
+  [[ "${output}" =~ Example\ Folder/Example\ File.bookmark.md   ]]
 }
 
 @test "'edit folder/folder/<filename>' edits properly without errors." {
@@ -176,10 +176,10 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Updated:                                                        ]]
-  [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/1                            ]]
-  [[ "${output}" =~ 🔖                                                              ]]
-  [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/Example\\\ File.bookmark.md  ]]
+  [[ "${output}" =~ Updated:                                                  ]]
+  [[ "${output}" =~ Example\ Folder/Sample\ Folder/1                          ]]
+  [[ "${output}" =~ 🔖                                                        ]]
+  [[ "${output}" =~ Example\ Folder/Sample\ Folder/Example\ File.bookmark.md  ]]
 }
 
 @test "'edit notebook:folder/<filename>' edits properly without errors." {
@@ -221,10 +221,10 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Updated:                                            ]]
-  [[ "${output}" =~ home:Example\\\ Folder/1                            ]]
-  [[ "${output}" =~ 🔖                                                  ]]
-  [[ "${output}" =~ home:Example\\\ Folder/Example\\\ File.bookmark.md  ]]
+  [[ "${output}" =~ Updated:                                        ]]
+  [[ "${output}" =~ home:Example\ Folder/1                          ]]
+  [[ "${output}" =~ 🔖                                              ]]
+  [[ "${output}" =~ home:Example\ Folder/Example\ File.bookmark.md  ]]
 }
 
 @test "'edit notebook:folder/folder/<filename>' edits properly without errors." {
@@ -266,10 +266,10 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Updated:                                                            ]]
-  [[ "${output}" =~ home:Example\\\ Folder/Sample\\\ Folder/1                           ]]
-  [[ "${output}" =~ 🔖                                                                  ]]
-  [[ "${output}" =~ home:Example\\\ Folder/Sample\\\ Folder/Example\\\ File.bookmark.md ]]
+  [[ "${output}" =~ Updated:                                                      ]]
+  [[ "${output}" =~ home:Example\ Folder/Sample\ Folder/1                         ]]
+  [[ "${output}" =~ 🔖                                                            ]]
+  [[ "${output}" =~ home:Example\ Folder/Sample\ Folder/Example\ File.bookmark.md ]]
 }
 
 # <id> ########################################################################
@@ -308,10 +308,10 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Updated:                                        ]]
-  [[ "${output}" =~ Example\\\ Folder/1                             ]]
-  [[ "${output}" =~ 🔖                                              ]]
-  [[ "${output}" =~ Example\\\ Folder/Example\\\ File.bookmark.md   ]]
+  [[ "${output}" =~ Updated:                                    ]]
+  [[ "${output}" =~ Example\ Folder/1                           ]]
+  [[ "${output}" =~ 🔖                                          ]]
+  [[ "${output}" =~ Example\ Folder/Example\ File.bookmark.md   ]]
 }
 
 @test "'edit folder/folder/<id>' edits properly without errors." {
@@ -348,10 +348,10 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Updated:                                                        ]]
-  [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/1                            ]]
-  [[ "${output}" =~ 🔖                                                              ]]
-  [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/Example\\\ File.bookmark.md  ]]
+  [[ "${output}" =~ Updated:                                                  ]]
+  [[ "${output}" =~ Example\ Folder/Sample\ Folder/1                          ]]
+  [[ "${output}" =~ 🔖                                                        ]]
+  [[ "${output}" =~ Example\ Folder/Sample\ Folder/Example\ File.bookmark.md  ]]
 }
 
 @test "'edit notebook:folder/<id>' edits properly without errors." {
@@ -393,10 +393,10 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Updated:                                            ]]
-  [[ "${output}" =~ home:Example\\\ Folder/1                            ]]
-  [[ "${output}" =~ 🔖                                                  ]]
-  [[ "${output}" =~ home:Example\\\ Folder/Example\\\ File.bookmark.md  ]]
+  [[ "${output}" =~ Updated:                                        ]]
+  [[ "${output}" =~ home:Example\ Folder/1                          ]]
+  [[ "${output}" =~ 🔖                                              ]]
+  [[ "${output}" =~ home:Example\ Folder/Example\ File.bookmark.md  ]]
 }
 
 @test "'edit notebook:folder/folder/<id>' edits properly without errors." {
@@ -438,10 +438,10 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Updated:                                                            ]]
-  [[ "${output}" =~ home:Example\\\ Folder/Sample\\\ Folder/1                           ]]
-  [[ "${output}" =~ 🔖                                                                  ]]
-  [[ "${output}" =~ home:Example\\\ Folder/Sample\\\ Folder/Example\\\ File.bookmark.md ]]
+  [[ "${output}" =~ Updated:                                                      ]]
+  [[ "${output}" =~ home:Example\ Folder/Sample\ Folder/1                         ]]
+  [[ "${output}" =~ 🔖                                                            ]]
+  [[ "${output}" =~ home:Example\ Folder/Sample\ Folder/Example\ File.bookmark.md ]]
 }
 
 # <title> #####################################################################
@@ -482,10 +482,10 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Updated:                                        ]]
-  [[ "${output}" =~ Example\\\ Folder/1                             ]]
-  [[ "${output}" =~ 🔖                                              ]]
-  [[ "${output}" =~ Example\\\ Folder/Example\\\ File.bookmark.md   ]]
+  [[ "${output}" =~ Updated:                                    ]]
+  [[ "${output}" =~ Example\ Folder/1                           ]]
+  [[ "${output}" =~ 🔖                                          ]]
+  [[ "${output}" =~ Example\ Folder/Example\ File.bookmark.md   ]]
 }
 
 @test "'edit folder/folder/<title>' edits properly without errors." {
@@ -524,10 +524,10 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Updated:                                                        ]]
-  [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/1                            ]]
-  [[ "${output}" =~ 🔖                                                              ]]
-  [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/Example\\\ File.bookmark.md  ]]
+  [[ "${output}" =~ Updated:                                                  ]]
+  [[ "${output}" =~ Example\ Folder/Sample\ Folder/1                          ]]
+  [[ "${output}" =~ 🔖                                                        ]]
+  [[ "${output}" =~ Example\ Folder/Sample\ Folder/Example\ File.bookmark.md  ]]
 }
 
 @test "'edit notebook:folder/<title>' edits properly without errors." {
@@ -571,10 +571,10 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Updated:                                            ]]
-  [[ "${output}" =~ home:Example\\\ Folder/1                            ]]
-  [[ "${output}" =~ 🔖                                                  ]]
-  [[ "${output}" =~ home:Example\\\ Folder/Example\\\ File.bookmark.md  ]]
+  [[ "${output}" =~ Updated:                                        ]]
+  [[ "${output}" =~ home:Example\ Folder/1                          ]]
+  [[ "${output}" =~ 🔖                                              ]]
+  [[ "${output}" =~ home:Example\ Folder/Example\ File.bookmark.md  ]]
 }
 
 @test "'edit notebook:folder/folder/<title>' edits properly without errors." {
@@ -617,8 +617,8 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Updated:                                                            ]]
-  [[ "${output}" =~ home:Example\\\ Folder/Sample\\\ Folder/1                           ]]
-  [[ "${output}" =~ 🔖                                                                  ]]
-  [[ "${output}" =~ home:Example\\\ Folder/Sample\\\ Folder/Example\\\ File.bookmark.md ]]
+  [[ "${output}" =~ Updated:                                                      ]]
+  [[ "${output}" =~ home:Example\ Folder/Sample\ Folder/1                         ]]
+  [[ "${output}" =~ 🔖                                                            ]]
+  [[ "${output}" =~ home:Example\ Folder/Sample\ Folder/Example\ File.bookmark.md ]]
 }

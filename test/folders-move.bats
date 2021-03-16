@@ -62,9 +62,9 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to:                                                                ]]
-  [[ "${output}" =~ one:Example\\\ Folder/Sample\\\ Folder/Demo\\\ Folder/1                   ]]
-  [[ "${output}" =~ one:Example\\\ Folder/Sample\\\ Folder/Demo\\\ Folder/Example\\\ File.md  ]]
+  [[ "${output}" =~ Moved\ to:                                                        ]]
+  [[ "${output}" =~ one:Example\ Folder/Sample\ Folder/Demo\ Folder/1                 ]]
+  [[ "${output}" =~ one:Example\ Folder/Sample\ Folder/Demo\ Folder/Example\ File.md  ]]
 }
 
 @test "'move folder/<id>' moves and creates intermediate folders." {
@@ -113,9 +113,9 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to:                                                            ]]
-  [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/Demo\\\ Folder/1                   ]]
-  [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/Demo\\\ Folder/Example\\\ File.md  ]]
+  [[ "${output}" =~ Moved\ to:                                                    ]]
+  [[ "${output}" =~ Example\ Folder/Sample\ Folder/Demo\ Folder/1                 ]]
+  [[ "${output}" =~ Example\ Folder/Sample\ Folder/Demo\ Folder/Example\ File.md  ]]
 }
 
 # error handling ##############################################################
@@ -216,9 +216,9 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to:                                    ]]
-  [[ "${output}" =~ Example\\\ Folder/1                           ]]
-  [[ "${output}" =~ Example\\\ Folder/Sample\\\ File.bookmark.md  ]]
+  [[ "${output}" =~ Moved\ to:                                ]]
+  [[ "${output}" =~ Example\ Folder/1                         ]]
+  [[ "${output}" =~ Example\ Folder/Sample\ File.bookmark.md  ]]
 }
 
 @test "'move <selector> folder/' creates folder and moves item into folder." {
@@ -262,9 +262,9 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to:                                    ]]
-  [[ "${output}" =~ Example\\\ Folder/1                           ]]
-  [[ "${output}" =~ Example\\\ Folder/Sample\\\ File.bookmark.md  ]]
+  [[ "${output}" =~ Moved\ to:                                ]]
+  [[ "${output}" =~ Example\ Folder/1                         ]]
+  [[ "${output}" =~ Example\ Folder/Sample\ File.bookmark.md  ]]
 }
 
 @test "'move <notebook>:<selector> <notebook>:folder/' moves item into folder." {
@@ -324,9 +324,9 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to:                                        ]]
-  [[ "${output}" =~ two:Example\\\ Folder/1                           ]]
-  [[ "${output}" =~ two:Example\\\ Folder/Sample\\\ File.bookmark.md  ]]
+  [[ "${output}" =~ Moved\ to:                                    ]]
+  [[ "${output}" =~ two:Example\ Folder/1                         ]]
+  [[ "${output}" =~ two:Example\ Folder/Sample\ File.bookmark.md  ]]
 }
 
 # <filename> ##################################################################
@@ -402,9 +402,9 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to:                        ]]
-  [[ "${output}" =~ two:Example\\\ Folder/1           ]]
-  [[ "${output}" =~ two:Example\\\ Folder/example.md  ]]
+  [[ "${output}" =~ Moved\ to:                      ]]
+  [[ "${output}" =~ two:Example\ Folder/1           ]]
+  [[ "${output}" =~ two:Example\ Folder/example.md  ]]
 }
 
 @test "'move folder/<filename>' moves properly without errors." {
@@ -454,9 +454,9 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to:                    ]]
-  [[ "${output}" =~ Example\\\ Folder/1           ]]
-  [[ "${output}" =~ Example\\\ Folder/example.md  ]]
+  [[ "${output}" =~ Moved\ to:                  ]]
+  [[ "${output}" =~ Example\ Folder/1           ]]
+  [[ "${output}" =~ Example\ Folder/example.md  ]]
 }
 
 @test "'move folder/folder/<filename>' moves properly on same level without errors." {
@@ -506,9 +506,9 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to:                                                    ]]
-  [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/1                          ]]
-  [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/example.md                 ]]
+  [[ "${output}" =~ Moved\ to:                                                ]]
+  [[ "${output}" =~ Example\ Folder/Sample\ Folder/1                          ]]
+  [[ "${output}" =~ Example\ Folder/Sample\ Folder/example.md                 ]]
 }
 
 @test "'move folder/folder/<filename>' moves properly up one level without errors." {
@@ -558,9 +558,9 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to:                    ]]
-  [[ "${output}" =~ Example\\\ Folder/2           ]]
-  [[ "${output}" =~ Example\\\ Folder/example.md  ]]
+  [[ "${output}" =~ Moved\ to:                  ]]
+  [[ "${output}" =~ Example\ Folder/2           ]]
+  [[ "${output}" =~ Example\ Folder/example.md  ]]
 }
 
 @test "'move notebook:folder/<filename>' moves properly without errors." {
@@ -615,9 +615,9 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to:                        ]]
-  [[ "${output}" =~ home:Example\\\ Folder/1          ]]
-  [[ "${output}" =~ home:Example\\\ Folder/example.md ]]
+  [[ "${output}" =~ Moved\ to:                      ]]
+  [[ "${output}" =~ home:Example\ Folder/1          ]]
+  [[ "${output}" =~ home:Example\ Folder/example.md ]]
 }
 
 @test "'move notebook:folder/folder/<filename>' moves properly on same level without errors." {
@@ -674,9 +674,9 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to:                                          ]]
-  [[ "${output}" =~ home:Example\\\ Folder/Sample\\\ Folder/1           ]]
-  [[ "${output}" =~ home:Example\\\ Folder/Sample\\\ Folder/example.md  ]]
+  [[ "${output}" =~ Moved\ to:                                      ]]
+  [[ "${output}" =~ home:Example\ Folder/Sample\ Folder/1           ]]
+  [[ "${output}" =~ home:Example\ Folder/Sample\ Folder/example.md  ]]
 }
 
 @test "'move notebook:folder/folder/<filename>' moves properly up one level without errors." {
@@ -731,9 +731,9 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to:                        ]]
-  [[ "${output}" =~ home:Example\\\ Folder/2          ]]
-  [[ "${output}" =~ home:Example\\\ Folder/example.md ]]
+  [[ "${output}" =~ Moved\ to:                      ]]
+  [[ "${output}" =~ home:Example\ Folder/2          ]]
+  [[ "${output}" =~ home:Example\ Folder/example.md ]]
 }
 
 # <id> ########################################################################
@@ -807,9 +807,9 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to:                        ]]
-  [[ "${output}" =~ two:Example\\\ Folder/1           ]]
-  [[ "${output}" =~ two:Example\\\ Folder/example.md  ]]
+  [[ "${output}" =~ Moved\ to:                      ]]
+  [[ "${output}" =~ two:Example\ Folder/1           ]]
+  [[ "${output}" =~ two:Example\ Folder/example.md  ]]
 }
 
 @test "'move folder/<id>' moves properly without errors." {
@@ -859,9 +859,9 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to:                    ]]
-  [[ "${output}" =~ Example\\\ Folder/1           ]]
-  [[ "${output}" =~ Example\\\ Folder/example.md  ]]
+  [[ "${output}" =~ Moved\ to:                  ]]
+  [[ "${output}" =~ Example\ Folder/1           ]]
+  [[ "${output}" =~ Example\ Folder/example.md  ]]
 }
 
 @test "'move folder/folder/<id>' moves properly on same level without errors." {
@@ -911,9 +911,9 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to:                                                    ]]
-  [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/1                          ]]
-  [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/example.md                 ]]
+  [[ "${output}" =~ Moved\ to:                                                ]]
+  [[ "${output}" =~ Example\ Folder/Sample\ Folder/1                          ]]
+  [[ "${output}" =~ Example\ Folder/Sample\ Folder/example.md                 ]]
 }
 
 @test "'move folder/folder/<id>' moves properly up one level without errors." {
@@ -963,9 +963,9 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to:                    ]]
-  [[ "${output}" =~ Example\\\ Folder/2           ]]
-  [[ "${output}" =~ Example\\\ Folder/example.md  ]]
+  [[ "${output}" =~ Moved\ to:                  ]]
+  [[ "${output}" =~ Example\ Folder/2           ]]
+  [[ "${output}" =~ Example\ Folder/example.md  ]]
 }
 
 @test "'move notebook:folder/<id>' moves properly without errors." {
@@ -1020,9 +1020,9 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to:                        ]]
-  [[ "${output}" =~ home:Example\\\ Folder/1          ]]
-  [[ "${output}" =~ home:Example\\\ Folder/example.md ]]
+  [[ "${output}" =~ Moved\ to:                      ]]
+  [[ "${output}" =~ home:Example\ Folder/1          ]]
+  [[ "${output}" =~ home:Example\ Folder/example.md ]]
 }
 
 @test "'move notebook:folder/folder/<id>' moves properly on same level without errors." {
@@ -1079,9 +1079,9 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to:                                          ]]
-  [[ "${output}" =~ home:Example\\\ Folder/Sample\\\ Folder/1           ]]
-  [[ "${output}" =~ home:Example\\\ Folder/Sample\\\ Folder/example.md  ]]
+  [[ "${output}" =~ Moved\ to:                                      ]]
+  [[ "${output}" =~ home:Example\ Folder/Sample\ Folder/1           ]]
+  [[ "${output}" =~ home:Example\ Folder/Sample\ Folder/example.md  ]]
 }
 
 @test "'move notebook:folder/folder/<id>' moves properly up one level without errors." {
@@ -1136,9 +1136,9 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to:                        ]]
-  [[ "${output}" =~ home:Example\\\ Folder/2          ]]
-  [[ "${output}" =~ home:Example\\\ Folder/example.md ]]
+  [[ "${output}" =~ Moved\ to:                      ]]
+  [[ "${output}" =~ home:Example\ Folder/2          ]]
+  [[ "${output}" =~ home:Example\ Folder/example.md ]]
 }
 
 # <title> #####################################################################
@@ -1212,9 +1212,9 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to:                    ]]
-  [[ "${output}" =~ Example\\\ Folder/1           ]]
-  [[ "${output}" =~ Example\\\ Folder/example.md  ]]
+  [[ "${output}" =~ Moved\ to:                  ]]
+  [[ "${output}" =~ Example\ Folder/1           ]]
+  [[ "${output}" =~ Example\ Folder/example.md  ]]
 }
 
 @test "'move folder/<title>' moves properly without errors." {
@@ -1264,9 +1264,9 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to:                    ]]
-  [[ "${output}" =~ Example\\\ Folder/1           ]]
-  [[ "${output}" =~ Example\\\ Folder/example.md  ]]
+  [[ "${output}" =~ Moved\ to:                  ]]
+  [[ "${output}" =~ Example\ Folder/1           ]]
+  [[ "${output}" =~ Example\ Folder/example.md  ]]
 }
 
 @test "'move folder/folder/<title>' moves properly on same level without errors." {
@@ -1316,9 +1316,9 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to:                                                    ]]
-  [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/1                          ]]
-  [[ "${output}" =~ Example\\\ Folder/Sample\\\ Folder/example.md                 ]]
+  [[ "${output}" =~ Moved\ to:                                                ]]
+  [[ "${output}" =~ Example\ Folder/Sample\ Folder/1                          ]]
+  [[ "${output}" =~ Example\ Folder/Sample\ Folder/example.md                 ]]
 }
 
 @test "'move folder/folder/<title>' moves properly up one level without errors." {
@@ -1368,9 +1368,9 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to:                    ]]
-  [[ "${output}" =~ Example\\\ Folder/2           ]]
-  [[ "${output}" =~ Example\\\ Folder/example.md  ]]
+  [[ "${output}" =~ Moved\ to:                  ]]
+  [[ "${output}" =~ Example\ Folder/2           ]]
+  [[ "${output}" =~ Example\ Folder/example.md  ]]
 }
 
 @test "'move notebook:folder/<title>' moves properly without errors." {
@@ -1425,9 +1425,9 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to:                        ]]
-  [[ "${output}" =~ home:Example\\\ Folder/1          ]]
-  [[ "${output}" =~ home:Example\\\ Folder/example.md ]]
+  [[ "${output}" =~ Moved\ to:                      ]]
+  [[ "${output}" =~ home:Example\ Folder/1          ]]
+  [[ "${output}" =~ home:Example\ Folder/example.md ]]
 }
 
 @test "'move notebook:folder/folder/<title>' moves properly on same level without errors." {
@@ -1484,9 +1484,9 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to:                                          ]]
-  [[ "${output}" =~ home:Example\\\ Folder/Sample\\\ Folder/1           ]]
-  [[ "${output}" =~ home:Example\\\ Folder/Sample\\\ Folder/example.md  ]]
+  [[ "${output}" =~ Moved\ to:                                      ]]
+  [[ "${output}" =~ home:Example\ Folder/Sample\ Folder/1           ]]
+  [[ "${output}" =~ home:Example\ Folder/Sample\ Folder/example.md  ]]
 }
 
 @test "'move notebook:folder/folder/<title>' moves properly up one level without errors." {
@@ -1541,7 +1541,7 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to:                        ]]
-  [[ "${output}" =~ home:Example\\\ Folder/2          ]]
-  [[ "${output}" =~ home:Example\\\ Folder/example.md ]]
+  [[ "${output}" =~ Moved\ to:                      ]]
+  [[ "${output}" =~ home:Example\ Folder/2          ]]
+  [[ "${output}" =~ home:Example\ Folder/example.md ]]
 }

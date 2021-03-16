@@ -886,9 +886,9 @@ HEREDOC
 
   # Prints output:
 
-  [[ "${output}" =~ Added:                          ]]
-  [[ "${output}" =~ example:[A-Za-z0-9]+            ]]
-  [[ "${output}" =~ example:Example\\\ Filename.md  ]]
+  [[ "${output}" =~ Added:                        ]]
+  [[ "${output}" =~ example:[A-Za-z0-9]+          ]]
+  [[ "${output}" =~ example:Example\ Filename.md  ]]
 }
 
 @test "'add notebook:<filename>' (no space) creates new note with <filename>." {
@@ -930,9 +930,9 @@ HEREDOC
 
   # Prints output:
 
-  [[ "${output}" =~ Added:                          ]]
-  [[ "${output}" =~ example:[A-Za-z0-9]+            ]]
-  [[ "${output}" =~ example:Example\\\ Filename.md  ]]
+  [[ "${output}" =~ Added:                        ]]
+  [[ "${output}" =~ example:[A-Za-z0-9]+          ]]
+  [[ "${output}" =~ example:Example\ Filename.md  ]]
 }
 
 @test "'add notebook:<string>' (no space) creates new note with <string> as filename." {
@@ -974,9 +974,9 @@ HEREDOC
 
   # Prints output:
 
-  [[ "${output}" =~ Added:                    ]]
-  [[ "${output}" =~ example:[A-Za-z0-9]+      ]]
-  [[ "${output}" =~ example:Example\\\ String ]]
+  [[ "${output}" =~ Added:                  ]]
+  [[ "${output}" =~ example:[A-Za-z0-9]+    ]]
+  [[ "${output}" =~ example:Example\ String ]]
 }
 
 

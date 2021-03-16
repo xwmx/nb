@@ -23,9 +23,9 @@ load test_helper
 
   # Prints output:
 
-  [[ "${status}"    == 0                                    ]]
-  [[ "${lines[0]}"  =~ Added                                ]]
-  [[ "${lines[0]}"  =~ Example\\\ Folder/Sample\\\ Folder-1 ]]
+  [[ "${status}"    == 0                                ]]
+  [[ "${lines[0]}"  =~ Added                            ]]
+  [[ "${lines[0]}"  =~ Example\ Folder/Sample\ Folder-1 ]]
 
   # Copies folder with contents:
 
@@ -68,9 +68,9 @@ load test_helper
 
   # Prints output:
 
-  [[ "${status}" == 0                                         ]]
-  [[ "${lines[0]}" =~ Added                                   ]]
-  [[ "${lines[0]}" =~ Example\\\ Folder/Example\\\ File-1.md  ]]
+  [[ "${status}" == 0                                     ]]
+  [[ "${lines[0]}" =~ Added                               ]]
+  [[ "${lines[0]}" =~ Example\ Folder/Example\ File-1.md  ]]
 
   # Copies file:
 

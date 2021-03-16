@@ -265,16 +265,16 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"     -eq 0                                       ]]
-  [[    "${#lines[@]}"  -ge 8                                       ]]
+  [[    "${status}"     -eq 0                                     ]]
+  [[    "${#lines[@]}"  -ge 8                                     ]]
 
-  [[    "${lines[0]}"   =~  home                                    ]]
-  [[    "${lines[1]}"   =~  ------------                            ]]
-  [[    "${lines[2]}"   =~  Example\\\ Folder/4.*📂\ Sample\ Folder ]]
-  [[    "${lines[3]}"   =~  Example\\\ Folder/3.*nested\ three      ]]
-  [[    "${lines[4]}"   =~  2\ omitted\.\ 4\ total\.                ]]
-  [[    "${lines[5]}"   =~  ------------                            ]]
-  [[    "${lines[6]}"   =~  nb\ add\ 4/                             ]]
+  [[    "${lines[0]}"   =~  home                                  ]]
+  [[    "${lines[1]}"   =~  ------------                          ]]
+  [[    "${lines[2]}"   =~  Example\ Folder/4.*📂\ Sample\ Folder ]]
+  [[    "${lines[3]}"   =~  Example\ Folder/3.*nested\ three      ]]
+  [[    "${lines[4]}"   =~  2\ omitted\.\ 4\ total\.              ]]
+  [[    "${lines[5]}"   =~  ------------                          ]]
+  [[    "${lines[6]}"   =~  nb\ add\ 4/                           ]]
 }
 
 @test "'ls <folder>/ -s' exits with 0, respects limit, and hides header and footer." {
@@ -331,12 +331,12 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"     -eq 0                                 ]]
-  [[    "${#lines[@]}"  -ge 3                                 ]]
+  [[    "${status}"     -eq 0                               ]]
+  [[    "${#lines[@]}"  -ge 3                               ]]
 
-  [[    "${lines[0]}"   =~  Example\\\ Folder/1.*nested\ one  ]]
-  [[    "${lines[1]}"   =~  Example\\\ Folder/2.*nested\ two  ]]
-  [[    "${lines[2]}"   =~  2\ omitted\.\ 4\ total\.          ]]
+  [[    "${lines[0]}"   =~  Example\ Folder/1.*nested\ one  ]]
+  [[    "${lines[1]}"   =~  Example\ Folder/2.*nested\ two  ]]
+  [[    "${lines[2]}"   =~  2\ omitted\.\ 4\ total\.        ]]
 }
 
 @test "'ls <folder>/ <pattern>...' (space) exits with 0 and ignores limit." {
@@ -381,46 +381,46 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"     -eq 0                                   ]]
-  [[    "${#lines[@]}"  -eq 3                                   ]]
+  [[    "${status}"     -eq 0                                 ]]
+  [[    "${#lines[@]}"  -eq 3                                 ]]
 
-  [[    "${lines[0]}"   =~  3.*root\ three                      ]]
-  [[    "${lines[1]}"   =~  2.*root\ two                        ]]
-  [[    "${lines[2]}"   =~  1.*root\ one                        ]]
+  [[    "${lines[0]}"   =~  3.*root\ three                    ]]
+  [[    "${lines[1]}"   =~  2.*root\ two                      ]]
+  [[    "${lines[2]}"   =~  1.*root\ one                      ]]
 
   run "${_NB}" ls Example\ Folder/ one
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"     -eq 0                                   ]]
-  [[    "${#lines[@]}"  -eq 1                                   ]]
+  [[    "${status}"     -eq 0                                 ]]
+  [[    "${#lines[@]}"  -eq 1                                 ]]
 
-  [[    "${lines[0]}"   =~  Example\\\ Folder/1.*nested\ one    ]]
+  [[    "${lines[0]}"   =~  Example\ Folder/1.*nested\ one    ]]
 
   run "${_NB}" ls Example\ Folder/ nested
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"     -eq 0                                   ]]
-  [[    "${#lines[@]}"  -eq 3                                   ]]
+  [[    "${status}"     -eq 0                                 ]]
+  [[    "${#lines[@]}"  -eq 3                                 ]]
 
-  [[    "${lines[0]}"   =~  Example\\\ Folder/3.*nested\ three  ]]
-  [[    "${lines[1]}"   =~  Example\\\ Folder/2.*nested\ two    ]]
-  [[    "${lines[2]}"   =~  Example\\\ Folder/1.*nested\ one    ]]
-  [[ !  "${output}"     =~  omitted                             ]]
+  [[    "${lines[0]}"   =~  Example\ Folder/3.*nested\ three  ]]
+  [[    "${lines[1]}"   =~  Example\ Folder/2.*nested\ two    ]]
+  [[    "${lines[2]}"   =~  Example\ Folder/1.*nested\ one    ]]
+  [[ !  "${output}"     =~  omitted                           ]]
 
   run "${_NB}" list Example\ Folder/ one two
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"     -eq 0                                   ]]
-  [[    "${#lines[@]}"  -eq 2                                   ]]
+  [[    "${status}"     -eq 0                                 ]]
+  [[    "${#lines[@]}"  -eq 2                                 ]]
 
-  [[    "${lines[0]}"   =~  Example\\\ Folder/2.*nested\ two    ]]
-  [[    "${lines[1]}"   =~  Example\\\ Folder/1.*nested\ one    ]]
+  [[    "${lines[0]}"   =~  Example\ Folder/2.*nested\ two    ]]
+  [[    "${lines[1]}"   =~  Example\ Folder/1.*nested\ one    ]]
 }
 
 @test "'ls <folder>/<pattern>...' (no space) exits with 0 and ignores limit." {
@@ -465,47 +465,47 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"     -eq 0                                   ]]
-  [[    "${#lines[@]}"  -eq 1                                   ]]
+  [[    "${status}"     -eq 0                                 ]]
+  [[    "${#lines[@]}"  -eq 1                                 ]]
 
-  [[    "${lines[0]}"   =~  Example\\\ Folder/1.*nested\ one    ]]
+  [[    "${lines[0]}"   =~  Example\ Folder/1.*nested\ one    ]]
 
   run "${_NB}" ls Example\ Folder/nested
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"     -eq 0                                   ]]
-  [[    "${#lines[@]}"  -eq 3                                   ]]
+  [[    "${status}"     -eq 0                                 ]]
+  [[    "${#lines[@]}"  -eq 3                                 ]]
 
-  [[    "${lines[0]}"   =~  Example\\\ Folder/3.*nested\ three  ]]
-  [[    "${lines[1]}"   =~  Example\\\ Folder/2.*nested\ two    ]]
-  [[    "${lines[2]}"   =~  Example\\\ Folder/1.*nested\ one    ]]
-  [[ !  "${output}"     =~  omitted                             ]]
+  [[    "${lines[0]}"   =~  Example\ Folder/3.*nested\ three  ]]
+  [[    "${lines[1]}"   =~  Example\ Folder/2.*nested\ two    ]]
+  [[    "${lines[2]}"   =~  Example\ Folder/1.*nested\ one    ]]
+  [[ !  "${output}"     =~  omitted                           ]]
 
   run "${_NB}" list Example\ Folder/one two
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"     -eq 0                                   ]]
-  [[    "${#lines[@]}"  -eq 2                                   ]]
+  [[    "${status}"     -eq 0                                 ]]
+  [[    "${#lines[@]}"  -eq 2                                 ]]
 
-  [[    "${lines[0]}"   =~  Example\\\ Folder/2.*nested\ two    ]]
-  [[    "${lines[1]}"   =~  Example\\\ Folder/1.*nested\ one    ]]
+  [[    "${lines[0]}"   =~  Example\ Folder/2.*nested\ two    ]]
+  [[    "${lines[1]}"   =~  Example\ Folder/1.*nested\ one    ]]
 
   run "${_NB}" list Example\ Folder/one two three
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"     -eq 0                                   ]]
-  [[    "${#lines[@]}"  -eq 3                                   ]]
+  [[    "${status}"     -eq 0                                 ]]
+  [[    "${#lines[@]}"  -eq 3                                 ]]
 
-  [[    "${lines[0]}"   =~  Example\\\ Folder/3.*nested\ three  ]]
-  [[    "${lines[1]}"   =~  Example\\\ Folder/2.*nested\ two    ]]
-  [[    "${lines[2]}"   =~  Example\\\ Folder/1.*nested\ one    ]]
-  [[ !  "${output}"     =~  omitted                             ]]
+  [[    "${lines[0]}"   =~  Example\ Folder/3.*nested\ three  ]]
+  [[    "${lines[1]}"   =~  Example\ Folder/2.*nested\ two    ]]
+  [[    "${lines[2]}"   =~  Example\ Folder/1.*nested\ one    ]]
+  [[ !  "${output}"     =~  omitted                           ]]
 }
 
 # error handling ##############################################################
@@ -689,42 +689,42 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"     -eq 0                                 ]]
-  [[    "${#lines[@]}"  -eq 1                                 ]]
+  [[    "${status}"     -eq 0                               ]]
+  [[    "${#lines[@]}"  -eq 1                               ]]
 
-  [[    "${lines[0]}"   =~  1.*root\ one                      ]]
+  [[    "${lines[0]}"   =~  1.*root\ one                    ]]
 
   run "${_NB}" ls Example\ Folder/ one
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"     -eq 0                                 ]]
-  [[    "${#lines[@]}"  -eq 1                                 ]]
+  [[    "${status}"     -eq 0                               ]]
+  [[    "${#lines[@]}"  -eq 1                               ]]
 
-  [[    "${lines[0]}"   =~  Example\\\ Folder/1.*nested\ one  ]]
+  [[    "${lines[0]}"   =~  Example\ Folder/1.*nested\ one  ]]
 
   run "${_NB}" ls Example\ Folder/ nested
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"     -eq 0                                 ]]
-  [[    "${#lines[@]}"  -eq 2                                 ]]
+  [[    "${status}"     -eq 0                               ]]
+  [[    "${#lines[@]}"  -eq 2                               ]]
 
-  [[    "${lines[0]}"   =~  Example\\\ Folder/2.*nested\ two  ]]
-  [[    "${lines[1]}"   =~  Example\\\ Folder/1.*nested\ one  ]]
+  [[    "${lines[0]}"   =~  Example\ Folder/2.*nested\ two  ]]
+  [[    "${lines[1]}"   =~  Example\ Folder/1.*nested\ one  ]]
 
   run "${_NB}" list Example\ Folder/ one two
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"     -eq 0                                 ]]
-  [[    "${#lines[@]}"  -eq 2                                 ]]
+  [[    "${status}"     -eq 0                               ]]
+  [[    "${#lines[@]}"  -eq 2                               ]]
 
-  [[    "${lines[0]}"   =~  Example\\\ Folder/2.*nested\ two  ]]
-  [[    "${lines[1]}"   =~  Example\\\ Folder/1.*nested\ one  ]]
+  [[    "${lines[0]}"   =~  Example\ Folder/2.*nested\ two  ]]
+  [[    "${lines[1]}"   =~  Example\ Folder/1.*nested\ one  ]]
 }
 
 @test "'ls <notebook>:<folder>/ <pattern>...' (slash) exits with 0 and prints filtered list." {
@@ -755,7 +755,7 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
     "${_NB}" notebooks add "example-notebook"
     "${_NB}" use "example-notebook"
 
-    [[ "$("${_NB}" notebooks current)" == "example-notebook"      ]]
+    [[ "$("${_NB}" notebooks current)" == "example-notebook"    ]]
   }
 
   run "${_NB}" ls home: one
@@ -763,42 +763,42 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"     -eq 0                                     ]]
-  [[    "${#lines[@]}"  -eq 1                                     ]]
+  [[    "${status}"     -eq 0                                   ]]
+  [[    "${#lines[@]}"  -eq 1                                   ]]
 
-  [[    "${lines[0]}"   =~  home:1.*root\ one                     ]]
+  [[    "${lines[0]}"   =~  home:1.*root\ one                   ]]
 
   run "${_NB}" ls home:Example\ Folder/ one
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"     -eq 0                                     ]]
-  [[    "${#lines[@]}"  -eq 1                                     ]]
+  [[    "${status}"     -eq 0                                   ]]
+  [[    "${#lines[@]}"  -eq 1                                   ]]
 
-  [[    "${lines[0]}"   =~  home:Example\\\ Folder/1.*nested\ one ]]
+  [[    "${lines[0]}"   =~  home:Example\ Folder/1.*nested\ one ]]
 
   run "${_NB}" ls home:Example\ Folder/ nested
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"     -eq 0                                     ]]
-  [[    "${#lines[@]}"  -eq 2                                     ]]
+  [[    "${status}"     -eq 0                                   ]]
+  [[    "${#lines[@]}"  -eq 2                                   ]]
 
-  [[    "${lines[0]}"   =~  home:Example\\\ Folder/2.*nested\ two ]]
-  [[    "${lines[1]}"   =~  home:Example\\\ Folder/1.*nested\ one ]]
+  [[    "${lines[0]}"   =~  home:Example\ Folder/2.*nested\ two ]]
+  [[    "${lines[1]}"   =~  home:Example\ Folder/1.*nested\ one ]]
 
   run "${_NB}" list home:Example\ Folder/ one two
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"     -eq 0                                     ]]
-  [[    "${#lines[@]}"  -eq 2                                     ]]
+  [[    "${status}"     -eq 0                                   ]]
+  [[    "${#lines[@]}"  -eq 2                                   ]]
 
-  [[    "${lines[0]}"   =~  home:Example\\\ Folder/2.*nested\ two ]]
-  [[    "${lines[1]}"   =~  home:Example\\\ Folder/1.*nested\ one ]]
+  [[    "${lines[0]}"   =~  home:Example\ Folder/2.*nested\ two ]]
+  [[    "${lines[1]}"   =~  home:Example\ Folder/1.*nested\ one ]]
 }
 
 @test "'ls <folder> <pattern>...' (no slash) exits with 0 and treats folder as selector and filter pattern." {
@@ -1121,15 +1121,15 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 0                                   ]]
+  [[   "${status}"    -eq 0                               ]]
 
-  [[   "${#lines[@]}" -eq 1                                   ]]
+  [[   "${#lines[@]}" -eq 1                               ]]
 
-  [[   "${lines[0]}"  =~  [^/]home:Example\\\ Folder/3        ]]
-  [[ ! "${lines[0]}"  =~  Example\\\ Folder/Sample\\\ Folder  ]]
-  [[   "${lines[0]}"  =~  📂                                  ]]
-  [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder      ]]
-  [[   "${lines[0]}"  =~  Sample\ Folder                      ]]
+  [[   "${lines[0]}"  =~  [^/]home:Example\ Folder/3      ]]
+  [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder  ]]
+  [[   "${lines[0]}"  =~  📂                              ]]
+  [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder  ]]
+  [[   "${lines[0]}"  =~  Sample\ Folder                  ]]
 }
 
 @test "'notebook:folder/folder/<id>' exits with 0 and prints the folder/folder/folder list item." {
@@ -1162,15 +1162,15 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 0                                                 ]]
+  [[   "${status}"    -eq 0                                           ]]
 
-  [[   "${#lines[@]}" -eq 1                                                 ]]
+  [[   "${#lines[@]}" -eq 1                                           ]]
 
-  [[   "${lines[0]}"  =~  [^/]home:Example\\\ Folder/Sample\\\ Folder/3     ]]
-  [[ ! "${lines[0]}"  =~  Example\\\ Folder/Sample\\\ Folder/Demo\\\ Folder ]]
-  [[   "${lines[0]}"  =~  📂                                                ]]
-  [[ ! "${lines[0]}"  =~  Sample\ Folder/Demo\ Folder                       ]]
-  [[   "${lines[0]}"  =~  Demo\ Folder                                      ]]
+  [[   "${lines[0]}"  =~  [^/]home:Example\ Folder/Sample\ Folder/3   ]]
+  [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder/Demo\ Folder ]]
+  [[   "${lines[0]}"  =~  📂                                          ]]
+  [[ ! "${lines[0]}"  =~  Sample\ Folder/Demo\ Folder                 ]]
+  [[   "${lines[0]}"  =~  Demo\ Folder                                ]]
 }
 
 @test "'notebook:folder/<id>' exits with 0 and prints the folder/folder list item." {
@@ -1198,15 +1198,15 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 0                                   ]]
+  [[   "${status}"    -eq 0                               ]]
 
-  [[   "${#lines[@]}" -eq 1                                   ]]
+  [[   "${#lines[@]}" -eq 1                               ]]
 
-  [[   "${lines[0]}"  =~  [^/]home:Example\\\ Folder/3        ]]
-  [[ ! "${lines[0]}"  =~  Example\\\ Folder/Sample\\\ Folder  ]]
-  [[   "${lines[0]}"  =~  📂                                  ]]
-  [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder      ]]
-  [[   "${lines[0]}"  =~  Sample\ Folder                      ]]
+  [[   "${lines[0]}"  =~  [^/]home:Example\ Folder/3      ]]
+  [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder  ]]
+  [[   "${lines[0]}"  =~  📂                              ]]
+  [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder  ]]
+  [[   "${lines[0]}"  =~  Sample\ Folder                  ]]
 }
 
 @test "'notebook:<id>' exits with 0 and prints the folder list item." {
@@ -1232,21 +1232,21 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 0                           ]]
+  [[   "${status}"    -eq 0                         ]]
 
-  [[ ! "${lines[0]}"  =~  3\.bookmark\.md             ]]
-  [[ ! "${lines[0]}"  =~  🔖\ 🔒                      ]]
-  [[ ! "${lines[1]}"  =~  2\.bookmark\.md             ]]
-  [[ ! "${lines[1]}"  =~  🔖                          ]]
-  [[ ! "${lines[2]}"  =~  one                         ]]
-  [[ ! "${lines[2]}"  =~  🔖                          ]]
-  [[ ! "${lines[2]}"  =~  🔒                          ]]
+  [[ ! "${lines[0]}"  =~  3\.bookmark\.md           ]]
+  [[ ! "${lines[0]}"  =~  🔖\ 🔒                    ]]
+  [[ ! "${lines[1]}"  =~  2\.bookmark\.md           ]]
+  [[ ! "${lines[1]}"  =~  🔖                        ]]
+  [[ ! "${lines[2]}"  =~  one                       ]]
+  [[ ! "${lines[2]}"  =~  🔖                        ]]
+  [[ ! "${lines[2]}"  =~  🔒                        ]]
 
-  [[ ! "${lines[0]}"  =~  [^/]home:Example\\\ Folder  ]]
-  [[   "${lines[0]}"  =~  3                           ]]
-  [[   "${lines[0]}"  =~  📂                          ]]
-  [[   "${lines[0]}"  =~  Example\ Folder             ]]
-  [[   "${#lines[@]}" -eq 1                           ]]
+  [[ ! "${lines[0]}"  =~  [^/]home:Example\ Folder  ]]
+  [[   "${lines[0]}"  =~  3                         ]]
+  [[   "${lines[0]}"  =~  📂                        ]]
+  [[   "${lines[0]}"  =~  Example\ Folder           ]]
+  [[   "${#lines[@]}" -eq 1                         ]]
 }
 
 # ls notebook:<id> ############################################################
@@ -1276,15 +1276,15 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 0                                   ]]
+  [[   "${status}"    -eq 0                               ]]
 
-  [[   "${#lines[@]}" -eq 1                                   ]]
+  [[   "${#lines[@]}" -eq 1                               ]]
 
-  [[   "${lines[0]}"  =~  home:Example\\\ Folder/3            ]]
-  [[ ! "${lines[0]}"  =~  Example\\\ Folder/Sample\\\ Folder  ]]
-  [[   "${lines[0]}"  =~  📂                                  ]]
-  [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder      ]]
-  [[   "${lines[0]}"  =~  Sample\ Folder                      ]]
+  [[   "${lines[0]}"  =~  home:Example\ Folder/3          ]]
+  [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder  ]]
+  [[   "${lines[0]}"  =~  📂                              ]]
+  [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder  ]]
+  [[   "${lines[0]}"  =~  Sample\ Folder                  ]]
 }
 
 @test "'ls notebook:folder/folder/<id>' exits with 0 and prints the folder/folder/folder list item." {
@@ -1317,15 +1317,15 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 0                                                 ]]
+  [[   "${status}"    -eq 0                                           ]]
 
-  [[   "${#lines[@]}" -eq 1                                                 ]]
+  [[   "${#lines[@]}" -eq 1                                           ]]
 
-  [[   "${lines[0]}"  =~  home:Example\\\ Folder/Sample\\\ Folder/3         ]]
-  [[ ! "${lines[0]}"  =~  Example\\\ Folder/Sample\\\ Folder/Demo\\\ Folder ]]
-  [[   "${lines[0]}"  =~  📂                                                ]]
-  [[ ! "${lines[0]}"  =~  Sample\ Folder/Demo\ Folder                       ]]
-  [[   "${lines[0]}"  =~  Demo\ Folder                                      ]]
+  [[   "${lines[0]}"  =~  home:Example\ Folder/Sample\ Folder/3       ]]
+  [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder/Demo\ Folder ]]
+  [[   "${lines[0]}"  =~  📂                                          ]]
+  [[ ! "${lines[0]}"  =~  Sample\ Folder/Demo\ Folder                 ]]
+  [[   "${lines[0]}"  =~  Demo\ Folder                                ]]
 }
 
 @test "'ls notebook:folder/<id>' exits with 0 and prints the folder/folder list item." {
@@ -1353,15 +1353,15 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 0                                   ]]
+  [[   "${status}"    -eq 0                               ]]
 
-  [[   "${#lines[@]}" -eq 1                                   ]]
+  [[   "${#lines[@]}" -eq 1                               ]]
 
-  [[   "${lines[0]}"  =~  home:Example\\\ Folder/3            ]]
-  [[ ! "${lines[0]}"  =~  Example\\\ Folder/Sample\\\ Folder  ]]
-  [[   "${lines[0]}"  =~  📂                                  ]]
-  [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder      ]]
-  [[   "${lines[0]}"  =~  Sample\ Folder                      ]]
+  [[   "${lines[0]}"  =~  home:Example\ Folder/3          ]]
+  [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder  ]]
+  [[   "${lines[0]}"  =~  📂                              ]]
+  [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder  ]]
+  [[   "${lines[0]}"  =~  Sample\ Folder                  ]]
 }
 
 @test "'ls notebook:<id>' exits with 0 and prints the folder list item." {
@@ -1387,21 +1387,21 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 0                       ]]
+  [[   "${status}"    -eq 0                     ]]
 
-  [[ ! "${lines[0]}"  =~  3\.bookmark\.md         ]]
-  [[ ! "${lines[0]}"  =~  🔖\ 🔒                  ]]
-  [[ ! "${lines[1]}"  =~  2\.bookmark\.md         ]]
-  [[ ! "${lines[1]}"  =~  🔖                      ]]
-  [[ ! "${lines[2]}"  =~  one                     ]]
-  [[ ! "${lines[2]}"  =~  🔖                      ]]
-  [[ ! "${lines[2]}"  =~  🔒                      ]]
+  [[ ! "${lines[0]}"  =~  3\.bookmark\.md       ]]
+  [[ ! "${lines[0]}"  =~  🔖\ 🔒                ]]
+  [[ ! "${lines[1]}"  =~  2\.bookmark\.md       ]]
+  [[ ! "${lines[1]}"  =~  🔖                    ]]
+  [[ ! "${lines[2]}"  =~  one                   ]]
+  [[ ! "${lines[2]}"  =~  🔖                    ]]
+  [[ ! "${lines[2]}"  =~  🔒                    ]]
 
-  [[ ! "${lines[0]}"  =~  home:Example\\\ Folder  ]]
-  [[   "${lines[0]}"  =~  3                       ]]
-  [[   "${lines[0]}"  =~  📂                      ]]
-  [[   "${lines[0]}"  =~  Example\ Folder         ]]
-  [[   "${#lines[@]}" -eq 1                       ]]
+  [[ ! "${lines[0]}"  =~  home:Example\ Folder  ]]
+  [[   "${lines[0]}"  =~  3                     ]]
+  [[   "${lines[0]}"  =~  📂                    ]]
+  [[   "${lines[0]}"  =~  Example\ Folder       ]]
+  [[   "${#lines[@]}" -eq 1                     ]]
 }
 
 # ls notebook:folder ###################################################################
@@ -1436,15 +1436,15 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 0                                                 ]]
+  [[   "${status}"    -eq 0                                           ]]
 
-  [[   "${#lines[@]}" -eq 1                                                 ]]
+  [[   "${#lines[@]}" -eq 1                                           ]]
 
-  [[   "${lines[0]}"  =~  home:Example\\\ Folder/Sample\\\ Folder/3         ]]
-  [[ ! "${lines[0]}"  =~  Example\\\ Folder/Sample\\\ Folder/Demo\\\ Folder ]]
-  [[   "${lines[0]}"  =~  📂                                                ]]
-  [[ ! "${lines[0]}"  =~  Sample\ Folder/Demo\ Folder                       ]]
-  [[   "${lines[0]}"  =~  Demo\ Folder                                      ]]
+  [[   "${lines[0]}"  =~  home:Example\ Folder/Sample\ Folder/3       ]]
+  [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder/Demo\ Folder ]]
+  [[   "${lines[0]}"  =~  📂                                          ]]
+  [[ ! "${lines[0]}"  =~  Sample\ Folder/Demo\ Folder                 ]]
+  [[   "${lines[0]}"  =~  Demo\ Folder                                ]]
 }
 
 @test "'ls notebook:folder/folder' exits with 0 and prints the folder/folder list item." {
@@ -1472,15 +1472,15 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 0                                   ]]
+  [[   "${status}"    -eq 0                               ]]
 
-  [[   "${#lines[@]}" -eq 1                                   ]]
+  [[   "${#lines[@]}" -eq 1                               ]]
 
-  [[   "${lines[0]}"  =~  home:Example\\\ Folder/3            ]]
-  [[ ! "${lines[0]}"  =~  Example\\\ Folder/Sample\\\ Folder  ]]
-  [[   "${lines[0]}"  =~  📂                                  ]]
-  [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder      ]]
-  [[   "${lines[0]}"  =~  Sample\ Folder                      ]]
+  [[   "${lines[0]}"  =~  home:Example\ Folder/3          ]]
+  [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder  ]]
+  [[   "${lines[0]}"  =~  📂                              ]]
+  [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder  ]]
+  [[   "${lines[0]}"  =~  Sample\ Folder                  ]]
 }
 
 @test "'ls notebook:folder' exits with 0 and prints the folder list item." {
@@ -1506,21 +1506,21 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 0                       ]]
+  [[   "${status}"    -eq 0                     ]]
 
-  [[ ! "${lines[0]}"  =~  3\.bookmark\.md         ]]
-  [[ ! "${lines[0]}"  =~  🔖\ 🔒                  ]]
-  [[ ! "${lines[1]}"  =~  2\.bookmark\.md         ]]
-  [[ ! "${lines[1]}"  =~  🔖                      ]]
-  [[ ! "${lines[2]}"  =~  one                     ]]
-  [[ ! "${lines[2]}"  =~  🔖                      ]]
-  [[ ! "${lines[2]}"  =~  🔒                      ]]
+  [[ ! "${lines[0]}"  =~  3\.bookmark\.md       ]]
+  [[ ! "${lines[0]}"  =~  🔖\ 🔒                ]]
+  [[ ! "${lines[1]}"  =~  2\.bookmark\.md       ]]
+  [[ ! "${lines[1]}"  =~  🔖                    ]]
+  [[ ! "${lines[2]}"  =~  one                   ]]
+  [[ ! "${lines[2]}"  =~  🔖                    ]]
+  [[ ! "${lines[2]}"  =~  🔒                    ]]
 
-  [[ ! "${lines[0]}"  =~  home:Example\\\ Folder  ]]
-  [[   "${lines[0]}"  =~  3                       ]]
-  [[   "${lines[0]}"  =~  📂                      ]]
-  [[   "${lines[0]}"  =~  Example\ Folder         ]]
-  [[   "${#lines[@]}" -eq 1                       ]]
+  [[ ! "${lines[0]}"  =~  home:Example\ Folder  ]]
+  [[   "${lines[0]}"  =~  3                     ]]
+  [[   "${lines[0]}"  =~  📂                    ]]
+  [[   "${lines[0]}"  =~  Example\ Folder       ]]
+  [[   "${#lines[@]}" -eq 1                     ]]
 }
 
 # ls notebook:<id>/ ###########################################################
@@ -2294,15 +2294,15 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 0                                                 ]]
+  [[   "${status}"    -eq 0                                           ]]
 
-  [[   "${#lines[@]}" -eq 1                                                 ]]
+  [[   "${#lines[@]}" -eq 1                                           ]]
 
-  [[   "${lines[0]}"  =~  Example\\\ Folder/Sample\\\ Folder/3              ]]
-  [[ ! "${lines[0]}"  =~  Example\\\ Folder/Sample\\\ Folder/Demo\\\ Folder ]]
-  [[   "${lines[0]}"  =~  📂                                                ]]
-  [[ ! "${lines[0]}"  =~  Sample\ Folder/Demo\ Folder                       ]]
-  [[   "${lines[0]}"  =~  Demo\ Folder                                      ]]
+  [[   "${lines[0]}"  =~  Example\ Folder/Sample\ Folder/3            ]]
+  [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder/Demo\ Folder ]]
+  [[   "${lines[0]}"  =~  📂                                          ]]
+  [[ ! "${lines[0]}"  =~  Sample\ Folder/Demo\ Folder                 ]]
+  [[   "${lines[0]}"  =~  Demo\ Folder                                ]]
 }
 
 @test "'ls folder/folder' exits with 0 and prints the folder/folder list item." {
@@ -2325,15 +2325,15 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 0                                   ]]
+  [[   "${status}"    -eq 0                               ]]
 
-  [[   "${#lines[@]}" -eq 1                                   ]]
+  [[   "${#lines[@]}" -eq 1                               ]]
 
-  [[   "${lines[0]}"  =~  Example\\\ Folder/3                 ]]
-  [[ ! "${lines[0]}"  =~  Example\\\ Folder/Sample\\\ Folder  ]]
-  [[   "${lines[0]}"  =~  📂                                  ]]
-  [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder      ]]
-  [[   "${lines[0]}"  =~  Sample\ Folder                      ]]
+  [[   "${lines[0]}"  =~  Example\ Folder/3               ]]
+  [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder  ]]
+  [[   "${lines[0]}"  =~  📂                              ]]
+  [[ ! "${lines[0]}"  =~  Example\ Folder/Sample\ Folder  ]]
+  [[   "${lines[0]}"  =~  Sample\ Folder                  ]]
 }
 
 @test "'ls folder' exits with 0 and prints the folder list item." {
@@ -2364,7 +2364,6 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
   [[ ! "${lines[2]}"  =~  🔖                ]]
   [[ ! "${lines[2]}"  =~  🔒                ]]
 
-  [[ ! "${lines[0]}"  =~  Example\\\ Folder ]]
   [[   "${lines[0]}"  =~  3                 ]]
   [[   "${lines[0]}"  =~  📂                ]]
   [[   "${lines[0]}"  =~  Example\ Folder   ]]

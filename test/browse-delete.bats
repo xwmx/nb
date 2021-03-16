@@ -68,7 +68,7 @@ export _S=" "
 "<h2 align=\"center\">deleting</h2>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<p align=\"center\">${_NEWLINE}  <a rel=\"noopener noreferrer\" href=\"http://localhost:6789/home:1?--per-page=.*&--columns=.*\">\[1\] Example\\\ File.md \"Example Title\"</a>${_NEWLINE}</p>"
+"<p align=\"center\">${_NEWLINE}  <a rel=\"noopener noreferrer\" href=\"http://localhost:6789/home:1?--per-page=.*&--columns=.*\">\[1\] Example\ File.md \"Example Title\"</a>${_NEWLINE}</p>"
 
   printf "%s\\n" "${output}" | grep -q \
 "action=\"/home:1?--delete&--per-page=.*&--columns=.*\""
@@ -214,7 +214,7 @@ export _S=" "
 "<h2 align=\"center\">deleting</h2>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<p align=\"center\">${_NEWLINE}<a rel=\"noopener noreferrer\" href=\"http://localhost:6789/home:1?--per-page=.*&--columns=.*\">\[1\] Example\\\ File.md \"Example Title\"</a>${_NEWLINE}</p>"
+"<p align=\"center\">${_NEWLINE}<a rel=\"noopener noreferrer\" href=\"http://localhost:6789/home:1?--per-page=.*&--columns=.*\">\[1\] Example\ File.md \"Example Title\"</a>${_NEWLINE}</p>"
 
   printf "%s\\n" "${output}" | grep -q \
 "action=\"/home:1?--delete&--per-page=.*&--columns=.*\""

@@ -88,8 +88,8 @@ _setup_rename() {
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to                   ]]
-  [[ "${output}" =~ EXAMPLE\\\ NEW\\\ NAME.org  ]]
+  [[ "${output}" =~ Moved\ to               ]]
+  [[ "${output}" =~ EXAMPLE\ NEW\ NAME.org  ]]
 }
 
 @test "'move' with extension-less <filename> argument uses source extension." {
@@ -130,8 +130,8 @@ _setup_rename() {
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to                 ]]
-  [[ "${output}" =~ EXAMPLE\\\ NEW\\\ NAME.md ]]
+  [[ "${output}" =~ Moved\ to             ]]
+  [[ "${output}" =~ EXAMPLE\ NEW\ NAME.md ]]
 }
 
 @test "'move' bookmark with extension-less <filename> argument uses source extension." {
@@ -171,8 +171,8 @@ _setup_rename() {
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to                           ]]
-  [[ "${output}" =~ EXAMPLE\\\ NEW\\\ NAME.bookmark.md  ]]
+  [[ "${output}" =~ Moved\ to                       ]]
+  [[ "${output}" =~ EXAMPLE\ NEW\ NAME.bookmark.md  ]]
 }
 
 @test "'move' bookmark with extension <filename> argument uses target extension." {
@@ -212,8 +212,8 @@ _setup_rename() {
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to                 ]]
-  [[ "${output}" =~ EXAMPLE\\\ NEW\\\ NAME.md ]]
+  [[ "${output}" =~ Moved\ to             ]]
+  [[ "${output}" =~ EXAMPLE\ NEW\ NAME.md ]]
 }
 
 @test "'move' note with bookmark extension <filename> argument uses target extension." {
@@ -253,8 +253,8 @@ _setup_rename() {
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to                           ]]
-  [[ "${output}" =~ EXAMPLE\\\ NEW\\\ NAME.bookmark.md  ]]
+  [[ "${output}" =~ Moved\ to                       ]]
+  [[ "${output}" =~ EXAMPLE\ NEW\ NAME.bookmark.md  ]]
 }
 
 @test "'move' with existing <filename> exits with status 1." {
@@ -318,8 +318,8 @@ _setup_rename() {
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to                 ]]
-  [[ "${output}" =~ EXAMPLE\\\ NEW\\\ NAME.md ]]
+  [[ "${output}" =~ Moved\ to             ]]
+  [[ "${output}" =~ EXAMPLE\ NEW\ NAME.md ]]
 }
 
 @test "'<id> move' with extension-less <filename> argument uses source extension." {
@@ -359,8 +359,8 @@ _setup_rename() {
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to                 ]]
-  [[ "${output}" =~ EXAMPLE\\\ NEW\\\ NAME.md ]]
+  [[ "${output}" =~ Moved\ to             ]]
+  [[ "${output}" =~ EXAMPLE\ NEW\ NAME.md ]]
 }
 
 # <filename> --reset ##########################################################
@@ -457,8 +457,8 @@ _setup_rename() {
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to                   ]]
-  [[ "${output}" =~ Example\\\ File.bookmark.md ]]
+  [[ "${output}" =~ Moved\ to                 ]]
+  [[ "${output}" =~ Example\ File.bookmark.md ]]
 }
 
 @test "'move 1 <name> --to-bookmark' with note renames without errors." {
@@ -502,8 +502,8 @@ _setup_rename() {
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to               ]]
-  [[ "${output}" =~ New\\\ Name.bookmark.md ]]
+  [[ "${output}" =~ Moved\ to             ]]
+  [[ "${output}" =~ New\ Name.bookmark.md ]]
 }
 
 @test "'move 1 New\ Name.demo --to-bookmark' discards extension and renames." {
@@ -547,8 +547,8 @@ _setup_rename() {
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to               ]]
-  [[ "${output}" =~ New\\\ Name.bookmark.md ]]
+  [[ "${output}" =~ Moved\ to             ]]
+  [[ "${output}" =~ New\ Name.bookmark.md ]]
 }
 
 @test "'rename --to-note' with bookmark renames without errors." {
@@ -592,8 +592,8 @@ _setup_rename() {
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to           ]]
-  [[ "${output}" =~ Example\\\ File.md  ]]
+  [[ "${output}" =~ Moved\ to         ]]
+  [[ "${output}" =~ Example\ File.md  ]]
 }
 
 # <scope> #####################################################################
@@ -636,9 +636,9 @@ _setup_rename() {
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to                     ]]
-  [[ "${output}" =~ one:1                         ]]
-  [[ "${output}" =~ one:EXAMPLE\\\ NEW\\\ NAME.md ]]
+  [[ "${output}" =~ Moved\ to                 ]]
+  [[ "${output}" =~ one:1                     ]]
+  [[ "${output}" =~ one:EXAMPLE\ NEW\ NAME.md ]]
 }
 
 @test "'<scope>:move <id>' with extension-less <filename> argument uses source extension." {
@@ -679,8 +679,8 @@ _setup_rename() {
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to                     ]]
-  [[ "${output}" =~ one:EXAMPLE\\\ NEW\\\ NAME.md ]]
+  [[ "${output}" =~ Moved\ to                 ]]
+  [[ "${output}" =~ one:EXAMPLE\ NEW\ NAME.md ]]
 }
 
 @test "'<scope>:<id> move' with extension-less <filename> argument uses source extension." {
@@ -721,8 +721,8 @@ _setup_rename() {
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to                     ]]
-  [[ "${output}" =~ one:EXAMPLE\\\ NEW\\\ NAME.md ]]
+  [[ "${output}" =~ Moved\ to                 ]]
+  [[ "${output}" =~ one:EXAMPLE\ NEW\ NAME.md ]]
 }
 
 @test "'<id> <scope>:move' with extension-less <filename> argument uses source extension." {
@@ -763,8 +763,8 @@ _setup_rename() {
 
   # Prints output:
 
-  [[ "${output}" =~ Moved\ to                     ]]
-  [[ "${output}" =~ one:EXAMPLE\\\ NEW\\\ NAME.md ]]
+  [[ "${output}" =~ Moved\ to                 ]]
+  [[ "${output}" =~ one:EXAMPLE\ NEW\ NAME.md ]]
 }
 
 # help ########################################################################

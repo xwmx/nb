@@ -177,9 +177,9 @@ HEREDOC
 
   # Prints output:
 
-  [[ "${output}" =~ Updated:                ]]
-  [[ "${output}" =~ [0-9]+                  ]]
-  [[ "${output}" =~ Example\\\ Filename.md  ]]
+  [[ "${output}" =~ Updated:              ]]
+  [[ "${output}" =~ [0-9]+                ]]
+  [[ "${output}" =~ Example\ Filename.md  ]]
 }
 
 @test "'edit --prepend' prepends standard input to file." {
@@ -224,9 +224,9 @@ HEREDOC
 
   # Prints output:
 
-  [[ "${output}" =~ Updated:                ]]
-  [[ "${output}" =~ [0-9]+                  ]]
-  [[ "${output}" =~ Example\\\ Filename.md  ]]
+  [[ "${output}" =~ Updated:              ]]
+  [[ "${output}" =~ [0-9]+                ]]
+  [[ "${output}" =~ Example\ Filename.md  ]]
 }
 
 @test "'edit --overwrite --content <content>' overwrites existing file content with content." {
@@ -269,9 +269,9 @@ HEREDOC
 
   # Prints output:
 
-  [[ "${output}" =~ Updated:                ]]
-  [[ "${output}" =~ [0-9]+                  ]]
-  [[ "${output}" =~ Example\\\ Filename.md  ]]
+  [[ "${output}" =~ Updated:              ]]
+  [[ "${output}" =~ [0-9]+                ]]
+  [[ "${output}" =~ Example\ Filename.md  ]]
 }
 
 @test "'edit --overwrite' overwrites existing content with standard input." {
@@ -314,9 +314,9 @@ HEREDOC
 
   # Prints output:
 
-  [[ "${output}" =~ Updated:                ]]
-  [[ "${output}" =~ [0-9]+                  ]]
-  [[ "${output}" =~ Example\\\ Filename.md  ]]
+  [[ "${output}" =~ Updated:              ]]
+  [[ "${output}" =~ [0-9]+                ]]
+  [[ "${output}" =~ Example\ Filename.md  ]]
 }
 
 # <selector> ##################################################################
@@ -358,7 +358,7 @@ HEREDOC
 
   touch "${_TMP_DIR}/editor-test.md"
   eval "${EDITOR} \"${_TMP_DIR}/editor-test.md\""
-  printf "cat \${_TMP_DIR}/editor-test.md: '%s'\\n" \
+  printf "cat \${_TMP_DIR}/editor-test.md: '%s'\\n"   \
     "$(cat "${_TMP_DIR}/editor-test.md")"
 
   printf "cat %s:\\n%s\\n" "${NB_DIR}/one/example.md" \
@@ -381,9 +381,9 @@ HEREDOC
 
     echo "\${_filename:-}: ${_filename:-}"
 
-    [[ -n "${_filename}"                        ]]
-    [[ -e "${NB_DIR}/one/${_filename}"          ]]
-    [[ ! "$(cat "${NB_DIR}/one/${_filename}")" =~ mock_editor  ]]
+    [[ -n "${_filename}"                                      ]]
+    [[ -e "${NB_DIR}/one/${_filename}"                        ]]
+    [[ ! "$(cat "${NB_DIR}/one/${_filename}")" =~ mock_editor ]]
   }
 
   run "${_NB}" one:edit "${_filename}"
@@ -543,10 +543,10 @@ HEREDOC
 
   printf "EDITOR: '%s'\\n" "${EDITOR:-}"
 
-  printf "cat %s:\\n%s\\n" "${NB_DIR}/home/${_filename}" \
+  printf "cat %s:\\n%s\\n" "${NB_DIR}/home/${_filename}"    \
     "$(cat "${NB_DIR}/home/${_filename}")"
 
-  [[ "$(cat "${NB_DIR}/home/${_filename}")" =~ mock_editor ]]
+  [[ "$(cat "${NB_DIR}/home/${_filename}")" =~ mock_editor  ]]
 
   # Creates git commit:
 
@@ -588,7 +588,7 @@ HEREDOC
 
   # Updates note file:
 
-  printf "cat %s:\\n%s\\n" "${NB_DIR}/home/${_filename}" \
+  printf "cat %s:\\n%s\\n" "${NB_DIR}/home/${_filename}"    \
     "$(cat "${NB_DIR}/home/${_filename}")"
 
   [[ "$(cat "${NB_DIR}/home/${_filename}")" =~ mock_editor  ]]
@@ -607,9 +607,9 @@ HEREDOC
 
   # Prints output:
 
-  [[ "${output}" =~ Updated:                          ]]
-  [[ "${output}" =~ [0-9]+                            ]]
-  [[ "${output}" =~ Note\\\ name\\\ with\\\ spaces.md ]]
+  [[ "${output}" =~ Updated:                    ]]
+  [[ "${output}" =~ [0-9]+                      ]]
+  [[ "${output}" =~ Note\ name\ with\ spaces.md ]]
 }
 
 # <id> ########################################################################
@@ -679,10 +679,10 @@ HEREDOC
 
   # Updates note file:
 
-  printf "cat %s:\\n%s\\n" "${NB_DIR}/home/${_filename}" \
+  printf "cat %s:\\n%s\\n" "${NB_DIR}/home/${_filename}"    \
     "$(cat "${NB_DIR}/home/${_filename}")"
 
-  [[ "$(cat "${NB_DIR}/home/${_filename}")" =~ mock_editor ]]
+  [[ "$(cat "${NB_DIR}/home/${_filename}")" =~ mock_editor  ]]
 
   # Creates git commit:
 
@@ -724,10 +724,10 @@ HEREDOC
 
   # Updates note file:
 
-  printf "cat %s:\\n%s\\n" "${NB_DIR}/home/${_filename}" \
+  printf "cat %s:\\n%s\\n" "${NB_DIR}/home/${_filename}"    \
     "$(cat "${NB_DIR}/home/${_filename}")"
 
-  [[ "$(cat "${NB_DIR}/home/${_filename}")" =~ mock_editor ]]
+  [[ "$(cat "${NB_DIR}/home/${_filename}")" =~ mock_editor  ]]
 
   # Creates git commit:
 
@@ -769,10 +769,10 @@ HEREDOC
 
   # Updates note file:
 
-  printf "cat %s:\\n%s\\n" "${NB_DIR}/home/${_filename}" \
+  printf "cat %s:\\n%s\\n" "${NB_DIR}/home/${_filename}"    \
     "$(cat "${NB_DIR}/home/${_filename}")"
 
-  [[ "$(cat "${NB_DIR}/home/${_filename}")" =~ mock_editor ]]
+  [[ "$(cat "${NB_DIR}/home/${_filename}")" =~ mock_editor  ]]
 
   # Creates git commit:
 
@@ -815,10 +815,10 @@ HEREDOC
 
   # Updates note file:
 
-  printf "cat %s:\\n%s\\n" "${NB_DIR}/home/${_filename}" \
+  printf "cat %s:\\n%s\\n" "${NB_DIR}/home/${_filename}"        \
     "$(cat "${NB_DIR}/home/${_filename}")"
 
-  [[ "$(cat "${NB_DIR}/home/${_filename}")" != "${_original}" ]]
+  [[ "$(cat "${NB_DIR}/home/${_filename}")" != "${_original}"   ]]
   grep -q '# Example' "${NB_DIR}/home"/*
   grep -q '## Piped' "${NB_DIR}/home"/*
 
@@ -948,10 +948,10 @@ HEREDOC
 
   # Updates note file:
 
-  printf "cat %s:\\n%s\\n" "${NB_DIR}/home/${_filename}" \
+  printf "cat %s:\\n%s\\n" "${NB_DIR}/home/${_filename}"    \
     "$(cat "${NB_DIR}/home/${_filename}")"
 
-  [[ "$(cat "${NB_DIR}/home/${_filename}")" =~ mock_editor ]]
+  [[ "$(cat "${NB_DIR}/home/${_filename}")" =~ mock_editor  ]]
 
   # Creates git commit:
 
@@ -991,10 +991,10 @@ HEREDOC
 
   # Updates note file:
 
-  printf "cat %s:\\n%s\\n" "${NB_DIR}/home/multi-word filename.md" \
+  printf "cat %s:\\n%s\\n" "${NB_DIR}/home/multi-word filename.md"    \
     "$(cat "${NB_DIR}/home/multi-word filename.md")"
 
-  [[ "$(cat "${NB_DIR}/home/multi-word filename.md")" =~ mock_editor ]]
+  [[ "$(cat "${NB_DIR}/home/multi-word filename.md")" =~ mock_editor  ]]
 
   # Creates git commit:
 
