@@ -54,7 +54,7 @@ load test_helper
 "<input type=\"hidden\" name=\"--title\""
 
   printf "%s\\n" "${output}" | grep -q \
-"<input type=\"hidden\" name=\"--filename\" value=\"Example File.md\">"
+"<input type=\"hidden\" name=\"--relative-path\" value=\"Example File.md\">"
 }
 
 # --title option ##############################################################
