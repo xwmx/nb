@@ -4,7 +4,7 @@ load test_helper
 
 # --add #######################################################################
 
-@test "'browse <notebook>:<folder-id>/<folder-id>/ --add' displays header crumbs add unlinked." {
+@test "'browse <notebook>:<folder-id>/<folder-id>/ --add' displays header crumbs with '+' unlinked." {
   {
     "${_NB}" init
 
