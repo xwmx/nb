@@ -3601,6 +3601,13 @@ $(_color_primary "Program Options:")
 
 $(_color_primary "More Information:")
   https://github.com/${_REPO}
+
+$(_color_primary "Sponsor:")
+  https://github.com/sponsors/xwmx
+
+$(_color_primary "Contributors:")
+  https://github.com/xwmx/nb/graphs/contributors
+
 HEREDOC
       fi
     else
