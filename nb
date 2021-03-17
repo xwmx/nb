@@ -17570,6 +17570,7 @@ HEREDOC
 _remote() {
   local _existing_url=
   local _force=0
+  local _only_url=0
   local _remote_exists=0
   local _subcommand=
   local _url=
@@ -17580,6 +17581,9 @@ _remote() {
     case "${__arg:-}" in
       -f|--force)
         _force=1
+        ;;
+      --url|url)
+        _only_url=1
         ;;
       *)
         if [[   -z  "${_subcommand:-}"              ]]
@@ -17713,7 +17717,12 @@ $(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
           git -C "${_notebook_path}" rev-parse --abbrev-ref HEAD
         )"
 
-        printf "%s (%s)\\n" "${_remote_url:-}" "${_remote_branch:-}"
+        if ((_only_url))
+        then
+          printf "%s\\n" "${_remote_url:-}"
+        else
+          printf "%s (%s)\\n" "${_remote_url:-}" "${_remote_branch:-}"
+        fi
       else
         _warn printf "No remote configured.\\n"
         return 1

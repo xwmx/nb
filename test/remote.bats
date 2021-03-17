@@ -18,7 +18,24 @@ load test_helper
   [[ "${lines[0]}"  =~  No\ remote\ configured  ]]
 }
 
-@test "'remote' with no arguments and existing remote prints url." {
+@test "'remote --url' with existing remote prints url." {
+  {
+    "${_NB}" init
+
+    cd "${NB_DIR}/home" &&
+      git remote add origin "${_GIT_REMOTE_URL}"
+  }
+
+  run "${_NB}" remote --url
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                     ]]
+  [[ "${lines[0]}"  ==  "${_GIT_REMOTE_URL}"  ]]
+}
+
+@test "'remote' with no arguments and existing remote prints url and branch." {
   {
     "${_NB}" init
 
