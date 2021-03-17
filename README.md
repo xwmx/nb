@@ -2311,6 +2311,23 @@ download (from [GitHub](https://github.com/ajaxorg/ace-builds/)),
 install, and enable the Ace editor in `nb browse edit --gui`
 and `nb browse add --gui`.
 
+#### `browse` URLs
+
+`browse` URLs are designed to mirror the underlying command line options and
+[selectors](#selectors), providing transparency and consistency between
+`nb` interfaces:
+
+```text
+# edit item with id 123 in the notebook named "example"
+http://localhost:6789/example:123?--edit
+
+# add an item titled "Example Title" to the "sample" folder in the "example" notebook
+http://localhost:6789/example:sample/?--add&--title=Example%20Title
+
+# search the "demo" notebook for "example"
+http://localhost:6789/demo:?--query=example
+```
+
 #### `browse` Portability
 
 `nb browse` depends on [`ncat`](https://nmap.org/ncat/) and
