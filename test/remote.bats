@@ -2,6 +2,91 @@
 
 load test_helper
 
+# remote set ##################################################################
+
+@test "'remote set' with no existing remote sets remote and prints message." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" remote set "${_GIT_REMOTE_URL}" --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  "${_NB}" remote
+
+  [[ "${status}"          -eq 0                   ]]
+
+  [[ "${lines[0]}"        =~  Remote\ set\ to     ]]
+  [[ "${lines[0]}"        =~  ${_GIT_REMOTE_URL}  ]]
+
+  diff                  \
+    <("${_NB}" remote)  \
+    <(printf "%s\\n" "${_GIT_REMOTE_URL:-}")
+}
+
+@test "'remote set' with existing remote sets remote and prints message." {
+  {
+    "${_NB}" init
+
+    cd "${NB_DIR}/home" &&
+      git remote add origin "https://example.test/example.git"
+
+    diff                  \
+      <("${_NB}" remote)  \
+      <(printf "https://example.test/example.git\\n")
+  }
+
+  run "${_NB}" remote set "${_GIT_REMOTE_URL}" --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"          -eq 0                   ]]
+
+  [[ "${lines[0]}"        =~  Remote\ set\ to     ]]
+  [[ "${lines[0]}"        =~  ${_GIT_REMOTE_URL}  ]]
+
+  diff                  \
+    <("${_NB}" remote)  \
+    <(printf "%s\\n" "${_GIT_REMOTE_URL:-}")
+
+}
+
+@test "'remote set' to same URL as existing remote exits and prints message." {
+  {
+    "${_NB}" init
+    cd "${NB_DIR}/home" &&
+      git remote add origin "${_GIT_REMOTE_URL}"
+  }
+
+  run "${_NB}" remote set "${_GIT_REMOTE_URL}" --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"          -eq 1                         ]]
+
+  [[ "${lines[0]}"        =~  Remote\ already\ set\ to  ]]
+  [[ "${lines[0]}"        =~  ${_GIT_REMOTE_URL}        ]]
+  [[ "$("${_NB}" remote)" =~  ${_GIT_REMOTE_URL}        ]]
+}
+
+@test "'remote set' with no URL exits with 1 and prints help." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" remote set --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 1       ]]
+  [[ "${lines[0]}"  =~  Usage\: ]]
+}
+
 # remote ######################################################################
 
 @test "'remote' with no arguments and no remote prints message." {
@@ -128,79 +213,6 @@ load test_helper
   [[ "$("${_NB}" remote 2>&1)"  =~  No\ remote          ]]
   [[ "${lines[0]}"              =~  Removed\ remote     ]]
   [[ "${lines[0]}"              =~  ${_GIT_REMOTE_URL}  ]]
-}
-
-# remote set ##################################################################
-
-@test "'remote set' with no URL exits with 1 and prints help." {
-  {
-    "${_NB}" init
-  }
-
-  run "${_NB}" remote set --force
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[ "${status}"    -eq 1       ]]
-  [[ "${lines[0]}"  =~  Usage\: ]]
-}
-
-@test "'remote set' with no existing remote sets remote and prints message." {
-  {
-    "${_NB}" init
-  }
-
-  run "${_NB}" remote set "${_GIT_REMOTE_URL}" --force
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  "${_NB}" remote
-
-  [[ "${status}"          -eq 0                   ]]
-
-  [[ "${lines[0]}"        =~  Remote\ set\ to     ]]
-  [[ "${lines[0]}"        =~  ${_GIT_REMOTE_URL}  ]]
-  [[ "$("${_NB}" remote)" =~  ${_GIT_REMOTE_URL}  ]]
-}
-
-@test "'remote set' with existing remote sets remote and prints message." {
-  {
-    "${_NB}" init
-    cd "${NB_DIR}/home" &&
-      git remote add origin "https://example.test/example.git"
-  }
-
-  run "${_NB}" remote set "${_GIT_REMOTE_URL}" --force
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[ "${status}"          -eq 0                   ]]
-
-  [[ "${lines[0]}"        =~  Remote\ set\ to     ]]
-  [[ "${lines[0]}"        =~  ${_GIT_REMOTE_URL}  ]]
-  [[ "$("${_NB}" remote)" =~  ${_GIT_REMOTE_URL}  ]]
-}
-
-@test "'remote set' to same URL as existing remote exits and prints message." {
-  {
-    "${_NB}" init
-    cd "${NB_DIR}/home" &&
-      git remote add origin "${_GIT_REMOTE_URL}"
-  }
-
-  run "${_NB}" remote set "${_GIT_REMOTE_URL}" --force
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[ "${status}"          -eq 1                         ]]
-
-  [[ "${lines[0]}"        =~  Remote\ already\ set\ to  ]]
-  [[ "${lines[0]}"        =~  ${_GIT_REMOTE_URL}        ]]
-  [[ "$("${_NB}" remote)" =~  ${_GIT_REMOTE_URL}        ]]
 }
 
 # help ########################################################################
