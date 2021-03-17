@@ -16956,16 +16956,11 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
     shift
   done
 
-  if ! ((_browse_notebooks)) &&
-     ! [[ "${_print_browse_render_function}" == "notebooks" ]]
+  if ! ((_browse_notebooks))                                        &&
+       [[   "${_print_browse_render_function}"  != "notebooks"  ]]  &&
+       [[ ! "${_selector:-}"                    =~ :            ]]
   then
-    if [[ -z "${_selector:-}" ]]
-    then
-      _selector="$(_notebooks current --name --no-color):"
-    elif [[ ! "${_selector:-}" =~ : ]]
-    then
-      _selector="$(_notebooks current --name --no-color):${_selector:-}"
-    fi
+    _selector="$(_notebooks current --name --no-color):${_selector:-}"
   fi
 
   local _arguments=()
