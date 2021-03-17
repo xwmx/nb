@@ -409,6 +409,9 @@ export _S=" "
 
   printf "%s\\n" "${output}" | grep -q \
 "value=\"save\"> <span class=\"dim\">·</span> <span class=\"dim\">last: .*</span>"
+
+  [[ !  "${output}"    =~ \<input\ type=\"hidden\"\ name=\"home%3A1\"\>    ]]
+
 }
 
 @test "GET to --edit URL prints form without updating note." {

@@ -15859,9 +15859,12 @@ HEREDOC
           _pagination_options+=("--terminal")
           ;;
         *)
-          if [[ -z "${_source_path:-}" ]] && [[ "${1:-}" =~ ^/ ]]
+          if [[ -z "${_source_path:-}"  ]] && [[    "${1:-}" =~ ^/    ]]
           then
             _source_path="${1:-}"
+          elif [[ "${1:-}" =~ :         ]] && [[ !  "${1:-}" =~ \-\-  ]]
+          then
+            : # skip selector
           else
             _subcommand_options+=("${1:-}")
           fi
