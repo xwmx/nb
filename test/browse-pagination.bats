@@ -72,7 +72,7 @@ export _AMP="&"
 "http://localhost:6789/Demo%20Notebook:8?--per-page=2&--columns=.*\" class=\"list-item\">"
 
   printf "%s\\n" "${output}" | grep       -q  \
-"http://localhost:6789/Demo%20Notebook:?--page=2&--per-page=2&--columns=.*\">next ❯"
+"http://localhost:6789/Demo%20Notebook:?--per-page=2&--columns=.*&--page=2\">next ❯"
 }
 
 @test "'browse' includes pagination on links on item page." {
@@ -280,7 +280,7 @@ export _AMP="&"
 
   [[    "${output}"  =~ \<p\ class=\"pagination\"\>      ]]
   [[    "${output}"  =~ \
-\<a.*\ href=\"http://localhost:6789/home:\?--page=2${_AMP}--per-page=4${_AMP}--columns=.*\"\>next\ ❯\</a\>\</p\>  ]]
+\<a.*\ href=\"http://localhost:6789/home:\?--per-page=4${_AMP}--columns=.*${_AMP}--page=2\"\>next\ ❯\</a\>\</p\>  ]]
   [[ !  "${output}"  =~ ❮\ prev ]]
 
   # page 2
@@ -359,9 +359,9 @@ export _AMP="&"
 
   [[    "${output}"  =~ \<p\ class=\"pagination\"\>      ]]
   [[    "${output}"  =~ \
-\<a.*\ href=\"http://localhost:6789/home:\?--page=1${_AMP}--per-page=4${_AMP}--columns=.*\"\>❮\ prev\</a\>\ .*\·.*\   ]]
+\<a.*\ href=\"http://localhost:6789/home:\?--per-page=4${_AMP}--columns=.*${_AMP}--page=1\"\>❮\ prev\</a\>\ .*\·.*\   ]]
   [[    "${output}"  =~ \
-\<a.*\ href=\"http://localhost:6789/home:\?--page=3${_AMP}--per-page=4${_AMP}--columns=.*\"\>next\ ❯\</a\>\</p\>           ]]
+\<a.*\ href=\"http://localhost:6789/home:\?--per-page=4${_AMP}--columns=.*${_AMP}--page=3\"\>next\ ❯\</a\>\</p\>      ]]
 
   # page 3
 
@@ -439,7 +439,7 @@ export _AMP="&"
 
   [[    "${output}"  =~ \<p\ class=\"pagination\"\>      ]]
   [[    "${output}"  =~ \
-\<a.*\ href=\"http://localhost:6789/home:\?--page=2${_AMP}--per-page=4${_AMP}--columns=.*\"\>❮\ prev\</a\>\</p\>  ]]
+\<a.*\ href=\"http://localhost:6789/home:\?--per-page=4${_AMP}--columns=.*${_AMP}--page=2\"\>❮\ prev\</a\>\</p\>  ]]
   [[ !  "${output}"  =~ next\ ❯ ]]
 
   # page with list of items under pagination limit

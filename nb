@@ -15373,7 +15373,7 @@ HEREDOC
     } | {
       printf "%s\\n" "$(
         _browse_render_header           \
-          "${_selector}"          \
+          "${_selector}"                \
           "${_pagination_options[@]:-}" \
           --add
       )"
@@ -15652,14 +15652,22 @@ HEREDOC
         _url_params+="&--query=${_query}"
       fi
 
+      if ! ((_terminal_browser)) &&
+         _contains "--per-page" "${_pagination_options[@]:-}"
+      then
+        _url_params+="&--per-page=${_per_page}"
+      fi
+
       if ((_print_prev))
       then
-        printf                                                          \
-          "<a href=\"http://localhost:%s/%s?--page=%s&%s\">❮ prev</a>"  \
-          "${NB_SERVER_PORT}"                                           \
-          "${_current_selector}"                                        \
-          "$((_current_page - 1))"                                      \
-          "${_url_params#$'?'}"
+        local _prev_url_params=
+        _prev_url_params="${_url_params#$'?'}&--page=$((_current_page - 1))"
+
+        printf                                                \
+          "<a href=\"http://localhost:%s/%s?%s\">❮ prev</a>"  \
+          "${NB_SERVER_PORT}"                                 \
+          "${_current_selector}"                              \
+          "${_prev_url_params#$'&'}"
       fi
 
       if ((_print_prev)) && ((_print_next))
@@ -15669,12 +15677,14 @@ HEREDOC
 
       if ((_print_next))
       then
-        printf                                                          \
-          "<a href=\"http://localhost:%s/%s?--page=%s&%s\">next ❯</a>"  \
-          "${NB_SERVER_PORT}"                                           \
-          "${_current_selector}"                                        \
-          "$((_current_page + 1))"                                      \
-          "${_url_params#$'?'}"
+        local _next_url_params=
+        _next_url_params="${_url_params#$'?'}&--page=$((_current_page + 1))"
+
+        printf                                                \
+          "<a href=\"http://localhost:%s/%s?%s\">next ❯</a>"  \
+          "${NB_SERVER_PORT}"                                 \
+          "${_current_selector}"                              \
+          "${_next_url_params#$'&'}"
       fi
 
       if ((_print_prev)) || ((_print_next))
