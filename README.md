@@ -6385,7 +6385,7 @@ at the root level of the notebook directory.
 
 ## Tests
 
-With more than 1,400 tests spanning over 30,000 lines, `nb` is really
+With more than 1,500 tests spanning over 30,000 lines, `nb` is really
 mostly a [test suite](https://github.com/xwmx/nb/tree/master/test).
 [Tests run continuously via GitHub Actions](https://github.com/xwmx/nb/actions)
 on recent versions of both Ubuntu and macOS to account for differences between
@@ -6393,7 +6393,8 @@ BSD and GNU tools and Bash versions.
 To run the tests locally, install
 [Bats](https://github.com/bats-core/bats-core)
 and the [recommended dependencies](#optional),
-then run `bats test` within the project root directory.
+then run `bats test` within the project root directory. Run groups of
+tests with globbing, e.g., `bats test/browse-*` and `bats test/folders-*`.
 
 ---
 <p align="center">
