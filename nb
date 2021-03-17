@@ -17033,7 +17033,7 @@ HEREDOC
         ((_open_gui))             ||
         _web_browser --gui        ||
         ((_only_serve))
-      }
+     }
   then
     if [[ -z "${_browse_per_page:-}"  ]]
     then # set per page based on terminal height
