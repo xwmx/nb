@@ -14,10 +14,9 @@ load test_helper
     sleep 1
   }
 
-  run "${_NB}" add --browse Example\ Folder/Example File.md --print \
-    --title     "Example Title"                                     \
-    --filename  "Example File.md"                                   \
-    --content   "Example content."                                  \
+  run "${_NB}" add --browse Example\ Folder/Example\ File.md --print  \
+    --title     "Example Title"                                       \
+    --content   "Example content."                                    \
     --tags      tag1,tag2
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -42,7 +41,7 @@ load test_helper
   printf "%s\\n" "${output}" | grep -q "cols=\".*\">"
 
   printf "%s\\n" "${output}" | grep -q \
-"action=\"/home:1?--add&--per-page=.*&--columns=.*\""
+"action=\"/home:Example%20Folder/Example%20File.md?--add&--per-page=.*&--columns=.*\""
 
   printf "%s\\n" "${output}" | grep -q \
 "value=\"add\">"
@@ -52,9 +51,6 @@ load test_helper
 
   printf "%s\\n" "${output}" | grep -q -v \
 "<input type=\"hidden\" name=\"--title\""
-
-  printf "%s\\n" "${output}" | grep -q \
-"<input type=\"hidden\" name=\"--relative-path\" value=\"Example%20File.md\">"
 }
 
 # --title option ##############################################################
