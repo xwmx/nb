@@ -2318,14 +2318,17 @@ and `nb browse add --gui`.
 and [selectors](#selectors), providing transparency and consistency between
 `nb` interfaces:
 
-```text
+```bash
 # edit item with id 123 in the notebook named "example"
+> nb browse edit example:123
 http://localhost:6789/example:123?--edit
 
 # add an item titled "Example Title" to the "sample" folder in the "example" notebook
+> nb browse add example:sample/ --title Example\ Title
 http://localhost:6789/example:sample/?--add&--title=Example%20Title
 
 # search the "demo" notebook for "example"
+> nb browse demo: --query example
 http://localhost:6789/demo:?--query=example
 ```
 
