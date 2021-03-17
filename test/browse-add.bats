@@ -9,6 +9,73 @@ export _S=" "
 
 # POST ########################################################################
 
+@test "POST to --add <folder-name>/<folder-name>/<filename> URL with existing file creates another with incremented filename."  {
+  {
+    "${_NB}" init
+
+    "${_NB}" add                                      \
+      "Example Folder/Sample Folder/Example File.md"  \
+      --content "Example content."
+
+    (ncat                                   \
+      --exec "${_NB} browse --respond"      \
+      --listen                              \
+      --source-port "6789"                  \
+      2>/dev/null) &
+
+    sleep 1
+  }
+
+  run curl -sS -D - --data                               \
+    "content=Example%20content.&--title=Example%20Title" \
+    "http://localhost:6789/home:Example%20Folder/Sample%20Folder/Example%20File.md?--add"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[    "${status}"  -eq 0                  ]]
+
+  # Creates file:
+
+  ls -la "${NB_DIR}/home/"
+
+  [[ -f "${NB_DIR}/home/Example Folder/Sample Folder/Example File-1.md"     ]]
+
+  diff                                                                      \
+    <(cat "${NB_DIR}/home/Example Folder/Sample Folder/Example File-1.md")  \
+    <(cat <<HEREDOC
+# Example Title
+
+Example content.
+HEREDOC
+)
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
+  while [[ -n "$(git status --porcelain)"   ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  # Prints output:
+
+  [[ "${#lines[@]}" -eq 5                                                           ]]
+
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Found                                        ]]
+  [[ "${lines[1]}"  =~  Date:\ .*                                                   ]]
+  [[ "${lines[2]}"  =~  Expires:\ .*                                                ]]
+  [[ "${lines[3]}"  =~  Server:\ nb                                                 ]]
+  [[ "${lines[4]}"  =~  \
+Location:\ http:\/\/localhost:6789\/Example\ Folder/Sample\ Folder/2\?--per-page=30 ]]
+}
+
 @test "POST to --add <folder-name>/<folder-name> (no slash) URL creates folder and file named 'Sample Folder' and redirects."  {
   {
     "${_NB}" init
