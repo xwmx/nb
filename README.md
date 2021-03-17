@@ -2314,7 +2314,7 @@ and `nb browse add --gui`.
 
 #### `browse` URLs
 
-`nb browse` URLs are designed to mirror the underlying command line options
+`nb browse` URLs are designed to reflect the underlying command line options
 and [selectors](#selectors), providing transparency and consistency between
 `nb` interfaces:
 
