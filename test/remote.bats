@@ -2,9 +2,80 @@
 
 load test_helper
 
+# remote ######################################################################
+
+@test "'remote' with no arguments and no remote prints message." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" remote
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 1                       ]]
+  [[ "${lines[0]}"  =~  No\ remote\ configured  ]]
+}
+
+@test "'remote' with no arguments and existing remote prints url." {
+  {
+    "${_NB}" init
+
+    cd "${NB_DIR}/home" &&
+      git remote add origin "${_GIT_REMOTE_URL}"
+  }
+
+  run "${_NB}" remote
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                             ]]
+  [[ "${lines[0]}"  ==  "${_GIT_REMOTE_URL} (master)" ]]
+}
+
+@test "'remote' with no arguments does not trigger git commit." {
+  {
+    "${_NB}" init
+    cd "${NB_DIR}/home" &&
+      git remote add origin "${_GIT_REMOTE_URL}"
+
+    touch "${NB_DIR}/home/example.md"
+
+    [[ -f "${NB_DIR}/home/example.md" ]]
+
+    "${_NB}" git dirty
+  }
+
+  run "${_NB}" remote
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                             ]]
+
+  [[ "${lines[0]}"  ==  "${_GIT_REMOTE_URL} (master)" ]]
+
+  [[ -f "${NB_DIR}/home/example.md"                   ]]
+
+  "${_NB}" git dirty
+
+  # does not create git commit
+
+  cd "${NB_DIR}/home" || return 1
+  if [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
+  then
+    sleep 1
+  fi
+
+  ! git log | grep -q '\[nb\] Commit'
+  ! git log | grep -q '\[nb\] Sync'
+}
+
 # remote set ##################################################################
 
-@test "'remote set' with no existing remote sets remote and prints message." {
+@test "'remote set <url>' with no existing remote sets remote and prints message." {
   {
     "${_NB}" init
   }
@@ -23,10 +94,10 @@ load test_helper
 
   diff                  \
     <("${_NB}" remote)  \
-    <(printf "%s\\n" "${_GIT_REMOTE_URL:-}")
+    <(printf "%s (master)\\n" "${_GIT_REMOTE_URL:-}")
 }
 
-@test "'remote set' with existing remote sets remote and prints message." {
+@test "'remote set <url>' with existing remote sets remote and prints message." {
   {
     "${_NB}" init
 
@@ -35,7 +106,7 @@ load test_helper
 
     diff                  \
       <("${_NB}" remote)  \
-      <(printf "https://example.test/example.git\\n")
+      <(printf "https://example.test/example.git (master)\\n")
   }
 
   run "${_NB}" remote set "${_GIT_REMOTE_URL}" --force
@@ -50,11 +121,10 @@ load test_helper
 
   diff                  \
     <("${_NB}" remote)  \
-    <(printf "%s\\n" "${_GIT_REMOTE_URL:-}")
-
+    <(printf "%s (master)\\n" "${_GIT_REMOTE_URL:-}")
 }
 
-@test "'remote set' to same URL as existing remote exits and prints message." {
+@test "'remote set <url>' to same URL as existing remote exits and prints message." {
   {
     "${_NB}" init
     cd "${NB_DIR}/home" &&
@@ -85,76 +155,6 @@ load test_helper
 
   [[ "${status}"    -eq 1       ]]
   [[ "${lines[0]}"  =~  Usage\: ]]
-}
-
-# remote ######################################################################
-
-@test "'remote' with no arguments and no remote prints message." {
-  {
-    "${_NB}" init
-  }
-
-  run "${_NB}" remote
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[ "${status}"    -eq 1                       ]]
-  [[ "${lines[0]}"  =~  No\ remote\ configured  ]]
-}
-
-@test "'remote' with no arguments and existing remote prints url." {
-  {
-    "${_NB}" init
-    cd "${NB_DIR}/home" &&
-      git remote add origin "${_GIT_REMOTE_URL}"
-  }
-
-  run "${_NB}" remote
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[ "${status}"    -eq 0                     ]]
-  [[ "${lines[0]}"  ==  "${_GIT_REMOTE_URL}"  ]]
-}
-
-@test "'remote' with no arguments does not trigger git commit." {
-  {
-    "${_NB}" init
-    cd "${NB_DIR}/home" &&
-      git remote add origin "${_GIT_REMOTE_URL}"
-
-    touch "${NB_DIR}/home/example.md"
-
-    [[ -f "${NB_DIR}/home/example.md" ]]
-
-    "${_NB}" git dirty
-  }
-
-  run "${_NB}" remote
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[ "${status}"    -eq 0                     ]]
-
-  [[ "${lines[0]}"  ==  "${_GIT_REMOTE_URL}"  ]]
-
-  [[ -f "${NB_DIR}/home/example.md"           ]]
-
-  "${_NB}" git dirty
-
-  # does not create git commit
-
-  cd "${NB_DIR}/home" || return 1
-  if [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
-  then
-    sleep 1
-  fi
-
-  ! git log | grep -q '\[nb\] Commit'
-  ! git log | grep -q '\[nb\] Sync'
 }
 
 # remote remove ###############################################################

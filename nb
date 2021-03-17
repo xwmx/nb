@@ -17672,7 +17672,17 @@ $(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
     *)
       if ((_remote_exists))
       then
-        git -C "${_notebook_path}" remote get-url origin && return 0
+        local _remote_url=
+        _remote_url="$(
+          git -C "${_notebook_path}" remote get-url origin
+        )"
+
+        local _remote_branch=
+        _remote_branch="$(
+          git -C "${_notebook_path}" rev-parse --abbrev-ref HEAD
+        )"
+
+        printf "%s (%s)\\n" "${_remote_url:-}" "${_remote_branch:-}"
       else
         _warn printf "No remote configured.\\n"
         return 1
