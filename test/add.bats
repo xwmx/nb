@@ -69,7 +69,7 @@ load test_helper
 
   [[ -f "${NB_DIR}/home/Example File.org" ]]
 
-  diff                                    \
+  diff                                        \
     <(cat "${NB_DIR}/home/Example File.org")  \
     <(printf "\
 #+TITLE: Example Title
@@ -505,7 +505,7 @@ HEREDOC
   }
 
   echo "Piped content." | {
-    run "${_NB}" add  \
+    run "${_NB}" add              \
       "Argument content one."     \
       --tags    tag1,tag2         \
       --title   "Example Title"   \
@@ -517,7 +517,7 @@ HEREDOC
 
     # Returns status 0:
 
-    [[ "${status}" -eq 0      ]]
+    [[ "${status}" -eq 0          ]]
 
     # Creates new note file:
 
