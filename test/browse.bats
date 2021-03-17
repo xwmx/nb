@@ -9,13 +9,44 @@ export _S=" "
 
 # --original ##################################################################
 
+@test "GET to --original URL serves file with no newlines." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example Folder/Example File.md"  \
+      --title     "Example Title"
+
+    printf "# Example Title" > "${NB_DIR}/home/Example Folder/Example File.md"
+
+
+    (ncat                               \
+      --exec "${_NB} browse --respond"  \
+      --listen                          \
+      --source-port "6789"              \
+      2>/dev/null) &
+
+    sleep 1
+  }
+
+  run curl -sS -D - "http://localhost:6789/--original/home/Example%20Folder/Example%20File.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0                         ]]
+
+  [[ "${output}"  =~  Content-Type:\ text/plain ]]
+
+  [[ "${output}"  =~  \#\ Example\ Title        ]]
+}
+
 @test "GET to --original URL serves original markdown file." {
   {
     "${_NB}" init
 
     "${_NB}" add  "Example Folder/Example File.md"  \
-    --title       "Example Title"                   \
-    --content     "Example content."
+      --title       "Example Title"                 \
+      --content     "Example content."
 
     (ncat                               \
       --exec "${_NB} browse --respond"  \
