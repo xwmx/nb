@@ -18,6 +18,7 @@ export _S=" "
 
     printf "# Example Title" > "${NB_DIR}/home/Example Folder/Example File.md"
 
+    "${_NB}" git checkpoint
 
     (ncat                               \
       --exec "${_NB} browse --respond"  \
@@ -28,7 +29,8 @@ export _S=" "
     sleep 1
   }
 
-  run curl -sS -D - "http://localhost:6789/--original/home/Example%20Folder/Example%20File.md"
+  run curl -sS --verbose -D - \
+    "http://localhost:6789/--original/home/Example%20Folder/Example%20File.md"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"

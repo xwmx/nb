@@ -16809,7 +16809,7 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
         local               __line=
         while IFS= read -r  __line || [[ -n "${__line:-}" ]]
         do
-          printf "%s\\r\\n" "${__line}"
+          printf "%s\\r\\n" "${__line:-}"
         done
       }
     fi
