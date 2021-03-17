@@ -6394,7 +6394,7 @@ To run the tests locally, install
 [Bats](https://github.com/bats-core/bats-core)
 and the [recommended dependencies](#optional),
 then run `bats test` within the project root directory. Run groups of
-tests with globbing, e.g., `bats test/browse-*` and `bats test/folders-*`.
+tests with globbing, e.g., `bats test/browse*` and `bats test/folders*`.
 
 ---
 <p align="center">
