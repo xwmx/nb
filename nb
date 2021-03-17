@@ -15008,8 +15008,8 @@ _browse() {
   # Description:
   #   Add a new item in the folder or notebook at <container-path>.
   _browse_item_create() {
-    local _container_path=
     local _message_body=
+    local _selector=
     local _subcommand_options=()
 
     while ((${#}))
@@ -15026,9 +15026,9 @@ _browse() {
           :
           ;;
         *)
-          if [[ -z "${_container_path:-}" ]] && [[ "${1:-}" =~ ^/ ]]
+          if [[ -z "${_selector:-}" ]]
           then
-            _container_path="${1:-}"
+            _selector="${1:-}"
           else
             _subcommand_options+=("${1:-}")
           fi
@@ -15038,21 +15038,13 @@ _browse() {
       shift
     done
 
-    [[ -z "${_container_path:-}" ]] && _browse_respond_with 404
+    [[ -z "${_selector:-}" ]] && _browse_respond_with 404
 
     local _notebook_path=
     _notebook_path="$(
-      _notebooks show "${_container_path:-}" --path 2>/dev/null ||
+      _notebooks show "${_selector:-}" --path 2>/dev/null ||
         _notebooks current --path
     )"
-
-    local _id_selector=
-    _id_selector="$(_get_id_selector "${_container_path:-}" --notebook)"
-
-    if [[ ! "${_id_selector:-}" =~ :$|/$      ]]
-    then
-      _id_selector="${_id_selector}/"
-    fi
 
     local _fields=()
     IFS='&' read -r -a _fields <<< "${_message_body}"
@@ -15099,12 +15091,12 @@ _browse() {
 
     if [[ -n "${_content:-}"  ]]
     then
-      if ! _contains "--relative-path" "${_add_options[@]:-}"
+      if [[ -n "${_selector:-}" ]]
       then
-        _add_options+=("${_id_selector}")
+        _add_options=("${_selector:-}" "${_add_options[@]:-}")
       fi
 
-      _add_options+=("--no-color" "${_add_options[@]:-}")
+      _add_options=("--no-color" "${_add_options[@]:-}")
 
       local _new_info_line=
       _new_info_line="$(
@@ -15228,7 +15220,6 @@ _browse() {
     local _content=
     local _pagination_options=()
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
-    local _relative_path=
     local _selector=
     local _subcommand_options=()
     local _tag_list=
@@ -15245,16 +15236,6 @@ _browse() {
           ;;
         -c|--content)
           _content="$(_option_get_value "${1:-}" "${2:-}")"
-          shift
-          ;;
-        -f|--file*|--*path|--target*)
-          _relative_path="$(_option_get_value "${1:-}" "${2:-}")"
-
-          if ! _contains "--relative-path" "${_subcommand_options[@]:-}"
-          then
-            _subcommand_options+=("--relative-path" "${2:-}")
-          fi
-
           shift
           ;;
         --page)
@@ -15281,6 +15262,18 @@ _browse() {
           _subcommand_options+=("${1:-}" "${2:-}")
           shift
           ;;
+        --*)
+          _subcommand_options+=("${1:-}")
+
+          if _option_value_is_present "${2:-}"
+          then
+            _subcommand_options+=("${2:-}")
+            shift
+          fi
+          ;;
+        -*)
+          _subcommand_options+=("${1:-}")
+          ;;
         *)
           if [[ -z "${_selector:-}" ]]
           then
@@ -15294,47 +15287,24 @@ _browse() {
       shift
     done
 
-    local _container_path=
-
-    if [[ "${_selector}" =~ ^/      ]]
-    then
-      if [[ -d "${_selector}"       ]]
-      then
-        _container_path="${_selector:-}"
-      else
-        _browse_respond_with 302 \
-"http://localhost:${NB_SERVER_PORT}/$(_get_id_selector "${_container_path}"  --notebook)"
-      fi
+    if [[ "${_selector:-}" =~ ^/    ]] &&
+       [[ -d "${_selector}"         ]]
+    then # file alteady exists
+      _browse_respond_with 302 \
+"http://localhost:${NB_SERVER_PORT}/$(_get_id_selector "${_selector:-}"  --notebook)"
     elif [[ -n "${_selector:-}"     ]]
     then
-      if [[ "${_selector:-}"  =~ /  ]]
+      local _notebook_name=
+      _notebook_name="$(
+        _notebooks show "${_selector:-}" --name 2>/dev/null ||
+          _notebooks current --name
+      )"
+
+      if [[ ! "${_selector:-}" =~ : ]]
       then
-        _container_path="$(_show "${_selector%/*}" --path 2>/dev/null || :)"
-
-        if ! _contains --relative-path "${_subcommand_options[@]:-}"
-        then
-          _subcommand_options+=("--relative-path" "${_selector##*/}")
-        fi
-      elif [[ "${_selector:-}" =~ : ]]
-      then
-        _container_path="$(_show "${_selector%:*}:" --path 2>/dev/null || :)"
-
-        if ! _contains --relative-path "${_subcommand_options[@]:-}"
-        then
-          _subcommand_options+=("--relative-path" "${_selector#*:}")
-        fi
-      else
-        _container_path="$(_notebooks current --path 2>/dev/null || :)"
-
-        if ! _contains --relative-path  "${_subcommand_options[@]:-}"
-        then
-          _subcommand_options+=("--relative-path" "${_selector}")
-        fi
+        _selector="${_notebook_name}:${_selector:-}"
       fi
     fi
-
-    local _form_action_selector=
-    _form_action_selector="$(_get_id_selector "${_container_path}" --notebook)"
 
     local _text_area_columns="${_columns:-}"
     local _rows=30
@@ -15384,7 +15354,7 @@ _browse() {
       # TODO: https://stackoverflow.com/a/15844977
       cat <<HEREDOC
 <form
-  action="/${_form_action_selector//' '/%20}?--add${_url_params:-}"
+  action="/${_selector//' '/%20}?--add${_url_params:-}"
   accept-charset="UTF-8"
   method="post">
 <textarea
@@ -15403,7 +15373,7 @@ HEREDOC
     } | {
       printf "%s\\n" "$(
         _browse_render_header           \
-          "${_container_path}"          \
+          "${_selector}"          \
           "${_pagination_options[@]:-}" \
           --add
       )"
@@ -16608,21 +16578,17 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
       local _selector_path=
       _selector_path="$(_show "${_target_selector%%\?*}" --path 2>/dev/null || :)"
 
+      _render_function_options+=("${_target_selector:-}")
+
       if [[ "${_action:-}" == "add"   ]]
       then
         case "${_request_method:-}" in
           GET)
-            _render_function_options+=(
-              "${_selector_path:-"${_target_selector:-}"}"
-            )
-
             _browse_render_add                      \
               "${_render_function_options[@]:-}"    \
               | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
             ;;
           POST)
-            _render_function_options+=("${_selector_path}")
-
             local _new_selector=
             _new_selector="$(
               _browse_item_create                   \
@@ -16995,6 +16961,9 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
      ! [[ "${_print_browse_render_function}" == "notebooks" ]]
   then
     _selector="$(_notebooks current --name --no-color):"
+  elif [[ ! "${_selector:-}" =~ : ]]
+  then
+    _selector="$(_notebooks current --name --no-color):${_selector:-}"
   fi
 
   local _arguments=()
@@ -17106,36 +17075,28 @@ HEREDOC
 
   # build initial request URL
 
-  local _url_selector=
   local _request_url_base="http://localhost:${NB_SERVER_PORT}"
 
-  if [[ "${_action:-}"        == "add"  ]]
+  if [[ "${_action:-}" == "add" ]]
   then
-    local _encoded_selector=
-    _encoded_selector="$(_get_uri --encode "${_selector#*:}")"
+    local _selector_path=
+    _selector_path="$(_show "${_selector:-}" --path 2>/dev/null || :)"
 
-    _arguments+=("--relative-path" "${_encoded_selector:-}")
-    _url_params+=("--relative-path=${_encoded_selector:-}")
+    local _notebook_path=
+    _notebook_path="$(_notebooks show "${_selector:-}" --path 2>/dev/null || :)"
 
-    if [[   "${_selector:-}"  =~ /      ]]
+    if [[ ! "${_selector}"      =~ /$                     ]] &&
+       [[ -d "${_selector_path:-}"                        ]] &&
+       [[ "${_selector_path:-}" != "${_notebook_path:-}"  ]]
     then
-      _url_selector="$(_get_id_selector "${_selector%/*}" --notebook || :)"
-    elif [[ "${_selector:-}"  =~ :      ]]
-    then
-      _url_selector="$(_get_id_selector "${_selector%:*}" --notebook ||  :)"
-    fi
-
-    if [[ -z "${_url_selector:-}"        ]]
-    then
-      _url_selector="$(_notebooks current --name --no-color):"
+      _selector="${_selector:-}/"
     fi
 
     _arguments=("${_selector:-}" "${_arguments[@]:-}")
-  else
-    _url_selector="${_selector:-}"
-  fi || :
+  fi
 
-  local _request_url="${_request_url_base}/${_url_selector:-}"
+  local _request_url_base="http://localhost:${NB_SERVER_PORT}"
+  local _request_url="${_request_url_base}/${_selector:-}"
 
   if ((${#_url_params[@]}))
   then

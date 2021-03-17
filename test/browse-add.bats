@@ -9,16 +9,9 @@ export _S=" "
 
 # POST ########################################################################
 
-@test "POST to --add URL accepts --relative-path with folder."  {
+@test "POST to --add <folder-name>/<folder-name> (no slash) URL creates folder and file named 'Sample Folder' and redirects."  {
   {
     "${_NB}" init
-
-    "${_NB}" add folder "Example Folder"
-    "${_NB}" add folder "Sample Folder"
-
-    declare _data="content=Example%20content."
-    _data+="&--title=Example%20Title"
-    _data+="&--relative-path=Sample%20Folder%2FExample%20File.md"
 
     (ncat                                   \
       --exec "${_NB} browse --respond"      \
@@ -29,21 +22,23 @@ export _S=" "
     sleep 1
   }
 
-  run curl -sS -D - --data "${_data}" "http://localhost:6789/home:1/?--add"
+  run curl -sS -D - --data                                \
+    "content=Example%20content.&--title=Example%20Title"  \
+    "http://localhost:6789/home:Example%20Folder/Sample%20Folder?--add"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0:
 
-  [[    "${status}"  -eq 0                                ]]
+  [[    "${status}"  -eq 0  ]]
 
   # Creates file:
 
-  [[ -f "${NB_DIR}/home/Sample Folder/Example File.md"    ]]
+  [[ -f "${NB_DIR}/home/Example Folder/Sample Folder"     ]]
 
   diff                                                    \
-    <(cat "${NB_DIR}/home/Sample Folder/Example File.md") \
+    <(cat "${NB_DIR}/home/Example Folder/Sample Folder")  \
     <(cat <<HEREDOC
 # Example Title
 
@@ -65,21 +60,19 @@ HEREDOC
 
   # Prints output:
 
-  [[ "${#lines[@]}" -eq 5                                           ]]
+  [[ "${#lines[@]}" -eq 5                                             ]]
 
-  [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Found                        ]]
-  [[ "${lines[1]}"  =~  Date:\ .*                                   ]]
-  [[ "${lines[2]}"  =~  Expires:\ .*                                ]]
-  [[ "${lines[3]}"  =~  Server:\ nb                                 ]]
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Found                          ]]
+  [[ "${lines[1]}"  =~  Date:\ .*                                     ]]
+  [[ "${lines[2]}"  =~  Expires:\ .*                                  ]]
+  [[ "${lines[3]}"  =~  Server:\ nb                                   ]]
   [[ "${lines[4]}"  =~  \
-Location:\ http:\/\/localhost:6789\/Sample\ Folder/1\?--per-page=30 ]]
+Location:\ http:\/\/localhost:6789\/Example\ Folder/1\?--per-page=30  ]]
 }
 
-@test "POST to --add URL prefers --relative-path parameter."  {
+@test "POST to --add <folder-name>/<folder-name>/ (slash) URL creates folders and note and redirects."  {
   {
     "${_NB}" init
-
-    "${_NB}" add folder "Example Folder"
 
     (ncat                                   \
       --exec "${_NB} browse --respond"      \
@@ -90,23 +83,27 @@ Location:\ http:\/\/localhost:6789\/Sample\ Folder/1\?--per-page=30 ]]
     sleep 1
   }
 
-  run curl -sS -D - --data                                                                  \
-    "content=Example%20content.&--title=Example%20Title&--relative-path=Example%20File.md"  \
-    "http://localhost:6789/home:1/?--add"
+  run curl -sS -D - --data                               \
+    "content=Example%20content.&--title=Example%20Title" \
+    "http://localhost:6789/home:Example%20Folder/Sample%20Folder/?--add"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0:
 
-  [[    "${status}"  -eq 0                  ]]
+  [[    "${status}"  -eq 0  ]]
 
   # Creates file:
 
-  [[ -f "${NB_DIR}/home/Example File.md"    ]]
+  _files=($(ls "${NB_DIR}/home/Example Folder/Sample Folder/"))
 
-  diff                                      \
-    <(cat "${NB_DIR}/home/Example File.md") \
+  [[ "${#_files[@]}" -eq 1  ]]
+
+  [[ -f "${NB_DIR}/home/Example Folder/Sample Folder/${_files[0]}"        ]]
+
+  diff                                                                    \
+    <(cat "${NB_DIR}/home/Example Folder/Sample Folder/${_files[0]}")  \
     <(cat <<HEREDOC
 # Example Title
 
@@ -128,16 +125,17 @@ HEREDOC
 
   # Prints output:
 
-  [[ "${#lines[@]}" -eq 5                                                     ]]
+  [[ "${#lines[@]}" -eq 5                                                           ]]
 
-  [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Found                                  ]]
-  [[ "${lines[1]}"  =~  Date:\ .*                                             ]]
-  [[ "${lines[2]}"  =~  Expires:\ .*                                          ]]
-  [[ "${lines[3]}"  =~  Server:\ nb                                           ]]
-  [[ "${lines[4]}"  =~  Location:\ http:\/\/localhost:6789\/2\?--per-page=30  ]]
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Found                                        ]]
+  [[ "${lines[1]}"  =~  Date:\ .*                                                   ]]
+  [[ "${lines[2]}"  =~  Expires:\ .*                                                ]]
+  [[ "${lines[3]}"  =~  Server:\ nb                                                 ]]
+  [[ "${lines[4]}"  =~  \
+Location:\ http:\/\/localhost:6789\/Example\ Folder/Sample\ Folder/1\?--per-page=30 ]]
 }
 
-@test "POST to --add URL creates note and redirects."  {
+@test "POST to --add <folder-name>/<folder-name>/<filename> URL creates folders and note and redirects."  {
   {
     "${_NB}" init
 
@@ -150,9 +148,9 @@ HEREDOC
     sleep 1
   }
 
-  run curl -sS -D - --data                                                            \
-    "content=Example%20content.&--title=Example%20Title&--filename=Example%20File.md" \
-    "http://localhost:6789/home:?--add"
+  run curl -sS -D - --data                               \
+    "content=Example%20content.&--title=Example%20Title" \
+    "http://localhost:6789/home:Example%20Folder/Sample%20Folder/Example%20File.md?--add"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -162,6 +160,133 @@ HEREDOC
   [[    "${status}"  -eq 0                  ]]
 
   # Creates file:
+
+  ls -la "${NB_DIR}/home/"
+
+  [[ -f "${NB_DIR}/home/Example Folder/Sample Folder/Example File.md"     ]]
+
+  diff                                                                    \
+    <(cat "${NB_DIR}/home/Example Folder/Sample Folder/Example File.md")  \
+    <(cat <<HEREDOC
+# Example Title
+
+Example content.
+HEREDOC
+)
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
+  while [[ -n "$(git status --porcelain)"   ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  # Prints output:
+
+  [[ "${#lines[@]}" -eq 5                                                           ]]
+
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Found                                        ]]
+  [[ "${lines[1]}"  =~  Date:\ .*                                                   ]]
+  [[ "${lines[2]}"  =~  Expires:\ .*                                                ]]
+  [[ "${lines[3]}"  =~  Server:\ nb                                                 ]]
+  [[ "${lines[4]}"  =~  \
+Location:\ http:\/\/localhost:6789\/Example\ Folder/Sample\ Folder/1\?--per-page=30 ]]
+}
+
+@test "POST to --add <folder-name>/<filename> URL creates folder and note and redirects."  {
+  {
+    "${_NB}" init
+
+    (ncat                                   \
+      --exec "${_NB} browse --respond"      \
+      --listen                              \
+      --source-port "6789"                  \
+      2>/dev/null) &
+
+    sleep 1
+  }
+
+  run curl -sS -D - --data                               \
+    "content=Example%20content.&--title=Example%20Title" \
+    "http://localhost:6789/home:Example%20Folder/Example%20File.md?--add"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[    "${status}"  -eq 0                  ]]
+
+  # Creates file:
+
+  ls -la "${NB_DIR}/home/"
+
+  [[ -f "${NB_DIR}/home/Example Folder/Example File.md"     ]]
+
+  diff                                                      \
+    <(cat "${NB_DIR}/home/Example Folder/Example File.md")  \
+    <(cat <<HEREDOC
+# Example Title
+
+Example content.
+HEREDOC
+)
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
+  while [[ -n "$(git status --porcelain)"   ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  # Prints output:
+
+  [[ "${#lines[@]}" -eq 5                                                                     ]]
+
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Found                                                  ]]
+  [[ "${lines[1]}"  =~  Date:\ .*                                                             ]]
+  [[ "${lines[2]}"  =~  Expires:\ .*                                                          ]]
+  [[ "${lines[3]}"  =~  Server:\ nb                                                           ]]
+  [[ "${lines[4]}"  =~  Location:\ http:\/\/localhost:6789\/Example\ Folder/1\?--per-page=30  ]]
+}
+
+@test "POST to --add <filename> URL creates note and redirects."  {
+  {
+    "${_NB}" init
+
+    (ncat                                   \
+      --exec "${_NB} browse --respond"      \
+      --listen                              \
+      --source-port "6789"                  \
+      2>/dev/null) &
+
+    sleep 1
+  }
+
+  run curl -sS -D - --data                               \
+    "content=Example%20content.&--title=Example%20Title" \
+    "http://localhost:6789/home:Example%20File.md?--add"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[    "${status}"  -eq 0                  ]]
+
+  # Creates file:
+
+  ls -la "${NB_DIR}/home/"
 
   [[ -f "${NB_DIR}/home/Example File.md"    ]]
 
@@ -237,7 +362,7 @@ HEREDOC
   printf "%s\\n" "${output}" | grep -q "cols=\".*\">"
 
   printf "%s\\n" "${output}" | grep -q \
-"action=\"/Example%20Notebook:?--add&--per-page=.*&--columns=.*\""
+"action=\"/Example%20Notebook:Example%20Folder/Example%20File.md?--add&--per-page=.*&--columns=.*\""
 
   printf "%s\\n" "${output}" | grep -q \
 "value=\"add\">"
@@ -247,12 +372,9 @@ HEREDOC
 
   printf "%s\\n" "${output}" | grep -q -v \
 "<input type=\"hidden\" name=\"--title\""
-
-  printf "%s\\n" "${output}" | grep -q \
-"<input type=\"hidden\" name=\"--relative-path\" value=\"Example%20Folder%2FExample%20File.md\">"
 }
 
-@test "'browse --add <item-selector>' renders the 'add' form with populated content and selector filename field." {
+@test "'browse --add <item-selector>' renders the 'add' form with populated content." {
   {
     "${_NB}" init
 
@@ -286,7 +408,7 @@ HEREDOC
   printf "%s\\n" "${output}" | grep -q "cols=\".*\">"
 
   printf "%s\\n" "${output}" | grep -q \
-"action=\"/home:?--add&--per-page=.*&--columns=.*\""
+"action=\"/home:Example%20Folder/Example%20File.md?--add&--per-page=.*&--columns=.*\""
 
   printf "%s\\n" "${output}" | grep -q \
 "value=\"add\">"
@@ -296,12 +418,9 @@ HEREDOC
 
   printf "%s\\n" "${output}" | grep -q -v \
 "<input type=\"hidden\" name=\"--title\""
-
-  printf "%s\\n" "${output}" | grep -q \
-"<input type=\"hidden\" name=\"--relative-path\" value=\"Example%20Folder%2FExample%20File.md\">"
 }
 
-@test "'browse --add <folder-selector>/ --filename <filename>' includes --relative-path <filename> hidden form field." {
+@test "'browse --add <folder-selector>/<filename>' includes <folder-selector>/<filename> in form action." {
   # TODO: review behavior
   {
     "${_NB}" init
@@ -311,10 +430,9 @@ HEREDOC
     sleep 1
   }
 
-  run "${_NB}" browse Example\ Folder/ --add --print  \
-    --title     "Example Title"                       \
-    --filename  "Example File.md"                     \
-    --content   "Example content."                    \
+  run "${_NB}" browse Example\ Folder/Example\ File.md --add --print  \
+    --title     "Example Title"                                       \
+    --content   "Example content."                                    \
     --tags      tag1,tag2
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -339,7 +457,7 @@ HEREDOC
   printf "%s\\n" "${output}" | grep -q "cols=\".*\">"
 
   printf "%s\\n" "${output}" | grep -q \
-"action=\"/home:1?--add&--per-page=.*&--columns=.*\""
+"action=\"/home:Example%20Folder/Example%20File.md?--add&--per-page=.*&--columns=.*\""
 
   printf "%s\\n" "${output}" | grep -q \
 "value=\"add\">"
@@ -349,9 +467,6 @@ HEREDOC
 
   printf "%s\\n" "${output}" | grep -q -v \
 "<input type=\"hidden\" name=\"--title\""
-
-  printf "%s\\n" "${output}" | grep -q \
-"<input type=\"hidden\" name=\"--relative-path\" value=\"Example%20File.md\">"
 }
 
 @test "'browse --add <folder-selector>/' includes add options as pre-filled content hidden form fields." {
@@ -390,7 +505,7 @@ HEREDOC
   printf "%s\\n" "${output}" | grep -q "cols=\".*\">"
 
   printf "%s\\n" "${output}" | grep -q \
-"action=\"/home:1?--add&--per-page=.*&--columns=.*\""
+"action=\"/home:Example%20Folder/Example%20File.md?--add&--per-page=.*&--columns=.*\""
 
   printf "%s\\n" "${output}" | grep -q \
 "value=\"add\">"
@@ -400,9 +515,6 @@ HEREDOC
 
   printf "%s\\n" "${output}" | grep -q -v \
 "<input type=\"hidden\" name=\"--title\""
-
-  printf "%s\\n" "${output}" | grep -q \
-"<input type=\"hidden\" name=\"--relative-path\" value=\"Example%20Folder%2FExample%20File.md\">"
 }
 
 @test "'browse --add <selector>' opens the add page in the browser." {
@@ -438,7 +550,7 @@ HEREDOC
   printf "%s\\n" "${output}" | grep -q "cols=\".*\">"
 
   printf "%s\\n" "${output}" | grep -q \
-"action=\"/home:1?--add&--per-page=.*&--columns=.*\""
+"action=\"/home:Example%20Folder/?--add&--per-page=.*&--columns=.*\""
 
   printf "%s\\n" "${output}" | grep -q \
 "value=\"add\">"
@@ -613,10 +725,10 @@ HEREDOC
   {
     "${_NB}" init
 
-    (ncat                                   \
-      --exec "${_NB} browse --respond"      \
-      --listen                              \
-      --source-port "6789"                  \
+    (ncat                                 \
+      --exec "${_NB} browse --respond"    \
+      --listen                            \
+      --source-port "6789"                \
       2>/dev/null) &
 
     sleep 1
