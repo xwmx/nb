@@ -2157,8 +2157,8 @@ arrow (`↓`) link to view or download the original file.
 
 Items in text formats can be edited within a terminal or GUI browser using
 the `edit` link on the item page or by opening the item with
-`nb browse edit` / `nb br e`, which automatically resizes the form to fit
-the current terminal window:
+[`nb browse edit`](#browse) / [`nb br e`](#browse),
+which automatically resizes the form to fit the current terminal window:
 
 ```bash
 > nb browse text:formats/markdown/123 edit
@@ -2189,8 +2189,9 @@ Terminal browsers can also be configured to use your editor.
 
 #### `browse add`
 
-Add an item within the browser using the `+` link or `nb browse add` /
-`nb br a`. Pass a notebook or folder selector to create a new
+Add an item within the browser using the `+` link or
+[`nb browse add`](#browse) / [`nb br a`](#browse).
+Pass a notebook, folder, and / or filename selector to create a new
 note in that location:
 
 ```bash
@@ -2234,8 +2235,8 @@ with content:
 
 #### `browse delete`
 
-Use the `-` link or `nb browse delete` / `nb br d` to delete an
-item:
+Use the `-` link or [`nb browse delete`](#browse) / [`nb br d`](#browse)
+to delete an item:
 
 ```bash
 > nb browse delete example:4
@@ -2286,7 +2287,7 @@ For more information about search options, see [Search](#-search) and
 #### `browse --gui`
 
 To open any `nb browse` view in the system's primary GUI web browser,
-add the `nb browse --gui` / `nb br -g` option:
+add the [`nb browse --gui`](#browse) / [`nb br -g`](#browse) option:
 
 ```bash
 # open the item with id 123 in the "sample" notebook in the system's primary GUI browser
@@ -2313,8 +2314,8 @@ and `nb browse add --gui`.
 
 #### `browse` URLs
 
-`browse` URLs are designed to mirror the underlying command line options and
-[selectors](#selectors), providing transparency and consistency between
+`nb browse` URLs are designed to mirror the underlying command line options
+and [selectors](#selectors), providing transparency and consistency between
 `nb` interfaces:
 
 ```text
