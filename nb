@@ -18492,7 +18492,7 @@ _shell() {
 
   local _initial_command=
   local _prompt=
-  _prompt="$(_color_primary "${_ME}")$(_color_secondary ";") "
+  _prompt="$(_color_primary "${_ME}")$(_color_secondary "❯") "
 
   local __arg=
   for   __arg in "${@:-}"

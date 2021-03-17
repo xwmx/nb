@@ -397,7 +397,7 @@ When a string is specified, a new note is immediately created with that
 string as the content and the editor is not opened:
 
 ```bash
-; nb add "This is a note."
+❯ nb add "This is a note."
 Added: [1] 20200101000000.md
 ```
 
@@ -412,15 +412,15 @@ the filename.
 
 ```bash
 # create a new note containing "Note content."
-; echo "Note content." | nb add
+❯ echo "Note content." | nb add
 Added: [6] 20200101000100.md
 
 # create a new note containing the clipboard contents on macOS
-; pbpaste | nb add
+❯ pbpaste | nb add
 Added: [7] 20200101000200.md
 
 # create a new note containing the clipboard contents using xclip
-; xclip -o | nb add
+❯ xclip -o | nb add
 Added: [8] 20200101000300.md
 ```
 
@@ -439,7 +439,7 @@ The title, filename, and content can also be specified with long and
 short options:
 
 ```bash
-; nb add --filename "example.md" -t "Example Title" -c "Example content."
+❯ nb add --filename "example.md" -t "Example Title" -c "Example content."
 Added: [9] example.md "Example Title"
 ```
 
@@ -448,7 +448,7 @@ to the title, lowercased with spaces and non-filename characters replaced
 with underscores:
 
 ```bash
-; nb add --title "Example Title" "Example content."
+❯ nb add --title "Example Title" "Example content."
 Added: [10] example_title.md "Example Title"
 ```
 
@@ -457,10 +457,10 @@ a comma separated list of tags, converts them to
 [#hashtags](#-tagging), and inserts them between the title and content:
 
 ```bash
-; nb add "Example content." --title "Tagged Example" --tags tag1,tag2
+❯ nb add "Example content." --title "Tagged Example" --tags tag1,tag2
 Added: [11] tagged_example.md "Tagged Example"
 
-; nb show 11 --print
+❯ nb show 11 --print
 # Tagged Example
 
 #tag1 #tag2
@@ -516,13 +516,13 @@ with content from multiple input methods and sources using a single
 command:
 
 ```bash
-; pb | nb + "Argument content." \
+❯ pb | nb + "Argument content." \
     --title "Sample Title"      \
     --tags  tag1,tag2           \
     --content "Option content."
 Added: [12] sample_title.md "Sample Title"
 
-; nb show 12 --print
+❯ nb show 12 --print
 # Sample Title
 
 #tag1 #tag2
@@ -593,7 +593,7 @@ Items can also be added within terminal and GUI web browsers using
 [`nb browse add`](#browse) / [`nb br a`](#browse):
 
 ```bash
-; nb browse add
+❯ nb browse add
 ❯nb · home : +
 
 [                                                     ]
@@ -622,7 +622,7 @@ nb browse add "example/file.md"
 with content:
 
 ```bash
-; nb browse add --title "Example Title" --content "Example content." --tags tag1,tag2
+❯ nb browse add --title "Example Title" --content "Example content." --tags tag1,tag2
 ❯nb · home : +
 
 [# Example Title                                      ]
@@ -649,7 +649,7 @@ For more information, see [Browsing](#-browsing).
 To list notes and notebooks, run [`nb ls`](#ls):
 
 ```bash
-; nb ls
+❯ nb ls
 home
 ----
 [3] example.md · "Example content."
@@ -703,7 +703,7 @@ Once defined, titles are displayed in place of the filename and first line
 in the output of `nb ls`:
 
 ```bash
-; nb ls
+❯ nb ls
 home
 ----
 [3] Example Title
@@ -714,12 +714,12 @@ home
 Pass an id, filename, or title to view the listing for that note:
 
 ```bash
-; nb ls Todos
+❯ nb ls Todos
 [2] Todos
 ```
 
 ```bash
-; nb ls 3
+❯ nb ls 3
 [3] Example Title
 ```
 
@@ -727,7 +727,7 @@ If there is no exact match, `nb` will list items with titles and
 filenames that fuzzy match the query:
 
 ```bash
-; nb ls "idea"
+❯ nb ls "idea"
 [1] Ideas
 ```
 
@@ -735,7 +735,7 @@ A case-insensitive regular expression can also be used to filter
 filenames and titles:
 
 ```bash
-; nb ls "^example.*"
+❯ nb ls "^example.*"
 [3] Example Title
 ```
 
@@ -743,7 +743,7 @@ Multiple words act like an `OR` filter, listing any titles or filenames that
 match any of the words:
 
 ```bash
-; nb ls example ideas
+❯ nb ls example ideas
 [3] Example Title
 [1] Ideas
 ```
@@ -751,7 +751,7 @@ match any of the words:
 When multiple words are quoted, filter titles and filenames for that phrase:
 
 ```bash
-; nb ls "example title"
+❯ nb ls "example title"
 [3] Example Title
 ```
 
@@ -761,14 +761,14 @@ To view excerpts of notes, use the `--excerpt` or `-e` option, which
 optionally accepts a length:
 
 ```bash
-; nb ls 3 --excerpt
+❯ nb ls 3 --excerpt
 [3] Example Title
 -----------------
 # Example Title
 
 This is an example excerpt.
 
-; nb ls 3 -e 8
+❯ nb ls 3 -e 8
 [3] Example Title
 -----------------
 # Example Title
@@ -786,7 +786,7 @@ easily identifiable in lists. For example, bookmarks and encrypted notes
 are listed with `🔖` and `🔒`:
 
 ```bash
-; nb ls
+❯ nb ls
 home
 ----
 [4] Example Note
@@ -812,14 +812,14 @@ By default, items are listed starting with the most recently modified.
 To reverse the order, use the `-r` or `--reverse` flag:
 
 ```bash
-; nb ls
+❯ nb ls
 home
 ----
 [2] Todos
 [3] Example Title
 [1] Ideas
 
-; nb ls --reverse
+❯ nb ls --reverse
 [1] Ideas
 [3] Example Title
 [2] Todos
@@ -829,19 +829,19 @@ Notes can be sorted with the `-s` / `--sort` flag, which can be combined
 with `-r` / `--reverse`:
 
 ```bash
-; nb ls
+❯ nb ls
 home
 ----
 [2] Todos
 [3] Example Title
 [1] Ideas
 
-; nb ls --sort
+❯ nb ls --sort
 [1] Ideas
 [2] Todos
 [3] Example Title
 
-; nb ls --sort --reverse
+❯ nb ls --sort --reverse
 [3] Example Title
 [2] Todos
 [1] Ideas
@@ -851,24 +851,24 @@ home
 above can be run without the `ls`:
 
 ```bash
-; nb
+❯ nb
 home
 ----
 [2] Todos
 [3] Example Title
 [1] Ideas
 
-; nb "^example.*"
+❯ nb "^example.*"
 [3] Example Title
 
-; nb 3 --excerpt
+❯ nb 3 --excerpt
 [3] Example Title
 -----------------
 # Example Title
 
 This is an example excerpt.
 
-; nb 3 -e 8
+❯ nb 3 -e 8
 [3] Example Title
 -----------------
 # Example Title
@@ -880,12 +880,12 @@ More example content:
 - two
 - three
 
-; nb --sort
+❯ nb --sort
 [1] Ideas
 [2] Todos
 [3] Example Title
 
-; nb --sort --reverse
+❯ nb --sort --reverse
 [3] Example Title
 [2] Todos
 [1] Ideas
@@ -895,7 +895,7 @@ Short options can be combined for brevity:
 
 ```bash
 # equivalent to `nb --sort --reverse --excerpt 2` and `nb -s -r -e 2`:
-; nb -sre 2
+❯ nb -sre 2
 [3] Example Title
 -----------------
 # Example Title
@@ -916,20 +916,20 @@ To list a different number of items on a per-command basis, use the
 `-n <limit>`, `--limit <limit>`, `--<limit>`, `-a`, or `--all` flags:
 
 ```bash
-; nb -n 1
+❯ nb -n 1
 home
 ----
 [5] Example Five
 4 omitted. 5 total.
 
-; nb --limit 2
+❯ nb --limit 2
 home
 ----
 [5] Example Five
 [4] Example Four
 3 omitted. 5 total.
 
-; nb --3
+❯ nb --3
 home
 ----
 [5] Example Five
@@ -937,7 +937,7 @@ home
 [3] Example Three
 2 omitted. 5 total.
 
-; nb --all
+❯ nb --all
 home
 ----
 [5] Example Five
@@ -952,7 +952,7 @@ in one view and accepts the same arguments as `nb list`, which lists only
 notes without the notebook list and with no limit by default:
 
 ```bash
-; nb list
+❯ nb list
 [100] Example One Hundred
 [99]  Example Ninety-Nine
 [98]  Example Ninety-Eight
@@ -970,7 +970,7 @@ Items can be listed within terminal and GUI web browsers using
 [`nb browse`](#browse) / [`nb br`](#browse):
 
 ```bash
-; nb browse example:sample/demo/
+❯ nb browse example:sample/demo/
 ❯nb · example : sample / demo / +
 
 search: [                    ]
@@ -1081,7 +1081,7 @@ Items can be edited within terminal and GUI web browsers using
 [`nb browse edit`](#browse) / [`nb br e`](#browse):
 
 ```bash
-; nb browse text:formats/markdown/123 edit
+❯ nb browse text:formats/markdown/123 edit
 ❯nb · text : formats / markdown / 123 · ↓ · editing · - | +
 
 [# Daring Fireball: Markdown (daringfireball.net)         ]
@@ -1165,7 +1165,7 @@ Use the `-p` / `--print` option to print to standard output with syntax
 highlighting:
 
 ```bash
-; nb show 123 --print
+❯ nb show 123 --print
 # Example Title
 
 Example content:
@@ -1224,10 +1224,10 @@ item. For example, use the `--added` / `-a` and `--updated` / `-u` flags to
 print the date and time that an item was added or updated:
 
 ```bash
-; nb show 2 --added
+❯ nb show 2 --added
 2020-01-01 01:01:00 -0700
 
-; nb show 2 --updated
+❯ nb show 2 --updated
 2020-02-02 02:02:00 -0700
 ```
 
@@ -1288,7 +1288,7 @@ Items can be viewed within terminal and GUI web browsers using
 [`nb browse`](#browse) / [`nb br`](#browse):
 
 ```bash
-; nb browse text:formats/markdown/123
+❯ nb browse text:formats/markdown/123
 ❯nb · text : formats / markdown / 123 · ↓ · edit · - | +
 Daring Fireball: Markdown (daringfireball.net)
 
@@ -1403,7 +1403,7 @@ Items can be deleted within terminal and GUI web browsers using
 [`nb browse delete`](#browse) / [`nb br d`](#browse):
 
 ```bash
-; nb browse delete example:4
+❯ nb browse delete example:4
 ❯nb · example : 4 · ↓ · edit · - | +
 
                 deleting
@@ -1565,7 +1565,7 @@ nb q "#tag"
 `nb search` / `nb q` automatically searches archived page content:
 
 ```bash
-; nb q "example query"
+❯ nb q "example query"
 [10] 🔖 example.bookmark.md "Example Bookmark (example.com)"
 ------------------------------------------------------------
 5:Lorem ipsum example query.
@@ -1587,21 +1587,21 @@ opened.
 and filter only bookmarks:
 
 ```bash
-; nb bookmark
+❯ nb bookmark
 Add: nb <url> Help: nb help bookmark
 ------------------------------------
 [3] 🔖 🔒 example.bookmark.md.enc
 [2] 🔖 Bookmark Two (example.com)
 [1] 🔖 Bookmark One (example.com)
 
-; nb bookmark list two
+❯ nb bookmark list two
 [2] 🔖 Bookmark Two (example.com)
 ```
 
 Bookmarks are also included in `nb`, `nb ls`, and `nb list`:
 
 ```bash
-; nb
+❯ nb
 home
 ----
 [7] 🔖 Bookmark Three (example.com)
@@ -1617,13 +1617,13 @@ Use the [`--type <type>` / `--<type>`](#ls) option as a filter to display
 only bookmarks:
 
 ```bash
-; nb --type bookmark
+❯ nb --type bookmark
 [7] 🔖 Bookmark Three (example.com)
 [5] 🔖 Bookmark Two (example.net)
 [3] 🔖 🔒 example-encrypted.bookmark.md.enc
 [1] 🔖 Bookmark One (example.com)
 
-; nb --bookmark
+❯ nb --bookmark
 [7] 🔖 Bookmark Three (example.com)
 [5] 🔖 Bookmark Two (example.net)
 [3] 🔖 🔒 example-encrypted.bookmark.md.enc
@@ -1634,7 +1634,7 @@ only bookmarks:
 using any list subcommands:
 
 ```bash
-; nb example.com
+❯ nb example.com
 [7] 🔖 Bookmark Three (example.com)
 [1] 🔖 Bookmark One (example.com)
 ```
@@ -1647,7 +1647,7 @@ and [`nb help bookmark`](#bookmark).
 `bookmark` can also be used with the alias `b`:
 
 ```bash
-; nb b
+❯ nb b
 Add: nb <url> Help: nb help bookmark
 ------------------------------------
 [7] 🔖 Bookmark Three (example.com)
@@ -1655,7 +1655,7 @@ Add: nb <url> Help: nb help bookmark
 [3] 🔖 🔒 example-encrypted.bookmark.md.enc
 [1] 🔖 Bookmark One (example.com)
 
-; nb b example.net
+❯ nb b example.net
 [5] 🔖 Bookmark Two (example.net)
 ```
 
@@ -1723,10 +1723,10 @@ and uses the first one it finds.
 individual command:
 
 ```bash
-; BROWSER=links nb 12 peek
+❯ BROWSER=links nb 12 peek
 # opens the URL from bookmark 12 in links
 
-; BROWSER=w3m nb 12 peek
+❯ BROWSER=w3m nb 12 peek
 # opens the URL from bookmark 12 in w3m
 ```
 
@@ -1787,39 +1787,39 @@ of the same subcommands and options with identical behavior.
 Bookmark a page:
 
 ```bash
-; bookmark https://example.com --tags tag1,tag2
+❯ bookmark https://example.com --tags tag1,tag2
 Added: [3] 🔖 20200101000000.bookmark.md "Example Title (example.com)"
 ```
 List and filter bookmarks with `bookmark` and `bookmark list`:
 
 ```bash
-; bookmark
+❯ bookmark
 Add: bookmark <url> Help: bookmark help
 ---------------------------------------
 [3] 🔖 🔒 example.bookmark.md.enc
 [2] 🔖 Example Two (example.com)
 [1] 🔖 Example One (example.com)
 
-; bookmark list two
+❯ bookmark list two
 [2] 🔖 Example Two (example.com)
 ```
 
 View a bookmark in your terminal web browser:
 
 ```bash
-; bookmark peek 2
+❯ bookmark peek 2
 ```
 
 Open a bookmark in your system's primary web browser:
 
 ```bash
-; bookmark open 2
+❯ bookmark open 2
 ```
 
 Perform a full text search of bookmarks and archived page content:
 
 ```bash
-; bookmark search "example query"
+❯ bookmark search "example query"
 [10] 🔖 example.bookmark.md "Example Bookmark (example.com)"
 ------------------------------------------------------------
 5:Lorem ipsum example query.
@@ -1844,7 +1844,7 @@ Tags added to notes with `nb add --tags` are placed between the title
 and body text:
 
 ```bash
-; nb add --title "Example Title" "Example note content." --tags tag1,tag2
+❯ nb add --title "Example Title" "Example note content." --tags tag1,tag2
 ```
 
 ```markdown
@@ -1859,7 +1859,7 @@ Tags added to bookmarks with `nb <url> --tags` and `nb bookmark <url> --tags`
 are placed in a _Tags_ section:
 
 ```bash
-; nb https://example.com --tags tag1,tag2
+❯ nb https://example.com --tags tag1,tag2
 ```
 
 ```markdown
@@ -1939,7 +1939,7 @@ that share a tag:
 
 ```bash
 # open to a list of items tagged with "#tag2" in the "example" notebook
-; nb browse example: --query "#tag2"
+❯ nb browse example: --query "#tag2"
 ❯nb · example
 
 search: [#tag2               ]
@@ -1949,7 +1949,7 @@ search: [#tag2               ]
 [example:789] Demo Title
 
 # shortcut alias and short option
-; nb br example: -q "#tag2"
+❯ nb br example: -q "#tag2"
 ❯nb · example
 
 search: [#tag2               ]
@@ -2030,7 +2030,7 @@ browsers, including seamlessly browsing to and from the offsite links in
 bookmarks and notes.
 
 ```bash
-; nb browse
+❯ nb browse
 ❯nb · home : +
 
 search: [                    ]
@@ -2054,7 +2054,7 @@ Items are displayed using the same format as `nb` and `nb ls`, including
 automatically paginated to fit the height of the terminal window.
 
 ```bash
-; nb browse example:sample/demo/
+❯ nb browse example:sample/demo/
 ❯nb · example : sample / demo / +
 
 search: [                    ]
@@ -2085,7 +2085,7 @@ for the item, folder, or notebook to `nb browse`:
 
 ```bash
 # open the item titled "Example Title" in the folder named "Sample" in the "example" notebook
-; nb browse example:sample/Example\ Title
+❯ nb browse example:sample/Example\ Title
 ❯nb · example : sample / 987 · ↓ · edit · - | +
 
 Example Title
@@ -2111,7 +2111,7 @@ convenient, distraction-free approach for browsing collections
 of bookmarks.
 
 ```bash
-; nb browse text:formats/markdown/123
+❯ nb browse text:formats/markdown/123
 ❯nb · text : formats / markdown / 123 · ↓ · edit · - | +
 Daring Fireball: Markdown (daringfireball.net)
 
@@ -2161,7 +2161,7 @@ the `edit` link on the item page or by opening the item with
 which automatically resizes the form to fit the current terminal window:
 
 ```bash
-; nb browse text:formats/markdown/123 edit
+❯ nb browse text:formats/markdown/123 edit
 ❯nb · text : formats / markdown / 123 · ↓ · editing · - | +
 
 [# Daring Fireball: Markdown (daringfireball.net)         ]
@@ -2195,7 +2195,7 @@ Pass a notebook, folder, and / or filename selector to create a new
 note in that location:
 
 ```bash
-; nb browse text:formats/ add
+❯ nb browse text:formats/ add
 ❯nb · text : formats / +
 
 [                                                     ]
@@ -2216,7 +2216,7 @@ note in that location:
 with content:
 
 ```bash
-; nb browse add --title "Example Title" --content "Example content." --tags tag1,tag2
+❯ nb browse add --title "Example Title" --content "Example content." --tags tag1,tag2
 ❯nb · home : +
 
 [# Example Title                                      ]
@@ -2239,7 +2239,7 @@ Use the `-` link or [`nb browse delete`](#browse) / [`nb br d`](#browse)
 to delete an item:
 
 ```bash
-; nb browse delete example:4
+❯ nb browse delete example:4
 ❯nb · example : 4 · ↓ · edit · - | +
 
               deleting
@@ -2261,7 +2261,7 @@ option to open `nb browse` to the results page for a search:
 
 ```bash
 # open to a list of items tagged with "#tag2" in the "example" notebook
-; nb browse --query "#tag2"
+❯ nb browse --query "#tag2"
 ❯nb · example
 
 search: [#tag2               ]
@@ -2271,7 +2271,7 @@ search: [#tag2               ]
 [home:789] Demo Title
 
 # using shortcut alias and short option
-; nb br -q "#tag2"
+❯ nb br -q "#tag2"
 ❯nb · example
 
 search: [#tag2               ]
@@ -2320,15 +2320,15 @@ and [selectors](#selectors), providing transparency and consistency between
 
 ```bash
 # edit item with id 123 in the notebook named "example"
-; nb browse edit example:123
+❯ nb browse edit example:123
 http://localhost:6789/example:123?--edit
 
 # add an item titled "Example Title" to the "sample" folder in the "example" notebook
-; nb browse add example:sample/ --title Example\ Title
+❯ nb browse add example:sample/ --title Example\ Title
 http://localhost:6789/example:sample/?--add&--title=Example%20Title
 
 # search the "demo" notebook for "example"
-; nb browse demo: --query example
+❯ nb browse demo: --query example
 http://localhost:6789/demo:?--query=example
 ```
 
@@ -2445,7 +2445,7 @@ To list the items in a folder, pass the folder relative path to
 with a trailing slash:
 
 ```bash
-; nb example/demo/
+❯ nb example/demo/
 home
 ----
 [example/demo/3] Title Three
@@ -2457,14 +2457,14 @@ Folders can also be identified by the folder's id and listed with
 a trailing slash:
 
 ```bash
-; nb list
+❯ nb list
 [1] 📂 example
 
-; nb list 1/
+❯ nb list 1/
 [example/2] 📂 demo
 [example/1] document.md
 
-; nb list 1/2/
+❯ nb list 1/2/
 [example/demo/3] Title Three
 [example/demo/2] Title Two
 [example/demo/1] Title One
@@ -2505,7 +2505,7 @@ nb edit example:sample/demo/3
 [Browse](#-browsing) starting at any folder with [`nb browse`](#browse):
 
 ```bash
-; nb browse example:sample/demo/
+❯ nb browse example:sample/demo/
 ❯nb · example : sample / demo /
 
 search: [                    ]
@@ -2527,7 +2527,7 @@ Items can be pinned so they appear first in `nb`, [`nb ls`](#ls), and
 [`nb browse`](#browse):
 
 ```bash
-; nb
+❯ nb
 home
 ----
 [2] 📌 Title Two
@@ -2540,7 +2540,7 @@ home
 Use [`nb pin`](#pin) and [`nb unpin`](#unpin) to pin and unpin items:
 
 ```bash
-; nb
+❯ nb
 home
 ----
 [5] Title Five
@@ -2549,13 +2549,13 @@ home
 [2] Title Two
 [1] Title One
 
-; nb pin 4
+❯ nb pin 4
 Pinned: [4] four.md "Title Four"
 
-; nb pin 1
+❯ nb pin 1
 Pinned: [1] one.md "Title One"
 
-; nb
+❯ nb
 home
 ----
 [4] 📌 Title Four
@@ -2564,10 +2564,10 @@ home
 [3] Title Three
 [2] Title Two
 
-; nb unpin 4
+❯ nb unpin 4
 Unpinned: [4] four.md "Title Four"
 
-; nb
+❯ nb
 home
 ----
 [1] 📌 Title One
@@ -2599,7 +2599,7 @@ export NB_INDICATOR_PINNED="💖"
 ```
 
 ```bash
-; nb
+❯ nb
 home
 ----
 [1] 💖 Title One
@@ -2667,7 +2667,7 @@ file, followed by each search query match and its line number, with color
 highlighting:
 
 ```bash
-; nb search "example"
+❯ nb search "example"
 [314]  🔖 example.bookmark.md "Example Bookmark (example.com)"
 --------------------------------------------------------------
 1:# Example Bookmark (example.com)
@@ -2683,7 +2683,7 @@ To just print the note information line without the content matches, use
 the `-l` or `--list` option:
 
 ```bash
-; nb search "example" --list
+❯ nb search "example" --list
 [314]  🔖 example.bookmark.md "Example Bookmark (example.com)"
 [2718] example.md "Example Note"
 ```
@@ -2763,7 +2763,7 @@ Searches can be performed within terminal and GUI web browsers using
 `nb browse --query` / `nb br -q`:
 
 ```bash
-; nb browse --query "#example"
+❯ nb browse --query "#example"
 ❯nb · home : +
 
 search: [#example             ]
@@ -2824,7 +2824,7 @@ nb notebooks add example
 `nb` and `nb ls` list the available notebooks above the list of notes:
 
 ```bash
-; nb
+❯ nb
 example · home
 --------------
 [3] Title Three
@@ -2911,7 +2911,7 @@ When a notebook name with colon is called without a subcommand, `nb` runs
 `nb ls` in the specified notebook:
 
 ```bash
-; nb example:
+❯ nb example:
 example · home
 --------------
 [example:3] Title Three
@@ -2924,7 +2924,7 @@ name with colon, then a space, then the URL and bookmark options:
 
 ```bash
 # create a new bookmark in a notebook named "sample"
-; nb sample: https://example.com --tags tag1,tag2
+❯ nb sample: https://example.com --tags tag1,tag2
 ```
 
 Notes can also be moved between notebooks:
@@ -2945,7 +2945,7 @@ in combination with shell history:
 
 ```bash
 # list items in the "example" notebook
-; nb example:
+❯ nb example:
 example · home
 --------------
 [example:3] Title Three
@@ -2953,15 +2953,15 @@ example · home
 [example:1] Title One
 
 # filter list
-; nb example: three
+❯ nb example: three
 [example:3] Title Three
 
 # view item
-; nb example:3 show
+❯ nb example:3 show
 # opens item in `less`
 
 # edit item
-; nb example:3 edit
+❯ nb example:3 edit
 # opens item in $EDITOR
 ```
 
@@ -2977,9 +2977,9 @@ the first two or three characters of the name, then press the \<tab\> key,
 then press \<enter\>:
 
 ```bash
-; nb exa<tab>
+❯ nb exa<tab>
 # completes to "example:"
-; nb example:
+❯ nb example:
 example · home
 --------------
 [example:3] Title Three
@@ -2990,9 +2990,9 @@ example · home
 Scoped notebook commands are also available in tab completion:
 
 ```bash
-; nb exa<tab>
+❯ nb exa<tab>
 # completes to "example:"
-; nb example:hi<tab>
+❯ nb example:hi<tab>
 # completes to "example:history"
 ```
 
@@ -3041,7 +3041,7 @@ When `nb` runs within a local notebook, the local notebook is set as the
 current notebook:
 
 ```bash
-; nb
+❯ nb
 local · example · home
 ----------------------
 [3] Title Three
@@ -3109,16 +3109,16 @@ nb import ../path/to/notebook
 easily turn any directory of existing files into a global `nb` notebook:
 
 ```bash
-; ls
+❯ ls
 example-directory
 
-; nb notebooks init example-directory
+❯ nb notebooks init example-directory
 Initialized local notebook: /home/username/example-directory
 
-; nb notebooks import example-directory
+❯ nb notebooks import example-directory
 Imported notebook: example-directory
 
-; nb notebooks
+❯ nb notebooks
 example-directory
 home
 ```
@@ -3140,7 +3140,7 @@ When a notebook is archived it is not included in [`nb`](#ls) /
 nor synced automatically with [`nb sync --all`](#sync).
 
 ```bash
-; nb
+❯ nb
 example1 · example2 · example3 · [1 archived]
 ---------------------------------------------
 [3] Title Three
@@ -3163,7 +3163,7 @@ Check a notebook's archival status with
 [`nb notebooks status`](#notebooks):
 
 ```bash
-; nb notebooks status example
+❯ nb notebooks status example
 example is archived.
 ```
 
@@ -3380,7 +3380,7 @@ Some imported file types have [indicators](#indicators) to make them easier
 to identify in lists:
 
 ```bash
-; nb
+❯ nb
 home
 ----
 [6] 📖 example-ebook.epub
@@ -3457,7 +3457,7 @@ The settings prompt for a setting can be started by passing the setting
 name or number to [`nb set`](#settings):
 
 ```bash
-; nb set editor
+❯ nb set editor
 [6]  editor
      ------
      The command line text editor used by `nb`.
@@ -3487,29 +3487,29 @@ and value to `nb set`:
 
 ```bash
 # set editor with setting name
-; nb set editor code
+❯ nb set editor code
 EDITOR set to code
 
 # set editor with setting number (6)
-; nb set 6 code
+❯ nb set 6 code
 EDITOR set to code
 
 # set the color theme to blacklight
-; nb set color_theme blacklight
+❯ nb set color_theme blacklight
 NB_COLOR_THEME set to blacklight
 
 # set the default `ls` limit to 10
-; nb set limit 10
+❯ nb set limit 10
 NB_LIMIT set to 10
 ```
 
 Use [`nb settings get`](#settings) to print the value of a setting:
 
 ```bash
-; nb settings get editor
+❯ nb settings get editor
 code
 
-; nb settings get 6
+❯ nb settings get 6
 code
 ```
 
@@ -3517,10 +3517,10 @@ Use [`nb settings unset`](#settings) to unset a setting and revert to
 the default:
 
 ```bash
-; nb settings unset editor
+❯ nb settings unset editor
 EDITOR restored to the default: vim
 
-; nb settings get editor
+❯ nb settings get editor
 vim
 ```
 
@@ -3633,7 +3633,7 @@ View this theme as a complete file:
 Themes can be installed using [`nb plugins`](#plugins):
 
 ```bash
-; nb plugins install https://github.com/xwmx/nb/blob/master/plugins/turquoise.nb-theme
+❯ nb plugins install https://github.com/xwmx/nb/blob/master/plugins/turquoise.nb-theme
 Plugin installed:
 /home/example/.nb/.plugins/turquoise.nb-theme
 ```
@@ -3642,7 +3642,7 @@ Once a theme is installed, use [`nb set color_theme`](#color_theme) to set it
 as the current theme:
 
 ```bash
-; nb set color_theme turquoise
+❯ nb set color_theme turquoise
 NB_COLOR_THEME set to turquoise
 ```
 
@@ -3760,27 +3760,27 @@ Installed plugins can be listed with [`nb plugins`](#plugins), which
 optionally takes a name and prints full paths:
 
 ```bash
-; nb plugins
+❯ nb plugins
 copy.nb-plugin
 example.nb-plugin
 turquoise.nb-theme
 
-; nb plugins copy.nb-plugin
+❯ nb plugins copy.nb-plugin
 copy.nb-plugin
 
-; nb plugins --paths
+❯ nb plugins --paths
 /home/example/.nb/.plugins/copy.nb-plugin
 /home/example/.nb/.plugins/example.nb-plugin
 /home/example/.nb/.plugins/turquoise.nb-theme
 
-; nb plugins turquoise.nb-theme --paths
+❯ nb plugins turquoise.nb-theme --paths
 /home/example/.nb/.plugins/turquoise.nb-theme
 ```
 
 Use [`nb plugins uninstall`](#plugins) to uninstall a plugin:
 
 ```bash
-; nb plugins uninstall example.nb-plugin
+❯ nb plugins uninstall example.nb-plugin
 Plugin successfully uninstalled:
 /home/example/.nb/.plugins/example.nb-plugin
 ```
@@ -3930,10 +3930,10 @@ the contents of the folder. When a trailing slash is omitted, the
 selector refers to the folder itself:
 
 ```bash
-; nb list sample
+❯ nb list sample
 [1] 📂 sample
 
-; nb list sample/
+❯ nb list sample/
 [sample/3] Title Three
 [sample/2] Title Two
 [sample/1] Title One
@@ -4088,7 +4088,7 @@ More complex data can be defined using additional
 [YAML](https://en.wikipedia.org/wiki/YAML)
 capabilities.
 
-### ; `nb` Interactive Shell
+### ❯ `nb` Interactive Shell
 
 `nb` has an interactive shell that can be started with
 [`nb shell`](#shell), `nb -i`, or `nb --interactive`:
@@ -4103,20 +4103,20 @@ __          _
 ------------------
 nb shell started. Enter ls to list notes and notebooks.
 Enter help for usage information. Enter exit to exit.
-nb; ls
+nb❯ ls
 home
 ----
 [3] Example
 [2] Sample
 [1] Demo
 
-nb; edit 3 --content "New content."
+nb❯ edit 3 --content "New content."
 Updated: [3] Example
 
-nb; bookmark https://example.com
+nb❯ bookmark https://example.com
 Added: [4] 🔖 example.bookmark.md "Example Title (example.com)"
 
-nb; ls
+nb❯ ls
 home
 ----
 [4] 🔖 Example Title (example.com)
@@ -4124,10 +4124,10 @@ home
 [2] Sample
 [1] Demo
 
-nb; bookmark url 4
+nb❯ bookmark url 4
 https://example.com
 
-nb; search "example"
+nb❯ search "example"
 [4] example.bookmark.md "Example (example.com)"
 -----------------------------------------------
 1:# Example (example.com)
@@ -4138,7 +4138,7 @@ nb; search "example"
 ------------------------
 1:# Example
 
-nb; exit
+nb❯ exit
 $
 ```
 
