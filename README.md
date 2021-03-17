@@ -2343,11 +2343,11 @@ default behavior of [`nb show`](#show).
 #### `browse` Privacy
 
 `nb browse` is completely local and self-contained within `nb`, from the
-CSS all the way down through the HTTP request parsing and response building,
-with no imports, libraries, frameworks, or third-party code outside of the
-few binary dependencies (`bash`, `git`, `ncat`, `pandoc`), the
-Linux / Unix environment, and the optional [Ace
-editor](#ace-editor).
+CSS and vanilla JavaScript all the way down through the HTTP request
+parsing and response building, with no imports, libraries, frameworks,
+or third-party code outside of the few binary dependencies
+(`bash`, `git`, `ncat`, `pandoc`), the Linux / Unix environment, and
+the optional [Ace editor](#ace-editor).
 
 Terminal web browsers don't use JavaScript, so visits are not visible to
 many web analytics tools. `nb browse` includes a number of additional
