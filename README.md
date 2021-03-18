@@ -1807,13 +1807,13 @@ Add: bookmark <url> Help: bookmark help
 View a bookmark in your terminal web browser:
 
 ```bash
-❯ bookmark peek 2
+bookmark peek 2
 ```
 
 Open a bookmark in your system's primary web browser:
 
 ```bash
-❯ bookmark open 2
+bookmark open 2
 ```
 
 Perform a full text search of bookmarks and archived page content:
