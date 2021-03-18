@@ -16227,8 +16227,8 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
         then
           # TODO: spacing
           # NOTE: add uniform newlines: `sed  '/^$/d' | sed G`
-          pdftotext "${_source_path}" - \
-            | tr -d '\014'                    \
+          pdftotext "${_source_path}" -   \
+            | tr -d '\014'                \
             | _render --from="md" --pandoc --body
         else
           printf "" | _render "${_source_path}" --pandoc --body
