@@ -17715,8 +17715,8 @@ $(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
           git -C "${_notebook_path}" remote get-url origin
         )"
 
-        local _remote_branch=
-        _remote_branch="$(
+        local _current_branch=
+        _current_branch="$(
           git -C "${_notebook_path}" rev-parse --abbrev-ref HEAD
         )"
 
@@ -17724,7 +17724,7 @@ $(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
         then
           printf "%s\\n" "${_remote_url:-}"
         else
-          printf "%s (%s)\\n" "${_remote_url:-}" "${_remote_branch:-}"
+          printf "%s (%s)\\n" "${_remote_url:-}" "${_current_branch:-}"
         fi
       else
         _warn printf "No remote configured.\\n"
