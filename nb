@@ -17571,12 +17571,10 @@ Examples:
   ${_ME} remote remove
 HEREDOC
 _remote() {
-  local _existing_url=
   local _force=0
   local _only_url=0
-  local _remote_exists=0
   local _subcommand=
-  local _url=
+  local _new_remote_url=
 
   local __arg=
   for   __arg in "${@:-}"
@@ -17593,9 +17591,9 @@ _remote() {
         then
           _subcommand="${__arg}"
         elif [[     "${_subcommand}" =~ ^set$|^add$ ]] &&
-             [[ -z  "${_url:-}"                     ]]
+             [[ -z  "${_new_remote_url:-}"          ]]
         then
-          _url="${__arg}"
+          _new_remote_url="${__arg}"
         fi
         ;;
     esac
@@ -17604,10 +17602,21 @@ _remote() {
   local _notebook_path=
   _notebook_path="$(_notebooks current --path)"
 
-  if [[ "$(git -C "${_notebook_path:-}" remote get-url origin 2>/dev/null)" ]]
+  local _current_branch=
+  _current_branch="$(
+    git -C "${_notebook_path}" rev-parse --abbrev-ref HEAD
+  )"
+
+  local _current_remote_url=
+  _current_remote_url="$(
+    git -C "${_notebook_path:-}" remote get-url origin 2>/dev/null || :
+  )"
+
+  local _remote_exists=0
+
+  if [[ -n "${_current_remote_url:-}" ]]
   then
     _remote_exists=1
-    _existing_url="$(git -C "${_notebook_path:-}" remote get-url origin)"
   fi
 
   case "${_subcommand:-}" in
@@ -17618,7 +17627,8 @@ _remote() {
         then
           while true
           do
-            printf "Removing remote: %s\\n" "$(_color_primary "${_existing_url:-}")"
+            printf "Removing remote: %s\\n" \
+              "$(_color_primary "${_current_remote_url:-}")"
 
             local __yn=
             IFS='' read -r -e -d $'\n' -p "\
@@ -17636,24 +17646,25 @@ $(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
           done
         fi
 
-        git -C "${_notebook_path:-}" remote rm origin &&
-          printf "Removed remote: %s\\n"              \
-            "$(_color_primary "${_existing_url:-}")"  &&
+        git -C "${_notebook_path:-}" remote rm origin       &&
+          printf "Removed remote: %s\\n"                    \
+            "$(_color_primary "${_current_remote_url:-}")"  &&
               return 0
       else
         _exit_1 printf "No remote configured.\\n"
       fi
       ;;
     set|add)
-      if [[ -z "${_url:-}" ]]
+      if [[ -z "${_new_remote_url:-}" ]]
       then
         _exit_1 _help "remote"
       fi
 
-      if ((_remote_exists)) && [[ "${_existing_url:-}" == "${_url:-}" ]]
+      if ((_remote_exists)) &&
+         [[ "${_current_remote_url:-}" == "${_new_remote_url:-}" ]]
       then
         _exit_1 printf "Remote already set to: %s\\n" \
-          "$(_color_primary "${_url}")"
+          "$(_color_primary "${_new_remote_url}")"
       fi
 
       if ! ((_force))
@@ -17667,15 +17678,15 @@ $(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
 
             _print_line "Updating remote for: $(_notebooks current --name)"
 
-            printf "From: %s\\n" "${_existing_url}"
-            printf "To:   %s\\n" "$(_color_primary "${_url}")"
+            printf "From: %s\\n" "${_current_remote_url}"
+            printf "To:   %s\\n" "$(_color_primary "${_new_remote_url}")"
           else
             printf "Adding remote to: %s\\n"          \
               "$(_color_primary "$(_notebooks current --name)")"
 
             _print_line "Adding remote to: $(_notebooks current --name)"
 
-            printf "URL: %s\\n" "$(_color_primary "${_url}")"
+            printf "URL: %s\\n" "$(_color_primary "${_new_remote_url}")"
           fi
 
           _print_line "--------------"
@@ -17684,7 +17695,7 @@ $(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
           IFS='' read -r -e -d $'\n' -p "\
 $(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
 
-          case ${__yn} in
+          case "${__yn:-}" in
             [Yy]*)
               break
               ;;
@@ -17703,28 +17714,18 @@ $(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
         _subcommand="set-url"
       fi
 
-      git -C "${_notebook_path}" remote "${_subcommand}" origin "${_url}" &&
-        printf "Remote set to: %s\\n" "$(_color_primary "${_url}")"       &&
+      git -C "${_notebook_path}" remote "${_subcommand}" origin "${_new_remote_url}" &&
+        printf "Remote set to: %s\\n" "$(_color_primary "${_new_remote_url}")"       &&
           return 0
       ;;
     *)
       if ((_remote_exists))
       then
-        local _remote_url=
-        _remote_url="$(
-          git -C "${_notebook_path}" remote get-url origin
-        )"
-
-        local _current_branch=
-        _current_branch="$(
-          git -C "${_notebook_path}" rev-parse --abbrev-ref HEAD
-        )"
-
         if ((_only_url))
         then
-          printf "%s\\n" "${_remote_url:-}"
+          printf "%s\\n" "${_current_remote_url:-}"
         else
-          printf "%s (%s)\\n" "${_remote_url:-}" "${_current_branch:-}"
+          printf "%s (%s)\\n" "${_current_remote_url:-}" "${_current_branch:-}"
         fi
       else
         _warn printf "No remote configured.\\n"
