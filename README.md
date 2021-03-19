@@ -1099,7 +1099,7 @@ Items can be edited within terminal and GUI web browsers using
 [- [[text:formats/org]]                                   ]
 [- [[cli:apps/nb]]                                        ]
 [                                                         ]
-[## Content                                               ]
+[## Tags                                                  ]
 [                                                         ]
 
 [save] · last: 2021-01-01 01:00:00
@@ -2179,7 +2179,7 @@ which automatically resizes the form to fit the current terminal window:
 [- [[text:formats/org]]                                   ]
 [- [[cli:apps/nb]]                                        ]
 [                                                         ]
-[## Content                                               ]
+[## Tags                                                  ]
 [                                                         ]
 
 [save] · last: 2021-01-01 01:00:00
