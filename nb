@@ -1448,6 +1448,9 @@ _get_content() {
   if [[   -z "${_path}" ]]
   then
     return 1
+  elif [[ -d "${_path}" ]]
+  then
+    return 0
   elif [[ -e "${_path}" ]]
   then
 

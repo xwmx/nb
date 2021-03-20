@@ -4,6 +4,22 @@ load test_helper
 
 # `_get_content()` ##############################################################
 
+@test "'_get_content()' skips directories." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder" --type "folder"
+  }
+
+  run "${_NB}" helpers get_content "${NB_DIR}/home/four.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}" -eq 0 ]]
+  [[ -z "${output}"       ]]
+}
+
 @test "'_get_content() --title' does not return first line when no .org title." {
   {
     "${_NB}" init
