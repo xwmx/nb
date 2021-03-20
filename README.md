@@ -2357,7 +2357,8 @@ many web analytics tools. `nb browse` includes a number of additional
 features to enhance privacy and avoid leaking information:
 
 - Page content is cached locally within each bookmark file, making it readable
-  in a terminal or GUI browser without visiting the original website.
+  in a terminal or GUI browser without requesting the page again or
+  needing to be connected to the internet.
 - `<img>` tags in bookmarked content are removed to avoid requests.
 - Outbound links are automatically rewritten to use an
   [exit page redirect](https://geekthis.net/post/hide-http-referer-headers/#exit-page-redirect)
