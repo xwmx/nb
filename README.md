@@ -1887,6 +1887,20 @@ permission.
 [More information\...](https://www.iana.org/domains/example)
 ```
 
+Use `nb --tags`, [`nb ls --tags`](#ls), and [`nb list --tags`](#list) to
+list the tags present in a notebook, folder, or item:
+
+```bash
+# list all tags found in items in the current notebook
+nb --tags
+
+# list all tags found in the folder named "example"
+nb example/--tags
+
+# list all tags in the item with id 123 in the notebook named "sample"
+nb example:123 --tags
+```
+
 Tagged items can be searched with [`nb search` / `nb q`](#search):
 
 ```bash
@@ -2020,7 +2034,7 @@ For more information about identifying items, see [Selectors](#selectors).
 
 Use [`nb browse`](#browse) (shortcut: `nb br`) to browse, view, edit,
 and search linked notes, bookmarks, notebooks, folders, and other items using
-a terminal or GUI web browser.
+terminal and GUI web browsers.
 
 `nb browse` includes an embedded, terminal-first web application that
 renders <a href="#-linking">[[wiki-style links]]</a> and
@@ -2296,9 +2310,9 @@ nb browse sample:123 --gui
 
 ##### Ace Editor
 
-[Ace](https://ace.c9.io/) is a text editor for GUI web browsers that enables
-advanced text editing functionality, including block selection and syntax
-highlighting.
+[Ace](https://ace.c9.io/) is a text editor for GUI web browsers that
+provides advanced text editing functionality, including block selection
+and syntax highlighting.
 
 To use Ace as the editor for `nb browse --gui`, add the following line to
 your `~/.nbrc` file:
