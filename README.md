@@ -1898,7 +1898,7 @@ nb --tags
 nb example/--tags
 
 # list all tags in the item with id 123 in the notebook named "sample"
-nb example:123 --tags
+nb sample:123 --tags
 ```
 
 Tagged items can be searched with [`nb search` / `nb q`](#search):
