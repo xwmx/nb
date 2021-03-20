@@ -4,14 +4,14 @@ load test_helper
 
 # `_get_content()` ##############################################################
 
-@test "'_get_content()' skips directories." {
+@test "'_get_content()' skips folders." {
   {
     "${_NB}" init
 
     "${_NB}" add "Example Folder" --type "folder"
   }
 
-  run "${_NB}" helpers get_content "${NB_DIR}/home/four.md"
+  run "${_NB}" helpers get_content "${NB_DIR}/home/Example Folder"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
