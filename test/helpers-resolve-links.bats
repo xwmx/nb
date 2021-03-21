@@ -150,6 +150,8 @@ HEREDOC
       "${NB_DIR}/home/Sample Folder/Sample Nested File One.md"
 
     [[ "$(cat "${_html_file_path}")" =~ \<h1\ id=\"sample-nested-title-one ]]
+
+    printf "\\n#tag8 #tag9\\n" >> "${_html_file_path}"
   }
 
   run "${_NB}" helpers resolve_links    \
@@ -197,6 +199,12 @@ HEREDOC
 
   printf "%s\\n" "${output}" | grep -q  \
 "<a.* href=\"http://localhost:6789?url=https%3A%2F%2Ftest.test\">Example Outbound Link Two</a> •</p>"
+
+  printf "%s\\n" "${output}" | grep -q  \
+"<a href=\"http://localhost:6789/home:?--per-page=2&--columns=70&--query=%23tag8\">#tag8</a>"
+
+  printf "%s\\n" "${output}" | grep -q  \
+"<a href=\"http://localhost:6789/home:?--per-page=2&--columns=70&--query=%23tag9\">#tag9</a>"
 }
 
 @test "'_resolve_links --browse' resolves [[wiki-style links]], tags, and outbound links in partial .html files to .html links to local web server URLs." {

@@ -9242,9 +9242,9 @@ _resolve_links() {
       then
         if grep -q "<\/body>" "${_input_temp_file_path}"
         then
-          sed -E -e "/<body>/,/<\/body>/ s/([>|\ ])\#([A-Za-z0-9_\-]+)/\1${_pattern}/g"
+          sed -E -e "/<body>/,/<\/body>/ s/(^|[>|\ ])\#([A-Za-z0-9_\-]+)/\1${_pattern}/g"
         else
-          sed -E -e "s/([>|\ ])\#([A-Za-z0-9_\-]+)/\1${_pattern}/g"
+          sed -E -e "s/(^|[>|\ ])\#([A-Za-z0-9_\-]+)/\1${_pattern}/g"
         fi
       else
         sed -E -e "s/(^|[>|\ ])\#([A-Za-z0-9_\-]+)/\1${_pattern}/g"
