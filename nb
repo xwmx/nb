@@ -6892,7 +6892,8 @@ HEREDOC
 
     local _notebook_name=
 
-    if [[ "${_notebook_path}" == "${_LOCAL_NOTEBOOK_PATH:-}" ]]
+    if [[   "${_notebook_path}"   == "${_LOCAL_NOTEBOOK_PATH:-}"  ]] ||
+       [[ ! "${_notebook_path:-}" =~ ^${NB_DIR}                   ]]
     then
       _notebook_name="local"
     else

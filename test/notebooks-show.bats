@@ -2,40 +2,73 @@
 
 load test_helper
 
-# `notebooks show` ############################################################
+# local #######################################################################
 
-@test "'notebooks show <notebook>:<folder-id>/<filename> --path' exits with status 0 and prints path." {
-  {
-    "${_NB}" init
-    "${_NB}" notebooks add "Example Notebook"
-    "${_NB}" add  "Example Notebook:Sample Folder/Example File.md"  \
-      --title     "Example Title"                                   \
-      --content   "Example content."
-  }
-
-  run "${_NB}" notebooks show "Example Notebook:1/Example File.md" --path
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[    "${status}"     -eq 0                           ]]
-  [[    "${#lines[@]}"  =~  1                           ]]
-  [[    "${lines[0]}"   =~  ${NB_DIR}/Example\ Notebook ]]
-}
-
-@test "'notebooks show <full-path>' exits with 0 and prints the notebook name." {
+@test "'notebooks show <local-full-path> --name' exits with 0 and prints 'local'." {
   {
     "${_NB}" init
     "${_NB}" notebooks add one
+
+    "${_NB}" notebooks init "${_TMP_DIR}/example-local"
+
+    cd "${_TMP_DIR}/example-local"
+
+    [[ "$(pwd)" == "${_TMP_DIR}/example-local" ]]
   }
 
-  run "${_NB}" notebooks show "${NB_DIR}/one"
+  run "${_NB}" notebooks show "${_TMP_DIR}/example-local" --name
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0      ]]
-  [[ "${output}" == "one" ]]
+  [[ "${status}"  -eq 0       ]]
+  [[ "${output}"  ==  "local" ]]
+}
+
+@test "'notebooks show <local-full-path> --name' exits with 0 and prints 'local' when not local." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add one
+
+    "${_NB}" notebooks init "${_TMP_DIR}/example-local"
+  }
+
+  run "${_NB}" notebooks show "${_TMP_DIR}/example-local" --name
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0       ]]
+  [[ "${output}"  ==  "local" ]]
+}
+
+@test "'notebooks show <local-item-full-path> --name' exits with 0 and prints 'local' when not local." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add one
+
+    "${_NB}" notebooks init "${_TMP_DIR}/example-local"
+
+    cd "${_TMP_DIR}/example-local"
+
+    [[ "$(pwd)" == "${_TMP_DIR}/example-local" ]]
+
+    "${_NB}" add "Example Folder/Sample Folder/example-local.md" --content "Example local content."
+
+    cd "${_TMP_DIR}"
+
+    [[ "$(pwd)" == "${_TMP_DIR}" ]]
+  }
+
+  run "${_NB}" notebooks show                                                 \
+    "${_TMP_DIR}/example-local/Example Folder/Sample Folder/example-local.md" \
+    --name
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0       ]]
+  [[ "${output}"  ==  "local" ]]
 }
 
 @test "'notebooks show <local-full-path> --path' exits with 0 and prints the local notebook path." {
@@ -76,7 +109,7 @@ load test_helper
   [[ "${output}" == "${_TMP_DIR}/example-local" ]]
 }
 
-@test "'notebooks show <local-full-path> --path' exits with 0 and prints the local notebook item path when not local." {
+@test "'notebooks show <local-item-full-path> --path' exits with 0 and prints the local notebook item path when not local." {
   {
     "${_NB}" init
     "${_NB}" notebooks add one
@@ -102,6 +135,42 @@ load test_helper
 
   [[ ${status} -eq 0                            ]]
   [[ "${output}" == "${_TMP_DIR}/example-local" ]]
+}
+
+# `notebooks show` ############################################################
+
+@test "'notebooks show <notebook>:<folder-id>/<filename> --path' exits with status 0 and prints path." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" add  "Example Notebook:Sample Folder/Example File.md"  \
+      --title     "Example Title"                                   \
+      --content   "Example content."
+  }
+
+  run "${_NB}" notebooks show "Example Notebook:1/Example File.md" --path
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 0                           ]]
+  [[    "${#lines[@]}"  =~  1                           ]]
+  [[    "${lines[0]}"   =~  ${NB_DIR}/Example\ Notebook ]]
+}
+
+@test "'notebooks show <full-path>' exits with 0 and prints the notebook name." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add one
+  }
+
+  run "${_NB}" notebooks show "${NB_DIR}/one"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0      ]]
+  [[ "${output}" == "one" ]]
 }
 
 @test "'notebooks show' with no id exits with 1 and prints help." {
