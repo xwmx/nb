@@ -7769,7 +7769,7 @@ _decrypt_file() {
   local _encrypted_path="${1:-}"
   local _password="${2:-}"
 
-  if [[ -z "${_password}" ]]
+  if [[ -z "${_password}"       ]]
   then
     _exit_1 printf "Password required.\\n"
   fi
@@ -7787,7 +7787,7 @@ _decrypt_file() {
   local _file_command_response
   _file_command_response="$(file "${_encrypted_path}")"
 
-  if [[ "${_file_command_response}" =~ GPG|PGP ]]
+  if [[   "${_file_command_response}" =~ GPG|PGP ]]
   then
     if _command_exists "gpg"
     then
@@ -7977,7 +7977,7 @@ Can't edit archives. Export archive and expand to edit.\\n"
   shopt -s nocasematch
 
   if ((_wait)) &&
-     [[ "${EDITOR}" =~ gvim|mvim ]]
+     [[   "${EDITOR}" =~ gvim|mvim      ]]
   then
     _editor_command="${_editor_command} -f"
   elif ((_wait)) &&
@@ -8039,7 +8039,7 @@ _encrypt_file() {
     _exit_1 printf "Encrypted and unencrypted paths required.\\n"
   fi
 
-  if [[ "${NB_ENCRYPTION_TOOL}" == "gpg" ]]
+  if [[   "${NB_ENCRYPTION_TOOL}" == "gpg"      ]]
   then
     printf "%s\\n" "${_password}"     \
       | gpg                           \
@@ -8050,7 +8050,7 @@ _encrypt_file() {
         --cipher-algo AES256          \
         --output "${_encrypted_path}" \
         "${_unencrypted_path}"
-  elif [[ "${NB_ENCRYPTION_TOOL}" == "openssl" ]]
+  elif [[ "${NB_ENCRYPTION_TOOL}" == "openssl"  ]]
   then
     openssl enc                       \
       -aes-256-cbc                    \
