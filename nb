@@ -9238,14 +9238,10 @@ _resolve_links() {
         *)    _pattern="\#\\2"                                                ;;
       esac
 
-      if [[ "${_input_type:-}" == "html" ]]
+      if [[ "${_input_type:-}" == "html" ]] &&
+         grep -q "<\/body>" "${_input_temp_file_path}"
       then
-        if grep -q "<\/body>" "${_input_temp_file_path}"
-        then
-          sed -E -e "/<body>/,/<\/body>/ s/(^|[>|\ ])\#([A-Za-z0-9_\-]+)/\1${_pattern}/g"
-        else
-          sed -E -e "s/(^|[>|\ ])\#([A-Za-z0-9_\-]+)/\1${_pattern}/g"
-        fi
+        sed -E -e "/<body>/,/<\/body>/ s/(^|[>|\ ])\#([A-Za-z0-9_\-]+)/\1${_pattern}/g"
       else
         sed -E -e "s/(^|[>|\ ])\#([A-Za-z0-9_\-]+)/\1${_pattern}/g"
       fi
