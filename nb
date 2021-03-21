@@ -3714,6 +3714,12 @@ _index() {
   local _index_path="${_folder_path}/.index"
   local _notebook_path="${NB_NOTEBOOK_PATH}"
 
+  if [[ ! "${_folder_path:-}" =~ ^${NB_NOTEBOOK_PATH} ]]
+  then
+    local _notebook_and_relative_path="${_folder_path#${NB_DIR}/}"
+    _notebook_path="${NB_DIR}/${_notebook_and_relative_path%%/*}"
+  fi
+
   if [[ ! -e "${_index_path}"             ]] &&
      [[ ! "${_subcommand}" == "rebuild"   ]] &&
      [[ ! "${_subcommand}" == "reconcile" ]]
