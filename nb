@@ -3711,10 +3711,8 @@ _index() {
 
   _folder_path="${_folder_path:-"${NB_NOTEBOOK_PATH}"}"
 
-  local _notebook_and_relative_path="${_folder_path#${NB_DIR}/}"
-  local _notebook_path="${NB_DIR}/${_notebook_and_relative_path%%/*}"
-
   local _index_path="${_folder_path}/.index"
+  local _notebook_path="${NB_NOTEBOOK_PATH}"
 
   if [[ ! -e "${_index_path}"             ]] &&
      [[ ! "${_subcommand}" == "rebuild"   ]] &&
@@ -9982,6 +9980,8 @@ _add() {
       _target_folder_relative_path="${_resolved_selector_folder_relative_path:-}/${_target_folder_relative_path}"
     fi
   fi
+
+  _target_folder_relative_path="${_target_folder_relative_path%/}"
 
   # Target
   # ------

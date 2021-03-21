@@ -2,6 +2,50 @@
 
 load test_helper
 
+# local #######################################################################
+
+@test "'add <selector-with-folder-and-filename>' adds to local notebook." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks init "${_TMP_DIR}/Example Local"
+
+    cd "${_TMP_DIR}/Example Local"
+
+    [[ "$(pwd)" == "${_TMP_DIR}/Example Local" ]]
+
+  }
+
+  run "${_NB}" add  "Example Folder/Sample Folder/Demo Folder/Example File.md"  \
+    --title         "Title One"                                                 \
+    --content       "Content one."
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0 ]]
+
+  [[ -f "${_TMP_DIR}/Example Local/Example Folder/Sample Folder/Demo Folder/Example File.md" ]]
+
+  cat "${_TMP_DIR}/Example Local/Example Folder/Sample Folder/Demo Folder/Example File.md"
+
+  diff                                                                                          \
+    <(cat "${_TMP_DIR}/Example Local/Example Folder/Sample Folder/Demo Folder/Example File.md") \
+    <(printf "# Title One\\n\\nContent one.\\n")
+
+  cd "${_TMP_DIR}/Example Local" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  [[ "${output}" =~ \
+       \ .*Example\ Folder/Sample\ Folder/Demo\ Folder/Example\ File.md ]]
+  [[ "${output}" =~ \
+       Added:\ .*[.*Example\ Folder/Sample\ Folder/Demo\ Folder/1.*]    ]]
+}
+
 # arguments ##################################################################
 
 @test "'add <selector-with-folder>/ --filename <relative-path> --folder <notebook> <folder> <content>' (slash) creates file at <selector-with-folder>/<relative-path> containing <notebook>, <folder>, and <content> as content." {
