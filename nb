@@ -8814,18 +8814,18 @@ textarea,
 .ace-twilight .ace_heading,
 .ace-twilight .ace_markup.ace_heading,
 .ace-twilight .ace_support.ace_constant {
-  color: #9191a1;
+  color:              #9191a1;
 }
 
 .ace-twilight .ace_list,
 .ace-twilight .ace_markup.ace_list,
 .ace-twilight .ace_storage,
 .ace-twilight .ace_string.ace_strong {
-  color: #F9EE98;
+  color:              #F9EE98;
 }
 
 .ace-twilight .ace_string {
-  color: ${_color_primary_hex};
+  color:              ${_color_primary_hex};
 }
 
 div.sourceCode {

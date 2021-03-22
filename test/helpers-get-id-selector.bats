@@ -92,8 +92,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 0         ]]
-  [[   "${#lines[@]}" ==  1         ]]
+  [[   "${status}"    -eq 0               ]]
+  [[   "${#lines[@]}" ==  1               ]]
 
   [[   "${lines[0]}"  ==  "local:1/1/1/1" ]]
 }
@@ -249,8 +249,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 0         ]]
-  [[   "${#lines[@]}" ==  1         ]]
+  [[   "${status}"    -eq 0               ]]
+  [[   "${#lines[@]}" ==  1               ]]
 
   [[   "${lines[0]}"  ==  "local:1/1/1/1" ]]
 }
@@ -273,10 +273,10 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 0         ]]
-  [[   "${#lines[@]}" ==  1         ]]
+  [[   "${status}"    -eq 0               ]]
+  [[   "${#lines[@]}" ==  1               ]]
 
-  [[   "${lines[0]}"  ==  "home:1/1/1/1" ]]
+  [[   "${lines[0]}"  ==  "home:1/1/1/1"  ]]
 }
 
 # conflicting id / name #######################################################
