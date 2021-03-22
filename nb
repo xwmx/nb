@@ -1651,6 +1651,7 @@ _get_id_selector() {
   local _id_selector=
   local _folder_path=
   local _notebook_name=
+  local _notebook_path=
   local _relative_path=
   local _selector_relative_path=
   local _selector="${1:-}"
@@ -1660,24 +1661,38 @@ _get_id_selector() {
 
   local _always_include_notebook=0
 
-  if [[ "${2:-}" == "--notebook"  ]]
+  if [[ "${2:-}" == "--notebook"        ]]
   then
     _always_include_notebook=1
   fi
 
-  if [[ "${_selector:-}" =~ /$    ]]
+  if [[ "${_selector:-}" =~ /$          ]]
   then
     _trailing_slash=1
   fi
 
-  if [[ "${_selector:-}" =~ ^/    ]]
+  if [[ "${_selector:-}" =~ ^/          ]]
   then # selector is full path
-    local _path_with_notebook="${_selector#${NB_DIR}/}"
-    _notebook_name="${_path_with_notebook%%/*}"
-
-    if [[ "${_path_with_notebook:-}" =~ / ]]
+    if [[ "${_selector}" =~ ^${NB_DIR}  ]]
     then
-      _selector_relative_path="${_path_with_notebook#*/}"
+      local _path_with_notebook="${_selector#${NB_DIR}/}"
+      _notebook_name="${_path_with_notebook%%/*}"
+      _notebook_path="${NB_DIR}/${_notebook_name}"
+
+      if [[ "${_path_with_notebook:-}" =~ / ]]
+      then
+        _selector_relative_path="${_path_with_notebook#*/}"
+      fi
+    else
+      _notebook_name="local"
+
+      _notebook_path="$(
+        cd "${_selector%/*}"    &&
+          __set_notebook_paths  &&
+          _notebooks current --path --no-color
+      )"
+
+      _selector_relative_path="${_selector#${_notebook_path}/}"
     fi
   else
     if [[ "${_selector:-}" =~ :   ]]
@@ -1689,18 +1704,33 @@ _get_id_selector() {
     fi
   fi
 
+  if [[ -z "${_notebook_path:-}"  ]]
+  then
+    if [[ "${_notebook_name:-}" == "local" ]]
+    then
+      _notebook_path="$(_notebooks current --path --no-color)"
+    else
+      _notebook_path="${NB_DIR}/${_notebook_name}"
+    fi
+  fi
+
   local _parent_folder_path=
 
   if [[ -n "${_notebook_name:-}"  ]]
   then
     _id_selector+="${_notebook_name}:"
-    _parent_folder_path="${NB_DIR}/${_notebook_name}"
+    _parent_folder_path="${_notebook_path:-}"
   else
     _parent_folder_path="$(_notebooks current --path)"
 
     if ((_always_include_notebook))
     then
-      _id_selector+="${_parent_folder_path##*/}:"
+      if _notebooks current --local
+      then
+        _id_selector+="local:"
+      else
+        _id_selector+="${_parent_folder_path##*/}:"
+      fi
     fi
   fi
 
