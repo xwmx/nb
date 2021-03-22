@@ -8461,6 +8461,7 @@ _render() {
       'a8a8a8' 'b2b2b2' 'bcbcbc' 'c6c6c6' 'd0d0d0' 'dadada' 'e4e4e4' 'eeeeee'
     )
 
+    local _color_dim_hex="#626480"
     local _color_primary_hex="#7593eb"
     # TODO
     # local _color_secondary_hex=
@@ -8705,7 +8706,7 @@ header {
   vertical-align:     top;
 }
 
-.dim        {         color: #626480;               }
+.dim        {         color: ${_color_dim_hex};     }
 .identifier {         color: ${_color_primary_hex}; }
 
 #search {
@@ -8895,35 +8896,39 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ffcfaf; } /* Alert */
-code span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
-code span.at { } /* Attribute */
-code span.bn { color: #dca3a3; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #f0dfaf; } /* ControlFlow */
-code span.ch { color: #dca3a3; } /* Char */
-code span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
-code span.co { color: #7f9f7f; } /* Comment */
-code span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
-code span.do { color: #7f9f7f; } /* Documentation */
-code span.dt { color: #dfdfbf; } /* DataType */
-code span.dv { color: #dcdccc; } /* DecVal */
-code span.er { color: #c3bf9f; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #c0bed1; } /* Float */
-code span.fu { color: #efef8f; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #7f9f7f; font-weight: bold; } /* Information */
-code span.kw { color: #f0dfaf; } /* Keyword */
-code span.op { color: #f0efd0; } /* Operator */
-code span.ot { color: #efef8f; } /* Other */
-code span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
-code span.sc { color: #dca3a3; } /* SpecialChar */
-code span.ss { color: #93a5cc; } /* SpecialString */
-code span.st { color: #93a5cc; } /* String */
-code span.va { } /* Variable */
-code span.vs { color: #93a5cc; } /* VerbatimString */
-code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
+/*
+ * #93a5cc #ffcfaf #7f9f7f #dca3a3 #f0dfaf #dfdfbf #dcdccc #c3bf9f #c0bed1
+ * #efef8f #b7bcd8 #cccc96 #9fa7d6
+ * /
+code span.al { color: #ffcfaf;                                    } /* Alert */
+code span.an { color: #7f9f7f;                font-weight: bold;  } /* Annotation */
+code span.at {                                                    } /* Attribute */
+code span.bn { color: #dca3a3;                                    } /* BaseN */
+code span.bu {                                                    } /* BuiltIn */
+code span.cf { color: ${_color_primary_hex};                      } /* ControlFlow */
+code span.ch { color: #8987a0;                                    } /* Char */
+code span.cn { color: #8987a0;                font-weight: bold;  } /* Constant */
+code span.co { color: ${_color_dim_hex};                          } /* Comment */
+code span.cv { color: #7f9f7f;                font-weight: bold;  } /* CommentVar */
+code span.do { color: ${_color_dim_hex};                          } /* Documentation */
+code span.dt { color: #cccc96;                                    } /* DataType */
+code span.dv { color: #dcdccc;                                    } /* DecVal */
+code span.er { color: #cccc96;                                    } /* Error */
+code span.ex {                                                    } /* Extension */
+code span.fl { color: #c0bed1;                                    } /* Float */
+code span.fu { color: ${_color_primary_hex};                      } /* Function */
+code span.im {                                                    } /* Import */
+code span.in { color: #7f9f7f;                font-weight: bold;  } /* Information */
+code span.kw { color: ${_color_primary_hex};                      } /* Keyword */
+code span.op { color: #f0efd0;                                    } /* Operator */
+code span.ot { color: #cccc96;                                    } /* Other */
+code span.pp { color: #ffcfaf;                font-weight: bold;  } /* Preprocessor */
+code span.sc { color: #8987a0;                                    } /* SpecialChar */
+code span.ss { color: #9fa7d6;                                    } /* SpecialString */
+code span.st { color: #9fa7d6;                                    } /* String */
+code span.va {                                                    } /* Variable */
+code span.vs { color: #9fa7d6;                                    } /* VerbatimString */
+code span.wa { color: #93a5cc;                font-weight: bold;  } /* Warning */
 </style>
 
 <script>
