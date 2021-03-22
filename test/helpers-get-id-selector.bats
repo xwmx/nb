@@ -98,6 +98,69 @@ load test_helper
   [[   "${lines[0]}"  ==  "local:1/1/1/1" ]]
 }
 
+@test "'helpers get_id_selector /<notebook-path>/<folder>/<folder>/<folder>/<filename>' exits with 0 and prints id selector without notebook." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks init "${_TMP_DIR}/Example Local"
+
+    cd "${_TMP_DIR}/Example Local"
+
+    [[ "$(pwd)" == "${_TMP_DIR}/Example Local" ]]
+
+    "${_NB}" add  "Example Folder/Sample Folder/Demo Folder/Example File.md"  \
+      --title     "Title One"                                                 \
+      --content   "Content one."
+
+    [[ -d "${_TMP_DIR}/Example Local/Example Folder"        ]]
+    [[ -f "${_TMP_DIR}/Example Local/Example Folder/.index" ]]
+  }
+
+  run "${_NB}" helpers                                                \
+    get_id_selector                                                   \
+    "${_TMP_DIR}/Example Local/Example Folder/Sample Folder/Demo Folder/Example File.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0               ]]
+  [[   "${#lines[@]}" ==  1               ]]
+
+  [[   "${lines[0]}"  ==  "local:1/1/1/1" ]]
+}
+
+@test "'helpers get_id_selector /<notebook-path>/<folder>/<folder>/<folder>/<filename> --notebook' exits with 0 and prints id selector with notebook." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks init "${_TMP_DIR}/Example Local"
+
+    cd "${_TMP_DIR}/Example Local"
+
+    [[ "$(pwd)" == "${_TMP_DIR}/Example Local" ]]
+
+    "${_NB}" add  "Example Folder/Sample Folder/Demo Folder/Example File.md"  \
+      --title     "Title One"                                                 \
+      --content   "Content one."
+
+    [[ -d "${_TMP_DIR}/Example Local/Example Folder"        ]]
+    [[ -f "${_TMP_DIR}/Example Local/Example Folder/.index" ]]
+  }
+
+  run "${_NB}" helpers                                                                    \
+    get_id_selector                                                                       \
+    "${_TMP_DIR}/Example Local/Example Folder/Sample Folder/Demo Folder/Example File.md"  \
+    --notebook
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0               ]]
+  [[   "${#lines[@]}" ==  1               ]]
+
+  [[   "${lines[0]}"  ==  "local:1/1/1/1" ]]
+}
+
 @test "'helpers get_id_selector <folder>/<folder>/<folder>/<filename> --notebook' exits with 0 and prints id selector with notebook." {
   {
     "${_NB}" init
