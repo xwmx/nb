@@ -8808,27 +8808,6 @@ textarea,
   background:         none;
 }
 
-.ace-twilight .ace_constant,
-.ace-twilight .ace_constant.ace_character,
-.ace-twilight .ace_constant.ace_character.ace_escape,
-.ace-twilight .ace_constant.ace_other,
-.ace-twilight .ace_heading,
-.ace-twilight .ace_markup.ace_heading,
-.ace-twilight .ace_support.ace_constant {
-  color:              #9191a1;
-}
-
-.ace-twilight .ace_list,
-.ace-twilight .ace_markup.ace_list,
-.ace-twilight .ace_storage,
-.ace-twilight .ace_string.ace_strong {
-  color:              #F9EE98;
-}
-
-.ace-twilight .ace_string {
-  color:              ${_color_primary_hex};
-}
-
 div.sourceCode {
   background-color:   transparent;
 }
@@ -8861,9 +8840,41 @@ div.hanging-indent {
 span.smallcaps        { font-variant: small-caps;   }
 span.underline        { text-decoration: underline; }
 ul.task-list          { list-style: none;           }
-</style>
 
-<style>
+/* Ace Syntax */
+
+.ace-twilight .ace_constant,
+.ace-twilight .ace_constant.ace_character,
+.ace-twilight .ace_constant.ace_character.ace_escape,
+.ace-twilight .ace_constant.ace_other,
+.ace-twilight .ace_heading,
+.ace-twilight .ace_markup.ace_heading,
+.ace-twilight .ace_support.ace_constant {
+  color:              #9191a1;
+}
+
+.ace-twilight .ace_list,
+.ace-twilight .ace_markup.ace_list,
+.ace-twilight .ace_storage,
+.ace-twilight .ace_string.ace_strong {
+  color:              #cccc96;
+}
+
+.ace_separator {
+  color:              ${_color_primary_hex};
+}
+
+.ace-twilight .ace_keyword,
+.ace-twilight .ace_meta {
+  color:              ${_color_primary_hex};
+}
+
+.ace-twilight .ace_string {
+  color:              #7290b1;
+}
+
+/* Pandoc Syntax */
+
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
