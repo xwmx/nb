@@ -8898,7 +8898,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }
 /*
  * #93a5cc #ffcfaf #7f9f7f #dca3a3 #f0dfaf #dfdfbf #dcdccc #c3bf9f #c0bed1
- * #efef8f #b7bcd8 #cccc96 #9fa7d6
+ * #efef8f #b7bcd8 #cccc96 #7290b1
  * /
 code span.al { color: #ffcfaf;                                    } /* Alert */
 code span.an { color: #7f9f7f;                font-weight: bold;  } /* Annotation */
@@ -8912,7 +8912,7 @@ code span.co { color: ${_color_dim_hex};                          } /* Comment *
 code span.cv { color: #7f9f7f;                font-weight: bold;  } /* CommentVar */
 code span.do { color: ${_color_dim_hex};                          } /* Documentation */
 code span.dt { color: #cccc96;                                    } /* DataType */
-code span.dv { color: #dcdccc;                                    } /* DecVal */
+code span.dv { color: #cccc96;                                    } /* DecVal */
 code span.er { color: #cccc96;                                    } /* Error */
 code span.ex {                                                    } /* Extension */
 code span.fl { color: #c0bed1;                                    } /* Float */
@@ -8924,10 +8924,10 @@ code span.op { color: #f0efd0;                                    } /* Operator 
 code span.ot { color: #cccc96;                                    } /* Other */
 code span.pp { color: #ffcfaf;                font-weight: bold;  } /* Preprocessor */
 code span.sc { color: #8987a0;                                    } /* SpecialChar */
-code span.ss { color: #9fa7d6;                                    } /* SpecialString */
-code span.st { color: #9fa7d6;                                    } /* String */
+code span.ss { color: #7290b1;                                    } /* SpecialString */
+code span.st { color: #7290b1;                                    } /* String */
 code span.va {                                                    } /* Variable */
-code span.vs { color: #9fa7d6;                                    } /* VerbatimString */
+code span.vs { color: #7290b1;                                    } /* VerbatimString */
 code span.wa { color: #93a5cc;                font-weight: bold;  } /* Warning */
 </style>
 
