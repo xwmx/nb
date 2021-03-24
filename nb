@@ -15494,6 +15494,7 @@ HEREDOC
   _browse_render_container() {
     local _columns="${NB_BROWSE_COLUMNS:-70}"
     local _current_page=1
+    local _local_notebook_path=
     local _pagination_options=()
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
     local _query=
@@ -15507,6 +15508,10 @@ HEREDOC
           _columns="$(_option_get_value "${1:-}" "${2:-}")"
           _pagination_options+=("${1:-}" "${2:?}")
           shift
+          ;;
+        --local)
+          _local_notebook_path="$(_option_get_value "${1:-}" "${2:-}")"
+          _pagination_options+=("${1:-}" "${2:?}")
           ;;
         --page)
           _current_page="${2:?}"
@@ -15567,6 +15572,18 @@ HEREDOC
     if ((_terminal_browser))
     then
       _url_params+="?--per-page=${_per_page}&--columns=${_columns}"
+    fi
+
+    if [[   -n "${_local_notebook_path:-}"  ]]
+    then
+      if [[ -z "${_url_params:-}"           ]]
+      then
+        _url_params+="?"
+      else
+        _url_params+="&"
+      fi
+
+      _url_params+="--local=$(_get_uri --encode "${_local_notebook_path:-}")"
     fi
 
     {
@@ -15676,8 +15693,17 @@ HEREDOC
       _list_count="$(_count "${_target_path}")"
 
       local _current_selector=
-      _current_selector="$(_get_id_selector "${_target_path%/}")"
-      _current_selector="${_current_selector//' '/%20}"
+      local _maybe_local_path=
+
+      if [[ "${_target_path%/}" == "${_local_notebook_path%/}" ]]
+      then
+        _current_selector="local:"
+        _maybe_local_input="\
+<input type=\"hidden\" name=\"--local\"     value=\"${_local_notebook_path}\">${_NEWLINE}"
+      else
+        _current_selector="$(_get_id_selector "${_target_path%/}" || :)"
+        _current_selector="${_current_selector//' '/%20}"
+      fi
 
       local _print_prev=0
 
@@ -15712,7 +15738,7 @@ HEREDOC
 <i></i>
 <input type="hidden" name="--page"      value="${_current_page}">
 <input type="hidden" name="--per-page"  value="${_per_page}">
-</form>
+${_maybe_local_input:-}</form>
 <br>
 HEREDOC
 
@@ -16587,6 +16613,8 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
 
     local _action=
     local _columns=1
+    local _encoded_local_notebook_path=
+    local _local_notebook_path=
     local _page_number=1
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
     local _query=
@@ -16613,6 +16641,15 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
             ;;
           --gui)
             _terminal_browser=0
+            ;;
+          --local=*)
+            _encoded_local_notebook_path="${__parameter#*=}"
+            _local_notebook_path="$(
+              printf "%b" "$(
+                # https://unix.stackexchange.com/a/187256
+                printf "%s\\n" "${_encoded_local_notebook_path//$'\r'}" | sed 's@+@ @g;s@%@\\x@g'
+              )"
+            )"
             ;;
           --page=*)
             _page_number="${__parameter#*=}"
@@ -16682,8 +16719,26 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
 
       return 0
     else
+      if [[ -n "${_encoded_local_notebook_path:-}"  ]]
+      then
+        _render_function_options+=("--local" "${_local_notebook_path:-}")
+        _response_url_params+=("--local=${_encoded_local_notebook_path:-}")
+      fi
+
       local _selector_path=
-      _selector_path="$(_show "${_target_selector%%\?*}" --path 2>/dev/null || :)"
+
+      if [[ "${_target_selector}" =~ ^local:        ]]
+      then
+        _selector_path="$(
+          cd "${_local_notebook_path:-}"  &&
+            __set_notebook_paths          &&
+            _show "${_target_selector%%\?*}" --path --no-color 2>&1 || :
+        )"
+      else
+        _selector_path="$(
+          _show "${_target_selector%%\?*}" --path 2>/dev/null || :
+        )"
+      fi
 
       _render_function_options+=("${_target_selector:-}")
 
@@ -17094,6 +17149,15 @@ HEREDOC
   # build initial request URL parameters and arguments
 
   local _url_params=()
+
+  if _notebooks current --local
+  then
+    local _encoded_local_path=
+    _encoded_local_path="$(_get_uri --encode "$(_notebooks current --path)")"
+
+    _arguments+=("--local" "${_encoded_local_path}")
+    _url_params+=("--local=${_encoded_local_path}")
+  fi
 
   if [[ -n "${_search_query:-}" ]]
   then
