@@ -15693,7 +15693,7 @@ HEREDOC
       _list_count="$(_count "${_target_path}")"
 
       local _current_selector=
-      local _maybe_local_path=
+      local _maybe_local_input=
 
       if [[ "${_target_path%/}" == "${_local_notebook_path%/}" ]]
       then
