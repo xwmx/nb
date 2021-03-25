@@ -9248,15 +9248,17 @@ _resolve_links() {
 
   local _columns="${NB_BROWSE_COLUMNS:-70}"
   local _for_browsing=0
+  local _input_type="html"
+  local _local_notebook_path=
   local _per_page=
   local _terminal=0
-  local _input_type="html"
 
   while ((${#}))
   do
     case "${1:-}" in
       --col*)     _columns="${2:?}"                 && shift  ;;
       --browse)   _for_browsing=1                             ;;
+      --local)    _local_notebook_path="${2:?}"     && shift  ;;
       --per-page) _per_page="${2:?}"                && shift  ;;
       --page)     _option_value_is_present "${2:-}" && shift  ;;
       --terminal) _terminal=1                                 ;;
@@ -9279,6 +9281,19 @@ _resolve_links() {
   if ((_terminal))
   then
     _url_params_pattern="?--per-page=${_per_page:-}\&--columns=${_columns:-}"
+  fi
+
+  if [[ -n "${_local_notebook_path:-}" ]]
+  then
+    local _encoded_local_notebook_path=
+    _encoded_local_notebook_path="$(
+      _get_uri --encode "${_local_notebook_path:-}"
+    )"
+
+    case "${_url_params_pattern:-}" in
+      '') _url_params_pattern+="?--local=${_encoded_local_notebook_path:-}"   ;;
+      *)  _url_params_pattern+="\&--local=${_encoded_local_notebook_path:-}"  ;;
+    esac
   fi
 
   local _input_temp_file_path=
