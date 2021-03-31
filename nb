@@ -16622,7 +16622,7 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
           --local=*)
             _encoded_local_notebook_path="${__parameter#*=}"
             _local_notebook_path="$(
-              _get_uri --encode "${_encoded_local_notebook_path}"
+              _get_uri --decode "${_encoded_local_notebook_path}"
             )"
             ;;
           --page=*)
@@ -16633,7 +16633,7 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
             _render_function_options+=("--per-page" "${_per_page}")
             ;;
           --query=*)
-            _query="$(_get_uri --encode "${__parameter#*=}")"
+            _query="$(_get_uri --decode "${__parameter#*=}")"
             ;;
           --terminal)
             _terminal_browser=1
@@ -17127,9 +17127,9 @@ HEREDOC
   then
     _arguments+=("--query" "${_search_query}")
 
-    local _escaped_query=
-    _escaped_query="$(_get_uri --encode "${_search_query}")"
-    _url_params+=("--query=${_escaped_query}")
+    local _encoded_query=
+    _encoded_query="$(_get_uri --encode "${_search_query}")"
+    _url_params+=("--query=${_encoded_query}")
   fi
 
   if [[ -n "${_action:-}" ]]
