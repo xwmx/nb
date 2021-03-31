@@ -1,5 +1,5 @@
 source "https://rubygems.org"
-ruby '2.7.1'
+ruby '2.7.2'
 # Hello! This is where you manage which Jekyll version is used to run.
 # When you want to use a different version, change it below, save the
 # file and run `bundle install`. Run Jekyll with `bundle exec`, like so:
@@ -34,7 +34,7 @@ gem "wdm", "~> 0.1.1", :platforms => [:mingw, :x64_mingw, :mswin]
 # TODO: Revisit.
 #
 # https://github.com/sparklemotion/nokogiri/security/advisories/GHSA-vr8q-g5c7-m54m
-gem "nokogiri", ">= 1.11.0.rc4"
+gem "nokogiri", ">= 1.11.2"
 
 # Just the Docs
 #
