@@ -8247,24 +8247,10 @@ _get_unique_relative_path() {
 _get_uri() {
   # Usage: _get_uri_decode <string>
   _get_uri_decode() {
-    local _decoding="${1//'%25'/%}"
-    _decoding="${_decoding//'%20'/ }"
-    _decoding="${_decoding//'%22'/\"}"
-    _decoding="${_decoding//'%23'/\#}"
-    _decoding="${_decoding//'%24'/$}"
-    _decoding="${_decoding//'%26'/&}"
-    _decoding="${_decoding//'%2B'/+}"
-    _decoding="${_decoding//'%2C'/,}"
-    _decoding="${_decoding//'%2F'//}"
-    _decoding="${_decoding//'%3A'/:}"
-    _decoding="${_decoding//'%3B'/;}"
-    _decoding="${_decoding//'%3D'/=}"
-    _decoding="${_decoding//'%3F'/?}"
-    _decoding="${_decoding//'%40'/@}"
-    _decoding="${_decoding//'%5B'/[}"
-    local _decoded="${_decoding//'%5D'/]}"
-
-    printf "%s\\n" "${_decoded:-}"
+    printf "%b" "$(
+      # https://unix.stackexchange.com/a/187256
+      printf "%s\\n" "${1//$'\r'}" | sed 's@+@ @g;s@%@\\x@g'
+    )"
   }
 
   # Usage: _get_uri_encode <string>
@@ -15166,29 +15152,15 @@ _browse() {
     do
       case "${__field:-}" in
         content=*)
-          local _decoding_content="${__field#content=}"
-          _decoding_content="$(
-            printf "%b" "$(
-              # https://unix.stackexchange.com/a/187256
-              printf "%s\\n" "${_decoding_content:-}" | sed 's@+@ @g;s@%@\\x@g'
-            )"
-          )"
-          _content="${_decoding_content//$'\r'}"
+          _content="$(_get_uri --decode "${__field#content=}")"
           ;;
         *)
           if [[ "${__field:-}" =~ \= ]]
           then
             _add_options+=("${__field%%=*}")
 
-            local _value="${__field#*=}"
-
-            _value="$(
-              printf "%b" "$(
-                # https://unix.stackexchange.com/a/187256
-                printf "%s\\n" "${_value:-}" | sed 's@+@ @g;s@%@\\x@g'
-              )"
-            )"
-            _value="${_value//$'\r'}"
+            local _value=
+            _value="$(_get_uri --decode "${__field#*=}")"
 
             _add_options+=("${_value:-}")
           else
@@ -15300,16 +15272,10 @@ _browse() {
 
     if [[ "${_message_body:-}" =~ ^content= ]]
     then
-      local _processing_content="${_message_body#content=}"
-      _processing_content="$(
-        printf "%b" "$(
-          # https://unix.stackexchange.com/a/187256
-          printf "%s\\n" "${_processing_content:-}" | sed 's@+@ @g;s@%@\\x@g'
-        )"
-      )"
-      local _processed_content="${_processing_content//$'\r'}"
+      local _content=
+      _content="$(_get_uri --decode "${_message_body#content=}")"
 
-      printf "%s\\n" "${_processed_content:-}" > "${_source_path}"
+      printf "%s\\n" "${_content:-}" > "${_source_path}"
 
       _git checkpoint "${_notebook_path}" \
         "[nb] Edit: ${_source_path#${_notebook_path}/}"
@@ -16604,11 +16570,7 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
       local _target_relative_path_with_notebook="${_request_uri#/--original/}"
 
       _target_relative_path_with_notebook="$(
-        printf "%b" "$(
-          # https://unix.stackexchange.com/a/187256
-          printf "%s\\n" "${_target_relative_path_with_notebook:-}" \
-            | sed 's@+@ @g;s@%@\\x@g'
-        )"
+        _get_uri --decode "${_target_relative_path_with_notebook:-}"
       )"
 
       _browse_respond_with 200 \
@@ -16660,10 +16622,7 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
           --local=*)
             _encoded_local_notebook_path="${__parameter#*=}"
             _local_notebook_path="$(
-              printf "%b" "$(
-                # https://unix.stackexchange.com/a/187256
-                printf "%s\\n" "${_encoded_local_notebook_path//$'\r'}" | sed 's@+@ @g;s@%@\\x@g'
-              )"
+              _get_uri --encode "${_encoded_local_notebook_path}"
             )"
             ;;
           --page=*)
@@ -16674,13 +16633,7 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
             _render_function_options+=("--per-page" "${_per_page}")
             ;;
           --query=*)
-            _query="${__parameter#*=}"
-            _query="$(
-              printf "%b" "$(
-                # https://unix.stackexchange.com/a/187256
-                printf "%s\\n" "${_query//$'\r'}" | sed 's@+@ @g;s@%@\\x@g'
-              )"
-            )"
+            _query="$(_get_uri --encode "${__parameter#*=}")"
             ;;
           --terminal)
             _terminal_browser=1
@@ -16690,12 +16643,8 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
 
             if [[ "${__parameter:-}" =~ \= ]]
             then
-              local _value="${__parameter#*=}"
               _render_function_options+=("$(
-                printf "%b" "$(
-                  # https://unix.stackexchange.com/a/187256
-                  printf "%s\\n" "${_value//$'\r'}" | sed 's@+@ @g;s@%@\\x@g'
-                )"
+                _get_uri --encode "${__parameter#*=}"
               )")
             fi
             ;;

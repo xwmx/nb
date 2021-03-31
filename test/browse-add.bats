@@ -17,6 +17,8 @@ export _S=" "
       "Example Folder/Sample Folder/Example File.md"  \
       --content "Example content."
 
+    [[ -f "${NB_DIR}/home/Example Folder/Sample Folder/Example File.md" ]]
+
     (ncat                                   \
       --exec "${_NB} browse --respond"      \
       --listen                              \
