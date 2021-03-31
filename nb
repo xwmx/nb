@@ -15475,7 +15475,7 @@ HEREDOC
   _browse_render_container() {
     local _columns="${NB_BROWSE_COLUMNS:-70}"
     local _current_page=1
-    local _local_notebook_path=
+    local _encoded_local_notebook_path=
     local _pagination_options=()
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
     local _query=
@@ -15491,7 +15491,7 @@ HEREDOC
           shift
           ;;
         --local)
-          _local_notebook_path="$(_option_get_value "${1:-}" "${2:-}")"
+          _encoded_local_notebook_path="$(_option_get_value "${1:-}" "${2:-}")"
           _pagination_options+=("${1:-}" "${2:?}")
           ;;
         --page)
@@ -15555,16 +15555,16 @@ HEREDOC
       _url_params+="?--per-page=${_per_page}&--columns=${_columns}"
     fi
 
-    if [[   -n "${_local_notebook_path:-}"  ]]
+    if [[   -n "${_encoded_local_notebook_path:-}"  ]]
     then
-      if [[ -z "${_url_params:-}"           ]]
+      if [[ -z "${_url_params:-}"                   ]]
       then
         _url_params+="?"
       else
         _url_params+="&"
       fi
 
-      _url_params+="--local=$(_get_uri --encode "${_local_notebook_path:-}")"
+      _url_params+="--local=${_encoded_local_notebook_path:-}"
     fi
 
     {
@@ -15675,6 +15675,9 @@ HEREDOC
 
       local _current_selector=
       local _maybe_local_input=
+
+      local _local_notebook_path=
+      _local_notebook_path="$(_get_uri --decode "${_encoded_local_notebook_path:-}")"
 
       if [[ "${_target_path%/}" == "${_local_notebook_path%/}" ]]
       then
@@ -16685,7 +16688,7 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
     else
       if [[ -n "${_encoded_local_notebook_path:-}"  ]]
       then
-        _render_function_options+=("--local" "${_local_notebook_path:-}")
+        _render_function_options+=("--local" "${_encoded_local_notebook_path:-}")
         _response_url_params+=("--local=${_encoded_local_notebook_path:-}")
       fi
 
