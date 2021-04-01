@@ -9235,7 +9235,6 @@ _resolve_links() {
   local _columns="${NB_BROWSE_COLUMNS:-70}"
   local _for_browsing=0
   local _input_type="html"
-  local _local_notebook_path=
   local _per_page=
   local _terminal=0
 
@@ -9244,7 +9243,6 @@ _resolve_links() {
     case "${1:-}" in
       --col*)     _columns="${2:?}"                 && shift  ;;
       --browse)   _for_browsing=1                             ;;
-      --local)    _local_notebook_path="${2:?}"     && shift  ;;
       --per-page) _per_page="${2:?}"                && shift  ;;
       --page)     _option_value_is_present "${2:-}" && shift  ;;
       --terminal) _terminal=1                                 ;;
@@ -9269,11 +9267,15 @@ _resolve_links() {
     _url_params_pattern="?--per-page=${_per_page:-}\&--columns=${_columns:-}"
   fi
 
-  if [[ -n "${_local_notebook_path:-}" ]]
+  local _notebook_name="${_notebook_path##*/}"
+
+  if [[ ! "${_notebook_path:-}" =~ ^${NB_DIR} ]]
   then
+    _notebook_name="local"
+
     local _encoded_local_notebook_path=
     _encoded_local_notebook_path="$(
-      _get_uri --encode "${_local_notebook_path:-}"
+      _get_uri --encode "${_notebook_path:-}"
     )"
 
     case "${_url_params_pattern:-}" in
@@ -9296,7 +9298,7 @@ _resolve_links() {
     then
       cat
     else
-      local _replacement_url="http:\/\/localhost:${NB_SERVER_PORT}\/${_notebook_path##*/}:"
+      local _replacement_url="http:\/\/localhost:${NB_SERVER_PORT}\/${_notebook_name}:"
 
       case "${_url_params_pattern:-}" in
         '') _replacement_url+="?--query=%23\\2"                         ;;
@@ -9328,8 +9330,6 @@ _resolve_links() {
 
     if ((_for_browsing)) && [[ "${_input_type:-}" == "html" ]]
     then
-      local _notebook_name="${_notebook_path#${NB_DIR}/}"
-
       local _url_pattern="http:\/\/localhost:${NB_SERVER_PORT}\/\1\2${_url_params_pattern:-}"
       local _replacement_pattern="<a\ href=\"${_url_pattern}\">[[\1\2]]<\/a>"
 
@@ -9385,16 +9385,16 @@ _resolve_links() {
           then
             _link="${__match}"
           else
-            local _notebook_name=
+            local _link_notebook_name=
             local _query_selector=
 
             if [[ "${_selector:-}" =~ : ]] && [[ ! "${_selector:-}" =~ :// ]]
             then
-              _notebook_name="${_selector%%:*}"
+              _link_notebook_name="${_selector%%:*}"
               _query_selector="${_selector}"
             else
-              _notebook_name="${_notebook_path##*/}"
-              _query_selector="${_notebook_name}:${_selector}"
+              _link_notebook_name="${_notebook_name}"
+              _query_selector="${_link_notebook_name}:${_selector}"
             fi
 
             local _selector_path=
