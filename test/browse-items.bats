@@ -4,6 +4,48 @@ load test_helper
 
 export NB_SERVER_PORT=6789
 
+# local notebook ##############################################################
+
+@test "'browse <folder-id>/<id>' with local notebook serves the rendered HTML page with [[wiki-style links]] resolved to internal web server URLs." {
+  {
+    "${_NB}" init
+
+    mkdir -p "${_TMP_DIR}/Local Notebook"
+    cd "${_TMP_DIR}/Local Notebook"
+
+    "${_NB}" notebooks init
+
+    "${_NB}" add  "Example File.md"             \
+      --title     "Example Title"               \
+      --content   "Example content."
+
+    "${_NB}" add  "Example Folder/File One.md"  \
+      --title     "Title One"                   \
+      --content   "Example content. [[Example Title]]"
+
+    sleep 1
+
+    declare _expected_params="?--per-page=.*&--columns=.*&--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
+  }
+
+  run "${_NB}" browse 2/1 --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    ==  0                   ]]
+  [[ "${output}"    =~  \<\!DOCTYPE\ html\> ]]
+
+  printf "%s\\n" "${output}" | grep -q \
+"<h1 id=\"title-one\">Title One</h1>"
+
+  printf "%s\\n" "${output}" | grep -q \
+"<p>Example content. <a.* href=\"http://localhost:6789/local:Example Title${_expected_params}\">"
+
+  printf "%s\\n" "${output}" | grep -q \
+"\[\[Example Title\]\]</a></p>"
+}
+
 # .pdf ########################################################################
 
 @test "'browse' with .pdf file serves the rendered HTML page with [[wiki-style links]] resolved to internal web server URLs." {

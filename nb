@@ -16242,7 +16242,7 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
           _pagination_options+=("${1:-}" "${2:?}")
           shift
           ;;
-        --page)
+        --local|--page)
           _option_value_is_present "${2:-}" && shift
           ;;
         --per-page)
