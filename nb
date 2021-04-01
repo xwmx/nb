@@ -15917,6 +15917,7 @@ HEREDOC
   #   Print an HTML page for editing a text file.
   _browse_render_edit() {
     local _columns="${NB_BROWSE_COLUMNS:-70}"
+    local _encoded_local_notebook_path=
     local _pagination_options=()
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
     local _source_path=
@@ -15927,6 +15928,11 @@ HEREDOC
       case "${1:-}" in
         --col*)
           _columns="$(_option_get_value "${1:-}" "${2:-}")"
+          _pagination_options+=("${1:?}" "${2:?}")
+          shift
+          ;;
+        --local)
+          _encoded_local_notebook_path="$(_option_get_value "${1:-}" "${2:-}")"
           _pagination_options+=("${1:?}" "${2:?}")
           shift
           ;;
@@ -15978,6 +15984,11 @@ HEREDOC
 
       _url_params+="&--columns=${_columns}"
       _text_area_columns="$((_text_area_columns - 3))"
+    fi
+
+    if [[ -n "${_encoded_local_notebook_path:-}" ]]
+    then
+      _url_params="&--local=${_encoded_local_notebook_path}"
     fi
 
     {

@@ -7,6 +7,58 @@ export NB_SERVER_PORT=6789
 # non-breaking space
 export _S=" "
 
+# local notebook ##############################################################
+
+@test "GET to --edit URL with local notebook renders form." {
+  {
+    "${_NB}" init
+
+    mkdir -p "${_TMP_DIR}/Local Notebook"
+    cd "${_TMP_DIR}/Local Notebook"
+
+    "${_NB}" notebooks init
+
+    "${_NB}" add  "Example Folder/File One.js"  \
+      --content   "console.log('example');"
+
+    # shellcheck disable=2129
+    printf "export NB_TESTING=1\\n"               >> "${NBRC_PATH}"
+
+    (ncat                                       \
+      --exec "${_NB} browse --respond"          \
+      --listen                                  \
+      --source-port "6789"                      \
+      2>/dev/null) &
+
+    sleep 1
+  }
+
+  run curl -sS -D - "http://localhost:6789/local:1/1?--edit&--example&-x&abcdefg&--sample=demo-value&--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq 0    ]]
+
+  # Prints output:
+
+  [[    "${lines[0]}"  =~  HTTP/1.0\ 200\ OK                                  ]]
+  [[    "${lines[1]}"  =~  Date:\ .*                                          ]]
+  [[    "${lines[2]}"  =~  Expires:\ .*                                       ]]
+  [[    "${lines[3]}"  =~  Server:\ nb                                        ]]
+  [[    "${lines[4]}"  =~  Content-Type:\ text/html                           ]]
+
+  [[    "${output}"    =~ \
+action=\"/local:1/1\?--edit\&--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook  ]]
+
+  [[    "${output}"    =~ \<input\ type=\"hidden\"\ name=\"--example\"\>      ]]
+  [[    "${output}"    =~ \<input\ type=\"hidden\"\ name=\"-x\"\>             ]]
+  [[    "${output}"    =~ \
+\<input\ type=\"hidden\"\ name=\"--sample\"\ value=\"demo-value\"\>           ]]
+
+  [[ !  "${output}"    =~ \<input\ type=\"hidden\"\ name=\"abcdefg\"\>        ]]
+}
+
 # option parameters ###########################################################
 
 @test "GET to --edit URL with option parameters adds hidden form fields." {
