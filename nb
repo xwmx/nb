@@ -9402,7 +9402,7 @@ _resolve_links() {
 
             local _id_selector=
             _id_selector="$(
-              _get_id_selector "${_notebook_name}:${_selector_path}" 2>/dev/null || :
+              _get_id_selector "${_link_notebook_name}:${_selector_path}" 2>/dev/null || :
             )"
 
             if [[ -n "${_selector#*:}" ]] && [[ -z "${_selector_path:-}" ]]
