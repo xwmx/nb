@@ -130,6 +130,61 @@ load test_helper
 
 # header crumbs ###############################################################
 
+@test "'browse <notebook>:<folder-id>/<folder-id>/<file-id>' with local notebook displays header crumbs with id with file." {
+  {
+    "${_NB}" init
+
+    mkdir -p "${_TMP_DIR}/Local Notebook"
+    cd "${_TMP_DIR}/Local Notebook"
+
+    "${_NB}" notebooks init
+
+    "${_NB}" add  "Example Folder/Sample Folder/File One.md"  \
+      --title     "Example Title"                             \
+      --content   "Example content."
+
+    declare _local_notebook_param="--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
+    declare _expected_params="?${_local_notebook_param}&--per-page=.*&--columns=.*"
+  }
+
+  run "${_NB}" browse local:1/1/1 --header
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    == 0 ]]
+
+  printf "%s\\n" "${output}" | grep -q \
+"<nav class=\"header-crumbs\"><h1><a href=\"http://localhost:6789/${_expected_params}\"><span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> "
+
+  printf "%s\\n" "${output}" | grep -q \
+" <span class=\"dim\">·</span> <a href=\"http://localhost:6789/local:${_expected_params}\">local</a> <span class=\"dim\">:</span> "
+
+  printf "%s\\n" "${output}" | grep -q \
+" <span class=\"dim\">:</span> <a href=\"http://localhost:6789/local:1/${_expected_params}\">Example Folder</a> <span class=\"dim\">/</span> "
+
+  printf "%s\\n" "${output}" | grep -q \
+" <span class=\"dim\">/</span> <a href=\"http://localhost:6789/local:1/1/${_expected_params}\">Sample Folder</a> <span class=\"dim\">/</span> "
+
+  printf "%s\\n" "${output}" | grep -q \
+" <span class=\"dim\">/</span> <span class=\"dim\">1</span> "
+
+  printf "%s\\n" "${output}" | grep -q \
+"1</span> <span class=\"dim\">·</span> <a"
+
+  printf "%s\\n" "${output}" | grep -q \
+"</span> <a.* href=\"http://localhost:6789/--original/local/Example Folder/Sample Folder/File One.md?${_local_notebook_param}\">↓</a>"
+
+  printf "%s\\n" "${output}" | grep -q \
+"<a href=\"http://localhost:6789/local:1/1/1${_expected_params}&--edit\">edit</a> <span class=\"dim\">·</span> <a "
+
+  printf "%s\\n" "${output}" | grep -q \
+"href=\"http://localhost:6789/local:1/1/1${_expected_params}&--delete\">-</a> <span class=\"dim\">\|</span> <a "
+
+  printf "%s\\n" "${output}" | grep -q \
+"href=\"http://localhost:6789/local:1/1/${_expected_params}&--add\">+</a></h1>"
+}
+
 @test "'browse <notebook>:<file-id>' displays header crumbs with id with file." {
   {
     "${_NB}" init

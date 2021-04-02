@@ -16041,6 +16041,7 @@ HEREDOC
     local _action=
     local _bullet="·"
     local _columns="${NB_BROWSE_COLUMNS:-70}"
+    local _encoded_local_notebook_path=
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
     local _selector=
     local _terminal_browser=0
@@ -16052,29 +16053,44 @@ HEREDOC
         --add|--delete|--edit)
           _action="${1#--}"
           ;;
-        --col*)     _columns="${2:?}"                 && shift  ;;
-        --page)     _option_value_is_present "${2:-}" && shift  ;;
-        --per*)     _per_page="${2:?}"                && shift  ;;
-        --terminal) _terminal_browser=1                         ;;
-        --*)        _option_value_is_present "${2:-}" && shift  ;;
-        -*)         :                                           ;;
-        *)          _selector="${1:-}"                          ;;
+        --col*)     _columns="${2:?}"                     && shift  ;;
+        --local)    _encoded_local_notebook_path="${2:?}" && shift  ;;
+        --page)     _option_value_is_present "${2:-}"     && shift  ;;
+        --per*)     _per_page="${2:?}"                    && shift  ;;
+        --terminal) _terminal_browser=1                             ;;
+        --*)        _option_value_is_present "${2:-}"     && shift  ;;
+        -*)         :                                               ;;
+        *)          _selector="${1:-}"                              ;;
       esac
 
       shift
     done
 
+    local _url_params=()
+
+    if [[ -n "${_encoded_local_notebook_path:-}" ]]
+    then
+      _url_params+=("--local=${_encoded_local_notebook_path}")
+    fi
+
     if ((_terminal_browser))
     then
-      local _url_params="?--per-page=${_per_page}&--columns=${_columns}"
-      local _url_params_ext="${_url_params}&"
+      _url_params+=("--per-page=${_per_page}" "--columns=${_columns}")
+    fi
+
+    local _url_param_string=
+    _url_param_string="$(_join "&" "${_url_params[@]:-}")"
+
+    if [[ -n "${_url_param_string:-}" ]]
+    then
+      _url_param_string="?${_url_param_string}"
+      local _url_params_ext="${_url_param_string}&"
     else
-      local _url_params=
       local _url_params_ext="?"
     fi
 
     local _header_content="\
-<a href=\"http://localhost:${NB_SERVER_PORT}/${_url_params:-}\"><span class=\"dim\">❯</span>nb</a>"
+<a href=\"http://localhost:${NB_SERVER_PORT}/${_url_param_string:-}\"><span class=\"dim\">❯</span>nb</a>"
     _header_content+=" <span class=\"dim\">${_bullet}</span>"
 
     if [[ -z "${_selector:-}"       ]]
@@ -16099,7 +16115,7 @@ HEREDOC
       _notebooks select "${_notebook_path}"
 
       _header_content+="\
- <a href=\"http://localhost:${NB_SERVER_PORT}/${_notebook_name//' '/%20}:${_url_params:-}\">${_notebook_name}</a>"
+ <a href=\"http://localhost:${NB_SERVER_PORT}/${_notebook_name//' '/%20}:${_url_param_string:-}\">${_notebook_name}</a>"
       _header_content+=" <span class=\"dim\">:</span>"
 
       local _relative_folder_path=
@@ -16162,7 +16178,7 @@ HEREDOC
           _url_path+="${_selector_folder_ids[i]:-}/"
 
           _header_content+="\
- <a href=\"http://localhost:${NB_SERVER_PORT}/${_url_path}${_url_params:-}\">${_selector_folders[i]}</a>"
+ <a href=\"http://localhost:${NB_SERVER_PORT}/${_url_path}${_url_param_string:-}\">${_selector_folders[i]}</a>"
           _header_content+=" <span class=\"dim\">/</span>"
         done
       fi
@@ -16171,10 +16187,20 @@ HEREDOC
     local _item_path=
     _item_path="$(_show "${_selector:-}" --path 2>/dev/null || :)"
 
-    if [[ -f "${_item_path:-}"          ]]
+    if [[ -f "${_item_path:-}"  ]]
     then
-      local _raw_url="\
-http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
+      local _raw_url="http://localhost:${NB_SERVER_PORT}/--original/"
+
+      if [[ !   "${_item_path:-}" =~ ^${NB_DIR}     ]] &&
+         [[ -n  "${_encoded_local_notebook_path:-}" ]]
+      then
+        local _local_notebook_path=
+        _local_notebook_path="$(_get_uri --decode "${_encoded_local_notebook_path}")"
+
+        _raw_url+="local/${_item_path#${_local_notebook_path}/}?--local=${_encoded_local_notebook_path}"
+      else
+        _raw_url+="${_item_path#${NB_DIR}/}"
+      fi
 
       local _id_selector=
       _id_selector="$(_get_id_selector "${_selector:-}" --notebook)"
@@ -16185,7 +16211,7 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
       if _contains "${_action:-}" "edit" "delete"
       then
         _header_content+="\
- <a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_params:-}\">${_selector_id:-}</a>"
+ <a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_param_string:-}\">${_selector_id:-}</a>"
       elif [[ "${_action:-}" != "add"   ]]
       then
         _header_content+=" <span class=\"dim\">${_selector_id:-}</span>"
@@ -16253,7 +16279,11 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
           _pagination_options+=("${1:-}" "${2:?}")
           shift
           ;;
-        --local|--page)
+        --local)
+          _pagination_options+=("${1:-}" "${2:?}")
+          shift
+          ;;
+        --page)
           _option_value_is_present "${2:-}" && shift
           ;;
         --per-page)
@@ -16577,22 +16607,6 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
       return 0
     fi
 
-    # serve raw files
-
-    if [[ "${_request_uri}"     =~ /--original/.*       ]]
-    then
-      local _target_relative_path_with_notebook="${_request_uri#/--original/}"
-
-      _target_relative_path_with_notebook="$(
-        _get_uri --decode "${_target_relative_path_with_notebook:-}"
-      )"
-
-      _browse_respond_with 200 \
-        "${NB_DIR}/${_target_relative_path_with_notebook}"
-
-      return 0
-    fi
-
     # query string
 
     local _query_string=
@@ -16664,6 +16678,30 @@ http://localhost:${NB_SERVER_PORT}/--original/${_item_path#${NB_DIR}/}"
             ;;
         esac
       done
+    fi
+
+    # serve raw files
+
+    if [[ "${_request_uri}"     =~ /--original/.*       ]]
+    then
+      local _target_relative_path_with_notebook="${_request_uri#/--original/}"
+      _target_relative_path_with_notebook="${_target_relative_path_with_notebook%%\?*}"
+
+      _target_relative_path_with_notebook="$(
+        _get_uri --decode "${_target_relative_path_with_notebook:-}"
+      )"
+
+      if [[ "${_target_relative_path_with_notebook}" =~ ^local/ ]] &&
+         [[ -n "${_local_notebook_path:-}"                      ]]
+      then
+        _browse_respond_with 200 \
+          "${_local_notebook_path:-}/${_target_relative_path_with_notebook#*/}"
+      else
+        _browse_respond_with 200 \
+          "${NB_DIR}/${_target_relative_path_with_notebook}"
+      fi
+
+      return 0
     fi
 
     # prepare response

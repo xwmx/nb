@@ -29,6 +29,8 @@ export _S=" "
     "${_NB}" add  "Example Folder"    \
       --type      "folder"
 
+    declare _expected_param_pattern="--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook\&--per-page=.*"
+
     sleep 1
   }
 
@@ -43,11 +45,11 @@ export _S=" "
   # header crumbs
 
   [[ "${output}"  =~  \
-\<nav\ class=\"header-crumbs\"\>\<h1\>.*\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\"\> ]]
+\<nav\ class=\"header-crumbs\"\>\<h1\>.*\<a.*\ href=\"http://localhost:6789/\?${_expected_param_pattern}\"\> ]]
   [[ "${output}"  =~  \
-href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>   ]]
+href=\"http://localhost:6789/\?${_expected_param_pattern}\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>   ]]
   [[ "${output}"  =~  \
-.*·.*\ \<a.*\ href=\"http://localhost:6789/local:\?--per-page=.*\"\>local\</a\>.*\</h1\>    ]]
+.*·.*\ \<a.*\ href=\"http://localhost:6789/local:\?${_expected_param_pattern}\"\>local\</a\>.*\</h1\>    ]]
 
   # form
 
