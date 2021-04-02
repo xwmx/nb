@@ -9,6 +9,82 @@ export _S=" "
 
 # GET #########################################################################
 
+@test "GET to --delete URL with --local parameter renders form to delete local item." {
+  {
+    "${_NB}" init
+
+    mkdir -p "${_TMP_DIR}/Local Notebook"
+    cd "${_TMP_DIR}/Local Notebook"
+
+    "${_NB}" notebooks init
+
+    "${_NB}" add "Example File.md" --title "Example Title" --content "Example content."
+
+    (ncat                                   \
+      --exec "${_NB} browse --respond"      \
+      --listen                              \
+      --source-port "6789"                  \
+      2>/dev/null) &
+
+    sleep 1
+
+    declare _local_notebook_param="--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
+    declare _expected_param_pattern="${_local_notebook_param}&--per-page=30&--columns=.*"
+  }
+
+  run curl -sS -D - "http://localhost:6789/local:1?--delete&${_local_notebook_param}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[    "${status}"  -eq 0                  ]]
+
+  # Does not delete file:
+
+  diff                                      \
+    <(cat "${_TMP_DIR}/Local Notebook/Example File.md") \
+    <(printf "# Example Title\\n\\nExample content.\\n")
+
+  # Does not create git commit:
+
+  cd "${_TMP_DIR}/Local Notebook" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
+  while [[ -n "$(git status --porcelain)"   ]]
+  do
+    sleep 1
+  done
+  git log | grep -v -q '\[nb\] Delete'
+
+  # Prints output:
+
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 200\ OK                     ]]
+  [[ "${lines[1]}"  =~  Date:\ .*                             ]]
+  [[ "${lines[2]}"  =~  Expires:\ .*                          ]]
+  [[ "${lines[3]}"  =~  Server:\ nb                           ]]
+  [[ "${lines[4]}"  =~  Content-Type:\ text/html              ]]
+
+  [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*local.*\ .*:.*\ .*1 ]]
+
+  printf "%s\\n" "${output}" | grep -q \
+"href=\"http://localhost:6789/?${_expected_param_pattern}\"><span class=\"dim\">❯</span>nb</a> "
+
+  printf "%s\\n" "${output}" | grep -q \
+"<h2 align=\"center\">deleting</h2>"
+
+  printf "%s\\n" "${output}" | grep -q \
+"<p align=\"center\">${_NEWLINE}  <a rel=\"noopener noreferrer\" href=\"http://localhost:6789/local:1?${_expected_param_pattern}\">\[1\] Example\ File.md \"Example Title\"</a>${_NEWLINE}</p>"
+
+  printf "%s\\n" "${output}" | grep -q \
+"action=\"/local:1?--delete&${_expected_param_pattern}\""
+
+  printf "%s\\n" "${output}" | grep -q \
+"value=\"delete\">"
+}
+
 @test "GET to --delete URL with --columns parameter uses value for form URL parameters, and header links." {
   {
     "${_NB}" init

@@ -15818,6 +15818,7 @@ HEREDOC
   #   Print an form for deleting an item
   _browse_render_delete() {
     local _columns="${NB_BROWSE_COLUMNS:-70}"
+    local _encoded_local_notebook_path=
     local _pagination_options=()
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
     local _source_path=
@@ -15827,6 +15828,11 @@ HEREDOC
       case "${1:-}" in
         --col*)
           _columns="$(_option_get_value "${1:-}" "${2:-}")"
+          _pagination_options+=("${1:?}" "${2:?}")
+          shift
+          ;;
+        --local)
+          _encoded_local_notebook_path="$(_option_get_value "${1:-}" "${2:-}")"
           _pagination_options+=("${1:?}" "${2:?}")
           shift
           ;;
@@ -15856,6 +15862,11 @@ HEREDOC
     _id_selector="$(_get_id_selector "${_source_path}")"
 
     local _url_params=
+
+    if [[ -n "${_encoded_local_notebook_path:-}" ]]
+    then
+      _url_params+="&--local=${_encoded_local_notebook_path}"
+    fi
 
     if _contains "--terminal" "${_pagination_options[@]:-}"
     then
