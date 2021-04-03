@@ -16721,7 +16721,7 @@ HEREDOC
 
     # serve raw files
 
-    if [[ "${_request_uri}"     =~ /--original/.*       ]]
+    if [[ "${_request_uri}" =~ /--original/.* ]]
     then
       local _target_relative_path_with_notebook="${_request_uri#/--original/}"
       _target_relative_path_with_notebook="${_target_relative_path_with_notebook%%\?*}"
@@ -16759,7 +16759,7 @@ HEREDOC
       _response_url_params+="&--per-page=${_per_page}"
     fi
 
-    if [[ -n "${_encoded_local_notebook_path:-}"  ]]
+    if [[ -n "${_encoded_local_notebook_path:-}"    ]]
     then
       _render_function_options+=("--local" "${_encoded_local_notebook_path:-}")
       _response_url_params+="&--local=${_encoded_local_notebook_path:-}"
@@ -16775,7 +16775,7 @@ HEREDOC
 
     # respond
 
-    if [[ -z "${_target_selector:-}"  ]]
+    if [[ -z "${_target_selector:-}"                ]]
     then
       _browse_render_notebooks "${_render_function_options[@]:-}" \
         | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
