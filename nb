@@ -16786,9 +16786,11 @@ HEREDOC
 
       if [[ "${_target_selector}" =~ ^local:        ]]
       then
+        [[ -z "${_local_notebook_path:-}" ]]  && _browse_respond_with 400
+
         _selector_path="$(
-          cd "${_local_notebook_path:-}"  &&
-            __set_notebook_paths          &&
+          cd "${_local_notebook_path:-}"      &&
+            __set_notebook_paths              &&
             _show "${_target_selector%%\?*}" --path --no-color 2>&1 || :
         )"
       else
