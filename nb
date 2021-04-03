@@ -8275,6 +8275,7 @@ _get_uri() {
     _encoding="${_encoding//'?'/%3F}"
     _encoding="${_encoding//'@'/%40}"
     _encoding="${_encoding//'['/%5B}"
+    _encoding="${_encoding//'\n'/%0A}"
     local _encoded="${_encoding//']'/%5D}"
 
     printf "%s\\n" "${_encoded:-}"
@@ -15158,6 +15159,7 @@ _browse() {
       case "${__field:-}" in
         content=*)
           _content="$(_get_uri --decode "${__field#content=}")"
+          _content="${_content//$'\r'}"
           ;;
         *)
           if [[ "${__field:-}" =~ \= ]]
@@ -15166,6 +15168,7 @@ _browse() {
 
             local _value=
             _value="$(_get_uri --decode "${__field#*=}")"
+            _value="${_value//$'\r'}"
 
             _add_options+=("${_value:-}")
           else
@@ -15279,6 +15282,7 @@ _browse() {
     then
       local _content=
       _content="$(_get_uri --decode "${_message_body#content=}")"
+      _content="${_content//$'\r'}"
 
       printf "%s\\n" "${_content:-}" > "${_source_path}"
 

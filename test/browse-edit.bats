@@ -142,7 +142,7 @@ action=\"/local:1/1\?--edit\&--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'
     sleep 1
   }
 
-  run curl -sS -D - --data "content=Updated" "http://localhost:6789/home:1?--edit"
+  run curl -sS -D - --data "content=Line%20one.%0A%0ALine%20two." "http://localhost:6789/home:1?--edit"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -155,7 +155,7 @@ action=\"/local:1/1\?--edit\&--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'
 
   diff                                      \
     <(cat "${NB_DIR}/home/Example File.md") \
-    <(printf "Updated\\n")
+    <(printf "Line one.\\n\\nLine two.\\n")
 
   # Creates git commit:
 
