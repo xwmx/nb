@@ -7,6 +7,116 @@ export NB_SERVER_PORT=6789
 # non-breaking space
 export _S=" "
 
+# POST ########################################################################
+
+@test "POST to --delete URL with local notebook deletes the note and redirects."  {
+  {
+    "${_NB}" init
+
+    mkdir -p "${_TMP_DIR}/Local Notebook"
+    cd "${_TMP_DIR}/Local Notebook"
+
+    "${_NB}" notebooks init
+
+    "${_NB}" add "Example File.md" --title "Example Title" --content "Example content."
+
+    (ncat                                   \
+      --exec "${_NB} browse --respond"      \
+      --listen                              \
+      --source-port "6789"                  \
+      2>/dev/null) &
+
+    sleep 1
+  }
+
+  run curl -sS -D - --data  \
+    ""                      \
+    "http://localhost:6789/local:1?--delete&--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[    "${status}"  -eq 0                    ]]
+
+  # Deletes file:
+
+  [[ -z "$(ls "${_TMP_DIR}/Local Notebook")"  ]]
+
+  # Creates git commit:
+
+  cd "${_TMP_DIR}/Local Notebook" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
+  while [[ -n "$(git status --porcelain)"     ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Delete'
+
+  # Prints output:
+
+  declare _expected_param_pattern="--per-page=30\&--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
+
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Found                            ]]
+  [[ "${lines[1]}"  =~  Date:\ .*                                       ]]
+  [[ "${lines[2]}"  =~  Expires:\ .*                                    ]]
+  [[ "${lines[3]}"  =~  Server:\ nb                                     ]]
+  [[ "${lines[4]}"  =~  \
+Location:\ http:\/\/localhost:6789\/local:\?${_expected_param_pattern}  ]]
+}
+
+@test "POST to --delete URL deletes the note and redirects."  {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example File.md" --title "Example Title" --content "Example content."
+
+    (ncat                                   \
+      --exec "${_NB} browse --respond"      \
+      --listen                              \
+      --source-port "6789"                  \
+      2>/dev/null) &
+
+    sleep 1
+  }
+
+  run curl -sS -D - --data "" "http://localhost:6789/home:1?--delete"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[    "${status}"  -eq 0                  ]]
+
+  # Deletes file:
+
+  [[ -z "$(ls "${NB_DIR}/home")" ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
+  while [[ -n "$(git status --porcelain)"   ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Delete'
+
+  # Prints output:
+
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Found                                      ]]
+  [[ "${lines[1]}"  =~  Date:\ .*                                                 ]]
+  [[ "${lines[2]}"  =~  Expires:\ .*                                              ]]
+  [[ "${lines[3]}"  =~  Server:\ nb                                               ]]
+  [[ "${lines[4]}"  =~  Location:\ http:\/\/localhost:6789\/home:\?--per-page=.*  ]]
+}
+
 # GET #########################################################################
 
 @test "GET to --delete URL with --local parameter renders form to delete local item." {
@@ -210,57 +320,6 @@ export _S=" "
 
   printf "%s\\n" "${output}" | grep -q \
 "value=\"delete\">"
-}
-
-# POST ########################################################################
-
-@test "POST to --delete URL deletes the note and redirects."  {
-  {
-    "${_NB}" init
-
-    "${_NB}" add "Example File.md" --title "Example Title" --content "Example content."
-
-    (ncat                                   \
-      --exec "${_NB} browse --respond"      \
-      --listen                              \
-      --source-port "6789"                  \
-      2>/dev/null) &
-
-    sleep 1
-  }
-
-  run curl -sS -D - --data "" "http://localhost:6789/home:1?--delete"
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  # Returns status 0:
-
-  [[    "${status}"  -eq 0                  ]]
-
-  # Deletes file:
-
-  [[ -z "$(ls "${NB_DIR}/home")" ]]
-
-  # Creates git commit:
-
-  cd "${NB_DIR}/home" || return 1
-
-  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
-
-  while [[ -n "$(git status --porcelain)"   ]]
-  do
-    sleep 1
-  done
-  git log | grep -q '\[nb\] Delete'
-
-  # Prints output:
-
-  [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Found                                      ]]
-  [[ "${lines[1]}"  =~  Date:\ .*                                                 ]]
-  [[ "${lines[2]}"  =~  Expires:\ .*                                              ]]
-  [[ "${lines[3]}"  =~  Server:\ nb                                               ]]
-  [[ "${lines[4]}"  =~  Location:\ http:\/\/localhost:6789\/home:\?--per-page=.*  ]]
 }
 
 # CLI #########################################################################

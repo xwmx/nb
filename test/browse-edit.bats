@@ -29,7 +29,9 @@ export _S=" "
     sleep 1
   }
 
-  run curl -sS -D - --data "content=Updated" "http://localhost:6789/local:1?--edit"
+  run curl -sS -D - --data  \
+    "content=Updated"       \
+    "http://localhost:6789/local:1?--edit&--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"

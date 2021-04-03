@@ -1692,7 +1692,12 @@ _get_id_selector() {
           _notebooks current --path --no-color
       )"
 
-      _selector_relative_path="${_selector#${_notebook_path}/}"
+      if [[ "${_selector:-}" == "${_notebook_path:-}" ]]
+      then
+        _selector_relative_path=
+      else
+        _selector_relative_path="${_selector#${_notebook_path}/}"
+      fi
     fi
   else
     if [[ "${_selector:-}" =~ :   ]]
@@ -1708,7 +1713,7 @@ _get_id_selector() {
   then
     if [[ "${_notebook_name:-}" == "local" ]]
     then
-      _notebook_path="$(_notebooks current --path --no-color)"
+      _notebook_path="$(_notebooks --local --path --no-color)"
     else
       _notebook_path="${NB_DIR}/${_notebook_name}"
     fi

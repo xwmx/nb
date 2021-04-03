@@ -4,6 +4,38 @@ load test_helper
 
 # local #######################################################################
 
+@test "'helpers get_id_selector <notebook-full-path> --notebook' in local notebook exits with 0 and prints local notebook selector." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks init "${_TMP_DIR}/Example Local"
+
+    cd "${_TMP_DIR}/Example Local"
+
+    [[ "$(pwd)" == "${_TMP_DIR}/Example Local" ]]
+
+    "${_NB}" add  "Example File.md" \
+      --title     "Title One"       \
+      --content   "Content one."
+
+    [[ -d "${_TMP_DIR}/Example Local"                 ]]
+    [[ -f "${_TMP_DIR}/Example Local/Example File.md" ]]
+  }
+
+  run "${_NB}" helpers              \
+    get_id_selector                 \
+    "${_TMP_DIR}/Example Local"     \
+    --notebook
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0         ]]
+  [[   "${#lines[@]}" ==  1         ]]
+
+  [[   "${lines[0]}"  ==  "local:"  ]]
+}
+
 @test "'helpers get_id_selector <id>/<id>/<id>/<id> --notebook' in local notebook exits with 0 and prints id selector with notebook." {
   {
     "${_NB}" init

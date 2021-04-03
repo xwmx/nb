@@ -67,15 +67,16 @@ HEREDOC
 
   # Prints output:
 
-  [[ "${#lines[@]}" -eq 5                                                                     ]]
+  [[ "${#lines[@]}" -eq 5                                                         ]]
 
   declare _expected_param_pattern="--per-page=30\&--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
 
-  [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Found                                                  ]]
-  [[ "${lines[1]}"  =~  Date:\ .*                                                             ]]
-  [[ "${lines[2]}"  =~  Expires:\ .*                                                          ]]
-  [[ "${lines[3]}"  =~  Server:\ nb                                                           ]]
-  [[ "${lines[4]}"  =~  Location:\ http:\/\/localhost:6789\/Example\ Folder/1\?${_expected_param_pattern}  ]]
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Found                                      ]]
+  [[ "${lines[1]}"  =~  Date:\ .*                                                 ]]
+  [[ "${lines[2]}"  =~  Expires:\ .*                                              ]]
+  [[ "${lines[3]}"  =~  Server:\ nb                                               ]]
+  [[ "${lines[4]}"  =~  \
+Location:\ http:\/\/localhost:6789\/Example\ Folder/1\?${_expected_param_pattern} ]]
 }
 
 @test "GET to --add URL with local notebook renders form." {
