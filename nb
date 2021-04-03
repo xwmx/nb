@@ -16976,9 +16976,14 @@ HEREDOC
       esac
     done
 
-    if [[ -n "${_path:-}" ]]
+    if [[ -n  "${_path:-}"          ]]
     then
-      _response_headers+=("Content-Type: $(file -b --mime-type "${_path}")")
+      if [[   "${_path:-}" =~ \.md$ ]]
+      then
+        _response_headers+=("Content-Type: text/plain")
+      else
+        _response_headers+=("Content-Type: $(file -b --mime-type "${_path}")")
+      fi
 
       # NOTE: Content length appears to be incorrect, since received content
       # is truncated. TODO: Get correct content length.
