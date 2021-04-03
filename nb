@@ -16403,6 +16403,7 @@ HEREDOC
   #   Print an HTML page listing notebooks.
   _browse_render_notebooks() {
     local _columns="${NB_BROWSE_COLUMNS:-70}"
+    local _encoded_local_notebook_path=
     local _pagination_options=()
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
 
@@ -16412,6 +16413,11 @@ HEREDOC
         --col*)
           _columns="$(_option_get_value "${1:-}" "${2:-}")"
           _pagination_options+=("${1:-}" "${2:?}")
+          shift
+          ;;
+        --local)
+          _encoded_local_notebook_path="$(_option_get_value "${1:-}" "${2:-}")"
+          _pagination_options+=("${1:?}" "${2:?}")
           shift
           ;;
         --page)
@@ -16430,15 +16436,21 @@ HEREDOC
       shift
     done
 
-    local _url_params=
+    local _notebook_names=()
+    _notebook_names=($(_notebooks --names --unarchived --no-color))
+
+    local _url_param_string=
+
+    if [[ -n "${_encoded_local_notebook_path:-}" ]]
+    then
+      _notebook_names=("local" "${_notebook_names[@]:-}")
+      _url_param_string+="&--local=${_encoded_local_notebook_path}"
+    fi
 
     if _contains "--terminal" "${_pagination_options[@]:-}"
     then
-      _url_params+="?--per-page=${_per_page}&--columns=${_columns}"
+      _url_param_string+="&--per-page=${_per_page}&--columns=${_columns}"
     fi
-
-    local _notebook_names=()
-    _notebook_names=($(_notebooks --names --unarchived --no-color))
 
     {
       printf "<p>"
@@ -16458,7 +16470,7 @@ HEREDOC
             "<a href=\"http://localhost:%s/%s:%s\">%s</a>"      \
             "${NB_SERVER_PORT}"                                 \
             "${__name//' '/%20}"                                \
-            "${_url_params:-}"                                  \
+            "${_url_param_string/&/?}"                          \
             "${__name//\ /${_NBSP}}"
         else
           printf --                                             \
@@ -16466,7 +16478,7 @@ HEREDOC
             "${_separator}"                                     \
             "${NB_SERVER_PORT}"                                 \
             "${__name//' '/%20}"                                \
-            "${_url_params:-}"                                  \
+            "${_url_param_string/&/?}"                          \
             "${__name//\ /${_NBSP}}"
         fi
 
@@ -16728,8 +16740,16 @@ HEREDOC
     if ((_terminal_browser))
     then
       _render_function_options+=("--terminal")
-      _response_url_params+="?--per-page=${_per_page}"
+      _response_url_params+="&--per-page=${_per_page}"
     fi
+
+    if [[ -n "${_encoded_local_notebook_path:-}"  ]]
+    then
+      _render_function_options+=("--local" "${_encoded_local_notebook_path:-}")
+      _response_url_params+="&--local=${_encoded_local_notebook_path:-}"
+    fi
+
+    _response_url_params="${_response_url_params/&/?}"
 
     local _respond_with_200_arguments=("--standard_input")
 
@@ -16746,12 +16766,6 @@ HEREDOC
 
       return 0
     else
-      if [[ -n "${_encoded_local_notebook_path:-}"  ]]
-      then
-        _render_function_options+=("--local" "${_encoded_local_notebook_path:-}")
-        _response_url_params+=("--local=${_encoded_local_notebook_path:-}")
-      fi
-
       local _selector_path=
 
       if [[ "${_target_selector}" =~ ^local:        ]]
