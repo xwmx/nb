@@ -15293,6 +15293,7 @@ _browse() {
   _browse_render_add() {
     local _columns="${NB_BROWSE_COLUMNS:-70}"
     local _content=
+    local _encoded_local_notebook_path=
     local _pagination_options=()
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
     local _selector=
@@ -15311,6 +15312,11 @@ _browse() {
           ;;
         -c|--content)
           _content="$(_option_get_value "${1:-}" "${2:-}")"
+          shift
+          ;;
+        --local)
+          _encoded_local_notebook_path="$(_option_get_value "${1:-}" "${2:-}")"
+          _pagination_options+=("${1:?}" "${2:?}")
           shift
           ;;
         --page)
@@ -15397,6 +15403,11 @@ _browse() {
     if [[ "${_target_type:-not-folder}" != "folder" ]]
     then
       _target_type="${NB_DEFAULT_EXTENSION:-}"
+    fi
+
+    if [[ -n "${_encoded_local_notebook_path:-}" ]]
+    then
+      _url_params+="&--local=${_encoded_local_notebook_path}"
     fi
 
     local _form_content=
@@ -15999,7 +16010,7 @@ HEREDOC
 
     if [[ -n "${_encoded_local_notebook_path:-}" ]]
     then
-      _url_params="&--local=${_encoded_local_notebook_path}"
+      _url_params+="&--local=${_encoded_local_notebook_path}"
     fi
 
     {

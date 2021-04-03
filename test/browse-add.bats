@@ -7,6 +7,272 @@ export NB_SERVER_PORT=6789
 # non-breaking space
 export _S=" "
 
+# local #######################################################################
+
+@test "GET to --add URL with local notebook renders form." {
+  {
+    "${_NB}" init
+
+    mkdir -p "${_TMP_DIR}/Local Notebook"
+    cd "${_TMP_DIR}/Local Notebook"
+
+    "${_NB}" notebooks init
+
+    (ncat                                   \
+      --exec "${_NB} browse --respond"      \
+      --listen                              \
+      --source-port "6789"                  \
+      2>/dev/null) &
+
+    sleep 1
+  }
+
+  run curl -sS -D - "http://localhost:6789/local:?--add&--example&-x&abcdefg&--sample=demo-value&--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq 0    ]]
+
+  # Prints output:
+
+  [[    "${lines[0]}"  =~ HTTP/1.0\ 200\ OK                               ]]
+  [[    "${lines[1]}"  =~ Date:\ .*                                       ]]
+  [[    "${lines[2]}"  =~ Expires:\ .*                                    ]]
+  [[    "${lines[3]}"  =~ Server:\ nb                                     ]]
+  [[    "${lines[4]}"  =~ Content-Type:\ text/html                        ]]
+
+  [[    "${output}"    =~ \
+action=\"/local:\?--add\&--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook ]]
+
+  [[    "${output}"    =~ \<input\ type=\"hidden\"\ name=\"--example\"\>  ]]
+  [[    "${output}"    =~ \<input\ type=\"hidden\"\ name=\"-x\"\>         ]]
+  [[    "${output}"    =~ \
+\<input\ type=\"hidden\"\ name=\"--sample\"\ value=\"demo-value\"\>       ]]
+
+  [[ !  "${output}"    =~ \<input\ type=\"hidden\"\ name=\"abcdefg\"\>    ]]
+}
+
+# option parameters ###########################################################
+
+@test "GET to --add URL with option parameters adds hidden form fields." {
+  {
+    "${_NB}" init
+
+    (ncat                                   \
+      --exec "${_NB} browse --respond"      \
+      --listen                              \
+      --source-port "6789"                  \
+      2>/dev/null) &
+
+    sleep 1
+  }
+
+  run curl -sS -D - "http://localhost:6789/home:?--add&--example&-x&abcdefg&--sample=demo-value"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq 0    ]]
+
+  # Prints output:
+
+  [[    "${lines[0]}"  =~ HTTP/1.0\ 200\ OK                               ]]
+  [[    "${lines[1]}"  =~ Date:\ .*                                       ]]
+  [[    "${lines[2]}"  =~ Expires:\ .*                                    ]]
+  [[    "${lines[3]}"  =~ Server:\ nb                                     ]]
+  [[    "${lines[4]}"  =~ Content-Type:\ text/html                        ]]
+
+  [[    "${output}"    =~ action=\"/home:\?--add                          ]]
+
+  [[    "${output}"    =~ \<input\ type=\"hidden\"\ name=\"--example\"\>  ]]
+  [[    "${output}"    =~ \<input\ type=\"hidden\"\ name=\"-x\"\>         ]]
+  [[    "${output}"    =~ \
+\<input\ type=\"hidden\"\ name=\"--sample\"\ value=\"demo-value\"\>       ]]
+
+  [[ !  "${output}"    =~ \<input\ type=\"hidden\"\ name=\"abcdefg\"\>    ]]
+}
+
+# GET #########################################################################
+
+@test "GET to --add URL with --columns parameter uses value for textarea, form URL parameters, and header links." {
+  {
+    "${_NB}" init
+
+    (ncat                                   \
+      --exec "${_NB} browse --respond"      \
+      --listen                              \
+      --source-port "6789"                  \
+      2>/dev/null) &
+
+    sleep 1
+  }
+
+  run curl -sS -D - "http://localhost:6789/home:?--add&--columns=20"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[    "${status}"  -eq 0                ]]
+
+  # Does not create file:
+
+  [[ -z "$(ls "${NB_DIR}/home/")"         ]]
+
+  # Does not create git commit:
+
+  cd "${NB_DIR}/home" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -v -q '\[nb\] Add'
+
+  # Prints output:
+
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 200\ OK                     ]]
+  [[ "${lines[1]}"  =~  Date:\ .*                             ]]
+  [[ "${lines[2]}"  =~  Expires:\ .*                          ]]
+  [[ "${lines[3]}"  =~  Server:\ nb                           ]]
+  [[ "${lines[4]}"  =~  Content-Type:\ text/html              ]]
+
+  [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1  ]]
+
+  printf "%s\\n" "${output}" | grep -q \
+    "href=\"http://localhost:6789/?--per-page=30&--columns=20\"><span class=\"dim\">❯</span>nb</a> "
+
+  printf "%s\\n" "${output}" | grep -q "cols=\"17\">"
+  printf "%s\\n" "${output}" | grep -q \
+    "<form${_NEWLINE}action=\"/home:?--add&--per-page=30--columns=20"
+
+  printf "%s\\n" "${output}" | grep -q \
+"value=\"add\">"
+}
+
+@test "GET to --add URL without --columns parameter uses default value for textarea." {
+  {
+    "${_NB}" init
+
+    (ncat                                   \
+      --exec "${_NB} browse --respond"      \
+      --listen                              \
+      --source-port "6789"                  \
+      2>/dev/null) &
+
+    sleep 1
+  }
+
+  run curl -sS -D - "http://localhost:6789/home:?--add"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[    "${status}"  -eq 0                ]]
+
+  # Does not create file:
+
+  [[ -z "$(ls "${NB_DIR}/home/")"         ]]
+
+  # Does not create git commit:
+
+  cd "${NB_DIR}/home" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -v -q '\[nb\] Add'
+
+  # Prints output:
+
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 200\ OK                     ]]
+  [[ "${lines[1]}"  =~  Date:\ .*                             ]]
+  [[ "${lines[2]}"  =~  Expires:\ .*                          ]]
+  [[ "${lines[3]}"  =~  Server:\ nb                           ]]
+  [[ "${lines[4]}"  =~  Content-Type:\ text/html              ]]
+
+  printf "%s\\n" "${output}" | grep -q \
+"<nav class=\"header-crumbs\"><h1><a rel=\"noopener noreferrer\" href=\"http://lo"
+
+  printf "%s\\n" "${output}" | grep -q \
+"calhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"
+
+  printf "%s\\n" "${output}" | grep -q \
+" <span class=\"dim\">·</span> <a rel=\"noopener noreferrer\" href=\"http://lo"
+
+  printf "%s\\n" "${output}" | grep -q \
+"calhost:6789/home:?--per-page=.*&--columns=.*\">home</a>"
+
+  printf "%s\\n" "${output}" | grep -q "cols=\"67\">"
+
+  printf "%s\\n" "${output}" | grep -q \
+"value=\"add\">"
+}
+
+@test "GET to --add URL prints form without creating note." {
+  {
+    "${_NB}" init
+
+    (ncat                                 \
+      --exec "${_NB} browse --respond"    \
+      --listen                            \
+      --source-port "6789"                \
+      2>/dev/null) &
+
+    sleep 1
+  }
+
+  run curl -sS -D - "http://localhost:6789/home:?--add"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[    "${status}"  -eq 0                ]]
+
+  # Does not create file:
+
+  [[ -z "$(ls "${NB_DIR}/home/")"         ]]
+
+  # Does not create git commit:
+
+  cd "${NB_DIR}/home" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -v -q '\[nb\] Add'
+
+  # Prints output:
+
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 200\ OK                         ]]
+  [[ "${lines[1]}"  =~  Date:\ .*                                 ]]
+  [[ "${lines[2]}"  =~  Expires:\ .*                              ]]
+  [[ "${lines[3]}"  =~  Server:\ nb                               ]]
+  [[ "${lines[4]}"  =~  Content-Type:\ text/html                  ]]
+
+  [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1      ]]
+
+  printf "%s\\n" "${output}" | grep -q \
+"<form${_NEWLINE}action=\"/home:?--add"
+
+  printf "%s\\n" "${output}" | grep -q \
+"value=\"add\">"
+}
+
 # POST ########################################################################
 
 @test "POST to --add <folder-name>/<folder-name>/<filename> URL with existing file creates another with incremented filename."  {
@@ -620,226 +886,6 @@ HEREDOC
 
   printf "%s\\n" "${output}" | grep -q \
 "action=\"/home:Example%20Folder/?--add&--per-page=.*&--columns=.*\""
-
-  printf "%s\\n" "${output}" | grep -q \
-"value=\"add\">"
-}
-
-# option parameters ###########################################################
-
-@test "GET to --add URL with option parameters adds hidden form fields." {
-  {
-    "${_NB}" init
-
-    (ncat                                   \
-      --exec "${_NB} browse --respond"      \
-      --listen                              \
-      --source-port "6789"                  \
-      2>/dev/null) &
-
-    sleep 1
-  }
-
-  run curl -sS -D - "http://localhost:6789/home:?--add&--example&-x&abcdefg&--sample=demo-value"
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[    "${status}"  -eq 0    ]]
-
-  # Prints output:
-
-  [[    "${lines[0]}"  =~ HTTP/1.0\ 200\ OK                               ]]
-  [[    "${lines[1]}"  =~ Date:\ .*                                       ]]
-  [[    "${lines[2]}"  =~ Expires:\ .*                                    ]]
-  [[    "${lines[3]}"  =~ Server:\ nb                                     ]]
-  [[    "${lines[4]}"  =~ Content-Type:\ text/html                        ]]
-
-  [[    "${output}"    =~ action=\"/home:\?--add                          ]]
-
-  [[    "${output}"    =~ \<input\ type=\"hidden\"\ name=\"--example\"\>  ]]
-  [[    "${output}"    =~ \<input\ type=\"hidden\"\ name=\"-x\"\>         ]]
-  [[    "${output}"    =~ \
-\<input\ type=\"hidden\"\ name=\"--sample\"\ value=\"demo-value\"\>       ]]
-
-  [[ !  "${output}"    =~ \<input\ type=\"hidden\"\ name=\"abcdefg\"\>    ]]
-}
-
-# GET #########################################################################
-
-@test "GET to --add URL with --columns parameter uses value for textarea, form URL parameters, and header links." {
-  {
-    "${_NB}" init
-
-    (ncat                                   \
-      --exec "${_NB} browse --respond"      \
-      --listen                              \
-      --source-port "6789"                  \
-      2>/dev/null) &
-
-    sleep 1
-  }
-
-  run curl -sS -D - "http://localhost:6789/home:?--add&--columns=20"
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  # Returns status 0:
-
-  [[    "${status}"  -eq 0                ]]
-
-  # Does not create file:
-
-  [[ -z "$(ls "${NB_DIR}/home/")"         ]]
-
-  # Does not create git commit:
-
-  cd "${NB_DIR}/home" || return 1
-
-  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
-
-  while [[ -n "$(git status --porcelain)" ]]
-  do
-    sleep 1
-  done
-  git log | grep -v -q '\[nb\] Add'
-
-  # Prints output:
-
-  [[ "${lines[0]}"  =~  HTTP/1.0\ 200\ OK                     ]]
-  [[ "${lines[1]}"  =~  Date:\ .*                             ]]
-  [[ "${lines[2]}"  =~  Expires:\ .*                          ]]
-  [[ "${lines[3]}"  =~  Server:\ nb                           ]]
-  [[ "${lines[4]}"  =~  Content-Type:\ text/html              ]]
-
-  [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1  ]]
-
-  printf "%s\\n" "${output}" | grep -q \
-    "href=\"http://localhost:6789/?--per-page=30&--columns=20\"><span class=\"dim\">❯</span>nb</a> "
-
-  printf "%s\\n" "${output}" | grep -q "cols=\"17\">"
-  printf "%s\\n" "${output}" | grep -q \
-    "<form${_NEWLINE}action=\"/home:?--add&--per-page=30--columns=20"
-
-  printf "%s\\n" "${output}" | grep -q \
-"value=\"add\">"
-}
-
-@test "GET to --add URL without --columns parameter uses default value for textarea." {
-  {
-    "${_NB}" init
-
-    (ncat                                   \
-      --exec "${_NB} browse --respond"      \
-      --listen                              \
-      --source-port "6789"                  \
-      2>/dev/null) &
-
-    sleep 1
-  }
-
-  run curl -sS -D - "http://localhost:6789/home:?--add"
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  # Returns status 0:
-
-  [[    "${status}"  -eq 0                ]]
-
-  # Does not create file:
-
-  [[ -z "$(ls "${NB_DIR}/home/")"         ]]
-
-  # Does not create git commit:
-
-  cd "${NB_DIR}/home" || return 1
-
-  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
-
-  while [[ -n "$(git status --porcelain)" ]]
-  do
-    sleep 1
-  done
-  git log | grep -v -q '\[nb\] Add'
-
-  # Prints output:
-
-  [[ "${lines[0]}"  =~  HTTP/1.0\ 200\ OK                     ]]
-  [[ "${lines[1]}"  =~  Date:\ .*                             ]]
-  [[ "${lines[2]}"  =~  Expires:\ .*                          ]]
-  [[ "${lines[3]}"  =~  Server:\ nb                           ]]
-  [[ "${lines[4]}"  =~  Content-Type:\ text/html              ]]
-
-  printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><h1><a rel=\"noopener noreferrer\" href=\"http://lo"
-
-  printf "%s\\n" "${output}" | grep -q \
-"calhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"
-
-  printf "%s\\n" "${output}" | grep -q \
-" <span class=\"dim\">·</span> <a rel=\"noopener noreferrer\" href=\"http://lo"
-
-  printf "%s\\n" "${output}" | grep -q \
-"calhost:6789/home:?--per-page=.*&--columns=.*\">home</a>"
-
-  printf "%s\\n" "${output}" | grep -q "cols=\"67\">"
-
-  printf "%s\\n" "${output}" | grep -q \
-"value=\"add\">"
-}
-
-@test "GET to --add URL prints form without creating note." {
-  {
-    "${_NB}" init
-
-    (ncat                                 \
-      --exec "${_NB} browse --respond"    \
-      --listen                            \
-      --source-port "6789"                \
-      2>/dev/null) &
-
-    sleep 1
-  }
-
-  run curl -sS -D - "http://localhost:6789/home:?--add"
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  # Returns status 0:
-
-  [[    "${status}"  -eq 0                ]]
-
-  # Does not create file:
-
-  [[ -z "$(ls "${NB_DIR}/home/")"         ]]
-
-  # Does not create git commit:
-
-  cd "${NB_DIR}/home" || return 1
-
-  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
-
-  while [[ -n "$(git status --porcelain)" ]]
-  do
-    sleep 1
-  done
-  git log | grep -v -q '\[nb\] Add'
-
-  # Prints output:
-
-  [[ "${lines[0]}"  =~  HTTP/1.0\ 200\ OK                         ]]
-  [[ "${lines[1]}"  =~  Date:\ .*                                 ]]
-  [[ "${lines[2]}"  =~  Expires:\ .*                              ]]
-  [[ "${lines[3]}"  =~  Server:\ nb                               ]]
-  [[ "${lines[4]}"  =~  Content-Type:\ text/html                  ]]
-
-  [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1      ]]
-
-  printf "%s\\n" "${output}" | grep -q \
-"<form${_NEWLINE}action=\"/home:?--add"
 
   printf "%s\\n" "${output}" | grep -q \
 "value=\"add\">"

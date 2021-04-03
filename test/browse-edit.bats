@@ -49,7 +49,7 @@ export _S=" "
   [[    "${lines[4]}"  =~  Content-Type:\ text/html                           ]]
 
   [[    "${output}"    =~ \
-action=\"/local:1/1\?--edit\&--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook  ]]
+action=\"/local:1/1\?--edit\&--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook ]]
 
   [[    "${output}"    =~ \<input\ type=\"hidden\"\ name=\"--example\"\>      ]]
   [[    "${output}"    =~ \<input\ type=\"hidden\"\ name=\"-x\"\>             ]]
