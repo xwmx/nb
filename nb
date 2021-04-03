@@ -15110,7 +15110,7 @@ _browse() {
     while ((${#}))
     do
       case "${1:-}" in
-        --col*|--page|--per*page)
+        --col*|--local|--page|--per*page)
           _option_value_is_present "${2:-}" && shift
           ;;
         --message*body)
@@ -15205,7 +15205,7 @@ _browse() {
     while ((${#}))
     do
       case "${1:-}" in
-        --col*|--page|--per*page)
+        --col*|--local|--page|--per*page)
           _option_value_is_present "${2:-}" && shift
           ;;
         --terminal)
@@ -15239,7 +15239,7 @@ _browse() {
     while ((${#}))
     do
       case "${1:-}" in
-        --col*|--page|--per*page)
+        --col*|--local|--page|--per*page)
           _option_value_is_present "${2:-}" && shift
           ;;
         --message*body)
@@ -16669,7 +16669,7 @@ HEREDOC
       do
         case "${__parameter:-}" in
           url=*)
-            _browse_respond_with 302 "${__parameter#*=}"
+            _browse_respond_with 302 "$(_get_uri --decode "${__parameter#*=}")"
             ;;
           --add|--delete|--edit)
             _action="${__parameter#--}"
@@ -16981,7 +16981,7 @@ HEREDOC
     elif _contains "${_status_code:-}" "302"
     then
       _only_headers=1
-      _response_headers+=("Location: $(_get_uri --decode "${2:-}")")
+      _response_headers+=("Location: ${2:-}")
     else
       _string="${2:-}"
 

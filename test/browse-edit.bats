@@ -9,6 +9,70 @@ export _S=" "
 
 # local notebook ##############################################################
 
+@test "POST to --edit URL with local notebook updates the note and prints form."  {
+  {
+    "${_NB}" init
+
+    mkdir -p "${_TMP_DIR}/Local Notebook"
+    cd "${_TMP_DIR}/Local Notebook"
+
+    "${_NB}" notebooks init
+
+    "${_NB}" add "Example File.md" --title "Example Title" --content "Example content."
+
+    (ncat                                   \
+      --exec "${_NB} browse --respond"      \
+      --listen                              \
+      --source-port "6789"                  \
+      2>/dev/null) &
+
+    sleep 1
+  }
+
+  run curl -sS -D - --data "content=Updated" "http://localhost:6789/local:1?--edit"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[    "${status}"  -eq 0                  ]]
+
+  # Updates file:
+
+  diff                                                  \
+    <(cat "${_TMP_DIR}/Local Notebook/Example File.md") \
+    <(printf "Updated\\n")
+
+  # Creates git commit:
+
+  cd "${_TMP_DIR}/Local Notebook" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
+  while [[ -n "$(git status --porcelain)"   ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Edit'
+
+  # Prints output:
+
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 200\ OK                     ]]
+  [[ "${lines[1]}"  =~  Date:\ .*                             ]]
+  [[ "${lines[2]}"  =~  Expires:\ .*                          ]]
+  [[ "${lines[3]}"  =~  Server:\ nb                           ]]
+  [[ "${lines[4]}"  =~  Content-Type:\ text/html              ]]
+
+  [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*local.*\ .*:.*\ .*1 ]]
+
+  printf "%s\\n" "${output}" | grep -q \
+"<form${_NEWLINE}action=\"/local:1?--edit&--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
+
+  printf "%s\\n" "${output}" | grep -q \
+"value=\"save\"> <span class=\"dim\">·</span> <span class=\"dim\">last: .*</span>"
+}
+
 @test "GET to --edit URL with local notebook renders form." {
   {
     "${_NB}" init
@@ -57,6 +121,67 @@ action=\"/local:1/1\?--edit\&--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'
 \<input\ type=\"hidden\"\ name=\"--sample\"\ value=\"demo-value\"\>           ]]
 
   [[ !  "${output}"    =~ \<input\ type=\"hidden\"\ name=\"abcdefg\"\>        ]]
+}
+
+# POST ########################################################################
+
+@test "POST to --edit URL updates the note and prints form."  {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example File.md" --title "Example Title" --content "Example content."
+
+    (ncat                                   \
+      --exec "${_NB} browse --respond"      \
+      --listen                              \
+      --source-port "6789"                  \
+      2>/dev/null) &
+
+    sleep 1
+  }
+
+  run curl -sS -D - --data "content=Updated" "http://localhost:6789/home:1?--edit"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[    "${status}"  -eq 0                  ]]
+
+  # Updates file:
+
+  diff                                      \
+    <(cat "${NB_DIR}/home/Example File.md") \
+    <(printf "Updated\\n")
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
+  while [[ -n "$(git status --porcelain)"   ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Edit'
+
+  # Prints output:
+
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 200\ OK                     ]]
+  [[ "${lines[1]}"  =~  Date:\ .*                             ]]
+  [[ "${lines[2]}"  =~  Expires:\ .*                          ]]
+  [[ "${lines[3]}"  =~  Server:\ nb                           ]]
+  [[ "${lines[4]}"  =~  Content-Type:\ text/html              ]]
+
+  [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1  ]]
+
+  printf "%s\\n" "${output}" | grep -q \
+"<form${_NEWLINE}action=\"/home:1?--edit"
+
+  printf "%s\\n" "${output}" | grep -q \
+"value=\"save\"> <span class=\"dim\">·</span> <span class=\"dim\">last: .*</span>"
 }
 
 # option parameters ###########################################################
@@ -517,67 +642,6 @@ action=\"/local:1/1\?--edit\&--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'
   [[ "${lines[4]}"  =~  Content-Type:\ text/html                  ]]
 
   [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1      ]]
-
-  printf "%s\\n" "${output}" | grep -q \
-"<form${_NEWLINE}action=\"/home:1?--edit"
-
-  printf "%s\\n" "${output}" | grep -q \
-"value=\"save\"> <span class=\"dim\">·</span> <span class=\"dim\">last: .*</span>"
-}
-
-# POST ########################################################################
-
-@test "POST to --edit URL updates the note and prints form."  {
-  {
-    "${_NB}" init
-
-    "${_NB}" add "Example File.md" --title "Example Title" --content "Example content."
-
-    (ncat                                   \
-      --exec "${_NB} browse --respond"      \
-      --listen                              \
-      --source-port "6789"                  \
-      2>/dev/null) &
-
-    sleep 1
-  }
-
-  run curl -sS -D - --data "content=Updated" "http://localhost:6789/home:1?--edit"
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  # Returns status 0:
-
-  [[    "${status}"  -eq 0                  ]]
-
-  # Updates file:
-
-  diff                                      \
-    <(cat "${NB_DIR}/home/Example File.md") \
-    <(printf "Updated\\n")
-
-  # Creates git commit:
-
-  cd "${NB_DIR}/home" || return 1
-
-  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
-
-  while [[ -n "$(git status --porcelain)"   ]]
-  do
-    sleep 1
-  done
-  git log | grep -q '\[nb\] Edit'
-
-  # Prints output:
-
-  [[ "${lines[0]}"  =~  HTTP/1.0\ 200\ OK                     ]]
-  [[ "${lines[1]}"  =~  Date:\ .*                             ]]
-  [[ "${lines[2]}"  =~  Expires:\ .*                          ]]
-  [[ "${lines[3]}"  =~  Server:\ nb                           ]]
-  [[ "${lines[4]}"  =~  Content-Type:\ text/html              ]]
-
-  [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1  ]]
 
   printf "%s\\n" "${output}" | grep -q \
 "<form${_NEWLINE}action=\"/home:1?--edit"
