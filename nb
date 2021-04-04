@@ -16737,10 +16737,12 @@ HEREDOC
       if [[ "${_target_relative_path_with_notebook}" =~ ^local/ ]] &&
          [[ -n "${_local_notebook_path:-}"                      ]]
       then
-        _browse_respond_with 200 \
+        _browse_respond_with 200  \
+          --original              \
           "${_local_notebook_path:-}/${_target_relative_path_with_notebook#*/}"
       else
-        _browse_respond_with 200 \
+        _browse_respond_with 200  \
+          --original              \
           "${NB_DIR}/${_target_relative_path_with_notebook}"
       fi
 
@@ -16940,6 +16942,7 @@ HEREDOC
   _browse_respond_with() {
     local _only_headers=0
     local _path=
+    local _serve_original_file=0
     local _status_code="${1:-}"
     local _read_from_standard_input=0
     local _string=
@@ -16963,6 +16966,9 @@ HEREDOC
         --*header*)
           _only_headers=1
           ;;
+        --original)
+          _serve_original_file=1
+          ;;
         --standard*input)
           _read_from_standard_input=1
           ;;
@@ -16978,7 +16984,7 @@ HEREDOC
 
     if [[ -n "${_path:-}" ]]
     then
-      if _file_is_text "${_path}"
+      if _file_is_text "${_path}" && ((_serve_original_file))
       then
         _response_headers+=("Content-Type: text/plain")
       else
