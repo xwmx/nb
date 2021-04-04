@@ -16976,9 +16976,9 @@ HEREDOC
       esac
     done
 
-    if [[ -n  "${_path:-}"          ]]
+    if [[ -n "${_path:-}" ]]
     then
-      if [[   "${_path:-}" =~ \.md$ ]]
+      if _file_is_text "${_path}"
       then
         _response_headers+=("Content-Type: text/plain")
       else

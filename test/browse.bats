@@ -9,6 +9,36 @@ export _S=" "
 
 # --original ##################################################################
 
+@test "GET to --original URL with .html extension serves original html file as text/plain." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example Folder/Example File.html"  \
+      --title     "Example Title"                     \
+      --content   "<!DOCTYPE html><html><head></head><body>Example</body></html>"
+
+    (ncat                               \
+      --exec "${_NB} browse --respond"  \
+      --listen                          \
+      --source-port "6789"              \
+      2>/dev/null) &
+
+    sleep 1
+  }
+
+  run curl -sS -D - "http://localhost:6789/--original/home/Example%20Folder/Example%20File.html"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0                                                           ]]
+
+  [[ "${output}"  =~  Content-Type:\ text/plain                                   ]]
+
+  [[ "${output}"  =~  \#\ Example\ Title                                          ]]
+  [[ "${output}"  =~  \<!DOCTYPE\ html\>\<html\>\<head\>\</head\>\<body\>Example\</body\>\</html\>  ]]
+}
+
 @test "GET to --original URL with .md extension serves original markdown file with html content as text/plain." {
   {
     "${_NB}" init
