@@ -12177,6 +12177,8 @@ Examples:
   ${_ME} example:import https://example.com/example.jpg
   ${_ME} import ./*
   ${_ME} import ./*.md
+  ${_ME} import ~/Pictures/example.png example-notebook:
+  ${_ME} import ~/Documents/example.docx example-folder/
 HEREDOC
 _import() {
   # _import_validate_path()

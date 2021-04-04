@@ -5019,6 +5019,8 @@ Examples:
   nb example:import https://example.com/example.jpg
   nb import ./*
   nb import ./*.md
+  nb import ~/Pictures/example.png example-notebook:
+  nb import ~/Documents/example.docx example-folder/
 ```
 
 #### `init`
