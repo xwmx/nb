@@ -81,8 +81,8 @@ __get_sub_files() {
     if [[ -d "${_folder_path}/${__filename}" ]]
     then
         _files+=($(
-                     __get_sub_files "${_folder_path}/${__filename}"
-                 ))
+          __get_sub_files "${_folder_path}/${__filename}"
+        ))
     else
         _files+=("${_folder_path}/${__filename}")
     fi
