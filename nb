@@ -12252,7 +12252,7 @@ _import() {
 
   local _convert=0
   local _paths=()
-  local _selector_path=
+  local _selector=
   local _subcommand=
   local _target_notebook_name=
   local _url=
@@ -12294,14 +12294,14 @@ _import() {
             then
               _url="${__arg:-}"
             else
-              _selector_path="${__arg:-}"
+              _selector="${__arg:-}"
             fi
           elif [[ "${_subcommand}" =~ ^copy$|^move$ ]] &&
                [[ -n "${_paths[*]:-}"               ]] &&
                [[ ! "${__arg}" =~ ^/                ]] &&
                [[ ! -e "${PWD}/${__arg}"            ]]
           then
-            _selector_path="${__arg}"
+            _selector="${__arg}"
           elif [[ "${_subcommand}" == "notebook"    ]] &&
                [[ -n "${_paths[*]:-}"               ]]
           then
@@ -12314,8 +12314,20 @@ _import() {
     esac
   done
 
-  local _notebook_path
-  _notebook_path="$(_notebooks current --path)"
+  local _notebook_path=
+  local _selector_path=
+
+  if [[ "${_selector:-}" =~ : ]]
+  then
+    _notebook_path="$(
+      _notebooks show "${_selector%%:*}" --path 2>/dev/null \
+        || _notebooks current --path
+    )"
+    _selector_path="${_selector#*:}"
+  else
+    _notebook_path="$(_notebooks current --path)"
+    _selector_path="${_selector:-}"
+  fi
 
   local _source_basename=
   local _target_basename=
@@ -12356,8 +12368,8 @@ _import() {
             "${_notebook_path}/${_target_folder_relative_path}" &&
               _git checkpoint "${_notebook_path}" "[nb] Import: ${_target_relative_path}"
 
-        printf "Imported %s from %s\\n"                     \
-          "$(_show "${_target_relative_path}" --info-line)" \
+        printf "Imported %s from %s\\n"                                       \
+          "$(_show "${_notebook_path}/${_target_relative_path}" --info-line)" \
           "$(_color_primary "${__path}")"
       done
       ;;
