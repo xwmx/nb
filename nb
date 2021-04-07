@@ -3521,6 +3521,7 @@ $(_color_primary "Usage:")
   ${_ME} help [-c | --colors] | [-r | --readme] | [-s | --short] [-p | --print]
   ${_ME} history [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
   ${_ME} import [copy | download | move] (<path>... | <url>) [--convert]
+            [<notebook>:][<folder>/][<filename>]
   ${_ME} import notebook <path> [<name>]
   ${_ME} init [<remote-url>]
   ${_ME} list [-e [<length>] | --excerpt [<length>]] [--filenames]
@@ -12150,10 +12151,8 @@ _history() {
 
 describe "import" <<HEREDOC
 Usage:
-  ${_ME} import (<path>... | <url>)
-  ${_ME} import copy <path>...
-  ${_ME} import download <url> [--convert]
-  ${_ME} import move <path>...
+  ${_ME} import [copy | download | move] (<path>... | <url>) [--convert]
+            [<notebook>:][<folder>/][<filename>]
   ${_ME} import notebook <path> [<name>]
 
 Options:

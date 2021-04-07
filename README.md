@@ -4280,6 +4280,7 @@ Usage:
   nb help [-c | --colors] | [-r | --readme] | [-s | --short] [-p | --print]
   nb history [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
   nb import [copy | download | move] (<path>... | <url>) [--convert]
+            [<notebook>:][<folder>/][<filename>]
   nb import notebook <path> [<name>]
   nb init [<remote-url>]
   nb list [-e [<length>] | --excerpt [<length>]] [--filenames]
@@ -4992,10 +4993,8 @@ Examples:
 
 ```text
 Usage:
-  nb import (<path>... | <url>)
-  nb import copy <path>...
-  nb import download <url> [--convert]
-  nb import move <path>...
+  nb import [copy | download | move] (<path>... | <url>) [--convert]
+            [<notebook>:][<folder>/][<filename>]
   nb import notebook <path> [<name>]
 
 Options:
