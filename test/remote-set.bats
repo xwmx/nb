@@ -42,6 +42,22 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*example.*\)             ]]
   diff                  \
     <("${_NB}" remote)  \
     <(printf "%s (example)\\n" "${_GIT_REMOTE_URL:-}")
+
+  "${_NB}" git fetch origin
+  "${_NB}" git push origin
+
+  declare _master_branch_hashes=()
+  _master_branch_hashes=($("${_NB}" git rev-list origin/master))
+
+  [[ "${#_master_branch_hashes[@]}"   == "1"                            ]]
+
+  declare _example_branch_hashes=()
+  _example_branch_hashes=($("${_NB}" git rev-list origin/example))
+
+  [[ "${#_example_branch_hashes[@]}"  == "2"                            ]]
+
+  [[ "${_master_branch_hashes[0]}"    != "${_example_branch_hashes[0]}" ]]
+  [[ "${_master_branch_hashes[0]}"    != "${_example_branch_hashes[1]}" ]]
 }
 
 @test "'remote set <url>' with no existing remote and no matching remote branch updates local branch, sets remote, and prints message." {
