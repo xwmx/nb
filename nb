@@ -3139,18 +3139,11 @@ HEREDOC
     if ! git -C "${_notebook_path}" show-branch         \
            "remotes/origin/${_git_branch}" > /dev/null 2>&1
     then
-      local _remote_branch=
-      _remote_branch="$(
-        git ls-remote --symref "${_remote_url:-}" HEAD  \
-          | awk '/^ref:/ {sub(/refs\/heads\//, "", $2); print $2}'
-      )"
+      printf "\\n"
 
-      if [[ "${_git_branch:-}" != "${_remote_branch:-}" ]]
-      then
-        git -C "${_notebook_path}"                      \
-          branch -m "${_git_branch:-}" "${_remote_branch:-}" &&
-            _git_branch="${_remote_branch:-}"
-      fi
+      _remote set "${_remote_url}" "${_git_branch}" # displays prompt
+
+      _git_branch="$(git -C "${_notebook_path}" rev-parse --abbrev-ref HEAD)"
     fi
 
     if ! git -C "${_notebook_path}" rebase "origin/${_git_branch}" &>/dev/null
@@ -17910,15 +17903,6 @@ $(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
 
       if ((_remote_exists))
       then
-        if [[ "${_new_branch:-}"          == "${_current_branch:-}" ]] &&
-           [[ "${_current_remote_url:-}"  == "${_new_remote_url:-}" ]]
-        then
-          _exit_1 printf "Remote already set to:%s%s (%s)\\n" \
-            "${_NEWLINE:-}"                                   \
-            "$(_color_primary "${_current_remote_url}")"      \
-            "$(_color_primary "${_current_branch}")"
-        fi
-
         printf "Updating remote for: %s\\n"       \
           "$(_color_primary "$(_notebooks current --name)")"
         _print_line "Updating remote for: $(_notebooks current --name)"

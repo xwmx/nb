@@ -3,7 +3,7 @@
 
 load test_helper
 
-@test "'sync' with different default branch names updates local branch to match remote and syncs successfully." {
+@test "'sync' with different branch names displays prompts, updates local branch to match remote, and syncs successfully." {
   {
     # set up remote
 
@@ -24,7 +24,7 @@ load test_helper
     export NB_DIR="${NB_DIR_1}"
 
     "${_NB}" init
-    "${_NB}" remote set "${_GIT_REMOTE_URL}" --force
+    "${_NB}" git remote add origin "${_GIT_REMOTE_URL}"
 
     diff                                                            \
       <(git -C "${NB_DIR_1}/home" rev-parse --abbrev-ref HEAD)      \
@@ -35,7 +35,7 @@ load test_helper
     export NB_DIR="${NB_DIR_2}"
 
     "${_NB}" init
-    "${_NB}" remote set "${_GIT_REMOTE_URL}" --force
+    "${_NB}" git remote add origin "${_GIT_REMOTE_URL}"
 
     diff                                                            \
       <(git -C "${NB_DIR_2}/home" rev-parse --abbrev-ref HEAD)      \
@@ -53,7 +53,7 @@ load test_helper
     [[ !  -f "${NB_DIR_2:-}/home/Example Folder/Example File.md"  ]]
   }
 
-  run "${_NB}" sync
+  run "${_NB}" sync  <<< "1${_NEWLINE}1${_NEWLINE}y${_NEWLINE}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -86,7 +86,7 @@ load test_helper
 
   export NB_DIR="${NB_DIR_2}"
 
-  run "${_NB}" sync
+  run "${_NB}" sync <<< "1${_NEWLINE}1${_NEWLINE}y${_NEWLINE}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"

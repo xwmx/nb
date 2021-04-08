@@ -465,26 +465,22 @@ _setup_notebooks() {
   {
     _setup_notebooks
 
-    run "${_NB}" notebooks init "${_TMP_DIR}/example-local"
+    "${_NB}" notebooks init "${_TMP_DIR}/example-local"
 
     cd "${_TMP_DIR}/example-local"
 
     [[ "$(pwd)" == "${_TMP_DIR}/example-local" ]]
 
-    run "${_NB}" remote set "${_GIT_REMOTE_URL}" --force
+    "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}"
 
-    [[ ${status} -eq 0                                    ]]
-    [[ "$("${_NB}" remote --url)" == "${_GIT_REMOTE_URL}" ]]
-    [[ "${lines[0]}"              =~ Remote\ set\ to      ]]
-    [[ "${lines[0]}"              =~ ${_GIT_REMOTE_URL}   ]]
+    diff <("${_NB}" remote --url) <(printf "%s\\n" "${_GIT_REMOTE_URL}")
 
     "${_NB}" notebooks current --local
 
     run "${_NB}" add "local.md" --content "Example content from local."
 
-    [[ ${status} -eq 0                              ]]
-    [[ -f "${_TMP_DIR}/example-local/local.md"      ]]
-    [[ ! -f "${NB_DIR_1}/home/local.md"             ]]
+    [[    -f "${_TMP_DIR}/example-local/local.md" ]]
+    [[ !  -f "${NB_DIR_1}/home/local.md"          ]]
   }
 
   # sync 1: send changes to remote
@@ -566,18 +562,15 @@ _setup_notebooks() {
 
     "${_NB}" add "one.md" --content "Example content from 1."
 
-    [[ -f "${NB_DIR_1}/home/one.md"   ]]
-    [[ ! -f "${NB_DIR_2}/home/one.md" ]]
+    [[    -f "${NB_DIR_1}/home/one.md"  ]]
+    [[ !  -f "${NB_DIR_2}/home/one.md"  ]]
+
+    "${_NB}" git remote add origin "https://example.test/invalid.git"
+
+    diff                        \
+      <("${_NB}" remote --url)  \
+      <(printf "%s\\n" "https://example.test/invalid.git")
   }
-
-  run "${_NB}" remote set "https://example.test/invalid.git" --force
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[ "${lines[0]}" =~ Remote\ set\ to ]]
-  [[ "${lines[0]}" =~ invalid         ]]
-  [[ ${status} -eq 0                  ]]
 
   run "${_NB}" sync
 
@@ -602,18 +595,18 @@ _setup_notebooks() {
 
     "${_NB}" add "one.md" --content "Example content from 1."
 
-    [[ -f "${NB_DIR_1}/home/one.md"   ]]
-    [[ ! -f "${NB_DIR_2}/home/one.md" ]]
+    [[    -f "${NB_DIR_1}/home/one.md"  ]]
+    [[ !  -f "${NB_DIR_2}/home/one.md"  ]]
   }
 
-  run "${_NB}" remote set "${_GIT_REMOTE_URL}" --force
+  run "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[0]}" =~ Remote\ set\ to     ]]
-  [[ "${lines[0]}" =~ ${_GIT_REMOTE_URL}  ]]
-  [[ ${status} -eq 0                      ]]
+  [[ "${output}" =~ Remote\ set\ to     ]]
+  [[ "${output}" =~ ${_GIT_REMOTE_URL}  ]]
+  [[ ${status} -eq 0                    ]]
 
   # sync 1: send changes to remote
   run "${_NB}" sync

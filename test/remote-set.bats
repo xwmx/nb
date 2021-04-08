@@ -247,7 +247,6 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)              ]]
 
   [[ "${status}"    -eq 0 ]]
 
-
   [[ "${lines[0]}"  =~  Updating\ remote\ for:\ .*home              ]]
   [[ "${lines[1]}"  =~  [^-]-------------------------[^-]           ]]
   [[ "${lines[2]}"  =~  From:\ \ \ https://example.test/example.git ]]
@@ -277,10 +276,17 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"          -eq 1 ]]
+  [[ "${status}"          -eq 0 ]]
 
-  [[ "${lines[0]}"        =~  Remote\ already\ set\ to:             ]]
-  [[ "${lines[1]}"        =~  .*${_GIT_REMOTE_URL}.*\ (.*master.*)  ]]
+  [[ "${lines[0]}"  =~  Updating\ remote\ for:\ .*home    ]]
+  [[ "${lines[1]}"  =~  [^-]-------------------------[^-] ]]
+  [[ "${lines[2]}"  =~  From:\ \ \ ${_GIT_REMOTE_URL}     ]]
+
+  [[ "${lines[3]}"  =~  URL:\ \ \ \ .*${_GIT_REMOTE_URL}  ]]
+  [[ "${lines[4]}"  =~  Branch:\ .*master                 ]]
+  [[ "${lines[5]}"  =~  [^-]--------------[^-]            ]]
+  [[ "${lines[6]}"  =~  \
+Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)  ]]
 
   diff                  \
     <("${_NB}" remote)  \
@@ -292,7 +298,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
     "${_NB}" init
   }
 
-  run "${_NB}" remote set --force
+  run "${_NB}" remote set
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"

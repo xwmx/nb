@@ -465,12 +465,15 @@ _setup_notebooks() {
 
     [[ "$(pwd)" == "${_TMP_DIR}/example-local" ]]
 
-    run "${_NB}" remote set "${_GIT_REMOTE_URL}" --force
+    run "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}"
+
+    printf "\${status}: '%s'\\n" "${status}"
+    printf "\${output}: '%s'\\n" "${output}"
 
     [[ ${status} -eq 0                                    ]]
     [[ "$("${_NB}" remote --url)" == "${_GIT_REMOTE_URL}" ]]
-    [[ "${lines[0]}"              =~ Remote\ set\ to      ]]
-    [[ "${lines[0]}"              =~ ${_GIT_REMOTE_URL}   ]]
+    [[ "${output}"                =~ Remote\ set\ to      ]]
+    [[ "${output}"                =~ ${_GIT_REMOTE_URL}   ]]
 
     "${_NB}" notebooks current --local
 
