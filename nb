@@ -17907,7 +17907,9 @@ $(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
           "$(_color_primary "$(_notebooks current --name)")"
         _print_line "Updating remote for: $(_notebooks current --name)"
 
-        printf "From:   %s (%s)\\n\\n" "${_current_remote_url}" "${_current_branch}"
+        printf "From:   %s (%s)\\n\\n"  \
+          "${_current_remote_url}"      \
+          "${_current_branch}"
       else
         printf "Adding remote to: %s\\n"          \
           "$(_color_primary "$(_notebooks current --name)")"
