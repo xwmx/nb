@@ -3559,7 +3559,7 @@ $(_color_primary "Usage:")
   ${_ME} plugins [<name>] [--paths]
   ${_ME} plugins install [<path> | <url>] [--force]
   ${_ME} plugins uninstall <name> [--force]
-  ${_ME} remote [remove | set <url> [-f | --force]]
+  ${_ME} remote [remove | set <url> [<branch>]]
   ${_ME} run <command> [<arguments>...]
   ${_ME} search ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             <query>... [-a | --all] [--and <query>] [--or <query>]
@@ -17778,18 +17778,15 @@ describe "remote" <<HEREDOC
 Usage:
   ${_ME} remote
   ${_ME} remote remove
-  ${_ME} remote set <url> [-f | --force]
+  ${_ME} remote set <url> [<branch>]
 
 Subcommands:
-  (default)     Print the remote URL for the notebook.
+  (default)     Print the remote URL and branch for the notebook.
   remove        Remove the remote URL from the notebook.
-  set           Set the remote URL for the notebook.
-
-Options:
-  -f, --force   Skip the confirmation prompt.
+  set           Set the remote URL and branch for the notebook.
 
 Description:
-  Get, set, and remove the remote repository URL for the current notebook.
+  Get, set, and remove a notebook's remote repository URL and branch.
 
 Examples:
   ${_ME} remote set https://github.com/example/example.git
@@ -17806,9 +17803,6 @@ _remote() {
   for   __arg in "${@:-}"
   do
     case "${__arg:-}" in
-      -f|--force)
-        _force=1
-        ;;
       --url|url)
         _only_url=1
         ;;
@@ -17852,24 +17846,50 @@ _remote() {
     remove|rm|unset)
       if ((_remote_exists))
       then
-        if ! ((_force))
+        while true
+        do
+          printf "Removing remote: %s\\n" \
+            "$(_color_primary "${_current_remote_url:-}")"
+
+          local __yn=
+          IFS='' read -r -e -d $'\n' -p "\
+$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
+
+          case ${__yn} in
+            [Yy]*)
+              break
+              ;;
+            *)
+              printf "Exiting...\\n"
+              exit 0
+              ;;
+          esac
+        done
+
+        local _remote_branches=()
+        _remote_branches=($(
+          git -C "${_notebook_path}" ls-remote  \
+            --heads "${_current_remote_url:-}"  \
+            | sed "s/.*\///g" || :
+        ))
+
+        if [[ "${#_remote_branches[@]}" -gt 1 ]] &&
+           _contains "${_current_branch}" "${_remote_branches[@]:-}"
         then
           while true
           do
-            printf "Removing remote: %s\\n" \
-              "$(_color_primary "${_current_remote_url:-}")"
-
             local __yn=
             IFS='' read -r -e -d $'\n' -p "\
-$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
+$(_color_primary "Remove branch from remote?") $(_color_brackets "y/N") " __yn
 
             case ${__yn} in
               [Yy]*)
+                git -C "${_notebook_path:-}" push origin \
+                  ":${_current_branch}" &>/dev/null
                 break
                 ;;
               *)
-                printf "Exiting...\\n"
-                exit 0
+                break
                 ;;
             esac
           done
@@ -17889,11 +17909,11 @@ $(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
         _exit_1 _help "remote"
       fi
 
-      local _remote_branches=
+      local _remote_branches=()
       _remote_branches=($(
         git -C "${_notebook_path}" ls-remote  \
           --heads "${_new_remote_url}"        \
-          | sed "s/.*\///g"
+          | sed "s/.*\///g" || :
       ))
 
       # TODO
@@ -17911,15 +17931,15 @@ $(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
 
       if ((_remote_exists))
       then
-        printf "Updating remote for: %s\\n"       \
+        printf "Updating remote for: %s\\n"   \
           "$(_color_primary "$(_notebooks current --name)")"
         _print_line "Updating remote for: $(_notebooks current --name)"
 
-        printf "From:   %s (%s)\\n\\n"  \
-          "${_current_remote_url}"      \
+        printf "From:   %s (%s)\\n\\n"        \
+          "${_current_remote_url}"            \
           "${_current_branch}"
       else
-        printf "Adding remote to: %s\\n"          \
+        printf "Adding remote to: %s\\n"      \
           "$(_color_primary "$(_notebooks current --name)")"
         _print_line "Adding remote to: $(_notebooks current --name)"
       fi

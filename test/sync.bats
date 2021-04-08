@@ -514,7 +514,7 @@ _setup_notebooks() {
   {
     _setup_notebooks
 
-    "${_NB}" remote remove --force
+    "${_NB}" remote remove <<< "y${_NEWLINE}"
 
     "${_NB}" remote && return 1
   }
@@ -536,7 +536,7 @@ _setup_notebooks() {
 
     "${_NB}" notebooks add example
     "${_NB}" notebooks archive home
-    "${_NB}" remote remove --force
+    "${_NB}" remote remove <<< "y${_NEWLINE}"
 
     "${_NB}" remote && return 1
   }
@@ -556,7 +556,7 @@ _setup_notebooks() {
   {
     _setup_notebooks
 
-    "${_NB}" remote remove --force
+    "${_NB}" remote remove <<< "y${_NEWLINE}"
 
     [[ "$("${_NB}" remote 2>&1)" =~ No\ remote ]]
 
@@ -589,7 +589,7 @@ _setup_notebooks() {
   {
     _setup_notebooks
 
-    "${_NB}" remote remove --force
+    "${_NB}" remote remove <<< "y${_NEWLINE}"
 
     [[ "$("${_NB}" remote 2>&1)" =~ No\ remote ]]
 

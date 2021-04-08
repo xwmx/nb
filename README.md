@@ -4317,7 +4317,7 @@ Usage:
   nb plugins [<name>] [--paths]
   nb plugins install [<path> | <url>] [--force]
   nb plugins uninstall <name> [--force]
-  nb remote [remove | set <url> [-f | --force]]
+  nb remote [remove | set <url> [<branch>]]
   nb run <command> [<arguments>...]
   nb search ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             <query>... [-a | --all] [--and <query>] [--or <query>]
@@ -5415,18 +5415,15 @@ Plugin Extensions:
 Usage:
   nb remote
   nb remote remove
-  nb remote set <url> [-f | --force]
+  nb remote set <url> [<branch>]
 
 Subcommands:
-  (default)     Print the remote URL for the notebook.
+  (default)     Print the remote URL and branch for the notebook.
   remove        Remove the remote URL from the notebook.
-  set           Set the remote URL for the notebook.
-
-Options:
-  -f, --force   Skip the confirmation prompt.
+  set           Set the remote URL and branch for the notebook.
 
 Description:
-  Get, set, and remove the remote repository URL for the current notebook.
+  Get, set, and remove a notebook's remote repository URL and branch.
 
 Examples:
   nb remote set https://github.com/example/example.git

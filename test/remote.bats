@@ -2,6 +2,112 @@
 
 load test_helper
 
+# remote remove ###############################################################
+
+@test "'remote remove' with no existing remote returns 1 and prints message." {
+  {
+    "${_NB}" init
+
+    _setup_remote_repo
+  }
+
+  run "${_NB}" remote remove
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 1                       ]]
+  [[ "${lines[0]}"  =~  No\ remote\ configured  ]]
+}
+
+@test "'remote remove' with existing remote removes remote and prints message." {
+  {
+    "${_NB}" init
+
+    _setup_remote_repo
+
+    cd "${NB_DIR}/home" &&
+      git remote add origin "${_GIT_REMOTE_URL}"
+  }
+
+  run "${_NB}" remote remove <<< "y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  "${_NB}" remote && return 1
+
+  [[ "${status}"    -eq 0 ]]
+
+  [[ "$("${_NB}" remote 2>&1)" =~ No\ remote\ configured.       ]]
+
+  [[ "${lines[0]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL} ]]
+  [[ "${lines[1]}"  =~  Removed\ remote:\ .*${_GIT_REMOTE_URL}  ]]
+}
+
+@test "'remote unset' with existing remote removes remote and prints message." {
+  {
+    "${_NB}" init
+
+    _setup_remote_repo
+
+    cd "${NB_DIR}/home" &&
+      git remote add origin "${_GIT_REMOTE_URL}"
+  }
+
+  run "${_NB}" remote unset <<< "y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  "${_NB}" remote && return 1
+
+  [[ "${status}"    -eq 0 ]]
+
+  [[ "$("${_NB}" remote 2>&1)" =~ No\ remote\ configured.       ]]
+
+  [[ "${lines[0]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL} ]]
+  [[ "${lines[1]}"  =~  Removed\ remote:\ .*${_GIT_REMOTE_URL}  ]]
+}
+
+@test "'remote remove' with existing remote as orphan removes remote, removes branch and prints message." {
+  {
+    "${_NB}" init
+
+    _setup_remote_repo
+
+    "${_NB}" git branch -m "example-branch"
+
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "2${_NEWLINE}y${_NEWLINE}"
+
+    diff                                  \
+      <(git -C "${NB_DIR}/home" ls-remote \
+          --heads "${_GIT_REMOTE_URL}"    \
+          | sed "s/.*\///g" || :)         \
+      <(printf "example-branch\\nmaster\\n")
+  }
+
+  run "${_NB}" remote remove <<< "y${_NEWLINE}y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  "${_NB}" remote && return 1
+
+  [[ "${status}"    -eq 0 ]]
+
+  [[ "$("${_NB}" remote 2>&1)" =~ No\ remote\ configured.       ]]
+
+  [[ "${lines[0]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL} ]]
+  [[ "${lines[1]}"  =~  Removed\ remote:\ .*${_GIT_REMOTE_URL}  ]]
+
+    diff                                  \
+      <(git -C "${NB_DIR}/home" ls-remote \
+          --heads "${_GIT_REMOTE_URL}"    \
+          | sed "s/.*\///g" || :)         \
+      <(printf "master\\n")
+}
+
 # remote ######################################################################
 
 @test "'remote' with no arguments and no remote prints message." {
@@ -88,64 +194,6 @@ load test_helper
 
   ! git log | grep -q '\[nb\] Commit'
   ! git log | grep -q '\[nb\] Sync'
-}
-
-# remote remove ###############################################################
-
-@test "'remote remove' with no existing remote returns 1 and prints message." {
-  {
-    "${_NB}" init
-  }
-
-  run "${_NB}" remote remove
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[ "${status}"    -eq 1                       ]]
-  [[ "${lines[0]}"  =~  No\ remote\ configured  ]]
-}
-
-@test "'remote remove' with existing remote removes remote and prints message." {
-  {
-    "${_NB}" init
-    cd "${NB_DIR}/home" &&
-      git remote add origin "${_GIT_REMOTE_URL}"
-  }
-
-  run "${_NB}" remote remove --force
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  "${_NB}" remote && return 1
-
-  [[ "${status}"                -eq 0                   ]]
-
-  [[ "$("${_NB}" remote 2>&1)"  =~  No\ remote          ]]
-  [[ "${lines[0]}"              =~  Removed\ remote     ]]
-  [[ "${lines[0]}"              =~  ${_GIT_REMOTE_URL}  ]]
-}
-
-@test "'remote unset' with existing remote removes remote and prints message." {
-  {
-    "${_NB}" init
-    cd "${NB_DIR}/home" &&
-      git remote add origin "${_GIT_REMOTE_URL}"
-  }
-
-  run "${_NB}" remote unset --force
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  "${_NB}" remote && return 1
-
-  [[ "${status}"                -eq 0                   ]]
-
-  [[ "$("${_NB}" remote 2>&1)"  =~  No\ remote          ]]
-  [[ "${lines[0]}"              =~  Removed\ remote     ]]
-  [[ "${lines[0]}"              =~  ${_GIT_REMOTE_URL}  ]]
 }
 
 # help ########################################################################
