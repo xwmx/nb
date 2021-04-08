@@ -4,6 +4,61 @@ load test_helper
 
 # remote set ##################################################################
 
+@test "'remote set <url> <branch>' with no existing remote and no matching remote branch pushes branch as new orphan, sets remote, and prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example File One.md" --content "Example content one."
+
+    _setup_remote_repo
+  }
+
+  run "${_NB}" remote set "${_GIT_REMOTE_URL}" "example" <<< "2${_NEWLINE}y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  "${_NB}" remote
+
+  [[ "${status}"    -eq 0 ]]
+
+  [[ "${lines[0]}"  =~  Adding\ remote\ to:\ .*home                   ]]
+  [[ "${lines[1]}"  =~  [^-]----------------------[^-]                ]]
+  [[ "${lines[2]}"  =~  Branch\ not\ present\ on\ remote:\ .*example  ]]
+  [[ "${lines[3]}"  =~  \
+.*[.*1.*].*\ Sync\ with\ an\ existing\ remote\ branch.                ]]
+  [[ "${lines[4]}"  =~  \
+.*[.*2.*].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote.       ]]
+  [[ "${lines[5]}"  =~  Adding\ remote\ to:\ .*home                   ]]
+  [[ "${lines[6]}"  =~  [^-]----------------------[^-]                ]]
+  [[ "${lines[7]}"  =~  URL:\ \ \ \ .*${_GIT_REMOTE_URL}              ]]
+  [[ "${lines[8]}"  =~  Branch:\ .*example                            ]]
+  [[ "${lines[9]}"  =~  [^-]--------------[^-]                        ]]
+  [[ "${lines[10]}" =~  \
+Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*example.*\)             ]]
+
+  diff                  \
+    <("${_NB}" remote)  \
+    <(printf "%s (example)\\n" "${_GIT_REMOTE_URL:-}")
+
+  "${_NB}" git fetch origin
+  "${_NB}" git push origin
+
+  declare _master_branch_hashes=()
+  _master_branch_hashes=($("${_NB}" git rev-list origin/master))
+
+  [[ "${#_master_branch_hashes[@]}"   == "1"                            ]]
+
+  declare _example_branch_hashes=()
+  _example_branch_hashes=($("${_NB}" git rev-list origin/example))
+
+  [[ "${#_example_branch_hashes[@]}"  == "2"                            ]]
+
+  [[ "${_master_branch_hashes[0]}"    != "${_example_branch_hashes[0]}" ]]
+  [[ "${_master_branch_hashes[0]}"    != "${_example_branch_hashes[1]}" ]]
+}
+
+
 @test "'remote set <url>' with no existing remote and no matching remote branch pushes branch as new orphan, sets remote, and prints message." {
   {
     "${_NB}" init

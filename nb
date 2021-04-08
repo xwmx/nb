@@ -17930,12 +17930,10 @@ $(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
         _print_line "Adding remote to: $(_notebooks current --name)"
       fi
 
-      if _contains "${_current_branch:-}" "${_remote_branches[@]:-}"
+      if ! _contains "${_new_branch:-}" "${_remote_branches[@]:-}"
       then
-        _new_branch="${_current_branch:-}"
-      else
         cat <<HEREDOC
-Branch not present on remote: $(_color_primary "${_current_branch:-}")
+Branch not present on remote: $(_color_primary "${_new_branch:-}")
 
 $(_color_brackets "1") Sync with an existing remote branch.
 $(_color_brackets "2") Sync as a new orphan branch on the remote.
@@ -18000,7 +17998,7 @@ $(_color_primary "Choose a branch") or $(_color_primary "q") to quit: "   \
           done
         elif [[ "${_selected_option:-}" == "2" ]]
         then
-          _new_branch="${_current_branch:-}"
+          : # do nothing. already set.
         fi
 
         printf "\\n"
