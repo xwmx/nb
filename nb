@@ -15625,7 +15625,7 @@ HEREDOC
           # TODO: improve
           *elinks*) _truncate_length="$((_columns - 23))" ;;
           *links*)  _truncate_length="$((_columns - 5))"  ;;
-          *)        _truncate_length="$((_columns - 1))"  ;;
+          *)        _truncate_length="$((_columns - 2))"  ;;
         esac
       else
         _truncate_length="$((_columns + 6))"
