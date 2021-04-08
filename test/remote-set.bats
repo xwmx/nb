@@ -58,6 +58,45 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*example.*\)             ]]
   [[ "${_master_branch_hashes[0]}"    != "${_example_branch_hashes[1]}" ]]
 }
 
+@test "'remote set <url> <branch>' with no existing remote and no matching remote branch updates local branch, sets remote, and prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example File One.md" --content "Example content one."
+
+    _setup_remote_repo
+  }
+
+  run "${_NB}" remote set "${_GIT_REMOTE_URL}" "example" <<< "1${_NEWLINE}1${_NEWLINE}y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  "${_NB}" remote
+
+  [[ "${status}"    -eq 0 ]]
+
+  [[ "${lines[0]}"  =~  Adding\ remote\ to:\ .*home                   ]]
+  [[ "${lines[1]}"  =~  [^-]----------------------[^-]                ]]
+  [[ "${lines[2]}"  =~  Branch\ not\ present\ on\ remote:\ .*example  ]]
+  [[ "${lines[3]}"  =~  \
+.*[.*1.*].*\ Sync\ with\ an\ existing\ remote\ branch.                ]]
+  [[ "${lines[4]}"  =~  \
+.*[.*2.*].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote.       ]]
+  [[ "${lines[5]}"  =~  Remote\ branches:                             ]]
+  [[ "${lines[6]}"  =~  .*[.*1.*].*\ master                           ]]
+  [[ "${lines[7]}"  =~  Adding\ remote\ to:\ .*home                   ]]
+  [[ "${lines[8]}"  =~  [^-]----------------------[^-]                ]]
+  [[ "${lines[9]}"  =~  URL:\ \ \ \ .*${_GIT_REMOTE_URL}              ]]
+  [[ "${lines[10]}" =~  Branch:\ .*master                             ]]
+  [[ "${lines[11]}" =~  [^-]--------------[^-]                        ]]
+  [[ "${lines[12]}" =~  \
+Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)              ]]
+
+  diff                  \
+    <("${_NB}" remote)  \
+    <(printf "%s (master)\\n" "${_GIT_REMOTE_URL:-}")
+}
 
 @test "'remote set <url>' with no existing remote and no matching remote branch pushes branch as new orphan, sets remote, and prints message." {
   {
