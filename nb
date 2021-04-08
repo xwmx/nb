@@ -17805,7 +17805,7 @@ _remote() {
         _only_url=1
         ;;
       *)
-        if [[     -z  "${_subcommand:-}"            ]]
+        if [[   -z  "${_subcommand:-}"              ]]
         then
           _subcommand="${__arg}"
         elif [[     "${_subcommand}" =~ ^set$|^add$ ]] &&

@@ -335,9 +335,9 @@ _setup_notebooks() {
 
     cd "${_TMP_DIR}/example-local"
 
-    [[ "$(pwd)" == "${_TMP_DIR}/example-local" ]]
+    [[ "$(pwd)" == "${_TMP_DIR}/example-local"            ]]
 
-    [[ ${status} -eq 0                              ]]
+    [[ ${status} -eq 0                                    ]]
     [[ "$("${_NB}" remote --url)" == "${_GIT_REMOTE_URL}" ]]
 
     "${_NB}" notebooks current --local
@@ -746,9 +746,9 @@ _setup_notebooks() {
   printf "index 2:\\n"
   cat "${NB_DIR_2}/home/Example Folder/.index"
 
-  [[ "${status}" -eq 0                              ]]
-  [[ "$(NB_DIR="${NB_DIR_1}" "${_NB}" count Example\ Folder/)" == 5  ]]
-  [[ "$(NB_DIR="${NB_DIR_2}" "${_NB}" count Example\ Folder/)" == 5  ]]
+  [[ "${status}" -eq 0                                              ]]
+  [[ "$(NB_DIR="${NB_DIR_1}" "${_NB}" count Example\ Folder/)" == 5 ]]
+  [[ "$(NB_DIR="${NB_DIR_2}" "${_NB}" count Example\ Folder/)" == 5 ]]
   [[ "$(cat "${NB_DIR_1}/home/Example Folder/.index")" == \
      "one.md${_NEWLINE}${_NEWLINE}two-2.md${_NEWLINE}one-2.md${_NEWLINE}two-3.md${_NEWLINE}one-3.md"  ]]
   [[ "$(cat "${NB_DIR_2}/home/Example Folder/.index")" == \
@@ -770,9 +770,9 @@ _setup_notebooks() {
   printf "index 2:\\n"
   cat "${NB_DIR_2}/home/Example Folder/.index"
 
-  [[ "${status}" -eq 0                              ]]
-  [[ "$(NB_DIR="${NB_DIR_1}" "${_NB}" count Example\ Folder/)" == 5  ]]
-  [[ "$(NB_DIR="${NB_DIR_2}" "${_NB}" count Example\ Folder/)" == 5  ]]
+  [[ "${status}" -eq 0                                              ]]
+  [[ "$(NB_DIR="${NB_DIR_1}" "${_NB}" count Example\ Folder/)" == 5 ]]
+  [[ "$(NB_DIR="${NB_DIR_2}" "${_NB}" count Example\ Folder/)" == 5 ]]
   [[ "$(cat "${NB_DIR_1}/home/Example Folder/.index")" == \
      "one.md${_NEWLINE}${_NEWLINE}two-2.md${_NEWLINE}one-2.md${_NEWLINE}two-3.md${_NEWLINE}one-3.md"  ]]
   [[ "$(cat "${NB_DIR_2}/home/Example Folder/.index")" == \
@@ -794,9 +794,9 @@ _setup_notebooks() {
   printf "index 2:\\n"
   cat "${NB_DIR_2}/home/Example Folder/.index"
 
-  [[ "${status}" -eq 0                              ]]
-  [[ "$(NB_DIR="${NB_DIR_1}" "${_NB}" count Example\ Folder/)" == 5  ]]
-  [[ "$(NB_DIR="${NB_DIR_2}" "${_NB}" count Example\ Folder/)" == 5  ]]
+  [[ "${status}" -eq 0                                              ]]
+  [[ "$(NB_DIR="${NB_DIR_1}" "${_NB}" count Example\ Folder/)" == 5 ]]
+  [[ "$(NB_DIR="${NB_DIR_2}" "${_NB}" count Example\ Folder/)" == 5 ]]
   [[ "$(cat "${NB_DIR_1}/home/Example Folder/.index")" == \
      "one.md${_NEWLINE}${_NEWLINE}two-2.md${_NEWLINE}one-2.md${_NEWLINE}two-3.md${_NEWLINE}one-3.md"  ]]
   [[ "$(cat "${NB_DIR_2}/home/Example Folder/.index")" == \

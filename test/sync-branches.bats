@@ -109,7 +109,6 @@ load test_helper
     <(git -C "${NB_DIR_2}/home" rev-parse --abbrev-ref HEAD)      \
     <(printf "example-branch-name\\n")
 
-
   # file from $NB_DIR_1 is synced from remote to $NB_DIR_2
 
   [[    -f "${NB_DIR_1:-}/home/Example Folder/Example File.md"  ]]
