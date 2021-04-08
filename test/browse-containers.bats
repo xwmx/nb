@@ -160,7 +160,7 @@ abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
 
   [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home    ]]
 
-  [[ "${output}"    =~  abcdefghij…               ]]
+  [[ "${output}"    =~  abcdefghi…                ]]
 
   printf "%s\\n" "${output}" \
     | grep -q "href=\"http://localhost:6789/home:1?--per-page=.*&--columns=20\" class=\"list-item\""
