@@ -18082,8 +18082,7 @@ HEREDOC
            git -C "${_notebook_path}" show-branch \
              "remotes/origin/${_new_branch}" > /dev/null 2>&1
       then
-        local _notebook_name_branch_name=
-        _notebook_name_branch_name="${_notebook_path##*/}"
+        local _notebook_name_branch_name="${_notebook_path##*/}"
         _notebook_name_branch_name="${_notebook_name_branch_name//' '/-}"
 
         local _uniqueness_counter=0
