@@ -196,8 +196,6 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)              ]]
     <(printf "%s (master)\\n" "${_GIT_REMOTE_URL:-}")
 }
 
-# previous: ###################################################################
-
 @test "'remote set <url>' with no existing remote and matching branch name sets remote and prints message." {
   {
     "${_NB}" init
