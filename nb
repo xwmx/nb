@@ -3240,10 +3240,10 @@ HEREDOC
 Files containing conflicts:
 
 $(local __file=
-for     __file in "${_conflicted_text_files[@]}"
-do
-  printf "  %s:%s\\n" "${_notebook_path}" "${__file}"
-done)
+  for     __file in "${_conflicted_text_files[@]}"
+  do
+    printf "  %s:%s\\n" "${_notebook_path}" "${__file}"
+  done)
 
 Resolve conflicts with \`${_ME} edit\`. More info: \`${_ME} help sync\`
 HEREDOC
@@ -3256,10 +3256,10 @@ HEREDOC
 Conflicted copies of binary files:
 
 $(local __file=
-for     __file in "${_conflicted_binary_files[@]}"
-do
-  printf "  %s:%s\\n" "${_notebook_path}" "${__file}"
-done)
+  for     __file in "${_conflicted_binary_files[@]}"
+  do
+    printf "  %s:%s\\n" "${_notebook_path}" "${__file}"
+  done)
 HEREDOC
         fi
       fi
@@ -17973,15 +17973,15 @@ $(_color_primary "Choose an option") or $(_color_primary "q") to quit: "  \
           esac
         done
 
-        if [[   "${_selected_option:-}" == "1" ]]
+        if [[   "${_selected_option:-}" == "1"  ]]
         then
           printf "\\nRemote branches:\\n\\n"
 
           local i=
           for ((i=0; i < "${#_remote_branches[@]}"; i++))
           do
-            printf "%s %s\\n"                 \
-              "$(_color_brackets "$((i+1))")" \
+            printf "%s %s\\n"                   \
+              "$(_color_brackets "$((i+1))")"   \
               "${_remote_branches[${i}]:-}"
 
           done
@@ -18010,7 +18010,7 @@ $(_color_primary "Choose a branch") or $(_color_primary "q") to quit: "   \
                 ;;
             esac
           done
-        elif [[ "${_selected_option:-}" == "2" ]]
+        elif [[ "${_selected_option:-}" == "2"  ]]
         then
           : # do nothing. already set.
         fi
@@ -18019,14 +18019,14 @@ $(_color_primary "Choose a branch") or $(_color_primary "q") to quit: "   \
 
         if ((_remote_exists))
         then
-          printf "Updating remote for: %s\\n"       \
+          printf "Updating remote for: %s\\n"   \
             "$(_color_primary "$(_notebooks current --name)")"
 
           printf "From:   %s (%s)\\n" "${_current_remote_url}" "${_current_branch}"
 
           _print_line "Updating remote for: $(_notebooks current --name)"
         else
-          printf "Adding remote to: %s\\n"          \
+          printf "Adding remote to: %s\\n"      \
             "$(_color_primary "$(_notebooks current --name)")"
 
           _print_line "Adding remote to: $(_notebooks current --name)"
