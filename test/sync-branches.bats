@@ -84,11 +84,11 @@ load test_helper
   [[ "${lines[3]}"  =~  Branch:\ .*master                         ]]
   [[ "${lines[4]}"  =~  [^-]--------------[^-]                    ]]
   [[ "${lines[5]}"  =~  \
-Remote\ branch\ has\ existing\ content:\ .*master                   ]]
+Remote\ branch\ has\ existing\ history:\ .*master                 ]]
   [[ "${lines[6]}"  =~  \
-.*[.*1.*].*\ Sync\ with\ existing\ remote\ content.                 ]]
+.*[.*1.*].*\ Merge\ and\ sync\ with\ existing\ remote\ branch\.   ]]
   [[ "${lines[7]}"  =~  \
-.*[.*2.*].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote.     ]]
+.*[.*2.*].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.  ]]
   [[ "${lines[8]}"  =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)          ]]
 

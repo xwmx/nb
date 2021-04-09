@@ -17985,7 +17985,7 @@ $(_color_primary "Remove branch from remote?") $(_color_brackets "y/N") " __yn
         cat <<HEREDOC
 Branch not present on remote: $(_color_primary "${_new_branch:-}")
 
-$(_color_brackets "1") Sync with an existing remote branch.
+$(_color_brackets "1") Merge and sync with an existing remote branch.
 $(_color_brackets "2") Sync as a new orphan branch on the remote.
 
 HEREDOC
@@ -18005,9 +18005,9 @@ HEREDOC
         if [[ "${_local_branch_root_hash:-}" != "${_remote_branch_root_hash:-}" ]]
         then
           cat <<HEREDOC
-Remote branch has existing content: $(_color_primary "${_new_branch:-}")
+Remote branch has existing history: $(_color_primary "${_new_branch:-}")
 
-$(_color_brackets "1") Sync with existing remote content.
+$(_color_brackets "1") Merge and sync with existing remote branch.
 $(_color_brackets "2") Sync as a new orphan branch on the remote.
 
 HEREDOC
