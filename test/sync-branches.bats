@@ -106,6 +106,11 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)          ]]
         | awk '/^ref:/ {sub(/refs\/heads\//, "", $2); print $2}') \
     <(printf "master\\n")
 
+  diff                                      \
+    <(git -C "${NB_DIR_1}/home" ls-remote   \
+        --heads "${_GIT_REMOTE_URL}"        \
+        | sed "s/.*\///g" || :)             \
+    <(printf "master\\n")
 
   declare _nbdir_1_home_commit_hashes=()
   _nbdir_1_home_commit_hashes=($(
@@ -229,15 +234,29 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)          ]]
 
   [[    -f "${NB_DIR_1}/Example Notebook/Example 1 File One.md"   ]]
 
-  # set new notebook remote
+  # set new notebook remote as orphan
 
-  run "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}1${_NEWLINE}"
+  run "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}"    -eq 0                                         ]]
 
+  git -C "${NB_DIR_1}/Example Notebook" ls-remote       \
+          --heads "${_GIT_REMOTE_URL}"                  \
+          | sed "s/.*\///g"
+
+  diff                                                  \
+    <(git -C "${NB_DIR_1}/Example Notebook" ls-remote   \
+        --heads "${_GIT_REMOTE_URL}"                    \
+        | sed "s/.*\///g")                              \
+    <(printf "Example-Notebook\\nmaster\\n")
+
+  # declare _nbdir_1_example_notebook_commit_hashes=()
+  # _nbdir_1_example_notebook_commit_hashes=($(
+  #   git -C "${NB_DIR_1}/Example Notebook" rev-list --all --full-history
+  # ))
 }
 
 @test "'sync' with different branch names displays prompts, updates local branch to match remote, and syncs successfully." {
