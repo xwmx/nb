@@ -465,7 +465,8 @@ _setup_notebooks() {
 
     [[ "$(pwd)" == "${_TMP_DIR}/example-local" ]]
 
-    run "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}"
+    run "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}1${_NEWLINE}"
+
 
     printf "\${status}: '%s'\\n" "${status}"
     printf "\${output}: '%s'\\n" "${output}"

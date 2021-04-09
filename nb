@@ -17923,21 +17923,6 @@ $(_color_primary "Remove branch from remote?") $(_color_brackets "y/N") " __yn
         _exit_1 _help "remote"
       fi
 
-      local _remote_branches=()
-      _remote_branches=($(
-        git -C "${_notebook_path}" ls-remote  \
-          --heads "${_new_remote_url}"        \
-          | sed "s/.*\///g" || :
-      ))
-
-      # TODO
-      # local _remote_head_branch=
-      # _remote_head_branch="$(
-      #   git -C "${_notebook_path}" ls-remote  \
-      #     --symref "${_new_remote_url}" HEAD  \
-      #     | awk '/^ref:/ {sub(/refs\/heads\//, "", $2); print $2}'
-      # )"
-
       if [[ -z "${_new_branch:-}" ]]
       then
         _new_branch="${_current_branch}"
@@ -17947,104 +17932,15 @@ $(_color_primary "Remove branch from remote?") $(_color_brackets "y/N") " __yn
       then
         printf "Updating remote for: %s\\n"   \
           "$(_color_primary "$(_notebooks current --name)")"
-        _print_line "Updating remote for: $(_notebooks current --name)"
 
-        printf "From:   %s (%s)\\n\\n"        \
-          "${_current_remote_url}"            \
-          "${_current_branch}"
+        printf "From:   %s (%s)\\n" "${_current_remote_url}" "${_current_branch}"
+
+        _print_line "Updating remote for: $(_notebooks current --name)"
       else
         printf "Adding remote to: %s\\n"      \
           "$(_color_primary "$(_notebooks current --name)")"
+
         _print_line "Adding remote to: $(_notebooks current --name)"
-      fi
-
-      if ! _contains "${_new_branch:-}" "${_remote_branches[@]:-}"
-      then
-        cat <<HEREDOC
-Branch not present on remote: $(_color_primary "${_new_branch:-}")
-
-$(_color_brackets "1") Sync with an existing remote branch.
-$(_color_brackets "2") Sync as a new orphan branch on the remote.
-
-HEREDOC
-
-        local _selected_option=
-
-        while true
-        do
-          IFS='' read -r -e -d $'\n' -p "\
-$(_color_primary "Choose an option") or $(_color_primary "q") to quit: "  \
-            _selected_option
-
-          case "${_selected_option:-}" in
-            [12])
-              break
-              ;;
-            q*|exit)
-              printf "Exiting...\\n"
-              exit 0
-              ;;
-          esac
-        done
-
-        if [[   "${_selected_option:-}" == "1"  ]]
-        then
-          printf "\\nRemote branches:\\n\\n"
-
-          local i=
-          for ((i=0; i < "${#_remote_branches[@]}"; i++))
-          do
-            printf "%s %s\\n"                   \
-              "$(_color_brackets "$((i+1))")"   \
-              "${_remote_branches[${i}]:-}"
-
-          done
-
-          printf "\\n"
-
-          local _selected_branch=
-
-          while true
-          do
-            IFS='' read -r -e -d $'\n' -p "\
-$(_color_primary "Choose a branch") or $(_color_primary "q") to quit: "   \
-            _selected_branch
-
-            case "${_selected_branch:-}" in
-              q*|exit)
-                printf "Exiting...\\n"
-                exit 0
-                ;;
-              [0-9]*)
-                if [[ -n "${_remote_branches[$((_selected_branch - 1))]:-}" ]]
-                then
-                  _new_branch="${_remote_branches[$((_selected_branch - 1))]:-}"
-                  break
-                fi
-                ;;
-            esac
-          done
-        elif [[ "${_selected_option:-}" == "2"  ]]
-        then
-          : # do nothing. already set.
-        fi
-
-        printf "\\n"
-
-        if ((_remote_exists))
-        then
-          printf "Updating remote for: %s\\n"   \
-            "$(_color_primary "$(_notebooks current --name)")"
-
-          printf "From:   %s (%s)\\n" "${_current_remote_url}" "${_current_branch}"
-
-          _print_line "Updating remote for: $(_notebooks current --name)"
-        else
-          printf "Adding remote to: %s\\n"      \
-            "$(_color_primary "$(_notebooks current --name)")"
-
-          _print_line "Adding remote to: $(_notebooks current --name)"
-        fi
       fi
 
       printf "URL:    %s\\n" "$(_color_primary "${_new_remote_url}")"
@@ -18055,8 +17951,10 @@ $(_color_primary "Choose a branch") or $(_color_primary "q") to quit: "   \
       while true
       do
         local __yn=
-        IFS='' read -r -e -d $'\n' -p "\
-$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
+
+        IFS='' read -r -e -d $'\n' -p                               \
+          "$(_color_primary "Proceed?") $(_color_brackets "y/N") "  \
+          __yn
 
         case "${__yn:-}" in
           [Yy]*)
@@ -18069,11 +17967,6 @@ $(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
         esac
       done
 
-      if [[ ! "${_new_branch:-}" == "${_current_branch:-}" ]]
-      then
-        git -C "${_notebook_path}" branch -m "${_new_branch:-}"
-      fi
-
       local _subcommand="add"
 
       if ((_remote_exists))
@@ -18084,6 +17977,138 @@ $(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
       git -C "${_notebook_path}" remote "${_subcommand}" origin "${_new_remote_url}" ||
         return 1
 
+      git -C "${_notebook_path}" fetch origin &>/dev/null
+
+      if ! git -C "${_notebook_path}" show-branch \
+           "remotes/origin/${_new_branch}" > /dev/null 2>&1
+      then
+        cat <<HEREDOC
+Branch not present on remote: $(_color_primary "${_new_branch:-}")
+
+$(_color_brackets "1") Sync with an existing remote branch.
+$(_color_brackets "2") Sync as a new orphan branch on the remote.
+
+HEREDOC
+      else
+        local _local_branch_root_hash=
+        _local_branch_root_hash="$(
+          git -C "${_notebook_path}" rev-list --max-parents=0 \
+            "${_new_branch}"
+        )"
+
+        local _remote_branch_root_hash=
+        _remote_branch_root_hash="$(
+          git -C "${_notebook_path}" rev-list --max-parents=0 \
+            "remotes/origin/${_new_branch}"
+        )"
+
+        if [[ "${_local_branch_root_hash:-}" != "${_remote_branch_root_hash:-}" ]]
+        then
+          cat <<HEREDOC
+Remote branch has existing content: $(_color_primary "${_new_branch:-}")
+
+$(_color_brackets "1") Sync with existing remote content.
+$(_color_brackets "2") Sync as a new orphan branch on the remote.
+
+HEREDOC
+        fi
+      fi
+
+      local _selected_option=
+
+      while true
+      do
+        IFS='' read -r -e -d $'\n' -p                                                 \
+          "$(_color_primary "Choose an option") or $(_color_primary "q") to quit: "   \
+          _selected_option
+
+        case "${_selected_option:-}" in
+          [12])
+            break
+            ;;
+          q*|exit)
+            printf "Exiting...\\n"
+            exit 0
+            ;;
+        esac
+      done
+
+      if [[   "${_selected_option:-}" == "1"  ]]  &&
+         ! git -C "${_notebook_path}" show-branch \
+           "remotes/origin/${_new_branch}" > /dev/null 2>&1
+      then
+        printf "\\nRemote branches:\\n\\n"
+
+        local _remote_branches=()
+        _remote_branches=($(
+          git -C "${_notebook_path}" ls-remote  \
+            --heads "${_new_remote_url}"        \
+            | sed "s/.*\///g" || :
+        ))
+
+        local i=
+        for ((i=0; i < "${#_remote_branches[@]}"; i++))
+        do
+          printf "%s %s\\n"                   \
+            "$(_color_brackets "$((i+1))")"   \
+            "${_remote_branches[${i}]:-}"
+        done
+
+        printf "\\n"
+
+        local _selected_branch=
+
+        while true
+        do
+          IFS='' read -r -e -d $'\n' -p                                               \
+            "$(_color_primary "Choose a branch") or $(_color_primary "q") to quit: "  \
+            _selected_branch
+
+          case "${_selected_branch:-}" in
+            q*|exit)
+              printf "Exiting...\\n"
+              exit 0
+              ;;
+            [0-9]*)
+              if [[ -n "${_remote_branches[$((_selected_branch - 1))]:-}" ]]
+              then
+                _new_branch="${_remote_branches[$((_selected_branch - 1))]:-}"
+                break
+              fi
+              ;;
+          esac
+        done
+      elif [[ "${_selected_option:-}" == "2"  ]]  &&
+           git -C "${_notebook_path}" show-branch \
+             "remotes/origin/${_new_branch}" > /dev/null 2>&1
+      then
+        local _notebook_name_branch_name=
+        _notebook_name_branch_name="${_notebook_path##*/}"
+        _notebook_name_branch_name="${_notebook_name_branch_name//' '/-}"
+
+        local _uniqueness_counter=0
+        local _unique_branch_name="${_notebook_name_branch_name}"
+
+        while git -C "${_notebook_path}" show-branch \
+             "remotes/origin/${_unique_branch_name}" > /dev/null 2>&1
+        do
+          _uniqueness_counter="$((_uniqueness_counter+1))"
+
+          printf -v _unique_branch_name -- "%s-%01d"  \
+            "${_notebook_name_branch_name}"           \
+            "${_uniqueness_counter}"
+        done
+
+        _new_branch="${_unique_branch_name}"
+      fi
+
+      if [[ ! "${_new_branch:-}" == "${_current_branch:-}" ]]
+      then
+        git -C "${_notebook_path}" branch -m "${_new_branch:-}"
+      fi
+
+      _git sync "${_notebook_path}" --skip-prompt
+
       local _updated_current_branch=
       _updated_current_branch="$(
         git -C "${_notebook_path}" rev-parse --abbrev-ref HEAD
@@ -18093,8 +18118,6 @@ $(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
       _updated_remote_url="$(
         git -C "${_notebook_path}" remote get-url origin 2>/dev/null
       )"
-
-      _git sync "${_notebook_path}" --skip-prompt
 
       printf "Remote set to: %s (%s)\\n"              \
         "$(_color_primary "${_updated_remote_url}")"  \

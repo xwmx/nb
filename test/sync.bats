@@ -471,7 +471,7 @@ _setup_notebooks() {
 
     [[ "$(pwd)" == "${_TMP_DIR}/example-local" ]]
 
-    "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}"
+    "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}1${_NEWLINE}"
 
     diff <("${_NB}" remote --url) <(printf "%s\\n" "${_GIT_REMOTE_URL}")
 
@@ -599,7 +599,7 @@ _setup_notebooks() {
     [[ !  -f "${NB_DIR_2}/home/one.md"  ]]
   }
 
-  run "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}"
+  run "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}1${_NEWLINE}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"

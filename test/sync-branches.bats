@@ -71,7 +71,7 @@ load test_helper
 
   "${_NB}" use "home"
 
-  run "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}"
+  run "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}1${_NEWLINE}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -84,6 +84,12 @@ load test_helper
   [[ "${lines[3]}"  =~  Branch:\ .*master                         ]]
   [[ "${lines[4]}"  =~  [^-]--------------[^-]                    ]]
   [[ "${lines[5]}"  =~  \
+Remote\ branch\ has\ existing\ content:\ .*master                   ]]
+  [[ "${lines[6]}"  =~  \
+.*[.*1.*].*\ Sync\ with\ existing\ remote\ content.                 ]]
+  [[ "${lines[7]}"  =~  \
+.*[.*2.*].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote.     ]]
+  [[ "${lines[8]}"  =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)          ]]
 
   # sync "home" to remote
@@ -161,7 +167,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)          ]]
 
   # add remote
 
-  run "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}"
+  run "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}1${_NEWLINE}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -225,7 +231,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)          ]]
 
   # set new notebook remote
 
-  run "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}"
+  run "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}1${_NEWLINE}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -284,7 +290,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)          ]]
     [[ !  -f "${NB_DIR_2:-}/home/Example Folder/Example File.md"  ]]
   }
 
-  run "${_NB}" sync  <<< "1${_NEWLINE}1${_NEWLINE}y${_NEWLINE}"
+  run "${_NB}" sync  <<< "y${_NEWLINE}1${_NEWLINE}1${_NEWLINE}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -317,7 +323,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)          ]]
 
   export NB_DIR="${NB_DIR_2}"
 
-  run "${_NB}" sync <<< "1${_NEWLINE}1${_NEWLINE}y${_NEWLINE}"
+  run "${_NB}" sync <<< "y${_NEWLINE}1${_NEWLINE}1${_NEWLINE}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
