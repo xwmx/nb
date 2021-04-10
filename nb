@@ -18088,8 +18088,8 @@ HEREDOC
         local _uniqueness_counter=0
         local _unique_branch_name="${_notebook_name_branch_name}"
 
-        while git -C "${_notebook_path}" show-branch \
-             "remotes/origin/${_unique_branch_name}" > /dev/null 2>&1
+        while git -C "${_notebook_path}" show-branch  \
+             "remotes/origin/${_unique_branch_name}"  > /dev/null 2>&1
         do
           _uniqueness_counter="$((_uniqueness_counter+1))"
 
