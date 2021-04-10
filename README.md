@@ -3185,10 +3185,10 @@ remote URL using [`nb remote`](#remote):
 
 ```bash
 # set the current notebook's remote to a private GitHub repository
-nb remote set https://github.com/example/example.git
+nb remote set https://github.com/example/example
 
 # set the remote for the notebook named "example"
-nb example:remote set https://github.com/example/example.git
+nb example:remote set https://github.com/example/example
 ```
 
 Any notebook with a remote URL will sync automatically every time a command is
@@ -3266,10 +3266,10 @@ branch name to
 
 ```bash
 # initialize new "home" notebook by cloning remote and using "sample-branch"
-nb init http://github.com/xwmx/example.git sample-branch
+nb init https://github.com/example/example sample-branch
 
 # add new "example" notebook by cloning remote and using "example-branch"
-nb notebooks add example http://github.com/xwmx/example.git example-branch
+nb notebooks add example https://github.com/example/example example-branch
 ```
 
 Orphan branch names are derived from the source notebook names. To list
