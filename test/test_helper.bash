@@ -236,7 +236,8 @@ _setup_remote_repo() {
   then
     mkdir "${_GIT_REMOTE_PATH}.setup"     &&
       cd "${_GIT_REMOTE_PATH}.setup"      &&
-      git init -b "${_branch_name}"       &&
+      git init                            &&
+      git checkout -b "${_branch_name}"   &&
       touch '.index'                      &&
       git add --all                       &&
       git commit -a -m "Initial commit."  &&
