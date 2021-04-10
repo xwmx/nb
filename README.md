@@ -3231,7 +3231,7 @@ nb notebooks add example http://github.com/xwmx/example.git example-branch
 ```
 
 Orphan branch names are derived from the source notebook names. To list
-all branches on a remote, use `nb remote branches`:
+all branches on a remote, use [`nb remote branches`](#remote):
 
 ```bash
 # list all branches on the current remote
@@ -4332,7 +4332,7 @@ Usage:
   nb plugins [<name>] [--paths]
   nb plugins install [<path> | <url>] [--force]
   nb plugins uninstall <name> [--force]
-  nb remote [remove | set <url> [<branch>]]
+  nb remote [branches [<url>] | remove | set <url> [<branch>]]
   nb run <command> [<arguments>...]
   nb search ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             <query>... [-a | --all] [--and <query>] [--or <query>]
@@ -5432,11 +5432,13 @@ Plugin Extensions:
 ```text
 Usage:
   nb remote
+  nb remote branches [<url>]
   nb remote remove
   nb remote set <url> [<branch>]
 
 Subcommands:
   (default)     Print the remote URL and branch for the notebook.
+  branches      List branches on the current or given remote.
   remove        Remove the remote URL from the notebook.
   set           Set the remote URL and branch for the notebook.
 

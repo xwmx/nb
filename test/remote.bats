@@ -2,6 +2,75 @@
 
 load test_helper
 
+# remote branches #############################################################
+
+@test "'remote branches' with no existing remote prints message." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" remote branches
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+
+  [[ "${status}"    -eq 1                       ]]
+  [[ "${#lines[@]}" -eq 1                       ]]
+
+  [[ "${lines[0]}"  =~  No\ remote\ configured. ]]
+}
+
+@test "'remote branches <url>' with no existing remote prints remote branches." {
+  {
+    "${_NB}" init
+
+    _setup_remote_repo
+  }
+
+  run "${_NB}" remote branches "${_GIT_REMOTE_URL}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+
+  [[ "${status}"    -eq 0                         ]]
+  [[ "${#lines[@]}" -eq 1                         ]]
+
+  [[ "${lines[0]}"  ==  "master"                  ]]
+}
+
+@test "'remote branches' with existing remote as orphan prints branches." {
+  {
+    "${_NB}" init
+
+    _setup_remote_repo
+
+    "${_NB}" git branch -m "example-branch"
+
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+
+    diff                                  \
+      <(git -C "${NB_DIR}/home" ls-remote \
+          --heads "${_GIT_REMOTE_URL}"    \
+          | sed "s/.*\///g" || :)         \
+      <(printf "example-branch\\nmaster\\n")
+  }
+
+  run "${_NB}" remote branches
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+
+  [[ "${status}"    -eq 0                         ]]
+  [[ "${#lines[@]}" -eq 3                         ]]
+
+  [[ "${lines[0]}"  ==  "From ${_GIT_REMOTE_URL}" ]]
+  [[ "${lines[1]}"  ==  "example-branch"          ]]
+  [[ "${lines[2]}"  ==  "master"                  ]]
+}
+
 # remote remove ###############################################################
 
 @test "'remote remove' with no existing remote returns 1 and prints message." {

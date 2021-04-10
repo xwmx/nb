@@ -3573,7 +3573,7 @@ $(_color_primary "Usage:")
   ${_ME} plugins [<name>] [--paths]
   ${_ME} plugins install [<path> | <url>] [--force]
   ${_ME} plugins uninstall <name> [--force]
-  ${_ME} remote [remove | set <url> [<branch>]]
+  ${_ME} remote [branches [<url>] | remove | set <url> [<branch>]]
   ${_ME} run <command> [<arguments>...]
   ${_ME} search ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             <query>... [-a | --all] [--and <query>] [--or <query>]
@@ -17814,11 +17814,13 @@ _alias_subcommand "plugins" "plugin"
 describe "remote" <<HEREDOC
 Usage:
   ${_ME} remote
+  ${_ME} remote branches [<url>]
   ${_ME} remote remove
   ${_ME} remote set <url> [<branch>]
 
 Subcommands:
   (default)     Print the remote URL and branch for the notebook.
+  branches      List branches on the current or given remote.
   remove        Remove the remote URL from the notebook.
   set           Set the remote URL and branch for the notebook.
 
@@ -17844,14 +17846,14 @@ _remote() {
         _only_url=1
         ;;
       *)
-        if [[   -z  "${_subcommand:-}"              ]]
+        if [[   -z  "${_subcommand:-}"      ]]
         then
           _subcommand="${__arg}"
-        elif [[     "${_subcommand}" =~ ^set$|^add$ ]] &&
-             [[ -z  "${_new_remote_url:-}"          ]]
+        elif _contains "${_subcommand}" "add" "branches" "set" &&
+             [[ -z  "${_new_remote_url:-}"  ]]
         then
           _new_remote_url="${__arg}"
-        elif [[ -z  "${_new_branch:-}"              ]]
+        elif [[ -z  "${_new_branch:-}"      ]]
         then
           _new_branch="${__arg:-}"
         fi
@@ -17880,6 +17882,23 @@ _remote() {
   fi
 
   case "${_subcommand:-}" in
+    branches)
+      if [[ -n "${_new_remote_url:-}" ]]
+      then
+        git -C "${_notebook_path}" ls-remote  \
+          --heads "${_new_remote_url:-}"      \
+          | sed "s/.*\///g"
+      elif ((_remote_exists))
+      then
+        git -C "${_notebook_path}" ls-remote  \
+          --heads                             \
+          | sed "s/.*\///g"
+      else
+        _exit_1 printf "No remote configured.\\n"
+      fi
+
+      return 0
+      ;;
     remove|rm|unset)
       if ((_remote_exists))
       then
