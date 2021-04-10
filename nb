@@ -17917,12 +17917,12 @@ _remote() {
           while true
           do
             local __yn=
-            IFS='' read -r -e -d $'\n' -p       \
+            IFS='' read -r -e -d $'\n' -p                   \
 "$(_color_primary "Remove branch from remote?") $(_color_brackets "y/N") " __yn
 
             case ${__yn} in
               [Yy]*)
-                git -C "${_notebook_path:-}" push origin \
+                git -C "${_notebook_path:-}" push origin    \
                   ":${_current_branch}" &>/dev/null
                 break
                 ;;
@@ -18064,16 +18064,16 @@ HEREDOC
 
         local _remote_branches=()
         _remote_branches=($(
-          git -C "${_notebook_path}" ls-remote  \
-            --heads "${_new_remote_url}"        \
+          git -C "${_notebook_path}" ls-remote    \
+            --heads "${_new_remote_url}"          \
             | sed "s/.*\///g" || :
         ))
 
         local i=
         for ((i=0; i < "${#_remote_branches[@]}"; i++))
         do
-          printf "%s %s\\n"                   \
-            "$(_color_brackets "$((i+1))")"   \
+          printf "%s %s\\n"                       \
+            "$(_color_brackets "$((i+1))")"       \
             "${_remote_branches[${i}]:-}"
         done
 
@@ -18101,30 +18101,34 @@ HEREDOC
               ;;
           esac
         done
-      elif [[ "${_selected_option:-}" == "2"  ]]  &&
-           git -C "${_notebook_path}" show-branch \
+      elif [[ "${_selected_option:-}" == "2"      ]]      &&
+           git -C "${_notebook_path}" show-branch         \
              "remotes/origin/${_new_branch}" > /dev/null 2>&1
       then
         local _notebook_name_branch_name="${_notebook_path##*/}"
         _notebook_name_branch_name="${_notebook_name_branch_name//' '/-}"
+        _notebook_name_branch_name="$(
+          printf "%s\\n" "${_notebook_name_branch_name}"  \
+            | tr '[:upper:]' '[:lower:]'
+        )"
 
         local _uniqueness_counter=0
         local _unique_branch_name="${_notebook_name_branch_name}"
 
-        while git -C "${_notebook_path}" show-branch  \
+        while git -C "${_notebook_path}" show-branch      \
              "remotes/origin/${_unique_branch_name}"  > /dev/null 2>&1
         do
           _uniqueness_counter="$((_uniqueness_counter+1))"
 
-          printf -v _unique_branch_name -- "%s-%01d"  \
-            "${_notebook_name_branch_name}"           \
+          printf -v _unique_branch_name -- "%s-%01d"      \
+            "${_notebook_name_branch_name}"               \
             "${_uniqueness_counter}"
         done
 
         _new_branch="${_unique_branch_name}"
       fi
 
-      if [[ ! "${_new_branch:-}" == "${_current_branch:-}" ]]
+      if [[ "${_new_branch:-}" != "${_current_branch:-}"  ]]
       then
         git -C "${_notebook_path}" branch -m "${_new_branch:-}"
       fi
@@ -18141,8 +18145,8 @@ HEREDOC
         git -C "${_notebook_path}" remote get-url origin 2>/dev/null
       )"
 
-      printf "Remote set to: %s (%s)\\n"              \
-        "$(_color_primary "${_updated_remote_url}")"  \
+      printf "Remote set to: %s (%s)\\n"                  \
+        "$(_color_primary "${_updated_remote_url}")"      \
         "$(_color_primary "${_updated_current_branch}")"
 
       return 0

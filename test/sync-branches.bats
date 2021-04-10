@@ -251,7 +251,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)          ]]
     <(git -C "${NB_DIR_1}/Example Notebook" ls-remote   \
         --heads "${_GIT_REMOTE_URL}"                    \
         | sed "s/.*\///g")                              \
-    <(printf "Example-Notebook\\nmaster\\n")
+    <(printf "example-notebook\\nmaster\\n")
 
   # declare _nbdir_1_example_notebook_commit_hashes=()
   # _nbdir_1_example_notebook_commit_hashes=($(
@@ -262,7 +262,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)          ]]
 
   export NB_DIR="${NB_DIR_2}"
 
-  "${_NB}" notebooks add "Example Clone Notebook" "${_GIT_REMOTE_URL}" "Example-Notebook"
+  "${_NB}" notebooks add "Example Clone Notebook" "${_GIT_REMOTE_URL}" "example-notebook"
 
   diff                                        \
     <(cd "${NB_DIR_2}/Example Clone Notebook" &&
@@ -272,7 +272,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)          ]]
   diff                                        \
     <(cd "${NB_DIR_2}/Example Clone Notebook" &&
       git rev-parse --abbrev-ref HEAD)        \
-    <(printf "Example-Notebook\\n")
+    <(printf "example-notebook\\n")
 
   [[ -f "${NB_DIR_2}/Example Clone Notebook/Example 1 File One.md"  ]]
 }
