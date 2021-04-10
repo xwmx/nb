@@ -4,13 +4,84 @@ load test_helper
 
 _setup_notebooks() {
   "${_NB}" init
+
   mkdir -p "${NB_DIR}/one"
   cd "${NB_DIR}/one" || return 1
   git init
   git remote add origin "${_GIT_REMOTE_URL}"
   touch "${NB_DIR}/one/.index"
+
   mkdir -p "${NB_DIR}/two"
+
   cd "${NB_DIR}" || return 1
+}
+
+# remote ######################################################################
+
+@test "'notebooks add <name> <remote-url> <branch>' exits with 0 and adds a notebook." {
+  {
+    _setup_notebooks
+    _setup_remote_repo
+
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" notebooks use "Example Notebook"
+    "${_NB}" git branch -m "example-branch"
+
+    "${_NB}" add "Example File One.md" --content "Example content one."
+
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+
+    diff                                              \
+      <(git -C "${NB_DIR}/Example Notebook" ls-remote \
+          --heads "${_GIT_REMOTE_URL}"                \
+          | sed "s/.*\///g" || :)                     \
+      <(printf "example-branch\\nmaster\\n")
+  }
+
+  run "${_NB}" notebooks add example "${_GIT_REMOTE_URL}" "example-branch"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 0                                     ]]
+  [[    "${lines[1]}" =~  Added\ notebook\:                     ]]
+  [[    "${lines[1]}" =~  example                               ]]
+  [[    "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)" -eq 8 ]]
+  [[ -d "${NB_DIR}/example/.git"                                ]]
+
+  diff                                                              \
+    <(cd "${NB_DIR}/example" && git config --get remote.origin.url) \
+    <(printf "%s\\n" "${_GIT_REMOTE_URL}")
+
+  diff                                                              \
+    <(cd "${NB_DIR}/example" && git rev-parse --abbrev-ref HEAD)    \
+    <(printf "example-branch\\n")
+}
+
+@test "'notebooks add <name> <remote-url>' exits with 0 and adds a notebook." {
+  {
+    _setup_notebooks
+    _setup_remote_repo
+  }
+
+  run "${_NB}" notebooks add example "${_GIT_REMOTE_URL}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 0                                     ]]
+  [[    "${lines[1]}" =~  Added\ notebook\:                     ]]
+  [[    "${lines[1]}" =~  example                               ]]
+  [[    "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)" -eq 7 ]]
+  [[ -d "${NB_DIR}/example/.git"                                ]]
+
+  diff                                                              \
+    <(cd "${NB_DIR}/example" && git config --get remote.origin.url) \
+    <(printf "%s\\n" "${_GIT_REMOTE_URL}")
+
+  diff                                                              \
+    <(cd "${NB_DIR}/example" && git rev-parse --abbrev-ref HEAD)    \
+    <(printf "master\\n")
 }
 
 # <name> validation ###########################################################
@@ -117,30 +188,6 @@ _setup_notebooks() {
     sleep 1
   done
   git log | grep -q '\[nb\] Initialize'
-}
-
-@test "'notebooks add <name> <remote-url>' exits with 0 and adds a notebook." {
-  {
-    _setup_notebooks
-    _setup_remote_repo
-  }
-
-  run "${_NB}" notebooks add example "${_GIT_REMOTE_URL}"
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${_GIT_REMOTE_URL}: '%s'\\n" "${_GIT_REMOTE_URL}"
-
-  [[ ${status} -eq 0                                          ]]
-  [[ "${lines[1]}" =~ Added\ notebook\:                       ]]
-  [[ "${lines[1]}" =~ example                                 ]]
-  [[ "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)" -eq 7  ]]
-  [[ -d "${NB_DIR}/example/.git"                              ]]
-
-  _origin="$(cd "${NB_DIR}/example" && git config --get remote.origin.url)"
-  _compare "${_GIT_REMOTE_URL}" "${_origin}"
-
-  [[ "${_origin}" =~ ${_GIT_REMOTE_URL} ]]
 }
 
 @test "'notebooks a <name>' exits with 0 and adds a notebook." {

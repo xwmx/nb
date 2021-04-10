@@ -4282,7 +4282,7 @@ Usage:
   nb import [copy | download | move] (<path>... | <url>) [--convert]
             [<notebook>:][<folder>/][<filename>]
   nb import notebook <path> [<name>]
-  nb init [<remote-url>]
+  nb init [<remote-url> [<remote>]]
   nb list [-e [<length>] | --excerpt [<length>]] [--filenames]
           [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
           [--no-indicator] [-p | --pager] [--paths] [-s | --sort]
@@ -4299,13 +4299,13 @@ Usage:
           [-f | --force]
   nb notebooks [<name>] [--archived] [--global] [--local] [--names]
                [--paths] [--unarchived]
-  nb notebooks add <name> [<remote-url>]
+  nb notebooks add <name> [<remote-url> [<remote>]]
   nb notebooks (archive | open | peek | status | unarchive) [<name>]
   nb notebooks current [--path | --selected | --filename [<filename>]]
                        [--global | --local]
   nb notebooks delete <name> [-f | --force]
   nb notebooks (export <name> [<path>] | import <path>)
-  nb notebooks init [<path> [<remote-url>]]
+  nb notebooks init [<path> [<remote-url> [<remote>]]]
   nb notebooks rename <old-name> <new-name>
   nb notebooks select <selector>
   nb notebooks show (<name> | <path> | <selector>) [--archived]
@@ -5026,7 +5026,7 @@ Examples:
 
 ```text
 Usage:
-  nb init [<remote-url>]
+  nb init [<remote-url> [<branch>]]
 
 Description:
   Initialize the local data directory and generate configuration file for `nb`
@@ -5222,13 +5222,13 @@ Shortcut Alias: `mv`
 Usage:
   nb notebooks [<name>] [--archived] [--global] [--local] [--names]
                [--paths] [--unarchived]
-  nb notebooks add <name> [<remote-url>]
+  nb notebooks add <name> [<remote-url> [<branch>]]
   nb notebooks (archive | open | peek | status | unarchive) [<name>]
   nb notebooks current [--path | --selected | --filename [<filename>]]
                        [--global | --local]
   nb notebooks delete <name> [-f | --force]
   nb notebooks (export <name> [<path>] | import <path>)
-  nb notebooks init [<path> [<remote-url>]]
+  nb notebooks init [<path> [<remote-url> [<branch>]]]
   nb notebooks rename <old-name> <new-name>
   nb notebooks select <selector>
   nb notebooks show (<name> | <path> | <selector>) [--archived]

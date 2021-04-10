@@ -3538,7 +3538,7 @@ $(_color_primary "Usage:")
   ${_ME} import [copy | download | move] (<path>... | <url>) [--convert]
             [<notebook>:][<folder>/][<filename>]
   ${_ME} import notebook <path> [<name>]
-  ${_ME} init [<remote-url>]
+  ${_ME} init [<remote-url> [<branch>]]
   ${_ME} list [-e [<length>] | --excerpt [<length>]] [--filenames]
           [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
           [--no-indicator] [-p | --pager] [--paths] [-s | --sort]
@@ -3555,13 +3555,13 @@ $(_color_primary "Usage:")
           [-f | --force]
   ${_ME} notebooks [<name>] [--archived] [--global] [--local] [--names]
                [--paths] [--unarchived]
-  ${_ME} notebooks add <name> [<remote-url>]
+  ${_ME} notebooks add <name> [<remote-url> [<branch>]]
   ${_ME} notebooks (archive | open | peek | status | unarchive) [<name>]
   ${_ME} notebooks current [--path | --selected | --filename [<filename>]]
                        [--global | --local]
   ${_ME} notebooks delete <name> [-f | --force]
   ${_ME} notebooks (export <name> [<path>] | import <path>)
-  ${_ME} notebooks init [<path> [<remote-url>]]
+  ${_ME} notebooks init [<path> [<remote-url> [<branch>]]]
   ${_ME} notebooks rename <old-name> <new-name>
   ${_ME} notebooks select <selector>
   ${_ME} notebooks show (<name> | <path> | <selector>) [--archived]
@@ -4118,7 +4118,7 @@ _index() {
 
 describe "init" <<HEREDOC
 Usage:
-  ${_ME} init [<remote-url>]
+  ${_ME} init [<remote-url> [<branch>]]
 
 Description:
   Initialize the local data directory and generate a configuration file for \`${_ME}\`
@@ -4131,13 +4131,19 @@ Examples:
   ${_ME} init https://github.com/example/example.git
 HEREDOC
 _init() {
-  # Usage: _init_create_home_notebook [<url>]
+  # Usage: _init_create_home_notebook [<url> [<branch>]]
   _init_create_home_notebook() {
-    local _repo_url="${1:-}"
+    local _remote_branch="${2:-}"
+    local _remote_url="${1:-}"
 
-    if [[ -n "${_repo_url}" ]]
+    if [[ -n "${_remote_url:-}"       ]]
     then
-      git clone "${_repo_url}" "${NB_DIR}/home"
+      if [[ -n "${_remote_branch:-}"  ]]
+      then
+        git clone -b "${_remote_branch:-}" "${_remote_url}" "${NB_DIR}/home"
+      else
+        git clone "${_remote_url}" "${NB_DIR}/home"
+      fi
     else
       mkdir -p  "${NB_DIR}/home"                    &&
         git -C  "${NB_DIR}/home" init   &>/dev/null &&
@@ -4215,11 +4221,11 @@ More Information:
 HEREDOC
   fi
 
-  _print_welcome                                    &&
-    _init_print_header                  1>/dev/null &&
-    _init_create_nb_dir                 1>/dev/null &&
-    _init_create_rc_file                1>/dev/null &&
-    _init_create_home_notebook "${1:-}" 1>/dev/null
+  _print_welcome                                              &&
+    _init_print_header                            1>/dev/null &&
+    _init_create_nb_dir                           1>/dev/null &&
+    _init_create_rc_file                          1>/dev/null &&
+    _init_create_home_notebook "${1:-}" "${2:-}"  1>/dev/null
 }
 
 # list · ############################################################### · list
@@ -5926,13 +5932,13 @@ describe "notebooks" <<HEREDOC
 Usage:
   ${_ME} notebooks [<name>] [--archived] [--global] [--local] [--names]
                [--paths] [--unarchived]
-  ${_ME} notebooks add <name> [<remote-url>]
+  ${_ME} notebooks add <name> [<remote-url> [<branch>]]
   ${_ME} notebooks (archive | open | peek | status | unarchive) [<name>]
   ${_ME} notebooks current [--path | --selected | --filename [<filename>]]
                        [--global | --local]
   ${_ME} notebooks delete <name> [-f | --force]
   ${_ME} notebooks (export <name> [<path>] | import <path>)
-  ${_ME} notebooks init [<path> [<remote-url>]]
+  ${_ME} notebooks init [<path> [<remote-url> [<branch>]]]
   ${_ME} notebooks rename <old-name> <new-name>
   ${_ME} notebooks select <selector>
   ${_ME} notebooks show (<name> | <path> | <selector>) [--archived]
@@ -6019,7 +6025,7 @@ _notebooks() {
   # _notebooks_add()
   #
   # Usage:
-  #   _notebooks_add <name> [<remote_url>]
+  #   _notebooks_add <name> [<remote_url> [<branch>]]
   _notebooks_add() {
     local _name="${1:-}"
 
@@ -6035,11 +6041,17 @@ _notebooks() {
       _exit_1 printf "Already exists: %s\\n" "$(_color_primary "${_name}")"
     fi
 
-    local _repo_url="${2:-}"
+    local _remote_url="${2:-}"
+    local _remote_branch="${3:-}"
 
-    if [[ -n "${_repo_url}"       ]]
+    if [[ -n "${_remote_url:-}"       ]]
     then
-      git clone "${_repo_url}" "${NB_DIR}/${_name}"   &&
+      if [[ -n "${_remote_branch:-}"  ]]
+      then
+        git clone -b "${_remote_branch:-}" "${_remote_url}" "${NB_DIR}/${_name}"
+      else
+        git clone "${_remote_url}" "${NB_DIR}/${_name}"
+      fi &&
         printf "%s\\n" "${_name}" > "${NB_DIR}/.current"
     else
       mkdir -p "${NB_DIR}/${_name}"
@@ -6375,20 +6387,23 @@ HEREDOC
   # _notebooks_init()
   #
   # Usage:
-  #   _notebooks_init [<path> [<remote_url>]]
+  #   _notebooks_init [<path> [<remote_url> [<branch>]]
   _notebooks_init() {
     local _path=
+    local _remote_branch=
     local _remote_url=
 
     local __arg=
     for   __arg in "${@:-}"
     do
-      if _string_is_url "${__arg}" && [[ -z "${_remote_url:-}" ]]
+      if _string_is_url "${__arg}" && [[ -z "${_remote_url:-}"  ]]
       then
         _remote_url="${__arg}"
-      elif [[ -z "${_path:-}"   ]]
+      elif [[ -z "${_path:-}"   ]] && [[ -z "${_remote_url:-}"  ]]
       then
         _path="${__arg}"
+      else
+        _remote_branch="${__arg}"
       fi
     done
 
@@ -6435,10 +6450,15 @@ HEREDOC
     if [[ "${_path}" != "${_CURRENT_WORKING_DIR}" ]] &&
        [[ -n "${_remote_url:-}"                   ]]
     then
-      git clone "${_remote_url}" "${_path}"
+      if [[ -n "${_remote_branch:-}" ]]
+      then
+        git clone -b "${_remote_branch:-}" "${_remote_url}" "${_path}"
+      else
+        git clone "${_remote_url}" "${_path}"
+      fi
     else
-        git -C "${_path}" init &>/dev/null  &&
-        touch "${_path}/.index"             &&
+      git -C "${_path}" init &>/dev/null  &&
+        touch "${_path}/.index"           &&
         _git checkpoint "${_path}" "[nb] Initialize"
     fi
 
@@ -7065,7 +7085,7 @@ HEREDOC
 
   case "${_subcommand}" in
     a|add|create|new)
-      _notebooks_add "${_name:-}" "${3:-}"
+      _notebooks_add "${_name:-}" "${3:-}" "${4:-}"
       ;;
     export)
       _notebooks_export "${2:-}" "${3:-}"
@@ -7074,7 +7094,7 @@ HEREDOC
       _notebooks_import "${2:-}" "${3:-}"
       ;;
     init)
-      _notebooks_init "${_name:-}" "${3:-}"
+      _notebooks_init "${_name:-}" "${3:-}" "${4:-}"
       ;;
     current)
       shift

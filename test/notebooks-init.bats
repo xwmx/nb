@@ -4,16 +4,106 @@ load test_helper
 
 _setup_notebooks() {
   "${_NB}" init
+
   mkdir -p "${NB_DIR}/one"
   cd "${NB_DIR}/one" || return 1
   git init
   git remote add origin "${_GIT_REMOTE_URL}"
   touch "${NB_DIR}/one/.index"
+
   mkdir -p "${NB_DIR}/two"
+
   cd "${NB_DIR}" || return 1
 }
 
 # `notebooks init` ############################################################
+
+@test "'notebooks init <path> <remote-url> <branch>' exits with 0 and adds a notebook." {
+  {
+    _setup_notebooks
+    _setup_remote_repo
+
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" notebooks use "Example Notebook"
+    "${_NB}" git branch -m "example-branch"
+
+    "${_NB}" add "Example File One.md" --content "Example content one."
+
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+
+    diff                                              \
+      <(git -C "${NB_DIR}/Example Notebook" ls-remote \
+          --heads "${_GIT_REMOTE_URL}"                \
+          | sed "s/.*\///g" || :)                     \
+      <(printf "example-branch\\nmaster\\n")
+  }
+
+  run "${_NB}" notebooks init "${_TMP_DIR}/example" "${_GIT_REMOTE_URL}" "example-branch"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  diff                                                                \
+    <(cd "${_TMP_DIR}/example" && git config --get remote.origin.url) \
+    <(printf "%s\\n" "${_GIT_REMOTE_URL}")
+
+  diff                                                                \
+    <(cd "${_TMP_DIR}/example" && git rev-parse --abbrev-ref HEAD)    \
+    <(printf "example-branch\\n")
+
+  [[    "${status}"   -eq 0                             ]]
+  [[    "${lines[0]}" =~  Cloning                       ]]
+  [[    "${lines[1]}" =~  Initialized\ local\ notebook  ]]
+  [[    "${lines[1]}" =~  example                       ]]
+  [[ -d "${_TMP_DIR}/example/.git"                      ]]
+  [[ -f "${_TMP_DIR}/example/.index"                    ]]
+
+  cd "${_TMP_DIR}/example" || return 1
+
+  printf "\$(git log): '%s'\n" "$(git log)"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -v 'Initial commit.'
+  git log | grep 'Initialize'
+}
+
+@test "'notebooks init <path> <remote-url>' exits with 0 and adds a notebook." {
+  {
+    _setup_notebooks
+    _setup_remote_repo
+  }
+
+  run "${_NB}" notebooks init "${_TMP_DIR}/example" "${_GIT_REMOTE_URL}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  diff                                                                \
+    <(cd "${_TMP_DIR}/example" && git config --get remote.origin.url) \
+    <(printf "%s\\n" "${_GIT_REMOTE_URL}")
+
+  diff                                                                \
+    <(cd "${_TMP_DIR}/example" && git rev-parse --abbrev-ref HEAD)    \
+    <(printf "master\\n")
+
+  [[    "${status}"   -eq 0                             ]]
+  [[    "${lines[0]}" =~  Cloning                       ]]
+  [[    "${lines[1]}" =~  Initialized\ local\ notebook  ]]
+  [[    "${lines[1]}" =~  example                       ]]
+  [[ -d "${_TMP_DIR}/example/.git"                      ]]
+  [[ -f "${_TMP_DIR}/example/.index"                    ]]
+
+  cd "${_TMP_DIR}/example" || return 1
+  printf "\$(git log): '%s'\n" "$(git log)"
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep 'Initial commit.'
+}
 
 @test "'notebooks init' with no arguments initializes the current directory" {
   {
@@ -228,37 +318,4 @@ _setup_notebooks() {
   [[ ${status} -eq 1                          ]]
   [[ "${lines[0]}" =~ Git\ repository\ exists ]]
   [[ "${lines[0]}" =~ example                 ]]
-}
-
-@test "'notebooks init <path> <remote-url>' exits with 0 and adds a notebook." {
-  {
-    _setup_notebooks
-    _setup_remote_repo
-  }
-
-  run "${_NB}" notebooks init "${_TMP_DIR}/example" "${_GIT_REMOTE_URL}"
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${_GIT_REMOTE_URL}: '%s'\\n" "${_GIT_REMOTE_URL}"
-
-  _origin="$(cd "${_TMP_DIR}/example" && git config --get remote.origin.url)"
-  _compare "${_GIT_REMOTE_URL}" "${_origin}"
-
-  [[ ${status} -eq 0                                ]]
-  [[ "${lines[0]}" =~ Cloning                       ]]
-  [[ "${lines[1]}" =~ Initialized\ local\ notebook  ]]
-  [[ "${lines[1]}" =~ example                       ]]
-  [[ -d "${_TMP_DIR}/example/.git"                  ]]
-  [[ -f "${_TMP_DIR}/example/.index"                ]]
-
-  [[ "${_origin}" =~ ${_GIT_REMOTE_URL} ]]
-
-  cd "${_TMP_DIR}/example" || return 1
-  printf "\$(git log): '%s'\n" "$(git log)"
-  while [[ -n "$(git status --porcelain)" ]]
-  do
-    sleep 1
-  done
-  git log | grep 'Initial commit.'
 }
