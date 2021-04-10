@@ -6237,8 +6237,8 @@ HEREDOC
       while true
       do
         local __response=
-        IFS='' read -r -e -d $'\n' -p "\
-Please type $(_color_primary "${_name}") to confirm: " __response
+        IFS='' read -r -e -d $'\n' -p \
+"Please type $(_color_primary "${_name}") to confirm: " __response
 
         if [[ "${__response}" == "${_name}" ]]
         then
@@ -10674,8 +10674,8 @@ _bookmark() {
           while true
           do
             local __yn=
-            IFS='' read -r -e -d $'\n' -p "\
-Check the Wayback Machine for an archived version instead? $(_color_brackets "y/N") " __yn
+            IFS='' read -r -e -d $'\n' -p \
+"Check the Wayback Machine for an archived version instead? $(_color_brackets "y/N") " __yn
 
             case ${__yn} in
               [Yy]*)
@@ -11378,8 +11378,8 @@ _delete() {
     while true
     do
       local __yn=
-      IFS='' read -r -e -d $'\n' -p "\
-$(_color_primary "Proceed?")  $(_color_brackets "y/N") " __yn
+      IFS='' read -r -e -d $'\n' -p \
+"$(_color_primary "Proceed?")  $(_color_brackets "y/N") " __yn
 
       case ${__yn} in
         [Yy]*)
@@ -12041,8 +12041,8 @@ _export() {
         while true
         do
           local __yn=
-          IFS='' read -r -e -d $'\n' -p "\
-$(_color_primary "Overwrite existing file?") $(_color_brackets "y/N") " __yn
+          IFS='' read -r -e -d $'\n' -p \
+"$(_color_primary "Overwrite existing file?") $(_color_brackets "y/N") " __yn
 
           case ${__yn} in
             [Yy]*)
@@ -12714,8 +12714,8 @@ _move() {
     while true
     do
       local __yn=
-      IFS='' read -r -e -d $'\n' -p "\
-$(_color_primary "Proceed?")  $(_color_brackets "y/N") " __yn
+      IFS='' read -r -e -d $'\n' -p \
+"$(_color_primary "Proceed?")  $(_color_brackets "y/N") " __yn
 
       case ${__yn} in
         [Yy]*)
@@ -17662,8 +17662,8 @@ _plugins() {
             while true
             do
               local __yn=
-              IFS='' read -r -e -d $'\n' -p "\
-$(_color_primary "Reinstall?") $(_color_brackets "y/N") " __yn
+              IFS='' read -r -e -d $'\n' -p \
+"$(_color_primary "Reinstall?") $(_color_brackets "y/N") " __yn
 
               case ${__yn} in
                 [Yy]*)
@@ -17726,8 +17726,8 @@ HEREDOC
         while true
         do
           local __yn=
-          IFS='' read -r -e -d $'\n' -p "\
-$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
+          IFS='' read -r -e -d $'\n' -p \
+"$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
 
           case ${__yn} in
             [Yy]*)
@@ -17866,8 +17866,8 @@ _remote() {
             "$(_color_primary "${_current_remote_url:-}")"
 
           local __yn=
-          IFS='' read -r -e -d $'\n' -p "\
-$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
+          IFS='' read -r -e -d $'\n' -p   \
+"$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
 
           case ${__yn} in
             [Yy]*)
@@ -17888,14 +17888,14 @@ $(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
             | sed "s/.*\///g" || :
         ))
 
-        if [[ "${#_remote_branches[@]}" -gt 1 ]] &&
+        if [[ "${#_remote_branches[@]}" -gt 1   ]] &&
            _contains "${_current_branch}" "${_remote_branches[@]:-}"
         then
           while true
           do
             local __yn=
-            IFS='' read -r -e -d $'\n' -p "\
-$(_color_primary "Remove branch from remote?") $(_color_brackets "y/N") " __yn
+            IFS='' read -r -e -d $'\n' -p       \
+"$(_color_primary "Remove branch from remote?") $(_color_brackets "y/N") " __yn
 
             case ${__yn} in
               [Yy]*)
@@ -18329,8 +18329,8 @@ HEREDOC
       while true
       do
         local __setting=
-        IFS='' read -r -e -d $'\n' -p "\
-$(_color_primary "Number or Name: ")" __setting
+        IFS='' read -r -e -d $'\n' -p \
+"$(_color_primary "Number or Name: ")" __setting
 
         if [[ -n "${__setting}" ]]
         then
@@ -19272,8 +19272,8 @@ HEREDOC
         printf "Updating %s in place. " "$(_color_primary "${_ME}")"
 
         local __yn=
-        IFS='' read -r -e -d $'\n' -p "\
-$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
+        IFS='' read -r -e -d $'\n' -p \
+"$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
 
         case ${__yn} in
           [Yy]*)
