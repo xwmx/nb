@@ -17884,6 +17884,7 @@ $(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
         _remote_branches=($(
           git -C "${_notebook_path}" ls-remote  \
             --heads "${_current_remote_url:-}"  \
+             2>/dev/null                        \
             | sed "s/.*\///g" || :
         ))
 
@@ -17910,7 +17911,7 @@ $(_color_primary "Remove branch from remote?") $(_color_brackets "y/N") " __yn
         fi
 
         git -C "${_notebook_path:-}" remote rm origin       &&
-          printf "Removed remote: %s\\n"                    \
+          printf "Removed  remote: %s\\n"                   \
             "$(_color_primary "${_current_remote_url:-}")"  &&
               return 0
       else
@@ -17967,14 +17968,13 @@ $(_color_primary "Remove branch from remote?") $(_color_brackets "y/N") " __yn
         esac
       done
 
-      local _subcommand="add"
-
       if ((_remote_exists))
       then
-        _subcommand="set-url"
+        _remote unset <<< "y${_NEWLINE}"
+        _print_line "--------------"
       fi
 
-      git -C "${_notebook_path}" remote "${_subcommand}" origin "${_new_remote_url}" ||
+      git -C "${_notebook_path}" remote add origin "${_new_remote_url}" ||
         return 1
 
       git -C "${_notebook_path}" fetch origin &>/dev/null

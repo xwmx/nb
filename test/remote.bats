@@ -39,10 +39,10 @@ load test_helper
 
   [[ "${status}"    -eq 0 ]]
 
-  [[ "$("${_NB}" remote 2>&1)" =~ No\ remote\ configured.       ]]
+  [[ "$("${_NB}" remote 2>&1)" =~ No\ remote\ configured.         ]]
 
-  [[ "${lines[0]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL} ]]
-  [[ "${lines[1]}"  =~  Removed\ remote:\ .*${_GIT_REMOTE_URL}  ]]
+  [[ "${lines[0]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}   ]]
+  [[ "${lines[1]}"  =~  Removed\ \ remote:\ .*${_GIT_REMOTE_URL}  ]]
 }
 
 @test "'remote unset' with existing remote removes remote and prints message." {
@@ -64,10 +64,10 @@ load test_helper
 
   [[ "${status}"    -eq 0 ]]
 
-  [[ "$("${_NB}" remote 2>&1)" =~ No\ remote\ configured.       ]]
+  [[ "$("${_NB}" remote 2>&1)" =~ No\ remote\ configured.         ]]
 
-  [[ "${lines[0]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL} ]]
-  [[ "${lines[1]}"  =~  Removed\ remote:\ .*${_GIT_REMOTE_URL}  ]]
+  [[ "${lines[0]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}   ]]
+  [[ "${lines[1]}"  =~  Removed\ \ remote:\ .*${_GIT_REMOTE_URL}  ]]
 }
 
 @test "'remote remove' with existing remote as orphan removes remote, removes branch and prints message." {
@@ -96,10 +96,10 @@ load test_helper
 
   [[ "${status}"    -eq 0 ]]
 
-  [[ "$("${_NB}" remote 2>&1)" =~ No\ remote\ configured.       ]]
+  [[ "$("${_NB}" remote 2>&1)" =~ No\ remote\ configured.         ]]
 
-  [[ "${lines[0]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL} ]]
-  [[ "${lines[1]}"  =~  Removed\ remote:\ .*${_GIT_REMOTE_URL}  ]]
+  [[ "${lines[0]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}   ]]
+  [[ "${lines[1]}"  =~  Removed\ \ remote:\ .*${_GIT_REMOTE_URL}  ]]
 
     diff                                  \
       <(git -C "${NB_DIR}/home" ls-remote \
