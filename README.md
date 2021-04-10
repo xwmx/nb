@@ -3208,6 +3208,41 @@ using Dropbox, Drive, Box, Syncthing, or another syncing tool by changing
 your `nb` directory with [`nb set nb_dir <path>`](#nb_dir)
 and git syncing will still work simultaneously.
 
+#### Syncing Multiple Notebooks with One Remote
+
+Multiple notebooks can be synced to one remote using orphan branches.
+An orphan branch is a branch with a history that's independent
+from the repository's `main`, `master`, or equivalent primary branch's
+history.  [`nb remote set`](#remote) provides the option of syncing the
+notebook as a new orphan branch.
+
+To create a notebook using an existing orphan branch on a remote, pass the
+branch name to
+[`nb init`](#init),
+[`nb notebooks add`](#notebooks), or
+[`nb notebooks init`](#notebooks):
+
+```bash
+# initialize new "home" notebook by cloning remote and using "sample-branch"
+nb init http://github.com/xwmx/example.git sample-branch
+
+# add new "example" notebook by cloning remote and using "example-branch"
+nb notebooks add example http://github.com/xwmx/example.git example-branch
+```
+
+Orphan branch names are derived from the source notebook names. To list
+all branches on a remote, use `nb remote branches`:
+
+```bash
+# list all branches on the current remote
+nb remote branches
+
+# list all branches on a remote repository
+nb remote branches "https://github.com/xwmx/example"
+```
+
+#### Cloning Existing Notebooks
+
 When you have an existing `nb` notebook in a git repository, simply
 pass the URL to [`nb notebooks add`](#notebooks) and `nb` will clone
 your existing notebook and start syncing changes automatically:
