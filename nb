@@ -17903,7 +17903,13 @@ _remote() {
         local         __line=
         while read -r __line
         do
-          if [[ "${__line:-}" == "${_current_branch:-}" ]]
+          if [[ "${__line:-}"             == "${_current_branch:-}"     ]] &&
+             {
+               [[ "${_new_remote_url:-}"  == "${_current_remote_url:-}" ]] ||
+               {
+                 [[ -z "${_new_remote_url:-}" ]] && ((_remote_exists))
+               }
+             }
           then
             printf "%s\\n" "$(_color_primary "${__line}")"
           else
