@@ -3255,10 +3255,10 @@ nb example:git status
 Multiple notebooks can be synced to one remote using orphan branches.
 An orphan branch is a branch with a history that's independent
 from the repository's `main`, `master`, or equivalent primary branch's
-history.  [`nb remote set`](#remote) provides the option of syncing the
-notebook as a new orphan branch when a remote is added. The
-name of orphan branch is derived from notebook name and can
-alternatively be specified as an argument to `nb remote set`:
+history. To sync a notebook with a new orphan branch, add the remote
+using [`nb remote set`](#remote) and select the option to create a new
+orphan branch. The name of orphan branch is derived from notebook name
+and can alternatively be specified as an argument to `nb remote set`:
 
 ```bash
 # set the remote for the current notebook to a remote URL and branch
@@ -3269,7 +3269,7 @@ To create a notebook using an existing orphan branch on a remote, pass the
 branch name to
 [`nb init`](#init),
 [`nb notebooks add`](#notebooks), or
-[`nb notebooks init`](#notebooks):
+[`nb notebooks init`](#notebooks) after the URL:
 
 ```bash
 # initialize new "home" notebook with the branch "sample-branch" on the remote
