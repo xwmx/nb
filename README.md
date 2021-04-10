@@ -5029,14 +5029,17 @@ Usage:
   nb init [<remote-url> [<branch>]]
 
 Description:
-  Initialize the local data directory and generate configuration file for `nb`
-  if it doesn't exist yet at:
+  Initialize the initial "home" notebook and generate a configuration file at:
 
       ~/.nbrc
+
+  Pass optional <remote-url> and <branch> options to create the initial
+  "home" notebook using a clone of an existing notebook.
 
 Examples:
   nb init
   nb init https://github.com/example/example.git
+  nb init https://github.com/example/example.git example-branch
 ```
 
 #### `list`

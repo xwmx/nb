@@ -4121,14 +4121,17 @@ Usage:
   ${_ME} init [<remote-url> [<branch>]]
 
 Description:
-  Initialize the local data directory and generate a configuration file for \`${_ME}\`
-  if it doesn't exist yet at:
+  Initialize the initial "home" notebook and generate a configuration file at:
 
       ${NBRC_PATH}
+
+  Pass optional <remote-url> and <branch> options to create the initial
+  "home" notebook using a clone of an existing notebook.
 
 Examples:
   ${_ME} init
   ${_ME} init https://github.com/example/example.git
+  ${_ME} init https://github.com/example/example.git example-branch
 HEREDOC
 _init() {
   # Usage: _init_create_home_notebook [<url> [<branch>]]
