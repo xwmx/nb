@@ -53,6 +53,12 @@ load test_helper
 
     cd "${NB_DIR}/home" &&
       git remote add origin "${_GIT_REMOTE_URL}"
+
+    diff                                  \
+      <(git -C "${NB_DIR}/home" ls-remote \
+          --heads "${_GIT_REMOTE_URL}"    \
+          | sed "s/.*\///g" || :)         \
+      <(printf "master\\n")
   }
 
   run "${_NB}" remote unset <<< "y${_NEWLINE}"
@@ -68,6 +74,14 @@ load test_helper
 
   [[ "${lines[0]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}   ]]
   [[ "${lines[1]}"  =~  Removed\ \ remote:\ .*${_GIT_REMOTE_URL}  ]]
+
+  # does not delete last branch
+
+  diff                                  \
+    <(git -C "${NB_DIR}/home" ls-remote \
+        --heads "${_GIT_REMOTE_URL}"    \
+        | sed "s/.*\///g" || :)         \
+    <(printf "master\\n")
 }
 
 @test "'remote remove' with existing remote as orphan removes remote, removes branch and prints message." {
