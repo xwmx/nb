@@ -4143,7 +4143,7 @@ _init() {
     then
       if [[ -n "${_remote_branch:-}"  ]]
       then
-        git clone -b "${_remote_branch:-}" "${_remote_url}" "${NB_DIR}/home"
+        git clone --branch "${_remote_branch:-}" "${_remote_url}" "${NB_DIR}/home"
       else
         git clone "${_remote_url}" "${NB_DIR}/home"
       fi
@@ -6051,7 +6051,7 @@ _notebooks() {
     then
       if [[ -n "${_remote_branch:-}"  ]]
       then
-        git clone -b "${_remote_branch:-}" "${_remote_url}" "${NB_DIR}/${_name}"
+        git clone --branch "${_remote_branch:-}" "${_remote_url}" "${NB_DIR}/${_name}"
       else
         git clone "${_remote_url}" "${NB_DIR}/${_name}"
       fi &&
@@ -6455,7 +6455,7 @@ HEREDOC
     then
       if [[ -n "${_remote_branch:-}" ]]
       then
-        git clone -b "${_remote_branch:-}" "${_remote_url}" "${_path}"
+        git clone --branch "${_remote_branch:-}" "${_remote_url}" "${_path}"
       else
         git clone "${_remote_url}" "${_path}"
       fi

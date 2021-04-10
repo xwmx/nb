@@ -57,7 +57,7 @@ _setup_notebooks() {
   [[    "${lines[1]}" =~  example                       ]]
   [[ -d "${_TMP_DIR}/example/.git"                      ]]
   [[ -f "${_TMP_DIR}/example/.index"                    ]]
-  [[ -f "${NB_DIR}/example/Example File One.md"         ]]
+  [[ -f "${_TMP_DIR}/example/Example File One.md"       ]]
 
   cd "${_TMP_DIR}/example" || return 1
 
