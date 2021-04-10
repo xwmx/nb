@@ -3256,7 +3256,12 @@ Multiple notebooks can be synced to one remote using orphan branches.
 An orphan branch is a branch with a history that's independent
 from the repository's `main`, `master`, or equivalent primary branch's
 history.  [`nb remote set`](#remote) provides the option of syncing the
-notebook as a new orphan branch.
+notebook as a new orphan branch when a remote is added. The name
+
+```bash
+# set the remote for the current notebook to remote URL and branch
+nb remote set https://github.com/xwmx/example demo-branch
+```
 
 To create a notebook using an existing orphan branch on a remote, pass the
 branch name to
@@ -3265,11 +3270,11 @@ branch name to
 [`nb notebooks init`](#notebooks):
 
 ```bash
-# initialize new "home" notebook by cloning remote and using "sample-branch"
-nb init https://github.com/example/example sample-branch
+# initialize new "home" notebook by cloning remote and switching to "sample-branch"
+nb init https://github.com/xwmx/example sample-branch
 
-# add new "example" notebook by cloning remote and using "example-branch"
-nb notebooks add example https://github.com/example/example example-branch
+# add new "example" notebook by cloning remote and switching to "example-branch"
+nb notebooks add example https://github.com/xwmx/example example-branch
 ```
 
 Orphan branch names are derived from the source notebook names. To list
@@ -3279,7 +3284,7 @@ all branches on a remote, use [`nb remote branches`](#remote):
 # list all branches on the current remote
 nb remote branches
 
-# list all branches on a remote repository
+# list all branches on a remote repository identified by a URL
 nb remote branches "https://github.com/xwmx/example"
 ```
 
