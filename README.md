@@ -3259,7 +3259,7 @@ history.  [`nb remote set`](#remote) provides the option of syncing the
 notebook as a new orphan branch when a remote is added. The name
 
 ```bash
-# set the remote for the current notebook to remote URL and branch
+# set the remote for the current notebook to a remote URL and branch
 nb remote set https://github.com/xwmx/example demo-branch
 ```
 
@@ -3270,10 +3270,10 @@ branch name to
 [`nb notebooks init`](#notebooks):
 
 ```bash
-# initialize new "home" notebook by cloning remote and switching to "sample-branch"
+# initialize new "home" notebook with the branch "sample-branch" on the remote
 nb init https://github.com/xwmx/example sample-branch
 
-# add new "example" notebook by cloning remote and switching to "example-branch"
+# add a new "example" notebook from the branch "example-branch" on the remote
 nb notebooks add example https://github.com/xwmx/example example-branch
 ```
 
