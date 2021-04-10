@@ -232,7 +232,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)          ]]
     --title     "Example 1 Title One"   \
     --content   "Example 1 content one."
 
-  [[    -f "${NB_DIR_1}/Example Notebook/Example 1 File One.md"   ]]
+  [[    -f "${NB_DIR_1}/Example Notebook/Example 1 File One.md"     ]]
 
   # set new notebook remote as orphan
 
@@ -241,7 +241,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)          ]]
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0                                         ]]
+  [[ "${status}"    -eq 0                                           ]]
 
   git -C "${NB_DIR_1}/Example Notebook" ls-remote       \
           --heads "${_GIT_REMOTE_URL}"                  \
@@ -257,6 +257,24 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)          ]]
   # _nbdir_1_example_notebook_commit_hashes=($(
   #   git -C "${NB_DIR_1}/Example Notebook" rev-list --all --full-history
   # ))
+
+  # switch back to $NB_DIR_2
+
+  export NB_DIR="${NB_DIR_2}"
+
+  "${_NB}" notebooks add "Example Clone Notebook" "${_GIT_REMOTE_URL}" "Example-Notebook"
+
+  diff                                        \
+    <(cd "${NB_DIR_2}/Example Clone Notebook" &&
+      git config --get remote.origin.url)     \
+    <(printf "%s\\n" "${_GIT_REMOTE_URL}")
+
+  diff                                        \
+    <(cd "${NB_DIR_2}/Example Clone Notebook" &&
+      git rev-parse --abbrev-ref HEAD)        \
+    <(printf "Example-Notebook\\n")
+
+  [[ -f "${NB_DIR_2}/Example Clone Notebook/Example 1 File One.md"  ]]
 }
 
 @test "'sync' with different branch names displays prompts, updates local branch to match remote, and syncs successfully." {

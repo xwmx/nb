@@ -40,6 +40,8 @@ load test_helper
   diff                                                            \
     <(cd "${NB_DIR}/home" && git rev-parse --abbrev-ref HEAD)     \
     <(printf "example-branch\\n")
+
+  [[ -f "${NB_DIR}/home/Example File One.md" ]]
 }
 
 @test "'init <remote-url>' creates a clone in '\$NB_NOTEBOOK_PATH' / '\$NB_DIR/home'." {

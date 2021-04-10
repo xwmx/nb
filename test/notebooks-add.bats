@@ -48,6 +48,7 @@ _setup_notebooks() {
   [[    "${lines[1]}" =~  example                               ]]
   [[    "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)" -eq 8 ]]
   [[ -d "${NB_DIR}/example/.git"                                ]]
+  [[ -f "${NB_DIR}/example/Example File One.md"                 ]]
 
   diff                                                              \
     <(cd "${NB_DIR}/example" && git config --get remote.origin.url) \
