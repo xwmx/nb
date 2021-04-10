@@ -109,7 +109,7 @@ features. `nb` is flexible.
 <p align="center">
 	Versions: 6.0.0-alpha
 	•
-	<a href="https://xwmx.github.io/nb/">5.7.8</a>
+	<a href="https://github.com/xwmx/nb/blob/5.7.8/README.md">5.7.8</a>
 </p>
 
 <p align="center">
@@ -333,7 +333,7 @@ repository and will be included in version 6.0.0.</em>
 </p>
 
 <p align="center">
-  <em><a href="https://xwmx.github.io/nb/">Version 5.7.8 Documentation</a></em>
+  <em><a href="https://github.com/xwmx/nb/blob/5.7.8/README.md">Version 5.7.8 Documentation</a></em>
 </p>
 
 To get started, simply run:
