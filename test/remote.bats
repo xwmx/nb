@@ -21,7 +21,7 @@ load test_helper
   [[ "${lines[0]}"  =~  No\ remote\ configured. ]]
 }
 
-@test "'remote branches <url>' with no existing remote prints remote branches." {
+@test "'remote branches <url>' with no existing remote prints remote branches with current branch highlighted." {
   {
     "${_NB}" init
 
@@ -37,10 +37,10 @@ load test_helper
   [[ "${status}"    -eq 0                         ]]
   [[ "${#lines[@]}" -eq 1                         ]]
 
-  [[ "${lines[0]}"  ==  "master"                  ]]
+  [[ "${lines[0]}"  =~  .*master.*                ]]
 }
 
-@test "'remote branches' with existing remote as orphan prints branches." {
+@test "'remote branches' with existing remote as orphan prints branches with current branch highlighted." {
   {
     "${_NB}" init
 
@@ -64,11 +64,10 @@ load test_helper
 
 
   [[ "${status}"    -eq 0                         ]]
-  [[ "${#lines[@]}" -eq 3                         ]]
+  [[ "${#lines[@]}" -eq 2                         ]]
 
-  [[ "${lines[0]}"  ==  "From ${_GIT_REMOTE_URL}" ]]
-  [[ "${lines[1]}"  ==  "example-branch"          ]]
-  [[ "${lines[2]}"  ==  "master"                  ]]
+  [[ "${lines[0]}"  =~  .*example-branch.*        ]]
+  [[ "${lines[1]}"  ==  "master"                  ]]
 }
 
 # remote remove ###############################################################

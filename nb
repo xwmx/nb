@@ -17876,26 +17876,41 @@ _remote() {
 
   local _remote_exists=0
 
-  if [[ -n "${_current_remote_url:-}" ]]
+  if [[ -n "${_current_remote_url:-}"   ]]
   then
     _remote_exists=1
   fi
 
   case "${_subcommand:-}" in
     branches)
-      if [[ -n "${_new_remote_url:-}" ]]
-      then
-        git -C "${_notebook_path}" ls-remote  \
-          --heads "${_new_remote_url:-}"      \
-          | sed "s/.*\///g"
-      elif ((_remote_exists))
-      then
-        git -C "${_notebook_path}" ls-remote  \
-          --heads                             \
-          | sed "s/.*\///g"
-      else
-        _exit_1 printf "No remote configured.\\n"
-      fi
+      {
+        if [[ -n "${_new_remote_url:-}" ]]
+        then
+          git -C "${_notebook_path}" ls-remote  \
+            --heads "${_new_remote_url:-}"      \
+            2>/dev/null                         \
+            | sed "s/.*\///g"
+        elif ((_remote_exists))
+        then
+          git -C "${_notebook_path}" ls-remote  \
+            --heads                             \
+            2>/dev/null                         \
+            | sed "s/.*\///g"
+        else
+          _exit_1 printf "No remote configured.\\n"
+        fi
+      } | {
+        local         __line=
+        while read -r __line
+        do
+          if [[ "${__line:-}" == "${_current_branch:-}" ]]
+          then
+            printf "%s\\n" "$(_color_primary "${__line}")"
+          else
+            printf "%s\\n" "${__line}"
+          fi
+        done
+      }
 
       return 0
       ;;
