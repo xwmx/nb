@@ -17900,16 +17900,20 @@ _remote() {
           _exit_1 printf "No remote configured.\\n"
         fi
       } | {
+        local _highlight_matching_branch=0
+
+        if ((_remote_exists))                 &&
+           [[ -z  "${_new_remote_url:-}"  ]]  ||
+           [[     "${_new_remote_url:-}"  ==  "${_current_remote_url:-}"  ]]
+        then
+          _highlight_matching_branch=1
+        fi
+
         local         __line=
         while read -r __line
         do
-          if [[ "${__line:-}"             == "${_current_branch:-}"     ]] &&
-             {
-               [[ "${_new_remote_url:-}"  == "${_current_remote_url:-}" ]] ||
-               {
-                 [[ -z "${_new_remote_url:-}" ]] && ((_remote_exists))
-               }
-             }
+          if ((_highlight_matching_branch))   &&
+             [[   "${__line:-}"           ==  "${_current_branch:-}"      ]]
           then
             printf "%s\\n" "$(_color_primary "${__line}")"
           else
