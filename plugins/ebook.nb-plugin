@@ -68,6 +68,29 @@ More info:
   https://pandoc.org/epub.html
 HEREDOC
 
+__get_sub_files() {
+  local _folder_path="${1:-}"
+  local _chapter_filenames=($(
+    _list_files "${_folder_path}"
+  ))
+  local _files=()
+
+  local __filename=
+  for __filename in "${_chapter_filenames[@]:-}"
+  do
+    if [[ -d "${_folder_path}/${__filename}" ]]
+    then
+        _files+=($(
+          __get_sub_files "${_folder_path}/${__filename}"
+        ))
+    else
+        _files+=("${_folder_path}/${__filename}")
+    fi
+  done
+
+  echo "${_files[@]}"
+}
+
 # Define the subcommand as a function, named with a leading underscore.
 _ebook() {
   local _force=0
@@ -237,7 +260,14 @@ HEREDOC
       local __filename=
       for   __filename in "${_chapter_filenames[@]:-}"
       do
-        _pandoc_arguments+=("${_notebook_path}/${__filename}")
+        if [[ -d "${_notebook_path}/${__filename}" ]]
+        then
+          _pandoc_arguments+=($(
+            __get_sub_files "${_notebook_path}/${__filename}"
+          ))
+        else
+          _pandoc_arguments+=("${_notebook_path}/${__filename}")
+        fi
       done
 
       local _output_filename=
