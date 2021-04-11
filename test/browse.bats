@@ -7,6 +7,51 @@ export NB_SERVER_PORT=6789
 # non-breaking space
 export _S=" "
 
+# conflicting folder and notebook names #######################################
+
+@test "'browse <folder-id>' with conflicting folder and notebook names renders folder." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Conflicting Name/Example Folder File.md"  \
+      --content "Example folder file content."
+
+    "${_NB}" notebooks add "Example Conflicting Name"
+    "${_NB}" notebooks use "Example Conflicting Name"
+
+    "${_NB}" add  "Example Notebook File.md"                        \
+      --content   "Example notebook file content."
+
+    "${_NB}" notebooks use "home"
+
+    [[   -f "${NB_DIR}/home/Example Conflicting Name/Example Folder File.md"  ]]
+    [[   -f "${NB_DIR}/Example Conflicting Name/Example Notebook File.md"     ]]
+
+    sleep 1
+  }
+
+  run "${_NB}" browse 1 --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  ==  0 ]]
+
+  [[ "${output}"  =~  \
+href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>       ]]
+  [[ "${output}"  =~  \
+\<nav\ class=\"header-crumbs\"\>\<h1\>.*\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\"\> ]]
+  [[ "${output}"  =~  \
+.*·.*\ \<a.*\ href=\"http://localhost:6789/home:\?--per-page=.*\"\>home\</a\>\ .*:.*\           ]]
+  [[ "${output}"  =~  \
+\<a.*\ href=\"http://localhost:6789/home:1/\?--per-page=.*\"\>Example\ Conflicting\ Name\</a\>\ .*/.*\</h1\>  ]]
+
+  [[ "${output}"  =~  \
+\<a.*\ href=\"http://localhost:6789/home:1/1\?--per-page=.*\"\ class=\"list-item\"\>.*\[.*Example${_S}Conflicting${_S}Name/1.*\].*   ]]
+  [[ "${output}"  =~  \
+class=\"list-item\"\>.*\[.*Example${_S}Conflicting${_S}Name/1.*\].*${_S}Example${_S}Folder${_S}File.md\</a\>\<br\>  ]]
+}
+
 # --original ##################################################################
 
 @test "GET to --original URL with .html extension serves original html file as text/plain." {
