@@ -6901,6 +6901,13 @@ HEREDOC
             ! {
               [[ -d "${_maybe_notebook_path}/.git"    ]] &&
               [[ -f "${_maybe_notebook_path}/.index"  ]]
+            } && {
+              {
+                [[    "${_maybe_notebook_path:-}"   =~ ^${NB_DIR}     ]]  &&
+                [[ !  "${_maybe_notebook_path%/*}"  == "${NB_DIR}"    ]]
+              } || {
+                [[ !  "${_maybe_notebook_path:-}"   =~ ^${NB_DIR}     ]]
+              }
             }
       do
         _maybe_notebook_path="${_maybe_notebook_path%/*}"

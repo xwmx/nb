@@ -2,6 +2,80 @@
 
 load test_helper
 
+# show <full-paths> ###########################################################
+
+@test "'notebooks show <notebook-path>/<folder-path> --path' with conflicting folder and notebook names exits with 0 and prints the notebook path." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add "Example Folder"
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" add "Example Notebook:Example Folder/Example File.md"  \
+      --content "Example file content."
+  }
+
+  run "${_NB}" notebooks show "${NB_DIR}/Example Notebook/Example Folder" --path
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0                             ]]
+  [[ "${output}"  ==  "${NB_DIR}/Example Notebook"  ]]
+}
+
+@test "'notebooks show <notebook-path>/<folder-path>/<filename> --path' exits with 0 and prints the notebook path." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" add "Example Notebook:Example Folder/Example File.md"  \
+      --content "Example file content."
+  }
+
+  run "${_NB}" notebooks show                                       \
+    "${NB_DIR}/Example Notebook/Example Folder/Example File.md"     \
+    --path
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0                             ]]
+  [[ "${output}"  ==  "${NB_DIR}/Example Notebook"  ]]
+}
+
+@test "'notebooks show <notebook-path>/<folder-path> --path' exits with 0 and prints the notebook path." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" add "Example Notebook:Example Folder/Example File.md" \
+      --content "Example file content."
+  }
+
+  run "${_NB}" notebooks show "${NB_DIR}/Example Notebook/Example Folder" --path
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0                             ]]
+  [[ "${output}"  ==  "${NB_DIR}/Example Notebook"  ]]
+}
+
+@test "'notebooks show <notebook-path> --path' exits with 0 and prints the notebook path." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add "Example Notebook"
+  }
+
+  run "${_NB}" notebooks show "${NB_DIR}/Example Notebook" --path
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0                             ]]
+  [[ "${output}"  ==  "${NB_DIR}/Example Notebook"  ]]
+}
+
 # local #######################################################################
 
 @test "'notebooks show <local-full-path> --name' exits with 0 and prints 'local'." {
