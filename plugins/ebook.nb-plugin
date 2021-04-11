@@ -69,26 +69,24 @@ More info:
 HEREDOC
 
 __get_sub_files() {
-  local _folder_path="${1:-}"
-  local _chapter_filenames=($(
-    _list_files "${_folder_path}"
-  ))
+  local _chapter_filenames=($(_list_files "${_folder_path}"))
   local _files=()
+  local _folder_path="${1:-}"
 
   local __filename=
-  for __filename in "${_chapter_filenames[@]:-}"
+  for   __filename in "${_chapter_filenames[@]:-}"
   do
     if [[ -d "${_folder_path}/${__filename}" ]]
     then
-        _files+=($(
-          __get_sub_files "${_folder_path}/${__filename}"
-        ))
+      _files+=($(
+        __get_sub_files "${_folder_path}/${__filename}"
+      ))
     else
-        _files+=("${_folder_path}/${__filename}")
+      _files+=("${_folder_path}/${__filename}")
     fi
   done
 
-  echo "${_files[@]}"
+  printf "%s\\n" "${_files[@]:-}"
 }
 
 # Define the subcommand as a function, named with a leading underscore.
