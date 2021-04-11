@@ -6826,7 +6826,8 @@ HEREDOC
       _notebooks_show "${_selector:-}" --path 2>/dev/null || :
     )"
 
-    if [[ -n "${_notebook_path:-}"  ]]
+    if [[ -n "${_notebook_path:-}"  ]] &&
+       [[ -d "${_notebook_path:-}"  ]]
     then
       NB_NOTEBOOK_PATH="${_notebook_path}"
       return 0
