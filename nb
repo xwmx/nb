@@ -12588,23 +12588,26 @@ _move() {
     shift
   done
 
-  if [[ -z "${_source_selector}" ]]
+  if [[ -z "${_source_selector}"          ]]
   then
     _exit_1 _help "move"
   fi
 
-  local _source_relative_path
+  local _source_relative_path=
   _source_relative_path="$(_show "${_source_selector}" --relative-path)"
 
-  if [[ -z "${_source_relative_path}" ]]
+  if [[ -z "${_source_relative_path}"     ]]
   then
     _exit_1 _help "move"
   fi
 
-  local _source_notebook_path
-  _source_notebook_path="$(
-    _notebooks show "${_source_selector}" --path 2>/dev/null || :
-  )"
+  local _source_notebook_path=
+  if [[ "${_source_selector:-}" =~ :      ]]
+  then
+    _source_notebook_path="$(
+      _notebooks show "${_source_selector}" --path 2>/dev/null || :
+    )"
+  fi
 
   if [[ -z "${_source_notebook_path:-}"   ]]
   then
@@ -12660,12 +12663,12 @@ _move() {
       fi
     fi
 
-    if [[ -n "${_to_target_type:-}" ]]
+    if [[ -n  "${_to_target_type:-}"  ]]
     then
-      if [[ "${_to_target_type}" == "bookmark"  ]]
+      if [[   "${_to_target_type}" == "bookmark"  ]]
       then
         _target_file_type="bookmark.md"
-      elif [[ "${_to_target_type}" == "note"    ]]
+      elif [[ "${_to_target_type}" == "note"      ]]
       then
         _target_file_type="md"
       else

@@ -2,6 +2,54 @@
 
 load test_helper
 
+# edge cases ##################################################################
+
+@test "'move <folder> <new-name>' with conflicting notebook name moves folder." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Conflicting Name/Sample File.bookmark.md" \
+      --title   "Sample Title"                                      \
+      --content "<https://1.example.test>"
+
+
+    "${_NB}" notebooks add "Example Conflicting Name"
+
+    [[   -d "${NB_DIR}/home/Example Conflicting Name"                         ]]
+    [[   -f "${NB_DIR}/home/Example Conflicting Name/Sample File.bookmark.md" ]]
+    [[ ! -e "${NB_DIR}/home/Example New Name/Sample File.bookmark.md"         ]]
+  }
+
+  run "${_NB}" move "Example Conflicting Name" "Example New Name" <<< "y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Moves folder:
+
+    [[ ! -e "${NB_DIR}/home/Example Conflicting Name"                         ]]
+    [[   -f "${NB_DIR}/home/Example New Name/Sample File.bookmark.md"         ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Move:'
+
+  # Prints output:
+
+  [[ "${lines[0]}"  =~  Moving:\ \ \ .*\[.*1.*\].*\ 📂\ .*Example\ Conflicting\ Name  ]]
+  [[ "${lines[1]}"  =~  To:\ \ \ \ \ \ \ .*Example\ New\ Name                         ]]
+  [[ "${lines[2]}"  =~  Moved\ to:\ .*Example\ New\ Name                              ]]
+}
+
 # intermediate folders ########################################################
 
 @test "'move notebook:folder/<id>' moves across notebooks and creates intermediate folders." {
