@@ -4587,20 +4587,23 @@ _list() {
   local _maybe_id_path_context=
   local _maybe_selector_context=
 
-  if [[ -n "${_folder_relative_path:-}" ]]
+  if [[ -n "${_folder_relative_path:-}"                 ]] &&
+     [[ -e "${_notebook_path}/${_folder_relative_path}" ]]
   then
     _list_path="${_notebook_path}/${_folder_relative_path}"
-
-    if [[ ! -e "${_list_path}" ]]
-    then
-      _exit_1 printf "Not found: %s\\n" "$(_color_primary "${_folder_relative_path:-}")"
-    fi
 
     _maybe_id_path_context="$(
       _get_id_selector "${_folder_relative_path:-}/"
     )"
 
     _maybe_selector_context="${_folder_relative_path:-}/"
+  fi
+
+  if [[ ! -e "${_list_path}" ]]
+  then
+    _exit_1 printf "Not found: %s\\n" "$(
+      _color_primary "${_folder_relative_path:-"${_selector:-}"}"
+    )"
   fi
 
   if _notebooks current --selected
