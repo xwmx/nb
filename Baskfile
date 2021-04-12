@@ -77,6 +77,8 @@ ${_front_matter_lines[*]}
 
 $(cat ./README.md)
 HEREDOC
+
+  printf "Rebuilt: %s\\n" "${_target_file:?}"
 }
 
 # npm:publish ##################################################### npm:publish
