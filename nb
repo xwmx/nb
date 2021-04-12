@@ -6151,7 +6151,13 @@ _notebooks() {
       git -C "${_notebook_path:-}" config --local user.name   || :
     )"
 
-    if [[ -z "${_new_email:-"${_new_name:-}"}" ]] && ! ((_unset))
+    if ((_unset))
+    then
+      git -C "${_notebook_path:-}" config --unset user.email  || :
+      git -C "${_notebook_path:-}" config --unset user.name   || :
+
+      _notebooks_config
+    elif [[ -z "${_new_email:-"${_new_name:-}"}" ]]
     then
       printf "email"
 
