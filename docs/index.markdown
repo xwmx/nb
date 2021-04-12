@@ -4154,7 +4154,7 @@ nb❯ edit 3 --content "New content."
 Updated: [3] Example
 
 nb❯ bookmark https://example.com
-Added: [4] 🔶� example.bookmark.md "Example Title (example.com)"
+Added: [4] 🔖 example.bookmark.md "Example Title (example.com)"
 
 nb❯ ls
 home
@@ -5709,7 +5709,7 @@ Alias: `set`
      The tool used for encrypting notes.
 
      • Supported Values: openssl, gpg
-     •¶�Default Value:    openssl
+     • Default Value:    openssl
 ```
 
 ##### `footer`
