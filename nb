@@ -6166,13 +6166,19 @@ _notebooks() {
 
     if ((_unset))
     then
-      if ((_email)) || ! ((_name))
+      if [[ -n "${_local_email:-}"  ]] && {
+           ((_email)) || ! ((_name))
+         }
       then
+        _warn printf "Unsetting local email.\\n"
         git -C "${_notebook_path:-}" config --unset user.email  || :
       fi
 
-      if ((_name))  || ! ((_email))
+      if [[ -n "${_local_name:-}"   ]] && {
+           ((_name))  || ! ((_email))
+         }
       then
+        _warn printf "Unsetting local name.\\n"
         git -C "${_notebook_path:-}" config --unset user.name   || :
       fi
 
