@@ -910,7 +910,7 @@ Todos
 title: Ideas
 ```
 
-`nb` and `nb ls` display the 20 most recently modified items. The default
+`nb` and `nb ls` display the 15 most recently modified items. The default
 limit can be changed with [`nb set limit <number>`](#limit).
 To list a different number of items on a per-command basis, use the
 `-n <limit>`, `--limit <limit>`, `--<limit>`, `-a`, or `--all` flags:
@@ -5141,7 +5141,7 @@ Options:
   -g, --gui                       Open the specified item or current notebook
                                   with `browse` in a GUI web browser.
   -n, --limit <limit>, --<limit>  The maximum number of listed items.
-                                  [default: 20]
+                                  [default: 15]
   --no-header                     Print without header.
   --no-footer                     Print without footer.
   --no-id                         Don't include the id in list items.
@@ -5746,7 +5746,7 @@ Alias: `set`
      -----
      The maximum number of notes included in the `nb` and `nb ls` lists.
 
-     • Default Value: 20
+     • Default Value: 15
 ```
 
 ##### `nb_dir`

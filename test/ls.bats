@@ -1105,7 +1105,7 @@ HEREDOC
   [[ "${lines[3]}"  =~  '29'  ]]
 }
 
-@test "'ls' exits with 0 and lists 20 items." {
+@test "'ls' exits with 0 and lists 15 items." {
   {
     _setup_ls_all
   }
@@ -1118,11 +1118,11 @@ HEREDOC
 
   [[ "${status}"    -eq 0         ]]
 
-  [[ "${#lines[@]}" -eq 26        ]]
+  [[ "${#lines[@]}" -eq 21        ]]
   [[ "${lines[2]}"  =~  '30'      ]]
   [[ "${lines[3]}"  =~  '29'      ]]
-  [[ "${lines[21]}" =~  '11'      ]]
-  [[ "${lines[22]}" =~  'omitted' ]]
+  [[ "${lines[16]}" =~  '16'      ]]
+  [[ "${lines[17]}" =~  'omitted' ]]
 }
 
 @test "'ls -a' exits with 0 and lists all items." {

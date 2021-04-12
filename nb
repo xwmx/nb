@@ -450,10 +450,10 @@ export NB_HEADER="${NB_HEADER:-2}"
 
 # $NB_LIMIT
 #
-# Default: '20'
+# Default: '15'
 #
 # Supported Values: any positive number
-export NB_LIMIT="${NB_LIMIT:-20}"
+export NB_LIMIT="${NB_LIMIT:-15}"
 
 # $NB_SERVER_PORT
 #
@@ -5197,7 +5197,7 @@ Options:
   -g, --gui                       Open the specified item or current notebook
                                   with \`browse\` in a GUI web browser.
   -n, --limit <limit>, --<limit>  The maximum number of listed items.
-                                  [default: 20]
+                                  [default: 15]
   --no-header                     Print without header.
   --no-footer                     Print without footer.
   --no-id                         Don't include the id in list items.
@@ -19037,7 +19037,7 @@ $(local __editor=
     $(_color_secondary " -----")
      The maximum number of notes included in the \`${_ME}\` and \`${_ME} ls\` lists.
 
-     • Default Value: $(_color_primary "20")")
+     • Default Value: $(_color_primary "15")")
 
   _settings_list_items+=("$(_color_brackets '11') nb_dir")
   _settings_help_items+=("\
