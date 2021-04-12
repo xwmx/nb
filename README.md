@@ -1827,7 +1827,7 @@ Perform a full text search of bookmarks and archived page content:
 
 See [`bookmark help`](#bookmark-help) for more information.
 
-### 🏷 Tagging
+### 🏷 #tagging
 
 `nb` recognizes [#hashtags](#-tagging) defined anywhere within a document.
 Notes and bookmarks can be tagged when they are created using the
