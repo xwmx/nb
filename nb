@@ -6166,8 +6166,15 @@ _notebooks() {
 
     if ((_unset))
     then
-      git -C "${_notebook_path:-}" config --unset user.email  || :
-      git -C "${_notebook_path:-}" config --unset user.name   || :
+      if ((_email)) || ! ((_name))
+      then
+        git -C "${_notebook_path:-}" config --unset user.email  || :
+      fi
+
+      if ((_name))  || ! ((_email))
+      then
+        git -C "${_notebook_path:-}" config --unset user.name   || :
+      fi
 
       _notebooks_config
     elif [[ -z "${_new_email:-"${_new_name:-}"}" ]]
