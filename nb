@@ -6261,7 +6261,6 @@ _notebooks() {
 
           case ${__yn} in
             [Yy]*)
-              printf "\\n"
               break
               ;;
             *)
@@ -6277,21 +6276,18 @@ _notebooks() {
           _unset=$(_color_primary "unset")
 
           cat <<HEREDOC
+
 Enter a new value, ${_unset} to use the global value,
 or leave blank to keep the current value.
+
 HEREDOC
-        fi
 
-        if [[ -z "${_new_local_email:-}"  ]]
-        then
           IFS='' read -r -e -d $'\n' -p             \
-"$(_color_primary "email:") " _new_local_email
-        fi
+"local $(_color_primary "email:") " _new_local_email
 
-        if [[ -z "${_new_local_name:-}"   ]]
-        then
+
           IFS='' read -r -e -d $'\n' -p             \
-"$(_color_primary "name:")  " _new_local_name
+"local $(_color_primary "name:")  " _new_local_name
         fi
       fi
 
