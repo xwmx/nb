@@ -6174,12 +6174,15 @@ _notebooks() {
 
     if ((_unset))
     then
+      local _unset_output_present=0
+
       if [[ -n "${_local_email:-}"  ]] && {
            ((_email)) || ! ((_name))
          }
       then
         _warn printf "Unsetting local email.\\n"
         git -C "${_notebook_path:-}" config --unset user.email  || :
+        _unset_output_present=1
       fi
 
       if [[ -n "${_local_name:-}"   ]] && {
@@ -6188,7 +6191,10 @@ _notebooks() {
       then
         _warn printf "Unsetting local name.\\n"
         git -C "${_notebook_path:-}" config --unset user.name   || :
+        _unset_output_present=1
       fi
+
+      ((_unset_output_present)) && printf "\\n"
 
       printf "Updated configuration for: %s\\n" "$(
         _color_primary "$(_notebooks_current --name)"
