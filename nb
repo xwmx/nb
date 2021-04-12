@@ -6108,8 +6108,10 @@ _notebooks() {
   _notebooks_config() {
     local _email=0
     local _name=0
-    local _new_email=
-    local _new_name=
+    local _new_local_email=
+    local _new_local_name=
+    local _print_current=0
+    local _skip_prompt=0
     local _unset=0
 
     while ((${#}))
@@ -6120,7 +6122,7 @@ _notebooks() {
 
           if _option_value_is_present "${2:-}"
           then
-            _new_email="${2:-}"
+            _new_local_email="${2:-}"
             shift
           fi
           ;;
@@ -6129,9 +6131,15 @@ _notebooks() {
 
           if _option_value_is_present "${2:-}"
           then
-            _new_name="${2:-}"
+            _new_local_name="${2:-}"
             shift
           fi
+          ;;
+        --print|--current)
+          _print_current=1
+          ;;
+        --skip*)
+          _skip_prompt=1
           ;;
         --unset)
           _unset=1
@@ -6182,17 +6190,20 @@ _notebooks() {
         git -C "${_notebook_path:-}" config --unset user.name   || :
       fi
 
-      _notebooks_config
-    elif [[ -z "${_new_email:-"${_new_name:-}"}" ]]
-    then
-      printf "Configuration for: %s\\n" "$(
+      printf "Updated configuration for: %s\\n" "$(
         _color_primary "$(_notebooks_current --name)"
       )"
-      _print_line "------------------"
 
+      _print_line "--------------------------"
+
+      _notebooks_config --current
+
+      return 0
+    elif ((_print_current))
+    then
       printf "%s" "$(_color_primary "email")"
 
-      if [[ -n "${_local_email:-}" ]]
+      if [[ -n "${_local_email:-}"        ]]
       then
         printf " (%s):  %s\\n" "$(_color_primary "local")" "${_local_email:-}"
       else
@@ -6201,11 +6212,114 @@ _notebooks() {
 
       printf "%s" "$(_color_primary "name")"
 
-      if [[ -n "${_local_name:-}" ]]
+      if [[ -n "${_local_name:-}"         ]]
       then
         printf "  (%s):  %s\\n" "$(_color_primary "local")" "${_local_name:-}"
       else
         printf "  (%s): %s\\n" "$(_color_primary "global")" "${_global_name:-}"
+      fi
+
+      return 0
+    else
+      printf "Current configuration for: %s\\n" "$(
+        _color_primary "$(_notebooks_current --name)"
+      )"
+
+      _print_line "--------------------------"
+
+      _notebooks_config --current
+
+      if [[ -n "${_new_local_email:-}"    ]] || [[ -n "${_new_local_name:-}" ]]
+      then
+        printf    "\\nUpdate:\\n"
+        _print_line  "-------"
+
+        if [[ -n "${_new_local_email:-}"  ]]
+        then
+          printf "local %s: %s\\n" "$(_color_primary "email")" "${_new_local_email:-}"
+        fi
+
+        if [[ -n "${_new_local_name:-}"   ]]
+        then
+          printf "local %s:  %s\\n" "$(_color_primary "name")" "${_new_local_name:-}"
+        fi
+      fi
+
+      if ! ((_skip_prompt))
+      then
+        while true
+        do
+          local __yn=
+          IFS='' read -r -e -d $'\n' -p   \
+"${_NEWLINE}$(_color_primary "Update?")  $(_color_brackets "y/N") " __yn
+
+          case ${__yn} in
+            [Yy]*)
+              printf "\\n"
+              break
+              ;;
+            *)
+              printf "Exiting...\\n"
+              exit 0
+              ;;
+          esac
+        done
+
+        if [[ -z "${_new_local_email:-"${_new_local_name:-}"}" ]]
+        then
+          local _unset=
+          _unset=$(_color_primary "unset")
+
+          cat <<HEREDOC
+Enter a new value, ${_unset} to use the global value,
+or leave blank to keep the current value.
+HEREDOC
+        fi
+
+        if [[ -z "${_new_local_email:-}"  ]]
+        then
+          IFS='' read -r -e -d $'\n' -p             \
+"$(_color_primary "email:") " _new_local_email
+        fi
+
+        if [[ -z "${_new_local_name:-}"   ]]
+        then
+          IFS='' read -r -e -d $'\n' -p             \
+"$(_color_primary "name:")  " _new_local_name
+        fi
+      fi
+
+      if [[ -n "${_new_local_email:-}"    ]]
+      then
+        if _contains "${_new_local_email:-}" "global" "--unset" "unset"
+        then
+          git -C "${_notebook_path:-}" config --unset user.email  || :
+        else
+          git -C "${_notebook_path}" config --local \
+            user.email "${_new_local_email:-}"
+        fi
+      fi
+
+      if [[ -n "${_new_local_name:-}"     ]]
+      then
+        if _contains "${_new_local_name:-}" "global" "--unset" "unset"
+        then
+          git -C "${_notebook_path:-}" config --unset user.name  || :
+        else
+          git -C "${_notebook_path}" config --local \
+            user.name "${_new_local_name:-}"
+        fi
+      fi
+
+      if [[ -n "${_new_local_email:-"${_new_local_name:-}"}" ]] || ! ((_skip_prompt))
+      then
+        printf "\\nUpdated configuration for: %s\\n" "$(
+          _color_primary "$(_notebooks_current --name)"
+        )"
+
+        _print_line "--------------------------"
+
+        _notebooks_config --current
       fi
     fi
   }
@@ -7216,49 +7330,50 @@ HEREDOC
 
   case "${_subcommand}" in
     a|add|create|new)
-      _notebooks_add "${_name:-}" "${3:-}" "${4:-}"
+      _notebooks_add      "${_name:-}" "${3:-}" "${4:-}"
       ;;
     export)
-      _notebooks_export "${2:-}" "${3:-}"
+      _notebooks_export   "${2:-}" "${3:-}"
       ;;
     import)
-      _notebooks_import "${2:-}" "${3:-}"
+      _notebooks_import   "${2:-}" "${3:-}"
       ;;
     init)
-      _notebooks_init "${_name:-}" "${3:-}" "${4:-}"
+      _notebooks_init     "${_name:-}" "${3:-}" "${4:-}"
       ;;
     config*)
-      _notebooks_config "${2:-}" "${3:-}" "${4:-}"
+      shift
+      _notebooks_config   "${@:-}"
       ;;
     current)
       shift
-      _notebooks_current "${@:-}"
+      _notebooks_current  "${@:-}"
       ;;
     d|delete)
-      _notebooks_delete "${_name:-}" "${3:-}"
+      _notebooks_delete   "${_name:-}" "${3:-}"
       ;;
     list)
       shift
-      _notebooks_list "${@:-}"
+      _notebooks_list     "${@:-}"
       ;;
     rename)
-      _notebooks_rename "${_name:-}" "${3:-}"
+      _notebooks_rename   "${_name:-}" "${3:-}"
       ;;
     select)
-      _notebooks_select "${2:-}"
+      _notebooks_select   "${2:-}"
       ;;
     s|show)
       shift
-      _notebooks_show "${@:-}"
+      _notebooks_show     "${@:-}"
       ;;
     u|use)
-      _notebooks_use "${_name:-}"
+      _notebooks_use      "${_name:-}"
       ;;
     archive|open|o|peek|p|status|unarchive)
       _notebooks_notebook "${_subcommand}" "${_name:-}"
       ;;
     *)
-      _notebooks_list "${@}"
+      _notebooks_list     "${@}"
       ;;
   esac
 }
