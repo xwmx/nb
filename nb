@@ -6100,20 +6100,20 @@ _notebooks() {
   # _notebooks_config()
   #
   # Usage:
-  #   _notebooks_config [<email> [<name>]] [--delete]
+  #   _notebooks_config [<email> [<name>]] [--unset]
   #
   # Description:
   #   Print, set, and delete the <email> and <name> for git commit attribution
   #   within the notebook.
   _notebooks_config() {
-    local _delete=0
     local _new_email=
     local _new_name=
+    local _unset=0
 
     while ((${#}))
     do
       case "${1:-}" in
-        --delete) _delete=1 ;;
+        --unset) _unset=1 ;;
         *)
           if   [[ -z "${_new_email:-}"  ]]
           then
@@ -6151,7 +6151,7 @@ _notebooks() {
       git -C "${_notebook_path:-}" config --local user.name   || :
     )"
 
-    if [[ -z "${_new_email:-"${_new_name:-}"}" ]] && ! ((_delete))
+    if [[ -z "${_new_email:-"${_new_name:-}"}" ]] && ! ((_unset))
     then
       printf "email"
 
