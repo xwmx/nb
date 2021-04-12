@@ -4403,12 +4403,12 @@ _list() {
         _with_pinned=1
         ;;
       *)
-        if [[ "${__arg:-}" =~ ^--[0-9]+$ ]]
+        if   [[   "${__arg:-}" =~ ^--[0-9]+$  ]]
         then
           _limit="${__arg:2}"
-        elif [[   "${__arg:-}" =~ ^--       ]]
+        elif [[   "${__arg:-}" =~ ^--         ]]
         then
-          if [[ ! "${__arg:-}" =~ archived  ]]
+          if [[ ! "${__arg:-}" =~ archived    ]]
           then
             _type="${__arg:2}"
           fi
@@ -4462,38 +4462,37 @@ _list() {
         _selector="${__argument}"
 
         local _selector_notebook_path=
-        if _selector_notebook_path="$(
-             _notebooks show "${__argument}" --path 2>/dev/null || :
-           )"
-        then
-          if [[ -n  "${_selector_notebook_path:-}"                        ]] &&
-             [[ -d  "${_selector_notebook_path:-}"                        ]] &&
-             [[     "${_selector_notebook_path:-}" != "${_notebook_path}" ]]
-          then
-            _notebooks select "${_selector_notebook_path}"
-            _notebook_path="${_selector_notebook_path}"
-          fi
+        _selector_notebook_path="$(
+          _notebooks show "${__argument}" --path 2>/dev/null || :
+        )"
 
-          if [[ "${__argument}" =~ /$ ]]
-          then
-            _selector_relative_path="${_selector_relative_path}/"
-            _folder_relative_path="${_selector_relative_path%\/*}"
-            _selector_basename="${_selector_relative_path##*\/}"
-          elif [[ "${_selector_relative_path}" =~ /   ]]
-          then
-            _folder_relative_path="${_selector_relative_path%\/*}"
-            _selector_basename="${_selector_relative_path##*\/}"
-          elif [[ -n "${_selector_relative_path:-}" ]]
-          then
-            _folder_relative_path=
-            _selector_basename="${_selector_relative_path}"
-          else
-            _filter_patterns+=("${__argument}")
-          fi
+        if [[ -n  "${_selector_notebook_path:-}"                        ]] &&
+           [[ -d  "${_selector_notebook_path:-}"                        ]] &&
+           [[     "${_selector_notebook_path:-}" != "${_notebook_path}" ]]
+        then
+          _notebooks select "${_selector_notebook_path}"
+          _notebook_path="${_selector_notebook_path}"
         fi
-      elif [[ "${__argument:-}" =~ /$ ]]
+
+        if [[ "${__argument}" =~ /$ ]]
+        then
+          _selector_relative_path="${_selector_relative_path}/"
+          _folder_relative_path="${_selector_relative_path%\/*}"
+          _selector_basename="${_selector_relative_path##*\/}"
+        elif [[     "${_selector_relative_path}" =~ /   ]]
+        then
+          _folder_relative_path="${_selector_relative_path%\/*}"
+          _selector_basename="${_selector_relative_path##*\/}"
+        elif [[ -n  "${_selector_relative_path:-}"      ]]
+        then
+          _folder_relative_path=
+          _selector_basename="${_selector_relative_path}"
+        else
+          _filter_patterns+=("${__argument}")
+        fi
+      elif [[ "${__argument:-}" =~ /$           ]]
       then
-        if [[ -n "${_selector_relative_path:-}"   ]]
+        if [[ -n "${_selector_relative_path:-}" ]]
         then
           if [[ -d "${_notebook_path}/${_selector_relative_path}" ]]
           then # argument is a folder selector with trailing /
@@ -4501,7 +4500,7 @@ _list() {
             _selector="${__argument}"
             _selector_basename=
           else # argument is a file selector
-            if [[ "${_selector_relative_path:-}" =~ / ]]
+            if [[ "${_selector_relative_path:-}" =~ /   ]]
             then # argument is a nested file selector
               _folder_relative_path="${_selector_relative_path%\/*}"
             else # argument does not include a folder
@@ -4514,7 +4513,7 @@ _list() {
         else # argument has a trailing slash and does not match an exsting path
           _filter_patterns+=("${__argument}")
         fi
-      elif [[ "${__argument:-}" =~ / ]]
+      elif [[ "${__argument:-}" =~ /            ]]
       then
         if [[ -n "${_selector_relative_path:-}" ]]
         then # argument is a nested file or folder path
@@ -4541,13 +4540,13 @@ _list() {
           fi
         fi
       else
-        if [[ -n "${_selector_relative_path:-}"   ]]
+        if [[ -n "${_selector_relative_path:-}" ]]
         then # argument is a root-level file or folder identifier
           _folder_relative_path=
           _selector="${__argument}"
           _selector_basename="${_selector_relative_path##*\/}"
         else
-          if [[ "${__argument:-}" =~ : ]]
+          if [[ "${__argument:-}" =~ :          ]]
           then # argument appears to include notebook selector
             local _selector_notebook_path=
             _selector_notebook_path="$(
