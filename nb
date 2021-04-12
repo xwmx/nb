@@ -6172,22 +6172,27 @@ _notebooks() {
       _notebooks_config
     elif [[ -z "${_new_email:-"${_new_name:-}"}" ]]
     then
-      printf "email"
+      printf "Configuration for: %s\\n" "$(
+        _color_primary "$(_notebooks_current --name)"
+      )"
+      _print_line "------------------"
+
+      printf "%s" "$(_color_primary "email")"
 
       if [[ -n "${_local_email:-}" ]]
       then
-        printf " (local):  %s\\n" "${_local_email:-}"
+        printf " (%s):  %s\\n" "$(_color_primary "local")" "${_local_email:-}"
       else
-        printf " (global): %s\\n" "${_global_email:-}"
+        printf " (%s): %s\\n" "$(_color_primary "global")" "${_global_email:-}"
       fi
 
-      printf "name"
+      printf "%s" "$(_color_primary "name")"
 
       if [[ -n "${_local_name:-}" ]]
       then
-        printf "  (local):  %s\\n" "${_local_name:-}"
+        printf "  (%s):  %s\\n" "$(_color_primary "local")" "${_local_name:-}"
       else
-        printf "  (global): %s\\n" "${_global_name:-}"
+        printf "  (%s): %s\\n" "$(_color_primary "global")" "${_global_name:-}"
       fi
     fi
   }

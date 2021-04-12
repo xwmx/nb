@@ -17,7 +17,7 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}"    -eq 0 ]]
-  [[ "${#lines[@]}" -eq 2 ]]
+  [[ "${#lines[@]}" -eq 4 ]]
 
   [[ -z "$(git -C "${NB_DIR}/home" config --local user.email  || :)" ]]
   [[ -z "$(git -C "${NB_DIR}/home" config --local user.name   || :)" ]]
@@ -28,8 +28,10 @@ load test_helper
   declare _global_name=
   _global_name="$(git -C "${NB_DIR}/home" config --global user.name)"
 
-  [[ "${lines[0]}"  == "email (global): ${_global_email}"   ]]
-  [[ "${lines[1]}"  == "name  (global): ${_global_name}"    ]]
+  [[ "${lines[0]}"  =~ Configuration\ for:\ .*home                            ]]
+  [[ "${lines[1]}"  =~ [^-]------------------[^-]                             ]]
+  [[ "${lines[2]}"  =~ .*email.*\ \(.*global.*\):\ ${_global_email}           ]]
+  [[ "${lines[3]}"  =~ .*name.*\ \ \(.*global.*\):\ ${_global_name//' '/\\ }  ]]
 }
 
 @test "'notebooks config --unset' with local name unsets and prints global values." {
@@ -45,7 +47,7 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}"    -eq 0 ]]
-  [[ "${#lines[@]}" -eq 2 ]]
+  [[ "${#lines[@]}" -eq 4 ]]
 
   [[ -z "$(git -C "${NB_DIR}/home" config --local user.email  || :)" ]]
   [[ -z "$(git -C "${NB_DIR}/home" config --local user.name   || :)" ]]
@@ -56,8 +58,10 @@ load test_helper
   declare _global_name=
   _global_name="$(git -C "${NB_DIR}/home" config --global user.name)"
 
-  [[ "${lines[0]}"  == "email (global): ${_global_email}"   ]]
-  [[ "${lines[1]}"  == "name  (global): ${_global_name}"    ]]
+  [[ "${lines[0]}"  =~ Configuration\ for:\ .*home                            ]]
+  [[ "${lines[1]}"  =~ [^-]------------------[^-]                             ]]
+  [[ "${lines[2]}"  =~ .*email.*\ \(.*global.*\):\ ${_global_email}           ]]
+  [[ "${lines[3]}"  =~ .*name.*\ \ \(.*global.*\):\ ${_global_name//' '/\\ }  ]]
 }
 
 @test "'notebooks config --unset' with full local configuration unsets and prints global values." {
@@ -74,7 +78,7 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}"    -eq 0 ]]
-  [[ "${#lines[@]}" -eq 2 ]]
+  [[ "${#lines[@]}" -eq 4 ]]
 
   [[ -z "$(git -C "${NB_DIR}/home" config --local user.email  || :)" ]]
   [[ -z "$(git -C "${NB_DIR}/home" config --local user.name   || :)" ]]
@@ -85,8 +89,10 @@ load test_helper
   declare _global_name=
   _global_name="$(git -C "${NB_DIR}/home" config --global user.name)"
 
-  [[ "${lines[0]}"  == "email (global): ${_global_email}"   ]]
-  [[ "${lines[1]}"  == "name  (global): ${_global_name}"    ]]
+  [[ "${lines[0]}"  =~ Configuration\ for:\ .*home                            ]]
+  [[ "${lines[1]}"  =~ [^-]------------------[^-]                             ]]
+  [[ "${lines[2]}"  =~ .*email.*\ \(.*global.*\):\ ${_global_email}           ]]
+  [[ "${lines[3]}"  =~ .*name.*\ \ \(.*global.*\):\ ${_global_name//' '/\\ }  ]]
 }
 
 @test "'notebooks config --unset' with no local configuration prints global values." {
@@ -100,7 +106,7 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}"    -eq 0 ]]
-  [[ "${#lines[@]}" -eq 2 ]]
+  [[ "${#lines[@]}" -eq 4 ]]
 
   [[ -z "$(git -C "${NB_DIR}/home" config --local user.email  || :)" ]]
   [[ -z "$(git -C "${NB_DIR}/home" config --local user.name   || :)" ]]
@@ -111,8 +117,10 @@ load test_helper
   declare _global_name=
   _global_name="$(git -C "${NB_DIR}/home" config --global user.name)"
 
-  [[ "${lines[0]}"  == "email (global): ${_global_email}"   ]]
-  [[ "${lines[1]}"  == "name  (global): ${_global_name}"    ]]
+  [[ "${lines[0]}"  =~ Configuration\ for:\ .*home                            ]]
+  [[ "${lines[1]}"  =~ [^-]------------------[^-]                             ]]
+  [[ "${lines[2]}"  =~ .*email.*\ \(.*global.*\):\ ${_global_email}           ]]
+  [[ "${lines[3]}"  =~ .*name.*\ \ \(.*global.*\):\ ${_global_name//' '/\\ }  ]]
 }
 
 # notebooks config ############################################################
@@ -130,13 +138,15 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}"    -eq 0 ]]
-  [[ "${#lines[@]}" -eq 2 ]]
+  [[ "${#lines[@]}" -eq 4 ]]
 
   declare _global_name=
   _global_name="$(git -C "${NB_DIR}/home" config --global user.name)"
 
-  [[ "${lines[0]}"  == "email (local):  local@example.test" ]]
-  [[ "${lines[1]}"  == "name  (global): ${_global_name}"    ]]
+  [[ "${lines[0]}"  =~ Configuration\ for:\ .*home                            ]]
+  [[ "${lines[1]}"  =~ [^-]------------------[^-]                             ]]
+  [[ "${lines[2]}"  =~ .*email.*\ \(.*local.*\):\ \ local@example.test        ]]
+  [[ "${lines[3]}"  =~ .*name.*\ \ \(.*global.*\):\ ${_global_name//' '/\\ }  ]]
 }
 
 @test "'notebooks config' with local name prints local value with global email." {
@@ -152,13 +162,15 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}"    -eq 0 ]]
-  [[ "${#lines[@]}" -eq 2 ]]
+  [[ "${#lines[@]}" -eq 4 ]]
 
   declare _global_email=
   _global_email="$(git -C "${NB_DIR}/home" config --global user.email)"
 
-  [[ "${lines[0]}"  == "email (global): ${_global_email}"   ]]
-  [[ "${lines[1]}"  == "name  (local):  Example Local Name" ]]
+  [[ "${lines[0]}"  =~ Configuration\ for:\ .*home                            ]]
+  [[ "${lines[1]}"  =~ [^-]------------------[^-]                             ]]
+  [[ "${lines[2]}"  =~ .*email.*\ \(.*global.*\):\ ${_global_email}           ]]
+  [[ "${lines[3]}"  =~ .*name.*\ \ \(.*local.*\):\ \ Example\ Local\ Name     ]]
 }
 
 @test "'notebooks config' with full local configuration prints local values." {
@@ -175,10 +187,12 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}"    -eq 0 ]]
-  [[ "${#lines[@]}" -eq 2 ]]
+  [[ "${#lines[@]}" -eq 4 ]]
 
-  [[ "${lines[0]}"  == "email (local):  local@example.test" ]]
-  [[ "${lines[1]}"  == "name  (local):  Example Local Name" ]]
+  [[ "${lines[0]}"  =~ Configuration\ for:\ .*home                            ]]
+  [[ "${lines[1]}"  =~ [^-]------------------[^-]                             ]]
+  [[ "${lines[2]}"  =~ .*email.*\ \(.*local.*\):\ \ local@example.test        ]]
+  [[ "${lines[3]}"  =~ .*name.*\ \ \(.*local.*\):\ \ Example\ Local\ Name     ]]
 }
 
 @test "'notebooks config' with no local configuration prints global values." {
@@ -192,7 +206,7 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}"    -eq 0 ]]
-  [[ "${#lines[@]}" -eq 2 ]]
+  [[ "${#lines[@]}" -eq 4 ]]
 
   declare _global_email=
   _global_email="$(git -C "${NB_DIR}/home" config --global user.email)"
@@ -200,6 +214,8 @@ load test_helper
   declare _global_name=
   _global_name="$(git -C "${NB_DIR}/home" config --global user.name)"
 
-  [[ "${lines[0]}"  == "email (global): ${_global_email}"   ]]
-  [[ "${lines[1]}"  == "name  (global): ${_global_name}"    ]]
+  [[ "${lines[0]}"  =~ Configuration\ for:\ .*home                            ]]
+  [[ "${lines[1]}"  =~ [^-]------------------[^-]                             ]]
+  [[ "${lines[2]}"  =~ .*email.*\ \(.*global.*\):\ ${_global_email}           ]]
+  [[ "${lines[3]}"  =~ .*name.*\ \ \(.*global.*\):\ ${_global_name//' '/\\ }  ]]
 }
