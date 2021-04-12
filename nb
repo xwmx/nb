@@ -4462,10 +4462,13 @@ _list() {
         _selector="${__argument}"
 
         local _selector_notebook_path=
-        if _selector_notebook_path="$(_notebooks show "${__argument}" --path 2>/dev/null || :)"
+        if _selector_notebook_path="$(
+             _notebooks show "${__argument}" --path 2>/dev/null || :
+           )"
         then
-          if [[ -n "${_selector_notebook_path:-}"                     ]] &&
-             [[ "${_selector_notebook_path:-}" != "${_notebook_path}" ]]
+          if [[ -n  "${_selector_notebook_path:-}"                        ]] &&
+             [[ -d  "${_selector_notebook_path:-}"                        ]] &&
+             [[     "${_selector_notebook_path:-}" != "${_notebook_path}" ]]
           then
             _notebooks select "${_selector_notebook_path}"
             _notebook_path="${_selector_notebook_path}"
@@ -4547,7 +4550,9 @@ _list() {
           if [[ "${__argument:-}" =~ : ]]
           then # argument appears to include notebook selector
             local _selector_notebook_path=
-            _selector_notebook_path="$(_notebooks show "${__argument%%:*}" --path)"
+            _selector_notebook_path="$(
+              _notebooks show "${__argument%%:*}" --path || :
+            )"
 
             if [[ -n "${_selector_notebook_path:-}"                   ]] &&
                [[ "${_selector_notebook_path}" == "${_notebook_path}" ]]
