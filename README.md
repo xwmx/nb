@@ -1895,7 +1895,7 @@ list the tags present in a notebook, folder, or item:
 nb --tags
 
 # list all tags found in the folder named "example"
-nb example/--tags
+nb example/ --tags
 
 # list all tags in the item with id 123 in the notebook named "sample"
 nb sample:123 --tags

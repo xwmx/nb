@@ -1901,7 +1901,7 @@ list the tags present in a notebook, folder, or item:
 nb --tags
 
 # list all tags found in the folder named "example"
-nb example/--tags
+nb example/ --tags
 
 # list all tags in the item with id 123 in the notebook named "sample"
 nb sample:123 --tags
@@ -4154,7 +4154,7 @@ nb❯ edit 3 --content "New content."
 Updated: [3] Example
 
 nb❯ bookmark https://example.com
-Added: [4] 🔖 example.bookmark.md "Example Title (example.com)"
+Added: [4] 🔶� example.bookmark.md "Example Title (example.com)"
 
 nb❯ ls
 home
@@ -5709,7 +5709,7 @@ Alias: `set`
      The tool used for encrypting notes.
 
      • Supported Values: openssl, gpg
-     • Default Value:    openssl
+     •¶�Default Value:    openssl
 ```
 
 ##### `footer`
