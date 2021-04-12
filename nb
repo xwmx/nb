@@ -6100,12 +6100,14 @@ _notebooks() {
   # _notebooks_config()
   #
   # Usage:
-  #   _notebooks_config [<email> [<name>]] [--unset]
+  #   _notebooks_config [--name [<name>]] [--email [<email>]] [--unset]
   #
   # Description:
   #   Print, set, and delete the <email> and <name> for git commit attribution
   #   within the notebook.
   _notebooks_config() {
+    local _email=0
+    local _name=0
     local _new_email=
     local _new_name=
     local _unset=0
@@ -6113,15 +6115,26 @@ _notebooks() {
     while ((${#}))
     do
       case "${1:-}" in
-        --unset) _unset=1 ;;
-        *)
-          if   [[ -z "${_new_email:-}"  ]]
+        --email)
+          _email=1
+
+          if _option_value_is_present "${2:-}"
           then
-            _new_email="${1:-}"
-          elif [[ -z "${_new_name:-}"   ]]
-          then
-            _new_name="${1:-}"
+            _new_email="${2:-}"
+            shift
           fi
+          ;;
+        --name)
+          _name=1
+
+          if _option_value_is_present "${2:-}"
+          then
+            _new_name="${2:-}"
+            shift
+          fi
+          ;;
+        --unset)
+          _unset=1
           ;;
       esac
 
