@@ -3259,8 +3259,10 @@ nb example:git status
 #### Syncing Multiple Notebooks with One Remote
 
 Multiple notebooks can be synced to one remote using orphan branches.
-An orphan branch is a branch with a history that's independent
-from the repository's `main`, `master`, or equivalent primary branch's
+An
+[orphan branch](https://git-scm.com/docs/git-checkout#Documentation/git-checkout.txt---orphanltnewbranchgt)
+is a branch with a history that is independent
+from the repository's `main`, `master`, or equivalent primary branch
 history. To sync a notebook with a new orphan branch, add the remote
 using [`nb remote set`](#remote) and select the option to create a new
 orphan branch. The name of orphan branch is derived from notebook name
