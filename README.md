@@ -2822,9 +2822,9 @@ name  (global): Example Name
 Update?  [y/N]
 ```
 
-Updating the email and password only applies to subsequent commits.
+Updating the email and name only applies to subsequent commits.
 
-To use a different email and password from the beginning of a notebook's
+To use a different email and name from the beginning of a notebook's
 history, create the new notebook using
 [`nb notebooks add --config`](#notebooks) or
 [`nb notebooks init --config`](#notebooks).
