@@ -3155,20 +3155,37 @@ HEREDOC
     local _git_branch=
     _git_branch="$(git -C "${_notebook_path}" rev-parse --abbrev-ref HEAD)"
 
-    if ((_prompt))                              &&
-       ! git -C "${_notebook_path}" show-branch \
-           "remotes/origin/${_git_branch}" > /dev/null 2>&1
+    if ((_prompt))
     then
-      printf "\\n"
+      if ! git -C "${_notebook_path}" show-branch                 \
+           "remotes/origin/${_git_branch}" > /dev/null 2>&1 ||
+         {
+           local _local_branch_root_hash=
+           _local_branch_root_hash="$(
+             git -C "${_notebook_path}" rev-list --max-parents=0  \
+               "${_git_branch}"
+           )"
 
-      _remote set "${_remote_url}" "${_git_branch}" # displays prompt
+           local _remote_branch_root_hash=
+           _remote_branch_root_hash="$(
+             git -C "${_notebook_path}" rev-list --max-parents=0  \
+               "remotes/origin/${_git_branch}"
+           )"
 
-      _git_branch="$(git -C "${_notebook_path}" rev-parse --abbrev-ref HEAD)"
+           [[ "${_local_branch_root_hash:-}" != "${_remote_branch_root_hash:-}" ]]
+         }
+      then
+        printf "\\n"
+
+        _remote set "${_remote_url}" "${_git_branch}" # displays prompt
+
+        _git_branch="$(git -C "${_notebook_path}" rev-parse --abbrev-ref HEAD)"
+      fi
     fi
 
-    if git -C "${_notebook_path}" show-branch               \
-          "remotes/origin/${_git_branch}" > /dev/null 2>&1  &&
-      ! git -C "${_notebook_path}" rebase "origin/${_git_branch}" &>/dev/null
+    if git -C "${_notebook_path}" show-branch                 \
+         "remotes/origin/${_git_branch}" > /dev/null 2>&1  &&
+       ! git -C "${_notebook_path}" rebase "origin/${_git_branch}" &>/dev/null
     then
       local _merge_error=1
 
