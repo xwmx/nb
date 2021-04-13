@@ -62,7 +62,7 @@ Enter\ a\ new\ value,\ .*unset.*\ to\ use\ the\ global\ value,                ]]
   [[ "${lines[8]}"  =~ .*email.*\ \(.*local.*\):\ \ local@example.test        ]]
   [[ "${lines[9]}"  =~ .*name.*\ \ \(.*local.*\):\ \ Example\ Local\ Name     ]]
 
-  "${_NB}" notebooks use "Example Notebookt "
+  "${_NB}" notebooks use "Example Notebook"
 
   "${_NB}" add "Example File.md" --content "Example content."
 
