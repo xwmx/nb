@@ -6214,12 +6214,17 @@ _notebooks() {
       shift
     done
 
-    if [[ -z "${_notebook_path:-}" ]]
+    if [[ -z "${_notebook_path:-}"            ]]
     then
       _notebook_path="$(_notebooks_current --path)"
     fi
 
-    local _notebook_name="${_notebook_path##*/}"
+    if [[ "${_notebook_path:-}" =~ ^${NB_DIR} ]]
+    then
+      local _notebook_name="${_notebook_path##*/}"
+    else
+      local _notebook_name="local"
+    fi
 
     local _global_email=
     _global_email="$(
@@ -6697,21 +6702,38 @@ HEREDOC
   # Usage:
   #   _notebooks_init [<path> [<remote_url> [<branch>]]
   _notebooks_init() {
+    local _config=0
+    local _config_arguments=()
     local _path=
     local _remote_branch=
     local _remote_url=
 
     while ((${#}))
     do
-      if _string_is_url "${1:-}"    && [[ -z "${_remote_url:-}"  ]]
-      then
-        _remote_url="${1:-}"
-      elif [[ -z "${_path:-}"   ]]  && [[ -z "${_remote_url:-}"  ]]
-      then
-        _path="${1:-}"
-      else
-        _remote_branch="${1:-}"
-      fi
+      case "${1:-}" in
+        --config) _config=1 ;;
+        --email|--name)
+          _config=1
+          _config_arguments+=("${1:-}")
+
+          if _option_value_is_present "${2:-}"
+          then
+            _config_arguments+=("${2:-}")
+            shift
+          fi
+          ;;
+        *)
+          if _string_is_url "${1:-}"    && [[ -z "${_remote_url:-}"  ]]
+          then
+            _remote_url="${1:-}"
+          elif [[ -z "${_path:-}"   ]]  && [[ -z "${_remote_url:-}"  ]]
+          then
+            _path="${1:-}"
+          else
+            _remote_branch="${1:-}"
+          fi
+          ;;
+      esac
 
       shift
     done
@@ -6767,6 +6789,13 @@ HEREDOC
       fi
     else
       git -C "${_path}" init &>/dev/null  &&
+        {
+          if ((_config))
+          then
+            _config_arguments+=("${_path}")
+            _notebooks config "${_config_arguments[@]:-}"
+          fi
+        } &&
         touch "${_path}/.index"           &&
         _git checkpoint "${_path}" "[nb] Initialize"
     fi
