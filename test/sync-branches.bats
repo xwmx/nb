@@ -3,6 +3,44 @@
 
 load test_helper
 
+@test "'sync' with unrelated histories displays prompt." {
+  {
+    _setup_remote_repo
+
+    "${_NB}" init "${_GIT_REMOTE_URL}"
+
+    "${_NB}" notebooks rename "home" "Example Notebook"
+
+    [[ !  -e "${NB_DIR}/home"                   ]]
+    [[    -d "${NB_DIR}/Example Notebook/.git"  ]]
+
+    "${_NB}" add "Example File.md" --content "Example content."
+
+    "${_NB}" notebooks add "Sample Notebook"
+    "${_NB}" notebooks use "Sample Notebook"
+
+    "${_NB}" add "Sample File.md" --content "Sample content."
+
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+
+    [[ "$("${_NB}" remote)" =~ ${_GIT_REMOTE_URL}\ \(sample-notebook\) ]]
+
+    "${_NB}" git branch -m "master"
+
+    [[ "$("${_NB}" remote)" =~ ${_GIT_REMOTE_URL}\ \(master\) ]]
+  }
+
+  run "${_NB}" sync <<< "y${_NEWLINE}2${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                                           ]]
+
+  [[ "${lines[0]}"  =~  Syncing:\ .*Sample\ Notebook.*\.\.\.        ]]
+  [[ "${lines[1]}"  =~  Updating\ remote\ for:\ .*Sample\ Notebook  ]]
+}
+
 @test "'remote' and 'sync' with multiple notebooks displays prompts, updates configuration, and syncs successfully." {
   # set up remote
 
