@@ -7411,7 +7411,8 @@ HEREDOC
       _notebooks_import   "${2:-}" "${3:-}"
       ;;
     init)
-      _notebooks_init     "${_name:-}" "${3:-}" "${4:-}"
+      shift
+      _notebooks_init     "${@:-}"
       ;;
     config*)
       shift
