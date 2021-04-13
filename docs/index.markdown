@@ -2811,6 +2811,30 @@ nb history example:12
 `nb history` uses `git log` by default and prefers
 [`tig`](https://github.com/jonas/tig) when available.
 
+By default, git commits are attributed to the email and name configured
+in your
+[`git` global configuration](https://git-scm.com/book/en/v2/Customizing-Git-Git-Configuration).
+
+Change the email and name used for a notebook with
+[`nb notebooks config`](#notebooks):
+
+```bash
+❯ nb notebooks config
+Current configuration for: home
+--------------------------
+email (global): example@example.test
+name  (global): Example Name
+
+Update?  [y/N]
+```
+
+Updating the email and password only applies to subsequent commits.
+
+To use a different email and password from the beginning of a notebook's
+history, create the new notebook using
+[`nb notebooks add --config`](#notebooks) or
+[`nb notebooks init --config`](#notebooks).
+
 ### 📚 Notebooks
 
 You can create additional notebooks, each of which has its own version history.
