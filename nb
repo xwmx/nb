@@ -6054,7 +6054,31 @@ _notebooks() {
   # Usage:
   #   _notebooks_add <name> [<remote_url> [<branch>]]
   _notebooks_add() {
-    local _name="${1:-}"
+    local _config=0
+    local _name=
+    local _remote_branch=
+    local _remote_url=
+
+    while ((${#}))
+    do
+      case "${1:-}" in
+        --config) _config=1 ;;
+        *)
+          if   [[ -z "${_name:-}"           ]]
+          then
+            _name="${1:-}"
+          elif [[ -z "${_remote_url:-}"     ]]
+          then
+            _remote_url="${1:-}"
+          elif [[ -z "${_remote_branch:-}"  ]]
+          then
+            _remote_branch="${1:-}"
+          fi
+          ;;
+      esac
+
+      shift
+    done
 
     if [[ -z "${_name}" ]]
     then
@@ -6068,10 +6092,7 @@ _notebooks() {
       _exit_1 printf "Already exists: %s\\n" "$(_color_primary "${_name}")"
     fi
 
-    local _remote_url="${2:-}"
-    local _remote_branch="${3:-}"
-
-    if [[ -n "${_remote_url:-}"       ]]
+    if   [[ -n "${_remote_url:-}"     ]]
     then
       if [[ -n "${_remote_branch:-}"  ]]
       then
@@ -6083,6 +6104,12 @@ _notebooks() {
     else
       mkdir -p "${NB_DIR}/${_name}"
         git -C "${NB_DIR}/${_name}" init &>/dev/null  &&
+        {
+          if ((_config))
+          then
+            _notebooks config "${NB_DIR}/${_name}"
+          fi
+        } &&
         touch "${NB_DIR}/${_name}/.index"             &&
         _temp cache clear                             &&
         _git checkpoint "${NB_DIR}/${_name}" "[nb] Initialize"
@@ -6118,6 +6145,7 @@ _notebooks() {
   #
   # Usage:
   #   _notebooks_config [--name [<name>]] [--email [<email>]] [--unset]
+  #                     [<notebook-path>]
   #
   # Description:
   #   Print, set, and delete the <email> and <name> for git commit attribution
@@ -6127,6 +6155,7 @@ _notebooks() {
     local _name=0
     local _new_local_email=
     local _new_local_name=
+    local _notebook_path=
     local _print_current=0
     local _skip_prompt=0
     local _unset=0
@@ -6161,13 +6190,23 @@ _notebooks() {
         --unset)
           _unset=1
           ;;
+        *)
+          if [[ -z "${_notebook_path:-}" ]]
+          then
+            _notebook_path="${1:-}"
+          fi
+          ;;
       esac
 
       shift
     done
 
-    local _notebook_path=
-    _notebook_path="$(_notebooks_current --path)"
+    if [[ -z "${_notebook_path:-}" ]]
+    then
+      _notebook_path="$(_notebooks_current --path)"
+    fi
+
+    local _notebook_name="${_notebook_path##*/}"
 
     local _global_email=
     _global_email="$(
@@ -6214,12 +6253,12 @@ _notebooks() {
       ((_unset_output_present)) && printf "\\n"
 
       printf "Updated configuration for: %s\\n" "$(
-        _color_primary "$(_notebooks_current --name)"
+        _color_primary "${_notebook_name}"
       )"
 
       _print_line "--------------------------"
 
-      _notebooks_config --current
+      _notebooks_config "${_notebook_path}" --current
 
       return 0
     elif ((_print_current))
@@ -6245,12 +6284,12 @@ _notebooks() {
       return 0
     else
       printf "Current configuration for: %s\\n" "$(
-        _color_primary "$(_notebooks_current --name)"
+        _color_primary "${_notebook_name}"
       )"
 
       _print_line "--------------------------"
 
-      _notebooks_config --current
+      _notebooks_config "${_notebook_path}" --current
 
       if [[ -n "${_new_local_email:-}"    ]] || [[ -n "${_new_local_name:-}" ]]
       then
@@ -6333,12 +6372,12 @@ HEREDOC
       if [[ -n "${_new_local_email:-"${_new_local_name:-}"}" ]] || ! ((_skip_prompt))
       then
         printf "\\nUpdated configuration for: %s\\n" "$(
-          _color_primary "$(_notebooks_current --name)"
+          _color_primary "${_notebook_name}"
         )"
 
         _print_line "--------------------------"
 
-        _notebooks_config --current
+        _notebooks_config "${_notebook_path}" --current
       fi
     fi
   }
@@ -7342,7 +7381,7 @@ HEREDOC
   local _subcommand="${1:-}"
   local _name="${2:-}"
 
-  if ! _contains "${_subcommand:-}" "current" "list" "show"
+  if ! _contains "${_subcommand:-}" "add" "config" "current" "init" "list" "show"
   then
     _notebooks_add_new
   fi

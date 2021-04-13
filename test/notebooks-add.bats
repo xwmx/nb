@@ -16,6 +16,61 @@ _setup_notebooks() {
   cd "${NB_DIR}" || return 1
 }
 
+# config ######################################################################
+
+@test "'notebooks add --config' displays config prompt and sets email and name." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Home File.md" --content "Example home content."
+
+    declare _global_email=
+    _global_email="$(git -C "${NB_DIR}/home" config --global user.email)"
+
+    declare _global_name=
+    _global_name="$(git -C "${NB_DIR}/home" config --global user.name)"
+
+  diff                                            \
+    <("${_NB}" git log -1 --stat | sed -n '2 p')  \
+    <(printf "Author: %s <%s>\\n" "${_global_name}" "${_global_email}")
+  }
+
+  run "${_NB}" notebooks add "Example Notebook" --config \
+    <<< "y${_NEWLINE}local@example.test${_NEWLINE}Example Local Name${_NEWLINE}"
+
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
+
+  [[ "${status}"    -eq 0   ]]
+  [[ "${#lines[@]}" -eq 11  ]]
+
+  [[ -n "$(git -C "${NB_DIR}/Example Notebook" config --local user.email  || :)"  ]]
+  [[ -n "$(git -C "${NB_DIR}/Example Notebook" config --local user.name   || :)"  ]]
+
+  [[ "${lines[0]}"  =~ Current\ configuration\ for:\ .*Example\ Notebook      ]]
+  [[ "${lines[1]}"  =~ [^-]--------------------------[^-]                     ]]
+  [[ "${lines[2]}"  =~ .*email.*\ \(.*global.*\):\ ${_global_email}           ]]
+  [[ "${lines[3]}"  =~ .*name.*\ \ \(.*global.*\):\ ${_global_name//' '/\\ }  ]]
+
+  [[ "${lines[4]}"  =~ \
+Enter\ a\ new\ value,\ .*unset.*\ to\ use\ the\ global\ value,                ]]
+  [[ "${lines[5]}"  =~ or\ leave\ blank\ to\ keep\ the\ current\ value\.      ]]
+
+  [[ "${lines[6]}"  =~ Updated\ configuration\ for:\ .*Example\ Notebook      ]]
+  [[ "${lines[7]}"  =~ [^-]--------------------------[^-]                     ]]
+  [[ "${lines[8]}"  =~ .*email.*\ \(.*local.*\):\ \ local@example.test        ]]
+  [[ "${lines[9]}"  =~ .*name.*\ \ \(.*local.*\):\ \ Example\ Local\ Name     ]]
+
+  "${_NB}" notebooks use "Example Notebookt "
+
+  "${_NB}" add "Example File.md" --content "Example content."
+
+  diff                                            \
+    <("${_NB}" git log -1 --stat | sed -n '2 p')  \
+    <(printf "Author: Example Local Name <local@example.test>\\n")
+}
+
 # remote ######################################################################
 
 @test "'notebooks add <name> <remote-url> <branch>' exits with 0 and adds a notebook." {

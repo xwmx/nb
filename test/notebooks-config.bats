@@ -2,6 +2,58 @@
 
 load test_helper
 
+# notebook path ###############################################################
+
+@test "'notebooks config <notebook-path> --email <email> --name <name>' updates the local email and name in <notebook-path>." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+  }
+
+  run "${_NB}" notebooks config   \
+    "${NB_DIR}/Example Notebook"  \
+    --email "local@example.test"  \
+    --name  "Example Local Name" <<< "y${_NEWLINE}"
+
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
+
+  [[ "${status}"    -eq 0   ]]
+  [[ "${#lines[@]}" -eq 12  ]]
+
+  [[ -n "$(git -C "${NB_DIR}/Example Notebook" config --local user.email  || :)" ]]
+  [[ -n "$(git -C "${NB_DIR}/Example Notebook" config --local user.name   || :)" ]]
+
+  declare _global_email=
+  _global_email="$(git -C "${NB_DIR}/Example Notebook" config --global user.email)"
+
+  declare _global_name=
+  _global_name="$(git -C "${NB_DIR}/Example Notebook" config --global user.name)"
+
+  [[ "${lines[0]}"  =~ Current\ configuration\ for:\ .*Example\ Notebook      ]]
+  [[ "${lines[1]}"  =~ [^-]--------------------------[^-]                     ]]
+  [[ "${lines[2]}"  =~ .*email.*\ \(.*global.*\):\ ${_global_email}           ]]
+  [[ "${lines[3]}"  =~ .*name.*\ \ \(.*global.*\):\ ${_global_name//' '/\\ }  ]]
+  [[ "${lines[4]}"  =~ Update:                                                ]]
+  [[ "${lines[5]}"  =~ [^-]-------[^-]                                        ]]
+  [[ "${lines[6]}"  =~ local\ .*email.*:\ local@example.test                  ]]
+  [[ "${lines[7]}"  =~ local\ .*name.*:\ \ Example\ Local\ Name               ]]
+  [[ "${lines[8]}"  =~ Updated\ configuration\ for:\ .*Example\ Notebook      ]]
+  [[ "${lines[9]}"  =~ [^-]--------------------------[^-]                     ]]
+  [[ "${lines[10]}" =~ .*email.*\ \(.*local.*\):\ \ local@example.test        ]]
+  [[ "${lines[11]}" =~ .*name.*\ \ \(.*local.*\):\ \ Example\ Local\ Name     ]]
+
+  "${_NB}" notebooks use "Example Notebook"
+
+  "${_NB}" add "Example File.md" --content "Example content."
+
+  diff                                            \
+    <("${_NB}" git log -1 --stat | sed -n '2 p')  \
+    <(printf "Author: Example Local Name <local@example.test>\\n")
+}
+
 # notebooks config email and name prompts #####################################
 
 @test "'notebooks config' prompts update the local email and name." {
