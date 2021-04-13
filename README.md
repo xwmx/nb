@@ -2807,13 +2807,13 @@ nb history example:12
 
 By default, git commits are attributed to the email and name configured
 in your
-[`git` global configuration](https://git-scm.com/book/en/v2/Customizing-Git-Git-Configuration).
+[global `git` configuration](https://git-scm.com/book/en/v2/Customizing-Git-Git-Configuration).
 
 Change the email and name used for a notebook with
 [`nb notebooks author`](#notebooks):
 
 ```bash
-# edit the email and name for the current notebook
+# edit the commit author email and name for the current notebook
 ❯ nb notebooks author
 Current configuration for: home
 --------------------------
@@ -2822,7 +2822,7 @@ name  (global): Example Name
 
 Update?  [y/N]
 
-# edit the email and name for the notebook named "example"
+# edit the commit author email and name for the notebook named "example"
 ❯ nb notebooks author example
 Current configuration for: example
 --------------------------
@@ -4356,7 +4356,7 @@ Usage:
   nb notebooks [<name>] [--archived] [--global] [--local] [--names]
                [--paths] [--unarchived]
   nb notebooks add <name> [<remote-url> [<branch>]] [--author]
-                   [--author] [--email <email>] [--name <name>]
+                   [--email <email>] [--name <name>]
   nb notebooks (archive | open | peek | status | unarchive) [<name>]
   nb notebooks author [<name> | <path>] [--email <email>] [--name <name>]
   nb notebooks current [--path | --selected | --filename [<filename>]]
@@ -5291,7 +5291,7 @@ Usage:
   nb notebooks [<name>] [--archived] [--global] [--local] [--names]
                [--paths] [--unarchived]
   nb notebooks add <name> [<remote-url> [<branch>]] [--author]
-                   [--author] [--email <email>] [--name <name>]
+                   [--email <email>] [--name <name>]
   nb notebooks (archive | open | peek | status | unarchive) [<name>]
   nb notebooks author [<name> | <path>] [--email <email>] [--name <name>]
   nb notebooks current [--path | --selected | --filename [<filename>]]
@@ -5309,8 +5309,8 @@ Usage:
 Options:
   --archived               List archived notebooks, or return archival status
                            with `show`.
-  --author                 Configure the commit author email and name.
-  --email <email>          Set the local commit author email address to <email>.
+  --author                 Set the notebook's commit author email and name.
+  --email <email>          Set the notebook's commit author email to <email>.
   --escaped                Print the notebook name with spaces escaped.
   --filename [<filename>]  Print an available filename for the notebooks. When
                            <filename> is provided, check for an existing file
@@ -5322,7 +5322,7 @@ Options:
                            otherwise exit with 1.
   -f, --force              Skip the confirmation prompt.
   --name, --names          Print the notebook name.
-  --name <name>            Set the local commit author name to <name>.
+  --name <name>            Set the notebook's commit author name to <name>.
   --path, --paths          Print the notebook path.
   --selected               Exit with 0 if the current notebook differs from
                            the current global notebook, otherwise exit with 1.

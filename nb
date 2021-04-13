@@ -3574,7 +3574,7 @@ $(_color_primary "Usage:")
   ${_ME} notebooks [<name>] [--archived] [--global] [--local] [--names]
                [--paths] [--unarchived]
   ${_ME} notebooks add <name> [<remote-url> [<branch>]] [--author]
-                   [--author] [--email <email>] [--name <name>]
+                   [--email <email>] [--name <name>]
   ${_ME} notebooks (archive | open | peek | status | unarchive) [<name>]
   ${_ME} notebooks author [<name> | <path>] [--email <email>] [--name <name>]
   ${_ME} notebooks current [--path | --selected | --filename [<filename>]]
@@ -6018,7 +6018,7 @@ Usage:
   ${_ME} notebooks [<name>] [--archived] [--global] [--local] [--names]
                [--paths] [--unarchived]
   ${_ME} notebooks add <name> [<remote-url> [<branch>]] [--author]
-                   [--author] [--email <email>] [--name <name>]
+                   [--email <email>] [--name <name>]
   ${_ME} notebooks (archive | open | peek | status | unarchive) [<name>]
   ${_ME} notebooks author [<name> | <path>] [--email <email>] [--name <name>]
   ${_ME} notebooks current [--path | --selected | --filename [<filename>]]
@@ -6036,8 +6036,8 @@ Usage:
 Options:
   --archived               List archived notebooks, or return archival status
                            with \`show\`.
-  --author                 Configure the commit author email and name.
-  --email <email>          Set the local commit author email address to <email>.
+  --author                 Set the notebook's commit author email and name.
+  --email <email>          Set the notebook's commit author email to <email>.
   --escaped                Print the notebook name with spaces escaped.
   --filename [<filename>]  Print an available filename for the notebooks. When
                            <filename> is provided, check for an existing file
@@ -6049,7 +6049,7 @@ Options:
                            otherwise exit with 1.
   -f, --force              Skip the confirmation prompt.
   --name, --names          Print the notebook name.
-  --name <name>            Set the local commit author name to <name>.
+  --name <name>            Set the notebook's commit author name to <name>.
   --path, --paths          Print the notebook path.
   --selected               Exit with 0 if the current notebook differs from
                            the current global notebook, otherwise exit with 1.
