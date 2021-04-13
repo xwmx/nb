@@ -3177,7 +3177,7 @@ HEREDOC
       then
         printf "\\n"
 
-        _remote set "${_remote_url}" "${_git_branch}" # displays prompt
+        _remote set "${_remote_url}" "${_git_branch}" --skip-preamble
 
         _git_branch="$(git -C "${_notebook_path}" rev-parse --abbrev-ref HEAD)"
       fi
@@ -18262,8 +18262,8 @@ Examples:
   ${_ME} remote remove
 HEREDOC
 _remote() {
-  local _force=0
   local _only_url=0
+  local _skip_preamble=0
   local _subcommand=
   local _new_branch=
   local _new_remote_url=
@@ -18272,9 +18272,8 @@ _remote() {
   for   __arg in "${@:-}"
   do
     case "${__arg:-}" in
-      --url|url)
-        _only_url=1
-        ;;
+      --skip-preamble)  _skip_preamble=1  ;;
+      --url|url)        _only_url=1       ;;
       *)
         if [[   -z  "${_subcommand:-}"      ]]
         then
@@ -18426,53 +18425,60 @@ _remote() {
         _new_branch="${_current_branch}"
       fi
 
-      if ((_remote_exists))
+      if ! ((_skip_preamble))
       then
-        printf "Updating remote for: %s\\n"   \
-          "$(_color_primary "$(_notebooks current --name)")"
+        if ((_remote_exists))
+        then
+          printf "Updating remote for: %s\\n"   \
+            "$(_color_primary "$(_notebooks current --name)")"
 
-        printf "From:   %s (%s)\\n" "${_current_remote_url}" "${_current_branch}"
+          printf "From:   %s (%s)\\n" "${_current_remote_url}" "${_current_branch}"
 
-        _print_line "Updating remote for: $(_notebooks current --name)"
-      else
-        printf "Adding remote to: %s\\n"      \
-          "$(_color_primary "$(_notebooks current --name)")"
+          _print_line "Updating remote for: $(_notebooks current --name)"
+        else
+          printf "Adding remote to: %s\\n"      \
+            "$(_color_primary "$(_notebooks current --name)")"
 
-        _print_line "Adding remote to: $(_notebooks current --name)"
+          _print_line "Adding remote to: $(_notebooks current --name)"
+        fi
+
+        printf "URL:    %s\\n" "$(_color_primary "${_new_remote_url}")"
+        printf "Branch: %s\\n" "$(_color_primary "${_new_branch}")"
+
+        _print_line "--------------"
+
+        while true
+        do
+          local __yn=
+
+          IFS='' read -r -e -d $'\n' -p                               \
+            "$(_color_primary "Proceed?") $(_color_brackets "y/N") "  \
+            __yn
+
+          case "${__yn:-}" in
+            [Yy]*)
+              break
+              ;;
+            *)
+              printf "Exiting...\\n"
+              exit 0
+              ;;
+          esac
+        done
       fi
 
-      printf "URL:    %s\\n" "$(_color_primary "${_new_remote_url}")"
-      printf "Branch: %s\\n" "$(_color_primary "${_new_branch}")"
-
-      _print_line "--------------"
-
-      while true
-      do
-        local __yn=
-
-        IFS='' read -r -e -d $'\n' -p                               \
-          "$(_color_primary "Proceed?") $(_color_brackets "y/N") "  \
-          __yn
-
-        case "${__yn:-}" in
-          [Yy]*)
-            break
-            ;;
-          *)
-            printf "Exiting...\\n"
-            exit 0
-            ;;
-        esac
-      done
-
-      if ((_remote_exists))
+      if ((_remote_exists)) &&
+         [[ "${_current_remote_url:-}" != "${_new_remote_url:-}" ]]
       then
         _remote unset <<< "y${_NEWLINE}"
         _print_line "--------------"
       fi
 
-      git -C "${_notebook_path}" remote add origin "${_new_remote_url}" ||
-        return 1
+      if [[ "${_current_remote_url:-}" != "${_new_remote_url:-}" ]]
+      then
+        git -C "${_notebook_path}" remote add origin "${_new_remote_url}" ||
+          return 1
+      fi
 
       git -C "${_notebook_path}" fetch origin &>/dev/null
 

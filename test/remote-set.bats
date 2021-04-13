@@ -299,16 +299,13 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)                        
   [[ "${lines[3]}"  =~  URL:\ \ \ \ .*${_GIT_REMOTE_URL}            ]]
   [[ "${lines[4]}"  =~  Branch:\ .*master                           ]]
   [[ "${lines[5]}"  =~  [^-]--------------[^-]                      ]]
-  [[ "${lines[6]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}     ]]
-  [[ "${lines[7]}"  =~  Removed\ \ remote:\ .*${_GIT_REMOTE_URL}    ]]
-  [[ "${lines[8]}"  =~  [^-]--------------[^-]                      ]]
-  [[ "${lines[9]}"  =~  \
+  [[ "${lines[6]}"  =~  \
 Remote\ branch\ has\ existing\ history:\ .*master                   ]]
-  [[ "${lines[10]}" =~  \
+  [[ "${lines[7]}"  =~  \
 .*[.*1.*].*\ Merge\ and\ sync\ with\ existing\ remote\ branch\.     ]]
-  [[ "${lines[11]}" =~  \
+  [[ "${lines[8]}"  =~  \
 .*[.*2.*].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.    ]]
-  [[ "${lines[12]}" =~  \
+  [[ "${lines[9]}"  =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
 
   diff                  \
