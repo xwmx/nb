@@ -3677,8 +3677,14 @@ $(_color_primary "Program Options:")
 $(_color_primary "More Information:")
   https://github.com/${_REPO}
 
-$(_color_primary "Sponsor:")
+$(_color_primary "Sponsor & Donate:")
   https://github.com/sponsors/xwmx
+  https://paypal.me/WilliamMelody
+
+$(_color_primary "Creator:")
+  William Melody
+  https://github.com/xwmx
+  https://www.williammelody.com
 
 $(_color_primary "Contributors:")
   https://github.com/xwmx/nb/graphs/contributors
