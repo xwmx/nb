@@ -4303,7 +4303,8 @@ Usage:
   nb import [copy | download | move] (<path>... | <url>) [--convert]
             [<notebook>:][<folder>/][<filename>]
   nb import notebook <path> [<name>]
-  nb init [<remote-url> [<remote>]]
+  nb init [<remote-url> [<branch>]] [--config] [--email <email>]
+          [--name <name>]
   nb list [-e [<length>] | --excerpt [<length>]] [--filenames]
           [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
           [--no-indicator] [-p | --pager] [--paths] [-s | --sort]
@@ -4320,13 +4321,16 @@ Usage:
           [-f | --force]
   nb notebooks [<name>] [--archived] [--global] [--local] [--names]
                [--paths] [--unarchived]
-  nb notebooks add <name> [<remote-url> [<remote>]]
+  nb notebooks add <name> [<remote-url> [<branch>]] [--config]
+                   [--config] [--email <email>] [--name <name>]
   nb notebooks (archive | open | peek | status | unarchive) [<name>]
+  nb notebooks config [--email <email>] [--name <name>]
   nb notebooks current [--path | --selected | --filename [<filename>]]
                        [--global | --local]
   nb notebooks delete <name> [-f | --force]
   nb notebooks (export <name> [<path>] | import <path>)
-  nb notebooks init [<path> [<remote-url> [<remote>]]]
+  nb notebooks init [<path> [<remote-url> [<branch>]]] [--config]
+                    [--email <email>] [--name <name>]
   nb notebooks rename <old-name> <new-name>
   nb notebooks select <selector>
   nb notebooks show (<name> | <path> | <selector>) [--archived]
@@ -5047,7 +5051,13 @@ Examples:
 
 ```text
 Usage:
-  nb init [<remote-url> [<branch>]]
+  nb init [<remote-url> [<branch>]] [--config] [--email <email>]
+          [--name <name>]
+
+Options:
+  --config         Display the local email and name config prompt.
+  --email <email>  Set the local commit author email address to <email>.
+  --name  <name>   Set the local commit author name to <name>.
 
 Description:
   Initialize the initial "home" notebook and generate a configuration file at:
@@ -5246,13 +5256,16 @@ Shortcut Alias: `mv`
 Usage:
   nb notebooks [<name>] [--archived] [--global] [--local] [--names]
                [--paths] [--unarchived]
-  nb notebooks add <name> [<remote-url> [<branch>]]
+  nb notebooks add <name> [<remote-url> [<branch>]] [--config]
+                   [--config] [--email <email>] [--name <name>]
   nb notebooks (archive | open | peek | status | unarchive) [<name>]
+  nb notebooks config [--email <email>] [--name <name>]
   nb notebooks current [--path | --selected | --filename [<filename>]]
                        [--global | --local]
   nb notebooks delete <name> [-f | --force]
   nb notebooks (export <name> [<path>] | import <path>)
-  nb notebooks init [<path> [<remote-url> [<branch>]]]
+  nb notebooks init [<path> [<remote-url> [<branch>]]] [--config]
+                    [--email <email>] [--name <name>]
   nb notebooks rename <old-name> <new-name>
   nb notebooks select <selector>
   nb notebooks show (<name> | <path> | <selector>) [--archived]
@@ -5262,6 +5275,8 @@ Usage:
 Options:
   --archived               List archived notebooks, or return archival status
                            with `show`.
+  --config                 Display the local email and name config prompt.
+  --email <email>          Set the local commit author email address to <email>.
   --escaped                Print the notebook name with spaces escaped.
   --filename [<filename>]  Print an available filename for the notebooks. When
                            <filename> is provided, check for an existing file
@@ -5273,6 +5288,7 @@ Options:
                            otherwise exit with 1.
   -f, --force              Skip the confirmation prompt.
   --name, --names          Print the notebook name.
+  --name <name>            Set the local commit author name to <name>.
   --path, --paths          Print the notebook path.
   --selected               Exit with 0 if the current notebook differs from
                            the current global notebook, otherwise exit with 1.

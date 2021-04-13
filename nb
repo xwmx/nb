@@ -3555,7 +3555,8 @@ $(_color_primary "Usage:")
   ${_ME} import [copy | download | move] (<path>... | <url>) [--convert]
             [<notebook>:][<folder>/][<filename>]
   ${_ME} import notebook <path> [<name>]
-  ${_ME} init [<remote-url> [<branch>]]
+  ${_ME} init [<remote-url> [<branch>]] [--config] [--email <email>]
+          [--name <name>]
   ${_ME} list [-e [<length>] | --excerpt [<length>]] [--filenames]
           [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
           [--no-indicator] [-p | --pager] [--paths] [-s | --sort]
@@ -3572,13 +3573,16 @@ $(_color_primary "Usage:")
           [-f | --force]
   ${_ME} notebooks [<name>] [--archived] [--global] [--local] [--names]
                [--paths] [--unarchived]
-  ${_ME} notebooks add <name> [<remote-url> [<branch>]]
+  ${_ME} notebooks add <name> [<remote-url> [<branch>]] [--config]
+                   [--config] [--email <email>] [--name <name>]
   ${_ME} notebooks (archive | open | peek | status | unarchive) [<name>]
+  ${_ME} notebooks config [--email <email>] [--name <name>]
   ${_ME} notebooks current [--path | --selected | --filename [<filename>]]
                        [--global | --local]
   ${_ME} notebooks delete <name> [-f | --force]
   ${_ME} notebooks (export <name> [<path>] | import <path>)
-  ${_ME} notebooks init [<path> [<remote-url> [<branch>]]]
+  ${_ME} notebooks init [<path> [<remote-url> [<branch>]]] [--config]
+                    [--email <email>] [--name <name>]
   ${_ME} notebooks rename <old-name> <new-name>
   ${_ME} notebooks select <selector>
   ${_ME} notebooks show (<name> | <path> | <selector>) [--archived]
@@ -4135,7 +4139,13 @@ _index() {
 
 describe "init" <<HEREDOC
 Usage:
-  ${_ME} init [<remote-url> [<branch>]]
+  ${_ME} init [<remote-url> [<branch>]] [--config] [--email <email>]
+          [--name <name>]
+
+Options:
+  --config         Display the local email and name config prompt.
+  --email <email>  Set the local commit author email address to <email>.
+  --name  <name>   Set the local commit author name to <name>.
 
 Description:
   Initialize the initial "home" notebook and generate a configuration file at:
@@ -6001,13 +6011,16 @@ describe "notebooks" <<HEREDOC
 Usage:
   ${_ME} notebooks [<name>] [--archived] [--global] [--local] [--names]
                [--paths] [--unarchived]
-  ${_ME} notebooks add <name> [<remote-url> [<branch>]]
+  ${_ME} notebooks add <name> [<remote-url> [<branch>]] [--config]
+                   [--config] [--email <email>] [--name <name>]
   ${_ME} notebooks (archive | open | peek | status | unarchive) [<name>]
+  ${_ME} notebooks config [--email <email>] [--name <name>]
   ${_ME} notebooks current [--path | --selected | --filename [<filename>]]
                        [--global | --local]
   ${_ME} notebooks delete <name> [-f | --force]
   ${_ME} notebooks (export <name> [<path>] | import <path>)
-  ${_ME} notebooks init [<path> [<remote-url> [<branch>]]]
+  ${_ME} notebooks init [<path> [<remote-url> [<branch>]]] [--config]
+                    [--email <email>] [--name <name>]
   ${_ME} notebooks rename <old-name> <new-name>
   ${_ME} notebooks select <selector>
   ${_ME} notebooks show (<name> | <path> | <selector>) [--archived]
@@ -6017,6 +6030,8 @@ Usage:
 Options:
   --archived               List archived notebooks, or return archival status
                            with \`show\`.
+  --config                 Display the local email and name config prompt.
+  --email <email>          Set the local commit author email address to <email>.
   --escaped                Print the notebook name with spaces escaped.
   --filename [<filename>]  Print an available filename for the notebooks. When
                            <filename> is provided, check for an existing file
@@ -6028,6 +6043,7 @@ Options:
                            otherwise exit with 1.
   -f, --force              Skip the confirmation prompt.
   --name, --names          Print the notebook name.
+  --name <name>            Set the local commit author name to <name>.
   --path, --paths          Print the notebook path.
   --selected               Exit with 0 if the current notebook differs from
                            the current global notebook, otherwise exit with 1.
