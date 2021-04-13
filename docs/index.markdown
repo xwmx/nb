@@ -4083,8 +4083,8 @@ For example, displayed timestamps are derived from
 [`git log`](https://git-scm.com/docs/git-log), with [`nb show --added`](#show)
 displaying the datetime of the first commit containing the file and
 [`nb show --updated`](#show) displaying the datetime of the last commit in
-which the file was modified. For sorting, the file system's modified
-timestamp is used due to better performance.
+which the file was modified. Meanwhile, the file system's modified
+timestamp is used for sorting due to better performance in that use case.
 
 `nb` also uses plain-text files to store ids and state information in
 git, including
