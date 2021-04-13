@@ -6701,18 +6701,19 @@ HEREDOC
     local _remote_branch=
     local _remote_url=
 
-    local __arg=
-    for   __arg in "${@:-}"
+    while ((${#}))
     do
-      if _string_is_url "${__arg}" && [[ -z "${_remote_url:-}"  ]]
+      if _string_is_url "${1:-}"    && [[ -z "${_remote_url:-}"  ]]
       then
-        _remote_url="${__arg}"
-      elif [[ -z "${_path:-}"   ]] && [[ -z "${_remote_url:-}"  ]]
+        _remote_url="${1:-}"
+      elif [[ -z "${_path:-}"   ]]  && [[ -z "${_remote_url:-}"  ]]
       then
-        _path="${__arg}"
+        _path="${1:-}"
       else
-        _remote_branch="${__arg}"
+        _remote_branch="${1:-}"
       fi
+
+      shift
     done
 
     if [[ -n "${_remote_url:-}" ]] && [[ -z "${_path}" ]]
