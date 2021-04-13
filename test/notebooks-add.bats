@@ -226,7 +226,6 @@ Enter\ a\ new\ value,\ .*unset.*\ to\ use\ the\ global\ value,                ]]
 
   [[ "${lines[11]}" =~ Added\ notebook:\ .*Example\ Notebook                  ]]
 
-
   "${_NB}" notebooks use "Example Notebook"
 
   "${_NB}" add "Example File.md" --content "Example content."

@@ -4151,29 +4151,71 @@ Examples:
   ${_ME} init https://github.com/example/example.git example-branch
 HEREDOC
 _init() {
-  # Usage: _init_create_home_notebook [<url> [<branch>]]
+  # Usage: _init_create_home_notebook [<url> [<branch>]] [--config]
+  #                                   [--email <email>] [--name <name>]
   _init_create_home_notebook() {
-    local _remote_branch="${2:-}"
-    local _remote_url="${1:-}"
+    local _config=0
+    local _config_arguments=()
+    local _remote_branch=
+    local _remote_url=
 
-    if [[ -n "${_remote_url:-}"       ]]
+    while ((${#}))
+    do
+      case "${1:-}" in
+        --config) _config=1 ;;
+        --email|--name)
+          _config=1
+          _config_arguments+=("${1:-}")
+
+          if _option_value_is_present "${2:-}"
+          then
+            _config_arguments+=("${2:-}")
+            shift
+          fi
+          ;;
+        *)
+          if   [[ -z "${_remote_url:-}"     ]]
+          then
+            _remote_url="${1:-}"
+          elif [[ -z "${_remote_branch:-}"  ]]
+          then
+            _remote_branch="${1:-}"
+          fi
+          ;;
+      esac
+
+      shift
+    done
+
+    ((_config)) && _config_arguments+=("${NB_DIR}/home")
+
+    if   [[ -n "${_remote_url:-}"     ]]
     then
       if [[ -n "${_remote_branch:-}"  ]]
       then
         git clone --branch "${_remote_branch:-}" "${_remote_url}" "${NB_DIR}/home"
       else
         git clone "${_remote_url}" "${NB_DIR}/home"
-      fi
+      fi && if ((_config))
+            then
+              _notebooks config "${_config_arguments[@]:-}"
+            fi
     else
       mkdir -p  "${NB_DIR}/home"                    &&
         git -C  "${NB_DIR}/home" init   &>/dev/null &&
+        {
+          if ((_config))
+          then
+            _notebooks config "${_config_arguments[@]:-}"
+          fi
+        } &&
         touch   "${NB_DIR}/home/.index"             &&
         _git checkpoint "${NB_DIR}/home" "[nb] Initialize"
     fi
 
     _notebooks use "home" 1>/dev/null
 
-    printf "Created notebook:           %s\\n" "$(_color_primary "home")"
+    # printf "Created notebook:           %s\\n" "$(_color_primary "home")"
   }
 
   # Usage: _init_create_nb_dir
@@ -4241,11 +4283,11 @@ More Information:
 HEREDOC
   fi
 
-  _print_welcome                                              &&
-    _init_print_header                            1>/dev/null &&
-    _init_create_nb_dir                           1>/dev/null &&
-    _init_create_rc_file                          1>/dev/null &&
-    _init_create_home_notebook "${1:-}" "${2:-}"  1>/dev/null
+  _print_welcome                                    &&
+    _init_print_header                  1>/dev/null &&
+    _init_create_nb_dir                 1>/dev/null &&
+    _init_create_rc_file                1>/dev/null &&
+    _init_create_home_notebook "${@:-}"
 }
 
 # list · ############################################################### · list
