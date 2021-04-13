@@ -10,6 +10,8 @@ load test_helper
 
     "${_NB}" add "Example File One.md" --content "Example content one."
 
+    [[ -f "${NB_DIR}/home/Example File One.md" ]]
+
     _setup_remote_repo
   }
 
@@ -35,6 +37,29 @@ load test_helper
 .*[.*2.*].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.      ]]
   [[ "${lines[8]}"  =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*example.*\)             ]]
+
+  run "${_NB}" git branch --all
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${lines[0]}"  =~ \*\ example            ]]
+  [[ "${lines[1]}"  =~ remotes/origin/example ]]
+  [[ "${lines[2]}"  =~ remotes/origin/master  ]]
+
+  git clone --branch "example" "${_GIT_REMOTE_URL}" "${_TMP_DIR}/new-clone"
+
+  run git -C "${_TMP_DIR}/new-clone" branch --all
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${lines[0]}"  =~ \*\ example                              ]]
+  [[ "${lines[1]}"  =~ remotes/origin/HEAD\ \-\>\ origin/master ]]
+  [[ "${lines[2]}"  =~ remotes/origin/example                   ]]
+  [[ "${lines[3]}"  =~ remotes/origin/master                    ]]
+
+  [[ -f "${_TMP_DIR}/new-clone/Example File One.md" ]]
 
   diff                  \
     <("${_NB}" remote)  \
