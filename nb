@@ -3606,9 +3606,9 @@ $(_color_primary "Usage:")
   ${_ME} settings set (<name> | <number>) <value>
   ${_ME} shell [<subcommand> [<options>...] | --clear-history]
   ${_ME} show ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
-          [[-a | --added] | [-b | --browse] | --filename | --id | --info-line |
-          --path | [-p | --print] | --relative-path | [-r | --render] |
-          --title | --type [<type>] | [-u | --updated]] [--no-color]
+          [[-a | --added] | [--authors] | [-b | --browse] | --filename | --id |
+          --info-line | --path | [-p | --print] | --relative-path | [-r |
+          --render] | --title | --type [<type>] | [-u | --updated]] [--no-color]
   ${_ME} show <notebook>
   ${_ME} subcommands [add <name>...] [alias <name> <alias>]
                  [describe <name> <usage>]
@@ -14587,13 +14587,14 @@ _alias_subcommand "search" "grep"
 describe "show" <<HEREDOC
 Usage:
   ${_ME} show ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
-          [[-a | --added] | [-b | --browse] | --filename | --id | --info-line |
-          --path | [-p | --print] | --relative-path | [-r | --render] |
-          --title | --type [<type>] | [-u | --updated]] [--no-color]
+          [[-a | --added] | [--authors] | [-b | --browse] | --filename | --id |
+          --info-line | --path | [-p | --print] | --relative-path | [-r |
+          --render] | --title | --type [<type>] | [-u | --updated]] [--no-color]
   ${_ME} show <notebook>
 
 Options:
   -a, --added      Print the date and time when the item was added.
+  --authors        List the git commit authors of an item.
   -b, --browse     Open the item with \`nb browse\`.
   --filename       Print the filename of the item.
   --id             Print the id number of the item.
@@ -14722,6 +14723,7 @@ _show() {
   local _password=
   local _per_page="${NB_BROWSE_PER_PAGE:-20}"
   local _print_added=0
+  local _print_authors=0
   local _print_bookmark_url=0
   local _print_filename=0
   local _print_folder_path=0
@@ -14752,6 +14754,9 @@ _show() {
       -a|--added*)
         _print_added=1
         _skip_notebook_fallback=1
+        ;;
+      --auth*)
+        _print_authors=1
         ;;
       -b|--br|--browse)
         _browse=1
@@ -14993,6 +14998,14 @@ _show() {
   if ((_print_title))
   then
     _get_content "${_notebook_path}/${_relative_path}" --title
+    return 0
+  fi
+
+  if ((_print_authors))
+  then
+    GIT_PAGER='' git -C "${_notebook_path}" shortlog              \
+      --summary --email -- "${_notebook_path}/${_relative_path}"  \
+      | sed "s/^[[:space:]]\{1,\}[[:digit:]]\{1,\}[[:space:]]\{1,\}//g"
     return 0
   fi
 

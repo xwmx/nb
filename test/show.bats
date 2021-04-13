@@ -2,6 +2,51 @@
 
 load test_helper
 
+# --authors ###################################################################
+
+@test "'show --authors' prints the list of authors for a file." {
+  {
+    "${_NB}" init
+
+    declare _global_email=
+    _global_email="$(git -C "${NB_DIR}/home" config --global user.email)"
+
+    declare _global_name=
+    _global_name="$(git -C "${NB_DIR}/home" config --global user.name)"
+
+    "${_NB}" add "Example File.md" --content "Example content."
+  }
+
+  run "${_NB}" show 1 --authors
+
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
+
+  [[ "${status}"    -eq 0   ]]
+  [[ "${#lines[@]}" -eq 1   ]]
+
+  [[ "${lines[0]}"  ==  "${_global_name} <${_global_email}>" ]]
+
+  "${_NB}" notebooks author                   \
+    --email "example-new-email@example.test"  \
+    --name "Example New Name" <<< "y${_NEWLINE}"
+
+  "${_NB}" edit 1 --content "Example updated content."
+
+  run "${_NB}" show 1 --authors
+
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
+
+  [[ "${status}"    -eq 0   ]]
+  [[ "${#lines[@]}" -eq 2   ]]
+
+  [[ "${lines[0]}"  ==  "Example New Name <example-new-email@example.test>" ]]
+  [[ "${lines[1]}"  ==  "${_global_name} <${_global_email}>"                ]]
+}
+
 # --type ######################################################################
 
 @test "'show <selector> --type' with a folder exits with status 0 and prints type." {

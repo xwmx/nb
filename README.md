@@ -4388,9 +4388,9 @@ Usage:
   nb settings set (<name> | <number>) <value>
   nb shell [<subcommand> [<options>...] | --clear-history]
   nb show ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
-          [[-a | --added] | [-b | --browse] | --filename | --id | --info-line |
-          --path | [-p | --print] | --relative-path | [-r | --render] |
-          --title | --type [<type>] | [-u | --updated]] [--no-color]
+          [[-a | --added] | [--authors] | [-b | --browse] | --filename | --id |
+          --info-line | --path | [-p | --print] | --relative-path | [-r |
+          --render] | --title | --type [<type>] | [-u | --updated]] [--no-color]
   nb show <notebook>
   nb subcommands [add <name>...] [alias <name> <alias>]
                  [describe <name> <usage>]
@@ -5888,13 +5888,14 @@ Example:
 ```text
 Usage:
   nb show ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
-          [[-a | --added] | [-b | --browse] | --filename | --id | --info-line |
-          --path | [-p | --print] | --relative-path | [-r | --render] |
-          --title | --type [<type>] | [-u | --updated]] [--no-color]
+          [[-a | --added] | [--authors] | [-b | --browse] | --filename | --id |
+          --info-line | --path | [-p | --print] | --relative-path | [-r |
+          --render] | --title | --type [<type>] | [-u | --updated]] [--no-color]
   nb show <notebook>
 
 Options:
   -a, --added      Print the date and time when the item was added.
+  --authors        List the git commit authors of an item.
   -b, --browse     Open the item with `nb browse`.
   --filename       Print the filename of the item.
   --id             Print the id number of the item.
