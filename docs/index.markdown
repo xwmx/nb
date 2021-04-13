@@ -4330,7 +4330,7 @@ Usage:
   nb notebooks add <name> [<remote-url> [<branch>]] [--config]
                    [--config] [--email <email>] [--name <name>]
   nb notebooks (archive | open | peek | status | unarchive) [<name>]
-  nb notebooks config [--email <email>] [--name <name>]
+  nb notebooks config [<name> | <path>] [--email <email>] [--name <name>]
   nb notebooks current [--path | --selected | --filename [<filename>]]
                        [--global | --local]
   nb notebooks delete <name> [-f | --force]
@@ -5265,7 +5265,7 @@ Usage:
   nb notebooks add <name> [<remote-url> [<branch>]] [--config]
                    [--config] [--email <email>] [--name <name>]
   nb notebooks (archive | open | peek | status | unarchive) [<name>]
-  nb notebooks config [--email <email>] [--name <name>]
+  nb notebooks config [<name> | <path>] [--email <email>] [--name <name>]
   nb notebooks current [--path | --selected | --filename [<filename>]]
                        [--global | --local]
   nb notebooks delete <name> [-f | --force]
@@ -5307,6 +5307,7 @@ Subcommands:
              clone of <remote-url>.
              Aliases: `notebooks create`, `notebooks new`
   archive    Set the current notebook or notebook <name> to "archived" status.
+  config     Configure the commit author email and name for the notebook.
   export     Export the notebook <name> to the current directory or <path>,
              making it usable as a local notebook.
   import     Import the local notebook at <path> to make it global.
@@ -6467,7 +6468,7 @@ at the root level of the notebook directory.
 
 ## Tests
 
-With more than 1,500 tests spanning tens of thousands of lines,
+With more than 1,600 tests spanning tens of thousands of lines,
 `nb` is really mostly a
 [test suite](https://github.com/xwmx/nb/tree/master/test).
 [Tests run continuously via GitHub Actions](https://github.com/xwmx/nb/actions)
