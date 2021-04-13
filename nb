@@ -6052,9 +6052,11 @@ _notebooks() {
   # _notebooks_add()
   #
   # Usage:
-  #   _notebooks_add <name> [<remote_url> [<branch>]]
+  #   _notebooks_add <name> [<remote_url> [<branch>]] [--config]
+  #                  [--email <email>] [--name <name>]
   _notebooks_add() {
     local _config=0
+    local _config_arguments=()
     local _name=
     local _remote_branch=
     local _remote_url=
@@ -6063,6 +6065,16 @@ _notebooks() {
     do
       case "${1:-}" in
         --config) _config=1 ;;
+        --email|--name)
+          _config=1
+          _config_arguments+=("${1:-}")
+
+          if _option_value_is_present "${2:-}"
+          then
+            _config_arguments+=("${2:-}")
+            shift
+          fi
+          ;;
         *)
           if   [[ -z "${_name:-}"           ]]
           then
@@ -6107,7 +6119,8 @@ _notebooks() {
         {
           if ((_config))
           then
-            _notebooks config "${NB_DIR}/${_name}"
+            _config_arguments+=("${NB_DIR}/${_name}")
+            _notebooks config "${_config_arguments[@]:-}"
           fi
         } &&
         touch "${NB_DIR}/${_name}/.index"             &&
@@ -7388,7 +7401,8 @@ HEREDOC
 
   case "${_subcommand}" in
     a|add|create|new)
-      _notebooks_add      "${_name:-}" "${3:-}" "${4:-}"
+      shift
+      _notebooks_add      "${@:-}"
       ;;
     export)
       _notebooks_export   "${2:-}" "${3:-}"
