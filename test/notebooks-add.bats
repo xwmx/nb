@@ -18,7 +18,7 @@ _setup_notebooks() {
 
 # config ######################################################################
 
-@test "'notebooks add --config' displays config prompt and sets email and name." {
+@test "'notebooks add --author' displays config prompt and sets email and name." {
   {
     "${_NB}" init
 
@@ -35,7 +35,7 @@ _setup_notebooks() {
       <(printf "Author: %s <%s>\\n" "${_global_name}" "${_global_email}")
   }
 
-  run "${_NB}" notebooks add "Example Notebook" --config \
+  run "${_NB}" notebooks add "Example Notebook" --author \
     <<< "y${_NEWLINE}local@example.test${_NEWLINE}Example Local Name${_NEWLINE}"
 
   printf "\${status}:     '%s'\\n" "${status}"
@@ -48,8 +48,8 @@ _setup_notebooks() {
   [[ -n "$(git -C "${NB_DIR}/Example Notebook" config --local user.email  || :)"  ]]
   [[ -n "$(git -C "${NB_DIR}/Example Notebook" config --local user.name   || :)"  ]]
 
-  [[ "${lines[0]}"  =~ Current\ configuration\ for:\ .*Example\ Notebook      ]]
-  [[ "${lines[1]}"  =~ [^-]--------------------------[^-]                     ]]
+  [[ "${lines[0]}"  =~ Current\ author\ for:\ .*Example\ Notebook             ]]
+  [[ "${lines[1]}"  =~ [^-]-------------------[^-]                            ]]
   [[ "${lines[2]}"  =~ .*email.*\ \(.*global.*\):\ ${_global_email}           ]]
   [[ "${lines[3]}"  =~ .*name.*\ \ \(.*global.*\):\ ${_global_name//' '/\\ }  ]]
 
@@ -57,8 +57,8 @@ _setup_notebooks() {
 Enter\ a\ new\ value,\ .*unset.*\ to\ use\ the\ global\ value,                ]]
   [[ "${lines[5]}"  =~ or\ leave\ blank\ to\ keep\ the\ current\ value\.      ]]
 
-  [[ "${lines[6]}"  =~ Updated\ configuration\ for:\ .*Example\ Notebook      ]]
-  [[ "${lines[7]}"  =~ [^-]--------------------------[^-]                     ]]
+  [[ "${lines[6]}"  =~ Updated\ author\ for:\ .*Example\ Notebook             ]]
+  [[ "${lines[7]}"  =~ [^-]-------------------[^-]                            ]]
   [[ "${lines[8]}"  =~ .*email.*\ \(.*local.*\):\ \ local@example.test        ]]
   [[ "${lines[9]}"  =~ .*name.*\ \ \(.*local.*\):\ \ Example\ Local\ Name     ]]
 
@@ -106,16 +106,16 @@ Enter\ a\ new\ value,\ .*unset.*\ to\ use\ the\ global\ value,                ]]
   [[ -n "$(git -C "${NB_DIR}/Example Notebook" config --local user.email  || :)" ]]
   [[ -n "$(git -C "${NB_DIR}/Example Notebook" config --local user.name   || :)" ]]
 
-  [[ "${lines[0]}"  =~ Current\ configuration\ for:\ .*Example\ Notebook      ]]
-  [[ "${lines[1]}"  =~ [^-]--------------------------[^-]                     ]]
+  [[ "${lines[0]}"  =~ Current\ author\ for:\ .*Example\ Notebook             ]]
+  [[ "${lines[1]}"  =~ [^-]-------------------[^-]                            ]]
   [[ "${lines[2]}"  =~ .*email.*\ \(.*global.*\):\ ${_global_email}           ]]
   [[ "${lines[3]}"  =~ .*name.*\ \ \(.*global.*\):\ ${_global_name//' '/\\ }  ]]
   [[ "${lines[4]}"  =~ Update:                                                ]]
   [[ "${lines[5]}"  =~ [^-]-------[^-]                                        ]]
   [[ "${lines[6]}"  =~ local\ .*email.*:\ local@example.test                  ]]
   [[ "${lines[7]}"  =~ local\ .*name.*:\ \ Example\ Local\ Name               ]]
-  [[ "${lines[8]}"  =~ Updated\ configuration\ for:\ .*Example\ Notebook      ]]
-  [[ "${lines[9]}"  =~ [^-]--------------------------[^-]                     ]]
+  [[ "${lines[8]}"  =~ Updated\ author\ for:\ .*Example\ Notebook             ]]
+  [[ "${lines[9]}"  =~ [^-]-------------------[^-]                            ]]
   [[ "${lines[10]}" =~ .*email.*\ \(.*local.*\):\ \ local@example.test        ]]
   [[ "${lines[11]}" =~ .*name.*\ \ \(.*local.*\):\ \ Example\ Local\ Name     ]]
 
@@ -159,15 +159,15 @@ Enter\ a\ new\ value,\ .*unset.*\ to\ use\ the\ global\ value,                ]]
   [[ -n "$(git -C "${NB_DIR}/Example Notebook" config --local user.email  || :)" ]]
   [[ -z "$(git -C "${NB_DIR}/Example Notebook" config --local user.name   || :)" ]]
 
-  [[ "${lines[0]}"  =~ Current\ configuration\ for:\ .*Example\ Notebook      ]]
-  [[ "${lines[1]}"  =~ [^-]--------------------------[^-]                     ]]
+  [[ "${lines[0]}"  =~ Current\ author\ for:\ .*Example\ Notebook             ]]
+  [[ "${lines[1]}"  =~ [^-]-------------------[^-]                            ]]
   [[ "${lines[2]}"  =~ .*email.*\ \(.*global.*\):\ ${_global_email}           ]]
   [[ "${lines[3]}"  =~ .*name.*\ \ \(.*global.*\):\ ${_global_name//' '/\\ }  ]]
   [[ "${lines[4]}"  =~ Update:                                                ]]
   [[ "${lines[5]}"  =~ [^-]-------[^-]                                        ]]
   [[ "${lines[6]}"  =~ local\ .*email.*:\ local@example.test                  ]]
-  [[ "${lines[7]}"  =~ Updated\ configuration\ for:\ .*Example\ Notebook      ]]
-  [[ "${lines[8]}"  =~ [^-]--------------------------[^-]                     ]]
+  [[ "${lines[7]}"  =~ Updated\ author\ for:\ .*Example\ Notebook             ]]
+  [[ "${lines[8]}"  =~ [^-]-------------------[^-]                            ]]
   [[ "${lines[9]}"  =~ .*email.*\ \(.*local.*\):\ \ local@example.test        ]]
   [[ "${lines[10]}" =~ .*name.*\ \ \(.*global.*\):\ ${_global_name//' '/\\ }  ]]
 
@@ -212,15 +212,15 @@ Enter\ a\ new\ value,\ .*unset.*\ to\ use\ the\ global\ value,                ]]
   [[ -z "$(git -C "${NB_DIR}/Example Notebook" config --local user.email  || :)" ]]
   [[ -n "$(git -C "${NB_DIR}/Example Notebook" config --local user.name   || :)" ]]
 
-  [[ "${lines[0]}"  =~ Current\ configuration\ for:\ .*Example\ Notebook      ]]
-  [[ "${lines[1]}"  =~ [^-]--------------------------[^-]                     ]]
+  [[ "${lines[0]}"  =~ Current\ author\ for:\ .*Example\ Notebook             ]]
+  [[ "${lines[1]}"  =~ [^-]-------------------[^-]                            ]]
   [[ "${lines[2]}"  =~ .*email.*\ \(.*global.*\):\ ${_global_email}           ]]
   [[ "${lines[3]}"  =~ .*name.*\ \ \(.*global.*\):\ ${_global_name//' '/\\ }  ]]
   [[ "${lines[4]}"  =~ Update:                                                ]]
   [[ "${lines[5]}"  =~ [^-]-------[^-]                                        ]]
   [[ "${lines[6]}"  =~ local\ .*name.*:\ \ Example\ Local\ Name               ]]
-  [[ "${lines[7]}"  =~ Updated\ configuration\ for:\ .*Example\ Notebook      ]]
-  [[ "${lines[8]}"  =~ [^-]--------------------------[^-]                     ]]
+  [[ "${lines[7]}"  =~ Updated\ author\ for:\ .*Example\ Notebook             ]]
+  [[ "${lines[8]}"  =~ [^-]-------------------[^-]                            ]]
   [[ "${lines[9]}"  =~ .*email.*\ \(.*global.*\):\ ${_global_email}           ]]
   [[ "${lines[10]}" =~ .*name.*\ \ \(.*local.*\):\ \ Example\ Local\ Name     ]]
 

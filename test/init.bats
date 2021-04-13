@@ -4,8 +4,8 @@ load test_helper
 
 # config ######################################################################
 
-@test "'init --config' displays config prompt and sets email and name." {
-  run "${_NB}" init --config \
+@test "'init --author' displays config prompt and sets email and name." {
+  run "${_NB}" init --author \
     <<< "y${_NEWLINE}local@example.test${_NEWLINE}Example Local Name${_NEWLINE}"
 
   printf "\${status}:     '%s'\\n" "${status}"
@@ -24,8 +24,8 @@ load test_helper
   declare _global_name=
   _global_name="$(git -C "${NB_DIR}/home" config --global user.name)"
 
-  [[ "${lines[8]}"  =~ Current\ configuration\ for:\ .*home                   ]]
-  [[ "${lines[9]}"  =~ [^-]--------------------------[^-]                     ]]
+  [[ "${lines[8]}"  =~ Current\ author\ for:\ .*home                          ]]
+  [[ "${lines[9]}"  =~ [^-]-------------------[^-]                            ]]
   [[ "${lines[10]}" =~ .*email.*\ \(.*global.*\):\ ${_global_email}           ]]
   [[ "${lines[11]}" =~ .*name.*\ \ \(.*global.*\):\ ${_global_name//' '/\\ }  ]]
 
@@ -33,8 +33,8 @@ load test_helper
 Enter\ a\ new\ value,\ .*unset.*\ to\ use\ the\ global\ value,                ]]
   [[ "${lines[13]}" =~ or\ leave\ blank\ to\ keep\ the\ current\ value\.      ]]
 
-  [[ "${lines[14]}" =~ Updated\ configuration\ for:\ .*home                   ]]
-  [[ "${lines[15]}" =~ [^-]--------------------------[^-]                     ]]
+  [[ "${lines[14]}" =~ Updated\ author\ for:\ .*home                          ]]
+  [[ "${lines[15]}" =~ [^-]-------------------[^-]                            ]]
   [[ "${lines[16]}" =~ .*email.*\ \(.*local.*\):\ \ local@example.test        ]]
   [[ "${lines[17]}" =~ .*name.*\ \ \(.*local.*\):\ \ Example\ Local\ Name     ]]
 
@@ -48,7 +48,7 @@ Enter\ a\ new\ value,\ .*unset.*\ to\ use\ the\ global\ value,                ]]
 # --email and --name ##########################################################
 
 @test "'init --email <email> --name <name>' sets the local email and name." {
-  run "${_NB}" init --config      \
+  run "${_NB}" init               \
     --email "local@example.test"  \
     --name  "Example Local Name"  \
     <<< "y${_NEWLINE}"
@@ -69,16 +69,16 @@ Enter\ a\ new\ value,\ .*unset.*\ to\ use\ the\ global\ value,                ]]
   declare _global_name=
   _global_name="$(git -C "${NB_DIR}/home" config --global user.name)"
 
-  [[ "${lines[8]}"  =~ Current\ configuration\ for:\ .*home                   ]]
-  [[ "${lines[9]}"  =~ [^-]--------------------------[^-]                     ]]
+  [[ "${lines[8]}"  =~ Current\ author\ for:\ .*home                          ]]
+  [[ "${lines[9]}"  =~ [^-]-------------------[^-]                            ]]
   [[ "${lines[10]}" =~ .*email.*\ \(.*global.*\):\ ${_global_email}           ]]
   [[ "${lines[11]}" =~ .*name.*\ \ \(.*global.*\):\ ${_global_name//' '/\\ }  ]]
   [[ "${lines[12]}" =~ Update:                                                ]]
   [[ "${lines[13]}" =~ [^-]-------[^-]                                        ]]
   [[ "${lines[14]}" =~ local\ .*email.*:\ local@example.test                  ]]
   [[ "${lines[15]}" =~ local\ .*name.*:\ \ Example\ Local\ Name               ]]
-  [[ "${lines[16]}" =~ Updated\ configuration\ for:\ .*home                   ]]
-  [[ "${lines[17]}" =~ [^-]--------------------------[^-]                     ]]
+  [[ "${lines[16]}" =~ Updated\ author\ for:\ .*home                          ]]
+  [[ "${lines[17]}" =~ [^-]-------------------[^-]                            ]]
   [[ "${lines[18]}" =~ .*email.*\ \(.*local.*\):\ \ local@example.test        ]]
   [[ "${lines[19]}" =~ .*name.*\ \ \(.*local.*\):\ \ Example\ Local\ Name     ]]
 
@@ -90,7 +90,7 @@ Enter\ a\ new\ value,\ .*unset.*\ to\ use\ the\ global\ value,                ]]
 }
 
 @test "'init --email <email>' sets the local email." {
-  run "${_NB}"  init --config     \
+  run "${_NB}"  init              \
     --email "local@example.test"  \
     <<< "y${_NEWLINE}"
 
@@ -110,15 +110,15 @@ Enter\ a\ new\ value,\ .*unset.*\ to\ use\ the\ global\ value,                ]]
   declare _global_name=
   _global_name="$(git -C "${NB_DIR}/home" config --global user.name)"
 
-  [[ "${lines[8]}"  =~ Current\ configuration\ for:\ .*home                   ]]
-  [[ "${lines[9]}"  =~ [^-]--------------------------[^-]                     ]]
+  [[ "${lines[8]}"  =~ Current\ author\ for:\ .*home                          ]]
+  [[ "${lines[9]}"  =~ [^-]-------------------[^-]                            ]]
   [[ "${lines[10]}" =~ .*email.*\ \(.*global.*\):\ ${_global_email}           ]]
   [[ "${lines[11]}" =~ .*name.*\ \ \(.*global.*\):\ ${_global_name//' '/\\ }  ]]
   [[ "${lines[12]}" =~ Update:                                                ]]
   [[ "${lines[13]}" =~ [^-]-------[^-]                                        ]]
   [[ "${lines[14]}" =~ local\ .*email.*:\ local@example.test                  ]]
-  [[ "${lines[15]}" =~ Updated\ configuration\ for:\ .*home                   ]]
-  [[ "${lines[16]}" =~ [^-]--------------------------[^-]                     ]]
+  [[ "${lines[15]}" =~ Updated\ author\ for:\ .*home                          ]]
+  [[ "${lines[16]}" =~ [^-]-------------------[^-]                            ]]
   [[ "${lines[17]}" =~ .*email.*\ \(.*local.*\):\ \ local@example.test        ]]
   [[ "${lines[18]}" =~ .*name.*\ \ \(.*global.*\):\ ${_global_name//' '/\\ }  ]]
 
@@ -130,7 +130,7 @@ Enter\ a\ new\ value,\ .*unset.*\ to\ use\ the\ global\ value,                ]]
 }
 
 @test "'init --name <name>' sets the local name." {
-  run "${_NB}" init --config      \
+  run "${_NB}" init               \
     --name "Example Local Name"   \
     <<< "y${_NEWLINE}"
 
@@ -149,15 +149,15 @@ Enter\ a\ new\ value,\ .*unset.*\ to\ use\ the\ global\ value,                ]]
   declare _global_name=
   _global_name="$(git -C "${NB_DIR}/home" config --global user.name)"
 
-  [[ "${lines[8]}"  =~ Current\ configuration\ for:\ .*home                   ]]
-  [[ "${lines[9]}"  =~ [^-]--------------------------[^-]                     ]]
+  [[ "${lines[8]}"  =~ Current\ author\ for:\ .*home                          ]]
+  [[ "${lines[9]}"  =~ [^-]-------------------[^-]                            ]]
   [[ "${lines[10]}" =~ .*email.*\ \(.*global.*\):\ ${_global_email}           ]]
   [[ "${lines[11]}" =~ .*name.*\ \ \(.*global.*\):\ ${_global_name//' '/\\ }  ]]
   [[ "${lines[12]}" =~ Update:                                                ]]
   [[ "${lines[13]}" =~ [^-]-------[^-]                                        ]]
   [[ "${lines[14]}" =~ local\ .*name.*:\ \ Example\ Local\ Name               ]]
-  [[ "${lines[15]}" =~ Updated\ configuration\ for:\ .*home                   ]]
-  [[ "${lines[16]}" =~ [^-]--------------------------[^-]                     ]]
+  [[ "${lines[15]}" =~ Updated\ author\ for:\ .*home                          ]]
+  [[ "${lines[16]}" =~ [^-]-------------------[^-]                            ]]
   [[ "${lines[17]}" =~ .*email.*\ \(.*global.*\):\ ${_global_email}           ]]
   [[ "${lines[18]}" =~ .*name.*\ \ \(.*local.*\):\ \ Example\ Local\ Name     ]]
 
