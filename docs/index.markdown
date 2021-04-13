@@ -2819,8 +2819,18 @@ Change the email and name used for a notebook with
 [`nb notebooks config`](#notebooks):
 
 ```bash
+# edit the email and name for the current notebook
 ❯ nb notebooks config
 Current configuration for: home
+--------------------------
+email (global): example@example.test
+name  (global): Example Name
+
+Update?  [y/N]
+
+# edit the email and name for the notebook named "example"
+❯ nb notebooks config example
+Current configuration for: example
 --------------------------
 email (global): example@example.test
 name  (global): Example Name
