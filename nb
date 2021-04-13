@@ -3555,7 +3555,7 @@ $(_color_primary "Usage:")
   ${_ME} import [copy | download | move] (<path>... | <url>) [--convert]
             [<notebook>:][<folder>/][<filename>]
   ${_ME} import notebook <path> [<name>]
-  ${_ME} init [<remote-url> [<branch>]] [--config] [--email <email>]
+  ${_ME} init [<remote-url> [<branch>]] [--author] [--email <email>]
           [--name <name>]
   ${_ME} list [-e [<length>] | --excerpt [<length>]] [--filenames]
           [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
@@ -3573,15 +3573,15 @@ $(_color_primary "Usage:")
           [-f | --force]
   ${_ME} notebooks [<name>] [--archived] [--global] [--local] [--names]
                [--paths] [--unarchived]
-  ${_ME} notebooks add <name> [<remote-url> [<branch>]] [--config]
-                   [--config] [--email <email>] [--name <name>]
+  ${_ME} notebooks add <name> [<remote-url> [<branch>]] [--author]
+                   [--author] [--email <email>] [--name <name>]
   ${_ME} notebooks (archive | open | peek | status | unarchive) [<name>]
-  ${_ME} notebooks config [<name> | <path>] [--email <email>] [--name <name>]
+  ${_ME} notebooks author [<name> | <path>] [--email <email>] [--name <name>]
   ${_ME} notebooks current [--path | --selected | --filename [<filename>]]
                        [--global | --local]
   ${_ME} notebooks delete <name> [-f | --force]
   ${_ME} notebooks (export <name> [<path>] | import <path>)
-  ${_ME} notebooks init [<path> [<remote-url> [<branch>]]] [--config]
+  ${_ME} notebooks init [<path> [<remote-url> [<branch>]]] [--author]
                     [--email <email>] [--name <name>]
   ${_ME} notebooks rename <old-name> <new-name>
   ${_ME} notebooks select <selector>
@@ -4145,11 +4145,11 @@ _index() {
 
 describe "init" <<HEREDOC
 Usage:
-  ${_ME} init [<remote-url> [<branch>]] [--config] [--email <email>]
+  ${_ME} init [<remote-url> [<branch>]] [--author] [--email <email>]
           [--name <name>]
 
 Options:
-  --config         Display the local email and name config prompt.
+  --author         Display the local email and name config prompt.
   --email <email>  Set the local commit author email address to <email>.
   --name  <name>   Set the local commit author name to <name>.
 
@@ -4167,25 +4167,25 @@ Examples:
   ${_ME} init https://github.com/example/example.git example-branch
 HEREDOC
 _init() {
-  # Usage: _init_create_home_notebook [<url> [<branch>]] [--config]
+  # Usage: _init_create_home_notebook [<url> [<branch>]] [--author]
   #                                   [--email <email>] [--name <name>]
   _init_create_home_notebook() {
-    local _config=0
-    local _config_arguments=()
+    local _author=0
+    local _author_arguments=()
     local _remote_branch=
     local _remote_url=
 
     while ((${#}))
     do
       case "${1:-}" in
-        --config) _config=1 ;;
+        --author) _author=1 ;;
         --email|--name)
-          _config=1
-          _config_arguments+=("${1:-}")
+          _author=1
+          _author_arguments+=("${1:-}")
 
           if _option_value_is_present "${2:-}"
           then
-            _config_arguments+=("${2:-}")
+            _author_arguments+=("${2:-}")
             shift
           fi
           ;;
@@ -4203,7 +4203,7 @@ _init() {
       shift
     done
 
-    ((_config)) && _config_arguments+=("${NB_DIR}/home")
+    ((_author)) && _author_arguments+=("${NB_DIR}/home")
 
     if   [[ -n "${_remote_url:-}"     ]]
     then
@@ -4212,17 +4212,17 @@ _init() {
         git clone --branch "${_remote_branch:-}" "${_remote_url}" "${NB_DIR}/home"
       else
         git clone "${_remote_url}" "${NB_DIR}/home"
-      fi && if ((_config))
+      fi && if ((_author))
             then
-              _notebooks config "${_config_arguments[@]:-}"
+              _notebooks author "${_author_arguments[@]:-}"
             fi
     else
       mkdir -p  "${NB_DIR}/home"                    &&
         git -C  "${NB_DIR}/home" init   &>/dev/null &&
         {
-          if ((_config))
+          if ((_author))
           then
-            _notebooks config "${_config_arguments[@]:-}"
+            _notebooks author "${_author_arguments[@]:-}"
           fi
         } &&
         touch   "${NB_DIR}/home/.index"             &&
@@ -6017,15 +6017,15 @@ describe "notebooks" <<HEREDOC
 Usage:
   ${_ME} notebooks [<name>] [--archived] [--global] [--local] [--names]
                [--paths] [--unarchived]
-  ${_ME} notebooks add <name> [<remote-url> [<branch>]] [--config]
-                   [--config] [--email <email>] [--name <name>]
+  ${_ME} notebooks add <name> [<remote-url> [<branch>]] [--author]
+                   [--author] [--email <email>] [--name <name>]
   ${_ME} notebooks (archive | open | peek | status | unarchive) [<name>]
-  ${_ME} notebooks config [<name> | <path>] [--email <email>] [--name <name>]
+  ${_ME} notebooks author [<name> | <path>] [--email <email>] [--name <name>]
   ${_ME} notebooks current [--path | --selected | --filename [<filename>]]
                        [--global | --local]
   ${_ME} notebooks delete <name> [-f | --force]
   ${_ME} notebooks (export <name> [<path>] | import <path>)
-  ${_ME} notebooks init [<path> [<remote-url> [<branch>]]] [--config]
+  ${_ME} notebooks init [<path> [<remote-url> [<branch>]]] [--author]
                     [--email <email>] [--name <name>]
   ${_ME} notebooks rename <old-name> <new-name>
   ${_ME} notebooks select <selector>
@@ -6036,7 +6036,7 @@ Usage:
 Options:
   --archived               List archived notebooks, or return archival status
                            with \`show\`.
-  --config                 Display the local email and name config prompt.
+  --author                 Configure the commit author email and name.
   --email <email>          Set the local commit author email address to <email>.
   --escaped                Print the notebook name with spaces escaped.
   --filename [<filename>]  Print an available filename for the notebooks. When
@@ -6117,11 +6117,11 @@ _notebooks() {
   # _notebooks_add()
   #
   # Usage:
-  #   _notebooks_add <name> [<remote_url> [<branch>]] [--config]
+  #   _notebooks_add <name> [<remote_url> [<branch>]] [--author]
   #                  [--email <email>] [--name <name>]
   _notebooks_add() {
-    local _config=0
-    local _config_arguments=()
+    local _author=0
+    local _author_arguments=()
     local _name=
     local _remote_branch=
     local _remote_url=
@@ -6129,14 +6129,14 @@ _notebooks() {
     while ((${#}))
     do
       case "${1:-}" in
-        --config) _config=1 ;;
+        --author) _author=1 ;;
         --email|--name)
-          _config=1
-          _config_arguments+=("${1:-}")
+          _author=1
+          _author_arguments+=("${1:-}")
 
           if _option_value_is_present "${2:-}"
           then
-            _config_arguments+=("${2:-}")
+            _author_arguments+=("${2:-}")
             shift
           fi
           ;;
@@ -6182,10 +6182,10 @@ _notebooks() {
       mkdir -p "${NB_DIR}/${_name}"
         git -C "${NB_DIR}/${_name}" init &>/dev/null  &&
         {
-          if ((_config))
+          if ((_author))
           then
-            _config_arguments+=("${NB_DIR}/${_name}")
-            _notebooks config "${_config_arguments[@]:-}"
+            _author_arguments+=("${NB_DIR}/${_name}")
+            _notebooks author "${_author_arguments[@]:-}"
           fi
         } &&
         touch "${NB_DIR}/${_name}/.index"             &&
@@ -6219,16 +6219,16 @@ _notebooks() {
     done
   }
 
-  # _notebooks_config()
+  # _notebooks_author()
   #
   # Usage:
-  #   _notebooks_config [--name [<name>]] [--email [<email>]] [--unset]
+  #   _notebooks_author [--name [<name>]] [--email [<email>]] [--unset]
   #                     [<notebook-path>]
   #
   # Description:
   #   Print, set, and delete the <email> and <name> for git commit attribution
   #   within the notebook.
-  _notebooks_config() {
+  _notebooks_author() {
     local _email=0
     local _name=0
     local _new_local_email=
@@ -6348,13 +6348,13 @@ _notebooks() {
 
       ((_unset_output_present)) && printf "\\n"
 
-      printf "Updated configuration for: %s\\n" "$(
+      printf "Updated author for: %s\\n" "$(
         _color_primary "${_notebook_name}"
       )"
 
-      _print_line "--------------------------"
+      _print_line "-------------------"
 
-      _notebooks_config "${_notebook_path}" --current
+      _notebooks_author "${_notebook_path}" --current
 
       return 0
     elif ((_print_current))
@@ -6379,13 +6379,13 @@ _notebooks() {
 
       return 0
     else
-      printf "Current configuration for: %s\\n" "$(
+      printf "Current author for: %s\\n" "$(
         _color_primary "${_notebook_name}"
       )"
 
-      _print_line "--------------------------"
+      _print_line "-------------------"
 
-      _notebooks_config "${_notebook_path}" --current
+      _notebooks_author "${_notebook_path}" --current
 
       if [[ -n "${_new_local_email:-}"    ]] || [[ -n "${_new_local_name:-}" ]]
       then
@@ -6467,13 +6467,13 @@ HEREDOC
 
       if [[ -n "${_new_local_email:-"${_new_local_name:-}"}" ]] || ! ((_skip_prompt))
       then
-        printf "\\nUpdated configuration for: %s\\n" "$(
+        printf "\\nUpdated author for: %s\\n" "$(
           _color_primary "${_notebook_name}"
         )"
 
-        _print_line "--------------------------"
+        _print_line "-------------------"
 
-        _notebooks_config "${_notebook_path}" --current
+        _notebooks_author "${_notebook_path}" --current
       fi
     fi
   }
@@ -6780,8 +6780,8 @@ HEREDOC
   # Usage:
   #   _notebooks_init [<path> [<remote_url> [<branch>]]
   _notebooks_init() {
-    local _config=0
-    local _config_arguments=()
+    local _author=0
+    local _author_arguments=()
     local _path=
     local _remote_branch=
     local _remote_url=
@@ -6789,14 +6789,14 @@ HEREDOC
     while ((${#}))
     do
       case "${1:-}" in
-        --config) _config=1 ;;
+        --author) _author=1 ;;
         --email|--name)
-          _config=1
-          _config_arguments+=("${1:-}")
+          _author=1
+          _author_arguments+=("${1:-}")
 
           if _option_value_is_present "${2:-}"
           then
-            _config_arguments+=("${2:-}")
+            _author_arguments+=("${2:-}")
             shift
           fi
           ;;
@@ -6868,10 +6868,10 @@ HEREDOC
     else
       git -C "${_path}" init &>/dev/null  &&
         {
-          if ((_config))
+          if ((_author))
           then
-            _config_arguments+=("${_path}")
-            _notebooks config "${_config_arguments[@]:-}"
+            _author_arguments+=("${_path}")
+            _notebooks author "${_author_arguments[@]:-}"
           fi
         } &&
         touch "${_path}/.index"           &&
@@ -7502,7 +7502,7 @@ HEREDOC
   local _subcommand="${1:-}"
   local _name="${2:-}"
 
-  if ! _contains "${_subcommand:-}" "add" "config" "current" "init" "list" "show"
+  if ! _contains "${_subcommand:-}" "add" "author" "current" "init" "list" "show"
   then
     _notebooks_add_new
   fi
@@ -7511,6 +7511,10 @@ HEREDOC
     a|add|create|new)
       shift
       _notebooks_add      "${@:-}"
+      ;;
+    author|config*)
+      shift
+      _notebooks_author   "${@:-}"
       ;;
     export)
       _notebooks_export   "${2:-}" "${3:-}"
@@ -7521,10 +7525,6 @@ HEREDOC
     init)
       shift
       _notebooks_init     "${@:-}"
-      ;;
-    config*)
-      shift
-      _notebooks_config   "${@:-}"
       ;;
     current)
       shift
