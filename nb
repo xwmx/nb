@@ -3576,7 +3576,7 @@ $(_color_primary "Usage:")
   ${_ME} notebooks add <name> [<remote-url> [<branch>]] [--config]
                    [--config] [--email <email>] [--name <name>]
   ${_ME} notebooks (archive | open | peek | status | unarchive) [<name>]
-  ${_ME} notebooks config [--email <email>] [--name <name>]
+  ${_ME} notebooks config [<name> | <path>] [--email <email>] [--name <name>]
   ${_ME} notebooks current [--path | --selected | --filename [<filename>]]
                        [--global | --local]
   ${_ME} notebooks delete <name> [-f | --force]
@@ -6014,7 +6014,7 @@ Usage:
   ${_ME} notebooks add <name> [<remote-url> [<branch>]] [--config]
                    [--config] [--email <email>] [--name <name>]
   ${_ME} notebooks (archive | open | peek | status | unarchive) [<name>]
-  ${_ME} notebooks config [--email <email>] [--name <name>]
+  ${_ME} notebooks config [<name> | <path>] [--email <email>] [--name <name>]
   ${_ME} notebooks current [--path | --selected | --filename [<filename>]]
                        [--global | --local]
   ${_ME} notebooks delete <name> [-f | --force]
@@ -6056,6 +6056,7 @@ Subcommands:
              clone of <remote-url>.
              Aliases: \`notebooks create\`, \`notebooks new\`
   archive    Set the current notebook or notebook <name> to "archived" status.
+  config     Configure the commit author email and name for the notebook.
   export     Export the notebook <name> to the current directory or <path>,
              making it usable as a local notebook.
   import     Import the local notebook at <path> to make it global.
@@ -6226,7 +6227,7 @@ _notebooks() {
     local _name=0
     local _new_local_email=
     local _new_local_name=
-    local _notebook_path=
+    local _selector=
     local _print_current=0
     local _skip_prompt=0
     local _unset=0
@@ -6262,15 +6263,28 @@ _notebooks() {
           _unset=1
           ;;
         *)
-          if [[ -z "${_notebook_path:-}" ]]
+          if [[ -z "${_selector:-}" ]]
           then
-            _notebook_path="${1:-}"
+            _selector="${1:-}"
           fi
           ;;
       esac
 
       shift
     done
+
+    local _notebook_path=
+
+    if   [[ "${_selector:-}" =~ ^/      ]]
+    then
+      _notebook_path="${_selector:-}"
+    elif [[ "${_selector:-}" == "local" ]]
+    then
+      _notebook_path="$(_notebooks_current --local --path || :)"
+    elif [[ -n "${_selector:-}"         ]]
+    then
+      _notebook_path="${NB_DIR}/${_selector%%:*}"
+    fi
 
     if [[ -z "${_notebook_path:-}"            ]]
     then
