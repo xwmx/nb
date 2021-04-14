@@ -8962,6 +8962,7 @@ textarea {
 body {
   font-kerning:       normal;
   hyphens:            none;
+  margin:             0;
   text-rendering:     optimizeLegibility;
   word-wrap:          break-word;
 }
@@ -8969,7 +8970,6 @@ body {
 @media (max-width: 600px) {
   body {
     font-size:        0.9em;
-    padding:          1em;
   }
 }
 
