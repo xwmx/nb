@@ -1665,13 +1665,15 @@ Add: nb <url> Help: nb help bookmark
 [5] 🔖 Bookmark Two (example.net)
 ```
 
-#### Opening and Viewing Bookmarked Pages
+#### Viewing Bookmarks
 
-`nb` provides multiple ways to view bookmarks, bookmarked content,
+`nb` provides multiple ways to view bookmark files, bookmarked content,
 and bookmarked URLs.
 
-Use [`nb browse`](#browse) to view bookmarks rendered with internal and
-external links in terminal and GUI web browsers:
+Use [`nb browse`](#browse) to [browse](#-browsing) rendered bookmark
+files, including cached content,
+<a href="#-linking">[[wiki-style links]]</a>,
+linked [#tags](#-tagging), and external links:
 
 ```bash
 ❯ nb browse text:formats/markdown/123
@@ -2106,7 +2108,7 @@ search: [                    ]
 [home:10] 🔖 🔒 example-encrypted.bookmark.md.enc
 [home:9]  Example .org Title
 [home:8]  🌄 example-image.png
-[home:7]  📄 example.pdf
+[home:7] �📄 example.pdf
 [home:5]  🔉 example-audio.mp3
 [home:4]  Example LaTeX Title
 [home:3]  📹 example-video.mp4
