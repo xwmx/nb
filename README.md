@@ -4278,10 +4278,11 @@ __          _
  / / | | | | |_) |
 /_/  |_| |_|_.__/
 
-[nb] Command line note-taking, bookmarking, archiving with plain-text data
-storage, encryption, filtering and search, Git-backed versioning and syncing,
-Pandoc-backed conversion, global and local notebooks, customizable color
-themes, plugins, and more in a single portable, user-friendly script.
+[nb] Command line and local web note-taking, bookmarking, and archiving with
+plain-text data storage, encryption, filtering and search, pinning, #tagging,
+Git-backed versioning and syncing, Pandoc-backed conversion, global and local
+notebooks, customizable color themes, [[wiki-style linking]], plugins, and more
+in a single portable, user-friendly script.
 
 Help:
   nb help               Display this help information.

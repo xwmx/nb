@@ -3496,10 +3496,11 @@ HEREDOC
       _color_secondary  "------------------"
       cat <<HEREDOC
 
-$(_color_brackets "nb") Command line note-taking, bookmarking, archiving with plain-text data
-storage, encryption, filtering and search, Git-backed versioning and syncing,
-Pandoc-backed conversion, global and local notebooks, customizable color
-themes, plugins, and more in a single portable, user-friendly script.
+$(_color_brackets "nb") Command line and local web note-taking, bookmarking, and archiving with
+plain-text data storage, encryption, filtering and search, pinning, #tagging,
+Git-backed versioning and syncing, Pandoc-backed conversion, global and local
+notebooks, customizable color themes, [[wiki-style linking]], plugins, and more
+in a single portable, user-friendly script.
 
 $(_color_primary "Help"):
   ${_ME} help               Display this help information.
