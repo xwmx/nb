@@ -251,6 +251,6 @@ _setup_notebook() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[0]}" == "Usage:"      ]]
+  [[ "${lines[0]}" =~ Usage.*:      ]]
   [[ "${lines[1]}" =~ nb\ notebook  ]]
 }

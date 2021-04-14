@@ -12,7 +12,7 @@ load test_helper
 
   [[ "${status}"    -eq 0               ]]
 
-  [[ "${lines[0]}"  =~  Usage\:         ]]
+  [[ "${lines[0]}"  =~  Usage.*\:       ]]
   [[ "${lines[1]}"  =~  \ \ nb\ plugins ]]
 }
 

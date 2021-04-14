@@ -48,7 +48,7 @@ load test_helper
 
   # Prints help information:
 
-  [[ "${lines[0]}" =~ Usage\:       ]]
+  [[ "${lines[0]}" =~ Usage.*\:     ]]
   [[ "${lines[1]}" =~ \ \ nb\ edit  ]]
 }
 
@@ -1024,6 +1024,6 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                ]]
-  [[ "${lines[0]}" == "Usage:"      ]]
+  [[ "${lines[0]}" =~ Usage.*\:     ]]
   [[ "${lines[1]}" =~ \ \ nb\ edit  ]]
 }

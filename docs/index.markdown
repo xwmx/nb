@@ -5863,7 +5863,7 @@ Alias: `set`
 Usage:
   nb shell [<subcommand> [<options>...] | --clear-history]
 
-Optons:
+Options:
   --clear-history  Clear the `nb` shell history.
 
 Description:

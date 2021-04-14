@@ -45,9 +45,9 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}" -eq  0                       ]]
+  [[ "${status}" -eq  0                         ]]
 
-  [[ "${output}" =~ Shortcut\ Alias\:\ \`h\`  ]]
+  [[ "${output}" =~ Shortcut\ Alias.*\:\ \`h\`  ]]
 }
 
 @test "'help settings' exits with 0 and prints 'settings' subcommand usage." {
@@ -58,7 +58,7 @@ load test_helper
 
   [[ "${status}"    -eq  0          ]]
 
-  [[ "${lines[0]}"  =~  Usage:      ]]
+  [[ "${lines[0]}"  =~  Usage.*:    ]]
   [[ "${lines[1]}"  =~  \ \ nb\ set ]]
 }
 
@@ -70,7 +70,7 @@ load test_helper
 
   [[ "${status}"    -eq  0          ]]
 
-  [[ "${lines[0]}"  =~  Usage:      ]]
+  [[ "${lines[0]}"  =~  Usage.*:    ]]
   [[ "${lines[1]}"  =~  \ \ nb\ set ]]
 }
 
@@ -82,7 +82,7 @@ load test_helper
 
   [[ "${status}"    -eq  0          ]]
 
-  [[ "${lines[0]}"  =~  Usage:      ]]
+  [[ "${lines[0]}"  =~  Usage.*:    ]]
   [[ "${lines[1]}"  =~  \ \ nb\ set ]]
 }
 
@@ -94,7 +94,7 @@ load test_helper
 
   [[ "${status}"    -eq  0          ]]
 
-  [[ "${lines[0]}"  =~  Usage:      ]]
+  [[ "${lines[0]}"  =~  Usage.*:    ]]
   [[ "${lines[1]}"  =~  \ \ nb\ set ]]
 }
 
@@ -106,7 +106,7 @@ load test_helper
 
   [[ "${status}"    -eq  0          ]]
 
-  [[ "${lines[0]}"  =~  Usage:      ]]
+  [[ "${lines[0]}"  =~  Usage.*:    ]]
   [[ "${lines[1]}"  =~  \ \ nb\ set ]]
 }
 
@@ -118,6 +118,6 @@ load test_helper
 
   [[ "${status}"    -eq  0          ]]
 
-  [[ "${lines[0]}"  =~  Usage:      ]]
+  [[ "${lines[0]}"  =~  Usage.*:    ]]
   [[ "${lines[1]}"  =~  \ \ nb\ set ]]
 }

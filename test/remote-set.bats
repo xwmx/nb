@@ -348,6 +348,6 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 1       ]]
-  [[ "${lines[0]}"  =~  Usage\: ]]
+  [[ "${status}"    -eq 1         ]]
+  [[ "${lines[0]}"  =~  Usage.*\: ]]
 }

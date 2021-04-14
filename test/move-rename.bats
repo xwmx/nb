@@ -43,7 +43,7 @@ _setup_rename() {
 
   # Prints help:
 
-  [[ "${lines[0]}" =~ Usage:    ]]
+  [[ "${lines[0]}" =~ Usage.*:  ]]
   [[ "${lines[1]}" =~ nb\ move  ]]
 }
 
@@ -781,6 +781,6 @@ _setup_rename() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[0]}" =~ Usage\:   ]]
-  [[ "${lines[1]}" =~ \nb\ move ]]
+  [[ "${lines[0]}" =~ Usage.*:  ]]
+  [[ "${lines[1]}" =~ nb\ move  ]]
 }

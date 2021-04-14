@@ -2755,10 +2755,10 @@ desc() { describe "${@}"; }
 # count · ############################################################# · count
 
 describe "count" <<HEREDOC
-Usage:
+$(_color_primary "Usage"):
   ${_ME} count [<notebook>:][<folder-path>/]
 
-Description:
+$(_color_primary "Description"):
   Print the number of items in the first level of the current notebook,
   <notebook>, or the folder at <folder-path>.
 HEREDOC
@@ -2815,20 +2815,20 @@ _count() {
 # git · ################################################################# · git
 
 describe "git" <<HEREDOC
-Usage:
+$(_color_primary "Usage"):
   ${_ME} git [checkpoint [<message>] | dirty]
   ${_ME} git <git-options>...
 
-Subcommands:
+$(_color_primary "Subcommands"):
   checkpoint    Create a new git commit in the current notebook and sync with
                 the remote if \`${_ME} set auto_sync\` is enabled.
   dirty         0 (success, true) if there are uncommitted changes in
                 <notebook-path>. 1 (error, false) if <notebook-path> is clean.
 
-Description:
+$(_color_primary "Description"):
   Run \`git\` commands within the current notebook directory.
 
-Examples:
+$(_color_primary "Examples"):
   ${_ME} git status
   ${_ME} git diff
   ${_ME} git log
@@ -3343,28 +3343,28 @@ HEREDOC
 # help · ############################################################### · help
 
 describe "help" <<HEREDOC
-Usage:
+$(_color_primary "Usage"):
   ${_ME} help [<subcommand>] [-p | --print]
   ${_ME} help [-c | --colors] | [-r | --readme] | [-s | --short] [-p | --print]
 
-Options:
+$(_color_primary "Options"):
   -c, --colors  View information about color themes and color settings.
   -p, --print   Print to standard output / terminal.
   -r, --readme  View the \`${_ME}\` README file.
   -s, --short   Print shorter help without subcommand descriptions.
 
-Description:
+$(_color_primary "Description"):
   Print the program help information. When a subcommand name is passed, print
   the help information for the subcommand.
 
-Examples:
+$(_color_primary "Examples"):
   ${_ME} help
   ${_ME} help add
   ${_ME} help import
   ${_ME} h notebooks
   ${_ME} h e
 
-Shortcut Alias: \`h\`
+$(_color_primary "Shortcut Alias"): \`h\`
 HEREDOC
 _help() {
   local _arguments=()
@@ -3711,7 +3711,7 @@ _alias_subcommand "help" "h"
 # index · ############################################################# · index
 
 describe "index" <<HEREDOC
-Usage:
+$(_color_primary "Usage"):
   ${_ME} index add <filename>
   ${_ME} index delete <filename>
   ${_ME} index get_basename <id>
@@ -3724,11 +3724,11 @@ Usage:
   ${_ME} index verify
   ${_ME} index <subcommand> <options>... [<folder-path>]
 
-Options:
+$(_color_primary "Options"):
   --ancestors   Perform the action on all folders within the notebook that
                 are ancestors of the current folder.
 
-Subcommands:
+$(_color_primary "Subcommands"):
   add           Add <filename> to the index.
   delete        Delete <filename> from the index.
   get_basename  Print the filename / basename at the specified <id>.
@@ -3741,7 +3741,7 @@ Subcommands:
   update        Overwrite the <existing-filename> entry with <new-filename>.
   verify        Verify that the index matches the folder contents.
 
-Description:
+$(_color_primary "Description"):
   Manage the index for the current folder or the folder at <folder-path>,
   which can be passed as the final argument to any \`index\` subcommand.
 
@@ -4144,16 +4144,16 @@ _index() {
 # init · ############################################################### · init
 
 describe "init" <<HEREDOC
-Usage:
+$(_color_primary "Usage"):
   ${_ME} init [<remote-url> [<branch>]] [--author] [--email <email>]
           [--name <name>]
 
-Options:
+$(_color_primary "Options"):
   --author         Display the local email and name config prompt.
   --email <email>  Set the local commit author email address to <email>.
   --name  <name>   Set the local commit author name to <name>.
 
-Description:
+$(_color_primary "Description"):
   Initialize the initial "home" notebook and generate a configuration file at:
 
       ${NBRC_PATH}
@@ -4161,7 +4161,7 @@ Description:
   Pass optional <remote-url> and <branch> options to create the initial
   "home" notebook using a clone of an existing notebook.
 
-Examples:
+$(_color_primary "Examples"):
   ${_ME} init
   ${_ME} init https://github.com/example/example.git
   ${_ME} init https://github.com/example/example.git example-branch
@@ -4309,14 +4309,14 @@ HEREDOC
 # list · ############################################################### · list
 
 describe "list" <<HEREDOC
-Usage:
+$(_color_primary "Usage"):
   ${_ME} list [-e [<length>] | --excerpt [<length>]] [--filenames]
           [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
           [--no-indicator] [-p | --pager] [--paths] [-s | --sort]
           [-r | --reverse] [--tags] [-t <type> | --type <type> | --<type>]
           [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
 
-Options:
+$(_color_primary "Options"):
   -e, --excerpt [<length>]        Print an excerpt <length> lines long under
                                   each note's filename [default: 3].
   --filenames                     Print the filename for each note.
@@ -4333,7 +4333,7 @@ Options:
                                   archive, audio, book, bookmark, document,
                                   folder, image, note, text, video
 
-Description:
+$(_color_primary "Description"):
   List notes in the current notebook.
 
   When <id>, <filename>, <path>, or <title> are present, the listing for the
@@ -4341,7 +4341,7 @@ Description:
   filenames will be searched for any that match <query> as a case-insensitive
   regular expression.
 
-Indicators:
+$(_color_primary "Indicators"):
   ${_NB_INDICATOR_AUDIO:-} Audio
   ${_NB_INDICATOR_EBOOK:-} Book
   ${_NB_INDICATOR_BOOKMARK:-} Bookmark
@@ -4351,7 +4351,7 @@ Indicators:
   ${_NB_INDICATOR_DOCUMENT:-} PDF, Word, or Open Office document
   ${_NB_INDICATOR_VIDEO:-} Video
 
-Examples:
+$(_color_primary "Examples"):
   ${_ME} list
   ${_ME} list example.md -e 10
   ${_ME} list --excerpt --no-id
@@ -5253,7 +5253,7 @@ HEREDOC
 # ls · ################################################################### · ls
 
 describe "ls" <<HEREDOC
-Usage:
+$(_color_primary "Usage"):
   ${_ME} ls [-a | --all] [-b | --browse] [-e [<length>] | --excerpt [<length>]]
         [--filenames] [-g | --gui] [-n <limit> | --limit <limit> | --<limit>]
         [--no-footer] [--no-header] [--no-id] [--no-indicator] [-p | --pager]
@@ -5261,7 +5261,7 @@ Usage:
         [-t <type> | --type <type> | --<type>]
         [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
 
-Options:
+$(_color_primary "Options"):
   -a, --all                       Print all items in the notebook. Equivalent
                                   to no limit.
   -b, --browse                    Open the specified item or current notebook
@@ -5287,7 +5287,7 @@ Options:
                                   note, book, bookmark, document, archive,
                                   image, video, audio, folder, text
 
-Description:
+$(_color_primary "Description"):
   List notebooks and notes in the current notebook, displaying note titles
   when available. \`${_ME} ls\` is a combination of \`${_ME} notebooks\` and
   \`${_ME} list\` in one view.
@@ -5300,7 +5300,7 @@ Description:
   Options are passed through to \`list\`. For more information, see
   \`${_ME} help list\`.
 
-Indicators:
+$(_color_primary "Indicators"):
   ${_NB_INDICATOR_AUDIO:-} Audio
   ${_NB_INDICATOR_EBOOK:-} Book
   ${_NB_INDICATOR_BOOKMARK:-} Bookmark
@@ -5310,7 +5310,7 @@ Indicators:
   ${_NB_INDICATOR_DOCUMENT:-} PDF, Word, or Open Office document
   ${_NB_INDICATOR_VIDEO:-} Video
 
-Examples:
+$(_color_primary "Examples"):
   ${_ME}
   ${_ME} --all
   ${_ME} ls
@@ -6014,7 +6014,7 @@ _ls() {
 # TODO: Vim highlighting bug. "
 
 describe "notebooks" <<HEREDOC
-Usage:
+$(_color_primary "Usage"):
   ${_ME} notebooks [<name>] [--archived] [--global] [--local] [--names]
                [--paths] [--unarchived]
   ${_ME} notebooks add <name> [<remote-url> [<branch>]] [--author]
@@ -6033,7 +6033,7 @@ Usage:
                     [--escaped | --name | --path | --filename [<filename>]]
   ${_ME} notebooks use <name>
 
-Options:
+$(_color_primary "Options"):
   --archived               List archived notebooks, or return archival status
                            with \`show\`.
   --author                 Set the notebook's commit author email and name.
@@ -6055,7 +6055,7 @@ Options:
                            the current global notebook, otherwise exit with 1.
   --unarchived             Only list unarchived notebooks.
 
-Subcommands:
+$(_color_primary "Subcommands"):
   (default)  List notebooks.
   add        Create a new global notebook. When an existing notebook's
              <remote-url> is specified, create the new global notebook as a
@@ -6092,17 +6092,17 @@ Subcommands:
     3. https://vifm.info/
     4. https://github.com/ogham/exa
 
-Description:
+$(_color_primary "Description"):
   Manage notebooks.
 
-Examples:
+$(_color_primary "Examples"):
   ${_ME} notebooks --names
   ${_ME} notebooks add sample
   ${_ME} notebooks add example https://github.com/example/example.git
   ${_ME} n current --path
   ${_ME} n archive example
 
-Shortcut Alias: \`n\`
+$(_color_primary "Shortcut Alias"): \`n\`
 HEREDOC
 _RESERVED_NOTEBOOK_NAMES=(
   ".cache"
@@ -7467,7 +7467,7 @@ Currently in a local notebook. To run a command in a global notebook,
 add the notebook name before the command name, separated by a colon:
   ${_ME} <notebook>:<command> [options...]
 
-Examples:
+$(_color_primary "Examples"):
   ${_ME} home:list
   ${_ME} example:add --title "Example Title"
   ${_ME} example:search "sample query"
@@ -7567,11 +7567,11 @@ _alias_subcommand "notebooks" "ns"
 # subcommands · ################################################# · subcommands
 
 describe "subcommands" <<HEREDOC
-Usage:
+$(_color_primary "Usage"):
   ${_ME} subcommands [add <name>...] [alias <name> <alias>]
                  [describe <name> <usage>]
 
-Subcommands:
+$(_color_primary "Subcommands"):
   add       Add a new subcommand.
   alias     Create an <alias> of a given subcommand <name>, with linked help.
             Note that aliases must also be added with \`subcommands add\`.
@@ -7579,7 +7579,7 @@ Subcommands:
             This can be assigned as a heredoc, which is recommended, or
             as a string argument.
 
-Description:
+$(_color_primary "Description"):
   List, add, alias, and describe subcommands. New subcommands, aliases, and
   descriptions are not persisted, so \`add\`, \`alias\`, \`describe\` are
   primarily for plugins.
@@ -10202,7 +10202,7 @@ _web_browser() {
 # add ##################################################################### add
 
 describe "add" <<HEREDOC
-Usage:
+$(_color_primary "Usage"):
   ${_ME} add [<notebook>:][<folder-path>/][<filename>] [<content>]
          [-b | --browse] [-c <content> | --content <content>] [--edit]
          [-e | --encrypt] [-f <filename> | --filename <filename>]
@@ -10210,7 +10210,7 @@ Usage:
          [-t <title> | --title <title>] [--type <type>]
   ${_ME} add folder [<name>]
 
-Options:
+$(_color_primary "Options"):
   -b, --browse                Add using a terminal or GUI web browser.
   -c, --content <content>     The content for the new note.
   --edit                      Open the note in the editor before saving when
@@ -10225,7 +10225,7 @@ Options:
   --type <type>               The file type for the new note, as a file
                               extension.
 
-Description:
+$(_color_primary "Description"):
   Create a new note or folder.
 
   If no arguments are passed, a new blank note file is opened with
@@ -10243,7 +10243,7 @@ Description:
   note with AES-256 using OpenSSL by default, or GPG, if configured in
   \`${_ME} set encryption_tool\`.
 
-Examples:
+$(_color_primary "Examples"):
   ${_ME} add
   ${_ME} add example.md
   ${_ME} add "Note content."
@@ -10259,8 +10259,8 @@ Examples:
   ${_ME} example:a
   ${_ME} example:a -t "Title"
 
-Aliases: \`create\`, \`new\`
-Shortcut Aliases: \`a\`, \`+\`
+$(_color_primary "Aliases"): \`create\`, \`new\`
+$(_color_primary "Shortcut Aliases"): \`a\`, \`+\`
 HEREDOC
 _add() {
   local _arguments=()
@@ -10740,7 +10740,7 @@ _alias_subcommand "add" "new"
 # bookmark ########################################################### bookmark
 
 describe "bookmark" <<HEREDOC
-Usage:
+$(_color_primary "Usage"):
   ${_ME} bookmark [<ls options>...]
   ${_ME} bookmark [<notebook>:][<folder-path>/] <url>
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
@@ -10752,7 +10752,7 @@ Usage:
               ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
   ${_ME} bookmark search <query>
 
-Options:
+$(_color_primary "Options"):
   -c, --comment <comment>      A comment or description for this bookmark.
   --edit                       Open the bookmark in your editor before saving.
   -e, --encrypt                Encrypt the bookmark with a password.
@@ -10770,7 +10770,7 @@ Options:
   --title <title>              The bookmark title. When not specified,
                                \`${_ME}\` will use the html <title> tag.
 
-Subcommands:
+$(_color_primary "Subcommands"):
   (default)  Add a new bookmark for <url>, or list bookmarks.
              Bookmarks can also be added with \`${_ME} <url>\`
   delete     Delete a bookmark.
@@ -10786,7 +10786,7 @@ Subcommands:
              Shortcut Alias: \`q\`
   url        Print the URL for the specified bookmark.
 
-Description:
+$(_color_primary "Description"):
   Create, view, search, edit, and delete bookmarks.
 
   By default, the html page content is saved within the bookmark, making the
@@ -10810,7 +10810,7 @@ Description:
     4. https://en.wikipedia.org/wiki/Links_(web_browser)
     5. https://en.wikipedia.org/wiki/Lynx_(web_browser)
 
-Examples:
+$(_color_primary "Examples"):
   ${_ME} https://example.com
   ${_ME} example: https://example.com
   ${_ME} https://example.com --encrypt
@@ -10823,7 +10823,7 @@ Examples:
   ${_ME} bookmark open 5
   ${_ME} b
 
-Shortcut Alias: \`b\`
+$(_color_primary "Shortcut Alias"): \`b\`
 HEREDOC
 _bookmark() {
   # Usage: _bookmark_view_in_terminal_browser (<url>)
@@ -11480,13 +11480,13 @@ _alias_subcommand "bookmark" "bookmarks"
 # completions ##################################################### completions
 
 describe "completions" <<HEREDOC
-Usage:
+$(_color_primary "Usage"):
   ${_ME} completions (check | install [-d | --download] | uninstall)
 
-Options:
+$(_color_primary "Options"):
   -d, --download  Download the completion scripts and install.
 
-Description:
+$(_color_primary "Description"):
   Manage completion scripts. For more information, visit:
   https://github.com/${_REPO}/blob/${_REPO_MAIN_BRANCH}/etc/README.md
 HEREDOC
@@ -11736,17 +11736,17 @@ HEREDOC
 # delete ############################################################### delete
 
 describe "delete" <<HEREDOC
-Usage:
+$(_color_primary "Usage"):
   ${_ME} delete ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])...
             [-f | --force]
 
-Options:
+$(_color_primary "Options"):
   -f, --force   Skip the confirmation prompt.
 
-Description:
+$(_color_primary "Description"):
   Delete one or more items.
 
-Examples:
+$(_color_primary "Examples"):
   ${_ME} delete 3
   ${_ME} delete example.md
   ${_ME} delete "A Document Title"
@@ -11759,7 +11759,7 @@ Examples:
   ${_ME} d example:12
   ${_ME} example:12 d
 
-Shortcut Aliases: \`d\`, \`-\`
+$(_color_primary "Shortcut Aliases"): \`d\`, \`-\`
 HEREDOC
 _delete() {
   local _force=0
@@ -11901,12 +11901,12 @@ _alias_subcommand "delete" "d"
 # edit ################################################################### edit
 
 describe "edit" <<HEREDOC
-Usage:
+$(_color_primary "Usage"):
   ${_ME} edit ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           [-c <content> | --content <content>] [--edit]
           [-e <editor> | --editor <editor>] [--overwrite] [--prepend]
 
-Options:
+$(_color_primary "Options"):
   -c, --content <content>  Content to add to the item.
   --edit                   Open the note in the editor before saving when
                            content is piped or passed as an argument.
@@ -11917,7 +11917,7 @@ Options:
   --prepend                Prepend <content> and standard input before
                            existing content.
 
-Description:
+$(_color_primary "Description"):
   Open the specified note in \`\$EDITOR\`, currently set to "${EDITOR}", or
   <editor> if specified. Content piped to \`${_ME} edit\` or passed using the
   \`--content\` option will will be appended to the file without opening it
@@ -11926,7 +11926,7 @@ Description:
   Non-text files will be opened in your system's preferred app or program for
   that file type.
 
-Examples:
+$(_color_primary "Examples"):
   ${_ME} edit 3
   ${_ME} edit example.md
   ${_ME} edit "A Document Title"
@@ -11940,7 +11940,7 @@ Examples:
   ${_ME} e example:12
   ${_ME} example:12 e
 
-Shortcut Alias: \`e\`
+$(_color_primary "Shortcut Alias"): \`e\`
 HEREDOC
 _edit() {
   local _content=
@@ -12133,13 +12133,13 @@ _alias_subcommand "edit" "e"
 # TODO: vim highlighting bug \`"
 
 describe "env" <<HEREDOC
-Usage:
+$(_color_primary "Usage"):
   ${_ME} env [install]
 
-Subcommands:
+$(_color_primary "Subcommands"):
   install  Install dependencies on supported systems.
 
-Description:
+$(_color_primary "Description"):
   Print program environment and configuration information, or install
   dependencies.
 HEREDOC
@@ -12358,17 +12358,17 @@ Please install %s manually. No .deb package available for %s."  \
 # export ############################################################### export
 
 describe "export" <<HEREDOC
-Usage:
+$(_color_primary "Usage"):
   ${_ME} export ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             <path> [-f | --force] [<pandoc options>...]
   ${_ME} export notebook <name> [<path>]
   ${_ME} export pandoc ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             [<pandoc options>...]
 
-Options:
+$(_color_primary "Options"):
   -f, --force   Skip the confirmation prompt when overwriting an existing file.
 
-Subcommands:
+$(_color_primary "Subcommands"):
   (default)     Export a file to <path>. If <path> has a different extension
                 than the source note, convert the note using \`pandoc\`.
   notebook      Export the notebook <name> to the current directory or <path>.
@@ -12376,7 +12376,7 @@ Subcommands:
   pandoc        Export the file to standard output or a file using \`pandoc\`.
                 \`export pandoc\` prints to standard output by default.
 
-Description:
+$(_color_primary "Description"):
   Export a file or notebook.
 
   If Pandoc [1] is available, convert the note from its current format
@@ -12386,7 +12386,7 @@ Description:
 
     1. https://pandoc.org/
 
-Examples:
+$(_color_primary "Examples"):
   # Export an Emacs Org mode note
   ${_ME} export example.org /path/to/example.org
 
@@ -12537,16 +12537,16 @@ _export() {
 # history ############################################################# history
 
 describe "history" <<HEREDOC
-Usage:
+$(_color_primary "Usage"):
   ${_ME} history [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
 
-Description:
+$(_color_primary "Description"):
   Display notebook history using \`tig\` [1] (if available) or \`git log\`.
   When a note is specified, the history for that note is displayed.
 
     1. https://github.com/jonas/tig
 
-Examples:
+$(_color_primary "Examples"):
   ${_ME} history
   ${_ME} history example.md
   ${_ME} 3 history
@@ -12615,26 +12615,26 @@ _history() {
 # import ############################################################### import
 
 describe "import" <<HEREDOC
-Usage:
+$(_color_primary "Usage"):
   ${_ME} import [copy | download | move] (<path>... | <url>) [--convert]
             [<notebook>:][<folder>/][<filename>]
   ${_ME} import notebook <path> [<name>]
 
-Options:
+$(_color_primary "Options"):
   --convert  Convert HTML content to Markdown.
 
-Subcommands:
+$(_color_primary "Subcommands"):
   (default) Copy or download the file(s) at <path> or <url>.
   copy      Copy the file(s) at <path> into the current notebook.
   download  Download the file at <url> into the current notebook.
   move      Move the file(s) at <path> into the current notebook.
   notebook  Import the local notebook at <path> to make it global.
 
-Description:
+$(_color_primary "Description"):
   Copy, move, or download files into the current notebook or import
   a local notebook to make it global.
 
-Examples:
+$(_color_primary "Examples"):
   ${_ME} import ~/Pictures/example.png
   ${_ME} import ~/Documents/example.docx
   ${_ME} import https://example.com/example.pdf
@@ -12934,12 +12934,12 @@ ${_url}
 # move ################################################################### move
 
 describe "move" <<HEREDOC
-Usage:
+$(_color_primary "Usage"):
   ${_ME} move ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note)
           [-f | --force]
 
-Options:
+$(_color_primary "Options"):
   -f, --force     Skip the confirmation prompt.
   --reset         Reset the filename to the last modified timestamp.
   --to-bookmark   Preserve the existing filename and replace the extension
@@ -12948,13 +12948,13 @@ Options:
                   ".bookmark.md" extension with ".md" to convert the bookmark
                   to a Markdown note.
 
-Description:
+$(_color_primary "Description"):
   Move or rename a note. Move the note to <path> or change the file type.
   When file extension is omitted, the existing extension will be used.
 
   \`move\` and \`rename\` are aliases and can be used interchangably.
 
-Examples:
+$(_color_primary "Examples"):
   # Move "example.md" to "example.org"
   ${_ME} move example.md sample.org
 
@@ -12973,8 +12973,8 @@ Examples:
   # Rename note 12 in the "example" notebook to "sample.md"
   ${_ME} rename example:12 "sample.md"
 
-Alias: \`rename\`
-Shortcut Alias: \`mv\`
+$(_color_primary "Alias"): \`rename\`
+$(_color_primary "Shortcut Alias"): \`mv\`
 HEREDOC
 _move() {
   local _force=0
@@ -13229,16 +13229,16 @@ _alias_subcommand "move" "rename"
 # open ################################################################### open
 
 describe "open" <<HEREDOC
-Usage:
+$(_color_primary "Usage"):
   ${_ME} open (<id> | <filename> | <path> | <title> | <notebook>)
 
-Description:
+$(_color_primary "Description"):
   Open a note or notebook. When the note is a bookmark, open the bookmarked
   page in your system's primary web browser. When the note is in a text format
   or any other file type, \`open\` is the equivalent of \`edit\`. \`open\`
   with a notebook opens the notebook folder in the system's file browser.
 
-Examples:
+$(_color_primary "Examples"):
   ${_ME} open 3
   ${_ME} open example.bookmark.md
   ${_ME} 3 open
@@ -13250,11 +13250,11 @@ Examples:
   ${_ME} o example:12
   ${_ME} example:12 o
 
-See also:
+$(_color_primary "See also"):
   ${_ME} help bookmark
   ${_ME} help edit
 
-Shortcut Alias: \`o\`
+$(_color_primary "Shortcut Alias"): \`o\`
 HEREDOC
 _open() {
   if [[ -z "${1:-}" ]]
@@ -13269,10 +13269,10 @@ _alias_subcommand "open" "o"
 # peek ################################################################### peek
 
 describe "peek" <<HEREDOC
-Usage:
+$(_color_primary "Usage"):
   ${_ME} peek ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
 
-Description:
+$(_color_primary "Description"):
   View a note or notebook in the terminal. When the note is a bookmark, view
   the bookmarked page in your terminal web browser. When the note is in a text
   format or any other file type, \`peek\` is the equivalent of \`show\`. When
@@ -13284,7 +13284,7 @@ Description:
     3. https://vifm.info/
     4. https://github.com/ogham/exa
 
-Examples:
+$(_color_primary "Examples"):
   ${_ME} peek 3
   ${_ME} peek example.bookmark.md
   ${_ME} 3 peek
@@ -13296,12 +13296,12 @@ Examples:
   ${_ME} p example:12
   ${_ME} example:12 p
 
-See also:
+$(_color_primary "See also"):
   ${_ME} help bookmark
   ${_ME} help show
 
-Alias: \`preview\`
-Shortcut Alias: \`p\`
+$(_color_primary "Alias"): \`preview\`
+$(_color_primary "Shortcut Alias"): \`p\`
 HEREDOC
 _peek() {
   if [[ -z "${1:-}" ]]
@@ -13317,13 +13317,13 @@ _alias_subcommand "peek" "preview"
 # pin ##################################################################### pin
 
 describe "pin" <<HEREDOC
-Usage:
+$(_color_primary "Usage"):
   ${_ME} pin ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
 
-Description:
+$(_color_primary "Description"):
   Pin an item so it appears first in lists.
 
-Examples:
+$(_color_primary "Examples"):
   ${_ME} pin 123
   ${_ME} pin example:sample/321
 HEREDOC
@@ -13418,13 +13418,13 @@ _pin() {
 # run ##################################################################### run
 
 describe "run" <<HEREDOC
-Usage:
+$(_color_primary "Usage"):
   ${_ME} run <command> [<arguments>...]
 
-Description:
+$(_color_primary "Description"):
   Run shell commands within the current notebook directory.
 
-Examples:
+$(_color_primary "Examples"):
   ${_ME} run ls -la
   ${_ME} run find . -name 'example*'
   ${_ME} run rg example
@@ -13443,13 +13443,13 @@ _alias_subcommand "run" "r"
 # search ############################################################### search
 
 describe "search" <<HEREDOC
-Usage:
+$(_color_primary "Usage"):
   ${_ME} search ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             <query>... [-a | --all] [--and <query>] [--or <query>]
             [-l | --list]  [--path] [-t <type> | --type <type> | --<type>]
             [--utility <name>]
 
-Options:
+$(_color_primary "Options"):
   -a, --all                     Search all unarchived notebooks.
   --and <query>                 Add a AND query.
   -l, --list                    Print the id, filename, and title listing for
@@ -13462,7 +13462,7 @@ Options:
                                 video, audio, folder, text
   --utility <name>              The name of the search utility to search with.
 
-Description:
+$(_color_primary "Description"):
   Perform a full text search.
 
   Multiple query arguments are treated as AND queries, returning items that
@@ -13481,7 +13481,7 @@ Description:
     4. \`ack\`   https://beyondgrep.com/
     5. \`grep\`  https://en.wikipedia.org/wiki/Grep
 
-Examples:
+$(_color_primary "Examples"):
   # search current notebook for "example query"
   ${_ME} search "example query"
 
@@ -13508,7 +13508,7 @@ Examples:
   # search all notebooks for "example query" and list matching items
   ${_ME} q -la "example query"
 
-Shortcut Alias: \`q\`
+$(_color_primary "Shortcut Alias"): \`q\`
 HEREDOC
 _search() {
   # Usage: _should_search_with <command-name> <search-utility>
@@ -14585,14 +14585,14 @@ _alias_subcommand "search" "grep"
 # TODO: Vim highlighting bug. "\`
 
 describe "show" <<HEREDOC
-Usage:
+$(_color_primary "Usage"):
   ${_ME} show ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           [[-a | --added] | [--authors] | [-b | --browse] | --filename | --id |
           --info-line | --path | [-p | --print] | --relative-path | [-r |
           --render] | --title | --type [<type>] | [-u | --updated]] [--no-color]
   ${_ME} show <notebook>
 
-Options:
+$(_color_primary "Options"):
   -a, --added      Print the date and time when the item was added.
   --authors        List the git commit authors of an item.
   -b, --browse     Open the item with \`nb browse\`.
@@ -14614,7 +14614,7 @@ Options:
                    text, video
   -u, --updated    Print the date and time of the last recorded change.
 
-Description:
+$(_color_primary "Description"):
   Show an item or notebook. Notes in text file formats can be rendered or
   printed to standard output. Non-text files will be opened in your system's
   preferred app or program for that file type.
@@ -14654,7 +14654,7 @@ Description:
     6. http://www.andre-simon.de/doku/highlight/en/highlight.php
     7. https://pygments.org/
 
-Examples:
+$(_color_primary "Examples"):
   ${_ME} show 1
   ${_ME} show example.md --render
   ${_ME} show "A Document Title" --print --no-color
@@ -14667,8 +14667,8 @@ Examples:
   ${_ME} s example:12
   ${_ME} example:12 s
 
-Alias: \`view\`
-Shortcut Alias: \`s\`
+$(_color_primary "Alias"): \`view\`
+$(_color_primary "Shortcut Alias"): \`s\`
 HEREDOC
 _show() {
   # _show_indicators()
@@ -15438,13 +15438,13 @@ _alias_subcommand "show" "view"
 # unpin ################################################################# unpin
 
 describe "unpin" <<HEREDOC
-Usage:
+$(_color_primary "Usage"):
   ${_ME} unpin ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
 
-Description:
+$(_color_primary "Description"):
   Unpin a pinned item.
 
-Examples:
+$(_color_primary "Examples"):
   ${_ME} unpin 123
   ${_ME} unpin example:sample/321
 HEREDOC
@@ -15455,16 +15455,16 @@ _unpin() {
 # use ##################################################################### use
 
 describe "use" <<HEREDOC
-Usage:
+$(_color_primary "Usage"):
   ${_ME} use <notebook>
 
-Description:
+$(_color_primary "Description"):
   Switch to the specified notebook. Shortcut for \`${_ME} notebooks use\`.
 
-Example:
+$(_color_primary "Example"):
   ${_ME} use example
 
-Shortcut Alias: \`u\`
+$(_color_primary "Shortcut Alias"): \`u\`
 HEREDOC
 _use() {
   local _name="${1:-}"
@@ -15479,10 +15479,10 @@ _alias_subcommand "use" "u"
 # version ############################################################# version
 
 describe "version" <<HEREDOC
-Usage:
+$(_color_primary "Usage"):
   ${_ME} version
 
-Description:
+$(_color_primary "Description"):
   Display version information.
 HEREDOC
 _version() {
@@ -15505,7 +15505,7 @@ _call_deferred_command --group 2
 # browse ############################################################### browse
 
 describe "browse" <<HEREDOC
-Usage:
+$(_color_primary "Usage"):
   ${_ME} browse [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
             [-g | --gui] [--notebooks] [--print] [-q | --query <query>]
             [-s | --serve]
@@ -15515,7 +15515,7 @@ Usage:
   ${_ME} browse delete ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
   ${_ME} browse edit ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
 
-Subcommands:
+$(_color_primary "Subcommands"):
   (default)  Open a notebook, folder, or item in the terminal or GUI web browser.
   add        Open the add view in the browser.
              Shortcut Aliases: \`a\`, \`+\`
@@ -15524,7 +15524,7 @@ Subcommands:
   edit       Open the edit view in the browser.
              Shortcut Alias: \`e\`
 
-Options:
+$(_color_primary "Options"):
   -c, --content <content>      Add content to the new note.
   -g, --gui                    Open in the system's primary GUI web browser.
   --notebooks                  Browse notebooks.
@@ -15534,7 +15534,7 @@ Options:
   -t, --tags <tag1>,<tag2>...  A comma-separated list of tags.
   -t, --title <title>          Add a title to the new note.
 
-Description:
+$(_color_primary "Description"):
   Browse, view, and edit linked notes, bookmarks, notebooks, folders, and
   other items using the terminal or GUI web browser.
 
@@ -15561,14 +15561,14 @@ Description:
     4. https://nmap.org/ncat/
     5. https://pandoc.org/
 
-Examples:
+$(_color_primary "Examples"):
   ${_ME} browse
   ${_ME} browse example:
   ${_ME} browse Example\ Folder/
   ${_ME} browse 123
   ${_ME} browse demo:456
 
-Shortcut Alias: \`br\`
+$(_color_primary "Shortcut Alias"): \`br\`
 HEREDOC
 _browse() {
   # Inspired by bashttpd: https://github.com/avleen/bashttpd
@@ -17911,10 +17911,10 @@ _alias_subcommand "browse" "browser"
 # helpers ############################################################# helpers
 
 describe "helpers" <<HEREDOC
-Usage:
+$(_color_primary "Usage"):
   ${_ME} helpers <name> [<options≥...]
 
-Description:
+$(_color_primary "Description"):
   Call helper functions.
 HEREDOC
 _helpers() {
@@ -18046,24 +18046,24 @@ _helpers() {
 # plugins ############################################################# plugins
 
 describe "plugins" <<HEREDOC
-Usage:
+$(_color_primary "Usage"):
   ${_ME} plugins [<name>] [--paths]
   ${_ME} plugins install [<path> | <url>] [--force]
   ${_ME} plugins uninstall <name> [--force]
 
-Options:
+$(_color_primary "Options"):
   --force  Skip the confirmation prompt.
   --paths  Print the full path to each plugin.
 
-Subcommands:
+$(_color_primary "Subcommands"):
   (default)  List plugins.
   install    Install a plugin from a <path> or <url>.
   uninstall  Uninstall the specified plugin.
 
-Description:
+$(_color_primary "Description"):
   Manage plugins and themes.
 
-Plugin Extensions:
+$(_color_primary "Plugin Extensions"):
   .nb-theme   Plugins defining color themes.
   .nb-plugin  Plugins defining new subcommands and functionality.
 HEREDOC
@@ -18255,22 +18255,22 @@ _alias_subcommand "plugins" "plugin"
 # remote ############################################################### remote
 
 describe "remote" <<HEREDOC
-Usage:
+$(_color_primary "Usage"):
   ${_ME} remote
   ${_ME} remote branches [<url>]
   ${_ME} remote remove
   ${_ME} remote set <url> [<branch>]
 
-Subcommands:
+$(_color_primary "Subcommands"):
   (default)     Print the remote URL and branch for the notebook.
   branches      List branches on the current or given remote.
   remove        Remove the remote URL from the notebook.
   set           Set the remote URL and branch for the notebook.
 
-Description:
+$(_color_primary "Description"):
   Get, set, and remove a notebook's remote repository URL and branch.
 
-Examples:
+$(_color_primary "Examples"):
   ${_ME} remote set https://github.com/example/example.git
   ${_ME} remote remove
 HEREDOC
@@ -18664,7 +18664,7 @@ HEREDOC
 # settings ########################################################### settings
 
 describe "settings" <<HEREDOC
-Usage:
+$(_color_primary "Usage"):
   ${_ME} set [<name> [<value>] | <number> [<value>]]
   ${_ME} settings colors [<number> | themes]
   ${_ME} settings edit
@@ -18674,7 +18674,7 @@ Usage:
   ${_ME} settings show  (<name> | <number>)
   ${_ME} settings unset (<name> | <number>)
 
-Subcommands:
+$(_color_primary "Subcommands"):
   (default)  Open the settings prompt, to <name> or <number>, if present.
              When <value> is also present, assign <value> to the setting.
   colors     Print a table of available colors and their xterm color numbers.
@@ -18687,7 +18687,7 @@ Subcommands:
   show       Print the help information and current value of a setting.
   unset      Unset a setting, returning it to the default value.
 
-Description:
+$(_color_primary "Description"):
   Configure \`${_ME}\`. Use \`${_ME} settings set\` to customize a setting and
   \`${_ME} settings unset\` to restore the default for a setting.
 
@@ -18696,7 +18696,7 @@ Description:
     ${_ME} set color_theme blacklight
     ${_ME} set limit 40
 
-Examples:
+$(_color_primary "Examples"):
   ${_ME} settings
   ${_ME} set 5 "org"
   ${_ME} set color_primary 105
@@ -18706,7 +18706,7 @@ Examples:
   ${_ME} settings colors 105
   ${_ME} set limit 15
 
-Alias: \`set\`
+$(_color_primary "Alias"): \`set\`
 HEREDOC
 _settings() {
   # Usage: _settings_colors [<number>] [themes]
@@ -19385,13 +19385,13 @@ _alias_subcommand "settings" "set"
 # shell  ################################################################ shell
 
 describe "shell" <<HEREDOC
-Usage:
+$(_color_primary "Usage"):
   ${_ME} shell [<subcommand> [<options>...] | --clear-history]
 
-Optons:
+$(_color_primary "Options"):
   --clear-history  Clear the \`${_ME}\` shell history.
 
-Description:
+$(_color_primary "Description"):
   Start the \`${_ME}\` interactive shell. Type "exit" to exit.
 
   \`${_ME} shell\` recognizes all \`${_ME}\` subcommands and options, providing
@@ -19399,7 +19399,7 @@ Description:
 
   When <subcommand> is present, the command will run as the shell is opened.
 
-Example:
+$(_color_primary "Example"):
   $ ${_ME} shell
   ${_ME}> ls 3
   [3] Example
@@ -19521,10 +19521,10 @@ HEREDOC
 # status ############################################################### status
 
 describe "status" <<HEREDOC
-Usage:
+$(_color_primary "Usage"):
   ${_ME} status
 
-Description:
+$(_color_primary "Description"):
   Run \`git status\` in the current notebook.
 HEREDOC
 _status() {
@@ -19537,16 +19537,16 @@ _status() {
 # sync ################################################################### sync
 
 describe "sync" <<HEREDOC
-Usage:
+$(_color_primary "Usage"):
   ${_ME} sync [-a | --all]
 
-Options:
+$(_color_primary "Options"):
   -a, --all   Sync all unarchived notebooks.
 
-Description:
+$(_color_primary "Description"):
   Sync the current local notebook with the remote repository.
 
-Private Repositories and Git Credentials:
+$(_color_primary "Private Repositories and Git Credentials"):
   Syncing with private repositories requires configuring git to not prompt
   for credentials.
 
@@ -19556,7 +19556,7 @@ Private Repositories and Git Credentials:
   More Information:
     https://github.com/xwmx/nb#private-repositories-and-git-credentials
 
-Sync Conflict Resolution:
+$(_color_primary "Sync Conflict Resolution"):
   When \`${_ME} sync\` encounters a conflict in a text file and can't merge
   overlapping local and remote changes, both versions are saved in the
   file, separated by git conflict markers. Use \`${_ME} edit\` to remove the
@@ -19688,13 +19688,13 @@ HEREDOC
 # todos ################################################################# todos
 
 describe "todos" <<HEREDOC
-Usage:
+$(_color_primary "Usage"):
   ${_ME} todos [open | closed] [-a | --all]
 
-Options:
+$(_color_primary "Options"):
   -a, --all  Search all unarchived notebooks.
 
-Description:
+$(_color_primary "Description"):
   List todos.
 HEREDOC
 _todos() {
@@ -19730,10 +19730,10 @@ _alias_subcommand "todos" "todo"
 # update ############################################################### update
 
 describe "update" <<HEREDOC
-Usage:
+$(_color_primary "Usage"):
   ${_ME} update
 
-Description:
+$(_color_primary "Description"):
   Update \`${_ME}\` to the latest version. You will be prompted for
   your password if administrator privileges are required.
 

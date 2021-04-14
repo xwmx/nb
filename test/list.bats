@@ -2006,6 +2006,6 @@ Help information:
   printf "\${output}:     '%s'\\n" "${output}"
   printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ "${lines[0]}" == "Usage:" ]]
-  [[ "${lines[1]}" =~ nb\ list ]]
+  [[ "${lines[0]}" =~ Usage.*\: ]]
+  [[ "${lines[1]}" =~ nb\ list  ]]
 }

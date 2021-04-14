@@ -14,8 +14,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1          ]]
-  [[ "${lines[0]}" =~ Usage\: ]]
+  [[ ${status} -eq 1            ]]
+  [[ "${lines[0]}" =~ Usage.*\: ]]
 }
 
 @test "'import' with no arguments does not create git commit." {
@@ -1607,6 +1607,6 @@ Folder/example.md.*\ \"Example\ Title\"\ from\ .*${_TMP_DIR}/fixtures/example.md
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                  ]]
-  [[ "${lines[0]}" =~ Usage\:         ]]
+  [[ "${lines[0]}" =~ Usage.*\:       ]]
   [[ "${lines[1]}" =~ \ \ nb\ import  ]]
 }

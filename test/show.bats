@@ -311,7 +311,7 @@ https://example.com
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}"    -eq 1           ]]
-  [[ "${lines[0]}"  =~  Usage\:     ]]
+  [[ "${lines[0]}"  =~  Usage.*\:   ]]
   [[ "${lines[1]}"  =~  '  nb show' ]]
 }
 
@@ -374,7 +374,7 @@ https://example.com
 
   [[    "${status}"   -eq 1           ]]
   [[ !  "${output}"   =~  mock_editor ]]
-  [[    "${lines[0]}" =~  Usage\:     ]]
+  [[    "${lines[0]}" =~  Usage.*\:   ]]
   [[    "${lines[1]}" =~  '  nb show' ]]
 }
 
@@ -1371,6 +1371,6 @@ https://example.com
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[0]}" =~ Usage\:     ]]
+  [[ "${lines[0]}" =~ Usage.*\:   ]]
   [[ "${lines[1]}" =~ '  nb show' ]]
 }

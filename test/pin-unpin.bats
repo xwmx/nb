@@ -257,7 +257,7 @@ load test_helper
 
   # prints help
 
-  [[ "${output}" =~ Usage:      ]]
+  [[ "${output}" =~ Usage.*:    ]]
   [[ "${output}" =~ nb\ pin     ]]
 
 
@@ -300,7 +300,7 @@ load test_helper
 
   # prints help
 
-  [[ "${output}" =~ Usage:      ]]
+  [[ "${output}" =~ Usage.*:    ]]
   [[ "${output}" =~ nb\ unpin   ]]
 
 

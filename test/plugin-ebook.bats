@@ -188,7 +188,7 @@ Content three."
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 1              ]]
-  [[ "${lines[0]}" =~ Usage\:     ]]
+  [[ "${lines[0]}" =~ Usage.*\:   ]]
   [[ "${lines[1]}" =~ nb\ ebook   ]]
 }
 
@@ -204,7 +204,7 @@ Content three."
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0              ]]
-  [[ "${lines[0]}" =~ Usage\:     ]]
+  [[ "${lines[0]}" =~ Usage.*\:   ]]
   [[ "${lines[1]}" =~ nb\ ebook   ]]
 }
 

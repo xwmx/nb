@@ -318,7 +318,7 @@ Example\ Folder/1.*File\ One.md.*\ ·\ Example\ Folder\ /\ Sample\ Folder\ /\ On
 
   [[    "${status}"    -eq  1           ]]
 
-  [[    "${lines[0]}"  =~   Usage:      ]]
+  [[    "${lines[0]}"  =~   Usage.*:    ]]
   [[    "${lines[1]}"  =~   nb\ search  ]]
 }
 
@@ -364,7 +364,7 @@ Example\ Folder/1.*File\ One.md.*\ ·\ Example\ Folder\ /\ Sample\ Folder\ /\ On
 
   [[    "${status}"    -eq 1            ]]
 
-  [[    "${lines[0]}"    =~  Usage:     ]]
+  [[    "${lines[0]}"    =~  Usage.*:   ]]
   [[    "${lines[1]}"    =~  nb\ search ]]
 }
 
@@ -416,10 +416,10 @@ Example\ Folder/1.*File\ One.md.*\ ·\ Example\ Folder\ /\ Sample\ Folder\ /\ On
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"   -eq 1          ]]
+  [[    "${status}"   -eq 1           ]]
 
-  [[    "${lines[0]}" =~  Usage:     ]]
-  [[    "${lines[1]}" =~  nb\ search ]]
+  [[    "${lines[0]}" =~  Usage.*:    ]]
+  [[    "${lines[1]}" =~  nb\ search  ]]
 }
 
 @test "'search <notebook>:' (no query, colon) without matching notebook searches for the string in <notebook> recursively." {

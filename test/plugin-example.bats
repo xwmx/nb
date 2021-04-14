@@ -33,7 +33,7 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                ]]
-  [[ "${lines[0]}" =~ Usage\:       ]]
+  [[ "${lines[0]}" =~ Usage.*\:     ]]
   [[ "${lines[1]}" =~ nb\ example   ]]
 }
 

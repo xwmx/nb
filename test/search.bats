@@ -54,7 +54,7 @@ _search_all_setup() {
 
   [[ "${status}"    -eq 1           ]]
 
-  [[ "${lines[0]}"  =~  Usage\:     ]]
+  [[ "${lines[0]}"  =~  Usage.*\:   ]]
   [[ "${lines[1]}"  =~  nb\ search  ]]
 }
 
@@ -772,6 +772,6 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[0]}" =~ Usage\:     ]]
+  [[ "${lines[0]}" =~ Usage.*\:   ]]
   [[ "${lines[1]}" =~ nb\ search  ]]
 }

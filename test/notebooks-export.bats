@@ -56,8 +56,8 @@ _setup_notebooks() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1          ]]
-  [[ "${lines[0]}" =~ Usage\: ]]
+  [[ ${status} -eq 1            ]]
+  [[ "${lines[0]}" =~ Usage.*\: ]]
 }
 
 @test "'notebooks export' with valid <name> exports to current directory." {
