@@ -1667,9 +1667,52 @@ Add: nb <url> Help: nb help bookmark
 
 #### Opening and Viewing Bookmarked Pages
 
-`nb` provides multiple ways to view bookmarked web pages.
+`nb` provides multiple ways to view bookmarks, bookmarked content,
+and bookmarked URLs.
 
-[`nb open`](#open) (shortcut: `o`) opens the bookmarked page in your
+Use [`nb browse`](#browse) to view bookmarks rendered with internal and
+external links in terminal and GUI web browsers:
+
+```bash
+❯ nb browse text:formats/markdown/123
+❯nb · text : formats / markdown / 123 · ↓ · edit · - | +
+Daring Fireball: Markdown (daringfireball.net)
+
+https://daringfireball.net/projects/markdown/
+
+Related
+
+  • https://en.wikipedia.org/wiki/Markdown
+
+Comments
+
+See also:
+
+  • [[text:formats/org]]
+  • [[cli:apps/nb]]
+
+Tags
+
+#markup #plain-text
+
+Content
+
+Daring Fireball: Markdown
+
+Download
+
+Markdown 1.0.1 (18 KB) — 17 Dec 2004
+
+Introduction
+
+Markdown is a text-to-HTML conversion tool for web writers. Markdown allows
+you to write using an easy-to-read, easy-to-write plain text format, then
+convert it to structurally valid XHTML (or HTML).
+```
+
+For more information, see [Browsing](#-browsing).
+
+[`nb open`](#open) (shortcut: `o`) opens the bookmarked URL in your
 system's primary web browser:
 
 ```bash
@@ -1687,7 +1730,7 @@ nb example:open 12
 ```
 
 [`nb peek`](#peek) (shortcut: `p`, alias: `preview`) opens the bookmarked
-page in your terminal web browser, such as
+URL in your terminal web browser, such as
 [w3m](https://en.wikipedia.org/wiki/W3m),
 [Links](https://en.wikipedia.org/wiki/Links_(web_browser)), or
 [Lynx](https://en.wikipedia.org/wiki/Lynx_(web_browser)):
@@ -2000,16 +2043,16 @@ include the id, title, or relative path for the target item
 within double square brackets anywhere in the linking document:
 
 ```text
-# link to item with id 123 in the root level of current notebook
+# link to the item with id 123 in the root level of current notebook
 [[123]]
 
-# link to item titled "Example Title" in the root level of the current notebook
+# link to the item titled "Example Title" in the root level of the current notebook
 [[Example Title]]
 
-# link to item with id 456 in the folder named "Sample Folder"
+# link to the item with id 456 in the folder named "Sample Folder"
 [[Sample Folder/456]]
 
-# link to item titled "Demo Title" in the folder named "Sample Folder"
+# link to the item titled "Demo Title" in the folder named "Sample Folder"
 [[Sample Folder/Demo Title]]
 ```
 
@@ -2017,7 +2060,7 @@ To link to an item in another notebook, add the notebook name with a
 colon before the identifier:
 
 ```text
-# link to item 123 in the "sample" folder in the "example" notebook
+# link to the item with id 123 in the "sample" folder in the "example" notebook
 [[example:sample/123]]
 
 # link to the item titled "Example Title" in the "demo" notebook
@@ -2031,6 +2074,8 @@ colon before the identifier:
 [Org links](https://orgmode.org/guide/Hyperlinks.html), which have
 a similar syntax, providing a convenient option for linking collections
 of Org files.
+
+Linked items can be [browsed](#-browsing) with [`nb browse`](#browse).
 
 For more information about identifying items, see [Selectors](#selectors).
 
