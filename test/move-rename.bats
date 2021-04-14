@@ -14,7 +14,7 @@ _setup_rename() {
     "${_NB}" init
     "${_NB}" add "Example File.md"
 
-    [[ -e "${NB_DIR}/home/Example File.md" ]]
+    [[ -e "${NB_DIR}/home/Example File.md"  ]]
   }
 
   run "${_NB}" move --force
@@ -28,12 +28,12 @@ _setup_rename() {
 
   # Does not move file:
 
-  [[ -e "${NB_DIR}/home/Example File.md" ]]
+  [[ -e "${NB_DIR}/home/Example File.md"    ]]
 
   # Does not create git commit:
 
   cd "${NB_DIR}/home" || return 1
-  while [[ -n "$(git status --porcelain)" ]]
+  while [[ -n "$(git status --porcelain)"   ]]
   do
     sleep 1
   done
@@ -54,7 +54,7 @@ _setup_rename() {
     "${_NB}" init
     "${_NB}" add "Example File.md"
 
-    [[ -e "${NB_DIR}/home/Example File.md" ]]
+    [[ -e "${NB_DIR}/home/Example File.md"  ]]
   }
 
   run "${_NB}" move "Example File.md" "EXAMPLE NEW NAME.org" --force
@@ -74,7 +74,7 @@ _setup_rename() {
   # Creates git commit:
 
   cd "${NB_DIR}/home" || return 1
-  while [[ -n "$(git status --porcelain)" ]]
+  while [[ -n "$(git status --porcelain)"   ]]
   do
     sleep 1
   done
@@ -97,7 +97,7 @@ _setup_rename() {
     "${_NB}" init
     "${_NB}" add "Example File.md"
 
-    [[ -e "${NB_DIR}/home/Example File.md" ]]
+    [[ -e "${NB_DIR}/home/Example File.md"  ]]
   }
 
   run "${_NB}" move "Example File.md" "EXAMPLE NEW NAME" --force
@@ -221,7 +221,7 @@ _setup_rename() {
     "${_NB}" init
     "${_NB}" add "Example File.md"
 
-    [[ -e "${NB_DIR}/home/Example File.md" ]]
+    [[ -e "${NB_DIR}/home/Example File.md"  ]]
   }
 
   run "${_NB}" move "Example File.md" "EXAMPLE NEW NAME.bookmark.md" --force
@@ -241,7 +241,7 @@ _setup_rename() {
   # Creates git commit:
 
   cd "${NB_DIR}/home" || return 1
-  while [[ -n "$(git status --porcelain)" ]]
+  while [[ -n "$(git status --porcelain)"   ]]
   do
     sleep 1
   done
@@ -262,11 +262,11 @@ _setup_rename() {
     "${_NB}" init
     "${_NB}" add "Example File.md"
 
-    [[ -e "${NB_DIR}/home/Example File.md" ]]
+    [[ -e "${NB_DIR}/home/Example File.md"          ]]
 
     "${_NB}" add "EXAMPLE NEW NAME.org"
 
-    [[ -e "${NB_DIR}/home/EXAMPLE NEW NAME.org" ]]
+    [[ -e "${NB_DIR}/home/EXAMPLE NEW NAME.org"     ]]
   }
 
   run "${_NB}" move "Example File.md" "EXAMPLE NEW NAME.org" --force
@@ -327,7 +327,7 @@ _setup_rename() {
     "${_NB}" init
     "${_NB}" add "Example File.md"
 
-    [[ -e "${NB_DIR}/home/Example File.md" ]]
+    [[ -e "${NB_DIR}/home/Example File.md"  ]]
   }
 
   run "${_NB}" 1 move "EXAMPLE NEW NAME" --force
@@ -347,7 +347,7 @@ _setup_rename() {
   # Creates git commit:
 
   cd "${NB_DIR}/home" || return 1
-  while [[ -n "$(git status --porcelain)" ]]
+  while [[ -n "$(git status --porcelain)"   ]]
   do
     sleep 1
   done
@@ -370,7 +370,7 @@ _setup_rename() {
     "${_NB}" init
     "${_NB}" add "Example File.md"
 
-    [[ -e "${NB_DIR}/home/Example File.md" ]]
+    [[ -e "${NB_DIR}/home/Example File.md"  ]]
   }
 
   run "${_NB}" rename "Example File.md" --reset --force
@@ -421,7 +421,7 @@ _setup_rename() {
     "${_NB}" init
     "${_NB}" add "Example File.md"
 
-    [[ -e "${NB_DIR}/home/Example File.md" ]]
+    [[ -e "${NB_DIR}/home/Example File.md"  ]]
   }
 
   run "${_NB}" move "Example File.md" --to-bookmark --force
@@ -441,7 +441,7 @@ _setup_rename() {
   # Creates git commit:
 
   cd "${NB_DIR}/home" || return 1
-  while [[ -n "$(git status --porcelain)" ]]
+  while [[ -n "$(git status --porcelain)"   ]]
   do
     sleep 1
   done
@@ -466,7 +466,7 @@ _setup_rename() {
     "${_NB}" init
     "${_NB}" add "Example File.md"
 
-    [[ -e "${NB_DIR}/home/Example File.md" ]]
+    [[ -e "${NB_DIR}/home/Example File.md"  ]]
   }
 
   run "${_NB}" move "Example File.md" "New Name" --to-bookmark --force
@@ -486,7 +486,7 @@ _setup_rename() {
   # Creates git commit:
 
   cd "${NB_DIR}/home" || return 1
-  while [[ -n "$(git status --porcelain)" ]]
+  while [[ -n "$(git status --porcelain)"   ]]
   do
     sleep 1
   done
@@ -511,7 +511,7 @@ _setup_rename() {
     "${_NB}" init
     "${_NB}" add "Example File.md"
 
-    [[ -e "${NB_DIR}/home/Example File.md" ]]
+    [[ -e "${NB_DIR}/home/Example File.md"  ]]
   }
 
   run "${_NB}" move "Example File.md" "New Name.demo" --to-bookmark --force
@@ -531,7 +531,7 @@ _setup_rename() {
   # Creates git commit:
 
   cd "${NB_DIR}/home" || return 1
-  while [[ -n "$(git status --porcelain)" ]]
+  while [[ -n "$(git status --porcelain)"   ]]
   do
     sleep 1
   done

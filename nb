@@ -3271,7 +3271,7 @@ HEREDOC
 Files containing conflicts:
 
 $(local __file=
-  for     __file in "${_conflicted_text_files[@]}"
+  for   __file in "${_conflicted_text_files[@]}"
   do
     printf "  %s:%s\\n" "${_notebook_path}" "${__file}"
   done)
@@ -3287,7 +3287,7 @@ HEREDOC
 Conflicted copies of binary files:
 
 $(local __file=
-  for     __file in "${_conflicted_binary_files[@]}"
+  for   __file in "${_conflicted_binary_files[@]}"
   do
     printf "  %s:%s\\n" "${_notebook_path}" "${__file}"
   done)
