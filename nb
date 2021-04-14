@@ -15164,8 +15164,8 @@ Can't show archives. Export archive and expand to edit.\\n"
   if ! _file_is_text "${_target_path}"      &&
      ! {
        ((_render))                          &&
-       [[ "${_target_path:-}" =~ \.docx$|\.epub$|\.odt$ ]]
-     }
+       [[       "${_target_path:-}" =~ \.docx$|\.epub$|\.odt$ ]]
+     } || [[ -d "${_target_path:-}"                           ]]
   then
     if [[ -d "${_target_path}" ]]
     then
