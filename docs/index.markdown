@@ -2108,7 +2108,7 @@ search: [                    ]
 [home:10] 🔖 🔒 example-encrypted.bookmark.md.enc
 [home:9]  Example .org Title
 [home:8]  🌄 example-image.png
-[home:7] �📄 example.pdf
+[home:7]  📄 example.pdf
 [home:5]  🔉 example-audio.mp3
 [home:4]  Example LaTeX Title
 [home:3]  📹 example-video.mp4
