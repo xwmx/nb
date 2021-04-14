@@ -5335,7 +5335,7 @@ Subcommands:
              clone of <remote-url>.
              Aliases: `notebooks create`, `notebooks new`
   archive    Set the current notebook or notebook <name> to "archived" status.
-  config     Configure the commit author email and name for the notebook.
+  author     Configure the commit author email and name for the notebook.
   export     Export the notebook <name> to the current directory or <path>,
              making it usable as a local notebook.
   import     Import the local notebook at <path> to make it global.
