@@ -3501,13 +3501,13 @@ storage, encryption, filtering and search, Git-backed versioning and syncing,
 Pandoc-backed conversion, global and local notebooks, customizable color
 themes, plugins, and more in a single portable, user-friendly script.
 
-$(_color_primary "Help:")
+$(_color_primary "Help"):
   ${_ME} help               Display this help information.
   ${_ME} help <subcommand>  View help information for <subcommand>.
   ${_ME} help --colors      View information about color settings.
   ${_ME} help --readme      View the \`${_ME}\` README file.
 
-$(_color_primary "Usage:")
+$(_color_primary "Usage"):
   ${_ME}
   ${_ME} [<ls options>...] [<id> | <filename> | <path> | <title> | <notebook>]
   ${_ME} [<url>] [<bookmark options>...]
@@ -3626,7 +3626,7 @@ HEREDOC
       then
         cat <<HEREDOC
 
-$(_color_primary "Subcommands:")
+$(_color_primary "Subcommands"):
   (default)    List notes and notebooks. This is an alias for \`${_ME} ls\`.
                When a <url> is provided, create a new bookmark.
   add          Add a note, folder, or file.
@@ -3664,29 +3664,29 @@ $(_color_primary "Subcommands:")
   use          Switch to a notebook.
   version      Display version information.
 
-$(_color_primary "Notebook Usage:")
+$(_color_primary "Notebook Usage"):
   ${_ME} <notebook>:[<subcommand>] [<identifier>] [<options>...]
   ${_ME} <subcommand> <notebook>:<identifier> [<options>...]
 
-$(_color_primary "Program Options:")
+$(_color_primary "Program Options"):
   -i, --interactive   Start the \`${_ME}\` interactive shell.
   -h, --help          Display this help information.
   --no-color          Print without color highlighting.
   --version           Display version information.
 
-$(_color_primary "More Information:")
+$(_color_primary "More Information"):
   https://github.com/${_REPO}
 
-$(_color_primary "Sponsor & Donate:")
+$(_color_primary "Sponsor & Donate"):
   https://github.com/sponsors/xwmx
   https://paypal.me/WilliamMelody
 
-$(_color_primary "Creator:")
+$(_color_primary "Creator"):
   William Melody
   https://github.com/xwmx
   https://www.williammelody.com
 
-$(_color_primary "Contributors:")
+$(_color_primary "Contributors"):
   https://github.com/xwmx/nb/graphs/contributors
 
 HEREDOC
