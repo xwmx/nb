@@ -43,8 +43,13 @@ load test_helper
   [[ "${status}"    -eq 0   ]]
   [[ "${#lines[@]}" -eq 2   ]]
 
-  [[ "${lines[0]}"  ==  "Example New Name <example-new-email@example.test>" ]]
-  [[ "${lines[1]}"  ==  "${_global_name} <${_global_email}>"                ]]
+  # ordering is dependent on global name
+
+  _contains "${_global_name} <${_global_email}>"                \
+    "${lines[0]}" "${lines[1]}"
+
+  _contains "Example New Name <example-new-email@example.test>" \
+    "${lines[0]}" "${lines[1]}"
 }
 
 # --type ######################################################################
