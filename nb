@@ -8991,7 +8991,8 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  margin-top:         1.4em;
+  margin-bottom:      1rem;
+  margin-top:         1rem;
 }
 
 h1  { font-size:      1.5rem;   }
@@ -9149,7 +9150,7 @@ header {
 }
 
 .main h1:first-child {
-  margin-top:         1rem;
+  margin-top:         0;
 }
 
 .item-list {
