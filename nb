@@ -9182,8 +9182,8 @@ label[for=search-input] {
   border:             none;
   border-bottom:      1px solid #4d4d4d;
   color:              #e6e6e6;
-  font-size:          1.2rem;
-  padding:            0.5rem;
+  font-size:          1rem;
+  padding:            0.5rem 0;
   width:              100%;
 }
 
