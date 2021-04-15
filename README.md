@@ -50,8 +50,8 @@ but `nb` works great without them.
 </p>
 
 `nb` is also a powerful CLI bookmarking system featuring locally-served,
-text-centric, distraction-free bookmark browsing with cached page content
-in terminal and GUI web browsers. Additional features include:
+text-centric, distraction-free bookmark browsing in terminal and GUI
+web browsers. Features include:
 
 - local full-text search of cached page content with regular expression support,
 - convenient filtering and listing,
@@ -59,7 +59,7 @@ in terminal and GUI web browsers. Additional features include:
   for broken links,
 - tagging, pinning, search, and integration with other `nb` features.
 
-Page information is automatically downloaded, organized, and saved into normal
+Page information is automatically downloaded, compiled, and saved into normal
 Markdown documents made for humans, so bookmarks are easy to view and edit
 just like any other note.
 
