@@ -2248,7 +2248,9 @@ which automatically resizes the form to fit the current terminal window:
 [save] · last: 2021-01-01 01:00:00
 ```
 
-Terminal browsers can also be configured to use your editor.
+With `w3m`, put your cursor in the textarea and press `<return>` to open
+the item in your text editor. After closing the editor, `w3m` returns to
+the form now populated with the updated content, which can then be saved.
 
 #### `browse add`
 
