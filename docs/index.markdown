@@ -68,7 +68,7 @@ Page information is automatically downloaded, compiled, and saved into normal Ma
 documents made for humans, so bookmarks are easy to edit just like any other note.
 
 <p align="center">
-  <img  src="https://xwmx.github.io/misc/nb/images/nb-theme-raspberry-bookmarks.png?v=3"
+  <img  src="https://xwmx.github.io/misc/nb/images/gui-terminal-browse.png?v=3"
         alt="bookmarks"
         width="450">
 </p>
