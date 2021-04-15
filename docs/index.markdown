@@ -2039,7 +2039,8 @@ and [Open Document](https://en.wikipedia.org/wiki/OpenDocument) `.odt`
 files can reference other items using
 <a href="#-linking">[[wiki-style links]]</a>, making `nb` a powerful
 terminal-first platform for
-[Zettelkasten](#-zettelkasten)
+[Zettelkasten](#-zettelkasten),
+wiki-style knowledge mapping,
 and other link-based note-taking methods.
 
 To add a link from a note or bookmark to another in the same notebook,
@@ -2254,9 +2255,9 @@ which automatically resizes the form to fit the current terminal window:
 [save] · last: 2021-01-01 01:00:00
 ```
 
-With `w3m`, put your cursor in the textarea and press `<return>` to open
-the item in your text editor. After closing the editor, `w3m` returns to
-the form now populated with the updated content, which can then be saved.
+When using `w3m`, put your cursor in the textarea and press `<return>` to
+open the item in your text editor. After closing the editor, `w3m` returns
+to the form now populated with the updated content, which can then be saved.
 
 #### `browse add`
 
@@ -2861,6 +2862,8 @@ nb history example:12
 
 `nb history` uses `git log` by default and prefers
 [`tig`](https://github.com/jonas/tig) when available.
+
+#### Authorship
 
 By default, git commits are attributed to the email and name configured
 in your
