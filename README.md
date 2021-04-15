@@ -49,7 +49,7 @@ but `nb` works great without them.
         width="450">
 </p>
 
-`nb` is also a powerful CLI bookmarking system featuring:
+`nb` is also a powerful bookmarking system featuring:
 
 - locally-served, text-centric, distraction-free bookmark browsing in
   terminal and GUI web browsers,
