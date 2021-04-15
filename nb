@@ -9129,7 +9129,7 @@ header {
   font-size:          1rem;
   font-weight:        normal;
   margin:             0;
-  padding:            2rem 2rem 0;
+  padding:            1.5rem 2rem 0rem;
   text-align:         center;
 }
 
@@ -9146,11 +9146,7 @@ header {
 .main {
   margin:             0 auto;
   max-width:          45rem;
-  padding:            1rem 2rem 2rem;
-}
-
-.main h1:first-child {
-  margin-top:         0;
+  padding:            0rem 2rem 2rem;
 }
 
 .item-list {
@@ -9168,6 +9164,10 @@ header {
 
 .dim        {         color: ${_color_dim_hex};     }
 .identifier {         color: ${_color_primary_hex}; }
+
+form {
+  padding-top:        0.5rem;
+}
 
 #search {
   position:           relative;
@@ -9227,7 +9227,6 @@ input[type="submit"] {
   border:             none;
   color:              ${_color_primary_hex};
   font-size:          1rem;
-  margin-top:         1rem;
   outline:            0 solid #1a1a1a;
   padding:            1rem;
 }
@@ -9254,6 +9253,7 @@ textarea,
   color:              #dddddd;
   font-size:          0.875rem;
   line-height:        1.5;
+  margin-top:         0.5rem;
   outline:            1px solid #242424;
   padding:            0;
   vertical-align:     top;
