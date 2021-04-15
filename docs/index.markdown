@@ -2084,6 +2084,12 @@ For more information about identifying items, see [Selectors](#selectors).
 
 ### 🌍 Browsing
 
+<p align="center">
+  <img  src="https://xwmx.github.io/misc/nb/images/gui-terminal-browse.png?v=3"
+        alt="bookmarks"
+        width="450">
+</p>
+
 Use [`nb browse`](#browse) (shortcut: `nb br`) to browse, view, edit,
 and search linked notes, bookmarks, notebooks, folders, and other items using
 terminal and GUI web browsers.
