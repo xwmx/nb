@@ -49,17 +49,19 @@ but `nb` works great without them.
         width="450">
 </p>
 
-`nb` is also a powerful text-based CLI bookmarking system that includes:
+`nb` is also a powerful CLI bookmarking system that includes:
 
+- locally-served, text-centric, distraction-free browsing of rendered
+  bookmarks with cached page content in terminal and GUI web browsers,
 - local full-text search of cached page content with regular expression support,
-- tagging,
 - convenient filtering and listing,
-- [Internet Archive Wayback Machine](https://archive.org/web/) snapshot lookup for
-  broken links,
-- easy viewing of bookmarked pages in the terminal and your regular web browser.
+- [Internet Archive Wayback Machine](https://archive.org/web/) snapshot lookup
+  for broken links,
+- tagging, pinning, search, and integration with other `nb` features.
 
-Page information is automatically downloaded, compiled, and saved into normal Markdown
-documents made for humans, so bookmarks are easy to edit just like any other note.
+Page information is automatically downloaded, organized, and saved into normal
+Markdown documents made for humans, so bookmarks are easy to view and edit
+just like any other note.
 
 <p align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/gui-terminal-browse.png?v=3"
