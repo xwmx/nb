@@ -57,7 +57,7 @@ but `nb` works great without them.
 - convenient filtering and listing,
 - [Internet Archive Wayback Machine](https://archive.org/web/) snapshot lookup
   for broken links,
-- tagging, pinning, search, and integration with other `nb` features.
+- tagging, pinning, and integration with other `nb` features.
 
 Page information is automatically downloaded, compiled, and saved into normal
 Markdown documents made for humans, so bookmarks are easy to view and edit
