@@ -49,10 +49,10 @@ but `nb` works great without them.
         width="450">
 </p>
 
-`nb` is also a powerful CLI bookmarking system featuring locally-served,
-text-centric, distraction-free bookmark browsing in terminal and GUI
-web browsers. Features include:
+`nb` is also a powerful CLI bookmarking system featuring:
 
+- locally-served, text-centric, distraction-free bookmark browsing in
+  terminal and GUI web browsers,
 - local full-text search of cached page content with regular expression support,
 - convenient filtering and listing,
 - [Internet Archive Wayback Machine](https://archive.org/web/) snapshot lookup
