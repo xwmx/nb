@@ -1116,16 +1116,16 @@ _SLASH=$'/'
 #   Create an <alias> of <subcommand>. NOTE: aliases also have to be added to
 #   the $_SUBCOMMANDS variable.
 _alias_subcommand() {
-  local _subcommand="${1:-}"
   local _alias="${2:-}"
+  local _subcommand="${1:-}"
 
-  if [[ -z "${_subcommand}" ]] || [[ -z "${_alias}" ]]
+  if [[ -z "${_subcommand:-}" ]] || [[ -z "${_alias:-}" ]]
   then
     return 1
   fi
 
-  eval "describe \"${_alias}\" \"\$____DESCRIBE_${_subcommand}\""
-  eval "_${_alias}() { _${_subcommand} \"\${@}\"; }"
+  eval "_describe_${_alias}() { _describe_${_subcommand}  \"\${@}\"; }"
+  eval "_${_alias}()          { _${_subcommand}           \"\${@}\"; }"
 }
 
 # _file_is_archive()
@@ -2725,6 +2725,9 @@ describe() {
     if [[ ! "${_name}" =~ ^\- ]] && [[ -n "${!_describe_var:-}" ]]
     then
       printf "%s\\n" "${!_describe_var}"
+    elif _command_exists "_describe_${_name:-}"
+    then
+      "_describe_${_name:-}"
     else
       printf "No additional information for \`%s\`\\n" "${_name}"
     fi
@@ -2754,7 +2757,8 @@ desc() { describe "${@}"; }
 
 # count · ############################################################# · count
 
-describe "count" <<HEREDOC
+_describe_count() {
+  cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} count [<notebook>:][<folder-path>/]
 
@@ -2762,6 +2766,7 @@ $(_color_primary "Description"):
   Print the number of items in the first level of the current notebook,
   <notebook>, or the folder at <folder-path>.
 HEREDOC
+}
 _count() {
   local _list_files_options=()
   local _selector=
@@ -2814,7 +2819,8 @@ _count() {
 
 # git · ################################################################# · git
 
-describe "git" <<HEREDOC
+_describe_git() {
+  cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} git [checkpoint [<message>] | dirty]
   ${_ME} git <git-options>...
@@ -2834,6 +2840,7 @@ $(_color_primary "Examples"):
   ${_ME} git log
   ${_ME} example:git status
 HEREDOC
+}
 _git() {
   # _git_autosyncable()
   #
@@ -3342,7 +3349,8 @@ HEREDOC
 
 # help · ############################################################### · help
 
-describe "help" <<HEREDOC
+_describe_help() {
+  cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} help [<subcommand>] [-p | --print]
   ${_ME} help [-c | --colors] | [-r | --readme] | [-s | --short] [-p | --print]
@@ -3366,6 +3374,7 @@ $(_color_primary "Examples"):
 
 $(_color_primary "Shortcut Alias"): \`h\`
 HEREDOC
+}
 _help() {
   local _arguments=()
   local _color_help=0
@@ -3711,7 +3720,8 @@ _alias_subcommand "help" "h"
 
 # index · ############################################################# · index
 
-describe "index" <<HEREDOC
+_describe_index() {
+  cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} index add <filename>
   ${_ME} index delete <filename>
@@ -3755,6 +3765,7 @@ $(_color_primary "Description"):
   represents the id. .index files are included in the git repository so
   ids are preserved across systems.
 HEREDOC
+}
 _index() {
   local _ancestors=0
   local _folder_path
@@ -4144,7 +4155,8 @@ _index() {
 
 # init · ############################################################### · init
 
-describe "init" <<HEREDOC
+_describe_init() {
+  cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} init [<remote-url> [<branch>]] [--author] [--email <email>]
           [--name <name>]
@@ -4167,6 +4179,7 @@ $(_color_primary "Examples"):
   ${_ME} init https://github.com/example/example.git
   ${_ME} init https://github.com/example/example.git example-branch
 HEREDOC
+}
 _init() {
   # Usage: _init_create_home_notebook [<url> [<branch>]] [--author]
   #                                   [--email <email>] [--name <name>]
@@ -4309,7 +4322,8 @@ HEREDOC
 
 # list · ############################################################### · list
 
-describe "list" <<HEREDOC
+_describe_list() {
+  cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} list [-e [<length>] | --excerpt [<length>]] [--filenames]
           [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
@@ -4362,6 +4376,7 @@ $(_color_primary "Examples"):
   ${_ME} list --type document
   ${_ME} example:list
 HEREDOC
+}
 _list() {
   local _error_on_empty=0
   local _excerpt_length=3
@@ -5253,7 +5268,8 @@ HEREDOC
 
 # ls · ################################################################### · ls
 
-describe "ls" <<HEREDOC
+_describe_ls() {
+  cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} ls [-a | --all] [-b | --browse] [-e [<length>] | --excerpt [<length>]]
         [--filenames] [-g | --gui] [-n <limit> | --limit <limit> | --<limit>]
@@ -5325,6 +5341,7 @@ $(_color_primary "Examples"):
   ${_ME} example: -ae
   ${_ME} example:ls
 HEREDOC
+}
 _ls() {
   # _ls_print_footer()
   #
@@ -6014,7 +6031,8 @@ _ls() {
 
 # TODO: Vim highlighting bug. "
 
-describe "notebooks" <<HEREDOC
+_describe_notebooks() {
+  cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} notebooks [<name>] [--archived] [--global] [--local] [--names]
                [--paths] [--unarchived]
@@ -6105,6 +6123,7 @@ $(_color_primary "Examples"):
 
 $(_color_primary "Shortcut Alias"): \`n\`
 HEREDOC
+}
 _RESERVED_NOTEBOOK_NAMES=(
   ".cache"
   ".current"
@@ -7567,7 +7586,8 @@ _alias_subcommand "notebooks" "ns"
 
 # subcommands · ################################################# · subcommands
 
-describe "subcommands" <<HEREDOC
+_describe_subcommands() {
+  cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} subcommands [add <name>...] [alias <name> <alias>]
                  [describe <name> <usage>]
@@ -7585,6 +7605,7 @@ $(_color_primary "Description"):
   descriptions are not persisted, so \`add\`, \`alias\`, \`describe\` are
   primarily for plugins.
 HEREDOC
+}
 _subcommands() {
   case "${1:-}" in
     add)
@@ -10203,7 +10224,8 @@ _web_browser() {
 
 # add ##################################################################### add
 
-describe "add" <<HEREDOC
+_describe_add() {
+  cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} add [<notebook>:][<folder-path>/][<filename>] [<content>]
          [-b | --browse] [-c <content> | --content <content>] [--edit]
@@ -10264,6 +10286,7 @@ $(_color_primary "Examples"):
 $(_color_primary "Aliases"): \`create\`, \`new\`
 $(_color_primary "Shortcut Aliases"): \`a\`, \`+\`
 HEREDOC
+}
 _add() {
   local _arguments=()
   local _browse=0
@@ -10741,7 +10764,8 @@ _alias_subcommand "add" "new"
 
 # bookmark ########################################################### bookmark
 
-describe "bookmark" <<HEREDOC
+_describe_bookmark() {
+  cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} bookmark [<ls options>...]
   ${_ME} bookmark [<notebook>:][<folder-path>/] <url>
@@ -10827,6 +10851,7 @@ $(_color_primary "Examples"):
 
 $(_color_primary "Shortcut Alias"): \`b\`
 HEREDOC
+}
 _bookmark() {
   # Usage: _bookmark_view_in_terminal_browser (<url>)
   _bookmark_view_in_terminal_browser() {
@@ -11481,7 +11506,8 @@ _alias_subcommand "bookmark" "bookmarks"
 
 # completions ##################################################### completions
 
-describe "completions" <<HEREDOC
+_describe_completions() {
+  cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} completions (check | install [-d | --download] | uninstall)
 
@@ -11492,6 +11518,7 @@ $(_color_primary "Description"):
   Manage completion scripts. For more information, visit:
   https://github.com/${_REPO}/blob/${_REPO_MAIN_BRANCH}/etc/README.md
 HEREDOC
+}
 _completions() {
   local _BASH_COMP_NAME="nb"
   local _ZSH_COMP_NAME="_nb"
@@ -11737,7 +11764,8 @@ HEREDOC
 
 # delete ############################################################### delete
 
-describe "delete" <<HEREDOC
+_describe_delete() {
+  cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} delete ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])...
             [-f | --force]
@@ -11763,6 +11791,7 @@ $(_color_primary "Examples"):
 
 $(_color_primary "Shortcut Aliases"): \`d\`, \`-\`
 HEREDOC
+}
 _delete() {
   local _force=0
   local _print_prompt_list=0
@@ -11902,7 +11931,8 @@ _alias_subcommand "delete" "d"
 
 # edit ################################################################### edit
 
-describe "edit" <<HEREDOC
+_describe_edit() {
+  cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} edit ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           [-c <content> | --content <content>] [--edit]
@@ -11944,6 +11974,7 @@ $(_color_primary "Examples"):
 
 $(_color_primary "Shortcut Alias"): \`e\`
 HEREDOC
+}
 _edit() {
   local _content=
   local _edit_before_commit=0
@@ -12134,7 +12165,8 @@ _alias_subcommand "edit" "e"
 
 # TODO: vim highlighting bug \`"
 
-describe "env" <<HEREDOC
+_describe_env() {
+  cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} env [install]
 
@@ -12145,6 +12177,7 @@ $(_color_primary "Description"):
   Print program environment and configuration information, or install
   dependencies.
 HEREDOC
+}
 _env() {
   # Usage: _env_install_deb <name> <version> <repo>
   _env_install_deb() {
@@ -12359,7 +12392,8 @@ Please install %s manually. No .deb package available for %s."  \
 
 # export ############################################################### export
 
-describe "export" <<HEREDOC
+_describe_export() {
+  cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} export ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             <path> [-f | --force] [<pandoc options>...]
@@ -12401,6 +12435,7 @@ $(_color_primary "Examples"):
   # Export note 12 in the "sample" notebook to HTML
   ${_ME} export sample:12 /path/to/example.html
 HEREDOC
+}
 _export() {
   local _args=()
   local _force=0
@@ -12538,7 +12573,8 @@ _export() {
 
 # history ############################################################# history
 
-describe "history" <<HEREDOC
+_describe_history() {
+  cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} history [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
 
@@ -12558,6 +12594,7 @@ $(_color_primary "Examples"):
   ${_ME} history example:12
   ${_ME} example:12 history
 HEREDOC
+}
 _history() {
   local _basename=
   local _force_git_log=0
@@ -12616,7 +12653,8 @@ _history() {
 
 # import ############################################################### import
 
-describe "import" <<HEREDOC
+_describe_import() {
+  cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} import [copy | download | move] (<path>... | <url>) [--convert]
             [<notebook>:][<folder>/][<filename>]
@@ -12646,6 +12684,7 @@ $(_color_primary "Examples"):
   ${_ME} import ~/Pictures/example.png example-notebook:
   ${_ME} import ~/Documents/example.docx example-folder/
 HEREDOC
+}
 _import() {
   # _import_validate_path()
   #
@@ -12935,7 +12974,8 @@ ${_url}
 
 # move ################################################################### move
 
-describe "move" <<HEREDOC
+_describe_move() {
+  cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} move ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note)
@@ -12978,6 +13018,7 @@ $(_color_primary "Examples"):
 $(_color_primary "Alias"): \`rename\`
 $(_color_primary "Shortcut Alias"): \`mv\`
 HEREDOC
+}
 _move() {
   local _force=0
   local _reset=0
@@ -13230,7 +13271,8 @@ _alias_subcommand "move" "rename"
 
 # open ################################################################### open
 
-describe "open" <<HEREDOC
+_describe_open() {
+  cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} open (<id> | <filename> | <path> | <title> | <notebook>)
 
@@ -13258,6 +13300,7 @@ $(_color_primary "See also"):
 
 $(_color_primary "Shortcut Alias"): \`o\`
 HEREDOC
+}
 _open() {
   if [[ -z "${1:-}" ]]
   then
@@ -13270,7 +13313,8 @@ _alias_subcommand "open" "o"
 
 # peek ################################################################### peek
 
-describe "peek" <<HEREDOC
+_describe_peek() {
+  cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} peek ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
 
@@ -13305,6 +13349,7 @@ $(_color_primary "See also"):
 $(_color_primary "Alias"): \`preview\`
 $(_color_primary "Shortcut Alias"): \`p\`
 HEREDOC
+}
 _peek() {
   if [[ -z "${1:-}" ]]
   then
@@ -13318,7 +13363,8 @@ _alias_subcommand "peek" "preview"
 
 # pin ##################################################################### pin
 
-describe "pin" <<HEREDOC
+_describe_pin() {
+  cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} pin ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
 
@@ -13329,6 +13375,7 @@ $(_color_primary "Examples"):
   ${_ME} pin 123
   ${_ME} pin example:sample/321
 HEREDOC
+}
 _pin() {
   local _selector=
   local _subcommand="pin"
@@ -13419,7 +13466,8 @@ _pin() {
 
 # run ##################################################################### run
 
-describe "run" <<HEREDOC
+_describe_run() {
+  cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} run <command> [<arguments>...]
 
@@ -13431,6 +13479,7 @@ $(_color_primary "Examples"):
   ${_ME} run find . -name 'example*'
   ${_ME} run rg example
 HEREDOC
+}
 _run() {
   local _notebook_path
   _notebook_path="$(_notebooks current --path)"
@@ -13444,7 +13493,8 @@ _alias_subcommand "run" "r"
 
 # search ############################################################### search
 
-describe "search" <<HEREDOC
+_describe_search() {
+  cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} search ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             <query>... [-a | --all] [--and <query>] [--or <query>]
@@ -13512,6 +13562,7 @@ $(_color_primary "Examples"):
 
 $(_color_primary "Shortcut Alias"): \`q\`
 HEREDOC
+}
 _search() {
   # Usage: _should_search_with <command-name> <search-utility>
   _should_search_with() {
@@ -14586,7 +14637,8 @@ _alias_subcommand "search" "grep"
 
 # TODO: Vim highlighting bug. "\`
 
-describe "show" <<HEREDOC
+_describe_show() {
+  cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} show ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           [[-a | --added] | [--authors] | [-b | --browse] | --filename | --id |
@@ -14672,6 +14724,7 @@ $(_color_primary "Examples"):
 $(_color_primary "Alias"): \`view\`
 $(_color_primary "Shortcut Alias"): \`s\`
 HEREDOC
+}
 _show() {
   # _show_indicators()
   #
@@ -15439,7 +15492,8 @@ _alias_subcommand "show" "view"
 
 # unpin ################################################################# unpin
 
-describe "unpin" <<HEREDOC
+_describe_unpin() {
+  cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} unpin ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
 
@@ -15450,13 +15504,15 @@ $(_color_primary "Examples"):
   ${_ME} unpin 123
   ${_ME} unpin example:sample/321
 HEREDOC
+}
 _unpin() {
   _pin unpin "${@:-}"
 }
 
 # use ##################################################################### use
 
-describe "use" <<HEREDOC
+_describe_use() {
+  cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} use <notebook>
 
@@ -15468,6 +15524,7 @@ $(_color_primary "Example"):
 
 $(_color_primary "Shortcut Alias"): \`u\`
 HEREDOC
+}
 _use() {
   local _name="${1:-}"
   if [[ -z "${_name}" ]]
@@ -15480,13 +15537,15 @@ _alias_subcommand "use" "u"
 
 # version ############################################################# version
 
-describe "version" <<HEREDOC
+_describe_version() {
+  cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} version
 
 $(_color_primary "Description"):
   Display version information.
 HEREDOC
+}
 _version() {
   printf "%s\\n" "${_VERSION}"
 }
@@ -15506,7 +15565,8 @@ _call_deferred_command --group 2
 
 # browse ############################################################### browse
 
-describe "browse" <<HEREDOC
+_describe_browse() {
+  cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} browse [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
             [-g | --gui] [--notebooks] [--print] [-q | --query <query>]
@@ -15572,6 +15632,7 @@ $(_color_primary "Examples"):
 
 $(_color_primary "Shortcut Alias"): \`br\`
 HEREDOC
+}
 _browse() {
   # Inspired by bashttpd: https://github.com/avleen/bashttpd
 
@@ -17912,13 +17973,15 @@ _alias_subcommand "browse" "browser"
 
 # helpers ############################################################# helpers
 
-describe "helpers" <<HEREDOC
+_describe_helpers() {
+  cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} helpers <name> [<options≥...]
 
 $(_color_primary "Description"):
   Call helper functions.
 HEREDOC
+}
 _helpers() {
   local _name="${1:-}"
   shift
@@ -18047,7 +18110,8 @@ _helpers() {
 
 # plugins ############################################################# plugins
 
-describe "plugins" <<HEREDOC
+_describe_plugins() {
+  cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} plugins [<name>] [--paths]
   ${_ME} plugins install [<path> | <url>] [--force]
@@ -18069,6 +18133,7 @@ $(_color_primary "Plugin Extensions"):
   .nb-theme   Plugins defining color themes.
   .nb-plugin  Plugins defining new subcommands and functionality.
 HEREDOC
+}
 _plugins() {
   local _basename=
   local _force=0
@@ -18256,7 +18321,8 @@ _alias_subcommand "plugins" "plugin"
 
 # remote ############################################################### remote
 
-describe "remote" <<HEREDOC
+_describe_remote() {
+  cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} remote
   ${_ME} remote branches [<url>]
@@ -18276,6 +18342,7 @@ $(_color_primary "Examples"):
   ${_ME} remote set https://github.com/example/example.git
   ${_ME} remote remove
 HEREDOC
+}
 _remote() {
   local _only_url=0
   local _skip_preamble=0
@@ -18665,7 +18732,8 @@ HEREDOC
 
 # settings ########################################################### settings
 
-describe "settings" <<HEREDOC
+_describe_settings() {
+  cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} set [<name> [<value>] | <number> [<value>]]
   ${_ME} settings colors [<number> | themes]
@@ -18710,6 +18778,7 @@ $(_color_primary "Examples"):
 
 $(_color_primary "Alias"): \`set\`
 HEREDOC
+}
 _settings() {
   # Usage: _settings_colors [<number>] [themes]
   _settings_colors() {
@@ -19386,7 +19455,8 @@ _alias_subcommand "settings" "set"
 
 # shell  ################################################################ shell
 
-describe "shell" <<HEREDOC
+_describe_shell() {
+  cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} shell [<subcommand> [<options>...] | --clear-history]
 
@@ -19415,6 +19485,7 @@ $(_color_primary "Example"):
   ${_ME}> exit
   $
 HEREDOC
+}
 _shell() {
   HISTFILE="${NB_HIST:-${HOME}/.${_ME}_history}"
   set -o history
@@ -19522,13 +19593,15 @@ HEREDOC
 
 # status ############################################################### status
 
-describe "status" <<HEREDOC
+_describe_status() {
+  cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} status
 
 $(_color_primary "Description"):
   Run \`git status\` in the current notebook.
 HEREDOC
+}
 _status() {
   local _notebook_path
   _notebook_path="$(_notebooks current --path)"
@@ -19538,7 +19611,8 @@ _status() {
 
 # sync ################################################################### sync
 
-describe "sync" <<HEREDOC
+_describe_sync() {
+  cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} sync [-a | --all]
 
@@ -19572,6 +19646,7 @@ $(_color_primary "Sync Conflict Resolution"):
   More Information:
     https://github.com/xwmx/nb#sync-conflict-resolution
 HEREDOC
+}
 _sync() {
   local _notebooks=()
   local _sync_all=0
@@ -19689,7 +19764,8 @@ HEREDOC
 
 # todos ################################################################# todos
 
-describe "todos" <<HEREDOC
+_describe_todos() {
+  cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} todos [open | closed] [-a | --all]
 
@@ -19699,6 +19775,7 @@ $(_color_primary "Options"):
 $(_color_primary "Description"):
   List todos.
 HEREDOC
+}
 _todos() {
   local _pattern='\- \[ \]|\- \[x\]'
   local _search_all=0
@@ -19731,7 +19808,8 @@ _alias_subcommand "todos" "todo"
 
 # update ############################################################### update
 
-describe "update" <<HEREDOC
+_describe_update() {
+  cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} update
 
@@ -19743,6 +19821,7 @@ $(_color_primary "Description"):
   Homebrew, use the package manager's upgrade functionality instead
   of this command.
 HEREDOC
+}
 _update() {
   local _current_path
   _current_path="${BASH_SOURCE[0]}"
