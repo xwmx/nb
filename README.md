@@ -2026,8 +2026,6 @@ about browsing, see [Browsing](#-browsing) and [`nb browse`](#browse).
 
 ### 🔗 Linking
 
-*Version 6.0.0-alpha*
-
 Notes, bookmarks, files in text-based formats, Word `.docx` documents,
 and [Open Document](https://en.wikipedia.org/wiki/OpenDocument) `.odt`
 files can reference other items using
@@ -2079,8 +2077,6 @@ Linked items can be [browsed](#-browsing) with [`nb browse`](#browse).
 For more information about identifying items, see [Selectors](#selectors).
 
 ### 🌍 Browsing
-
-*Version 6.0.0-alpha*
 
 Use [`nb browse`](#browse) (shortcut: `nb br`) to browse, view, edit,
 and search linked notes, bookmarks, notebooks, folders, and other items using
@@ -2461,8 +2457,6 @@ For more information about Zettelkasten, see
 
 ### 📂 Folders
 
-*Version 6.0.0-alpha*
-
 Items can be organized in folders. To add a note to a folder, call
 `nb add` with the folder's relative path within the notebook
 followed by a slash:
@@ -2567,8 +2561,6 @@ search: [                    ]
 For more information about identifying folders, see [Selectors](#selectors).
 
 ### 📌 Pinning
-
-*Version 6.0.0-alpha*
 
 Items can be pinned so they appear first in `nb`, [`nb ls`](#ls), and
 [`nb browse`](#browse):
