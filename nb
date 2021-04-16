@@ -9169,6 +9169,11 @@ header {
   padding:            0rem 2rem 2rem;
 }
 
+.main p:first-child,
+.main .sourceCode:first-child {
+  padding-top:        1rem;
+}
+
 .item-list {
   margin-top:         0;
 }
