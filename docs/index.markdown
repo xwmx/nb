@@ -1657,12 +1657,12 @@ using any list subcommands:
 For more listing options, see [`nb help ls`](#ls), [`nb help list`](#list),
 and [`nb help bookmark`](#bookmark).
 
-##### Shortcut Alias: `b`
+##### Shortcut Alias: `bk`
 
-`bookmark` can also be used with the alias `b`:
+`bookmark` can also be used with the alias `bk`:
 
 ```bash
-❯ nb b
+❯ nb bk
 Add: nb <url> Help: nb help bookmark
 ------------------------------------
 [7] 🔖 Bookmark Three (example.com)
@@ -1670,7 +1670,7 @@ Add: nb <url> Help: nb help bookmark
 [3] 🔖 🔒 example-encrypted.bookmark.md.enc
 [1] 🔖 Bookmark One (example.com)
 
-❯ nb b example.net
+❯ nb bk example.net
 [5] 🔖 Bookmark Two (example.net)
 ```
 
@@ -4847,9 +4847,9 @@ Examples:
   nb bookmark list
   nb bookmark search "example query"
   nb bookmark open 5
-  nb b
+  nb bk
 
-Shortcut Alias: `b`
+Shortcut Alias: `bk`
 ```
 
 #### `browse`
@@ -4918,6 +4918,7 @@ Examples:
   nb browse Example\ Folder/
   nb browse 123
   nb browse demo:456
+  nb br
 
 Shortcut Alias: `br`
 ```

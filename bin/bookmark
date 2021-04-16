@@ -94,7 +94,9 @@ HEREDOC
         | sed -e "s/  nb https/  bookmark https/g"  \
         | sed -e "s/  nb bookmark/  bookmark/g"     \
         | sed -e "/  nb b$/d"                       \
+        | sed -e "/  nb bk$/d"                      \
         | sed -e "s/Shortcut Alias: \`b\`//"        \
+        | sed -e "s/Shortcut Alias: \`bk\`//"       \
         | sed -e '$ d'
 
       cat <<HEREDOC

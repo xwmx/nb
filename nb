@@ -7754,6 +7754,8 @@ _SUBCOMMANDS=(
   a
   add
   b
+  bk
+  bm
   bookmark
   bookmarks
   br
@@ -7831,6 +7833,7 @@ _DOCUMENTED_SUBCOMMANDS=(
   a
   add
   b
+  bk
   bookmark
   br
   browse
@@ -7890,6 +7893,8 @@ _GIT_SUBCOMMANDS=(
   a
   add
   b
+  bk
+  bm
   bookmark
   bookmarks
   br
@@ -8201,8 +8206,8 @@ _call_deferred_command() {
 
   local _group="${2:-}"
   local _group_3_names=(
-    "_br" "_browse" "_browser" "_config" "_h" "_help" "_helpers" "_set"   \
-    "_plugin" "_plugins" "_remote" "_settings" "_shell" "_status" "_sync" \
+    "_b" "_br" "_browse" "_browser" "_config" "_h" "_help" "_helpers" "_set"  \
+    "_plugin" "_plugins" "_remote" "_settings" "_shell" "_status" "_sync"     \
     "_todo" "_todos" "_update" "_upgrade"
   )
 
@@ -10869,9 +10874,9 @@ $(_color_primary "Examples"):
   ${_ME} bookmark list
   ${_ME} bookmark search "example query"
   ${_ME} bookmark open 5
-  ${_ME} b
+  ${_ME} bk
 
-$(_color_primary "Shortcut Alias"): \`b\`
+$(_color_primary "Shortcut Alias"): \`bk\`
 HEREDOC
 }
 _bookmark() {
@@ -11523,7 +11528,8 @@ _bookmark() {
     exit 0
   fi
 }
-_alias_subcommand "bookmark" "b"
+_alias_subcommand "bookmark" "bk"
+_alias_subcommand "bookmark" "bm"
 _alias_subcommand "bookmark" "bookmarks"
 
 # completions ##################################################### completions
@@ -15655,6 +15661,7 @@ $(_color_primary "Examples"):
   ${_ME} browse Example\ Folder/
   ${_ME} browse 123
   ${_ME} browse demo:456
+  ${_ME} br
 
 $(_color_primary "Shortcut Alias"): \`br\`
 HEREDOC
@@ -18007,6 +18014,7 @@ HEREDOC
 
   exit 0
 }
+_alias_subcommand "browse" "b"
 _alias_subcommand "browse" "br"
 _alias_subcommand "browse" "browser"
 
