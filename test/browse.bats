@@ -49,7 +49,9 @@ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</spa
   [[ "${output}"  =~  \
 \<a.*\ href=\"http://localhost:6789/home:1/1\?--per-page=.*\"\ class=\"list-item\"\>.*\[.*Example${_S}Conflicting${_S}Name/1.*\].*   ]]
   [[ "${output}"  =~  \
-class=\"list-item\"\>.*\[.*Example${_S}Conflicting${_S}Name/1.*\].*${_S}Example${_S}Folder${_S}File.md\</a\>\<br\>  ]]
+class=\"list-item\"\>.*\[.*Example${_S}Conflicting${_S}Name/1.*\].*${_S}Example${_S}Folder${_S}File.md${_S}·  ]]
+  [[ "${output}"  =~  \
+${_S}Example${_S}Folder${_S}File.md${_S}·${_S}\"Example${_S}folder${_S}file${_S}content\.\"\</a\>\<br\>       ]]
 }
 
 # --original ##################################################################
@@ -269,9 +271,9 @@ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</spa
 \<a.*\ href=\"http://localhost:6789/home:2/\?--per-page=.*\"\>1\</a\>\ .*/.*\</h1\>     ]]
 
   [[ "${output}"  =~  \
-\<a.*\ href=\"http://localhost:6789/home:2/1\?--per-page=.*\"\ class=\"list-item\"\>.*\[.*1/1.*\].*   ]]
+\<a.*\ href=\"http://localhost:6789/home:2/1\?--per-page=.*\"\ class=\"list-item\"\>.*\[.*1/1.*\].*       ]]
   [[ "${output}"  =~  \
-class=\"list-item\"\>.*\[.*1/1.*\].*${_S}File${_S}One.md\</a\>\<br\>    ]]
+class=\"list-item\"\>.*\[.*1/1.*\].*${_S}File${_S}One.md${_S}·${_S}\"Example${_S}content\.\"\</a\>\<br\>  ]]
 }
 
 # headers #######################################################################
