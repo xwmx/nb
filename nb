@@ -8969,7 +8969,6 @@ _render() {
 html {
   background-color:   #1a1a1a;
   color:              #e6e6e6;
-  font-family:        Georgia, serif;
   font-size:          16px;
   line-height:        1.5;
 }
