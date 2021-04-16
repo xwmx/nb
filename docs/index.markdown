@@ -2156,7 +2156,7 @@ To open a specific item in `nb browse`, pass the [selector](#selectors)
 for the item, folder, or notebook to `nb browse`:
 
 ```bash
-# open the item titled "Example Title" in the folder named "Sample" in the "example" notebook
+# open the item titled "Example Title" in the folder named "sample" in the "example" notebook
 ❯ nb browse example:sample/Example\ Title
 ❯nb · example : sample / 987 · ↓ · edit · - | +
 
