@@ -2371,7 +2371,7 @@ _selector_resolve_folders() {
 
   local _selector_path="${_selector#*:}"
 
-  if [[ "${_selector}" =~ : ]]
+  if [[ "${_selector}" =~ :       ]]
   then
     local _selector_notebook_path=
     _selector_notebook_path="$(
@@ -2402,16 +2402,16 @@ _selector_resolve_folders() {
     local _parent_folder_path=
     local _selector_segment="${_selector_path%%\/*}"
 
-    if [[ -z "${_folder_relative_path:-}" ]]
+    if [[ -z "${_folder_relative_path:-}"       ]]
     then
       _parent_folder_path="${_notebook_path}"
     else
       _parent_folder_path="${_notebook_path}/${_folder_relative_path}"
     fi
 
-    if [[ -n "${_selector_segment:-}"     ]]
+    if [[ -n "${_selector_segment:-}"           ]]
     then
-      if [[ "${_selector_segment}" =~ ^[0-9]+$ ]]
+      if [[ "${_selector_segment}" =~ ^[0-9]+$  ]]
       then # folder name might be an id
         _folder_name="$(
           _index get_basename "${_selector_segment:?}" "${_parent_folder_path:?}" ||
@@ -2419,7 +2419,7 @@ _selector_resolve_folders() {
         )"
       fi
 
-      if [[ -z "${_folder_name:-}"  ]]
+      if [[ -z "${_folder_name:-}"            ]]
       then
         _folder_name="${_selector_segment}"
       fi
@@ -2557,14 +2557,14 @@ _selector_resolve_path() {
          [[ !  "${_identifier}" =~ ^[0-9]+$     ]]
       then # <selector> is relative path with a non-numeric filename
         _relative_path="${_folder_relative_path}/${_identifier}"
-      elif [[ "${_identifier}" =~ ^[0-9]+$ ]]
+      elif [[ "${_identifier}" =~ ^[0-9]+$      ]]
       then # <selector> is an id
         local _basename=
         _basename="$(_index get_basename "${_identifier}" "${_folder_path}")"
 
-        if [[ -n "${_basename:-}" ]]
+        if [[ -n "${_basename:-}"                     ]]
         then
-          if [[ -n "${_folder_relative_path:-}" ]]
+          if [[ -n "${_folder_relative_path:-}"       ]]
           then
             _relative_path="${_folder_relative_path}/${_basename}"
           else
@@ -2717,12 +2717,12 @@ _string_is_url() {
 # one has been set.
 describe() {
   set +e
-  [[ -z "${1:-}" ]] &&
+  [[ -z "${1:-}"          ]] &&
     _exit_1 printf "describe(): <name> required.\\n"
 
   if [[ "${1}" == "--get" ]]
   then # get ------------------------------------------------------------------
-    [[ -z "${2:-}" ]] &&
+    [[ -z "${2:-}"        ]] &&
       _exit_1 printf "describe(): <description> required.\\n"
 
     local _name="${2:-}"
@@ -2738,7 +2738,7 @@ describe() {
       printf "No additional information for \`%s\`\\n" "${_name}"
     fi
   else # set ------------------------------------------------------------------
-    if [[ -n "${2:-}" ]]
+    if [[ -n "${2:-}"     ]]
     then # argument is present
       read -r -d '' "____DESCRIBE_${1}" <<HEREDOC
 ${2}
@@ -2803,12 +2803,12 @@ _count() {
     shift
   done
 
-  if [[ -n "${_selector:-}" ]]
+  if [[ -n "${_selector:-}"         ]]
   then
     local _selector_path=
     _selector_path="$(_selector_resolve_path "${_selector}" --full)"
 
-    if [[ -z "${_selector_path:-}" ]]
+    if [[ -z "${_selector_path:-}"  ]]
     then
       if ! ((_skip_unmatched_selector))
       then
@@ -4026,7 +4026,7 @@ _index() {
 
       while [[ "${_current_folder_path:?}" =~ ^${_top_path} ]]
       do
-        if [[ ! -e "${_current_folder_path:?}/.index" ]]
+        if [[ ! -e "${_current_folder_path:?}/.index"       ]]
         then
           ls -t -r "${_current_folder_path:?}" > "${_current_folder_path:?}/.index"
         fi
