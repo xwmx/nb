@@ -1672,8 +1672,8 @@ Add: nb <url> Help: nb help bookmark
 `nb` provides multiple ways to view bookmark files, bookmarked content,
 and bookmarked URLs.
 
-Use [`nb browse`](#browse) to [browse](#-browsing) rendered bookmark
-files, including cached content,
+Use [`nb browse`](#browse) (shortcut: `nb br`) to [browse](#-browsing)
+bookmarks with cached content,
 <a href="#-linking">[[wiki-style links]]</a>,
 linked [#tags](#-tagging), and external links:
 
@@ -5717,12 +5717,11 @@ Alias: `set`
 ```text
 [2]  color_primary
      -------------
-     The primary color used to highlight identifiers and messages. Often this
-     can be set to an xterm color number between 0 and 255. Some terminals
-     support many more colors.
+     The primary color used to highlight identifiers and messages.
 
-     • Default Value: 68 (blue) for 256 color terminals,
-                      4  (blue) for  8  color terminals.
+     • Supported Values: xterm color numbers between 0 and 255.
+     • Default Value:    68 (blue) for 256 color terminals,
+                         4  (blue) for  8  color terminals.
 ```
 
 ##### `color_secondary`
@@ -5730,11 +5729,10 @@ Alias: `set`
 ```text
 [3]  color_secondary
      ---------------
-     The color used for lines and footer elements. Often this can be set to an
-     xterm color number between 0 and 255. Some terminals support many more
-     colors.
+     The color used for lines and footer elements.
 
-     • Default Value: 8
+     • Supported Values: xterm color numbers between 0 and 255.
+     • Default Value:    8
 ```
 
 ##### `color_theme`

@@ -19200,21 +19200,19 @@ HEREDOC
   _settings_list_items+=("$(_color_brackets '2')  color_primary")
   _settings_help_items+=("\
     $(_color_secondary " -------------")
-     The primary color used to highlight identifiers and messages. Often this
-     can be set to an xterm color number between 0 and 255. Some terminals
-     support many more colors.
+     The primary color used to highlight identifiers and messages.
 
-     • Default Value: $(_color_primary "68") (blue) for 256 color terminals,
-                      $(_color_primary "4")  (blue) for  8  color terminals.")
+     • Supported Values: xterm color numbers between 0 and 255.
+     • Default Value:    $(_color_primary "68") (blue) for 256 color terminals,
+                         $(_color_primary "4")  (blue) for  8  color terminals.")
 
   _settings_list_items+=("$(_color_brackets '3')  color_secondary")
   _settings_help_items+=("\
     $(_color_secondary " ---------------")
-     The color used for lines and footer elements. Often this can be set to an
-     xterm color number between 0 and 255. Some terminals support many more
-     colors.
+     The color used for lines and footer elements.
 
-     • Default Value: $(_color_primary "8")")
+     • Supported Values: xterm color numbers between 0 and 255.
+     • Default Value:    $(_color_primary "8")")
 
   _settings_list_items+=("$(_color_brackets '4')  color_theme")
   _settings_help_items+=("\
