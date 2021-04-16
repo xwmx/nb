@@ -4,6 +4,37 @@ load test_helper
 
 # `_get_content()` ##############################################################
 
+@test "'_get_content()' prints first line when there are two lines." {
+  {
+    "${_NB}" init
+    "${_NB}" add "Example File.md" \
+      --content "Example line one.${_NEWLINE}Example line two."
+  }
+
+  run "${_NB}" helpers get_content "${NB_DIR}/home/Example File.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq 0                                ]]
+  [[    "${output}"  ==  "__first_line:Example line one." ]]
+}
+
+@test "'_get_content()' prints first line when there is only one line." {
+  {
+    "${_NB}" init
+    "${_NB}" add "Example File.md" --content "Example single line."
+  }
+
+  run "${_NB}" helpers get_content "${NB_DIR}/home/Example File.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq 0                                    ]]
+  [[    "${output}"  ==  "__first_line:Example single line."  ]]
+}
+
 @test "'_get_content()' skips folders." {
   {
     "${_NB}" init

@@ -1468,7 +1468,7 @@ _get_content() {
     if [[ "${_path}" =~ \.md$|\.markdown$ ]]
     then
       local               __line=
-      while IFS= read -r  __line || [[ -n "${__line:-}"      ]]
+      while IFS= read -r  __line || [[ -n "${__line:-}"     ]]
       do
         if [[ "${__line}" =~ ^([[:space:]]*#[[:space:]]+)   ]] &&
            ! ((_in_code_block))
@@ -1506,23 +1506,23 @@ _get_content() {
           else
             _in_code_block=1
           fi
-        elif ((_in_front_matter)) && [[ "${__line}" =~ ^title\: ]]
+        elif ((_in_front_matter)) && [[ "${__line}" =~ ^title\:   ]]
         then # front matter title
           _title="$(printf "%s\\n" "${__line}" | sed 's/^title: //')"
           break
         elif ! ((_in_front_matter)) && ! ((_in_code_block))
         then
-          if [[ -z "${_maybe_title}" ]] && [[ -n "${__line}"    ]]
+          if [[ -z "${_maybe_title:-}" ]] && [[ -n "${__line:-}"  ]]
           then  # potential setext-style H1
             _maybe_title="${__line}"
-          elif [[ -n "${_maybe_title}"              ]] &&
+          elif [[ -n "${_maybe_title:-}"            ]] &&
                [[ "${__line}" =~ ^[[:space:]]*\=+$  ]]
           then # underline for setext-style H1 on previous line
             _title="$(
               printf "%s\\n" "${_maybe_title}" | sed 's/^[[:space:]]*//'
             )"
             break
-          elif [[ -n "${_maybe_title}"          ]]
+          elif [[ -n "${_maybe_title:-}"        ]]
           then # in normal content, title not found
             if ! ((_only_title))
             then
@@ -1543,6 +1543,12 @@ _get_content() {
           fi
         fi
       done < "${_path}"
+
+      if [[ -z "${_title:-"${_first_line:-}"}"  ]] &&
+         [[ -n "${_maybe_title:-}"              ]]
+      then
+        _first_line="${_maybe_title:-}"
+      fi
     elif [[ "${_path}"    =~ \.latex$|\.tex$    ]]
     then
       local               __line=
