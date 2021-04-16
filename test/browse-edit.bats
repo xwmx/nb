@@ -72,7 +72,7 @@ export _S=" "
 "<form${_NEWLINE}action=\"/local:1?--edit&--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
 
   printf "%s\\n" "${output}" | grep -q \
-"value=\"save\"> <span class=\"dim\">·</span> <span class=\"dim\">last: .*</span>"
+"value=\"save\"> <span class=\"dim\">·</span> <span class=\"dim last-saved\">last: .*</span>"
 }
 
 @test "GET to --edit URL with local notebook renders form." {
@@ -183,7 +183,7 @@ action=\"/local:1/1\?--edit\&--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'
 "<form${_NEWLINE}action=\"/home:1?--edit"
 
   printf "%s\\n" "${output}" | grep -q \
-"value=\"save\"> <span class=\"dim\">·</span> <span class=\"dim\">last: .*</span>"
+"value=\"save\"> <span class=\"dim\">·</span> <span class=\"dim last-saved\">last: .*</span>"
 }
 
 # option parameters ###########################################################
@@ -501,7 +501,7 @@ action=\"/local:1/1\?--edit\&--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'
     "<form${_NEWLINE}action=\"/home:1?--edit&--per-page=30--columns=20"
 
   printf "%s\\n" "${output}" | grep -q \
-"value=\"save\"> <span class=\"dim\">·</span> <span class=\"dim\">last: .*</span>"
+"value=\"save\"> <span class=\"dim\">·</span> <span class=\"dim last-saved\">last: .*</span>"
 }
 
 @test "GET to --edit URL without --columns parameter uses default value for textarea and retains leading tab." {
@@ -587,7 +587,7 @@ action=\"/local:1/1\?--edit\&--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'
   printf "%s\\n" "${output}" | grep -q "cols=\"67\"># Example Title"
 
   printf "%s\\n" "${output}" | grep -q \
-"value=\"save\"> <span class=\"dim\">·</span> <span class=\"dim\">last: .*</span>"
+"value=\"save\"> <span class=\"dim\">·</span> <span class=\"dim last-saved\">last: .*</span>"
 
   [[ !  "${output}"    =~ \<input\ type=\"hidden\"\ name=\"home%3A1\"\>    ]]
 
@@ -649,7 +649,7 @@ action=\"/local:1/1\?--edit\&--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'
 "<form${_NEWLINE}action=\"/home:1?--edit"
 
   printf "%s\\n" "${output}" | grep -q \
-"value=\"save\"> <span class=\"dim\">·</span> <span class=\"dim\">last: .*</span>"
+"value=\"save\"> <span class=\"dim\">·</span> <span class=\"dim last-saved\">last: .*</span>"
 }
 
 # CLI #########################################################################
@@ -676,5 +676,5 @@ action=\"/local:1/1\?--edit\&--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'
 "<form${_NEWLINE}action=\"/home:1?--edit"
 
   printf "%s\\n" "${output}" | grep -q \
-"value=\"save\"> <span class=\"dim\">·</span> <span class=\"dim\">last: .*</span>"
+"value=\"save\"> <span class=\"dim\">·</span> <span class=\"dim last-saved\">last: .*</span>"
 }
