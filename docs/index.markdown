@@ -65,7 +65,7 @@ but `nb` works great without them.
   for broken links,
 - tagging, pinning, and integration with other `nb` features.
 
-Page information is automatically downloaded, compiled, and saved into normal
+Page information is downloaded, compiled, and saved into normal
 Markdown documents made for humans, so bookmarks are easy to view and edit
 just like any other note.
 
@@ -95,9 +95,9 @@ shell script that can be
 installed, copied, or `curl`ed almost anywhere and just work, using
 a strategy inspired by
 [progressive enhancement](https://en.wikipedia.org/wiki/Progressive_enhancement)
-for various experience improvements in more capable environments. `nb` works great
-whether you have one notebook with just a few notes or dozens of
-notebooks containing thousands of notes, bookmarks, and other items.
+for various experience improvements in more capable environments.
+`nb` works great whether you have one notebook with just a few notes or
+dozens of notebooks containing thousands of notes, bookmarks, and other items.
 `nb` makes it easy to incorporate other tools, writing apps, and workflows.
 `nb` can be used a little, a lot, once in a while, or for just a subset of
 features. `nb` is flexible.
