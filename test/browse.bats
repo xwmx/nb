@@ -51,7 +51,7 @@ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</spa
   [[ "${output}"  =~  \
 class=\"list-item\"\>.*\[.*Example${_S}Conflicting${_S}Name/1.*\].*${_S}Example${_S}Folder${_S}File.md${_S}·  ]]
   [[ "${output}"  =~  \
-${_S}Example${_S}Folder${_S}File.md${_S}·${_S}\"Example${_S}folder${_S}file${_S}content\.\"\</a\>\<br\>       ]]
+${_S}Example${_S}Folder${_S}File.md${_S}·${_S}\"Example${_S}folder.*\</a\>\<br\>                              ]]
 }
 
 # --original ##################################################################
