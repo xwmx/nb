@@ -38,9 +38,10 @@
 <script src="./assets/js/scroll-highlight.js"></script>
 
 <script>
-  // remove padding from empty table cells
-  $("td:contains(\u00a0)").css('padding', '0')
+  $(document).ready(function() {
+    // remove padding from empty table cells
+    $("td:contains(\u00a0)").css('padding', '0');
+  });
 </script>
-
 
 <link href="https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap" rel="stylesheet">
