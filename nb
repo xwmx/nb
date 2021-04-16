@@ -15867,8 +15867,10 @@ _browse() {
   # _browse_render_add()
   #
   # Usage:
-  #   _browse_render_add [--columns <columns>] [--per-page <limit>]
-  #                      [--terminal]
+  #   _browse_render_add [--columns <columns>] [--content <content>]
+  #                      [--local <encoded-url>] [--per-page <limit>]
+  #                      [--tags <tag-list>] [--terminal] [--title <title>]
+  #                      [--type <type>] [<add-option>...]
   #
   # Description:
   #   Print an HTML page for creating a text file.
@@ -16060,8 +16062,9 @@ HEREDOC
   #
   # Usage:
   #   _browse_render_container <target-path> [--columns <columns>]
-  #                            [--page <page-number>] [--per-page <limit>]
-  #                            [--query <query>] [--terminal]
+  #                            [--local <encoded-url>] [--page <page-number>]
+  #                            [--per-page <limit>] [--query <query>]
+  #                            [--terminal]
   #
   # Description:
   #   Render a notebook or folder as an HTML page.
@@ -16404,11 +16407,11 @@ HEREDOC
   # _browse_render_delete()
   #
   # Usage:
-  #   _browse_render_delete <path> [--columns <columns>] [--per-page <limit>]
-  #                         [--terminal]
+  #   _browse_render_delete <path> [--columns <columns>] [--local <encoded-url>]
+  #                         [--per-page <limit>] [--terminal]
   #
   # Description:
-  #   Print an form for deleting an item
+  #   Print an form for deleting an item.
   _browse_render_delete() {
     local _columns="${NB_BROWSE_COLUMNS:-70}"
     local _encoded_local_notebook_path=
@@ -16514,8 +16517,8 @@ HEREDOC
   # _browse_render_edit()
   #
   # Usage:
-  #   _browse_render_edit <path> [--columns <columns>] [--per-page <limit>]
-  #                       [--terminal]
+  #   _browse_render_edit <path> [--columns <columns>] [--local <encoded-url>]
+  #                       [--per-page <limit>] [--terminal] [<edit-option>...]
   #
   # Description:
   #   Print an HTML page for editing a text file.
@@ -16637,7 +16640,8 @@ HEREDOC
   #
   # Usage:
   #   _browse_render_header <selector> [--columns <columns>]
-  #                         [--per-page <limit>] [--terminal]
+  #                         [--local <encoded-url>] [--per-page <limit>]
+  #                         [--terminal]
   #
   # Description:
   #   Print a context-aware, linked nav header.
@@ -16865,8 +16869,8 @@ HEREDOC
   # _browse_render_item()
   #
   # Usage:
-  #   _browse_render_item <path> [--columns <columns>] [--per-page <limit>]
-  #                       [--terminal]
+  #   _browse_render_item <path> [--columns <columns>] [--local <encoded-url>]
+  #                       [--per-page <limit>] [--terminal]
   #
   # Description:
   #   Render an item to HTML with links resolved to internal web server.
@@ -16989,8 +16993,8 @@ HEREDOC
   # _browse_render_notebooks()
   #
   # Usage:
-  #   _browse_render_notebooks [--columns <columns>] [--per-page <limit>]
-  #                            [--terminal]
+  #   _browse_render_notebooks [--columns <columns>] [--local <encoded-url>]
+  #                            [--per-page <limit>] [--terminal]
   #
   # Description:
   #   Print an HTML page listing notebooks.
@@ -18370,14 +18374,14 @@ _remote() {
   for   __arg in "${@:-}"
   do
     case "${__arg:-}" in
-      --skip-preamble)  _skip_preamble=1  ;;
-      --url|url)        _only_url=1       ;;
+      --skip-preamble)  _skip_preamble=1    ;;
+      --url|url)        _only_url=1         ;;
       *)
         if [[   -z  "${_subcommand:-}"      ]]
         then
           _subcommand="${__arg}"
-        elif _contains "${_subcommand}" "add" "branches" "set" &&
-             [[ -z  "${_new_remote_url:-}"  ]]
+        elif [[ -z  "${_new_remote_url:-}"  ]] &&
+             _contains "${_subcommand}" "add" "branches" "set"
         then
           _new_remote_url="${__arg}"
         elif [[ -z  "${_new_branch:-}"      ]]
@@ -18518,7 +18522,7 @@ _remote() {
         _exit_1 _help "remote"
       fi
 
-      if [[ -z "${_new_branch:-}" ]]
+      if [[ -z "${_new_branch:-}"     ]]
       then
         _new_branch="${_current_branch}"
       fi
