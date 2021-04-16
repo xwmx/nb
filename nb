@@ -10182,7 +10182,7 @@ _web_browser() {
       fi
 
       return 0
-    elif [[ "${_web_browser_command[*]:-}" =~ lynx ]]
+    elif [[ "${_web_browser_command[*]:-}" =~ lynx    ]]
     then
       ((_dump)) && _arguments+=("-dump")
 
@@ -11197,7 +11197,7 @@ _bookmark() {
       fi
 
       # `bookmark peek`
-      if [[ "${_subcommand}" == "peek" ]]
+      if [[   "${_subcommand}" == "peek" ]]
       then
         _bookmark_view_in_terminal_browser "${_target_url}"
         return 0
@@ -11302,7 +11302,7 @@ _bookmark() {
       )" || : # TODO: pipeline returns error status but still returns title
     fi
 
-    if [[ -z "${_title}" ]]
+    if [[ -z "${_title:-}"  ]]
     then
       _title="$(
         cat "${_temp_file}" \
@@ -11316,13 +11316,13 @@ _bookmark() {
   local _domain=
   _domain="$(printf "%s\\n" "${_url}" | awk -F[/:] '{print $4}')"
 
-  if [[ -n "${_domain:-}" ]]
+  if [[ -n "${_domain:-}"   ]]
   then
-    [[ -n "${_title:-}" ]] && _title+=" "
+    [[ -n "${_title:-}" ]]  && _title+=" "
     _title+="(${_domain})"
   fi
 
-  if [[ -n "${_title:-}" ]]
+  if [[ -n "${_title:-}"    ]]
   then
     if _command_exists "w3m"
     then # convert html entities TODO: _web_browser --convert-entities
@@ -11346,7 +11346,7 @@ _bookmark() {
             2>/dev/null || :
     )"
 
-    if [[ -z "${_description:-}" ]]
+    if [[ -z "${_description:-}"  ]]
     then
       _description="$(
         cat "${_temp_file}" \
@@ -11356,7 +11356,7 @@ _bookmark() {
       )"
     fi
 
-    if [[ -n "${_description}" ]]
+    if [[ -n "${_description:-}"  ]]
     then
       if _command_exists "w3m"
       then # convert html entities TODO: _web_browser --convert-entities
@@ -11370,7 +11370,7 @@ _bookmark() {
     fi
   fi
 
-  if [[ -n "${_quote}" ]]
+  if [[ -n "${_quote:-}"          ]]
   then
     _bookmark_content+="${_NEWLINE}## Quote${_NEWLINE}"
 
@@ -11382,7 +11382,7 @@ _bookmark() {
       if ! ((_counter))
       then
         _bookmark_content+="${_NEWLINE}> ${__line}${_NEWLINE}"
-      elif [[ -z "${__line:-}" ]]
+      elif [[ -z "${__line:-}"      ]]
       then
         _bookmark_content+=">${_NEWLINE}"
       else
@@ -11393,13 +11393,13 @@ _bookmark() {
     done <<< "${_quote}"
   fi
 
-  if [[ -n "${_comment}" ]]
+  if [[ -n "${_comment:-}"          ]]
   then
     _bookmark_content+="${_NEWLINE}## Comment${_NEWLINE}"
     _bookmark_content+="${_NEWLINE}${_comment}${_NEWLINE}"
   fi
 
-  if [[ -n "${_related_urls[*]:-}" ]]
+  if [[ -n "${_related_urls[*]:-}"  ]]
   then
     _bookmark_content+="${_NEWLINE}## Related${_NEWLINE}${_NEWLINE}"
 
@@ -11410,7 +11410,7 @@ _bookmark() {
     done
   fi
 
-  if [[ -n "${_tag_list}" ]]
+  if [[ -n "${_tag_list:-}"         ]]
   then
     _bookmark_content+="${_NEWLINE}## Tags${_NEWLINE}"
     _bookmark_content+="${_NEWLINE}${_tag_list}${_NEWLINE}"
@@ -11461,7 +11461,7 @@ _bookmark() {
     fi
   fi
 
-  if [[ -n "${_bookmark_content}" ]]
+  if [[ -n "${_bookmark_content}"   ]]
   then
     local _relative_folder_path=
     local _relative_path=
@@ -11478,7 +11478,7 @@ _bookmark() {
       fi
     fi
 
-    if [[ -z "${_target_filename:-}" ]]
+    if [[ -z "${_target_filename:-}"    ]]
     then
       _relative_path="$(
         _notebooks current --filename   \
