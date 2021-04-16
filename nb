@@ -9275,6 +9275,10 @@ input[type="submit"]:hover {
   border-bottom:      1px solid ${_color_primary_hex};
 }
 
+.last-saved {
+  padding-left:       1rem;
+}
+
 textarea,
 .ace_editor {
   background-color:   #1d1d1d;
@@ -9284,7 +9288,8 @@ textarea,
   color:              #dddddd;
   font-size:          0.875rem;
   line-height:        1.5;
-  margin-top:         0.5rem;
+  margin-bottom:      1rem;
+  margin-top:         1rem;
   outline:            1px solid #242424;
   padding:            0;
   vertical-align:     top;
@@ -16605,7 +16610,7 @@ HEREDOC
 <br><br>
 <input
   type="submit"
-  value="save"> <span class="dim">·</span> <span class="dim">last: ${_last_saved_at}</span>
+  value="save"> <span class="dim">·</span> <span class="dim last-saved">last: ${_last_saved_at}</span>
 $(_browse_render_option_fields "${_subcommand_options[@]:-}")
 </form>
 HEREDOC
