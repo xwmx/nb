@@ -56,7 +56,7 @@ ${_S}Example${_S}Folder${_S}File.md${_S}·${_S}\"Example${_S}folder.*\</a\>\<br\
 
 # --original ##################################################################
 
-@test "GET to --original URL with .html extension serves original html file as text/plain." {
+@test "GET to --original URL with .html extension serves original html file as 'Content Type: text/plain; charset=UTF-8'." {
   {
     "${_NB}" init
 
@@ -80,13 +80,13 @@ ${_S}Example${_S}Folder${_S}File.md${_S}·${_S}\"Example${_S}folder.*\</a\>\<br\
 
   [[ "${status}"  -eq 0                                                           ]]
 
-  [[ "${output}"  =~  Content-Type:\ text/plain                                   ]]
+  [[ "${output}"  =~  Content-Type:\ text/plain\;\ charset=UTF-8                  ]]
 
   [[ "${output}"  =~  \#\ Example\ Title                                          ]]
   [[ "${output}"  =~  \<!DOCTYPE\ html\>\<html\>\<head\>\</head\>\<body\>Example\</body\>\</html\>  ]]
 }
 
-@test "GET to --original URL with .md extension serves original markdown file with html content as text/plain." {
+@test "GET to --original URL with .md extension serves original markdown file with html content as 'Content Type: text/plain; charset=UTF-8'." {
   {
     "${_NB}" init
 
@@ -110,7 +110,7 @@ ${_S}Example${_S}Folder${_S}File.md${_S}·${_S}\"Example${_S}folder.*\</a\>\<br\
 
   [[ "${status}"  -eq 0                                                           ]]
 
-  [[ "${output}"  =~  Content-Type:\ text/plain                                   ]]
+  [[ "${output}"  =~  Content-Type:\ text/plain\;\ charset=UTF-8                  ]]
 
   [[ "${output}"  =~  \#\ Example\ Title                                          ]]
   [[ "${output}"  =~  \<html\>\<head\>\</head\>\<body\>Example\</body\>\</html\>  ]]
@@ -142,11 +142,11 @@ ${_S}Example${_S}Folder${_S}File.md${_S}·${_S}\"Example${_S}folder.*\</a\>\<br\
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"  -eq 0                         ]]
+  [[ "${status}"  -eq 0                                           ]]
 
-  [[ "${output}"  =~  Content-Type:\ text/plain ]]
+  [[ "${output}"  =~  Content-Type:\ text/plain\;\ charset=UTF-8  ]]
 
-  [[ "${output}"  =~  \#\ Example\ Title        ]]
+  [[ "${output}"  =~  \#\ Example\ Title                          ]]
 }
 
 @test "GET to --original URL serves original markdown file." {
@@ -171,12 +171,12 @@ ${_S}Example${_S}Folder${_S}File.md${_S}·${_S}\"Example${_S}folder.*\</a\>\<br\
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"  -eq 0                         ]]
+  [[ "${status}"  -eq 0                                           ]]
 
-  [[ "${output}"  =~  Content-Type:\ text/plain ]]
+  [[ "${output}"  =~  Content-Type:\ text/plain\;\ charset=UTF-8  ]]
 
-  [[ "${output}"  =~  \#\ Example\ Title        ]]
-  [[ "${output}"  =~  Example\ content.         ]]
+  [[ "${output}"  =~  \#\ Example\ Title                          ]]
+  [[ "${output}"  =~  Example\ content.                           ]]
 }
 
 # title #######################################################################

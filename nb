@@ -17578,7 +17578,7 @@ HEREDOC
     then
       if _file_is_text "${_path}" && ((_serve_original_file))
       then
-        _response_headers+=("Content-Type: text/plain")
+        _response_headers+=("Content-Type: text/plain; charset=UTF-8")
       else
         _response_headers+=("Content-Type: $(file -b --mime-type "${_path}")")
       fi
