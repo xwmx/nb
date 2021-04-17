@@ -9166,12 +9166,6 @@ header {
   text-align:         center;
 }
 
-@media (min-width: 992px) {
-  .header-crumbs {
-    font-size:        1.2rem;
-  }
-}
-
 .header-crumbs h1 {
   display:            inline-block;
   font-size:          1rem;
