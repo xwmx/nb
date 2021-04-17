@@ -176,10 +176,7 @@ load test_helper
 "</span> <a.* href=\"http://localhost:6789/--original/local/Example Folder/Sample Folder/File One.md?${_local_notebook_param}\">↓</a>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<a href=\"http://localhost:6789/local:1/1/1${_expected_params}&--edit\">edit</a> <span class=\"dim\">·</span> <a "
-
-  printf "%s\\n" "${output}" | grep -q \
-"href=\"http://localhost:6789/local:1/1/1${_expected_params}&--delete\">-</a> <span class=\"dim\">\|</span> <a "
+"<a href=\"http://localhost:6789/local:1/1/1${_expected_params}&--edit\">edit</a> <span class=\"dim\">\|</span> <a "
 
   printf "%s\\n" "${output}" | grep -q \
 "href=\"http://localhost:6789/local:1/1/${_expected_params}&--add\">+</a></h1>"
@@ -217,11 +214,7 @@ load test_helper
 "</span> <a.* href=\"http://localhost:6789/--original/home/File One.md\">↓</a>"
 
   printf "%s\\n" "${output}" | grep -q \
-" <a href=\"http://localhost:6789/home:1?--per-page=.*&--columns=.*&--edit\">edit</a> <span class=\"dim\">·</span> <a "
-
-
-  printf "%s\\n" "${output}" | grep -q \
-"href=\"http://localhost:6789/home:1?--per-page=.*&--columns=.*&--delete\">-</a> <span class=\"dim\">\|</span> <a "
+" <a href=\"http://localhost:6789/home:1?--per-page=.*&--columns=.*&--edit\">edit</a> <span class=\"dim\">\|</span> <a "
 
   printf "%s\\n" "${output}" | grep -q \
 "href=\"http://localhost:6789/home:?--per-page=.*&--columns=.*&--add\">+</a></h1>"
@@ -265,10 +258,7 @@ load test_helper
 "</span> <a.* href=\"http://localhost:6789/--original/home/Example Folder/Sample Folder/File One.md\">↓</a>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<a href=\"http://localhost:6789/home:1/1/1?--per-page=.*&--columns=.*&--edit\">edit</a> <span class=\"dim\">·</span> <a "
-
-  printf "%s\\n" "${output}" | grep -q \
-"href=\"http://localhost:6789/home:1/1/1?--per-page=.*&--columns=.*&--delete\">-</a> <span class=\"dim\">\|</span> <a "
+"<a href=\"http://localhost:6789/home:1/1/1?--per-page=.*&--columns=.*&--edit\">edit</a> <span class=\"dim\">\|</span> <a "
 
   printf "%s\\n" "${output}" | grep -q \
 "href=\"http://localhost:6789/home:1/1/?--per-page=.*&--columns=.*&--add\">+</a></h1>"
@@ -310,10 +300,7 @@ load test_helper
 "</span> <a.* href=\"http://localhost:6789/--original/home/Example Folder/File One.md\">↓</a>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<a href=\"http://localhost:6789/home:1/1?--per-page=.*&--columns=.*&--edit\">edit</a> <span class=\"dim\">·</span> <a "
-
-  printf "%s\\n" "${output}" | grep -q \
-"href=\"http://localhost:6789/home:1/1?--per-page=.*&--columns=.*&--delete\">-</a> <span class=\"dim\">|</span> <a "
+"<a href=\"http://localhost:6789/home:1/1?--per-page=.*&--columns=.*&--edit\">edit</a> <span class=\"dim\">|</span> <a "
 
   printf "%s\\n" "${output}" | grep -q \
 "href=\"http://localhost:6789/home:1/?--per-page=.*&--columns=.*&--add\">+</a></h1>"
@@ -402,10 +389,7 @@ load test_helper
 "</span> <a.* href=\"http://localhost:6789/--original/home/Example Folder/File One.md\">↓</a>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<a href=\"http://localhost:6789/home:1/1?--per-page=.*&--columns=.*&--edit\">edit</a> <span class=\"dim\">·</span> <a "
-
-  printf "%s\\n" "${output}" | grep -q \
-"href=\"http://localhost:6789/home:1/1?--per-page=.*&--columns=.*&--delete\">-</a> <span class=\"dim\">\|</span> <a "
+"<a href=\"http://localhost:6789/home:1/1?--per-page=.*&--columns=.*&--edit\">edit</a> <span class=\"dim\">\|</span> <a "
 
   printf "%s\\n" "${output}" | grep -q \
 "href=\"http://localhost:6789/home:1/?--per-page=.*&--columns=.*&--add\">+</a></h1>"

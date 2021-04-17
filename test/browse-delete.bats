@@ -180,7 +180,10 @@ Location:\ http:\/\/localhost:6789\/local:\?${_expected_param_pattern}  ]]
   [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*local.*\ .*:.*\ .*1 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"href=\"http://localhost:6789/?${_expected_param_pattern}\"><span class=\"dim\">❯</span>nb</a> "
+"href=\"http://localhost:6789/?${_expected_param_pattern}\"><span class=\"dim\">❯</span>nb</a>"
+
+  printf "%s\\n" "${output}" | grep -q \
+"❯</span>nb</a>.*<span class=\"dim\">·</span> <span class=\"dim\">-</span> <span class=\"dim\">|</span>"
 
   printf "%s\\n" "${output}" | grep -q \
 "<h2 align=\"center\">deleting</h2>"
@@ -249,6 +252,9 @@ Location:\ http:\/\/localhost:6789\/local:\?${_expected_param_pattern}  ]]
 
   printf "%s\\n" "${output}" | grep -q \
 "href=\"http://localhost:6789/?--per-page=30&--columns=20\"><span class=\"dim\">❯</span>nb</a> "
+
+  printf "%s\\n" "${output}" | grep -q \
+"❯</span>nb</a>.*<span class=\"dim\">·</span> <span class=\"dim\">-</span> <span class=\"dim\">|</span>"
 
   printf "%s\\n" "${output}" | grep -q \
 "<h2 align=\"center\">deleting</h2>"

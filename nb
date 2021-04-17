@@ -16841,17 +16841,22 @@ HEREDOC
  <a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_params_ext:-}--edit\">edit</a>"
       fi
 
-      if [[ "${_action:-}"  == "delete" ]]
-      then
-        _header_content+=" <span class=\"dim\">${_bullet}</span>"
-        _header_content+=" <span class=\"dim\">-</span>"
-        _header_content+=" <span class=\"dim\">|</span>"
-      else
-        _header_content+=" <span class=\"dim\">${_bullet}</span>"
-        _header_content+="\
+      case "${_action:-}" in
+        delete)
+          _header_content+=" <span class=\"dim\">${_bullet}</span>"
+          _header_content+=" <span class=\"dim\">-</span>"
+          _header_content+=" <span class=\"dim\">|</span>"
+          ;;
+        edit)
+          _header_content+=" <span class=\"dim\">${_bullet}</span>"
+          _header_content+="\
  <a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_params_ext:-}--delete\">-</a>"
-        _header_content+=" <span class=\"dim\">|</span>"
-      fi
+          _header_content+=" <span class=\"dim\">|</span>"
+          ;;
+        *)
+          _header_content+=" <span class=\"dim\">|</span>"
+          ;;
+      esac
     fi
 
     if [[ -n "${_selector:-}"           ]]

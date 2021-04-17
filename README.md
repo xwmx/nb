@@ -1291,7 +1291,7 @@ Items can be viewed within terminal and GUI web browsers using
 
 ```bash
 ❯ nb browse text:formats/markdown/123
-❯nb · text : formats / markdown / 123 · ↓ · edit · - | +
+❯nb · text : formats / markdown / 123 · ↓ · edit | +
 Daring Fireball: Markdown (daringfireball.net)
 
 https://daringfireball.net/projects/markdown/
@@ -1673,7 +1673,7 @@ linked [#tags](#-tagging), and external links:
 
 ```bash
 ❯ nb browse text:formats/markdown/123
-❯nb · text : formats / markdown / 123 · ↓ · edit · - | +
+❯nb · text : formats / markdown / 123 · ↓ · edit | +
 Daring Fireball: Markdown (daringfireball.net)
 
 https://daringfireball.net/projects/markdown/
@@ -2152,7 +2152,7 @@ for the item, folder, or notebook to `nb browse`:
 ```bash
 # open the item titled "Example Title" in the folder named "sample" in the "example" notebook
 ❯ nb browse example:sample/Example\ Title
-❯nb · example : sample / 987 · ↓ · edit · - | +
+❯nb · example : sample / 987 · ↓ · edit | +
 
 Example Title
 
@@ -2178,7 +2178,7 @@ of bookmarks.
 
 ```bash
 ❯ nb browse text:formats/markdown/123
-❯nb · text : formats / markdown / 123 · ↓ · edit · - | +
+❯nb · text : formats / markdown / 123 · ↓ · edit | +
 Daring Fireball: Markdown (daringfireball.net)
 
 https://daringfireball.net/projects/markdown/
@@ -2303,7 +2303,8 @@ with content:
 
 #### `browse delete`
 
-Use the `-` link or [`nb browse delete`](#browse) / [`nb br d`](#browse)
+Use the `-` link on the `nb browse edit` page or
+[`nb browse delete`](#browse) / [`nb br d`](#browse)
 to delete an item:
 
 ```bash
