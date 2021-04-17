@@ -15868,7 +15868,7 @@ _browse() {
   #
   # Usage:
   #   _browse_render_add [--columns <columns>] [--content <content>]
-  #                      [--local <encoded-url>] [--per-page <limit>]
+  #                      [--local <url-encoded-path>] [--per-page <limit>]
   #                      [--tags <tag-list>] [--terminal] [--title <title>]
   #                      [--type <type>] [<add-option>...]
   #
@@ -16062,9 +16062,9 @@ HEREDOC
   #
   # Usage:
   #   _browse_render_container <target-path> [--columns <columns>]
-  #                            [--local <encoded-url>] [--page <page-number>]
-  #                            [--per-page <limit>] [--query <query>]
-  #                            [--terminal]
+  #                            [--local <url-encoded-path>]
+  #                            [--page <page-number>] [--per-page <limit>]
+  #                            [--query <query>] [--terminal]
   #
   # Description:
   #   Render a notebook or folder as an HTML page.
@@ -16407,8 +16407,9 @@ HEREDOC
   # _browse_render_delete()
   #
   # Usage:
-  #   _browse_render_delete <path> [--columns <columns>] [--local <encoded-url>]
-  #                         [--per-page <limit>] [--terminal]
+  #   _browse_render_delete <path> [--columns <columns>]
+  #                         [--local <url-encoded-path>] [--per-page <limit>]
+  #                         [--terminal]
   #
   # Description:
   #   Print an form for deleting an item.
@@ -16517,8 +16518,9 @@ HEREDOC
   # _browse_render_edit()
   #
   # Usage:
-  #   _browse_render_edit <path> [--columns <columns>] [--local <encoded-url>]
-  #                       [--per-page <limit>] [--terminal] [<edit-option>...]
+  #   _browse_render_edit <path> [--columns <columns>]
+  #                       [--local <url-encoded-path>] [--per-page <limit>]
+  #                       [--terminal] [<edit-option>...]
   #
   # Description:
   #   Print an HTML page for editing a text file.
@@ -16640,7 +16642,7 @@ HEREDOC
   #
   # Usage:
   #   _browse_render_header <selector> [--columns <columns>]
-  #                         [--local <encoded-url>] [--per-page <limit>]
+  #                         [--local <url-encoded-path>] [--per-page <limit>]
   #                         [--terminal]
   #
   # Description:
@@ -16869,8 +16871,9 @@ HEREDOC
   # _browse_render_item()
   #
   # Usage:
-  #   _browse_render_item <path> [--columns <columns>] [--local <encoded-url>]
-  #                       [--per-page <limit>] [--terminal]
+  #   _browse_render_item <path> [--columns <columns>]
+  #                       [--local <url-encoded-path>] [--per-page <limit>]
+  #                       [--terminal]
   #
   # Description:
   #   Render an item to HTML with links resolved to internal web server.
@@ -16993,8 +16996,9 @@ HEREDOC
   # _browse_render_notebooks()
   #
   # Usage:
-  #   _browse_render_notebooks [--columns <columns>] [--local <encoded-url>]
-  #                            [--per-page <limit>] [--terminal]
+  #   _browse_render_notebooks [--columns <columns>]
+  #                            [--local <url-encoded-path>] [--per-page <limit>]
+  #                            [--terminal]
   #
   # Description:
   #   Print an HTML page listing notebooks.
