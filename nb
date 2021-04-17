@@ -8980,6 +8980,12 @@ html {
   line-height:        1.5;
 }
 
+@media (min-width: 992px) {
+  html {
+    font-size:        17px;
+  }
+}
+
 html,
 input,
 textarea {
@@ -9158,6 +9164,12 @@ header {
   margin:             0;
   padding:            1.5rem 2rem 0rem;
   text-align:         center;
+}
+
+@media (min-width: 992px) {
+  .header-crumbs {
+    font-size:        1.2rem;
+  }
 }
 
 .header-crumbs h1 {
