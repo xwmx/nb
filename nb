@@ -261,7 +261,7 @@ _debug() {
   if ((${_USE_DEBUG:-0}))
   then
     __DEBUG_COUNTER=$((__DEBUG_COUNTER+1))
-    printf "🐛  %s " "${__DEBUG_COUNTER}"
+    printf "🐛  %s" "${__DEBUG_COUNTER} "
 
     "${@}"
 
@@ -327,16 +327,16 @@ _warn() {
 #   Given a flag (e.g., -e | --example) return the value or exit 1 if value
 #   is blank or appears to be another option.
 _option_get_value() {
-  local __arg="${1:-}"
-  local __val="${2:-}"
+  local _option="${1:-}"
+  local _value="${2:-}"
 
-  if [[ -n "${__val:-}" ]] && [[ ! "${__val:-}" =~ ^- ]]
+  if [[ -n "${_value:-}" ]] && [[ ! "${_value:-}" =~ ^- ]]
   then
-    printf "%s\\n" "${__val}"
+    printf "%s\\n" "${_value}"
   else
-    _exit_1 printf                        \
-      "%s requires a valid argument.\\n"  \
-      "$(_color_primary "${__arg}")"
+    _exit_1 printf                          \
+      "%s requires a valid argument.\\n"    \
+      "$(_color_primary "${_option}")"
   fi
 }
 
@@ -350,7 +350,7 @@ _option_get_value() {
 #                      flag.
 #   1 (error,  false)  The argument is blank or matches as an option flag.
 _option_value_is_present() {
-  [[ -n "${1:-}" ]] && [[ ! "${1:-}" =~ ^- ]]
+  [[ -n "${1:-}" ]] && [[ ! "${1:-}" =~ ^-  ]]
 }
 
 ###############################################################################
@@ -388,17 +388,17 @@ fi
 export NB_DIR="${NB_DIR:-"${HOME}/.nb"}"
 
 # Handle symlinked NB_DIR.
-if [[ -L "${NB_DIR:-}"  ]]
+if [[ -L "${NB_DIR:-}"      ]]
 then
   NB_DIR="$(_resolve_symlink "${NB_DIR}")"
 fi
 
 # Validate that NB_DIR exists and is writable.
-if [[ -z "${NB_DIR:?}"   ]] ||
-   [[ "${NB_DIR}" == "/" ]] ||
+if [[ -z "${NB_DIR:?}"      ]] ||
+   [[    "${NB_DIR}" == "/" ]] ||
    {
-     [[ -e "${NB_DIR}"   ]] &&
-     [[ ! -w "${NB_DIR}" ]]
+     [[   -e "${NB_DIR}"    ]] &&
+     [[ ! -w "${NB_DIR}"    ]]
    }
 then
   _exit_1 cat <<HEREDOC
@@ -493,7 +493,7 @@ __set_editor() {
     emacs
   )
 
-  if [[ -z "${EDITOR:-}" ]]
+  if [[   -z "${EDITOR:-}" ]]
   then
     if [[ -n "${VISUAL:-}" ]]
     then
@@ -697,19 +697,19 @@ export _NB_COLOR_THEMES=(
 #
 #  To view a list of available color numbers, run `nb settings colors`
 __load_themes() {
-  if [[ -d "${NB_DIR}/.themes"    ]] &&
+  if [[   -d "${NB_DIR}/.themes"  ]] &&
      [[ ! -e "${NB_DIR}/.plugins" ]]
   then # migrate legacy .themes directory. TODO: Remove.
     mv "${NB_DIR}/.themes" "${NB_DIR}/.plugins"
   fi
 
-  if [[ -d "${NB_DIR}/.plugins" ]]
+  if [[ -d "${NB_DIR}/.plugins"   ]]
   then
     set +f
     local __file=
     for   __file in "${NB_DIR}/.plugins"/*.nb-theme*
     do
-      if [[ -e "${__file}" ]]
+      if [[ -e "${__file}"        ]]
       then
         local _basename
         _basename="$(basename "${__file}")"
@@ -832,17 +832,17 @@ _color_primary() {
 
   if [[ "${2:-}" == "--underline" ]]
   then
-    printf "%s%s%s%s%s\\n"      \
-      "${_TPUT_SGR0}"           \
-      "${_TPUT_SMUL}"           \
-      "${_TPUT_COLOR_PRIMARY}"  \
-      "${1:-}"                  \
+    printf "%s%s%s%s%s\\n"        \
+      "${_TPUT_SGR0}"             \
+      "${_TPUT_SMUL}"             \
+      "${_TPUT_COLOR_PRIMARY}"    \
+      "${1:-}"                    \
       "${_TPUT_SGR0}"
   else
-    printf "%s%s%s%s\\n"        \
-      "${_TPUT_SGR0}"           \
-      "${_TPUT_COLOR_PRIMARY}"  \
-      "${1:-}"                  \
+    printf "%s%s%s%s\\n"          \
+      "${_TPUT_SGR0}"             \
+      "${_TPUT_COLOR_PRIMARY}"    \
+      "${1:-}"                    \
       "${_TPUT_SGR0}"
   fi
 }
@@ -915,7 +915,7 @@ __set_notebook_paths() {
   }; __set_local_notebook_path
 
   __set_global_notebook_path() {
-    if [[ -e "${NB_DIR}/.current" ]]
+    if [[   -e "${NB_DIR}/.current"                 ]]
     then
       local _global_notebook_name=
       _global_notebook_name="$(<"${NB_DIR}/.current")"
@@ -927,7 +927,7 @@ __set_notebook_paths() {
     fi
   }; __set_global_notebook_path
 
-  if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}" ]]
+  if [[     -n "${_LOCAL_NOTEBOOK_PATH:-}"          ]]
   then
     NB_NOTEBOOK_PATH="${_LOCAL_NOTEBOOK_PATH}"
   else
@@ -1043,14 +1043,14 @@ _temp() {
 
       local _temp_file_path=
 
-      if [[ -z  "${_relative_path:-}"   ]]
+      if [[ -z  "${_relative_path:-}"       ]]
       then
         _temp_file_path="${_NB_TEMP_DIRECTORY}/${RANDOM}${_extension:-}"
       else
         _temp_file_path="${_NB_TEMP_DIRECTORY}/${_relative_path:-}"
       fi
 
-      if [[   "${_relative_path:-}" =~ /  ]]
+      if [[     "${_relative_path:-}" =~ /  ]]
       then
         mkdir -p "${_temp_file_path%/*}"
       fi
