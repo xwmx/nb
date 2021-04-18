@@ -65,7 +65,7 @@ just like any other note.
 
 <p align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/gui-terminal-browse.png"
-        alt="bookmarks"
+        alt="nb browse"
         width="450">
 </p>
 
@@ -2091,7 +2091,7 @@ terminal and GUI web browsers.
 
 <p align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/gui-gui-terminal-browse.png"
-        alt="bookmarks"
+        alt="nb browse"
         width="450">
 </p>
 
@@ -2227,6 +2227,12 @@ files are converted into HTML and rendered in the browser. Use the down
 arrow (`↓`) link to view or download the original file.
 
 #### `browse edit`
+
+<p align="center">
+  <img  src="https://xwmx.github.io/misc/nb/images/gui-terminal-browse-edit.png"
+        alt="nb browse edit"
+        width="450">
+</p>
 
 Items in text formats can be edited within a terminal or GUI browser using
 the `edit` link on the item page or by opening the item with
