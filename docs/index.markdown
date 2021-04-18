@@ -2382,7 +2382,7 @@ add the [`nb browse --gui`](#browse) / [`nb br -g`](#browse) option:
 nb browse sample:123 --gui
 ```
 
-`browse --gui` reflects the color theme:
+`nb browse --gui` reflects the color theme:
 
 <p align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/gui-browse-themes.png"
