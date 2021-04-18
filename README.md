@@ -127,7 +127,7 @@ performs the magic it describes on systems with as little as
 [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell)),
 [Git](https://git-scm.com/), and a text editor.
 Use an installation method below for a full-featured configuration
-augmented by gems of the terminal ecosystem.
+augmented by the terminal ecosystem.
 
 #### Dependencies
 
