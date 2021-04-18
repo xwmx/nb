@@ -1507,13 +1507,13 @@ _get_content() {
           else
             _in_code_block=1
           fi
-        elif ((_in_front_matter)) && [[ "${__line}" =~ ^title\:   ]]
+        elif ((_in_front_matter))   &&  [[ "${__line}" =~ ^title\:  ]]
         then # front matter title
           _title="$(printf "%s\\n" "${__line}" | sed 's/^title: //')"
           break
         elif ! ((_in_front_matter)) && ! ((_in_code_block))
         then
-          if [[ -z "${_maybe_title:-}" ]] && [[ -n "${__line:-}"  ]]
+          if [[ -z "${_maybe_title:-}" ]] && [[ -n "${__line:-}"    ]]
           then  # potential setext-style H1
             _maybe_title="${__line}"
           elif [[ -n "${_maybe_title:-}"            ]] &&
@@ -1553,7 +1553,7 @@ _get_content() {
     elif [[ "${_path}"    =~ \.latex$|\.tex$    ]]
     then
       local               __line=
-      while IFS= read -r  __line || [[ -n "${__line}" ]]
+      while IFS= read -r  __line || [[ -n "${__line:-}" ]]
       do
         _counter="$((_counter+1))"
 
@@ -1579,17 +1579,17 @@ _get_content() {
           continue
         fi
       done < "${_path}"
-    elif [[ "${_path}" =~ \.org$ ]]
+    elif [[   "${_path}" =~ \.org$    ]]
     then
       local               __line=
-      while IFS= read -r  __line || [[ -n "${__line}" ]]
+      while IFS= read -r  __line ||   [[ -n "${__line}" ]]
       do
         _counter="$((_counter+1))"
 
         # NOTE: Titles can be defined with multiple #+TITLE: lines.
         if [[ "${__line}" =~ ^\#\+TITLE\: ]]
         then
-          if [[ -n "${_title:-}" ]]
+          if [[ -n "${_title:-}"          ]]
           then
             _title="${_title} "
           fi
@@ -1616,11 +1616,11 @@ _get_content() {
          LC_ALL=C _contains "${_path##*.}" "${_TEXT_FILE_EXTENSIONS[@]}"
     then
       local               __line=
-      while IFS= read -r  __line || [[ -n "${__line:-}" ]]
+      while IFS= read -r  __line ||   [[ -n "${__line:-}" ]]
       do
-        if [[ -n "${__line}" ]]
+        if [[ -n "${__line:-}"        ]]
         then
-          if [[ "${#__line}" -gt 500 ]]
+          if [[ "${#__line}" -gt 500  ]]
           then
             _first_line="${__line:0:500}..."
           else
@@ -1631,7 +1631,7 @@ _get_content() {
       done < "${_path}"
     fi
 
-    if [[ -n "${_title:-}" ]]
+    if [[ -n "${_title:-}"    ]]
     then
       printf "%s\\n" "${_title/%$'\r'}"
     elif ! ((_only_title)) && [[ -n "${_first_line:-}" ]]
@@ -1668,19 +1668,19 @@ _get_id_selector() {
 
   local _always_include_notebook=0
 
-  if [[ "${2:-}" == "--notebook"        ]]
+  if [[ "${2:-}" == "--notebook"  ]]
   then
     _always_include_notebook=1
   fi
 
-  if [[ "${_selector:-}" =~ /$          ]]
+  if [[ "${_selector:-}" =~ /$    ]]
   then
     _trailing_slash=1
   fi
 
-  if [[ "${_selector:-}" =~ ^/          ]]
+  if [[ "${_selector:-}" =~ ^/    ]]
   then # selector is full path
-    if [[ "${_selector}" =~ ^${NB_DIR}  ]]
+    if [[ "${_selector}" =~ ^${NB_DIR}      ]]
     then
       local _path_with_notebook="${_selector#${NB_DIR}/}"
       _notebook_name="${_path_with_notebook%%/*}"
@@ -1694,8 +1694,8 @@ _get_id_selector() {
       _notebook_name="local"
 
       _notebook_path="$(
-        cd "${_selector%/*}"    &&
-          __set_notebook_paths  &&
+        cd "${_selector%/*}"      &&
+          __set_notebook_paths    &&
           _notebooks current --path --no-color
       )"
 
