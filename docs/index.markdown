@@ -2382,21 +2382,6 @@ nb browse sample:123 --gui
 provides advanced text editing functionality, including block selection
 and syntax highlighting.
 
-<p align="center">
-  <img  src="https://xwmx.github.io/misc/nb/images/nb-web-editor.png?v=3"
-        alt="web-editor"
-        width="450">
-</p>
-
-Ace makes it easy to work with code snippets in the browser:
-
-<p align="center">
-  <img  src="https://xwmx.github.io/misc/nb/images/nb-web-pandoc-ruby-utility.png?v=3"
-        alt="web-editor"
-        width="450">
-</p>
-
-
 To use Ace as the editor for `nb browse --gui`, add the following line to
 your `~/.nbrc` file:
 
