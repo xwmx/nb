@@ -64,7 +64,7 @@ Markdown documents made for humans, so bookmarks are easy to view and edit
 just like any other note.
 
 <p align="center">
-  <img  src="https://xwmx.github.io/misc/nb/images/gui-gui-terminal-browse.png?v=3"
+  <img  src="https://xwmx.github.io/misc/nb/images/gui-terminal-browse.png?v=3"
         alt="bookmarks"
         width="450">
 </p>
@@ -2090,7 +2090,7 @@ and search linked notes, bookmarks, notebooks, folders, and other items using
 terminal and GUI web browsers.
 
 <p align="center">
-  <img  src="https://xwmx.github.io/misc/nb/images/gui-terminal-browse.png?v=3"
+  <img  src="https://xwmx.github.io/misc/nb/images/gui-gui-terminal-browse.png?v=3"
         alt="bookmarks"
         width="450">
 </p>
