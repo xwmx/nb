@@ -11209,12 +11209,12 @@ _bookmark() {
       fi
 
       # `bookmark peek`
-      if [[   "${_subcommand}" == "peek" ]]
+      if [[   "${_subcommand}" == "peek"  ]]
       then
         _bookmark_view_in_terminal_browser "${_target_url}"
         return 0
       # `bookmark open`
-      elif [[ "${_subcommand}" == "open" ]]
+      elif [[ "${_subcommand}" == "open"  ]]
       then
         if _command_exists "xdg-open"
         then
@@ -11230,7 +11230,7 @@ _bookmark() {
             "$(_color_primary "${_ME}")"
         fi
       # `bookmark url`
-      elif [[ "${_subcommand}" == "url" ]]
+      elif [[ "${_subcommand}" == "url"   ]]
       then
         printf "%s\\n" "${_target_url}"
         return 0
@@ -11241,7 +11241,7 @@ _bookmark() {
   # `bookmark`
 
   {
-    if [[ -z "${_url:-}" ]]
+    if [[   -z "${_url:-}"          ]]
     then
       if [[ -z "${_arguments[*]:-}" ]]
       then
@@ -11296,7 +11296,7 @@ _bookmark() {
 
   if _file_is_text "${_temp_file}"
   then
-    if [[ -z "${_title}" ]]
+    if [[ -z "${_title}"    ]]
     then
       _title="$(
         cat "${_temp_file}"               \
@@ -11320,7 +11320,7 @@ _bookmark() {
         cat "${_temp_file}" \
           | sed -E -n       \
             's/.*<meta .*property=.og:title[^>]*content="([^"]+)".*/\1/p' \
-            2>/dev/null || :
+            2>/dev/null     || :
       )"
     fi
   fi
@@ -11330,7 +11330,7 @@ _bookmark() {
 
   if [[ -n "${_domain:-}"   ]]
   then
-    [[ -n "${_title:-}" ]]  && _title+=" "
+    [[ -n "${_title:-}"     ]]  && _title+=" "
     _title+="(${_domain})"
   fi
 
@@ -11355,20 +11355,20 @@ _bookmark() {
       cat "${_temp_file}"   \
         | sed -E -n         \
             's/.*<meta .*name=.description.[^>]*content="([^"]+)".*/\1/p' \
-            2>/dev/null || :
+            2>/dev/null     || :
     )"
 
-    if [[ -z "${_description:-}"  ]]
+    if [[ -z "${_description:-}"    ]]
     then
       _description="$(
         cat "${_temp_file}" \
           | sed -E -n       \
               's/.*<meta .*property=.og:description[^>]*content="([^"]+)".*/\1/p' \
-              2>/dev/null || :
+              2>/dev/null   || :
       )"
     fi
 
-    if [[ -n "${_description:-}"  ]]
+    if [[ -n "${_description:-}"    ]]
     then
       if _command_exists "w3m"
       then # convert html entities TODO: _web_browser --convert-entities
@@ -11382,7 +11382,7 @@ _bookmark() {
     fi
   fi
 
-  if [[ -n "${_quote:-}"          ]]
+  if [[ -n "${_quote:-}"            ]]
   then
     _bookmark_content+="${_NEWLINE}## Quote${_NEWLINE}"
 
@@ -11434,7 +11434,7 @@ _bookmark() {
     then
       local _processed_content
 
-      if _command_exists "pandoc" || _command_exists "readable"
+      if _command_exists "pandoc"   || _command_exists "readable"
       then
         _processed_content="$(
           cat "${_temp_file}" \
@@ -11490,21 +11490,21 @@ _bookmark() {
       fi
     fi
 
-    if [[ -z "${_target_filename:-}"    ]]
+    if [[ -z "${_target_filename:-}"        ]]
     then
       _relative_path="$(
-        _notebooks current --filename   \
+        _notebooks current --filename       \
           "${_relative_folder_path}$(date '+%Y%m%d%H%M%S').bookmark.md"
       )"
     else
-      if [[ "${_target_filename}" =~ \. ]]
+      if [[ "${_target_filename}" =~ \.     ]]
       then
         _relative_path="$(
-          _notebooks current --filename \
+          _notebooks current --filename     \
             "${_relative_folder_path}${_target_filename}")"
       else
         _relative_path="$(
-          _notebooks current --filename \
+          _notebooks current --filename     \
             "${_relative_folder_path}${_target_filename}.bookmark.md"
         )"
       fi
@@ -11644,12 +11644,12 @@ _completions() {
 
     local _my_dir=
     _my_dir="$(cd "$(dirname "${_my_path}")"; pwd)"
-    if [[ -z "${_my_dir}" ]] || [[ ! -d "${_my_dir}" ]]
+    if [[ -z "${_my_dir}" ]] || [[ ! -d "${_my_dir}"        ]]
     then
       exit 1
     fi
 
-    if [[ -z "${_REPO:-}" ]] || [[ -z "${_REPO_RAW_URL:-}" ]]
+    if [[ -z "${_REPO:-}" ]] || [[ -z "${_REPO_RAW_URL:-}"  ]]
     then
       _exit_1 printf "Source Git repository not configured.\\n"
     fi
@@ -11688,25 +11688,27 @@ HEREDOC
       else
         local _completion_path=
         local _completion_target=
-        if [[ "${__shell}" == "bash"  ]]
-        then
-          _completion_path="$(_get_bash_completion_path)"
-          _completion_target="${_completion_path}/${_BASH_COMP_NAME}"
-        elif [[ "${__shell}" == "zsh" ]]
-        then
-          _completion_path="/usr/local/share/zsh/site-functions"
-          _completion_target="${_completion_path}/${_ZSH_COMP_NAME}"
-        fi
 
-        if [[ -n "${_completion_path:-}" ]] &&
-           [[ -d "${_completion_path}"   ]]
+        case "${__shell}" in
+          bash)
+            _completion_path="$(_get_bash_completion_path)"
+            _completion_target="${_completion_path}/${_BASH_COMP_NAME}"
+            ;;
+          zsh)
+            _completion_path="/usr/local/share/zsh/site-functions"
+            _completion_target="${_completion_path}/${_ZSH_COMP_NAME}"
+            ;;
+        esac
+
+        if [[ -n "${_completion_path:-}"  ]] &&
+           [[ -d "${_completion_path}"    ]]
         then
-          if [[ -w "${_completion_path}" ]]
+          if [[ -w "${_completion_path}"  ]]
           then
             if [[ ! -e "${_completion_target}" ]]
             then
-              cp \
-                "${_completion_source}" \
+              cp                          \
+                "${_completion_source}"   \
                 "${_completion_target}"
               chmod +r "${_completion_target}"
               printf "Completion script installed: %s\\n" \
@@ -11730,15 +11732,16 @@ HEREDOC
     local __shell=
     for   __shell in bash zsh
     do
-      if [[ "${__shell}" == "bash" ]]
-      then
-        _completion_path="$(_get_bash_completion_path)"
-        _completion_target="${_completion_path}/${_BASH_COMP_NAME}"
-      elif [[ "${__shell}" == "zsh" ]]
-      then
-        _completion_path="/usr/local/share/zsh/site-functions"
-        _completion_target="${_completion_path}/${_ZSH_COMP_NAME}"
-      fi
+      case "${__shell}" in
+        bash)
+          _completion_path="$(_get_bash_completion_path)"
+          _completion_target="${_completion_path}/${_BASH_COMP_NAME}"
+          ;;
+        zsh)
+          _completion_path="/usr/local/share/zsh/site-functions"
+          _completion_target="${_completion_path}/${_ZSH_COMP_NAME}"
+          ;;
+      esac
 
       if [[ -n "${_completion_path:-}" ]] &&
          [[ -d "${_completion_path}"   ]]
@@ -11936,7 +11939,7 @@ _delete() {
         fi
       fi
 
-      if [[ ! -e "${_notebook_path}/${_relative_path}" ]]
+      if [[ ! -e "${_notebook_path}/${_relative_path}"  ]]
       then
         _index delete "${_basename}" "${_folder_path}"
 
@@ -12042,7 +12045,7 @@ _edit() {
     shift
   done
 
-  if [[ -z "${_selector:-}" ]]
+  if [[ -z "${_selector:-}"       ]]
   then
     _exit_1 _help "edit"
   fi
@@ -12056,7 +12059,7 @@ _edit() {
   local _notebook_path
   _notebook_path="$(_notebooks current --path)"
 
-  if [[ -z "${_relative_path}" ]]
+  if [[ -z "${_relative_path:-}"  ]]
   then
     _exit_1 printf "Not found: %s\\n" "$(_color_primary "${_relative_path}")"
   fi
@@ -12105,10 +12108,10 @@ _edit() {
           cat
         fi
       } | {
-        if [[ "${_edit_type:-}" == "overwrite" ]]
+        if [[   "${_edit_type:-}" == "overwrite"  ]]
         then
           cat > "${_target_file}"
-        elif [[ "${_edit_type:-}" == "prepend" ]]
+        elif [[ "${_edit_type:-}" == "prepend"    ]]
         then
           local _prepend_temp
           _prepend_temp="$(_temp file)"
@@ -12134,7 +12137,7 @@ _edit() {
        ! _piped_input && [[ -z "${_content:-}" ]]
     }
     then
-      if [[ -n "${_local_editor}" ]]
+      if [[ -n "${_local_editor}"   ]]
       then
         EDITOR="${_local_editor}" _edit_file "${_target_file}"
       else
@@ -12144,7 +12147,7 @@ _edit() {
 
     _after="$(_get_hash "${_notebook_path}/${_relative_path}")"
 
-    if [[ -n "${_encrypted_path:-}" ]] && [[ -e "${_decrypted_path:-}" ]]
+    if [[ -n "${_encrypted_path:-}" ]]  &&  [[ -e "${_decrypted_path:-}" ]]
     then
       _after="$(_get_hash "${_decrypted_path}")"
 
@@ -12713,7 +12716,7 @@ _import() {
   # Usage:
   #   _import_validate_path <path>
   _import_validate_path() {
-    if [[ -z "${1:-}" ]]
+    if [[     -z "${1:-}" ]]
     then
       _exit_1 _help "import"
     elif [[ ! -e "${1:-}" ]]
@@ -12805,7 +12808,7 @@ _import() {
       *)
         if [[ -z "${_subcommand:-}" ]]
         then
-          if [[ "${__arg:-}" =~ ^http|^file\: ]]
+          if [[ "${__arg:-}" =~ ^http|^file\:   ]]
           then
             _subcommand="download"
           else
@@ -12815,9 +12818,9 @@ _import() {
 
         if [[ -n "${_subcommand:-}" ]]
         then
-          if [[ "${_subcommand}" == "download" ]]
+          if [[ "${_subcommand}" == "download"  ]]
           then
-            if [[ -z "${_url:-}" ]]
+            if [[ -z "${_url:-}"    ]]
             then
               _url="${__arg:-}"
             else
@@ -13186,13 +13189,13 @@ _move() {
   local _target_info=
   local _target_notebook_path
 
-  if [[ "${_target_selector:-}" =~ : ]]
+  if [[       "${_target_selector:-}" =~ :  ]]
   then
     _target_notebook_path="$(
       _notebooks show "${_target_selector:-}" --path 2>/dev/null || :
     )"
 
-    if [[ -z "${_target_notebook_path:-}" ]]
+    if [[ -z  "${_target_notebook_path:-}"  ]]
     then
       _exit_1 printf "Target notebook not found: %s\\n" "${_target_selector%%:*}"
     fi
@@ -13209,7 +13212,7 @@ _move() {
   local _target_folder_path="${_target_notebook_path}"
   local _target_relative_path="${_target_basename}"
 
-  if [[ "${_target_selector_relative_path:-}" =~ / ]]
+  if [[     "${_target_selector_relative_path:-}" =~ /          ]]
   then
     _target_folder_path="${_target_notebook_path}/${_target_selector_relative_path%\/*}"
 
@@ -13218,7 +13221,7 @@ _move() {
 
   _target_info+="${_target_relative_path}"
 
-  if [[ -e "${_target_notebook_path}/${_target_relative_path}" ]]
+  if [[ -e  "${_target_notebook_path}/${_target_relative_path}" ]]
   then
     _exit_1 printf "File already exists: %s\\n" \
       "$(_color_primary "${_target_info}")"
@@ -13257,9 +13260,9 @@ _move() {
   mv "${_source_path}" "${_target_notebook_path}/${_target_relative_path}" ||
     _exit_1 printf "Move failed.\\n"
 
-  if [[ "${_source_notebook_path}" == "${_target_notebook_path}" ]]
+  if [[ "${_source_notebook_path}" == "${_target_notebook_path}"  ]]
   then
-    if [[ "${_source_folder_path}" == "${_target_folder_path}" ]]
+    if [[ "${_source_folder_path}" == "${_target_folder_path}"    ]]
     then
       _index update               \
         "${_source_basename}"     \
@@ -13432,18 +13435,18 @@ _pin() {
   local _relative_path=
   _relative_path="$(_show "${_selector}" --relative-path)"
 
-  if [[ ! -e "${_item_path:-}"      ]] ||
-     [[ ! -d "${_folder_path:-}"    ]] ||
-     [[   -z "${_basename:-}"       ]] ||
-     [[   -z "${_notebook_path:-}"  ]] ||
-     [[   -z "${_relative_path:-}"  ]]
+  if [[ ! -e "${_item_path:-}"        ]] ||
+     [[ ! -d "${_folder_path:-}"      ]] ||
+     [[   -z "${_basename:-}"         ]] ||
+     [[   -z "${_notebook_path:-}"    ]] ||
+     [[   -z "${_relative_path:-}"    ]]
   then
     _exit_1 printf "Not found: %s\\n" "${_selector}"
   fi
 
   case "${_subcommand:-}" in
     unpin)
-      if [[ ! -e "${_pindex_path}" ]] ||
+      if [[ ! -e "${_pindex_path}"    ]] ||
          ! grep -q "^${_basename}$" "${_pindex_path}"
       then
         _exit_1 printf          \
@@ -13454,7 +13457,7 @@ _pin() {
       _sed_i -e "s/^${_basename}$//g"   "${_pindex_path}"
       _sed_i -e '/^[[:space:]]*$/d'     "${_pindex_path}" # remove blank line
 
-      if [[ ! -s "${_pindex_path:?}" ]]
+      if [[ ! -s "${_pindex_path:?}"  ]]
       then
         rm -f "${_pindex_path:?}"
       fi
@@ -13464,15 +13467,15 @@ _pin() {
       printf "Unpinned: %s\\n" "$(_show "${_selector}" --info-line)"
       ;;
     *)
-      if [[ ! -e "${_pindex_path}" ]]
+      if [[ ! -e "${_pindex_path}"    ]]
       then
         touch "${_pindex_path}"
       fi
 
       if grep -q "^${_basename}$" "${_pindex_path}"
       then
-        _exit_1 printf            \
-          "Already pinned: %s\\n" \
+        _exit_1 printf                \
+          "Already pinned: %s\\n"     \
           "$(_color_primary "${_selector}")"
       else
         printf "%s\\n" "${_basename}" >> "${_pindex_path}"
@@ -14352,7 +14355,7 @@ _search() {
             :
           elif ((_print_paths))
           then
-            if [[ "${_last_path}" != "${_path}" ]]
+            if [[ "${_last_path}" != "${_path}"   ]]
             then # match is in a different file than the last match
               printf "%s\\n" "${_path}"
             fi
@@ -14364,7 +14367,7 @@ _search() {
 
             local _folder_path="${_path%\/*}"
 
-            if [[ ! -e "${_folder_path}/.index" ]]
+            if [[ ! -e "${_folder_path}/.index"   ]]
             then # skip unindexed folders
               continue
             fi
@@ -14638,7 +14641,7 @@ _search() {
           done
         fi
 
-        if [[ "${_page:-0}" -gt 1 ]]
+        if [[ "${_page:-0}" -gt 1     ]]
         then
           return 0
         else
@@ -14956,17 +14959,17 @@ _show() {
       printf "%s\\n" "${_notebook_path}"
       return 0
     fi
-  elif [[ "${_selector:-}" =~ ^${NB_DIR} ]]
+  elif [[ "${_selector:-}" =~ ^${NB_DIR}  ]]
   then
     local _selector_relative_path="${_selector#${NB_DIR}/}"
 
     _notebook_path="$(_notebooks show "${_selector_relative_path%%/*}" --path)"
-  elif [[ "${_selector:-}" =~ ^/ ]]
+  elif [[ "${_selector:-}" =~ ^/          ]]
   then
     _notebook_path="$(_notebooks show "${_selector}" --path)"
   fi
 
-  if [[ -z "${_notebook_path:-}" ]]
+  if [[ -z "${_notebook_path:-}"          ]]
   then
     _notebook_path="$(_notebooks current --path)"
   fi
@@ -14979,7 +14982,7 @@ _show() {
   local _folder_path="${_notebook_path:?}"
   local _relative_folder_path=
 
-  if [[ "${_relative_path:-}" =~ / ]]
+  if [[ "${_relative_path:-}" =~ /        ]]
   then
     _folder_path="${_notebook_path}/${_relative_path%\/*}"
     _relative_folder_path="${_relative_path%\/*}"
@@ -14990,7 +14993,7 @@ _show() {
 
   local _target_path="${_notebook_path}/${_relative_path}"
 
-  if [[ -z "${_relative_path:-}" ]] && ! ((_skip_notebook_fallback))
+  if [[ -z "${_relative_path:-}"    ]] && ! ((_skip_notebook_fallback))
   then
     local _maybe_notebook="${_selector:-}"
 
@@ -15096,7 +15099,7 @@ _show() {
   then
     if [[ -z "${_type}" ]]
     then
-      if [[ -d "${_notebook_path}/${_relative_path}" ]]
+      if [[ -d "${_notebook_path}/${_relative_path}"  ]]
       then
         printf "%s\\n" "folder"
       else
@@ -15110,7 +15113,7 @@ _show() {
         "_file_is_${_type}" "${_notebook_path}/${_relative_path}"
         return $?
       else
-        [[ "${_type}" == "${_relative_path#*.}" ]]
+        [[ "${_type}" == "${_relative_path#*.}"       ]]
         return $?
       fi
     fi
@@ -15161,7 +15164,7 @@ _show() {
     local _title
     _title="$(_get_content "${_notebook_path}/${_relative_path}" --title)"
 
-    if [[ -n "${_title:-}" ]]
+    if [[ -n "${_title:-}"      ]]
     then
       _info_line+="\"${_title}\""
     fi
@@ -15225,7 +15228,7 @@ _show() {
     _target_path="${_decrypted_path}"
   fi
 
-  if _file_is_archive "${_target_path}"   &&
+  if _file_is_archive "${_target_path}"     &&
      [[ ! "${_target_path}" =~ docx$  ]]
   then
     _exit_1 printf "\
