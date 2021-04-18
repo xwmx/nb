@@ -50,7 +50,7 @@ environment, including macOS and Windows via WSL.
 but `nb` works great without them.
 
 <p align="center">
-  <img  src="https://xwmx.github.io/misc/nb/images/nb-theme-nb-home.png?v=3"
+  <img  src="https://xwmx.github.io/misc/nb/images/nb-theme-nb-home.png"
         alt="home"
         width="450">
 </p>
@@ -70,7 +70,7 @@ Markdown documents made for humans, so bookmarks are easy to view and edit
 just like any other note.
 
 <p align="center">
-  <img  src="https://xwmx.github.io/misc/nb/images/gui-terminal-browse.png?v=3"
+  <img  src="https://xwmx.github.io/misc/nb/images/gui-terminal-browse.png"
         alt="bookmarks"
         width="450">
 </p>
@@ -82,7 +82,7 @@ syncing utility like Dropbox so notes can be edited in other apps
 on any device.
 
 <p align="center">
-  <img  src="https://xwmx.github.io/misc/nb/images/nb-theme-console-empty.png?v=3"
+  <img  src="https://xwmx.github.io/misc/nb/images/nb-theme-console-empty.png"
         alt="welcome"
         width="450">
 </p>
@@ -2096,7 +2096,7 @@ and search linked notes, bookmarks, notebooks, folders, and other items using
 terminal and GUI web browsers.
 
 <p align="center">
-  <img  src="https://xwmx.github.io/misc/nb/images/gui-gui-terminal-browse.png?v=3"
+  <img  src="https://xwmx.github.io/misc/nb/images/gui-gui-terminal-browse.png"
         alt="bookmarks"
         width="450">
 </p>
@@ -3683,67 +3683,67 @@ nb set color_theme
 
 ##### `blacklight`
 
-| ![blacklight](https://xwmx.github.io/misc/nb/images/nb-theme-blacklight-home.png?v=3)  |  ![blacklight](https://xwmx.github.io/misc/nb/images/nb-theme-blacklight-web.png?v=3)
+| ![blacklight](https://xwmx.github.io/misc/nb/images/nb-theme-blacklight-home.png)  |  ![blacklight](https://xwmx.github.io/misc/nb/images/nb-theme-blacklight-web.png)
 |:--:|:--:|
 |    |    |
 
 ##### `console`
 
-| ![console](https://xwmx.github.io/misc/nb/images/nb-theme-console-home.png?v=3)  |  ![console](https://xwmx.github.io/misc/nb/images/nb-theme-console-web.png?v=3) |
+| ![console](https://xwmx.github.io/misc/nb/images/nb-theme-console-home.png)  |  ![console](https://xwmx.github.io/misc/nb/images/nb-theme-console-web.png) |
 |:--:|:--:|
 |    |    |
 
 ##### `desert`
 
-| ![desert](https://xwmx.github.io/misc/nb/images/nb-theme-desert-home.png?v=3)  |  ![desert](https://xwmx.github.io/misc/nb/images/nb-theme-desert-web.png?v=3) |
+| ![desert](https://xwmx.github.io/misc/nb/images/nb-theme-desert-home.png)  |  ![desert](https://xwmx.github.io/misc/nb/images/nb-theme-desert-web.png) |
 |:--:|:--:|
 |    |    |
 
 ##### `electro`
 
-| ![electro](https://xwmx.github.io/misc/nb/images/nb-theme-electro-home.png?v=3)  |  ![electro](https://xwmx.github.io/misc/nb/images/nb-theme-electro-web.png?v=3) |
+| ![electro](https://xwmx.github.io/misc/nb/images/nb-theme-electro-home.png)  |  ![electro](https://xwmx.github.io/misc/nb/images/nb-theme-electro-web.png) |
 |:--:|:--:|
 |    |    |
 
 ##### `forest`
 
-| ![forest](https://xwmx.github.io/misc/nb/images/nb-theme-forest-home.png?v=3)  |  ![forest](https://xwmx.github.io/misc/nb/images/nb-theme-forest-web.png?v=3) |
+| ![forest](https://xwmx.github.io/misc/nb/images/nb-theme-forest-home.png)  |  ![forest](https://xwmx.github.io/misc/nb/images/nb-theme-forest-web.png) |
 |:--:|:--:|
 |    |    |
 
 ##### `nb` (default)
 
-| ![nb](https://xwmx.github.io/misc/nb/images/nb-theme-nb-home.png?v=3)  |  ![nb](https://xwmx.github.io/misc/nb/images/nb-theme-nb-web.png?v=3) |
+| ![nb](https://xwmx.github.io/misc/nb/images/nb-theme-nb-home.png)  |  ![nb](https://xwmx.github.io/misc/nb/images/nb-theme-nb-web.png) |
 |:--:|:--:|
 |    |    |
 
 ##### `ocean`
 
-| ![ocean](https://xwmx.github.io/misc/nb/images/nb-theme-ocean-home.png?v=3)  |  ![ocean](https://xwmx.github.io/misc/nb/images/nb-theme-ocean-web.png?v=3) |
+| ![ocean](https://xwmx.github.io/misc/nb/images/nb-theme-ocean-home.png)  |  ![ocean](https://xwmx.github.io/misc/nb/images/nb-theme-ocean-web.png) |
 |:--:|:--:|
 |    |    |
 
 ##### `raspberry`
 
-| ![raspberry](https://xwmx.github.io/misc/nb/images/nb-theme-raspberry-home.png?v=3)  |  ![raspberry](https://xwmx.github.io/misc/nb/images/nb-theme-raspberry-web.png?v=3) |
+| ![raspberry](https://xwmx.github.io/misc/nb/images/nb-theme-raspberry-home.png)  |  ![raspberry](https://xwmx.github.io/misc/nb/images/nb-theme-raspberry-web.png) |
 |:--:|:--:|
 |    |    |
 
 ##### `smoke`
 
-| ![smoke](https://xwmx.github.io/misc/nb/images/nb-theme-monochrome-home.png?v=3)  |  ![smoke](https://xwmx.github.io/misc/nb/images/nb-theme-smoke-web.png?v=3) |
+| ![smoke](https://xwmx.github.io/misc/nb/images/nb-theme-monochrome-home.png)  |  ![smoke](https://xwmx.github.io/misc/nb/images/nb-theme-smoke-web.png) |
 |:--:|:--:|
 |    |    |
 
 ##### `unicorn`
 
-| ![unicorn](https://xwmx.github.io/misc/nb/images/nb-theme-unicorn-home.png?v=3)  |  ![unicorn](https://xwmx.github.io/misc/nb/images/nb-theme-unicorn-web.png?v=3) |
+| ![unicorn](https://xwmx.github.io/misc/nb/images/nb-theme-unicorn-home.png)  |  ![unicorn](https://xwmx.github.io/misc/nb/images/nb-theme-unicorn-web.png) |
 |:--:|:--:|
 |    |    |
 
 ##### `utility`
 
-| ![utility](https://xwmx.github.io/misc/nb/images/nb-theme-utility-home.png?v=3)  |  ![utility](https://xwmx.github.io/misc/nb/images/nb-theme-utility-web.png?v=3) |
+| ![utility](https://xwmx.github.io/misc/nb/images/nb-theme-utility-home.png)  |  ![utility](https://xwmx.github.io/misc/nb/images/nb-theme-utility-web.png) |
 |:--:|:--:|
 |    |    |
 
