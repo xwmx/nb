@@ -2382,6 +2382,22 @@ add the [`nb browse --gui`](#browse) / [`nb br -g`](#browse) option:
 nb browse sample:123 --gui
 ```
 
+`browse --gui` reflects the color theme:
+
+<p align="center">
+  <img  src="https://xwmx.github.io/misc/nb/images/gui-browse-themes.png"
+        alt="nb browse themes"
+        width="450">
+</p>
+
+Syntax highlighting is included:
+
+<p align="center">
+  <img  src="https://xwmx.github.io/misc/nb/images/nb-web-pandoc-ruby-utility.png"
+        alt="nb syntax highlighting"
+        width="450">
+</p>
+
 ##### `browse --gui` Editing
 
 [Ace](https://ace.c9.io/) is a text editor for GUI web browsers that
