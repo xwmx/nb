@@ -49,7 +49,7 @@ toc_list: true
 title: nb
 email: hi@williammelody.com
 description: >- # this means to ignore newlines until "baseurl:"
-  CLI plain-text note-taking, bookmarking, and archiving with encryption,
+  CLI plain text note-taking, bookmarking, and archiving with encryption,
   filtering and search, Git-backed versioning and syncing, Pandoc-backed
   conversion, and more in a single portable script.
 # the subpath of your site, e.g. /blog

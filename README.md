@@ -17,7 +17,7 @@
 `nb` is a command line and local web note-taking, bookmarking, archiving,
 and knowledge base application with:
 
-- plain-text data storage,
+- plain text data storage,
 - [encryption](#password-protected-encrypted-notes-and-bookmarks),
 - [filtering](#listing--filtering), [pinning](#-pinning), [#tagging](#-tagging), and [search](#-search),
 - [Git](https://git-scm.com/)-backed [versioning](#-revision-history) and [syncing](#-git-sync),
@@ -2452,7 +2452,7 @@ knowledge management modeled around a few key features:
 - Index cards can reference other index cards.
 - Cards can include tags and other metadata.
 
-Since `nb` works directly on plain-text files organized in normal system
+Since `nb` works directly on plain text files organized in normal system
 directories in normal git repositories, `nb` is a very close digital analogue
 to physical zettelkasten note-taking.
 
@@ -4174,7 +4174,7 @@ displaying the datetime of the first commit containing the file and
 which the file was modified. Meanwhile, the file system's modified
 timestamp is used for sorting due to better performance in that use case.
 
-`nb` also uses plain-text files to store ids and state information in
+`nb` also uses plain text files to store ids and state information in
 git, including
 [`.index` files](https://github.com/xwmx/nb#index-files),
 [`.pindex` files](https://github.com/xwmx/nb#pindex-files),
@@ -4339,7 +4339,7 @@ __          _
 /_/  |_| |_|_.__/
 
 [nb] Command line and local web note-taking, bookmarking, and archiving with
-plain-text data storage, encryption, filtering and search, pinning, #tagging,
+plain text data storage, encryption, filtering and search, pinning, #tagging,
 Git-backed versioning and syncing, Pandoc-backed conversion, global and local
 notebooks, customizable color themes, [[wiki-style linking]], plugins, and more
 in a single portable, user-friendly script.
