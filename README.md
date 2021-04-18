@@ -122,7 +122,7 @@ features. `nb` is flexible.
 
 ### Installation
 
-`nb` is a simple plain text file with a two-letter filename that
+`nb` is a simple plain text file with a two-letter name that
 performs the operations it describes on systems with as little as
 [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell)),
 [Git](https://git-scm.com/), and a text editor.

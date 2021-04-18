@@ -103,7 +103,7 @@ dozens of notebooks containing thousands of notes, bookmarks, and other items.
 features. `nb` is flexible.
 
 <p align="center">
-  📝
+  📀�
   🔖
   🔒
   🔍
@@ -128,7 +128,7 @@ features. `nb` is flexible.
 
 ### Installation
 
-`nb` is a simple plain text file with a two-letter filename that
+`nb` is a simple plain text file with a two-letter name that
 performs the operations it describes on systems with as little as
 [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell)),
 [Git](https://git-scm.com/), and a text editor.
@@ -1856,7 +1856,7 @@ List and filter bookmarks with `bookmark` and `bookmark list`:
 ❯ bookmark
 Add: bookmark <url> Help: bookmark help
 ---------------------------------------
-[3] 🔖 🔒 example.bookmark.md.enc
+[3] 🔀� 🔒 example.bookmark.md.enc
 [2] 🔖 Example Two (example.com)
 [1] 🔖 Example One (example.com)
 
@@ -2120,7 +2120,7 @@ search: [                    ]
 [home:10] 🔖 🔒 example-encrypted.bookmark.md.enc
 [home:9]  Example .org Title
 [home:8]  🌄 example-image.png
-[home:7]  📄 example.pdf
+[home:7]  📀� example.pdf
 [home:5]  🔉 example-audio.mp3
 [home:4]  Example LaTeX Title
 [home:3]  📹 example-video.mp4
@@ -2164,7 +2164,7 @@ for the item, folder, or notebook to `nb browse`:
 
 ```bash
 # open the item titled "Example Title" in the folder named "sample" in the "example" notebook
-❯ nb browse example:sample/Example\ Title
+❀� nb browse example:sample/Example\ Title
 ❯nb · example : sample / 987 · ↓ · edit | +
 
 Example Title
@@ -4644,7 +4644,7 @@ For more information, see: `nb help`.
   <a href="#notebooks">notebooks</a> •
   <a href="#open">open</a> •
   <a href="#peek">peek</a> •
-  <a href="#pin">pin</a> •
+  <a href="#pin">pin</a>  �
   <a href="#plugins">plugins</a> •
   <a href="#remote">remote</a> •
   <a href="#run">run</a> •
