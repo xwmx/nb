@@ -91,9 +91,9 @@ on any device.
 providing a full-featured and intuitive experience within a highly composable
 user-centric text interface.
 The entire program is a single [well-tested](#tests)
-shell script that can be
-installed, copied, or `curl`ed almost anywhere and just work, using
-a strategy inspired by
+shell script that can be installed, copied, or `curl`ed almost anywhere and
+just work,
+using a strategy inspired by
 [progressive enhancement](https://en.wikipedia.org/wiki/Progressive_enhancement)
 for various experience improvements in more capable environments.
 `nb` works great whether you have one notebook with just a few notes or
@@ -531,9 +531,9 @@ with content from multiple input methods and sources using a single
 command:
 
 ```bash
-❯ pb | nb + "Argument content." \
-    --title "Sample Title"      \
-    --tags  tag1,tag2           \
+❯ pb | nb add "Argument content." \
+    --title   "Sample Title"      \
+    --tags    tag1,tag2           \
     --content "Option content."
 Added: [12] sample_title.md "Sample Title"
 
