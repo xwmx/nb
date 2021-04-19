@@ -17410,7 +17410,7 @@ HEREDOC
 
       _render_function_options+=("${_target_selector:-}")
 
-      if [[ "${_action:-}" == "add"   ]]
+      if [[ "${_action:-}" == "add"       ]]
       then
         case "${_request_method:-}" in
           GET)
