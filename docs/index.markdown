@@ -2374,6 +2374,12 @@ For more information about search options, see [Search](#-search) and
 
 #### `browse --gui`
 
+<p align="center">
+  <img  src="https://xwmx.github.io/misc/nb/images/nb-browse-home-forest.png"
+        alt="nb browse home:"
+        width="450">
+</p>
+
 To open any `nb browse` view in the system's primary GUI web browser,
 add the [`nb browse --gui`](#browse) / [`nb br -g`](#browse) option:
 
