@@ -97,12 +97,6 @@ dozens of notebooks containing thousands of notes, bookmarks, and other items.
 features. `nb` is flexible.
 
 <p align="center">
-  <img  src="https://xwmx.github.io/misc/nb/images/gui-browse-themes.png"
-        alt="nb browse"
-        width="700">
-</p>
-
-<p align="center">
   📝
   🔖
   🔒
