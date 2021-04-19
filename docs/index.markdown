@@ -115,7 +115,7 @@ features. `nb` is flexible.
 <h1 align="center" id="nb"><code>nb</code></h1>
 
 <p align="center">
-	Versions: 6.0.0-alpha
+	Versions: 6.0.0-rc.1
 	•
 	<a href="https://github.com/xwmx/nb/blob/5.7.8/README.md">5.7.8</a>
 </p>
