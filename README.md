@@ -122,7 +122,7 @@ features. `nb` is flexible.
 
 ### Installation
 
-`nb` is a simple plain text file with a two-letter name that
+`nb` is a simple plain text file with a two-letter filename that
 performs the operations it describes on systems with as little as
 [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell)),
 [Git](https://git-scm.com/), and a text editor.
@@ -2236,7 +2236,7 @@ arrow (`↓`) link to view or download the original file.
         width="700">
 </p>
 
-Items in text formats can be edited within a terminal or GUI browser using
+Items in text formats can be edited within terminal and GUI web browsers using
 the `edit` link on the item page or by opening the item with
 [`nb browse edit`](#browse) / [`nb br e`](#browse),
 which automatically resizes the form to fit the current terminal window:
@@ -2445,7 +2445,7 @@ many web analytics tools. `nb browse` includes a number of additional
 features to enhance privacy and avoid leaking information:
 
 - Page content is cached locally within each bookmark file, making it readable
-  in a terminal or GUI browser without requesting the page again or
+  in terminal and GUI web browsers without requesting the page again or
   needing to be connected to the internet.
 - `<img>` tags in bookmarked content are removed to avoid requests.
 - Outbound links are automatically rewritten to use an
@@ -4508,7 +4508,7 @@ Subcommands:
                When a <url> is provided, create a new bookmark.
   add          Add a note, folder, or file.
   bookmark     Add, open, list, and search bookmarks.
-  browse       Browse and manage linked items in terminal and GUI browsers.
+  browse       Browse and manage linked items in terminal and GUI web browsers.
   completions  Install and uninstall completion scripts.
   count        Print the number of items in a notebook or folder.
   delete       Delete a note.
