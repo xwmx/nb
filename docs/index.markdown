@@ -20,7 +20,8 @@ permalink: /
 
 <br>
 
-`nb` is a command line and local web note-taking, bookmarking, archiving,
+`nb` is a command line and local web
+note-taking, bookmarking, archiving,
 and knowledge base application with:
 
 - plain text data storage,
@@ -40,12 +41,13 @@ and more, all in a single portable, user-friendly script.
 [Markdown](https://en.wikipedia.org/wiki/Markdown),
 [Org](https://orgmode.org/),
 and [LaTeX](https://www.latex-project.org/),
-can work with files in any format, can import and export notes to many
-document formats, and can create private, password-protected encrypted
-notes and bookmarks. With `nb`, you can write notes using Vim, Emacs,
-VS Code, Sublime Text, and any other text editor you like, as well as
-terminal and GUI web browsers. `nb` works in any standard Linux / Unix
-environment, including macOS and Windows via WSL.
+can work with files in any format,
+can import and export notes to many document formats,
+and can create private, password-protected encrypted notes and bookmarks.
+With `nb`, you can write notes using Vim, Emacs, VS Code, Sublime Text,
+and any other text editor you like, as well as terminal and GUI web browsers.
+`nb` works in any standard Linux / Unix environment, including
+macOS and Windows via WSL.
 [Optional dependencies](#optional) can be installed to enhance functionality,
 but `nb` works great without them.
 
@@ -65,9 +67,9 @@ but `nb` works great without them.
   for broken links,
 - tagging, pinning, and integration with other `nb` features.
 
-Page information is downloaded, compiled, and saved into normal
-Markdown documents made for humans, so bookmarks are easy to view and edit
-just like any other note.
+Page information is downloaded, compiled, and saved into
+normal Markdown documents made for humans,
+so bookmarks are easy to view and edit just like any other note.
 
 <p align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/gui-terminal-browse.png"
@@ -75,11 +77,11 @@ just like any other note.
         width="500">
 </p>
 
-`nb` uses [Git](https://git-scm.com/) in the background to automatically
-record changes and sync notebooks with remote repositories.
-`nb` can also be configured to sync notebooks using a general purpose
-syncing utility like Dropbox so notes can be edited in other apps
-on any device.
+`nb` uses [Git](https://git-scm.com/) in the background to
+automatically record changes and sync notebooks with remote repositories.
+`nb` can also be configured to sync notebooks using
+a general purpose syncing utility like Dropbox
+so notes can be edited in other apps on any device.
 
 <p align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/nb-theme-console-empty.png"
@@ -91,8 +93,9 @@ on any device.
 providing a full-featured and intuitive experience within a highly composable
 user-centric text interface.
 The entire program is a single [well-tested](#tests)
-shell script that can be installed, copied, or `curl`ed almost anywhere and
-just work,
+shell script
+that can be
+installed, copied, or `curl`ed almost anywhere and just work,
 using a strategy inspired by
 [progressive enhancement](https://en.wikipedia.org/wiki/Progressive_enhancement)
 for various experience improvements in more capable environments.
@@ -1435,8 +1438,9 @@ For more information, see [Browsing](#-browsing).
 ### 🔖 Bookmarks
 
 `nb` is a powerful bookmark management system, enabling you to to view, search,
-and manage your bookmarks, links, and online references. Bookmarks are
-Markdown notes containing information about the bookmarked page.
+[browse](#-browsing), and manage your bookmarks, links, and online references.
+
+Bookmarks are Markdown notes containing information about the bookmarked page.
 
 To create a new bookmark pass a URL as the first argument to `nb`:
 
@@ -2409,6 +2413,9 @@ Syntax highlighting is included and incorporates the color theme's primary color
 </p>
 
 ##### `browse --gui` Editing
+
+By default, `nb browse --gui` uses the browser's default `<textarea>` for
+editing items.
 
 [Ace](https://ace.c9.io/) is a text editor for GUI web browsers that
 provides advanced text editing functionality, including block selection
