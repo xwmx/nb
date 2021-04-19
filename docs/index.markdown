@@ -22,7 +22,8 @@ permalink: /
 
 `nb` is a command line and local web
 note-taking, bookmarking, archiving,
-and knowledge base application with:
+and knowledge base application
+with:
 
 - plain text data storage,
 - [encryption](#password-protected-encrypted-notes-and-bookmarks),
@@ -46,8 +47,8 @@ can import and export notes to many document formats,
 and can create private, password-protected encrypted notes and bookmarks.
 With `nb`, you can write notes using Vim, Emacs, VS Code, Sublime Text,
 and any other text editor you like, as well as terminal and GUI web browsers.
-`nb` works in any standard Linux / Unix environment, including
-macOS and Windows via WSL.
+`nb` works in any standard Linux / Unix environment,
+including macOS and Windows via WSL.
 [Optional dependencies](#optional) can be installed to enhance functionality,
 but `nb` works great without them.
 
@@ -59,15 +60,16 @@ but `nb` works great without them.
 
 `nb` is also a powerful bookmarking system featuring:
 
-- locally-served, text-centric, distraction-free bookmark browsing in
-  terminal and GUI web browsers,
-- local full-text search of cached page content with regular expression support,
+- locally-served, text-centric, distraction-free bookmark [browsing](#-browsing)
+  in terminal and GUI web browsers,
+- local full-text [search](#-search) of cached page content
+  with regular expression support,
 - convenient filtering and listing,
 - [Internet Archive Wayback Machine](https://archive.org/web/) snapshot lookup
   for broken links,
-- tagging, pinning, and integration with other `nb` features.
+- tagging, pinning, linking, and integration with other `nb` features.
 
-Page information is downloaded, compiled, and saved into
+Page information is downloaded, cleaned up, structured, and saved into
 normal Markdown documents made for humans,
 so bookmarks are easy to view and edit just like any other note.
 
@@ -90,8 +92,8 @@ so notes can be edited in other apps on any device.
 </p>
 
 `nb` is designed to be portable, future-focused, and vendor independent,
-providing a full-featured and intuitive experience within a highly composable
-user-centric text interface.
+providing a full-featured and intuitive experience
+within a highly composable user-centric text interface.
 The entire program is a single [well-tested](#tests)
 shell script
 that can be
@@ -131,20 +133,23 @@ features. `nb` is flexible.
 
 ### Installation
 
-`nb` is a simple plain text file with a two-letter filename that
-performs the operations it describes on systems with as little as
+`nb` is a simple plain text file with a two-letter filename
+that performs the operations it describes
+on systems with as little as
 [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell)),
-[Git](https://git-scm.com/), and a text editor.
-Use an installation method below for a full-featured configuration
-augmented by the terminal ecosystem.
+[Git](https://git-scm.com/),
+and a text editor.
+Use an installation method below for
+a full-featured configuration augmented by the terminal ecosystem.
 
 #### Dependencies
 
 ##### Required
 
 - [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell))
-  - `nb` works perfectly with Zsh, fish, and any other shell set as your
-    primary login shell, the system just needs to have Bash available on it.
+  - `nb` works perfectly with Zsh, fish, and any other shell
+    set as your primary login shell,
+    the system just needs to have Bash available on it.
 - [Git](https://git-scm.com/)
 - A text editor with command line support, such as:
   - [Vim](https://en.wikipedia.org/wiki/Vim_\(text_editor\)),
