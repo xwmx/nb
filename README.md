@@ -2095,8 +2095,10 @@ terminal and GUI web browsers.
         width="700">
 </p>
 
-`nb browse` includes an embedded, terminal-first web application that
-renders <a href="#-linking">[[wiki-style links]]</a> and
+`nb browse` includes an embedded web application designed for
+terminal and GUI web browsers that renders
+<a href="#-linking">[[wiki-style links]]</a>
+and
 [#hashtags](#-tagging)
 as internal links, enabling you to browse your notes and notebooks in web
 browsers, including seamlessly browsing to and from the offsite links in
