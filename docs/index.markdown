@@ -522,8 +522,8 @@ pb | nb a rust: .rs
 pb | nb + snippets: example.hs
 ```
 
-Use [`nb show`](#show) to view code snippets with automatic syntax
-highlighting and [`nb edit`](#edit) to open in your editor.
+Use [`nb show`](#show) and [`nb browse`](#browse) to view code snippets with
+automatic syntax highlighting and [`nb edit`](#edit) to open in your editor.
 
 Piping, `--title <title>`, `--tags <tag-list>`, `--content <content>`, and
 content passed in an argument can be combined as needed to create notes
@@ -2153,7 +2153,7 @@ next ❯
 browsers using only keyboard commands, with mouse interactions also
 supported. The `nb browse` interface includes breadcrumbs that can be
 used to quickly navigate to back to parent folders, the current notebook,
-or jump to other notebooks.
+and jump to other notebooks.
 
 `nb browse` opens in [w3m](https://en.wikipedia.org/wiki/W3m) (currently
 the primary terminal reference browser for `nb`),
@@ -2287,16 +2287,16 @@ note in that location:
 ❯ nb browse text:formats/ add
 ❯nb · text : formats / +
 
-[                                                     ]
-[                                                     ]
-[                                                     ]
-[                                                     ]
-[                                                     ]
-[                                                     ]
-[                                                     ]
-[                                                     ]
-[                                                     ]
-[                                                     ]
+[                                                   ]
+[                                                   ]
+[                                                   ]
+[                                                   ]
+[                                                   ]
+[                                                   ]
+[                                                   ]
+[                                                   ]
+[                                                   ]
+[                                                   ]
 
 [add]
 ```
@@ -2308,16 +2308,16 @@ with content:
 ❯ nb browse add --title "Example Title" --content "Example content." --tags tag1,tag2
 ❯nb · home : +
 
-[# Example Title                                      ]
-[                                                     ]
-[#tag1 #tag2                                          ]
-[                                                     ]
-[Example content.                                     ]
-[                                                     ]
-[                                                     ]
-[                                                     ]
-[                                                     ]
-[                                                     ]
+[# Example Title                                    ]
+[                                                   ]
+[#tag1 #tag2                                        ]
+[                                                   ]
+[Example content.                                   ]
+[                                                   ]
+[                                                   ]
+[                                                   ]
+[                                                   ]
+[                                                   ]
 
 [add]
 ```
@@ -2392,7 +2392,7 @@ nb browse example/ -g
 nb br -g
 ```
 
-`nb browse --gui` reflects the color theme:
+`nb browse --gui` reflects the [color theme](#-color-themes):
 
 <p align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/gui-browse-themes.png"
@@ -2741,7 +2741,7 @@ nb search "\d\d\d-\d\d\d\d"
 nb search "example" --type bookmark
 
 # search bookmarks for "example", alternative
-nb b q "example"
+nb bk q "example"
 
 # search the current notebook for "example query"
 nb q "example query"
@@ -3700,8 +3700,10 @@ For more information about `set` and `settings`, see
 
 ### 🎨 Color Themes
 
-`nb` uses color to highlight various interface elements, including ids, the
-current notebook name, the shell prompt, and divider lines.
+`nb` uses color to highlight various interface elements, including
+ids and [selectors](#selectors),
+the current notebook name, the shell prompt, divider lines, links, and
+syntax.
 
 `nb` includes several built-in color themes and also supports user-defined
 themes. The current color theme can be set using
