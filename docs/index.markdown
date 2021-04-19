@@ -72,7 +72,7 @@ just like any other note.
 <p align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/gui-terminal-browse.png"
         alt="nb browse"
-        width="450">
+        width="500">
 </p>
 
 `nb` uses [Git](https://git-scm.com/) in the background to automatically
@@ -2098,7 +2098,7 @@ terminal and GUI web browsers.
 <p align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/gui-gui-terminal-browse.png"
         alt="nb browse"
-        width="450">
+        width="700">
 </p>
 
 `nb browse` includes an embedded, terminal-first web application that
@@ -2237,7 +2237,7 @@ arrow (`↓`) link to view or download the original file.
 <p align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/gui-terminal-browse-edit.png"
         alt="nb browse edit"
-        width="450">
+        width="700">
 </p>
 
 Items in text formats can be edited within a terminal or GUI browser using
@@ -2387,7 +2387,7 @@ nb browse sample:123 --gui
 <p align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/gui-browse-themes.png"
         alt="nb browse themes"
-        width="450">
+        width="700">
 </p>
 
 Syntax highlighting is included:
@@ -2395,7 +2395,7 @@ Syntax highlighting is included:
 <p align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/nb-web-pandoc-ruby-utility.png"
         alt="nb syntax highlighting"
-        width="450">
+        width="700">
 </p>
 
 ##### `browse --gui` Editing
