@@ -2095,8 +2095,8 @@ terminal and GUI web browsers.
         width="700">
 </p>
 
-`nb browse` includes an embedded web application designed for
-terminal and GUI web browsers that renders
+`nb browse` includes an embedded, terminal-first web application
+that renders
 <a href="#-linking">[[wiki-style links]]</a>
 and
 [#hashtags](#-tagging)
