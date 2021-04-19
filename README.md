@@ -2386,9 +2386,7 @@ nb browse sample:123 --gui
         width="700">
 </p>
 
-Syntax highlighting is included when viewing and
-[editing](#browse---gui-editing)
-and incorporates the color theme's primary color:
+Syntax highlighting is included and incorporates the color theme's primary color:
 
 <p align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/nb-web-pandoc-ruby-utility.png"
