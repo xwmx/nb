@@ -4873,10 +4873,11 @@ Description:
   Browse, view, and edit linked notes, bookmarks, notebooks, folders, and
   other items using the terminal or GUI web browser.
 
-  `browse` includes an embedded, terminal-first web application that
-  renders [[wiki-style links]] and #tags as internal links, enabling you
-  to browse your notes and notebooks in your terminal web browser, as well
-  as seamlessly browse to and from the offsite links in bookmarks and notes.
+  `browse` includes an embedded web application designed for terminal
+  and GUI web browsers that renders [[wiki-style links]] and #tags as
+  internal links, providing the ability to browse notes and notebooks,
+  as well as seamlessly browse to and from the offsite links in
+  bookmarks and notes.
 
   To link to a note or bookmark from another, include the selector for the
   target item within double square brackets anywhere in the linking document:
