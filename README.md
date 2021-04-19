@@ -2386,7 +2386,9 @@ nb browse sample:123 --gui
         width="700">
 </p>
 
-Syntax highlighting is included:
+Syntax highlighting is included when viewing and
+[editing](#browse---gui-editing)
+and incorporates the color theme's primary color:
 
 <p align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/nb-web-pandoc-ruby-utility.png"
@@ -3816,7 +3818,7 @@ To view a table of available colors and numbers, run:
 nb set colors
 ```
 
-#### Syntax Highlighting Theme
+#### Terminal Syntax Highlighting Theme
 
 `nb` displays files with syntax highlighting when
 [`bat`](https://github.com/sharkdp/bat),
@@ -3829,6 +3831,11 @@ When `bat` is installed, syntax highlighting color themes are
 available for both light and dark terminal backgrounds.
 To view a list of available themes and set the syntax highlighting color
 theme, use [`nb set syntax_theme`](#syntax_theme).
+
+#### GUI Web Syntax Highlighting Themes
+
+Syntax highlighting is also available with [`nb browse --gui`](#browse---gui)
+which incorporates the color theme's primary color into the syntax theme.
 
 #### Indicators
 
