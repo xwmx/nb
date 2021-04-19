@@ -2376,6 +2376,14 @@ add the [`nb browse --gui`](#browse) / [`nb br -g`](#browse) option:
 ```bash
 # open the item with id 123 in the "sample" notebook in the system's primary GUI browser
 nb browse sample:123 --gui
+
+# open the folder named "example" in the system's primary GUI browser,
+# short option
+nb browse example/ -g
+
+# open the current notebook in the system's primary GUI browser,
+# shortcut alias and short option
+nb br -g
 ```
 
 `nb browse --gui` reflects the color theme:
