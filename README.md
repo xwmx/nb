@@ -189,8 +189,6 @@ Also supported for various enhancements:
 
 #### macOS / Homebrew
 
-To install version 5.7.8 with [Homebrew](https://brew.sh/):
-
 ```bash
 brew tap xwmx/taps
 brew install nb
@@ -202,8 +200,6 @@ above and completion scripts for Bash and Zsh.
 #### Ubuntu, Windows WSL, and others
 
 ##### npm
-
-To install version 5.7.8 with [npm](https://www.npmjs.com/package/nb.sh):
 
 ```bash
 npm install -g nb.sh
@@ -327,15 +323,6 @@ the latest version using the [`nb update`](#update) subcommand.
   <a href="#help">Help</a> •
   <a href="#specifications">Specifications</a> •
   <a href="#tests">Tests</a>
-</p>
-
-<p align="center">
-  <em>Some new features described below are currently available in the git
-repository and will be included in version 6.0.0.</em>
-</p>
-
-<p align="center">
-  <em><a href="https://github.com/xwmx/nb/blob/5.7.8/README.md">Version 5.7.8 Documentation</a></em>
 </p>
 
 To get started, simply run:
