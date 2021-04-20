@@ -17497,29 +17497,31 @@ HEREDOC
               | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
 
             return 0
-          elif _file_is_text "${_selector_path:-}"                        ||
+          else
+            if _file_is_text "${_selector_path:-}"                        ||
                [[ "${_selector_path:-}"     =~ \.docx$|\.epub$|\.odt$ ]]  ||
                {
                  ((${NB_BROWSE_PDF_ENABLED:-0}))                          &&
                  [[ "${_selector_path}"    =~ \.pdf                   ]]  &&
                  _command_exists "pdftotext"
                }
-          then
-            _browse_render_item                         \
-              "${_render_function_options[@]:-}"        \
-              | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
+            then
+              _browse_render_item                         \
+                "${_render_function_options[@]:-}"        \
+                | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
 
-            return 0
-          elif _file_is_encrypted "${_selector_path:-}"
-          then
-            _browse_respond_with 415                    \
-              "415 $(_browse_http_response_message 415): File is encrypted."
+              return 0
+            elif _file_is_encrypted "${_selector_path:-}"
+            then
+              _browse_respond_with 415                    \
+                "415 $(_browse_http_response_message 415): File is encrypted."
 
-            return 0
-          else
-            _browse_respond_with 415
+              return 0
+            else
+              _browse_respond_with 415
 
-            return 0
+              return 0
+            fi
           fi
         fi
       fi
