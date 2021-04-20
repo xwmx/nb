@@ -652,6 +652,12 @@ home
 [1] ideas.md · "- Example idea one."
 ```
 
+<p align="center">
+  <img  src="https://xwmx.github.io/misc/nb/images/nb-theme-utility-home.png"
+        alt="welcome"
+        width="450">
+</p>
+
 Notebooks are listed above the line, with the current notebook
 highlighted and/or underlined, depending on terminal capabilities.
 `nb ls` also includes a footer with example commands for easy reference.
