@@ -52,7 +52,7 @@ but `nb` works great without them.
         width="450">
 </p>
 
-`nb` is also a powerful bookmarking system featuring:
+`nb` is also a powerful [bookmarking](#-bookmarks) system featuring:
 
 - locally-served, text-centric, distraction-free bookmark [browsing](#-browsing)
   in terminal and GUI web browsers,
@@ -1591,8 +1591,10 @@ opened.
         width="500">
 </p>
 
-[`nb bookmark`](#bookmark) and `nb bookmark list` can be used to list
-and filter only bookmarks:
+Bookmarks are included in `nb`, [`nb ls`](#ls), [`nb list`](#list), and
+[`nb browse`](#browse) along with items of other types.
+[`nb bookmark`](#bookmark) and `nb bookmark list` can be used to
+list and filter only bookmarks:
 
 ```bash
 ❯ nb bookmark
