@@ -16934,34 +16934,14 @@ HEREDOC
       shift
     done
 
-    if _file_is_text "${_selector_path:-}"                        ||
-       [[ "${_selector_path:-}"     =~ \.docx$|\.epub$|\.odt$ ]]  ||
-       {
-         ((${NB_BROWSE_PDF_ENABLED:-0}))                          &&
-         [[ "${_selector_path}"     =~ \.pdf                  ]]  &&
-         _command_exists "pdftotext"
-       }
-    then
-      : # can be rendered, continue
-    elif _file_is_encrypted "${_selector_path:-}"
-    then
-      _browse_respond_with 415            \
-        "415 $(_browse_http_response_message 415): File is encrypted."
-
-      return 0
-    else
-      _browse_respond_with 415
-
-      return 0
-    fi
-
     local _notebook_path=
     _notebook_path="$(
       _notebooks show "${_source_path:-}" --path 2>/dev/null  ||
         _notebooks current --path
     )"
 
-    if [[ "${_source_path:-}" =~ \.org$   ]]
+    if [[ "${_source_path:-}" =~ \.org$   ]] &&
+       _file_is_text "${_selector_path:-}"
     then # resolve Org [[wiki-style links]] before rendering to HTML
       {
         cat "${_source_path}"
@@ -16999,8 +16979,12 @@ HEREDOC
       }
     else # render non-Org to HTML before resolving [[wiki-style links]]
       {
-        if ((${NB_BROWSE_PDF_ENABLED:-0}))    &&
-           [[ "${_source_path}" =~ \.pdf  ]]  &&
+        if _file_is_text "${_source_path:-}"    ||
+           [[ "${_source_path:-}" =~ \.docx$|\.epub$|\.odt$ ]]
+        then
+          printf "" | _render "${_source_path}" --pandoc --body
+        elif ((${NB_BROWSE_PDF_ENABLED:-0}))    &&
+           [[ "${_source_path}" =~ \.pdf  ]]    &&
            _command_exists "pdftotext"
         then
           # TODO: spacing
@@ -17008,8 +16992,16 @@ HEREDOC
           pdftotext "${_source_path}" -   \
             | tr -d '\014'                \
             | _render --from="md" --pandoc --body
+        elif _file_is_encrypted "${_source_path:-}"
+        then
+          _browse_respond_with 415        \
+            "415 $(_browse_http_response_message 415): File is encrypted."
+
+          return 0
         else
-          printf "" | _render "${_source_path}" --pandoc --body
+          _browse_respond_with 415
+
+          return 0
         fi
       } | {
         printf "%s\\n" "$(
