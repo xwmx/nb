@@ -1421,8 +1421,8 @@ For more information, see [Browsing](#-browsing).
 ### 🔖 Bookmarks
 
 `nb` is a featureful bookmarking application providing the
-ability to manage, annotate, view, search, and [browse](#-browsing)
-collections of bookmarks.
+ability to conveniently create, annotate, view, search, [browse](#-browsing),
+and manage collections of bookmarks.
 
 <p align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/nb-bookmarks-gui-gui-terminal.png"
@@ -1430,8 +1430,9 @@ collections of bookmarks.
         width="450">
 </p>
 
-Bookmarks are Markdown files containing structured information
-from the bookmarked page.
+Bookmarks in `nb` are stored as
+[simple, structured Markdown files](#nb-markdown-bookmark-file-format)
+containing information extracted from the bookmarked pages.
 
 To create a new bookmark pass a URL as the first argument to `nb`:
 
