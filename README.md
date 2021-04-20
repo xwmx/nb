@@ -1573,6 +1573,12 @@ opened.
 
 #### Listing and Filtering Bookmarks
 
+<p align="center">
+  <img  src="https://xwmx.github.io/misc/nb/images/nb-bookmarks-gui-terminal-terminal.png"
+        alt="welcome"
+        width="500">
+</p>
+
 [`nb bookmark`](#bookmark) and `nb bookmark list` can be used to list
 and filter only bookmarks:
 
