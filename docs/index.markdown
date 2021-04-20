@@ -2102,7 +2102,7 @@ terminal and GUI web browsers.
 <p align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/gui-gui-terminal-browse.png"
         alt="nb browse"
-        width="700">
+        width="500">
 </p>
 
 `nb browse` includes an embedded, terminal-first web application
@@ -2243,7 +2243,7 @@ arrow (`↓`) link to view or download the original file.
 <p align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/gui-terminal-browse-edit.png"
         alt="nb browse edit"
-        width="700">
+        width="500">
 </p>
 
 Items in text formats can be edited within terminal and GUI web browsers using
