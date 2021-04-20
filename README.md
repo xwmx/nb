@@ -1414,8 +1414,8 @@ For more information, see [Browsing](#-browsing).
 
 ### 🔖 Bookmarks
 
-`nb` is a powerful bookmark management system, enabling you to to view, search,
-[browse](#-browsing), and manage your bookmarks, links, and online references.
+`nb` is a featureful plain text bookmark management system, enabling you to
+view, search, [browse](#-browsing), and manage collections of bookmarks.
 
 <p align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/nb-bookmarks-gui-gui-terminal.png"
@@ -2394,7 +2394,7 @@ editing items.
 
 [Ace](https://ace.c9.io/) is a text editor for GUI web browsers that
 provides advanced text editing functionality, including block selection
-and syntax highlighting.
+and [syntax highlighting](#browse---gui).
 
 To use Ace as the editor for `nb browse --gui`, add the following line to
 your `~/.nbrc` file:
@@ -4353,6 +4353,13 @@ nb u example-notebook
 ```
 
 For more commands and options, run `nb help` or `nb help <subcommand>`
+
+
+<p align="center">
+  <img  src="https://xwmx.github.io/misc/nb/images/gui-browse-themes.png"
+        alt="nb browse themes"
+        width="700">
+</p>
 
 ### Help
 
@@ -6605,12 +6612,6 @@ then run `bats test` within the project root directory. Run groups of
 tests with globbing, e.g., `bats test/browse*` and `bats test/folders*`.
 
 ---
-
-<p align="center">
-  <img  src="https://xwmx.github.io/misc/nb/images/gui-browse-themes.png"
-        alt="nb browse themes"
-        width="700">
-</p>
 
 <p align="center">
   Copyright (c) 2015-present <a href="https://www.williammelody.com/">William Melody</a> • See LICENSE for details.
