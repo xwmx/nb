@@ -81,7 +81,7 @@ so notes can be edited in other apps on any device.
 
 <p align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/nb-theme-console-empty.png"
-        alt="welcome"
+        alt="nb list empty"
         width="450">
 </p>
 
@@ -648,7 +648,7 @@ home
 
 <p align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/nb-theme-utility-home.png"
-        alt="welcome"
+        alt="nb ls"
         width="450">
 </p>
 
@@ -2387,22 +2387,6 @@ nb browse example/ -g
 nb br -g
 ```
 
-`nb browse --gui` reflects the [color theme](#-color-themes):
-
-<p align="center">
-  <img  src="https://xwmx.github.io/misc/nb/images/gui-browse-themes.png"
-        alt="nb browse themes"
-        width="700">
-</p>
-
-Syntax highlighting is included and incorporates the color theme's primary color:
-
-<p align="center">
-  <img  src="https://xwmx.github.io/misc/nb/images/nb-web-pandoc-ruby-utility.png"
-        alt="nb syntax highlighting"
-        width="700">
-</p>
-
 ##### `browse --gui` Editing
 
 By default, `nb browse --gui` uses the browser's default `<textarea>` for
@@ -3700,8 +3684,8 @@ For more information about `set` and `settings`, see
 
 `nb` uses color to highlight various interface elements, including
 ids and [selectors](#selectors),
-the current notebook name, the shell prompt, divider lines, links, and
-syntax.
+the current notebook name, the shell prompt, divider lines, syntax, and
+links.
 
 `nb` includes several built-in color themes and also supports user-defined
 themes. The current color theme can be set using
@@ -3844,10 +3828,17 @@ available for both light and dark terminal backgrounds.
 To view a list of available themes and set the syntax highlighting color
 theme, use [`nb set syntax_theme`](#syntax_theme).
 
-#### GUI Web Syntax Highlighting Themes
+#### GUI Web Syntax Highlighting
 
-Syntax highlighting is also available with [`nb browse --gui`](#browse---gui)
-which incorporates the color theme's primary color into the syntax theme.
+Syntax highlighting is also available when viewing and editing items in
+text formats with [`nb browse --gui`](#browse---gui),
+which incorporates the color theme's primary color into the syntax theme:
+
+<p align="center">
+  <img  src="https://xwmx.github.io/misc/nb/images/nb-web-pandoc-ruby-utility.png"
+        alt="nb syntax highlighting"
+        width="500">
+</p>
 
 #### Indicators
 
@@ -6614,6 +6605,13 @@ then run `bats test` within the project root directory. Run groups of
 tests with globbing, e.g., `bats test/browse*` and `bats test/folders*`.
 
 ---
+
+<p align="center">
+  <img  src="https://xwmx.github.io/misc/nb/images/gui-browse-themes.png"
+        alt="nb browse themes"
+        width="700">
+</p>
+
 <p align="center">
   Copyright (c) 2015-present <a href="https://www.williammelody.com/">William Melody</a> • See LICENSE for details.
 </p>
