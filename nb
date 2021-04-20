@@ -16938,14 +16938,14 @@ HEREDOC
        [[ "${_selector_path:-}"     =~ \.docx$|\.epub$|\.odt$ ]]  ||
        {
          ((${NB_BROWSE_PDF_ENABLED:-0}))                          &&
-         [[ "${_selector_path}"    =~ \.pdf                   ]]  &&
+         [[ "${_selector_path}"     =~ \.pdf                  ]]  &&
          _command_exists "pdftotext"
        }
     then
       : # can be rendered, continue
     elif _file_is_encrypted "${_selector_path:-}"
     then
-      _browse_respond_with 415                    \
+      _browse_respond_with 415            \
         "415 $(_browse_http_response_message 415): File is encrypted."
 
       return 0
@@ -17336,7 +17336,7 @@ HEREDOC
           -*)
             _render_function_options+=("${__parameter%=*}")
 
-            if [[ "${__parameter:-}" =~ \= ]]
+            if [[ "${__parameter:-}" =~ \=    ]]
             then
               _render_function_options+=("$(
                 _get_uri --encode "${__parameter#*=}"
@@ -17400,7 +17400,7 @@ HEREDOC
     local _respond_with_200_arguments=("--standard_input")
 
     case "${_request_method}" in
-      HEAD) _respond_with_200_arguments+=("--headers") ;;
+      HEAD) _respond_with_200_arguments+=("--headers")  ;;
     esac
 
     # respond
@@ -17416,11 +17416,11 @@ HEREDOC
 
       if [[ "${_target_selector}" =~ ^local:        ]]
       then
-        [[ -z "${_local_notebook_path:-}" ]]  && _browse_respond_with 400
+        [[ -z "${_local_notebook_path:-}"   ]]  && _browse_respond_with 400
 
         _selector_path="$(
-          cd "${_local_notebook_path:-}"      &&
-            __set_notebook_paths              &&
+          cd "${_local_notebook_path:-}"        &&
+            __set_notebook_paths                &&
             _show "${_target_selector%%\?*}" --path --no-color 2>&1 || :
         )"
       else
@@ -17431,7 +17431,7 @@ HEREDOC
 
       _render_function_options+=("${_target_selector:-}")
 
-      if [[ "${_action:-}" == "add"       ]]
+      if [[ "${_action:-}" == "add"         ]]
       then
         case "${_request_method:-}" in
           GET)
@@ -17484,8 +17484,8 @@ HEREDOC
           then
             case "${_request_method:-}" in
               GET)
-                _browse_render_delete                   \
-                  "${_render_function_options[@]:-}"    \
+                _browse_render_delete                 \
+                  "${_render_function_options[@]:-}"  \
                   | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
                 ;;
               POST)
@@ -17494,33 +17494,33 @@ HEREDOC
                   _get_id_selector "${_selector_path%/*}" --notebook
                 )"
 
-                _browse_item_delete                     \
+                _browse_item_delete                   \
                   "${_render_function_options[@]:-}"  &>/dev/null
 
-                _browse_respond_with 302                \
+                _browse_respond_with 302              \
 "http://localhost:${NB_SERVER_PORT}/${_container_id_selector}${_response_url_params:-}"
                 ;;
             esac
 
             return 0
-          elif [[ "${_action:-}" == "edit"  ]]  &&
+          elif [[ "${_action:-}" == "edit"  ]]        &&
                _file_is_text "${_selector_path:-}"
           then
-            if [[ "${_request_method}"  == "POST"       ]]
+            if [[ "${_request_method}"  == "POST"     ]]
             then
-              _browse_item_update                       \
-                "${_render_function_options[@]:-}"      \
+              _browse_item_update                     \
+                "${_render_function_options[@]:-}"    \
                 --message-body "${_message_body:-}"
             fi
 
-            _browse_render_edit                         \
-              "${_render_function_options[@]:-}"        \
+            _browse_render_edit                       \
+              "${_render_function_options[@]:-}"      \
               | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
 
             return 0
           else
-            _browse_render_item                         \
-              "${_render_function_options[@]:-}"        \
+            _browse_render_item                       \
+              "${_render_function_options[@]:-}"      \
               | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
 
             return 0
