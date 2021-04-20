@@ -53,6 +53,7 @@ note-link-janitor required:
 
     while true
     do
+      local __yn=
       IFS='' read -r -e -d $'\n' -p "Proceed? [y/N] " __yn
       case ${__yn} in
         [Yy]*)
@@ -66,7 +67,7 @@ note-link-janitor required:
     done
   fi
 
-  local _notebook_path
+  local _notebook_path=
   _notebook_path="$(_notebooks current --path)"
 
   note-link-janitor "${_notebook_path}"

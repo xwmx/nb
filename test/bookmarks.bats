@@ -4,7 +4,7 @@ load test_helper
 
 # `bookmarks` #################################################################
 
-@test "\`bookmarks\` exits with 0 and displays a list of bookmarks with titles." {
+@test "'bookmarks' exits with 0 and displays a list of bookmarks with titles." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "first.md"
@@ -28,7 +28,7 @@ line two
 line three
 line four
 HEREDOC
-    _files=($(ls "${_NOTEBOOK_PATH}/"))
+    _files=($(ls "${NB_DIR}/home/"))
   }
 
   run "${_NB}" bookmarks
@@ -46,7 +46,7 @@ HEREDOC
 
 # `bookmarks --sort` ##########################################################
 
-@test "\`bookmarks --sort\` exits with 0 and displays a sorted list of bookmarks." {
+@test "'bookmarks --sort' exits with 0 and displays a sorted list of bookmarks." {
   {
     "${_NB}" init
     cat <<HEREDOC | "${_NB}" add "first.md"
@@ -70,7 +70,7 @@ line two
 line three
 line four
 HEREDOC
-    _files=($(ls "${_NOTEBOOK_PATH}/"))
+    _files=($(ls "${NB_DIR}/home/"))
   }
 
   run "${_NB}" bookmarks --sort

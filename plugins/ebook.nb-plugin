@@ -68,6 +68,27 @@ More info:
   https://pandoc.org/epub.html
 HEREDOC
 
+__get_sub_files() {
+  local _chapter_filenames=($(_list_files "${_folder_path}"))
+  local _files=()
+  local _folder_path="${1:-}"
+
+  local __filename=
+  for   __filename in "${_chapter_filenames[@]:-}"
+  do
+    if [[ -d "${_folder_path}/${__filename}" ]]
+    then
+      _files+=($(
+        __get_sub_files "${_folder_path}/${__filename}"
+      ))
+    else
+      _files+=("${_folder_path}/${__filename}")
+    fi
+  done
+
+  printf "%s\\n" "${_files[@]:-}"
+}
+
 # Define the subcommand as a function, named with a leading underscore.
 _ebook() {
   local _force=0
@@ -76,7 +97,8 @@ _ebook() {
   local _prompt=0
   local _subcommand=
 
-  for __arg in "${@}"
+  local __arg=
+  for   __arg in "${@}"
   do
     case "${__arg}" in
       --force)
@@ -125,6 +147,7 @@ HEREDOC
       then
         while true
         do
+          local __yn=
           IFS='' read -r -e -d $'\n' -p "Proceed?  [y/N] " __yn
           case ${__yn} in
             [Yy]*)
@@ -199,10 +222,10 @@ HEREDOC
 
       local _pandoc_arguments=()
 
-      local _notebook_path
+      local _notebook_path=
       _notebook_path="$(_notebooks current --path)"
 
-      local _notebook_name
+      local _notebook_name=
       _notebook_name="$(_notebooks current --name)"
 
       local _stylesheet_path="${_notebook_path}/stylesheet.css"
@@ -232,12 +255,20 @@ HEREDOC
         exit 1
       fi
 
-      for __filename in "${_chapter_filenames[@]:-}"
+      local __filename=
+      for   __filename in "${_chapter_filenames[@]:-}"
       do
-        _pandoc_arguments+=("${_notebook_path}/${__filename}")
+        if [[ -d "${_notebook_path}/${__filename}" ]]
+        then
+          _pandoc_arguments+=($(
+            __get_sub_files "${_notebook_path}/${__filename}"
+          ))
+        else
+          _pandoc_arguments+=("${_notebook_path}/${__filename}")
+        fi
       done
 
-      local _output_filename
+      local _output_filename=
       _output_filename="$(
         _notebooks current --filename "${_notebook_name}.epub"
       )"

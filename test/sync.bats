@@ -6,23 +6,37 @@ load test_helper
 _setup_notebooks() {
   _setup_remote_repo
 
-  export NB_DIR_1="${_TMP_DIR}/notebook-1"
-  export NB_DIR_2="${_TMP_DIR}/notebook-2"
+  export NB_DIR_1="${_TMP_DIR}/nbdir-1"
+  export NB_DIR_2="${_TMP_DIR}/nbdir-2"
 
   export NB_DIR="${NB_DIR_1}"
 
-  run "${_NB}" init "${_GIT_REMOTE_URL}"
+  "${_NB}" init "${_GIT_REMOTE_URL}"
 
   export NB_DIR="${NB_DIR_2}"
 
-  run "${_NB}" init "${_GIT_REMOTE_URL}"
+  "${_NB}" init "${_GIT_REMOTE_URL}"
 
   export NB_DIR="${NB_DIR_1}"
 }
 
+# help ########################################################################
+
+@test "'help sync' exits with 0 and prints help information." {
+  run "${_NB}" help sync
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0             ]]
+
+  [[ "${lines[0]}"  =~  Usage.*\:     ]]
+  [[ "${lines[1]}"  =~  \ \ nb\ sync  ]]
+}
+
 # sync --all #################################################################
 
-@test "\`sync --all\` with no local syncs global notebooks." {
+@test "'sync --all' with no local syncs global notebooks." {
   export NB_AUTO_SYNC=0
 
   {
@@ -30,7 +44,8 @@ _setup_notebooks() {
 
     # global-remote
 
-    run "${_NB}" notebooks add global-remote "${_GIT_REMOTE_URL}"
+    "${_NB}" notebooks add global-remote "${_GIT_REMOTE_URL}"
+
     run "${_NB}" global-remote:add "global-remote.md" \
       --content "Example content from global-remote."
 
@@ -62,7 +77,8 @@ _setup_notebooks() {
 
     # global-no-remote
 
-    run "${_NB}" notebooks add global-no-remote
+    "${_NB}" notebooks add global-no-remote
+
     run "${_NB}" global-no-remote:add "global-no-remote.md" \
       --content "Example content from global-no-remote."
 
@@ -94,8 +110,8 @@ _setup_notebooks() {
 
     # example-archived
 
-    run "${_NB}" notebooks add example-archived "${_GIT_REMOTE_URL}"
-    run "${_NB}" notebooks archive example-archived
+    "${_NB}" notebooks add example-archived "${_GIT_REMOTE_URL}"
+    "${_NB}" notebooks archive example-archived
     run "${_NB}" example-archived:add "archived.md" \
       --content "Example content from example-archived."
 
@@ -181,7 +197,7 @@ _setup_notebooks() {
 
 # local notebook ##############################################################
 
-@test "\`sync --all\` with local syncs local and global notebooks." {
+@test "'sync --all' with local syncs local and global notebooks." {
   export NB_AUTO_SYNC=0
 
   {
@@ -189,7 +205,8 @@ _setup_notebooks() {
 
     # global-remote
 
-    run "${_NB}" notebooks add global-remote "${_GIT_REMOTE_URL}"
+    "${_NB}" notebooks add global-remote "${_GIT_REMOTE_URL}"
+
     run "${_NB}" global-remote:add "global-remote.md" \
       --content "Example content from global-remote."
 
@@ -233,7 +250,8 @@ _setup_notebooks() {
 
     # global-no-remote
 
-    run "${_NB}" notebooks add global-no-remote
+    "${_NB}" notebooks add global-no-remote
+
     run "${_NB}" global-no-remote:add "global-no-remote.md" \
       --content "Example content from global-no-remote."
 
@@ -277,8 +295,9 @@ _setup_notebooks() {
 
     # example-archived
 
-    run "${_NB}" notebooks add example-archived "${_GIT_REMOTE_URL}"
-    run "${_NB}" notebooks archive example-archived
+    "${_NB}" notebooks add example-archived "${_GIT_REMOTE_URL}"
+    "${_NB}" notebooks archive example-archived
+
     run "${_NB}" example-archived:add "archived.md" \
       --content "Example content from example-archived."
 
@@ -326,8 +345,8 @@ _setup_notebooks() {
 
     [[ "$(pwd)" == "${_TMP_DIR}/example-local" ]]
 
-    [[ ${status} -eq 0                              ]]
-    [[ "$("${_NB}" remote)" == "${_GIT_REMOTE_URL}" ]]
+    [[ ${status} -eq 0                                    ]]
+    [[ "$("${_NB}" remote --url)" == "${_GIT_REMOTE_URL}" ]]
 
     "${_NB}" notebooks current --local
 
@@ -442,30 +461,26 @@ _setup_notebooks() {
   [[   -f "${_TMP_DIR}/example-local/local.md"                ]]
 }
 
-@test "\`sync\` succeeds with local notebook." {
+@test "'sync' succeeds with local notebook." {
   {
     _setup_notebooks
 
-    run "${_NB}" notebooks init "${_TMP_DIR}/example-local"
+    "${_NB}" notebooks init "${_TMP_DIR}/example-local"
 
     cd "${_TMP_DIR}/example-local"
 
     [[ "$(pwd)" == "${_TMP_DIR}/example-local" ]]
 
-    run "${_NB}" remote set "${_GIT_REMOTE_URL}" --force
+    "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}1${_NEWLINE}"
 
-    [[ ${status} -eq 0                              ]]
-    [[ "$("${_NB}" remote)" == "${_GIT_REMOTE_URL}" ]]
-    [[ "${lines[0]}" =~ Remote\ set\ to             ]]
-    [[ "${lines[0]}" =~ ${_GIT_REMOTE_URL}          ]]
+    diff <("${_NB}" remote --url) <(printf "%s\\n" "${_GIT_REMOTE_URL}")
 
     "${_NB}" notebooks current --local
 
     run "${_NB}" add "local.md" --content "Example content from local."
 
-    [[ ${status} -eq 0                              ]]
-    [[ -f "${_TMP_DIR}/example-local/local.md"      ]]
-    [[ ! -f "${NB_DIR_1}/home/local.md"             ]]
+    [[    -f "${_TMP_DIR}/example-local/local.md" ]]
+    [[ !  -f "${NB_DIR_1}/home/local.md"          ]]
   }
 
   # sync 1: send changes to remote
@@ -495,11 +510,11 @@ _setup_notebooks() {
 
 # sync errors #################################################################
 
-@test "\`sync\` returns error when notebook has no remote." {
+@test "'sync' returns error when notebook has no remote." {
   {
     _setup_notebooks
 
-    run "${_NB}" remote remove --force
+    "${_NB}" remote remove <<< "y${_NEWLINE}"
 
     "${_NB}" remote && return 1
   }
@@ -515,14 +530,13 @@ _setup_notebooks() {
   [[ ${status} -eq 1                          ]]
 }
 
-@test "\`sync --all\` returns error when no unarchived notebooks with remotes found." {
+@test "'sync --all' returns error when no unarchived notebooks with remotes found." {
   {
     _setup_notebooks
 
-    run "${_NB}" notebooks add example
-    run "${_NB}" notebooks archive notebook-1
-    run "${_NB}" notebooks archive notebook-2
-    run "${_NB}" remote remove --force
+    "${_NB}" notebooks add example
+    "${_NB}" notebooks archive home
+    "${_NB}" remote remove <<< "y${_NEWLINE}"
 
     "${_NB}" remote && return 1
   }
@@ -538,54 +552,25 @@ _setup_notebooks() {
 
 # remote set && sync #########################################################
 
-@test "\`sync\` returns error with missing remote branch." {
+@test "'sync' fails with invalid remote." {
   {
     _setup_notebooks
 
-    git -C "${_TMP_DIR}/notebook-1/home" checkout -b example-branch
-    git -C "${_TMP_DIR}/notebook-1/home" branch -d master
-
-    run "${_NB}" remote set "${_GIT_REMOTE_URL}" --force
-
-     NB_AUTO_SYNC=0 run "${_NB}" add "one.md" --content "Example content from 1."
-
-    [[ -f "${NB_DIR_1}/home/one.md"   ]]
-    [[ ! -f "${NB_DIR_2}/home/one.md" ]]
-  }
-
-  run "${_NB}" sync
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[ ${status}      -eq 1                           ]]
-  [[ "${lines[0]}"  =~  Remote\ branch\ not\ found: ]]
-  [[ "${lines[0]}"  =~  example-branch              ]]
-  [[ ! "${output}"  =~  Done                        ]]
-}
-
-@test "\`sync\` fails with invalid remote." {
-  {
-    _setup_notebooks
-
-    run "${_NB}" remote remove --force
+    "${_NB}" remote remove <<< "y${_NEWLINE}"
 
     [[ "$("${_NB}" remote 2>&1)" =~ No\ remote ]]
 
-    run "${_NB}" add "one.md" --content "Example content from 1."
+    "${_NB}" add "one.md" --content "Example content from 1."
 
-    [[ -f "${NB_DIR_1}/home/one.md"   ]]
-    [[ ! -f "${NB_DIR_2}/home/one.md" ]]
+    [[    -f "${NB_DIR_1}/home/one.md"  ]]
+    [[ !  -f "${NB_DIR_2}/home/one.md"  ]]
+
+    "${_NB}" git remote add origin "https://example.test/invalid.git"
+
+    diff                        \
+      <("${_NB}" remote --url)  \
+      <(printf "%s\\n" "https://example.test/invalid.git")
   }
-
-  run "${_NB}" remote set "https://example.test/invalid.git" --force
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[ "${lines[0]}" =~ Remote\ set\ to ]]
-  [[ "${lines[0]}" =~ invalid         ]]
-  [[ ${status} -eq 0                  ]]
 
   run "${_NB}" sync
 
@@ -600,28 +585,28 @@ _setup_notebooks() {
   [[ ! "${output}"  =~ Done                                 ]]
 }
 
-@test "\`sync\` succeeds after \`remote set\`" {
+@test "'sync' succeeds after 'remote set'" {
   {
     _setup_notebooks
 
-    run "${_NB}" remote remove --force
+    "${_NB}" remote remove <<< "y${_NEWLINE}"
 
     [[ "$("${_NB}" remote 2>&1)" =~ No\ remote ]]
 
-    run "${_NB}" add "one.md" --content "Example content from 1."
+    "${_NB}" add "one.md" --content "Example content from 1."
 
-    [[ -f "${NB_DIR_1}/home/one.md"   ]]
-    [[ ! -f "${NB_DIR_2}/home/one.md" ]]
+    [[    -f "${NB_DIR_1}/home/one.md"  ]]
+    [[ !  -f "${NB_DIR_2}/home/one.md"  ]]
   }
 
-  run "${_NB}" remote set "${_GIT_REMOTE_URL}" --force
+  run "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}1${_NEWLINE}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[0]}" =~ Remote\ set\ to     ]]
-  [[ "${lines[0]}" =~ ${_GIT_REMOTE_URL}  ]]
-  [[ ${status} -eq 0                      ]]
+  [[ "${output}" =~ Remote\ set\ to     ]]
+  [[ "${output}" =~ ${_GIT_REMOTE_URL}  ]]
+  [[ ${status} -eq 0                    ]]
 
   # sync 1: send changes to remote
   run "${_NB}" sync
@@ -648,7 +633,7 @@ _setup_notebooks() {
 
 # autosync ####################################################################
 
-@test "NB_AUTO_SYNC=1 syncs with \`add\`." {
+@test "NB_AUTO_SYNC=1 syncs with 'add'." {
   {
     _setup_notebooks
 
@@ -691,7 +676,7 @@ _setup_notebooks() {
   [[ -f "${NB_DIR_2}/home/one.md" ]]
 }
 
-@test "NB_AUTO_SYNC=0 does not sync with \`add\`." {
+@test "NB_AUTO_SYNC=0 does not sync with 'add'." {
   {
     _setup_notebooks
 
@@ -870,14 +855,14 @@ _setup_notebooks() {
 
 # sync ########################################################################
 
-@test "\`sync\` succeeds when files are added and removed from two clones." {
+@test "'sync' succeeds when files are added and removed from two clones." {
   # skip
   {
     _setup_notebooks
-    run "${_NB}" add "one.md" --content "Example content from 1."
+    "${_NB}" add "one.md" --content "Example content from 1."
 
     export NB_DIR="${NB_DIR_2}"
-    run "${_NB}" add "two.md" --content "Example content from 2."
+    "${_NB}" add "two.md" --content "Example content from 2."
 
     export NB_DIR="${NB_DIR_1}"
   }
@@ -1138,7 +1123,7 @@ _setup_notebooks() {
      "one.md${_NEWLINE}${_NEWLINE}two-2.md${_NEWLINE}one-2.md${_NEWLINE}two-3.md${_NEWLINE}one-3.md"  ]]
 }
 
-@test "\`sync\` succeeds when one file is edited on two clones." {
+@test "'sync' succeeds when one file is edited on two clones." {
   # skip
 
   _setup_notebooks
@@ -1189,7 +1174,7 @@ _setup_notebooks() {
   grep -q '\- Line 5 List Item' "${NB_DIR_1}/home/one.md"
 }
 
-@test "\`sync\` succeeds when multiple files are edited on two clones." {
+@test "'sync' succeeds when multiple files are edited on two clones." {
   # skip
   _setup_notebooks
 
@@ -1275,7 +1260,7 @@ _setup_notebooks() {
   grep -q '\- Line 5 List Item' "${NB_DIR_1}/home/three.md"
 }
 
-@test "\`sync\` succeeds when the same filename is added on two clones." {
+@test "'sync' succeeds when the same filename is added on two clones." {
   # skip
   _setup_notebooks
 
@@ -1319,7 +1304,7 @@ This content is unique to 2.
   grep -q '\[nb\] Add\: one.md'       "${NB_DIR_2}/home/one.md"
 }
 
-@test "\`sync\` succeeds when an encrypted file is edited on two clones." {
+@test "'sync' succeeds when an encrypted file is edited on two clones." {
   # skip
 
   _setup_notebooks
@@ -1466,7 +1451,7 @@ This content is unique to 2.
       )" =~ Edit\ content\ from\ 2\.                                ]]
 }
 
-@test "\`sync\` notebooks exist after setup." {
+@test "'sync' notebooks exist after setup." {
   _setup_notebooks
 
   [[ -d "${_GIT_REMOTE_PATH}"     ]]

@@ -26,7 +26,7 @@ HEREDOC
 
 # `count` #####################################################################
 
-@test "\`count\` exits with 0 and prints count." {
+@test "'count' exits with 0 and prints count." {
   {
     _setup_count
   }
@@ -42,7 +42,7 @@ HEREDOC
   [[ "${lines[0]}" -eq 3  ]]
 }
 
-@test "\`count --type <type>\` exits with 0 and counts items of type." {
+@test "'count --type <type>' exits with 0 and counts items of type." {
   {
     "${_NB}" init
 
@@ -83,18 +83,18 @@ HEREDOC
 
 # help ########################################################################
 
-@test "\`help count\` exits with status 0." {
+@test "'help count' exits with status 0." {
   run "${_NB}" help count
 
   [[ ${status} -eq 0 ]]
 }
 
-@test "\`help count\` prints help information." {
+@test "'help count' prints help information." {
   run "${_NB}" help count
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[0]}" == "Usage:"      ]]
-  [[ "${lines[1]}" == "  nb count"  ]]
+  [[ "${lines[0]}" =~ Usage.*:  ]]
+  [[ "${lines[1]}" =~ nb\ count ]]
 }

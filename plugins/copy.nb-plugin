@@ -17,7 +17,7 @@ _subcommands add "duplicate"
 # Define help and usage text with `_subcommands describe <subcommand> <usage>`.
 _subcommands describe "copy" <<HEREDOC
 Usage:
-  nb copy (<id> | <filename> | <path> | <title>)
+  nb copy ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
 
 Description:
   Create a copy of the specified item in the current notebook.
@@ -47,50 +47,63 @@ _copy() {
     exit 1
   fi
 
-  # Get the filename using the selector:
-  local _source_filename
-  _source_filename="$(_show "${_selector}" --filename)"
+  # Get the relative path using the selector:
+  local _source_relative_path=
+  _source_relative_path="$(_show "${_selector}" --relative-path)"
 
   # Get the current notebook path:
-  local _notebook_path
+  local _notebook_path=
   _notebook_path="$(_notebooks current --path)"
 
   # Validate that the selector represents a valid file:
-  if [[ -z "${_source_filename:-}"                      ]] ||
-     [[ ! -e "${_notebook_path}/${_source_filename}"    ]]
+  if [[   -z "${_source_relative_path:-}"                 ]] ||
+     [[ ! -e "${_notebook_path}/${_source_relative_path}" ]]
   then
     printf "Not found: %s\\n" "${_selector}"
-    exit 1
-  elif [[ ! -f "${_notebook_path}/${_source_filename}"  ]]
-  then
-    printf "Not a file: %s\\n" "${_selector}"
     exit 1
   fi
 
   # Get a unique filename based on the source filename:
-  local _target_filename
-  _target_filename="$(_notebooks current --filename "${_source_filename}")"
+  local _target_relative_path=
+  _target_relative_path="$(
+    _notebooks current --filename "${_source_relative_path}"
+  )"
+
+  if [[ "${_target_relative_path:-}" =~ / ]]
+  then
+    local _target_folder_path="${_notebook_path}/${_target_relative_path%/*}"
+  else
+    local _target_folder_path="${_notebook_path}"
+  fi
 
   # Check if the file is a text file:
-  if _show "${_source_filename}" --type text
+  if _show "${_source_relative_path}" --type text
   then # Text can use `_add`.
     # Print the source contents and pipe to `_add`:
-    _show "${_source_filename}" --no-color --print | _add "${_target_filename}"
-  else # Binary files must be copied manually.
-    # Copy the binary file to the new filename:
-    cp                                        \
-      "${_notebook_path}/${_source_filename}" \
-      "${_notebook_path}/${_target_filename}"
+    _show "${_source_relative_path}" --no-color --print   \
+      | _add "${_target_relative_path}"
+  else
+    local _copy_arguments=(
+      "${_notebook_path}/${_source_relative_path}"
+      "${_notebook_path}/${_target_relative_path}"
+    )
+
+    if [[ -d "${_notebook_path}/${_source_relative_path}" ]]
+    then
+      _copy_arguments=("-R" "${_copy_arguments[@]:-}")
+    fi
+
+    cp "${_copy_arguments[@]:-}"
 
     # Add the new filename to the index:
-    _index add "${_target_filename}"
+    _index add "${_target_relative_path##*/}" "${_target_folder_path}"
 
     # Record the change in git:
-    _git checkpoint "[nb] Add: ${_target_filename}"
+    _git checkpoint "[nb] Add: ${_target_relative_path}"
 
     # Print feedback:
-    local _info
-    _info="$(_show "${_target_filename}" --info-line)"
+    local _info=
+    _info="$(_show "${_target_relative_path}" --info-line)"
 
     printf "Added: %s\\n" "${_info}"
   fi

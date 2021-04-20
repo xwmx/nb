@@ -16,16 +16,33 @@
 ###############################################################################
 
 _nb_subcommands() {
-  # _cache_completions()
+  # _nb_cache_completions()
   #
   # Usage:
-  #   _cache_completions <path>
+  #   _nb_cache_completions <path>
   #
   # Description:
   #   Cache completions for `nb`. Generating completions can be slow and
   #   native shell caching doesn't appear to help.
-  _cache_completions() {
+  _nb_cache_completions() {
     local _cache_path="${1:-}"
+
+    [[ -z "${_cache_path:-}" ]] && return 0
+
+    # Remove outdated cache files.
+
+    local _base_cache_path="${_cache_path%-*}"
+    local __suffix
+
+    for __suffix in "zsh" "v1"
+    do
+      if [[ -e "${_base_cache_path:?}-${__suffix:?}" ]]
+      then
+        rm -f  "${_base_cache_path:?}-${__suffix:?}"
+      fi
+    done
+
+    # Rebuild completion cache.
 
     local _commands
     IFS=$'\n' _commands=($(nb subcommands))
@@ -76,9 +93,15 @@ _nb_subcommands() {
 
       local _directory_path
       _directory_path="$(dirname "${_cache_path}")"
+
       mkdir -p "${_directory_path}"
 
-      echo >! "${_cache_path}"
+      if [[ -f "${_cache_path:?}" ]]
+      then
+        rm -f "${_cache_path:?}"
+      fi
+
+      touch "${_cache_path:?}"
 
       {
         (IFS=$' '; printf "%s\\n" "${_commands[*]}")
@@ -87,7 +110,6 @@ _nb_subcommands() {
       } >> "${_cache_path}"
     fi
   }
-
 
   local _nb_dir=
   _nb_dir="$(nb env | grep 'NB_DIR' | cut -d = -f 2)"
@@ -111,12 +133,12 @@ _nb_subcommands() {
     return 0
   fi
 
-  local _cache_path="${_nb_dir}/.cache/nb-completion-cache-zsh"
+  local _cache_path="${_nb_dir:?}/.cache/nb-completion-cache-v2"
   local _completions_cached=()
 
   if [[ ! -e "${_cache_path}" ]]
   then
-    _cache_completions "${_cache_path}"
+    _nb_cache_completions "${_cache_path}"
   fi
 
   if [[ -e "${_cache_path}" ]]
@@ -133,7 +155,7 @@ _nb_subcommands() {
       fi
     done < "${_cache_path}"
 
-    (_cache_completions "${_cache_path}" &)
+    (_nb_cache_completions "${_cache_path}" &)
   fi
 
   local _current="${COMP_WORDS[COMP_CWORD]}"

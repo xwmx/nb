@@ -4,10 +4,21 @@
 #
 # Test helper for Bats: Bash Automated Testing System.
 #
+# https://github.com/bats-core/bats-core
 # https://github.com/sstephenson/bats
 ###############################################################################
 
-setup() {
+# Usage: _setup [<bats-base-path>]
+_setup() {
+  export NB_TEST_BASE_PATH="${1:-"${BATS_TEST_DIRNAME}"}"
+
+# $IFS
+  IFS=$'\n\t'
+
+  # Allow clobber. More info:
+  # https://stackoverflow.com/a/6762399
+  set +o noclobber
+
   # Set terminal width.
   #
   # The number of lines with wrapped output depends on terminal width.
@@ -22,31 +33,27 @@ setup() {
   # `$_NB`
   #
   # The location of the `nb` script being tested.
-  export _NB="${BATS_TEST_DIRNAME}/../nb"
-
-  # `$_NB_PATH`
-  #
-  # Used by `bookmark` and `nb` for testing.
-  export _NB_PATH="${_NB}"
+  export _NB="${NB_TEST_BASE_PATH}/../nb"
 
   # `$_BOOKMARK`
   #
   # The location of the `bookmark` script being tested.
-  export _BOOKMARK="${BATS_TEST_DIRNAME}/../bin/bookmark"
+  export _BOOKMARK="${NB_TEST_BASE_PATH}/../bin/bookmark"
 
   # `$_NOTES`
   #
   # The location of the `notes` script being tested.
-  export _NOTES="${BATS_TEST_DIRNAME}/../bin/notes"
+  export _NOTES="${NB_TEST_BASE_PATH}/../bin/notes"
+
+  # `$_NB_PATH`
+  #
+  # Used by `bookmark` and `notes` for testing.
+  export _NB_PATH="${_NB}"
 
   export _TMP_DIR
   _TMP_DIR="$(mktemp -d /tmp/nb_test.XXXXXX)" || exit 1
 
   export NB_DIR="${_TMP_DIR}/notebooks"
-
-  export NB_NOTEBOOK_PATH="${NB_DIR}/home"
-# Assign legacy $_NOTEBOOK_PATH. TODO: global search and replace.
-  export _NOTEBOOK_PATH="${NB_NOTEBOOK_PATH}"
 
   export NBRC_PATH="${_TMP_DIR}/.nbrc"
   export NB_COLOR_PRIMARY=3
@@ -55,7 +62,8 @@ setup() {
   export _GIT_REMOTE_PATH="${_TMP_DIR}/remote"
   export _GIT_REMOTE_URL="file://${_GIT_REMOTE_PATH}"
 
-  export _BOOKMARK_URL="file://${BATS_TEST_DIRNAME}/fixtures/example.com.html"
+  export _BOOKMARK_URL="file://${NB_TEST_BASE_PATH}/fixtures/example.com.html"
+  export _OG_BOOKMARK_URL="file://${NB_TEST_BASE_PATH}/fixtures/example.com-og.html"
 
   # `$_ERROR_PREFIX`
   #
@@ -65,12 +73,8 @@ setup() {
 
   if [[ -z "${EDITOR:-}" ]] || [[ ! "${EDITOR:-}" =~ mock_editor ]]
   then
-    export EDITOR="${BATS_TEST_DIRNAME}/fixtures/bin/mock_editor"
+    export EDITOR="${NB_TEST_BASE_PATH}/fixtures/bin/mock_editor"
   fi
-
-  # Use empty `nb` script in environment to avoid depending on `nb`
-  # being available in `$PATH`.
-  export PATH="${BATS_TEST_DIRNAME}/fixtures/bin:${PATH}"
 
   # $_NEWLINE
   #
@@ -78,11 +82,18 @@ setup() {
   export _NEWLINE=$'\n'
 
   if [[ ! "${NB_DIR}"         =~ ^/tmp/nb_test ]] ||
-     [[ ! "${_NOTEBOOK_PATH}" =~ ^/tmp/nb_test ]] ||
      [[ ! "${NBRC_PATH}"      =~ ^/tmp/nb_test ]]
   then
     exit 1
   fi
+}
+
+setup() {
+  _setup
+
+  # Use empty `nb` script in environment to avoid depending on `nb`
+  # being available in `$PATH`.
+  export PATH="${NB_TEST_BASE_PATH}/fixtures/bin:${PATH}"
 }
 
 teardown() {
@@ -116,6 +127,36 @@ _compare() {
   local _actual="${2:-}"
   printf "expected:\\n%s\\n" "${_expected}"
   printf "actual:\\n%s\\n" "${_actual}"
+}
+
+# _contains()
+#
+# Usage:
+#   _contains <query> <list-item>...
+#
+# Exit / Error Status:
+#   0 (success, true)  If the item is included in the list.
+#   1 (error,  false)  If not.
+#
+# Example:
+#   _contains "${_query}" "${_list[@]}"
+_contains() {
+  local _query="${1:-}"
+  shift
+
+  if [[ -z "${_query}"  ]] ||
+     [[ -z "${*:-}"     ]]
+  then
+    return 1
+  fi
+
+  local __element=
+  for   __element in "${@}"
+  do
+    [[ "${__element}" == "${_query}" ]] && return 0
+  done
+
+  return 1
 }
 
 # _get_hash()
@@ -170,8 +211,9 @@ _get_hash() {
 #   _color_primary <string> [--underline]
 export _TPUT_COLOR_PRIMARY
 _TPUT_COLOR_PRIMARY="$(tput setaf 3)"
-export _TPUT_SGR0= && _TPUT_SGR0="$(tput sgr0)"
-export _TPUT_SMUL= && _TPUT_SMUL="$(tput smul)"
+export _TPUT_SGR0=    && _TPUT_SGR0="$(tput sgr0)"
+export _TPUT_SMUL=    && _TPUT_SMUL="$(tput smul)"
+export _TPUT_SETAF_8= && _TPUT_SETAF_8="$(tput setaf 8)"
 _color_primary() {
   local _input="${1:-}"
   if [[ -z "${_input}" ]]
@@ -210,19 +252,22 @@ _sed_i() {
 # _setup_remote_repo()
 #
 # Usage:
-#   _setup_remote_repo
+#   _setup_remote_repo [<branch-name>]
 #
 # Description:
 #   Initialize and add initial commit to a git repository at
 #   `$_GIT_REMOTE_URL`.
 _setup_remote_repo() {
+  local _branch_name="${1:-"master"}"
   local _pwd="${PWD}"
+
   if [[ -n "${_GIT_REMOTE_PATH}" ]] &&
      [[ "${_GIT_REMOTE_PATH}" =~ ^/tmp/nb_test ]]
   then
     mkdir "${_GIT_REMOTE_PATH}.setup"     &&
       cd "${_GIT_REMOTE_PATH}.setup"      &&
       git init                            &&
+      git checkout -b "${_branch_name}"   &&
       touch '.index'                      &&
       git add --all                       &&
       git commit -a -m "Initial commit."  &&

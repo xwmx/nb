@@ -14,9 +14,40 @@ _setup_notebook() {
   } > /dev/null 2>&1
 }
 
+# <name> validation ###########################################################
+
+@test "'notebooks archive <reserved>' exits with 1 and prints error message." {
+  {
+    "${_NB}" init
+
+    cd "${_TMP_DIR}"
+
+    _names=(
+      ".cache"
+      ".current"
+      ".plugins"
+      ".readme"
+      "readme"
+      "readme.md"
+    )
+  }
+
+  for __name in "${_names[@]}"
+  do
+    run "${_NB}" notebooks archive "${__name}"
+
+    printf "\${status}: '%s'\\n" "${status}"
+    printf "\${output}: '%s'\\n" "${output}"
+
+    [[ ${status} -eq 1                  ]]
+    [[ "${lines[0]}" =~ Name\ reserved  ]]
+    [[ "${lines[0]}" =~ ${__name}       ]]
+  done
+}
+
 # `notebooks archive` #########################################################
 
-@test "\`notebooks archive\` exits with 0 and archives." {
+@test "'notebooks archive' exits with 0 and archives." {
   {
     _setup_notebook
   }
@@ -30,7 +61,7 @@ _setup_notebook() {
   [[ "${output}" == "$(_color_primary "home") archived."  ]]
 
   # Creates git commit
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -38,7 +69,7 @@ _setup_notebook() {
   git log | grep -q '\[nb\] Archived'
 }
 
-@test "\`notebooks archive <name>\` exits with 0 and archives." {
+@test "'notebooks archive <name>' exits with 0 and archives." {
   {
     _setup_notebook
   }
@@ -63,10 +94,10 @@ _setup_notebook() {
   git log | grep -q '\[nb\] Archived'
 }
 
-@test "\`notebooks archive\` does not create git commit if already archived." {
+@test "'notebooks archive' does not create git commit if already archived." {
   {
     _setup_notebook
-    touch "${_NOTEBOOK_PATH}/.archived"
+    touch "${NB_DIR}/home/.archived"
   }
 
   run "${_NB}" notebooks archive
@@ -80,7 +111,7 @@ _setup_notebook() {
   [[ "${output}" =~ archived\.$ ]]
 
   # Creates git commit
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -90,10 +121,10 @@ _setup_notebook() {
 
 # `notebooks unarchive` #######################################################
 
-@test "\`notebooks unarchive\` exits with 0 and unarchives." {
+@test "'notebooks unarchive' exits with 0 and unarchives." {
   {
     _setup_notebook
-    run "${_NB}" notebooks archive
+    "${_NB}" notebooks archive
   }
 
   run "${_NB}" notebooks unarchive
@@ -105,7 +136,7 @@ _setup_notebook() {
   [[ "${output}" == "$(_color_primary "home") unarchived."  ]]
 
   # Creates git commit
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -113,10 +144,10 @@ _setup_notebook() {
   git log | grep '\[nb\] Unarchived'
 }
 
-@test "\`notebooks unarchive <name>\` exits with 0 and unarchives." {
+@test "'notebooks unarchive <name>' exits with 0 and unarchives." {
   {
     _setup_notebook
-    run "${_NB}" notebooks archive one
+    "${_NB}" notebooks archive one
   }
 
   run "${_NB}" notebooks unarchive one
@@ -136,7 +167,7 @@ _setup_notebook() {
   git log | grep '\[nb\] Unarchived'
 }
 
-@test "\`notebooks unarchive\` does not create git commit if already unarchived." {
+@test "'notebooks unarchive' does not create git commit if already unarchived." {
   {
     _setup_notebook
   }
@@ -150,7 +181,7 @@ _setup_notebook() {
   [[ "${output}" == "$(_color_primary "home") unarchived."  ]]
 
   # Creates git commit
-  cd "${_NOTEBOOK_PATH}" || return 1
+  cd "${NB_DIR}/home" || return 1
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
@@ -160,7 +191,7 @@ _setup_notebook() {
 
 # `notebooks status` ##########################################################
 
-@test "\`notebooks status\` exits with 0 and prints status." {
+@test "'notebooks status' exits with 0 and prints status." {
   {
     _setup_notebook
   }
@@ -183,7 +214,7 @@ _setup_notebook() {
   [[ "${output}" == "$(_color_primary "home") is archived." ]]
 }
 
-@test "\`notebooks status <name>\` exits with 0 and prints status." {
+@test "'notebooks status <name>' exits with 0 and prints status." {
   {
     _setup_notebook
   }
@@ -208,18 +239,18 @@ _setup_notebook() {
 
 # help ########################################################################
 
-@test "\`help notebooks\` exits with status 0." {
+@test "'help notebooks' exits with status 0." {
   run "${_NB}" help notebooks
 
   [[ ${status} -eq 0 ]]
 }
 
-@test "\`help notebooks\` prints help information." {
+@test "'help notebooks' prints help information." {
   run "${_NB}" help notebooks
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[0]}" == "Usage:"      ]]
+  [[ "${lines[0]}" =~ Usage.*:      ]]
   [[ "${lines[1]}" =~ nb\ notebook  ]]
 }

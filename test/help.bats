@@ -3,35 +3,121 @@
 
 load test_helper
 
-@test "\`help\` with no arguments exits with status 0." {
+@test "'help' with no arguments exits with status 0 and prints default help." {
   run "${_NB}" help
 
-  [[ "${status}" -eq 0 ]]
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq  0                         ]]
+
+  [[ "${output}" =~   nb\ help\ \<subcommand\>  ]]
+  [[ "${output}" =~   nb\ edit                  ]]
 }
 
-@test "\`help\` with no arguments prints default help." {
-  run "${_NB}" help
-
-  [[ "${output}" =~ nb\ help\ \<subcommand\>  ]]
-  [[ "${output}" =~ nb\ edit                  ]]
-}
-
-@test "\`-h\` prints default help." {
+@test "'-h' exits with 0 and prints default help." {
   run "${_NB}" -h
 
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq  0                       ]]
+
   [[ "${output}" =~ nb\ help\ \<subcommand\>  ]]
   [[ "${output}" =~ nb\ edit                  ]]
 }
 
-@test "\`--help\` prints default help." {
+@test "'--help' exits with 0 and prints default help." {
   run "${_NB}" --help
 
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq  0                       ]]
+
   [[ "${output}" =~ nb\ help\ \<subcommand\>  ]]
   [[ "${output}" =~ nb\ edit                  ]]
 }
 
-@test "\`help help\` prints \`help\` subcommand usage." {
+@test "'help help' exits with 0 and prints 'help' subcommand usage." {
   run "${_NB}" help help
 
-  [[ "${output}" =~ Shortcut\ Alias\:\ \`h\` ]]
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq  0                         ]]
+
+  [[ "${output}" =~ Shortcut\ Alias.*\:\ \`h\`  ]]
+}
+
+@test "'help settings' exits with 0 and prints 'settings' subcommand usage." {
+  run "${_NB}" help settings
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq  0          ]]
+
+  [[ "${lines[0]}"  =~  Usage.*:    ]]
+  [[ "${lines[1]}"  =~  \ \ nb\ set ]]
+}
+
+@test "'h settings' exits with 0 and prints 'settings' subcommand usage." {
+  run "${_NB}" h settings
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq  0          ]]
+
+  [[ "${lines[0]}"  =~  Usage.*:    ]]
+  [[ "${lines[1]}"  =~  \ \ nb\ set ]]
+}
+
+@test "'--help settings' exits with 0 and prints 'settings' subcommand usage." {
+  run "${_NB}" --help settings
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq  0          ]]
+
+  [[ "${lines[0]}"  =~  Usage.*:    ]]
+  [[ "${lines[1]}"  =~  \ \ nb\ set ]]
+}
+
+@test "'settings --help' exits with 0 and prints 'settings' subcommand usage." {
+  run "${_NB}" settings --help
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq  0          ]]
+
+  [[ "${lines[0]}"  =~  Usage.*:    ]]
+  [[ "${lines[1]}"  =~  \ \ nb\ set ]]
+}
+
+@test "'-h settings' exits with 0 and prints 'settings' subcommand usage." {
+  run "${_NB}" -h settings
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq  0          ]]
+
+  [[ "${lines[0]}"  =~  Usage.*:    ]]
+  [[ "${lines[1]}"  =~  \ \ nb\ set ]]
+}
+
+@test "'settings -h' exits with 0 and prints 'settings' subcommand usage." {
+  run "${_NB}" settings -h
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq  0          ]]
+
+  [[ "${lines[0]}"  =~  Usage.*:    ]]
+  [[ "${lines[1]}"  =~  \ \ nb\ set ]]
 }

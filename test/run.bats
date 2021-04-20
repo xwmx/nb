@@ -2,14 +2,14 @@
 
 load test_helper
 
-@test "\`run\` exits with status 0 and prints output." {
+@test "'run' exits with status 0 and prints output." {
   {
     "${_NB}" init
     "${_NB}" add "one.md" --title "one"
     "${_NB}" add "two.md" --title "two"
     "${_NB}" add "three.md" --title "three"
 
-    _files="$(ls "${_NOTEBOOK_PATH}/")"
+    _files="$(ls "${NB_DIR}/home/")"
   }
 
   run "${_NB}" run ls
@@ -21,7 +21,7 @@ load test_helper
   [[ "${output}" == "${_files}" ]]
 }
 
-@test "\`run\` with no command exits with status 1 and prints message." {
+@test "'run' with no command exits with status 1 and prints message." {
   {
     "${_NB}" init
     "${_NB}" add "one.md" --title "one"

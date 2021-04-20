@@ -4,10 +4,10 @@ load test_helper
 
 # no argument #################################################################
 
-@test "\`export\` with no arguments exits with status 1 and prints help." {
+@test "'export' with no arguments exits with status 1 and prints help." {
   {
-    run "${_NB}" init
-    run "${_NB}" add
+    "${_NB}" init
+    "${_NB}" add
   }
 
   run "${_NB}" export
@@ -21,10 +21,10 @@ load test_helper
 
 # <id> ######################################################################
 
-@test "\`export\` with valid <id> and <path> exports a new note file." {
+@test "'export' with valid <id> and <path> exports a new note file." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "# Export Example"
+    "${_NB}" init
+    "${_NB}" add "# Export Example"
   }
 
   run "${_NB}" export 1 "${_TMP_DIR}/example.md"
@@ -42,10 +42,10 @@ load test_helper
   [[ "${output}" =~ example.md  ]]
 }
 
-@test "\`export\` with valid <id> and directory <path> exports a new note file." {
+@test "'export' with valid <id> and directory <path> exports a new note file." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "# Export Example" --filename "example.md"
+    "${_NB}" init
+    "${_NB}" add "# Export Example" --filename "example.md"
   }
 
   run "${_NB}" export 1 "${_TMP_DIR}"
@@ -63,10 +63,10 @@ load test_helper
   [[ "${output}" =~ example.md  ]]
 }
 
-@test "\`export\` with valid <id> and different basename <path> exports a new note file." {
+@test "'export' with valid <id> and different basename <path> exports a new note file." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "# Export Example" --filename "example.md"
+    "${_NB}" init
+    "${_NB}" add "# Export Example" --filename "example.md"
   }
 
   run "${_NB}" export 1 "${_TMP_DIR}/sample.md"
@@ -85,10 +85,10 @@ load test_helper
   [[ "${output}" =~ sample.md   ]]
 }
 
-@test "\`export\` with valid <id> and <path> with diffferent file type converts." {
+@test "'export' with valid <id> and <path> with diffferent file type converts." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "# Export Example"
+    "${_NB}" init
+    "${_NB}" add "# Export Example"
   }
 
   run "${_NB}" export 1 "${_TMP_DIR}/example.html"
@@ -106,11 +106,12 @@ load test_helper
 
 # `notebook` ##################################################################
 
-@test "\`export notebook\` with valid <name> and <path> exports." {
+@test "'export notebook' with valid <name> and <path> exports." {
   {
-    run "${_NB}" init
-    run "${_NB}" notebooks add "example"
-    [[ -d "${NB_DIR}/example" ]]
+    "${_NB}" init
+    "${_NB}" notebooks add "example"
+
+    [[ -d "${NB_DIR}/example"     ]]
     [[ ! -d "${_TMP_DIR}/example" ]]
   }
 
@@ -128,10 +129,10 @@ load test_helper
 
 # `pandoc <id>` ###############################################################
 
-@test "\`export pandoc\` with valid <id> and <path> exports a new note file." {
+@test "'export pandoc' with valid <id> and <path> exports a new note file." {
   {
-    run "${_NB}" init
-    run "${_NB}" add "# Export Example"
+    "${_NB}" init
+    "${_NB}" add "# Export Example"
   }
 
   run "${_NB}" export pandoc 1
@@ -143,9 +144,9 @@ load test_helper
   [[ "${output}" =~ '<h1 id="export-example">Export Example</h1>' ]]
 }
 
-@test "\`export pandoc\` with invalid <id> returns error." {
+@test "'export pandoc' with invalid <id> returns error." {
   {
-    run "${_NB}" init
+    "${_NB}" init
   }
 
   run "${_NB}" export pandoc 100
@@ -159,13 +160,13 @@ load test_helper
 
 # help ########################################################################
 
-@test "\`help export\` returns usage information." {
+@test "'help export' returns usage information." {
   run "${_NB}" help export
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                ]]
-  [[ "${lines[0]}" == "Usage:"      ]]
+  [[ "${lines[0]}" =~ Usage.*:      ]]
   [[ "${lines[1]}" =~ '  nb export' ]]
 }

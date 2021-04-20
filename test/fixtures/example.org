@@ -1,0 +1,18 @@
+#+BEGIN_COMMENT
+Example Org mode file.
+
+Resources:
+  https://writequit.org/denver-emacs/presentations/files/example.org.html
+  https://orgmode.org/guide/index.html
+#+END_COMMENT
+
+#+TITLE: Example .org Title
+
+- _underscores let you underline things_
+- *stars add emphasis*
+- /slashes are italics/
+- +pluses are strikethrough+
+- =equal signs are verbatim text=
+- ~tildes can also be used~
+
+Sample text with link. [[home:1]]

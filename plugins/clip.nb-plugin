@@ -1,0 +1,117 @@
+#!/usr/bin/env bash
+###############################################################################
+# clip
+#
+# A plugin for `nb` providing clipboard functionality.
+#
+# Author: hyb (https://github.com/ohyhyb)
+###############################################################################
+
+# Add the new subcommand names with `_subcommands add <name>`.
+_subcommands add "clip"
+
+# Define help and usage text with `_subcommands describe <subcommand> <usage>`.
+_subcommands describe "clip" <<HEREDOC
+Usage:
+  nb clip [<notebook>:][<id> | <filename> | <path> | <title> | <extension>]
+
+Description:
+  Save the clipboard contents and copy contents of text or markdown items to
+  the clipboard.
+
+  When called with no arguments or when no matching file is found, the text
+  content on the clipboard is saved to a new file, pending a prompt.
+
+Examples:
+  # copy the content of item 123 to the clipboard
+  nb clip 123
+
+  # save the clipboard contents to a new file with a \`.js\` file extension
+  nb clip .js
+HEREDOC
+
+# Define the subcommand as a function, named with a leading underscore.
+_clip() {
+  local _force=0
+  local _selector=
+
+  local __arg=
+  for   __arg in "${@:-}"
+  do
+    case "${__arg:-}" in
+      '')       :                     ;;
+      --force)  _force=1              ;;
+      *)        _selector="${__arg}"  ;;
+    esac
+  done
+
+  local _source_relative_path=
+
+  if [[ -n "${_selector:-}" ]]
+  then
+    _source_relative_path="$(
+      _show "${_selector:-}" --relative-path 2>/dev/null || :
+    )"
+  fi
+
+  local _notebook_path=
+  _notebook_path="$(_notebooks current --path)"
+
+  if [[   -z  "${_source_relative_path:-}"                    ]] ||
+     [[ ! -e  "${_notebook_path}/${_source_relative_path}"    ]]
+  then
+    printf "Saving clipboard contents...\\n"
+
+    if ! ((_force))
+    then
+      while true
+      do
+        local __yn=
+        IFS='' read -r -e -d $'\n' -p "\
+$(_color_primary "Proceed?")  $(_color_brackets "y/N") " __yn
+
+        case ${__yn} in
+          [Yy]*)
+            break
+            ;;
+          *)
+            printf "Exiting...\\n"
+            exit 0
+            ;;
+        esac
+      done
+    fi
+
+    {
+      if _command_exists "xclip" && [[ ! "${OSTYPE}" =~ ^darwin ]]
+      then
+        xclip -o
+      elif _command_exists "pbpaste"
+      then
+        pbpaste
+      fi
+    } | {
+      _add "${_selector}"
+    }
+
+    return 0
+  elif [[ ! -f "${_notebook_path}/${_source_relative_path}"   ]]
+  then
+    printf "Not a file: %s\\n" "${_selector}"
+    exit 1
+  fi
+
+  if _show "${_source_relative_path}" --type text ||
+     _show "${_source_relative_path}" --type md
+  then
+    if _command_exists "xclip" && [[ ! "${OSTYPE}" =~ ^darwin ]]
+    then
+      cat "${_notebook_path}/${_source_relative_path}" | xclip -sel clip
+    elif _command_exists "pbcopy"
+    then
+      cat "${_notebook_path}/${_source_relative_path}" | pbcopy
+    fi && printf "Copied $(_color_primary "${_source_relative_path}") contents to clipboard.%s\\n"
+  else
+    _exit_1 printf "Not a text or markdown file.%s\\n"
+  fi
+}

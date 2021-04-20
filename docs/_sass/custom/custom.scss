@@ -6,52 +6,61 @@
 // https://pmarsceill.github.io/just-the-docs/docs/customization/
 
 code {
-  border: 0;
-  font-family: 'Courier Prime', 'SFMono-Regular', Menlo, Consolas, Monospace;
-  font-size: 0.9rem;
+  border:           0;
+  font-family:      'Courier Prime', 'SFMono-Regular', Menlo, Consolas, Monospace;
+  font-size:        0.9rem;
+  line-height:      1.2;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  color: #515055 !important;
+  color:            #515055 !important;
 }
 
 h1, h1 code {
-  font-size: 2rem !important;
+  font-size:        2rem    !important;
 }
 
 h2 {
-  font-size: 1.35rem !important;
+  font-size:        1.35rem !important;
 }
 
 h3 {
-  font-size: 1.25rem !important;
+  font-size:        1.25rem !important;
 }
 
 pre {
-  font-size: 1.2rem;
-  line-height: 1rem;
+  font-size:        1.2rem;
+  line-height:      1rem;
 }
 
 .main-content {
   .highlighter-rouge {
-    margin-bottom: 1.15rem;
+    margin-bottom:  1.15rem;
   }
 
   h2, h3, h4, h5, h6 {
-    margin-bottom: 1rem !important;
-    margin-top: 1.15rem !important;
+    margin-bottom:  1rem    !important;
+    margin-top:     1.15rem !important;
   }
 
   h4 {
-    font-size: 14px !important;
+    font-size:      14px    !important;
   }
 
   h4, h5, h6 {
-    font-weight: bold;
+    font-weight:    bold;
     text-transform: none;
 
     code {
-      font-size: 1rem !important;
+      font-size:    1rem    !important;
     }
   }
+}
+
+.highlight .o {
+  color:            #60548c;
+}
+
+.site-nav {
+    padding-top:    0;
 }

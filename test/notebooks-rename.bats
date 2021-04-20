@@ -26,9 +26,70 @@ _setup_notebooks() {
   cd "${NB_DIR}" || return 1
 }
 
+# <name> validation ###########################################################
+
+@test "'notebooks rename <reserved> <new>' exits with 1 and prints error message." {
+  {
+    "${_NB}" init
+
+    cd "${_TMP_DIR}"
+
+    _names=(
+      ".cache"
+      ".current"
+      ".plugins"
+      ".readme"
+      "readme"
+      "readme.md"
+    )
+  }
+
+  for __name in "${_names[@]}"
+  do
+    run "${_NB}" notebooks rename "${__name}" "example"
+
+    printf "\${status}: '%s'\\n" "${status}"
+    printf "\${output}: '%s'\\n" "${output}"
+
+    [[ ${status} -eq 1                  ]]
+    [[ "${lines[0]}" =~ Name\ reserved  ]]
+    [[ "${lines[0]}" =~ ${__name}       ]]
+  done
+}
+
+@test "'notebooks rename <old> <reserved>' exits with 1 and prints error message." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add "example"
+
+    cd "${_TMP_DIR}"
+
+    _names=(
+      ".cache"
+      ".current"
+      ".plugins"
+      ".readme"
+      "readme"
+      "readme.md"
+    )
+  }
+
+  for __name in "${_names[@]}"
+  do
+    run "${_NB}" notebooks rename "example" "${__name}"
+
+    printf "\${status}: '%s'\\n" "${status}"
+    printf "\${output}: '%s'\\n" "${output}"
+
+    [[ ${status} -eq 1                  ]]
+    [[ "${lines[0]}" =~ Name\ reserved  ]]
+    [[ "${lines[0]}" =~ ${__name}       ]]
+  done
+}
+
 # `notebooks rename` ##########################################################
 
-@test "\`notebooks rename <valid-old> <valid-new>\` exits with 0 and renames notebook." {
+@test "'notebooks rename <valid-old> <valid-new>' exits with 0 and renames notebook." {
   {
     _setup_notebooks
   }
@@ -47,7 +108,7 @@ _setup_notebooks() {
   [[ "$(cat "${NB_DIR}/.current")" == "home"  ]]
 }
 
-@test "\`notebooks rename home <valid-new>\` exits with 0,  renames notebook, and updates .current." {
+@test "'notebooks rename home <valid-new>' exits with 0,  renames notebook, and updates .current." {
   {
     _setup_notebooks
   }
@@ -66,7 +127,7 @@ _setup_notebooks() {
   [[ "$(cat "${NB_DIR}/.current")" == "new-name"  ]]
 }
 
-@test "\`notebooks rename <invalid-old> <valid-new>\` exits with 1 and does not rename notebook." {
+@test "'notebooks rename <invalid-old> <valid-new>' exits with 1 and does not rename notebook." {
   {
     _setup_notebooks
   }
@@ -87,7 +148,7 @@ _setup_notebooks() {
   [[ "$(cat "${NB_DIR}/.current")" == "home"            ]]
 }
 
-@test "\`notebooks rename <valid-old> <invalid-new>\` exits with 1 and does not rename notebook." {
+@test "'notebooks rename <valid-old> <invalid-new>' exits with 1 and does not rename notebook." {
   {
     _setup_notebooks
   }
@@ -108,11 +169,11 @@ _setup_notebooks() {
   [[ "$(cat "${NB_DIR}/.current")" == "home"  ]]
 }
 
-@test "\`notebooks rename local <new-name>\` in local exits with 1." {
+@test "'notebooks rename local <new-name>' in local exits with 1." {
   {
     "${_NB}" init
 
-    run "${_NB}" notebooks add local
+    "${_NB}" notebooks add local
 
     mkdir -p "${_TMP_DIR}/example"
 
@@ -135,13 +196,13 @@ _setup_notebooks() {
   [[ -e "${NB_DIR}/local"                       ]]
 }
 
-@test "\`notebooks rename local <new-name>\` outside local deletes." {
+@test "'notebooks rename local <new-name>' outside local deletes." {
   {
     _pwd="${PWD}"
 
     "${_NB}" init
 
-    run "${_NB}" notebooks add local
+    "${_NB}" notebooks add local
 
     mkdir -p "${_TMP_DIR}/example"
 

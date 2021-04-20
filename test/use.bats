@@ -13,7 +13,7 @@ _setup_use() {
 
 # `use <name>` ################################################################
 
-@test "\`use\` exits with 1 and prints error message." {
+@test "'use' exits with 1 and prints error message." {
   {
     _setup_use
   }
@@ -37,7 +37,7 @@ _setup_use() {
   [[ "${lines[2]}" == "NB_NOTEBOOK_PATH=${NB_DIR}/home" ]]
 }
 
-@test "\`use <invalid>\` exits with 1 and prints error message." {
+@test "'use <invalid>' exits with 1 and prints error message." {
   {
     _setup_use
   }
@@ -61,7 +61,7 @@ _setup_use() {
   [[ "${lines[2]}" == "NB_NOTEBOOK_PATH=${NB_DIR}/home" ]]
 }
 
-@test "\`repo use <name>\` exits with 0 and sets <name> in .current." {
+@test "'repo use <name>' exits with 0 and sets <name> in .current." {
   {
     _setup_use
     _expected="Now using: $(_color_primary 'one')"
@@ -87,13 +87,13 @@ _setup_use() {
 
 # help ########################################################################
 
-@test "\`help use\` exits with status 0." {
+@test "'help use' exits with status 0." {
   run "${_NB}" help use
 
   [[ ${status} -eq 0 ]]
 }
 
-@test "\`help use\` prints help information." {
+@test "'help use' prints help information." {
   run "${_NB}" help use
 
   printf "\${status}: '%s'\\n" "${status}"

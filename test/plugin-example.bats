@@ -4,12 +4,10 @@ load test_helper
 
 # `example` ###################################################################
 
-@test "\`nb example\` prints output." {
+@test "'nb example' prints output." {
   {
-    run "${_NB}" init
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/example.nb-plugin"
-
-    [[ "${status}" == 0 ]]
+    "${_NB}" init
+    "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/example.nb-plugin"
   }
 
   run "${_NB}" example
@@ -23,12 +21,10 @@ load test_helper
 
 # help ########################################################################
 
-@test "\`help example\` exits with status 0 and prints usage." {
+@test "'help example' exits with status 0 and prints usage." {
   {
-    run "${_NB}" init
-    run "${_NB}" plugins install "${BATS_TEST_DIRNAME}/../plugins/example.nb-plugin"
-
-    [[ "${status}" == 0 ]]
+    "${_NB}" init
+    "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/example.nb-plugin"
   }
 
   run "${_NB}" help example
@@ -37,7 +33,7 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ ${status} -eq 0                ]]
-  [[ "${lines[0]}" =~ Usage\:       ]]
+  [[ "${lines[0]}" =~ Usage.*\:     ]]
   [[ "${lines[1]}" =~ nb\ example   ]]
 }
 

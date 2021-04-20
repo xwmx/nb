@@ -1,33 +1,56 @@
 #!/usr/bin/env bash
+###############################################################################
+# mock_editor
+###############################################################################
+
+###############################################################################
+# Shell Options & Strict Mode
+#
+# More Information:
+#   https://github.com/xwmx/bash-boilerplate#bash-strict-mode
+###############################################################################
+
+set -o errexit
+set -o noglob
+set -o nounset
+set -o pipefail
+
+set +o noclobber
+
+IFS=$'\n\t'
+
+###############################################################################
 
 # _mock_editor()
 #
 # Usage:
-#   _mock_editor <filename>
+#   _mock_editor <path>
 #
 # Description:
-#   Save a string as the only content in a new file named <filename>.
+#   Save a string as the only content in a new file named <path>.
 _mock_editor() {
+  local _path=
+
   for __arg in "${@:-}"
   do
     if [[ ! "${__arg}" =~ ^-- ]]
     then
-      _filename="${__arg}"
+      _path="${__arg}"
     fi
   done
 
-  if [[ -z "${_filename}" ]]
+  if [[ -z "${_path:-}"       ]]
   then
-    printf "Usage: _mock_editor <filename>\n"
+    printf "Usage: mock_editor <path>\\n"
     return 1
   fi
 
-  if [[ -e "${_filename}" ]]
+  if [[ -e "${_path:-}"       ]]
   then
-    printf "Already exists: %s\n" "${_filename}"
+    printf "[mock_editor] Already exists: %s\\n" "${_path:-}"
   fi
 
-  printf "# mock_editor %s\n" "${_filename%.*}" >> "${_filename}"
+  printf "# mock_editor %s\\n" "${_path%.*}" >> "${_path:-}"
 }
 
 _mock_editor "$@"

@@ -50,11 +50,11 @@ _copy() {
   _set_selection_notebook "${_selection}"
 
   # Validate that the selection is a file.
-  if [[ -z "${_source_basename:-}"                    ]] ||
-     [[ ! -e "${_NOTEBOOK_PATH}/${_source_basename}"  ]]
+  if [[ -z "${_source_basename:-}"                      ]] ||
+     [[ ! -e "${_NOTEBOOK_PATH}/${_source_basename}"    ]]
   then
     _exit_1 printf "Not found: %s\\n" "${_selection}"
-  elif [[ ! -f "${_NOTEBOOK_PATH}/${_source_basename}" ]]
+  elif [[ ! -f "${_NOTEBOOK_PATH}/${_source_basename}"  ]]
   then
     _exit_1 printf "Not a file: %s\\n" "${_selection}"
   fi

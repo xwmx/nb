@@ -2,7 +2,7 @@
 
 load test_helper
 
-@test "\`env\` exits with status 0 and prints output." {
+@test "'env' exits with status 0 and prints output." {
   run "${_NB}" env
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -15,7 +15,7 @@ load test_helper
 
 # EDITOR ######################################################################
 
-@test "\`env\` with EDITOR sets editor." {
+@test "'env' with EDITOR sets editor." {
   EDITOR='example-editor' run "${_NB}" env
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -24,7 +24,7 @@ load test_helper
   [[ "${lines[4]}" =~ EDITOR=example-editor ]]
 }
 
-@test "\`env\` with VISUAL sets editor." {
+@test "'env' with VISUAL sets editor." {
   EDITOR='' VISUAL='example-visual' run "${_NB}" env
 
   printf "\${status}: '%s'\\n" "${status}"
