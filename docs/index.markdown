@@ -2102,7 +2102,7 @@ terminal and GUI web browsers.
 <p align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/gui-gui-terminal-browse.png"
         alt="nb browse"
-        width="500">
+        width="600">
 </p>
 
 `nb browse` includes an embedded, terminal-first web application
