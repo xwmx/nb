@@ -1417,6 +1417,12 @@ For more information, see [Browsing](#-browsing).
 `nb` is a powerful bookmark management system, enabling you to to view, search,
 [browse](#-browsing), and manage your bookmarks, links, and online references.
 
+<p align="center">
+  <img  src="https://xwmx.github.io/misc/nb/images/nb-bookmarks-gui-gui-terminal.png"
+        alt="nb bookmarks"
+        width="450">
+</p>
+
 Bookmarks are Markdown notes containing information about the bookmarked page.
 
 To create a new bookmark pass a URL as the first argument to `nb`:
@@ -1578,6 +1584,12 @@ Encrypted bookmarks require a password before they can be viewed or
 opened.
 
 #### Listing and Filtering Bookmarks
+
+<p align="center">
+  <img  src="https://xwmx.github.io/misc/nb/images/nb-bookmarks-gui-terminal-terminal.png"
+        alt="nb bookmark lists"
+        width="500">
+</p>
 
 [`nb bookmark`](#bookmark) and `nb bookmark list` can be used to list
 and filter only bookmarks:
