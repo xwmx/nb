@@ -17397,7 +17397,7 @@ HEREDOC
 
     _response_url_params="${_response_url_params/&/?}"
 
-    local _respond_with_200_arguments=("--standard_input")
+    local _respond_with_200_arguments=("--standard-input")
 
     case "${_request_method}" in
       HEAD) _respond_with_200_arguments+=("--headers")  ;;
