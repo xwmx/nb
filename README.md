@@ -635,7 +635,7 @@ For more information, see [Browsing](#-browsing).
 
 #### Listing & Filtering
 
-To list notes and notebooks, run [`nb ls`](#ls):
+To list notes and notebooks, run [`nb ls`](#ls) (shortcut alias: `nb`):
 
 ```bash
 ❯ nb ls
@@ -647,7 +647,7 @@ home
 ```
 
 <p align="center">
-  <img  src="https://xwmx.github.io/misc/nb/images/nb-theme-utility-home.png"
+  <img  src="https://xwmx.github.io/misc/nb/images/nb-theme-blacklight-home.png"
         alt="nb ls"
         width="450">
 </p>
@@ -1424,7 +1424,8 @@ collections of bookmarks.
         width="450">
 </p>
 
-Bookmarks are Markdown notes containing information about the bookmarked page.
+Bookmarks are Markdown files containing structured information
+from the bookmarked page.
 
 To create a new bookmark pass a URL as the first argument to `nb`:
 
