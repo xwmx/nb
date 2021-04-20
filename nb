@@ -17408,7 +17408,7 @@ HEREDOC
 
       if [[ "${_target_selector}" =~ ^local:        ]]
       then
-        [[ -z "${_local_notebook_path:-}"   ]]  && _browse_respond_with 400
+        [[ -z "${_local_notebook_path:-}"   ]]  &&  _browse_respond_with 400
 
         _selector_path="$(
           cd "${_local_notebook_path:-}"        &&
