@@ -651,7 +651,7 @@ case "${NB_COLOR_THEME}" in
     export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-26}"
     ;;
   purple)
-    export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-200}"
+    export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-199}"
     export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-55}"
     ;;
   raspberry)
