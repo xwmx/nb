@@ -2162,7 +2162,7 @@ and other items using terminal and GUI web browsers.
 <p align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/gui-gui-terminal-browse.png"
         alt="nb browse"
-        width="600">
+        width="500">
 </p>
 
 `nb browse` includes an embedded, terminal-first web application
