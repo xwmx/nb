@@ -8757,10 +8757,11 @@ _get_unique_relative_path() {
 _get_uri() {
   # Usage: _get_uri_decode <string>
   _get_uri_decode() {
-    printf "%b" "$(
-      # https://unix.stackexchange.com/a/187256
-      printf "%s\\n" "${1//$'\r'}" | sed 's@+@ @g;s@%@\\x@g'
-    )"
+    # https://unix.stackexchange.com/a/187256
+    local _input="${1:-}"
+    _input="${_input//+/ }"
+    _input="${_input//$'\r'}"
+    printf "%b" "${_input//%/\\x}"
   }
 
   # Usage: _get_uri_encode <string>
