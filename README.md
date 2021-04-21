@@ -1414,7 +1414,7 @@ For more information, see [Browsing](#-browsing).
 
 ### 🔖 Bookmarks
 
-`nb` is a featureful bookmarking application providing the
+`nb` includes a bookmarking system providing the
 ability to conveniently create, annotate, view, search, [browse](#-browsing),
 and manage collections of bookmarks.
 
@@ -1459,7 +1459,7 @@ permission.
 
 `nb` embeds the page content in the bookmark, making it available for full
 text search with [`nb search`](#search). When [Pandoc](https://pandoc.org/)
-is installed, the HTML page content will be converted to Markdown. When
+is installed, the HTML page content is converted to Markdown. When
 [readability-cli](https://gitlab.com/gardenappl/readability-cli) is
 installed, markup is cleaned up to focus on content.
 
