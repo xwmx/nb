@@ -647,7 +647,7 @@ home
 ```
 
 <p align="center">
-  <img  src="https://xwmx.github.io/misc/nb/images/nb-theme-blacklight-home.png"
+  <img  src="https://xwmx.github.io/misc/nb/images/nb-theme-utility-home.png"
         alt="nb ls"
         width="450">
 </p>
