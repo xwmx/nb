@@ -74,7 +74,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="6.0.1"
+_VERSION="6.0.2"
 
 # $_ME
 #
@@ -650,6 +650,10 @@ case "${NB_COLOR_THEME}" in
     export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-75}"
     export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-26}"
     ;;
+  purple)
+    export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-199}"
+    export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-55}"
+    ;;
   raspberry)
     export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-162}"
     export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-90}"
@@ -676,6 +680,7 @@ export _NB_COLOR_THEMES=(
   forest
   nb
   ocean
+  purple
   raspberry
   smoke
   unicorn
@@ -3101,7 +3106,7 @@ Welcome to $(_color_primary "${_ME}")!
 
 Git requires some additional setup before using $(_color_primary "${_ME}").
 Enter the name and email address you'd like to use with Git.
-Edits you make will be attributed to this name and email address.
+Edits you make are attributed to this name and email address.
 HEREDOC
       if [[ -z "${_git_name}" ]]
       then
@@ -4359,9 +4364,9 @@ $(_color_primary "Description"):
   List notes in the current notebook.
 
   When <id>, <filename>, <path>, or <title> are present, the listing for the
-  matching note will be displayed. When no match is found, titles and
-  filenames will be searched for any that match <query> as a case-insensitive
-  regular expression.
+  matching note is displayed. When no match is found, titles and filenames
+  are searched for any that match <query> as a case-insensitive regular
+  expression.
 
 $(_color_primary "Indicators"):
   ${_NB_INDICATOR_AUDIO:-} Audio
@@ -5317,9 +5322,9 @@ $(_color_primary "Description"):
   \`${_ME} list\` in one view.
 
   When <id>, <filename>, <path>, or <title> are present, the listing for the
-  matching note will be displayed. When no match is found, titles and
-  filenames will be searched for any that match <query> as a case-insensitive
-  regular expression.
+  matching note is displayed. When no match is found, titles and filenames
+  are searched for any that match <query> as a case-insensitive regular
+  expression.
 
   Options are passed through to \`list\`. For more information, see
   \`${_ME} help list\`.
@@ -8752,10 +8757,11 @@ _get_unique_relative_path() {
 _get_uri() {
   # Usage: _get_uri_decode <string>
   _get_uri_decode() {
-    printf "%b" "$(
-      # https://unix.stackexchange.com/a/187256
-      printf "%s\\n" "${1//$'\r'}" | sed 's@+@ @g;s@%@\\x@g'
-    )"
+    # https://unix.stackexchange.com/a/187256
+    local _input="${1:-}"
+    _input="${_input//+/ }"
+    _input="${_input//$'\r'}"
+    printf "%b" "${_input//%/\\x}"
   }
 
   # Usage: _get_uri_encode <string>
@@ -9295,7 +9301,6 @@ textarea,
 .ace_editor {
   background-color:   #1d1d1d;
   border:             none;
-  border:             1rem solid #1d1d1d;
   box-sizing:         border-box;
   color:              #dddddd;
   font-size:          0.875rem;
@@ -9306,6 +9311,14 @@ textarea,
   padding:            0;
   vertical-align:     top;
   width:              100%;
+}
+
+.ace_editor {
+  border:             1rem solid #1d1d1d;
+}
+
+textarea {
+  padding:            1rem;
 }
 
 .ace_scroller.ace_scroll-left {
@@ -10271,7 +10284,7 @@ $(_color_primary "Options"):
   --folder <folder-path>      Add within the folder located at <folder-path>.
   --tags <tag1>,<tag2>....    A comma-separated list of tags.
   -t, --title <title>         The title for a new note. If \`--title\` is
-                              present, the filename will be derived from the
+                              present, the filename is derived from the
                               title, unless \`--filename\` is specified.
   --type <type>               The file type for the new note, as a file
                               extension.
@@ -10844,7 +10857,7 @@ $(_color_primary "Description"):
 
   By default, the html page content is saved within the bookmark, making the
   bookmarked page available for full-text search. When Pandoc [1] is
-  installed, the HTML content will be converted to Markdown before saving.
+  installed, the HTML content is converted to Markdown before saving.
   When readability-cli [2] is install, markup is cleaned up to focus on
   content.
 
@@ -11983,10 +11996,10 @@ $(_color_primary "Options"):
 $(_color_primary "Description"):
   Open the specified note in \`\$EDITOR\`, currently set to "${EDITOR}", or
   <editor> if specified. Content piped to \`${_ME} edit\` or passed using the
-  \`--content\` option will will be appended to the file without opening it
+  \`--content\` option will is appended to the file without opening it
   in the editor, unless the \`--edit\` flag is specified.
 
-  Non-text files will be opened in your system's preferred app or program for
+  Non-text files are opened in your system's preferred app or program for
   that file type.
 
 $(_color_primary "Examples"):
@@ -13023,7 +13036,7 @@ $(_color_primary "Options"):
 
 $(_color_primary "Description"):
   Move or rename a note. Move the note to <path> or change the file type.
-  When file extension is omitted, the existing extension will be used.
+  When file extension is omitted, the existing extension is used.
 
   \`move\` and \`rename\` are aliases and can be used interchangably.
 
@@ -14701,10 +14714,10 @@ $(_color_primary "Options"):
 
 $(_color_primary "Description"):
   Show an item or notebook. Notes in text file formats can be rendered or
-  printed to standard output. Non-text files will be opened in your system's
+  printed to standard output. Non-text files are opened in your system's
   preferred app or program for that file type.
 
-  By default, the item will be opened using \`less\` or the program configured
+  By default, the item is opened using \`less\` or the program configured
   in the \`\$PAGER\` environment variable. Use the following keys to navigate
   in \`less\` (see \`man less\` for more information):
 
@@ -15740,7 +15753,7 @@ _browse() {
     local _fields=()
     IFS='&' read -r -a _fields <<< "${_message_body}"
 
-    local _content=
+    local _prepared_encoded_content=
     local _add_options=()
 
     local __field=
@@ -15748,8 +15761,9 @@ _browse() {
     do
       case "${__field:-}" in
         content=*)
-          _content="$(_get_uri --decode "${__field#content=}")"
-          _content="${_content//$'\r'}"
+          _prepared_encoded_content="${__field#content=}"
+          _prepared_encoded_content="${_prepared_encoded_content//+/ }"
+          _prepared_encoded_content="${_prepared_encoded_content//%/\\x}"
           ;;
         *)
           if [[ "${__field:-}" =~ \= ]]
@@ -15768,9 +15782,9 @@ _browse() {
       esac
     done
 
-    if [[ -n "${_content:-}"  ]]
+    if [[   -n "${_prepared_encoded_content:-}" ]]
     then
-      if [[ -n "${_selector:-}" ]]
+      if [[ -n "${_selector:-}"                 ]]
       then
         _add_options=("${_selector:-}" "${_add_options[@]:-}")
       fi
@@ -15779,7 +15793,9 @@ _browse() {
 
       local _new_info_line=
       _new_info_line="$(
-        printf "%s\\n" "${_content:-}" | _add "${_add_options[@]:-}"
+        printf "%b\\n" "${_prepared_encoded_content:-}" \
+          | tr -d $'\r'                                 \
+          | _add "${_add_options[@]:-}"
       )"
 
       local _new_selector="${_new_info_line#*[}"
@@ -15870,13 +15886,15 @@ _browse() {
 
     if [[ "${_message_body:-}" =~ ^content= ]]
     then
-      local _content=
-      _content="$(_get_uri --decode "${_message_body#content=}")"
-      _content="${_content//$'\r'}"
+      local _prepared_encoded_content="${_message_body#content=}"
+      _prepared_encoded_content="${_prepared_encoded_content//+/ }"
+      _prepared_encoded_content="${_prepared_encoded_content//%/\\x}"
 
-      printf "%s\\n" "${_content:-}" > "${_source_path}"
+      printf "%b\\n" "${_prepared_encoded_content:-}" \
+        | tr -d $'\r'                                 \
+        > "${_source_path}"
 
-      _git checkpoint "${_notebook_path}" \
+      _git checkpoint "${_notebook_path}"             \
         "[nb] Edit: ${_source_path#${_notebook_path}/}"
     fi
   }
@@ -16940,7 +16958,8 @@ HEREDOC
         _notebooks current --path
     )"
 
-    if [[ "${_source_path:-}" =~ \.org$   ]]
+    if [[ "${_source_path:-}" =~ \.org$   ]] &&
+       _file_is_text "${_selector_path:-}"
     then # resolve Org [[wiki-style links]] before rendering to HTML
       {
         cat "${_source_path}"
@@ -16978,8 +16997,12 @@ HEREDOC
       }
     else # render non-Org to HTML before resolving [[wiki-style links]]
       {
-        if ((${NB_BROWSE_PDF_ENABLED:-0}))    &&
-           [[ "${_source_path}" =~ \.pdf  ]]  &&
+        if _file_is_text "${_source_path:-}"    ||
+           [[ "${_source_path:-}" =~ \.docx$|\.epub$|\.odt$ ]]
+        then
+          printf "" | _render "${_source_path}" --pandoc --body
+        elif ((${NB_BROWSE_PDF_ENABLED:-0}))    &&
+           [[ "${_source_path}" =~ \.pdf  ]]    &&
            _command_exists "pdftotext"
         then
           # TODO: spacing
@@ -16987,8 +17010,16 @@ HEREDOC
           pdftotext "${_source_path}" -   \
             | tr -d '\014'                \
             | _render --from="md" --pandoc --body
+        elif _file_is_encrypted "${_source_path:-}"
+        then
+          _browse_respond_with 415        \
+            "415 $(_browse_http_response_message 415): File is encrypted."
+
+          return 0
         else
-          printf "" | _render "${_source_path}" --pandoc --body
+          _browse_respond_with 415
+
+          return 0
         fi
       } | {
         printf "%s\\n" "$(
@@ -17315,7 +17346,7 @@ HEREDOC
           -*)
             _render_function_options+=("${__parameter%=*}")
 
-            if [[ "${__parameter:-}" =~ \= ]]
+            if [[ "${__parameter:-}" =~ \=    ]]
             then
               _render_function_options+=("$(
                 _get_uri --encode "${__parameter#*=}"
@@ -17376,10 +17407,10 @@ HEREDOC
 
     _response_url_params="${_response_url_params/&/?}"
 
-    local _respond_with_200_arguments=("--standard_input")
+    local _respond_with_200_arguments=("--standard-input")
 
     case "${_request_method}" in
-      HEAD) _respond_with_200_arguments+=("--headers") ;;
+      HEAD) _respond_with_200_arguments+=("--headers")  ;;
     esac
 
     # respond
@@ -17395,11 +17426,11 @@ HEREDOC
 
       if [[ "${_target_selector}" =~ ^local:        ]]
       then
-        [[ -z "${_local_notebook_path:-}" ]]  && _browse_respond_with 400
+        [[ -z "${_local_notebook_path:-}"   ]]  &&  _browse_respond_with 400
 
         _selector_path="$(
-          cd "${_local_notebook_path:-}"      &&
-            __set_notebook_paths              &&
+          cd "${_local_notebook_path:-}"        &&
+            __set_notebook_paths                &&
             _show "${_target_selector%%\?*}" --path --no-color 2>&1 || :
         )"
       else
@@ -17410,7 +17441,7 @@ HEREDOC
 
       _render_function_options+=("${_target_selector:-}")
 
-      if [[ "${_action:-}" == "add"       ]]
+      if [[ "${_action:-}" == "add"         ]]
       then
         case "${_request_method:-}" in
           GET)
@@ -17463,8 +17494,8 @@ HEREDOC
           then
             case "${_request_method:-}" in
               GET)
-                _browse_render_delete                   \
-                  "${_render_function_options[@]:-}"    \
+                _browse_render_delete                 \
+                  "${_render_function_options[@]:-}"  \
                   | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
                 ;;
               POST)
@@ -17473,51 +17504,34 @@ HEREDOC
                   _get_id_selector "${_selector_path%/*}" --notebook
                 )"
 
-                _browse_item_delete                     \
+                _browse_item_delete                   \
                   "${_render_function_options[@]:-}"  &>/dev/null
 
-                _browse_respond_with 302                \
+                _browse_respond_with 302              \
 "http://localhost:${NB_SERVER_PORT}/${_container_id_selector}${_response_url_params:-}"
                 ;;
             esac
 
             return 0
-          elif [[ "${_action:-}" == "edit"  ]]  &&
+          elif [[ "${_action:-}" == "edit"  ]]        &&
                _file_is_text "${_selector_path:-}"
           then
-            if [[ "${_request_method}"  == "POST"       ]]
+            if [[ "${_request_method}"  == "POST"     ]]
             then
-              _browse_item_update                       \
-                "${_render_function_options[@]:-}"      \
+              _browse_item_update                     \
+                "${_render_function_options[@]:-}"    \
                 --message-body "${_message_body:-}"
             fi
 
-            _browse_render_edit                         \
-              "${_render_function_options[@]:-}"        \
+            _browse_render_edit                       \
+              "${_render_function_options[@]:-}"      \
               | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
-
-            return 0
-          elif _file_is_text "${_selector_path:-}"                        ||
-               [[ "${_selector_path:-}"     =~ \.docx$|\.epub$|\.odt$ ]]  ||
-               {
-                 ((${NB_BROWSE_PDF_ENABLED:-0}))                          &&
-                 [[ "${_selector_path}"    =~ \.pdf                   ]]  &&
-                 _command_exists "pdftotext"
-               }
-          then
-            _browse_render_item                         \
-              "${_render_function_options[@]:-}"        \
-              | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
-
-            return 0
-          elif _file_is_encrypted "${_selector_path:-}"
-          then
-            _browse_respond_with 415                    \
-              "415 $(_browse_http_response_message 415): File is encrypted."
 
             return 0
           else
-            _browse_respond_with 415
+            _browse_render_item                       \
+              "${_render_function_options[@]:-}"      \
+              | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
 
             return 0
           fi
