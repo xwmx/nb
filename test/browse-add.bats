@@ -27,9 +27,9 @@ export _S=" "
     sleep 1
   }
 
-  run curl -sS -D - --data                               \
-    "content=Example%20content.&--title=Example%20Title" \
-    "http://localhost:6789/local:Example%20Folder/Example%20File.md?--add&--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
+  run curl -sS -D - --data                                                                \
+"content=Example%20line%20one.%0D%0A%0D%0AExample%20line%20two.&--title=Example%20Title"  \
+"http://localhost:6789/local:Example%20Folder/Example%20File.md?--add&--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -49,7 +49,9 @@ export _S=" "
     <(cat <<HEREDOC
 # Example Title
 
-Example content.
+Example line one.
+
+Example line two.
 HEREDOC
 )
 
@@ -97,7 +99,8 @@ Location:\ http:\/\/localhost:6789\/Example\ Folder/1\?${_expected_param_pattern
     sleep 1
   }
 
-  run curl -sS -D - "http://localhost:6789/local:?--add&--example&-x&abcdefg&--sample=demo-value&--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
+  run curl -sS -D -           \
+"http://localhost:6789/local:?--add&--example&-x&abcdefg&--sample=demo-value&--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -144,9 +147,9 @@ action=\"/local:\?--add\&--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'/'/%
     sleep 1
   }
 
-  run curl -sS -D - --data                                                          \
-    "content=Example%20content.%0A%0AExample%20line%20two.&--title=Example%20Title" \
-    "http://localhost:6789/home:Example%20Folder/Sample%20Folder/Example%20File.md?--add"
+  run curl -sS -D - --data                                                                \
+"content=Example%20line%20one.%0D%0A%0D%0AExample%20line%20two.&--title=Example%20Title"  \
+"http://localhost:6789/home:Example%20Folder/Sample%20Folder/Example%20File.md?--add"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -168,7 +171,7 @@ action=\"/local:\?--add\&--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'/'/%
     <(cat <<HEREDOC
 # Example Title
 
-Example content.
+Example line one.
 
 Example line two.
 HEREDOC
@@ -211,9 +214,9 @@ Location:\ http:\/\/localhost:6789\/Example\ Folder/Sample\ Folder/2\?--per-page
     sleep 1
   }
 
-  run curl -sS -D - --data                                \
-    "content=Example%20content.&--title=Example%20Title"  \
-    "http://localhost:6789/home:Example%20Folder/Sample%20Folder?--add"
+  run curl -sS -D - --data                                                                \
+"content=Example%20line%20one.%0D%0A%0D%0AExample%20line%20two.&--title=Example%20Title"  \
+"http://localhost:6789/home:Example%20Folder/Sample%20Folder?--add"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -231,7 +234,9 @@ Location:\ http:\/\/localhost:6789\/Example\ Folder/Sample\ Folder/2\?--per-page
     <(cat <<HEREDOC
 # Example Title
 
-Example content.
+Example line one.
+
+Example line two.
 HEREDOC
 )
 
@@ -272,9 +277,9 @@ Location:\ http:\/\/localhost:6789\/Example\ Folder/1\?--per-page=30  ]]
     sleep 1
   }
 
-  run curl -sS -D - --data                               \
-    "content=Example%20content.&--title=Example%20Title" \
-    "http://localhost:6789/home:Example%20Folder/Sample%20Folder/?--add"
+  run curl -sS -D - --data                                                                \
+"content=Example%20line%20one.%0D%0A%0D%0AExample%20line%20two.&--title=Example%20Title"  \
+"http://localhost:6789/home:Example%20Folder/Sample%20Folder/?--add"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -292,11 +297,13 @@ Location:\ http:\/\/localhost:6789\/Example\ Folder/1\?--per-page=30  ]]
   [[ -f "${NB_DIR}/home/Example Folder/Sample Folder/${_files[0]}"        ]]
 
   diff                                                                    \
-    <(cat "${NB_DIR}/home/Example Folder/Sample Folder/${_files[0]}")  \
+    <(cat "${NB_DIR}/home/Example Folder/Sample Folder/${_files[0]}")     \
     <(cat <<HEREDOC
 # Example Title
 
-Example content.
+Example line one.
+
+Example line two.
 HEREDOC
 )
 
@@ -337,9 +344,9 @@ Location:\ http:\/\/localhost:6789\/Example\ Folder/Sample\ Folder/1\?--per-page
     sleep 1
   }
 
-  run curl -sS -D - --data                               \
-    "content=Example%20content.&--title=Example%20Title" \
-    "http://localhost:6789/home:Example%20Folder/Sample%20Folder/Example%20File.md?--add"
+  run curl -sS -D - --data                                                                \
+"content=Example%20line%20one.%0D%0A%0D%0AExample%20line%20two.&--title=Example%20Title"  \
+"http://localhost:6789/home:Example%20Folder/Sample%20Folder/Example%20File.md?--add"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -359,7 +366,9 @@ Location:\ http:\/\/localhost:6789\/Example\ Folder/Sample\ Folder/1\?--per-page
     <(cat <<HEREDOC
 # Example Title
 
-Example content.
+Example line one.
+
+Example line two.
 HEREDOC
 )
 
@@ -400,9 +409,9 @@ Location:\ http:\/\/localhost:6789\/Example\ Folder/Sample\ Folder/1\?--per-page
     sleep 1
   }
 
-  run curl -sS -D - --data                               \
-    "content=Example%20content.&--title=Example%20Title" \
-    "http://localhost:6789/home:Example%20Folder/Example%20File.md?--add"
+  run curl -sS -D - --data                                                                \
+"content=Example%20line%20one.%0D%0A%0D%0AExample%20line%20two.&--title=Example%20Title"  \
+"http://localhost:6789/home:Example%20Folder/Example%20File.md?--add"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -422,7 +431,9 @@ Location:\ http:\/\/localhost:6789\/Example\ Folder/Sample\ Folder/1\?--per-page
     <(cat <<HEREDOC
 # Example Title
 
-Example content.
+Example line one.
+
+Example line two.
 HEREDOC
 )
 
@@ -462,9 +473,9 @@ HEREDOC
     sleep 1
   }
 
-  run curl -sS -D - --data                               \
-    "content=Example%20content.&--title=Example%20Title" \
-    "http://localhost:6789/home:Example%20File.md?--add"
+  run curl -sS -D - --data                                                                \
+"content=Example%20line%20one.%0D%0A%0D%0AExample%20line%20two.&--title=Example%20Title"  \
+"http://localhost:6789/home:Example%20File.md?--add"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -484,7 +495,9 @@ HEREDOC
     <(cat <<HEREDOC
 # Example Title
 
-Example content.
+Example line one.
+
+Example line two.
 HEREDOC
 )
 

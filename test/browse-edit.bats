@@ -24,8 +24,8 @@ export _S=" "
     sleep 1
   }
 
-  run curl -sS -D -                                           \
-    --data "content=Line%20one.%0A%0ALine%20%2F%26%3F%20two." \
+  run curl -sS -D -                                                 \
+    --data "content=Line%20one.%0D%0A%0D%0ALine%20%2F%26%3F%20two." \
     "http://localhost:6789/home:1?--edit"
 
   printf "\${status}: '%s'\\n" "${status}"
