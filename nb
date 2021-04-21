@@ -9301,7 +9301,6 @@ textarea,
 .ace_editor {
   background-color:   #1d1d1d;
   border:             none;
-  border:             1rem solid #1d1d1d;
   box-sizing:         border-box;
   color:              #dddddd;
   font-size:          0.875rem;
@@ -9312,6 +9311,14 @@ textarea,
   padding:            0;
   vertical-align:     top;
   width:              100%;
+}
+
+.ace_editor {
+  border:             1rem solid #1d1d1d;
+}
+
+textarea {
+  padding:            1rem;
 }
 
 .ace_scroller.ace_scroll-left {
