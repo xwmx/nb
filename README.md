@@ -2415,7 +2415,7 @@ and `nb browse add --gui`.
 
 `nb browse` depends on [`ncat`](https://nmap.org/ncat/) and
 [`pandoc`](https://pandoc.org/). When only `pandoc` is available, the
-current note will be rendered and
+current note is rendered and
 <a href="#-linking">[[wiki-style links]]</a>
 go to unrendered, original files. If only `ncat` is available, files in
 plain text formats are rendered with the original markup unconverted.
@@ -4625,7 +4625,7 @@ Description:
 
   By default, the html page content is saved within the bookmark, making the
   bookmarked page available for full-text search. When Pandoc [1] is
-  installed, the HTML content will be converted to Markdown before saving.
+  installed, the HTML content is converted to Markdown before saving.
   When readability-cli [2] is install, markup is cleaned up to focus on
   content.
 
@@ -4720,7 +4720,7 @@ Options:
   --folder <folder-path>      Add within the folder located at <folder-path>.
   --tags <tag1>,<tag2>....    A comma-separated list of tags.
   -t, --title <title>         The title for a new note. If `--title` is
-                              present, the filename will be derived from the
+                              present, the filename is derived from the
                               title, unless `--filename` is specified.
   --type <type>               The file type for the new note, as a file
                               extension.
@@ -4818,7 +4818,7 @@ Description:
 
   By default, the html page content is saved within the bookmark, making the
   bookmarked page available for full-text search. When Pandoc [1] is
-  installed, the HTML content will be converted to Markdown before saving.
+  installed, the HTML content is converted to Markdown before saving.
   When readability-cli [2] is install, markup is cleaned up to focus on
   content.
 
@@ -4998,12 +4998,12 @@ Options:
                            existing content.
 
 Description:
-  Open the specified note in `$EDITOR` or <editor> if specified. Content
-  piped to `nb edit` or passed using the `--content` option will will be
-  appended to the file without opening it in the editor, unless the
-  `--edit` flag is specified.
+  Open the specified note in `$EDITOR` or <editor> if specified.
+  Content piped to `nb edit` or passed using the `--content` option
+  is appended to the file without opening it in the editor,
+  unless the `--edit` flag is specified.
 
-  Non-text files will be opened in your system's preferred app or program for
+  Non-text files are opened in your system's preferred app or program for
   that file type.
 
 Examples:
@@ -5245,9 +5245,9 @@ Description:
   List notes in the current notebook.
 
   When <id>, <filename>, <path>, or <title> are present, the listing for the
-  matching note will be displayed. When no match is found, titles and
-  filenames will be searched for any that match <query> as a case-insensitive
-  regular expression.
+  matching note is displayed. When no match is found, titles and filenames
+  are searched for any that match <query> as a case-insensitive regular
+  expression.
 
 Indicators:
   🔉  Audio
@@ -5313,9 +5313,9 @@ Description:
   `nb list` in one view.
 
   When <id>, <filename>, <path>, or <title> are present, the listing for the
-  matching note will be displayed. When no match is found, titles and
-  filenames will be searched for any that match <query> as a case-insensitive
-  regular expression.
+  matching note is displayed. When no match is found, titles and filenames
+  are searched for any that match <query> as a case-insensitive regular
+  expression.
 
   Options are passed through to `list`. For more information, see
   `nb help list`.
@@ -5364,7 +5364,7 @@ Options:
 
 Description:
   Move or rename a note. Move the note to <path> or change the file type.
-  When file extension is omitted, the existing extension will be used.
+  When file extension is omitted, the existing extension is used.
 
   `move` and `rename` are aliases and can be used interchangably.
 
@@ -6022,10 +6022,10 @@ Options:
 
 Description:
   Show an item or notebook. Notes in text file formats can be rendered or
-  printed to standard output. Non-text files will be opened in your system's
+  printed to standard output. Non-text files are opened in your system's
   preferred app or program for that file type.
 
-  By default, the item will be opened using `less` or the program configured
+  By default, the item is opened using `less` or the program configured
   in the `$PAGER` environment variable. Use the following keys to navigate
   in `less` (see `man less` for more information):
 
