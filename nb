@@ -15746,7 +15746,7 @@ _browse() {
     local _fields=()
     IFS='&' read -r -a _fields <<< "${_message_body}"
 
-    local _content=
+    local _prepared_encoded_content=
     local _add_options=()
 
     local __field=
@@ -15754,8 +15754,9 @@ _browse() {
     do
       case "${__field:-}" in
         content=*)
-          _content="$(_get_uri --decode "${__field#content=}")"
-          _content="${_content//$'\r'}"
+          _prepared_encoded_content="${__field#content=}"
+          _prepared_encoded_content="${_prepared_encoded_content//+/ }"
+          _prepared_encoded_content="${_prepared_encoded_content//%/\\x}"
           ;;
         *)
           if [[ "${__field:-}" =~ \= ]]
@@ -15774,9 +15775,9 @@ _browse() {
       esac
     done
 
-    if [[ -n "${_content:-}"  ]]
+    if [[   -n "${_prepared_encoded_content:-}" ]]
     then
-      if [[ -n "${_selector:-}" ]]
+      if [[ -n "${_selector:-}"                 ]]
       then
         _add_options=("${_selector:-}" "${_add_options[@]:-}")
       fi
@@ -15785,7 +15786,9 @@ _browse() {
 
       local _new_info_line=
       _new_info_line="$(
-        printf "%s\\n" "${_content:-}" | _add "${_add_options[@]:-}"
+        printf "%b\\n" "${_prepared_encoded_content:-}" \
+          | tr -d $'\r'                                 \
+          | _add "${_add_options[@]:-}"
       )"
 
       local _new_selector="${_new_info_line#*[}"
@@ -15876,13 +15879,15 @@ _browse() {
 
     if [[ "${_message_body:-}" =~ ^content= ]]
     then
-      local _content=
-      _content="$(_get_uri --decode "${_message_body#content=}")"
-      _content="${_content//$'\r'}"
+      local _prepared_encoded_content="${_message_body#content=}"
+      _prepared_encoded_content="${_prepared_encoded_content//+/ }"
+      _prepared_encoded_content="${_prepared_encoded_content//%/\\x}"
 
-      printf "%s\\n" "${_content:-}" > "${_source_path}"
+      printf "%b\\n" "${_prepared_encoded_content:-}" \
+        | tr -d $'\r'                                 \
+        > "${_source_path}"
 
-      _git checkpoint "${_notebook_path}" \
+      _git checkpoint "${_notebook_path}"             \
         "[nb] Edit: ${_source_path#${_notebook_path}/}"
     fi
   }
