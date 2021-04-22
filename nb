@@ -656,6 +656,10 @@ case "${NB_COLOR_THEME}" in
     export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-199}"
     export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-55}"
     ;;
+  mint)
+    export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-43}"
+    export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-60}"
+    ;;
   ocean)
     export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-75}"
     export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-26}"
@@ -676,6 +680,10 @@ case "${NB_COLOR_THEME}" in
     export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-227}"
     export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-8}"
     ;;
+  1)
+    export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-164}"
+    export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-60}"
+    ;;
 esac
 
 export _NB_COLOR_THEMES=(
@@ -686,12 +694,14 @@ export _NB_COLOR_THEMES=(
   forest
   grape
   mage
+  mint
   nb
   ocean
   raspberry
   smoke
   unicorn
   utility
+  1
 )
 
 # User defined themes can be installed in the $NB_DIR/.plugins directory.
