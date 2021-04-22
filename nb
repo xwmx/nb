@@ -16689,6 +16689,7 @@ HEREDOC
     local _bullet="·"
     local _columns="${NB_BROWSE_COLUMNS:-70}"
     local _encoded_local_notebook_path=
+    local _download_link_enabled=1
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
     local _selector=
     local _terminal_browser=0
@@ -16700,14 +16701,15 @@ HEREDOC
         --add|--delete|--edit)
           _action="${1#--}"
           ;;
-        --col*)     _columns="${2:?}"                     && shift  ;;
-        --local)    _encoded_local_notebook_path="${2:?}" && shift  ;;
-        --page)     _option_value_is_present "${2:-}"     && shift  ;;
-        --per*)     _per_page="${2:?}"                    && shift  ;;
-        --terminal) _terminal_browser=1                             ;;
-        --*)        _option_value_is_present "${2:-}"     && shift  ;;
-        -*)         :                                               ;;
-        *)          _selector="${1:-}"                              ;;
+        --col*)         _columns="${2:?}"                     && shift  ;;
+        --local)        _encoded_local_notebook_path="${2:?}" && shift  ;;
+        --page)         _option_value_is_present     "${2:-}" && shift  ;;
+        --no*download)  _download_link_enabled=0                        ;;
+        --per*)         _per_page="${2:?}"                    && shift  ;;
+        --terminal)     _terminal_browser=1                             ;;
+        --*)            _option_value_is_present "${2:-}"     && shift  ;;
+        -*)             :                                               ;;
+        *)              _selector="${1:-}"                              ;;
       esac
 
       shift
@@ -16864,8 +16866,11 @@ HEREDOC
         _header_content+=" <span class=\"dim\">${_selector_id:-}</span>"
       fi
 
-      _header_content+=" <span class=\"dim\">${_bullet}</span>"
-      _header_content+=" <a href=\"${_raw_url}\">↓</a>"
+      if ((_download_link_enabled))
+      then
+        _header_content+=" <span class=\"dim\">${_bullet}</span>"
+        _header_content+=" <a href=\"${_raw_url}\">↓</a>"
+      fi
 
       if [[ "${_action:-}"  == "edit"   ]]
       then
@@ -16977,7 +16982,8 @@ HEREDOC
         printf "%s\\n" "$(
           _browse_render_header                 \
             "${_source_path}"                   \
-            "${_pagination_options[@]:-}"
+            "${_pagination_options[@]:-}"       \
+            --no-download
         )"
 
         printf "<div class=\"main\">\\n<p>\\n"

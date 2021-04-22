@@ -177,7 +177,8 @@ Location:\ http:\/\/localhost:6789\/local:\?${_expected_param_pattern}  ]]
   [[ "${lines[3]}"  =~  Server:\ nb                               ]]
   [[ "${lines[4]}"  =~  Content-Type:\ text/html\;\ charset=UTF-8 ]]
 
-  [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*local.*\ .*:.*\ .*1 ]]
+  [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*local.*\ .*:.*\ .*1     ]]
+  [[ "${output}"    =~  header-crumbs.*↓                          ]]
 
   printf "%s\\n" "${output}" | grep -q \
 "href=\"http://localhost:6789/?${_expected_param_pattern}\"><span class=\"dim\">❯</span>nb</a>"
@@ -249,6 +250,7 @@ Location:\ http:\/\/localhost:6789\/local:\?${_expected_param_pattern}  ]]
   [[ "${lines[4]}"  =~  Content-Type:\ text/html\;\ charset=UTF-8 ]]
 
   [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1      ]]
+  [[ "${output}"    =~  header-crumbs.*↓                          ]]
 
   printf "%s\\n" "${output}" | grep -q \
 "href=\"http://localhost:6789/?--per-page=30&--columns=20\"><span class=\"dim\">❯</span>nb</a> "
@@ -320,6 +322,7 @@ Location:\ http:\/\/localhost:6789\/local:\?${_expected_param_pattern}  ]]
   [[ "${lines[4]}"  =~  Content-Type:\ text/html\;\ charset=UTF-8 ]]
 
   [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1      ]]
+  [[ "${output}"    =~  header-crumbs.*↓                          ]]
 
   printf "%s\\n" "${output}" | grep -q \
 "<form${_NEWLINE}action=\"/home:1?--delete"
@@ -344,9 +347,10 @@ Location:\ http:\/\/localhost:6789\/local:\?${_expected_param_pattern}  ]]
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"  -eq 0                                    ]]
+  [[    "${status}"  -eq 0                                        ]]
 
-  [[    "${output}"  =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1 ]]
+  [[    "${output}"  =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1     ]]
+  [[ "${output}"    =~  header-crumbs.*↓                          ]]
 
   printf "%s\\n" "${output}" | grep -q \
 "href=\"http://localhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a> "

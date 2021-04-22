@@ -309,6 +309,7 @@ HEREDOC
   [[ "${output}"    =~  \<\!DOCTYPE\ html\>                     ]]
 
   [[ "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>  ]]
+  [[ "${output}"    =~  header-crumbs.*↓                        ]]
 
   printf "%s\\n" "${output}" | grep -q \
 '<a.* href="http://localhost:6789/?--per-page=.*"><span class="dim">❯</span>nb</a>'
@@ -352,6 +353,9 @@ HEREDOC
   [[ "${status}"    ==  0                   ]]
   [[ "${output}"    =~  \<\!DOCTYPE\ html\> ]]
 
+
+  [[ "${output}"    =~  header-crumbs.*↓    ]]
+
   printf "%s\\n" "${output}" | grep -q \
 "<h1 id=\"title-one\"><span id=\"anchor\"></span>Title One</h1>"
 
@@ -393,6 +397,8 @@ HEREDOC
   [[ "${status}"    ==  0                   ]]
   [[ "${output}"    =~  \<\!DOCTYPE\ html\> ]]
 
+  [[ "${output}"    =~  header-crumbs.*↓    ]]
+
   printf "%s\\n" "${output}" | grep -q \
 "<h1 id=\"title-one\">Title One</h1>"
 
@@ -427,6 +433,8 @@ HEREDOC
 
   [[ "${status}"    ==  0                   ]]
   [[ "${output}"    =~  \<\!DOCTYPE\ html\> ]]
+
+  [[ "${output}"    =~  header-crumbs.*↓    ]]
 
   # TODO: .org / org mode titles in pandoc HTML output?
   # [[ "${output}"    =~  \<h1\ id=\"title-one\"\>Title\ One\</h1\>                     ]]
@@ -466,6 +474,8 @@ HEREDOC
   [[ "${status}"    ==  0                   ]]
   [[ "${output}"    =~  \<\!DOCTYPE\ html\> ]]
 
+  [[ "${output}"    =~  header-crumbs.*↓    ]]
+
   printf "%s\\n" "${output}" | grep -q \
 "<h1 id=\"title-one\">Title One</h1>"
 
@@ -496,6 +506,8 @@ HEREDOC
 
   [[ "${status}"    ==  0                   ]]
   [[ "${output}"    =~  \<\!DOCTYPE\ html\> ]]
+
+  [[ "${output}"    =~  header-crumbs.*↓    ]]
 
   printf "%s\\n" "${output}" | grep -q \
 "<h1 id=\"title-one\">Title One</h1>"
