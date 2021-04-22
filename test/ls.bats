@@ -516,8 +516,8 @@ HEREDOC
   [[ "${lines[6]}"  =~  nb\ \<url\>           ]]
   [[ "${lines[6]}"  =~  nb\ edit\ \<id\>      ]]
 
-  [[ "${output}"  =~  nb\ list\ \·            ]]
-  [[ "${output}"  =~  nb\ search\ \<query\>   ]]
+  [[ "${output}"    =~  nb\ list\ \·          ]]
+  [[ "${output}"    =~  nb\ search\ \<query\> ]]
 
   run "${_NB}" ls Example\ Notebook:Example\ Folder/ --no-color
 
