@@ -642,7 +642,7 @@ case "${NB_COLOR_THEME}" in
     ;;
   electro)
     export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-200}"
-    export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-26}"
+    export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-62}"
     ;;
   forest)
     export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-29}"
