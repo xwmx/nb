@@ -646,13 +646,13 @@ case "${NB_COLOR_THEME}" in
     export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-29}"
     export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-59}"
     ;;
+  mage)
+    export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-199}"
+    export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-55}"
+    ;;
   ocean)
     export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-75}"
     export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-26}"
-    ;;
-  purple)
-    export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-199}"
-    export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-55}"
     ;;
   raspberry)
     export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-162}"
@@ -678,9 +678,9 @@ export _NB_COLOR_THEMES=(
   desert
   electro
   forest
+  mage
   nb
   ocean
-  purple
   raspberry
   smoke
   unicorn
