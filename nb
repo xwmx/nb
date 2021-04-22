@@ -16941,7 +16941,7 @@ HEREDOC
           shift
           ;;
         --page)
-          _option_value_is_present "${2:-}"   && shift
+          _option_value_is_present "${2:-}"     && shift
           ;;
         --per-page)
           _pagination_options+=("${1:?}" "${2:?}")
@@ -16963,7 +16963,7 @@ HEREDOC
 
     local _render_type=
 
-    if _file_is_text "${_source_path:-}"      ||
+    if _file_is_text "${_source_path:-}"        ||
        [[ "${_source_path:-}" =~ \.docx$|\.epub$|\.odt$ ]]
     then
       _render_type="pandoc"
@@ -17053,8 +17053,8 @@ HEREDOC
           pdf)
             # TODO: spacing
             # NOTE: add uniform newlines: `sed  '/^$/d' | sed G`
-            pdftotext "${_source_path}" -   \
-              | tr -d '\014'                \
+            pdftotext "${_source_path}" - \
+              | tr -d '\014'              \
               | _render --from="md" --pandoc --body
             ;;
           esac
