@@ -18848,14 +18848,16 @@ _settings() {
       printf '\e[38;5;%dm %3d ' "${1:-}" "${1:-}"
     }
 
-    if [[ -n "${1:-}" ]]
+    if [[   -n  "${1:-}"              ]]
     then
-      if [[ "${1}" == "themes" ]]
+      if [[     "${1}" == "themes"    ]]
       then
         printf "%s\\n" "${_NB_COLOR_THEMES[@]}"
       else
-        [[ "${1}" =~ [[:digit:]] ]] || _exit_1 \
-          printf "Usage: %s settings colors [<number> | themes]\\n" "${_ME}"
+        if [[ ! "${1}" =~ [[:digit:]] ]]
+        then
+          _exit_1 printf "Usage: %s settings colors [<number> | themes]\\n" "${_ME}"
+        fi
 
         _settings_colors_print "${1:-}"
         printf "\\n"
@@ -18879,8 +18881,9 @@ _settings() {
   # Usage: _settings_get_value (<number> | <name>)
   _settings_get_value() {
     local _setting_name=
-    _setting_name="$(_settings_identify "${1:-}")" &&
-      _env | grep "${_setting_name}" | cut -d= -f2
+    _setting_name="$(_settings_identify "${1:-}")"
+
+    _env | grep "${_setting_name}" | cut -d= -f2
   }
 
   # Usage: _settings_identify [--id] (<number> | <name>)
@@ -18888,17 +18891,24 @@ _settings() {
     local _get_id=0
     local _id_or_name=
 
-    if [[ -z "${1:-}" ]]
-    then
-      return 1
-    elif [[ "${1}" == "--id" ]]
-    then
-      _get_id=1
-      [[ -z "${2:-}"  ]] && return 1
-      _id_or_name="${2:-}"
-    else
-      _id_or_name="${1}"
-    fi
+    case "${1:-}" in
+      '')
+        return 1
+        ;;
+      --id)
+        _get_id=1
+
+        if [[ -n "${2:-}" ]]
+        then
+          _id_or_name="${2:-}"
+        else
+          return 1
+        fi
+        ;;
+      *)
+        _id_or_name="${1}"
+        ;;
+    esac
 
     case "${_id_or_name}" in
       1|*auto*|*AUTO*|*sync*|*SYNC*)
@@ -19032,11 +19042,11 @@ HEREDOC
             return 0
             ;;
           unset|default|reset)
-            _settings_unset "${_setting_name}" || continue
+            _settings_unset "${_setting_name}"              || continue
             break
             ;;
           *)
-            _settings_set "${_setting_name}" "${__value}" || continue
+            _settings_set   "${_setting_name}" "${__value}" || continue
             break
             ;;
         esac
@@ -19046,102 +19056,109 @@ HEREDOC
 
   # Usage: _settings_set (<number> | <name>) <value>
   _settings_set() {
+    local _entry=
+    local _value="${2:-}"
+
+    local _setting_name=
+    _setting_name="$(_settings_identify "${1:-}")"
+
+    if _contains "${2:-}" "unset" "default" "reset"
+    then
+      _settings_unset "${_setting_name}"
+
+      return 0
+    fi
+
+    _settings_validate_value "${_setting_name}" "${2:-}"    || return 1
+
+    if [[ "${_value:-}"       =~ ^~       ]]
+    then
+      # shellcheck disable=SC2016
+      _value="$(printf "%s\\n" "${_value}" | sed "s|~|${HOME}|g")"
+    fi
+
     local _attribution=
     _attribution="# Set by \`${_ME}\` • $(date)"
-    local _entry=
-    local _setting_name=
-    local _stripped=
-    local _value=
 
-    _setting_name="$(_settings_identify "${1:-}")"  &&
-      if _contains "${2:-}" "unset" "default" "reset"
-      then
-        _settings_unset "${_setting_name}" && return 0
-      fi &&
-      _settings_validate_value "${_setting_name}" "${2:-}" &&
-      {
-        _value="${2:-}"
-        if [[ "${_value}" =~ ^~ ]]
-        then
-          # shellcheck disable=SC2016
-          _value="$(printf "%s\\n" "${_value}" | sed "s|~|${HOME}|g")"
-        fi
-      } &&
-      if [[ "${_setting_name}" == "EDITOR" ]]
-      then
-        _entry="export ${_setting_name}=\"${_value}\" ${_attribution}"
-      else
-        _entry="export ${_setting_name}=\"\${${_setting_name}:-${_value}}\" ${_attribution}"
-      fi &&
-      _settings_unset "${_setting_name}" > /dev/null 2>&1     &&
-      printf "\\n%s\\n" "${_entry}" >> "${NBRC_PATH}"         &&
-      if [[ "${_setting_name}" == "NB_COLOR_PRIMARY"      ]]  ||
-         [[ "${_setting_name}" == "NB_COLOR_SECONDARY"    ]]
-      then
-        _setting_name="$(_tput setaf "${_value}")${_setting_name}${_TPUT_SGR0}"
-        _value="$(_tput setaf "${_value}")${_value}${_TPUT_SGR0}"
-      elif [[ "${_setting_name}" == "NB_COLOR_THEME" ]]
-      then
-        local _new_color=
-        _new_color="$(
-          NB_COLOR_THEME="${_value}"  \
-          NB_COLOR_PRIMARY=''         \
-            "${_MY_PATH}" settings get NB_COLOR_PRIMARY
-        )"
-        _setting_name="$(_tput setaf "${_new_color}")${_setting_name}${_TPUT_SGR0}"
-        _value="$(_tput setaf "${_new_color}")${_value}${_TPUT_SGR0}"
-      else
-        _setting_name="$(_color_primary "${_setting_name}")"  \
-        _value="$(_color_primary "${_value}")"
-      fi &&
-      printf "%s set to %s\\n"  \
-        "${_setting_name}"      \
-        "${_value}"
+    if [[ "${_setting_name}"  == "EDITOR" ]]
+    then
+      _entry="export ${_setting_name}=\"${_value}\" ${_attribution}"
+    else
+      _entry="export ${_setting_name}=\"\${${_setting_name}:-${_value}}\" ${_attribution}"
+    fi
+
+    _settings_unset "${_setting_name}" > /dev/null 2>&1     || return 1
+
+    printf "\\n%s\\n" "${_entry}" >> "${NBRC_PATH}"
+
+    if [[   "${_setting_name}" == "NB_COLOR_PRIMARY"    ]]  ||
+       [[   "${_setting_name}" == "NB_COLOR_SECONDARY"  ]]
+    then
+      _setting_name="$(_tput setaf "${_value}")${_setting_name}${_TPUT_SGR0}"
+      _value="$(_tput setaf "${_value}")${_value}${_TPUT_SGR0}"
+    elif [[ "${_setting_name}" == "NB_COLOR_THEME"      ]]
+    then
+      local _new_color=
+      _new_color="$(
+        NB_COLOR_THEME="${_value}" NB_COLOR_PRIMARY=''  \
+          "${_MY_PATH}" settings get NB_COLOR_PRIMARY
+      )"
+
+      _setting_name="$(_tput setaf "${_new_color}")${_setting_name}${_TPUT_SGR0}"
+      _value="$(_tput setaf "${_new_color}")${_value}${_TPUT_SGR0}"
+    else
+      _setting_name="$(_color_primary "${_setting_name}")"
+      _value="$(_color_primary "${_value}")"
+    fi
+
+    printf "%s set to %s\\n" "${_setting_name}" "${_value}"
   }
 
   # Usage: _settings_unset (<number> | <name>)
   _settings_unset() {
     local _setting_name=
+    _setting_name="$(_settings_identify "${1:-}")"
+
+    _sed_i                                              \
+      -e "/^export ${_setting_name}.*Added by.*$/d"     \
+      -e "/^export ${_setting_name}.*Set by.*$/d"       \
+      "${NBRC_PATH}"
+
+    local _stripped=
+    _stripped=$(<"${NBRC_PATH}")
+
+    printf "%s\\n" "${_stripped}" > "${NBRC_PATH}"
+
     local _default_value=
+    _default_value="$(
+      eval "${_setting_name}='' \"${_MY_PATH}\" settings get ${_setting_name}"
+    )"
 
-    _setting_name="$(_settings_identify "${1:-}")"    &&
-      _sed_i                                          \
-        -e "/^export ${_setting_name}.*Added by.*$/d" \
-        -e "/^export ${_setting_name}.*Set by.*$/d"   \
-        "${NBRC_PATH}" &&
-        {
-          _stripped=$(<"${NBRC_PATH}")
-          printf "%s\\n" "${_stripped}" > "${NBRC_PATH}"
-        } && {
-          _default_value="$(
-            eval "${_setting_name}='' \"${_MY_PATH}\" settings get ${_setting_name}"
-          )"
+    if [[   "${_setting_name}" == "NB_COLOR_SECONDARY"  ]]
+    then
+      _setting_name="$(_color_primary "${_setting_name}")"
+      _default_value="$(_tput setaf "${_default_value}")${_default_value}${_TPUT_SGR0}"
+    elif [[ "${_setting_name}" == "NB_COLOR_PRIMARY"    ]]
+    then
+      _setting_name="$(_tput setaf "${_default_value}")${_setting_name}${_TPUT_SGR0}"
+      _default_value="$(_tput setaf "${_default_value}")${_default_value}${_TPUT_SGR0}"
+    elif [[ "${_setting_name}" == "NB_COLOR_THEME"      ]]
+    then
+      _new_hi_color="$(
+        NB_COLOR_THEME="nb" NB_COLOR_PRIMARY=''         \
+          "${_MY_PATH}" settings get NB_COLOR_PRIMARY
+      )"
 
-          if [[ "${_setting_name}" == "NB_COLOR_SECONDARY"  ]]
-          then
-            _setting_name="$(_color_primary "${_setting_name}")"
-            _default_value="$(_tput setaf "${_default_value}")${_default_value}${_TPUT_SGR0}"
-          elif [[ "${_setting_name}" == "NB_COLOR_PRIMARY"  ]]
-          then
-            _setting_name="$(_tput setaf "${_default_value}")${_setting_name}${_TPUT_SGR0}"
-            _default_value="$(_tput setaf "${_default_value}")${_default_value}${_TPUT_SGR0}"
-          elif [[ "${_setting_name}" == "NB_COLOR_THEME"    ]]
-          then
-            _new_hi_color="$(
-              NB_COLOR_THEME="nb" NB_COLOR_PRIMARY='' \
-                "${_MY_PATH}" settings get NB_COLOR_PRIMARY
-            )"
+      _setting_name="$(_tput setaf "${_new_hi_color}")${_setting_name}${_TPUT_SGR0}"
+      _default_value="$(_tput setaf "${_new_hi_color}")${_default_value}${_TPUT_SGR0}"
+    else
+      _setting_name="$(_color_primary "${_setting_name}")"
+      _default_value="$(_color_primary "${_default_value}")"
+    fi
 
-            _setting_name="$(_tput setaf "${_new_hi_color}")${_setting_name}${_TPUT_SGR0}"
-            _default_value="$(_tput setaf "${_new_hi_color}")${_default_value}${_TPUT_SGR0}"
-          else
-            _setting_name="$(_color_primary "${_setting_name}")"
-            _default_value="$(_color_primary "${_default_value}")"
-          fi
-        } &&
-        printf "%s restored to the default: %s\\n"  \
-          "${_setting_name}"                        \
-          "${_default_value}"
+    printf "%s restored to the default: %s\\n"          \
+      "${_setting_name}"                                \
+      "${_default_value}"
   }
 
   # Usage: _settings_validate_value (<number> | <name>) <value>
@@ -19149,12 +19166,13 @@ HEREDOC
     if [[ "${1:-}" == 'EDITOR'                ]] ||
        [[ "${1:-}" == 'NB_DEFAULT_EXTENSION'  ]]
     then
-      if [[ -n "${2:-}" ]]
+      if [[ -n "${2:-}"                       ]]
       then
         return 0
       else
-        _warn printf "%s requires a value.\\n" "${1:-}" &&
-          return 1
+        _warn printf "%s requires a value.\\n" "${1:-}"
+
+        return 1
       fi
     elif [[ "${1:-}" == 'NB_AUTO_SYNC'        ]] ||
          [[ "${1:-}" == 'NB_FOOTER'           ]]
@@ -19163,8 +19181,9 @@ HEREDOC
       then
         return 0
       else
-        _warn printf "%s must be either \"0\" or \"1\".\\n" "${1}" &&
-          return 1
+        _warn printf "%s must be either \"0\" or \"1\".\\n" "${1}"
+
+        return 1
       fi
     elif [[ "${1:-}" == 'NB_HEADER'           ]]
     then
@@ -19172,8 +19191,9 @@ HEREDOC
       then
         return 0
       else
-        _warn printf "%s must be \"0\", \"1\", \"2\", or \"3\".\\n" "${1}" &&
-          return 1
+        _warn printf "%s must be \"0\", \"1\", \"2\", or \"3\".\\n" "${1}"
+
+        return 1
       fi
     elif [[ "${1:-}" == 'NB_LIMIT'            ]]
     then
@@ -19181,8 +19201,9 @@ HEREDOC
       then
         return 0
       else
-        _warn printf "%s must be a number.\\n" "${1}" &&
-          return 1
+        _warn printf "%s must be a number.\\n" "${1}"
+
+        return 1
       fi
     elif [[ "${1:-}" == 'NB_DIR'              ]]
     then
@@ -19193,8 +19214,9 @@ HEREDOC
            [[ ! -w "${2}"                     ]]
          }
       then
-        _warn printf "\"%s\" is not a valid location for NB_DIR.\\n" "${2:-}" &&
-          return 1
+        _warn printf "\"%s\" is not a valid location for NB_DIR.\\n" "${2:-}"
+
+        return 1
       fi
     elif [[ "${1:-}" == 'NB_ENCRYPTION_TOOL'  ]]
     then
@@ -19203,17 +19225,20 @@ HEREDOC
         return 0
       else
         _warn \
-          printf "NB_ENCRYPTION_TOOL must be either \"openssl\" or \"gpg\".\\n" &&
-            return 1
+          printf "NB_ENCRYPTION_TOOL must be either \"openssl\" or \"gpg\".\\n"
+
+          return 1
       fi
     elif [[ "${1:-}" == 'NB_COLOR_PRIMARY'    ]] ||
          [[ "${1:-}" == 'NB_COLOR_SECONDARY'  ]]
     then
-      if [[ "${2:-}" =~ ^[0-9] ]]
+      if [[ "${2:-}" =~ ^[0-9]                ]]
       then
         return 0
       else
-        _warn printf "%s must be a number.\\n" "${1}" && return 1
+        _warn printf "%s must be a number.\\n" "${1}"
+
+        return 1
       fi
     elif [[ "${1:-}" == 'NB_COLOR_THEME'      ]]
     then
@@ -19221,8 +19246,9 @@ HEREDOC
       then
         return 0
       else
-        _warn printf "%s must be one of the available themes.\\n" "${1}" &&
-          return 1
+        _warn printf "%s must be one of the available themes.\\n" "${1}"
+
+        return 1
       fi
     elif [[ "${1:-}" == 'NB_SYNTAX_THEME'     ]]
     then
@@ -19237,7 +19263,8 @@ HEREDOC
         then
           return 0
         else
-          _warn printf "%s must be one of the available themes.\\n" "${1}" &&
+          _warn printf "%s must be one of the available themes.\\n" "${1}"
+
           return 1
         fi
       fi
@@ -19414,7 +19441,7 @@ $(local __editor=
         return 0
         ;;
       get)
-        if [[ -z "${2:-}" ]]
+        if [[ -z  "${2:-}"              ]]
         then
           _exit_1 _help settings
         fi
@@ -19423,7 +19450,7 @@ $(local __editor=
         return 0
         ;;
       list)
-        if [[ "${2:-}" == "--long" ]]
+        if [[     "${2:-}" == "--long"  ]]
         then
           local _counter=0
 
@@ -19490,9 +19517,9 @@ $(local __editor=
           _setting_name="$(_settings_identify "${1}")"
         fi
 
-        if [[ -n "${_setting_name:-}" ]]
+        if [[   -n "${_setting_name:-}" ]]
         then
-          if [[ -n "${2:-}" ]]
+          if [[ -n "${2:-}"             ]]
           then
             _settings_set "${_setting_name}" "${2}"
           else
