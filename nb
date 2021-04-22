@@ -17628,7 +17628,7 @@ HEREDOC
     else
       _string="${2:-}"
 
-      _response_headers+=("Content-Type: text/html")
+      _response_headers+=("Content-Type: text/html; charset=UTF-8")
     fi
 
     printf "%s\\r\\n" \
