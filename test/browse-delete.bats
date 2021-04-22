@@ -171,11 +171,11 @@ Location:\ http:\/\/localhost:6789\/local:\?${_expected_param_pattern}  ]]
 
   # Prints output:
 
-  [[ "${lines[0]}"  =~  HTTP/1.0\ 200\ OK                     ]]
-  [[ "${lines[1]}"  =~  Date:\ .*                             ]]
-  [[ "${lines[2]}"  =~  Expires:\ .*                          ]]
-  [[ "${lines[3]}"  =~  Server:\ nb                           ]]
-  [[ "${lines[4]}"  =~  Content-Type:\ text/html              ]]
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 200\ OK                         ]]
+  [[ "${lines[1]}"  =~  Date:\ .*                                 ]]
+  [[ "${lines[2]}"  =~  Expires:\ .*                              ]]
+  [[ "${lines[3]}"  =~  Server:\ nb                               ]]
+  [[ "${lines[4]}"  =~  Content-Type:\ text/html\;\ charset=UTF-8 ]]
 
   [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*local.*\ .*:.*\ .*1 ]]
 
@@ -242,13 +242,13 @@ Location:\ http:\/\/localhost:6789\/local:\?${_expected_param_pattern}  ]]
 
   # Prints output:
 
-  [[ "${lines[0]}"  =~  HTTP/1.0\ 200\ OK                     ]]
-  [[ "${lines[1]}"  =~  Date:\ .*                             ]]
-  [[ "${lines[2]}"  =~  Expires:\ .*                          ]]
-  [[ "${lines[3]}"  =~  Server:\ nb                           ]]
-  [[ "${lines[4]}"  =~  Content-Type:\ text/html              ]]
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 200\ OK                         ]]
+  [[ "${lines[1]}"  =~  Date:\ .*                                 ]]
+  [[ "${lines[2]}"  =~  Expires:\ .*                              ]]
+  [[ "${lines[3]}"  =~  Server:\ nb                               ]]
+  [[ "${lines[4]}"  =~  Content-Type:\ text/html\;\ charset=UTF-8 ]]
 
-  [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1  ]]
+  [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1      ]]
 
   printf "%s\\n" "${output}" | grep -q \
 "href=\"http://localhost:6789/?--per-page=30&--columns=20\"><span class=\"dim\">❯</span>nb</a> "
@@ -317,7 +317,7 @@ Location:\ http:\/\/localhost:6789\/local:\?${_expected_param_pattern}  ]]
   [[ "${lines[1]}"  =~  Date:\ .*                                 ]]
   [[ "${lines[2]}"  =~  Expires:\ .*                              ]]
   [[ "${lines[3]}"  =~  Server:\ nb                               ]]
-  [[ "${lines[4]}"  =~  Content-Type:\ text/html                  ]]
+  [[ "${lines[4]}"  =~  Content-Type:\ text/html\;\ charset=UTF-8 ]]
 
   [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1      ]]
 
