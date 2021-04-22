@@ -8,66 +8,72 @@
 
 ### `blacklight`
 
-| ![blacklight](https://xwmx.github.io/misc/nb/images/nb-theme-blacklight-home.png)  |  ![blacklight](https://xwmx.github.io/misc/nb/images/nb-theme-blacklight-web.png)
+| ![blacklight](https://xwmx.github.io/misc/nb/images/nb-theme-blacklight-home.png) | ![blacklight](https://xwmx.github.io/misc/nb/images/nb-theme-blacklight-web.png)  |
 |:--:|:--:|
-| 	|    |
+|    |    |
 
-### `console`
+##### `console`
 
-| ![console](https://xwmx.github.io/misc/nb/images/nb-theme-console-home.png)  |  ![console](https://xwmx.github.io/misc/nb/images/nb-theme-console-web.png) |
+| ![console](https://xwmx.github.io/misc/nb/images/nb-theme-console-home.png)       | ![console](https://xwmx.github.io/misc/nb/images/nb-theme-console-web.png)        |
 |:--:|:--:|
-| 	|    |
+|    |    |
 
-### `desert`
+##### `desert`
 
-| ![desert](https://xwmx.github.io/misc/nb/images/nb-theme-desert-home.png)  |  ![desert](https://xwmx.github.io/misc/nb/images/nb-theme-desert-web.png) |
+| ![desert](https://xwmx.github.io/misc/nb/images/nb-theme-desert-home.png)         | ![desert](https://xwmx.github.io/misc/nb/images/nb-theme-desert-web.png)          |
 |:--:|:--:|
-| 	|    |
+|    |    |
 
-### `electro`
+##### `electro`
 
-| ![electro](https://xwmx.github.io/misc/nb/images/nb-theme-electro-home.png)  |  ![electro](https://xwmx.github.io/misc/nb/images/nb-theme-electro-web.png) |
+| ![electro](https://xwmx.github.io/misc/nb/images/nb-theme-electro-home.png)       | ![electro](https://xwmx.github.io/misc/nb/images/nb-theme-electro-web.png)        |
 |:--:|:--:|
-| 	|    |
+|    |    |
 
-### `forest`
+##### `forest`
 
-| ![forest](https://xwmx.github.io/misc/nb/images/nb-theme-forest-home.png)  |  ![forest](https://xwmx.github.io/misc/nb/images/nb-theme-forest-web.png) |
+| ![forest](https://xwmx.github.io/misc/nb/images/nb-theme-forest-home.png)         | ![forest](https://xwmx.github.io/misc/nb/images/nb-theme-forest-web.png)          |
 |:--:|:--:|
-| 	|    |
+|    |    |
 
-### `nb` (default)
+##### `mage`
 
-| ![nb](https://xwmx.github.io/misc/nb/images/nb-theme-nb-home.png)  |  ![nb](https://xwmx.github.io/misc/nb/images/nb-theme-nb-web.png) |
+| ![mage](https://xwmx.github.io/misc/nb/images/nb-theme-mage-home.png)             | ![mage](https://xwmx.github.io/misc/nb/images/nb-theme-mage-web.png)              |
 |:--:|:--:|
-| 	|    |
+|    |    |
 
-### `ocean`
+##### `nb` (default)
 
-| ![ocean](https://xwmx.github.io/misc/nb/images/nb-theme-ocean-home.png)  |  ![ocean](https://xwmx.github.io/misc/nb/images/nb-theme-ocean-web.png) |
+| ![nb](https://xwmx.github.io/misc/nb/images/nb-theme-nb-home.png)                 | ![nb](https://xwmx.github.io/misc/nb/images/nb-theme-nb-web.png)                  |
 |:--:|:--:|
-| 	|    |
+|    |    |
 
-### `raspberry`
+##### `ocean`
 
-| ![raspberry](https://xwmx.github.io/misc/nb/images/nb-theme-raspberry-home.png)  |  ![raspberry](https://xwmx.github.io/misc/nb/images/nb-theme-raspberry-web.png) |
+| ![ocean](https://xwmx.github.io/misc/nb/images/nb-theme-ocean-home.png)           | ![ocean](https://xwmx.github.io/misc/nb/images/nb-theme-ocean-web.png)            |
 |:--:|:--:|
-| 	|    |
+|    |    |
 
-### `smoke`
+##### `raspberry`
 
-| ![smoke](https://xwmx.github.io/misc/nb/images/nb-theme-monochrome-home.png)  |  ![smoke](https://xwmx.github.io/misc/nb/images/nb-theme-smoke-web.png) |
+| ![raspberry](https://xwmx.github.io/misc/nb/images/nb-theme-raspberry-home.png)   | ![raspberry](https://xwmx.github.io/misc/nb/images/nb-theme-raspberry-web.png)    |
 |:--:|:--:|
-| 	|    |
+|    |    |
 
-### `unicorn`
+##### `smoke`
 
-| ![unicorn](https://xwmx.github.io/misc/nb/images/nb-theme-unicorn-home.png)  |  ![unicorn](https://xwmx.github.io/misc/nb/images/nb-theme-unicorn-web.png) |
+| ![smoke](https://xwmx.github.io/misc/nb/images/nb-theme-monochrome-home.png)      | ![smoke](https://xwmx.github.io/misc/nb/images/nb-theme-smoke-web.png)            |
 |:--:|:--:|
-| 	|    |
+|    |    |
 
-### `utility`
+##### `unicorn`
 
-| ![utility](https://xwmx.github.io/misc/nb/images/nb-theme-utility-home.png)  |  ![utility](https://xwmx.github.io/misc/nb/images/nb-theme-utility-web.png) |
+| ![unicorn](https://xwmx.github.io/misc/nb/images/nb-theme-unicorn-home.png)       | ![unicorn](https://xwmx.github.io/misc/nb/images/nb-theme-unicorn-web.png)        |
 |:--:|:--:|
-| 	|    |
+|    |    |
+
+##### `utility`
+
+| ![utility](https://xwmx.github.io/misc/nb/images/nb-theme-utility-home.png)       | ![utility](https://xwmx.github.io/misc/nb/images/nb-theme-utility-web.png)        |
+|:--:|:--:|
+|    |    |
