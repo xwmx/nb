@@ -16961,7 +16961,7 @@ HEREDOC
     )"
 
     if [[ "${_source_path:-}" =~ \.org$   ]] &&
-       _file_is_text "${_selector_path:-}"
+       _file_is_text "${_source_path:-}"
     then # resolve Org [[wiki-style links]] before rendering to HTML
       {
         cat "${_source_path}"
