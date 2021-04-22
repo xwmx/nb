@@ -16974,6 +16974,14 @@ HEREDOC
       _render_type="pdf"
     else
       {
+        printf "%s\\n" "$(
+          _browse_render_header                 \
+            "${_source_path}"                   \
+            "${_pagination_options[@]:-}"
+        )"
+
+        printf "<div class=\"main\">\\n<p>\\n"
+
         if _file_is_encrypted "${_source_path:-}"
         then
           printf "415 %s: File is encrypted\\n" \
@@ -16982,18 +16990,8 @@ HEREDOC
           printf "415 %s\\n"                    \
             "$(_browse_http_response_message 415)"
         fi
-      } | {
-        printf "%s\\n" "$(
-          _browse_render_header                 \
-            "${_source_path}"                   \
-            "${_pagination_options[@]:-}"
-        )"
 
-        printf "<div class=\"main\">\\n"
-
-        cat
-
-        printf "</div>\\n"
+        printf "</p>\\n</div>\\n"
       } | {
         _render
       } | {
