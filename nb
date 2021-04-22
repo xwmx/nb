@@ -16201,7 +16201,6 @@ HEREDOC
     fi
 
     {
-      # shellcheck disable=SC2030
       if [[ -n "${_query:-}" ]]
       then
         _search "${_target_path}"         \
@@ -16374,7 +16373,6 @@ HEREDOC
 
       printf "</p>\\n"
 
-      # shellcheck disable=SC2031
       if [[ -n "${_query:-}"                              ]] &&
          [[ "${_pagination_count}" -lt "${_per_page:-0}"  ]]
       then
