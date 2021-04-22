@@ -3838,6 +3838,12 @@ nb set color_theme
 |:--:|:--:|
 |    |    |
 
+##### `mage`
+
+| ![mage](https://xwmx.github.io/misc/nb/images/nb-theme-mage-home.png)  |  ![mage](https://xwmx.github.io/misc/nb/images/nb-theme-mage-web.png)
+|:--:|:--:|
+|    |    |
+
 ##### `nb` (default)
 
 | ![nb](https://xwmx.github.io/misc/nb/images/nb-theme-nb-home.png)  |  ![nb](https://xwmx.github.io/misc/nb/images/nb-theme-nb-web.png) |
