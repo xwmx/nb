@@ -17441,10 +17441,10 @@ HEREDOC
         )"
       fi
 
-      _render_function_options+=("${_target_selector:-}")
-
       if [[ "${_action:-}" == "add"         ]]
       then
+        _render_function_options+=("${_target_selector:-}")
+
         case "${_request_method:-}" in
           GET)
             _browse_render_add                      \
