@@ -16922,6 +16922,7 @@ HEREDOC
   _browse_render_item() {
     local _columns="${NB_BROWSE_COLUMNS:-70}"
     local _pagination_options=()
+    local _respond_with_arguments=("--standard-input")
     local _source_path=
 
     while ((${#}))
@@ -16932,12 +16933,15 @@ HEREDOC
           _pagination_options+=("${1:-}" "${2:?}")
           shift
           ;;
+        --headers)
+          _respond_with_arguments+=("${1:-}")
+          ;;
         --local)
           _pagination_options+=("${1:-}" "${2:?}")
           shift
           ;;
         --page)
-          _option_value_is_present "${2:-}" && shift
+          _option_value_is_present "${2:-}"   && shift
           ;;
         --per-page)
           _pagination_options+=("${1:?}" "${2:?}")
@@ -16947,12 +16951,57 @@ HEREDOC
           _pagination_options+=("--terminal")
           ;;
         *)
-          _source_path="${1:-}"
+          if [[ -z "${_source_path:-}"  ]]
+          then
+            _source_path="${1:-}"
+          fi
           ;;
       esac
 
       shift
     done
+
+    local _render_type=
+
+    if _file_is_text "${_source_path:-}"      ||
+       [[ "${_source_path:-}" =~ \.docx$|\.epub$|\.odt$ ]]
+    then
+      _render_type="pandoc"
+    elif   ((${NB_BROWSE_PDF_ENABLED:-0}))      &&
+       [[ "${_source_path}" =~ \.pdf    ]]      &&
+       _command_exists "pdftotext"
+    then
+      _render_type="pdf"
+    else
+      {
+        if _file_is_encrypted "${_source_path:-}"
+        then
+          printf "415 %s: File is encrypted\\n" \
+            "$(_browse_http_response_message 415)"
+        else
+          printf "415 %s\\n"                    \
+            "$(_browse_http_response_message 415)"
+        fi
+      } | {
+        printf "%s\\n" "$(
+          _browse_render_header                 \
+            "${_source_path}"                   \
+            "${_pagination_options[@]:-}"
+        )"
+
+        printf "<div class=\"main\">\\n"
+
+        cat
+
+        printf "</div>\\n"
+      } | {
+        _render
+      } | {
+        _browse_respond_with 415 "${_respond_with_arguments[@]:-}"
+      }
+
+      return 1
+    fi
 
     local _notebook_path=
     _notebook_path="$(
@@ -16999,30 +17048,18 @@ HEREDOC
       }
     else # render non-Org to HTML before resolving [[wiki-style links]]
       {
-        if _file_is_text "${_source_path:-}"    ||
-           [[ "${_source_path:-}" =~ \.docx$|\.epub$|\.odt$ ]]
-        then
-          printf "" | _render "${_source_path}" --pandoc --body
-        elif ((${NB_BROWSE_PDF_ENABLED:-0}))    &&
-           [[ "${_source_path}" =~ \.pdf  ]]    &&
-           _command_exists "pdftotext"
-        then
-          # TODO: spacing
-          # NOTE: add uniform newlines: `sed  '/^$/d' | sed G`
-          pdftotext "${_source_path}" -   \
-            | tr -d '\014'                \
-            | _render --from="md" --pandoc --body
-        elif _file_is_encrypted "${_source_path:-}"
-        then
-          _browse_respond_with 415        \
-            "415 $(_browse_http_response_message 415): File is encrypted."
-
-          return 0
-        else
-          _browse_respond_with 415
-
-          return 0
-        fi
+        case "${_render_type:-}" in
+          pandoc)
+            printf "" | _render "${_source_path}" --pandoc --body
+            ;;
+          pdf)
+            # TODO: spacing
+            # NOTE: add uniform newlines: `sed  '/^$/d' | sed G`
+            pdftotext "${_source_path}" -   \
+              | tr -d '\014'                \
+              | _render --from="md" --pandoc --body
+            ;;
+          esac
       } | {
         printf "%s\\n" "$(
           _browse_render_header           \
@@ -17043,7 +17080,9 @@ HEREDOC
       } | {
         _render
       }
-    fi
+    fi | {
+      _browse_respond_with 200 "${_respond_with_arguments[@]:-}"
+    }
 
     return 0
   }
@@ -17533,7 +17572,7 @@ HEREDOC
           else
             _browse_render_item                       \
               "${_render_function_options[@]:-}"      \
-              | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
+              "${_respond_with_200_arguments[@]:-}"
 
             return 0
           fi
