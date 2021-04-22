@@ -648,6 +648,10 @@ case "${NB_COLOR_THEME}" in
     export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-29}"
     export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-59}"
     ;;
+  grape)
+    export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-183}"
+    export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-61}"
+    ;;
   mage)
     export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-199}"
     export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-55}"
@@ -672,10 +676,6 @@ case "${NB_COLOR_THEME}" in
     export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-227}"
     export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-8}"
     ;;
-  1)
-    export NB_COLOR_PRIMARY="${NB_COLOR_PRIMARY:-183}"
-    export NB_COLOR_SECONDARY="${NB_COLOR_SECONDARY:-61}"
-    ;;
 esac
 
 export _NB_COLOR_THEMES=(
@@ -684,6 +684,7 @@ export _NB_COLOR_THEMES=(
   desert
   electro
   forest
+  grape
   mage
   nb
   ocean
