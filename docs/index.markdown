@@ -95,7 +95,7 @@ sync notebooks using a general purpose syncing utility like Dropbox
 so notes can be edited in other apps on any device.
 
 <p align="center">
-  <img  src="https://xwmx.github.io/misc/nb/images/nb-theme-smoke-empty.png"
+  <img  src="https://xwmx.github.io/misc/nb/images/nb-theme-console-empty.png"
         alt="nb list empty"
         width="450">
 </p>
