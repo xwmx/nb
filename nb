@@ -959,7 +959,9 @@ __set_notebook_paths() {
 #
 # The full path to the cache directory.
 export _NB_CACHE_PATH="${NB_DIR}/.cache"
-if [[ -d "${NB_DIR}" ]] && [[ ! -e "${_NB_CACHE_PATH}" ]]
+
+if [[   -d "${NB_DIR}"          ]] &&
+   [[ ! -e "${_NB_CACHE_PATH}"  ]]
 then
   mkdir -p "${_NB_CACHE_PATH}"
 fi
