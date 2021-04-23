@@ -692,16 +692,12 @@ export _NB_COLOR_THEMES=(
   desert
   electro
   forest
-  lavender
-  mage
-  mint
   nb
   ocean
   raspberry
   smoke
   unicorn
   utility
-  1
 )
 
 # User defined themes can be installed in the $NB_DIR/.plugins directory.

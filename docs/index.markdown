@@ -2322,7 +2322,7 @@ which automatically resizes the form to fit the current terminal window:
 
 ```bash
 ❯ nb browse text:formats/markdown/123 edit
-❯nb · text : formats / markdown / 123 · ↓ · editing · - | +
+❯nb · text : formats / markdown / 123 · ↓ · editing � - | +
 
 [# Daring Fireball: Markdown (daringfireball.net)         ]
 [                                                         ]
@@ -3844,12 +3844,6 @@ nb set color_theme
 |:--:|:--:|
 |    |    |
 
-##### `mage`
-
-| ![mage](https://xwmx.github.io/misc/nb/images/nb-theme-mage-home.png)             | ![mage](https://xwmx.github.io/misc/nb/images/nb-theme-mage-web.png)              |
-|:--:|:--:|
-|    |    |
-
 ##### `nb` (default)
 
 | ![nb](https://xwmx.github.io/misc/nb/images/nb-theme-nb-home.png)                 | ![nb](https://xwmx.github.io/misc/nb/images/nb-theme-nb-web.png)                  |
@@ -4491,7 +4485,7 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
 ### Help
 
 <p align="center">
-  <a href="#nb-help">nb</a> •
+  <a href="#nb-help">nb</a> –�
   <a href="#bookmark-help">bookmark</a> •
   <a href="#subcommands">subcommands</a> •
   <a href="#plugins-1">plugins</a>
