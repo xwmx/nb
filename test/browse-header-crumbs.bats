@@ -2,6 +2,28 @@
 
 load test_helper
 
+# download link #######################################################################
+
+@test "'browse <folder>/<file> --header --no-download' hides download link." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/Example File.md" --content "Example content."
+
+    sleep 1
+  }
+
+  run "${_NB}" browse 1/1 --header --no-download
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}" -eq 0                                                   ]]
+
+  [[    "${output}" =~  header-crumbs                                       ]]
+  [[ !  "${output}" =~  ↓                                                   ]]
+}
+
 # --add #######################################################################
 
 @test "'browse <notebook>:<folder-id>/<folder-id>/ --add' displays header crumbs with '+' unlinked." {

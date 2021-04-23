@@ -55,13 +55,13 @@ export _S=" "
 
   # Prints output:
 
-  [[ "${lines[0]}"  =~  HTTP/1.0\ 200\ OK                     ]]
-  [[ "${lines[1]}"  =~  Date:\ .*                             ]]
-  [[ "${lines[2]}"  =~  Expires:\ .*                          ]]
-  [[ "${lines[3]}"  =~  Server:\ nb                           ]]
-  [[ "${lines[4]}"  =~  Content-Type:\ text/html              ]]
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 200\ OK                         ]]
+  [[ "${lines[1]}"  =~  Date:\ .*                                 ]]
+  [[ "${lines[2]}"  =~  Expires:\ .*                              ]]
+  [[ "${lines[3]}"  =~  Server:\ nb                               ]]
+  [[ "${lines[4]}"  =~  Content-Type:\ text/html\;\ charset=UTF-8 ]]
 
-  [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1  ]]
+  [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1      ]]
 
   printf "%s\\n" "${output}" | grep -q \
 "<form${_NEWLINE}action=\"/home:1?--edit"
@@ -123,13 +123,13 @@ export _S=" "
 
   # Prints output:
 
-  [[ "${lines[0]}"  =~  HTTP/1.0\ 200\ OK                     ]]
-  [[ "${lines[1]}"  =~  Date:\ .*                             ]]
-  [[ "${lines[2]}"  =~  Expires:\ .*                          ]]
-  [[ "${lines[3]}"  =~  Server:\ nb                           ]]
-  [[ "${lines[4]}"  =~  Content-Type:\ text/html              ]]
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 200\ OK                         ]]
+  [[ "${lines[1]}"  =~  Date:\ .*                                 ]]
+  [[ "${lines[2]}"  =~  Expires:\ .*                              ]]
+  [[ "${lines[3]}"  =~  Server:\ nb                               ]]
+  [[ "${lines[4]}"  =~  Content-Type:\ text/html\;\ charset=UTF-8 ]]
 
-  [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*local.*\ .*:.*\ .*1 ]]
+  [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*local.*\ .*:.*\ .*1     ]]
 
   printf "%s\\n" "${output}" | grep -q \
 "<form${_NEWLINE}action=\"/local:1?--edit&--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
@@ -171,21 +171,21 @@ export _S=" "
 
   # Prints output:
 
-  [[    "${lines[0]}"  =~  HTTP/1.0\ 200\ OK                                  ]]
-  [[    "${lines[1]}"  =~  Date:\ .*                                          ]]
-  [[    "${lines[2]}"  =~  Expires:\ .*                                       ]]
-  [[    "${lines[3]}"  =~  Server:\ nb                                        ]]
-  [[    "${lines[4]}"  =~  Content-Type:\ text/html                           ]]
+  [[    "${lines[0]}"  =~  HTTP/1.0\ 200\ OK                              ]]
+  [[    "${lines[1]}"  =~  Date:\ .*                                      ]]
+  [[    "${lines[2]}"  =~  Expires:\ .*                                   ]]
+  [[    "${lines[3]}"  =~  Server:\ nb                                    ]]
+  [[    "${lines[4]}"  =~  Content-Type:\ text/html\;\ charset=UTF-8      ]]
 
   [[    "${output}"    =~ \
 action=\"/local:1/1\?--edit\&--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook ]]
 
-  [[    "${output}"    =~ \<input\ type=\"hidden\"\ name=\"--example\"\>      ]]
-  [[    "${output}"    =~ \<input\ type=\"hidden\"\ name=\"-x\"\>             ]]
+  [[    "${output}"    =~ \<input\ type=\"hidden\"\ name=\"--example\"\>  ]]
+  [[    "${output}"    =~ \<input\ type=\"hidden\"\ name=\"-x\"\>         ]]
   [[    "${output}"    =~ \
-\<input\ type=\"hidden\"\ name=\"--sample\"\ value=\"demo-value\"\>           ]]
+\<input\ type=\"hidden\"\ name=\"--sample\"\ value=\"demo-value\"\>       ]]
 
-  [[ !  "${output}"    =~ \<input\ type=\"hidden\"\ name=\"abcdefg\"\>        ]]
+  [[ !  "${output}"    =~ \<input\ type=\"hidden\"\ name=\"abcdefg\"\>    ]]
 }
 
 # option parameters ###########################################################
@@ -222,7 +222,7 @@ action=\"/local:1/1\?--edit\&--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'
   [[    "${lines[1]}"  =~  Date:\ .*                                      ]]
   [[    "${lines[2]}"  =~  Expires:\ .*                                   ]]
   [[    "${lines[3]}"  =~  Server:\ nb                                    ]]
-  [[    "${lines[4]}"  =~  Content-Type:\ text/html                       ]]
+  [[    "${lines[4]}"  =~  Content-Type:\ text/html\;\ charset=UTF-8      ]]
 
   [[    "${output}"    =~ action=\"/home:1/1\?--edit                      ]]
 
@@ -270,7 +270,7 @@ action=\"/local:1/1\?--edit\&--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'
   [[    "${lines[1]}"  =~  Date:\ .*                                      ]]
   [[    "${lines[2]}"  =~  Expires:\ .*                                   ]]
   [[    "${lines[3]}"  =~  Server:\ nb                                    ]]
-  [[    "${lines[4]}"  =~  Content-Type:\ text/html                       ]]
+  [[    "${lines[4]}"  =~  Content-Type:\ text/html\;\ charset=UTF-8      ]]
 
   [[    "${output}"    =~ action=\"/home:1/1\?--edit                      ]]
 
@@ -310,7 +310,7 @@ action=\"/local:1/1\?--edit\&--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'
   [[    "${lines[1]}"  =~  Date:\ .*                                          ]]
   [[    "${lines[2]}"  =~  Expires:\ .*                                       ]]
   [[    "${lines[3]}"  =~  Server:\ nb                                        ]]
-  [[    "${lines[4]}"  =~  Content-Type:\ text/html                           ]]
+  [[    "${lines[4]}"  =~  Content-Type:\ text/html\;\ charset=UTF-8          ]]
 
   [[    "${output}"    =~ action=\"/home:1/1\?--edit                          ]]
 
@@ -351,7 +351,7 @@ action=\"/local:1/1\?--edit\&--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'
   [[    "${lines[1]}"  =~  Date:\ .*                                          ]]
   [[    "${lines[2]}"  =~  Expires:\ .*                                       ]]
   [[    "${lines[3]}"  =~  Server:\ nb                                        ]]
-  [[    "${lines[4]}"  =~  Content-Type:\ text/html                           ]]
+  [[    "${lines[4]}"  =~  Content-Type:\ text/html\;\ charset=UTF-8          ]]
 
   [[    "${output}"    =~ action=\"/home:1/1\?--edit                          ]]
 
@@ -393,7 +393,7 @@ action=\"/local:1/1\?--edit\&--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'
   [[    "${lines[1]}"  =~ Date:\ .*                                           ]]
   [[    "${lines[2]}"  =~ Expires:\ .*                                        ]]
   [[    "${lines[3]}"  =~ Server:\ nb                                         ]]
-  [[    "${lines[4]}"  =~ Content-Type:\ text/html                            ]]
+  [[    "${lines[4]}"  =~ Content-Type:\ text/html\;\ charset=UTF-8           ]]
 
   [[    "${output}"    =~ action=\"/home:1/1\?--edit                          ]]
 
@@ -487,13 +487,13 @@ action=\"/local:1/1\?--edit\&--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'
 
   # Prints output:
 
-  [[ "${lines[0]}"  =~  HTTP/1.0\ 200\ OK                     ]]
-  [[ "${lines[1]}"  =~  Date:\ .*                             ]]
-  [[ "${lines[2]}"  =~  Expires:\ .*                          ]]
-  [[ "${lines[3]}"  =~  Server:\ nb                           ]]
-  [[ "${lines[4]}"  =~  Content-Type:\ text/html              ]]
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 200\ OK                         ]]
+  [[ "${lines[1]}"  =~  Date:\ .*                                 ]]
+  [[ "${lines[2]}"  =~  Expires:\ .*                              ]]
+  [[ "${lines[3]}"  =~  Server:\ nb                               ]]
+  [[ "${lines[4]}"  =~  Content-Type:\ text/html\;\ charset=UTF-8 ]]
 
-  [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1  ]]
+  [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1      ]]
 
   printf "%s\\n" "${output}" | grep -q \
     "href=\"http://localhost:6789/?--per-page=30&--columns=20\"><span class=\"dim\">❯</span>nb</a> "
@@ -550,11 +550,11 @@ action=\"/local:1/1\?--edit\&--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'
 
   # Prints output:
 
-  [[ "${lines[0]}"  =~  HTTP/1.0\ 200\ OK                     ]]
-  [[ "${lines[1]}"  =~  Date:\ .*                             ]]
-  [[ "${lines[2]}"  =~  Expires:\ .*                          ]]
-  [[ "${lines[3]}"  =~  Server:\ nb                           ]]
-  [[ "${lines[4]}"  =~  Content-Type:\ text/html              ]]
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 200\ OK                         ]]
+  [[ "${lines[1]}"  =~  Date:\ .*                                 ]]
+  [[ "${lines[2]}"  =~  Expires:\ .*                              ]]
+  [[ "${lines[3]}"  =~  Server:\ nb                               ]]
+  [[ "${lines[4]}"  =~  Content-Type:\ text/html\;\ charset=UTF-8 ]]
 
   printf "%s\\n" "${output}" | grep -q \
 "<nav class=\"header-crumbs\"><h1><a rel=\"noopener noreferrer\" href=\"http://lo"
@@ -643,7 +643,7 @@ action=\"/local:1/1\?--edit\&--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'
   [[ "${lines[1]}"  =~  Date:\ .*                                 ]]
   [[ "${lines[2]}"  =~  Expires:\ .*                              ]]
   [[ "${lines[3]}"  =~  Server:\ nb                               ]]
-  [[ "${lines[4]}"  =~  Content-Type:\ text/html                  ]]
+  [[ "${lines[4]}"  =~  Content-Type:\ text/html\;\ charset=UTF-8 ]]
 
   [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1      ]]
 

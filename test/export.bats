@@ -15,8 +15,9 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1                ]]
-  [[ "${lines[1]}" =~ '  nb export' ]]
+  [[ "${status}"  -eq 1               ]]
+  [[ "${lines[0]}" =~ Usage           ]]
+  [[ "${lines[1]}" =~ \ \ nb\ export  ]]
 }
 
 # <id> ######################################################################
@@ -24,20 +25,27 @@ load test_helper
 @test "'export' with valid <id> and <path> exports a new note file." {
   {
     "${_NB}" init
-    "${_NB}" add "# Export Example"
+    "${_NB}" add "Example File.md" --content "# Export Example"
+
+    [[ -f "${NB_DIR}/home/Example File.md" ]]
   }
 
   run "${_NB}" export 1 "${_TMP_DIR}/example.md"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  ls "${_TMP_DIR}"
+
+  ls  "${_TMP_DIR}"
   cat "${_TMP_DIR}/example.md"
 
-  [[ -e "${_TMP_DIR}/example.md" ]]
+  [[ -f "${_TMP_DIR}/example.md" ]]
+
   grep -q '# Export Example' "${_TMP_DIR}/example.md"
 
-  # Prints output
+  diff                              \
+    <(cat "${_TMP_DIR}/example.md") \
+    <(cat "${NB_DIR}/home/Example File.md")
+
   [[ "${output}" =~ Exported    ]]
   [[ "${output}" =~ example.md  ]]
 }

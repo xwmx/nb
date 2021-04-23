@@ -495,6 +495,51 @@ HEREDOC
   [[ !  "${lines[6]}" =~  ❯ ]]
 }
 
+@test "'ls' footer uses expected spacing and escaping." {
+  {
+    _setup_ls
+
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" add  "Example Notebook:Example Folder/Example File.md" \
+      --content   "Example content."
+  }
+
+  run "${_NB}" ls --no-color
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                     ]]
+
+  [[ "${lines[6]}"  =~  ❯                     ]]
+  [[ "${lines[6]}"  =~  nb\ add               ]]
+  [[ "${lines[6]}"  =~  nb\ \<url\>           ]]
+  [[ "${lines[6]}"  =~  nb\ edit\ \<id\>      ]]
+
+  [[ "${output}"    =~  nb\ list\ \·          ]] ||
+    [[ "${output}"  =~  nb\ list${_NEWLINE}   ]]
+
+  [[ "${output}"    =~  nb\ search\ \<query\> ]]
+
+  run "${_NB}" ls Example\ Notebook:Example\ Folder/ --no-color
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                                             ]]
+
+  [[ "${lines[4]}"  =~  ❯                                             ]]
+  [[ "${lines[4]}"  =~  nb\ add\ Example\\\ Notebook:1/               ]]
+
+  [[ "${output}"    =~  nb\ Example\\\ Notebook:1/\ \<url\>           ]]
+  [[ "${output}"    =~  nb\ edit\ Example\\\ Notebook:1/\<id\>        ]]
+
+  [[ "${output}"    =~  nb\ list\ Example\\\ Notebook:1/\ \·          ]] ||
+    [[ "${output}"  =~  nb\ list\ Example\\\ Notebook:1/${_NEWLINE}   ]]
+
+  [[ "${output}"    =~  nb\ search\ Example\\\ Notebook:1/\ \<query\> ]]
+}
+
 @test "'ls' footer includes command names." {
   {
     _setup_ls

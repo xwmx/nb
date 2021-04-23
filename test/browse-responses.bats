@@ -114,19 +114,21 @@ export NB_SERVER_PORT=6789
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"  -eq 0                              ]]
+  [[    "${status}"  -eq  0                             ]]
 
   [[    "${output}"   =~  html                          ]]
+  [[    "${output}"   =~  header-crumbs                 ]]
   [[    "${output}"   =~  \<title\>nb\</title\>         ]]
   [[    "${output}"   =~  415\ Unsupported\ Media\ Type ]]
   [[ !  "${output}"   =~  encrypted                     ]]
+  [[ !  "${output}"   =~  ↓                             ]]
 }
 
 @test "'browse <file>' renders 415 with message when file is encrypted." {
   {
     "${_NB}" init
 
-    "${_NB}" add "Example File.md" \
+    "${_NB}" add "Example File.md"                \
       --content "Example content."                \
       --encrypt                                   \
       --password password
@@ -139,11 +141,13 @@ export NB_SERVER_PORT=6789
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"  -eq 0                      ]]
+  [[    "${status}"  -eq 0                                                  ]]
 
-  [[    "${output}"  =~  html                   ]]
-  [[    "${output}"  =~  \<title\>nb\</title\>  ]]
-  [[    "${output}"  =~  415\ Unsupported\ Media\ Type:\ File\ is\ encrypted\. ]]
+  [[    "${output}" =~  html                                                ]]
+  [[    "${output}" =~  header-crumbs                                       ]]
+  [[    "${output}" =~  \<title\>nb\</title\>                               ]]
+  [[    "${output}" =~  415\ Unsupported\ Media\ Type:\ File\ is\ encrypted ]]
+  [[ !  "${output}" =~  ↓                                                   ]]
 }
 
 @test "'browse <folder>/<file>' renders 415 with message when file is encrypted." {
@@ -163,9 +167,11 @@ export NB_SERVER_PORT=6789
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"  -eq 0                      ]]
+  [[    "${status}" -eq 0                                                   ]]
 
-  [[    "${output}"  =~  html                   ]]
-  [[    "${output}"  =~  \<title\>nb\</title\>  ]]
-  [[    "${output}"  =~  415\ Unsupported\ Media\ Type:\ File\ is\ encrypted\. ]]
+  [[    "${output}" =~  html                                                ]]
+  [[    "${output}" =~  header-crumbs                                       ]]
+  [[    "${output}" =~  \<title\>nb\</title\>                               ]]
+  [[    "${output}" =~  415\ Unsupported\ Media\ Type:\ File\ is\ encrypted ]]
+  [[ !  "${output}" =~  ↓                                                   ]]
 }

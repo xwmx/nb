@@ -103,17 +103,17 @@ abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
 
   # Returns status 0:
 
-  [[    "${status}"  -eq 0                        ]]
+  [[    "${status}"  -eq 0                                        ]]
 
   # Prints output:
 
-  [[ "${lines[0]}"  =~  HTTP/1.0\ 200\ OK         ]]
-  [[ "${lines[1]}"  =~  Date:\ .*                 ]]
-  [[ "${lines[2]}"  =~  Expires:\ .*              ]]
-  [[ "${lines[3]}"  =~  Server:\ nb               ]]
-  [[ "${lines[4]}"  =~  Content-Type:\ text/html  ]]
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 200\ OK                         ]]
+  [[ "${lines[1]}"  =~  Date:\ .*                                 ]]
+  [[ "${lines[2]}"  =~  Expires:\ .*                              ]]
+  [[ "${lines[3]}"  =~  Server:\ nb                               ]]
+  [[ "${lines[4]}"  =~  Content-Type:\ text/html\;\ charset=UTF-8 ]]
 
-  [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home    ]]
+  [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home                    ]]
 
   [[ "${output}"    =~  abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmno…  ]]
 
@@ -148,19 +148,19 @@ abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
 
   # Returns status 0:
 
-  [[    "${status}"  -eq 0                        ]]
+  [[    "${status}"  -eq 0                                        ]]
 
   # Prints output:
 
-  [[ "${lines[0]}"  =~  HTTP/1.0\ 200\ OK         ]]
-  [[ "${lines[1]}"  =~  Date:\ .*                 ]]
-  [[ "${lines[2]}"  =~  Expires:\ .*              ]]
-  [[ "${lines[3]}"  =~  Server:\ nb               ]]
-  [[ "${lines[4]}"  =~  Content-Type:\ text/html  ]]
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 200\ OK                         ]]
+  [[ "${lines[1]}"  =~  Date:\ .*                                 ]]
+  [[ "${lines[2]}"  =~  Expires:\ .*                              ]]
+  [[ "${lines[3]}"  =~  Server:\ nb                               ]]
+  [[ "${lines[4]}"  =~  Content-Type:\ text/html\;\ charset=UTF-8 ]]
 
-  [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home    ]]
+  [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home                    ]]
 
-  [[ "${output}"    =~  abcdefghi…                ]]
+  [[ "${output}"    =~  abcdefghi…                                ]]
 
   printf "%s\\n" "${output}" \
     | grep -q "href=\"http://localhost:6789/home:1?--per-page=.*&--columns=20\" class=\"list-item\""
@@ -182,7 +182,7 @@ abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"  ==  0 ]]
+  [[ "${status}"  ==  0         ]]
 
   [[ "${output}"  =~  \
 \<nav\ class=\"header-crumbs\"\>\<h1\>\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\> ]]
@@ -208,7 +208,7 @@ abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"  ==  0 ]]
+  [[ "${status}"  ==  0         ]]
 
   [[ "${output}"  =~  \
 \<nav\ class=\"header-crumbs\"\>\<h1\>\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>  ]]

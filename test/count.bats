@@ -36,10 +36,8 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  _compare "${lines[0]}" "3"
-
-  [[ ${status} -eq 0      ]]
-  [[ "${lines[0]}" -eq 3  ]]
+  [[ "${status}"    -eq 0 ]]
+  [[ "${lines[0]}"  -eq 3 ]]
 }
 
 @test "'count --type <type>' exits with 0 and counts items of type." {
@@ -77,8 +75,8 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0      ]]
-  [[ "${lines[0]}" -eq 2  ]]
+  [[ "${status}"    -eq 0 ]]
+  [[ "${lines[0]}"  -eq 2 ]]
 }
 
 # help ########################################################################
@@ -86,7 +84,7 @@ HEREDOC
 @test "'help count' exits with status 0." {
   run "${_NB}" help count
 
-  [[ ${status} -eq 0 ]]
+  [[ "${status}"    -eq 0       ]]
 }
 
 @test "'help count' prints help information." {

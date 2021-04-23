@@ -294,12 +294,12 @@ class=\"list-item\"\>.*\[.*1/1.*\].*${_S}File${_S}One.md${_S}·${_S}\"Example${_
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    ==  0                         ]]
-  [[ "${#lines[@]}" ==  5                         ]]
+  [[ "${status}"    ==  0                                         ]]
+  [[ "${#lines[@]}" ==  5                                         ]]
 
-  [[ "${lines[0]}"  =~  HTTP/1.0\ 200\ OK         ]]
-  [[ "${lines[1]}"  =~  Date:\ .*                 ]]
-  [[ "${lines[2]}"  =~  Expires:\ .*              ]]
-  [[ "${lines[3]}"  =~  Server:\ nb               ]]
-  [[ "${lines[4]}"  =~  Content-Type:\ text/html  ]]
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 200\ OK                         ]]
+  [[ "${lines[1]}"  =~  Date:\ .*                                 ]]
+  [[ "${lines[2]}"  =~  Expires:\ .*                              ]]
+  [[ "${lines[3]}"  =~  Server:\ nb                               ]]
+  [[ "${lines[4]}"  =~  Content-Type:\ text/html\;\ charset=UTF-8 ]]
 }
