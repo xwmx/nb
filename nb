@@ -19475,7 +19475,7 @@ $(local __editor=
          printf "\\n"
 
          local __theme=
-         for  __theme in $(bat --list-themes --color never)
+         for   __theme in $(bat --list-themes --color never)
          do
            printf "         %s\\n" "$(_color_primary "${__theme}")"
          done
