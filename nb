@@ -3716,7 +3716,7 @@ $(_color_primary "Sponsor & Donate"):
   https://github.com/sponsors/xwmx
   https://paypal.me/WilliamMelody
 
-$(_color_primary "By"):
+$(_color_primary "Created By"):
   William Melody
   https://github.com/xwmx
   https://www.williammelody.com
