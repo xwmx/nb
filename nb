@@ -20100,6 +20100,8 @@ $(_color_primary "Alias"): \`${_ME} reset\`
 HEREDOC
 }
 _unset() {
+  [[ -z "${1:-}" ]] && _exit_1 _help "unset"
+
   _settings unset "${@:-}"
 }
 _alias_subcommand "unset" "reset"

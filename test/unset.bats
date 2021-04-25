@@ -2,6 +2,20 @@
 
 load test_helper
 
+# help ########################################################################
+
+@test "'help unset' exits with 0 and prints help information." {
+  run "${_NB}" help unset
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0             ]]
+
+  [[ "${lines[0]}"  =~  Usage.*\:     ]]
+  [[ "${lines[1]}"  =~  \ \ nb\ unset ]]
+}
+
 # `reset` #####################################################################
 
 @test "'reset' with argument unsets, prints, and exits." {
@@ -40,8 +54,9 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"  -eq 1     ]]
-  [[ "${output}"  =~  Usage ]]
+  [[ "${status}"    -eq 1             ]]
+  [[ "${lines[0]}"  =~  Usage.*\:     ]]
+  [[ "${lines[1]}"  =~  \ \ nb\ unset ]]
 }
 
 @test "'unset' with invalid argument exits with error." {
