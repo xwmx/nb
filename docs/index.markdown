@@ -100,20 +100,21 @@ so notes can be edited in other apps on any device.
         width="450">
 </p>
 
-`nb` is designed to be portable, future-focused, and vendor independent,
-providing a full-featured and intuitive experience
-within a highly composable user-centric text interface.
-The entire program is a single [well-tested](#tests)
-shell script
-that can be installed, copied, or `curl`ed almost anywhere and just work,
+`nb` is designed to be
+enjoyable, portable, future-focused, and vendor independent,
+providing a full-featured and intuitive experience within
+a highly composable user-centric text interface.
+The entire program is
+a single [well-tested](#tests) shell script
+that can be
+installed, copied, or `curl`ed almost anywhere and just work,
 using a strategy inspired by
 [progressive enhancement](https://en.wikipedia.org/wiki/Progressive_enhancement)
 for various experience improvements in more capable environments.
 `nb` works great whether you have one notebook with just a few notes
 or dozens of notebooks containing thousands of notes, bookmarks, and other items.
 `nb` makes it easy to incorporate other tools, writing apps, and workflows.
-`nb` can be used a little, a lot, once in a while,
-or for just a subset of features.
+`nb` can be used a little, a lot, once in a while, or for just a subset of features.
 `nb` is flexible.
 
 <p align="center">
@@ -1124,7 +1125,7 @@ Items can be edited within terminal and GUI web browsers using
 [`nb browse edit`](#browse) / [`nb br e`](#browse):
 
 ```bash
-❯ nb browse text:formats/markdown/123 edit
+❯ nb browse edit text:formats/markdown/123
 ❯nb · text : formats / markdown / 123 · ↓ · editing · - | +
 
 [# Daring Fireball: Markdown (daringfireball.net)         ]
@@ -2321,7 +2322,7 @@ the `edit` link on the item page or by opening the item with
 which automatically resizes the form to fit the current terminal window:
 
 ```bash
-❯ nb browse text:formats/markdown/123 edit
+❯ nb browse edit text:formats/markdown/123
 ❯nb · text : formats / markdown / 123 · ↓ · editing · - | +
 
 [# Daring Fireball: Markdown (daringfireball.net)         ]
@@ -2361,7 +2362,7 @@ Pass a notebook, folder, and / or filename selector to create a new note
 in that location:
 
 ```bash
-❯ nb browse text:formats/ add
+❯ nb add browse text:formats/
 ❯nb · text : formats / +
 
 [                                                   ]
@@ -5005,7 +5006,7 @@ Options:
 
 Description:
   Browse, view, and edit linked notes, bookmarks, notebooks, folders, and
-  other items using the terminal or GUI web browser.
+  other items using terminal and GUI web browsers.
 
   `browse` includes an embedded web application designed for terminal
   and GUI web browsers that renders [[wiki-style links]] and #tags as

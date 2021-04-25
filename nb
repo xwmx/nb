@@ -15655,7 +15655,7 @@ $(_color_primary "Options"):
 
 $(_color_primary "Description"):
   Browse, view, and edit linked notes, bookmarks, notebooks, folders, and
-  other items using the terminal or GUI web browser.
+  other items using terminal and GUI web browsers.
 
   \`browse\` includes an embedded web application designed for terminal
   and GUI web browsers that renders [[wiki-style links]] and #tags as
