@@ -3652,6 +3652,7 @@ $(_color_primary "Usage"):
   ${_ME} sync [-a | --all]
   ${_ME} unarchive [<notebook>]
   ${_ME} unpin ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+  ${_ME} unset (<name> | <number>)
   ${_ME} update
   ${_ME} use <notebook>
   ${_ME} -i | --interactive [<subcommand> [<options>...]]
@@ -3699,6 +3700,7 @@ $(_color_primary "Subcommands"):
   subcommands  List, add, alias, and describe subcommands.
   sync         Sync local notebook with the remote repository.
   unarchive    Unarchive the current or specified notebook.
+  unset        Return a setting to its default value.
   unpin        Unpin a pinned item.
   update       Update \`${_ME}\` to the latest version.
   use          Switch to a notebook.
@@ -7846,6 +7848,7 @@ _SUBCOMMANDS=(
   unar
   unarchive
   unpin
+  unset
   update
   upgrade
   use
@@ -7914,6 +7917,7 @@ _DOCUMENTED_SUBCOMMANDS=(
   unar
   unarchive
   unpin
+  unset
   update
   use
   version
@@ -7972,6 +7976,7 @@ _GIT_SUBCOMMANDS=(
   unar
   unarchive
   unpin
+  unset
   use
   view
   ${NB_PLUGIN_SUBCOMMANDS[@]:-}
@@ -8247,7 +8252,7 @@ _call_deferred_command() {
     "_ar" "_archive" "_b" "_br" "_browse" "_browser" "_config" "_h" "_help" \
     "_helpers" "_set" "_plugin" "_plugins" "_remote" "_settings" "_shell"   \
     "_st" "_stat" "_status" "_sync" "_todo" "_todos" "_unar" "_unarchive"   \
-    "_update" "_upgrade"
+    "_unset" "_update" "_upgrade"
   )
 
   if {
@@ -20074,6 +20079,27 @@ _unarchive() {
   _notebooks unarchive "${@:-}"
 }
 _alias_subcommand "unarchive" "unar"
+
+# unset ################################################################# unset
+
+_describe_unset() {
+  cat <<HEREDOC
+$(_color_primary "Usage"):
+  ${_ME} unset (<name> | <number>)
+
+$(_color_primary "Description"):
+  Unset a setting, returning it to the default value.
+
+  This is an alias for \`${_ME} settings unset\`.
+
+$(_color_primary "Examples"):
+  ${_ME} unset color_primary
+  ${_ME} unset 2
+HEREDOC
+}
+_unset() {
+  _settings unset "${@:-}"
+}
 
 # update ############################################################### update
 

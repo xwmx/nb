@@ -3802,11 +3802,13 @@ code
 code
 ```
 
-Use [`nb settings unset`](#settings) to unset a setting
-and revert to the default:
+Use
+[`nb unset`](#unset) or
+[`nb settings unset`](#settings)
+to unset a setting and revert to the default:
 
 ```bash
-❯ nb settings unset editor
+❯ nb unset editor
 EDITOR restored to the default: vim
 
 ❯ nb settings get editor
@@ -4648,6 +4650,7 @@ Usage:
   nb sync [-a | --all]
   nb unarchive [<notebook>]
   nb unpin ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+  nb unset (<name> | <number>)
   nb update
   nb use <notebook>
   nb -i | --interactive [<subcommand> [<options>...]]
@@ -4692,6 +4695,7 @@ Subcommands:
   sync         Sync local notebook with the remote repository.
   unarchive    Unarchive the current or specified notebook.
   unpin        Unpin a pinned item.
+  unset        Return a setting to its default value.
   update       Update `nb` to the latest version.
   use          Switch to a notebook.
   version      Display version information.
@@ -4846,6 +4850,7 @@ For more information, see: `nb help`.
   <a href="#sync">sync</a> •
   <a href="#unarchive">unarchive</a> •
   <a href="#unpin">unpin</a> •
+  <a href="#unset">unset</a> •
   <a href="#update">update</a> •
   <a href="#use">use</a> •
   <a href="#version">version</a>
@@ -6351,6 +6356,22 @@ Description:
 Examples:
   nb unpin 123
   nb unpin example:sample/321
+```
+
+#### `unset`
+
+```text
+Usage:
+  nb unset (<name> | <number>)
+
+Description:
+  Unset a setting, returning it to the default value.
+
+  This is an alias for `nb settings unset`.
+
+Examples:
+  nb unset color_primary
+  nb unset 2
 ```
 
 #### `update`
