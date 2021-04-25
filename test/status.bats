@@ -2,6 +2,8 @@
 
 load test_helper
 
+# error handling ##############################################################
+
 @test "'status <not-valid>' exits with 1 and prints message." {
   {
     "${_NB}" init
