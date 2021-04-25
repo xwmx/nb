@@ -3397,7 +3397,7 @@ $(_color_primary "Examples"):
   ${_ME} h notebooks
   ${_ME} h e
 
-$(_color_primary "Shortcut Alias"): \`nb h\`
+$(_color_primary "Shortcut Alias"): \`${_ME} h\`
 HEREDOC
 }
 _help() {
