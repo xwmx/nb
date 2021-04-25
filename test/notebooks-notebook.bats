@@ -5,11 +5,16 @@ load test_helper
 _setup_notebook() {
   {
     "${_NB}" init
+
     mkdir -p "${NB_DIR}/one"
+
     cd "${NB_DIR}/one" || return 1
+
     git init
     git remote add origin "${_GIT_REMOTE_URL}"
+
     mkdir -p "${NB_DIR}/two"
+
     cd "${NB_DIR}" || return 1
   } > /dev/null 2>&1
 }
@@ -22,7 +27,7 @@ _setup_notebook() {
 
     cd "${_TMP_DIR}"
 
-    _names=(
+    declare _names=(
       ".cache"
       ".current"
       ".plugins"
@@ -32,16 +37,17 @@ _setup_notebook() {
     )
   }
 
-  for __name in "${_names[@]}"
+  declare __name=
+  for     __name in "${_names[@]}"
   do
     run "${_NB}" notebooks archive "${__name}"
 
     printf "\${status}: '%s'\\n" "${status}"
     printf "\${output}: '%s'\\n" "${output}"
 
-    [[ ${status} -eq 1                  ]]
-    [[ "${lines[0]}" =~ Name\ reserved  ]]
-    [[ "${lines[0]}" =~ ${__name}       ]]
+    [[ "${status}"    -eq 1               ]]
+    [[ "${lines[0]}"  =~  Name\ reserved  ]]
+    [[ "${lines[0]}"  =~  ${__name}       ]]
   done
 }
 
@@ -57,15 +63,18 @@ _setup_notebook() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0                                      ]]
-  [[ "${output}" == "$(_color_primary "home") archived."  ]]
+  [[ "${status}"  -eq 0                                     ]]
+  [[ "${output}"  ==  "$(_color_primary "home") archived."  ]]
 
   # Creates git commit
+
   cd "${NB_DIR}/home" || return 1
+
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
   done
+
   git log | grep -q '\[nb\] Archived'
 }
 
@@ -79,24 +88,31 @@ _setup_notebook() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0                                    ]]
-  [[ "${output}" == "$(_color_primary "one") archived." ]]
+  [[ "${status}"  -eq 0                                   ]]
+  [[ "${output}"  ==  "$(_color_primary "one") archived." ]]
 
   # Creates git commit
+
   cd "${NB_DIR}/one" || return 1
-  _counter=0
+
+  declare _counter=0
+
   while [[ -n "$(git status --porcelain)" ]]
   do
     [[ "${_counter}" -gt 5 ]] && git status && break
+
     sleep 1
+
     _counter="$((_counter+1))"
   done
+
   git log | grep -q '\[nb\] Archived'
 }
 
 @test "'notebooks archive' does not create git commit if already archived." {
   {
     _setup_notebook
+
     touch "${NB_DIR}/home/.archived"
   }
 
@@ -105,17 +121,19 @@ _setup_notebook() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0            ]]
+  [[ "${status}"  -eq 0           ]]
   # NOTE: Spinner changes output in unexpected ways.
-  [[ "${output}" =~ home        ]]
-  [[ "${output}" =~ archived\.$ ]]
+  [[ "${output}"  =~  home        ]]
+  [[ "${output}"  =~  archived\.$ ]]
 
-  # Creates git commit
+  # Does not create git commit
   cd "${NB_DIR}/home" || return 1
+
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
   done
+
   ! git log | grep '\[nb\] Archived'
 }
 
@@ -124,6 +142,7 @@ _setup_notebook() {
 @test "'notebooks unarchive' exits with 0 and unarchives." {
   {
     _setup_notebook
+
     "${_NB}" notebooks archive
   }
 
@@ -132,21 +151,25 @@ _setup_notebook() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0                                        ]]
-  [[ "${output}" == "$(_color_primary "home") unarchived."  ]]
+  [[ "${status}"  -eq 0                                       ]]
+  [[ "${output}"  ==  "$(_color_primary "home") unarchived."  ]]
 
   # Creates git commit
+
   cd "${NB_DIR}/home" || return 1
+
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
   done
+
   git log | grep '\[nb\] Unarchived'
 }
 
 @test "'notebooks unarchive <name>' exits with 0 and unarchives." {
   {
     _setup_notebook
+
     "${_NB}" notebooks archive one
   }
 
@@ -155,15 +178,18 @@ _setup_notebook() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0                                      ]]
-  [[ "${output}" == "$(_color_primary "one") unarchived." ]]
+  [[ "${status}"  -eq 0                                     ]]
+  [[ "${output}"  ==  "$(_color_primary "one") unarchived." ]]
 
   # Creates git commit
+
   cd "${NB_DIR}/one" || return 1
+
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
   done
+
   git log | grep '\[nb\] Unarchived'
 }
 
@@ -177,15 +203,18 @@ _setup_notebook() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0                                        ]]
-  [[ "${output}" == "$(_color_primary "home") unarchived."  ]]
+  [[ "${status}"  -eq 0                                       ]]
+  [[ "${output}"  ==  "$(_color_primary "home") unarchived."  ]]
 
   # Creates git commit
+
   cd "${NB_DIR}/home" || return 1
+
   while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
   done
+
   ! git log | grep -q '\[nb\] Unarchived'
 }
 

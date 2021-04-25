@@ -6128,7 +6128,7 @@ $(_color_primary "Subcommands"):
   status     Print the archival status of the current notebook or
              notebook <name>.
   show       Show and return information about a specified notebook.
-  unarchive  Remove "archived" status from current notebook or notebook <name>.
+  unarchive  Remove "archived" status from the current notebook or notebook <name>.
   use        Switch to a notebook.
 
     1. https://ranger.github.io/
@@ -7771,6 +7771,7 @@ _USE_DEBUG=0
 _SUBCOMMANDS=(
   a
   add
+  archive
   b
   bk
   bm
@@ -7834,6 +7835,7 @@ _SUBCOMMANDS=(
   subcommands
   sync
   u
+  unarchive
   unpin
   update
   upgrade
@@ -7850,6 +7852,7 @@ _SUBCOMMANDS=(
 _DOCUMENTED_SUBCOMMANDS=(
   a
   add
+  archive
   b
   bk
   bookmark
@@ -7897,6 +7900,7 @@ _DOCUMENTED_SUBCOMMANDS=(
   subcommands
   sync
   u
+  unarchive
   unpin
   update
   use
@@ -7910,6 +7914,7 @@ _DOCUMENTED_SUBCOMMANDS=(
 _GIT_SUBCOMMANDS=(
   a
   add
+  archive
   b
   bk
   bm
@@ -7951,6 +7956,7 @@ _GIT_SUBCOMMANDS=(
   show
   search
   u
+  unarchive
   unpin
   use
   view
@@ -8224,9 +8230,9 @@ _call_deferred_command() {
 
   local _group="${2:-}"
   local _group_3_names=(
-    "_b" "_br" "_browse" "_browser" "_config" "_h" "_help" "_helpers" "_set"  \
-    "_plugin" "_plugins" "_remote" "_settings" "_shell" "_status" "_sync"     \
-    "_todo" "_todos" "_update" "_upgrade"
+    "_archive" "_b" "_br" "_browse" "_browser" "_config" "_h" "_help"     \
+    "_helpers" "_set" "_plugin" "_plugins" "_remote" "_settings" "_shell" \
+    "_status" "_sync" "_todo" "_todos" "_unarchive" "_update" "_upgrade"
   )
 
   if {
@@ -15620,6 +15626,27 @@ _call_deferred_command --group 2
 ###############################################################################
 # --------------------------------------------------------------------------- #
 
+# archive ############################################################# archive
+
+_describe_archive() {
+  cat <<HEREDOC
+$(_color_primary "Usage"):
+  ${_ME} archive [<name>]
+
+$(_color_primary "Description"):
+  Set the current notebook or notebook <name> to "archived" status.
+
+  This is an alias for \`${_ME} notebooks archive\`.
+
+$(_color_primary "Examples"):
+  ${_ME} archive
+  ${_ME} archive example
+HEREDOC
+}
+_archive() {
+  _notebooks archive "${@:-}"
+}
+
 # browse ############################################################### browse
 
 _describe_browse() {
@@ -19947,6 +19974,27 @@ _todos() {
   fi | sed -e '/^$/d'
 }
 _alias_subcommand "todos" "todo"
+
+# unarchive ######################################################### unarchive
+
+_describe_unarchive() {
+  cat <<HEREDOC
+$(_color_primary "Usage"):
+  ${_ME} unarchive [<name>]
+
+$(_color_primary "Description"):
+  Remove "archived" status from the current notebook or notebook <name>.
+
+  This is an alias for \`${_ME} notebooks unarchive\`.
+
+$(_color_primary "Examples"):
+  ${_ME} unarchive
+  ${_ME} unarchive example
+HEREDOC
+}
+_unarchive() {
+  _notebooks unarchive "${@:-}"
+}
 
 # update ############################################################### update
 
