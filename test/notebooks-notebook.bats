@@ -70,7 +70,7 @@ _setup_notebook() {
 
   cd "${NB_DIR}/home" || return 1
 
-  while [[ -n "$(git status --porcelain)" ]]
+  while [[ -n "$(git status --porcelain)"                   ]]
   do
     sleep 1
   done
@@ -97,7 +97,7 @@ _setup_notebook() {
 
   declare _counter=0
 
-  while [[ -n "$(git status --porcelain)" ]]
+  while [[ -n "$(git status --porcelain)"                 ]]
   do
     [[ "${_counter}" -gt 5 ]] && git status && break
 
@@ -121,10 +121,11 @@ _setup_notebook() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"  -eq 0           ]]
+  [[ "${status}"  -eq 0                   ]]
+
   # NOTE: Spinner changes output in unexpected ways.
-  [[ "${output}"  =~  home        ]]
-  [[ "${output}"  =~  archived\.$ ]]
+  [[ "${output}"  =~  home                ]]
+  [[ "${output}"  =~  archived\.$         ]]
 
   # Does not create git commit
   cd "${NB_DIR}/home" || return 1
@@ -158,7 +159,7 @@ _setup_notebook() {
 
   cd "${NB_DIR}/home" || return 1
 
-  while [[ -n "$(git status --porcelain)" ]]
+  while [[ -n "$(git status --porcelain)"                     ]]
   do
     sleep 1
   done
@@ -185,7 +186,7 @@ _setup_notebook() {
 
   cd "${NB_DIR}/one" || return 1
 
-  while [[ -n "$(git status --porcelain)" ]]
+  while [[ -n "$(git status --porcelain)"                   ]]
   do
     sleep 1
   done
@@ -210,7 +211,7 @@ _setup_notebook() {
 
   cd "${NB_DIR}/home" || return 1
 
-  while [[ -n "$(git status --porcelain)" ]]
+  while [[ -n "$(git status --porcelain)"                     ]]
   do
     sleep 1
   done
@@ -271,7 +272,7 @@ _setup_notebook() {
 @test "'help notebooks' exits with status 0." {
   run "${_NB}" help notebooks
 
-  [[ ${status} -eq 0 ]]
+  [[ ${status} -eq 0                ]]
 }
 
 @test "'help notebooks' prints help information." {
