@@ -3362,6 +3362,7 @@ nb example:list
 ```
 
 Check a notebook's archival status with
+[`nb status`](#status) and
 [`nb notebooks status`](#notebooks):
 
 ```bash
@@ -3370,6 +3371,12 @@ nb notebooks status
 
 # print the archival status of the notebook named "example"
 nb notebooks status example
+
+# print status information, including archival status, for the current notebook
+nb status
+
+# print status information, including archival status, for the notebook named "example"
+nb status example
 ```
 
 Use [`nb unarchive`](#unarchive) to unarchive a notebook:
@@ -4616,6 +4623,7 @@ Usage:
           --info-line | --path | [-p | --print] | --relative-path | [-r |
           --render] | --title | --type [<type>] | [-u | --updated]] [--no-color]
   nb show <notebook>
+  nb status [<notebook>]
   nb subcommands [add <name>...] [alias <name> <alias>]
                  [describe <name> <usage>]
   nb sync [-a | --all]
@@ -4661,6 +4669,7 @@ Subcommands:
   show         Show a note or notebook.
   status       Run `git status` in the current notebook.
   subcommands  List, add, alias, and describe subcommands.
+  status       Print notebook status information.
   sync         Sync local notebook with the remote repository.
   unarchive    Unarchive the current or specified notebook.
   unpin        Unpin a pinned item.
@@ -6221,10 +6230,15 @@ Shortcut Alias: `nb s`
 
 ```text
 Usage:
-  nb status
+  nb status [<notebook>]
 
 Description:
-  Run `git status` the current notebook.
+  Print archival, git, and remote status information for the current notebook
+  or <notebook>.
+
+Examples:
+  nb status
+  nb status example
 ```
 
 #### `subcommands`
