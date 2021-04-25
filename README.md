@@ -65,7 +65,7 @@ but `nb` works great without them.
 - convenient filtering and listing,
 - [Internet Archive Wayback Machine](https://archive.org/web/) snapshot lookup
   for broken links,
-- tagging, pinning, linking, and integration with other `nb` features.
+- tagging, pinning, linking, and full integration with other `nb` features.
 
 Page information is
 downloaded,
