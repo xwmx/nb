@@ -6245,6 +6245,8 @@ Description:
 Examples:
   nb status
   nb status example
+
+Shortcut Alias: `nb st`
 ```
 
 #### `subcommands`

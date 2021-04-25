@@ -2,6 +2,46 @@
 
 load test_helper
 
+# aliases #####################################################################
+
+@test "'st' exits with 0 and prints current notebook status information." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" st
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                           ]]
+
+  [[ "${lines[0]}"  ==  "$(_color_primary "home")"  ]]
+  [[ "${lines[1]}"  =~  [^-]----[^-]                ]]
+  [[ "${lines[2]}"  ==  "status:  unarchived"       ]]
+  [[ "${lines[3]}"  ==  "remote:  none"             ]]
+  [[ "${lines[4]}"  ==  "git:     clean"            ]]
+}
+
+@test "'stat' exits with 0 and prints current notebook status information." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" stat
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                           ]]
+
+  [[ "${lines[0]}"  ==  "$(_color_primary "home")"  ]]
+  [[ "${lines[1]}"  =~  [^-]----[^-]                ]]
+  [[ "${lines[2]}"  ==  "status:  unarchived"       ]]
+  [[ "${lines[3]}"  ==  "remote:  none"             ]]
+  [[ "${lines[4]}"  ==  "git:     clean"            ]]
+}
+
 # status ######################################################################
 
 @test "'status' exits with 0 and prints changes." {

@@ -7836,6 +7836,8 @@ _SUBCOMMANDS=(
   settings
   shell
   show
+  st
+  stat
   status
   subcommands
   sync
@@ -7901,6 +7903,7 @@ _DOCUMENTED_SUBCOMMANDS=(
   settings
   shell
   show
+  st
   status
   subcommands
   sync
@@ -8235,9 +8238,10 @@ _call_deferred_command() {
 
   local _group="${2:-}"
   local _group_3_names=(
-    "_archive" "_b" "_br" "_browse" "_browser" "_config" "_h" "_help"     \
-    "_helpers" "_set" "_plugin" "_plugins" "_remote" "_settings" "_shell" \
-    "_status" "_sync" "_todo" "_todos" "_unarchive" "_update" "_upgrade"
+    "_archive" "_b" "_br" "_browse" "_browser" "_config" "_h" "_help"       \
+    "_helpers" "_set" "_plugin" "_plugins" "_remote" "_settings" "_shell"   \
+    "_st" "_stat" "_status" "_sync" "_todo" "_todos" "_unarchive" "_update" \
+    "_upgrade"
   )
 
   if {
@@ -19779,6 +19783,8 @@ $(_color_primary "Description"):
 $(_color_primary "Examples"):
   ${_ME} status
   ${_ME} status example
+
+$(_color_primary "Shortcut Alias"): \`${_ME} st\`
 HEREDOC
 }
 _status() {
@@ -19833,6 +19839,8 @@ _status() {
     printf "clean\\n"
   fi
 }
+_alias_subcommand "status" "st"
+_alias_subcommand "status" "stat"
 
 # sync ################################################################### sync
 
