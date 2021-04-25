@@ -3589,7 +3589,7 @@ $(_color_primary "Usage"):
   ${_ME} help [-c | --colors] | [-r | --readme] | [-s | --short] [-p | --print]
   ${_ME} history [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
   ${_ME} import [copy | download | move] (<path>... | <url>) [--convert]
-            [<notebook>:][<folder>/][<filename>]
+            [<notebook>:][<folder-path>/][<filename>]
   ${_ME} import notebook <path> [<name>]
   ${_ME} init [<remote-url> [<branch>]] [--author] [--email <email>]
           [--name <name>]
@@ -12740,7 +12740,7 @@ _describe_import() {
   cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} import [copy | download | move] (<path>... | <url>) [--convert]
-            [<notebook>:][<folder>/][<filename>]
+            [<notebook>:][<folder-path>/][<filename>]
   ${_ME} import notebook <path> [<name>]
 
 $(_color_primary "Options"):

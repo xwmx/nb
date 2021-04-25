@@ -4587,7 +4587,7 @@ Usage:
   nb help [-c | --colors] | [-r | --readme] | [-s | --short] [-p | --print]
   nb history [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
   nb import [copy | download | move] (<path>... | <url>) [--convert]
-            [<notebook>:][<folder>/][<filename>]
+            [<notebook>:][<folder-path>/][<filename>]
   nb import notebook <path> [<name>]
   nb init [<remote-url> [<branch>]] [--author] [--email <email>]
           [--name <name>]
@@ -5335,7 +5335,7 @@ Examples:
 ```text
 Usage:
   nb import [copy | download | move] (<path>... | <url>) [--convert]
-            [<notebook>:][<folder>/][<filename>]
+            [<notebook>:][<folder-path>/][<filename>]
   nb import notebook <path> [<name>]
 
 Options:
