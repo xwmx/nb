@@ -3331,14 +3331,14 @@ home
 
 #### Archiving Notebooks
 
-Notebooks can be archived using [`nb notebooks archive`](#notebooks):
+Notebooks can be archived using [`nb archive`](#archive):
 
 ```bash
 # archive the current notebook
-nb notebooks archive
+nb archive
 
 # archive the notebook named "example"
-nb notebooks archive example
+nb archive example
 ```
 
 When a notebook is archived it is not included in
@@ -3371,22 +3371,27 @@ Check a notebook's archival status with
 [`nb notebooks status`](#notebooks):
 
 ```bash
-❯ nb notebooks status example
-example is archived.
+# print the archival status of the current notebook
+nb notebooks status
+
+# print the archival status of the notebook named "example"
+nb notebooks status example
 ```
 
-Use [`nb notebooks unarchive`](#notebooks) to unarchive a notebook:
+Use [`nb unarchive`](#unarchive) to unarchive a notebook:
 
 ```bash
 # unarchive the current notebook
-nb notebooks unarchive
+nb unarchive
 
 # unarchive the notebook named "example"
-nb notebooks unarchive example
+nb unarchive example
 ```
 
 For more information about working with notebooks, see
-[`nb help notebooks`](#notebooks).
+[`nb help notebooks`](#notebooks),
+[`nb help archive`](#archive),
+and [`nb help unarchive`](#unarchive).
 
 For technical details about notebooks, see
 [`nb` Notebook Specification](#nb-notebook-specification).
@@ -4523,6 +4528,7 @@ Usage:
          [--folder <folder-path>] [--tags <tag1>,<tag2>...]
          [-t <title> | --title <title>] [--type <type>]
   nb add folder [<name>]
+  nb archive [<notebook>]
   nb bookmark [<ls options>...]
   nb bookmark [<notebook>:][<folder-path>/] <url>
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
@@ -4619,6 +4625,7 @@ Usage:
   nb subcommands [add <name>...] [alias <name> <alias>]
                  [describe <name> <usage>]
   nb sync [-a | --all]
+  nb unarchive [<notebook>]
   nb unpin ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
   nb update
   nb use <notebook>
@@ -4631,6 +4638,7 @@ Subcommands:
   (default)    List notes and notebooks. This is an alias for `nb ls`.
                When a <url> is provided, create a new bookmark.
   add          Add a note, folder, or file.
+  archive      Archive the current or specified notebook.
   bookmark     Add, open, list, and search bookmarks.
   browse       Browse and manage linked items in terminal and GUI web browsers.
   completions  Install and uninstall completion scripts.
@@ -4660,6 +4668,7 @@ Subcommands:
   status       Run `git status` in the current notebook.
   subcommands  List, add, alias, and describe subcommands.
   sync         Sync local notebook with the remote repository.
+  unarchive    Unarchive the current or specified notebook.
   unpin        Unpin a pinned item.
   update       Update `nb` to the latest version.
   use          Switch to a notebook.
@@ -4782,6 +4791,7 @@ For more information, see: `nb help`.
 
 <p align="center">
   <a href="#add">add</a> •
+  <a href="#archive">archive</a> •
   <a href="#bookmark">bookmark</a> •
   <a href="#browse">browse</a> •
   <a href="#completions">completions</a> •
@@ -4812,6 +4822,7 @@ For more information, see: `nb help`.
   <a href="#status">status</a> •
   <a href="#subcommands-1">subcommands</a> •
   <a href="#sync">sync</a> •
+  <a href="#unarchive">unarchive</a> •
   <a href="#unpin">unpin</a> •
   <a href="#update">update</a> •
   <a href="#use">use</a> •
@@ -4880,6 +4891,22 @@ Examples:
 
 Aliases: `nb create`, `nb new`
 Shortcut Aliases: `nb a`, `nb +`
+```
+
+#### `archive`
+
+```text
+Usage:
+  nb archive [<name>]
+
+Description:
+  Set the current notebook or notebook <name> to "archived" status.
+
+  This is an alias for `nb notebooks archive`.
+
+Examples:
+  nb archive
+  nb archive example
 ```
 
 #### `bookmark`
@@ -5583,7 +5610,7 @@ Subcommands:
   status     Print the archival status of the current notebook or
              notebook <name>.
   show       Show and return information about a specified notebook.
-  unarchive  Remove "archived" status from current notebook or notebook <name>.
+  unarchive  Remove "archived" status from the current notebook or notebook <name>.
   use        Switch to a notebook.
 
     1. https://ranger.github.io/
@@ -6263,6 +6290,23 @@ Sync Conflict Resolution:
   More Information:
     https://github.com/xwmx/nb#sync-conflict-resolution
 ```
+
+#### `unarchive`
+
+```text
+Usage:
+  nb unarchive [<name>]
+
+Description:
+  Remove "archived" status from the current notebook or notebook <name>.
+
+  This is an alias for `nb notebooks unarchive`.
+
+Examples:
+  nb unarchive
+  nb unarchive example
+```
+
 #### `unpin`
 
 ```text

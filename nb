@@ -3552,6 +3552,7 @@ $(_color_primary "Usage"):
          [--folder <folder-path>] [--tags <tag1>,<tag2>...]
          [-t <title> | --title <title>] [--type <type>]
   ${_ME} add folder [<name>]
+  ${_ME} archive [<notebook>]
   ${_ME} bookmark [<ls options>...]
   ${_ME} bookmark [<notebook>:][<folder-path>/] <url>
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
@@ -3648,6 +3649,7 @@ $(_color_primary "Usage"):
   ${_ME} subcommands [add <name>...] [alias <name> <alias>]
                  [describe <name> <usage>]
   ${_ME} sync [-a | --all]
+  ${_ME} unarchive [<notebook>]
   ${_ME} unpin ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
   ${_ME} update
   ${_ME} use <notebook>
@@ -3665,6 +3667,7 @@ $(_color_primary "Subcommands"):
   (default)    List notes and notebooks. This is an alias for \`${_ME} ls\`.
                When a <url> is provided, create a new bookmark.
   add          Add a note, folder, or file.
+  archive      Archive the current or specified notebook.
   bookmark     Add, open, list, and search bookmarks.
   browse       Browse and manage linked items in terminal and GUI browsers.
   completions  Install and uninstall completion scripts.
@@ -3694,6 +3697,7 @@ $(_color_primary "Subcommands"):
   status       Run \`git status\` in the current notebook.
   subcommands  List, add, alias, and describe subcommands.
   sync         Sync local notebook with the remote repository.
+  unarchive    Unarchive the current or specified notebook.
   unpin        Unpin a pinned item.
   update       Update \`${_ME}\` to the latest version.
   use          Switch to a notebook.
