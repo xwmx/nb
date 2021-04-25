@@ -3330,7 +3330,7 @@ home
 
 #### Archiving Notebooks
 
-Notebooks can be archived using [`nb archive`](#archive):
+Notebooks can be archived using [`nb archive`](#archive) (shortcut: `nb ar`):
 
 ```bash
 # archive the current notebook
@@ -3371,20 +3371,20 @@ Check a notebook's archival status with
 [`nb notebooks status`](#notebooks):
 
 ```bash
-# print the archival status of the current notebook
-nb notebooks status
-
-# print the archival status of the notebook named "example"
-nb notebooks status example
-
 # print status information, including archival status, for the current notebook
 nb status
 
 # print status information, including archival status, for the notebook named "example"
 nb status example
+
+# print the archival status of the current notebook
+nb notebooks status
+
+# print the archival status of the notebook named "example"
+nb notebooks status example
 ```
 
-Use [`nb unarchive`](#unarchive) to unarchive a notebook:
+Use [`nb unarchive`](#unarchive) (shortcut: `nb unar`) to unarchive a notebook:
 
 ```bash
 # unarchive the current notebook
@@ -4915,6 +4915,8 @@ Description:
 Examples:
   nb archive
   nb archive example
+
+Shortcut Alias: `nb ar`
 ```
 
 #### `bookmark`
@@ -6319,6 +6321,8 @@ Description:
 Examples:
   nb unarchive
   nb unarchive example
+
+Shortcut Alias: `nb unar`
 ```
 
 #### `unpin`

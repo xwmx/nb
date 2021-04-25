@@ -7776,6 +7776,7 @@ _USE_DEBUG=0
 _SUBCOMMANDS=(
   a
   add
+  ar
   archive
   b
   bk
@@ -7842,6 +7843,7 @@ _SUBCOMMANDS=(
   subcommands
   sync
   u
+  unar
   unarchive
   unpin
   update
@@ -7859,6 +7861,7 @@ _SUBCOMMANDS=(
 _DOCUMENTED_SUBCOMMANDS=(
   a
   add
+  ar
   archive
   b
   bk
@@ -7908,6 +7911,7 @@ _DOCUMENTED_SUBCOMMANDS=(
   subcommands
   sync
   u
+  unar
   unarchive
   unpin
   update
@@ -7922,6 +7926,7 @@ _DOCUMENTED_SUBCOMMANDS=(
 _GIT_SUBCOMMANDS=(
   a
   add
+  ar
   archive
   b
   bk
@@ -7964,6 +7969,7 @@ _GIT_SUBCOMMANDS=(
   show
   search
   u
+  unar
   unarchive
   unpin
   use
@@ -8238,10 +8244,10 @@ _call_deferred_command() {
 
   local _group="${2:-}"
   local _group_3_names=(
-    "_archive" "_b" "_br" "_browse" "_browser" "_config" "_h" "_help"       \
+    "_ar" "_archive" "_b" "_br" "_browse" "_browser" "_config" "_h" "_help" \
     "_helpers" "_set" "_plugin" "_plugins" "_remote" "_settings" "_shell"   \
-    "_st" "_stat" "_status" "_sync" "_todo" "_todos" "_unarchive" "_update" \
-    "_upgrade"
+    "_st" "_stat" "_status" "_sync" "_todo" "_todos" "_unar" "_unarchive"   \
+    "_update" "_upgrade"
   )
 
   if {
@@ -15650,11 +15656,14 @@ $(_color_primary "Description"):
 $(_color_primary "Examples"):
   ${_ME} archive
   ${_ME} archive example
+
+$(_color_primary "Shortcut Alias"): \`${_ME} ar\`
 HEREDOC
 }
 _archive() {
   _notebooks archive "${@:-}"
 }
+_alias_subcommand "archive" "ar"
 
 # browse ############################################################### browse
 
@@ -20057,11 +20066,14 @@ $(_color_primary "Description"):
 $(_color_primary "Examples"):
   ${_ME} unarchive
   ${_ME} unarchive example
+
+$(_color_primary "Shortcut Alias"): \`${_ME} unar\`
 HEREDOC
 }
 _unarchive() {
   _notebooks unarchive "${@:-}"
 }
+_alias_subcommand "unarchive" "unar"
 
 # update ############################################################### update
 
