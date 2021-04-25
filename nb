@@ -3397,7 +3397,7 @@ $(_color_primary "Examples"):
   ${_ME} h notebooks
   ${_ME} h e
 
-$(_color_primary "Shortcut Alias"): \`h\`
+$(_color_primary "Shortcut Alias"): \`nb h\`
 HEREDOC
 }
 _help() {
@@ -6104,7 +6104,7 @@ $(_color_primary "Subcommands"):
   add        Create a new global notebook. When an existing notebook's
              <remote-url> is specified, create the new global notebook as a
              clone of <remote-url>.
-             Aliases: \`notebooks create\`, \`notebooks new\`
+             Aliases: \`${_ME} notebooks create\`, \`${_ME} notebooks new\`
   archive    Set the current notebook or notebook <name> to "archived" status.
   author     Configure the commit author email and name for the notebook.
   export     Export the notebook <name> to the current directory or <path>,
@@ -6146,7 +6146,7 @@ $(_color_primary "Examples"):
   ${_ME} n current --path
   ${_ME} n archive example
 
-$(_color_primary "Shortcut Alias"): \`n\`
+$(_color_primary "Shortcut Alias"): \`${_ME} n\`
 HEREDOC
 }
 _RESERVED_NOTEBOOK_NAMES=(
@@ -10336,8 +10336,8 @@ $(_color_primary "Examples"):
   ${_ME} example:a
   ${_ME} example:a -t "Title"
 
-$(_color_primary "Aliases"): \`create\`, \`new\`
-$(_color_primary "Shortcut Aliases"): \`a\`, \`+\`
+$(_color_primary "Aliases"): \`${_ME} create\`, \`${_ME} new\`
+$(_color_primary "Shortcut Aliases"): \`${_ME} a\`, \`${_ME} +\`
 HEREDOC
 }
 _add() {
@@ -10902,7 +10902,7 @@ $(_color_primary "Examples"):
   ${_ME} bookmark open 5
   ${_ME} bk
 
-$(_color_primary "Shortcut Alias"): \`bk\`
+$(_color_primary "Shortcut Alias"): \`${_ME} bk\`
 HEREDOC
 }
 _bookmark() {
@@ -11846,7 +11846,7 @@ $(_color_primary "Examples"):
   ${_ME} d example:12
   ${_ME} example:12 d
 
-$(_color_primary "Shortcut Aliases"): \`d\`, \`-\`
+$(_color_primary "Shortcut Aliases"): \`${_ME} d\`, \`${_ME} -\`
 HEREDOC
 }
 _delete() {
@@ -12029,7 +12029,7 @@ $(_color_primary "Examples"):
   ${_ME} e example:12
   ${_ME} example:12 e
 
-$(_color_primary "Shortcut Alias"): \`e\`
+$(_color_primary "Shortcut Alias"): \`${_ME} e\`
 HEREDOC
 }
 _edit() {
@@ -13072,8 +13072,8 @@ $(_color_primary "Examples"):
   # Rename note 12 in the "example" notebook to "sample.md"
   ${_ME} rename example:12 "sample.md"
 
-$(_color_primary "Alias"): \`rename\`
-$(_color_primary "Shortcut Alias"): \`mv\`
+$(_color_primary "Alias"): \`${_ME} rename\`
+$(_color_primary "Shortcut Alias"): \`${_ME} mv\`
 HEREDOC
 }
 _move() {
@@ -13355,7 +13355,7 @@ $(_color_primary "See also"):
   ${_ME} help bookmark
   ${_ME} help edit
 
-$(_color_primary "Shortcut Alias"): \`o\`
+$(_color_primary "Shortcut Alias"): \`${_ME} o\`
 HEREDOC
 }
 _open() {
@@ -13403,8 +13403,8 @@ $(_color_primary "See also"):
   ${_ME} help bookmark
   ${_ME} help show
 
-$(_color_primary "Alias"): \`preview\`
-$(_color_primary "Shortcut Alias"): \`p\`
+$(_color_primary "Alias"): \`${_ME} preview\`
+$(_color_primary "Shortcut Alias"): \`${_ME} p\`
 HEREDOC
 }
 _peek() {
@@ -13617,7 +13617,7 @@ $(_color_primary "Examples"):
   # search all notebooks for "example query" and list matching items
   ${_ME} q -la "example query"
 
-$(_color_primary "Shortcut Alias"): \`q\`
+$(_color_primary "Shortcut Alias"): \`${_ME} q\`
 HEREDOC
 }
 _search() {
@@ -14778,8 +14778,8 @@ $(_color_primary "Examples"):
   ${_ME} s example:12
   ${_ME} example:12 s
 
-$(_color_primary "Alias"): \`view\`
-$(_color_primary "Shortcut Alias"): \`s\`
+$(_color_primary "Alias"): \`${_ME} view\`
+$(_color_primary "Shortcut Alias"): \`${_ME} s\`
 HEREDOC
 }
 _show() {
@@ -15579,7 +15579,7 @@ $(_color_primary "Description"):
 $(_color_primary "Example"):
   ${_ME} use example
 
-$(_color_primary "Shortcut Alias"): \`u\`
+$(_color_primary "Shortcut Alias"): \`${_ME} u\`
 HEREDOC
 }
 _use() {
@@ -15641,7 +15641,7 @@ $(_color_primary "Subcommands"):
   delete     Open the delete view in the browser.
              Shortcut Aliases: \`d\`, \`-\`
   edit       Open the edit view in the browser.
-             Shortcut Alias: \`e\`
+             Shortcut Alias:   \`e\`
 
 $(_color_primary "Options"):
   -c, --content <content>      Add content to the new note.
@@ -15689,7 +15689,7 @@ $(_color_primary "Examples"):
   ${_ME} browse demo:456
   ${_ME} br
 
-$(_color_primary "Shortcut Alias"): \`br\`
+$(_color_primary "Shortcut Alias"): \`${_ME} br\`
 HEREDOC
 }
 _browse() {
@@ -18893,7 +18893,7 @@ $(_color_primary "Examples"):
   ${_ME} settings colors 105
   ${_ME} set limit 15
 
-$(_color_primary "Alias"): \`set\`
+$(_color_primary "Alias"): \`${_ME} set\`
 HEREDOC
 }
 _settings() {

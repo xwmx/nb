@@ -358,7 +358,7 @@ regardless of the current working directory.
 
 #### Adding
 
-Use [`nb add`](#add) (shortcuts: `a`, `+`) to create new notes:
+Use [`nb add`](#add) (shortcuts: `nb a`, `nb +`) to create new notes:
 
 ```bash
 # create a new note in your text editor
@@ -513,11 +513,11 @@ or [`pb`](https://github.com/xwmx/pb):
 pb | nb add .js
 
 # save the clipboard contents as a Rust file in the "rust" notebook
-# using the shortcut alias `a`
+# using the shortcut alias `nb a`
 pb | nb a rust: .rs
 
 # save the clipboard contents as a Haskell file named "example.hs" in the
-# "snippets" notebook using the shortcut alias `+`
+# "snippets" notebook using the shortcut alias `nb +`
 pb | nb + snippets: example.hs
 ```
 
@@ -575,10 +575,10 @@ Encrypted notes can be decrypted
 using the OpenSSL and GPG command line tools directly, so
 you aren't dependent on `nb` to decrypt your files.
 
-##### Shortcut Aliases: `a`, `+`
+##### Shortcut Aliases: `nb a`, `nb +`
 
 `nb` includes shortcuts for many commands, including
-`a` and `+` for `add`:
+`nb a` and `nb +` for `nb add`:
 
 ```bash
 # create a new note in your text editor
@@ -597,7 +597,7 @@ xclip -o | nb +
 nb example:a
 ```
 
-##### Other Aliases: `create`, `new`
+##### Other Aliases: `nb create`, `nb new`
 
 `nb add` can also be invoked with `nb create` and `nb new` for convenience:
 
@@ -609,7 +609,7 @@ nb new "Example note content."
 nb create --title "Example Note Title"
 ```
 
-##### Adding with `browse`
+##### Adding with `nb browse`
 
 Items can also be added within terminal and GUI web browsers using
 [`nb browse add`](#browse) / [`nb br a`](#browse):
@@ -1027,7 +1027,7 @@ For more information, see [Browsing](#-browsing).
 #### Editing
 
 You can edit an item in your editor with
-[`nb edit`](#edit) (shortcut: `e`):
+[`nb edit`](#edit) (shortcut: `nb e`):
 
 ```bash
 # edit note by id
@@ -1084,9 +1084,9 @@ When a note is encrypted, `nb edit` will prompt you for the note password,
 open the unencrypted content in your editor,
 and then automatically reencrypt the note when you are done editing.
 
-##### Shortcut Alias: `e`
+##### Shortcut Alias: `nb e`
 
-Like `add`, `edit` has a shortcut alias, `e`:
+`nb edit` can be called by the shortcut alias, `nb e`:
 
 ```bash
 # edit note by id
@@ -1147,7 +1147,7 @@ For more information, see [Browsing](#-browsing).
 
 #### Viewing
 
-Notes and other items can be viewed using [`nb show`](#show) (shortcut: `s`):
+Notes and other items can be viewed using [`nb show`](#show) (shortcut: `nb s`):
 
 ```bash
 # show note by id
@@ -1281,9 +1281,9 @@ To view a file in the system's preferred GUI application, use
 
 For full `nb show` usage information, run [`nb help show`](#show).
 
-##### Shortcut Alias: `s`
+##### Shortcut Alias: `nb s`
 
-`show` is aliased to `s`:
+`nb show` can be called using the shortcut alias `nb s`:
 
 ```bash
 # show note by id
@@ -1308,7 +1308,7 @@ nb example:12 s
 nb example:s 12
 ```
 
-##### Alias: `view`
+##### Alias: `nb view`
 
 `nb show` can also be invoked with `nb view` for convenience:
 
@@ -1374,7 +1374,7 @@ For more information, see [Browsing](#-browsing).
 
 To delete one or more notes, pass any number of
 ids, filenames, titles, and other [selectors](#selectors)
-to [`nb delete`](#delete) (shortcuts: `d`, `-`):
+to [`nb delete`](#delete) (shortcuts: `nb d`, `nb -`):
 
 ```bash
 # delete item by id
@@ -1412,9 +1412,9 @@ To skip, use the `--force` / `-f` option:
 nb delete 3 --force
 ```
 
-##### Shortcut Aliases: `d`, `-`
+##### Shortcut Aliases: `nb d`, `nb -`
 
-`delete` has the aliases `d` and `-`:
+`delete` has the aliases `nb d` and `nb -`:
 
 ```bash
 # delete note by id
@@ -1441,7 +1441,7 @@ nb example:d 12
 
 For `nb delete` help information, run [`nb help delete`](#delete).
 
-##### Deleting with `browse`
+##### Deleting with `nb browse`
 
 Items can be deleted within terminal and GUI web browsers using
 [`nb browse delete`](#browse) / [`nb br d`](#browse):
@@ -1710,9 +1710,9 @@ For more listing options, see
 [`nb help list`](#list),
 and [`nb help bookmark`](#bookmark).
 
-##### Shortcut Alias: `bk`
+##### Shortcut Alias: `nb bk`
 
-`bookmark` can also be used with the alias `bk`:
+`nb bookmark` can also be used with the alias `nb bk`:
 
 ```bash
 ❯ nb bk
@@ -1776,7 +1776,7 @@ convert it to structurally valid XHTML (or HTML).
 
 For more information, see [Browsing](#-browsing).
 
-[`nb open`](#open) (shortcut: `o`) opens the bookmarked URL in
+[`nb open`](#open) (shortcut: `nb o`) opens the bookmarked URL in
 your system's primary web browser:
 
 ```bash
@@ -1793,7 +1793,7 @@ nb example:12 open
 nb example:open 12
 ```
 
-[`nb peek`](#peek) (shortcut: `p`, alias: `preview`)
+[`nb peek`](#peek) (shortcut: `nb p`, alias: `nb preview`)
 opens the bookmarked URL in your terminal web browser,
 such as
 [w3m](https://en.wikipedia.org/wiki/W3m),
@@ -1813,10 +1813,10 @@ nb example:12 peek
 # peek bookmark 12 in the notebook named "example", alternative
 nb example:peek 12
 ```
-`open` and `peek` subcommands also work seamlessly with encrypted bookmarks.
+`nb open` and `nb peek` subcommands also work seamlessly with encrypted bookmarks.
 `nb` will simply prompt you for the bookmark's password.
 
-`open` and `peek` automatically check whether the URL is still valid.
+`nb open` and `nb peek` automatically check whether the URL is still valid.
 If the page has been removed, `nb` can check
 the [Internet Archive Wayback Machine](https://archive.org/web/)
 for an archived copy.
@@ -1855,10 +1855,10 @@ including all bookmark fields and the cached page content,
 providing a cleaned-up, distraction-free, locally-served view of
 the page content along with all of your notes.
 
-##### Shortcut Aliases: `o` and `p`
+##### Shortcut Aliases: `nb o` and `nb p`
 
-`open` and `peek` can also be used with the shortcut aliases `o` and
-`p`:
+`nb open` and `nb peek` can also be used with the shortcut aliases
+`nb o` and `nb p`:
 
 ```bash
 # open bookmark by id
@@ -2527,9 +2527,9 @@ to enhance privacy and avoid leaking information:
 - Links include a `rel="noopener noreferrer"` attribute.
 - `lynx` is opened with the `-noreferer` option.
 
-#### Shortcut Alias: `br`
+#### Shortcut Alias: `nb br`
 
-`nb browse` can also be used with the alias `br`:
+`nb browse` can also be used with the alias `nb br`:
 
 ```bash
 # open the current notebook in the terminal web browser
@@ -2898,9 +2898,9 @@ Supported alternative search tools:
 - [`ack`](https://beyondgrep.com/)
 - [`grep`](https://en.wikipedia.org/wiki/Grep)
 
-##### Shortcut Alias: `q`
+##### Shortcut Alias: `nb q`
 
-`search` can also be used with the alias `q` (for "query"):
+`nb search` can also be used with the alias `nb q` (for "query"):
 
 ```bash
 # search for "example" and print matching excerpts
@@ -4872,8 +4872,8 @@ Examples:
   nb example:a
   nb example:a -t "Title"
 
-Aliases: `create`, `new`
-Shortcut Aliases: `a`, `+`
+Aliases: `nb create`, `nb new`
+Shortcut Aliases: `nb a`, `nb +`
 ```
 
 #### `bookmark`
@@ -4963,7 +4963,7 @@ Examples:
   nb bookmark open 5
   nb bk
 
-Shortcut Alias: `bk`
+Shortcut Alias: `nb bk`
 ```
 
 #### `browse`
@@ -4986,7 +4986,7 @@ Subcommands:
   delete     Open the delete view in the browser.
              Shortcut Aliases: `d`, `-`
   edit       Open the edit view in the browser.
-             Shortcut Alias: `e`
+             Shortcut Alias:   `e`
 
 Options:
   -c, --content <content>      Add content to the new note.
@@ -5034,7 +5034,7 @@ Examples:
   nb browse demo:456
   nb br
 
-Shortcut Alias: `br`
+Shortcut Alias: `nb br`
 ```
 
 #### `completions`
@@ -5088,7 +5088,7 @@ Examples:
   nb d example:12
   nb example:12 d
 
-Shortcut Aliases: `d`, `-`
+Shortcut Aliases: `nb d`, `nb -`
 ```
 
 #### `edit`
@@ -5133,7 +5133,7 @@ Examples:
   nb e example:12
   nb example:12 e
 
-Shortcut Alias: `e`
+Shortcut Alias: `nb e`
 ```
 
 #### `env`
@@ -5242,7 +5242,7 @@ Examples:
   nb h notebooks
   nb h e
 
-Shortcut Alias: `h`
+Shortcut Alias: `nb h`
 ```
 
 #### `history`
@@ -5479,7 +5479,7 @@ Description:
   Move or rename a note. Move the note to <path> or change the file type.
   When file extension is omitted, the existing extension is used.
 
-  `move` and `rename` are aliases and can be used interchangably.
+  `nb move` and `nb rename` are aliases and can be used interchangably.
 
 Examples:
   # Move "example.md" to "example.org"
@@ -5500,8 +5500,8 @@ Examples:
   # Rename note 12 in the "example" notebook to "sample.md"
   nb rename example:12 "sample.md"
 
-Alias: `rename`
-Shortcut Alias: `mv`
+Alias: `nb rename`
+Shortcut Alias: `nb mv`
 ```
 
 #### `notebooks`
@@ -5553,7 +5553,7 @@ Subcommands:
   add        Create a new global notebook. When an existing notebook's
              <remote-url> is specified, create the new global notebook as a
              clone of <remote-url>.
-             Aliases: `notebooks create`, `notebooks new`
+             Aliases: `nb notebooks create`, `nb notebooks new`
   archive    Set the current notebook or notebook <name> to "archived" status.
   author     Configure the commit author email and name for the notebook.
   export     Export the notebook <name> to the current directory or <path>,
@@ -5595,7 +5595,7 @@ Examples:
   nb n current --path
   nb n archive example
 
-Shortcut Alias: `n`
+Shortcut Alias: `nb n`
 ```
 
 #### `open`
@@ -5626,7 +5626,7 @@ See also:
   nb help bookmark
   nb help edit
 
-Shortcut Alias: `o`
+Shortcut Alias: `nb o`
 ```
 
 #### `peek`
@@ -5662,8 +5662,8 @@ See also:
   nb help bookmark
   nb help show
 
-Alias: `preview`
-Shortcut Alias: `p`
+Alias: `nb preview`
+Shortcut Alias: `nb p`
 ```
 
 #### `pin`
@@ -5810,7 +5810,7 @@ Examples:
   # search all notebooks for "example query" and list matching items
   nb q -la "example query"
 
-Shortcut Alias: `q`
+Shortcut Alias: `nb q`
 ```
 
 #### `settings`
@@ -5858,7 +5858,7 @@ Examples:
   nb settings colors 105
   nb set limit 15
 
-Alias: `set`
+Alias: `nb set`
 ```
 
 ##### `auto_sync`
@@ -6186,8 +6186,8 @@ Examples:
   nb s example:12
   nb example:12 s
 
-Alias: `view`
-Shortcut Alias: `s`
+Alias: `nb view`
+Shortcut Alias: `nb s`
 ```
 
 #### `status`
@@ -6298,7 +6298,7 @@ Description:
 Example:
   nb use example
 
-Shortcut Alias: `u`
+Shortcut Alias: `nb u`
 ```
 
 #### `version`
@@ -6373,7 +6373,7 @@ Usage:
 Description:
   Create a copy of the specified item in the current notebook.
 
-Alias: `duplicate`
+Alias: `nb duplicate`
 ```
 
 #### `ebook`
