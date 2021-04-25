@@ -5603,7 +5603,7 @@ _ls() {
         printf "local\\n"
       fi
 
-      printf "%s\\n" "${_unarchived_notebook_names[@]}"
+      printf "%s\\n" "${_unarchived_notebook_names[@]:-}"
 
       if ((_archived_count))
       then
