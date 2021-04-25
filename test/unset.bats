@@ -2,6 +2,32 @@
 
 load test_helper
 
+# `reset` #####################################################################
+
+@test "'reset' with argument unsets, prints, and exits." {
+  {
+    "${_NB}" init
+
+    run "${_NB}" settings set EDITOR sample
+
+    [[ "$(EDITOR='' "${_NB}" settings get EDITOR)" == 'sample'  ]]
+    [[ "$(cat "${NBRC_PATH}")" =~ 'EDITOR="sample"'             ]]
+  }
+
+  run "${_NB}" reset EDITOR
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf ".nbrc:\\n'%s'\\n" "$(cat "${NBRC_PATH}")"
+
+  [[    "${status}"             -eq 0                           ]]
+  [[ !  "$(cat "${NBRC_PATH}")" =~  'EDITOR="sample"'           ]]
+  [[ !  "$(cat "${NBRC_PATH}")" =~  'EDITOR="sample"'           ]]
+  [[    "${output}"             =~  EDITOR                      ]]
+  [[    "${output}"             =~  restored\ to\ the\ default  ]]
+  [[ !  "${output}"             =~  sample                      ]]
+}
+
 # `unset` #####################################################################
 
 @test "'unset' with no argument exits with error." {

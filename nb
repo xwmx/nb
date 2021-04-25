@@ -7832,6 +7832,7 @@ _SUBCOMMANDS=(
   r
   remote
   rename
+  reset
   run
   s
   search
@@ -7976,7 +7977,6 @@ _GIT_SUBCOMMANDS=(
   unar
   unarchive
   unpin
-  unset
   use
   view
   ${NB_PLUGIN_SUBCOMMANDS[@]:-}
@@ -8250,9 +8250,9 @@ _call_deferred_command() {
   local _group="${2:-}"
   local _group_3_names=(
     "_ar" "_archive" "_b" "_br" "_browse" "_browser" "_config" "_h" "_help" \
-    "_helpers" "_set" "_plugin" "_plugins" "_remote" "_settings" "_shell"   \
-    "_st" "_stat" "_status" "_sync" "_todo" "_todos" "_unar" "_unarchive"   \
-    "_unset" "_update" "_upgrade"
+    "_helpers" "_set" "_plugin" "_plugins" "_remote" "_reset" "_settings"   \
+    "_shell" "_st" "_stat" "_status" "_sync" "_todo" "_todos" "_unar"       \
+    "_unarchive" "_unset" "_update" "_upgrade"
   )
 
   if {
@@ -20095,11 +20095,14 @@ $(_color_primary "Description"):
 $(_color_primary "Examples"):
   ${_ME} unset color_primary
   ${_ME} unset 2
+
+$(_color_primary "Alias"): \`${_ME} reset\`
 HEREDOC
 }
 _unset() {
   _settings unset "${@:-}"
 }
+_alias_subcommand "unset" "reset"
 
 # update ############################################################### update
 

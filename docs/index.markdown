@@ -6372,6 +6372,8 @@ Description:
 Examples:
   nb unset color_primary
   nb unset 2
+
+Alias: `nb reset`
 ```
 
 #### `update`
