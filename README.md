@@ -3332,6 +3332,12 @@ nb archive
 
 # archive the notebook named "example"
 nb archive example
+
+# archive the current notebook, shortcut alias
+nb ar
+
+# archive the notebook named "example", shortcut alias
+nb ar example
 ```
 
 When a notebook is archived it is not included in
@@ -3361,7 +3367,7 @@ nb example:list
 ```
 
 Check a notebook's archival status with
-[`nb status`](#status) and
+[`nb status`](#status) (shortcut: `nb st`) and
 [`nb notebooks status`](#notebooks):
 
 ```bash
@@ -3370,6 +3376,14 @@ nb status
 
 # print status information, including archival status, for the notebook named "example"
 nb status example
+
+# print status information, including archival status, for the current notebook,
+# shortcut alias
+nb st
+
+# print status information, including archival status, for the notebook named "example",
+# shortcut alias
+nb st example
 
 # print the archival status of the current notebook
 nb notebooks status
