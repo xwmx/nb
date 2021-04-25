@@ -45,9 +45,9 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}" -eq  0                         ]]
+  [[ "${status}" -eq  0                             ]]
 
-  [[ "${output}" =~ Shortcut\ Alias.*\:\ \`h\`  ]]
+  [[ "${output}" =~ Shortcut\ Alias.*\:\ \`nb\ h\`  ]]
 }
 
 @test "'help settings' exits with 0 and prints 'settings' subcommand usage." {
