@@ -2835,7 +2835,7 @@ with color highlighting:
 
 ```bash
 ❯ nb search "example"
-[314]  🔫� example.bookmark.md "Example Bookmark (example.com)"
+[314]  🔖 example.bookmark.md "Example Bookmark (example.com)"
 --------------------------------------------------------------
 1:# Example Bookmark (example.com)
 
