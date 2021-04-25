@@ -19777,8 +19777,7 @@ $(_color_primary "Usage"):
   ${_ME} status [<notebook>]
 
 $(_color_primary "Description"):
-  Print archival, git, and remote status information for the current notebook
-  or <notebook>.
+  Print archival, git, and remote status for the current notebook or <notebook>.
 
 $(_color_primary "Examples"):
   ${_ME} status

@@ -6233,8 +6233,7 @@ Usage:
   nb status [<notebook>]
 
 Description:
-  Print archival, git, and remote status information for the current notebook
-  or <notebook>.
+  Print archival, git, and remote status for the current notebook or <notebook>.
 
 Examples:
   nb status
