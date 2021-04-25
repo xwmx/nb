@@ -2,6 +2,24 @@
 
 load test_helper
 
+@test "'status <not-valid>' exits with 1 and prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+  }
+
+  run "${_NB}" status "Sample Notebook"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 1                                                     ]]
+  [[ "${#lines[@]}" -eq 1                                                     ]]
+
+  [[ "${lines[0]}"  =~  ^.*!.*\ Notebook\ not\ found:\ .*Sample\ Notebook.*$  ]]
+}
+
 # aliases #####################################################################
 
 @test "'st' exits with 0 and prints current notebook status information." {

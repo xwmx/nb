@@ -19788,17 +19788,21 @@ $(_color_primary "Shortcut Alias"): \`${_ME} st\`
 HEREDOC
 }
 _status() {
-  local _notebook_name="${1:-}"
+  local _notebook_name="${1%%:*}"
   local _notebook_path=
 
   if [[   -n "${_notebook_name:-}" ]]
   then
-    _notebook_path="$(_notebooks show "${_notebook_name:-}" --path)"
+    _notebook_path="$(
+      _notebooks show "${_notebook_name:-}" --path 2>/dev/null || :
+    )"
 
     if [[ -z "${_notebook_path:-}" ]]
     then
-      _exit_1 printf "Notebook not found: %s\\n" \
+      _warn printf "Notebook not found: %s\\n" \
         "$(_color_primary "${_notebook_name:-}")"
+
+      return 1
     fi
   else
     _notebook_name="$(_notebooks current --name)"
