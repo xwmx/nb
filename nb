@@ -19814,7 +19814,7 @@ _status() {
   printf "%s\\n" "$(_color_primary "${_notebook_name}")"
   _print_line "${_notebook_name}"
 
-  printf "status:  "
+  printf "status: "
 
   if [[ "$(_notebooks status "${_notebook_name}")" =~ not\ archived ]]
   then
@@ -19823,11 +19823,11 @@ _status() {
     printf "archived\\n"
   fi
 
-  printf "remote:  "
+  printf "remote: "
 
   _remote 2>/dev/null || printf "none\\n"
 
-  printf "git:     "
+  printf "git:    "
 
   local _git_status_files=
   _git_status_files="$(git -C "${_notebook_path}" status --porcelain)"

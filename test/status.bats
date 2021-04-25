@@ -36,9 +36,9 @@ load test_helper
 
   [[ "${lines[0]}"  ==  "$(_color_primary "home")"  ]]
   [[ "${lines[1]}"  =~  [^-]----[^-]                ]]
-  [[ "${lines[2]}"  ==  "status:  unarchived"       ]]
-  [[ "${lines[3]}"  ==  "remote:  none"             ]]
-  [[ "${lines[4]}"  ==  "git:     clean"            ]]
+  [[ "${lines[2]}"  ==  "status: unarchived"        ]]
+  [[ "${lines[3]}"  ==  "remote: none"              ]]
+  [[ "${lines[4]}"  ==  "git:    clean"             ]]
 }
 
 @test "'stat' exits with 0 and prints current notebook status information." {
@@ -55,9 +55,9 @@ load test_helper
 
   [[ "${lines[0]}"  ==  "$(_color_primary "home")"  ]]
   [[ "${lines[1]}"  =~  [^-]----[^-]                ]]
-  [[ "${lines[2]}"  ==  "status:  unarchived"       ]]
-  [[ "${lines[3]}"  ==  "remote:  none"             ]]
-  [[ "${lines[4]}"  ==  "git:     clean"            ]]
+  [[ "${lines[2]}"  ==  "status: unarchived"        ]]
+  [[ "${lines[3]}"  ==  "remote: none"              ]]
+  [[ "${lines[4]}"  ==  "git:    clean"             ]]
 }
 
 # status ######################################################################
@@ -88,9 +88,9 @@ load test_helper
 
   [[ "${lines[0]}"  ==  "$(_color_primary "home")"              ]]
   [[ "${lines[1]}"  =~  [^-]----[^-]                            ]]
-  [[ "${lines[2]}"  ==  "status:  archived"                     ]]
-  [[ "${lines[3]}"  ==  "remote:  ${_GIT_REMOTE_URL} (master)"  ]]
-  [[ "${lines[4]}"  ==  "git:     dirty"                        ]]
+  [[ "${lines[2]}"  ==  "status: archived"                      ]]
+  [[ "${lines[3]}"  ==  "remote: ${_GIT_REMOTE_URL} (master)"   ]]
+  [[ "${lines[4]}"  ==  "git:    dirty"                         ]]
   [[ "${lines[5]}"  ==  "changes"                               ]]
   [[ "${lines[6]}"  =~  [^-]-------[^-]                         ]]
   [[ "${lines[7]}"  =~  \ M\ \"Example\ File\.md\"              ]]
@@ -113,9 +113,9 @@ load test_helper
 
   [[ "${lines[0]}"  ==  "$(_color_primary "Example Notebook")"  ]]
   [[ "${lines[1]}"  =~  [^-]----------------[^-]                ]]
-  [[ "${lines[2]}"  ==  "status:  unarchived"                   ]]
-  [[ "${lines[3]}"  ==  "remote:  none"                         ]]
-  [[ "${lines[4]}"  ==  "git:     clean"                        ]]
+  [[ "${lines[2]}"  ==  "status: unarchived"                    ]]
+  [[ "${lines[3]}"  ==  "remote: none"                          ]]
+  [[ "${lines[4]}"  ==  "git:    clean"                         ]]
 }
 
 @test "'status' exits with 0 and prints current notebook status information." {
@@ -132,9 +132,9 @@ load test_helper
 
   [[ "${lines[0]}"  ==  "$(_color_primary "home")"  ]]
   [[ "${lines[1]}"  =~  [^-]----[^-]                ]]
-  [[ "${lines[2]}"  ==  "status:  unarchived"       ]]
-  [[ "${lines[3]}"  ==  "remote:  none"             ]]
-  [[ "${lines[4]}"  ==  "git:     clean"            ]]
+  [[ "${lines[2]}"  ==  "status: unarchived"        ]]
+  [[ "${lines[3]}"  ==  "remote: none"              ]]
+  [[ "${lines[4]}"  ==  "git:    clean"             ]]
 }
 
 # help ########################################################################
