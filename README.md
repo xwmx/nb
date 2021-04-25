@@ -2356,7 +2356,7 @@ Pass a notebook, folder, and / or filename selector to create a new note
 in that location:
 
 ```bash
-❯ nb add browse text:formats/
+❯ nb browse add text:formats/
 ❯nb · text : formats / +
 
 [                                                   ]
