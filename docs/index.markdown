@@ -67,8 +67,7 @@ but `nb` works great without them.
 
 - locally-served, text-centric, distraction-free bookmark [browsing](#-browsing)
   in terminal and GUI web browsers,
-- local full-text [search](#-search) of cached page content
-  with regular expression support,
+- local full-text search of cached page content with regular expression support,
 - convenient filtering and listing,
 - [Internet Archive Wayback Machine](https://archive.org/web/) snapshot lookup
   for broken links,
