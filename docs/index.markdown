@@ -1510,11 +1510,14 @@ permission.
 [More information\...](https://www.iana.org/domains/example)
 ```
 
-`nb` embeds the page content in the bookmark, making it available for full
-text search with [`nb search`](#search). When [Pandoc](https://pandoc.org/)
-is installed, the HTML page content is converted to Markdown. When
-[readability-cli](https://gitlab.com/gardenappl/readability-cli) is
-installed, markup is cleaned up to focus on content.
+`nb` embeds the page content in the bookmark, making it available for
+[full text search](#-search) with [`nb search`](#search) and
+locally-served, distraction-free [reading and browsing](#-browsing)
+with [`nb browse`](#browse).
+When [Pandoc](https://pandoc.org/) is installed,
+the HTML page content is converted to Markdown.
+When [readability-cli](https://gitlab.com/gardenappl/readability-cli)
+is installed, markup is cleaned up to focus on content.
 
 In addition to caching the page content, you can also include a quote from
 the page using the `-q` / `--quote` option:
@@ -2231,6 +2234,8 @@ and other notebooks.
 [Links](https://en.wikipedia.org/wiki/Links_\(web_browser\)),
 [Lynx](https://en.wikipedia.org/wiki/Lynx_\(web_browser\)),
 or in the browser set in the `$BROWSER` environment variable.
+Use [`nb browse --gui`](#browse) / [`nb br -g`](#browse) to
+open in a [GUI browser](#browse---gui).
 
 To open a specific item in `nb browse`, pass the [selector](#selectors)
 for the item, folder, or notebook to `nb browse`:
