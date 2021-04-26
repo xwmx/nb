@@ -4348,13 +4348,12 @@ subcommands called using their underscore-prefixed function names.
 ### Metadata
 
 Metadata in `nb` is primarily derived from git, the filesystem, and file
-content, treating git and the filesystem like overlapping document databases.
-For example, displayed timestamps are derived from
+content. For example, displayed timestamps are derived from
 [`git log`](https://git-scm.com/docs/git-log), with [`nb show --added`](#show)
 displaying the datetime of the first commit containing the file and
 [`nb show --updated`](#show) displaying the datetime of the last commit in
 which the file was modified. Meanwhile, the file system's modified
-timestamp is used for sorting due to better performance in that use case.
+timestamp used for sorting.
 
 `nb` also uses plain text files to store ids and state information in
 git, including
@@ -4364,8 +4363,8 @@ and [`.archived` files](https://github.com/xwmx/nb#archived-notebooks).
 
 #### Front Matter
 
-User-defined metadata can be added to notes in `nb` using ["front
-matter"](https://jekyllrb.com/docs/front-matter/). Front matter is a
+User-defined metadata can be added to notes in `nb` using [front
+matter](https://jekyllrb.com/docs/front-matter/). Front matter is a
 simple, human accessible, and future-proof method for defining metadata
 fields in plain text and is well supported in tools for working with
 Markdown.
