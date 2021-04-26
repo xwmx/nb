@@ -93,8 +93,7 @@ so notes can be edited in other apps on any device.
         width="450">
 </p>
 
-`nb` is designed to be
-enjoyable, portable, future-focused, and vendor independent,
+`nb` is designed to be portable, future-focused, and vendor independent,
 providing a full-featured and intuitive experience within
 a highly composable user-centric text interface.
 The entire program is
