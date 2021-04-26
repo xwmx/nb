@@ -2115,7 +2115,7 @@ To add a link from a note or bookmark to another in the same notebook,
 include the id, title, or relative path for the target item
 within double square brackets anywhere in the linking document:
 
-```text
+```markdown
 # link to the item with id 123 in the root level of current notebook
 [[123]]
 
@@ -2129,10 +2129,10 @@ within double square brackets anywhere in the linking document:
 [[Sample Folder/Demo Title]]
 ```
 
-To link to an item in another notebook, add
-the notebook name with a colon before the identifier:
+To link to an item in another notebook,
+add the notebook name with a colon before the identifier:
 
-```text
+```markdown
 # link to the item with id 123 in the "sample" folder in the "example" notebook
 [[example:sample/123]]
 
