@@ -2438,7 +2438,7 @@ _selector_resolve_folders() {
         )"
       fi
 
-      if [[ -z "${_folder_name:-}"            ]]
+      if [[ -z "${_folder_name:-}"              ]]
       then
         _folder_name="${_selector_segment}"
       fi
@@ -2446,7 +2446,7 @@ _selector_resolve_folders() {
       if [[ -d "${_parent_folder_path:?}/${_folder_name:?}" ]] ||
          ((_build_path))
       then
-        if [[ -z "${_folder_relative_path:-}" ]]
+        if [[ -z "${_folder_relative_path:-}"   ]]
         then
           _folder_relative_path="${_folder_name}"
         else
@@ -5383,14 +5383,15 @@ _ls() {
     local _footer_line_hi=
     local _footer_line_raw=
     local _footer_separator_raw=" ·"
-    local _footer_separator_hi=
-    _footer_separator_hi="$(_color_primary "${_footer_separator_raw}")"
     local _footer_test_line=
     local _maybe_notebook=
     local _maybe_selector_scope=
     local _maybe_selector_scope_padded_left=
     local _maybe_selector_scope_padded_right=
     local _selector_path="${1:-}"
+
+    local _footer_separator_hi=
+    _footer_separator_hi="$(_color_primary "${_footer_separator_raw}")"
 
     if _notebooks current --selected
     then
@@ -17300,7 +17301,7 @@ HEREDOC
 
     # Request-Line HTTP RFC 2616 §5
     # https://www.w3.org/Protocols/rfc2616/rfc2616-sec5.html
-    local _request_line=
+    local   _request_line=
     read -r _request_line || _browse_respond_with 400
 
     # strip trailing CR if it exists
