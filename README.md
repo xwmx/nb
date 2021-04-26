@@ -2193,7 +2193,7 @@ search: [                    ]
 [home:1]  📂 Example Folder
 ```
 
-Items are displayed using the same format as `nb` and `nb ls`,
+Lists are displayed using the same format as `nb` and `nb ls`,
 including [pinned](#-pinning) items, with each list item linked.
 Lists are automatically paginated to fit the height of the terminal window.
 
