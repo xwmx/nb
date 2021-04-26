@@ -2115,32 +2115,39 @@ To add a link from a note or bookmark to another in the same notebook,
 include the id, title, or relative path for the target item
 within double square brackets anywhere in the linking document:
 
-```markdown
-# link to the item with id 123 in the root level of current notebook
-[[123]]
+```text
+Link to the item with id 123 in the root level of current notebook:
 
-# link to the item titled "Example Title" in the root level of the current notebook
-[[Example Title]]
+    [[123]]
 
-# link to the item with id 456 in the folder named "Sample Folder"
-[[Sample Folder/456]]
+Link to the item titled "Example Title" in the root level of the current notebook:
 
-# link to the item titled "Demo Title" in the folder named "Sample Folder"
-[[Sample Folder/Demo Title]]
+    [[Example Title]]
+
+Link to the item with id 456 in the folder named "Sample Folder":
+
+    [[Sample Folder/456]]
+
+Link to the item titled "Demo Title" in the folder named "Sample Folder":
+
+    [[Sample Folder/Demo Title]]
 ```
 
 To link to an item in another notebook,
 add the notebook name with a colon before the identifier:
 
-```markdown
-# link to the item with id 123 in the "sample" folder in the "example" notebook
-[[example:sample/123]]
+```text
+Link to the item with id 123 in the "sample" folder in the "example" notebook:
 
-# link to the item titled "Example Title" in the "demo" notebook
-[[demo:Example Title]]
+    [[example:sample/123]]
 
-# link to the item with filename "Example File.md" in the "sample" notebook
-[[sample:Example File.md]]
+Link to the item titled "Example Title" in the "demo" notebook:
+
+    [[demo:Example Title]]
+
+Link to the item with filename "Example File.md" in the "sample" notebook:
+
+    [[sample:Example File.md]]
 ```
 
 <a href="#-linking">[[wiki-style links]]</a> cooperate well with
