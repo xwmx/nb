@@ -2229,7 +2229,7 @@ and other notebooks.
 [Lynx](https://en.wikipedia.org/wiki/Lynx_\(web_browser\)),
 or in the browser set in the `$BROWSER` environment variable.
 Use [`nb browse --gui`](#browse) / [`nb br -g`](#browse) to
-open in a [GUI browser](#browse---gui).
+open in the system's primary [GUI web browser](#browse---gui).
 
 To open a specific item in `nb browse`, pass the [selector](#selectors)
 for the item, folder, or notebook to `nb browse`:
