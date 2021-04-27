@@ -33,6 +33,10 @@ pre {
   line-height:      1rem;
 }
 
+.highlight .o {
+  color:            #60548c;
+}
+
 .main-content {
   .highlighter-rouge {
     margin-bottom:  1.15rem;
@@ -57,10 +61,6 @@ pre {
   }
 }
 
-.highlight .o {
-  color:            #60548c;
-}
-
 .site-nav {
-    padding-top:    0;
+  padding-top:      0;
 }

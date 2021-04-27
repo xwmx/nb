@@ -67,12 +67,11 @@ but `nb` works great without them.
 
 - locally-served, text-centric, distraction-free bookmark [browsing](#-browsing)
   in terminal and GUI web browsers,
-- local full-text [search](#-search) of cached page content
-  with regular expression support,
+- local full-text search of cached page content with regular expression support,
 - convenient filtering and listing,
 - [Internet Archive Wayback Machine](https://archive.org/web/) snapshot lookup
   for broken links,
-- tagging, pinning, linking, and integration with other `nb` features.
+- tagging, pinning, linking, and full integration with other `nb` features.
 
 Page information is
 downloaded,
@@ -95,25 +94,25 @@ sync notebooks using a general purpose syncing utility like Dropbox
 so notes can be edited in other apps on any device.
 
 <p align="center">
-  <img  src="https://xwmx.github.io/misc/nb/images/nb-theme-smoke-empty.png"
+  <img  src="https://xwmx.github.io/misc/nb/images/terminal-empty.png"
         alt="nb list empty"
         width="450">
 </p>
 
 `nb` is designed to be portable, future-focused, and vendor independent,
-providing a full-featured and intuitive experience
-within a highly composable user-centric text interface.
-The entire program is a single [well-tested](#tests)
-shell script
-that can be installed, copied, or `curl`ed almost anywhere and just work,
+providing a full-featured and intuitive experience within
+a highly composable user-centric text interface.
+The entire program is
+a single [well-tested](#tests) shell script
+that can be
+installed, copied, or `curl`ed almost anywhere and just work,
 using a strategy inspired by
 [progressive enhancement](https://en.wikipedia.org/wiki/Progressive_enhancement)
 for various experience improvements in more capable environments.
 `nb` works great whether you have one notebook with just a few notes
 or dozens of notebooks containing thousands of notes, bookmarks, and other items.
 `nb` makes it easy to incorporate other tools, writing apps, and workflows.
-`nb` can be used a little, a lot, once in a while,
-or for just a subset of features.
+`nb` can be used a little, a lot, once in a while, or for just a subset of features.
 `nb` is flexible.
 
 <p align="center">
@@ -363,7 +362,7 @@ regardless of the current working directory.
 
 #### Adding
 
-Use [`nb add`](#add) (shortcuts: `a`, `+`) to create new notes:
+Use [`nb add`](#add) (shortcuts: `nb a`, `nb +`) to create new notes:
 
 ```bash
 # create a new note in your text editor
@@ -518,11 +517,11 @@ or [`pb`](https://github.com/xwmx/pb):
 pb | nb add .js
 
 # save the clipboard contents as a Rust file in the "rust" notebook
-# using the shortcut alias `a`
+# using the shortcut alias `nb a`
 pb | nb a rust: .rs
 
 # save the clipboard contents as a Haskell file named "example.hs" in the
-# "snippets" notebook using the shortcut alias `+`
+# "snippets" notebook using the shortcut alias `nb +`
 pb | nb + snippets: example.hs
 ```
 
@@ -580,10 +579,10 @@ Encrypted notes can be decrypted
 using the OpenSSL and GPG command line tools directly, so
 you aren't dependent on `nb` to decrypt your files.
 
-##### Shortcut Aliases: `a`, `+`
+##### Shortcut Aliases: `nb a`, `nb +`
 
 `nb` includes shortcuts for many commands, including
-`a` and `+` for `add`:
+`nb a` and `nb +` for `nb add`:
 
 ```bash
 # create a new note in your text editor
@@ -602,7 +601,7 @@ xclip -o | nb +
 nb example:a
 ```
 
-##### Other Aliases: `create`, `new`
+##### Other Aliases: `nb create`, `nb new`
 
 `nb add` can also be invoked with `nb create` and `nb new` for convenience:
 
@@ -614,7 +613,7 @@ nb new "Example note content."
 nb create --title "Example Note Title"
 ```
 
-##### Adding with `browse`
+##### Adding with `nb browse`
 
 Items can also be added within terminal and GUI web browsers using
 [`nb browse add`](#browse) / [`nb br a`](#browse):
@@ -1032,7 +1031,7 @@ For more information, see [Browsing](#-browsing).
 #### Editing
 
 You can edit an item in your editor with
-[`nb edit`](#edit) (shortcut: `e`):
+[`nb edit`](#edit) (shortcut: `nb e`):
 
 ```bash
 # edit note by id
@@ -1089,9 +1088,9 @@ When a note is encrypted, `nb edit` will prompt you for the note password,
 open the unencrypted content in your editor,
 and then automatically reencrypt the note when you are done editing.
 
-##### Shortcut Alias: `e`
+##### Shortcut Alias: `nb e`
 
-Like `add`, `edit` has a shortcut alias, `e`:
+`nb edit` can be called by the shortcut alias, `nb e`:
 
 ```bash
 # edit note by id
@@ -1124,7 +1123,7 @@ Items can be edited within terminal and GUI web browsers using
 [`nb browse edit`](#browse) / [`nb br e`](#browse):
 
 ```bash
-❯ nb browse text:formats/markdown/123 edit
+❯ nb browse edit text:formats/markdown/123
 ❯nb · text : formats / markdown / 123 · ↓ · editing · - | +
 
 [# Daring Fireball: Markdown (daringfireball.net)         ]
@@ -1152,7 +1151,7 @@ For more information, see [Browsing](#-browsing).
 
 #### Viewing
 
-Notes and other items can be viewed using [`nb show`](#show) (shortcut: `s`):
+Notes and other items can be viewed using [`nb show`](#show) (shortcut: `nb s`):
 
 ```bash
 # show note by id
@@ -1286,9 +1285,9 @@ To view a file in the system's preferred GUI application, use
 
 For full `nb show` usage information, run [`nb help show`](#show).
 
-##### Shortcut Alias: `s`
+##### Shortcut Alias: `nb s`
 
-`show` is aliased to `s`:
+`nb show` can be called using the shortcut alias `nb s`:
 
 ```bash
 # show note by id
@@ -1313,7 +1312,7 @@ nb example:12 s
 nb example:s 12
 ```
 
-##### Alias: `view`
+##### Alias: `nb view`
 
 `nb show` can also be invoked with `nb view` for convenience:
 
@@ -1379,7 +1378,7 @@ For more information, see [Browsing](#-browsing).
 
 To delete one or more notes, pass any number of
 ids, filenames, titles, and other [selectors](#selectors)
-to [`nb delete`](#delete) (shortcuts: `d`, `-`):
+to [`nb delete`](#delete) (shortcuts: `nb d`, `nb -`):
 
 ```bash
 # delete item by id
@@ -1417,9 +1416,9 @@ To skip, use the `--force` / `-f` option:
 nb delete 3 --force
 ```
 
-##### Shortcut Aliases: `d`, `-`
+##### Shortcut Aliases: `nb d`, `nb -`
 
-`delete` has the aliases `d` and `-`:
+`delete` has the aliases `nb d` and `nb -`:
 
 ```bash
 # delete note by id
@@ -1446,7 +1445,7 @@ nb example:d 12
 
 For `nb delete` help information, run [`nb help delete`](#delete).
 
-##### Deleting with `browse`
+##### Deleting with `nb browse`
 
 Items can be deleted within terminal and GUI web browsers using
 [`nb browse delete`](#browse) / [`nb br d`](#browse):
@@ -1511,11 +1510,14 @@ permission.
 [More information\...](https://www.iana.org/domains/example)
 ```
 
-`nb` embeds the page content in the bookmark, making it available for full
-text search with [`nb search`](#search). When [Pandoc](https://pandoc.org/)
-is installed, the HTML page content is converted to Markdown. When
-[readability-cli](https://gitlab.com/gardenappl/readability-cli) is
-installed, markup is cleaned up to focus on content.
+`nb` embeds the page content in the bookmark, making it available for
+[full text search](#-search) with [`nb search`](#search) and
+locally-served, distraction-free [reading and browsing](#-browsing)
+with [`nb browse`](#browse).
+When [Pandoc](https://pandoc.org/) is installed,
+the HTML page content is converted to Markdown.
+When [readability-cli](https://gitlab.com/gardenappl/readability-cli)
+is installed, markup is cleaned up to focus on content.
 
 In addition to caching the page content, you can also include a quote from
 the page using the `-q` / `--quote` option:
@@ -1715,9 +1717,9 @@ For more listing options, see
 [`nb help list`](#list),
 and [`nb help bookmark`](#bookmark).
 
-##### Shortcut Alias: `bk`
+##### Shortcut Alias: `nb bk`
 
-`bookmark` can also be used with the alias `bk`:
+`nb bookmark` can also be used with the alias `nb bk`:
 
 ```bash
 ❯ nb bk
@@ -1781,7 +1783,7 @@ convert it to structurally valid XHTML (or HTML).
 
 For more information, see [Browsing](#-browsing).
 
-[`nb open`](#open) (shortcut: `o`) opens the bookmarked URL in
+[`nb open`](#open) (shortcut: `nb o`) opens the bookmarked URL in
 your system's primary web browser:
 
 ```bash
@@ -1798,7 +1800,7 @@ nb example:12 open
 nb example:open 12
 ```
 
-[`nb peek`](#peek) (shortcut: `p`, alias: `preview`)
+[`nb peek`](#peek) (shortcut: `nb p`, alias: `nb preview`)
 opens the bookmarked URL in your terminal web browser,
 such as
 [w3m](https://en.wikipedia.org/wiki/W3m),
@@ -1818,10 +1820,10 @@ nb example:12 peek
 # peek bookmark 12 in the notebook named "example", alternative
 nb example:peek 12
 ```
-`open` and `peek` subcommands also work seamlessly with encrypted bookmarks.
+`nb open` and `nb peek` subcommands also work seamlessly with encrypted bookmarks.
 `nb` will simply prompt you for the bookmark's password.
 
-`open` and `peek` automatically check whether the URL is still valid.
+`nb open` and `nb peek` automatically check whether the URL is still valid.
 If the page has been removed, `nb` can check
 the [Internet Archive Wayback Machine](https://archive.org/web/)
 for an archived copy.
@@ -1860,10 +1862,10 @@ including all bookmark fields and the cached page content,
 providing a cleaned-up, distraction-free, locally-served view of
 the page content along with all of your notes.
 
-##### Shortcut Aliases: `o` and `p`
+##### Shortcut Aliases: `nb o` and `nb p`
 
-`open` and `peek` can also be used with the shortcut aliases `o` and
-`p`:
+`nb open` and `nb peek` can also be used with the shortcut aliases
+`nb o` and `nb p`:
 
 ```bash
 # open bookmark by id
@@ -2122,7 +2124,7 @@ To add a link from a note or bookmark to another in the same notebook,
 include the id, title, or relative path for the target item
 within double square brackets anywhere in the linking document:
 
-```text
+```bash
 # link to the item with id 123 in the root level of current notebook
 [[123]]
 
@@ -2136,10 +2138,10 @@ within double square brackets anywhere in the linking document:
 [[Sample Folder/Demo Title]]
 ```
 
-To link to an item in another notebook, add
-the notebook name with a colon before the identifier:
+To link to an item in another notebook,
+add the notebook name with a colon before the identifier:
 
-```text
+```bash
 # link to the item with id 123 in the "sample" folder in the "example" notebook
 [[example:sample/123]]
 
@@ -2200,7 +2202,7 @@ search: [                    ]
 [home:1]  📂 Example Folder
 ```
 
-Items are displayed using the same format as `nb` and `nb ls`,
+Lists are displayed using the same format as `nb` and `nb ls`,
 including [pinned](#-pinning) items, with each list item linked.
 Lists are automatically paginated to fit the height of the terminal window.
 
@@ -2232,6 +2234,8 @@ and other notebooks.
 [Links](https://en.wikipedia.org/wiki/Links_\(web_browser\)),
 [Lynx](https://en.wikipedia.org/wiki/Lynx_\(web_browser\)),
 or in the browser set in the `$BROWSER` environment variable.
+Use [`nb browse --gui`](#browse) / [`nb br -g`](#browse) to
+open in the system's primary [GUI web browser](#browse---gui).
 
 To open a specific item in `nb browse`, pass the [selector](#selectors)
 for the item, folder, or notebook to `nb browse`:
@@ -2321,7 +2325,7 @@ the `edit` link on the item page or by opening the item with
 which automatically resizes the form to fit the current terminal window:
 
 ```bash
-❯ nb browse text:formats/markdown/123 edit
+❯ nb browse edit text:formats/markdown/123
 ❯nb · text : formats / markdown / 123 · ↓ · editing · - | +
 
 [# Daring Fireball: Markdown (daringfireball.net)         ]
@@ -2361,7 +2365,7 @@ Pass a notebook, folder, and / or filename selector to create a new note
 in that location:
 
 ```bash
-❯ nb browse text:formats/ add
+❯ nb browse add text:formats/
 ❯nb · text : formats / +
 
 [                                                   ]
@@ -2532,9 +2536,9 @@ to enhance privacy and avoid leaking information:
 - Links include a `rel="noopener noreferrer"` attribute.
 - `lynx` is opened with the `-noreferer` option.
 
-#### Shortcut Alias: `br`
+#### Shortcut Alias: `nb br`
 
-`nb browse` can also be used with the alias `br`:
+`nb browse` can also be used with the alias `nb br`:
 
 ```bash
 # open the current notebook in the terminal web browser
@@ -2903,9 +2907,9 @@ Supported alternative search tools:
 - [`ack`](https://beyondgrep.com/)
 - [`grep`](https://en.wikipedia.org/wiki/Grep)
 
-##### Shortcut Alias: `q`
+##### Shortcut Alias: `nb q`
 
-`search` can also be used with the alias `q` (for "query"):
+`nb search` can also be used with the alias `nb q` (for "query"):
 
 ```bash
 # search for "example" and print matching excerpts
@@ -3330,14 +3334,20 @@ home
 
 #### Archiving Notebooks
 
-Notebooks can be archived using [`nb notebooks archive`](#notebooks):
+Notebooks can be archived using [`nb archive`](#archive) (shortcut: `nb ar`):
 
 ```bash
 # archive the current notebook
-nb notebooks archive
+nb archive
 
 # archive the notebook named "example"
-nb notebooks archive example
+nb archive example
+
+# archive the current notebook, shortcut alias
+nb ar
+
+# archive the notebook named "example", shortcut alias
+nb ar example
 ```
 
 When a notebook is archived it is not included in
@@ -3367,25 +3377,45 @@ nb example:list
 ```
 
 Check a notebook's archival status with
+[`nb status`](#status) (shortcut: `nb st`) and
 [`nb notebooks status`](#notebooks):
 
 ```bash
-❯ nb notebooks status example
-example is archived.
+# print status information, including archival status, for the current notebook
+nb status
+
+# print status information, including archival status, for the notebook named "example"
+nb status example
+
+# print status information, including archival status, for the current notebook,
+# shortcut alias
+nb st
+
+# print status information, including archival status, for the notebook named "example",
+# shortcut alias
+nb st example
+
+# print the archival status of the current notebook
+nb notebooks status
+
+# print the archival status of the notebook named "example"
+nb notebooks status example
 ```
 
-Use [`nb notebooks unarchive`](#notebooks) to unarchive a notebook:
+Use [`nb unarchive`](#unarchive) (shortcut: `nb unar`) to unarchive a notebook:
 
 ```bash
 # unarchive the current notebook
-nb notebooks unarchive
+nb unarchive
 
 # unarchive the notebook named "example"
-nb notebooks unarchive example
+nb unarchive example
 ```
 
 For more information about working with notebooks, see
-[`nb help notebooks`](#notebooks).
+[`nb help notebooks`](#notebooks),
+[`nb help archive`](#archive),
+and [`nb help unarchive`](#unarchive).
 
 For technical details about notebooks, see
 [`nb` Notebook Specification](#nb-notebook-specification).
@@ -3776,11 +3806,13 @@ code
 code
 ```
 
-Use [`nb settings unset`](#settings) to unset a setting
-and revert to the default:
+Use
+[`nb unset`](#unset) or
+[`nb settings unset`](#settings)
+to unset a setting and revert to the default:
 
 ```bash
-❯ nb settings unset editor
+❯ nb unset editor
 EDITOR restored to the default: vim
 
 ❯ nb settings get editor
@@ -4321,13 +4353,12 @@ subcommands called using their underscore-prefixed function names.
 ### Metadata
 
 Metadata in `nb` is primarily derived from git, the filesystem, and file
-content, treating git and the filesystem like overlapping document databases.
-For example, displayed timestamps are derived from
+content. For example, displayed timestamps are derived from
 [`git log`](https://git-scm.com/docs/git-log), with [`nb show --added`](#show)
 displaying the datetime of the first commit containing the file and
 [`nb show --updated`](#show) displaying the datetime of the last commit in
 which the file was modified. Meanwhile, the file system's modified
-timestamp is used for sorting due to better performance in that use case.
+timestamp used for sorting.
 
 `nb` also uses plain text files to store ids and state information in
 git, including
@@ -4337,9 +4368,9 @@ and [`.archived` files](https://github.com/xwmx/nb#archived-notebooks).
 
 #### Front Matter
 
-User-defined metadata can be added to notes in `nb` using ["front
-matter"](https://jekyllrb.com/docs/front-matter/). Front matter is a
-simple, human accessible, and future-proof method for defining metadata
+User-defined metadata can be added to notes in `nb` using [front
+matter](https://jekyllrb.com/docs/front-matter/). Front matter is a
+simple, human accessible, and future-friendly method for defining metadata
 fields in plain text and is well supported in tools for working with
 Markdown.
 
@@ -4522,6 +4553,7 @@ Usage:
          [--folder <folder-path>] [--tags <tag1>,<tag2>...]
          [-t <title> | --title <title>] [--type <type>]
   nb add folder [<name>]
+  nb archive [<notebook>]
   nb bookmark [<ls options>...]
   nb bookmark [<notebook>:][<folder-path>/] <url>
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
@@ -4558,7 +4590,7 @@ Usage:
   nb help [-c | --colors] | [-r | --readme] | [-s | --short] [-p | --print]
   nb history [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
   nb import [copy | download | move] (<path>... | <url>) [--convert]
-            [<notebook>:][<folder>/][<filename>]
+            [<notebook>:][<folder-path>/][<filename>]
   nb import notebook <path> [<name>]
   nb init [<remote-url> [<branch>]] [--author] [--email <email>]
           [--name <name>]
@@ -4615,10 +4647,13 @@ Usage:
           --info-line | --path | [-p | --print] | --relative-path | [-r |
           --render] | --title | --type [<type>] | [-u | --updated]] [--no-color]
   nb show <notebook>
+  nb status [<notebook>]
   nb subcommands [add <name>...] [alias <name> <alias>]
                  [describe <name> <usage>]
   nb sync [-a | --all]
+  nb unarchive [<notebook>]
   nb unpin ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+  nb unset (<name> | <number>)
   nb update
   nb use <notebook>
   nb -i | --interactive [<subcommand> [<options>...]]
@@ -4630,6 +4665,7 @@ Subcommands:
   (default)    List notes and notebooks. This is an alias for `nb ls`.
                When a <url> is provided, create a new bookmark.
   add          Add a note, folder, or file.
+  archive      Archive the current or specified notebook.
   bookmark     Add, open, list, and search bookmarks.
   browse       Browse and manage linked items in terminal and GUI web browsers.
   completions  Install and uninstall completion scripts.
@@ -4658,8 +4694,11 @@ Subcommands:
   show         Show a note or notebook.
   status       Run `git status` in the current notebook.
   subcommands  List, add, alias, and describe subcommands.
+  status       Print notebook status information.
   sync         Sync local notebook with the remote repository.
+  unarchive    Unarchive the current or specified notebook.
   unpin        Unpin a pinned item.
+  unset        Return a setting to its default value.
   update       Update `nb` to the latest version.
   use          Switch to a notebook.
   version      Display version information.
@@ -4781,6 +4820,7 @@ For more information, see: `nb help`.
 
 <p align="center">
   <a href="#add">add</a> •
+  <a href="#archive">archive</a> •
   <a href="#bookmark">bookmark</a> •
   <a href="#browse">browse</a> •
   <a href="#completions">completions</a> •
@@ -4811,7 +4851,9 @@ For more information, see: `nb help`.
   <a href="#status">status</a> •
   <a href="#subcommands-1">subcommands</a> •
   <a href="#sync">sync</a> •
+  <a href="#unarchive">unarchive</a> •
   <a href="#unpin">unpin</a> •
+  <a href="#unset">unset</a> •
   <a href="#update">update</a> •
   <a href="#use">use</a> •
   <a href="#version">version</a>
@@ -4877,8 +4919,26 @@ Examples:
   nb example:a
   nb example:a -t "Title"
 
-Aliases: `create`, `new`
-Shortcut Aliases: `a`, `+`
+Aliases: `nb create`, `nb new`
+Shortcut Aliases: `nb a`, `nb +`
+```
+
+#### `archive`
+
+```text
+Usage:
+  nb archive [<name>]
+
+Description:
+  Set the current notebook or notebook <name> to "archived" status.
+
+  This is an alias for `nb notebooks archive`.
+
+Examples:
+  nb archive
+  nb archive example
+
+Shortcut Alias: `nb ar`
 ```
 
 #### `bookmark`
@@ -4968,7 +5028,7 @@ Examples:
   nb bookmark open 5
   nb bk
 
-Shortcut Alias: `bk`
+Shortcut Alias: `nb bk`
 ```
 
 #### `browse`
@@ -4991,7 +5051,7 @@ Subcommands:
   delete     Open the delete view in the browser.
              Shortcut Aliases: `d`, `-`
   edit       Open the edit view in the browser.
-             Shortcut Alias: `e`
+             Shortcut Alias:   `e`
 
 Options:
   -c, --content <content>      Add content to the new note.
@@ -5005,7 +5065,7 @@ Options:
 
 Description:
   Browse, view, and edit linked notes, bookmarks, notebooks, folders, and
-  other items using the terminal or GUI web browser.
+  other items using terminal and GUI web browsers.
 
   `browse` includes an embedded web application designed for terminal
   and GUI web browsers that renders [[wiki-style links]] and #tags as
@@ -5039,7 +5099,7 @@ Examples:
   nb browse demo:456
   nb br
 
-Shortcut Alias: `br`
+Shortcut Alias: `nb br`
 ```
 
 #### `completions`
@@ -5093,7 +5153,7 @@ Examples:
   nb d example:12
   nb example:12 d
 
-Shortcut Aliases: `d`, `-`
+Shortcut Aliases: `nb d`, `nb -`
 ```
 
 #### `edit`
@@ -5138,7 +5198,7 @@ Examples:
   nb e example:12
   nb example:12 e
 
-Shortcut Alias: `e`
+Shortcut Alias: `nb e`
 ```
 
 #### `env`
@@ -5247,7 +5307,7 @@ Examples:
   nb h notebooks
   nb h e
 
-Shortcut Alias: `h`
+Shortcut Alias: `nb h`
 ```
 
 #### `history`
@@ -5278,7 +5338,7 @@ Examples:
 ```text
 Usage:
   nb import [copy | download | move] (<path>... | <url>) [--convert]
-            [<notebook>:][<folder>/][<filename>]
+            [<notebook>:][<folder-path>/][<filename>]
   nb import notebook <path> [<name>]
 
 Options:
@@ -5484,7 +5544,7 @@ Description:
   Move or rename a note. Move the note to <path> or change the file type.
   When file extension is omitted, the existing extension is used.
 
-  `move` and `rename` are aliases and can be used interchangably.
+  `nb move` and `nb rename` are aliases and can be used interchangably.
 
 Examples:
   # Move "example.md" to "example.org"
@@ -5505,8 +5565,8 @@ Examples:
   # Rename note 12 in the "example" notebook to "sample.md"
   nb rename example:12 "sample.md"
 
-Alias: `rename`
-Shortcut Alias: `mv`
+Alias: `nb rename`
+Shortcut Alias: `nb mv`
 ```
 
 #### `notebooks`
@@ -5558,7 +5618,7 @@ Subcommands:
   add        Create a new global notebook. When an existing notebook's
              <remote-url> is specified, create the new global notebook as a
              clone of <remote-url>.
-             Aliases: `notebooks create`, `notebooks new`
+             Aliases: `nb notebooks create`, `nb notebooks new`
   archive    Set the current notebook or notebook <name> to "archived" status.
   author     Configure the commit author email and name for the notebook.
   export     Export the notebook <name> to the current directory or <path>,
@@ -5582,7 +5642,7 @@ Subcommands:
   status     Print the archival status of the current notebook or
              notebook <name>.
   show       Show and return information about a specified notebook.
-  unarchive  Remove "archived" status from current notebook or notebook <name>.
+  unarchive  Remove "archived" status from the current notebook or notebook <name>.
   use        Switch to a notebook.
 
     1. https://ranger.github.io/
@@ -5600,7 +5660,7 @@ Examples:
   nb n current --path
   nb n archive example
 
-Shortcut Alias: `n`
+Shortcut Alias: `nb n`
 ```
 
 #### `open`
@@ -5610,8 +5670,8 @@ Usage:
   nb open ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
 
 Description:
-  Open a note or notebook. When the note is a bookmark, open the bookmarked
-  page in your system's primary web browser. When the note is in a text format
+  Open an item or notebook. When the item is a bookmark, open the bookmarked
+  page in your system's primary web browser. When the item is in a text format
   or any other file type, `open` is the equivalent of `edit`. `open`
   with a notebook opens the notebook folder in the system's file browser.
 
@@ -5631,7 +5691,7 @@ See also:
   nb help bookmark
   nb help edit
 
-Shortcut Alias: `o`
+Shortcut Alias: `nb o`
 ```
 
 #### `peek`
@@ -5641,7 +5701,7 @@ Usage:
   nb peek ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
 
 Description:
-  View a note or notebook in the terminal. When the note is a bookmark, view
+  View an item or notebook in the terminal. When the item is a bookmark, view
   the bookmarked page in your terminal web browser. When the note is in a text
   format or any other file type, `peek` is the equivalent of `show`. When
   used with a notebook, `peek` opens the notebook folder first tool found in
@@ -5667,8 +5727,8 @@ See also:
   nb help bookmark
   nb help show
 
-Alias: `preview`
-Shortcut Alias: `p`
+Alias: `nb preview`
+Shortcut Alias: `nb p`
 ```
 
 #### `pin`
@@ -5815,7 +5875,7 @@ Examples:
   # search all notebooks for "example query" and list matching items
   nb q -la "example query"
 
-Shortcut Alias: `q`
+Shortcut Alias: `nb q`
 ```
 
 #### `settings`
@@ -5863,7 +5923,7 @@ Examples:
   nb settings colors 105
   nb set limit 15
 
-Alias: `set`
+Alias: `nb set`
 ```
 
 ##### `auto_sync`
@@ -5885,7 +5945,7 @@ Alias: `set`
      -------------
      The primary color used to highlight identifiers and messages.
 
-     • Supported Values: xterm color numbers between 0 and 255.
+     • Supported Values: xterm color numbers 0 through 255.
      • Default Value:    68 (blue) for 256 color terminals,
                          4  (blue) for  8  color terminals.
 ```
@@ -5897,7 +5957,7 @@ Alias: `set`
      ---------------
      The color used for lines and footer elements.
 
-     • Supported Values: xterm color numbers between 0 and 255.
+     • Supported Values: xterm color numbers 0 through 255.
      • Default Value:    8
 ```
 
@@ -6191,18 +6251,24 @@ Examples:
   nb s example:12
   nb example:12 s
 
-Alias: `view`
-Shortcut Alias: `s`
+Alias: `nb view`
+Shortcut Alias: `nb s`
 ```
 
 #### `status`
 
 ```text
 Usage:
-  nb status
+  nb status [<notebook>]
 
 Description:
-  Run `git status` the current notebook.
+  Print archival, git, and remote status for the current notebook or <notebook>.
+
+Examples:
+  nb status
+  nb status example
+
+Shortcut Alias: `nb st`
 ```
 
 #### `subcommands`
@@ -6262,6 +6328,25 @@ Sync Conflict Resolution:
   More Information:
     https://github.com/xwmx/nb#sync-conflict-resolution
 ```
+
+#### `unarchive`
+
+```text
+Usage:
+  nb unarchive [<name>]
+
+Description:
+  Remove "archived" status from the current notebook or notebook <name>.
+
+  This is an alias for `nb notebooks unarchive`.
+
+Examples:
+  nb unarchive
+  nb unarchive example
+
+Shortcut Alias: `nb unar`
+```
+
 #### `unpin`
 
 ```text
@@ -6274,6 +6359,24 @@ Description:
 Examples:
   nb unpin 123
   nb unpin example:sample/321
+```
+
+#### `unset`
+
+```text
+Usage:
+  nb unset (<name> | <number>)
+
+Description:
+  Unset a setting, returning it to the default value.
+
+  This is an alias for `nb settings unset`.
+
+Examples:
+  nb unset color_primary
+  nb unset 2
+
+Alias: `nb reset`
 ```
 
 #### `update`
@@ -6303,7 +6406,7 @@ Description:
 Example:
   nb use example
 
-Shortcut Alias: `u`
+Shortcut Alias: `nb u`
 ```
 
 #### `version`
@@ -6378,7 +6481,7 @@ Usage:
 Description:
   Create a copy of the specified item in the current notebook.
 
-Alias: `duplicate`
+Alias: `nb duplicate`
 ```
 
 #### `ebook`

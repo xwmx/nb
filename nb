@@ -74,7 +74,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="6.0.3"
+_VERSION="6.1.0"
 
 # $_ME
 #
@@ -2438,7 +2438,7 @@ _selector_resolve_folders() {
         )"
       fi
 
-      if [[ -z "${_folder_name:-}"            ]]
+      if [[ -z "${_folder_name:-}"              ]]
       then
         _folder_name="${_selector_segment}"
       fi
@@ -2446,7 +2446,7 @@ _selector_resolve_folders() {
       if [[ -d "${_parent_folder_path:?}/${_folder_name:?}" ]] ||
          ((_build_path))
       then
-        if [[ -z "${_folder_relative_path:-}" ]]
+        if [[ -z "${_folder_relative_path:-}"   ]]
         then
           _folder_relative_path="${_folder_name}"
         else
@@ -3397,7 +3397,7 @@ $(_color_primary "Examples"):
   ${_ME} h notebooks
   ${_ME} h e
 
-$(_color_primary "Shortcut Alias"): \`h\`
+$(_color_primary "Shortcut Alias"): \`${_ME} h\`
 HEREDOC
 }
 _help() {
@@ -3552,6 +3552,7 @@ $(_color_primary "Usage"):
          [--folder <folder-path>] [--tags <tag1>,<tag2>...]
          [-t <title> | --title <title>] [--type <type>]
   ${_ME} add folder [<name>]
+  ${_ME} archive [<notebook>]
   ${_ME} bookmark [<ls options>...]
   ${_ME} bookmark [<notebook>:][<folder-path>/] <url>
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
@@ -3588,7 +3589,7 @@ $(_color_primary "Usage"):
   ${_ME} help [-c | --colors] | [-r | --readme] | [-s | --short] [-p | --print]
   ${_ME} history [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
   ${_ME} import [copy | download | move] (<path>... | <url>) [--convert]
-            [<notebook>:][<folder>/][<filename>]
+            [<notebook>:][<folder-path>/][<filename>]
   ${_ME} import notebook <path> [<name>]
   ${_ME} init [<remote-url> [<branch>]] [--author] [--email <email>]
           [--name <name>]
@@ -3645,10 +3646,13 @@ $(_color_primary "Usage"):
           --info-line | --path | [-p | --print] | --relative-path | [-r |
           --render] | --title | --type [<type>] | [-u | --updated]] [--no-color]
   ${_ME} show <notebook>
+  ${_ME} status [<notebook>]
   ${_ME} subcommands [add <name>...] [alias <name> <alias>]
                  [describe <name> <usage>]
   ${_ME} sync [-a | --all]
+  ${_ME} unarchive [<notebook>]
   ${_ME} unpin ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+  ${_ME} unset (<name> | <number>)
   ${_ME} update
   ${_ME} use <notebook>
   ${_ME} -i | --interactive [<subcommand> [<options>...]]
@@ -3665,6 +3669,7 @@ $(_color_primary "Subcommands"):
   (default)    List notes and notebooks. This is an alias for \`${_ME} ls\`.
                When a <url> is provided, create a new bookmark.
   add          Add a note, folder, or file.
+  archive      Archive the current or specified notebook.
   bookmark     Add, open, list, and search bookmarks.
   browse       Browse and manage linked items in terminal and GUI browsers.
   completions  Install and uninstall completion scripts.
@@ -3691,9 +3696,11 @@ $(_color_primary "Subcommands"):
   settings     Edit configuration settings.
   shell        Start the \`${_ME}\` interactive shell.
   show         Show a note or notebook.
-  status       Run \`git status\` in the current notebook.
+  status       Print notebook status information.
   subcommands  List, add, alias, and describe subcommands.
   sync         Sync local notebook with the remote repository.
+  unarchive    Unarchive the current or specified notebook.
+  unset        Return a setting to its default value.
   unpin        Unpin a pinned item.
   update       Update \`${_ME}\` to the latest version.
   use          Switch to a notebook.
@@ -3716,7 +3723,7 @@ $(_color_primary "Sponsor & Donate"):
   https://github.com/sponsors/xwmx
   https://paypal.me/WilliamMelody
 
-$(_color_primary "By"):
+$(_color_primary "Created By"):
   William Melody
   https://github.com/xwmx
   https://www.williammelody.com
@@ -5376,14 +5383,15 @@ _ls() {
     local _footer_line_hi=
     local _footer_line_raw=
     local _footer_separator_raw=" ·"
-    local _footer_separator_hi=
-    _footer_separator_hi="$(_color_primary "${_footer_separator_raw}")"
     local _footer_test_line=
     local _maybe_notebook=
     local _maybe_selector_scope=
     local _maybe_selector_scope_padded_left=
     local _maybe_selector_scope_padded_right=
     local _selector_path="${1:-}"
+
+    local _footer_separator_hi=
+    _footer_separator_hi="$(_color_primary "${_footer_separator_raw}")"
 
     if _notebooks current --selected
     then
@@ -5598,7 +5606,7 @@ _ls() {
         printf "local\\n"
       fi
 
-      printf "%s\\n" "${_unarchived_notebook_names[@]}"
+      printf "%s\\n" "${_unarchived_notebook_names[@]:-}"
 
       if ((_archived_count))
       then
@@ -6104,7 +6112,7 @@ $(_color_primary "Subcommands"):
   add        Create a new global notebook. When an existing notebook's
              <remote-url> is specified, create the new global notebook as a
              clone of <remote-url>.
-             Aliases: \`notebooks create\`, \`notebooks new\`
+             Aliases: \`${_ME} notebooks create\`, \`${_ME} notebooks new\`
   archive    Set the current notebook or notebook <name> to "archived" status.
   author     Configure the commit author email and name for the notebook.
   export     Export the notebook <name> to the current directory or <path>,
@@ -6128,7 +6136,7 @@ $(_color_primary "Subcommands"):
   status     Print the archival status of the current notebook or
              notebook <name>.
   show       Show and return information about a specified notebook.
-  unarchive  Remove "archived" status from current notebook or notebook <name>.
+  unarchive  Remove "archived" status from the current notebook or notebook <name>.
   use        Switch to a notebook.
 
     1. https://ranger.github.io/
@@ -6146,7 +6154,7 @@ $(_color_primary "Examples"):
   ${_ME} n current --path
   ${_ME} n archive example
 
-$(_color_primary "Shortcut Alias"): \`n\`
+$(_color_primary "Shortcut Alias"): \`${_ME} n\`
 HEREDOC
 }
 _RESERVED_NOTEBOOK_NAMES=(
@@ -7771,6 +7779,8 @@ _USE_DEBUG=0
 _SUBCOMMANDS=(
   a
   add
+  ar
+  archive
   b
   bk
   bm
@@ -7823,6 +7833,7 @@ _SUBCOMMANDS=(
   r
   remote
   rename
+  reset
   run
   s
   search
@@ -7830,11 +7841,16 @@ _SUBCOMMANDS=(
   settings
   shell
   show
+  st
+  stat
   status
   subcommands
   sync
   u
+  unar
+  unarchive
   unpin
+  unset
   update
   upgrade
   use
@@ -7850,6 +7866,8 @@ _SUBCOMMANDS=(
 _DOCUMENTED_SUBCOMMANDS=(
   a
   add
+  ar
+  archive
   b
   bk
   bookmark
@@ -7893,11 +7911,15 @@ _DOCUMENTED_SUBCOMMANDS=(
   settings
   shell
   show
+  st
   status
   subcommands
   sync
   u
+  unar
+  unarchive
   unpin
+  unset
   update
   use
   version
@@ -7910,6 +7932,8 @@ _DOCUMENTED_SUBCOMMANDS=(
 _GIT_SUBCOMMANDS=(
   a
   add
+  ar
+  archive
   b
   bk
   bm
@@ -7951,6 +7975,8 @@ _GIT_SUBCOMMANDS=(
   show
   search
   u
+  unar
+  unarchive
   unpin
   use
   view
@@ -8224,9 +8250,10 @@ _call_deferred_command() {
 
   local _group="${2:-}"
   local _group_3_names=(
-    "_b" "_br" "_browse" "_browser" "_config" "_h" "_help" "_helpers" "_set"  \
-    "_plugin" "_plugins" "_remote" "_settings" "_shell" "_status" "_sync"     \
-    "_todo" "_todos" "_update" "_upgrade"
+    "_ar" "_archive" "_b" "_br" "_browse" "_browser" "_config" "_h" "_help" \
+    "_helpers" "_set" "_plugin" "_plugins" "_remote" "_reset" "_settings"   \
+    "_shell" "_st" "_stat" "_status" "_sync" "_todo" "_todos" "_unar"       \
+    "_unarchive" "_unset" "_update" "_upgrade"
   )
 
   if {
@@ -10336,8 +10363,8 @@ $(_color_primary "Examples"):
   ${_ME} example:a
   ${_ME} example:a -t "Title"
 
-$(_color_primary "Aliases"): \`create\`, \`new\`
-$(_color_primary "Shortcut Aliases"): \`a\`, \`+\`
+$(_color_primary "Aliases"): \`${_ME} create\`, \`${_ME} new\`
+$(_color_primary "Shortcut Aliases"): \`${_ME} a\`, \`${_ME} +\`
 HEREDOC
 }
 _add() {
@@ -10902,7 +10929,7 @@ $(_color_primary "Examples"):
   ${_ME} bookmark open 5
   ${_ME} bk
 
-$(_color_primary "Shortcut Alias"): \`bk\`
+$(_color_primary "Shortcut Alias"): \`${_ME} bk\`
 HEREDOC
 }
 _bookmark() {
@@ -11846,7 +11873,7 @@ $(_color_primary "Examples"):
   ${_ME} d example:12
   ${_ME} example:12 d
 
-$(_color_primary "Shortcut Aliases"): \`d\`, \`-\`
+$(_color_primary "Shortcut Aliases"): \`${_ME} d\`, \`${_ME} -\`
 HEREDOC
 }
 _delete() {
@@ -12029,7 +12056,7 @@ $(_color_primary "Examples"):
   ${_ME} e example:12
   ${_ME} example:12 e
 
-$(_color_primary "Shortcut Alias"): \`e\`
+$(_color_primary "Shortcut Alias"): \`${_ME} e\`
 HEREDOC
 }
 _edit() {
@@ -12714,7 +12741,7 @@ _describe_import() {
   cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} import [copy | download | move] (<path>... | <url>) [--convert]
-            [<notebook>:][<folder>/][<filename>]
+            [<notebook>:][<folder-path>/][<filename>]
   ${_ME} import notebook <path> [<name>]
 
 $(_color_primary "Options"):
@@ -13072,8 +13099,8 @@ $(_color_primary "Examples"):
   # Rename note 12 in the "example" notebook to "sample.md"
   ${_ME} rename example:12 "sample.md"
 
-$(_color_primary "Alias"): \`rename\`
-$(_color_primary "Shortcut Alias"): \`mv\`
+$(_color_primary "Alias"): \`${_ME} rename\`
+$(_color_primary "Shortcut Alias"): \`${_ME} mv\`
 HEREDOC
 }
 _move() {
@@ -13331,11 +13358,11 @@ _alias_subcommand "move" "rename"
 _describe_open() {
   cat <<HEREDOC
 $(_color_primary "Usage"):
-  ${_ME} open (<id> | <filename> | <path> | <title> | <notebook>)
+  ${_ME} open ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
 
 $(_color_primary "Description"):
-  Open a note or notebook. When the note is a bookmark, open the bookmarked
-  page in your system's primary web browser. When the note is in a text format
+  Open an item or notebook. When the item is a bookmark, open the bookmarked
+  page in your system's primary web browser. When the item is in a text format
   or any other file type, \`open\` is the equivalent of \`edit\`. \`open\`
   with a notebook opens the notebook folder in the system's file browser.
 
@@ -13355,7 +13382,7 @@ $(_color_primary "See also"):
   ${_ME} help bookmark
   ${_ME} help edit
 
-$(_color_primary "Shortcut Alias"): \`o\`
+$(_color_primary "Shortcut Alias"): \`${_ME} o\`
 HEREDOC
 }
 _open() {
@@ -13376,7 +13403,7 @@ $(_color_primary "Usage"):
   ${_ME} peek ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
 
 $(_color_primary "Description"):
-  View a note or notebook in the terminal. When the note is a bookmark, view
+  View an item or notebook in the terminal. When the item is a bookmark, view
   the bookmarked page in your terminal web browser. When the note is in a text
   format or any other file type, \`peek\` is the equivalent of \`show\`. When
   used with a notebook, \`peek\` opens the notebook folder first tool found in
@@ -13403,8 +13430,8 @@ $(_color_primary "See also"):
   ${_ME} help bookmark
   ${_ME} help show
 
-$(_color_primary "Alias"): \`preview\`
-$(_color_primary "Shortcut Alias"): \`p\`
+$(_color_primary "Alias"): \`${_ME} preview\`
+$(_color_primary "Shortcut Alias"): \`${_ME} p\`
 HEREDOC
 }
 _peek() {
@@ -13617,7 +13644,7 @@ $(_color_primary "Examples"):
   # search all notebooks for "example query" and list matching items
   ${_ME} q -la "example query"
 
-$(_color_primary "Shortcut Alias"): \`q\`
+$(_color_primary "Shortcut Alias"): \`${_ME} q\`
 HEREDOC
 }
 _search() {
@@ -14778,8 +14805,8 @@ $(_color_primary "Examples"):
   ${_ME} s example:12
   ${_ME} example:12 s
 
-$(_color_primary "Alias"): \`view\`
-$(_color_primary "Shortcut Alias"): \`s\`
+$(_color_primary "Alias"): \`${_ME} view\`
+$(_color_primary "Shortcut Alias"): \`${_ME} s\`
 HEREDOC
 }
 _show() {
@@ -15579,7 +15606,7 @@ $(_color_primary "Description"):
 $(_color_primary "Example"):
   ${_ME} use example
 
-$(_color_primary "Shortcut Alias"): \`u\`
+$(_color_primary "Shortcut Alias"): \`${_ME} u\`
 HEREDOC
 }
 _use() {
@@ -15620,6 +15647,30 @@ _call_deferred_command --group 2
 ###############################################################################
 # --------------------------------------------------------------------------- #
 
+# archive ############################################################# archive
+
+_describe_archive() {
+  cat <<HEREDOC
+$(_color_primary "Usage"):
+  ${_ME} archive [<name>]
+
+$(_color_primary "Description"):
+  Set the current notebook or notebook <name> to "archived" status.
+
+  This is an alias for \`${_ME} notebooks archive\`.
+
+$(_color_primary "Examples"):
+  ${_ME} archive
+  ${_ME} archive example
+
+$(_color_primary "Shortcut Alias"): \`${_ME} ar\`
+HEREDOC
+}
+_archive() {
+  _notebooks archive "${@:-}"
+}
+_alias_subcommand "archive" "ar"
+
 # browse ############################################################### browse
 
 _describe_browse() {
@@ -15641,7 +15692,7 @@ $(_color_primary "Subcommands"):
   delete     Open the delete view in the browser.
              Shortcut Aliases: \`d\`, \`-\`
   edit       Open the edit view in the browser.
-             Shortcut Alias: \`e\`
+             Shortcut Alias:   \`e\`
 
 $(_color_primary "Options"):
   -c, --content <content>      Add content to the new note.
@@ -15655,7 +15706,7 @@ $(_color_primary "Options"):
 
 $(_color_primary "Description"):
   Browse, view, and edit linked notes, bookmarks, notebooks, folders, and
-  other items using the terminal or GUI web browser.
+  other items using terminal and GUI web browsers.
 
   \`browse\` includes an embedded web application designed for terminal
   and GUI web browsers that renders [[wiki-style links]] and #tags as
@@ -15689,7 +15740,7 @@ $(_color_primary "Examples"):
   ${_ME} browse demo:456
   ${_ME} br
 
-$(_color_primary "Shortcut Alias"): \`br\`
+$(_color_primary "Shortcut Alias"): \`${_ME} br\`
 HEREDOC
 }
 _browse() {
@@ -17250,7 +17301,7 @@ HEREDOC
 
     # Request-Line HTTP RFC 2616 §5
     # https://www.w3.org/Protocols/rfc2616/rfc2616-sec5.html
-    local _request_line=
+    local   _request_line=
     read -r _request_line || _browse_respond_with 400
 
     # strip trailing CR if it exists
@@ -18893,7 +18944,7 @@ $(_color_primary "Examples"):
   ${_ME} settings colors 105
   ${_ME} set limit 15
 
-$(_color_primary "Alias"): \`set\`
+$(_color_primary "Alias"): \`${_ME} set\`
 HEREDOC
 }
 _settings() {
@@ -19346,7 +19397,7 @@ HEREDOC
     $(_color_secondary " -------------")
      The primary color used to highlight identifiers and messages.
 
-     • Supported Values: xterm color numbers between 0 and 255.
+     • Supported Values: xterm color numbers 0 through 255.
      • Default Value:    $(_color_primary "68") (blue) for 256 color terminals,
                          $(_color_primary "4")  (blue) for  8  color terminals.")
 
@@ -19355,7 +19406,7 @@ HEREDOC
     $(_color_secondary " ---------------")
      The color used for lines and footer elements.
 
-     • Supported Values: xterm color numbers between 0 and 255.
+     • Supported Values: xterm color numbers 0 through 255.
      • Default Value:    $(_color_primary "8")")
 
   _settings_list_items+=("$(_color_brackets '4')  color_theme")
@@ -19475,7 +19526,7 @@ $(local __editor=
          printf "\\n"
 
          local __theme=
-         for  __theme in $(bat --list-themes --color never)
+         for   __theme in $(bat --list-themes --color never)
          do
            printf "         %s\\n" "$(_color_primary "${__theme}")"
          done
@@ -19738,18 +19789,76 @@ HEREDOC
 _describe_status() {
   cat <<HEREDOC
 $(_color_primary "Usage"):
-  ${_ME} status
+  ${_ME} status [<notebook>]
 
 $(_color_primary "Description"):
-  Run \`git status\` in the current notebook.
+  Print archival, git, and remote status for the current notebook or <notebook>.
+
+$(_color_primary "Examples"):
+  ${_ME} status
+  ${_ME} status example
+
+$(_color_primary "Shortcut Alias"): \`${_ME} st\`
 HEREDOC
 }
 _status() {
-  local _notebook_path
-  _notebook_path="$(_notebooks current --path)"
+  local _notebook_name="${1%%:*}"
+  local _notebook_path=
 
-  git -C "${_notebook_path}" status
+  if [[   -n "${_notebook_name:-}" ]]
+  then
+    _notebook_path="$(
+      _notebooks show "${_notebook_name:-}" --path 2>/dev/null || :
+    )"
+
+    if [[ -z "${_notebook_path:-}" ]]
+    then
+      _warn printf "Notebook not found: %s\\n" \
+        "$(_color_primary "${_notebook_name:-}")"
+
+      return 1
+    fi
+  else
+    _notebook_name="$(_notebooks current --name)"
+    _notebook_path="$(_notebooks current --path)"
+  fi
+
+  _notebooks select "${_notebook_path}"
+
+  printf "%s\\n" "$(_color_primary "${_notebook_name}")"
+  _print_line "${_notebook_name}"
+
+  printf "status: "
+
+  if [[ "$(_notebooks status "${_notebook_name}")" =~ not\ archived ]]
+  then
+    printf "unarchived\\n"
+  else
+    printf "archived\\n"
+  fi
+
+  printf "remote: "
+
+  _remote 2>/dev/null || printf "none\\n"
+
+  printf "git:    "
+
+  local _git_status_files=
+  _git_status_files="$(git -C "${_notebook_path}" status --porcelain)"
+
+  if [[ -n "${_git_status_files:-}" ]]
+  then
+    printf "dirty\\n\\nchanges\\n"
+
+    _print_line "changes"
+
+    git -C "${_notebook_path}" status --porcelain
+  else
+    printf "clean\\n"
+  fi
 }
+_alias_subcommand "status" "st"
+_alias_subcommand "status" "stat"
 
 # sync ################################################################### sync
 
@@ -19947,6 +20056,56 @@ _todos() {
   fi | sed -e '/^$/d'
 }
 _alias_subcommand "todos" "todo"
+
+# unarchive ######################################################### unarchive
+
+_describe_unarchive() {
+  cat <<HEREDOC
+$(_color_primary "Usage"):
+  ${_ME} unarchive [<name>]
+
+$(_color_primary "Description"):
+  Remove "archived" status from the current notebook or notebook <name>.
+
+  This is an alias for \`${_ME} notebooks unarchive\`.
+
+$(_color_primary "Examples"):
+  ${_ME} unarchive
+  ${_ME} unarchive example
+
+$(_color_primary "Shortcut Alias"): \`${_ME} unar\`
+HEREDOC
+}
+_unarchive() {
+  _notebooks unarchive "${@:-}"
+}
+_alias_subcommand "unarchive" "unar"
+
+# unset ################################################################# unset
+
+_describe_unset() {
+  cat <<HEREDOC
+$(_color_primary "Usage"):
+  ${_ME} unset (<name> | <number>)
+
+$(_color_primary "Description"):
+  Unset a setting, returning it to the default value.
+
+  This is an alias for \`${_ME} settings unset\`.
+
+$(_color_primary "Examples"):
+  ${_ME} unset color_primary
+  ${_ME} unset 2
+
+$(_color_primary "Alias"): \`${_ME} reset\`
+HEREDOC
+}
+_unset() {
+  [[ -z "${1:-}" ]] && _exit_1 _help "unset"
+
+  _settings unset "${@:-}"
+}
+_alias_subcommand "unset" "reset"
 
 # update ############################################################### update
 
