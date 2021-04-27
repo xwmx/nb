@@ -5670,8 +5670,8 @@ Usage:
   nb open ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
 
 Description:
-  Open a note or notebook. When the note is a bookmark, open the bookmarked
-  page in your system's primary web browser. When the note is in a text format
+  Open an item or notebook. When the item is a bookmark, open the bookmarked
+  page in your system's primary web browser. When the item is in a text format
   or any other file type, `open` is the equivalent of `edit`. `open`
   with a notebook opens the notebook folder in the system's file browser.
 
@@ -5701,7 +5701,7 @@ Usage:
   nb peek ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
 
 Description:
-  View a note or notebook in the terminal. When the note is a bookmark, view
+  View an item or notebook in the terminal. When the item is a bookmark, view
   the bookmarked page in your terminal web browser. When the note is in a text
   format or any other file type, `peek` is the equivalent of `show`. When
   used with a notebook, `peek` opens the notebook folder first tool found in
