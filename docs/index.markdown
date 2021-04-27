@@ -4370,7 +4370,7 @@ and [`.archived` files](https://github.com/xwmx/nb#archived-notebooks).
 
 User-defined metadata can be added to notes in `nb` using [front
 matter](https://jekyllrb.com/docs/front-matter/). Front matter is a
-simple, human accessible, and future-proof method for defining metadata
+simple, human accessible, and future-friendly method for defining metadata
 fields in plain text and is well supported in tools for working with
 Markdown.
 
