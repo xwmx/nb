@@ -5945,7 +5945,7 @@ Alias: `nb set`
      -------------
      The primary color used to highlight identifiers and messages.
 
-     • Supported Values: xterm color numbers between 0 and 255.
+     • Supported Values: xterm color numbers 0 through 255.
      • Default Value:    68 (blue) for 256 color terminals,
                          4  (blue) for  8  color terminals.
 ```
@@ -5957,7 +5957,7 @@ Alias: `nb set`
      ---------------
      The color used for lines and footer elements.
 
-     • Supported Values: xterm color numbers between 0 and 255.
+     • Supported Values: xterm color numbers 0 through 255.
      • Default Value:    8
 ```
 
