@@ -5656,10 +5656,10 @@ Examples:
   nb notebooks --names
   nb notebooks add sample
   nb notebooks add example https://github.com/example/example.git
-  nb n current --path
-  nb n archive example
+  nb nb current --path
+  nb nb archive example
 
-Shortcut Alias: `nb n`
+Shortcut Aliases: `nb n`, `nb nb`
 ```
 
 #### `open`

@@ -6151,10 +6151,10 @@ $(_color_primary "Examples"):
   ${_ME} notebooks --names
   ${_ME} notebooks add sample
   ${_ME} notebooks add example https://github.com/example/example.git
-  ${_ME} n current --path
-  ${_ME} n archive example
+  ${_ME} nb current --path
+  ${_ME} nb archive example
 
-$(_color_primary "Shortcut Alias"): \`${_ME} n\`
+$(_color_primary "Shortcut Aliases"): \`${_ME} n\`, \`${_ME} nb\`
 HEREDOC
 }
 _RESERVED_NOTEBOOK_NAMES=(
