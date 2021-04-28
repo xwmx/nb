@@ -7109,14 +7109,18 @@ HEREDOC
             git -C "${_notebook_paths[i]}" config --get remote.origin.url || echo ''
           )"
 
-          if [[ -n "${_origin_url:-}" ]]
+          if [[ -n "${_origin_url:-}"   ]]
           then
             _notebook_line="${_notebook_line} (${_origin_url})"
           fi
         fi
 
-        printf "%s\\n" "${_notebook_line}"
-        _counter=$((_counter+1))
+        if [[ -n "${_notebook_line:-}"  ]]
+        then
+          printf "%s\\n" "${_notebook_line:-}"
+
+          _counter=$((_counter+1))
+        fi
       fi
     done
 
