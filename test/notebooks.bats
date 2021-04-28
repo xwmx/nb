@@ -14,7 +14,34 @@ _setup_notebooks() {
   cd "${NB_DIR}" || return 1
 }
 
-# fuzzy matching ##############################################################
+# notebook name filtering #####################################################
+
+@test "'notebooks --not-valid-option-or-query' exits with 1 and prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example One"
+    "${_NB}" notebooks add "Example Two"
+    "${_NB}" notebooks add "Example Three"
+
+    "${_NB}" notebooks add "Sample One"
+    "${_NB}" notebooks add "Sample Two"
+
+    "${_NB}" notebooks add "Demo One"
+    "${_NB}" notebooks add "Demo Two"
+  }
+
+  run "${_NB}" notebooks --not-valid-option-or-query
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 1                         ]]
+  [[ "${#lines[@]}" -eq 1                         ]]
+
+  [[ "${output}"    =~  \
+\!.*\ Notebook\ not\ found:\ .*--not-valid-option-or-query ]]
+}
 
 @test "'notebooks <query> --path' exits with 0 and prints matching notebook paths." {
   {

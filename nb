@@ -6937,8 +6937,8 @@ HEREDOC
   # _notebooks_list()
   #
   # Usage:
-  #   _notebooks_list [<name>] [--archived] [--local] [--global] [--names]
-  #                   [--paths] [--unarchived]
+  #   _notebooks_list [<name> | <query>] [--archived] [--local] [--global]
+  #                   [--names] [--paths] [--unarchived]
   _notebooks_list() {
     local _counter=0
     local _query_names=()
@@ -6991,7 +6991,7 @@ HEREDOC
       esac
     done
 
-    if [[ -z "${NB_DIR}" ]] || [[ ! -e "${NB_DIR}" ]]
+    if [[ -z "${NB_DIR}" ]] || [[ ! -e "${NB_DIR}"  ]]
     then
       exit 1
     fi
@@ -7021,7 +7021,7 @@ HEREDOC
       do
         _notebook_names+=("${__name}")
 
-        if [[ "${__name}" == "local" ]]
+        if [[ "${__name}" == "local"                ]]
         then
           _notebook_paths+=("${_LOCAL_NOTEBOOK_PATH}")
         else
@@ -7033,14 +7033,14 @@ HEREDOC
     local i=
     for ((i=0; i < "${#_notebook_names[@]}"; i++))
     do
-      if [[ -e "${_notebook_paths[i]}/.git" ]]
+      if [[ -e "${_notebook_paths[i]}/.git"         ]]
       then # it's a git repository.
         local _notebook_line=
         local _origin_url=
 
         if [[ "${i}" == "0" ]]                       &&
-           [[ "${_notebook_names[i]}" == "local"  ]] &&
-           [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"      ]]
+           [[ "${_notebook_names[i]}" == "local"    ]] &&
+           [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"        ]]
         then # local notebook as first notebook
           if ((_only_global))
           then
@@ -7059,7 +7059,7 @@ HEREDOC
           fi
         elif ((_only_local))
         then
-          if [[ -z "${_LOCAL_NOTEBOOK_PATH:-}" ]]
+          if [[ -z "${_LOCAL_NOTEBOOK_PATH:-}"      ]]
           then
             return 1
           else
@@ -7077,7 +7077,7 @@ HEREDOC
             then # it's the current repository.
               _notebook_line="$(_color_primary "${_notebook_names[i]}")"
 
-              if [[ "${#_notebook_names[@]}" -gt 1 ]]
+              if [[ "${#_notebook_names[@]}" -gt 1  ]]
               then
                 _notebook_line="$(
                   _color_primary "${_notebook_names[i]}" --underline
@@ -7089,7 +7089,7 @@ HEREDOC
           fi
         fi
 
-        if [[ -e "${_notebook_paths[i]}/.archived" ]]
+        if [[ -e "${_notebook_paths[i]}/.archived"  ]]
         then
           if ((_only_unarchived))
           then
@@ -7126,7 +7126,7 @@ HEREDOC
       then
         {
           _notebooks_list "${_options[@]}"  \
-            | grep -i "$(_join "|" "${_query_names[@]:-}")"
+            | grep -i "$(_join "|" "${_query_names[@]:-}")" 2>/dev/null
         } || {
           _warn printf                      \
             "Notebook not found: %s\\n"     \
