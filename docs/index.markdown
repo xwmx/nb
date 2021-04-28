@@ -1956,7 +1956,7 @@ See [`bookmark help`](#bookmark-help) for more information.
 
 `nb` recognizes [#hashtags](#-tagging) defined anywhere within a document.
 A hashtag is defined in `nb` as a `#` character followed by any number of
-letters, numbers, underscores, and hypens (`#[A-Za-z0-9_-]+`).
+letters, numbers, underscores, and dashes (`#[A-Za-z0-9_-]+`).
 
 Notes and bookmarks can be tagged when they are created using the
 `--tags <tag1>,<tag2>...` option,
@@ -4613,7 +4613,7 @@ Usage:
   nb move ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note)
           [-f | --force]
-  nb notebooks [<name>] [--archived] [--global] [--local] [--names]
+  nb notebooks [<name> | <query>] [--archived] [--global] [--local] [--names]
                [--paths] [--unarchived]
   nb notebooks add <name> [<remote-url> [<branch>]] [--author]
                    [--email <email>] [--name <name>]
@@ -5578,7 +5578,7 @@ Shortcut Alias: `nb mv`
 
 ```text
 Usage:
-  nb notebooks [<name>] [--archived] [--global] [--local] [--names]
+  nb notebooks [<name> | <query>] [--archived] [--global] [--local] [--names]
                [--paths] [--unarchived]
   nb notebooks add <name> [<remote-url> [<branch>]] [--author]
                    [--email <email>] [--name <name>]
