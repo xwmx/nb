@@ -4607,7 +4607,7 @@ Usage:
   nb move ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note)
           [-f | --force]
-  nb notebooks [<name>] [--archived] [--global] [--local] [--names]
+  nb notebooks [<name> | <query>] [--archived] [--global] [--local] [--names]
                [--paths] [--unarchived]
   nb notebooks add <name> [<remote-url> [<branch>]] [--author]
                    [--email <email>] [--name <name>]
@@ -5572,7 +5572,7 @@ Shortcut Alias: `nb mv`
 
 ```text
 Usage:
-  nb notebooks [<name>] [--archived] [--global] [--local] [--names]
+  nb notebooks [<name> | <query>] [--archived] [--global] [--local] [--names]
                [--paths] [--unarchived]
   nb notebooks add <name> [<remote-url> [<branch>]] [--author]
                    [--email <email>] [--name <name>]

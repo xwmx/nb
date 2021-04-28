@@ -3607,7 +3607,7 @@ $(_color_primary "Usage"):
   ${_ME} move ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note)
           [-f | --force]
-  ${_ME} notebooks [<name>] [--archived] [--global] [--local] [--names]
+  ${_ME} notebooks [<name> | <query>] [--archived] [--global] [--local] [--names]
                [--paths] [--unarchived]
   ${_ME} notebooks add <name> [<remote-url> [<branch>]] [--author]
                    [--email <email>] [--name <name>]
@@ -6067,7 +6067,7 @@ _ls() {
 _describe_notebooks() {
   cat <<HEREDOC
 $(_color_primary "Usage"):
-  ${_ME} notebooks [<name>] [--archived] [--global] [--local] [--names]
+  ${_ME} notebooks [<name> | <query>] [--archived] [--global] [--local] [--names]
                [--paths] [--unarchived]
   ${_ME} notebooks add <name> [<remote-url> [<branch>]] [--author]
                    [--email <email>] [--name <name>]
@@ -6951,19 +6951,27 @@ HEREDOC
     local _only_names=0
     local _only_paths=0
     local _only_unarchived=0
+    local _options=()
 
     local __arg=
     for   __arg in "${@:-}"
     do
       case "${__arg}" in
+        --archived|--global|--local|--name*|--no*color|--path*|--unarchived)
+          _options+=("${__arg}")
+          ;;
+      esac
+
+      case "${__arg}" in
         --archived)
           _only_archived=1
-          ;;
-        --local)
-          _only_local=1
+          _options+=("${__arg}")
           ;;
         --global)
           _only_global=1
+          ;;
+        --local)
+          _only_local=1
           ;;
         --name*)
           _only_names=1
@@ -7116,10 +7124,15 @@ HEREDOC
     then
       if [[ -n "${_query_names[*]:-}" ]]
       then
-        _warn printf                  \
-          "Notebook not found: %s\\n" \
-          "$(_color_primary "${_query_names[*]}" | tr '\r\n' ' ')" &&
-            return 1
+        {
+          _notebooks_list "${_options[@]}"  \
+            | grep -i "$(_join "|" "${_query_names[@]:-}")"
+        } || {
+          _warn printf                      \
+            "Notebook not found: %s\\n"     \
+            "$(_color_primary "${_query_names[*]}" | tr '\r\n' ' ')" &&
+              return 1
+        }
       else
         return 1
       fi

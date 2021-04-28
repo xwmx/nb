@@ -14,6 +14,158 @@ _setup_notebooks() {
   cd "${NB_DIR}" || return 1
 }
 
+# fuzzy matching ##############################################################
+
+@test "'notebooks <query> --path' exits with 0 and prints matching notebook paths." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example One"
+    "${_NB}" notebooks add "Example Two"
+    "${_NB}" notebooks add "Example Three"
+
+    "${_NB}" notebooks add "Sample One"
+    "${_NB}" notebooks add "Sample Two"
+
+    "${_NB}" notebooks add "Demo One"
+    "${_NB}" notebooks add "Demo Two"
+  }
+
+  run "${_NB}" notebooks example --path
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                         ]]
+  [[ "${#lines[@]}" -eq 3                         ]]
+
+  [[ "${output}"    =~  ${NB_DIR}/Example\ Three  ]]
+  [[ "${output}"    =~  ${NB_DIR}/Example\ Two    ]]
+  [[ "${output}"    =~  ${NB_DIR}/Example\ One    ]]
+
+  run "${_NB}" notebooks two --path
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                         ]]
+  [[ "${#lines[@]}" -eq 3                         ]]
+
+  [[ "${output}"    =~  ${NB_DIR}/Example\ Two    ]]
+  [[ "${output}"    =~  ${NB_DIR}/Sample\ Two     ]]
+  [[ "${output}"    =~  ${NB_DIR}/Demo\ Two       ]]
+
+  run "${_NB}" notebooks no-match --path
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 1                         ]]
+  [[ "${#lines[@]}" -eq 1                         ]]
+
+  [[ "${output}"    =~  \!.*\ Notebook\ not\ found:\ .*no-match ]]
+}
+
+@test "'notebooks <query> --name' exits with 0 and prints matching notebook names." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example One"
+    "${_NB}" notebooks add "Example Two"
+    "${_NB}" notebooks add "Example Three"
+
+    "${_NB}" notebooks add "Sample One"
+    "${_NB}" notebooks add "Sample Two"
+
+    "${_NB}" notebooks add "Demo One"
+    "${_NB}" notebooks add "Demo Two"
+  }
+
+  run "${_NB}" notebooks example --name
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0               ]]
+  [[ "${#lines[@]}" -eq 3               ]]
+
+  [[ "${output}"    =~  Example\ Three  ]]
+  [[ "${output}"    =~  Example\ Two    ]]
+  [[ "${output}"    =~  Example\ One    ]]
+
+  run "${_NB}" notebooks two --name
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0               ]]
+  [[ "${#lines[@]}" -eq 3               ]]
+
+  [[ "${output}"    =~  Example\ Two    ]]
+  [[ "${output}"    =~  Sample\ Two     ]]
+  [[ "${output}"    =~  Demo\ Two       ]]
+
+  run "${_NB}" notebooks no-match --name
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 1               ]]
+  [[ "${#lines[@]}" -eq 1               ]]
+
+  [[ "${output}"    =~  \!.*\ Notebook\ not\ found:\ .*no-match ]]
+}
+
+@test "'notebooks <query>' exits with 0 and prints matching notebook names." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example One"
+    "${_NB}" notebooks add "Example Two"
+    "${_NB}" notebooks add "Example Three"
+
+    "${_NB}" notebooks add "Sample One"
+    "${_NB}" notebooks add "Sample Two"
+
+    "${_NB}" notebooks add "Demo One"
+    "${_NB}" notebooks add "Demo Two"
+  }
+
+  run "${_NB}" notebooks example
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0               ]]
+  [[ "${#lines[@]}" -eq 3               ]]
+
+  [[ "${output}"    =~  Example\ Three  ]]
+  [[ "${output}"    =~  Example\ Two    ]]
+  [[ "${output}"    =~  Example\ One    ]]
+
+  run "${_NB}" notebooks two
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0               ]]
+  [[ "${#lines[@]}" -eq 3               ]]
+
+  [[ "${output}"    =~  Example\ Two    ]]
+  [[ "${output}"    =~  Sample\ Two     ]]
+  [[ "${output}"    =~  Demo\ Two       ]]
+
+  run "${_NB}" notebooks no-match
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 1               ]]
+  [[ "${#lines[@]}" -eq 1               ]]
+
+  [[ "${output}"    =~  \!.*\ Notebook\ not\ found:\ .*no-match ]]
+}
+
 # `notebooks` #################################################################
 
 @test "'notebooks' exits with 0 and prints all notebook names." {
@@ -385,6 +537,6 @@ ${NB_DIR}/one"
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[0]}" =~ Usage.*:                        ]]
-  [[ "${lines[1]}" =~ \ \ nb\ notebooks\ \[\<name\>\] ]]
+  [[ "${lines[0]}" =~ Usage.*:          ]]
+  [[ "${lines[1]}" =~ \ \ nb\ notebooks ]]
 }
