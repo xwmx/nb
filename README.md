@@ -1113,6 +1113,12 @@ For `nb edit` help information, run [`nb help edit`](#edit).
 
 ##### Editing with `browse`
 
+<p align="center">
+  <img  src="https://xwmx.github.io/misc/nb/images/gui-terminal-browse-edit.png"
+        alt="nb browse edit"
+        width="500">
+</p>
+
 Items can be edited within terminal and GUI web browsers using
 [`nb browse edit`](#browse) / [`nb br e`](#browse):
 
@@ -1947,7 +1953,9 @@ See [`bookmark help`](#bookmark-help) for more information.
 
 ### 🏷 #tagging
 
-`nb` recognizes [#hashtags](#-tagging) defined anywhere within a document.
+`nb` recognizes [#hashtags](#https://en.wikipedia.org/wiki/Hashtag)
+defined anywhere within a document.
+
 Notes and bookmarks can be tagged when they are created using the
 `--tags <tag1>,<tag2>...` option,
 which is available with
@@ -2343,9 +2351,10 @@ which automatically resizes the form to fit the current terminal window:
 [save] · last: 2021-01-01 01:00:00
 ```
 
-When using `w3m`, put your cursor in the textarea and press `<return>` to
-open the item in your text editor. After closing the editor, `w3m` returns
-to the form now populated with the updated content, which can then be saved.
+When using `w3m`, put your cursor within the brackets representing
+the `<textarea>` and press `<return>` to open the item in your text editor.
+After closing the editor, `w3m` returns to the form
+now populated with the updated content, which can then be saved.
 
 Syntax highlighting, block selection, and other
 [advanced editor features](#browse---gui-editing)
@@ -3562,7 +3571,7 @@ and handles conflicts using a couple different strategies.
 When [`nb sync`](#sync) encounters a conflict in a text file
 and can't cleanly merge overlapping local and remote changes,
 `nb` saves both versions within the file separated by git conflict markers
-and prints a message indicating which file(s) contain conflicting text.
+and prints a message indicating which files contain conflicting text.
 Use [`nb edit`](#edit) to remove the conflict markers
 and delete any unwanted text.
 
@@ -3827,7 +3836,7 @@ ids and [selectors](#selectors),
 the current notebook name,
 the shell prompt,
 divider lines,
-syntax elements,
+[syntax elements](#terminal-syntax-highlighting-theme),
 and links.
 
 `nb` includes several built-in color themes
