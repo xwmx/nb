@@ -7126,11 +7126,17 @@ HEREDOC
 
     if ! ((_counter))
     then
-      if [[ -n "${_query_names[*]:-}" ]]
+      if [[ -n "${_query_names[*]:-}"   ]]
       then
         {
-          _notebooks_list "${_options[@]}"  \
-            | grep -i "$(_join "|" "${_query_names[@]:-}")" 2>/dev/null
+          local _query_pattern=
+          _query_pattern="$(_join "|" "${_query_names[@]:-}")"
+
+          {
+            _notebooks_list "${_options[@]}"  2>/dev/null
+          } | {
+            grep -i "${_query_pattern:-}"     2>/dev/null
+          }
         } || {
           _warn printf                      \
             "Notebook not found: %s\\n"     \
