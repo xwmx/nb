@@ -335,7 +335,7 @@ the [`nb update`](#update) subcommand.
   <a href="#-notebooks">Notebooks</a> •
   <a href="#-git-sync">Git Sync</a> •
   <a href="#%EF%B8%8F-import--export">Import / Export</a> •
-  <a href="#%EF%B8%8F-set--settings"><code>set</code> & Settings</a> •
+  <a href="#%EF%B8%8F-set--settings"><code>set</code> & <code>settings</code></a> •
   <a href="#-color-themes">Color Themes</a> •
   <a href="#-plugins">Plugins</a> •
   <a href="#-nb-interactive-shell">Shell</a> •
@@ -816,7 +816,7 @@ More example content:
 ```
 
 Several classes of file types are represented with emoji
-to make them easily identifiable in lists.
+[indicators](#indicators) to make them easily identifiable in lists.
 For example, bookmarks and encrypted notes are listed with `🔖` and `🔒`:
 
 ```bash
@@ -1119,12 +1119,6 @@ For `nb edit` help information, run [`nb help edit`](#edit).
 
 ##### Editing with `browse`
 
-<p align="center">
-  <img  src="https://xwmx.github.io/misc/nb/images/gui-terminal-browse-edit.png"
-        alt="nb browse edit"
-        width="500">
-</p>
-
 Items can be edited within terminal and GUI web browsers using
 [`nb browse edit`](#browse) / [`nb br e`](#browse):
 
@@ -1153,7 +1147,8 @@ Items can be edited within terminal and GUI web browsers using
 [save] · last: 2021-01-01 01:00:00
 ```
 
-For more information, see [Browsing](#-browsing).
+For more information, see
+[`browse edit`](#browse-edit) and [Browsing](#-browsing).
 
 #### Viewing
 
@@ -1959,8 +1954,9 @@ See [`bookmark help`](#bookmark-help) for more information.
 
 ### 🏷 #tagging
 
-`nb` recognizes [#hashtags](#https://en.wikipedia.org/wiki/Hashtag)
-defined anywhere within a document.
+`nb` recognizes [#hashtags](#-tagging) defined anywhere within a document.
+A hashtag is defined in `nb` as a `#` character followed by any number of
+letters, numbers, underscores, and hypens (`#[A-Za-z0-9_-]+`).
 
 Notes and bookmarks can be tagged when they are created using the
 `--tags <tag1>,<tag2>...` option,
@@ -3736,7 +3732,7 @@ For more information about imported and exported notebooks, see
 For `nb import` and `nb export` help information, see
 [`nb help import`](#import) and [`nb help export`](#export).
 
-### ⚙️ `set` & Settings
+### ⚙️ `set` & `settings`
 
 [`nb set`](#settings) and [`nb settings`](#settings)
 open the settings prompt,
