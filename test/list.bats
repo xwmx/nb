@@ -4,7 +4,7 @@ load test_helper
 
 # `list` edge cases ###########################################################
 
-@test "'list --archived / --unarchived' ignores options." {
+@test "'list' ignores --ar, --archived, --unar, and --unarchived options." {
   {
     "${_NB}" init
     "${_NB}" add "File One.md"    --title "Title One"
@@ -12,7 +12,25 @@ load test_helper
     "${_NB}" add "File Three.md"  --title "Title Three"
   }
 
+  run "${_NB}" list --ar
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0             ]]
+  [[ "${#lines[@]}" -eq 3             ]]
+  [[ "${lines[0]}"  =~  Title\ Three  ]]
+
   run "${_NB}" list --archived
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0             ]]
+  [[ "${#lines[@]}" -eq 3             ]]
+  [[ "${lines[0]}"  =~  Title\ Three  ]]
+
+  run "${_NB}" list --unar
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
