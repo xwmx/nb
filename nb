@@ -3747,8 +3747,9 @@ HEREDOC
       then
         cat
       else
+        local _replacement_pattern="${_TPUT_SGR0}${_TPUT_SETAF_8}\1${_TPUT_SGR0}"
         sed -E \
--e "/^\ \ /s/(\[|\]|\(|\)|\|)/${_TPUT_SGR0}${_TPUT_SETAF_8}\1${_TPUT_SGR0}/g"
+-e "/^\ \ |\[\[wiki\-style\ linking\]\]/s/(\[|\]|\(|\)|\|)/${_replacement_pattern}/g"
       fi
     } | {
       sed -e "s/\`/${_TPUT_SGR0}${_TPUT_SETAF_8}\`${_TPUT_SGR0}/g"
