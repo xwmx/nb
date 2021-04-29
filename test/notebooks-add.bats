@@ -349,7 +349,7 @@ Enter\ a\ new\ value,\ .*unset.*\ to\ use\ the\ global\ value,                ]]
   printf "%s\\n" "$(cd "${NB_DIR}" && find . -maxdepth 1)"
 
   [[ ${status} -eq 1                                          ]]
-  [[ "${lines[1]}" =~ \ \ nb\ notebooks\ \[\<name\>\]         ]]
+  [[ "${lines[1]}" =~ \ \ nb\ notebooks\                      ]]
   [[ "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)" -eq 6  ]]
 }
 

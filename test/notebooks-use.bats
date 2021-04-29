@@ -58,7 +58,7 @@ _setup_notebooks() {
   printf ".current: %s\\n" "$(cat "${NB_DIR}/.current")"
 
   [[ ${status} -eq 1                                  ]]
-  [[ "${lines[1]}" =~ \ \ nb\ notebooks\ \[\<name\>\] ]]
+  [[ "${lines[1]}" =~ \ \ nb\ notebooks               ]]
   [[ "$(cat "${NB_DIR}/.current")" == "home"          ]]
 
   run "${_NB}" env

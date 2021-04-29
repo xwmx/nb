@@ -335,7 +335,7 @@ the [`nb update`](#update) subcommand.
   <a href="#-notebooks">Notebooks</a> •
   <a href="#-git-sync">Git Sync</a> •
   <a href="#%EF%B8%8F-import--export">Import / Export</a> •
-  <a href="#%EF%B8%8F-set--settings"><code>set</code> & Settings</a> •
+  <a href="#%EF%B8%8F-set--settings"><code>set</code> & <code>settings</code></a> •
   <a href="#-color-themes">Color Themes</a> •
   <a href="#-plugins">Plugins</a> •
   <a href="#-nb-interactive-shell">Shell</a> •
@@ -816,7 +816,7 @@ More example content:
 ```
 
 Several classes of file types are represented with emoji
-to make them easily identifiable in lists.
+[indicators](#indicators) to make them easily identifiable in lists.
 For example, bookmarks and encrypted notes are listed with `🔖` and `🔒`:
 
 ```bash
@@ -1147,7 +1147,8 @@ Items can be edited within terminal and GUI web browsers using
 [save] · last: 2021-01-01 01:00:00
 ```
 
-For more information, see [Browsing](#-browsing).
+For more information, see
+[`browse edit`](#browse-edit) and [Browsing](#-browsing).
 
 #### Viewing
 
@@ -1954,6 +1955,9 @@ See [`bookmark help`](#bookmark-help) for more information.
 ### 🏷 #tagging
 
 `nb` recognizes [#hashtags](#-tagging) defined anywhere within a document.
+A hashtag is defined in `nb` as a `#` character followed by any number of
+letters, numbers, underscores, and dashes (`#[A-Za-z0-9_-]+`).
+
 Notes and bookmarks can be tagged when they are created using the
 `--tags <tag1>,<tag2>...` option,
 which is available with
@@ -2349,9 +2353,10 @@ which automatically resizes the form to fit the current terminal window:
 [save] · last: 2021-01-01 01:00:00
 ```
 
-When using `w3m`, put your cursor in the textarea and press `<return>` to
-open the item in your text editor. After closing the editor, `w3m` returns
-to the form now populated with the updated content, which can then be saved.
+When using `w3m`, put your cursor within the brackets representing
+the `<textarea>` and press `<return>` to open the item in your text editor.
+After closing the editor, `w3m` returns to the form
+now populated with the updated content, which can then be saved.
 
 Syntax highlighting, block selection, and other
 [advanced editor features](#browse---gui-editing)
@@ -3568,7 +3573,7 @@ and handles conflicts using a couple different strategies.
 When [`nb sync`](#sync) encounters a conflict in a text file
 and can't cleanly merge overlapping local and remote changes,
 `nb` saves both versions within the file separated by git conflict markers
-and prints a message indicating which file(s) contain conflicting text.
+and prints a message indicating which files contain conflicting text.
 Use [`nb edit`](#edit) to remove the conflict markers
 and delete any unwanted text.
 
@@ -3727,7 +3732,7 @@ For more information about imported and exported notebooks, see
 For `nb import` and `nb export` help information, see
 [`nb help import`](#import) and [`nb help export`](#export).
 
-### ⚙️ `set` & Settings
+### ⚙️ `set` & `settings`
 
 [`nb set`](#settings) and [`nb settings`](#settings)
 open the settings prompt,
@@ -3833,7 +3838,7 @@ ids and [selectors](#selectors),
 the current notebook name,
 the shell prompt,
 divider lines,
-syntax elements,
+[syntax elements](#terminal-syntax-highlighting-theme),
 and links.
 
 `nb` includes several built-in color themes
@@ -4608,7 +4613,7 @@ Usage:
   nb move ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note)
           [-f | --force]
-  nb notebooks [<name>] [--archived] [--global] [--local] [--names]
+  nb notebooks [<name> | <query>] [--archived] [--global] [--local] [--names]
                [--paths] [--unarchived]
   nb notebooks add <name> [<remote-url> [<branch>]] [--author]
                    [--email <email>] [--name <name>]
@@ -5573,7 +5578,7 @@ Shortcut Alias: `nb mv`
 
 ```text
 Usage:
-  nb notebooks [<name>] [--archived] [--global] [--local] [--names]
+  nb notebooks [<name> | <query>] [--archived] [--global] [--local] [--names]
                [--paths] [--unarchived]
   nb notebooks add <name> [<remote-url> [<branch>]] [--author]
                    [--email <email>] [--name <name>]
@@ -5657,10 +5662,10 @@ Examples:
   nb notebooks --names
   nb notebooks add sample
   nb notebooks add example https://github.com/example/example.git
-  nb n current --path
-  nb n archive example
+  nb nb current --path
+  nb nb archive example
 
-Shortcut Alias: `nb n`
+Shortcut Aliases: `nb n`, `nb nb`
 ```
 
 #### `open`

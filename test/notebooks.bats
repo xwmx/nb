@@ -14,6 +14,328 @@ _setup_notebooks() {
   cd "${NB_DIR}" || return 1
 }
 
+# --archived / --unarchived ###################################################
+
+@test "'notebooks --archived' works with filtering." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" notebooks add "Sample Query Notebook"
+    "${_NB}" notebooks add "Demo Query Notebook"
+    "${_NB}" notebooks add "Test Notebook"
+
+    "${_NB}" archive "Sample Query Notebook"
+    "${_NB}" archive "Demo Query Notebook"
+    "${_NB}" archive "Test Notebook"
+  }
+
+  run "${_NB}" notebooks --archived query
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    -eq 0                                      ]]
+  [[    "${#lines[@]}" -eq 2                                      ]]
+
+  [[ !  "${output}"    =~  home                                   ]]
+  [[ !  "${output}"    =~  Example\ Notebook                      ]]
+  [[    "${output}"    =~  Sample\ Query\ Notebook\ \(archived\)  ]]
+  [[    "${output}"    =~  Demo\ Query\ Notebook\ \(archived\)    ]]
+  [[ !  "${output}"    =~  Test\ Notebook                         ]]
+}
+
+@test "'notebooks --ar' exits with 0 and prints archived notebooks." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" notebooks add "Sample Notebook"
+    "${_NB}" notebooks add "Demo Notebook"
+    "${_NB}" notebooks add "Test Notebook"
+
+    "${_NB}" archive "Sample Notebook"
+    "${_NB}" archive "Test Notebook"
+  }
+
+  run "${_NB}" notebooks --ar
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    -eq 0                              ]]
+  [[    "${#lines[@]}" -eq 2                              ]]
+
+  [[ !  "${output}"    =~  home                           ]]
+  [[ !  "${output}"    =~  Example\ Notebook              ]]
+  [[    "${output}"    =~  Sample\ Notebook\ \(archived\) ]]
+  [[ !  "${output}"    =~  Demo\ Notebook                 ]]
+  [[    "${output}"    =~  Test\ Notebook\ \(archived\)   ]]
+}
+
+@test "'notebooks --archived' exits with 0 and prints archived notebooks." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" notebooks add "Sample Notebook"
+    "${_NB}" notebooks add "Demo Notebook"
+    "${_NB}" notebooks add "Test Notebook"
+
+    "${_NB}" archive "Sample Notebook"
+    "${_NB}" archive "Test Notebook"
+  }
+
+  run "${_NB}" notebooks --archived
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    -eq 0                              ]]
+  [[    "${#lines[@]}" -eq 2                              ]]
+
+  [[ !  "${output}"    =~  home                           ]]
+  [[ !  "${output}"    =~  Example\ Notebook              ]]
+  [[    "${output}"    =~  Sample\ Notebook\ \(archived\) ]]
+  [[ !  "${output}"    =~  Demo\ Notebook                 ]]
+  [[    "${output}"    =~  Test\ Notebook\ \(archived\)   ]]
+}
+
+@test "'notebooks --unarchived' exits with 0 and prints unarchived notebooks." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" notebooks add "Sample Notebook"
+    "${_NB}" notebooks add "Demo Notebook"
+    "${_NB}" notebooks add "Test Notebook"
+
+    "${_NB}" archive "Sample Notebook"
+    "${_NB}" archive "Test Notebook"
+  }
+
+  run "${_NB}" notebooks --unarchived
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    -eq 0                  ]]
+  [[    "${#lines[@]}" -eq 3                  ]]
+
+  [[    "${output}"    =~  home               ]]
+  [[    "${output}"    =~  Example\ Notebook  ]]
+  [[ !  "${output}"    =~  Sample\ Notebook   ]]
+  [[    "${output}"    =~  Demo\ Notebook     ]]
+  [[ !  "${output}"    =~  Test\ Notebook     ]]
+}
+
+@test "'notebooks --unar' exits with 0 and prints unarchived notebooks." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" notebooks add "Sample Notebook"
+    "${_NB}" notebooks add "Demo Notebook"
+    "${_NB}" notebooks add "Test Notebook"
+
+    "${_NB}" archive "Sample Notebook"
+    "${_NB}" archive "Test Notebook"
+  }
+
+  run "${_NB}" notebooks --unar
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    -eq 0                  ]]
+  [[    "${#lines[@]}" -eq 3                  ]]
+
+  [[    "${output}"    =~  home               ]]
+  [[    "${output}"    =~  Example\ Notebook  ]]
+  [[ !  "${output}"    =~  Sample\ Notebook   ]]
+  [[    "${output}"    =~  Demo\ Notebook     ]]
+  [[ !  "${output}"    =~  Test\ Notebook     ]]
+}
+
+# notebook name filtering #####################################################
+
+@test "'notebooks --not-valid-option-or-query' exits with 1 and prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example One"
+    "${_NB}" notebooks add "Example Two"
+    "${_NB}" notebooks add "Example Three"
+
+    "${_NB}" notebooks add "Sample One"
+    "${_NB}" notebooks add "Sample Two"
+
+    "${_NB}" notebooks add "Demo One"
+    "${_NB}" notebooks add "Demo Two"
+  }
+
+  run "${_NB}" notebooks --not-valid-option-or-query
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 1                         ]]
+  [[ "${#lines[@]}" -eq 1                         ]]
+
+  [[ "${output}"    =~  \
+\!.*\ Notebook\ not\ found:\ .*--not-valid-option-or-query ]]
+}
+
+@test "'notebooks <query> --path' exits with 0 and prints matching notebook paths." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example One"
+    "${_NB}" notebooks add "Example Two"
+    "${_NB}" notebooks add "Example Three"
+
+    "${_NB}" notebooks add "Sample One"
+    "${_NB}" notebooks add "Sample Two"
+
+    "${_NB}" notebooks add "Demo One"
+    "${_NB}" notebooks add "Demo Two"
+  }
+
+  run "${_NB}" notebooks example --path
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                         ]]
+  [[ "${#lines[@]}" -eq 3                         ]]
+
+  [[ "${output}"    =~  ${NB_DIR}/Example\ Three  ]]
+  [[ "${output}"    =~  ${NB_DIR}/Example\ Two    ]]
+  [[ "${output}"    =~  ${NB_DIR}/Example\ One    ]]
+
+  run "${_NB}" notebooks two --path
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                         ]]
+  [[ "${#lines[@]}" -eq 3                         ]]
+
+  [[ "${output}"    =~  ${NB_DIR}/Example\ Two    ]]
+  [[ "${output}"    =~  ${NB_DIR}/Sample\ Two     ]]
+  [[ "${output}"    =~  ${NB_DIR}/Demo\ Two       ]]
+
+  run "${_NB}" notebooks no-match --path
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 1                         ]]
+  [[ "${#lines[@]}" -eq 1                         ]]
+
+  [[ "${output}"    =~  \!.*\ Notebook\ not\ found:\ .*no-match ]]
+}
+
+@test "'notebooks <query> --name' exits with 0 and prints matching notebook names." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example One"
+    "${_NB}" notebooks add "Example Two"
+    "${_NB}" notebooks add "Example Three"
+
+    "${_NB}" notebooks add "Sample One"
+    "${_NB}" notebooks add "Sample Two"
+
+    "${_NB}" notebooks add "Demo One"
+    "${_NB}" notebooks add "Demo Two"
+  }
+
+  run "${_NB}" notebooks example --name
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0               ]]
+  [[ "${#lines[@]}" -eq 3               ]]
+
+  [[ "${output}"    =~  Example\ Three  ]]
+  [[ "${output}"    =~  Example\ Two    ]]
+  [[ "${output}"    =~  Example\ One    ]]
+
+  run "${_NB}" notebooks two --name
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0               ]]
+  [[ "${#lines[@]}" -eq 3               ]]
+
+  [[ "${output}"    =~  Example\ Two    ]]
+  [[ "${output}"    =~  Sample\ Two     ]]
+  [[ "${output}"    =~  Demo\ Two       ]]
+
+  run "${_NB}" notebooks no-match --name
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 1               ]]
+  [[ "${#lines[@]}" -eq 1               ]]
+
+  [[ "${output}"    =~  \!.*\ Notebook\ not\ found:\ .*no-match ]]
+}
+
+@test "'notebooks <query>' exits with 0 and prints matching notebook names." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example One"
+    "${_NB}" notebooks add "Example Two"
+    "${_NB}" notebooks add "Example Three"
+
+    "${_NB}" notebooks add "Sample One"
+    "${_NB}" notebooks add "Sample Two"
+
+    "${_NB}" notebooks add "Demo One"
+    "${_NB}" notebooks add "Demo Two"
+  }
+
+  run "${_NB}" notebooks example
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0               ]]
+  [[ "${#lines[@]}" -eq 3               ]]
+
+  [[ "${output}"    =~  Example\ Three  ]]
+  [[ "${output}"    =~  Example\ Two    ]]
+  [[ "${output}"    =~  Example\ One    ]]
+
+  run "${_NB}" notebooks two
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0               ]]
+  [[ "${#lines[@]}" -eq 3               ]]
+
+  [[ "${output}"    =~  Example\ Two    ]]
+  [[ "${output}"    =~  Sample\ Two     ]]
+  [[ "${output}"    =~  Demo\ Two       ]]
+
+  run "${_NB}" notebooks no-match
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 1               ]]
+  [[ "${#lines[@]}" -eq 1               ]]
+
+  [[ "${output}"    =~  \!.*\ Notebook\ not\ found:\ .*no-match ]]
+}
+
 # `notebooks` #################################################################
 
 @test "'notebooks' exits with 0 and prints all notebook names." {
@@ -29,8 +351,8 @@ one (${_GIT_REMOTE_URL})"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${_expected}: '%s'\\n" "${_expected}"
 
-  [[ ${status} -eq 0                ]]
-  [[ "${output}" == "${_expected}"  ]]
+  [[ "${status}"  -eq 0               ]]
+  [[ "${output}"  ==  "${_expected}"  ]]
 }
 
 @test "'notebooks <name>' exits with 0 and prints the given notebook." {
@@ -45,8 +367,8 @@ one (${_GIT_REMOTE_URL})"
 
   _expected="one (${_GIT_REMOTE_URL})"
 
-  [[ "${output}" == "${_expected}"  ]]
-  [[ ${status} -eq 0                ]]
+  [[ "${status}"  -eq 0               ]]
+  [[ "${output}"  ==  "${_expected}"  ]]
 }
 
 @test "'notebooks <name> <name>' exits with 0 and prints the given notebooks." {
@@ -63,8 +385,8 @@ one (${_GIT_REMOTE_URL})"
 $(_color_primary 'home' --underline)"
   _compare "${_expected}" "${output}"
 
-  [[ "${output}" == "${_expected}"  ]]
-  [[ ${status} -eq 0                ]]
+  [[ "${status}"  -eq 0               ]]
+  [[ "${output}"  ==  "${_expected}"  ]]
 }
 
 @test "'notebooks <invalid>' exits with 1 and prints the given notebook." {
@@ -77,8 +399,8 @@ $(_color_primary 'home' --underline)"
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1                      ]]
-  [[ "${output}" =~ Notebook\ not\ found  ]]
+  [[ "${status}"  -eq 1                     ]]
+  [[ "${output}"  =~  Notebook\ not\ found  ]]
 }
 
 @test "'notebooks <name> --names' exits with 0 and prints the given notebook name." {
@@ -94,8 +416,8 @@ $(_color_primary 'home' --underline)"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${_expected}: '%s'\\n" "${_expected}"
 
-  [[ ${status} -eq 0                ]]
-  [[ "${output}" == "${_expected}"  ]]
+  [[ "${status}"  -eq 0               ]]
+  [[ "${output}"  ==  "${_expected}"  ]]
 }
 
 @test "'notebooks --names' exits with 0 and prints all notebook names." {
@@ -111,8 +433,8 @@ one"
   printf "\${output}: '%s'\\n" "${output}"
   printf "\${_expected}: '%s'\\n" "${_expected}"
 
-  [[ ${status} -eq 0                ]]
-  [[ "${output}" == "${_expected}"  ]]
+  [[ "${status}"  -eq 0               ]]
+  [[ "${output}"  ==  "${_expected}"  ]]
 }
 
 @test "'notebooks --no-color' exits with 0 and prints all notebook names with no highlighting." {
@@ -128,8 +450,8 @@ one"
   _expected="home
 one (${_GIT_REMOTE_URL})"
 
-  [[ "${output}" == "${_expected}"  ]]
-  [[ ${status} -eq 0                ]]
+  [[ "${status}"  -eq 0               ]]
+  [[ "${output}"  ==  "${_expected}"  ]]
 }
 
 @test "'notebooks <name> --no-color' exits with 0 and prints the given notebook name with no highlighting." {
@@ -144,8 +466,8 @@ one (${_GIT_REMOTE_URL})"
 
   _expected="home"
 
-  [[ "${output}" == "${_expected}"  ]]
-  [[ ${status} -eq 0                ]]
+  [[ "${status}"  -eq 0               ]]
+  [[ "${output}"  ==  "${_expected}"  ]]
 }
 
 @test "'notebooks --names --no-color' exits with 0 and prints all notebook names with no highlighting." {
@@ -161,8 +483,8 @@ one (${_GIT_REMOTE_URL})"
   _expected="home
 one"
 
-  [[ "${output}" == "${_expected}"  ]]
-  [[ ${status} -eq 0                ]]
+  [[ "${output}"  ==  "${_expected}"  ]]
+  [[ "${status}"  -eq 0               ]]
 }
 
 @test "'notebooks --names --no-color --archived' exits with 0 and prints archived." {
@@ -178,8 +500,8 @@ one"
 
   _expected="one"
 
-  [[ "${output}" == "${_expected}"  ]]
-  [[ ${status} -eq 0                ]]
+  [[ "${output}"  ==  "${_expected}"  ]]
+  [[ "${status}"  -eq 0               ]]
 }
 
 @test "'notebooks --names --no-color --unarchived' exits with 0 and prints unarchived." {
@@ -195,8 +517,8 @@ one"
 
   _expected="home"
 
-  [[ "${output}" == "${_expected}"  ]]
-  [[ ${status} -eq 0                ]]
+  [[ "${output}"  ==  "${_expected}"  ]]
+  [[ "${status}"  -eq 0               ]]
 }
 
 @test "'notebooks --names --no-color' prints local and global." {
@@ -207,7 +529,7 @@ one"
 
     cd "${_TMP_DIR}/example-local"
 
-    [[ "$(pwd)" == "${_TMP_DIR}/example-local" ]]
+    [[ "$(pwd)"   ==  "${_TMP_DIR}/example-local" ]]
   }
 
   run "${_NB}" notebooks --names --no-color
@@ -219,8 +541,8 @@ one"
 home
 one"
 
-  [[ "${output}" == "${_expected}"  ]]
-  [[ ${status} -eq 0                ]]
+  [[ "${output}"  ==  "${_expected}"  ]]
+  [[ "${status}"  -eq 0               ]]
 }
 
 @test "'notebooks --names --no-color --local' exits with 0 and prints local." {
@@ -231,7 +553,7 @@ one"
 
     cd "${_TMP_DIR}/example-local"
 
-    [[ "$(pwd)" == "${_TMP_DIR}/example-local" ]]
+    [[ "$(pwd)"   ==  "${_TMP_DIR}/example-local" ]]
   }
 
   run "${_NB}" notebooks --names --no-color --local
@@ -242,8 +564,8 @@ one"
 
   _expected="local"
 
-  [[ "${output}" == "${_expected}"  ]]
-  [[ ${status} -eq 0                ]]
+  [[ "${output}"  ==  "${_expected}"  ]]
+  [[ "${status}"  -eq 0               ]]
 }
 
 @test "'notebooks --names --no-color --local' with no local exits with 1." {
@@ -254,7 +576,7 @@ one"
 
     cd "${_TMP_DIR}"
 
-    [[ "$(pwd)" == "${_TMP_DIR}" ]]
+    [[ "$(pwd)"   ==  "${_TMP_DIR}"   ]]
   }
 
   run "${_NB}" notebooks --names --no-color --local
@@ -262,8 +584,8 @@ one"
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ -z "${output}"   ]]
-  [[ ${status} -eq 1  ]]
+  [[ -z "${output}"       ]]
+  [[    "${status}" -eq 1 ]]
 }
 
 @test "'notebooks --names --no-color --global' exits with 0 and prints global." {
@@ -280,8 +602,8 @@ one"
   _expected="home
 one"
 
-  [[ "${output}" == "${_expected}"  ]]
-  [[ ${status} -eq 0                ]]
+  [[ "${output}"  ==  "${_expected}"  ]]
+  [[ "${status}"  -eq 0               ]]
 }
 
 # `notebooks --paths` #########################################################
@@ -294,7 +616,7 @@ one"
 
     cd "${_TMP_DIR}/example-local"
 
-    [[ "$(pwd)" == "${_TMP_DIR}/example-local" ]]
+    [[ "$(pwd)"   ==  "${_TMP_DIR}/example-local" ]]
   }
 
   run "${_NB}" notebooks --paths
@@ -306,8 +628,8 @@ one"
 ${NB_DIR}/home
 ${NB_DIR}/one"
 
-  [[ "${output}" == "${_expected}"  ]]
-  [[ ${status} -eq 0                ]]
+  [[ "${output}"  ==  "${_expected}"  ]]
+  [[ "${status}"  -eq 0               ]]
 }
 
 @test "'notebooks --paths --local' exits with 0 and prints local." {
@@ -318,7 +640,7 @@ ${NB_DIR}/one"
 
     cd "${_TMP_DIR}/example-local"
 
-    [[ "$(pwd)" == "${_TMP_DIR}/example-local" ]]
+    [[ "$(pwd)"   ==  "${_TMP_DIR}/example-local" ]]
   }
 
   run "${_NB}" notebooks --paths --local
@@ -329,8 +651,8 @@ ${NB_DIR}/one"
 
   _expected="${_TMP_DIR}/example-local"
 
-  [[ "${output}" == "${_expected}"  ]]
-  [[ ${status} -eq 0                ]]
+  [[ "${output}"  ==  "${_expected}"  ]]
+  [[ "${status}"  -eq 0               ]]
 }
 
 @test "'notebooks --paths --local' with no local exits with 1." {
@@ -341,7 +663,7 @@ ${NB_DIR}/one"
 
     cd "${_TMP_DIR}"
 
-    [[ "$(pwd)" == "${_TMP_DIR}" ]]
+    [[ "$(pwd)"     ==  "${_TMP_DIR}" ]]
   }
 
   run "${_NB}" notebooks --paths --local
@@ -349,8 +671,8 @@ ${NB_DIR}/one"
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ -z "${output}"   ]]
-  [[ ${status} -eq 1  ]]
+  [[ -z "${output}"                   ]]
+  [[    "${status}" -eq 1             ]]
 }
 
 @test "'notebooks --paths --global' exits with 0 and prints global." {
@@ -367,8 +689,8 @@ ${NB_DIR}/one"
   _expected="${NB_DIR}/home
 ${NB_DIR}/one"
 
-  [[ "${output}" == "${_expected}"  ]]
-  [[ ${status} -eq 0                ]]
+  [[ "${output}"  ==  "${_expected}"  ]]
+  [[ "${status}"  -eq 0               ]]
 }
 
 # help ########################################################################
@@ -376,7 +698,7 @@ ${NB_DIR}/one"
 @test "'help notebooks' exits with status 0." {
   run "${_NB}" help notebooks
 
-  [[ ${status} -eq 0 ]]
+  [[ "${status}"    -eq 0                 ]]
 }
 
 @test "'help notebooks' prints help information." {
@@ -385,6 +707,6 @@ ${NB_DIR}/one"
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[0]}" =~ Usage.*:                        ]]
-  [[ "${lines[1]}" =~ \ \ nb\ notebooks\ \[\<name\>\] ]]
+  [[ "${lines[0]}"  =~  Usage.*:          ]]
+  [[ "${lines[1]}"  =~  \ \ nb\ notebooks ]]
 }

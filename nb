@@ -74,7 +74,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="6.1.0"
+_VERSION="6.1.1"
 
 # $_ME
 #
@@ -3607,8 +3607,8 @@ $(_color_primary "Usage"):
   ${_ME} move ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note)
           [-f | --force]
-  ${_ME} notebooks [<name>] [--archived] [--global] [--local] [--names]
-               [--paths] [--unarchived]
+  ${_ME} notebooks [<name> | <query>] [--ar | --archived] [--global] [--local]
+               [--names] [--paths] [--unar | --unarchived]
   ${_ME} notebooks add <name> [<remote-url> [<branch>]] [--author]
                    [--email <email>] [--name <name>]
   ${_ME} notebooks (archive | open | peek | status | unarchive) [<name>]
@@ -3621,7 +3621,7 @@ $(_color_primary "Usage"):
                     [--email <email>] [--name <name>]
   ${_ME} notebooks rename <old-name> <new-name>
   ${_ME} notebooks select <selector>
-  ${_ME} notebooks show (<name> | <path> | <selector>) [--archived]
+  ${_ME} notebooks show (<name> | <path> | <selector>) [--ar | --archived]
                     [--escaped | --name | --path | --filename [<filename>]]
   ${_ME} notebooks use <name>
   ${_ME} open ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
@@ -4531,7 +4531,7 @@ _list() {
           _limit="${__arg:2}"
         elif [[   "${__arg:-}" =~ ^--         ]]
         then
-          if [[ ! "${__arg:-}" =~ archived    ]]
+          if ! _contains "${__arg:-}" "--ar" "--archived" "--unar" "--unarchived"
           then
             _type="${__arg:2}"
           fi
@@ -5256,8 +5256,15 @@ Help information:
   $(_color_primary "${_ME} help")
 HEREDOC
           else
+            if [[ "${_type:-}" =~ ^folder$|^folders$ ]]
+            then
+              local _empty_type_label="folders"
+            else
+              local _empty_type_label="${_type} files"
+            fi
+
             cat <<HEREDOC
-0 ${_type} files.
+0 ${_empty_type_label}.
 
 Import a file:
   $(_color_primary "${_ME} import (<path> | <url>)${_maybe_id_path_context_padded_left:-}")
@@ -5723,7 +5730,7 @@ _ls() {
     local __val="${2:-}"
 
     case "${__arg}" in
-      --added|--updated)
+      --added|--ar|--archived|--unar|--unarchived|--updated)
         _delegate_arguments+=("${__arg}")
         ;;
       -a|--all)
@@ -5835,6 +5842,10 @@ _ls() {
       for ((i=0; i < "${#_delegate_arguments[@]}"; i++))
       do
         case "${_delegate_arguments[i]:-}" in
+          --ar*|--unar*)
+            _defer "_notebooks" list "${_delegate_arguments[@]:-}"
+            return 0
+            ;;
           --added|--updated)
             if [[ -n "${_selector:-}" ]]
             then
@@ -5928,7 +5939,7 @@ _ls() {
         _list --error-on-empty "${_list_options[@]:-}" 2>&1 >&3 3>&-
       )"
     } 3>&1 || {
-      if [[ -n "${_arguments[*]:-}" ]]
+      if [[ -n "${_arguments[*]:-}" ]] && [[ ! "${_arguments[0]:-}" =~ ^-- ]]
       then
         local _maybe_notebook_name="${_arguments[0]:-}"
 
@@ -6067,8 +6078,8 @@ _ls() {
 _describe_notebooks() {
   cat <<HEREDOC
 $(_color_primary "Usage"):
-  ${_ME} notebooks [<name>] [--archived] [--global] [--local] [--names]
-               [--paths] [--unarchived]
+  ${_ME} notebooks [<name> | <query>] [--ar | --archived] [--global] [--local]
+               [--names] [--paths] [--unar | --unarchived]
   ${_ME} notebooks add <name> [<remote-url> [<branch>]] [--author]
                    [--email <email>] [--name <name>]
   ${_ME} notebooks (archive | open | peek | status | unarchive) [<name>]
@@ -6081,12 +6092,12 @@ $(_color_primary "Usage"):
                     [--email <email>] [--name <name>]
   ${_ME} notebooks rename <old-name> <new-name>
   ${_ME} notebooks select <selector>
-  ${_ME} notebooks show (<name> | <path> | <selector>) [--archived]
+  ${_ME} notebooks show (<name> | <path> | <selector>) [--ar | --archived]
                     [--escaped | --name | --path | --filename [<filename>]]
   ${_ME} notebooks use <name>
 
 $(_color_primary "Options"):
-  --archived               List archived notebooks, or return archival status
+  --ar, --archived         List archived notebooks, or return archival status
                            with \`show\`.
   --author                 Set the notebook's commit author email and name.
   --email <email>          Set the notebook's commit author email to <email>.
@@ -6105,7 +6116,7 @@ $(_color_primary "Options"):
   --path, --paths          Print the notebook path.
   --selected               Exit with 0 if the current notebook differs from
                            the current global notebook, otherwise exit with 1.
-  --unarchived             Only list unarchived notebooks.
+  --unar, --unarchived     Only list unarchived notebooks.
 
 $(_color_primary "Subcommands"):
   (default)  List notebooks.
@@ -6151,10 +6162,10 @@ $(_color_primary "Examples"):
   ${_ME} notebooks --names
   ${_ME} notebooks add sample
   ${_ME} notebooks add example https://github.com/example/example.git
-  ${_ME} n current --path
-  ${_ME} n archive example
+  ${_ME} nb current --path
+  ${_ME} nb archive example
 
-$(_color_primary "Shortcut Alias"): \`${_ME} n\`
+$(_color_primary "Shortcut Aliases"): \`${_ME} n\`, \`${_ME} nb\`
 HEREDOC
 }
 _RESERVED_NOTEBOOK_NAMES=(
@@ -6937,8 +6948,8 @@ HEREDOC
   # _notebooks_list()
   #
   # Usage:
-  #   _notebooks_list [<name>] [--archived] [--local] [--global] [--names]
-  #                   [--paths] [--unarchived]
+  #   _notebooks_list [<name> | <query>] [--ar | --archived] [--local]
+  #                   [--global] [--names] [--paths] [--unar | --unarchived]
   _notebooks_list() {
     local _counter=0
     local _query_names=()
@@ -6951,19 +6962,26 @@ HEREDOC
     local _only_names=0
     local _only_paths=0
     local _only_unarchived=0
+    local _options=()
 
     local __arg=
     for   __arg in "${@:-}"
     do
       case "${__arg}" in
-        --archived)
-          _only_archived=1
+        --archived|--global|--local|--name*|--no*color|--path*|--unarchived)
+          _options+=("${__arg}")
           ;;
-        --local)
-          _only_local=1
+      esac
+
+      case "${__arg}" in
+        --ar|--archived)
+          _only_archived=1
           ;;
         --global)
           _only_global=1
+          ;;
+        --local)
+          _only_local=1
           ;;
         --name*)
           _only_names=1
@@ -6974,7 +6992,7 @@ HEREDOC
         --path*)
           _only_paths=1
           ;;
-        --unarchived)
+        --unar|--unarchived)
           _only_unarchived=1
           ;;
         *)
@@ -6983,7 +7001,7 @@ HEREDOC
       esac
     done
 
-    if [[ -z "${NB_DIR}" ]] || [[ ! -e "${NB_DIR}" ]]
+    if [[ -z "${NB_DIR}" ]] || [[ ! -e "${NB_DIR}"  ]]
     then
       exit 1
     fi
@@ -7013,7 +7031,7 @@ HEREDOC
       do
         _notebook_names+=("${__name}")
 
-        if [[ "${__name}" == "local" ]]
+        if [[ "${__name}" == "local"                ]]
         then
           _notebook_paths+=("${_LOCAL_NOTEBOOK_PATH}")
         else
@@ -7025,14 +7043,14 @@ HEREDOC
     local i=
     for ((i=0; i < "${#_notebook_names[@]}"; i++))
     do
-      if [[ -e "${_notebook_paths[i]}/.git" ]]
+      if [[ -e "${_notebook_paths[i]}/.git"         ]]
       then # it's a git repository.
         local _notebook_line=
         local _origin_url=
 
         if [[ "${i}" == "0" ]]                       &&
-           [[ "${_notebook_names[i]}" == "local"  ]] &&
-           [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"      ]]
+           [[ "${_notebook_names[i]}" == "local"    ]] &&
+           [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"        ]]
         then # local notebook as first notebook
           if ((_only_global))
           then
@@ -7051,7 +7069,7 @@ HEREDOC
           fi
         elif ((_only_local))
         then
-          if [[ -z "${_LOCAL_NOTEBOOK_PATH:-}" ]]
+          if [[ -z "${_LOCAL_NOTEBOOK_PATH:-}"      ]]
           then
             return 1
           else
@@ -7069,7 +7087,7 @@ HEREDOC
             then # it's the current repository.
               _notebook_line="$(_color_primary "${_notebook_names[i]}")"
 
-              if [[ "${#_notebook_names[@]}" -gt 1 ]]
+              if [[ "${#_notebook_names[@]}" -gt 1  ]]
               then
                 _notebook_line="$(
                   _color_primary "${_notebook_names[i]}" --underline
@@ -7081,7 +7099,7 @@ HEREDOC
           fi
         fi
 
-        if [[ -e "${_notebook_paths[i]}/.archived" ]]
+        if [[ -e "${_notebook_paths[i]}/.archived"  ]]
         then
           if ((_only_unarchived))
           then
@@ -7101,25 +7119,40 @@ HEREDOC
             git -C "${_notebook_paths[i]}" config --get remote.origin.url || echo ''
           )"
 
-          if [[ -n "${_origin_url:-}" ]]
+          if [[ -n "${_origin_url:-}"   ]]
           then
             _notebook_line="${_notebook_line} (${_origin_url})"
           fi
         fi
 
-        printf "%s\\n" "${_notebook_line}"
-        _counter=$((_counter+1))
+        if [[ -n "${_notebook_line:-}"  ]]
+        then
+          printf "%s\\n" "${_notebook_line:-}"
+
+          _counter=$((_counter+1))
+        fi
       fi
     done
 
     if ! ((_counter))
     then
-      if [[ -n "${_query_names[*]:-}" ]]
+      if [[ -n "${_query_names[*]:-}"   ]]
       then
-        _warn printf                  \
-          "Notebook not found: %s\\n" \
-          "$(_color_primary "${_query_names[*]}" | tr '\r\n' ' ')" &&
-            return 1
+        {
+          local _query_pattern=
+          _query_pattern="$(_join "|" "${_query_names[@]:-}")"
+
+          {
+            _notebooks_list "${_options[@]}"  2>/dev/null
+          } | {
+            grep -i "${_query_pattern:-}"     2>/dev/null
+          }
+        } || {
+          _warn printf                      \
+            "Notebook not found: %s\\n"     \
+            "$(_color_primary "${_query_names[*]}" | tr '\r\n' ' ')" &&
+              return 1
+        }
       else
         return 1
       fi
