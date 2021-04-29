@@ -6965,7 +6965,6 @@ HEREDOC
       case "${__arg}" in
         --archived)
           _only_archived=1
-          _options+=("${__arg}")
           ;;
         --global)
           _only_global=1
