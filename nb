@@ -5256,8 +5256,15 @@ Help information:
   $(_color_primary "${_ME} help")
 HEREDOC
           else
+            if [[ "${_type:-}" =~ ^folder$|^folders$ ]]
+            then
+              local _empty_type_label="folders"
+            else
+              local _empty_type_label="${_type} files"
+            fi
+
             cat <<HEREDOC
-0 ${_type} files.
+0 ${_empty_type_label}.
 
 Import a file:
   $(_color_primary "${_ME} import (<path> | <url>)${_maybe_id_path_context_padded_left:-}")
