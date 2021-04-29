@@ -3522,12 +3522,16 @@ To set the syntax highlighting color theme, use:
 HEREDOC
     elif [[ -z "${_arguments[*]:-}" ]] || ((_short))
     then
-      _color_primary    "__          _"
-      _color_primary    "\ \   _ __ | |__"
-      _color_primary    " \ \ | '_ \| '_ \\"
-      _color_primary    " / / | | | | |_) |"
-      _color_primary    "/_/  |_| |_|_.__/"
-      _color_secondary  "------------------"
+      _color_primary    " __          _"
+      _color_primary    " \ \   _ __ | |__"
+      _color_primary    "  \ \ | '_ \| '_ \\"
+      _color_primary    "  / / | | | | |_) |"
+      _color_primary    " /_/  |_| |_|_.__/"
+
+      printf "\\n"
+
+      _print_line "$(printf "%-${_COLUMNS}s" '.')"
+
       cat <<HEREDOC
 
 $(_color_brackets "nb") Command line and local web note-taking, bookmarking, and archiving with
