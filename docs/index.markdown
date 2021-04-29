@@ -4613,8 +4613,8 @@ Usage:
   nb move ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note)
           [-f | --force]
-  nb notebooks [<name> | <query>] [--archived] [--global] [--local] [--names]
-               [--paths] [--unarchived]
+  nb notebooks [<name> | <query>] [--ar | --archived] [--global] [--local]
+               [--names] [--paths] [--unar | --unarchived]
   nb notebooks add <name> [<remote-url> [<branch>]] [--author]
                    [--email <email>] [--name <name>]
   nb notebooks (archive | open | peek | status | unarchive) [<name>]
@@ -4627,7 +4627,7 @@ Usage:
                     [--email <email>] [--name <name>]
   nb notebooks rename <old-name> <new-name>
   nb notebooks select <selector>
-  nb notebooks show (<name> | <path> | <selector>) [--archived]
+  nb notebooks show (<name> | <path> | <selector>) [--ar | --archived]
                     [--escaped | --name | --path | --filename [<filename>]]
   nb notebooks use <name>
   nb open ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
@@ -4938,6 +4938,11 @@ Description:
   Set the current notebook or notebook <name> to "archived" status.
 
   This is an alias for `nb notebooks archive`.
+
+See Also:
+  nb help notebooks
+  nb help status
+  nb help unarchive
 
 Examples:
   nb archive
@@ -5578,8 +5583,8 @@ Shortcut Alias: `nb mv`
 
 ```text
 Usage:
-  nb notebooks [<name> | <query>] [--archived] [--global] [--local] [--names]
-               [--paths] [--unarchived]
+  nb notebooks [<name> | <query>] [--ar | --archived] [--global] [--local]
+               [--names] [--paths] [--unar | --unarchived]
   nb notebooks add <name> [<remote-url> [<branch>]] [--author]
                    [--email <email>] [--name <name>]
   nb notebooks (archive | open | peek | status | unarchive) [<name>]
@@ -5592,12 +5597,12 @@ Usage:
                     [--email <email>] [--name <name>]
   nb notebooks rename <old-name> <new-name>
   nb notebooks select <selector>
-  nb notebooks show (<name> | <path> | <selector>) [--archived]
+  nb notebooks show (<name> | <path> | <selector>) [--ar | --archived]
                     [--escaped | --name | --path | --filename [<filename>]]
   nb notebooks use <name>
 
 Options:
-  --archived               List archived notebooks, or return archival status
+  --ar, --archived         List archived notebooks, or return archival status
                            with `show`.
   --author                 Set the notebook's commit author email and name.
   --email <email>          Set the notebook's commit author email to <email>.
@@ -5616,7 +5621,7 @@ Options:
   --path, --paths          Print the notebook path.
   --selected               Exit with 0 if the current notebook differs from
                            the current global notebook, otherwise exit with 1.
-  --unarchived             Only list unarchived notebooks.
+  --unar, --unarchived     Only list unarchived notebooks.
 
 Subcommands:
   (default)  List notebooks.
@@ -5657,6 +5662,14 @@ Subcommands:
 
 Description:
   Manage notebooks.
+
+See Also:
+  nb help archive
+  nb help remote
+  nb help status
+  nb help sync
+  nb help unarchive
+  nb help use
 
 Examples:
   nb notebooks --names
@@ -5745,6 +5758,9 @@ Usage:
 Description:
   Pin an item so it appears first in lists.
 
+See Also:
+  nb help unpin
+
 Examples:
   nb pin 123
   nb pin example:sample/321
@@ -5791,6 +5807,9 @@ Subcommands:
 
 Description:
   Get, set, and remove a notebook's remote repository URL and branch.
+
+See Also:
+  nb help sync
 
 Examples:
   nb remote set https://github.com/example/example.git
@@ -5917,6 +5936,9 @@ Description:
 
     nb set color_theme blacklight
     nb set limit 40
+
+See Also:
+  nb help unset
 
 Examples:
   nb settings
@@ -6269,6 +6291,14 @@ Usage:
 Description:
   Print archival, git, and remote status for the current notebook or <notebook>.
 
+See Also:
+  nb help archive
+  nb help notebooks
+  nb help remote
+  nb help status
+  nb help sync
+  nb help unarchive
+
 Examples:
   nb status
   nb status example
@@ -6332,6 +6362,15 @@ Sync Conflict Resolution:
 
   More Information:
     https://github.com/xwmx/nb#sync-conflict-resolution
+
+See Also:
+  nb help notebooks
+  nb help remote
+  nb help status
+
+Examples:
+  nb sync
+  nb sync --all
 ```
 
 #### `unarchive`
@@ -6344,6 +6383,11 @@ Description:
   Remove "archived" status from the current notebook or notebook <name>.
 
   This is an alias for `nb notebooks unarchive`.
+
+See Also:
+  nb help archive
+  nb help notebooks
+  nb help status
 
 Examples:
   nb unarchive
@@ -6361,6 +6405,9 @@ Usage:
 Description:
   Unpin a pinned item.
 
+See Also:
+  nb help pin
+
 Examples:
   nb unpin 123
   nb unpin example:sample/321
@@ -6376,6 +6423,9 @@ Description:
   Unset a setting, returning it to the default value.
 
   This is an alias for `nb settings unset`.
+
+See Also:
+  nb help settings
 
 Examples:
   nb unset color_primary

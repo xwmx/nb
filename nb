@@ -6172,6 +6172,14 @@ $(_color_primary "Subcommands"):
 $(_color_primary "Description"):
   Manage notebooks.
 
+$(_color_primary "See Also"):
+  ${_ME} help archive
+  ${_ME} help remote
+  ${_ME} help status
+  ${_ME} help sync
+  ${_ME} help unarchive
+  ${_ME} help use
+
 $(_color_primary "Examples"):
   ${_ME} notebooks --names
   ${_ME} notebooks add sample
@@ -13502,6 +13510,9 @@ $(_color_primary "Usage"):
 $(_color_primary "Description"):
   Pin an item so it appears first in lists.
 
+$(_color_primary "See Also"):
+  ${_ME} help unpin
+
 $(_color_primary "Examples"):
   ${_ME} pin 123
   ${_ME} pin example:sample/321
@@ -15631,6 +15642,9 @@ $(_color_primary "Usage"):
 $(_color_primary "Description"):
   Unpin a pinned item.
 
+$(_color_primary "See Also"):
+  ${_ME} help pin
+
 $(_color_primary "Examples"):
   ${_ME} unpin 123
   ${_ME} unpin example:sample/321
@@ -15705,6 +15719,11 @@ $(_color_primary "Description"):
   Set the current notebook or notebook <name> to "archived" status.
 
   This is an alias for \`${_ME} notebooks archive\`.
+
+$(_color_primary "See Also"):
+  ${_ME} help notebooks
+  ${_ME} help status
+  ${_ME} help unarchive
 
 $(_color_primary "Examples"):
   ${_ME} archive
@@ -18553,6 +18572,9 @@ $(_color_primary "Subcommands"):
 $(_color_primary "Description"):
   Get, set, and remove a notebook's remote repository URL and branch.
 
+$(_color_primary "See Also"):
+  ${_ME} help sync
+
 $(_color_primary "Examples"):
   ${_ME} remote set https://github.com/example/example.git
   ${_ME} remote remove
@@ -18980,6 +19002,9 @@ $(_color_primary "Description"):
 
     ${_ME} set color_theme blacklight
     ${_ME} set limit 40
+
+$(_color_primary "See Also"):
+  ${_ME} help unset
 
 $(_color_primary "Examples"):
   ${_ME} settings
@@ -19841,6 +19866,14 @@ $(_color_primary "Usage"):
 $(_color_primary "Description"):
   Print archival, git, and remote status for the current notebook or <notebook>.
 
+$(_color_primary "See Also"):
+  ${_ME} help archive
+  ${_ME} help notebooks
+  ${_ME} help remote
+  ${_ME} help status
+  ${_ME} help sync
+  ${_ME} help unarchive
+
 $(_color_primary "Examples"):
   ${_ME} status
   ${_ME} status example
@@ -19943,6 +19976,15 @@ $(_color_primary "Sync Conflict Resolution"):
 
   More Information:
     https://github.com/xwmx/nb#sync-conflict-resolution
+
+$(_color_primary "See Also"):
+  ${_ME} help notebooks
+  ${_ME} help remote
+  ${_ME} help status
+
+$(_color_primary "Examples"):
+  ${_ME} sync
+  ${_ME} sync --all
 HEREDOC
 }
 _sync() {
@@ -20116,6 +20158,11 @@ $(_color_primary "Description"):
 
   This is an alias for \`${_ME} notebooks unarchive\`.
 
+$(_color_primary "See Also"):
+  ${_ME} help archive
+  ${_ME} help notebooks
+  ${_ME} help status
+
 $(_color_primary "Examples"):
   ${_ME} unarchive
   ${_ME} unarchive example
@@ -20139,6 +20186,9 @@ $(_color_primary "Description"):
   Unset a setting, returning it to the default value.
 
   This is an alias for \`${_ME} settings unset\`.
+
+$(_color_primary "See Also"):
+  ${_ME} help settings
 
 $(_color_primary "Examples"):
   ${_ME} unset color_primary

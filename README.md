@@ -4933,6 +4933,11 @@ Description:
 
   This is an alias for `nb notebooks archive`.
 
+See Also:
+  nb help notebooks
+  nb help status
+  nb help unarchive
+
 Examples:
   nb archive
   nb archive example
@@ -5652,6 +5657,14 @@ Subcommands:
 Description:
   Manage notebooks.
 
+See Also:
+  nb help archive
+  nb help remote
+  nb help status
+  nb help sync
+  nb help unarchive
+  nb help use
+
 Examples:
   nb notebooks --names
   nb notebooks add sample
@@ -5739,6 +5752,9 @@ Usage:
 Description:
   Pin an item so it appears first in lists.
 
+See Also:
+  nb help unpin
+
 Examples:
   nb pin 123
   nb pin example:sample/321
@@ -5785,6 +5801,9 @@ Subcommands:
 
 Description:
   Get, set, and remove a notebook's remote repository URL and branch.
+
+See Also:
+  nb help sync
 
 Examples:
   nb remote set https://github.com/example/example.git
@@ -5911,6 +5930,9 @@ Description:
 
     nb set color_theme blacklight
     nb set limit 40
+
+See Also:
+  nb help unset
 
 Examples:
   nb settings
@@ -6263,6 +6285,14 @@ Usage:
 Description:
   Print archival, git, and remote status for the current notebook or <notebook>.
 
+See Also:
+  nb help archive
+  nb help notebooks
+  nb help remote
+  nb help status
+  nb help sync
+  nb help unarchive
+
 Examples:
   nb status
   nb status example
@@ -6326,6 +6356,15 @@ Sync Conflict Resolution:
 
   More Information:
     https://github.com/xwmx/nb#sync-conflict-resolution
+
+See Also:
+  nb help notebooks
+  nb help remote
+  nb help status
+
+Examples:
+  nb sync
+  nb sync --all
 ```
 
 #### `unarchive`
@@ -6338,6 +6377,11 @@ Description:
   Remove "archived" status from the current notebook or notebook <name>.
 
   This is an alias for `nb notebooks unarchive`.
+
+See Also:
+  nb help archive
+  nb help notebooks
+  nb help status
 
 Examples:
   nb unarchive
@@ -6355,6 +6399,9 @@ Usage:
 Description:
   Unpin a pinned item.
 
+See Also:
+  nb help pin
+
 Examples:
   nb unpin 123
   nb unpin example:sample/321
@@ -6370,6 +6417,9 @@ Description:
   Unset a setting, returning it to the default value.
 
   This is an alias for `nb settings unset`.
+
+See Also:
+  nb help settings
 
 Examples:
   nb unset color_primary
