@@ -3607,8 +3607,8 @@ $(_color_primary "Usage"):
   ${_ME} move ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note)
           [-f | --force]
-  ${_ME} notebooks [<name> | <query>] [--archived] [--global] [--local] [--names]
-               [--paths] [--unarchived]
+  ${_ME} notebooks [<name> | <query>] [--ar | --archived] [--global] [--local]
+               [--names] [--paths] [--unar | --unarchived]
   ${_ME} notebooks add <name> [<remote-url> [<branch>]] [--author]
                    [--email <email>] [--name <name>]
   ${_ME} notebooks (archive | open | peek | status | unarchive) [<name>]
@@ -3621,7 +3621,7 @@ $(_color_primary "Usage"):
                     [--email <email>] [--name <name>]
   ${_ME} notebooks rename <old-name> <new-name>
   ${_ME} notebooks select <selector>
-  ${_ME} notebooks show (<name> | <path> | <selector>) [--archived]
+  ${_ME} notebooks show (<name> | <path> | <selector>) [--ar | --archived]
                     [--escaped | --name | --path | --filename [<filename>]]
   ${_ME} notebooks use <name>
   ${_ME} open ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
@@ -6074,8 +6074,8 @@ _ls() {
 _describe_notebooks() {
   cat <<HEREDOC
 $(_color_primary "Usage"):
-  ${_ME} notebooks [<name> | <query>] [--archived] [--global] [--local] [--names]
-               [--paths] [--unarchived]
+  ${_ME} notebooks [<name> | <query>] [--ar | --archived] [--global] [--local]
+               [--names] [--paths] [--unar | --unarchived]
   ${_ME} notebooks add <name> [<remote-url> [<branch>]] [--author]
                    [--email <email>] [--name <name>]
   ${_ME} notebooks (archive | open | peek | status | unarchive) [<name>]
@@ -6088,12 +6088,12 @@ $(_color_primary "Usage"):
                     [--email <email>] [--name <name>]
   ${_ME} notebooks rename <old-name> <new-name>
   ${_ME} notebooks select <selector>
-  ${_ME} notebooks show (<name> | <path> | <selector>) [--archived]
+  ${_ME} notebooks show (<name> | <path> | <selector>) [--ar | --archived]
                     [--escaped | --name | --path | --filename [<filename>]]
   ${_ME} notebooks use <name>
 
 $(_color_primary "Options"):
-  --archived               List archived notebooks, or return archival status
+  --ar, --archived         List archived notebooks, or return archival status
                            with \`show\`.
   --author                 Set the notebook's commit author email and name.
   --email <email>          Set the notebook's commit author email to <email>.
@@ -6112,7 +6112,7 @@ $(_color_primary "Options"):
   --path, --paths          Print the notebook path.
   --selected               Exit with 0 if the current notebook differs from
                            the current global notebook, otherwise exit with 1.
-  --unarchived             Only list unarchived notebooks.
+  --unar, --unarchived     Only list unarchived notebooks.
 
 $(_color_primary "Subcommands"):
   (default)  List notebooks.
@@ -6944,8 +6944,8 @@ HEREDOC
   # _notebooks_list()
   #
   # Usage:
-  #   _notebooks_list [<name> | <query>] [--archived] [--local] [--global]
-  #                   [--names] [--paths] [--unarchived]
+  #   _notebooks_list [<name> | <query>] [--ar | --archived] [--local]
+  #                   [--global] [--names] [--paths] [--unar | --unarchived]
   _notebooks_list() {
     local _counter=0
     local _query_names=()
@@ -6970,7 +6970,7 @@ HEREDOC
       esac
 
       case "${__arg}" in
-        --archived)
+        --ar|--archived)
           _only_archived=1
           ;;
         --global)
@@ -6988,7 +6988,7 @@ HEREDOC
         --path*)
           _only_paths=1
           ;;
-        --unarchived)
+        --unar|--unarchived)
           _only_unarchived=1
           ;;
         *)

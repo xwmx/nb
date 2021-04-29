@@ -14,6 +14,149 @@ _setup_notebooks() {
   cd "${NB_DIR}" || return 1
 }
 
+# --archived / --unarchived ###################################################
+
+@test "'notebooks --archived' works with filtering." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" notebooks add "Sample Query Notebook"
+    "${_NB}" notebooks add "Demo Query Notebook"
+    "${_NB}" notebooks add "Test Notebook"
+
+    "${_NB}" archive "Sample Query Notebook"
+    "${_NB}" archive "Demo Query Notebook"
+    "${_NB}" archive "Test Notebook"
+  }
+
+  run "${_NB}" notebooks --archived query
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    -eq 0                                      ]]
+  [[    "${#lines[@]}" -eq 2                                      ]]
+
+  [[ !  "${output}"    =~  home                                   ]]
+  [[ !  "${output}"    =~  Example\ Notebook                      ]]
+  [[    "${output}"    =~  Sample\ Query\ Notebook\ \(archived\)  ]]
+  [[    "${output}"    =~  Demo\ Query\ Notebook\ \(archived\)    ]]
+  [[ !  "${output}"    =~  Test\ Notebook                         ]]
+}
+
+@test "'notebooks --ar' exits with 0 and prints archived notebooks." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" notebooks add "Sample Notebook"
+    "${_NB}" notebooks add "Demo Notebook"
+    "${_NB}" notebooks add "Test Notebook"
+
+    "${_NB}" archive "Sample Notebook"
+    "${_NB}" archive "Test Notebook"
+  }
+
+  run "${_NB}" notebooks --ar
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    -eq 0                              ]]
+  [[    "${#lines[@]}" -eq 2                              ]]
+
+  [[ !  "${output}"    =~  home                           ]]
+  [[ !  "${output}"    =~  Example\ Notebook              ]]
+  [[    "${output}"    =~  Sample\ Notebook\ \(archived\) ]]
+  [[ !  "${output}"    =~  Demo\ Notebook                 ]]
+  [[    "${output}"    =~  Test\ Notebook\ \(archived\)   ]]
+}
+
+@test "'notebooks --archived' exits with 0 and prints archived notebooks." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" notebooks add "Sample Notebook"
+    "${_NB}" notebooks add "Demo Notebook"
+    "${_NB}" notebooks add "Test Notebook"
+
+    "${_NB}" archive "Sample Notebook"
+    "${_NB}" archive "Test Notebook"
+  }
+
+  run "${_NB}" notebooks --archived
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    -eq 0                              ]]
+  [[    "${#lines[@]}" -eq 2                              ]]
+
+  [[ !  "${output}"    =~  home                           ]]
+  [[ !  "${output}"    =~  Example\ Notebook              ]]
+  [[    "${output}"    =~  Sample\ Notebook\ \(archived\) ]]
+  [[ !  "${output}"    =~  Demo\ Notebook                 ]]
+  [[    "${output}"    =~  Test\ Notebook\ \(archived\)   ]]
+}
+
+@test "'notebooks --unarchived' exits with 0 and prints unarchived notebooks." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" notebooks add "Sample Notebook"
+    "${_NB}" notebooks add "Demo Notebook"
+    "${_NB}" notebooks add "Test Notebook"
+
+    "${_NB}" archive "Sample Notebook"
+    "${_NB}" archive "Test Notebook"
+  }
+
+  run "${_NB}" notebooks --unarchived
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    -eq 0                  ]]
+  [[    "${#lines[@]}" -eq 3                  ]]
+
+  [[    "${output}"    =~  home               ]]
+  [[    "${output}"    =~  Example\ Notebook  ]]
+  [[ !  "${output}"    =~  Sample\ Notebook   ]]
+  [[    "${output}"    =~  Demo\ Notebook     ]]
+  [[ !  "${output}"    =~  Test\ Notebook     ]]
+}
+
+@test "'notebooks --unar' exits with 0 and prints unarchived notebooks." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" notebooks add "Sample Notebook"
+    "${_NB}" notebooks add "Demo Notebook"
+    "${_NB}" notebooks add "Test Notebook"
+
+    "${_NB}" archive "Sample Notebook"
+    "${_NB}" archive "Test Notebook"
+  }
+
+  run "${_NB}" notebooks --unar
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    -eq 0                  ]]
+  [[    "${#lines[@]}" -eq 3                  ]]
+
+  [[    "${output}"    =~  home               ]]
+  [[    "${output}"    =~  Example\ Notebook  ]]
+  [[ !  "${output}"    =~  Sample\ Notebook   ]]
+  [[    "${output}"    =~  Demo\ Notebook     ]]
+  [[ !  "${output}"    =~  Test\ Notebook     ]]
+}
+
 # notebook name filtering #####################################################
 
 @test "'notebooks --not-valid-option-or-query' exits with 1 and prints message." {
