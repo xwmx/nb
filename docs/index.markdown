@@ -5809,6 +5809,8 @@ Description:
   Get, set, and remove a notebook's remote repository URL and branch.
 
 See Also:
+  nb help notebooks
+  nb help status
   nb help sync
 
 Examples:

@@ -10407,6 +10407,9 @@ $(_color_primary "Description"):
   note with AES-256 using OpenSSL by default, or GPG, if configured in
   \`${_ME} set encryption_tool\`.
 
+$(_color_primary "See Also"):
+  ${_ME} help browse
+
 $(_color_primary "Examples"):
   ${_ME} add
   ${_ME} add example.md
@@ -10975,6 +10978,12 @@ $(_color_primary "Description"):
     3. https://en.wikipedia.org/wiki/W3m
     4. https://en.wikipedia.org/wiki/Links_(web_browser)
     5. https://en.wikipedia.org/wiki/Lynx_(web_browser)
+
+$(_color_primary "See Also"):
+  ${_ME} help browse
+  ${_ME} help open
+  ${_ME} help peek
+  ${_ME} help show
 
 $(_color_primary "Examples"):
   ${_ME} https://example.com
@@ -11920,6 +11929,9 @@ $(_color_primary "Options"):
 $(_color_primary "Description"):
   Delete one or more items.
 
+$(_color_primary "See Also"):
+  ${_ME} help browse
+
 $(_color_primary "Examples"):
   ${_ME} delete 3
   ${_ME} delete example.md
@@ -12101,6 +12113,9 @@ $(_color_primary "Description"):
 
   Non-text files are opened in your system's preferred app or program for
   that file type.
+
+$(_color_primary "See Also"):
+  ${_ME} help browse
 
 $(_color_primary "Examples"):
   ${_ME} edit 3
@@ -13440,7 +13455,9 @@ $(_color_primary "Examples"):
 
 $(_color_primary "See also"):
   ${_ME} help bookmark
-  ${_ME} help edit
+  ${_ME} help browse
+  ${_ME} help peek
+  ${_ME} help show
 
 $(_color_primary "Shortcut Alias"): \`${_ME} o\`
 HEREDOC
@@ -13488,6 +13505,8 @@ $(_color_primary "Examples"):
 
 $(_color_primary "See also"):
   ${_ME} help bookmark
+  ${_ME} help browse
+  ${_ME} help open
   ${_ME} help show
 
 $(_color_primary "Alias"): \`${_ME} preview\`
@@ -14855,6 +14874,11 @@ $(_color_primary "Description"):
     6. http://www.andre-simon.de/doku/highlight/en/highlight.php
     7. https://pygments.org/
 
+$(_color_primary "See Also"):
+  ${_ME} help browse
+  ${_ME} help open
+  ${_ME} help peek
+
 $(_color_primary "Examples"):
   ${_ME} show 1
   ${_ME} show example.md --render
@@ -15802,6 +15826,11 @@ $(_color_primary "Description"):
     3. https://en.wikipedia.org/wiki/Lynx_(web_browser)
     4. https://nmap.org/ncat/
     5. https://pandoc.org/
+
+$(_color_primary "See Also"):
+  ${_ME} help open
+  ${_ME} help peek
+  ${_ME} help show
 
 $(_color_primary "Examples"):
   ${_ME} browse
@@ -18578,6 +18607,8 @@ $(_color_primary "Description"):
   Get, set, and remove a notebook's remote repository URL and branch.
 
 $(_color_primary "See Also"):
+  ${_ME} help notebooks
+  ${_ME} help status
   ${_ME} help sync
 
 $(_color_primary "Examples"):
