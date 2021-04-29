@@ -25,13 +25,19 @@ line four
 HEREDOC
 }
 
-# `ls --type` #################################################################
+# --archived / --unarchived ###################################################
 
-@test "'ls' ignores --ar, --archived, --unar, and --unarchived options." {
+@test "'ls' delegates --ar, --archived, --unar, and --unarchived options to 'notebooks'." {
   {
     "${_NB}" init
-    "${_NB}" add "File One.md" --content "Example content one."
-    "${_NB}" add "File Two.md" --content "Example content two."
+
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" notebooks add "Sample Notebook"
+    "${_NB}" notebooks add "Demo Notebook"
+    "${_NB}" notebooks add "Test Notebook"
+
+    "${_NB}" archive "Sample Notebook"
+    "${_NB}" archive "Test Notebook"
   }
 
   run "${_NB}" ls --ar
@@ -39,45 +45,59 @@ HEREDOC
   printf "\${status}:     '%s'\\n" "${status}"
   printf "\${output}:     '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0                           ]]
+  [[    "${status}"    -eq 0                              ]]
+  [[    "${#lines[@]}" -eq 2                              ]]
 
-  [[ "${#lines[@]}" ==  2                           ]]
-  [[ "${output}"    =~  \[.*2.*\].*\ File\ Two\.md  ]]
-  [[ "${output}"    =~  \[.*1.*\].*\ File\ One\.md  ]]
+  [[ !  "${output}"    =~  home                           ]]
+  [[ !  "${output}"    =~  Example\ Notebook              ]]
+  [[    "${output}"    =~  Sample\ Notebook\ \(archived\) ]]
+  [[ !  "${output}"    =~  Demo\ Notebook                 ]]
+  [[    "${output}"    =~  Test\ Notebook\ \(archived\)   ]]
 
   run "${_NB}" ls --archived
 
   printf "\${status}:     '%s'\\n" "${status}"
   printf "\${output}:     '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0                           ]]
+  [[    "${status}"    -eq 0                              ]]
+  [[    "${#lines[@]}" -eq 2                              ]]
 
-  [[ "${#lines[@]}" ==  2                           ]]
-  [[ "${output}"    =~  \[.*2.*\].*\ File\ Two\.md  ]]
-  [[ "${output}"    =~  \[.*1.*\].*\ File\ One\.md  ]]
-
-  run "${_NB}" ls --unarchived
-
-  printf "\${status}:     '%s'\\n" "${status}"
-  printf "\${output}:     '%s'\\n" "${output}"
-
-  [[ "${status}"    -eq 0                           ]]
-
-  [[ "${#lines[@]}" ==  2                           ]]
-  [[ "${output}"    =~  \[.*2.*\].*\ File\ Two\.md  ]]
-  [[ "${output}"    =~  \[.*1.*\].*\ File\ One\.md  ]]
+  [[ !  "${output}"    =~  home                           ]]
+  [[ !  "${output}"    =~  Example\ Notebook              ]]
+  [[    "${output}"    =~  Sample\ Notebook\ \(archived\) ]]
+  [[ !  "${output}"    =~  Demo\ Notebook                 ]]
+  [[    "${output}"    =~  Test\ Notebook\ \(archived\)   ]]
 
   run "${_NB}" ls --unar
 
   printf "\${status}:     '%s'\\n" "${status}"
   printf "\${output}:     '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0                           ]]
+  [[    "${status}"    -eq 0                              ]]
+  [[    "${#lines[@]}" -eq 3                              ]]
 
-  [[ "${#lines[@]}" ==  2                           ]]
-  [[ "${output}"    =~  \[.*2.*\].*\ File\ Two\.md  ]]
-  [[ "${output}"    =~  \[.*1.*\].*\ File\ One\.md  ]]
+  [[    "${output}"    =~  home                           ]]
+  [[    "${output}"    =~  Example\ Notebook              ]]
+  [[ !  "${output}"    =~  Sample\ Notebook               ]]
+  [[    "${output}"    =~  Demo\ Notebook                 ]]
+  [[ !  "${output}"    =~  Test\ Notebook                 ]]
+
+  run "${_NB}" ls --unarchived
+
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+
+  [[    "${status}"    -eq 0                              ]]
+  [[    "${#lines[@]}" -eq 3                              ]]
+
+  [[    "${output}"    =~  home                           ]]
+  [[    "${output}"    =~  Example\ Notebook              ]]
+  [[ !  "${output}"    =~  Sample\ Notebook               ]]
+  [[    "${output}"    =~  Demo\ Notebook                 ]]
+  [[ !  "${output}"    =~  Test\ Notebook                 ]]
 }
+
+# `ls --type` #################################################################
 
 @test "'ls --document' exits with 0 and displays a list of documents." {
   {

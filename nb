@@ -5730,7 +5730,7 @@ _ls() {
     local __val="${2:-}"
 
     case "${__arg}" in
-      --added|--updated)
+      --added|--ar|--archived|--unar|--unarchived|--updated)
         _delegate_arguments+=("${__arg}")
         ;;
       -a|--all)
@@ -5842,6 +5842,10 @@ _ls() {
       for ((i=0; i < "${#_delegate_arguments[@]}"; i++))
       do
         case "${_delegate_arguments[i]:-}" in
+          --ar*|--unar*)
+            _defer "_notebooks" list "${_delegate_arguments[@]:-}"
+            return 0
+            ;;
           --added|--updated)
             if [[ -n "${_selector:-}" ]]
             then
