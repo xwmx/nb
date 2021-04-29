@@ -3743,9 +3743,15 @@ HEREDOC
         cat
       fi
     } | {
-      sed -E                                                                  \
--e "/^\ \ /s/(\[|\]|\(|\)|\|)/${_TPUT_SGR0}${_TPUT_SETAF_8}\1${_TPUT_SGR0}/g" \
--e "s/\`/${_TPUT_SGR0}${_TPUT_SETAF_8}\`${_TPUT_SGR0}/g"
+      if ((_color_help))
+      then
+        cat
+      else
+        sed -E \
+-e "/^\ \ /s/(\[|\]|\(|\)|\|)/${_TPUT_SGR0}${_TPUT_SETAF_8}\1${_TPUT_SGR0}/g"
+      fi
+    } | {
+      sed -e "s/\`/${_TPUT_SGR0}${_TPUT_SETAF_8}\`${_TPUT_SGR0}/g"
     } | {
       if ((_use_pager))
       then
