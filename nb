@@ -3735,17 +3735,21 @@ HEREDOC
       fi
     else
       printf "%s\\n" "$(describe --get "${_arguments[@]}")"
-    fi |  if ((_shell))
-          then
-            sed -e "s/^  nb /  /" -e "/^  nb$/d"
-          else
-            cat
-          fi |  if ((_use_pager))
-                then
-                  _pager
-                else
-                  cat
-                fi
+    fi | {
+      if ((_shell))
+      then
+        sed -e "s/^  nb /  /" -e "/^  nb$/d"
+      else
+        cat
+      fi
+    } | {
+      if ((_use_pager))
+      then
+        _pager
+      else
+        cat
+      fi
+    }
   fi
 }
 _alias_subcommand "help" "h"
