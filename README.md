@@ -1950,7 +1950,7 @@ See [`bookmark help`](#bookmark-help) for more information.
 
 `nb` recognizes [#hashtags](#-tagging) defined anywhere within a document.
 A hashtag is defined in `nb` as a `#` character followed by any number of
-letters, numbers, underscores, and dashes (`#[A-Za-z0-9_-]+`).
+letters, numbers, underscores, and dashes.
 
 Notes and bookmarks can be tagged when they are created using the
 `--tags <tag1>,<tag2>...` option,
@@ -2347,11 +2347,6 @@ which automatically resizes the form to fit the current terminal window:
 [save] · last: 2021-01-01 01:00:00
 ```
 
-When using `w3m`, put your cursor within the brackets representing
-the `<textarea>` and press `<return>` to open the item in your text editor.
-After closing the editor, `w3m` returns to the form
-now populated with the updated content, which can then be saved.
-
 Syntax highlighting, block selection, and other
 [advanced editor features](#browse---gui-editing)
 are available with `nb browse --gui`.
@@ -2569,8 +2564,8 @@ organized in normal system directories in normal git repositories,
 
 |    Zettelkasten   |                       `nb`                    |
 |:-----------------:|:---------------------------------------------:|
-| index cards       | [notes](#-notes) and [bookmarks](#-bookmarks) |
-| numbering         | ids and [selectors](#selectors)               |
+| index cards       | [notes](#-notes) & [bookmarks](#-bookmarks)   |
+| numbering         | ids & [selectors](#selectors)                 |
 | slip boxes        | [notebooks](#-notebooks)                      |
 | tags              | [#tags](#-tagging)                            |
 | metadata          | [front matter](#front-matter)                 |
@@ -4902,6 +4897,9 @@ Description:
   note with AES-256 using OpenSSL by default, or GPG, if configured in
   `nb set encryption_tool`.
 
+See Also:
+  nb help browse
+
 Examples:
   nb add
   nb add example.md
@@ -4932,6 +4930,11 @@ Description:
   Set the current notebook or notebook <name> to "archived" status.
 
   This is an alias for `nb notebooks archive`.
+
+See Also:
+  nb help notebooks
+  nb help status
+  nb help unarchive
 
 Examples:
   nb archive
@@ -5014,6 +5017,12 @@ Description:
     4. https://en.wikipedia.org/wiki/Links_(web_browser)
     5. https://en.wikipedia.org/wiki/Lynx_(web_browser)
 
+See Also:
+  nb help browse
+  nb help open
+  nb help peek
+  nb help show
+
 Examples:
   nb https://example.com
   nb example: https://example.com
@@ -5090,6 +5099,11 @@ Description:
     4. https://nmap.org/ncat/
     5. https://pandoc.org/
 
+See Also:
+  nb help open
+  nb help peek
+  nb help show
+
 Examples:
   nb browse
   nb browse example:
@@ -5139,6 +5153,9 @@ Options:
 Description:
   Delete one or more items.
 
+See Also:
+  nb help browse
+
 Examples:
   nb delete 3
   nb delete example.md
@@ -5182,6 +5199,9 @@ Description:
 
   Non-text files are opened in your system's preferred app or program for
   that file type.
+
+See Also:
+  nb help browse
 
 Examples:
   nb edit 3
@@ -5244,6 +5264,9 @@ Description:
   See the Pandoc help information for available options.
 
     1. https://pandoc.org/
+
+See Also:
+  nb help import
 
 Examples:
   # Export an Org note
@@ -5354,6 +5377,9 @@ Description:
   Copy, move, or download files into the current notebook or import
   a local notebook to make it global.
 
+See Also:
+  nb help export
+
 Examples:
   nb import ~/Pictures/example.png
   nb import ~/Documents/example.docx
@@ -5436,6 +5462,9 @@ Indicators:
   📄  PDF, Word, or Open Office document
   📹  Video
 
+See Also:
+  nb help ls
+
 Examples:
   nb list
   nb list example.md -e 10
@@ -5506,6 +5535,9 @@ Indicators:
   🌄  Image
   📄  PDF, Word, or Open Office document
   📹  Video
+
+See Also:
+  nb help list
 
 Examples:
   nb
@@ -5652,6 +5684,14 @@ Subcommands:
 Description:
   Manage notebooks.
 
+See Also:
+  nb help archive
+  nb help remote
+  nb help status
+  nb help sync
+  nb help unarchive
+  nb help use
+
 Examples:
   nb notebooks --names
   nb notebooks add sample
@@ -5688,7 +5728,9 @@ Examples:
 
 See also:
   nb help bookmark
-  nb help edit
+  nb help browse
+  nb help peek
+  nb help show
 
 Shortcut Alias: `nb o`
 ```
@@ -5724,6 +5766,8 @@ Examples:
 
 See also:
   nb help bookmark
+  nb help browse
+  nb help open
   nb help show
 
 Alias: `nb preview`
@@ -5738,6 +5782,9 @@ Usage:
 
 Description:
   Pin an item so it appears first in lists.
+
+See Also:
+  nb help unpin
 
 Examples:
   nb pin 123
@@ -5785,6 +5832,11 @@ Subcommands:
 
 Description:
   Get, set, and remove a notebook's remote repository URL and branch.
+
+See Also:
+  nb help notebooks
+  nb help status
+  nb help sync
 
 Examples:
   nb remote set https://github.com/example/example.git
@@ -5911,6 +5963,9 @@ Description:
 
     nb set color_theme blacklight
     nb set limit 40
+
+See Also:
+  nb help unset
 
 Examples:
   nb settings
@@ -6237,6 +6292,11 @@ Description:
     6. http://www.andre-simon.de/doku/highlight/en/highlight.php
     7. https://pygments.org/
 
+See Also:
+  nb help browse
+  nb help open
+  nb help peek
+
 Examples:
   nb show 1
   nb show example.md --render
@@ -6262,6 +6322,14 @@ Usage:
 
 Description:
   Print archival, git, and remote status for the current notebook or <notebook>.
+
+See Also:
+  nb help archive
+  nb help notebooks
+  nb help remote
+  nb help status
+  nb help sync
+  nb help unarchive
 
 Examples:
   nb status
@@ -6301,7 +6369,7 @@ Options:
   -a, --all   Sync all unarchived notebooks.
 
 Description:
-  Sync the current local notebook with the remote repository.
+  Sync the current notebook with its remote.
 
 Private Repositories and Git Credentials:
   Syncing with private repositories requires configuring git to not prompt
@@ -6326,6 +6394,15 @@ Sync Conflict Resolution:
 
   More Information:
     https://github.com/xwmx/nb#sync-conflict-resolution
+
+See Also:
+  nb help notebooks
+  nb help remote
+  nb help status
+
+Examples:
+  nb sync
+  nb sync --all
 ```
 
 #### `unarchive`
@@ -6338,6 +6415,11 @@ Description:
   Remove "archived" status from the current notebook or notebook <name>.
 
   This is an alias for `nb notebooks unarchive`.
+
+See Also:
+  nb help archive
+  nb help notebooks
+  nb help status
 
 Examples:
   nb unarchive
@@ -6355,6 +6437,9 @@ Usage:
 Description:
   Unpin a pinned item.
 
+See Also:
+  nb help pin
+
 Examples:
   nb unpin 123
   nb unpin example:sample/321
@@ -6370,6 +6455,9 @@ Description:
   Unset a setting, returning it to the default value.
 
   This is an alias for `nb settings unset`.
+
+See Also:
+  nb help settings
 
 Examples:
   nb unset color_primary
@@ -6401,6 +6489,9 @@ Usage:
 
 Description:
   Switch to the specified notebook. Shortcut for `nb notebooks use`.
+
+See Also:
+  nb help notebooks
 
 Example:
   nb use example

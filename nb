@@ -74,7 +74,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="6.1.1"
+_VERSION="6.1.2"
 
 # $_ME
 #
@@ -3460,13 +3460,15 @@ _help() {
     then
       # NOTE: this screen mirrors the content from README.md#-color-themes:
       # https://github.com/xwmx/nb#-color-themes
-      _color_primary "__          _                     _"
-      _color_primary "\ \   _ __ | |__         ___ ___ | | ___  _ __ ___"
-      _color_primary " \ \ | '_ \| '_ \   _   / __/ _ \| |/ _ \| '__/ __|"
-      _color_primary " / / | | | | |_) | (_) | (_| (_) | | (_) | |  \__ \\"
-      _color_primary "/_/  |_| |_|_.__/       \___\___/|_|\___/|_|  |___/"
-      _color_secondary "\
----------------------------------------------------"
+      _color_primary  " __          _                     _"
+      _color_primary  " \ \   _ __ | |__         ___ ___ | | ___  _ __ ___"
+      _color_primary  "  \ \ | '_ \| '_ \   _   / __/ _ \| |/ _ \| '__/ __|"
+      _color_primary  "  / / | | | | |_) | (_) | (_| (_) | | (_) | |  \__ \\"
+      _color_primary  " /_/  |_| |_|_.__/       \___\___/|_|\___/|_|  |___/"
+      printf "\\n"
+      _color_secondary \
+                      " ---------------------------------------------------"
+      printf "\\n"
   cat <<HEREDOC
 \`${_ME}\` uses color to highlight various interface elements, including ids,
 the current notebook name, the shell prompt, and divider lines.
@@ -3522,12 +3524,16 @@ To set the syntax highlighting color theme, use:
 HEREDOC
     elif [[ -z "${_arguments[*]:-}" ]] || ((_short))
     then
-      _color_primary    "__          _"
-      _color_primary    "\ \   _ __ | |__"
-      _color_primary    " \ \ | '_ \| '_ \\"
-      _color_primary    " / / | | | | |_) |"
-      _color_primary    "/_/  |_| |_|_.__/"
-      _color_secondary  "------------------"
+      _color_primary        " __          _"
+      _color_primary        " \ \   _ __ | |__"
+      _color_primary        "  \ \ | '_ \| '_ \\"
+      _color_primary        "  / / | | | | |_) |"
+      _color_primary        " /_/  |_| |_|_.__/"
+
+      printf        \
+        "\\n %s\\n" \
+        "$(_color_secondary  "------------------")"
+
       cat <<HEREDOC
 
 $(_color_brackets "nb") Command line and local web note-taking, bookmarking, and archiving with
@@ -3735,17 +3741,34 @@ HEREDOC
       fi
     else
       printf "%s\\n" "$(describe --get "${_arguments[@]}")"
-    fi |  if ((_shell))
-          then
-            sed -e "s/^  nb /  /" -e "/^  nb$/d"
-          else
-            cat
-          fi |  if ((_use_pager))
-                then
-                  _pager
-                else
-                  cat
-                fi
+    fi | {
+      if ((_shell))
+      then
+        sed -e "s/^  nb /  /" -e "/^  nb$/d"
+      else
+        cat
+      fi
+    } | {
+      if ((_color_help))
+      then
+        cat
+      else
+        local _replacement_pattern="${_TPUT_SGR0}${_TPUT_SETAF_8}\1${_TPUT_SGR0}"
+
+        sed -E                                                      \
+-e "s/#tagging/${_TPUT_SGR0}${_TPUT_SETAF_8}#${_TPUT_SGR0}tagging/" \
+-e "/^\ \ |\[\[wiki\-style\ linking\]\]/s/(\[|\]|\(|\)|\|)/${_replacement_pattern}/g"
+      fi
+    } | {
+      sed -e "s/\`/${_TPUT_SGR0}${_TPUT_SETAF_8}\`${_TPUT_SGR0}/g"
+    } | {
+      if ((_use_pager))
+      then
+        _pager
+      else
+        cat
+      fi
+    }
   fi
 }
 _alias_subcommand "help" "h"
@@ -4397,6 +4420,9 @@ $(_color_primary "Indicators"):
   ${_NB_INDICATOR_IMAGE:-} Image
   ${_NB_INDICATOR_DOCUMENT:-} PDF, Word, or Open Office document
   ${_NB_INDICATOR_VIDEO:-} Video
+
+$(_color_primary "See Also"):
+  ${_ME} help ls
 
 $(_color_primary "Examples"):
   ${_ME} list
@@ -5366,6 +5392,9 @@ $(_color_primary "Indicators"):
   ${_NB_INDICATOR_DOCUMENT:-} PDF, Word, or Open Office document
   ${_NB_INDICATOR_VIDEO:-} Video
 
+$(_color_primary "See Also"):
+  ${_ME} help list
+
 $(_color_primary "Examples"):
   ${_ME}
   ${_ME} --all
@@ -6157,6 +6186,14 @@ $(_color_primary "Subcommands"):
 
 $(_color_primary "Description"):
   Manage notebooks.
+
+$(_color_primary "See Also"):
+  ${_ME} help archive
+  ${_ME} help remote
+  ${_ME} help status
+  ${_ME} help sync
+  ${_ME} help unarchive
+  ${_ME} help use
 
 $(_color_primary "Examples"):
   ${_ME} notebooks --names
@@ -10380,6 +10417,9 @@ $(_color_primary "Description"):
   note with AES-256 using OpenSSL by default, or GPG, if configured in
   \`${_ME} set encryption_tool\`.
 
+$(_color_primary "See Also"):
+  ${_ME} help browse
+
 $(_color_primary "Examples"):
   ${_ME} add
   ${_ME} add example.md
@@ -10948,6 +10988,12 @@ $(_color_primary "Description"):
     3. https://en.wikipedia.org/wiki/W3m
     4. https://en.wikipedia.org/wiki/Links_(web_browser)
     5. https://en.wikipedia.org/wiki/Lynx_(web_browser)
+
+$(_color_primary "See Also"):
+  ${_ME} help browse
+  ${_ME} help open
+  ${_ME} help peek
+  ${_ME} help show
 
 $(_color_primary "Examples"):
   ${_ME} https://example.com
@@ -11893,6 +11939,9 @@ $(_color_primary "Options"):
 $(_color_primary "Description"):
   Delete one or more items.
 
+$(_color_primary "See Also"):
+  ${_ME} help browse
+
 $(_color_primary "Examples"):
   ${_ME} delete 3
   ${_ME} delete example.md
@@ -12074,6 +12123,9 @@ $(_color_primary "Description"):
 
   Non-text files are opened in your system's preferred app or program for
   that file type.
+
+$(_color_primary "See Also"):
+  ${_ME} help browse
 
 $(_color_primary "Examples"):
   ${_ME} edit 3
@@ -12539,6 +12591,9 @@ $(_color_primary "Description"):
 
     1. https://pandoc.org/
 
+$(_color_primary "See Also"):
+  ${_ME} help import
+
 $(_color_primary "Examples"):
   # Export an Emacs Org mode note
   ${_ME} export example.org /path/to/example.org
@@ -12790,6 +12845,9 @@ $(_color_primary "Subcommands"):
 $(_color_primary "Description"):
   Copy, move, or download files into the current notebook or import
   a local notebook to make it global.
+
+$(_color_primary "See Also"):
+  ${_ME} help export
 
 $(_color_primary "Examples"):
   ${_ME} import ~/Pictures/example.png
@@ -13413,7 +13471,9 @@ $(_color_primary "Examples"):
 
 $(_color_primary "See also"):
   ${_ME} help bookmark
-  ${_ME} help edit
+  ${_ME} help browse
+  ${_ME} help peek
+  ${_ME} help show
 
 $(_color_primary "Shortcut Alias"): \`${_ME} o\`
 HEREDOC
@@ -13461,6 +13521,8 @@ $(_color_primary "Examples"):
 
 $(_color_primary "See also"):
   ${_ME} help bookmark
+  ${_ME} help browse
+  ${_ME} help open
   ${_ME} help show
 
 $(_color_primary "Alias"): \`${_ME} preview\`
@@ -13487,6 +13549,9 @@ $(_color_primary "Usage"):
 
 $(_color_primary "Description"):
   Pin an item so it appears first in lists.
+
+$(_color_primary "See Also"):
+  ${_ME} help unpin
 
 $(_color_primary "Examples"):
   ${_ME} pin 123
@@ -14825,6 +14890,11 @@ $(_color_primary "Description"):
     6. http://www.andre-simon.de/doku/highlight/en/highlight.php
     7. https://pygments.org/
 
+$(_color_primary "See Also"):
+  ${_ME} help browse
+  ${_ME} help open
+  ${_ME} help peek
+
 $(_color_primary "Examples"):
   ${_ME} show 1
   ${_ME} show example.md --render
@@ -15617,6 +15687,9 @@ $(_color_primary "Usage"):
 $(_color_primary "Description"):
   Unpin a pinned item.
 
+$(_color_primary "See Also"):
+  ${_ME} help pin
+
 $(_color_primary "Examples"):
   ${_ME} unpin 123
   ${_ME} unpin example:sample/321
@@ -15635,6 +15708,9 @@ $(_color_primary "Usage"):
 
 $(_color_primary "Description"):
   Switch to the specified notebook. Shortcut for \`${_ME} notebooks use\`.
+
+$(_color_primary "See Also"):
+  ${_ME} help notebooks
 
 $(_color_primary "Example"):
   ${_ME} use example
@@ -15691,6 +15767,11 @@ $(_color_primary "Description"):
   Set the current notebook or notebook <name> to "archived" status.
 
   This is an alias for \`${_ME} notebooks archive\`.
+
+$(_color_primary "See Also"):
+  ${_ME} help notebooks
+  ${_ME} help status
+  ${_ME} help unarchive
 
 $(_color_primary "Examples"):
   ${_ME} archive
@@ -15764,6 +15845,11 @@ $(_color_primary "Description"):
     3. https://en.wikipedia.org/wiki/Lynx_(web_browser)
     4. https://nmap.org/ncat/
     5. https://pandoc.org/
+
+$(_color_primary "See Also"):
+  ${_ME} help open
+  ${_ME} help peek
+  ${_ME} help show
 
 $(_color_primary "Examples"):
   ${_ME} browse
@@ -18539,6 +18625,11 @@ $(_color_primary "Subcommands"):
 $(_color_primary "Description"):
   Get, set, and remove a notebook's remote repository URL and branch.
 
+$(_color_primary "See Also"):
+  ${_ME} help notebooks
+  ${_ME} help status
+  ${_ME} help sync
+
 $(_color_primary "Examples"):
   ${_ME} remote set https://github.com/example/example.git
   ${_ME} remote remove
@@ -18966,6 +19057,9 @@ $(_color_primary "Description"):
 
     ${_ME} set color_theme blacklight
     ${_ME} set limit 40
+
+$(_color_primary "See Also"):
+  ${_ME} help unset
 
 $(_color_primary "Examples"):
   ${_ME} settings
@@ -19827,6 +19921,14 @@ $(_color_primary "Usage"):
 $(_color_primary "Description"):
   Print archival, git, and remote status for the current notebook or <notebook>.
 
+$(_color_primary "See Also"):
+  ${_ME} help archive
+  ${_ME} help notebooks
+  ${_ME} help remote
+  ${_ME} help status
+  ${_ME} help sync
+  ${_ME} help unarchive
+
 $(_color_primary "Examples"):
   ${_ME} status
   ${_ME} status example
@@ -19904,7 +20006,7 @@ $(_color_primary "Options"):
   -a, --all   Sync all unarchived notebooks.
 
 $(_color_primary "Description"):
-  Sync the current local notebook with the remote repository.
+  Sync the current notebook with its remote.
 
 $(_color_primary "Private Repositories and Git Credentials"):
   Syncing with private repositories requires configuring git to not prompt
@@ -19929,6 +20031,15 @@ $(_color_primary "Sync Conflict Resolution"):
 
   More Information:
     https://github.com/xwmx/nb#sync-conflict-resolution
+
+$(_color_primary "See Also"):
+  ${_ME} help notebooks
+  ${_ME} help remote
+  ${_ME} help status
+
+$(_color_primary "Examples"):
+  ${_ME} sync
+  ${_ME} sync --all
 HEREDOC
 }
 _sync() {
@@ -20102,6 +20213,11 @@ $(_color_primary "Description"):
 
   This is an alias for \`${_ME} notebooks unarchive\`.
 
+$(_color_primary "See Also"):
+  ${_ME} help archive
+  ${_ME} help notebooks
+  ${_ME} help status
+
 $(_color_primary "Examples"):
   ${_ME} unarchive
   ${_ME} unarchive example
@@ -20125,6 +20241,9 @@ $(_color_primary "Description"):
   Unset a setting, returning it to the default value.
 
   This is an alias for \`${_ME} settings unset\`.
+
+$(_color_primary "See Also"):
+  ${_ME} help settings
 
 $(_color_primary "Examples"):
   ${_ME} unset color_primary
