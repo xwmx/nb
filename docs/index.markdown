@@ -5468,6 +5468,9 @@ Indicators:
   📄  PDF, Word, or Open Office document
   📹  Video
 
+See Also:
+  nb help ls
+
 Examples:
   nb list
   nb list example.md -e 10
@@ -5538,6 +5541,9 @@ Indicators:
   🌄  Image
   📄  PDF, Word, or Open Office document
   📹  Video
+
+See Also:
+  nb help list
 
 Examples:
   nb

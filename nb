@@ -4417,6 +4417,9 @@ $(_color_primary "Indicators"):
   ${_NB_INDICATOR_DOCUMENT:-} PDF, Word, or Open Office document
   ${_NB_INDICATOR_VIDEO:-} Video
 
+$(_color_primary "See Also"):
+  ${_ME} help ls
+
 $(_color_primary "Examples"):
   ${_ME} list
   ${_ME} list example.md -e 10
@@ -5384,6 +5387,9 @@ $(_color_primary "Indicators"):
   ${_NB_INDICATOR_IMAGE:-} Image
   ${_NB_INDICATOR_DOCUMENT:-} PDF, Word, or Open Office document
   ${_NB_INDICATOR_VIDEO:-} Video
+
+$(_color_primary "See Also"):
+  ${_ME} help list
 
 $(_color_primary "Examples"):
   ${_ME}
