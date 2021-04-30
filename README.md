@@ -1950,7 +1950,7 @@ See [`bookmark help`](#bookmark-help) for more information.
 
 `nb` recognizes [#hashtags](#-tagging) defined anywhere within a document.
 A hashtag is defined in `nb` as a `#` character followed by any number of
-letters, numbers, underscores, and dashes (`#[A-Za-z0-9_-]+`).
+letters, numbers, underscores, and dashes.
 
 Notes and bookmarks can be tagged when they are created using the
 `--tags <tag1>,<tag2>...` option,
@@ -2347,11 +2347,6 @@ which automatically resizes the form to fit the current terminal window:
 [save] · last: 2021-01-01 01:00:00
 ```
 
-When using `w3m`, put your cursor within the brackets representing
-the `<textarea>` and press `<return>` to open the item in your text editor.
-After closing the editor, `w3m` returns to the form
-now populated with the updated content, which can then be saved.
-
 Syntax highlighting, block selection, and other
 [advanced editor features](#browse---gui-editing)
 are available with `nb browse --gui`.
@@ -2569,8 +2564,8 @@ organized in normal system directories in normal git repositories,
 
 |    Zettelkasten   |                       `nb`                    |
 |:-----------------:|:---------------------------------------------:|
-| index cards       | [notes](#-notes) and [bookmarks](#-bookmarks) |
-| numbering         | ids and [selectors](#selectors)               |
+| index cards       | [notes](#-notes) & [bookmarks](#-bookmarks)   |
+| numbering         | ids & [selectors](#selectors)                 |
 | slip boxes        | [notebooks](#-notebooks)                      |
 | tags              | [#tags](#-tagging)                            |
 | metadata          | [front matter](#front-matter)                 |
