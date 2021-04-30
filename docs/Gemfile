@@ -29,13 +29,6 @@ end
 # Performance-booster for watching directories on Windows
 gem "wdm", "~> 0.1.1", :platforms => [:mingw, :x64_mingw, :mswin]
 
-# Update nokogiri for security advisory.
-#
-# TODO: Revisit.
-#
-# https://github.com/sparklemotion/nokogiri/security/advisories/GHSA-vr8q-g5c7-m54m
-gem "nokogiri", ">= 1.11.2"
-
 # Just the Docs
 #
 # A Jekyll theme.
