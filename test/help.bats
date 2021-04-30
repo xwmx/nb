@@ -3,6 +3,26 @@
 
 load test_helper
 
+@test "'help' dims hash in #tag* patterns." {
+  run "${_NB}" help
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq  0               ]]
+
+  [[ "${output}" =~   \ .*#.*tagging  ]]
+
+  run "${_NB}" help browse
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq  0               ]]
+
+  [[ "${output}" =~   \ .*#.*tags     ]]
+}
+
 @test "'help' with no arguments exits with status 0 and prints default help." {
   run "${_NB}" help
 
