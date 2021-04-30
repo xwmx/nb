@@ -6369,7 +6369,7 @@ Options:
   -a, --all   Sync all unarchived notebooks.
 
 Description:
-  Sync the current local notebook with the remote repository.
+  Sync the current notebook with its remote.
 
 Private Repositories and Git Credentials:
   Syncing with private repositories requires configuring git to not prompt
