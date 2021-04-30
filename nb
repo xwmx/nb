@@ -3752,7 +3752,9 @@ HEREDOC
         cat
       else
         local _replacement_pattern="${_TPUT_SGR0}${_TPUT_SETAF_8}\1${_TPUT_SGR0}"
-        sed -E \
+
+        sed -E                                                      \
+-e "s/#tagging/${_TPUT_SGR0}${_TPUT_SETAF_8}#${_TPUT_SGR0}tagging/" \
 -e "/^\ \ |\[\[wiki\-style\ linking\]\]/s/(\[|\]|\(|\)|\|)/${_replacement_pattern}/g"
       fi
     } | {
