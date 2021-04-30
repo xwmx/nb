@@ -5270,6 +5270,9 @@ Description:
 
     1. https://pandoc.org/
 
+See Also:
+  nb help import
+
 Examples:
   # Export an Org note
   nb export example.org /path/to/example.org
@@ -5378,6 +5381,9 @@ Subcommands:
 Description:
   Copy, move, or download files into the current notebook or import
   a local notebook to make it global.
+
+See Also:
+  nb help export
 
 Examples:
   nb import ~/Pictures/example.png
@@ -6482,6 +6488,9 @@ Usage:
 
 Description:
   Switch to the specified notebook. Shortcut for `nb notebooks use`.
+
+See Also:
+  nb help notebooks
 
 Example:
   nb use example

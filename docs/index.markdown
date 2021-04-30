@@ -4908,6 +4908,9 @@ Description:
   note with AES-256 using OpenSSL by default, or GPG, if configured in
   `nb set encryption_tool`.
 
+See Also:
+  nb help browse
+
 Examples:
   nb add
   nb add example.md
@@ -5025,6 +5028,12 @@ Description:
     4. https://en.wikipedia.org/wiki/Links_(web_browser)
     5. https://en.wikipedia.org/wiki/Lynx_(web_browser)
 
+See Also:
+  nb help browse
+  nb help open
+  nb help peek
+  nb help show
+
 Examples:
   nb https://example.com
   nb example: https://example.com
@@ -5101,6 +5110,11 @@ Description:
     4. https://nmap.org/ncat/
     5. https://pandoc.org/
 
+See Also:
+  nb help open
+  nb help peek
+  nb help show
+
 Examples:
   nb browse
   nb browse example:
@@ -5150,6 +5164,9 @@ Options:
 Description:
   Delete one or more items.
 
+See Also:
+  nb help browse
+
 Examples:
   nb delete 3
   nb delete example.md
@@ -5193,6 +5210,9 @@ Description:
 
   Non-text files are opened in your system's preferred app or program for
   that file type.
+
+See Also:
+  nb help browse
 
 Examples:
   nb edit 3
@@ -5255,6 +5275,9 @@ Description:
   See the Pandoc help information for available options.
 
     1. https://pandoc.org/
+
+See Also:
+  nb help import
 
 Examples:
   # Export an Org note
@@ -5364,6 +5387,9 @@ Subcommands:
 Description:
   Copy, move, or download files into the current notebook or import
   a local notebook to make it global.
+
+See Also:
+  nb help export
 
 Examples:
   nb import ~/Pictures/example.png
@@ -5707,7 +5733,9 @@ Examples:
 
 See also:
   nb help bookmark
-  nb help edit
+  nb help browse
+  nb help peek
+  nb help show
 
 Shortcut Alias: `nb o`
 ```
@@ -5743,6 +5771,8 @@ Examples:
 
 See also:
   nb help bookmark
+  nb help browse
+  nb help open
   nb help show
 
 Alias: `nb preview`
@@ -6267,6 +6297,11 @@ Description:
     6. http://www.andre-simon.de/doku/highlight/en/highlight.php
     7. https://pygments.org/
 
+See Also:
+  nb help browse
+  nb help open
+  nb help peek
+
 Examples:
   nb show 1
   nb show example.md --render
@@ -6459,6 +6494,9 @@ Usage:
 
 Description:
   Switch to the specified notebook. Shortcut for `nb notebooks use`.
+
+See Also:
+  nb help notebooks
 
 Example:
   nb use example

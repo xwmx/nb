@@ -12581,6 +12581,9 @@ $(_color_primary "Description"):
 
     1. https://pandoc.org/
 
+$(_color_primary "See Also"):
+  ${_ME} help import
+
 $(_color_primary "Examples"):
   # Export an Emacs Org mode note
   ${_ME} export example.org /path/to/example.org
@@ -12832,6 +12835,9 @@ $(_color_primary "Subcommands"):
 $(_color_primary "Description"):
   Copy, move, or download files into the current notebook or import
   a local notebook to make it global.
+
+$(_color_primary "See Also"):
+  ${_ME} help export
 
 $(_color_primary "Examples"):
   ${_ME} import ~/Pictures/example.png
@@ -15692,6 +15698,9 @@ $(_color_primary "Usage"):
 
 $(_color_primary "Description"):
   Switch to the specified notebook. Shortcut for \`${_ME} notebooks use\`.
+
+$(_color_primary "See Also"):
+  ${_ME} help notebooks
 
 $(_color_primary "Example"):
   ${_ME} use example
