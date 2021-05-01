@@ -5979,11 +5979,13 @@ _ls() {
         local _notebook_name=
         _notebook_name="$(
           _notebooks \
-            list "${_maybe_notebook_name:-}" --names --no-color 2>/dev/null
-        )" || :
+            show "${_maybe_notebook_name:-}" --name --no-color 2>/dev/null || :
+        )"
       fi
 
-      if [[ -n "${_notebook_name:-}" ]] && ! _notebooks current --selected
+      if [[ -n "${_notebook_name:-}"          ]]  &&
+         ! _notebooks current --selected          &&
+         [[ -d "${NB_DIR}/${_notebook_name}"  ]]
       then
         NB_NOTEBOOK_PATH="${NB_DIR}/${_notebook_name}"  \
           _ls "${_arguments[@]:1}"
