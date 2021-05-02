@@ -1283,6 +1283,8 @@ print the date and time that an item was added or updated:
 `nb show` is primarily intended for viewing items within the terminal.
 To view a file in the system's preferred GUI application, use
 [`nb open`](#open).
+To [browse](#-browsing) rendered items in terminal and GUI web browsers, use
+[`nb browse`](#browse).
 
 For full `nb show` usage information, run [`nb help show`](#show).
 
@@ -2245,9 +2247,9 @@ To open a specific item in `nb browse`, pass the [selector](#selectors)
 for the item, folder, or notebook to `nb browse`:
 
 ```bash
-# open the item titled "Example Title" in the folder named "sample" in the "example" notebook
-❯ nb browse example:sample/Example\ Title
-❯nb · example : sample / 987 · ↓ · edit | +
+# open the item with id 42 in the folder named "sample" in the "example" notebook
+❯ nb browse example:sample/42
+❯nb · example : sample / 42 · ↓ · edit | +
 
 Example Title
 
@@ -2267,7 +2269,7 @@ Items can also be browsed with
 which behaves identically.
 
 `nb browse` is particularly useful for [bookmarks](#-bookmarks).
-Cached content is rendered in the web browser.
+Cached content is rendered in the web browser along with comments and notes.
 Internal and external links are easily accessible directly in the terminal,
 providing a convenient, distraction-free approach for browsing collections
 of bookmarks.
@@ -4708,8 +4710,8 @@ Notebook Usage:
   nb <subcommand> <notebook>:<identifier> [<options>...]
 
 Program Options:
-  -i, --interactive   Start the `nb` interactive shell.
   -h, --help          Display this help information.
+  -i, --interactive   Start the `nb` interactive shell.
   --no-color          Print without color highlighting.
   --version           Display version information.
 

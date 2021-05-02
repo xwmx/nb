@@ -25,6 +25,28 @@ line four
 HEREDOC
 }
 
+# edge cases ##################################################################
+
+@test "'ls <query>' with partial notebook name match prints 'not found' message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" notebooks add "Sample Notebook"
+    "${_NB}" notebooks add "Demo Notebook"
+  }
+
+  run "${_NB}" ls notebook
+
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+
+  [[    "${status}"    -eq 1                              ]]
+  [[    "${#lines[@]}" -eq 1                              ]]
+
+  [[    "${output}"    =~  \!.*\ Not\ found:\ .*notebook  ]]
+}
+
 # --archived / --unarchived ###################################################
 
 @test "'ls' delegates --ar, --archived, --unar, and --unarchived options to 'notebooks'." {
