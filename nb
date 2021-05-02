@@ -3717,8 +3717,8 @@ $(_color_primary "Notebook Usage"):
   ${_ME} <subcommand> <notebook>:<identifier> [<options>...]
 
 $(_color_primary "Program Options"):
-  -i, --interactive   Start the \`${_ME}\` interactive shell.
   -h, --help          Display this help information.
+  -i, --interactive   Start the \`${_ME}\` interactive shell.
   --no-color          Print without color highlighting.
   --version           Display version information.
 
