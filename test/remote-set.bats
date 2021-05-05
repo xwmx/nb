@@ -20,7 +20,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  "${_NB}" remote
+  printf "remote:    '%s'\\n" "$("${_NB}" remote)"
 
   [[ "${status}"    -eq 0 ]]
 
@@ -38,14 +38,18 @@ load test_helper
   [[ "${lines[8]}"  =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*example.*\)             ]]
 
+  diff                                      \
+    <(git -C "${NB_DIR}/home" branch --all) \
+    <(printf "* example\\n  remotes/origin/example\\n")
+
   run "${_NB}" git branch --all
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[0]}"  =~ \*\ example            ]]
-  [[ "${lines[1]}"  =~ remotes/origin/example ]]
-  [[ "${lines[2]}"  =~ remotes/origin/master  ]]
+  [[    "${lines[0]}" =~ \*\ example            ]]
+  [[    "${lines[1]}" =~ remotes/origin/example ]]
+  [[ !  "${output}"   =~ remotes/origin/master  ]]
 
   git clone --branch "example" "${_GIT_REMOTE_URL}" "${_TMP_DIR}/new-clone"
 

@@ -3034,33 +3034,6 @@ _git() {
     [[ -n "$(git -C "${_target_path}" status --porcelain)" ]]
   }
 
-  # _git_fetch()
-  #
-  # Usage:
-  #   _git_fetch [<notebook-path>]
-  #
-  # Description:
-  #   Perform a `git fetch` git prompt and error output.
-  _git_fetch() {
-    local _notebook_path=
-    _notebook_path="${1:-"$(_notebooks current --path)"}"
-
-    if ! GIT_TERMINAL_PROMPT=0 git -C "${_notebook_path}" fetch &>/dev/null
-    then
-      if ((_prompt))
-      then # fetch again, displaying git prompt and/or errors after newline
-        printf "\\n"
-
-        if ! GIT_TERMINAL_PROMPT=1 git -C "${_notebook_path}" fetch
-        then
-          exit 1
-        fi
-      else
-        return 1
-      fi
-    fi
-  }
-
   # _git_out_of_sync()
   #
   # Usage:
@@ -3182,10 +3155,32 @@ HEREDOC
       return 0
     fi
 
-    _git_fetch "${_notebook_path}"
-
     local _git_branch=
     _git_branch="$(git -C "${_notebook_path}" rev-parse --abbrev-ref HEAD)"
+
+    if ! GIT_TERMINAL_PROMPT=0 git -C "${_notebook_path}" fetch origin "${_git_branch}" &>/dev/null
+    then
+      local _remote_branches=($(
+        git -C "${_notebook_path}" ls-remote --heads "${_remote_url}" 2>/dev/null \
+          | sed "s/.*\///g" || :
+      ))
+
+      if [[ -z "${_remote_branches[*]:-}" ]] ||
+         _contains "${_git_branch}" "${_remote_branches[@]}"
+      then
+        if ((_prompt))
+        then # fetch again, displaying git prompt and/or errors after newline
+          printf "\\n"
+
+          if ! GIT_TERMINAL_PROMPT=1 git -C "${_notebook_path}" fetch origin "${_git_branch}"
+          then
+            exit 1
+          fi
+        else
+          return 1
+        fi
+      fi
+    fi
 
     if ((_prompt))
     then
@@ -18862,7 +18857,7 @@ _remote() {
           return 1
       fi
 
-      git -C "${_notebook_path}" fetch origin &>/dev/null
+      git -C "${_notebook_path}" fetch origin "${_new_branch}" &>/dev/null || :
 
       if ! git -C "${_notebook_path}" show-branch \
            "remotes/origin/${_new_branch}" > /dev/null 2>&1

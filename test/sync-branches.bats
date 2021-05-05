@@ -3,6 +3,199 @@
 
 load test_helper
 
+@test "'sync' only fetches the remote branch." {
+  {
+    _setup_remote_repo
+
+    "${_NB}" init "${_GIT_REMOTE_URL}"
+
+    # Example Notebook
+
+    "${_NB}" notebooks rename "home" "Example Notebook"
+
+    [[ !  -e "${NB_DIR}/home"                   ]]
+    [[    -d "${NB_DIR}/Example Notebook/.git"  ]]
+
+    "${_NB}" add "Example File.md" --content "Example content."
+
+    # Sample Notebook
+
+    "${_NB}" notebooks add "Sample Notebook"
+    "${_NB}" notebooks use "Sample Notebook"
+
+    "${_NB}" add "Sample File.md" --content "Sample content."
+
+    diff                                                  \
+      <(git -C "${NB_DIR}/Sample Notebook" branch --all)  \
+      <(printf "* master\\n")
+
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+
+    [[ "$("${_NB}" remote)" =~ ${_GIT_REMOTE_URL}\ \(sample-notebook\)  ]]
+
+    diff                                                  \
+      <(git -C "${NB_DIR}/Example Notebook" ls-remote     \
+          --heads "${_GIT_REMOTE_URL}"                    \
+          | sed "s/.*\///g" || :)                         \
+      <(printf "master\\nsample-notebook\\n")
+
+    diff                                                  \
+      <(git -C "${NB_DIR}/Example Notebook" branch --all) \
+      <(printf "* master\\n  remotes/origin/HEAD -> origin/master\\n  remotes/origin/master\\n")
+
+    printf "Sample Notebook Branches: \\n"
+    git -C "${NB_DIR}/Sample Notebook" branch --all
+
+    diff                                                  \
+      <(git -C "${NB_DIR}/Sample Notebook" branch --all)  \
+      <(printf "* sample-notebook\\n  remotes/origin/master\\n  remotes/origin/sample-notebook\\n")
+
+    # Demo Notebook
+
+    "${_NB}" notebooks add "Demo Notebook"
+    "${_NB}" notebooks use "Demo Notebook"
+
+    "${_NB}" add "Demo File.md" --content "Demo content."
+
+    diff                                                  \
+      <(git -C "${NB_DIR}/Demo Notebook" branch --all)    \
+      <(printf "* master\\n")
+
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+
+    [[ "$("${_NB}" remote)" =~ ${_GIT_REMOTE_URL}\ \(demo-notebook\)  ]]
+
+    diff                                                  \
+      <(git -C "${NB_DIR}/Example Notebook" ls-remote     \
+          --heads "${_GIT_REMOTE_URL}"                    \
+          | sed "s/.*\///g" || :)                         \
+      <(printf "demo-notebook\\nmaster\\nsample-notebook\\n")
+
+    diff                                                  \
+      <(git -C "${NB_DIR}/Example Notebook" branch --all) \
+      <(printf "* master\\n  remotes/origin/HEAD -> origin/master\\n  remotes/origin/master\\n")
+
+    printf "Sample Notebook Branches: \\n"
+    git -C "${NB_DIR}/Sample Notebook" branch --all
+
+    diff                                                  \
+      <(git -C "${NB_DIR}/Sample Notebook" branch --all)  \
+      <(printf "* sample-notebook\\n  remotes/origin/master\\n  remotes/origin/sample-notebook\\n")
+
+    printf "Demo Notebook Branches: \\n"
+    git -C "${NB_DIR}/Demo Notebook" branch --all
+
+    diff                                                  \
+      <(git -C "${NB_DIR}/Demo Notebook" branch --all)    \
+      <(printf "* demo-notebook\\n  remotes/origin/demo-notebook\\n  remotes/origin/master\\n")
+  }
+
+  # Sample Notebook
+
+  run "${_NB}" Sample\ Notebook:sync
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0 ]]
+
+  [[ "${lines[0]}"  =~  Syncing:\ .*Sample\ Notebook.*\.\.\..*Done!   ]]
+
+  diff                                                  \
+    <(git -C "${NB_DIR}/Example Notebook" ls-remote     \
+        --heads "${_GIT_REMOTE_URL}"                    \
+        | sed "s/.*\///g" || :)                         \
+    <(printf "demo-notebook\\nmaster\\nsample-notebook\\n")
+
+  diff                                                  \
+    <(git -C "${NB_DIR}/Example Notebook" branch --all) \
+    <(printf "* master\\n  remotes/origin/HEAD -> origin/master\\n  remotes/origin/master\\n")
+
+  printf "Sample Notebook Branches: \\n"
+  git -C "${NB_DIR}/Sample Notebook" branch --all
+
+  diff                                                  \
+    <(git -C "${NB_DIR}/Sample Notebook" branch --all)  \
+    <(printf "* sample-notebook\\n  remotes/origin/master\\n  remotes/origin/sample-notebook\\n")
+
+  printf "Demo Notebook Branches: \\n"
+  git -C "${NB_DIR}/Demo Notebook" branch --all
+
+  diff                                                  \
+    <(git -C "${NB_DIR}/Demo Notebook" branch --all)    \
+    <(printf "* demo-notebook\\n  remotes/origin/demo-notebook\\n  remotes/origin/master\\n")
+
+  # Example Notebook
+
+  run "${_NB}" Example\ Notebook:sync
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0 ]]
+
+  [[ "${lines[0]}"  =~  Syncing:\ .*Example\ Notebook.*\.\.\..*Done!  ]]
+
+  diff                                                  \
+    <(git -C "${NB_DIR}/Example Notebook" ls-remote     \
+        --heads "${_GIT_REMOTE_URL}"                    \
+        | sed "s/.*\///g" || :)                         \
+    <(printf "demo-notebook\\nmaster\\nsample-notebook\\n")
+
+  diff                                                  \
+    <(git -C "${NB_DIR}/Example Notebook" branch --all) \
+    <(printf "* master\\n  remotes/origin/HEAD -> origin/master\\n  remotes/origin/master\\n")
+
+  printf "Sample Notebook Branches: \\n"
+  git -C "${NB_DIR}/Sample Notebook" branch --all
+
+  diff                                                  \
+    <(git -C "${NB_DIR}/Sample Notebook" branch --all)  \
+    <(printf "* sample-notebook\\n  remotes/origin/master\\n  remotes/origin/sample-notebook\\n")
+
+  printf "Demo Notebook Branches: \\n"
+  git -C "${NB_DIR}/Demo Notebook" branch --all
+
+  diff                                                  \
+    <(git -C "${NB_DIR}/Demo Notebook" branch --all)    \
+    <(printf "* demo-notebook\\n  remotes/origin/demo-notebook\\n  remotes/origin/master\\n")
+
+  # Demo Notebook
+
+  run "${_NB}" Demo\ Notebook:sync
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0 ]]
+
+  [[ "${lines[0]}"  =~  Syncing:\ .*Demo\ Notebook.*\.\.\..*Done!     ]]
+
+  diff                                                  \
+    <(git -C "${NB_DIR}/Example Notebook" ls-remote     \
+        --heads "${_GIT_REMOTE_URL}"                    \
+        | sed "s/.*\///g" || :)                         \
+    <(printf "demo-notebook\\nmaster\\nsample-notebook\\n")
+
+  diff                                                  \
+    <(git -C "${NB_DIR}/Example Notebook" branch --all) \
+    <(printf "* master\\n  remotes/origin/HEAD -> origin/master\\n  remotes/origin/master\\n")
+
+  printf "Sample Notebook Branches: \\n"
+  git -C "${NB_DIR}/Sample Notebook" branch --all
+
+  diff                                                  \
+    <(git -C "${NB_DIR}/Sample Notebook" branch --all)  \
+    <(printf "* sample-notebook\\n  remotes/origin/master\\n  remotes/origin/sample-notebook\\n")
+
+  printf "Demo Notebook Branches: \\n"
+  git -C "${NB_DIR}/Demo Notebook" branch --all
+
+  diff                                                  \
+    <(git -C "${NB_DIR}/Demo Notebook" branch --all)    \
+    <(printf "* demo-notebook\\n  remotes/origin/demo-notebook\\n  remotes/origin/master\\n")
+}
+
 @test "'sync' with unrelated histories displays prompt and merges with existing." {
   {
     _setup_remote_repo
