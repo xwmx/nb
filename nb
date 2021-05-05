@@ -3166,7 +3166,7 @@ HEREDOC
       ))
 
       if [[ -z "${_remote_branches[*]:-}" ]] ||
-         _contains "${_git_branch}" "${_remote_branches[@]}"
+         _contains "${_git_branch}" "${_remote_branches[@]:-}"
       then
         if ((_prompt))
         then # fetch again, displaying git prompt and/or errors after newline
