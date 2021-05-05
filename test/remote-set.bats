@@ -319,7 +319,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)                        
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"          -eq 0 ]]
+  [[ "${status}"    -eq 0 ]]
 
   [[ "${lines[0]}"  =~  Updating\ remote\ for:\ .*home              ]]
   [[ "${lines[1]}"  =~  From:\ \ \ ${_GIT_REMOTE_URL}               ]]

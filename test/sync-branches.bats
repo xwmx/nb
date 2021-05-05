@@ -3,7 +3,7 @@
 
 load test_helper
 
-@test "'sync' only fetches the remote branch." {
+@test "'sync' only fetches select branches." {
   {
     _setup_remote_repo
 
