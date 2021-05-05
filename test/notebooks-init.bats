@@ -16,6 +16,123 @@ _setup_notebooks() {
   cd "${NB_DIR}" || return 1
 }
 
+# remote ######################################################################
+
+@test "'notebooks init <path> <remote-url> <branch>' exits with 0 and adds a notebook." {
+  {
+    _setup_notebooks
+    _setup_remote_repo
+
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" notebooks use "Example Notebook"
+    "${_NB}" git branch -m "example-branch"
+
+    "${_NB}" add "Example File One.md" --content "Example content one."
+
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+
+    diff                                              \
+      <(git -C "${NB_DIR}/Example Notebook" ls-remote \
+          --heads "${_GIT_REMOTE_URL}"                \
+          | sed "s/.*\///g" || :)                     \
+      <(printf "example-branch\\nmaster\\n")
+  }
+
+  run "${_NB}" notebooks init "${_TMP_DIR}/example" "${_GIT_REMOTE_URL}" "example-branch"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  diff                                                                \
+    <(cd "${_TMP_DIR}/example" && git config --get remote.origin.url) \
+    <(printf "%s\\n" "${_GIT_REMOTE_URL}")
+
+  diff                                                                \
+    <(cd "${_TMP_DIR}/example" && git rev-parse --abbrev-ref HEAD)    \
+    <(printf "example-branch\\n")
+
+  [[    "${status}"   -eq 0                             ]]
+  [[    "${lines[0]}" =~  Cloning                       ]]
+  [[    "${lines[1]}" =~  Initialized\ local\ notebook  ]]
+  [[    "${lines[1]}" =~  example                       ]]
+  [[ -d "${_TMP_DIR}/example/.git"                      ]]
+  [[ -f "${_TMP_DIR}/example/.index"                    ]]
+  [[ -f "${_TMP_DIR}/example/Example File One.md"       ]]
+
+  cd "${_TMP_DIR}/example" || return 1
+
+  printf "\$(git log): '%s'\n" "$(git log)"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -v 'Initial commit.'
+  git log | grep 'Initialize'
+
+  "${_NB}" git branch --all
+
+  [[    "$("${_NB}" git branch --all)"  =~  \*\ example-branch            ]]
+  [[    "$("${_NB}" git branch --all)"  =~  remotes/origin/example-branch ]]
+  [[ !  "$("${_NB}" git branch --all)"  =~  master|main                   ]]
+}
+
+@test "'notebooks init <path> <remote-url>' exits with 0 and adds a notebook." {
+  {
+    _setup_notebooks
+    _setup_remote_repo
+
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" notebooks use "Example Notebook"
+    "${_NB}" git branch -m "example-branch"
+
+    "${_NB}" add "Example File One.md" --content "Example content one."
+
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+
+    diff                                              \
+      <(git -C "${NB_DIR}/Example Notebook" ls-remote \
+          --heads "${_GIT_REMOTE_URL}"                \
+          | sed "s/.*\///g" || :)                     \
+      <(printf "example-branch\\nmaster\\n")
+  }
+
+  run "${_NB}" notebooks init "${_TMP_DIR}/example" "${_GIT_REMOTE_URL}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  diff                                                                \
+    <(cd "${_TMP_DIR}/example" && git config --get remote.origin.url) \
+    <(printf "%s\\n" "${_GIT_REMOTE_URL}")
+
+  diff                                                                \
+    <(cd "${_TMP_DIR}/example" && git rev-parse --abbrev-ref HEAD)    \
+    <(printf "master\\n")
+
+  [[    "${status}"   -eq 0                             ]]
+  [[    "${lines[0]}" =~  Cloning                       ]]
+  [[    "${lines[1]}" =~  Initialized\ local\ notebook  ]]
+  [[    "${lines[1]}" =~  example                       ]]
+  [[ -d "${_TMP_DIR}/example/.git"                      ]]
+  [[ -f "${_TMP_DIR}/example/.index"                    ]]
+
+  cd "${_TMP_DIR}/example" || return 1
+  printf "\$(git log): '%s'\n" "$(git log)"
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep 'Initial commit.'
+
+  "${_NB}" git branch --all
+
+  [[    "$("${_NB}" git branch --all)"  =~  \*\ master                                ]]
+  [[    "$("${_NB}" git branch --all)"  =~  remotes/origin/HEAD\ \-\>\ origin/master  ]]
+  [[    "$("${_NB}" git branch --all)"  =~  remotes/origin/master                     ]]
+  [[ !  "$("${_NB}" git branch --all)"  =~  example-branch                            ]]
+}
+
 # config ######################################################################
 
 @test "'notebooks init --author' displays config prompt and sets email and name." {
@@ -242,94 +359,6 @@ Initialized\ local\ notebook:\ .*${_TMP_DIR}/Example\ Local\ Notebook         ]]
 }
 
 # `notebooks init` ############################################################
-
-@test "'notebooks init <path> <remote-url> <branch>' exits with 0 and adds a notebook." {
-  {
-    _setup_notebooks
-    _setup_remote_repo
-
-    "${_NB}" notebooks add "Example Notebook"
-    "${_NB}" notebooks use "Example Notebook"
-    "${_NB}" git branch -m "example-branch"
-
-    "${_NB}" add "Example File One.md" --content "Example content one."
-
-    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
-
-    diff                                              \
-      <(git -C "${NB_DIR}/Example Notebook" ls-remote \
-          --heads "${_GIT_REMOTE_URL}"                \
-          | sed "s/.*\///g" || :)                     \
-      <(printf "example-branch\\nmaster\\n")
-  }
-
-  run "${_NB}" notebooks init "${_TMP_DIR}/example" "${_GIT_REMOTE_URL}" "example-branch"
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  diff                                                                \
-    <(cd "${_TMP_DIR}/example" && git config --get remote.origin.url) \
-    <(printf "%s\\n" "${_GIT_REMOTE_URL}")
-
-  diff                                                                \
-    <(cd "${_TMP_DIR}/example" && git rev-parse --abbrev-ref HEAD)    \
-    <(printf "example-branch\\n")
-
-  [[    "${status}"   -eq 0                             ]]
-  [[    "${lines[0]}" =~  Cloning                       ]]
-  [[    "${lines[1]}" =~  Initialized\ local\ notebook  ]]
-  [[    "${lines[1]}" =~  example                       ]]
-  [[ -d "${_TMP_DIR}/example/.git"                      ]]
-  [[ -f "${_TMP_DIR}/example/.index"                    ]]
-  [[ -f "${_TMP_DIR}/example/Example File One.md"       ]]
-
-  cd "${_TMP_DIR}/example" || return 1
-
-  printf "\$(git log): '%s'\n" "$(git log)"
-
-  while [[ -n "$(git status --porcelain)" ]]
-  do
-    sleep 1
-  done
-  git log | grep -v 'Initial commit.'
-  git log | grep 'Initialize'
-}
-
-@test "'notebooks init <path> <remote-url>' exits with 0 and adds a notebook." {
-  {
-    _setup_notebooks
-    _setup_remote_repo
-  }
-
-  run "${_NB}" notebooks init "${_TMP_DIR}/example" "${_GIT_REMOTE_URL}"
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  diff                                                                \
-    <(cd "${_TMP_DIR}/example" && git config --get remote.origin.url) \
-    <(printf "%s\\n" "${_GIT_REMOTE_URL}")
-
-  diff                                                                \
-    <(cd "${_TMP_DIR}/example" && git rev-parse --abbrev-ref HEAD)    \
-    <(printf "master\\n")
-
-  [[    "${status}"   -eq 0                             ]]
-  [[    "${lines[0]}" =~  Cloning                       ]]
-  [[    "${lines[1]}" =~  Initialized\ local\ notebook  ]]
-  [[    "${lines[1]}" =~  example                       ]]
-  [[ -d "${_TMP_DIR}/example/.git"                      ]]
-  [[ -f "${_TMP_DIR}/example/.index"                    ]]
-
-  cd "${_TMP_DIR}/example" || return 1
-  printf "\$(git log): '%s'\n" "$(git log)"
-  while [[ -n "$(git status --porcelain)" ]]
-  do
-    sleep 1
-  done
-  git log | grep 'Initial commit.'
-}
 
 @test "'notebooks init' with no arguments initializes the current directory" {
   {
