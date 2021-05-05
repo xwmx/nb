@@ -295,11 +295,11 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*sample-notebook-1.*\)       ]]
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # TODO
-  # diff                                                            \
-  #   <(git ls-remote --symref "${_GIT_REMOTE_URL}" HEAD            \
-  #       | awk '/^ref:/ {sub(/refs\/heads\//, "", $2); print $2}') \
-  #   <(printf "master\\nsample-notebook\\nsample-notebook-1\\n")
+  diff                                              \
+    <(git -C "${NB_DIR}/Example Notebook" ls-remote \
+        --heads "${_GIT_REMOTE_URL}"                \
+        | sed "s/.*\///g" || :)                     \
+    <(printf "master\\nsample-notebook\\nsample-notebook-1\\n")
 }
 
 @test "'remote' and 'sync' with multiple notebooks displays prompts, updates configuration, and syncs successfully." {
