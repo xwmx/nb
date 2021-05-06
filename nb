@@ -3433,6 +3433,13 @@ _help() {
     esac
   done
 
+  if ! ((_COLOR_ENABLED))
+  then
+    _TPUT_COLOR_PRIMARY=""
+    _TPUT_SETAF_8=""
+    _TPUT_SGR0=""
+  fi
+
   if ((_readme))
   then
     _download_from                          \
