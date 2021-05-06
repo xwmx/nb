@@ -3,7 +3,54 @@
 
 load test_helper
 
-@test "'help' dims hash in #tag* patterns." {
+# color #######################################################################
+
+@test "'help' and 'help <subcommand>' respect --no-color option." {
+  run "${_NB}" help --no-color
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}" -eq 0             ]]
+
+  [[    "${output}" =~  \
+nb\ -h\ \|\ \-\-help\ \|\ help\ \[\<subcommand\>\ \|\ \-\-readme\]  ]]
+
+  run "${_NB}" help browse --no-color
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}" -eq  0            ]]
+
+  [[    "${output}" =~  \[\-s\ \|\ \-\-serve\]                      ]]
+}
+
+@test "'help' and 'help <subcommand>' dim usage." {
+  run "${_NB}" help
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}" -eq 0             ]]
+
+  [[    "${output}" =~  \
+nb\ -h\ .*\|.*\ \-\-help\ .*\|.*\ help\ .*\[.*\<subcommand\>\ .*\|.*\ \-\-readme.*\]  ]]
+  [[ !  "${output}" =~  \
+nb\ -h\ \|\ \-\-help\ \|\ help\ \[\<subcommand\>\ \|\ \-\-readme\]                    ]]
+
+  run "${_NB}" help browse
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}" -eq  0            ]]
+
+  [[    "${output}" =~  \[.*\-s\ .*\|.*\ \-\-serve.*\]  ]]
+  [[ !  "${output}" =~  \[\-s\ \|\ \-\-serve\]          ]]
+}
+
+@test "'help' and 'help <subcomman>' dim hash in #tag* patterns." {
   run "${_NB}" help
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -22,6 +69,8 @@ load test_helper
 
   [[ "${output}" =~   \ .*#.*tags     ]]
 }
+
+# `help` ######################################################################
 
 @test "'help' with no arguments exits with status 0 and prints default help." {
   run "${_NB}" help

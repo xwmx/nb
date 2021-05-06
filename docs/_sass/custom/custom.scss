@@ -5,15 +5,52 @@
 // More info:
 // https://pmarsceill.github.io/just-the-docs/docs/customization/
 
+/* #1a1a1a #1b1b1b #1e1f25 #4da6dc #65bcfb #6cb2b5 #222327 #232529 */
+
+::selection {
+  background-color: #fba4d7;
+}
+
+a,
+a code {
+  color:            #58a6ff !important;
+}
+
+a:not([class]),
+a:not([class]):hover {
+  background:       none;
+}
+
+a:not([class]):hover {
+  text-decoration:  underline;
+}
+
+body {
+  background-color: #1e242d;
+  color:            #e6e6e6;
+}
+
+code,
+div.highlighter-rouge {
+  background-color: #161b22;
+}
+
+a:visited code,
 code {
-  border:           0;
+  border:           1px solid #2d3035;
+  color:            #dedede;
   font-family:      'Courier Prime', 'SFMono-Regular', Menlo, Consolas, Monospace;
-  font-size:        0.9rem;
-  line-height:      1.2;
+  font-size:        1rem;
+  line-height:      1.4;
+  padding:          0.1rem 0.25rem;
+}
+
+div.highlighter-rouge {
+  padding: 0.75rem 1rem;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  color:            #515055 !important;
+  color:            #e6e6e6 !important;
 }
 
 h1, h1 code {
@@ -28,13 +65,50 @@ h3 {
   font-size:        1.25rem !important;
 }
 
+input[type='text'] {
+  background-color: #1e242d;
+}
+
 pre {
   font-size:        1.2rem;
   line-height:      1rem;
 }
 
-.highlight .o {
+th,
+thead th,
+td {
+  background-color: transparent;
+  border-bottom:    1px solid #3a3a3a;
+  border-left:      1px solid #3a3a3a;
+}
+
+.highlight .k   {
+  color:            #fff56f;
+}
+
+.highlight .gh  {
+  color:            #8ee6ea;
+}
+
+.highlight .nb  {
+  color:            #e095ff;
+}
+
+.highlight .gu  {
+  color:            #268bd2;
+}
+
+.highlight .o   {
   color:            #60548c;
+}
+
+.hightlight .s2 {
+  color:            #2aa198;
+}
+
+.main-header {
+  background-color: #1e242d;
+  border:           0;
 }
 
 .main-content {
@@ -61,6 +135,46 @@ pre {
   }
 }
 
+.nav-list .nav-list-item .nav-list-link:hover,
+.nav-list .nav-list-item .nav-list-link.active,
+.site-title:hover {
+  background-image: linear-gradient(-90deg, #191a1d 0%,
+                    rgba(34, 42, 74, 0.8) 80%,
+                    rgba(255, 257, 255, 0) 100%);
+}
+
+.search-active .search-input,
+.search-input,
+.search-results,
+.search-result-previews {
+  background-color: #1e1f25;
+  color:            #c7c5ce;
+}
+
+.search-result:hover,
+.search-result.active,
+.site-button:hover {
+  background:       none;
+  background-color: #25272b;
+}
+
+.side-bar {
+  background-color: #191a1d;
+  border:           0;
+}
+
+.site-header {
+  border:           0;
+}
+
 .site-nav {
   padding-top:      0;
+}
+
+.site-title {
+  padding-left:     1.5rem;
+}
+
+.table-wrapper {
+  box-shadow:       none;
 }

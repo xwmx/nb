@@ -34,10 +34,10 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
 
-  [[ "${status}"    -eq 0                         ]]
-  [[ "${#lines[@]}" -eq 1                         ]]
+  [[ "${status}"    -eq 0                       ]]
+  [[ "${#lines[@]}" -eq 1                       ]]
 
-  [[ "${lines[0]}"  =~  .*master.*                ]]
+  [[ "${lines[0]}"  =~  .*master.*              ]]
 }
 
 @test "'remote branches' with existing remote as orphan prints branches with current branch highlighted." {
@@ -63,11 +63,11 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
 
-  [[ "${status}"    -eq 0                         ]]
-  [[ "${#lines[@]}" -eq 2                         ]]
+  [[ "${status}"    -eq 0                       ]]
+  [[ "${#lines[@]}" -eq 2                       ]]
 
-  [[ "${lines[0]}"  =~  .*example-branch.*        ]]
-  [[ "${lines[1]}"  ==  "master"                  ]]
+  [[ "${lines[0]}"  =~  .*example-branch.*      ]]
+  [[ "${lines[1]}"  ==  "master"                ]]
 }
 
 # remote remove ###############################################################
@@ -94,8 +94,15 @@ load test_helper
 
     _setup_remote_repo
 
-    cd "${NB_DIR}/home" &&
-      git remote add origin "${_GIT_REMOTE_URL}"
+    "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}1${_NEWLINE}"
+
+    diff                                      \
+      <("${_NB}" remote)                      \
+      <(printf "%s (master)\\n" "${_GIT_REMOTE_URL}")
+
+    diff                                      \
+      <(git -C "${NB_DIR}/home" branch --all) \
+      <(printf "* master\\n  remotes/origin/master\\n")
   }
 
   run "${_NB}" remote remove <<< "y${_NEWLINE}"
@@ -111,6 +118,18 @@ load test_helper
 
   [[ "${lines[0]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}   ]]
   [[ "${lines[1]}"  =~  Removed\ \ remote:\ .*${_GIT_REMOTE_URL}  ]]
+
+  diff                                        \
+    <(git -C "${NB_DIR}/home" branch --all)   \
+    <(printf "* master\\n")
+
+  # does not delete last branch
+
+  diff                                        \
+    <(git -C "${NB_DIR}/home" ls-remote       \
+        --heads "${_GIT_REMOTE_URL}"          \
+        | sed "s/.*\///g" || :)               \
+    <(printf "master\\n")
 }
 
 @test "'remote unset' with existing remote removes remote and prints message." {
@@ -119,14 +138,15 @@ load test_helper
 
     _setup_remote_repo
 
-    cd "${NB_DIR}/home" &&
-      git remote add origin "${_GIT_REMOTE_URL}"
+    "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}1${_NEWLINE}"
 
-    diff                                  \
-      <(git -C "${NB_DIR}/home" ls-remote \
-          --heads "${_GIT_REMOTE_URL}"    \
-          | sed "s/.*\///g" || :)         \
-      <(printf "master\\n")
+    diff                                      \
+      <("${_NB}" remote)                      \
+      <(printf "%s (master)\\n" "${_GIT_REMOTE_URL}")
+
+    diff                                      \
+      <(git -C "${NB_DIR}/home" branch --all) \
+      <(printf "* master\\n  remotes/origin/master\\n")
   }
 
   run "${_NB}" remote unset <<< "y${_NEWLINE}"
@@ -143,12 +163,16 @@ load test_helper
   [[ "${lines[0]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}   ]]
   [[ "${lines[1]}"  =~  Removed\ \ remote:\ .*${_GIT_REMOTE_URL}  ]]
 
+  diff                                        \
+    <(git -C "${NB_DIR}/home" branch --all)   \
+    <(printf "* master\\n")
+
   # does not delete last branch
 
-  diff                                  \
-    <(git -C "${NB_DIR}/home" ls-remote \
-        --heads "${_GIT_REMOTE_URL}"    \
-        | sed "s/.*\///g" || :)         \
+  diff                                        \
+    <(git -C "${NB_DIR}/home" ls-remote       \
+        --heads "${_GIT_REMOTE_URL}"          \
+        | sed "s/.*\///g" || :)               \
     <(printf "master\\n")
 }
 
@@ -162,10 +186,18 @@ load test_helper
 
     "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
 
-    diff                                  \
-      <(git -C "${NB_DIR}/home" ls-remote \
-          --heads "${_GIT_REMOTE_URL}"    \
-          | sed "s/.*\///g" || :)         \
+    diff                                      \
+      <("${_NB}" remote)                      \
+      <(printf "%s (example-branch)\\n" "${_GIT_REMOTE_URL}")
+
+    diff                                      \
+      <(git -C "${NB_DIR}/home" branch --all) \
+      <(printf "* example-branch\\n  remotes/origin/example-branch\\n")
+
+    diff                                      \
+      <(git -C "${NB_DIR}/home" ls-remote     \
+          --heads "${_GIT_REMOTE_URL}"        \
+          | sed "s/.*\///g" || :)             \
       <(printf "example-branch\\nmaster\\n")
   }
 
@@ -183,11 +215,15 @@ load test_helper
   [[ "${lines[0]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}   ]]
   [[ "${lines[1]}"  =~  Removed\ \ remote:\ .*${_GIT_REMOTE_URL}  ]]
 
-    diff                                  \
-      <(git -C "${NB_DIR}/home" ls-remote \
-          --heads "${_GIT_REMOTE_URL}"    \
-          | sed "s/.*\///g" || :)         \
-      <(printf "master\\n")
+  diff                                        \
+    <(git -C "${NB_DIR}/home" ls-remote       \
+        --heads "${_GIT_REMOTE_URL}"          \
+        | sed "s/.*\///g" || :)               \
+    <(printf "master\\n")
+
+  diff                                        \
+    <(git -C "${NB_DIR}/home" branch --all)   \
+    <(printf "* example-branch\\n")
 }
 
 # remote ######################################################################
@@ -248,7 +284,7 @@ load test_helper
 
     touch "${NB_DIR}/home/example.md"
 
-    [[ -f "${NB_DIR}/home/example.md" ]]
+    [[ -f "${NB_DIR}/home/example.md"   ]]
 
     "${_NB}" git dirty
   }

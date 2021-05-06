@@ -74,7 +74,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="6.1.3"
+_VERSION="6.1.4"
 
 # $_ME
 #
@@ -3034,33 +3034,6 @@ _git() {
     [[ -n "$(git -C "${_target_path}" status --porcelain)" ]]
   }
 
-  # _git_fetch()
-  #
-  # Usage:
-  #   _git_fetch [<notebook-path>]
-  #
-  # Description:
-  #   Perform a `git fetch` git prompt and error output.
-  _git_fetch() {
-    local _notebook_path=
-    _notebook_path="${1:-"$(_notebooks current --path)"}"
-
-    if ! GIT_TERMINAL_PROMPT=0 git -C "${_notebook_path}" fetch &>/dev/null
-    then
-      if ((_prompt))
-      then # fetch again, displaying git prompt and/or errors after newline
-        printf "\\n"
-
-        if ! GIT_TERMINAL_PROMPT=1 git -C "${_notebook_path}" fetch
-        then
-          exit 1
-        fi
-      else
-        return 1
-      fi
-    fi
-  }
-
   # _git_out_of_sync()
   #
   # Usage:
@@ -3182,10 +3155,32 @@ HEREDOC
       return 0
     fi
 
-    _git_fetch "${_notebook_path}"
-
     local _git_branch=
     _git_branch="$(git -C "${_notebook_path}" rev-parse --abbrev-ref HEAD)"
+
+    if ! GIT_TERMINAL_PROMPT=0 git -C "${_notebook_path}" fetch origin "${_git_branch}" &>/dev/null
+    then
+      local _remote_branches=($(
+        git -C "${_notebook_path}" ls-remote --heads "${_remote_url}" 2>/dev/null \
+          | sed "s/.*\///g" || :
+      ))
+
+      if [[ -z "${_remote_branches[*]:-}" ]] ||
+         _contains "${_git_branch}" "${_remote_branches[@]:-}"
+      then
+        if ((_prompt))
+        then # fetch again, displaying git prompt and/or errors after newline
+          printf "\\n"
+
+          if ! GIT_TERMINAL_PROMPT=1 git -C "${_notebook_path}" fetch origin "${_git_branch}"
+          then
+            exit 1
+          fi
+        else
+          return 1
+        fi
+      fi
+    fi
 
     if ((_prompt))
     then
@@ -3437,6 +3432,13 @@ _help() {
         ;;
     esac
   done
+
+  if ! ((_COLOR_ENABLED))
+  then
+    _TPUT_COLOR_PRIMARY=""
+    _TPUT_SETAF_8=""
+    _TPUT_SGR0=""
+  fi
 
   if ((_readme))
   then
@@ -4278,9 +4280,11 @@ _init() {
     then
       if [[ -n "${_remote_branch:-}"  ]]
       then
-        git clone --branch "${_remote_branch:-}" "${_remote_url}" "${NB_DIR}/home"
+        git clone --no-local --single-branch --branch "${_remote_branch:-}" \
+          "${_remote_url}"                                                  \
+          "${NB_DIR}/home"
       else
-        git clone "${_remote_url}" "${NB_DIR}/home"
+        git clone --no-local --single-branch "${_remote_url}" "${NB_DIR}/home"
       fi && if ((_author))
             then
               _notebooks author "${_author_arguments[@]:-}"
@@ -6276,9 +6280,11 @@ _notebooks() {
     then
       if [[ -n "${_remote_branch:-}"  ]]
       then
-        git clone --branch "${_remote_branch:-}" "${_remote_url}" "${NB_DIR}/${_name}"
+        git clone --no-local --single-branch --branch "${_remote_branch:-}" \
+          "${_remote_url}"                                                  \
+          "${NB_DIR}/${_name}"
       else
-        git clone "${_remote_url}" "${NB_DIR}/${_name}"
+        git clone --no-local --single-branch "${_remote_url}" "${NB_DIR}/${_name}"
       fi &&
         printf "%s\\n" "${_name}" > "${NB_DIR}/.current"
     else
@@ -6964,9 +6970,11 @@ HEREDOC
     then
       if [[ -n "${_remote_branch:-}" ]]
       then
-        git clone --branch "${_remote_branch:-}" "${_remote_url}" "${_path}"
+        git clone --no-local --single-branch --branch "${_remote_branch:-}" \
+          "${_remote_url}"                                                  \
+          "${_path}"
       else
-        git clone "${_remote_url}" "${_path}"
+        git clone --no-local --single-branch "${_remote_url}" "${_path}"
       fi
     else
       git -C "${_path}" init &>/dev/null  &&
@@ -18856,7 +18864,7 @@ _remote() {
           return 1
       fi
 
-      git -C "${_notebook_path}" fetch origin &>/dev/null
+      git -C "${_notebook_path}" fetch origin "${_new_branch}" &>/dev/null || :
 
       if ! git -C "${_notebook_path}" show-branch \
            "remotes/origin/${_new_branch}" > /dev/null 2>&1
@@ -18995,6 +19003,19 @@ HEREDOC
       _updated_current_branch="$(
         git -C "${_notebook_path}" rev-parse --abbrev-ref HEAD
       )"
+
+      local __local_branch=
+      for   __local_branch in $(git -C "${_notebook_path}" branch --all)
+      do
+        if [[   "${__local_branch:-}" =~ ^\ \ remotes/              ]] &&
+           [[ ! "${__local_branch:-}" =~ ^\ \ remotes/origin/HEAD   ]] &&
+           [[ ! "${__local_branch:-}" =~ \
+                  ^\ \ remotes/origin/${_updated_current_branch}$   ]]
+        then
+          git -C "${_notebook_path}" branch               \
+            --delete --remotes "${__local_branch#\ \ remotes/}" &>/dev/null
+        fi
+      done
 
       local _updated_remote_url=
       _updated_remote_url="$(
