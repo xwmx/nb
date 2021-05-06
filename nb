@@ -18997,6 +18997,19 @@ HEREDOC
         git -C "${_notebook_path}" rev-parse --abbrev-ref HEAD
       )"
 
+      local __local_branch=
+      for   __local_branch in $(git -C "${_notebook_path}" branch --all)
+      do
+        if [[   "${__local_branch:-}" =~ ^\ \ remotes/              ]] &&
+           [[ ! "${__local_branch:-}" =~ ^\ \ remotes/origin/HEAD   ]] &&
+           [[ ! "${__local_branch:-}" =~ \
+                  ^\ \ remotes/origin/${_updated_current_branch}$   ]]
+        then
+          git -C "${_notebook_path}" branch               \
+            --delete --remotes "${__local_branch#\ \ remotes/}" &>/dev/null
+        fi
+      done
+
       local _updated_remote_url=
       _updated_remote_url="$(
         git -C "${_notebook_path}" remote get-url origin 2>/dev/null

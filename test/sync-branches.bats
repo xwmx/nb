@@ -48,7 +48,7 @@ load test_helper
 
     diff                                                  \
       <(git -C "${NB_DIR}/Sample Notebook" branch --all)  \
-      <(printf "* sample-notebook\\n  remotes/origin/master\\n  remotes/origin/sample-notebook\\n")
+      <(printf "* sample-notebook\\n  remotes/origin/sample-notebook\\n")
 
     # Demo Notebook
 
@@ -80,14 +80,14 @@ load test_helper
 
     diff                                                  \
       <(git -C "${NB_DIR}/Sample Notebook" branch --all)  \
-      <(printf "* sample-notebook\\n  remotes/origin/master\\n  remotes/origin/sample-notebook\\n")
+      <(printf "* sample-notebook\\n  remotes/origin/sample-notebook\\n")
 
     printf "Demo Notebook Branches: \\n"
     git -C "${NB_DIR}/Demo Notebook" branch --all
 
     diff                                                  \
       <(git -C "${NB_DIR}/Demo Notebook" branch --all)    \
-      <(printf "* demo-notebook\\n  remotes/origin/demo-notebook\\n  remotes/origin/master\\n")
+      <(printf "* demo-notebook\\n  remotes/origin/demo-notebook\\n")
   }
 
   # Sample Notebook
@@ -116,14 +116,14 @@ load test_helper
 
   diff                                                  \
     <(git -C "${NB_DIR}/Sample Notebook" branch --all)  \
-    <(printf "* sample-notebook\\n  remotes/origin/master\\n  remotes/origin/sample-notebook\\n")
+    <(printf "* sample-notebook\\n  remotes/origin/sample-notebook\\n")
 
   printf "Demo Notebook Branches: \\n"
   git -C "${NB_DIR}/Demo Notebook" branch --all
 
   diff                                                  \
     <(git -C "${NB_DIR}/Demo Notebook" branch --all)    \
-    <(printf "* demo-notebook\\n  remotes/origin/demo-notebook\\n  remotes/origin/master\\n")
+    <(printf "* demo-notebook\\n  remotes/origin/demo-notebook\\n")
 
   # Example Notebook
 
@@ -151,14 +151,14 @@ load test_helper
 
   diff                                                  \
     <(git -C "${NB_DIR}/Sample Notebook" branch --all)  \
-    <(printf "* sample-notebook\\n  remotes/origin/master\\n  remotes/origin/sample-notebook\\n")
+    <(printf "* sample-notebook\\n  remotes/origin/sample-notebook\\n")
 
   printf "Demo Notebook Branches: \\n"
   git -C "${NB_DIR}/Demo Notebook" branch --all
 
   diff                                                  \
     <(git -C "${NB_DIR}/Demo Notebook" branch --all)    \
-    <(printf "* demo-notebook\\n  remotes/origin/demo-notebook\\n  remotes/origin/master\\n")
+    <(printf "* demo-notebook\\n  remotes/origin/demo-notebook\\n")
 
   # Demo Notebook
 
@@ -186,14 +186,14 @@ load test_helper
 
   diff                                                  \
     <(git -C "${NB_DIR}/Sample Notebook" branch --all)  \
-    <(printf "* sample-notebook\\n  remotes/origin/master\\n  remotes/origin/sample-notebook\\n")
+    <(printf "* sample-notebook\\n  remotes/origin/sample-notebook\\n")
 
   printf "Demo Notebook Branches: \\n"
   git -C "${NB_DIR}/Demo Notebook" branch --all
 
   diff                                                  \
     <(git -C "${NB_DIR}/Demo Notebook" branch --all)    \
-    <(printf "* demo-notebook\\n  remotes/origin/demo-notebook\\n  remotes/origin/master\\n")
+    <(printf "* demo-notebook\\n  remotes/origin/demo-notebook\\n")
 }
 
 @test "'sync' with unrelated histories displays prompt and merges with existing." {

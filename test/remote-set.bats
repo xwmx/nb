@@ -58,10 +58,10 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*example.*\)             ]]
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[0]}"  =~ \*\ example                              ]]
-  [[ "${lines[1]}"  =~ remotes/origin/HEAD\ \-\>\ origin/master ]]
-  [[ "${lines[2]}"  =~ remotes/origin/example                   ]]
-  [[ "${lines[3]}"  =~ remotes/origin/master                    ]]
+  [[    "${lines[0]}"  =~ \*\ example                              ]]
+  [[    "${lines[1]}"  =~ remotes/origin/HEAD\ \-\>\ origin/master ]]
+  [[    "${lines[2]}"  =~ remotes/origin/example                   ]]
+  [[    "${lines[3]}"  =~ remotes/origin/master                    ]]
 
   [[ -f "${_TMP_DIR}/new-clone/Example File One.md" ]]
 
