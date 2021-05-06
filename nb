@@ -4273,11 +4273,11 @@ _init() {
     then
       if [[ -n "${_remote_branch:-}"  ]]
       then
-        git clone --single-branch --branch "${_remote_branch:-}"  \
-          "${_remote_url}"                                        \
+        git clone --no-local --single-branch --branch "${_remote_branch:-}" \
+          "${_remote_url}"                                                  \
           "${NB_DIR}/home"
       else
-        git clone --single-branch "${_remote_url}" "${NB_DIR}/home"
+        git clone --no-local --single-branch "${_remote_url}" "${NB_DIR}/home"
       fi && if ((_author))
             then
               _notebooks author "${_author_arguments[@]:-}"
@@ -6273,11 +6273,11 @@ _notebooks() {
     then
       if [[ -n "${_remote_branch:-}"  ]]
       then
-        git clone --single-branch --branch "${_remote_branch:-}"  \
-          "${_remote_url}"                                        \
+        git clone --no-local --single-branch --branch "${_remote_branch:-}" \
+          "${_remote_url}"                                                  \
           "${NB_DIR}/${_name}"
       else
-        git clone --single-branch "${_remote_url}" "${NB_DIR}/${_name}"
+        git clone --no-local --single-branch "${_remote_url}" "${NB_DIR}/${_name}"
       fi &&
         printf "%s\\n" "${_name}" > "${NB_DIR}/.current"
     else
@@ -6963,11 +6963,11 @@ HEREDOC
     then
       if [[ -n "${_remote_branch:-}" ]]
       then
-        git clone --single-branch --branch "${_remote_branch:-}"  \
-          "${_remote_url}"                                        \
+        git clone --no-local --single-branch --branch "${_remote_branch:-}" \
+          "${_remote_url}"                                                  \
           "${_path}"
       else
-        git clone --single-branch "${_remote_url}" "${_path}"
+        git clone --no-local --single-branch "${_remote_url}" "${_path}"
       fi
     else
       git -C "${_path}" init &>/dev/null  &&
