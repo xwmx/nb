@@ -18,6 +18,8 @@ load test_helper
 
     "${_NB}" add "Example File.md" --content "Example content."
 
+    "${_NB}" sync
+
     # Sample Notebook
 
     "${_NB}" notebooks add "Sample Notebook"

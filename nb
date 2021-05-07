@@ -3165,8 +3165,7 @@ HEREDOC
           | sed "s/.*\///g" || :
       ))
 
-      if [[ -z "${_remote_branches[*]:-}" ]] ||
-         _contains "${_git_branch}" "${_remote_branches[@]:-}"
+      if _contains "${_git_branch}" "${_remote_branches[@]:-}"
       then
         if ((_prompt))
         then # fetch again, displaying git prompt and/or errors after newline
@@ -18875,6 +18874,7 @@ _remote() {
               ;;
             *)
               printf "Exiting...\\n"
+
               exit 0
               ;;
           esac
@@ -18888,6 +18888,13 @@ _remote() {
         _print_line "--------------"
       fi
 
+      local _remote_branches=()
+      _remote_branches=($(
+        git -C "${_notebook_path}" ls-remote  \
+          --heads "${_new_remote_url:-}"      \
+          | sed "s/.*\///g" || :
+      ))
+
       if [[ "${_current_remote_url:-}" != "${_new_remote_url:-}" ]]
       then
         git -C "${_notebook_path}" remote add origin "${_new_remote_url}" ||
@@ -18898,8 +18905,10 @@ _remote() {
 
       local _selected_push_option=
 
-      if ! git -C "${_notebook_path}" show-branch             \
-           "remotes/origin/${_new_branch}" > /dev/null 2>&1
+      if [[ "${#_remote_branches[@]}" -eq 0 ]]
+      then
+        _selected_push_option=2
+      elif ! _contains "${_new_branch}" "${_remote_branches[@]:-}"
       then
         cat <<HEREDOC
 Branch not present on remote: $(_color_primary "${_new_branch:-}")
@@ -18951,35 +18960,33 @@ HEREDOC
         fi
       fi
 
-      while true
-      do
-        IFS='' read -r -e -d $'\n' -p                                                 \
-          "$(_color_primary "Choose an option") or $(_color_primary "q") to quit: "   \
-          _selected_push_option
+      if [[ -z "${_selected_push_option:-}" ]]
+      then
+        while true
+        do
+          IFS='' read -r -e -d $'\n' -p                                                 \
+            "$(_color_primary "Choose an option") or $(_color_primary "q") to quit: "   \
+            _selected_push_option
 
-        case "${_selected_push_option:-}" in
-          [12])
-            break
-            ;;
-          q*|exit)
-            printf "Exiting...\\n"
-            exit 0
-            ;;
-        esac
-      done
+          case "${_selected_push_option:-}" in
+            [12])
+              break
+              ;;
+            q*|exit)
+              printf "Exiting...\\n"
+
+              _remote unset <<< "y${_NEWLINE}"
+
+              exit 0
+              ;;
+          esac
+        done
+      fi
 
       if [[   "${_selected_push_option:-}" == "1" ]]      &&
-         ! git -C "${_notebook_path}" show-branch \
-           "remotes/origin/${_new_branch}" > /dev/null 2>&1
+         ! _contains "${_new_branch}" "${_remote_branches[@]:-}"
       then
         printf "\\nRemote branches:\\n\\n"
-
-        local _remote_branches=()
-        _remote_branches=($(
-          git -C "${_notebook_path}" ls-remote    \
-            --heads "${_new_remote_url}"          \
-            | sed "s/.*\///g" || :
-        ))
 
         local i=
         for ((i=0; i < "${#_remote_branches[@]}"; i++))
@@ -19002,20 +19009,23 @@ HEREDOC
           case "${_selected_branch:-}" in
             q*|exit)
               printf "Exiting...\\n"
+
+              _remote unset <<< "y${_NEWLINE}"
+
               exit 0
               ;;
             [0-9]*)
               if [[ -n "${_remote_branches[$((_selected_branch - 1))]:-}" ]]
               then
                 _new_branch="${_remote_branches[$((_selected_branch - 1))]:-}"
+
                 break
               fi
               ;;
           esac
         done
       elif [[ "${_selected_push_option:-}" == "2" ]]      &&
-           git -C "${_notebook_path}" show-branch         \
-             "remotes/origin/${_new_branch}" > /dev/null 2>&1
+           _contains "${_new_branch}" "${_remote_branches[@]:-}"
       then
         local _notebook_name_branch_name="${_notebook_path##*/}"
         _notebook_name_branch_name="${_notebook_name_branch_name//' '/-}"
@@ -19027,8 +19037,7 @@ HEREDOC
         local _uniqueness_counter=0
         local _unique_branch_name="${_notebook_name_branch_name}"
 
-        while git -C "${_notebook_path}" show-branch      \
-             "remotes/origin/${_unique_branch_name}"  > /dev/null 2>&1
+        while _contains "${_unique_branch_name}" "${_remote_branches[@]:-}"
         do
           _uniqueness_counter="$((_uniqueness_counter+1))"
 
