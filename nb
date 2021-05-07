@@ -18656,18 +18656,18 @@ _remote() {
   for   __arg in "${@:-}"
   do
     case "${__arg:-}" in
-      --skip*confirm*)  _skip_confirmation=1  ;;
-      --skip*preamble)  _skip_preamble=1      ;;
-      --url|url)        _only_url=1           ;;
+      --skip*confirm*)  _skip_confirmation=1    ;;
+      --skip*preamble)  _skip_preamble=1        ;;
+      --url|url)        _only_url=1             ;;
       *)
-        if [[   -z  "${_subcommand:-}"        ]]
+        if [[   -z  "${_subcommand:-}"          ]]
         then
           _subcommand="${__arg}"
-        elif [[ -z  "${_new_remote_url:-}"    ]] &&
+        elif [[ -z  "${_new_remote_url:-}"      ]]  &&
              _contains "${_subcommand}" "add" "branches" "set"
         then
           _new_remote_url="${__arg}"
-        elif [[ -z  "${_new_branch:-}"        ]]
+        elif [[ -z  "${_new_branch:-}"          ]]
         then
           _new_branch="${__arg:-}"
         fi
@@ -18690,7 +18690,7 @@ _remote() {
 
   local _remote_exists=0
 
-  if [[ -n "${_current_remote_url:-}"   ]]
+  if [[ -n "${_current_remote_url:-}"           ]]
   then
     _remote_exists=1
   fi
@@ -18698,7 +18698,7 @@ _remote() {
   case "${_subcommand:-}" in
     branches)
       {
-        if [[ -n "${_new_remote_url:-}" ]]
+        if [[ -n "${_new_remote_url:-}"         ]]
         then
           git -C "${_notebook_path}" ls-remote  \
             --heads "${_new_remote_url:-}"      \
@@ -18741,7 +18741,7 @@ _remote() {
     remove|rm|unset)
       if ((_remote_exists))
       then
-        printf "Removing remote: %s\\n"       \
+        printf "Removing remote: %s\\n"         \
           "$(_color_primary "${_current_remote_url:-}")"
 
         if ! ((_skip_confirmation))
@@ -18749,7 +18749,7 @@ _remote() {
           while true
           do
             local __yn=
-            IFS='' read -r -e -d $'\n' -p         \
+            IFS='' read -r -e -d $'\n' -p       \
 "$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
 
             case ${__yn} in
@@ -18805,40 +18805,40 @@ _remote() {
             cd "${_blank_repo_path}" || return 1
 
             {
-              git -C "${_blank_repo_path}" init             \
-                  --initial-branch "${_remote_branches[0]}" &&
-                touch "${_blank_repo_path}/.index"          &&
-                git -C "${_blank_repo_path}" add --all      &&
-                git -C "${_blank_repo_path}" commit         \
-                  -a -m "[nb] Initialize"                   &&
-                git -C "${_blank_repo_path}" remote add     \
-                  origin "${_current_remote_url:-}"         &&
-                git -C "${_blank_repo_path}" push origin    \
+              git -C "${_blank_repo_path}" init                     \
+                  --initial-branch "${_remote_branches[0]}"         &&
+                touch "${_blank_repo_path}/.index"                  &&
+                git -C "${_blank_repo_path}" add --all              &&
+                git -C "${_blank_repo_path}" commit                 \
+                  -a -m "[nb] Initialize"                           &&
+                git -C "${_blank_repo_path}" remote add             \
+                  origin "${_current_remote_url:-}"                 &&
+                git -C "${_blank_repo_path}" push origin            \
                   "${_remote_branches[0]}" --force
             } &>/dev/null ||
               _exit_1 printf "Unable to reset remote branch: %s\\n" \
                 "$(_color_primary "${_remote_branches[0]}")"
           else
-            git -C "${_notebook_path:-}" push origin        \
+            git -C "${_notebook_path:-}" push origin                \
               ":${_current_branch}"  --force &>/dev/null
           fi
         fi
 
-        git -C "${_notebook_path:-}" remote rm origin       &&
-          printf "Remote removed: %s\\n"                    \
-            "$(_color_primary "${_current_remote_url:-}")"  &&
+        git -C "${_notebook_path:-}" remote rm origin               &&
+          printf "Remote removed: %s\\n"                            \
+            "$(_color_primary "${_current_remote_url:-}")"          &&
               return 0
       else
         _exit_1 printf "No remote configured.\\n"
       fi
       ;;
     set|add)
-      if [[ -z "${_new_remote_url:-}" ]]
+      if [[ -z "${_new_remote_url:-}"           ]]
       then
         _exit_1 _help "remote"
       fi
 
-      if [[ -z "${_new_branch:-}"     ]]
+      if [[ -z "${_new_branch:-}"               ]]
       then
         _new_branch="${_current_branch}"
       fi
@@ -18888,14 +18888,14 @@ _remote() {
 
       local _remote_branches=()
       _remote_branches=($(
-        git -C "${_notebook_path}" ls-remote  \
-          --heads "${_new_remote_url:-}"      \
+        git -C "${_notebook_path}" ls-remote    \
+          --heads "${_new_remote_url:-}"        \
           | sed "s/.*\///g" || :
       ))
 
       local _selected_push_option=
 
-      if [[ "${#_remote_branches[@]}" -eq 0 ]]
+      if [[ "${#_remote_branches[@]}" -eq 0     ]]
       then
         _selected_push_option=2
       elif ! _contains "${_new_branch}" "${_remote_branches[@]:-}"
@@ -18911,7 +18911,7 @@ HEREDOC
         local _temp_repo_path="${_NB_TEMP_DIRECTORY}/${RANDOM}"
 
         (
-          cd "${_NB_TEMP_DIRECTORY}" &&
+          cd "${_NB_TEMP_DIRECTORY}"                            &&
             git clone --no-local                                \
               --single-branch --branch "${_new_branch:-}"       \
               "${_new_remote_url}"                              \
@@ -18962,7 +18962,7 @@ HEREDOC
         fi
       fi
 
-      if [[ -z "${_selected_push_option:-}" ]]
+      if [[ -z "${_selected_push_option:-}"       ]]
       then
         while true
         do
@@ -19024,7 +19024,7 @@ HEREDOC
         done
       fi
 
-      if [[ "${_selected_push_option:-}" == "2" ]]      &&
+      if [[ "${_selected_push_option:-}" == "2"   ]]      &&
            _contains "${_new_branch}" "${_remote_branches[@]:-}"
       then
         local _notebook_name_branch_name="${_notebook_path##*/}"
