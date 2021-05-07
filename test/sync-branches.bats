@@ -209,6 +209,8 @@ load test_helper
 
     "${_NB}" add "Example File.md" --content "Example content."
 
+    "${_NB}" sync
+
     "${_NB}" notebooks add "Sample Notebook"
     "${_NB}" notebooks use "Sample Notebook"
 
@@ -258,6 +260,8 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)                  ]]
     [[    -d "${NB_DIR}/Example Notebook/.git"  ]]
 
     "${_NB}" add "Example File.md" --content "Example content."
+
+    "${_NB}" sync
 
     "${_NB}" notebooks add "Sample Notebook"
     "${_NB}" notebooks use "Sample Notebook"
@@ -383,12 +387,6 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*sample-notebook-1.*\)       ]]
   [[ "${lines[3]}"  =~  Branch:\ .*master                         ]]
   [[ "${lines[4]}"  =~  [^-]--------------[^-]                    ]]
   [[ "${lines[5]}"  =~  \
-Remote\ branch\ has\ existing\ history:\ .*master                 ]]
-  [[ "${lines[6]}"  =~  \
-.*[.*1.*].*\ Merge\ and\ sync\ with\ existing\ remote\ branch\.   ]]
-  [[ "${lines[7]}"  =~  \
-.*[.*2.*].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.  ]]
-  [[ "${lines[8]}"  =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)          ]]
 
   # sync "home" to remote
