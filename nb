@@ -18646,6 +18646,7 @@ HEREDOC
 }
 _remote() {
   local _only_url=0
+  local _skip_confirmation=0
   local _skip_preamble=0
   local _subcommand=
   local _new_branch=
@@ -18655,17 +18656,18 @@ _remote() {
   for   __arg in "${@:-}"
   do
     case "${__arg:-}" in
-      --skip-preamble)  _skip_preamble=1    ;;
-      --url|url)        _only_url=1         ;;
+      --skip*confirm*)  _skip_confirmation=1  ;;
+      --skip*preamble)  _skip_preamble=1      ;;
+      --url|url)        _only_url=1           ;;
       *)
-        if [[   -z  "${_subcommand:-}"      ]]
+        if [[   -z  "${_subcommand:-}"        ]]
         then
           _subcommand="${__arg}"
-        elif [[ -z  "${_new_remote_url:-}"  ]] &&
+        elif [[ -z  "${_new_remote_url:-}"    ]] &&
              _contains "${_subcommand}" "add" "branches" "set"
         then
           _new_remote_url="${__arg}"
-        elif [[ -z  "${_new_branch:-}"      ]]
+        elif [[ -z  "${_new_branch:-}"        ]]
         then
           _new_branch="${__arg:-}"
         fi
@@ -18742,7 +18744,7 @@ _remote() {
         printf "Removing remote: %s\\n"       \
           "$(_color_primary "${_current_remote_url:-}")"
 
-        if ! ((_skip_preamble))
+        if ! ((_skip_confirmation))
         then
           while true
           do
@@ -19054,7 +19056,7 @@ HEREDOC
 
       if ((_remote_exists))
       then
-        _remote unset --skip-preamble
+        _remote unset --skip-confirmation
         _print_line "--------------"
       fi
 
