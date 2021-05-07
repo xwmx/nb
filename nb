@@ -74,7 +74,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="6.1.4"
+_VERSION="6.1.5"
 
 # $_ME
 #
@@ -18715,9 +18715,9 @@ _remote() {
       } | {
         local _highlight_matching_branch=0
 
-        if ((_remote_exists))                 &&
-           [[ -z  "${_new_remote_url:-}"  ]]  ||
-           [[     "${_new_remote_url:-}"  ==  "${_current_remote_url:-}"  ]]
+        if ((_remote_exists))                   &&
+           [[ -z  "${_new_remote_url:-}"  ]]    ||
+           [[     "${_new_remote_url:-}"  ==    "${_current_remote_url:-}"  ]]
         then
           _highlight_matching_branch=1
         fi
@@ -18725,8 +18725,8 @@ _remote() {
         local         __line=
         while read -r __line
         do
-          if ((_highlight_matching_branch))   &&
-             [[   "${__line:-}"           ==  "${_current_branch:-}"      ]]
+          if ((_highlight_matching_branch))     &&
+             [[   "${__line:-}"           ==    "${_current_branch:-}"      ]]
           then
             printf "%s\\n" "$(_color_primary "${__line}")"
           else
@@ -18742,11 +18742,11 @@ _remote() {
       then
         while true
         do
-          printf "Removing remote: %s\\n" \
+          printf "Removing remote: %s\\n"       \
             "$(_color_primary "${_current_remote_url:-}")"
 
           local __yn=
-          IFS='' read -r -e -d $'\n' -p   \
+          IFS='' read -r -e -d $'\n' -p         \
 "$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
 
           case ${__yn} in
@@ -18768,19 +18768,20 @@ _remote() {
             | sed "s/.*\///g" || :
         ))
 
-        if [[ "${#_remote_branches[@]}" -gt 1   ]] &&
-           _contains "${_current_branch}" "${_remote_branches[@]:-}"
+        local _delete_remote_branch=0
+
+        if _contains "${_current_branch}" "${_remote_branches[@]:-}"
         then
           while true
           do
             local __yn=
-            IFS='' read -r -e -d $'\n' -p                   \
+            IFS='' read -r -e -d $'\n' -p       \
 "$(_color_primary "Remove branch from remote?") $(_color_brackets "y/N") " __yn
 
             case ${__yn} in
               [Yy]*)
-                git -C "${_notebook_path:-}" push origin    \
-                  ":${_current_branch}" &>/dev/null
+                _delete_remote_branch=1
+
                 break
                 ;;
               *)
@@ -18788,6 +18789,35 @@ _remote() {
                 ;;
             esac
           done
+        fi
+
+        if ((_delete_remote_branch))
+        then
+          if [[ "${#_remote_branches[@]}" -eq 1 ]]
+          then
+            local _blank_repo_path="${_NB_TEMP_DIRECTORY:-/tmp}/blank-repo"
+
+            mkdir -p "${_blank_repo_path}"
+            cd "${_blank_repo_path}" || return 1
+
+            {
+              git -C "${_blank_repo_path}" init             \
+                  --initial-branch "${_remote_branches[0]}" &&
+                touch "${_blank_repo_path}/.index"          &&
+                git -C "${_blank_repo_path}" add --all      &&
+                git -C "${_blank_repo_path}" commit         \
+                  -a -m "[nb] Initialize"                   &&
+                git -C "${_blank_repo_path}" remote add     \
+                  origin "${_current_remote_url:-}"         &&
+                git -C "${_blank_repo_path}" push origin    \
+                  "${_remote_branches[0]}" --force
+            } &>/dev/null ||
+              _exit_1 printf "Unable to reset remote branch: %s\\n" \
+                "$(_color_primary "${_remote_branches[0]}")"
+          else
+            git -C "${_notebook_path:-}" push origin        \
+              ":${_current_branch}"  --force &>/dev/null
+          fi
         fi
 
         git -C "${_notebook_path:-}" remote rm origin       &&
@@ -18866,7 +18896,9 @@ _remote() {
 
       git -C "${_notebook_path}" fetch origin "${_new_branch}" &>/dev/null || :
 
-      if ! git -C "${_notebook_path}" show-branch \
+      local _selected_push_option=
+
+      if ! git -C "${_notebook_path}" show-branch             \
            "remotes/origin/${_new_branch}" > /dev/null 2>&1
       then
         cat <<HEREDOC
@@ -18889,27 +18921,43 @@ HEREDOC
             "remotes/origin/${_new_branch}"
         )"
 
-        if [[ "${_local_branch_root_hash:-}" != "${_remote_branch_root_hash:-}" ]]
+        local _remote_branch_commit_hashes=()
+        _remote_branch_commit_hashes=($(
+          git -C "${_notebook_path}" rev-list                 \
+            --max-count 3 "remotes/origin/${_new_branch}"
+        ))
+
+        local _remote_branch_files=()
+        _remote_branch_files=($(
+          git -C "${_notebook_path}" ls-tree --name-only "origin/${_new_branch}"
+        ))
+
+        if [[ "${_local_branch_root_hash:-}"  !=  "${_remote_branch_root_hash:-}" ]]
         then
-          cat <<HEREDOC
+           if [[ "${#_remote_branch_commit_hashes[@]}"  -eq 1         ]]  &&
+              [[ "${#_remote_branch_files[@]}"          -eq 1         ]]  &&
+              [[ "${_remote_branch_files[0]}"           ==  ".index"  ]]
+          then
+            _selected_push_option=1
+          else
+            cat <<HEREDOC
 Remote branch has existing history: $(_color_primary "${_new_branch:-}")
 
 $(_color_brackets "1") Merge and sync with existing remote branch.
 $(_color_brackets "2") Sync as a new orphan branch on the remote.
 
 HEREDOC
+          fi
         fi
       fi
-
-      local _selected_option=
 
       while true
       do
         IFS='' read -r -e -d $'\n' -p                                                 \
           "$(_color_primary "Choose an option") or $(_color_primary "q") to quit: "   \
-          _selected_option
+          _selected_push_option
 
-        case "${_selected_option:-}" in
+        case "${_selected_push_option:-}" in
           [12])
             break
             ;;
@@ -18920,7 +18968,7 @@ HEREDOC
         esac
       done
 
-      if [[   "${_selected_option:-}" == "1"  ]]  &&
+      if [[   "${_selected_push_option:-}" == "1" ]]      &&
          ! git -C "${_notebook_path}" show-branch \
            "remotes/origin/${_new_branch}" > /dev/null 2>&1
       then
@@ -18965,7 +19013,7 @@ HEREDOC
               ;;
           esac
         done
-      elif [[ "${_selected_option:-}" == "2"      ]]      &&
+      elif [[ "${_selected_push_option:-}" == "2" ]]      &&
            git -C "${_notebook_path}" show-branch         \
              "remotes/origin/${_new_branch}" > /dev/null 2>&1
       then
