@@ -241,7 +241,7 @@ load test_helper
   [[ "${lines[3]}"  =~  \
 .*\[.*2.*\].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.        ]]
   [[ "${lines[4]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}           ]]
-  [[ "${lines[5]}"  =~  Removed\ \ remote:\ .*${_GIT_REMOTE_URL}          ]]
+  [[ "${lines[5]}"  =~  Remote\ removed:\ .*${_GIT_REMOTE_URL}            ]]
   [[ "${lines[6]}"  =~  [^-]--------------[^-]                            ]]
   [[ "${lines[7]}"  =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)                  ]]
@@ -296,7 +296,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)                  ]]
   [[ "${lines[3]}"  =~  \
 .*\[.*2.*\].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.        ]]
   [[ "${lines[4]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}           ]]
-  [[ "${lines[5]}"  =~  Removed\ \ remote:\ .*${_GIT_REMOTE_URL}          ]]
+  [[ "${lines[5]}"  =~  Remote\ removed:\ .*${_GIT_REMOTE_URL}            ]]
   [[ "${lines[6]}"  =~  [^-]--------------[^-]                            ]]
   [[ "${lines[7]}"  =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*sample-notebook-1.*\)       ]]

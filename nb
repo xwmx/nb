@@ -18739,25 +18739,28 @@ _remote() {
     remove|rm|unset)
       if ((_remote_exists))
       then
-        while true
-        do
-          printf "Removing remote: %s\\n"       \
-            "$(_color_primary "${_current_remote_url:-}")"
+        printf "Removing remote: %s\\n"       \
+          "$(_color_primary "${_current_remote_url:-}")"
 
-          local __yn=
-          IFS='' read -r -e -d $'\n' -p         \
+        if ! ((_skip_preamble))
+        then
+          while true
+          do
+            local __yn=
+            IFS='' read -r -e -d $'\n' -p         \
 "$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
 
-          case ${__yn} in
-            [Yy]*)
-              break
-              ;;
-            *)
-              printf "Exiting...\\n"
-              exit 0
-              ;;
-          esac
-        done
+            case ${__yn} in
+              [Yy]*)
+                break
+                ;;
+              *)
+                printf "Exiting...\\n"
+                exit 0
+                ;;
+            esac
+          done
+        fi
 
         local _remote_branches=()
         _remote_branches=($(
@@ -18775,7 +18778,7 @@ _remote() {
           do
             local __yn=
             IFS='' read -r -e -d $'\n' -p       \
-"$(_color_primary "Remove branch from remote?") $(_color_brackets "y/N") " __yn
+"$(_color_primary "Remove branch on remote?") ($(_color_primary "${_current_branch}")) $(_color_brackets "y/N") " __yn
 
             case ${__yn} in
               [Yy]*)
@@ -18820,7 +18823,7 @@ _remote() {
         fi
 
         git -C "${_notebook_path:-}" remote rm origin       &&
-          printf "Removed  remote: %s\\n"                   \
+          printf "Remote removed: %s\\n"                    \
             "$(_color_primary "${_current_remote_url:-}")"  &&
               return 0
       else
@@ -19051,7 +19054,7 @@ HEREDOC
 
       if ((_remote_exists))
       then
-        _remote unset <<< "y${_NEWLINE}"
+        _remote unset --skip-preamble
         _print_line "--------------"
       fi
 

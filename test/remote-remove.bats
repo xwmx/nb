@@ -2,6 +2,169 @@
 
 load test_helper
 
+# --skip-preamble #############################################################
+
+@test "'remote remove --skip-preamble' with existing remote removes remote without resetting default branch and prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example File.md" --content "Example content."
+
+    _setup_remote_repo
+
+    "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}1${_NEWLINE}"
+
+    diff                                      \
+      <("${_NB}" remote)                      \
+      <(printf "%s (master)\\n" "${_GIT_REMOTE_URL}")
+
+    diff                                      \
+      <(git -C "${NB_DIR}/home" branch --all) \
+      <(printf "* master\\n  remotes/origin/master\\n")
+
+    declare _before_hashes=()
+    _before_hashes=($("${_NB}" git rev-list origin/master))
+
+    [[ "${#_before_hashes[@]}"  -eq 2                                 ]]
+
+    [[ "$("${_NB}" git log)"    =~  \[nb\]\ Add:\ Example\ File\.md   ]]
+    [[ "$("${_NB}" git log)"    =~  Initial\ commit\.                 ]]
+  }
+
+  run "${_NB}" remote remove --skip-preamble <<< "n${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  "${_NB}" remote && return 1
+
+  [[ "${status}"    -eq 0 ]]
+
+  [[ "$("${_NB}" remote 2>&1)"  =~  No\ remote\ configured.           ]]
+
+  [[ "${lines[0]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}       ]]
+  [[ "${lines[1]}"  =~  Remote\ removed:\ .*${_GIT_REMOTE_URL}        ]]
+
+  diff                                        \
+    <(git -C "${NB_DIR}/home" branch --all)   \
+    <(printf "* master\\n")
+
+  # does not reset remote
+
+  diff                                        \
+    <(git -C "${NB_DIR}/home" ls-remote       \
+        --heads "${_GIT_REMOTE_URL}"          \
+        | sed "s/.*\///g" || :)               \
+    <(printf "master\\n")
+
+  git clone "${_GIT_REMOTE_URL}" "${_TMP_DIR}/new-clone"
+
+  run git -C "${_TMP_DIR}/new-clone" branch --all
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${lines[0]}"  =~ \*\ master                                  ]]
+  [[    "${lines[1]}"  =~ remotes/origin/HEAD\ \-\>\ origin/master    ]]
+  [[    "${lines[2]}"  =~ remotes/origin/master                       ]]
+
+  declare _after_hashes=()
+  _after_hashes=($(git -C "${_TMP_DIR}/new-clone" rev-list origin/master))
+
+  [[ "${#_after_hashes[@]}" -eq 2                                     ]]
+
+  [[ "${_after_hashes[0]}"  ==  "${_before_hashes[0]}"                ]]
+  [[ "${_after_hashes[1]}"  ==  "${_before_hashes[1]}"                ]]
+
+  git -C "${_TMP_DIR}/new-clone" log
+
+  [[    "$(git -C "${_TMP_DIR}/new-clone" log)" =~  \
+          \[nb\]\ Add:\ Example\ File\.md             ]]
+  [[    "$(git -C "${_TMP_DIR}/new-clone" log)" =~  \
+          Initial\ commit\.                           ]]
+  [[ !  "$(git -C "${_TMP_DIR}/new-clone" log)" =~  \
+          \[nb\]\ Initialize                          ]]
+}
+
+@test "'remote remove --skip-preamble' with existing remote removes remote, resets default branch, and prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example File.md" --content "Example content."
+
+    _setup_remote_repo
+
+    "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}1${_NEWLINE}"
+
+    diff                                      \
+      <("${_NB}" remote)                      \
+      <(printf "%s (master)\\n" "${_GIT_REMOTE_URL}")
+
+    diff                                      \
+      <(git -C "${NB_DIR}/home" branch --all) \
+      <(printf "* master\\n  remotes/origin/master\\n")
+
+    declare _before_hashes=()
+    _before_hashes=($("${_NB}" git rev-list origin/master))
+
+    [[ "${#_before_hashes[@]}"  -eq 2                                 ]]
+
+    [[ "$("${_NB}" git log)"    =~  \[nb\]\ Add:\ Example\ File\.md   ]]
+    [[ "$("${_NB}" git log)"    =~  Initial\ commit\.                 ]]
+  }
+
+  run "${_NB}" remote remove --skip-preamble <<< "y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  "${_NB}" remote && return 1
+
+  [[ "${status}"    -eq 0 ]]
+
+  [[ "$("${_NB}" remote 2>&1)" =~ No\ remote\ configured.             ]]
+
+  [[ "${lines[0]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}       ]]
+  [[ "${lines[1]}"  =~  Remote\ removed:\ .*${_GIT_REMOTE_URL}        ]]
+
+  diff                                        \
+    <(git -C "${NB_DIR}/home" branch --all)   \
+    <(printf "* master\\n")
+
+  # resets remote
+
+  diff                                        \
+    <(git -C "${NB_DIR}/home" ls-remote       \
+        --heads "${_GIT_REMOTE_URL}"          \
+        | sed "s/.*\///g" || :)               \
+    <(printf "master\\n")
+
+  git clone "${_GIT_REMOTE_URL}" "${_TMP_DIR}/new-clone"
+
+  run git -C "${_TMP_DIR}/new-clone" branch --all
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${lines[0]}"  =~ \*\ master                                  ]]
+  [[    "${lines[1]}"  =~ remotes/origin/HEAD\ \-\>\ origin/master    ]]
+  [[    "${lines[2]}"  =~ remotes/origin/master                       ]]
+
+  declare _after_hashes=()
+  _after_hashes=($(git -C "${_TMP_DIR}/new-clone" rev-list origin/master))
+
+  [[ "${#_after_hashes[@]}" -eq 1                                     ]]
+
+  ! _contains "${_after_hashes[0]}" "${_before_hashes[@]}"
+
+  [[ "${_after_hashes[0]}"  != "${_before_hashes[0]}"                 ]]
+  [[ "${_after_hashes[0]}"  != "${_before_hashes[1]}"                 ]]
+
+  git -C "${_TMP_DIR}/new-clone" log
+
+  [[ "$(git -C "${_TMP_DIR}/new-clone" log)"  =~  \[nb\]\ Initialize  ]]
+}
+
 # remote remove ###############################################################
 
 @test "'remote remove' with no existing remote returns 1 and prints message." {
@@ -59,7 +222,7 @@ load test_helper
   [[ "$("${_NB}" remote 2>&1)"  =~  No\ remote\ configured.           ]]
 
   [[ "${lines[0]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}       ]]
-  [[ "${lines[1]}"  =~  Removed\ \ remote:\ .*${_GIT_REMOTE_URL}      ]]
+  [[ "${lines[1]}"  =~  Remote\ removed:\ .*${_GIT_REMOTE_URL}        ]]
 
   diff                                        \
     <(git -C "${NB_DIR}/home" branch --all)   \
@@ -141,7 +304,7 @@ load test_helper
   [[ "$("${_NB}" remote 2>&1)" =~ No\ remote\ configured.             ]]
 
   [[ "${lines[0]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}       ]]
-  [[ "${lines[1]}"  =~  Removed\ \ remote:\ .*${_GIT_REMOTE_URL}      ]]
+  [[ "${lines[1]}"  =~  Remote\ removed:\ .*${_GIT_REMOTE_URL}        ]]
 
   diff                                        \
     <(git -C "${NB_DIR}/home" branch --all)   \
@@ -220,7 +383,7 @@ load test_helper
   [[ "$("${_NB}" remote 2>&1)" =~ No\ remote\ configured.             ]]
 
   [[ "${lines[0]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}       ]]
-  [[ "${lines[1]}"  =~  Removed\ \ remote:\ .*${_GIT_REMOTE_URL}      ]]
+  [[ "${lines[1]}"  =~  Remote\ removed:\ .*${_GIT_REMOTE_URL}        ]]
 
   diff                                        \
     <(git -C "${NB_DIR}/home" branch --all)   \
@@ -297,7 +460,7 @@ load test_helper
   [[ "$("${_NB}" remote 2>&1)" =~ No\ remote\ configured.         ]]
 
   [[ "${lines[0]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}   ]]
-  [[ "${lines[1]}"  =~  Removed\ \ remote:\ .*${_GIT_REMOTE_URL}  ]]
+  [[ "${lines[1]}"  =~  Remote\ removed:\ .*${_GIT_REMOTE_URL}    ]]
 
   diff                                        \
     <(git -C "${NB_DIR}/home" ls-remote       \
@@ -347,7 +510,7 @@ load test_helper
   [[ "$("${_NB}" remote 2>&1)" =~ No\ remote\ configured.         ]]
 
   [[ "${lines[0]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}   ]]
-  [[ "${lines[1]}"  =~  Removed\ \ remote:\ .*${_GIT_REMOTE_URL}  ]]
+  [[ "${lines[1]}"  =~  Remote\ removed:\ .*${_GIT_REMOTE_URL}    ]]
 
   diff                                        \
     <(git -C "${NB_DIR}/home" ls-remote       \
