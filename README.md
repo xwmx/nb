@@ -2496,14 +2496,16 @@ and enable the Ace editor in `nb browse edit --gui` and `nb browse add --gui`.
 #### `browse` Portability
 
 `nb browse` depends on
-[`ncat`](https://nmap.org/ncat/) and [`pandoc`](https://pandoc.org/).
+[`ncat`](https://nmap.org/ncat/), which is available as part of
+the `nmap` package in most package managers, and
+[`pandoc`](https://pandoc.org/).
 When only `pandoc` is available, the current note is rendered and
 <a href="#-linking">[[wiki-style links]]</a>
 go to unrendered, original files.
 If only `ncat` is available,
 files in plain text formats are rendered with the original markup unconverted.
 If neither `ncat` nor `pandoc` is available,
-`nb` falls back to the default behavior of [`nb show`](#show).
+`nb browse` falls back to the default behavior of [`nb show`](#show).
 
 #### `browse` Privacy
 
