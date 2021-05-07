@@ -2,9 +2,9 @@
 
 load test_helper
 
-# --skip-preamble #############################################################
+# --skip-confirmation #############################################################
 
-@test "'remote remove --skip-preamble' with existing remote removes remote without resetting default branch and prints message." {
+@test "'remote remove --skip-confirmation' with existing remote removes remote without resetting default branch and prints message." {
   {
     "${_NB}" init
 
@@ -31,7 +31,7 @@ load test_helper
     [[ "$("${_NB}" git log)"    =~  Initial\ commit\.                 ]]
   }
 
-  run "${_NB}" remote remove --skip-preamble <<< "n${_NEWLINE}"
+  run "${_NB}" remote remove --skip-confirmation <<< "n${_NEWLINE}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -86,7 +86,7 @@ load test_helper
           \[nb\]\ Initialize                          ]]
 }
 
-@test "'remote remove --skip-preamble' with existing remote removes remote, resets default branch, and prints message." {
+@test "'remote remove --skip-confirmation' with existing remote removes remote, resets default branch, and prints message." {
   {
     "${_NB}" init
 
@@ -113,7 +113,7 @@ load test_helper
     [[ "$("${_NB}" git log)"    =~  Initial\ commit\.                 ]]
   }
 
-  run "${_NB}" remote remove --skip-preamble <<< "y${_NEWLINE}"
+  run "${_NB}" remote remove --skip-confirmation <<< "y${_NEWLINE}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
