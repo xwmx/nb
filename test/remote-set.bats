@@ -32,13 +32,13 @@ load test_helper
 
   [[ "${status}"    -eq 0 ]]
 
-  [[ "${lines[0]}"  =~  Adding\ remote\ to:\ .*Example\ Notebook          ]]
-  [[ "${lines[1]}"  =~  [^-]----------------------------------[^-]        ]]
-  [[ "${lines[2]}"  =~  URL:\ \ \ \ .*${_GIT_REMOTE_URL}                  ]]
-  [[ "${lines[3]}"  =~  Branch:\ .*master                                 ]]
-  [[ "${lines[4]}"  =~  [^-]--------------[^-]                            ]]
+  [[ "${lines[0]}"  =~  Adding\ remote\ to:\ .*Example\ Notebook    ]]
+  [[ "${lines[1]}"  =~  [^-]----------------------------------[^-]  ]]
+  [[ "${lines[2]}"  =~  URL:\ \ \ \ .*${_GIT_REMOTE_URL}            ]]
+  [[ "${lines[3]}"  =~  Branch:\ .*master                           ]]
+  [[ "${lines[4]}"  =~  [^-]--------------[^-]                      ]]
   [[ "${lines[5]}"  =~  \
-Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)          ]]
+Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
 
   diff                                                            \
     <(git ls-remote --symref "${_GIT_REMOTE_URL}" HEAD            \
@@ -85,7 +85,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)          ]]
 
   [[ "${status}"    -eq 0 ]]
 
-  [[ "$("${_NB}" remote 2>&1)"  =~  No\ remote\ configured.       ]]
+  [[ "$("${_NB}" remote 2>&1)"  =~  No\ remote\ configured. ]]
 }
 
 @test "'remote set' with exit on second prompt removes new remote." {
@@ -121,7 +121,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)          ]]
 
   [[ "${status}"    -eq 0 ]]
 
-  [[ "$("${_NB}" remote 2>&1)"  =~  No\ remote\ configured.       ]]
+  [[ "$("${_NB}" remote 2>&1)"  =~  No\ remote\ configured. ]]
 }
 
 # remote set ##################################################################
