@@ -240,9 +240,12 @@ load test_helper
 .*\[.*1.*\].*\ Merge\ and\ sync\ with\ existing\ remote\ branch\.         ]]
   [[ "${lines[3]}"  =~  \
 .*\[.*2.*\].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.        ]]
-  [[ "${lines[4]}"  =~  \
+  [[ "${lines[4]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}           ]]
+  [[ "${lines[5]}"  =~  Removed\ \ remote:\ .*${_GIT_REMOTE_URL}          ]]
+  [[ "${lines[6]}"  =~  [^-]--------------[^-]                            ]]
+  [[ "${lines[7]}"  =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)                  ]]
-  [[ "${lines[5]}"  =~  Done!                                             ]]
+  [[ "${lines[8]}"  =~  Done!                                             ]]
 
   diff                                                            \
     <(git ls-remote --symref "${_GIT_REMOTE_URL}" HEAD            \
@@ -292,9 +295,12 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)                  ]]
 .*\[.*1.*\].*\ Merge\ and\ sync\ with\ existing\ remote\ branch\.         ]]
   [[ "${lines[3]}"  =~  \
 .*\[.*2.*\].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.        ]]
-  [[ "${lines[4]}"  =~  \
+  [[ "${lines[4]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}           ]]
+  [[ "${lines[5]}"  =~  Removed\ \ remote:\ .*${_GIT_REMOTE_URL}          ]]
+  [[ "${lines[6]}"  =~  [^-]--------------[^-]                            ]]
+  [[ "${lines[7]}"  =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*sample-notebook-1.*\)       ]]
-  [[ "${lines[5]}"  =~  Done!                                             ]]
+  [[ "${lines[8]}"  =~  Done!                                             ]]
 
   run "${_NB}" sync
 

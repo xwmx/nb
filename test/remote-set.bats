@@ -52,7 +52,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
 
 # exiting #####################################################################
 
-@test "'remote set' with exit on third prompt removes new remote." {
+@test "'remote set' with exit on third prompt does not set new remote." {
   {
     _setup_remote_repo
 
@@ -88,7 +88,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
   [[ "$("${_NB}" remote 2>&1)"  =~  No\ remote\ configured. ]]
 }
 
-@test "'remote set' with exit on second prompt removes new remote." {
+@test "'remote set' with exit on second prompt does not set new remote." {
   {
     _setup_remote_repo
 
@@ -150,7 +150,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
     "${_NB}" add "Sample File.md" --content "Sample content."
   }
 
-  run "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}1${_NEWLINE}"
+  run "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}1${_NEWLINE}q${_NEWLINE}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -339,7 +339,10 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)                        
     [[ "${lines[3]}"  =~  URL:\ \ \ \ .*${_GIT_REMOTE_URL}          ]]
     [[ "${lines[4]}"  =~  Branch:\ .*master                         ]]
     [[ "${lines[5]}"  =~  [^-]--------------[^-]                    ]]
-    [[ "${lines[6]}"  =~  \
+    [[ "${lines[6]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}   ]]
+    [[ "${lines[7]}"  =~  Removed\ \ remote:\ .*${_GIT_REMOTE_URL}  ]]
+    [[ "${lines[8]}"  =~  [^-]--------------[^-]                    ]]
+    [[ "${lines[9]}"  =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
 
     diff                  \
@@ -417,7 +420,10 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
     [[ "${lines[3]}"  =~  URL:\ \ \ \ .*${_GIT_REMOTE_URL}          ]]
     [[ "${lines[4]}"  =~  Branch:\ .*master                         ]]
     [[ "${lines[5]}"  =~  [^-]--------------[^-]                    ]]
-    [[ "${lines[6]}"  =~  \
+    [[ "${lines[6]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}   ]]
+    [[ "${lines[7]}"  =~  Removed\ \ remote:\ .*${_GIT_REMOTE_URL}  ]]
+    [[ "${lines[8]}"  =~  [^-]--------------[^-]                    ]]
+    [[ "${lines[9]}"  =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
 
     diff                  \

@@ -18881,27 +18881,12 @@ _remote() {
         done
       fi
 
-      if ((_remote_exists)) &&
-         [[ "${_current_remote_url:-}" != "${_new_remote_url:-}" ]]
-      then
-        _remote unset <<< "y${_NEWLINE}"
-        _print_line "--------------"
-      fi
-
       local _remote_branches=()
       _remote_branches=($(
         git -C "${_notebook_path}" ls-remote  \
           --heads "${_new_remote_url:-}"      \
           | sed "s/.*\///g" || :
       ))
-
-      if [[ "${_current_remote_url:-}" != "${_new_remote_url:-}" ]]
-      then
-        git -C "${_notebook_path}" remote add origin "${_new_remote_url}" ||
-          return 1
-      fi
-
-      git -C "${_notebook_path}" fetch origin "${_new_branch}" &>/dev/null || :
 
       local _selected_push_option=
 
@@ -18918,31 +18903,43 @@ $(_color_brackets "2") Sync as a new orphan branch on the remote.
 
 HEREDOC
       else
+        local _temp_repo_path="${_NB_TEMP_DIRECTORY}/${RANDOM}"
+
+        (
+          cd "${_NB_TEMP_DIRECTORY}" &&
+            git clone --no-local                                \
+              --single-branch --branch "${_new_branch:-}"       \
+              "${_new_remote_url}"                              \
+              "${_temp_repo_path}" &>/dev/null
+        )
+
         local _local_branch_root_hash=
         _local_branch_root_hash="$(
-          git -C "${_notebook_path}" rev-list --max-parents=0 \
+          git -C "${_notebook_path}" rev-list --max-parents=0   \
             "${_new_branch}"
         )"
 
         local _remote_branch_root_hash=
         _remote_branch_root_hash="$(
-          git -C "${_notebook_path}" rev-list --max-parents=0 \
+          git -C "${_temp_repo_path}" rev-list --max-parents=0  \
             "remotes/origin/${_new_branch}"
         )"
 
         local _remote_branch_commit_hashes=()
         _remote_branch_commit_hashes=($(
-          git -C "${_notebook_path}" rev-list                 \
+          git -C "${_temp_repo_path}" rev-list                  \
             --max-count 3 "remotes/origin/${_new_branch}"
         ))
 
         local _remote_branch_files=()
         _remote_branch_files=($(
-          git -C "${_notebook_path}" ls-tree --name-only "origin/${_new_branch}"
+          git -C "${_temp_repo_path}" ls-tree --name-only "origin/${_new_branch}"
         ))
 
-        if [[ "${_local_branch_root_hash:-}"  !=  "${_remote_branch_root_hash:-}" ]]
+        if [[ "${_local_branch_root_hash:-}"  ==  "${_remote_branch_root_hash:-}" ]]
         then
+          _selected_push_option=1
+        else
            if [[ "${#_remote_branch_commit_hashes[@]}"  -eq 1         ]]  &&
               [[ "${#_remote_branch_files[@]}"          -eq 1         ]]  &&
               [[ "${_remote_branch_files[0]}"           ==  ".index"  ]]
@@ -18974,8 +18971,6 @@ HEREDOC
               ;;
             q*|exit)
               printf "Exiting...\\n"
-
-              _remote unset <<< "y${_NEWLINE}"
 
               exit 0
               ;;
@@ -19010,8 +19005,6 @@ HEREDOC
             q*|exit)
               printf "Exiting...\\n"
 
-              _remote unset <<< "y${_NEWLINE}"
-
               exit 0
               ;;
             [0-9]*)
@@ -19024,7 +19017,9 @@ HEREDOC
               ;;
           esac
         done
-      elif [[ "${_selected_push_option:-}" == "2" ]]      &&
+      fi
+
+      if [[ "${_selected_push_option:-}" == "2" ]]      &&
            _contains "${_new_branch}" "${_remote_branches[@]:-}"
       then
         local _notebook_name_branch_name="${_notebook_path##*/}"
@@ -19053,6 +19048,17 @@ HEREDOC
       then
         git -C "${_notebook_path}" branch -m "${_new_branch:-}"
       fi
+
+      if ((_remote_exists))
+      then
+        _remote unset <<< "y${_NEWLINE}"
+        _print_line "--------------"
+      fi
+
+      git -C "${_notebook_path}" remote add origin "${_new_remote_url}" ||
+        return 1
+
+      git -C "${_notebook_path}" fetch origin "${_new_branch}" &>/dev/null || :
 
       _git sync "${_notebook_path}" --skip-prompt
 
