@@ -4,6 +4,128 @@ load test_helper
 
 # remote set ##################################################################
 
+@test "'remote set' with unrelated histories displays prompt and merges with existing." {
+  {
+    _setup_remote_repo
+
+    "${_NB}" init "${_GIT_REMOTE_URL}"
+
+    "${_NB}" notebooks rename "home" "Example Notebook"
+
+    [[ !  -e "${NB_DIR}/home"                   ]]
+    [[    -d "${NB_DIR}/Example Notebook/.git"  ]]
+
+    "${_NB}" add "Example File.md" --content "Example content."
+
+    "${_NB}" sync
+
+    declare _example_hashes=()
+    _example_hashes=($("${_NB}" git rev-list origin/master))
+
+    "${_NB}" notebooks add "Sample Notebook"
+    "${_NB}" notebooks use "Sample Notebook"
+
+    "${_NB}" add "Sample File.md" --content "Sample content."
+  }
+
+  run "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}1${_NEWLINE}1${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0 ]]
+
+  [[ "${lines[0]}"  =~  Adding\ remote\ to:\ .*Sample\ Notebook           ]]
+  [[ "${lines[1]}"  =~  [^-]---------------------------------[^-]         ]]
+  [[ "${lines[2]}"  =~  URL:\ \ \ \ .*${_GIT_REMOTE_URL}                  ]]
+  [[ "${lines[3]}"  =~  Branch:\ .*master                                 ]]
+  [[ "${lines[4]}"  =~  [^-]--------------[^-]                            ]]
+  [[ "${lines[5]}"  =~  Remote\ branch\ has\ existing\ history:\ .*master ]]
+  [[ "${lines[6]}"  =~  \
+.*\[.*1.*\].*\ Merge\ and\ sync\ with\ existing\ remote\ branch\.         ]]
+  [[ "${lines[7]}"  =~  \
+.*\[.*2.*\].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.        ]]
+  [[ "${lines[8]}"  =~  \
+Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)                  ]]
+
+  diff                                                            \
+    <(git ls-remote --symref "${_GIT_REMOTE_URL}" HEAD            \
+        | awk '/^ref:/ {sub(/refs\/heads\//, "", $2); print $2}') \
+    <(printf "master\\n")
+
+  declare _sample_hashes=()
+  _sample_hashes=($("${_NB}" git rev-list origin/master))
+
+  [[ "${#_example_hashes[@]}" -eq 2                       ]]
+  [[ "${#_sample_hashes[@]}"  -eq 3                       ]]
+
+  [[ "${_example_hashes[0]}"  ==  "${_sample_hashes[1]}"  ]]
+  [[ "${_example_hashes[1]}"  ==  "${_sample_hashes[2]}"  ]]
+
+  _contains "${_example_hashes[0]}" "${_sample_hashes[@]}"
+  _contains "${_example_hashes[1]}" "${_sample_hashes[@]}"
+}
+
+@test "'sync' with unrelated histories displays prompt and creates new orphan." {
+  {
+    _setup_remote_repo
+
+    "${_NB}" init "${_GIT_REMOTE_URL}"
+
+    "${_NB}" notebooks rename "home" "Example Notebook"
+
+    [[ !  -e "${NB_DIR}/home"                   ]]
+    [[    -d "${NB_DIR}/Example Notebook/.git"  ]]
+
+    "${_NB}" add "Example File.md" --content "Example content."
+
+    "${_NB}" sync
+
+    declare _example_hashes=()
+    _example_hashes=($("${_NB}" git rev-list origin/master))
+
+    "${_NB}" notebooks add "Sample Notebook"
+    "${_NB}" notebooks use "Sample Notebook"
+
+    "${_NB}" add "Sample File.md" --content "Sample content."
+  }
+
+  run "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0 ]]
+
+  [[ "${lines[0]}"  =~  Adding\ remote\ to:\ .*Sample\ Notebook           ]]
+  [[ "${lines[1]}"  =~  [^-]---------------------------------[^-]         ]]
+  [[ "${lines[2]}"  =~  URL:\ \ \ \ .*${_GIT_REMOTE_URL}                  ]]
+  [[ "${lines[3]}"  =~  Branch:\ .*master                                 ]]
+  [[ "${lines[4]}"  =~  [^-]--------------[^-]                            ]]
+  [[ "${lines[5]}"  =~  Remote\ branch\ has\ existing\ history:\ .*master ]]
+  [[ "${lines[6]}"  =~  \
+.*\[.*1.*\].*\ Merge\ and\ sync\ with\ existing\ remote\ branch\.         ]]
+  [[ "${lines[7]}"  =~  \
+.*\[.*2.*\].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.        ]]
+  [[ "${lines[8]}"  =~  \
+Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*sample-notebook.*\)         ]]
+
+  diff                                              \
+    <(git -C "${NB_DIR}/Example Notebook" ls-remote \
+        --heads "${_GIT_REMOTE_URL}"                \
+        | sed "s/.*\///g" || :)                     \
+    <(printf "master\\nsample-notebook\\n")
+
+  declare _sample_hashes=()
+  _sample_hashes=($("${_NB}" git rev-list origin/sample-notebook))
+
+  [[ "${#_example_hashes[@]}" -eq 2                       ]]
+  [[ "${#_sample_hashes[@]}"  -eq 2                       ]]
+
+  ! _contains "${_example_hashes[0]}" "${_sample_hashes[@]}"
+  ! _contains "${_example_hashes[1]}" "${_sample_hashes[@]}"
+}
+
 @test "'remote set <url>' with no existing remote and matching branch name with no history sets remote and prints message." {
   {
     "${_NB}" init
