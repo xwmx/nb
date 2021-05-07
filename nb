@@ -18967,7 +18967,7 @@ HEREDOC
         esac
       done
 
-      if [[   "${_selected_push_option:-}" == "1" ]]  &&
+      if [[   "${_selected_push_option:-}" == "1" ]]      &&
          ! git -C "${_notebook_path}" show-branch \
            "remotes/origin/${_new_branch}" > /dev/null 2>&1
       then
