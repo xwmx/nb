@@ -18934,8 +18934,9 @@ HEREDOC
 
         if [[ "${_local_branch_root_hash:-}"  !=  "${_remote_branch_root_hash:-}" ]]
         then
-           if [[ "${#_remote_branch_commit_hashes[@]}" -eq 1        ]] &&
-              [[ "${_remote_branch_files:-}"           ==  ".index" ]]
+           if [[ "${#_remote_branch_commit_hashes[@]}"  -eq 1         ]]  &&
+              [[ "${#_remote_branch_files[@]}"          -eq 1         ]]  &&
+              [[ "${_remote_branch_files[0]}"           ==  ".index"  ]]
           then
             _selected_push_option=1
           else
