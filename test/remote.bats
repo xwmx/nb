@@ -4,7 +4,7 @@ load test_helper
 
 # remote remove and set #######################################################
 
-@test "'remote remove' deletes remote branch and 'remote set' rebased onto initialized remote." {
+@test "'remote remove' deletes remote branch and 'remote set' rebases onto initialized remote." {
   {
     "${_NB}" init
 
@@ -117,7 +117,7 @@ load test_helper
   [[ "${lines[2]}"  =~  URL:\ \ \ \ .*${_GIT_REMOTE_URL}                  ]]
   [[ "${lines[3]}"  =~  Branch:\ .*master                                 ]]
   [[ "${lines[4]}"  =~  [^-]--------------[^-]                            ]]
-  [[ "${lines[5]}" =~   \
+  [[ "${lines[5]}"  =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)                  ]]
 
   diff                  \
