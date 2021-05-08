@@ -18921,7 +18921,7 @@ HEREDOC
         local _local_branch_root_hash=
         _local_branch_root_hash="$(
           git -C "${_notebook_path}" rev-list --max-parents=0   \
-            "${_new_branch}"
+            "${_current_branch}"
         )"
 
         local _remote_branch_root_hash=

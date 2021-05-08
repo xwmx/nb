@@ -2,6 +2,210 @@
 
 load test_helper
 
+# merge with existing branch ##################################################
+
+@test "'remote set <url> <branch>' with unshared histories syncs to same branch." {
+  {
+    "${_NB}" init
+
+    mkdir "${_GIT_REMOTE_PATH}"
+    cd "${_GIT_REMOTE_PATH}"
+    git init --bare &>/dev/null
+
+    cd "${_TMP_DIR}"
+  }
+
+  # Notebook One
+
+  {
+    "${_NB}" notebooks init "${_TMP_DIR}/Notebook One"
+    cd "${_TMP_DIR}/Notebook One"
+
+    "${_NB}" add "File One.md" --content "Example content one."
+
+    [[    -f "${_TMP_DIR}/Notebook One/File One.md"                 ]]
+    [[ !  -f "${_TMP_DIR}/Notebook One/File Two.md"                 ]]
+  }
+
+  run "${_NB}" remote set "${_GIT_REMOTE_URL}" "shared-branch" <<< "y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0 ]]
+
+  [[ "${lines[0]}"  =~  Adding\ remote\ to:\ .*local                ]]
+  [[ "${lines[1]}"  =~  [^-]-----------------------[^-]             ]]
+  [[ "${lines[2]}"  =~  URL:\ \ \ \ .*${_GIT_REMOTE_URL}            ]]
+  [[ "${lines[3]}"  =~  Branch:\ .*shared-branch                    ]]
+  [[ "${lines[4]}"  =~  [^-]--------------[^-]                      ]]
+  [[ "${lines[5]}"  =~  \
+Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*shared-branch.*\)     ]]
+
+  diff                                                              \
+    <("${_NB}" remote)                                              \
+    <(printf "%s (shared-branch)\\n" "${_GIT_REMOTE_URL:-}")
+
+  diff                                                              \
+    <(git -C "${_TMP_DIR}/Notebook One" branch --all)               \
+    <(printf "* shared-branch\\n  remotes/origin/shared-branch\\n")
+
+  diff                                                              \
+    <(git -C "${_TMP_DIR}/Notebook One" ls-remote                   \
+        --heads "${_GIT_REMOTE_URL}" | sed "s/.*\///g")             \
+    <(printf "shared-branch\\n")
+
+  # Notebook Two
+
+  {
+    "${_NB}" notebooks init "${_TMP_DIR}/Notebook Two"
+    cd "${_TMP_DIR}/Notebook Two"
+
+    "${_NB}" add "File Two.md" --content "Sample content two."
+
+    [[ !  -f "${_TMP_DIR}/Notebook Two/File One.md"                 ]]
+    [[    -f "${_TMP_DIR}/Notebook Two/File Two.md"                 ]]
+  }
+
+  run "${_NB}" remote set "${_GIT_REMOTE_URL}" "shared-branch" <<< "y${_NEWLINE}1${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0 ]]
+
+  [[ "${lines[0]}"  =~  Adding\ remote\ to:\ .*local                ]]
+  [[ "${lines[1]}"  =~  [^-]-----------------------[^-]             ]]
+  [[ "${lines[2]}"  =~  URL:\ \ \ \ .*${_GIT_REMOTE_URL}            ]]
+  [[ "${lines[3]}"  =~  Branch:\ .*shared-branch                    ]]
+  [[ "${lines[4]}"  =~  [^-]--------------[^-]                      ]]
+  [[ "${lines[5]}"  =~  \
+Remote\ branch\ has\ existing\ history:\ .*shared-branch            ]]
+  [[ "${lines[6]}"  =~  \
+.*\[.*1.*\].*\ Merge\ and\ sync\ with\ existing\ remote\ branch\.   ]]
+  [[ "${lines[7]}"  =~  \
+.*\[.*2.*\].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.  ]]
+  [[ "${lines[8]}"  =~  \
+Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*shared-branch.*\)     ]]
+
+  diff                                                              \
+    <("${_NB}" remote)                                              \
+    <(printf "%s (shared-branch)\\n" "${_GIT_REMOTE_URL:-}")
+
+  diff                                                              \
+    <(git -C "${_TMP_DIR}/Notebook Two" branch --all)               \
+    <(printf "* shared-branch\\n  remotes/origin/shared-branch\\n")
+
+  diff                                                              \
+    <(git -C "${_TMP_DIR}/Notebook Two" ls-remote                   \
+        --heads "${_GIT_REMOTE_URL}" | sed "s/.*\///g")             \
+    <(printf "shared-branch\\n")
+
+  [[    -f "${_TMP_DIR}/Notebook Two/File One.md"                   ]]
+  [[    -f "${_TMP_DIR}/Notebook Two/File Two.md"                   ]]
+}
+
+@test "'remote set <url>' with unshared histories syncs to same branch." {
+  {
+    "${_NB}" init
+
+    mkdir "${_GIT_REMOTE_PATH}"
+    cd "${_GIT_REMOTE_PATH}"
+    git init --bare &>/dev/null
+
+    cd "${_TMP_DIR}"
+  }
+
+  # Notebook One
+
+  {
+    "${_NB}" notebooks init "${_TMP_DIR}/Notebook One"
+    cd "${_TMP_DIR}/Notebook One"
+
+    "${_NB}" add "File One.md" --content "Example content one."
+
+    [[    -f "${_TMP_DIR}/Notebook One/File One.md"                 ]]
+    [[ !  -f "${_TMP_DIR}/Notebook One/File Two.md"                 ]]
+  }
+
+  run "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                                           ]]
+
+  [[ "${lines[0]}"  =~  Adding\ remote\ to:\ .*local                ]]
+  [[ "${lines[1]}"  =~  [^-]-----------------------[^-]             ]]
+  [[ "${lines[2]}"  =~  URL:\ \ \ \ .*${_GIT_REMOTE_URL}            ]]
+  [[ "${lines[3]}"  =~  Branch:\ .*master                           ]]
+  [[ "${lines[4]}"  =~  [^-]--------------[^-]                      ]]
+  [[ "${lines[5]}"  =~  \
+Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
+
+  diff                                                              \
+    <("${_NB}" remote)                                              \
+    <(printf "%s (master)\\n" "${_GIT_REMOTE_URL:-}")
+
+  diff                                                              \
+    <(git -C "${_TMP_DIR}/Notebook One" branch --all)               \
+    <(printf "* master\\n  remotes/origin/master\\n")
+
+  diff                                                              \
+    <(git -C "${_TMP_DIR}/Notebook One" ls-remote                   \
+        --heads "${_GIT_REMOTE_URL}" | sed "s/.*\///g")             \
+    <(printf "master\\n")
+
+  # Notebook Two
+
+  {
+    "${_NB}" notebooks init "${_TMP_DIR}/Notebook Two"
+    cd "${_TMP_DIR}/Notebook Two"
+
+    "${_NB}" add "File Two.md" --content "Sample content two."
+
+    [[ !  -f "${_TMP_DIR}/Notebook Two/File One.md"                 ]]
+    [[    -f "${_TMP_DIR}/Notebook Two/File Two.md"                 ]]
+  }
+
+  run "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}1${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                                           ]]
+
+  [[ "${lines[0]}"  =~  Adding\ remote\ to:\ .*local                ]]
+  [[ "${lines[1]}"  =~  [^-]-----------------------[^-]             ]]
+  [[ "${lines[2]}"  =~  URL:\ \ \ \ .*${_GIT_REMOTE_URL}            ]]
+  [[ "${lines[3]}"  =~  Branch:\ .*master                           ]]
+  [[ "${lines[4]}"  =~  [^-]--------------[^-]                      ]]
+  [[ "${lines[5]}"  =~  \
+Remote\ branch\ has\ existing\ history:\ .*master                   ]]
+  [[ "${lines[6]}"  =~  \
+.*\[.*1.*\].*\ Merge\ and\ sync\ with\ existing\ remote\ branch\.   ]]
+  [[ "${lines[7]}"  =~  \
+.*\[.*2.*\].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.  ]]
+  [[ "${lines[8]}"  =~  \
+Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
+
+  diff                                                              \
+    <("${_NB}" remote)                                              \
+    <(printf "%s (master)\\n" "${_GIT_REMOTE_URL:-}")
+
+  diff                                                              \
+    <(git -C "${_TMP_DIR}/Notebook Two" branch --all)               \
+    <(printf "* master\\n  remotes/origin/master\\n")
+
+  diff                                                              \
+    <(git -C "${_TMP_DIR}/Notebook Two" ls-remote                   \
+        --heads "${_GIT_REMOTE_URL}" | sed "s/.*\///g")             \
+    <(printf "master\\n")
+
+  [[    -f "${_TMP_DIR}/Notebook Two/File One.md"                   ]]
+  [[    -f "${_TMP_DIR}/Notebook Two/File Two.md"                   ]]
+}
+
 # empty remote ################################################################
 
 @test "'remote set' with empty remote pushes branch." {
@@ -43,6 +247,11 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
   diff                                                            \
     <(git ls-remote --symref "${_GIT_REMOTE_URL}" HEAD            \
         | awk '/^ref:/ {sub(/refs\/heads\//, "", $2); print $2}') \
+    <(printf "master\\n")
+
+  diff                                                  \
+    <(git -C "${NB_DIR}/Example Notebook" ls-remote     \
+        --heads "${_GIT_REMOTE_URL}" | sed "s/.*\///g") \
     <(printf "master\\n")
 
   diff                  \
@@ -173,6 +382,11 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)                  ]]
   diff                                                            \
     <(git ls-remote --symref "${_GIT_REMOTE_URL}" HEAD            \
         | awk '/^ref:/ {sub(/refs\/heads\//, "", $2); print $2}') \
+    <(printf "master\\n")
+
+  diff                                                    \
+    <(git -C "${NB_DIR}/Sample Notebook" ls-remote        \
+        --heads "${_GIT_REMOTE_URL}" | sed "s/.*\///g")   \
     <(printf "master\\n")
 
   declare _sample_hashes=()
