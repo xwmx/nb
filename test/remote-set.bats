@@ -32,7 +32,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0 ]]
+  [[ "${status}"    -eq 0                                           ]]
 
   [[ "${lines[0]}"  =~  Adding\ remote\ to:\ .*local                ]]
   [[ "${lines[1]}"  =~  [^-]-----------------------[^-]             ]]
@@ -72,7 +72,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*shared-branch.*\)     ]]
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0 ]]
+  [[ "${status}"    -eq 0                                           ]]
 
   [[ "${lines[0]}"  =~  Adding\ remote\ to:\ .*local                ]]
   [[ "${lines[1]}"  =~  [^-]-----------------------[^-]             ]]
@@ -234,7 +234,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0 ]]
+  [[ "${status}"    -eq 0                                           ]]
 
   [[ "${lines[0]}"  =~  Adding\ remote\ to:\ .*Example\ Notebook    ]]
   [[ "${lines[1]}"  =~  [^-]----------------------------------[^-]  ]]
@@ -292,7 +292,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0 ]]
+  [[ "${status}"                -eq 0                       ]]
 
   [[ "$("${_NB}" remote 2>&1)"  =~  No\ remote\ configured. ]]
 }
@@ -328,7 +328,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0 ]]
+  [[ "${status}"                -eq 0                       ]]
 
   [[ "$("${_NB}" remote 2>&1)"  =~  No\ remote\ configured. ]]
 }
@@ -343,8 +343,8 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
 
     "${_NB}" notebooks rename "home" "Example Notebook"
 
-    [[ !  -e "${NB_DIR}/home"                   ]]
-    [[    -d "${NB_DIR}/Example Notebook/.git"  ]]
+    [[ !  -e "${NB_DIR}/home"                               ]]
+    [[    -d "${NB_DIR}/Example Notebook/.git"              ]]
 
     "${_NB}" add "Example File.md" --content "Example content."
 
@@ -364,7 +364,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0 ]]
+  [[ "${status}"    -eq 0                                                 ]]
 
   [[ "${lines[0]}"  =~  Adding\ remote\ to:\ .*Sample\ Notebook           ]]
   [[ "${lines[1]}"  =~  [^-]---------------------------------[^-]         ]]
@@ -410,8 +410,8 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)                  ]]
 
     "${_NB}" notebooks rename "home" "Example Notebook"
 
-    [[ !  -e "${NB_DIR}/home"                   ]]
-    [[    -d "${NB_DIR}/Example Notebook/.git"  ]]
+    [[ !  -e "${NB_DIR}/home"                             ]]
+    [[    -d "${NB_DIR}/Example Notebook/.git"            ]]
 
     "${_NB}" add "Example File.md" --content "Example content."
 
@@ -431,7 +431,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)                  ]]
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0 ]]
+  [[ "${status}"    -eq 0                                                 ]]
 
   [[ "${lines[0]}"  =~  Adding\ remote\ to:\ .*Sample\ Notebook           ]]
   [[ "${lines[1]}"  =~  [^-]---------------------------------[^-]         ]]
@@ -446,10 +446,10 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)                  ]]
   [[ "${lines[8]}"  =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*sample-notebook.*\)         ]]
 
-  diff                                              \
-    <(git -C "${NB_DIR}/Example Notebook" ls-remote \
-        --heads "${_GIT_REMOTE_URL}"                \
-        | sed "s/.*\///g" || :)                     \
+  diff                                                    \
+    <(git -C "${NB_DIR}/Example Notebook" ls-remote       \
+        --heads "${_GIT_REMOTE_URL}"                      \
+        | sed "s/.*\///g" || :)                           \
     <(printf "master\\nsample-notebook\\n")
 
   declare _sample_hashes=()
@@ -476,7 +476,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*sample-notebook.*\)         ]]
 
   "${_NB}" remote
 
-  [[ "${status}"    -eq 0 ]]
+  [[ "${status}"    -eq 0                                             ]]
 
   [[ "${lines[0]}"  =~  Adding\ remote\ to:\ .*home                   ]]
   [[ "${lines[1]}"  =~  [^-]----------------------[^-]                ]]
@@ -509,7 +509,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)              ]]
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0 ]]
+  [[ "${status}"    -eq 0                                                       ]]
 
   [[ "${lines[0]}"  =~  Updating\ remote\ for:\ .*home                          ]]
   [[ "${lines[1]}"  =~  From:\ \ \ https://example.test/example.git             ]]
@@ -544,7 +544,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)                        
     printf "\${status}: '%s'\\n" "${status}"
     printf "\${output}: '%s'\\n" "${output}"
 
-    [[ "${status}"    -eq 0 ]]
+    [[ "${status}"    -eq 0                                         ]]
 
     [[ "${lines[0]}"  =~  Updating\ remote\ for:\ .*home            ]]
     [[ "${lines[1]}"  =~  From:\ \ \ ${_GIT_REMOTE_URL}             ]]
@@ -579,7 +579,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0 ]]
+  [[ "${status}"    -eq 0                                           ]]
 
   [[ "${lines[0]}"  =~  Adding\ remote\ to:\ .*Sample\ Notebook     ]]
   [[ "${lines[1]}"  =~  [^-]---------------------------------[^-]   ]]
@@ -603,11 +603,11 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
   printf "new hashes:     %s\\n" "${_new_hashes[@]}"
   "${_NB}" git log
 
-  [[ "${#_remote_hashes[@]}"  -eq 2                   ]]
-  [[ "${#_new_hashes[@]}"     -eq 3                   ]]
+  [[ "${#_remote_hashes[@]}"  -eq 2                                 ]]
+  [[ "${#_new_hashes[@]}"     -eq 3                                 ]]
 
-  [[ "${_remote_hashes[0]}"   ==  "${_new_hashes[1]}" ]]
-  [[ "${_remote_hashes[1]}"   ==  "${_new_hashes[2]}" ]]
+  [[ "${_remote_hashes[0]}"   ==  "${_new_hashes[1]}"               ]]
+  [[ "${_remote_hashes[1]}"   ==  "${_new_hashes[2]}"               ]]
 }
 
 @test "'remote set <url>' to same URL and branch as existing remote with shared history updates remote and prints message." {
@@ -625,7 +625,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
     printf "\${status}: '%s'\\n" "${status}"
     printf "\${output}: '%s'\\n" "${output}"
 
-    [[ "${status}"    -eq 0 ]]
+    [[ "${status}"    -eq 0                                         ]]
 
     [[ "${lines[0]}"  =~  Updating\ remote\ for:\ .*home            ]]
     [[ "${lines[1]}"  =~  From:\ \ \ ${_GIT_REMOTE_URL}             ]]
@@ -661,7 +661,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0 ]]
+  [[ "${status}"    -eq 0                                           ]]
 
   [[ "${lines[0]}"  =~  Adding\ remote\ to:\ .*home                 ]]
   [[ "${lines[1]}"  =~  [^-]----------------------[^-]              ]]
@@ -679,11 +679,11 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
   printf "new hashes:     %s\\n" "${_new_hashes[@]}"
   "${_NB}" git log
 
-  [[ "${#_remote_hashes[@]}"  -eq 2                   ]]
-  [[ "${#_new_hashes[@]}"     -eq 3                   ]]
+  [[ "${#_remote_hashes[@]}"  -eq 2                                 ]]
+  [[ "${#_new_hashes[@]}"     -eq 3                                 ]]
 
-  [[ "${_remote_hashes[0]}"   ==  "${_new_hashes[1]}" ]]
-  [[ "${_remote_hashes[1]}"   ==  "${_new_hashes[2]}" ]]
+  [[ "${_remote_hashes[0]}"   ==  "${_new_hashes[1]}"               ]]
+  [[ "${_remote_hashes[1]}"   ==  "${_new_hashes[2]}"               ]]
 }
 
 @test "'remote set <url> <branch>' with no existing remote and no matching remote branch pushes branch as new orphan, sets remote, and prints message." {
@@ -692,7 +692,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
 
     "${_NB}" add "Example File One.md" --content "Example content one."
 
-    [[ -f "${NB_DIR}/home/Example File One.md" ]]
+    [[ -f "${NB_DIR}/home/Example File One.md"                      ]]
 
     _setup_remote_repo
   }
@@ -704,24 +704,24 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
 
   printf "remote:    '%s'\\n" "$("${_NB}" remote)"
 
-  [[ "${status}"    -eq 0 ]]
+  [[ "${status}"    -eq 0                                               ]]
 
-  [[ "${lines[0]}"  =~  Adding\ remote\ to:\ .*home                   ]]
-  [[ "${lines[1]}"  =~  [^-]----------------------[^-]                ]]
-  [[ "${lines[2]}"  =~  URL:\ \ \ \ .*${_GIT_REMOTE_URL}              ]]
-  [[ "${lines[3]}"  =~  Branch:\ .*example                            ]]
-  [[ "${lines[4]}"  =~  [^-]--------------[^-]                        ]]
+  [[ "${lines[0]}"  =~  Adding\ remote\ to:\ .*home                     ]]
+  [[ "${lines[1]}"  =~  [^-]----------------------[^-]                  ]]
+  [[ "${lines[2]}"  =~  URL:\ \ \ \ .*${_GIT_REMOTE_URL}                ]]
+  [[ "${lines[3]}"  =~  Branch:\ .*example                              ]]
+  [[ "${lines[4]}"  =~  [^-]--------------[^-]                          ]]
 
-  [[ "${lines[5]}"  =~  Branch\ not\ present\ on\ remote:\ .*example  ]]
+  [[ "${lines[5]}"  =~  Branch\ not\ present\ on\ remote:\ .*example    ]]
   [[ "${lines[6]}"  =~  \
-.*[.*1.*].*\ Merge\ and\ sync\ with\ an\ existing\ remote\ branch\.   ]]
+.*[.*1.*].*\ Merge\ and\ sync\ with\ an\ existing\ remote\ branch\.     ]]
   [[ "${lines[7]}"  =~  \
-.*[.*2.*].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.      ]]
+.*[.*2.*].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.        ]]
   [[ "${lines[8]}"  =~  \
-Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*example.*\)             ]]
+Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*example.*\)               ]]
 
-  diff                                      \
-    <(git -C "${NB_DIR}/home" branch --all) \
+  diff                                                                  \
+    <(git -C "${NB_DIR}/home" branch --all)                             \
     <(printf "* example\\n  remotes/origin/example\\n")
 
   run "${_NB}" git branch --all
@@ -729,9 +729,9 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*example.*\)             ]]
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${lines[0]}" =~ \*\ example            ]]
-  [[    "${lines[1]}" =~ remotes/origin/example ]]
-  [[ !  "${output}"   =~ remotes/origin/master  ]]
+  [[    "${lines[0]}" =~ \*\ example                                    ]]
+  [[    "${lines[1]}" =~ remotes/origin/example                         ]]
+  [[ !  "${output}"   =~ remotes/origin/master                          ]]
 
   git clone --branch "example" "${_GIT_REMOTE_URL}" "${_TMP_DIR}/new-clone"
 
@@ -740,15 +740,15 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*example.*\)             ]]
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${lines[0]}"  =~ \*\ example                              ]]
-  [[    "${lines[1]}"  =~ remotes/origin/HEAD\ \-\>\ origin/master ]]
-  [[    "${lines[2]}"  =~ remotes/origin/example                   ]]
-  [[    "${lines[3]}"  =~ remotes/origin/master                    ]]
+  [[    "${lines[0]}"  =~ \*\ example                                   ]]
+  [[    "${lines[1]}"  =~ remotes/origin/HEAD\ \-\>\ origin/master      ]]
+  [[    "${lines[2]}"  =~ remotes/origin/example                        ]]
+  [[    "${lines[3]}"  =~ remotes/origin/master                         ]]
 
-  [[ -f "${_TMP_DIR}/new-clone/Example File One.md" ]]
+  [[ -f "${_TMP_DIR}/new-clone/Example File One.md"                     ]]
 
-  diff                  \
-    <("${_NB}" remote)  \
+  diff                                                                  \
+    <("${_NB}" remote)                                                  \
     <(printf "%s (example)\\n" "${_GIT_REMOTE_URL:-}")
 
   "${_NB}" git fetch origin
@@ -784,7 +784,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*example.*\)             ]]
 
   "${_NB}" remote
 
-  [[ "${status}"    -eq 0 ]]
+  [[ "${status}"    -eq 0                                             ]]
 
   [[ "${lines[0]}"  =~  Adding\ remote\ to:\ .*home                   ]]
   [[ "${lines[1]}"  =~  [^-]----------------------[^-]                ]]
@@ -827,7 +827,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)              ]]
 
   "${_NB}" remote
 
-  [[ "${status}"    -eq 0 ]]
+  [[ "${status}"    -eq 0                                             ]]
 
   [[ "${lines[0]}"  =~  Adding\ remote\ to:\ .*home                   ]]
   [[ "${lines[1]}"  =~  [^-]----------------------[^-]                ]]
@@ -882,7 +882,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*example.*\)             ]]
 
   "${_NB}" remote
 
-  [[ "${status}"    -eq 0 ]]
+  [[ "${status}"    -eq 0                                             ]]
 
   [[ "${lines[0]}"  =~  Adding\ remote\ to:\ .*home                   ]]
   [[ "${lines[1]}"  =~  [^-]----------------------[^-]                ]]
