@@ -21,7 +21,7 @@ load test_helper
     "${_NB}" notebooks init "${_TMP_DIR}/Notebook One"
     cd "${_TMP_DIR}/Notebook One"
 
-    "${_NB}" add "File One.md" --content "Example content one."
+    "${_NB}" add "File One.md" --content "Content."
 
     [[    -f "${_TMP_DIR}/Notebook One/File One.md"                 ]]
     [[ !  -f "${_TMP_DIR}/Notebook One/File Two.md"                 ]]
@@ -33,6 +33,15 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}"    -eq 0                                           ]]
+
+  printf "local branches:   '%s'\\n" "$(
+    git -C "${_TMP_DIR}/Notebook One" branch --all
+  )"
+
+  printf "remote branches:  '%s'\\n" "$(
+    git -C "${_TMP_DIR}/Notebook One" ls-remote                     \
+      --heads "${_GIT_REMOTE_URL}" | sed "s/.*\///g"
+  )"
 
   [[ "${lines[0]}"  =~  Adding\ remote\ to:\ .*local                ]]
   [[ "${lines[1]}"  =~  [^-]-----------------------[^-]             ]]
@@ -58,10 +67,12 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*shared-branch.*\)     ]]
   # Notebook Two
 
   {
+    sleep 1
+
     "${_NB}" notebooks init "${_TMP_DIR}/Notebook Two"
     cd "${_TMP_DIR}/Notebook Two"
 
-    "${_NB}" add "File Two.md" --content "Sample content two."
+    "${_NB}" add "File Two.md" --content "Content."
 
     [[ !  -f "${_TMP_DIR}/Notebook Two/File One.md"                 ]]
     [[    -f "${_TMP_DIR}/Notebook Two/File Two.md"                 ]]
@@ -73,6 +84,15 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*shared-branch.*\)     ]]
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}"    -eq 0                                           ]]
+
+  printf "local branches:   '%s'\\n" "$(
+    git -C "${_TMP_DIR}/Notebook Two" branch --all
+  )"
+
+  printf "remote branches:  '%s'\\n" "$(
+    git -C "${_TMP_DIR}/Notebook Two" ls-remote                     \
+      --heads "${_GIT_REMOTE_URL}" | sed "s/.*\///g"
+  )"
 
   [[ "${lines[0]}"  =~  Adding\ remote\ to:\ .*local                ]]
   [[ "${lines[1]}"  =~  [^-]-----------------------[^-]             ]]
@@ -135,6 +155,15 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*shared-branch.*\)     ]]
 
   [[ "${status}"    -eq 0                                           ]]
 
+  printf "local branches:   '%s'\\n" "$(
+    git -C "${_TMP_DIR}/Notebook One" branch --all
+  )"
+
+  printf "remote branches:  '%s'\\n" "$(
+    git -C "${_TMP_DIR}/Notebook One" ls-remote                     \
+      --heads "${_GIT_REMOTE_URL}" | sed "s/.*\///g"
+  )"
+
   [[ "${lines[0]}"  =~  Adding\ remote\ to:\ .*local                ]]
   [[ "${lines[1]}"  =~  [^-]-----------------------[^-]             ]]
   [[ "${lines[2]}"  =~  URL:\ \ \ \ .*${_GIT_REMOTE_URL}            ]]
@@ -159,6 +188,8 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
   # Notebook Two
 
   {
+    sleep 1
+
     "${_NB}" notebooks init "${_TMP_DIR}/Notebook Two"
     cd "${_TMP_DIR}/Notebook Two"
 
@@ -174,6 +205,15 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}"    -eq 0                                           ]]
+
+  printf "local branches:   '%s'\\n" "$(
+    git -C "${_TMP_DIR}/Notebook Two" branch --all
+  )"
+
+  printf "remote branches:  '%s'\\n" "$(
+    git -C "${_TMP_DIR}/Notebook Two" ls-remote                     \
+      --heads "${_GIT_REMOTE_URL}" | sed "s/.*\///g"
+  )"
 
   [[ "${lines[0]}"  =~  Adding\ remote\ to:\ .*local                ]]
   [[ "${lines[1]}"  =~  [^-]-----------------------[^-]             ]]
