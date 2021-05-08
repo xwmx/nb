@@ -2503,7 +2503,7 @@ and enable the Ace editor in `nb browse edit --gui` and `nb browse add --gui`.
 
 `nb browse` depends on
 [`ncat`](https://nmap.org/ncat/), which is available as part of
-the `nmap` package in most package managers, and
+the `ncat` or `nmap` package in most package managers, and
 [`pandoc`](https://pandoc.org/).
 When only `pandoc` is available, the current note is rendered and
 <a href="#-linking">[[wiki-style links]]</a>
@@ -5670,7 +5670,7 @@ Subcommands:
              Specify <remote-url> to clone an existing notebook.
   current    Print the current notebook name or path.
   delete     Delete a notebook.
-  open       Open the current notebook directory or notebook <name> in your
+  open       Open the current notebook directory or notebook <name> in the
              file browser, explorer, or finder.
              Shortcut Alias: `o`
   peek       Open the current notebook directory or notebook <name> in the

@@ -74,7 +74,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="6.1.5"
+_VERSION="6.1.6"
 
 # $_ME
 #
@@ -3165,8 +3165,7 @@ HEREDOC
           | sed "s/.*\///g" || :
       ))
 
-      if [[ -z "${_remote_branches[*]:-}" ]] ||
-         _contains "${_git_branch}" "${_remote_branches[@]:-}"
+      if _contains "${_git_branch}" "${_remote_branches[@]:-}"
       then
         if ((_prompt))
         then # fetch again, displaying git prompt and/or errors after newline
@@ -3210,8 +3209,8 @@ HEREDOC
       fi
     fi
 
-    if git -C "${_notebook_path}" show-branch                 \
-         "remotes/origin/${_git_branch}" > /dev/null 2>&1  &&
+    if git -C "${_notebook_path}" show-branch             \
+         "remotes/origin/${_git_branch}" > /dev/null 2>&1 &&
        ! git -C "${_notebook_path}" rebase "origin/${_git_branch}" &>/dev/null
     then
       local _merge_error=1
@@ -6169,7 +6168,7 @@ $(_color_primary "Subcommands"):
              Specify <remote-url> to clone an existing notebook.
   current    Print the current notebook name or path.
   delete     Delete a notebook.
-  open       Open the current notebook directory or notebook <name> in your
+  open       Open the current notebook directory or notebook <name> in the
              file browser, explorer, or finder.
              Shortcut Alias: \`o\`
   peek       Open the current notebook directory or notebook <name> in the
@@ -6699,16 +6698,16 @@ HEREDOC
           _force=1
           ;;
         *)
-          [[ -z "${_name:-}" ]] && _name="${__arg%%:*}"
+          [[ -z "${_name:-}"  ]] && _name="${__arg%%:*}"
           ;;
       esac
     done
 
-    if [[ -z "${_name}" ]]
+    if [[   -z  "${_name}"    ]]
     then
       _exit_1 _help notebooks
-    elif [[ "${_name}" == "local"          ]] &&
-         [[ -n "${_LOCAL_NOTEBOOK_PATH:-}" ]]
+    elif [[     "${_name}"    == "local"    ]] &&
+         [[ -n  "${_LOCAL_NOTEBOOK_PATH:-}" ]]
     then
       _exit_1 cat <<HEREDOC
 Use your system's shell or file explorer to delete local notebook directories.
@@ -6717,9 +6716,9 @@ HEREDOC
 
     _notebooks_validate_name "${_name}"
 
-    if [[ ! -d "${NB_DIR}/${_name}"        ]] ||
-       [[ ! -e "${NB_DIR}/${_name}/.git"   ]] ||
-       [[ ! -e "${NB_DIR}/${_name}/.index" ]]
+    if [[ ! -d "${NB_DIR}/${_name}"         ]] ||
+       [[ ! -e "${NB_DIR}/${_name}/.git"    ]] ||
+       [[ ! -e "${NB_DIR}/${_name}/.index"  ]]
     then
       _exit_1 printf "Notebook not found: %s\\n" "$(_color_primary "${_name}")"
     fi
@@ -6752,7 +6751,7 @@ HEREDOC
         IFS='' read -r -e -d $'\n' -p \
 "Please type $(_color_primary "${_name}") to confirm: " __response
 
-        if [[ "${__response}" == "${_name}" ]]
+        if [[ "${__response}"     == "${_name}"   ]]
         then
           break
         else
@@ -6762,17 +6761,17 @@ HEREDOC
       done
     fi
 
-    if [[ "$(_notebooks current)" == "${_name}" ]] &&
-       [[ "${_notebook_count}" -gt 1            ]]
+    if [[ "$(_notebooks current)" ==  "${_name}"  ]] &&
+       [[ "${_notebook_count}"    -gt 1           ]]
     then
-      if [[ "${_name}" != "home" ]]
+      if [[ "${_name}" != "home"  ]]
       then
         _notebooks use "home"
       else
         local __notebook=
         for   __notebook in "${_notebook_names[@]:-}"
         do
-          if [[ "${__notebook}" != "$(_notebooks current)"  ]]
+          if [[ "${__notebook}"   != "$(_notebooks current)"    ]]
           then
             _notebooks use "${__notebook}"
             break
@@ -6781,7 +6780,7 @@ HEREDOC
       fi
     fi
 
-    if _command_exists "trash" && [[ "${OSTYPE}" =~ ^darwin ]]
+    if _command_exists "trash"    && [[ "${OSTYPE}" =~ ^darwin  ]]
     then
       trash "${NB_DIR:?}/${_name:?}"
     else
@@ -6867,7 +6866,7 @@ HEREDOC
 
     local _target_basename="${2:-}"
 
-    if [[ -z "${_target_basename:-}"  ]]
+    if [[   -z "${_target_basename:-}"  ]]
     then
       _target_basename="${_basename}"
     fi
@@ -6910,10 +6909,10 @@ HEREDOC
           fi
           ;;
         *)
-          if _string_is_url "${1:-}"    && [[ -z "${_remote_url:-}"  ]]
+          if _string_is_url "${1:-}"    && [[ -z "${_remote_url:-}" ]]
           then
             _remote_url="${1:-}"
-          elif [[ -z "${_path:-}"   ]]  && [[ -z "${_remote_url:-}"  ]]
+          elif [[ -z "${_path:-}"   ]]  && [[ -z "${_remote_url:-}" ]]
           then
             _path="${1:-}"
           else
@@ -6925,24 +6924,24 @@ HEREDOC
       shift
     done
 
-    if [[ -n "${_remote_url:-}" ]] && [[ -z "${_path}" ]]
+    if [[ -n "${_remote_url:-}"     ]]  && [[ -z "${_path}"         ]]
     then
       _exit_1 printf \
         "Must specify a <path> when cloning from <remote-url>.\\n%s\\n" \
         "$(_help "notebooks")"
     fi
 
-    if [[ -n "${_path:-}"       ]]
+    if [[   -n "${_path:-}"         ]]
     then
-      if [[ ! "${_path}" =~ ^/  ]]
+      if [[ !   "${_path}" =~ ^/    ]]
       then
         _path="${_CURRENT_WORKING_DIR}/${_path}"
       fi
 
-      if [[ ! -e "${_path}"     ]]
+      if [[ ! -e "${_path}"         ]]
       then
         mkdir -p "${_path}"
-      elif [[ -f "${_path}"     ]]
+      elif [[ -f "${_path}"         ]]
       then
         _exit_1 printf "File already exists: %s\\n" "$(_color_primary "${_path}")"
       fi
@@ -6950,12 +6949,12 @@ HEREDOC
       _path="${_CURRENT_WORKING_DIR}"
     fi
 
-    if [[ -d "${_path}"           ]] &&
-       [[ -d "${_path}/.git"      ]]
+    if [[ -d "${_path}"             ]]  &&
+       [[ -d "${_path}/.git"        ]]
     then
       local _error_message=
 
-      if [[ -f "${_path}/.index"  ]]
+      if [[ -f "${_path}/.index"    ]]
       then
         _error_message="Notebook exists: $(_color_primary "${_path}")"
       else
@@ -6968,7 +6967,7 @@ HEREDOC
     if [[ "${_path}" != "${_CURRENT_WORKING_DIR}" ]] &&
        [[ -n "${_remote_url:-}"                   ]]
     then
-      if [[ -n "${_remote_branch:-}" ]]
+      if [[ -n "${_remote_branch:-}"      ]]
       then
         git clone --no-local --single-branch --branch "${_remote_branch:-}" \
           "${_remote_url}"                                                  \
@@ -7055,7 +7054,7 @@ HEREDOC
 
     _current_notebook_name="$(_notebooks current --name)"
 
-    if [[ -z "${_query_names[*]:-}" ]]
+    if [[ -z "${_query_names[*]:-}"         ]]
     then
       _notebook_names=($(ls -1 "${NB_DIR}"))
 
@@ -7065,7 +7064,7 @@ HEREDOC
       _notebook_paths=($(ls -1 -d "${NB_DIR}"/*))
       set -f
 
-      if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}" ]]
+      if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"  ]]
       then
         _notebook_names=("local" "${_notebook_names[@]:-}")
         _notebook_paths=("${_LOCAL_NOTEBOOK_PATH}" "${_notebook_paths[@]:-}")
@@ -7078,7 +7077,7 @@ HEREDOC
       do
         _notebook_names+=("${__name}")
 
-        if [[ "${__name}" == "local"                ]]
+        if [[ "${__name}" == "local"        ]]
         then
           _notebook_paths+=("${_LOCAL_NOTEBOOK_PATH}")
         else
@@ -7090,14 +7089,14 @@ HEREDOC
     local i=
     for ((i=0; i < "${#_notebook_names[@]}"; i++))
     do
-      if [[ -e "${_notebook_paths[i]}/.git"         ]]
+      if [[ -e "${_notebook_paths[i]}/.git"                 ]]
       then # it's a git repository.
         local _notebook_line=
         local _origin_url=
 
-        if [[ "${i}" == "0" ]]                       &&
-           [[ "${_notebook_names[i]}" == "local"    ]] &&
-           [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"        ]]
+        if [[     "${i}"                        == "0"      ]]  &&
+           [[     "${_notebook_names[i]:-}"     == "local"  ]]  &&
+           [[ -n  "${_LOCAL_NOTEBOOK_PATH:-}"               ]]
         then # local notebook as first notebook
           if ((_only_global))
           then
@@ -7106,8 +7105,8 @@ HEREDOC
             if ((_only_paths))
             then
               _notebook_line="${_notebook_paths[i]}"
-            elif ((_notebook_color_enabled))                  &&
-                 [[ "${_current_notebook_name}" == "local" ]]
+            elif ((_notebook_color_enabled))                    &&
+                 [[ "${_current_notebook_name}" == "local"  ]]
             then
               _notebook_line="$(_color_primary "local" --underline)"
             else
@@ -7241,7 +7240,7 @@ HEREDOC
       return 0
     fi
 
-    if [[ "${_subcommand:-}" =~ ^open$|^o$    ]]
+    if [[ "${_subcommand:-}"    =~ ^open$|^o$ ]]
     then
       if _command_exists "xdg-open"
       then
@@ -7250,11 +7249,11 @@ HEREDOC
       then
         open "${_notebook_path}"
       else
-        _exit_1 printf \
-          "%s doesn't know how to open directories on your system.\\n" \
+        _exit_1 printf                                                  \
+          "%s doesn't know how to open directories on this system.\\n"  \
           "$(_color_primary "${_ME}")"
       fi
-    elif [[ "${_subcommand:-}" =~ ^peek$|^p$  ]]
+    elif [[ "${_subcommand:-}"  =~ ^peek$|^p$ ]]
     then
       if _command_exists "ranger"
       then
@@ -7276,9 +7275,9 @@ HEREDOC
     else
       local _dotfile_path="${_notebook_path}/.archived"
 
-      if [[ "${_subcommand}" == "archive" ]]
+      if [[   "${_subcommand}" == "archive"   ]]
       then
-        if [[ ! -e "${_dotfile_path}"     ]]
+        if [[ ! -e "${_dotfile_path}"         ]]
         then
           touch "${_dotfile_path}" &&
             _git checkpoint "${_notebook_path}" "[nb] Archived"
@@ -7287,7 +7286,7 @@ HEREDOC
         printf "%s archived.\\n" "$(_color_primary "${_notebook_name}")"
       elif [[ "${_subcommand}" == "status"    ]]
       then
-        if [[ -e "${_dotfile_path}"           ]]
+        if [[   -e "${_dotfile_path}"         ]]
         then
           printf "%s is archived.\\n" "$(_color_primary "${_notebook_name}")"
         else
@@ -7295,7 +7294,7 @@ HEREDOC
         fi
       elif [[ "${_subcommand}" == "unarchive" ]]
       then
-        if [[ -e "${_dotfile_path}"           ]]
+        if [[   -e "${_dotfile_path}"         ]]
         then
           rm "${_dotfile_path:?}" &&
             _git checkpoint "${_notebook_path}" "[nb] Unarchived"
@@ -11372,8 +11371,8 @@ _bookmark() {
           open "${_target_url}"
           return 0
         else
-          _exit_1 printf \
-            "%s doesn't know how to open URLs on your system.\\n" \
+          _exit_1 printf                                          \
+            "%s doesn't know how to open URLs on this system.\\n" \
             "$(_color_primary "${_ME}")"
         fi
       # `bookmark url`
@@ -18647,6 +18646,7 @@ HEREDOC
 }
 _remote() {
   local _only_url=0
+  local _skip_confirmation=0
   local _skip_preamble=0
   local _subcommand=
   local _new_branch=
@@ -18656,17 +18656,18 @@ _remote() {
   for   __arg in "${@:-}"
   do
     case "${__arg:-}" in
-      --skip-preamble)  _skip_preamble=1    ;;
-      --url|url)        _only_url=1         ;;
+      --skip*confirm*)  _skip_confirmation=1    ;;
+      --skip*preamble)  _skip_preamble=1        ;;
+      --url|url)        _only_url=1             ;;
       *)
-        if [[   -z  "${_subcommand:-}"      ]]
+        if [[   -z  "${_subcommand:-}"          ]]
         then
           _subcommand="${__arg}"
-        elif [[ -z  "${_new_remote_url:-}"  ]] &&
+        elif [[ -z  "${_new_remote_url:-}"      ]]  &&
              _contains "${_subcommand}" "add" "branches" "set"
         then
           _new_remote_url="${__arg}"
-        elif [[ -z  "${_new_branch:-}"      ]]
+        elif [[ -z  "${_new_branch:-}"          ]]
         then
           _new_branch="${__arg:-}"
         fi
@@ -18689,7 +18690,7 @@ _remote() {
 
   local _remote_exists=0
 
-  if [[ -n "${_current_remote_url:-}"   ]]
+  if [[ -n "${_current_remote_url:-}"           ]]
   then
     _remote_exists=1
   fi
@@ -18697,7 +18698,7 @@ _remote() {
   case "${_subcommand:-}" in
     branches)
       {
-        if [[ -n "${_new_remote_url:-}" ]]
+        if [[ -n "${_new_remote_url:-}"         ]]
         then
           git -C "${_notebook_path}" ls-remote  \
             --heads "${_new_remote_url:-}"      \
@@ -18740,25 +18741,28 @@ _remote() {
     remove|rm|unset)
       if ((_remote_exists))
       then
-        while true
-        do
-          printf "Removing remote: %s\\n"       \
-            "$(_color_primary "${_current_remote_url:-}")"
+        printf "Removing remote: %s\\n"         \
+          "$(_color_primary "${_current_remote_url:-}")"
 
-          local __yn=
-          IFS='' read -r -e -d $'\n' -p         \
+        if ! ((_skip_confirmation))
+        then
+          while true
+          do
+            local __yn=
+            IFS='' read -r -e -d $'\n' -p       \
 "$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
 
-          case ${__yn} in
-            [Yy]*)
-              break
-              ;;
-            *)
-              printf "Exiting...\\n"
-              exit 0
-              ;;
-          esac
-        done
+            case ${__yn} in
+              [Yy]*)
+                break
+                ;;
+              *)
+                printf "Exiting...\\n"
+                exit 0
+                ;;
+            esac
+          done
+        fi
 
         local _remote_branches=()
         _remote_branches=($(
@@ -18776,7 +18780,7 @@ _remote() {
           do
             local __yn=
             IFS='' read -r -e -d $'\n' -p       \
-"$(_color_primary "Remove branch from remote?") $(_color_brackets "y/N") " __yn
+"$(_color_primary "Remove branch on remote?") ($(_color_primary "${_current_branch}")) $(_color_brackets "y/N") " __yn
 
             case ${__yn} in
               [Yy]*)
@@ -18801,40 +18805,40 @@ _remote() {
             cd "${_blank_repo_path}" || return 1
 
             {
-              git -C "${_blank_repo_path}" init             \
-                  --initial-branch "${_remote_branches[0]}" &&
-                touch "${_blank_repo_path}/.index"          &&
-                git -C "${_blank_repo_path}" add --all      &&
-                git -C "${_blank_repo_path}" commit         \
-                  -a -m "[nb] Initialize"                   &&
-                git -C "${_blank_repo_path}" remote add     \
-                  origin "${_current_remote_url:-}"         &&
-                git -C "${_blank_repo_path}" push origin    \
+              git -C "${_blank_repo_path}" init                     \
+                  --initial-branch "${_remote_branches[0]}"         &&
+                touch "${_blank_repo_path}/.index"                  &&
+                git -C "${_blank_repo_path}" add --all              &&
+                git -C "${_blank_repo_path}" commit                 \
+                  -a -m "[nb] Initialize"                           &&
+                git -C "${_blank_repo_path}" remote add             \
+                  origin "${_current_remote_url:-}"                 &&
+                git -C "${_blank_repo_path}" push origin            \
                   "${_remote_branches[0]}" --force
             } &>/dev/null ||
               _exit_1 printf "Unable to reset remote branch: %s\\n" \
                 "$(_color_primary "${_remote_branches[0]}")"
           else
-            git -C "${_notebook_path:-}" push origin        \
+            git -C "${_notebook_path:-}" push origin                \
               ":${_current_branch}"  --force &>/dev/null
           fi
         fi
 
-        git -C "${_notebook_path:-}" remote rm origin       &&
-          printf "Removed  remote: %s\\n"                   \
-            "$(_color_primary "${_current_remote_url:-}")"  &&
+        git -C "${_notebook_path:-}" remote rm origin               &&
+          printf "Remote removed: %s\\n"                            \
+            "$(_color_primary "${_current_remote_url:-}")"          &&
               return 0
       else
         _exit_1 printf "No remote configured.\\n"
       fi
       ;;
     set|add)
-      if [[ -z "${_new_remote_url:-}" ]]
+      if [[ -z "${_new_remote_url:-}"           ]]
       then
         _exit_1 _help "remote"
       fi
 
-      if [[ -z "${_new_branch:-}"     ]]
+      if [[ -z "${_new_branch:-}"               ]]
       then
         _new_branch="${_current_branch}"
       fi
@@ -18875,31 +18879,26 @@ _remote() {
               ;;
             *)
               printf "Exiting...\\n"
+
               exit 0
               ;;
           esac
         done
       fi
 
-      if ((_remote_exists)) &&
-         [[ "${_current_remote_url:-}" != "${_new_remote_url:-}" ]]
-      then
-        _remote unset <<< "y${_NEWLINE}"
-        _print_line "--------------"
-      fi
-
-      if [[ "${_current_remote_url:-}" != "${_new_remote_url:-}" ]]
-      then
-        git -C "${_notebook_path}" remote add origin "${_new_remote_url}" ||
-          return 1
-      fi
-
-      git -C "${_notebook_path}" fetch origin "${_new_branch}" &>/dev/null || :
+      local _remote_branches=()
+      _remote_branches=($(
+        git -C "${_notebook_path}" ls-remote    \
+          --heads "${_new_remote_url:-}"        \
+          | sed "s/.*\///g" || :
+      ))
 
       local _selected_push_option=
 
-      if ! git -C "${_notebook_path}" show-branch             \
-           "remotes/origin/${_new_branch}" > /dev/null 2>&1
+      if [[ "${#_remote_branches[@]}" -eq 0     ]]
+      then
+        _selected_push_option=2
+      elif ! _contains "${_new_branch}" "${_remote_branches[@]:-}"
       then
         cat <<HEREDOC
 Branch not present on remote: $(_color_primary "${_new_branch:-}")
@@ -18909,31 +18908,43 @@ $(_color_brackets "2") Sync as a new orphan branch on the remote.
 
 HEREDOC
       else
+        local _temp_repo_path="${_NB_TEMP_DIRECTORY}/${RANDOM}"
+
+        (
+          cd "${_NB_TEMP_DIRECTORY}"                            &&
+            git clone --no-local                                \
+              --single-branch --branch "${_new_branch:-}"       \
+              "${_new_remote_url}"                              \
+              "${_temp_repo_path}" &>/dev/null
+        )
+
         local _local_branch_root_hash=
         _local_branch_root_hash="$(
-          git -C "${_notebook_path}" rev-list --max-parents=0 \
+          git -C "${_notebook_path}" rev-list --max-parents=0   \
             "${_new_branch}"
         )"
 
         local _remote_branch_root_hash=
         _remote_branch_root_hash="$(
-          git -C "${_notebook_path}" rev-list --max-parents=0 \
+          git -C "${_temp_repo_path}" rev-list --max-parents=0  \
             "remotes/origin/${_new_branch}"
         )"
 
         local _remote_branch_commit_hashes=()
         _remote_branch_commit_hashes=($(
-          git -C "${_notebook_path}" rev-list                 \
+          git -C "${_temp_repo_path}" rev-list                  \
             --max-count 3 "remotes/origin/${_new_branch}"
         ))
 
         local _remote_branch_files=()
         _remote_branch_files=($(
-          git -C "${_notebook_path}" ls-tree --name-only "origin/${_new_branch}"
+          git -C "${_temp_repo_path}" ls-tree --name-only "origin/${_new_branch}"
         ))
 
-        if [[ "${_local_branch_root_hash:-}"  !=  "${_remote_branch_root_hash:-}" ]]
+        if [[ "${_local_branch_root_hash:-}"  ==  "${_remote_branch_root_hash:-}" ]]
         then
+          _selected_push_option=1
+        else
            if [[ "${#_remote_branch_commit_hashes[@]}"  -eq 1         ]]  &&
               [[ "${#_remote_branch_files[@]}"          -eq 1         ]]  &&
               [[ "${_remote_branch_files[0]}"           ==  ".index"  ]]
@@ -18951,35 +18962,31 @@ HEREDOC
         fi
       fi
 
-      while true
-      do
-        IFS='' read -r -e -d $'\n' -p                                                 \
-          "$(_color_primary "Choose an option") or $(_color_primary "q") to quit: "   \
-          _selected_push_option
+      if [[ -z "${_selected_push_option:-}"       ]]
+      then
+        while true
+        do
+          IFS='' read -r -e -d $'\n' -p                                                 \
+            "$(_color_primary "Choose an option") or $(_color_primary "q") to quit: "   \
+            _selected_push_option
 
-        case "${_selected_push_option:-}" in
-          [12])
-            break
-            ;;
-          q*|exit)
-            printf "Exiting...\\n"
-            exit 0
-            ;;
-        esac
-      done
+          case "${_selected_push_option:-}" in
+            [12])
+              break
+              ;;
+            q*|exit)
+              printf "Exiting...\\n"
+
+              exit 0
+              ;;
+          esac
+        done
+      fi
 
       if [[   "${_selected_push_option:-}" == "1" ]]      &&
-         ! git -C "${_notebook_path}" show-branch \
-           "remotes/origin/${_new_branch}" > /dev/null 2>&1
+         ! _contains "${_new_branch}" "${_remote_branches[@]:-}"
       then
         printf "\\nRemote branches:\\n\\n"
-
-        local _remote_branches=()
-        _remote_branches=($(
-          git -C "${_notebook_path}" ls-remote    \
-            --heads "${_new_remote_url}"          \
-            | sed "s/.*\///g" || :
-        ))
 
         local i=
         for ((i=0; i < "${#_remote_branches[@]}"; i++))
@@ -19002,20 +19009,23 @@ HEREDOC
           case "${_selected_branch:-}" in
             q*|exit)
               printf "Exiting...\\n"
+
               exit 0
               ;;
             [0-9]*)
               if [[ -n "${_remote_branches[$((_selected_branch - 1))]:-}" ]]
               then
                 _new_branch="${_remote_branches[$((_selected_branch - 1))]:-}"
+
                 break
               fi
               ;;
           esac
         done
-      elif [[ "${_selected_push_option:-}" == "2" ]]      &&
-           git -C "${_notebook_path}" show-branch         \
-             "remotes/origin/${_new_branch}" > /dev/null 2>&1
+      fi
+
+      if [[ "${_selected_push_option:-}" == "2"   ]]      &&
+           _contains "${_new_branch}" "${_remote_branches[@]:-}"
       then
         local _notebook_name_branch_name="${_notebook_path##*/}"
         _notebook_name_branch_name="${_notebook_name_branch_name//' '/-}"
@@ -19027,8 +19037,7 @@ HEREDOC
         local _uniqueness_counter=0
         local _unique_branch_name="${_notebook_name_branch_name}"
 
-        while git -C "${_notebook_path}" show-branch      \
-             "remotes/origin/${_unique_branch_name}"  > /dev/null 2>&1
+        while _contains "${_unique_branch_name}" "${_remote_branches[@]:-}"
         do
           _uniqueness_counter="$((_uniqueness_counter+1))"
 
@@ -19044,6 +19053,17 @@ HEREDOC
       then
         git -C "${_notebook_path}" branch -m "${_new_branch:-}"
       fi
+
+      if ((_remote_exists))
+      then
+        _remote unset --skip-confirmation
+        _print_line "--------------"
+      fi
+
+      git -C "${_notebook_path}" remote add origin "${_new_remote_url}" ||
+        return 1
+
+      git -C "${_notebook_path}" fetch origin "${_new_branch}" &>/dev/null || :
 
       _git sync "${_notebook_path}" --skip-prompt
 

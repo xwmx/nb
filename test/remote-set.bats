@@ -2,6 +2,128 @@
 
 load test_helper
 
+# empty remote ################################################################
+
+@test "'remote set' with empty remote pushes branch." {
+  {
+    mkdir "${_TMP_DIR}/bare-repo"
+    cd "${_TMP_DIR}/bare-repo"
+    git init
+    mv "${_TMP_DIR}/bare-repo/.git" "${_GIT_REMOTE_PATH}"
+    cd "${_GIT_REMOTE_PATH}"
+    git config --bool core.bare true
+
+    cd "${_TMP_DIR}"
+
+    "${_NB}" init
+
+    "${_NB}" notebooks rename "home" "Example Notebook"
+
+    [[ !  -e "${NB_DIR}/home"                   ]]
+    [[    -d "${NB_DIR}/Example Notebook/.git"  ]]
+
+    "${_NB}" add "Example File.md" --content "Example content."
+  }
+
+  run "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0 ]]
+
+  [[ "${lines[0]}"  =~  Adding\ remote\ to:\ .*Example\ Notebook    ]]
+  [[ "${lines[1]}"  =~  [^-]----------------------------------[^-]  ]]
+  [[ "${lines[2]}"  =~  URL:\ \ \ \ .*${_GIT_REMOTE_URL}            ]]
+  [[ "${lines[3]}"  =~  Branch:\ .*master                           ]]
+  [[ "${lines[4]}"  =~  [^-]--------------[^-]                      ]]
+  [[ "${lines[5]}"  =~  \
+Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
+
+  diff                                                            \
+    <(git ls-remote --symref "${_GIT_REMOTE_URL}" HEAD            \
+        | awk '/^ref:/ {sub(/refs\/heads\//, "", $2); print $2}') \
+    <(printf "master\\n")
+
+  diff                  \
+    <("${_NB}" remote)  \
+    <(printf "%s (master)\\n" "${_GIT_REMOTE_URL:-}")
+}
+
+# exiting #####################################################################
+
+@test "'remote set' with exit on third prompt does not set new remote." {
+  {
+    _setup_remote_repo
+
+    "${_NB}" init "${_GIT_REMOTE_URL}"
+
+    "${_NB}" notebooks rename "home" "Example Notebook"
+
+    [[ !  -e "${NB_DIR}/home"                   ]]
+    [[    -d "${NB_DIR}/Example Notebook/.git"  ]]
+
+    "${_NB}" add "Example File.md" --content "Example content."
+
+    "${_NB}" sync
+
+    declare _example_hashes=()
+    _example_hashes=($("${_NB}" git rev-list origin/master))
+
+    "${_NB}" notebooks add "Sample Notebook"
+    "${_NB}" notebooks use "Sample Notebook"
+
+    "${_NB}" add "Sample File.md" --content "Sample content."
+
+    "${_NB}" git branch -m "sample-branch"
+  }
+
+  run "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}1${_NEWLINE}q${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0 ]]
+
+  [[ "$("${_NB}" remote 2>&1)"  =~  No\ remote\ configured. ]]
+}
+
+@test "'remote set' with exit on second prompt does not set new remote." {
+  {
+    _setup_remote_repo
+
+    "${_NB}" init "${_GIT_REMOTE_URL}"
+
+    "${_NB}" notebooks rename "home" "Example Notebook"
+
+    [[ !  -e "${NB_DIR}/home"                   ]]
+    [[    -d "${NB_DIR}/Example Notebook/.git"  ]]
+
+    "${_NB}" add "Example File.md" --content "Example content."
+
+    "${_NB}" sync
+
+    declare _example_hashes=()
+    _example_hashes=($("${_NB}" git rev-list origin/master))
+
+    "${_NB}" notebooks add "Sample Notebook"
+    "${_NB}" notebooks use "Sample Notebook"
+
+    "${_NB}" add "Sample File.md" --content "Sample content."
+
+    "${_NB}" git branch -m "sample-branch"
+  }
+
+  run "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}q${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0 ]]
+
+  [[ "$("${_NB}" remote 2>&1)"  =~  No\ remote\ configured. ]]
+}
+
 # remote set ##################################################################
 
 @test "'remote set' with unrelated histories displays prompt and merges with existing." {
@@ -28,7 +150,7 @@ load test_helper
     "${_NB}" add "Sample File.md" --content "Sample content."
   }
 
-  run "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}1${_NEWLINE}1${_NEWLINE}"
+  run "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}1${_NEWLINE}q${_NEWLINE}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -66,7 +188,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)                  ]]
   _contains "${_example_hashes[1]}" "${_sample_hashes[@]}"
 }
 
-@test "'sync' with unrelated histories displays prompt and creates new orphan." {
+@test "'remote set' with unrelated histories displays prompt and creates new orphan." {
   {
     _setup_remote_repo
 
@@ -183,7 +305,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)              ]]
   [[ "${lines[4]}"  =~  Branch:\ .*master                                       ]]
   [[ "${lines[5]}"  =~  [^-]--------------[^-]                                  ]]
   [[ "${lines[6]}"  =~  Removing\ remote:\ .*https://example.test/example.git   ]]
-  [[ "${lines[7]}"  =~  Removed\ \ remote:\ .*https://example.test/example.git  ]]
+  [[ "${lines[7]}"  =~  Remote\ removed:\ .*https://example.test/example.git    ]]
   [[ "${lines[8]}"  =~  [^-]--------------[^-]                                  ]]
   [[ "${lines[9]}"  =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)                        ]]
@@ -217,7 +339,10 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)                        
     [[ "${lines[3]}"  =~  URL:\ \ \ \ .*${_GIT_REMOTE_URL}          ]]
     [[ "${lines[4]}"  =~  Branch:\ .*master                         ]]
     [[ "${lines[5]}"  =~  [^-]--------------[^-]                    ]]
-    [[ "${lines[6]}"  =~  \
+    [[ "${lines[6]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}   ]]
+    [[ "${lines[7]}"  =~  Remote\ removed:\ .*${_GIT_REMOTE_URL}    ]]
+    [[ "${lines[8]}"  =~  [^-]--------------[^-]                    ]]
+    [[ "${lines[9]}"  =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
 
     diff                  \
@@ -295,7 +420,10 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
     [[ "${lines[3]}"  =~  URL:\ \ \ \ .*${_GIT_REMOTE_URL}          ]]
     [[ "${lines[4]}"  =~  Branch:\ .*master                         ]]
     [[ "${lines[5]}"  =~  [^-]--------------[^-]                    ]]
-    [[ "${lines[6]}"  =~  \
+    [[ "${lines[6]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}   ]]
+    [[ "${lines[7]}"  =~  Remote\ removed:\ .*${_GIT_REMOTE_URL}    ]]
+    [[ "${lines[8]}"  =~  [^-]--------------[^-]                    ]]
+    [[ "${lines[9]}"  =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
 
     diff                  \
