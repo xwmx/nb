@@ -19063,8 +19063,6 @@ HEREDOC
       git -C "${_notebook_path}" remote add origin "${_new_remote_url}" ||
         return 1
 
-      git -C "${_notebook_path}" fetch origin "${_new_branch}" &>/dev/null || :
-
       _git sync "${_notebook_path}" --skip-prompt
 
       local _updated_current_branch=
