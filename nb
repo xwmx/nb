@@ -18799,7 +18799,7 @@ _remote() {
         then
           if [[ "${#_remote_branches[@]}" -eq 1 ]]
           then
-            local _blank_repo_path="${_NB_TEMP_DIRECTORY:-/tmp}/blank-repo"
+            local _blank_repo_path="${_NB_TEMP_DIRECTORY:-/tmp}/${RANDOM}"
 
             mkdir -p "${_blank_repo_path}"
             cd "${_blank_repo_path}" || return 1
