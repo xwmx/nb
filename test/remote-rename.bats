@@ -16,8 +16,8 @@ load test_helper
 
     "${_NB}" notebooks rename "home" "Example Notebook"
 
-    [[ !  -e "${NB_DIR}/home"                   ]]
-    [[    -d "${NB_DIR}/Example Notebook/.git"  ]]
+    [[ !  -e "${NB_DIR}/home"                                       ]]
+    [[    -d "${NB_DIR}/Example Notebook/.git"                      ]]
 
     "${_NB}" add "Example File.md" --content "Example content."
 
@@ -217,8 +217,8 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*updated-branch-name.*\)  ]]
 
     "${_NB}" notebooks rename "home" "Example Notebook"
 
-    [[ !  -e "${NB_DIR}/home"                   ]]
-    [[    -d "${NB_DIR}/Example Notebook/.git"  ]]
+    [[ !  -e "${NB_DIR}/home"                                       ]]
+    [[    -d "${NB_DIR}/Example Notebook/.git"                      ]]
 
     "${_NB}" add "Example File.md" --content "Example content."
 
@@ -340,8 +340,8 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*updated-branch-name.*\)  ]]
 
     "${_NB}" notebooks rename "home" "Example Notebook"
 
-    [[ !  -e "${NB_DIR}/home"                   ]]
-    [[    -d "${NB_DIR}/Example Notebook/.git"  ]]
+    [[ !  -e "${NB_DIR}/home"                                       ]]
+    [[    -d "${NB_DIR}/Example Notebook/.git"                      ]]
 
     "${_NB}" add "Example File.md" --content "Example content."
 
@@ -455,8 +455,8 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*updated-branch-name.*\)  ]]
 
     "${_NB}" notebooks rename "home" "Example Notebook"
 
-    [[ !  -e "${NB_DIR}/home"                   ]]
-    [[    -d "${NB_DIR}/Example Notebook/.git"  ]]
+    [[ !  -e "${NB_DIR}/home"                                       ]]
+    [[    -d "${NB_DIR}/Example Notebook/.git"                      ]]
 
     "${_NB}" add "Example File.md" --content "Example content."
 
@@ -576,8 +576,8 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*updated-branch-name.*\)  ]]
 
     "${_NB}" notebooks rename "home" "Example Notebook"
 
-    [[ !  -e "${NB_DIR}/home"                   ]]
-    [[    -d "${NB_DIR}/Example Notebook/.git"  ]]
+    [[ !  -e "${NB_DIR}/home"                                       ]]
+    [[    -d "${NB_DIR}/Example Notebook/.git"                      ]]
 
     "${_NB}" add "Example File.md" --content "Example content."
 
@@ -656,8 +656,8 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*updated-branch-name.*\)  ]]
 
     "${_NB}" notebooks rename "home" "Example Notebook"
 
-    [[ !  -e "${NB_DIR}/home"                   ]]
-    [[    -d "${NB_DIR}/Example Notebook/.git"  ]]
+    [[ !  -e "${NB_DIR}/home"                                       ]]
+    [[    -d "${NB_DIR}/Example Notebook/.git"                      ]]
 
     "${_NB}" add "Example File.md" --content "Example content."
 
@@ -730,8 +730,8 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*updated-branch-name.*\)  ]]
 
     "${_NB}" add "Example File.md" --content "Example content."
 
-    diff                                      \
-      <(git -C "${NB_DIR}/home" branch --all) \
+    diff                                                            \
+      <(git -C "${NB_DIR}/home" branch --all)                       \
       <(printf "* master\\n")
 
     [[ "$("${_NB}" remote 2>&1)" =~  \!.*\ No\ remote\ configured\. ]]
@@ -751,8 +751,8 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*updated-branch-name.*\)  ]]
   [[ "${lines[4]}"  =~  [^-]--------------[^-]                      ]]
   [[ "${lines[5]}"  =~  Renamed\ to:\ .*updated-branch-name.*$      ]]
 
-    diff                                      \
-      <(git -C "${NB_DIR}/home" branch --all) \
+    diff                                                            \
+      <(git -C "${NB_DIR}/home" branch --all)                       \
       <(printf "* updated-branch-name\\n")
 
   [[ "$("${_NB}" remote 2>&1)" =~  \!.*\ No\ remote\ configured\.   ]]
@@ -770,8 +770,8 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*updated-branch-name.*\)  ]]
 
     "${_NB}" notebooks rename "home" "Example Notebook"
 
-    [[ !  -e "${NB_DIR}/home"                   ]]
-    [[    -d "${NB_DIR}/Example Notebook/.git"  ]]
+    [[ !  -e "${NB_DIR}/home"                                       ]]
+    [[    -d "${NB_DIR}/Example Notebook/.git"                      ]]
 
     "${_NB}" add "Example File.md" --content "Example content."
 
@@ -782,13 +782,13 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*updated-branch-name.*\)  ]]
           | awk '/^ref:/ {sub(/refs\/heads\//, "", $2); print $2}') \
       <(printf "master\\n")
 
-    diff                                                  \
-      <(git -C "${NB_DIR}/Example Notebook" ls-remote     \
-          --heads "${_GIT_REMOTE_URL}" | sed "s/.*\///g") \
+    diff                                                            \
+      <(git -C "${NB_DIR}/Example Notebook" ls-remote               \
+          --heads "${_GIT_REMOTE_URL}" | sed "s/.*\///g")           \
       <(printf "master\\n")
 
-    diff                  \
-      <("${_NB}" remote)  \
+    diff                                                            \
+      <("${_NB}" remote)                                            \
       <(printf "%s (master)\\n" "${_GIT_REMOTE_URL:-}")
   }
 
