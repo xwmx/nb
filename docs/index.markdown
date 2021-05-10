@@ -4678,7 +4678,8 @@ Usage:
   nb plugins [<name>] [--paths]
   nb plugins install [<path> | <url>] [--force]
   nb plugins uninstall <name> [--force]
-  nb remote [branches [<url>] | remove | set <url> [<branch>]]
+  nb remote [branches [<url>] | remove | rename [<branch-name>] <name>]
+  nb remote set <url> [<branch>]
   nb run <command> [<arguments>...]
   nb search ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             <query>... [-a | --all] [--and <query>] [--or <query>]
