@@ -19047,14 +19047,18 @@ HEREDOC
           | sed "s/.*\///g" || :
       ))
 
-      local _show_branch_selection_prompt=0
       local _selected_push_option=
+      local _show_branch_selection_prompt=0
+      local _show_branch_name_prompt=1
 
       if [[ "${#_remote_branches[@]}" -eq 0     ]]
       then
         _selected_push_option=2
+        _show_branch_name_prompt=0
       elif ! _contains "${_new_branch}" "${_remote_branches[@]:-}"
       then
+        _print_line "--------------"
+
         cat <<HEREDOC
 Branch not present on remote: $(_color_primary "${_new_branch:-}")
 
@@ -19119,6 +19123,8 @@ HEREDOC
           then
             _selected_push_option=1
           else
+            _print_line "--------------"
+
             cat <<HEREDOC
 Remote branch has existing history: $(_color_primary "${_new_branch:-}")
 
@@ -19182,7 +19188,9 @@ HEREDOC
 
       if ((_show_branch_selection_prompt))
       then
-        printf "\\nRemote branches:\\n\\n"
+        _print_line "------------------------------"
+
+        printf "Remote branches:\\n\\n"
 
         local i=
         for ((i=0; i < "${#_remote_branches[@]}"; i++))
@@ -19251,29 +19259,37 @@ HEREDOC
           _target_orphan_branch_name="${_unique_branch_name}"
         fi
 
-        local _bk_name=  && _bk_name="$(_color_brackets "${_target_orphan_branch_name}")"
-        local _hi_enter= && _hi_enter="$(_color_primary 'enter')"
-        local _hi_q=     && _hi_q="$(_color_primary 'q')"
-        local _hi_type=  && _hi_type="$(_color_primary 'type')"
+        if ! ((_show_branch_name_prompt))
+        then
+          _new_branch="${_target_orphan_branch_name}"
+        else
+          _print_line "------------------------------"
 
-        cat <<HEREDOC
+          local _bk_name=  && _bk_name="$(_color_brackets "${_target_orphan_branch_name}")"
+          local _hi_enter= && _hi_enter="$(_color_primary 'enter')"
+          local _hi_q=     && _hi_q="$(_color_primary 'q')"
+          local _hi_type=  && _hi_type="$(_color_primary 'type')"
+
+          cat <<HEREDOC
 Press ${_hi_enter} to use the selected name, ${_hi_type} a new name, or press ${_hi_q} to quit.
+
 HEREDOC
 
-        while true
-        do
-          local _orphan_branch_prompt_response=
+          while true
+          do
+            local _orphan_branch_prompt_response=
 
-          IFS='' read -r -e -d $'\n' -p                       \
-            "$(_color_primary "Name") ${_bk_name}: "          \
-            _orphan_branch_prompt_response
+            IFS='' read -r -e -d $'\n' -p                     \
+              "Name ${_bk_name}: "                            \
+              _orphan_branch_prompt_response
 
-          case "${_orphan_branch_prompt_response:-}" in
-            '')       _new_branch="${_target_orphan_branch_name}"     && break  ;;
-            q*|exit)  printf "Exiting...\\n"                          && exit 0 ;;
-            *)        _new_branch="${_orphan_branch_prompt_response}" && break  ;;
-          esac
-        done
+            case "${_orphan_branch_prompt_response:-}" in
+              '')       _new_branch="${_target_orphan_branch_name}"     && break  ;;
+              q*|exit)  printf "Exiting...\\n"                          && exit 0 ;;
+              *)        _new_branch="${_orphan_branch_prompt_response}" && break  ;;
+            esac
+          done
+        fi
       fi
 
       if [[ "${_new_branch:-}" != "${_current_branch:-}"      ]]

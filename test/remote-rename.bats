@@ -173,21 +173,22 @@ load test_helper
       | awk '/^ref:/ {sub(/refs\/heads\//, "", $2); print $2}'
   )"
 
-  [[ "${lines[1]}"  =~  \
-Branch\ not\ present\ on\ remote:\ .*sample-notebook                ]]
+  [[ "${lines[1]}"  =~  [^-]--------------[^-]                      ]]
   [[ "${lines[2]}"  =~  \
-.*[.*1.*].*\ Merge\ and\ sync\ with\ an\ existing\ remote\ branch\. ]]
+Branch\ not\ present\ on\ remote:\ .*sample-notebook                ]]
   [[ "${lines[3]}"  =~  \
+.*[.*1.*].*\ Merge\ and\ sync\ with\ an\ existing\ remote\ branch\. ]]
+  [[ "${lines[4]}"  =~  \
 .*[.*2.*].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.    ]]
-
-  [[ "${lines[4]}"  =~  Remote\ branches:                           ]]
-  [[ "${lines[5]}"  =~  .*[.*1.*].*\ master                         ]]
-  [[ "${lines[6]}"  =~  .*[.*2.*].*\ updated-branch-name            ]]
-  [[ "${lines[7]}"  =~  [^-]--------------[^-]                      ]]
-  [[ "${lines[8]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}     ]]
-  [[ "${lines[9]}"  =~  Remote\ removed.                            ]]
-  [[ "${lines[10]}" =~  [^-]---------------[^-]                     ]]
-  [[ "${lines[11]}"  =~  \
+  [[ "${lines[5]}"  =~  [^-]------------------------------[^-]      ]]
+  [[ "${lines[6]}"  =~  Remote\ branches:                           ]]
+  [[ "${lines[7]}"  =~  .*[.*1.*].*\ master                         ]]
+  [[ "${lines[8]}"  =~  .*[.*2.*].*\ updated-branch-name            ]]
+  [[ "${lines[9]}"  =~  [^-]--------------[^-]                      ]]
+  [[ "${lines[10]}" =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}     ]]
+  [[ "${lines[11]}" =~  Remote\ removed.                            ]]
+  [[ "${lines[12]}" =~  [^-]---------------[^-]                     ]]
+  [[ "${lines[13]}" =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*updated-branch-name.*\)  ]]
 
   diff                                                              \

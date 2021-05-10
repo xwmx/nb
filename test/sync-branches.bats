@@ -235,20 +235,21 @@ load test_helper
   [[ "${status}"    -eq 0 ]]
 
   [[ "${lines[0]}"  =~  Syncing:\ .*Sample\ Notebook.*\.\.\.              ]]
-  [[ "${lines[1]}"  =~  Remote\ branch\ has\ existing\ history:\ .*master ]]
-  [[ "${lines[2]}"  =~  \
-.*\[.*1.*\].*\ Merge\ and\ sync\ with\ the\ existing\ remote\ branch\:\ .*master  ]]
+  [[ "${lines[1]}"  =~  [^-]--------------[^-]                            ]]
+  [[ "${lines[2]}"  =~  Remote\ branch\ has\ existing\ history:\ .*master ]]
   [[ "${lines[3]}"  =~  \
-.*\[.*2.*\].*\ Merge\ and\ sync\ with\ a\ different\ existing\ remote\ branch\.   ]]
+.*\[.*1.*\].*\ Merge\ and\ sync\ with\ the\ existing\ remote\ branch\:\ .*master  ]]
   [[ "${lines[4]}"  =~  \
+.*\[.*2.*\].*\ Merge\ and\ sync\ with\ a\ different\ existing\ remote\ branch\.   ]]
+  [[ "${lines[5]}"  =~  \
 .*\[.*3.*\].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.                ]]
-  [[ "${lines[5]}"  =~  [^-]--------------[^-]                            ]]
-  [[ "${lines[6]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}           ]]
-  [[ "${lines[7]}"  =~  Remote\ removed.                                  ]]
-  [[ "${lines[8]}"  =~  [^-]---------------[^-]                           ]]
-  [[ "${lines[9]}"  =~  \
+  [[ "${lines[6]}"  =~  [^-]--------------[^-]                            ]]
+  [[ "${lines[7]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}           ]]
+  [[ "${lines[8]}"  =~  Remote\ removed.                                  ]]
+  [[ "${lines[9]}"  =~  [^-]---------------[^-]                           ]]
+  [[ "${lines[10]}" =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)                  ]]
-  [[ "${lines[10]}" =~  Done!                                             ]]
+  [[ "${lines[11]}" =~  Done!                                             ]]
 
   diff                                                            \
     <(git ls-remote --symref "${_GIT_REMOTE_URL}" HEAD            \
@@ -293,24 +294,26 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)                  ]]
   [[ "${status}"    -eq 0 ]]
 
   [[ "${lines[0]}"  =~  Syncing:\ .*Sample\ Notebook.*\.\.\.              ]]
-  [[ "${lines[1]}"  =~  Remote\ branch\ has\ existing\ history:\ .*master ]]
-  [[ "${lines[2]}"  =~  \
-.*\[.*1.*\].*\ Merge\ and\ sync\ with\ the\ existing\ remote\ branch\:\ .*master  ]]
+  [[ "${lines[1]}"  =~  [^-]--------------[^-]                            ]]
+  [[ "${lines[2]}"  =~  Remote\ branch\ has\ existing\ history:\ .*master ]]
   [[ "${lines[3]}"  =~  \
-.*\[.*2.*\].*\ Merge\ and\ sync\ with\ a\ different\ existing\ remote\ branch\.   ]]
+.*\[.*1.*\].*\ Merge\ and\ sync\ with\ the\ existing\ remote\ branch\:\ .*master  ]]
   [[ "${lines[4]}"  =~  \
+.*\[.*2.*\].*\ Merge\ and\ sync\ with\ a\ different\ existing\ remote\ branch\.   ]]
+  [[ "${lines[5]}"  =~  \
 .*\[.*3.*\].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.                ]]
-  [[ "${lines[5]}"  =~  \
+  [[ "${lines[6]}"  =~  [^-]------------------------------[^-]            ]]
+  [[ "${lines[7]}"  =~  \
 Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\             ]]
-  [[ "${lines[5]}"  =~  \
+  [[ "${lines[7]}"  =~  \
 name,\ .*type.*\ a\ new\ name,\ or\ press\ .*q.*\ to\ quit\.              ]]
-  [[ "${lines[6]}"  =~  [^-]--------------[^-]                            ]]
-  [[ "${lines[7]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}           ]]
-  [[ "${lines[8]}"  =~  Remote\ removed.                                  ]]
-  [[ "${lines[9]}"  =~  [^-]---------------[^-]                           ]]
-  [[ "${lines[10]}" =~  \
+  [[ "${lines[8]}"  =~  [^-]--------------[^-]                            ]]
+  [[ "${lines[9]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}           ]]
+  [[ "${lines[10]}" =~  Remote\ removed.                                  ]]
+  [[ "${lines[11]}" =~  [^-]---------------[^-]                           ]]
+  [[ "${lines[12]}" =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*sample-notebook-1.*\)       ]]
-  [[ "${lines[11]}" =~  Done!                                             ]]
+  [[ "${lines[13]}" =~  Done!                                             ]]
 
   run "${_NB}" sync
 
