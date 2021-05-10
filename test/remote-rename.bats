@@ -185,8 +185,8 @@ Branch\ not\ present\ on\ remote:\ .*sample-notebook                ]]
   [[ "${lines[6]}"  =~  .*[.*2.*].*\ updated-branch-name            ]]
   [[ "${lines[7]}"  =~  [^-]--------------[^-]                      ]]
   [[ "${lines[8]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}     ]]
-  [[ "${lines[9]}"  =~  Remote\ removed:\ .*${_GIT_REMOTE_URL}      ]]
-  [[ "${lines[10]}" =~  [^-]--------------[^-]                      ]]
+  [[ "${lines[9]}"  =~  Remote\ removed.                            ]]
+  [[ "${lines[10]}" =~  [^-]---------------[^-]                     ]]
   [[ "${lines[11]}"  =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*updated-branch-name.*\)  ]]
 

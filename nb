@@ -18839,9 +18839,9 @@ _remote() {
         fi
 
         git -C "${_notebook_path:-}" remote rm origin               &&
-          printf "Remote removed: %s\\n"                            \
-            "$(_color_primary "${_current_remote_url:-}")"          &&
-              return 0
+          printf "Remote removed.\\n"
+
+        return 0
       else
         _exit_1 printf "No remote configured.\\n"
       fi
@@ -19264,8 +19264,8 @@ HEREDOC
         do
           local _orphan_branch_prompt_response=
 
-          IFS='' read -r -e -d $'\n' -p               \
-            "$(_color_primary "Name") ${_bk_name}: "  \
+          IFS='' read -r -e -d $'\n' -p                       \
+            "$(_color_primary "Name") ${_bk_name}: "          \
             _orphan_branch_prompt_response
 
           case "${_orphan_branch_prompt_response:-}" in
@@ -19276,7 +19276,7 @@ HEREDOC
         done
       fi
 
-      if [[ "${_new_branch:-}" != "${_current_branch:-}"  ]]
+      if [[ "${_new_branch:-}" != "${_current_branch:-}"      ]]
       then
         git -C "${_notebook_path}" branch -m "${_new_branch:-}"
       fi
@@ -19285,7 +19285,7 @@ HEREDOC
       then
         _print_line "--------------"
         _remote unset --skip-confirmation
-        _print_line "--------------"
+        _print_line "---------------"
       fi
 
       git -C "${_notebook_path}" remote add origin "${_new_remote_url}" ||

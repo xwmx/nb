@@ -59,7 +59,7 @@ load test_helper
   [[ "$("${_NB}" remote 2>&1)"  =~  No\ remote\ configured.           ]]
 
   [[ "${lines[0]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}       ]]
-  [[ "${lines[1]}"  =~  Remote\ removed:\ .*${_GIT_REMOTE_URL}        ]]
+  [[ "${lines[1]}"  =~  Remote\ removed.                              ]]
 
   diff                                        \
     <(git -C "${NB_DIR}/home" branch --all)   \
@@ -143,7 +143,7 @@ load test_helper
   [[ "$("${_NB}" remote 2>&1)" =~ No\ remote\ configured.             ]]
 
   [[ "${lines[0]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}       ]]
-  [[ "${lines[1]}"  =~  Remote\ removed:\ .*${_GIT_REMOTE_URL}        ]]
+  [[ "${lines[1]}"  =~  Remote\ removed.                              ]]
 
   diff                                        \
     <(git -C "${NB_DIR}/home" branch --all)   \
@@ -242,7 +242,7 @@ load test_helper
   [[ "$("${_NB}" remote 2>&1)"  =~  No\ remote\ configured.           ]]
 
   [[ "${lines[0]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}       ]]
-  [[ "${lines[1]}"  =~  Remote\ removed:\ .*${_GIT_REMOTE_URL}        ]]
+  [[ "${lines[1]}"  =~  Remote\ removed.                              ]]
 
   diff                                        \
     <(git -C "${NB_DIR}/home" branch --all)   \
@@ -326,7 +326,7 @@ load test_helper
   [[ "$("${_NB}" remote 2>&1)" =~ No\ remote\ configured.             ]]
 
   [[ "${lines[0]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}       ]]
-  [[ "${lines[1]}"  =~  Remote\ removed:\ .*${_GIT_REMOTE_URL}        ]]
+  [[ "${lines[1]}"  =~  Remote\ removed.                              ]]
 
   diff                                        \
     <(git -C "${NB_DIR}/home" branch --all)   \
@@ -407,7 +407,7 @@ load test_helper
   [[ "$("${_NB}" remote 2>&1)" =~ No\ remote\ configured.             ]]
 
   [[ "${lines[0]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}       ]]
-  [[ "${lines[1]}"  =~  Remote\ removed:\ .*${_GIT_REMOTE_URL}        ]]
+  [[ "${lines[1]}"  =~  Remote\ removed.                              ]]
 
   diff                                        \
     <(git -C "${NB_DIR}/home" branch --all)   \
@@ -486,7 +486,7 @@ load test_helper
   [[ "$("${_NB}" remote 2>&1)" =~ No\ remote\ configured.         ]]
 
   [[ "${lines[0]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}   ]]
-  [[ "${lines[1]}"  =~  Remote\ removed:\ .*${_GIT_REMOTE_URL}    ]]
+  [[ "${lines[1]}"  =~  Remote\ removed.                          ]]
 
   diff                                        \
     <(git -C "${NB_DIR}/home" ls-remote       \
@@ -536,7 +536,7 @@ load test_helper
   [[ "$("${_NB}" remote 2>&1)" =~ No\ remote\ configured.         ]]
 
   [[ "${lines[0]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}   ]]
-  [[ "${lines[1]}"  =~  Remote\ removed:\ .*${_GIT_REMOTE_URL}    ]]
+  [[ "${lines[1]}"  =~  Remote\ removed.                          ]]
 
   diff                                        \
     <(git -C "${NB_DIR}/home" ls-remote       \

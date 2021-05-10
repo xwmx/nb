@@ -862,8 +862,8 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)              ]]
   [[ "${lines[5]}"  =~  [^-]--------------[^-]                                  ]]
   [[ "${lines[6]}"  =~  [^-]--------------[^-]                                  ]]
   [[ "${lines[7]}"  =~  Removing\ remote:\ .*https://example.test/example.git   ]]
-  [[ "${lines[8]}"  =~  Remote\ removed:\ .*https://example.test/example.git    ]]
-  [[ "${lines[9]}"  =~  [^-]--------------[^-]                                  ]]
+  [[ "${lines[8]}"  =~  Remote\ removed\.                                       ]]
+  [[ "${lines[9]}"  =~  [^-]---------------[^-]                                 ]]
   [[ "${lines[10]}" =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)                        ]]
 
@@ -898,8 +898,8 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)                        
     [[ "${lines[5]}"  =~  [^-]--------------[^-]                    ]]
     [[ "${lines[6]}"  =~  [^-]--------------[^-]                    ]]
     [[ "${lines[7]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}   ]]
-    [[ "${lines[8]}"  =~  Remote\ removed:\ .*${_GIT_REMOTE_URL}    ]]
-    [[ "${lines[9]}"  =~  [^-]--------------[^-]                    ]]
+    [[ "${lines[8]}"  =~  Remote\ removed.                          ]]
+    [[ "${lines[9]}"  =~  [^-]---------------[^-]                   ]]
     [[ "${lines[10]}" =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
 
@@ -980,8 +980,8 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
     [[ "${lines[5]}"  =~  [^-]--------------[^-]                    ]]
     [[ "${lines[6]}"  =~  [^-]--------------[^-]                    ]]
     [[ "${lines[7]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}   ]]
-    [[ "${lines[8]}"  =~  Remote\ removed:\ .*${_GIT_REMOTE_URL}    ]]
-    [[ "${lines[9]}"  =~  [^-]--------------[^-]                    ]]
+    [[ "${lines[8]}"  =~  Remote\ removed.                          ]]
+    [[ "${lines[9]}"  =~  [^-]---------------[^-]                   ]]
     [[ "${lines[10]}" =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
 
