@@ -18896,7 +18896,10 @@ _remote() {
          [[     "${_remote_branch_name:-"${_current_branch}"}" ==     \
                   "${_remote_head_branch:-}"                          ]]
       then
-        _exit_1 printf "The HEAD branch of a remote can't be renamed.\\n"
+        _exit_1 cat <<HEREDOC
+The primary branch of a remote can't be renamed or changed by \`nb\`.
+THe primary branch can be reassigned using some git hosts' web interfaces.
+HEREDOC
       fi
 
       if [[ -n "${_remote_branch_name:-}"                             ]] &&

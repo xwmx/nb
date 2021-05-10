@@ -291,7 +291,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*updated-branch-name.*\)  ]]
 
   [[ "${status}"  -eq 1                                                             ]]
 
-  [[ "${output}"  =~  !.*\ The\ HEAD\ branch\ of\ a\ remote\ can\'t\ be\ renamed\.  ]]
+  [[ "${output}"  =~  !.*\ The\ primary\ branch\ of\ a\ remote\ can\'t\ be\ renamed ]]
 
   printf "local branches:     '%s'\\n" "$(
     git -C "${NB_DIR}/Example Notebook" branch --all
@@ -408,7 +408,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*updated-branch-name.*\)  ]]
 
   [[ "${status}"  -eq 1                                                             ]]
 
-  [[ "${output}"  =~  !.*\ The\ HEAD\ branch\ of\ a\ remote\ can\'t\ be\ renamed\.  ]]
+  [[ "${output}"  =~  !.*\ The\ primary\ branch\ of\ a\ remote\ can\'t\ be\ renamed ]]
 
   printf "local branches:     '%s'\\n" "$(
     git -C "${NB_DIR}/Sample Notebook" branch --all
@@ -529,7 +529,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*updated-branch-name.*\)  ]]
 
   [[ "${status}"  -eq 1                                                             ]]
 
-  [[ "${output}"  =~  !.*\ The\ HEAD\ branch\ of\ a\ remote\ can\'t\ be\ renamed\.  ]]
+  [[ "${output}"  =~  !.*\ The\ primary\ branch\ of\ a\ remote\ can\'t\ be\ renamed ]]
 
   printf "local branches:     '%s'\\n" "$(
     git -C "${NB_DIR}/Example Notebook" branch --all
@@ -609,7 +609,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*updated-branch-name.*\)  ]]
 
   [[ "${status}"  -eq 1                                                             ]]
 
-  [[ "${output}"  =~  !.*\ The\ HEAD\ branch\ of\ a\ remote\ can\'t\ be\ renamed\.  ]]
+  [[ "${output}"  =~  !.*\ The\ primary\ branch\ of\ a\ remote\ can\'t\ be\ renamed ]]
 
   printf "local branches:     '%s'\\n" "$(
     git -C "${NB_DIR}/Example Notebook" branch --all
@@ -689,7 +689,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*updated-branch-name.*\)  ]]
 
   [[ "${status}"  -eq 1                                                             ]]
 
-  [[ "${output}"  =~  !.*\ The\ HEAD\ branch\ of\ a\ remote\ can\'t\ be\ renamed\.  ]]
+  [[ "${output}"  =~  !.*\ The\ primary\ branch\ of\ a\ remote\ can\'t\ be\ renamed ]]
 
   printf "local branches:     '%s'\\n" "$(
     git -C "${NB_DIR}/Example Notebook" branch --all
