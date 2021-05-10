@@ -4908,6 +4908,8 @@ For more information, see: `nb help`.
 
 #### `add`
 
+See also: [Adding](#adding)
+
 ```text
 Usage:
   nb add [<notebook>:][<folder-path>/][<filename>] [<content>]
@@ -4975,6 +4977,8 @@ Shortcut Aliases: `nb a`, `nb +`
 
 #### `archive`
 
+See also: [Archiving Notebooks](#archiving-notebooks)
+
 ```text
 Usage:
   nb archive [<name>]
@@ -4997,6 +5001,8 @@ Shortcut Alias: `nb ar`
 ```
 
 #### `bookmark`
+
+See also: [Bookmarks](#archiving-notebooks), [Browsing](#-browsing)
 
 ```text
 Usage:
@@ -5094,6 +5100,8 @@ Shortcut Alias: `nb bk`
 
 #### `browse`
 
+See also: [Browsing](#-browsing)
+
 ```text
 Usage:
   nb browse [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
@@ -5170,6 +5178,8 @@ Shortcut Alias: `nb br`
 
 #### `completions`
 
+See also: [Tab Completion](https://github.com/xwmx/nb/tree/master/etc)
+
 ```text
 Usage:
   nb completions (check | install [-d | --download] | uninstall)
@@ -5194,6 +5204,8 @@ Description:
 ```
 
 #### `delete`
+
+See also: [Deleting](#deleting)
 
 ```text
 Usage:
@@ -5226,6 +5238,8 @@ Shortcut Aliases: `nb d`, `nb -`
 ```
 
 #### `edit`
+
+See also: [Editing](#editing)
 
 ```text
 Usage:
@@ -5288,6 +5302,8 @@ Description:
 ```
 
 #### `export`
+
+See also: [Import / Export](#%EF%B8%8F-import--export)
 
 ```text
 Usage:
@@ -5387,6 +5403,8 @@ Shortcut Alias: `nb h`
 
 #### `history`
 
+See also: [History](#-revision-history)
+
 ```text
 Usage:
   nb history [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
@@ -5409,6 +5427,8 @@ Examples:
 ```
 
 #### `import`
+
+See also: [Import / Export](#%EF%B8%8F-import--export)
 
 ```text
 Usage:
@@ -5472,6 +5492,8 @@ Examples:
 
 #### `list`
 
+See also: [Listing & Filtering](#listing--filtering)
+
 ```text
 Usage:
   nb list [-e [<length>] | --excerpt [<length>]] [--filenames]
@@ -5530,6 +5552,8 @@ Examples:
 ```
 
 #### `ls`
+
+See also: [Listing & Filtering](#listing--filtering)
 
 ```text
 Usage:
@@ -5655,6 +5679,8 @@ Shortcut Alias: `nb mv`
 
 #### `notebooks`
 
+See also: [Notebooks](#-notebooks)
+
 ```text
 Usage:
   nb notebooks [<name> | <query>] [--ar | --archived] [--global] [--local]
@@ -5757,6 +5783,8 @@ Shortcut Aliases: `nb n`, `nb nb`
 
 #### `open`
 
+See also: [Viewing Bookmarks](#viewing-bookmarks)
+
 ```text
 Usage:
   nb open ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
@@ -5789,6 +5817,8 @@ Shortcut Alias: `nb o`
 ```
 
 #### `peek`
+
+See also: [Viewing Bookmarks](#viewing-bookmarks)
 
 ```text
 Usage:
@@ -5829,6 +5859,8 @@ Shortcut Alias: `nb p`
 
 #### `pin`
 
+See also: [Pinning](#-pinning)
+
 ```text
 Usage:
   nb pin ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
@@ -5845,6 +5877,8 @@ Examples:
 ```
 
 #### `plugins`
+
+See also: [Plugins](#-plugins)
 
 ```text
 Usage:
@@ -5869,6 +5903,8 @@ Plugin Extensions:
 ```
 
 #### `remote`
+
+See also: [Git Sync](#-git-sync)
 
 ```text
 Usage:
@@ -5917,6 +5953,8 @@ Examples:
 ```
 
 #### `search`
+
+See also: [Search](#-search)
 
 ```text
 Usage:
@@ -5988,6 +6026,8 @@ Shortcut Alias: `nb q`
 ```
 
 #### `settings`
+
+See also: [`set` & `settings`](#%EF%B8%8F-set--settings)
 
 ```text
 Usage:
@@ -6248,6 +6288,8 @@ Alias: `nb set`
 
 #### `shell`
 
+See also: [Interactive Shell](#-nb-interactive-shell)
+
 ```text
 Usage:
   nb shell [<subcommand> [<options>...] | --clear-history]
@@ -6279,6 +6321,8 @@ Example:
 ```
 
 #### `show`
+
+See also: [Viewing](#viewing)
 
 ```text
 Usage:
@@ -6374,6 +6418,8 @@ Shortcut Alias: `nb s`
 
 #### `status`
 
+See also: [Git Sync](#-git-sync), [Notebooks](#-notebooks)
+
 ```text
 Usage:
   nb status [<notebook>]
@@ -6398,6 +6444,8 @@ Shortcut Alias: `nb st`
 
 #### `subcommands`
 
+See also: [Plugins](#-plugins)
+
 ```text
 Usage:
   nb subcommands [add <name>...] [alias <name> <alias>]
@@ -6418,6 +6466,8 @@ Description:
 ```
 
 #### `sync`
+
+See also: [Git Sync](#-git-sync)
 
 ```text
 Usage:
@@ -6465,6 +6515,8 @@ Examples:
 
 #### `unarchive`
 
+See also: [Archiving Notebooks](#archiving-notebooks)
+
 ```text
 Usage:
   nb unarchive [<name>]
@@ -6488,6 +6540,8 @@ Shortcut Alias: `nb unar`
 
 #### `unpin`
 
+See also: [Pinning](#-pinning)
+
 ```text
 Usage:
   nb unpin ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
@@ -6504,6 +6558,8 @@ Examples:
 ```
 
 #### `unset`
+
+See also: [`set` & `settings`](#%EF%B8%8F-set--settings)
 
 ```text
 Usage:
@@ -6526,6 +6582,8 @@ Alias: `nb reset`
 
 #### `update`
 
+See also: [Installation](#installation)
+
 ```text
 Usage:
   nb update
@@ -6540,6 +6598,8 @@ Description:
 ```
 
 #### `use`
+
+See also: [Notebooks](#-notebooks)
 
 ```text
 Usage:
