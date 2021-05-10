@@ -3542,6 +3542,8 @@ nb remote branches
 nb remote branches "https://github.com/xwmx/example"
 ```
 
+For information about assigning remotes, see [`nb help remote`](#remote).
+
 #### Private Repositories and Git Credentials
 
 Syncing with private repositories requires
