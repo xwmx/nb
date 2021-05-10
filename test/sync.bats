@@ -577,12 +577,12 @@ _setup_notebooks() {
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status}      -eq 1                                   ]]
-  [[ "${lines[0]}"  =~ Syncing                              ]]
-  [[ "${lines[0]}"  =~ home                                 ]]
-  [[ "${lines[1]}"  =~ unable\ to\ access\                  ]]
-  [[ "${lines[1]}"  =~ https://example.test/invalid.git/    ]]
-  [[ ! "${output}"  =~ Done                                 ]]
+  [[    "${status}"   -eq 1                                   ]]
+  [[    "${lines[0]}" =~  Syncing                             ]]
+  [[    "${lines[0]}" =~  home                                ]]
+  [[    "${lines[1]}" =~  unable\ to\ access\                 ]]
+  [[    "${lines[1]}" =~  https://example.test/invalid.git/   ]]
+  [[ !  "${output}"   =~  Done                                ]]
 }
 
 @test "'sync' succeeds after 'remote set'" {

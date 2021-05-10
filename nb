@@ -3156,17 +3156,20 @@ HEREDOC
     fi
 
     local _git_branch=
-    _git_branch="$(git -C "${_notebook_path}" rev-parse --abbrev-ref HEAD)"
+    _git_branch="$(git -C "${_notebook_path}" rev-parse --abbrev-ref HEAD 2>/dev/null)"
+
+    local _branch_query_succeeded=0
 
     local _remote_branches=
     _remote_branches=($(
       git -C "${_notebook_path}" ls-remote --heads "${_remote_url}" 2>/dev/null \
-        | sed "s/.*\///g" || :
-    ))
+        | sed "s/.*\///g"
+    )) && _branch_query_succeeded=1
 
     if ! GIT_TERMINAL_PROMPT=0 git -C "${_notebook_path}" fetch origin "${_git_branch}" &>/dev/null
     then
-      if _contains "${_git_branch}" "${_remote_branches[@]:-}"
+      if _contains "${_git_branch}" "${_remote_branches[@]:-}" ||
+         ! ((_branch_query_succeeded))
       then
         if ((_prompt))
         then # fetch again, displaying git prompt and/or errors after newline
