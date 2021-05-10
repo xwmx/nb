@@ -9511,18 +9511,15 @@ ul.task-list          { list-style: none;           }
 }
 
 .ace_separator {
-  /* color:              ${_color_primary_hex}; */
   color:              #7290b1;
 }
 
 .ace-twilight .ace_keyword,
 .ace-twilight .ace_meta {
-  /* color:              ${_color_primary_hex}; */
   color:              #7290b1;
 }
 
 .ace-twilight .ace_string {
-  /* color:              #7290b1; */
   color:              ${_color_primary_hex};
 }
 
