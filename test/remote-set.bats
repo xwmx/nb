@@ -2,6 +2,51 @@
 
 load test_helper
 
+# reassignment ################################################################
+
+@test "'remote set <url>' to same existing remote branch sets remote and prints message and resets remote branch." {
+  {
+    "${_NB}" init
+
+    _setup_remote_repo
+
+  run "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}1${_NEWLINE}"
+
+    diff                  \
+      <("${_NB}" remote)  \
+      <(printf "${_GIT_REMOTE_URL} (master)\\n")
+
+    "${_NB}" add "Example File.md" --content "Example content."
+
+    "${_NB}" sync
+  }
+
+  run "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                                                       ]]
+
+  [[ "${lines[0]}"  =~  Updating\ remote\ for:\ .*home                          ]]
+  [[ "${lines[1]}"  =~  From:\ \ \ ${_GIT_REMOTE_URL}                           ]]
+  [[ "${lines[2]}"  =~  [^-]-------------------------[^-]                       ]]
+  [[ "${lines[3]}"  =~  URL:\ \ \ \ .*${_GIT_REMOTE_URL}                        ]]
+  [[ "${lines[4]}"  =~  Branch:\ .*master                                       ]]
+  [[ "${lines[5]}"  =~  [^-]--------------[^-]                                  ]]
+  [[ "${lines[6]}"  =~  [^-]--------------[^-]                                  ]]
+  [[ "${lines[7]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}                 ]]
+  [[ "${lines[8]}"  =~  Remote\ branch\ reset:\ .*master                        ]]
+  [[ "${lines[9]}"  =~  Remote\ removed\.                                       ]]
+  [[ "${lines[10]}" =~  [^-]---------------[^-]                                 ]]
+  [[ "${lines[11]}" =~  \
+Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)                        ]]
+
+  diff                  \
+    <("${_NB}" remote)  \
+    <(printf "%s (master)\\n" "${_GIT_REMOTE_URL:-}")
+}
+
 # alias #######################################################################
 
 @test "'set remote <url> <branch>' with no existing remote and no matching remote branch pushes branch as new orphan, sets remote, and prints message." {

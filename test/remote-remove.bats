@@ -143,7 +143,8 @@ load test_helper
   [[ "$("${_NB}" remote 2>&1)" =~ No\ remote\ configured.             ]]
 
   [[ "${lines[0]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}       ]]
-  [[ "${lines[1]}"  =~  Remote\ removed.                              ]]
+  [[ "${lines[1]}"  =~  Remote\ branch\ reset:\ .*master              ]]
+  [[ "${lines[2]}"  =~  Remote\ removed.                              ]]
 
   diff                                        \
     <(git -C "${NB_DIR}/home" branch --all)   \
@@ -326,7 +327,8 @@ load test_helper
   [[ "$("${_NB}" remote 2>&1)" =~ No\ remote\ configured.             ]]
 
   [[ "${lines[0]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}       ]]
-  [[ "${lines[1]}"  =~  Remote\ removed.                              ]]
+  [[ "${lines[1]}"  =~  Remote\ branch\ reset:\ .*master              ]]
+  [[ "${lines[2]}"  =~  Remote\ removed.                              ]]
 
   diff                                        \
     <(git -C "${NB_DIR}/home" branch --all)   \
@@ -407,7 +409,8 @@ load test_helper
   [[ "$("${_NB}" remote 2>&1)" =~ No\ remote\ configured.             ]]
 
   [[ "${lines[0]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}       ]]
-  [[ "${lines[1]}"  =~  Remote\ removed.                              ]]
+  [[ "${lines[1]}"  =~  Remote\ branch\ reset:\ .*master              ]]
+  [[ "${lines[2]}"  =~  Remote\ removed.                              ]]
 
   diff                                        \
     <(git -C "${NB_DIR}/home" branch --all)   \
@@ -483,10 +486,11 @@ load test_helper
 
   [[ "${status}"    -eq 0 ]]
 
-  [[ "$("${_NB}" remote 2>&1)" =~ No\ remote\ configured.         ]]
+  [[ "$("${_NB}" remote 2>&1)" =~ No\ remote\ configured.           ]]
 
-  [[ "${lines[0]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}   ]]
-  [[ "${lines[1]}"  =~  Remote\ removed.                          ]]
+  [[ "${lines[0]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}     ]]
+  [[ "${lines[1]}"  =~  Remote\ branch\ deleted:\ .*example-branch  ]]
+  [[ "${lines[2]}"  =~  Remote\ removed.                            ]]
 
   diff                                        \
     <(git -C "${NB_DIR}/home" ls-remote       \

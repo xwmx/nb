@@ -18790,21 +18790,27 @@ _remote() {
 
         if _contains "${_current_branch}" "${_remote_branches[@]:-}"
         then
+          local _delete_action="Remove"
+
+          if [[ "${#_remote_branches[@]}" -eq 1 ]]
+          then
+            _delete_action="Reset"
+          fi
+
+          local _branch_delete_prompt=
+          _branch_delete_prompt="\
+$(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_current_branch}"))"
+
           while true
           do
             local __yn=
             IFS='' read -r -e -d $'\n' -p       \
-"$(_color_primary "Remove branch on remote?") ($(_color_primary "${_current_branch}")) $(_color_brackets "y/N") " __yn
+              "${_branch_delete_prompt} $(_color_brackets "y/N") " __yn
 
             case ${__yn} in
-              [Yy]*)
-                _delete_remote_branch=1
-
-                break
-                ;;
-              *)
-                break
-                ;;
+              [Yy]*)    _delete_remote_branch=1;  break   ;;
+              q*|exit)  printf "Exiting...\\n";   exit 0  ;;
+              *)                                  break   ;;
             esac
           done
         fi
@@ -18832,9 +18838,15 @@ _remote() {
             } &>/dev/null ||
               _exit_1 printf "Unable to reset remote branch: %s\\n" \
                 "$(_color_primary "${_remote_branches[0]}")"
+
+            printf "Remote branch reset: %s\\n"                     \
+              "$(_color_primary "${_remote_branches[0]}")"
           else
             git -C "${_notebook_path:-}" push origin                \
               ":${_current_branch}"  --force &>/dev/null
+
+            printf "Remote branch deleted: %s\\n"                   \
+              "$(_color_primary "${_current_branch}")"
           fi
         fi
 
