@@ -319,7 +319,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*updated-branch-name.*\)  ]]
 
   diff                                                              \
     <("${_NB}" remote)                                              \
-    <(printf "%s (master)\\n" "${_GIT_REMOTE_URL:-}")  
+    <(printf "%s (master)\\n" "${_GIT_REMOTE_URL:-}")
 
   diff                                                              \
     <(git -C "${NB_DIR}/Example Notebook" branch --all)             \
@@ -436,7 +436,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*updated-branch-name.*\)  ]]
 
   diff                                                              \
     <("${_NB}" remote)                                              \
-    <(printf "%s (sample-notebook)\\n" "${_GIT_REMOTE_URL:-}")  
+    <(printf "%s (sample-notebook)\\n" "${_GIT_REMOTE_URL:-}")
 
   diff                                                              \
     <(git -C "${NB_DIR}/Sample Notebook" branch --all)              \
@@ -557,7 +557,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*updated-branch-name.*\)  ]]
 
   diff                                                              \
     <("${_NB}" remote)                                              \
-    <(printf "%s (master)\\n" "${_GIT_REMOTE_URL:-}")  
+    <(printf "%s (master)\\n" "${_GIT_REMOTE_URL:-}")
 
   diff                                                              \
     <(git -C "${NB_DIR}/Example Notebook" branch --all)             \
@@ -637,7 +637,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*updated-branch-name.*\)  ]]
 
   diff                                                              \
     <("${_NB}" remote)                                              \
-    <(printf "%s (master)\\n" "${_GIT_REMOTE_URL:-}")  
+    <(printf "%s (master)\\n" "${_GIT_REMOTE_URL:-}")
 
   diff                                                              \
     <(git -C "${NB_DIR}/Example Notebook" branch --all)             \
@@ -717,93 +717,46 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*updated-branch-name.*\)  ]]
 
   diff                                                              \
     <("${_NB}" remote)                                              \
-    <(printf "%s (master)\\n" "${_GIT_REMOTE_URL:-}")  
+    <(printf "%s (master)\\n" "${_GIT_REMOTE_URL:-}")
 
   diff                                                              \
     <(git -C "${NB_DIR}/Example Notebook" branch --all)             \
     <(printf "* master\\n  remotes/origin/master\\n")
 }
 
-# @test "'remote rename <name>' with existing remote renames local and remote branches." {
-#   {
-#     mkdir "${_GIT_REMOTE_PATH}"
-#     cd "${_GIT_REMOTE_PATH}"
-#     git init --bare &>/dev/null
+@test "'remote rename <name>' with no remote renames current branch." {
+  {
+    "${_NB}" init
 
-#     cd "${_TMP_DIR}"
+    "${_NB}" add "Example File.md" --content "Example content."
 
-#     "${_NB}" init
+    diff                                      \
+      <(git -C "${NB_DIR}/home" branch --all) \
+      <(printf "* master\\n")
 
-#     "${_NB}" notebooks rename "home" "Example Notebook"
+    [[ "$("${_NB}" remote 2>&1)" =~  \!.*\ No\ remote\ configured\. ]]
+  }
 
-#     [[ !  -e "${NB_DIR}/home"                   ]]
-#     [[    -d "${NB_DIR}/Example Notebook/.git"  ]]
+  run "${_NB}" remote rename "updated-branch-name" <<< "y${_NEWLINE}"
 
-#     "${_NB}" add "Example File.md" --content "Example content."
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
+  [[ "${status}"    -eq 0                                           ]]
 
-#     "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}"
+  [[ "${lines[0]}"  =~  Renaming\ current\ branch                   ]]
+  [[ "${lines[1]}"  =~  [^-]-----------------------[^-]             ]]
+  [[ "${lines[2]}"  =~  From:\ master                               ]]
+  [[ "${lines[3]}"  =~  To:\ \ \ .*updated-branch-name.*$           ]]
+  [[ "${lines[4]}"  =~  [^-]--------------[^-]                      ]]
+  [[ "${lines[5]}"  =~  Renamed\ to:\ .*updated-branch-name.*$      ]]
 
-#     diff                                                            \
-#       <(git ls-remote --symref "${_GIT_REMOTE_URL}" HEAD            \
-#           | awk '/^ref:/ {sub(/refs\/heads\//, "", $2); print $2}') \
-#       <(printf "master\\n")
+    diff                                      \
+      <(git -C "${NB_DIR}/home" branch --all) \
+      <(printf "* updated-branch-name\\n")
 
-#     diff                                                            \
-#       <(git -C "${NB_DIR}/Example Notebook" ls-remote               \
-#           --heads "${_GIT_REMOTE_URL}" | sed "s/.*\///g")           \
-#       <(printf "master\\n")
-
-#     diff                                                            \
-#       <("${_NB}" remote)                                            \
-#       <(printf "%s (master)\\n" "${_GIT_REMOTE_URL:-}")
-
-#     diff                                                            \
-#       <(git -C "${NB_DIR}/Example Notebook" branch --all)           \
-#       <(printf "* master\\n  remotes/origin/master\\n")
-#   }
-
-#   run "${_NB}" remote rename "updated-branch-name" <<< "y${_NEWLINE}"
-
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
-
-#   [[ "${status}"    -eq 0                       ]]
-
-#   printf "local branches:     '%s'\\n" "$(
-#     git -C "${NB_DIR}/Example Notebook" branch --all
-#   )"
-
-#   printf "remote branches:    '%s'\\n" "$(
-#     git -C "${NB_DIR}/Example Notebook" ls-remote                   \
-#       --heads "${_GIT_REMOTE_URL}" | sed "s/.*\///g"
-#   )"
-
-#   printf "remote HEAD branch: '%s'\\n" "$(
-#     git ls-remote --symref "${_GIT_REMOTE_URL}" HEAD                \
-#       | awk '/^ref:/ {sub(/refs\/heads\//, "", $2); print $2}'
-#   )"
-
-#   diff                                                              \
-#     <(git ls-remote --symref "${_GIT_REMOTE_URL}" HEAD              \
-#         | awk '/^ref:/ {sub(/refs\/heads\//, "", $2); print $2}')   \
-#     <(printf "updated-branch-name\\n")
-
-
-
-#   diff                                                              \
-#     <(git -C "${NB_DIR}/Example Notebook" ls-remote                 \
-#         --heads "${_GIT_REMOTE_URL}" | sed "s/.*\///g")             \
-#     <(printf "updated-branch-name\\n")
-
-#   diff                                                              \
-#     <("${_NB}" remote)                                              \
-#     <(printf "%s (updated-branch-name)\\n" "${_GIT_REMOTE_URL:-}")  
-
-#   diff                                                              \
-#     <(git -C "${NB_DIR}/Example Notebook" branch --all)             \
-#     <(printf "* updated-branch-name\\n  remotes/origin/master\\n")
-# }
+  [[ "$("${_NB}" remote 2>&1)" =~  \!.*\ No\ remote\ configured\.   ]]
+}
 
 @test "'remote rename' with missing <name> prints help." {
   {

@@ -18882,20 +18882,24 @@ _remote() {
       fi
 
       local _remote_head_branch=
-      _remote_head_branch="$(
-        git ls-remote --symref "${_GIT_REMOTE_URL}" HEAD            \
-          | awk '/^ref:/ {sub(/refs\/heads\//, "", $2); print $2}'
-      )"
 
-      if [[ -n  "${_remote_head_branch:-}"                          ]] &&
-         [[     "${_remote_branch_name:-"${_current_branch}"}" ==   \
-                  "${_remote_head_branch:-}"                        ]]
+      if [[ -n "${_current_remote_url:-}"       ]]
+      then
+        _remote_head_branch="$(
+          git ls-remote --symref "${_current_remote_url:-}" HEAD      \
+            | awk '/^ref:/ {sub(/refs\/heads\//, "", $2); print $2}'
+        )"
+      fi
+
+      if [[ -n  "${_remote_head_branch:-}"                            ]] &&
+         [[     "${_remote_branch_name:-"${_current_branch}"}" ==     \
+                  "${_remote_head_branch:-}"                          ]]
       then
         _exit_1 printf "The HEAD branch of a remote can't be renamed.\\n"
       fi
 
-      if [[ -n "${_remote_branch_name:-}"                           ]] &&
-         [[    "${_remote_branch_name:-}" != "${_current_branch:-}" ]]
+      if [[ -n "${_remote_branch_name:-}"                             ]] &&
+         [[    "${_remote_branch_name:-}" != "${_current_branch:-}"   ]]
       then
         printf      "Renaming remote branch\\n"
         _print_line "-----------------------"
