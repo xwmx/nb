@@ -8594,7 +8594,7 @@ _edit_file() {
         _wait=0
         ;;
       *)
-        if [[ -z "${_file_path}" ]]
+        if [[ -z "${_file_path}"  ]]
         then
           _file_path="${__arg}"
         fi
@@ -8602,7 +8602,7 @@ _edit_file() {
     esac
   done
 
-  if [[ -z "${_file_path}" ]]
+  if [[ -z "${_file_path}"        ]]
   then
     return 1
   fi
@@ -8610,9 +8610,9 @@ _edit_file() {
   local _current_notebook_path
   _current_notebook_path="$(_notebooks current --path)"
 
-  cd "${_current_notebook_path}" || return 1
+  cd "${_current_notebook_path}"  ||  return 1
 
-  if [[ -e "${_file_path}" ]]
+  if [[ -e "${_file_path}"            ]]
   then
     if _file_is_encrypted "${_file_path}"
     then
@@ -8620,20 +8620,20 @@ _edit_file() {
 File must be decrypted before editing.\\n"
     fi
 
-    if _file_is_archive "${_file_path}" &&
-       [[ ! "${_file_path}" =~ docx$ ]]
+    if _file_is_archive "${_file_path}"   &&
+       [[ ! "${_file_path}" =~ docx$  ]]
     then
       _exit_1 printf "\
 Can't edit archives. Export archive and expand to edit.\\n"
     fi
 
-    if ! _file_is_text "${_file_path}" &&
-       [[ ! -d "${_file_path}" ]]
+    if ! _file_is_text "${_file_path}"    &&
+       [[ ! -d "${_file_path}"        ]]
     then
       if _command_exists "xdg-open"
       then
         xdg-open "${_file_path}" && return 0
-      elif [[ "${OSTYPE}" =~ ^darwin ]]
+      elif [[ "${OSTYPE}" =~ ^darwin  ]]
       then
         open "${_file_path}" && return 0
       fi
@@ -18985,7 +18985,6 @@ HEREDOC
       fi
 
       printf "Renamed to: %s\\n" "$(_color_primary "${_target_branch_name}")"
-
       ;;
     set|add)
       if [[ -z "${_new_remote_url:-}"           ]]
