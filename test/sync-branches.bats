@@ -31,7 +31,7 @@ load test_helper
       <(git -C "${NB_DIR}/Sample Notebook" branch --all)  \
       <(printf "* master\\n")
 
-    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}3${_NEWLINE}"
 
     [[ "$("${_NB}" remote)" =~ ${_GIT_REMOTE_URL}\ \(sample-notebook\)  ]]
 
@@ -63,7 +63,7 @@ load test_helper
       <(git -C "${NB_DIR}/Demo Notebook" branch --all)    \
       <(printf "* master\\n")
 
-    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}3${_NEWLINE}"
 
     [[ "$("${_NB}" remote)" =~ ${_GIT_REMOTE_URL}\ \(demo-notebook\)  ]]
 
@@ -218,7 +218,7 @@ load test_helper
 
     "${_NB}" add "Sample File.md" --content "Sample content."
 
-    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}3${_NEWLINE}"
 
     [[ "$("${_NB}" remote)" =~ ${_GIT_REMOTE_URL}\ \(sample-notebook\) ]]
 
@@ -237,15 +237,17 @@ load test_helper
   [[ "${lines[0]}"  =~  Syncing:\ .*Sample\ Notebook.*\.\.\.              ]]
   [[ "${lines[1]}"  =~  Remote\ branch\ has\ existing\ history:\ .*master ]]
   [[ "${lines[2]}"  =~  \
-.*\[.*1.*\].*\ Merge\ and\ sync\ with\ existing\ remote\ branch\.         ]]
+.*\[.*1.*\].*\ Merge\ and\ sync\ with\ the\ existing\ remote\ branch\:\ .*master  ]]
   [[ "${lines[3]}"  =~  \
-.*\[.*2.*\].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.        ]]
-  [[ "${lines[4]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}           ]]
-  [[ "${lines[5]}"  =~  Remote\ removed:\ .*${_GIT_REMOTE_URL}            ]]
-  [[ "${lines[6]}"  =~  [^-]--------------[^-]                            ]]
-  [[ "${lines[7]}"  =~  \
+.*\[.*2.*\].*\ Merge\ and\ sync\ with\ a\ different\ existing\ remote\ branch\.   ]]
+  [[ "${lines[4]}"  =~  \
+.*\[.*3.*\].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.                ]]
+  [[ "${lines[5]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}           ]]
+  [[ "${lines[6]}"  =~  Remote\ removed:\ .*${_GIT_REMOTE_URL}            ]]
+  [[ "${lines[7]}"  =~  [^-]--------------[^-]                            ]]
+  [[ "${lines[8]}"  =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)                  ]]
-  [[ "${lines[8]}"  =~  Done!                                             ]]
+  [[ "${lines[9]}"  =~  Done!                                             ]]
 
   diff                                                            \
     <(git ls-remote --symref "${_GIT_REMOTE_URL}" HEAD            \
@@ -273,7 +275,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)                  ]]
 
     "${_NB}" add "Sample File.md" --content "Sample content."
 
-    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}3${_NEWLINE}"
 
     [[ "$("${_NB}" remote)" =~ ${_GIT_REMOTE_URL}\ \(sample-notebook\) ]]
 
@@ -282,7 +284,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)                  ]]
     [[ "$("${_NB}" remote)" =~ ${_GIT_REMOTE_URL}\ \(master\) ]]
   }
 
-  run "${_NB}" sync <<< "y${_NEWLINE}2${_NEWLINE}"
+  run "${_NB}" sync <<< "y${_NEWLINE}3${_NEWLINE}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -292,15 +294,17 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)                  ]]
   [[ "${lines[0]}"  =~  Syncing:\ .*Sample\ Notebook.*\.\.\.              ]]
   [[ "${lines[1]}"  =~  Remote\ branch\ has\ existing\ history:\ .*master ]]
   [[ "${lines[2]}"  =~  \
-.*\[.*1.*\].*\ Merge\ and\ sync\ with\ existing\ remote\ branch\.         ]]
+.*\[.*1.*\].*\ Merge\ and\ sync\ with\ the\ existing\ remote\ branch\:\ .*master  ]]
   [[ "${lines[3]}"  =~  \
-.*\[.*2.*\].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.        ]]
-  [[ "${lines[4]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}           ]]
-  [[ "${lines[5]}"  =~  Remote\ removed:\ .*${_GIT_REMOTE_URL}            ]]
-  [[ "${lines[6]}"  =~  [^-]--------------[^-]                            ]]
-  [[ "${lines[7]}"  =~  \
+.*\[.*2.*\].*\ Merge\ and\ sync\ with\ a\ different\ existing\ remote\ branch\.   ]]
+  [[ "${lines[4]}"  =~  \
+.*\[.*3.*\].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.                ]]
+  [[ "${lines[5]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}           ]]
+  [[ "${lines[6]}"  =~  Remote\ removed:\ .*${_GIT_REMOTE_URL}            ]]
+  [[ "${lines[7]}"  =~  [^-]--------------[^-]                            ]]
+  [[ "${lines[8]}"  =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*sample-notebook-1.*\)       ]]
-  [[ "${lines[8]}"  =~  Done!                                             ]]
+  [[ "${lines[9]}"  =~  Done!                                             ]]
 
   run "${_NB}" sync
 
@@ -541,7 +545,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)          ]]
 
   # set new notebook remote as orphan
 
-  run "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+  run "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}3${_NEWLINE}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"

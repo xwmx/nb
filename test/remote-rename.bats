@@ -52,7 +52,7 @@ load test_helper
 
     [[ "$("${_NB}" notebooks current --name --no-color)" == "Sample Notebook" ]]
 
-    "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+    "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}3${_NEWLINE}"
 
     diff                                                            \
       <("${_NB}" remote)                                            \
@@ -253,7 +253,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*updated-branch-name.*\)  ]]
 
     [[ "$("${_NB}" notebooks current --name --no-color)" == "Sample Notebook" ]]
 
-    "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+    "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}3${_NEWLINE}"
 
     diff                                                            \
       <("${_NB}" remote)                                            \
@@ -376,7 +376,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*updated-branch-name.*\)  ]]
 
     [[ "$("${_NB}" notebooks current --name --no-color)" == "Sample Notebook" ]]
 
-    "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+    "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}3${_NEWLINE}"
 
     diff                                                            \
       <("${_NB}" remote)                                            \
@@ -491,7 +491,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*updated-branch-name.*\)  ]]
 
     [[ "$("${_NB}" notebooks current --name --no-color)" == "Sample Notebook" ]]
 
-    "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+    "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}3${_NEWLINE}"
 
     diff                                                            \
       <("${_NB}" remote)                                            \

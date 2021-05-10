@@ -102,10 +102,12 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*shared-branch.*\)     ]]
   [[ "${lines[5]}"  =~  \
 Remote\ branch\ has\ existing\ history:\ .*shared-branch            ]]
   [[ "${lines[6]}"  =~  \
-.*\[.*1.*\].*\ Merge\ and\ sync\ with\ existing\ remote\ branch\.   ]]
+.*\[.*1.*\].*\ Merge\ and\ sync\ with\ the\ existing\ remote\ branch\:\ .*shared-branch ]]
   [[ "${lines[7]}"  =~  \
-.*\[.*2.*\].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.  ]]
+.*\[.*2.*\].*\ Merge\ and\ sync\ with\ a\ different\ existing\ remote\ branch\.         ]]
   [[ "${lines[8]}"  =~  \
+.*\[.*3.*\].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.                      ]]
+  [[ "${lines[9]}"  =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*shared-branch.*\)     ]]
 
   diff                                                              \
@@ -223,10 +225,12 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
   [[ "${lines[5]}"  =~  \
 Remote\ branch\ has\ existing\ history:\ .*master                   ]]
   [[ "${lines[6]}"  =~  \
-.*\[.*1.*\].*\ Merge\ and\ sync\ with\ existing\ remote\ branch\.   ]]
+.*\[.*1.*\].*\ Merge\ and\ sync\ with\ the\ existing\ remote\ branch\:\ .*master  ]]
   [[ "${lines[7]}"  =~  \
-.*\[.*2.*\].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.  ]]
+.*\[.*2.*\].*\ Merge\ and\ sync\ with\ a\ different\ existing\ remote\ branch\.   ]]
   [[ "${lines[8]}"  =~  \
+.*\[.*3.*\].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.                ]]
+  [[ "${lines[9]}"  =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
 
   diff                                                              \
@@ -373,9 +377,9 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
   [[ "$("${_NB}" remote 2>&1)"  =~  No\ remote\ configured. ]]
 }
 
-# remote set ##################################################################
+# # remote set ##################################################################
 
-@test "'remote set' with unrelated histories displays prompt and merges with existing." {
+@test "'remote set' with unrelated histories displays prompt and merges with existing branch." {
   {
     _setup_remote_repo
 
@@ -399,7 +403,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
     "${_NB}" add "Sample File.md" --content "Sample content."
   }
 
-  run "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}1${_NEWLINE}q${_NEWLINE}"
+  run "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}1${_NEWLINE}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -413,10 +417,12 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
   [[ "${lines[4]}"  =~  [^-]--------------[^-]                            ]]
   [[ "${lines[5]}"  =~  Remote\ branch\ has\ existing\ history:\ .*master ]]
   [[ "${lines[6]}"  =~  \
-.*\[.*1.*\].*\ Merge\ and\ sync\ with\ existing\ remote\ branch\.         ]]
+.*\[.*1.*\].*\ Merge\ and\ sync\ with\ the\ existing\ remote\ branch\:\ .*master  ]]
   [[ "${lines[7]}"  =~  \
-.*\[.*2.*\].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.        ]]
+.*\[.*2.*\].*\ Merge\ and\ sync\ with\ a\ different\ existing\ remote\ branch\.   ]]
   [[ "${lines[8]}"  =~  \
+.*\[.*3.*\].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.                ]]
+  [[ "${lines[9]}"  =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)                  ]]
 
   diff                                                            \
@@ -442,7 +448,128 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)                  ]]
   _contains "${_example_hashes[1]}" "${_sample_hashes[@]}"
 }
 
-@test "'remote set' with unrelated histories displays prompt and creates new orphan." {
+@test "'remote set' with unrelated histories displays prompts and merges with selected existing branch." {
+  {
+    _setup_remote_repo
+
+    "${_NB}" init "${_GIT_REMOTE_URL}"
+
+    "${_NB}" notebooks rename "home" "Example Notebook"
+
+    [[ !  -e "${NB_DIR}/home"                               ]]
+    [[    -d "${NB_DIR}/Example Notebook/.git"              ]]
+
+    "${_NB}" add "Example File.md" --content "Example content."
+
+    "${_NB}" sync
+
+    diff                                                    \
+      <(git -C "${NB_DIR}/Example Notebook" ls-remote       \
+          --heads "${_GIT_REMOTE_URL}" | sed "s/.*\///g")   \
+      <(printf "master\\n")
+
+    diff                                                    \
+      <("${_NB}" remote)                                    \
+      <(printf "%s (master)\\n" "${_GIT_REMOTE_URL:-}")
+
+    diff                                                    \
+      <(git -C "${NB_DIR}/Example Notebook" branch --all)   \
+      <(printf "* master\\n  remotes/origin/HEAD -> origin/master\\n  remotes/origin/master\\n")
+
+    declare _example_hashes=()
+    _example_hashes=($("${_NB}" git rev-list origin/master))
+
+    "${_NB}" notebooks add "Demo Notebook"
+    "${_NB}" notebooks use "Demo Notebook"
+
+    "${_NB}" add "Demo File.md" --content "Demo content."
+
+    "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}3${_NEWLINE}"
+
+    diff                                                    \
+      <(git -C "${NB_DIR}/Demo Notebook" ls-remote          \
+          --heads "${_GIT_REMOTE_URL}" | sed "s/.*\///g")   \
+      <(printf "demo-notebook\\nmaster\\n")
+
+    diff                                                    \
+      <("${_NB}" remote)                                    \
+      <(printf "%s (demo-notebook)\\n" "${_GIT_REMOTE_URL:-}")
+
+    diff                                                    \
+      <(git -C "${NB_DIR}/Demo Notebook" branch --all)      \
+      <(printf "* demo-notebook\\n  remotes/origin/demo-notebook\\n")
+
+    declare _demo_hashes=()
+    _demo_hashes=($("${_NB}" git rev-list origin/demo-notebook))
+
+    "${_NB}" notebooks add "Sample Notebook"
+    "${_NB}" notebooks use "Sample Notebook"
+
+    "${_NB}" add "Sample File.md" --content "Sample content."
+  }
+
+  run "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}1${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                                                 ]]
+
+  [[ "${lines[0]}"  =~  Adding\ remote\ to:\ .*Sample\ Notebook           ]]
+  [[ "${lines[1]}"  =~  [^-]---------------------------------[^-]         ]]
+  [[ "${lines[2]}"  =~  URL:\ \ \ \ .*${_GIT_REMOTE_URL}                  ]]
+  [[ "${lines[3]}"  =~  Branch:\ .*master                                 ]]
+  [[ "${lines[4]}"  =~  [^-]--------------[^-]                            ]]
+  [[ "${lines[5]}"  =~  Remote\ branch\ has\ existing\ history:\ .*master ]]
+  [[ "${lines[6]}"  =~  \
+.*\[.*1.*\].*\ Merge\ and\ sync\ with\ the\ existing\ remote\ branch\:\ .*master  ]]
+  [[ "${lines[7]}"  =~  \
+.*\[.*2.*\].*\ Merge\ and\ sync\ with\ a\ different\ existing\ remote\ branch\.   ]]
+  [[ "${lines[8]}"  =~  \
+.*\[.*3.*\].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.                ]]
+
+  [[ "${lines[9]}"  =~  Remote\ branches:                                 ]]
+  [[ "${lines[10]}" =~  .*[.*1.*].*\ demo-notebook                        ]]
+  [[ "${lines[11]}" =~  .*[.*2.*].*\ master                               ]]
+
+  [[ "${lines[12]}" =~  \
+Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*demo-notebook.*\)           ]]
+
+  diff                                                    \
+    <(git -C "${NB_DIR}/Sample Notebook" ls-remote        \
+        --heads "${_GIT_REMOTE_URL}" | sed "s/.*\///g")   \
+    <(printf "demo-notebook\\nmaster\\n")
+
+  diff                                                    \
+    <("${_NB}" remote)                                    \
+    <(printf "%s (demo-notebook)\\n" "${_GIT_REMOTE_URL:-}")
+
+  diff                                                    \
+    <(git -C "${NB_DIR}/Sample Notebook" branch --all)    \
+    <(printf "* demo-notebook\\n  remotes/origin/demo-notebook\\n")
+
+  declare _sample_hashes=()
+  _sample_hashes=($("${_NB}" git rev-list origin/demo-notebook))
+
+  printf "\${#_example_hashes[@]}:  '%s'\\n" "${#_example_hashes[@]}"
+  printf "\${#_demo_hashes[@]}:     '%s'\\n" "${#_demo_hashes[@]}"
+  printf "\${#_sample_hashes[@]}:   '%s'\\n" "${#_sample_hashes[@]}"
+
+  [[ "${#_example_hashes[@]}" -eq 2                       ]]
+  [[ "${#_demo_hashes[@]}"    -eq 2                       ]]
+  [[ "${#_sample_hashes[@]}"  -eq 3                       ]]
+
+  [[ "${_demo_hashes[0]}"     ==  "${_sample_hashes[1]}"  ]]
+  [[ "${_demo_hashes[1]}"     ==  "${_sample_hashes[2]}"  ]]
+
+  _contains   "${_demo_hashes[0]}" "${_sample_hashes[@]}"
+  _contains   "${_demo_hashes[1]}" "${_sample_hashes[@]}"
+
+  ! _contains "${_example_hashes[0]}" "${_sample_hashes[@]}"
+  ! _contains "${_example_hashes[1]}" "${_sample_hashes[@]}"
+}
+
+@test "'remote set' with unrelated histories displays prompt and creates new orphan branch." {
   {
     _setup_remote_repo
 
@@ -466,7 +593,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)                  ]]
     "${_NB}" add "Sample File.md" --content "Sample content."
   }
 
-  run "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+  run "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}3${_NEWLINE}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -480,10 +607,12 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)                  ]]
   [[ "${lines[4]}"  =~  [^-]--------------[^-]                            ]]
   [[ "${lines[5]}"  =~  Remote\ branch\ has\ existing\ history:\ .*master ]]
   [[ "${lines[6]}"  =~  \
-.*\[.*1.*\].*\ Merge\ and\ sync\ with\ existing\ remote\ branch\.         ]]
+.*\[.*1.*\].*\ Merge\ and\ sync\ with\ the\ existing\ remote\ branch\:\ .*master  ]]
   [[ "${lines[7]}"  =~  \
-.*\[.*2.*\].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.        ]]
+.*\[.*2.*\].*\ Merge\ and\ sync\ with\ a\ different\ existing\ remote\ branch\.   ]]
   [[ "${lines[8]}"  =~  \
+.*\[.*3.*\].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.                ]]
+  [[ "${lines[9]}"  =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*sample-notebook.*\)         ]]
 
   diff                                                    \
@@ -630,10 +759,12 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
   [[ "${lines[5]}"  =~  \
 Remote\ branch\ has\ existing\ history:\ .*master                   ]]
   [[ "${lines[6]}"  =~  \
-.*[.*1.*].*\ Merge\ and\ sync\ with\ existing\ remote\ branch\.     ]]
+.*\[.*1.*\].*\ Merge\ and\ sync\ with\ the\ existing\ remote\ branch\:\ .*master  ]]
   [[ "${lines[7]}"  =~  \
-.*[.*2.*].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.    ]]
+.*\[.*2.*\].*\ Merge\ and\ sync\ with\ a\ different\ existing\ remote\ branch\.   ]]
   [[ "${lines[8]}"  =~  \
+.*\[.*3.*\].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.                ]]
+  [[ "${lines[9]}"  =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
 
   declare _new_hashes=()
