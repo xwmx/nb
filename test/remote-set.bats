@@ -14,7 +14,7 @@ load test_helper
 
     diff                  \
       <("${_NB}" remote)  \
-      <(printf "${_GIT_REMOTE_URL} (master)\\n")
+      <(printf "%s (master)\\n" "${_GIT_REMOTE_URL}")
 
     "${_NB}" add "Example File.md" --content "Example content."
 
