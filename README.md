@@ -6074,6 +6074,8 @@ Alias: `nb set`
 
 ##### `auto_sync`
 
+See also: [Git Sync](#-git-sync)
+
 ```text
 [1]  auto_sync
      ---------
@@ -6085,6 +6087,8 @@ Alias: `nb set`
 ```
 
 ##### `color_primary`
+
+See also: [Color Themes](#-color-themes), [Custom Color Themes](#custom-color-themes)
 
 ```text
 [2]  color_primary
@@ -6098,6 +6102,8 @@ Alias: `nb set`
 
 ##### `color_secondary`
 
+See also: [Color Themes](#-color-themes), [Custom Color Themes](#custom-color-themes)
+
 ```text
 [3]  color_secondary
      ---------------
@@ -6108,6 +6114,8 @@ Alias: `nb set`
 ```
 
 ##### `color_theme`
+
+See also: [Color Themes](#-color-themes)
 
 ```text
 [4]  color_theme
@@ -6145,6 +6153,8 @@ Alias: `nb set`
 
 ##### `default_extension`
 
+See also: [Adding](#adding)
+
 ```text
 [5]  default_extension
      -----------------
@@ -6156,6 +6166,8 @@ Alias: `nb set`
 ```
 
 ##### `editor`
+
+See also: [Editing](#editing)
 
 ```text
 [6]  editor
@@ -6179,6 +6191,8 @@ Alias: `nb set`
 
 ##### `encryption_tool`
 
+See also: [Password-Protected Encrypted Notes and Bookmarks](#password-protected-encrypted-notes-and-bookmarks)
+
 ```text
 [7]  encryption_tool
      ---------------
@@ -6190,6 +6204,8 @@ Alias: `nb set`
 
 ##### `footer`
 
+See also: [Listing & Filtering](#listing--filtering)
+
 ```text
 [8]  footer
      ------
@@ -6200,6 +6216,8 @@ Alias: `nb set`
 ```
 
 ##### `header`
+
+See also: [Listing & Filtering](#listing--filtering)
 
 ```text
 [9]  header
@@ -6220,6 +6238,8 @@ Alias: `nb set`
 ```
 
 ##### `limit`
+
+See also: [Listing & Filtering](#listing--filtering)
 
 ```text
 [10] limit
@@ -6243,6 +6263,8 @@ Alias: `nb set`
 ```
 
 ##### `syntax_theme`
+
+See also: [Terminal Syntax Highlighting Theme](#terminal-syntax-highlighting-theme)
 
 ```text
 [12] syntax_theme
