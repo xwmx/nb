@@ -3158,13 +3158,14 @@ HEREDOC
     local _git_branch=
     _git_branch="$(git -C "${_notebook_path}" rev-parse --abbrev-ref HEAD)"
 
+    local _remote_branches=
+    _remote_branches=($(
+      git -C "${_notebook_path}" ls-remote --heads "${_remote_url}" 2>/dev/null \
+        | sed "s/.*\///g" || :
+    ))
+
     if ! GIT_TERMINAL_PROMPT=0 git -C "${_notebook_path}" fetch origin "${_git_branch}" &>/dev/null
     then
-      local _remote_branches=($(
-        git -C "${_notebook_path}" ls-remote --heads "${_remote_url}" 2>/dev/null \
-          | sed "s/.*\///g" || :
-      ))
-
       if _contains "${_git_branch}" "${_remote_branches[@]:-}"
       then
         if ((_prompt))
@@ -3183,8 +3184,9 @@ HEREDOC
 
     if ((_prompt))
     then
-      if ! git -C "${_notebook_path}" show-branch                 \
-           "remotes/origin/${_git_branch}" > /dev/null 2>&1 ||
+      if ! _contains "${_git_branch}" "${_remote_branches[@]:-}"  ||
+         ! git -C "${_notebook_path}" show-branch                 \
+           "remotes/origin/${_git_branch}" > /dev/null 2>&1       ||
          {
            local _local_branch_root_hash=
            _local_branch_root_hash="$(
@@ -18623,12 +18625,15 @@ $(_color_primary "Usage"):
   ${_ME} remote
   ${_ME} remote branches [<url>]
   ${_ME} remote remove
+  ${_ME} remote rename [<branch-name>] <name>
   ${_ME} remote set <url> [<branch>]
 
 $(_color_primary "Subcommands"):
   (default)     Print the remote URL and branch for the notebook.
   branches      List branches on the current or given remote.
   remove        Remove the remote URL from the notebook.
+                Alias: \`unset\`
+  rename        Rename the current branch or <branch-name> to <name>.
   set           Set the remote URL and branch for the notebook.
 
 $(_color_primary "Description"):
@@ -18645,12 +18650,13 @@ $(_color_primary "Examples"):
 HEREDOC
 }
 _remote() {
+  local _new_branch=
+  local _new_remote_url=
   local _only_url=0
+  local _rename_arguments=()
   local _skip_confirmation=0
   local _skip_preamble=0
   local _subcommand=
-  local _new_branch=
-  local _new_remote_url=
 
   local __arg=
   for   __arg in "${@:-}"
@@ -18660,17 +18666,21 @@ _remote() {
       --skip*preamble)  _skip_preamble=1        ;;
       --url|url)        _only_url=1             ;;
       *)
-        if [[   -z  "${_subcommand:-}"          ]]
-        then
-          _subcommand="${__arg}"
-        elif [[ -z  "${_new_remote_url:-}"      ]]  &&
-             _contains "${_subcommand}" "add" "branches" "set"
-        then
-          _new_remote_url="${__arg}"
-        elif [[ -z  "${_new_branch:-}"          ]]
-        then
-          _new_branch="${__arg:-}"
-        fi
+        case "${_subcommand:-}" in
+          '') _subcommand="${__arg:-}"          ;;
+          add|branches|set)
+            if [[   -z "${_new_remote_url:-}"   ]]
+            then
+              _new_remote_url="${__arg:-}"
+            elif [[ -z "${_new_branch:-}"       ]]
+            then
+              _new_branch="${__arg:-}"
+            fi
+            ;;
+          rename)
+            _rename_arguments+=("${__arg:-}")
+            ;;
+        esac
         ;;
     esac
   done
@@ -18831,6 +18841,140 @@ _remote() {
       else
         _exit_1 printf "No remote configured.\\n"
       fi
+      ;;
+    rename)
+      local _remote_branch_name=
+      local _target_branch_name=
+
+      local _remote_branches=()
+
+      if ((_remote_exists))
+      then
+        _remote_branches=($(
+          git -C "${_notebook_path}" ls-remote  \
+            --heads "${_current_remote_url:-}"  \
+            | sed "s/.*\///g" || :
+        ))
+      fi
+
+      if [[ "${#_rename_arguments[@]}" -gt 1    ]]
+      then
+        if _contains "${_rename_arguments[0]:-}" "${_remote_branches[@]:-}"
+        then
+          _remote_branch_name="${_rename_arguments[0]:-}"
+          _target_branch_name="${_rename_arguments[1]:-}"
+        else
+          _exit_1 printf "Remote branch not found: %s\\n"   \
+            "$(_color_primary "${_rename_arguments[0]:-}")"
+        fi
+      else
+        _target_branch_name="${_rename_arguments[0]:-}"
+      fi
+
+      if [[ -z "${_target_branch_name:-}"       ]]
+      then
+        _exit_1 _help "remote"
+      fi
+
+      if _contains "${_target_branch_name:-}" "${_remote_branches[@]:-}"
+      then
+        _exit_1 printf "A remote branch with that name already exists.\\n"
+      fi
+
+      local _remote_head_branch=
+      _remote_head_branch="$(
+        git ls-remote --symref "${_GIT_REMOTE_URL}" HEAD            \
+          | awk '/^ref:/ {sub(/refs\/heads\//, "", $2); print $2}'
+      )"
+
+      if [[ -n  "${_remote_head_branch:-}"                          ]] &&
+         [[     "${_remote_branch_name:-"${_current_branch}"}" ==   \
+                  "${_remote_head_branch:-}"                        ]]
+      then
+        _exit_1 printf "The HEAD branch of a remote can't be renamed.\\n"
+      fi
+
+      if [[ -n "${_remote_branch_name:-}"                           ]] &&
+         [[    "${_remote_branch_name:-}" != "${_current_branch:-}" ]]
+      then
+        printf      "Renaming remote branch\\n"
+        _print_line "-----------------------"
+      else
+        printf      "Renaming current branch\\n"
+        _print_line "-----------------------"
+      fi
+
+      printf        "From: %s\\n" "${_remote_branch_name:-"${_current_branch:-}"}"
+      printf        "To:   %s\\n" "$(_color_primary "${_target_branch_name:-}")"
+
+      _print_line   "--------------"
+
+      while true
+      do
+        local __yn=
+        IFS='' read -r -e -d $'\n' -p                     \
+"$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
+
+        case ${__yn} in
+          [Yy]*)
+            break
+            ;;
+          *)
+            printf "Exiting...\\n"
+            exit 0
+            ;;
+        esac
+      done
+
+      if ((_remote_exists))
+      then
+        if [[   -z  "${_remote_branch_name:-}"                           ]] ||
+           [[       "${_remote_branch_name:-}" == "${_current_branch:-}" ]]
+        then
+          {
+            git -C "${_notebook_path}" checkout           \
+              -b "${_target_branch_name}"                 \
+              "${_current_branch}"                        &&
+              git -C "${_notebook_path}" push             \
+                -u origin "${_target_branch_name}"        &&
+              git -C "${_notebook_path}" branch           \
+                -d "${_current_branch}"                   &&
+              git -C "${_notebook_path}" push             \
+                --delete origin "${_current_branch}"      &&
+              git -C "${_notebook_path}" remote prune origin
+          } &>/dev/null || _exit_1 printf "Unable to rename branch.\\n"
+        elif [[ -n  "${_remote_branch_name:-}"                           ]] &&
+             [[     "${_remote_branch_name:-}" != "${_current_branch:-}" ]]
+        then
+          local _temp_repo_path="${_NB_TEMP_DIRECTORY}/${RANDOM}"
+
+          {
+            cd "${_NB_TEMP_DIRECTORY}"                    &&
+              git clone --no-local                        \
+                --single-branch                           \
+                --branch "${_remote_branch_name:-}"       \
+                "${_current_remote_url}"                  \
+                "${_temp_repo_path}"                      &&
+              git -C "${_temp_repo_path}" checkout        \
+                -b "${_target_branch_name}"               \
+              "${_remote_branch_name}"                    &&
+              git -C "${_temp_repo_path}" push            \
+                -u origin "${_target_branch_name}"        &&
+              git -C "${_temp_repo_path}" branch          \
+                -d "${_remote_branch_name}"               &&
+              git -C "${_temp_repo_path}" push            \
+                --delete origin "${_remote_branch_name}"  &&
+              git -C "${_temp_repo_path}" remote prune origin
+          } &>/dev/null || _exit_1 printf "Unable to rename branch.\\n"
+        fi
+      else
+        git -C "${_notebook_path}" branch                 \
+          -m "${_target_branch_name}"                     \
+          &>/dev/null || _exit_1 printf "Unable to rename branch.\\n"
+      fi
+
+      printf "Renamed to: %s\\n" "$(_color_primary "${_target_branch_name}")"
+
       ;;
     set|add)
       if [[ -z "${_new_remote_url:-}"           ]]
