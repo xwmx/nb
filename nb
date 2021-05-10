@@ -18636,7 +18636,8 @@ $(_color_primary "Subcommands"):
   branches      List branches on the current or given remote.
   remove        Remove the remote URL from the notebook.
                 Alias: \`unset\`
-  rename        Rename the current branch or <branch-name> to <name>.
+  rename        Rename the current orphan branch or <branch-name> to <name>.
+                Caveat: only orphan branches can be renamed.
   set           Set the remote URL and branch for the notebook.
 
 $(_color_primary "Description"):
@@ -18911,10 +18912,7 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
          [[     "${_remote_branch_name:-"${_current_branch}"}" ==     \
                   "${_remote_head_branch:-}"                          ]]
       then
-        _exit_1 cat <<HEREDOC
-The primary branch of a remote can't be renamed or changed by \`nb\`.
-THe primary branch can be reassigned using some git hosts' web interfaces.
-HEREDOC
+        _exit_1 printf "Only orphan branches can be renamed.\\n"
       fi
 
       if [[ -n "${_remote_branch_name:-}"                             ]] &&

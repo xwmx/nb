@@ -5840,7 +5840,8 @@ Subcommands:
   branches      List branches on the current or given remote.
   remove        Remove the remote URL from the notebook.
                 Alias: `unset`
-  rename        Rename the current branch or <branch-name> to <name>.
+  rename        Rename the current orphan branch or <branch-name> to <name>.
+                Caveat: only orphan branches can be renamed.
   set           Set the remote URL and branch for the notebook.
 
 Description:

@@ -289,16 +289,17 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*updated-branch-name.*\)  ]]
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"  -eq 1                                                             ]]
+  [[ "${status}"  -eq 1                                             ]]
 
-  [[ "${output}"  =~  !.*\ The\ primary\ branch\ of\ a\ remote\ can\'t\ be\ renamed ]]
+  [[ "${output}"  =~  \
+!.*\ Only\ orphan\ branches\ can\ be\ renamed\.                     ]]
 
   printf "local branches:     '%s'\\n" "$(
     git -C "${NB_DIR}/Example Notebook" branch --all
   )"
 
   printf "remote branches:    '%s'\\n" "$(
-    git -C "${NB_DIR}/Example Notebook" ls-remote                    \
+    git -C "${NB_DIR}/Example Notebook" ls-remote                   \
       --heads "${_GIT_REMOTE_URL}" | sed "s/.*\///g"
   )"
 
@@ -406,9 +407,10 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*updated-branch-name.*\)  ]]
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"  -eq 1                                                             ]]
+  [[ "${status}"  -eq 1                                             ]]
 
-  [[ "${output}"  =~  !.*\ The\ primary\ branch\ of\ a\ remote\ can\'t\ be\ renamed ]]
+  [[ "${output}"  =~  \
+!.*\ Only\ orphan\ branches\ can\ be\ renamed\.                     ]]
 
   printf "local branches:     '%s'\\n" "$(
     git -C "${NB_DIR}/Sample Notebook" branch --all
@@ -527,9 +529,10 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*updated-branch-name.*\)  ]]
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"  -eq 1                                                             ]]
+  [[ "${status}"  -eq 1                                             ]]
 
-  [[ "${output}"  =~  !.*\ The\ primary\ branch\ of\ a\ remote\ can\'t\ be\ renamed ]]
+  [[ "${output}"  =~  \
+!.*\ Only\ orphan\ branches\ can\ be\ renamed\.                     ]]
 
   printf "local branches:     '%s'\\n" "$(
     git -C "${NB_DIR}/Example Notebook" branch --all
@@ -607,9 +610,10 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*updated-branch-name.*\)  ]]
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"  -eq 1                                                             ]]
+  [[ "${status}"  -eq 1                                             ]]
 
-  [[ "${output}"  =~  !.*\ The\ primary\ branch\ of\ a\ remote\ can\'t\ be\ renamed ]]
+  [[ "${output}"  =~  \
+!.*\ Only\ orphan\ branches\ can\ be\ renamed\.                     ]]
 
   printf "local branches:     '%s'\\n" "$(
     git -C "${NB_DIR}/Example Notebook" branch --all
@@ -687,9 +691,10 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*updated-branch-name.*\)  ]]
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"  -eq 1                                                             ]]
+  [[ "${status}"  -eq 1                                             ]]
 
-  [[ "${output}"  =~  !.*\ The\ primary\ branch\ of\ a\ remote\ can\'t\ be\ renamed ]]
+  [[ "${output}"  =~  \
+!.*\ Only\ orphan\ branches\ can\ be\ renamed\.                     ]]
 
   printf "local branches:     '%s'\\n" "$(
     git -C "${NB_DIR}/Example Notebook" branch --all
