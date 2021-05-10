@@ -6167,7 +6167,7 @@ See also: [Adding](#adding)
 
 ##### `editor`
 
-See also: [Editing](#editing)
+See also: [Editing](#editing), [Adding](#adding)
 
 ```text
 [6]  editor
