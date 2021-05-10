@@ -2,6 +2,94 @@
 
 load test_helper
 
+# alias #######################################################################
+
+@test "'set remote <url> <branch>' with no existing remote and no matching remote branch pushes branch as new orphan, sets remote, and prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example File One.md" --content "Example content one."
+
+    [[ -f "${NB_DIR}/home/Example File One.md"                      ]]
+
+    _setup_remote_repo
+  }
+
+  run "${_NB}" set remote "${_GIT_REMOTE_URL}" "example" <<< "y${_NEWLINE}2${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  printf "remote:    '%s'\\n" "$("${_NB}" remote)"
+
+  [[ "${status}"    -eq 0                                               ]]
+
+  [[ "${lines[0]}"  =~  Adding\ remote\ to:\ .*home                     ]]
+  [[ "${lines[1]}"  =~  [^-]----------------------[^-]                  ]]
+  [[ "${lines[2]}"  =~  URL:\ \ \ \ .*${_GIT_REMOTE_URL}                ]]
+  [[ "${lines[3]}"  =~  Branch:\ .*example                              ]]
+  [[ "${lines[4]}"  =~  [^-]--------------[^-]                          ]]
+
+  [[ "${lines[5]}"  =~  Branch\ not\ present\ on\ remote:\ .*example    ]]
+  [[ "${lines[6]}"  =~  \
+.*[.*1.*].*\ Merge\ and\ sync\ with\ an\ existing\ remote\ branch\.     ]]
+  [[ "${lines[7]}"  =~  \
+.*[.*2.*].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.        ]]
+  [[ "${lines[8]}"  =~  \
+Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\           ]]
+  [[ "${lines[8]}"  =~  \
+name,\ .*type.*\ a\ new\ name,\ or\ press\ .*q.*\ to\ quit\.            ]]
+  [[ "${lines[9]}"  =~  \
+Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*example.*\)               ]]
+
+  diff                                                                  \
+    <(git -C "${NB_DIR}/home" branch --all)                             \
+    <(printf "* example\\n  remotes/origin/example\\n")
+
+  run "${_NB}" git branch --all
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${lines[0]}" =~ \*\ example                                    ]]
+  [[    "${lines[1]}" =~ remotes/origin/example                         ]]
+  [[ !  "${output}"   =~ remotes/origin/master                          ]]
+
+  git clone --branch "example" "${_GIT_REMOTE_URL}" "${_TMP_DIR}/new-clone"
+
+  run git -C "${_TMP_DIR}/new-clone" branch --all
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${lines[0]}"  =~ \*\ example                                   ]]
+  [[    "${lines[1]}"  =~ remotes/origin/HEAD\ \-\>\ origin/master      ]]
+  [[    "${lines[2]}"  =~ remotes/origin/example                        ]]
+  [[    "${lines[3]}"  =~ remotes/origin/master                         ]]
+
+  [[ -f "${_TMP_DIR}/new-clone/Example File One.md"                     ]]
+
+  diff                                                                  \
+    <("${_NB}" remote)                                                  \
+    <(printf "%s (example)\\n" "${_GIT_REMOTE_URL:-}")
+
+  "${_NB}" git fetch origin
+  "${_NB}" git push origin
+
+  declare _master_branch_hashes=()
+  _master_branch_hashes=($("${_NB}" git rev-list origin/master))
+
+  [[ "${#_master_branch_hashes[@]}"   == "1"                            ]]
+
+  declare _example_branch_hashes=()
+  _example_branch_hashes=($("${_NB}" git rev-list origin/example))
+
+  [[ "${#_example_branch_hashes[@]}"  == "2"                            ]]
+
+  [[ "${_master_branch_hashes[0]}"    != "${_example_branch_hashes[0]}" ]]
+  [[ "${_master_branch_hashes[0]}"    != "${_example_branch_hashes[1]}" ]]
+}
+
 # merge with existing branch ##################################################
 
 @test "'remote set <url> <branch>' with unshared histories syncs to same branch." {

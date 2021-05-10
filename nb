@@ -20063,10 +20063,12 @@ $(local __editor=
         ;;
       *)
         local _setting_name=
-        if [[ -n "${1:-}" ]]
-        then
-          _setting_name="$(_settings_identify "${1}")"
-        fi
+
+        case "${1:-}" in
+          '')       :                                             ;;
+          remote)   _remote set "${@:2}"; return 0                ;;
+          *)        _setting_name="$(_settings_identify "${1}")"  ;;
+        esac
 
         if [[   -n "${_setting_name:-}" ]]
         then
@@ -20570,9 +20572,11 @@ $(_color_primary "Alias"): \`${_ME} reset\`
 HEREDOC
 }
 _unset() {
-  [[ -z "${1:-}" ]] && _exit_1 _help "unset"
-
-  _settings unset "${@:-}"
+  case "${1:-}" in
+    '')     _exit_1 _help "unset";    return 1 ;;
+    remote) _remote unset;            return 0 ;;
+    *)      _settings unset "${@:-}"; return 0 ;;
+  esac
 }
 _alias_subcommand "unset" "reset"
 

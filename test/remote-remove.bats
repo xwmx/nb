@@ -2,7 +2,23 @@
 
 load test_helper
 
-# --skip-confirmation #############################################################
+# alias #######################################################################
+
+@test "'unset remote' with no existing remote returns 1 and prints message." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" unset remote
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 1                       ]]
+  [[ "${lines[0]}"  =~  No\ remote\ configured  ]]
+}
+
+# --skip-confirmation #########################################################
 
 @test "'remote remove --skip-confirmation' with existing remote removes remote without resetting default branch and prints message." {
   {
