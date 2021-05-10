@@ -20082,7 +20082,7 @@ $(local __editor=
 
         case "${1:-}" in
           '')       :                                             ;;
-          remote)   _remote set "${@:2}"; return 0                ;;
+          remote)   shift; _remote set "${@}"; return 0           ;;
           *)        _setting_name="$(_settings_identify "${1}")"  ;;
         esac
 
