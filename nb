@@ -19116,29 +19116,58 @@ HEREDOC
 Remote branch has existing history: $(_color_primary "${_new_branch:-}")
 
 $(_color_brackets "1") Merge and sync with the existing remote branch: $(_color_primary "${_new_branch:-}")
+HEREDOC
+
+            if [[ "${#_remote_branches[@]}" -le 1 ]]
+            then
+              cat <<HEREDOC
+$(_color_brackets "2") Sync as a new orphan branch on the remote.
+
+HEREDOC
+            else
+              cat <<HEREDOC
 $(_color_brackets "2") Merge and sync with a different existing remote branch.
 $(_color_brackets "3") Sync as a new orphan branch on the remote.
 
 HEREDOC
+            fi
+
             local _existing_history_prompt_option=
 
             while true
             do
-              IFS='' read -r -e -d $'\n' -p       \
-"$(_color_primary "Choose an option") or $(_color_primary "q") to quit: "  _existing_history_prompt_option
+              IFS='' read -r -e -d $'\n' -p                               \
+"$(_color_primary "Choose an option") or $(_color_primary "q") to quit: " \
+              _existing_history_prompt_option
 
               case "${_existing_history_prompt_option:-}" in
-                [12])     _selected_push_option=1         ;;
-                3)        _selected_push_option=2         ;;
-              esac
+                1)
+                  _selected_push_option=1
 
-              case "${_existing_history_prompt_option:-}" in
-                2)        _show_branch_selection_prompt=1 ;;
-              esac
+                  break
+                  ;;
+                2)
+                  _show_branch_selection_prompt=1
 
-              case "${_existing_history_prompt_option:-}" in
-                [123])                            break   ;;
-                q*|exit)  printf "Exiting...\\n"; exit 0  ;;
+                  if [[ "${#_remote_branches[@]}" -le 1 ]]
+                  then
+                    _selected_push_option=2
+                  else
+                    _selected_push_option=1
+                  fi
+
+                  break
+                  ;;
+                3)
+                  _selected_push_option=2
+
+                  break
+                  ;;
+                q*|exit)
+                  printf "Exiting...\\n"
+
+                  exit 0
+                  ;;
               esac
             done
           fi

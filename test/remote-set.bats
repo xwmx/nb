@@ -104,10 +104,8 @@ Remote\ branch\ has\ existing\ history:\ .*shared-branch            ]]
   [[ "${lines[6]}"  =~  \
 .*\[.*1.*\].*\ Merge\ and\ sync\ with\ the\ existing\ remote\ branch\:\ .*shared-branch ]]
   [[ "${lines[7]}"  =~  \
-.*\[.*2.*\].*\ Merge\ and\ sync\ with\ a\ different\ existing\ remote\ branch\.         ]]
+.*\[.*2.*\].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.                      ]]
   [[ "${lines[8]}"  =~  \
-.*\[.*3.*\].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.                      ]]
-  [[ "${lines[9]}"  =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*shared-branch.*\)     ]]
 
   diff                                                              \
@@ -227,10 +225,8 @@ Remote\ branch\ has\ existing\ history:\ .*master                   ]]
   [[ "${lines[6]}"  =~  \
 .*\[.*1.*\].*\ Merge\ and\ sync\ with\ the\ existing\ remote\ branch\:\ .*master  ]]
   [[ "${lines[7]}"  =~  \
-.*\[.*2.*\].*\ Merge\ and\ sync\ with\ a\ different\ existing\ remote\ branch\.   ]]
+.*\[.*2.*\].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.                ]]
   [[ "${lines[8]}"  =~  \
-.*\[.*3.*\].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.                ]]
-  [[ "${lines[9]}"  =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
 
   diff                                                              \
@@ -419,10 +415,8 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
   [[ "${lines[6]}"  =~  \
 .*\[.*1.*\].*\ Merge\ and\ sync\ with\ the\ existing\ remote\ branch\:\ .*master  ]]
   [[ "${lines[7]}"  =~  \
-.*\[.*2.*\].*\ Merge\ and\ sync\ with\ a\ different\ existing\ remote\ branch\.   ]]
+.*\[.*2.*\].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.                ]]
   [[ "${lines[8]}"  =~  \
-.*\[.*3.*\].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.                ]]
-  [[ "${lines[9]}"  =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)                  ]]
 
   diff                                                            \
@@ -609,10 +603,8 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*demo-notebook.*\)           ]]
   [[ "${lines[6]}"  =~  \
 .*\[.*1.*\].*\ Merge\ and\ sync\ with\ the\ existing\ remote\ branch\:\ .*master  ]]
   [[ "${lines[7]}"  =~  \
-.*\[.*2.*\].*\ Merge\ and\ sync\ with\ a\ different\ existing\ remote\ branch\.   ]]
+.*\[.*2.*\].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.                ]]
   [[ "${lines[8]}"  =~  \
-.*\[.*3.*\].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.                ]]
-  [[ "${lines[9]}"  =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*sample-notebook.*\)         ]]
 
   diff                                                    \
@@ -761,10 +753,8 @@ Remote\ branch\ has\ existing\ history:\ .*master                   ]]
   [[ "${lines[6]}"  =~  \
 .*\[.*1.*\].*\ Merge\ and\ sync\ with\ the\ existing\ remote\ branch\:\ .*master  ]]
   [[ "${lines[7]}"  =~  \
-.*\[.*2.*\].*\ Merge\ and\ sync\ with\ a\ different\ existing\ remote\ branch\.   ]]
+.*\[.*2.*\].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.                ]]
   [[ "${lines[8]}"  =~  \
-.*\[.*3.*\].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.                ]]
-  [[ "${lines[9]}"  =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
 
   declare _new_hashes=()
