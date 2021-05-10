@@ -19281,6 +19281,7 @@ HEREDOC
 
       if ((_remote_exists))
       then
+        _print_line "--------------"
         _remote unset --skip-confirmation
         _print_line "--------------"
       fi

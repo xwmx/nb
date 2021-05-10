@@ -242,12 +242,13 @@ load test_helper
 .*\[.*2.*\].*\ Merge\ and\ sync\ with\ a\ different\ existing\ remote\ branch\.   ]]
   [[ "${lines[4]}"  =~  \
 .*\[.*3.*\].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.                ]]
-  [[ "${lines[5]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}           ]]
-  [[ "${lines[6]}"  =~  Remote\ removed:\ .*${_GIT_REMOTE_URL}            ]]
-  [[ "${lines[7]}"  =~  [^-]--------------[^-]                            ]]
-  [[ "${lines[8]}"  =~  \
+  [[ "${lines[5]}"  =~  [^-]--------------[^-]                            ]]
+  [[ "${lines[6]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}           ]]
+  [[ "${lines[7]}"  =~  Remote\ removed:\ .*${_GIT_REMOTE_URL}            ]]
+  [[ "${lines[8]}"  =~  [^-]--------------[^-]                            ]]
+  [[ "${lines[9]}"  =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)                  ]]
-  [[ "${lines[9]}"  =~  Done!                                             ]]
+  [[ "${lines[10]}" =~  Done!                                             ]]
 
   diff                                                            \
     <(git ls-remote --symref "${_GIT_REMOTE_URL}" HEAD            \
@@ -303,12 +304,13 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)                  ]]
 Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\             ]]
   [[ "${lines[5]}"  =~  \
 name,\ .*type.*\ a\ new\ name,\ or\ press\ .*q.*\ to\ quit\.              ]]
-  [[ "${lines[6]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}           ]]
-  [[ "${lines[7]}"  =~  Remote\ removed:\ .*${_GIT_REMOTE_URL}            ]]
-  [[ "${lines[8]}"  =~  [^-]--------------[^-]                            ]]
-  [[ "${lines[9]}"  =~  \
+  [[ "${lines[6]}"  =~  [^-]--------------[^-]                            ]]
+  [[ "${lines[7]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}           ]]
+  [[ "${lines[8]}"  =~  Remote\ removed:\ .*${_GIT_REMOTE_URL}            ]]
+  [[ "${lines[9]}"  =~  [^-]--------------[^-]                            ]]
+  [[ "${lines[10]}" =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*sample-notebook-1.*\)       ]]
-  [[ "${lines[10]}" =~  Done!                                             ]]
+  [[ "${lines[11]}" =~  Done!                                             ]]
 
   run "${_NB}" sync
 

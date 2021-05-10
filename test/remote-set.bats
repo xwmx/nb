@@ -772,10 +772,11 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)              ]]
   [[ "${lines[3]}"  =~  URL:\ \ \ \ .*${_GIT_REMOTE_URL}                        ]]
   [[ "${lines[4]}"  =~  Branch:\ .*master                                       ]]
   [[ "${lines[5]}"  =~  [^-]--------------[^-]                                  ]]
-  [[ "${lines[6]}"  =~  Removing\ remote:\ .*https://example.test/example.git   ]]
-  [[ "${lines[7]}"  =~  Remote\ removed:\ .*https://example.test/example.git    ]]
-  [[ "${lines[8]}"  =~  [^-]--------------[^-]                                  ]]
-  [[ "${lines[9]}"  =~  \
+  [[ "${lines[6]}"  =~  [^-]--------------[^-]                                  ]]
+  [[ "${lines[7]}"  =~  Removing\ remote:\ .*https://example.test/example.git   ]]
+  [[ "${lines[8]}"  =~  Remote\ removed:\ .*https://example.test/example.git    ]]
+  [[ "${lines[9]}"  =~  [^-]--------------[^-]                                  ]]
+  [[ "${lines[10]}" =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)                        ]]
 
   diff                  \
@@ -807,10 +808,11 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)                        
     [[ "${lines[3]}"  =~  URL:\ \ \ \ .*${_GIT_REMOTE_URL}          ]]
     [[ "${lines[4]}"  =~  Branch:\ .*master                         ]]
     [[ "${lines[5]}"  =~  [^-]--------------[^-]                    ]]
-    [[ "${lines[6]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}   ]]
-    [[ "${lines[7]}"  =~  Remote\ removed:\ .*${_GIT_REMOTE_URL}    ]]
-    [[ "${lines[8]}"  =~  [^-]--------------[^-]                    ]]
-    [[ "${lines[9]}"  =~  \
+    [[ "${lines[6]}"  =~  [^-]--------------[^-]                    ]]
+    [[ "${lines[7]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}   ]]
+    [[ "${lines[8]}"  =~  Remote\ removed:\ .*${_GIT_REMOTE_URL}    ]]
+    [[ "${lines[9]}"  =~  [^-]--------------[^-]                    ]]
+    [[ "${lines[10]}" =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
 
     diff                  \
@@ -888,10 +890,11 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
     [[ "${lines[3]}"  =~  URL:\ \ \ \ .*${_GIT_REMOTE_URL}          ]]
     [[ "${lines[4]}"  =~  Branch:\ .*master                         ]]
     [[ "${lines[5]}"  =~  [^-]--------------[^-]                    ]]
-    [[ "${lines[6]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}   ]]
-    [[ "${lines[7]}"  =~  Remote\ removed:\ .*${_GIT_REMOTE_URL}    ]]
-    [[ "${lines[8]}"  =~  [^-]--------------[^-]                    ]]
-    [[ "${lines[9]}"  =~  \
+    [[ "${lines[6]}"  =~  [^-]--------------[^-]                    ]]
+    [[ "${lines[7]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}   ]]
+    [[ "${lines[8]}"  =~  Remote\ removed:\ .*${_GIT_REMOTE_URL}    ]]
+    [[ "${lines[9]}"  =~  [^-]--------------[^-]                    ]]
+    [[ "${lines[10]}" =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
 
     diff                  \
