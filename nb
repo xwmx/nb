@@ -19059,8 +19059,9 @@ HEREDOC
 
         while true
         do
-          IFS='' read -r -e -d $'\n' -p         \
-"$(_color_primary "Choose an option") or $(_color_primary "q") to quit: "  _selected_push_option
+          IFS='' read -r -e -d $'\n' -p                                   \
+"$(_color_primary "Choose an option") or $(_color_primary "q") to quit: " \
+            _selected_push_option
 
           case "${_selected_push_option:-}" in
             1)        _show_branch_selection_prompt=1 &&  break   ;;
@@ -19147,13 +19148,12 @@ HEREDOC
                   break
                   ;;
                 2)
-                  _show_branch_selection_prompt=1
-
                   if [[ "${#_remote_branches[@]}" -le 1 ]]
                   then
                     _selected_push_option=2
                   else
                     _selected_push_option=1
+                    _show_branch_selection_prompt=1
                   fi
 
                   break
@@ -19214,29 +19214,60 @@ HEREDOC
         done
       fi
 
-      if [[ "${_selected_push_option:-}" == "2"   ]]      &&
-           _contains "${_new_branch}" "${_remote_branches[@]:-}"
+      if [[ "${_selected_push_option:-}" == "2"               ]]
       then
-        local _notebook_name_branch_name="${_notebook_path##*/}"
-        _notebook_name_branch_name="${_notebook_name_branch_name//' '/-}"
-        _notebook_name_branch_name="$(
-          printf "%s\\n" "${_notebook_name_branch_name}"  \
-            | tr '[:upper:]' '[:lower:]'
-        )"
+        local _target_orphan_branch_name="${_new_branch}"
 
-        local _uniqueness_counter=0
-        local _unique_branch_name="${_notebook_name_branch_name}"
+        if _contains "${_new_branch}" "${_remote_branches[@]:-}"
+        then
+          if [[ "${_new_branch:-}" == "${_current_branch:-}"  ]]
+          then
+            local _notebook_name_branch_name="${_notebook_path##*/}"
+            _notebook_name_branch_name="${_notebook_name_branch_name//' '/-}"
+            _notebook_name_branch_name="$(
+              printf "%s\\n" "${_notebook_name_branch_name}"  \
+                | tr '[:upper:]' '[:lower:]'
+            )"
+          fi
 
-        while _contains "${_unique_branch_name}" "${_remote_branches[@]:-}"
+          local _uniqueness_counter=0
+          local _unique_branch_name="${_notebook_name_branch_name}"
+
+          while _contains "${_unique_branch_name}" "${_remote_branches[@]:-}"
+          do
+            _uniqueness_counter="$((_uniqueness_counter+1))"
+
+            printf -v _unique_branch_name -- "%s-%01d"        \
+              "${_notebook_name_branch_name}"                 \
+              "${_uniqueness_counter}"
+          done
+
+          _target_orphan_branch_name="${_unique_branch_name}"
+        fi
+
+        local _bk_name=  && _bk_name="$(_color_brackets "${_target_orphan_branch_name}")"
+        local _hi_enter= && _hi_enter="$(_color_primary 'enter')"
+        local _hi_q=     && _hi_q="$(_color_primary 'q')"
+        local _hi_type=  && _hi_type="$(_color_primary 'type')"
+
+        cat <<HEREDOC
+Press ${_hi_enter} to use the selected name, ${_hi_type} a new name, or press ${_hi_q} to quit.
+HEREDOC
+
+        while true
         do
-          _uniqueness_counter="$((_uniqueness_counter+1))"
+          local _orphan_branch_prompt_response=
 
-          printf -v _unique_branch_name -- "%s-%01d"      \
-            "${_notebook_name_branch_name}"               \
-            "${_uniqueness_counter}"
+          IFS='' read -r -e -d $'\n' -p               \
+            "$(_color_primary "Name") ${_bk_name}: "  \
+            _orphan_branch_prompt_response
+
+          case "${_orphan_branch_prompt_response:-}" in
+            '')       _new_branch="${_target_orphan_branch_name}"     && break  ;;
+            q*|exit)  printf "Exiting...\\n"                          && exit 0 ;;
+            *)        _new_branch="${_orphan_branch_prompt_response}" && break  ;;
+          esac
         done
-
-        _new_branch="${_unique_branch_name}"
       fi
 
       if [[ "${_new_branch:-}" != "${_current_branch:-}"  ]]

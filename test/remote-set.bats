@@ -49,6 +49,10 @@ load test_helper
   [[ "${lines[3]}"  =~  Branch:\ .*shared-branch                    ]]
   [[ "${lines[4]}"  =~  [^-]--------------[^-]                      ]]
   [[ "${lines[5]}"  =~  \
+Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\       ]]
+  [[ "${lines[5]}"  =~  \
+name,\ .*type.*\ a\ new\ name,\ or\ press\ .*q.*\ to\ quit\.        ]]
+  [[ "${lines[6]}"  =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*shared-branch.*\)     ]]
 
   diff                                                              \
@@ -170,6 +174,10 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*shared-branch.*\)     ]]
   [[ "${lines[3]}"  =~  Branch:\ .*master                           ]]
   [[ "${lines[4]}"  =~  [^-]--------------[^-]                      ]]
   [[ "${lines[5]}"  =~  \
+Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\       ]]
+  [[ "${lines[5]}"  =~  \
+name,\ .*type.*\ a\ new\ name,\ or\ press\ .*q.*\ to\ quit\.        ]]
+  [[ "${lines[6]}"  =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
 
   diff                                                              \
@@ -282,6 +290,10 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
   [[ "${lines[3]}"  =~  Branch:\ .*master                           ]]
   [[ "${lines[4]}"  =~  [^-]--------------[^-]                      ]]
   [[ "${lines[5]}"  =~  \
+Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\       ]]
+  [[ "${lines[5]}"  =~  \
+name,\ .*type.*\ a\ new\ name,\ or\ press\ .*q.*\ to\ quit\.        ]]
+  [[ "${lines[6]}"  =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
 
   diff                                                            \
@@ -563,7 +575,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*demo-notebook.*\)           ]]
   ! _contains "${_example_hashes[1]}" "${_sample_hashes[@]}"
 }
 
-@test "'remote set' with unrelated histories displays prompt and creates new orphan branch." {
+@test "'remote set' with unrelated histories displays prompt and creates new orphan branch with name from prompt." {
   {
     _setup_remote_repo
 
@@ -578,6 +590,12 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*demo-notebook.*\)           ]]
 
     "${_NB}" sync
 
+  diff                                                    \
+    <(git -C "${NB_DIR}/Example Notebook" ls-remote       \
+        --heads "${_GIT_REMOTE_URL}"                      \
+        | sed "s/.*\///g" || :)                           \
+    <(printf "master\\n")
+
     declare _example_hashes=()
     _example_hashes=($("${_NB}" git rev-list origin/master))
 
@@ -587,7 +605,8 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*demo-notebook.*\)           ]]
     "${_NB}" add "Sample File.md" --content "Sample content."
   }
 
-  run "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}3${_NEWLINE}"
+  run "${_NB}" remote set "${_GIT_REMOTE_URL}"            \
+    <<< "y${_NEWLINE}3${_NEWLINE}branch-name-from-prompt${_NEWLINE}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -605,6 +624,80 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*demo-notebook.*\)           ]]
   [[ "${lines[7]}"  =~  \
 .*\[.*2.*\].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.                ]]
   [[ "${lines[8]}"  =~  \
+Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\             ]]
+  [[ "${lines[8]}"  =~  \
+name,\ .*type.*\ a\ new\ name,\ or\ press\ .*q.*\ to\ quit\.              ]]
+  [[ "${lines[9]}"  =~  \
+Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*branch-name-from-prompt.*\) ]]
+
+  diff                                                    \
+    <(git -C "${NB_DIR}/Example Notebook" ls-remote       \
+        --heads "${_GIT_REMOTE_URL}"                      \
+        | sed "s/.*\///g" || :)                           \
+    <(printf "branch-name-from-prompt\\nmaster\\n")
+
+  declare _sample_hashes=()
+  _sample_hashes=($("${_NB}" git rev-list origin/branch-name-from-prompt))
+
+  [[ "${#_example_hashes[@]}" -eq 2                       ]]
+  [[ "${#_sample_hashes[@]}"  -eq 2                       ]]
+
+  ! _contains "${_example_hashes[0]}" "${_sample_hashes[@]}"
+  ! _contains "${_example_hashes[1]}" "${_sample_hashes[@]}"
+}
+
+@test "'remote set' with unrelated histories displays prompt and creates new orphan branch named after notebook." {
+  {
+    _setup_remote_repo
+
+    "${_NB}" init "${_GIT_REMOTE_URL}"
+
+    "${_NB}" notebooks rename "home" "Example Notebook"
+
+    [[ !  -e "${NB_DIR}/home"                             ]]
+    [[    -d "${NB_DIR}/Example Notebook/.git"            ]]
+
+    "${_NB}" add "Example File.md" --content "Example content."
+
+    "${_NB}" sync
+
+  diff                                                    \
+    <(git -C "${NB_DIR}/Example Notebook" ls-remote       \
+        --heads "${_GIT_REMOTE_URL}"                      \
+        | sed "s/.*\///g" || :)                           \
+    <(printf "master\\n")
+
+    declare _example_hashes=()
+    _example_hashes=($("${_NB}" git rev-list origin/master))
+
+    "${_NB}" notebooks add "Sample Notebook"
+    "${_NB}" notebooks use "Sample Notebook"
+
+    "${_NB}" add "Sample File.md" --content "Sample content."
+  }
+
+  run "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}3${_NEWLINE}${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                                                 ]]
+
+  [[ "${lines[0]}"  =~  Adding\ remote\ to:\ .*Sample\ Notebook           ]]
+  [[ "${lines[1]}"  =~  [^-]---------------------------------[^-]         ]]
+  [[ "${lines[2]}"  =~  URL:\ \ \ \ .*${_GIT_REMOTE_URL}                  ]]
+  [[ "${lines[3]}"  =~  Branch:\ .*master                                 ]]
+  [[ "${lines[4]}"  =~  [^-]--------------[^-]                            ]]
+  [[ "${lines[5]}"  =~  Remote\ branch\ has\ existing\ history:\ .*master ]]
+  [[ "${lines[6]}"  =~  \
+.*\[.*1.*\].*\ Merge\ and\ sync\ with\ the\ existing\ remote\ branch\:\ .*master  ]]
+  [[ "${lines[7]}"  =~  \
+.*\[.*2.*\].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.                ]]
+  [[ "${lines[8]}"  =~  \
+Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\             ]]
+  [[ "${lines[8]}"  =~  \
+name,\ .*type.*\ a\ new\ name,\ or\ press\ .*q.*\ to\ quit\.              ]]
+  [[ "${lines[9]}"  =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*sample-notebook.*\)         ]]
 
   diff                                                    \
@@ -879,6 +972,10 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
   [[ "${lines[7]}"  =~  \
 .*[.*2.*].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.        ]]
   [[ "${lines[8]}"  =~  \
+Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\           ]]
+  [[ "${lines[8]}"  =~  \
+name,\ .*type.*\ a\ new\ name,\ or\ press\ .*q.*\ to\ quit\.            ]]
+  [[ "${lines[9]}"  =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*example.*\)               ]]
 
   diff                                                                  \
@@ -1002,6 +1099,10 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)              ]]
   [[ "${lines[7]}"  =~  \
 .*[.*2.*].*\ Sync\ as\ a\ new\ orphan\ branch\ on\ the\ remote\.      ]]
   [[ "${lines[8]}"  =~  \
+Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\         ]]
+  [[ "${lines[8]}"  =~  \
+name,\ .*type.*\ a\ new\ name,\ or\ press\ .*q.*\ to\ quit\.          ]]
+  [[ "${lines[9]}"  =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*example.*\)             ]]
 
   diff                  \
