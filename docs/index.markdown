@@ -4528,6 +4528,47 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
   <a href="#plugins-1">plugins</a>
 </p>
 
+<p align="center">
+  <a href="#add">add</a> •
+  <a href="#archive">archive</a> •
+  <a href="#bookmark">bookmark</a> •
+  <a href="#browse">browse</a> •
+  <a href="#completions">completions</a> •
+  <a href="#count">count</a> •
+  <a href="#delete">delete</a> •
+  <a href="#edit">edit</a> •
+  <a href="#env">env</a> •
+  <a href="#export">export</a> •
+  <a href="#git">git</a> •
+  <a href="#help-1">help</a> •
+  <a href="#history">history</a> •
+  <a href="#import">import</a> •
+  <a href="#init">init</a> •
+  <a href="#list">list</a> •
+  <a href="#ls">ls</a> •
+  <a href="#move">move</a> •
+  <a href="#notebooks">notebooks</a> •
+  <a href="#open">open</a> •
+  <a href="#peek">peek</a> •
+  <a href="#pin">pin</a> •
+  <a href="#plugins">plugins</a> •
+  <a href="#remote">remote</a> •
+  <a href="#run">run</a> •
+  <a href="#search">search</a> •
+  <a href="#settings">settings</a> •
+  <a href="#shell">shell</a> •
+  <a href="#show">show</a> •
+  <a href="#status">status</a> •
+  <a href="#subcommands-1">subcommands</a> •
+  <a href="#sync">sync</a> •
+  <a href="#unarchive">unarchive</a> •
+  <a href="#unpin">unpin</a> •
+  <a href="#unset">unset</a> •
+  <a href="#update">update</a> •
+  <a href="#use">use</a> •
+  <a href="#version">version</a>
+</p>
+
 #### `nb help`
 
 ```text
