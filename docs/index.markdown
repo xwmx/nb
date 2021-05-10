@@ -5844,7 +5844,7 @@ Subcommands:
   set           Set the remote URL and branch for the notebook.
 
 Description:
-  Get, set, and remove a notebook's remote repository URL and branch.
+  Configure the remote repository URL and branch for the current notebook.
 
 See Also:
   nb help notebooks
@@ -5854,6 +5854,7 @@ See Also:
 Examples:
   nb remote set https://github.com/example/example.git
   nb remote remove
+  nb example-notebook:remote set https://github.com/example/example.git
 ```
 
 #### `run`

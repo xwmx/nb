@@ -18637,7 +18637,7 @@ $(_color_primary "Subcommands"):
   set           Set the remote URL and branch for the notebook.
 
 $(_color_primary "Description"):
-  Get, set, and remove a notebook's remote repository URL and branch.
+  Configure the remote repository URL and branch for the current notebook.
 
 $(_color_primary "See Also"):
   ${_ME} help notebooks
@@ -18647,6 +18647,7 @@ $(_color_primary "See Also"):
 $(_color_primary "Examples"):
   ${_ME} remote set https://github.com/example/example.git
   ${_ME} remote remove
+  ${_ME} example-notebook:remote set https://github.com/example/example.git
 HEREDOC
 }
 _remote() {
