@@ -4761,6 +4761,8 @@ More Information:
 
 #### `bookmark help`
 
+See also: [Bookmarks](#-bookmarks)
+
 ```text
     __                __                        __
    / /_  ____  ____  / /______ ___  ____ ______/ /__
@@ -4997,7 +4999,7 @@ Shortcut Alias: `nb ar`
 
 #### `bookmark`
 
-See also: [Bookmarks](#archiving-notebooks), [Browsing](#-browsing)
+See also: [Bookmarks](#-bookmarks), [Browsing](#-browsing)
 
 ```text
 Usage:
@@ -5283,6 +5285,8 @@ Shortcut Alias: `nb e`
 ```
 
 #### `env`
+
+See also: [Installation](#installation)
 
 ```text
 Usage:
@@ -7037,7 +7041,7 @@ Description:
 
 Any folder may contain an optional plain text file named `.pindex`
 containing a list of basenames from that folder, one per line, that should
-be treated as "[pinned](#-pinning)", meaning they appear first in some
+be treated as [pinned](#-pinning), meaning they appear first in some
 list operations, including `nb` and `nb ls`. Entires are added to a
 `.pindex` file with [`nb pin`](#pin) and removed with [`nb unpin`](#unpin).
 
