@@ -4853,6 +4853,15 @@ Description:
     3. https://en.wikipedia.org/wiki/W3m
     4. https://en.wikipedia.org/wiki/Lynx_(web_browser)
 
+Read More:
+  https://github.com/xwmx/nb#-bookmarks
+
+See Also:
+  nb help browse
+  nb help open
+  nb help peek
+  nb help show
+
 Examples:
   bookmark https://example.com
   bookmark https://example.com --encrypt
@@ -4958,6 +4967,9 @@ Description:
   note with AES-256 using OpenSSL by default, or GPG, if configured in
   `nb set encryption_tool`.
 
+Read More:
+  https://github.com/xwmx/nb#adding
+
 See Also:
   nb help browse
 
@@ -4997,6 +5009,9 @@ Description:
   Set the current notebook or notebook <name> to "archived" status.
 
   This is an alias for `nb notebooks archive`.
+
+Read More:
+  https://github.com/xwmx/nb#archiving-notebooks
 
 See Also:
   nb help notebooks
@@ -5090,6 +5105,9 @@ Description:
     3. https://en.wikipedia.org/wiki/W3m
     4. https://en.wikipedia.org/wiki/Links_(web_browser)
     5. https://en.wikipedia.org/wiki/Lynx_(web_browser)
+
+Read More:
+  https://github.com/xwmx/nb#-bookmarks
 
 See Also:
   nb help browse
@@ -5187,6 +5205,9 @@ Description:
     4. https://nmap.org/ncat/
     5. https://pandoc.org/
 
+Read More:
+  https://github.com/xwmx/nb#-browsing
+
 See Also:
   nb help add
   nb help delete
@@ -5224,7 +5245,9 @@ Options:
   -d, --download  Download the completion scripts and install.
 
 Description:
-  Manage completion scripts. For more information, visit:
+  Manage completion scripts.
+
+Read More:
   https://github.com/xwmx/nb/blob/master/etc/README.md
 ```
 
@@ -5255,6 +5278,9 @@ Options:
 
 Description:
   Delete one or more items.
+
+Read More:
+  https://github.com/xwmx/nb#deleting
 
 See Also:
   nb help browse
@@ -5305,6 +5331,9 @@ Description:
   Non-text files are opened in your system's preferred app or program for
   that file type.
 
+Read More:
+  https://github.com/xwmx/nb#editing
+
 See Also:
   nb help browse
 
@@ -5339,6 +5368,9 @@ Subcommands:
 Description:
   Print program environment and configuration information, or install
   dependencies.
+
+Read More:
+  https://github.com/xwmx/nb#installation
 ```
 
 #### `export`
@@ -5375,6 +5407,9 @@ Description:
   See the Pandoc help information for available options.
 
     1. https://pandoc.org/
+
+Read More:
+  https://github.com/xwmx/nb#%EF%B8%8F-import--export
 
 See Also:
   nb help import
@@ -5416,6 +5451,10 @@ Subcommands:
 
 Description:
   Run `git` commands within the current notebook directory.
+
+Read More:
+  https://github.com/xwmx/nb#-git-sync
+  https://github.com/xwmx/nb#-revision-history
 
 See Also:
   nb help history
@@ -5479,6 +5518,10 @@ Description:
 
     1. https://github.com/jonas/tig
 
+Read More:
+  https://github.com/xwmx/nb#-revision-history
+  https://github.com/xwmx/nb#-git-sync
+
 See Also:
   nb help git
   nb help remote
@@ -5521,6 +5564,9 @@ Subcommands:
 Description:
   Copy, move, or download files into the current notebook or import
   a local notebook to make it global.
+
+Read More:
+  https://github.com/xwmx/nb#%EF%B8%8F-import--export
 
 See Also:
   nb help export
@@ -5607,6 +5653,9 @@ Description:
   are searched for any that match <query> as a case-insensitive regular
   expression.
 
+Read More:
+  https://github.com/xwmx/nb#listing--filtering
+
 Indicators:
   🔉  Audio
   📖  Book
@@ -5692,6 +5741,9 @@ Description:
 
   Options are passed through to `list`. For more information, see
   `nb help list`.
+
+Read More:
+  https://github.com/xwmx/nb#listing--filtering
 
 Indicators:
   🔉  Audio
@@ -5867,6 +5919,9 @@ Subcommands:
 Description:
   Manage notebooks.
 
+Read More:
+  https://github.com/xwmx/nb#-notebooks
+
 See Also:
   nb help archive
   nb help history
@@ -5905,6 +5960,15 @@ Description:
   or any other file type, `open` is the equivalent of `edit`. `open`
   with a notebook opens the notebook folder in the system's file browser.
 
+Read More:
+  https://github.com/xwmx/nb#viewing-bookmarks
+
+See also:
+  nb help bookmark
+  nb help browse
+  nb help peek
+  nb help show
+
 Examples:
   nb open 3
   nb open example.bookmark.md
@@ -5916,12 +5980,6 @@ Examples:
   nb 3 o
   nb o example:12
   nb example:12 o
-
-See also:
-  nb help bookmark
-  nb help browse
-  nb help peek
-  nb help show
 
 Shortcut Alias: `nb o`
 ```
@@ -5950,6 +6008,15 @@ Description:
     2. https://en.wikipedia.org/wiki/Midnight_Commander
     3. https://github.com/ogham/exa
 
+Read More:
+  https://github.com/xwmx/nb#viewing-bookmarks
+
+See also:
+  nb help bookmark
+  nb help browse
+  nb help open
+  nb help show
+
 Examples:
   nb peek 3
   nb peek example.bookmark.md
@@ -5961,12 +6028,6 @@ Examples:
   nb 3 p
   nb p example:12
   nb example:12 p
-
-See also:
-  nb help bookmark
-  nb help browse
-  nb help open
-  nb help show
 
 Alias: `nb preview`
 Shortcut Alias: `nb p`
@@ -5987,6 +6048,9 @@ Usage:
 
 Description:
   Pin an item so it appears first in lists.
+
+Read More:
+  https://github.com/xwmx/nb#-pinning
 
 See Also:
   nb help browse
@@ -6021,6 +6085,9 @@ Subcommands:
 
 Description:
   Manage plugins and themes.
+
+Read More:
+  https://github.com/xwmx/nb#-plugins
 
 Plugin Extensions:
   .nb-theme   Plugins defining color themes.
@@ -6059,6 +6126,10 @@ Subcommands:
 
 Description:
   Configure the remote repository URL and branch for the current notebook.
+
+Read More:
+  https://github.com/xwmx/nb#-git-sync
+  https://github.com/xwmx/nb#-revision-history
 
 See Also:
   nb help history
@@ -6136,6 +6207,9 @@ Description:
     4. `ack`   https://beyondgrep.com/
     5. `grep`  https://en.wikipedia.org/wiki/Grep
 
+Read More:
+  https://github.com/xwmx/nb#-search
+
 See Also:
   nb help browse
   nb help list
@@ -6209,6 +6283,9 @@ Description:
 
     nb set color_theme blacklight
     nb set limit 40
+
+Read More:
+  https://github.com/xwmx/nb#%EF%B8%8F-set--settings
 
 See Also:
   nb help unset
@@ -6477,6 +6554,9 @@ Description:
 
   When <subcommand> is present, the command will run as the shell is opened.
 
+Read More:
+  https://github.com/xwmx/nb#-nb-interactive-shell
+
 Example:
   $ nb shell
   nb> ls 3
@@ -6570,6 +6650,9 @@ Description:
     6. http://www.andre-simon.de/doku/highlight/en/highlight.php
     7. https://pygments.org/
 
+Read More:
+  https://github.com/xwmx/nb#viewing
+
 See Also:
   nb help browse
   nb help open
@@ -6611,6 +6694,10 @@ Usage:
 Description:
   Print archival, git, and remote status for the current notebook or <notebook>.
 
+Read More:
+  https://github.com/xwmx/nb#-git-sync
+  https://github.com/xwmx/nb#-revision-history
+
 See Also:
   nb help archive
   nb help history
@@ -6649,6 +6736,9 @@ Description:
   List, add, alias, and describe subcommands. New subcommands, aliases, and
   descriptions are not persisted, so `add`, `alias`, `describe` are
   primarily for plugins.
+
+Read More:
+  https://github.com/xwmx/nb#-plugins
 
 See Also:
   nb help plugins
@@ -6698,6 +6788,10 @@ Sync Conflict Resolution:
   More Information:
     https://github.com/xwmx/nb#sync-conflict-resolution
 
+Read More:
+  https://github.com/xwmx/nb#-git-sync
+  https://github.com/xwmx/nb#-revision-history
+
 See Also:
   nb help history
   nb help notebooks
@@ -6725,6 +6819,9 @@ Description:
   Remove "archived" status from the current notebook or notebook <name>.
 
   This is an alias for `nb notebooks unarchive`.
+
+Read More:
+  https://github.com/xwmx/nb#archiving-notebooks
 
 See Also:
   nb help archive
@@ -6754,6 +6851,9 @@ Usage:
 Description:
   Unpin a pinned item.
 
+Read More:
+  https://github.com/xwmx/nb#-pinning
+
 See Also:
   nb help browse
   nb help list
@@ -6780,6 +6880,9 @@ Description:
 
   This is an alias for `nb settings unset`.
 
+Read More:
+  https://github.com/xwmx/nb#%EF%B8%8F-set--settings
+
 See Also:
   nb help settings
 
@@ -6805,6 +6908,9 @@ Description:
   If `nb` was installed using a package manager like npm or
   Homebrew, use the package manager's upgrade functionality instead
   of this command.
+
+Read More:
+  https://github.com/xwmx/nb#installation
 ```
 
 #### `use`
@@ -6819,6 +6925,9 @@ Usage:
 
 Description:
   Switch to the specified notebook. Shortcut for `nb notebooks use`.
+
+Read More:
+  https://github.com/xwmx/nb#-notebooks
 
 See Also:
   nb help notebooks

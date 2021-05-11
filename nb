@@ -2859,6 +2859,10 @@ $(_color_primary "Subcommands"):
 $(_color_primary "Description"):
   Run \`git\` commands within the current notebook directory.
 
+$(_color_primary "Read More"):
+  ${_README_URL}#-git-sync
+  ${_README_URL}#-revision-history
+
 $(_color_primary "See Also"):
   ${_ME} help history
   ${_ME} help remote
@@ -3378,6 +3382,8 @@ HEREDOC
 }
 
 # help · ############################################################### · help
+
+export _README_URL="https://github.com/xwmx/nb"
 
 _describe_help() {
   cat <<HEREDOC
@@ -4426,6 +4432,9 @@ $(_color_primary "Description"):
   are searched for any that match <query> as a case-insensitive regular
   expression.
 
+$(_color_primary "Read More"):
+  ${_README_URL}#listing--filtering
+
 $(_color_primary "Indicators"):
   ${_NB_INDICATOR_AUDIO:-} Audio
   ${_NB_INDICATOR_EBOOK:-} Book
@@ -4435,6 +4444,7 @@ $(_color_primary "Indicators"):
   ${_NB_INDICATOR_IMAGE:-} Image
   ${_NB_INDICATOR_DOCUMENT:-} PDF, Word, or Open Office document
   ${_NB_INDICATOR_VIDEO:-} Video
+
 
 $(_color_primary "See Also"):
   ${_ME} help browse
@@ -5401,6 +5411,9 @@ $(_color_primary "Description"):
   Options are passed through to \`list\`. For more information, see
   \`${_ME} help list\`.
 
+$(_color_primary "Read More"):
+  ${_README_URL}#listing--filtering
+
 $(_color_primary "Indicators"):
   ${_NB_INDICATOR_AUDIO:-} Audio
   ${_NB_INDICATOR_EBOOK:-} Book
@@ -6211,6 +6224,9 @@ $(_color_primary "Subcommands"):
 
 $(_color_primary "Description"):
   Manage notebooks.
+
+$(_color_primary "Read More"):
+  ${_README_URL}#-notebooks
 
 $(_color_primary "See Also"):
   ${_ME} help archive
@@ -7737,6 +7753,9 @@ $(_color_primary "Description"):
   List, add, alias, and describe subcommands. New subcommands, aliases, and
   descriptions are not persisted, so \`add\`, \`alias\`, \`describe\` are
   primarily for plugins.
+
+$(_color_primary "Read More"):
+  ${_README_URL}#-plugins
 
 $(_color_primary "See Also"):
   ${_ME} help plugins
@@ -10450,6 +10469,9 @@ $(_color_primary "Description"):
   note with AES-256 using OpenSSL by default, or GPG, if configured in
   \`${_ME} set encryption_tool\`.
 
+$(_color_primary "Read More"):
+  ${_README_URL}#adding
+
 $(_color_primary "See Also"):
   ${_ME} help browse
 
@@ -11021,6 +11043,9 @@ $(_color_primary "Description"):
     3. https://en.wikipedia.org/wiki/W3m
     4. https://en.wikipedia.org/wiki/Links_(web_browser)
     5. https://en.wikipedia.org/wiki/Lynx_(web_browser)
+
+$(_color_primary "Read More"):
+  ${_README_URL}#-bookmark
 
 $(_color_primary "See Also"):
   ${_ME} help browse
@@ -11708,7 +11733,9 @@ $(_color_primary "Options"):
   -d, --download  Download the completion scripts and install.
 
 $(_color_primary "Description"):
-  Manage completion scripts. For more information, visit:
+  Manage completion scripts.
+
+$(_color_primary "Read More"):
   https://github.com/${_REPO}/blob/${_REPO_MAIN_BRANCH}/etc/README.md
 HEREDOC
 }
@@ -11972,6 +11999,9 @@ $(_color_primary "Options"):
 $(_color_primary "Description"):
   Delete one or more items.
 
+$(_color_primary "Read More"):
+  ${_README_URL}#deleting
+
 $(_color_primary "See Also"):
   ${_ME} help browse
 
@@ -12156,6 +12186,9 @@ $(_color_primary "Description"):
 
   Non-text files are opened in your system's preferred app or program for
   that file type.
+
+$(_color_primary "Read More"):
+  ${_README_URL}#editing
 
 $(_color_primary "See Also"):
   ${_ME} help browse
@@ -12378,6 +12411,9 @@ $(_color_primary "Subcommands"):
 $(_color_primary "Description"):
   Print program environment and configuration information, or install
   dependencies.
+
+$(_color_primary "Read More"):
+  ${_README_URL}#installation
 HEREDOC
 }
 _env() {
@@ -12624,6 +12660,9 @@ $(_color_primary "Description"):
 
     1. https://pandoc.org/
 
+$(_color_primary "Read More"):
+  ${_README_URL}#%EF%B8%8F-import--export
+
 $(_color_primary "See Also"):
   ${_ME} help import
 
@@ -12789,6 +12828,10 @@ $(_color_primary "Description"):
 
     1. https://github.com/jonas/tig
 
+$(_color_primary "Read More"):
+  ${_README_URL}#-revision-history
+  ${_README_URL}#-git-sync
+
 $(_color_primary "See Also"):
   ${_ME} help git
   ${_ME} help remote
@@ -12884,6 +12927,9 @@ $(_color_primary "Subcommands"):
 $(_color_primary "Description"):
   Copy, move, or download files into the current notebook or import
   a local notebook to make it global.
+
+$(_color_primary "Read More"):
+  ${_README_URL}#%EF%B8%8F-import--export
 
 $(_color_primary "See Also"):
   ${_ME} help export
@@ -13496,6 +13542,15 @@ $(_color_primary "Description"):
   or any other file type, \`open\` is the equivalent of \`edit\`. \`open\`
   with a notebook opens the notebook folder in the system's file browser.
 
+$(_color_primary "Read More"):
+  ${_README_URL}#viewing-bookmarks
+
+$(_color_primary "See also"):
+  ${_ME} help bookmark
+  ${_ME} help browse
+  ${_ME} help peek
+  ${_ME} help show
+
 $(_color_primary "Examples"):
   ${_ME} open 3
   ${_ME} open example.bookmark.md
@@ -13507,12 +13562,6 @@ $(_color_primary "Examples"):
   ${_ME} 3 o
   ${_ME} o example:12
   ${_ME} example:12 o
-
-$(_color_primary "See also"):
-  ${_ME} help bookmark
-  ${_ME} help browse
-  ${_ME} help peek
-  ${_ME} help show
 
 $(_color_primary "Shortcut Alias"): \`${_ME} o\`
 HEREDOC
@@ -13546,6 +13595,15 @@ $(_color_primary "Description"):
     3. https://vifm.info/
     4. https://github.com/ogham/exa
 
+$(_color_primary "Read More"):
+  ${_README_URL}#viewing-bookmarks
+
+$(_color_primary "See also"):
+  ${_ME} help bookmark
+  ${_ME} help browse
+  ${_ME} help open
+  ${_ME} help show
+
 $(_color_primary "Examples"):
   ${_ME} peek 3
   ${_ME} peek example.bookmark.md
@@ -13557,12 +13615,6 @@ $(_color_primary "Examples"):
   ${_ME} 3 p
   ${_ME} p example:12
   ${_ME} example:12 p
-
-$(_color_primary "See also"):
-  ${_ME} help bookmark
-  ${_ME} help browse
-  ${_ME} help open
-  ${_ME} help show
 
 $(_color_primary "Alias"): \`${_ME} preview\`
 $(_color_primary "Shortcut Alias"): \`${_ME} p\`
@@ -13588,6 +13640,9 @@ $(_color_primary "Usage"):
 
 $(_color_primary "Description"):
   Pin an item so it appears first in lists.
+
+$(_color_primary "Read More"):
+  ${_README_URL}#-pinning
 
 $(_color_primary "See Also"):
   ${_ME} help browse
@@ -13756,6 +13811,9 @@ $(_color_primary "Description"):
     3. \`ag\`    https://github.com/ggreer/the_silver_searcher
     4. \`ack\`   https://beyondgrep.com/
     5. \`grep\`  https://en.wikipedia.org/wiki/Grep
+
+$(_color_primary "Read More"):
+  ${_README_URL}#-search
 
 $(_color_primary "See Also"):
   ${_ME} help browse
@@ -14937,6 +14995,9 @@ $(_color_primary "Description"):
     6. http://www.andre-simon.de/doku/highlight/en/highlight.php
     7. https://pygments.org/
 
+$(_color_primary "Read More"):
+  ${_README_URL}#viewing
+
 $(_color_primary "See Also"):
   ${_ME} help browse
   ${_ME} help open
@@ -15734,6 +15795,9 @@ $(_color_primary "Usage"):
 $(_color_primary "Description"):
   Unpin a pinned item.
 
+$(_color_primary "Read More"):
+  ${_README_URL}#-pinning
+
 $(_color_primary "See Also"):
   ${_ME} help browse
   ${_ME} help list
@@ -15758,6 +15822,9 @@ $(_color_primary "Usage"):
 
 $(_color_primary "Description"):
   Switch to the specified notebook. Shortcut for \`${_ME} notebooks use\`.
+
+$(_color_primary "Read More"):
+  ${_README_URL}#-notebooks
 
 $(_color_primary "See Also"):
   ${_ME} help notebooks
@@ -15817,6 +15884,9 @@ $(_color_primary "Description"):
   Set the current notebook or notebook <name> to "archived" status.
 
   This is an alias for \`${_ME} notebooks archive\`.
+
+$(_color_primary "Read More"):
+  ${_README_URL}#archiving-notebooks
 
 $(_color_primary "See Also"):
   ${_ME} help notebooks
@@ -15895,6 +15965,9 @@ $(_color_primary "Description"):
     3. https://en.wikipedia.org/wiki/Lynx_(web_browser)
     4. https://nmap.org/ncat/
     5. https://pandoc.org/
+
+$(_color_primary "Read More"):
+  ${_README_URL}#-browsing
 
 $(_color_primary "See Also"):
   ${_ME} help add
@@ -18474,6 +18547,9 @@ $(_color_primary "Subcommands"):
 $(_color_primary "Description"):
   Manage plugins and themes.
 
+$(_color_primary "Read More"):
+  ${_README_URL}#-plugins
+
 $(_color_primary "Plugin Extensions"):
   .nb-theme   Plugins defining color themes.
   .nb-plugin  Plugins defining new subcommands and functionality.
@@ -18689,6 +18765,10 @@ $(_color_primary "Subcommands"):
 
 $(_color_primary "Description"):
   Configure the remote repository URL and branch for the current notebook.
+
+$(_color_primary "Read More"):
+  ${_README_URL}#-git-sync
+  ${_README_URL}#-revision-history
 
 $(_color_primary "See Also"):
   ${_ME} help history
@@ -19449,6 +19529,9 @@ $(_color_primary "Description"):
     ${_ME} set color_theme blacklight
     ${_ME} set limit 40
 
+$(_color_primary "Read More"):
+  ${_README_URL}#%EF%B8%8F-set--settings
+
 $(_color_primary "See Also"):
   ${_ME} help unset
 
@@ -20184,6 +20267,9 @@ $(_color_primary "Description"):
 
   When <subcommand> is present, the command will run as the shell is opened.
 
+$(_color_primary "Read More"):
+  ${_README_URL}#-nb-interactive-shell
+
 $(_color_primary "Example"):
   $ ${_ME} shell
   ${_ME}> ls 3
@@ -20314,6 +20400,10 @@ $(_color_primary "Usage"):
 $(_color_primary "Description"):
   Print archival, git, and remote status for the current notebook or <notebook>.
 
+$(_color_primary "Read More"):
+  ${_README_URL}#-git-sync
+  ${_README_URL}#-revision-history
+
 $(_color_primary "See Also"):
   ${_ME} help archive
   ${_ME} help history
@@ -20409,7 +20499,7 @@ $(_color_primary "Private Repositories and Git Credentials"):
   For repositories cloned over SSH, keys can be added to the ssh-agent.
 
   More Information:
-    https://github.com/xwmx/nb#private-repositories-and-git-credentials
+    ${_README_URL}#private-repositories-and-git-credentials
 
 $(_color_primary "Sync Conflict Resolution"):
   When \`${_ME} sync\` encounters a conflict in a text file and can't merge
@@ -20423,7 +20513,11 @@ $(_color_primary "Sync Conflict Resolution"):
   the filename.
 
   More Information:
-    https://github.com/xwmx/nb#sync-conflict-resolution
+    ${_README_URL}#sync-conflict-resolution
+
+$(_color_primary "Read More"):
+  ${_README_URL}#-git-sync
+  ${_README_URL}#-revision-history
 
 $(_color_primary "See Also"):
   ${_ME} help history
@@ -20522,7 +20616,7 @@ Reason unknown, but likely one of the following:
 - Misconfigured remote URL.
 
 Configuring Git Credentials:
-  https://github.com/xwmx/nb#private-repositories-and-git-credentials
+  ${_README_URL}#private-repositories-and-git-credentials
 HEREDOC
     fi
   done && ((_syncable_count)) && _sync_successful=1
@@ -20607,6 +20701,9 @@ $(_color_primary "Description"):
 
   This is an alias for \`${_ME} notebooks unarchive\`.
 
+$(_color_primary "Read More"):
+  ${_README_URL}#archiving-notebooks
+
 $(_color_primary "See Also"):
   ${_ME} help archive
   ${_ME} help notebooks
@@ -20635,6 +20732,9 @@ $(_color_primary "Description"):
   Unset a setting, returning it to the default value.
 
   This is an alias for \`${_ME} settings unset\`.
+
+$(_color_primary "Read More"):
+  ${_README_URL}#%EF%B8%8F-set--settings
 
 $(_color_primary "See Also"):
   ${_ME} help settings
@@ -20669,6 +20769,9 @@ $(_color_primary "Description"):
   If \`${_ME}\` was installed using a package manager like npm or
   Homebrew, use the package manager's upgrade functionality instead
   of this command.
+
+$(_color_primary "Read More"):
+  ${_README_URL}#installation
 HEREDOC
 }
 _update() {
