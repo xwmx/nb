@@ -5997,7 +5997,7 @@ Examples:
 
 [↑](#help) · See also:
 [Plugins](#-plugins),
-[`subcommands`](#subcommands)
+[`subcommands`](#subcommands-1)
 
 ```text
 Usage:
