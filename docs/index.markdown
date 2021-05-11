@@ -4911,7 +4911,7 @@ For more information, see: `nb help`.
 
 #### `add`
 
-[↑](#help) · See also: [Adding](#adding)
+[↑](#help) · See also: [Adding](#adding), [`browse`](#browse)
 
 ```text
 Usage:
@@ -4980,7 +4980,11 @@ Shortcut Aliases: `nb a`, `nb +`
 
 #### `archive`
 
-[↑](#help) · See also: [Archiving Notebooks](#archiving-notebooks)
+[↑](#help) · See also:
+[Archiving Notebooks](#archiving-notebooks),
+[`notebooks`](#notebooks),
+[`status`](#status),
+[`unarchive`](#unarchive)
 
 ```text
 Usage:
@@ -5005,7 +5009,12 @@ Shortcut Alias: `nb ar`
 
 #### `bookmark`
 
-[↑](#help) · See also: [Bookmarks](#-bookmarks), [Browsing](#-browsing)
+[↑](#help) · See also:
+[Bookmarks](#-bookmarks),
+[`browse`](#browse),
+[`open`](#open),
+[`peek`](#peek),
+[`show`](#show)
 
 ```text
 Usage:
@@ -5103,7 +5112,11 @@ Shortcut Alias: `nb bk`
 
 #### `browse`
 
-[↑](#help) · See also: [Browsing](#-browsing)
+[↑](#help) · See also:
+[Browsing](#-browsing),
+[`open`](#open),
+[`peek`](#peek),
+[`show`](#show)
 
 ```text
 Usage:
@@ -5181,7 +5194,8 @@ Shortcut Alias: `nb br`
 
 #### `completions`
 
-[↑](#help) · See also: [Tab Completion](https://github.com/xwmx/nb/tree/master/etc)
+[↑](#help) · See also:
+[Tab Completion](https://github.com/xwmx/nb/tree/master/etc)
 
 ```text
 Usage:
@@ -5210,7 +5224,7 @@ Description:
 
 #### `delete`
 
-[↑](#help) · See also: [Deleting](#deleting)
+[↑](#help) · See also: [Deleting](#deleting), [`browse`](#browse)
 
 ```text
 Usage:
@@ -5244,7 +5258,7 @@ Shortcut Aliases: `nb d`, `nb -`
 
 #### `edit`
 
-[↑](#help) · See also: [Editing](#editing)
+[↑](#help) · See also: [Editing](#editing), [`browse`](#browse)
 
 ```text
 Usage:
@@ -5310,7 +5324,9 @@ Description:
 
 #### `export`
 
-[↑](#help) · See also: [Import / Export](#%EF%B8%8F-import--export)
+[↑](#help) · See also:
+[Import / Export](#%EF%B8%8F-import--export),
+[`import`](#import)
 
 ```text
 Usage:
@@ -5439,7 +5455,9 @@ Examples:
 
 #### `import`
 
-[↑](#help) · See also: [Import / Export](#%EF%B8%8F-import--export)
+[↑](#help) · See also:
+[Import / Export](#%EF%B8%8F-import--export),
+[`export`](#export)
 
 ```text
 Usage:
@@ -5505,7 +5523,9 @@ Examples:
 
 #### `list`
 
-[↑](#help) · See also: [Listing & Filtering](#listing--filtering)
+[↑](#help) · See also:
+[Listing & Filtering](#listing--filtering),
+[`ls`](#ls)
 
 ```text
 Usage:
@@ -5566,7 +5586,9 @@ Examples:
 
 #### `ls`
 
-[↑](#help) · See also: [Listing & Filtering](#listing--filtering)
+[↑](#help) · See also:
+[Listing & Filtering](#listing--filtering),
+[`list`](#list)
 
 ```text
 Usage:
@@ -5694,7 +5716,14 @@ Shortcut Alias: `nb mv`
 
 #### `notebooks`
 
-[↑](#help) · See also: [Notebooks](#-notebooks)
+[↑](#help) · See also:
+[Notebooks](#-notebooks),
+[`archive`](#archive),
+[`remote`](#remote),
+[`status`](#status),
+[`sync`](#sync),
+[`unarchive`](#unarchive),
+[`use`](#use)
 
 ```text
 Usage:
@@ -5798,7 +5827,12 @@ Shortcut Aliases: `nb n`, `nb nb`
 
 #### `open`
 
-[↑](#help) · See also: [Viewing Bookmarks](#viewing-bookmarks)
+[↑](#help) · See also:
+[Viewing Bookmarks](#viewing-bookmarks),
+[`bookmark`](#bookmark),
+[`browse`](#browse),
+[`peek`](#peek),
+[`show`](#show)
 
 ```text
 Usage:
@@ -5833,7 +5867,12 @@ Shortcut Alias: `nb o`
 
 #### `peek`
 
-[↑](#help) · See also: [Viewing Bookmarks](#viewing-bookmarks)
+[↑](#help) · See also:
+[Viewing Bookmarks](#viewing-bookmarks),
+[`bookmark`](#bookmark),
+[`browse`](#browse),
+[`peek`](#open),
+[`show`](#show)
 
 ```text
 Usage:
@@ -5874,7 +5913,7 @@ Shortcut Alias: `nb p`
 
 #### `pin`
 
-[↑](#help) · See also: [Pinning](#-pinning)
+[↑](#help) · See also: [Pinning](#-pinning), [`unpin`](#unpin)
 
 ```text
 Usage:
@@ -5919,7 +5958,11 @@ Plugin Extensions:
 
 #### `remote`
 
-[↑](#help) · See also: [Git Sync](#-git-sync)
+[↑](#help) · See also:
+[Git Sync](#-git-sync),
+[`notebooks`](#notebooks),
+[`status`](#status),
+[`sync`](#sync)
 
 ```text
 Usage:
@@ -6044,7 +6087,9 @@ Shortcut Alias: `nb q`
 
 #### `settings`
 
-[↑](#help) · See also: [`set` & `settings`](#%EF%B8%8F-set--settings)
+[↑](#help) · See also:
+[`set` & `settings`](#%EF%B8%8F-set--settings),
+[`unset`](#unset)
 
 ```text
 Usage:
@@ -6363,7 +6408,11 @@ Example:
 
 #### `show`
 
-[↑](#help) · See also: [Viewing](#viewing)
+[↑](#help) · See also:
+[Viewing](#viewing),
+[`browse`](#browse),
+[`open`](#open),
+[`peek`](#peek)
 
 ```text
 Usage:
@@ -6459,7 +6508,14 @@ Shortcut Alias: `nb s`
 
 #### `status`
 
-[↑](#help) · See also: [Git Sync](#-git-sync), [Notebooks](#-notebooks)
+[↑](#help) · See also:
+[Git Sync](#-git-sync),
+[`archive`](#archive),
+[`notebooks`](#notebooks),
+[`remote`](#remote),
+[`status`](#status),
+[`sync`](#sync),
+[`unarchive`](#unarchive)
 
 ```text
 Usage:
@@ -6508,7 +6564,11 @@ Description:
 
 #### `sync`
 
-[↑](#help) · See also: [Git Sync](#-git-sync)
+[↑](#help) · See also:
+[Git Sync](#-git-sync),
+[`notebooks`](#notebooks),
+[`remote`](#remote),
+[`status`](#status)
 
 ```text
 Usage:
@@ -6556,7 +6616,11 @@ Examples:
 
 #### `unarchive`
 
-[↑](#help) · See also: [Archiving Notebooks](#archiving-notebooks)
+[↑](#help) · See also:
+[Archiving Notebooks](#archiving-notebooks),
+[`archive`](#archive),
+[`notebooks`](#notebooks),
+[`status`](#status)
 
 ```text
 Usage:
@@ -6581,7 +6645,7 @@ Shortcut Alias: `nb unar`
 
 #### `unpin`
 
-[↑](#help) · See also: [Pinning](#-pinning)
+[↑](#help) · See also: [Pinning](#-pinning), [`pin`](#pin)
 
 ```text
 Usage:
@@ -6600,7 +6664,9 @@ Examples:
 
 #### `unset`
 
-[↑](#help) · See also: [`set` & `settings`](#%EF%B8%8F-set--settings)
+[↑](#help) · See also:
+[`set` & `settings`](#%EF%B8%8F-set--settings),
+[`settings`](#settings)
 
 ```text
 Usage:
@@ -6640,7 +6706,9 @@ Description:
 
 #### `use`
 
-[↑](#help) · See also: [Notebooks](#-notebooks)
+[↑](#help) · See also:
+[Notebooks](#-notebooks),
+[`notebooks`](#notebooks)
 
 ```text
 Usage:
