@@ -398,9 +398,10 @@ files by default. The default file type can be changed to
 whatever you like
 using [`nb set default_extension`](#default_extension).
 
-`nb add` has smart argument parsing and behaves differently depending on
-the types of arguments it receives. When a filename with extension is
-specified, a new note with that filename is opened in the editor:
+`nb add` has intelligent argument parsing
+and behaves differently depending on the types of arguments it receives.
+When a filename with extension is specified,
+a new note with that filename is opened in the editor:
 
 ```bash
 nb add example.md
