@@ -5926,7 +5926,7 @@ Shortcut Alias: `nb o`
 [Viewing Bookmarks](#viewing-bookmarks),
 [`bookmark`](#bookmark),
 [`browse`](#browse),
-[`peek`](#open),
+[`open`](#open),
 [`show`](#show)
 
 ```text
