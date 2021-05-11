@@ -6601,7 +6601,6 @@ Shortcut Alias: `nb s`
 [`history`](#history),
 [`notebooks`](#notebooks),
 [`remote`](#remote),
-[`status`](#status),
 [`sync`](#sync),
 [`unarchive`](#unarchive)
 
@@ -6617,7 +6616,6 @@ See Also:
   nb help history
   nb help notebooks
   nb help remote
-  nb help status
   nb help sync
   nb help unarchive
 

@@ -20319,7 +20319,6 @@ $(_color_primary "See Also"):
   ${_ME} help history
   ${_ME} help notebooks
   ${_ME} help remote
-  ${_ME} help status
   ${_ME} help sync
   ${_ME} help unarchive
 
