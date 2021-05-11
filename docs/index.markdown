@@ -5124,10 +5124,10 @@ Shortcut Alias: `nb bk`
 [`ls`](#ls),
 [`open`](#open),
 [`peek`](#peek),
-[`peek`](#pin),
-[`show`](#search),
+[`pin`](#pin),
+[`search`](#search),
 [`show`](#show),
-[`show`](#unpin)
+[`unpin`](#unpin)
 
 ```text
 Usage:
