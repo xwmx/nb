@@ -74,7 +74,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="6.1.6"
+_VERSION="6.2.0"
 
 # $_ME
 #
@@ -2859,6 +2859,16 @@ $(_color_primary "Subcommands"):
 $(_color_primary "Description"):
   Run \`git\` commands within the current notebook directory.
 
+$(_color_primary "Read More"):
+  ${_README_URL}#-git-sync
+  ${_README_URL}#-revision-history
+
+$(_color_primary "See Also"):
+  ${_ME} help history
+  ${_ME} help remote
+  ${_ME} help status
+  ${_ME} help sync
+
 $(_color_primary "Examples"):
   ${_ME} git status
   ${_ME} git diff
@@ -3156,16 +3166,20 @@ HEREDOC
     fi
 
     local _git_branch=
-    _git_branch="$(git -C "${_notebook_path}" rev-parse --abbrev-ref HEAD)"
+    _git_branch="$(git -C "${_notebook_path}" rev-parse --abbrev-ref HEAD 2>/dev/null)"
+
+    local _branch_query_succeeded=0
+
+    local _remote_branches=
+    _remote_branches=($(
+      git -C "${_notebook_path}" ls-remote --heads "${_remote_url}" 2>/dev/null \
+        | sed "s/.*\///g"
+    )) && _branch_query_succeeded=1
 
     if ! GIT_TERMINAL_PROMPT=0 git -C "${_notebook_path}" fetch origin "${_git_branch}" &>/dev/null
     then
-      local _remote_branches=($(
-        git -C "${_notebook_path}" ls-remote --heads "${_remote_url}" 2>/dev/null \
-          | sed "s/.*\///g" || :
-      ))
-
-      if _contains "${_git_branch}" "${_remote_branches[@]:-}"
+      if _contains "${_git_branch}" "${_remote_branches[@]:-}" ||
+         ! ((_branch_query_succeeded))
       then
         if ((_prompt))
         then # fetch again, displaying git prompt and/or errors after newline
@@ -3183,8 +3197,9 @@ HEREDOC
 
     if ((_prompt))
     then
-      if ! git -C "${_notebook_path}" show-branch                 \
-           "remotes/origin/${_git_branch}" > /dev/null 2>&1 ||
+      if ! _contains "${_git_branch}" "${_remote_branches[@]:-}"  ||
+         ! git -C "${_notebook_path}" show-branch                 \
+           "remotes/origin/${_git_branch}" > /dev/null 2>&1       ||
          {
            local _local_branch_root_hash=
            _local_branch_root_hash="$(
@@ -3367,6 +3382,8 @@ HEREDOC
 }
 
 # help · ############################################################### · help
+
+export _README_URL="https://github.com/xwmx/nb"
 
 _describe_help() {
   cat <<HEREDOC
@@ -3637,7 +3654,8 @@ $(_color_primary "Usage"):
   ${_ME} plugins [<name>] [--paths]
   ${_ME} plugins install [<path> | <url>] [--force]
   ${_ME} plugins uninstall <name> [--force]
-  ${_ME} remote [branches [<url>] | remove | set <url> [<branch>]]
+  ${_ME} remote [branches [<url>] | remove | rename [<branch-name>] <name>]
+  ${_ME} remote set <url> [<branch>]
   ${_ME} run <command> [<arguments>...]
   ${_ME} search ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             <query>... [-a | --all] [--and <query>] [--or <query>]
@@ -4414,6 +4432,9 @@ $(_color_primary "Description"):
   are searched for any that match <query> as a case-insensitive regular
   expression.
 
+$(_color_primary "Read More"):
+  ${_README_URL}#listing--filtering
+
 $(_color_primary "Indicators"):
   ${_NB_INDICATOR_AUDIO:-} Audio
   ${_NB_INDICATOR_EBOOK:-} Book
@@ -4424,8 +4445,13 @@ $(_color_primary "Indicators"):
   ${_NB_INDICATOR_DOCUMENT:-} PDF, Word, or Open Office document
   ${_NB_INDICATOR_VIDEO:-} Video
 
+
 $(_color_primary "See Also"):
+  ${_ME} help browse
   ${_ME} help ls
+  ${_ME} help pin
+  ${_ME} help search
+  ${_ME} help unpin
 
 $(_color_primary "Examples"):
   ${_ME} list
@@ -5385,6 +5411,9 @@ $(_color_primary "Description"):
   Options are passed through to \`list\`. For more information, see
   \`${_ME} help list\`.
 
+$(_color_primary "Read More"):
+  ${_README_URL}#listing--filtering
+
 $(_color_primary "Indicators"):
   ${_NB_INDICATOR_AUDIO:-} Audio
   ${_NB_INDICATOR_EBOOK:-} Book
@@ -5396,7 +5425,11 @@ $(_color_primary "Indicators"):
   ${_NB_INDICATOR_VIDEO:-} Video
 
 $(_color_primary "See Also"):
+  ${_ME} help browse
   ${_ME} help list
+  ${_ME} help pin
+  ${_ME} help search
+  ${_ME} help unpin
 
 $(_color_primary "Examples"):
   ${_ME}
@@ -6192,8 +6225,12 @@ $(_color_primary "Subcommands"):
 $(_color_primary "Description"):
   Manage notebooks.
 
+$(_color_primary "Read More"):
+  ${_README_URL}#-notebooks
+
 $(_color_primary "See Also"):
   ${_ME} help archive
+  ${_ME} help history
   ${_ME} help remote
   ${_ME} help status
   ${_ME} help sync
@@ -7716,6 +7753,12 @@ $(_color_primary "Description"):
   List, add, alias, and describe subcommands. New subcommands, aliases, and
   descriptions are not persisted, so \`add\`, \`alias\`, \`describe\` are
   primarily for plugins.
+
+$(_color_primary "Read More"):
+  ${_README_URL}#-plugins
+
+$(_color_primary "See Also"):
+  ${_ME} help plugins
 HEREDOC
 }
 _subcommands() {
@@ -8589,7 +8632,7 @@ _edit_file() {
         _wait=0
         ;;
       *)
-        if [[ -z "${_file_path}" ]]
+        if [[ -z "${_file_path}"  ]]
         then
           _file_path="${__arg}"
         fi
@@ -8597,7 +8640,7 @@ _edit_file() {
     esac
   done
 
-  if [[ -z "${_file_path}" ]]
+  if [[ -z "${_file_path}"        ]]
   then
     return 1
   fi
@@ -8605,9 +8648,9 @@ _edit_file() {
   local _current_notebook_path
   _current_notebook_path="$(_notebooks current --path)"
 
-  cd "${_current_notebook_path}" || return 1
+  cd "${_current_notebook_path}"  ||  return 1
 
-  if [[ -e "${_file_path}" ]]
+  if [[ -e "${_file_path}"            ]]
   then
     if _file_is_encrypted "${_file_path}"
     then
@@ -8615,20 +8658,20 @@ _edit_file() {
 File must be decrypted before editing.\\n"
     fi
 
-    if _file_is_archive "${_file_path}" &&
-       [[ ! "${_file_path}" =~ docx$ ]]
+    if _file_is_archive "${_file_path}"   &&
+       [[ ! "${_file_path}" =~ docx$  ]]
     then
       _exit_1 printf "\
 Can't edit archives. Export archive and expand to edit.\\n"
     fi
 
-    if ! _file_is_text "${_file_path}" &&
-       [[ ! -d "${_file_path}" ]]
+    if ! _file_is_text "${_file_path}"    &&
+       [[ ! -d "${_file_path}"        ]]
     then
       if _command_exists "xdg-open"
       then
         xdg-open "${_file_path}" && return 0
-      elif [[ "${OSTYPE}" =~ ^darwin ]]
+      elif [[ "${OSTYPE}" =~ ^darwin  ]]
       then
         open "${_file_path}" && return 0
       fi
@@ -9506,16 +9549,16 @@ ul.task-list          { list-style: none;           }
 }
 
 .ace_separator {
-  color:              ${_color_primary_hex};
+  color:              #7290b1;
 }
 
 .ace-twilight .ace_keyword,
 .ace-twilight .ace_meta {
-  color:              ${_color_primary_hex};
+  color:              #7290b1;
 }
 
 .ace-twilight .ace_string {
-  color:              #7290b1;
+  color:              ${_color_primary_hex};
 }
 
 /* Pandoc Syntax */
@@ -9577,7 +9620,7 @@ code span.an { color: #7f9f7f;                font-weight: bold;  } /* Annotatio
 code span.at {                                                    } /* Attribute */
 code span.bn { color: #dca3a3;                                    } /* BaseN */
 code span.bu {                                                    } /* BuiltIn */
-code span.cf { color: ${_color_primary_hex};                      } /* ControlFlow */
+code span.cf { color: #7290b1;                                    } /* ControlFlow */
 code span.ch { color: #8987a0;                                    } /* Char */
 code span.cn { color: #8987a0;                font-weight: bold;  } /* Constant */
 code span.co { color: ${_color_dim_hex};                          } /* Comment */
@@ -9588,18 +9631,18 @@ code span.dv { color: #cccc96;                                    } /* DecVal */
 code span.er { color: #cccc96;                                    } /* Error */
 code span.ex {                                                    } /* Extension */
 code span.fl { color: #c0bed1;                                    } /* Float */
-code span.fu { color: ${_color_primary_hex};                      } /* Function */
+code span.fu { color: #7290b1;                                    } /* Function */
 code span.im {                                                    } /* Import */
 code span.in { color: #7f9f7f;                font-weight: bold;  } /* Information */
-code span.kw { color: ${_color_primary_hex};                      } /* Keyword */
+code span.kw { color: #7290b1;                                    } /* Keyword */
 code span.op { color: #f0efd0;                                    } /* Operator */
 code span.ot { color: #cccc96;                                    } /* Other */
 code span.pp { color: #ffcfaf;                font-weight: bold;  } /* Preprocessor */
 code span.sc { color: #8987a0;                                    } /* SpecialChar */
-code span.ss { color: #7290b1;                                    } /* SpecialString */
-code span.st { color: #7290b1;                                    } /* String */
+code span.ss { color: ${_color_primary_hex};                      } /* SpecialString */
+code span.st { color: ${_color_primary_hex};                      } /* String */
 code span.va {                                                    } /* Variable */
-code span.vs { color: #7290b1;                                    } /* VerbatimString */
+code span.vs { color: ${_color_primary_hex};                      } /* VerbatimString */
 code span.wa { color: #93a5cc;                font-weight: bold;  } /* Warning */
 </style>
 
@@ -10426,6 +10469,9 @@ $(_color_primary "Description"):
   note with AES-256 using OpenSSL by default, or GPG, if configured in
   \`${_ME} set encryption_tool\`.
 
+$(_color_primary "Read More"):
+  ${_README_URL}#adding
+
 $(_color_primary "See Also"):
   ${_ME} help browse
 
@@ -10997,6 +11043,9 @@ $(_color_primary "Description"):
     3. https://en.wikipedia.org/wiki/W3m
     4. https://en.wikipedia.org/wiki/Links_(web_browser)
     5. https://en.wikipedia.org/wiki/Lynx_(web_browser)
+
+$(_color_primary "Read More"):
+  ${_README_URL}#-bookmark
 
 $(_color_primary "See Also"):
   ${_ME} help browse
@@ -11684,7 +11733,9 @@ $(_color_primary "Options"):
   -d, --download  Download the completion scripts and install.
 
 $(_color_primary "Description"):
-  Manage completion scripts. For more information, visit:
+  Manage completion scripts.
+
+$(_color_primary "Read More"):
   https://github.com/${_REPO}/blob/${_REPO_MAIN_BRANCH}/etc/README.md
 HEREDOC
 }
@@ -11948,6 +11999,9 @@ $(_color_primary "Options"):
 $(_color_primary "Description"):
   Delete one or more items.
 
+$(_color_primary "Read More"):
+  ${_README_URL}#deleting
+
 $(_color_primary "See Also"):
   ${_ME} help browse
 
@@ -12132,6 +12186,9 @@ $(_color_primary "Description"):
 
   Non-text files are opened in your system's preferred app or program for
   that file type.
+
+$(_color_primary "Read More"):
+  ${_README_URL}#editing
 
 $(_color_primary "See Also"):
   ${_ME} help browse
@@ -12354,6 +12411,9 @@ $(_color_primary "Subcommands"):
 $(_color_primary "Description"):
   Print program environment and configuration information, or install
   dependencies.
+
+$(_color_primary "Read More"):
+  ${_README_URL}#installation
 HEREDOC
 }
 _env() {
@@ -12600,6 +12660,9 @@ $(_color_primary "Description"):
 
     1. https://pandoc.org/
 
+$(_color_primary "Read More"):
+  ${_README_URL}#%EF%B8%8F-import--export
+
 $(_color_primary "See Also"):
   ${_ME} help import
 
@@ -12765,6 +12828,16 @@ $(_color_primary "Description"):
 
     1. https://github.com/jonas/tig
 
+$(_color_primary "Read More"):
+  ${_README_URL}#-revision-history
+  ${_README_URL}#-git-sync
+
+$(_color_primary "See Also"):
+  ${_ME} help git
+  ${_ME} help remote
+  ${_ME} help status
+  ${_ME} help sync
+
 $(_color_primary "Examples"):
   ${_ME} history
   ${_ME} history example.md
@@ -12854,6 +12927,9 @@ $(_color_primary "Subcommands"):
 $(_color_primary "Description"):
   Copy, move, or download files into the current notebook or import
   a local notebook to make it global.
+
+$(_color_primary "Read More"):
+  ${_README_URL}#%EF%B8%8F-import--export
 
 $(_color_primary "See Also"):
   ${_ME} help export
@@ -13466,6 +13542,15 @@ $(_color_primary "Description"):
   or any other file type, \`open\` is the equivalent of \`edit\`. \`open\`
   with a notebook opens the notebook folder in the system's file browser.
 
+$(_color_primary "Read More"):
+  ${_README_URL}#viewing-bookmarks
+
+$(_color_primary "See also"):
+  ${_ME} help bookmark
+  ${_ME} help browse
+  ${_ME} help peek
+  ${_ME} help show
+
 $(_color_primary "Examples"):
   ${_ME} open 3
   ${_ME} open example.bookmark.md
@@ -13477,12 +13562,6 @@ $(_color_primary "Examples"):
   ${_ME} 3 o
   ${_ME} o example:12
   ${_ME} example:12 o
-
-$(_color_primary "See also"):
-  ${_ME} help bookmark
-  ${_ME} help browse
-  ${_ME} help peek
-  ${_ME} help show
 
 $(_color_primary "Shortcut Alias"): \`${_ME} o\`
 HEREDOC
@@ -13516,6 +13595,15 @@ $(_color_primary "Description"):
     3. https://vifm.info/
     4. https://github.com/ogham/exa
 
+$(_color_primary "Read More"):
+  ${_README_URL}#viewing-bookmarks
+
+$(_color_primary "See also"):
+  ${_ME} help bookmark
+  ${_ME} help browse
+  ${_ME} help open
+  ${_ME} help show
+
 $(_color_primary "Examples"):
   ${_ME} peek 3
   ${_ME} peek example.bookmark.md
@@ -13527,12 +13615,6 @@ $(_color_primary "Examples"):
   ${_ME} 3 p
   ${_ME} p example:12
   ${_ME} example:12 p
-
-$(_color_primary "See also"):
-  ${_ME} help bookmark
-  ${_ME} help browse
-  ${_ME} help open
-  ${_ME} help show
 
 $(_color_primary "Alias"): \`${_ME} preview\`
 $(_color_primary "Shortcut Alias"): \`${_ME} p\`
@@ -13559,7 +13641,13 @@ $(_color_primary "Usage"):
 $(_color_primary "Description"):
   Pin an item so it appears first in lists.
 
+$(_color_primary "Read More"):
+  ${_README_URL}#-pinning
+
 $(_color_primary "See Also"):
+  ${_ME} help browse
+  ${_ME} help list
+  ${_ME} help ls
   ${_ME} help unpin
 
 $(_color_primary "Examples"):
@@ -13723,6 +13811,14 @@ $(_color_primary "Description"):
     3. \`ag\`    https://github.com/ggreer/the_silver_searcher
     4. \`ack\`   https://beyondgrep.com/
     5. \`grep\`  https://en.wikipedia.org/wiki/Grep
+
+$(_color_primary "Read More"):
+  ${_README_URL}#-search
+
+$(_color_primary "See Also"):
+  ${_ME} help browse
+  ${_ME} help list
+  ${_ME} help ls
 
 $(_color_primary "Examples"):
   # search current notebook for "example query"
@@ -14899,6 +14995,9 @@ $(_color_primary "Description"):
     6. http://www.andre-simon.de/doku/highlight/en/highlight.php
     7. https://pygments.org/
 
+$(_color_primary "Read More"):
+  ${_README_URL}#viewing
+
 $(_color_primary "See Also"):
   ${_ME} help browse
   ${_ME} help open
@@ -15696,7 +15795,13 @@ $(_color_primary "Usage"):
 $(_color_primary "Description"):
   Unpin a pinned item.
 
+$(_color_primary "Read More"):
+  ${_README_URL}#-pinning
+
 $(_color_primary "See Also"):
+  ${_ME} help browse
+  ${_ME} help list
+  ${_ME} help ls
   ${_ME} help pin
 
 $(_color_primary "Examples"):
@@ -15717,6 +15822,9 @@ $(_color_primary "Usage"):
 
 $(_color_primary "Description"):
   Switch to the specified notebook. Shortcut for \`${_ME} notebooks use\`.
+
+$(_color_primary "Read More"):
+  ${_README_URL}#-notebooks
 
 $(_color_primary "See Also"):
   ${_ME} help notebooks
@@ -15776,6 +15884,9 @@ $(_color_primary "Description"):
   Set the current notebook or notebook <name> to "archived" status.
 
   This is an alias for \`${_ME} notebooks archive\`.
+
+$(_color_primary "Read More"):
+  ${_README_URL}#archiving-notebooks
 
 $(_color_primary "See Also"):
   ${_ME} help notebooks
@@ -15855,10 +15966,21 @@ $(_color_primary "Description"):
     4. https://nmap.org/ncat/
     5. https://pandoc.org/
 
+$(_color_primary "Read More"):
+  ${_README_URL}#-browsing
+
 $(_color_primary "See Also"):
+  ${_ME} help add
+  ${_ME} help delete
+  ${_ME} help edit
+  ${_ME} help list
+  ${_ME} help ls
   ${_ME} help open
   ${_ME} help peek
+  ${_ME} help pin
+  ${_ME} help search
   ${_ME} help show
+  ${_ME} help unpin
 
 $(_color_primary "Examples"):
   ${_ME} browse
@@ -18425,9 +18547,15 @@ $(_color_primary "Subcommands"):
 $(_color_primary "Description"):
   Manage plugins and themes.
 
+$(_color_primary "Read More"):
+  ${_README_URL}#-plugins
+
 $(_color_primary "Plugin Extensions"):
   .nb-theme   Plugins defining color themes.
   .nb-plugin  Plugins defining new subcommands and functionality.
+
+$(_color_primary "See Also"):
+  ${_ME} help subcommands
 HEREDOC
 }
 _plugins() {
@@ -18623,18 +18751,27 @@ $(_color_primary "Usage"):
   ${_ME} remote
   ${_ME} remote branches [<url>]
   ${_ME} remote remove
+  ${_ME} remote rename [<branch-name>] <name>
   ${_ME} remote set <url> [<branch>]
 
 $(_color_primary "Subcommands"):
   (default)     Print the remote URL and branch for the notebook.
   branches      List branches on the current or given remote.
   remove        Remove the remote URL from the notebook.
+                Alias: \`unset\`
+  rename        Rename the current orphan branch or <branch-name> to <name>.
+                Caveat: only orphan branches can be renamed.
   set           Set the remote URL and branch for the notebook.
 
 $(_color_primary "Description"):
-  Get, set, and remove a notebook's remote repository URL and branch.
+  Configure the remote repository URL and branch for the current notebook.
+
+$(_color_primary "Read More"):
+  ${_README_URL}#-git-sync
+  ${_README_URL}#-revision-history
 
 $(_color_primary "See Also"):
+  ${_ME} help history
   ${_ME} help notebooks
   ${_ME} help status
   ${_ME} help sync
@@ -18642,15 +18779,17 @@ $(_color_primary "See Also"):
 $(_color_primary "Examples"):
   ${_ME} remote set https://github.com/example/example.git
   ${_ME} remote remove
+  ${_ME} example-notebook:remote set https://github.com/example/example.git
 HEREDOC
 }
 _remote() {
+  local _new_branch=
+  local _new_remote_url=
   local _only_url=0
+  local _rename_arguments=()
   local _skip_confirmation=0
   local _skip_preamble=0
   local _subcommand=
-  local _new_branch=
-  local _new_remote_url=
 
   local __arg=
   for   __arg in "${@:-}"
@@ -18660,17 +18799,21 @@ _remote() {
       --skip*preamble)  _skip_preamble=1        ;;
       --url|url)        _only_url=1             ;;
       *)
-        if [[   -z  "${_subcommand:-}"          ]]
-        then
-          _subcommand="${__arg}"
-        elif [[ -z  "${_new_remote_url:-}"      ]]  &&
-             _contains "${_subcommand}" "add" "branches" "set"
-        then
-          _new_remote_url="${__arg}"
-        elif [[ -z  "${_new_branch:-}"          ]]
-        then
-          _new_branch="${__arg:-}"
-        fi
+        case "${_subcommand:-}" in
+          '') _subcommand="${__arg:-}"          ;;
+          add|branches|set)
+            if [[   -z "${_new_remote_url:-}"   ]]
+            then
+              _new_remote_url="${__arg:-}"
+            elif [[ -z "${_new_branch:-}"       ]]
+            then
+              _new_branch="${__arg:-}"
+            fi
+            ;;
+          rename)
+            _rename_arguments+=("${__arg:-}")
+            ;;
+        esac
         ;;
     esac
   done
@@ -18776,21 +18919,27 @@ _remote() {
 
         if _contains "${_current_branch}" "${_remote_branches[@]:-}"
         then
+          local _delete_action="Remove"
+
+          if [[ "${#_remote_branches[@]}" -eq 1 ]]
+          then
+            _delete_action="Reset"
+          fi
+
+          local _branch_delete_prompt=
+          _branch_delete_prompt="\
+$(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_current_branch}"))"
+
           while true
           do
             local __yn=
             IFS='' read -r -e -d $'\n' -p       \
-"$(_color_primary "Remove branch on remote?") ($(_color_primary "${_current_branch}")) $(_color_brackets "y/N") " __yn
+              "${_branch_delete_prompt} $(_color_brackets "y/N") " __yn
 
             case ${__yn} in
-              [Yy]*)
-                _delete_remote_branch=1
-
-                break
-                ;;
-              *)
-                break
-                ;;
+              [Yy]*)    _delete_remote_branch=1;  break   ;;
+              q*|exit)  printf "Exiting...\\n";   exit 0  ;;
+              *)                                  break   ;;
             esac
           done
         fi
@@ -18799,7 +18948,7 @@ _remote() {
         then
           if [[ "${#_remote_branches[@]}" -eq 1 ]]
           then
-            local _blank_repo_path="${_NB_TEMP_DIRECTORY:-/tmp}/blank-repo"
+            local _blank_repo_path="${_NB_TEMP_DIRECTORY:-/tmp}/${RANDOM}"
 
             mkdir -p "${_blank_repo_path}"
             cd "${_blank_repo_path}" || return 1
@@ -18818,19 +18967,162 @@ _remote() {
             } &>/dev/null ||
               _exit_1 printf "Unable to reset remote branch: %s\\n" \
                 "$(_color_primary "${_remote_branches[0]}")"
+
+            printf "Remote branch reset: %s\\n"                     \
+              "$(_color_primary "${_remote_branches[0]}")"
           else
             git -C "${_notebook_path:-}" push origin                \
               ":${_current_branch}"  --force &>/dev/null
+
+            printf "Remote branch deleted: %s\\n"                   \
+              "$(_color_primary "${_current_branch}")"
           fi
         fi
 
         git -C "${_notebook_path:-}" remote rm origin               &&
-          printf "Remote removed: %s\\n"                            \
-            "$(_color_primary "${_current_remote_url:-}")"          &&
-              return 0
+          printf "Remote removed.\\n"
+
+        return 0
       else
         _exit_1 printf "No remote configured.\\n"
       fi
+      ;;
+    rename)
+      local _remote_branch_name=
+      local _target_branch_name=
+
+      local _remote_branches=()
+
+      if ((_remote_exists))
+      then
+        _remote_branches=($(
+          git -C "${_notebook_path}" ls-remote  \
+            --heads "${_current_remote_url:-}"  \
+            | sed "s/.*\///g" || :
+        ))
+      fi
+
+      if [[ "${#_rename_arguments[@]}" -gt 1    ]]
+      then
+        if _contains "${_rename_arguments[0]:-}" "${_remote_branches[@]:-}"
+        then
+          _remote_branch_name="${_rename_arguments[0]:-}"
+          _target_branch_name="${_rename_arguments[1]:-}"
+        else
+          _exit_1 printf "Remote branch not found: %s\\n"   \
+            "$(_color_primary "${_rename_arguments[0]:-}")"
+        fi
+      else
+        _target_branch_name="${_rename_arguments[0]:-}"
+      fi
+
+      if [[ -z "${_target_branch_name:-}"       ]]
+      then
+        _exit_1 _help "remote"
+      fi
+
+      if _contains "${_target_branch_name:-}" "${_remote_branches[@]:-}"
+      then
+        _exit_1 printf "A remote branch with that name already exists.\\n"
+      fi
+
+      local _remote_head_branch=
+
+      if [[ -n "${_current_remote_url:-}"       ]]
+      then
+        _remote_head_branch="$(
+          git ls-remote --symref "${_current_remote_url:-}" HEAD      \
+            | awk '/^ref:/ {sub(/refs\/heads\//, "", $2); print $2}'
+        )"
+      fi
+
+      if [[ -n  "${_remote_head_branch:-}"                            ]] &&
+         [[     "${_remote_branch_name:-"${_current_branch}"}" ==     \
+                  "${_remote_head_branch:-}"                          ]]
+      then
+        _exit_1 printf "Only orphan branches can be renamed.\\n"
+      fi
+
+      if [[ -n "${_remote_branch_name:-}"                             ]] &&
+         [[    "${_remote_branch_name:-}" != "${_current_branch:-}"   ]]
+      then
+        printf      "Renaming remote branch\\n"
+        _print_line "-----------------------"
+      else
+        printf      "Renaming current branch\\n"
+        _print_line "-----------------------"
+      fi
+
+      printf        "From: %s\\n" "${_remote_branch_name:-"${_current_branch:-}"}"
+      printf        "To:   %s\\n" "$(_color_primary "${_target_branch_name:-}")"
+
+      _print_line   "--------------"
+
+      while true
+      do
+        local __yn=
+        IFS='' read -r -e -d $'\n' -p                     \
+"$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
+
+        case ${__yn} in
+          [Yy]*)
+            break
+            ;;
+          *)
+            printf "Exiting...\\n"
+            exit 0
+            ;;
+        esac
+      done
+
+      if ((_remote_exists))
+      then
+        if [[   -z  "${_remote_branch_name:-}"                           ]] ||
+           [[       "${_remote_branch_name:-}" == "${_current_branch:-}" ]]
+        then
+          {
+            git -C "${_notebook_path}" checkout           \
+              -b "${_target_branch_name}"                 \
+              "${_current_branch}"                        &&
+              git -C "${_notebook_path}" push             \
+                -u origin "${_target_branch_name}"        &&
+              git -C "${_notebook_path}" branch           \
+                -d "${_current_branch}"                   &&
+              git -C "${_notebook_path}" push             \
+                --delete origin "${_current_branch}"      &&
+              git -C "${_notebook_path}" remote prune origin
+          } &>/dev/null || _exit_1 printf "Unable to rename branch.\\n"
+        elif [[ -n  "${_remote_branch_name:-}"                           ]] &&
+             [[     "${_remote_branch_name:-}" != "${_current_branch:-}" ]]
+        then
+          local _temp_repo_path="${_NB_TEMP_DIRECTORY}/${RANDOM}"
+
+          {
+            cd "${_NB_TEMP_DIRECTORY}"                    &&
+              git clone --no-local                        \
+                --single-branch                           \
+                --branch "${_remote_branch_name:-}"       \
+                "${_current_remote_url}"                  \
+                "${_temp_repo_path}"                      &&
+              git -C "${_temp_repo_path}" checkout        \
+                -b "${_target_branch_name}"               \
+              "${_remote_branch_name}"                    &&
+              git -C "${_temp_repo_path}" push            \
+                -u origin "${_target_branch_name}"        &&
+              git -C "${_temp_repo_path}" branch          \
+                -d "${_remote_branch_name}"               &&
+              git -C "${_temp_repo_path}" push            \
+                --delete origin "${_remote_branch_name}"  &&
+              git -C "${_temp_repo_path}" remote prune origin
+          } &>/dev/null || _exit_1 printf "Unable to rename branch.\\n"
+        fi
+      else
+        git -C "${_notebook_path}" branch                 \
+          -m "${_target_branch_name}"                     \
+          &>/dev/null || _exit_1 printf "Unable to rename branch.\\n"
+      fi
+
+      printf "Renamed to: %s\\n" "$(_color_primary "${_target_branch_name}")"
       ;;
     set|add)
       if [[ -z "${_new_remote_url:-}"           ]]
@@ -18894,12 +19186,17 @@ _remote() {
       ))
 
       local _selected_push_option=
+      local _show_branch_selection_prompt=0
+      local _show_branch_name_prompt=1
 
       if [[ "${#_remote_branches[@]}" -eq 0     ]]
       then
         _selected_push_option=2
+        _show_branch_name_prompt=0
       elif ! _contains "${_new_branch}" "${_remote_branches[@]:-}"
       then
+        _print_line "--------------"
+
         cat <<HEREDOC
 Branch not present on remote: $(_color_primary "${_new_branch:-}")
 
@@ -18907,6 +19204,19 @@ $(_color_brackets "1") Merge and sync with an existing remote branch.
 $(_color_brackets "2") Sync as a new orphan branch on the remote.
 
 HEREDOC
+
+        while true
+        do
+          IFS='' read -r -e -d $'\n' -p                                   \
+"$(_color_primary "Choose an option") or $(_color_primary "q") to quit: " \
+            _selected_push_option
+
+          case "${_selected_push_option:-}" in
+            1)        _show_branch_selection_prompt=1 &&  break   ;;
+            2)                                            break   ;;
+            q*|exit)  printf "Exiting...\\n"          &&  exit 0  ;;
+          esac
+        done
       else
         local _temp_repo_path="${_NB_TEMP_DIRECTORY}/${RANDOM}"
 
@@ -18921,7 +19231,7 @@ HEREDOC
         local _local_branch_root_hash=
         _local_branch_root_hash="$(
           git -C "${_notebook_path}" rev-list --max-parents=0   \
-            "${_new_branch}"
+            "${_current_branch}"
         )"
 
         local _remote_branch_root_hash=
@@ -18951,42 +19261,74 @@ HEREDOC
           then
             _selected_push_option=1
           else
+            _print_line "--------------"
+
             cat <<HEREDOC
 Remote branch has existing history: $(_color_primary "${_new_branch:-}")
 
-$(_color_brackets "1") Merge and sync with existing remote branch.
+$(_color_brackets "1") Merge and sync with the existing remote branch: $(_color_primary "${_new_branch:-}")
+HEREDOC
+
+            if [[ "${#_remote_branches[@]}" -le 1 ]]
+            then
+              cat <<HEREDOC
 $(_color_brackets "2") Sync as a new orphan branch on the remote.
 
 HEREDOC
+            else
+              cat <<HEREDOC
+$(_color_brackets "2") Merge and sync with a different existing remote branch.
+$(_color_brackets "3") Sync as a new orphan branch on the remote.
+
+HEREDOC
+            fi
+
+            local _existing_history_prompt_option=
+
+            while true
+            do
+              IFS='' read -r -e -d $'\n' -p                               \
+"$(_color_primary "Choose an option") or $(_color_primary "q") to quit: " \
+              _existing_history_prompt_option
+
+              case "${_existing_history_prompt_option:-}" in
+                1)
+                  _selected_push_option=1
+
+                  break
+                  ;;
+                2)
+                  if [[ "${#_remote_branches[@]}" -le 1 ]]
+                  then
+                    _selected_push_option=2
+                  else
+                    _selected_push_option=1
+                    _show_branch_selection_prompt=1
+                  fi
+
+                  break
+                  ;;
+                3)
+                  _selected_push_option=2
+
+                  break
+                  ;;
+                q*|exit)
+                  printf "Exiting...\\n"
+
+                  exit 0
+                  ;;
+              esac
+            done
           fi
         fi
       fi
 
-      if [[ -z "${_selected_push_option:-}"       ]]
+      if ((_show_branch_selection_prompt))
       then
-        while true
-        do
-          IFS='' read -r -e -d $'\n' -p                                                 \
-            "$(_color_primary "Choose an option") or $(_color_primary "q") to quit: "   \
-            _selected_push_option
+        _print_line "------------------------------"
 
-          case "${_selected_push_option:-}" in
-            [12])
-              break
-              ;;
-            q*|exit)
-              printf "Exiting...\\n"
-
-              exit 0
-              ;;
-          esac
-        done
-      fi
-
-      if [[   "${_selected_push_option:-}" == "1" ]]      &&
-         ! _contains "${_new_branch}" "${_remote_branches[@]:-}"
-      then
-        printf "\\nRemote branches:\\n\\n"
+        printf "Remote branches:\\n\\n"
 
         local i=
         for ((i=0; i < "${#_remote_branches[@]}"; i++))
@@ -19024,46 +19366,84 @@ HEREDOC
         done
       fi
 
-      if [[ "${_selected_push_option:-}" == "2"   ]]      &&
-           _contains "${_new_branch}" "${_remote_branches[@]:-}"
+      if [[ "${_selected_push_option:-}" == "2"               ]]
       then
-        local _notebook_name_branch_name="${_notebook_path##*/}"
-        _notebook_name_branch_name="${_notebook_name_branch_name//' '/-}"
-        _notebook_name_branch_name="$(
-          printf "%s\\n" "${_notebook_name_branch_name}"  \
-            | tr '[:upper:]' '[:lower:]'
-        )"
+        local _target_orphan_branch_name="${_new_branch}"
 
-        local _uniqueness_counter=0
-        local _unique_branch_name="${_notebook_name_branch_name}"
+        if _contains "${_new_branch}" "${_remote_branches[@]:-}"
+        then
+          if [[ "${_new_branch:-}" == "${_current_branch:-}"  ]]
+          then
+            local _notebook_name_branch_name="${_notebook_path##*/}"
+            _notebook_name_branch_name="${_notebook_name_branch_name//' '/-}"
+            _notebook_name_branch_name="$(
+              printf "%s\\n" "${_notebook_name_branch_name}"  \
+                | tr '[:upper:]' '[:lower:]'
+            )"
+          fi
 
-        while _contains "${_unique_branch_name}" "${_remote_branches[@]:-}"
-        do
-          _uniqueness_counter="$((_uniqueness_counter+1))"
+          local _uniqueness_counter=0
+          local _unique_branch_name="${_notebook_name_branch_name}"
 
-          printf -v _unique_branch_name -- "%s-%01d"      \
-            "${_notebook_name_branch_name}"               \
-            "${_uniqueness_counter}"
-        done
+          while _contains "${_unique_branch_name}" "${_remote_branches[@]:-}"
+          do
+            _uniqueness_counter="$((_uniqueness_counter+1))"
 
-        _new_branch="${_unique_branch_name}"
+            printf -v _unique_branch_name -- "%s-%01d"        \
+              "${_notebook_name_branch_name}"                 \
+              "${_uniqueness_counter}"
+          done
+
+          _target_orphan_branch_name="${_unique_branch_name}"
+        fi
+
+        if ! ((_show_branch_name_prompt))
+        then
+          _new_branch="${_target_orphan_branch_name}"
+        else
+          _print_line "------------------------------"
+
+          local _bk_name=  && _bk_name="$(_color_brackets "${_target_orphan_branch_name}")"
+          local _hi_enter= && _hi_enter="$(_color_primary 'enter')"
+          local _hi_q=     && _hi_q="$(_color_primary 'q')"
+          local _hi_type=  && _hi_type="$(_color_primary 'type')"
+
+          cat <<HEREDOC
+Press ${_hi_enter} to use the selected name, ${_hi_type} a new name, or press ${_hi_q} to quit.
+
+HEREDOC
+
+          while true
+          do
+            local _orphan_branch_prompt_response=
+
+            IFS='' read -r -e -d $'\n' -p                     \
+              "Name ${_bk_name}: "                            \
+              _orphan_branch_prompt_response
+
+            case "${_orphan_branch_prompt_response:-}" in
+              '')       _new_branch="${_target_orphan_branch_name}"     && break  ;;
+              q*|exit)  printf "Exiting...\\n"                          && exit 0 ;;
+              *)        _new_branch="${_orphan_branch_prompt_response}" && break  ;;
+            esac
+          done
+        fi
       fi
 
-      if [[ "${_new_branch:-}" != "${_current_branch:-}"  ]]
+      if [[ "${_new_branch:-}" != "${_current_branch:-}"      ]]
       then
         git -C "${_notebook_path}" branch -m "${_new_branch:-}"
       fi
 
       if ((_remote_exists))
       then
-        _remote unset --skip-confirmation
         _print_line "--------------"
+        _remote unset --skip-confirmation
+        _print_line "---------------"
       fi
 
       git -C "${_notebook_path}" remote add origin "${_new_remote_url}" ||
         return 1
-
-      git -C "${_notebook_path}" fetch origin "${_new_branch}" &>/dev/null || :
 
       _git sync "${_notebook_path}" --skip-prompt
 
@@ -19148,6 +19528,9 @@ $(_color_primary "Description"):
 
     ${_ME} set color_theme blacklight
     ${_ME} set limit 40
+
+$(_color_primary "Read More"):
+  ${_README_URL}#%EF%B8%8F-set--settings
 
 $(_color_primary "See Also"):
   ${_ME} help unset
@@ -19837,10 +20220,12 @@ $(local __editor=
         ;;
       *)
         local _setting_name=
-        if [[ -n "${1:-}" ]]
-        then
-          _setting_name="$(_settings_identify "${1}")"
-        fi
+
+        case "${1:-}" in
+          '')       :                                             ;;
+          remote)   shift; _remote set "${@}"; return 0           ;;
+          *)        _setting_name="$(_settings_identify "${1}")"  ;;
+        esac
 
         if [[   -n "${_setting_name:-}" ]]
         then
@@ -19881,6 +20266,9 @@ $(_color_primary "Description"):
   a streamlined, distraction-free approach for working with \`${_ME}\`.
 
   When <subcommand> is present, the command will run as the shell is opened.
+
+$(_color_primary "Read More"):
+  ${_README_URL}#-nb-interactive-shell
 
 $(_color_primary "Example"):
   $ ${_ME} shell
@@ -20012,11 +20400,15 @@ $(_color_primary "Usage"):
 $(_color_primary "Description"):
   Print archival, git, and remote status for the current notebook or <notebook>.
 
+$(_color_primary "Read More"):
+  ${_README_URL}#-git-sync
+  ${_README_URL}#-revision-history
+
 $(_color_primary "See Also"):
   ${_ME} help archive
+  ${_ME} help history
   ${_ME} help notebooks
   ${_ME} help remote
-  ${_ME} help status
   ${_ME} help sync
   ${_ME} help unarchive
 
@@ -20107,7 +20499,7 @@ $(_color_primary "Private Repositories and Git Credentials"):
   For repositories cloned over SSH, keys can be added to the ssh-agent.
 
   More Information:
-    https://github.com/xwmx/nb#private-repositories-and-git-credentials
+    ${_README_URL}#private-repositories-and-git-credentials
 
 $(_color_primary "Sync Conflict Resolution"):
   When \`${_ME} sync\` encounters a conflict in a text file and can't merge
@@ -20121,9 +20513,14 @@ $(_color_primary "Sync Conflict Resolution"):
   the filename.
 
   More Information:
-    https://github.com/xwmx/nb#sync-conflict-resolution
+    ${_README_URL}#sync-conflict-resolution
+
+$(_color_primary "Read More"):
+  ${_README_URL}#-git-sync
+  ${_README_URL}#-revision-history
 
 $(_color_primary "See Also"):
+  ${_ME} help history
   ${_ME} help notebooks
   ${_ME} help remote
   ${_ME} help status
@@ -20219,7 +20616,7 @@ Reason unknown, but likely one of the following:
 - Misconfigured remote URL.
 
 Configuring Git Credentials:
-  https://github.com/xwmx/nb#private-repositories-and-git-credentials
+  ${_README_URL}#private-repositories-and-git-credentials
 HEREDOC
     fi
   done && ((_syncable_count)) && _sync_successful=1
@@ -20304,6 +20701,9 @@ $(_color_primary "Description"):
 
   This is an alias for \`${_ME} notebooks unarchive\`.
 
+$(_color_primary "Read More"):
+  ${_README_URL}#archiving-notebooks
+
 $(_color_primary "See Also"):
   ${_ME} help archive
   ${_ME} help notebooks
@@ -20333,6 +20733,9 @@ $(_color_primary "Description"):
 
   This is an alias for \`${_ME} settings unset\`.
 
+$(_color_primary "Read More"):
+  ${_README_URL}#%EF%B8%8F-set--settings
+
 $(_color_primary "See Also"):
   ${_ME} help settings
 
@@ -20344,9 +20747,11 @@ $(_color_primary "Alias"): \`${_ME} reset\`
 HEREDOC
 }
 _unset() {
-  [[ -z "${1:-}" ]] && _exit_1 _help "unset"
-
-  _settings unset "${@:-}"
+  case "${1:-}" in
+    '')     _exit_1 _help "unset";    return 1 ;;
+    remote) _remote unset;            return 0 ;;
+    *)      _settings unset "${@:-}"; return 0 ;;
+  esac
 }
 _alias_subcommand "unset" "reset"
 
@@ -20364,6 +20769,9 @@ $(_color_primary "Description"):
   If \`${_ME}\` was installed using a package manager like npm or
   Homebrew, use the package manager's upgrade functionality instead
   of this command.
+
+$(_color_primary "Read More"):
+  ${_README_URL}#installation
 HEREDOC
 }
 _update() {

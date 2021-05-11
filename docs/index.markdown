@@ -3542,6 +3542,8 @@ nb remote branches
 nb remote branches "https://github.com/xwmx/example"
 ```
 
+For information about assigning remotes, see [`nb help remote`](#remote).
+
 #### Private Repositories and Git Credentials
 
 Syncing with private repositories requires
@@ -4526,6 +4528,47 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
   <a href="#plugins-1">plugins</a>
 </p>
 
+<p align="center">
+  <a href="#add">add</a> •
+  <a href="#archive">archive</a> •
+  <a href="#bookmark">bookmark</a> •
+  <a href="#browse">browse</a> •
+  <a href="#completions">completions</a> •
+  <a href="#count">count</a> •
+  <a href="#delete">delete</a> •
+  <a href="#edit">edit</a> •
+  <a href="#env">env</a> •
+  <a href="#export">export</a> •
+  <a href="#git">git</a> •
+  <a href="#help-1">help</a> •
+  <a href="#history">history</a> •
+  <a href="#import">import</a> •
+  <a href="#init">init</a> •
+  <a href="#list">list</a> •
+  <a href="#ls">ls</a> •
+  <a href="#move">move</a> •
+  <a href="#notebooks">notebooks</a> •
+  <a href="#open">open</a> •
+  <a href="#peek">peek</a> •
+  <a href="#pin">pin</a> •
+  <a href="#plugins">plugins</a> •
+  <a href="#remote">remote</a> •
+  <a href="#run">run</a> •
+  <a href="#search">search</a> •
+  <a href="#settings">settings</a> •
+  <a href="#shell">shell</a> •
+  <a href="#show">show</a> •
+  <a href="#status">status</a> •
+  <a href="#subcommands-1">subcommands</a> •
+  <a href="#sync">sync</a> •
+  <a href="#unarchive">unarchive</a> •
+  <a href="#unpin">unpin</a> •
+  <a href="#unset">unset</a> •
+  <a href="#update">update</a> •
+  <a href="#use">use</a> •
+  <a href="#version">version</a>
+</p>
+
 #### `nb help`
 
 ```text
@@ -4635,7 +4678,8 @@ Usage:
   nb plugins [<name>] [--paths]
   nb plugins install [<path> | <url>] [--force]
   nb plugins uninstall <name> [--force]
-  nb remote [branches [<url>] | remove | set <url> [<branch>]]
+  nb remote [branches [<url>] | remove | rename [<branch-name>] <name>]
+  nb remote set <url> [<branch>]
   nb run <command> [<arguments>...]
   nb search ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             <query>... [-a | --all] [--and <query>] [--or <query>]
@@ -4723,6 +4767,11 @@ More Information:
 
 #### `bookmark help`
 
+[↑](#help) · See also:
+[Bookmarks](#-bookmarks),
+[`bookmark`](#bookmark),
+[`browse`](#browse)
+
 ```text
     __                __                        __
    / /_  ____  ____  / /______ ___  ____ ______/ /__
@@ -4804,6 +4853,15 @@ Description:
     3. https://en.wikipedia.org/wiki/W3m
     4. https://en.wikipedia.org/wiki/Lynx_(web_browser)
 
+Read More:
+  https://github.com/xwmx/nb#-bookmarks
+
+See Also:
+  nb help browse
+  nb help open
+  nb help peek
+  nb help show
+
 Examples:
   bookmark https://example.com
   bookmark https://example.com --encrypt
@@ -4865,6 +4923,8 @@ For more information, see: `nb help`.
 
 #### `add`
 
+[↑](#help) · See also: [Adding](#adding), [`browse`](#browse)
+
 ```text
 Usage:
   nb add [<notebook>:][<folder-path>/][<filename>] [<content>]
@@ -4907,6 +4967,9 @@ Description:
   note with AES-256 using OpenSSL by default, or GPG, if configured in
   `nb set encryption_tool`.
 
+Read More:
+  https://github.com/xwmx/nb#adding
+
 See Also:
   nb help browse
 
@@ -4932,6 +4995,12 @@ Shortcut Aliases: `nb a`, `nb +`
 
 #### `archive`
 
+[↑](#help) · See also:
+[Archiving Notebooks](#archiving-notebooks),
+[`notebooks`](#notebooks),
+[`status`](#status),
+[`unarchive`](#unarchive)
+
 ```text
 Usage:
   nb archive [<name>]
@@ -4940,6 +5009,9 @@ Description:
   Set the current notebook or notebook <name> to "archived" status.
 
   This is an alias for `nb notebooks archive`.
+
+Read More:
+  https://github.com/xwmx/nb#archiving-notebooks
 
 See Also:
   nb help notebooks
@@ -4954,6 +5026,13 @@ Shortcut Alias: `nb ar`
 ```
 
 #### `bookmark`
+
+[↑](#help) · See also:
+[Bookmarks](#-bookmarks),
+[`browse`](#browse),
+[`open`](#open),
+[`peek`](#peek),
+[`show`](#show)
 
 ```text
 Usage:
@@ -5027,6 +5106,9 @@ Description:
     4. https://en.wikipedia.org/wiki/Links_(web_browser)
     5. https://en.wikipedia.org/wiki/Lynx_(web_browser)
 
+Read More:
+  https://github.com/xwmx/nb#-bookmarks
+
 See Also:
   nb help browse
   nb help open
@@ -5050,6 +5132,20 @@ Shortcut Alias: `nb bk`
 ```
 
 #### `browse`
+
+[↑](#help) · See also:
+[Browsing](#-browsing),
+[`add`](#add),
+[`delete`](#delete),
+[`edit`](#edit),
+[`list`](#list),
+[`ls`](#ls),
+[`open`](#open),
+[`peek`](#peek),
+[`pin`](#pin),
+[`search`](#search),
+[`show`](#show),
+[`unpin`](#unpin)
 
 ```text
 Usage:
@@ -5109,10 +5205,21 @@ Description:
     4. https://nmap.org/ncat/
     5. https://pandoc.org/
 
+Read More:
+  https://github.com/xwmx/nb#-browsing
+
 See Also:
+  nb help add
+  nb help delete
+  nb help edit
+  nb help list
+  nb help ls
   nb help open
   nb help peek
+  nb help pin
+  nb help search
   nb help show
+  nb help unpin
 
 Examples:
   nb browse
@@ -5127,6 +5234,9 @@ Shortcut Alias: `nb br`
 
 #### `completions`
 
+[↑](#help) · See also:
+[Tab Completion](https://github.com/xwmx/nb/tree/master/etc)
+
 ```text
 Usage:
   nb completions (check | install [-d | --download] | uninstall)
@@ -5135,11 +5245,15 @@ Options:
   -d, --download  Download the completion scripts and install.
 
 Description:
-  Manage completion scripts. For more information, visit:
+  Manage completion scripts.
+
+Read More:
   https://github.com/xwmx/nb/blob/master/etc/README.md
 ```
 
 #### `count`
+
+[↑](#help)
 
 ```text
 Usage:
@@ -5152,6 +5266,8 @@ Description:
 
 #### `delete`
 
+[↑](#help) · See also: [Deleting](#deleting), [`browse`](#browse)
+
 ```text
 Usage:
   nb delete ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])...
@@ -5162,6 +5278,9 @@ Options:
 
 Description:
   Delete one or more items.
+
+Read More:
+  https://github.com/xwmx/nb#deleting
 
 See Also:
   nb help browse
@@ -5183,6 +5302,8 @@ Shortcut Aliases: `nb d`, `nb -`
 ```
 
 #### `edit`
+
+[↑](#help) · See also: [Editing](#editing), [`browse`](#browse)
 
 ```text
 Usage:
@@ -5210,6 +5331,9 @@ Description:
   Non-text files are opened in your system's preferred app or program for
   that file type.
 
+Read More:
+  https://github.com/xwmx/nb#editing
+
 See Also:
   nb help browse
 
@@ -5232,6 +5356,8 @@ Shortcut Alias: `nb e`
 
 #### `env`
 
+[↑](#help) · See also: [Installation](#installation)
+
 ```text
 Usage:
   nb env [install]
@@ -5242,9 +5368,16 @@ Subcommands:
 Description:
   Print program environment and configuration information, or install
   dependencies.
+
+Read More:
+  https://github.com/xwmx/nb#installation
 ```
 
 #### `export`
+
+[↑](#help) · See also:
+[Import / Export](#%EF%B8%8F-import--export),
+[`import`](#import)
 
 ```text
 Usage:
@@ -5275,6 +5408,9 @@ Description:
 
     1. https://pandoc.org/
 
+Read More:
+  https://github.com/xwmx/nb#%EF%B8%8F-import--export
+
 See Also:
   nb help import
 
@@ -5294,6 +5430,14 @@ Examples:
 
 #### `git`
 
+[↑](#help) · See also:
+[Git Sync](#-git-sync),
+[History](#-revision-history),
+[`history`](#history),
+[`remote`](#remote),
+[`status`](#status),
+[`sync`](#sync)
+
 ```text
 Usage:
   nb git [checkpoint [<message>] | dirty]
@@ -5308,6 +5452,16 @@ Subcommands:
 Description:
   Run `git` commands within the current notebook directory.
 
+Read More:
+  https://github.com/xwmx/nb#-git-sync
+  https://github.com/xwmx/nb#-revision-history
+
+See Also:
+  nb help history
+  nb help remote
+  nb help status
+  nb help sync
+
 Examples:
   nb git status
   nb git diff
@@ -5316,6 +5470,8 @@ Examples:
 ```
 
 #### `help`
+
+[↑](#help)
 
 ```text
 Usage:
@@ -5344,6 +5500,14 @@ Shortcut Alias: `nb h`
 
 #### `history`
 
+[↑](#help) · See also:
+[History](#-revision-history),
+[Git Sync](#-git-sync),
+[`git`](#git),
+[`remote`](#remote),
+[`status`](#status),
+[`sync`](#sync)
+
 ```text
 Usage:
   nb history [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
@@ -5353,6 +5517,16 @@ Description:
   When a note is specified, the history for that note is displayed.
 
     1. https://github.com/jonas/tig
+
+Read More:
+  https://github.com/xwmx/nb#-revision-history
+  https://github.com/xwmx/nb#-git-sync
+
+See Also:
+  nb help git
+  nb help remote
+  nb help status
+  nb help sync
 
 Examples:
   nb history
@@ -5366,6 +5540,10 @@ Examples:
 ```
 
 #### `import`
+
+[↑](#help) · See also:
+[Import / Export](#%EF%B8%8F-import--export),
+[`export`](#export)
 
 ```text
 Usage:
@@ -5387,6 +5565,9 @@ Description:
   Copy, move, or download files into the current notebook or import
   a local notebook to make it global.
 
+Read More:
+  https://github.com/xwmx/nb#%EF%B8%8F-import--export
+
 See Also:
   nb help export
 
@@ -5402,6 +5583,8 @@ Examples:
 ```
 
 #### `init`
+
+[↑](#help)
 
 ```text
 Usage:
@@ -5428,6 +5611,14 @@ Examples:
 ```
 
 #### `list`
+
+[↑](#help) · See also:
+[Listing & Filtering](#listing--filtering),
+[`browse`](#browse),
+[`ls`](#ls),
+[`pin`](#pin),
+[`search`](#search),
+[`unpin`](#unpin)
 
 ```text
 Usage:
@@ -5462,6 +5653,9 @@ Description:
   are searched for any that match <query> as a case-insensitive regular
   expression.
 
+Read More:
+  https://github.com/xwmx/nb#listing--filtering
+
 Indicators:
   🔉  Audio
   📖  Book
@@ -5473,7 +5667,11 @@ Indicators:
   📹  Video
 
 See Also:
+  nb help browse
   nb help ls
+  nb help pin
+  nb help search
+  nb help unpin
 
 Examples:
   nb list
@@ -5487,6 +5685,14 @@ Examples:
 ```
 
 #### `ls`
+
+[↑](#help) · See also:
+[Listing & Filtering](#listing--filtering),
+[`browse`](#browse),
+[`list`](#list),
+[`pin`](#pin),
+[`search`](#search),
+[`unpin`](#unpin)
 
 ```text
 Usage:
@@ -5536,6 +5742,9 @@ Description:
   Options are passed through to `list`. For more information, see
   `nb help list`.
 
+Read More:
+  https://github.com/xwmx/nb#listing--filtering
+
 Indicators:
   🔉  Audio
   📖  Book
@@ -5547,7 +5756,11 @@ Indicators:
   📹  Video
 
 See Also:
+  nb help browse
   nb help list
+  nb help pin
+  nb help search
+  nb help unpin
 
 Examples:
   nb
@@ -5565,6 +5778,8 @@ Examples:
 ```
 
 #### `move`
+
+[↑](#help)
 
 ```text
 Usage:
@@ -5611,6 +5826,16 @@ Shortcut Alias: `nb mv`
 ```
 
 #### `notebooks`
+
+[↑](#help) · See also:
+[Notebooks](#-notebooks),
+[`archive`](#archive),
+[`history`](#history),
+[`remote`](#remote),
+[`status`](#status),
+[`sync`](#sync),
+[`unarchive`](#unarchive),
+[`use`](#use)
 
 ```text
 Usage:
@@ -5694,8 +5919,12 @@ Subcommands:
 Description:
   Manage notebooks.
 
+Read More:
+  https://github.com/xwmx/nb#-notebooks
+
 See Also:
   nb help archive
+  nb help history
   nb help remote
   nb help status
   nb help sync
@@ -5714,6 +5943,13 @@ Shortcut Aliases: `nb n`, `nb nb`
 
 #### `open`
 
+[↑](#help) · See also:
+[Viewing Bookmarks](#viewing-bookmarks),
+[`bookmark`](#bookmark),
+[`browse`](#browse),
+[`peek`](#peek),
+[`show`](#show)
+
 ```text
 Usage:
   nb open ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
@@ -5723,6 +5959,15 @@ Description:
   page in your system's primary web browser. When the item is in a text format
   or any other file type, `open` is the equivalent of `edit`. `open`
   with a notebook opens the notebook folder in the system's file browser.
+
+Read More:
+  https://github.com/xwmx/nb#viewing-bookmarks
+
+See also:
+  nb help bookmark
+  nb help browse
+  nb help peek
+  nb help show
 
 Examples:
   nb open 3
@@ -5736,16 +5981,17 @@ Examples:
   nb o example:12
   nb example:12 o
 
-See also:
-  nb help bookmark
-  nb help browse
-  nb help peek
-  nb help show
-
 Shortcut Alias: `nb o`
 ```
 
 #### `peek`
+
+[↑](#help) · See also:
+[Viewing Bookmarks](#viewing-bookmarks),
+[`bookmark`](#bookmark),
+[`browse`](#browse),
+[`open`](#open),
+[`show`](#show)
 
 ```text
 Usage:
@@ -5762,6 +6008,15 @@ Description:
     2. https://en.wikipedia.org/wiki/Midnight_Commander
     3. https://github.com/ogham/exa
 
+Read More:
+  https://github.com/xwmx/nb#viewing-bookmarks
+
+See also:
+  nb help bookmark
+  nb help browse
+  nb help open
+  nb help show
+
 Examples:
   nb peek 3
   nb peek example.bookmark.md
@@ -5774,17 +6029,18 @@ Examples:
   nb p example:12
   nb example:12 p
 
-See also:
-  nb help bookmark
-  nb help browse
-  nb help open
-  nb help show
-
 Alias: `nb preview`
 Shortcut Alias: `nb p`
 ```
 
 #### `pin`
+
+[↑](#help) · See also:
+[Pinning](#-pinning),
+[`browse`](#browse),
+[`list`](#list),
+[`ls`](#ls),
+[`unpin`](#unpin)
 
 ```text
 Usage:
@@ -5793,7 +6049,13 @@ Usage:
 Description:
   Pin an item so it appears first in lists.
 
+Read More:
+  https://github.com/xwmx/nb#-pinning
+
 See Also:
+  nb help browse
+  nb help list
+  nb help ls
   nb help unpin
 
 Examples:
@@ -5802,6 +6064,10 @@ Examples:
 ```
 
 #### `plugins`
+
+[↑](#help) · See also:
+[Plugins](#-plugins),
+[`subcommands`](#subcommands-1)
 
 ```text
 Usage:
@@ -5820,30 +6086,53 @@ Subcommands:
 Description:
   Manage plugins and themes.
 
+Read More:
+  https://github.com/xwmx/nb#-plugins
+
 Plugin Extensions:
   .nb-theme   Plugins defining color themes.
   .nb-plugin  Plugins defining new subcommands and functionality.
+
+See Also:
+  nb help subcommands
 ```
 
 #### `remote`
+
+[↑](#help) · See also:
+[Git Sync](#-git-sync),
+[History](#-revision-history),
+[`history`](#history),
+[`notebooks`](#notebooks),
+[`status`](#status),
+[`sync`](#sync)
 
 ```text
 Usage:
   nb remote
   nb remote branches [<url>]
   nb remote remove
+  nb remote rename [<branch-name>] <name>
   nb remote set <url> [<branch>]
 
 Subcommands:
   (default)     Print the remote URL and branch for the notebook.
   branches      List branches on the current or given remote.
   remove        Remove the remote URL from the notebook.
+                Alias: `unset`
+  rename        Rename the current orphan branch or <branch-name> to <name>.
+                Caveat: only orphan branches can be renamed.
   set           Set the remote URL and branch for the notebook.
 
 Description:
-  Get, set, and remove a notebook's remote repository URL and branch.
+  Configure the remote repository URL and branch for the current notebook.
+
+Read More:
+  https://github.com/xwmx/nb#-git-sync
+  https://github.com/xwmx/nb#-revision-history
 
 See Also:
+  nb help history
   nb help notebooks
   nb help status
   nb help sync
@@ -5851,9 +6140,12 @@ See Also:
 Examples:
   nb remote set https://github.com/example/example.git
   nb remote remove
+  nb example-notebook:remote set https://github.com/example/example.git
 ```
 
 #### `run`
+
+[↑](#help)
 
 ```text
 Usage:
@@ -5869,6 +6161,12 @@ Examples:
 ```
 
 #### `search`
+
+[↑](#help) · See also:
+[Search](#-search),
+[`browse`](#browse),
+[`list`](#list),
+[`ls`](#ls)
 
 ```text
 Usage:
@@ -5909,6 +6207,14 @@ Description:
     4. `ack`   https://beyondgrep.com/
     5. `grep`  https://en.wikipedia.org/wiki/Grep
 
+Read More:
+  https://github.com/xwmx/nb#-search
+
+See Also:
+  nb help browse
+  nb help list
+  nb help ls
+
 Examples:
   # search current notebook for "example query"
   nb search "example query"
@@ -5940,6 +6246,10 @@ Shortcut Alias: `nb q`
 ```
 
 #### `settings`
+
+[↑](#help) · See also:
+[`set` & `settings`](#%EF%B8%8F-set--settings),
+[`unset`](#unset)
 
 ```text
 Usage:
@@ -5974,6 +6284,9 @@ Description:
     nb set color_theme blacklight
     nb set limit 40
 
+Read More:
+  https://github.com/xwmx/nb#%EF%B8%8F-set--settings
+
 See Also:
   nb help unset
 
@@ -5992,6 +6305,8 @@ Alias: `nb set`
 
 ##### `auto_sync`
 
+[↑](#help) · See also: [Git Sync](#-git-sync)
+
 ```text
 [1]  auto_sync
      ---------
@@ -6003,6 +6318,8 @@ Alias: `nb set`
 ```
 
 ##### `color_primary`
+
+[↑](#help) · See also: [Color Themes](#-color-themes), [Custom Color Themes](#custom-color-themes)
 
 ```text
 [2]  color_primary
@@ -6016,6 +6333,8 @@ Alias: `nb set`
 
 ##### `color_secondary`
 
+[↑](#help) · See also: [Color Themes](#-color-themes), [Custom Color Themes](#custom-color-themes)
+
 ```text
 [3]  color_secondary
      ---------------
@@ -6026,6 +6345,8 @@ Alias: `nb set`
 ```
 
 ##### `color_theme`
+
+[↑](#help) · See also: [Color Themes](#-color-themes)
 
 ```text
 [4]  color_theme
@@ -6063,6 +6384,8 @@ Alias: `nb set`
 
 ##### `default_extension`
 
+[↑](#help) · See also: [Adding](#adding)
+
 ```text
 [5]  default_extension
      -----------------
@@ -6074,6 +6397,8 @@ Alias: `nb set`
 ```
 
 ##### `editor`
+
+[↑](#help) · See also: [Editing](#editing), [Adding](#adding)
 
 ```text
 [6]  editor
@@ -6097,6 +6422,8 @@ Alias: `nb set`
 
 ##### `encryption_tool`
 
+[↑](#help) · See also: [Password-Protected Encrypted Notes and Bookmarks](#password-protected-encrypted-notes-and-bookmarks)
+
 ```text
 [7]  encryption_tool
      ---------------
@@ -6108,6 +6435,8 @@ Alias: `nb set`
 
 ##### `footer`
 
+[↑](#help) · See also: [Listing & Filtering](#listing--filtering)
+
 ```text
 [8]  footer
      ------
@@ -6118,6 +6447,8 @@ Alias: `nb set`
 ```
 
 ##### `header`
+
+[↑](#help) · See also: [Listing & Filtering](#listing--filtering)
 
 ```text
 [9]  header
@@ -6139,6 +6470,8 @@ Alias: `nb set`
 
 ##### `limit`
 
+[↑](#help) · See also: [Listing & Filtering](#listing--filtering)
+
 ```text
 [10] limit
      -----
@@ -6148,6 +6481,8 @@ Alias: `nb set`
 ```
 
 ##### `nb_dir`
+
+[↑](#help)
 
 ```text
 [11] nb_dir
@@ -6161,6 +6496,8 @@ Alias: `nb set`
 ```
 
 ##### `syntax_theme`
+
+[↑](#help) · See also: [Terminal Syntax Highlighting Theme](#terminal-syntax-highlighting-theme)
 
 ```text
 [12] syntax_theme
@@ -6200,6 +6537,8 @@ Alias: `nb set`
 
 #### `shell`
 
+[↑](#help) · See also: [Interactive Shell](#-nb-interactive-shell)
+
 ```text
 Usage:
   nb shell [<subcommand> [<options>...] | --clear-history]
@@ -6214,6 +6553,9 @@ Description:
   a streamlined, distraction-free approach for working with `nb`.
 
   When <subcommand> is present, the command will run as the shell is opened.
+
+Read More:
+  https://github.com/xwmx/nb#-nb-interactive-shell
 
 Example:
   $ nb shell
@@ -6231,6 +6573,12 @@ Example:
 ```
 
 #### `show`
+
+[↑](#help) · See also:
+[Viewing](#viewing),
+[`browse`](#browse),
+[`open`](#open),
+[`peek`](#peek)
 
 ```text
 Usage:
@@ -6302,6 +6650,9 @@ Description:
     6. http://www.andre-simon.de/doku/highlight/en/highlight.php
     7. https://pygments.org/
 
+Read More:
+  https://github.com/xwmx/nb#viewing
+
 See Also:
   nb help browse
   nb help open
@@ -6326,6 +6677,16 @@ Shortcut Alias: `nb s`
 
 #### `status`
 
+[↑](#help) · See also:
+[Git Sync](#-git-sync),
+[History](#-revision-history),
+[`archive`](#archive),
+[`history`](#history),
+[`notebooks`](#notebooks),
+[`remote`](#remote),
+[`sync`](#sync),
+[`unarchive`](#unarchive)
+
 ```text
 Usage:
   nb status [<notebook>]
@@ -6333,11 +6694,15 @@ Usage:
 Description:
   Print archival, git, and remote status for the current notebook or <notebook>.
 
+Read More:
+  https://github.com/xwmx/nb#-git-sync
+  https://github.com/xwmx/nb#-revision-history
+
 See Also:
   nb help archive
+  nb help history
   nb help notebooks
   nb help remote
-  nb help status
   nb help sync
   nb help unarchive
 
@@ -6349,6 +6714,10 @@ Shortcut Alias: `nb st`
 ```
 
 #### `subcommands`
+
+[↑](#help) · See also:
+[Plugins](#-plugins),
+[`plugins`](#plugins)
 
 ```text
 Usage:
@@ -6367,9 +6736,23 @@ Description:
   List, add, alias, and describe subcommands. New subcommands, aliases, and
   descriptions are not persisted, so `add`, `alias`, `describe` are
   primarily for plugins.
+
+Read More:
+  https://github.com/xwmx/nb#-plugins
+
+See Also:
+  nb help plugins
 ```
 
 #### `sync`
+
+[↑](#help) · See also:
+[Git Sync](#-git-sync),
+[History](#-revision-history),
+[`history`](#history),
+[`notebooks`](#notebooks),
+[`remote`](#remote),
+[`status`](#status)
 
 ```text
 Usage:
@@ -6405,7 +6788,12 @@ Sync Conflict Resolution:
   More Information:
     https://github.com/xwmx/nb#sync-conflict-resolution
 
+Read More:
+  https://github.com/xwmx/nb#-git-sync
+  https://github.com/xwmx/nb#-revision-history
+
 See Also:
+  nb help history
   nb help notebooks
   nb help remote
   nb help status
@@ -6417,6 +6805,12 @@ Examples:
 
 #### `unarchive`
 
+[↑](#help) · See also:
+[Archiving Notebooks](#archiving-notebooks),
+[`archive`](#archive),
+[`notebooks`](#notebooks),
+[`status`](#status)
+
 ```text
 Usage:
   nb unarchive [<name>]
@@ -6425,6 +6819,9 @@ Description:
   Remove "archived" status from the current notebook or notebook <name>.
 
   This is an alias for `nb notebooks unarchive`.
+
+Read More:
+  https://github.com/xwmx/nb#archiving-notebooks
 
 See Also:
   nb help archive
@@ -6440,6 +6837,13 @@ Shortcut Alias: `nb unar`
 
 #### `unpin`
 
+[↑](#help) · See also:
+[Pinning](#-pinning),
+[`browse`](#browse),
+[`list`](#list),
+[`ls`](#ls),
+[`pin`](#pin)
+
 ```text
 Usage:
   nb unpin ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
@@ -6447,7 +6851,13 @@ Usage:
 Description:
   Unpin a pinned item.
 
+Read More:
+  https://github.com/xwmx/nb#-pinning
+
 See Also:
+  nb help browse
+  nb help list
+  nb help ls
   nb help pin
 
 Examples:
@@ -6457,6 +6867,10 @@ Examples:
 
 #### `unset`
 
+[↑](#help) · See also:
+[`set` & `settings`](#%EF%B8%8F-set--settings),
+[`settings`](#settings)
+
 ```text
 Usage:
   nb unset (<name> | <number>)
@@ -6465,6 +6879,9 @@ Description:
   Unset a setting, returning it to the default value.
 
   This is an alias for `nb settings unset`.
+
+Read More:
+  https://github.com/xwmx/nb#%EF%B8%8F-set--settings
 
 See Also:
   nb help settings
@@ -6478,6 +6895,8 @@ Alias: `nb reset`
 
 #### `update`
 
+[↑](#help) · See also: [Installation](#installation)
+
 ```text
 Usage:
   nb update
@@ -6489,9 +6908,16 @@ Description:
   If `nb` was installed using a package manager like npm or
   Homebrew, use the package manager's upgrade functionality instead
   of this command.
+
+Read More:
+  https://github.com/xwmx/nb#installation
 ```
 
 #### `use`
+
+[↑](#help) · See also:
+[Notebooks](#-notebooks),
+[`notebooks`](#notebooks)
 
 ```text
 Usage:
@@ -6499,6 +6925,9 @@ Usage:
 
 Description:
   Switch to the specified notebook. Shortcut for `nb notebooks use`.
+
+Read More:
+  https://github.com/xwmx/nb#-notebooks
 
 See Also:
   nb help notebooks
@@ -6510,6 +6939,8 @@ Shortcut Alias: `nb u`
 ```
 
 #### `version`
+
+[↑](#help)
 
 ```text
 Usage:
@@ -6530,6 +6961,8 @@ Description:
 </p>
 
 #### `backlink`
+
+[↑](#plugins-1)
 
 ```text
 Usage:
@@ -6553,6 +6986,8 @@ Description:
 
 #### `clip`
 
+[↑](#plugins-1)
+
 ```text
 Usage:
   nb clip [<notebook>:][<id> | <filename> | <path> | <title> | <extension>]
@@ -6574,6 +7009,8 @@ Examples:
 
 #### `copy`
 
+[↑](#plugins-1)
+
 ```text
 Usage:
   nb copy ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
@@ -6585,6 +7022,8 @@ Alias: `nb duplicate`
 ```
 
 #### `ebook`
+
+[↑](#plugins-1)
 
 ```text
 Usage:
@@ -6636,6 +7075,8 @@ More info:
 ```
 
 #### `example`
+
+[↑](#plugins-1)
 
 ```text
 Usage:
@@ -6912,7 +7353,7 @@ Description:
 
 Any folder may contain an optional plain text file named `.pindex`
 containing a list of basenames from that folder, one per line, that should
-be treated as "[pinned](#-pinning)", meaning they appear first in some
+be treated as [pinned](#-pinning), meaning they appear first in some
 list operations, including `nb` and `nb ls`. Entires are added to a
 `.pindex` file with [`nb pin`](#pin) and removed with [`nb unpin`](#unpin).
 

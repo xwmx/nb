@@ -2,7 +2,23 @@
 
 load test_helper
 
-# --skip-confirmation #############################################################
+# alias #######################################################################
+
+@test "'unset remote' with no existing remote returns 1 and prints message." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" unset remote
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 1                       ]]
+  [[ "${lines[0]}"  =~  No\ remote\ configured  ]]
+}
+
+# --skip-confirmation #########################################################
 
 @test "'remote remove --skip-confirmation' with existing remote removes remote without resetting default branch and prints message." {
   {
@@ -43,7 +59,7 @@ load test_helper
   [[ "$("${_NB}" remote 2>&1)"  =~  No\ remote\ configured.           ]]
 
   [[ "${lines[0]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}       ]]
-  [[ "${lines[1]}"  =~  Remote\ removed:\ .*${_GIT_REMOTE_URL}        ]]
+  [[ "${lines[1]}"  =~  Remote\ removed.                              ]]
 
   diff                                        \
     <(git -C "${NB_DIR}/home" branch --all)   \
@@ -67,6 +83,8 @@ load test_helper
   [[    "${lines[0]}"  =~ \*\ master                                  ]]
   [[    "${lines[1]}"  =~ remotes/origin/HEAD\ \-\>\ origin/master    ]]
   [[    "${lines[2]}"  =~ remotes/origin/master                       ]]
+
+  [[ -f "${_TMP_DIR}/new-clone/Example File.md"                       ]]
 
   declare _after_hashes=()
   _after_hashes=($(git -C "${_TMP_DIR}/new-clone" rev-list origin/master))
@@ -125,7 +143,8 @@ load test_helper
   [[ "$("${_NB}" remote 2>&1)" =~ No\ remote\ configured.             ]]
 
   [[ "${lines[0]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}       ]]
-  [[ "${lines[1]}"  =~  Remote\ removed:\ .*${_GIT_REMOTE_URL}        ]]
+  [[ "${lines[1]}"  =~  Remote\ branch\ reset:\ .*master              ]]
+  [[ "${lines[2]}"  =~  Remote\ removed.                              ]]
 
   diff                                        \
     <(git -C "${NB_DIR}/home" branch --all)   \
@@ -146,23 +165,25 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${lines[0]}"  =~ \*\ master                                  ]]
-  [[    "${lines[1]}"  =~ remotes/origin/HEAD\ \-\>\ origin/master    ]]
-  [[    "${lines[2]}"  =~ remotes/origin/master                       ]]
+  [[      "${lines[0]}"  =~ \*\ master                                  ]]
+  [[      "${lines[1]}"  =~ remotes/origin/HEAD\ \-\>\ origin/master    ]]
+  [[      "${lines[2]}"  =~ remotes/origin/master                       ]]
+
+  [[ ! -e "${_TMP_DIR}/new-clone/Example File.md"                       ]]
 
   declare _after_hashes=()
   _after_hashes=($(git -C "${_TMP_DIR}/new-clone" rev-list origin/master))
 
-  [[ "${#_after_hashes[@]}" -eq 1                                     ]]
+  [[ "${#_after_hashes[@]}" -eq 1                                       ]]
 
   ! _contains "${_after_hashes[0]}" "${_before_hashes[@]}"
 
-  [[ "${_after_hashes[0]}"  != "${_before_hashes[0]}"                 ]]
-  [[ "${_after_hashes[0]}"  != "${_before_hashes[1]}"                 ]]
+  [[ "${_after_hashes[0]}"  != "${_before_hashes[0]}"                   ]]
+  [[ "${_after_hashes[0]}"  != "${_before_hashes[1]}"                   ]]
 
   git -C "${_TMP_DIR}/new-clone" log
 
-  [[ "$(git -C "${_TMP_DIR}/new-clone" log)"  =~  \[nb\]\ Initialize  ]]
+  [[ "$(git -C "${_TMP_DIR}/new-clone" log)"  =~  \[nb\]\ Initialize    ]]
 }
 
 # remote remove ###############################################################
@@ -222,7 +243,7 @@ load test_helper
   [[ "$("${_NB}" remote 2>&1)"  =~  No\ remote\ configured.           ]]
 
   [[ "${lines[0]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}       ]]
-  [[ "${lines[1]}"  =~  Remote\ removed:\ .*${_GIT_REMOTE_URL}        ]]
+  [[ "${lines[1]}"  =~  Remote\ removed.                              ]]
 
   diff                                        \
     <(git -C "${NB_DIR}/home" branch --all)   \
@@ -246,6 +267,8 @@ load test_helper
   [[    "${lines[0]}"  =~ \*\ master                                  ]]
   [[    "${lines[1]}"  =~ remotes/origin/HEAD\ \-\>\ origin/master    ]]
   [[    "${lines[2]}"  =~ remotes/origin/master                       ]]
+
+  [[ -f "${_TMP_DIR}/new-clone/Example File.md"                       ]]
 
   declare _after_hashes=()
   _after_hashes=($(git -C "${_TMP_DIR}/new-clone" rev-list origin/master))
@@ -304,7 +327,8 @@ load test_helper
   [[ "$("${_NB}" remote 2>&1)" =~ No\ remote\ configured.             ]]
 
   [[ "${lines[0]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}       ]]
-  [[ "${lines[1]}"  =~  Remote\ removed:\ .*${_GIT_REMOTE_URL}        ]]
+  [[ "${lines[1]}"  =~  Remote\ branch\ reset:\ .*master              ]]
+  [[ "${lines[2]}"  =~  Remote\ removed.                              ]]
 
   diff                                        \
     <(git -C "${NB_DIR}/home" branch --all)   \
@@ -325,23 +349,25 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${lines[0]}"  =~ \*\ master                                  ]]
-  [[    "${lines[1]}"  =~ remotes/origin/HEAD\ \-\>\ origin/master    ]]
-  [[    "${lines[2]}"  =~ remotes/origin/master                       ]]
+  [[      "${lines[0]}"  =~ \*\ master                                  ]]
+  [[      "${lines[1]}"  =~ remotes/origin/HEAD\ \-\>\ origin/master    ]]
+  [[      "${lines[2]}"  =~ remotes/origin/master                       ]]
+
+  [[ ! -e "${_TMP_DIR}/new-clone/Example File.md"                       ]]
 
   declare _after_hashes=()
   _after_hashes=($(git -C "${_TMP_DIR}/new-clone" rev-list origin/master))
 
-  [[ "${#_after_hashes[@]}" -eq 1                                     ]]
+  [[ "${#_after_hashes[@]}" -eq 1                                       ]]
 
   ! _contains "${_after_hashes[0]}" "${_before_hashes[@]}"
 
-  [[ "${_after_hashes[0]}"  != "${_before_hashes[0]}"                 ]]
-  [[ "${_after_hashes[0]}"  != "${_before_hashes[1]}"                 ]]
+  [[ "${_after_hashes[0]}"  != "${_before_hashes[0]}"                   ]]
+  [[ "${_after_hashes[0]}"  != "${_before_hashes[1]}"                   ]]
 
   git -C "${_TMP_DIR}/new-clone" log
 
-  [[ "$(git -C "${_TMP_DIR}/new-clone" log)"  =~  \[nb\]\ Initialize  ]]
+  [[ "$(git -C "${_TMP_DIR}/new-clone" log)"  =~  \[nb\]\ Initialize    ]]
 }
 
 @test "'remote unset' with existing remote removes remote, resets default branch, and prints message." {
@@ -383,7 +409,8 @@ load test_helper
   [[ "$("${_NB}" remote 2>&1)" =~ No\ remote\ configured.             ]]
 
   [[ "${lines[0]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}       ]]
-  [[ "${lines[1]}"  =~  Remote\ removed:\ .*${_GIT_REMOTE_URL}        ]]
+  [[ "${lines[1]}"  =~  Remote\ branch\ reset:\ .*master              ]]
+  [[ "${lines[2]}"  =~  Remote\ removed.                              ]]
 
   diff                                        \
     <(git -C "${NB_DIR}/home" branch --all)   \
@@ -404,23 +431,25 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${lines[0]}"  =~ \*\ master                                  ]]
-  [[    "${lines[1]}"  =~ remotes/origin/HEAD\ \-\>\ origin/master    ]]
-  [[    "${lines[2]}"  =~ remotes/origin/master                       ]]
+  [[      "${lines[0]}"  =~ \*\ master                                  ]]
+  [[      "${lines[1]}"  =~ remotes/origin/HEAD\ \-\>\ origin/master    ]]
+  [[      "${lines[2]}"  =~ remotes/origin/master                       ]]
+
+  [[ ! -e "${_TMP_DIR}/new-clone/Example File.md"                       ]]
 
   declare _after_hashes=()
   _after_hashes=($(git -C "${_TMP_DIR}/new-clone" rev-list origin/master))
 
-  [[ "${#_after_hashes[@]}" -eq 1                                     ]]
+  [[ "${#_after_hashes[@]}" -eq 1                                       ]]
 
   ! _contains "${_after_hashes[0]}" "${_before_hashes[@]}"
 
-  [[ "${_after_hashes[0]}"  != "${_before_hashes[0]}"                 ]]
-  [[ "${_after_hashes[0]}"  != "${_before_hashes[1]}"                 ]]
+  [[ "${_after_hashes[0]}"  != "${_before_hashes[0]}"                   ]]
+  [[ "${_after_hashes[0]}"  != "${_before_hashes[1]}"                   ]]
 
   git -C "${_TMP_DIR}/new-clone" log
 
-  [[ "$(git -C "${_TMP_DIR}/new-clone" log)"  =~  \[nb\]\ Initialize  ]]
+  [[ "$(git -C "${_TMP_DIR}/new-clone" log)"  =~  \[nb\]\ Initialize    ]]
 }
 
 @test "'remote remove' with existing remote as orphan removes remote, removes branch and prints message." {
@@ -457,10 +486,11 @@ load test_helper
 
   [[ "${status}"    -eq 0 ]]
 
-  [[ "$("${_NB}" remote 2>&1)" =~ No\ remote\ configured.         ]]
+  [[ "$("${_NB}" remote 2>&1)" =~ No\ remote\ configured.           ]]
 
-  [[ "${lines[0]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}   ]]
-  [[ "${lines[1]}"  =~  Remote\ removed:\ .*${_GIT_REMOTE_URL}    ]]
+  [[ "${lines[0]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}     ]]
+  [[ "${lines[1]}"  =~  Remote\ branch\ deleted:\ .*example-branch  ]]
+  [[ "${lines[2]}"  =~  Remote\ removed.                            ]]
 
   diff                                        \
     <(git -C "${NB_DIR}/home" ls-remote       \
@@ -510,7 +540,7 @@ load test_helper
   [[ "$("${_NB}" remote 2>&1)" =~ No\ remote\ configured.         ]]
 
   [[ "${lines[0]}"  =~  Removing\ remote:\ .*${_GIT_REMOTE_URL}   ]]
-  [[ "${lines[1]}"  =~  Remote\ removed:\ .*${_GIT_REMOTE_URL}    ]]
+  [[ "${lines[1]}"  =~  Remote\ removed.                          ]]
 
   diff                                        \
     <(git -C "${NB_DIR}/home" ls-remote       \
