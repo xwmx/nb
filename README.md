@@ -4761,7 +4761,10 @@ More Information:
 
 #### `bookmark help`
 
-[↑](#help) · See also: [Bookmarks](#-bookmarks)
+[↑](#help) · See also:
+[Bookmarks](#-bookmarks),
+[`bookmark`](#bookmark),
+[`browse`](#browse)
 
 ```text
     __                __                        __
@@ -5370,7 +5373,13 @@ Examples:
 
 #### `git`
 
-[↑](#help)
+[↑](#help) · See also:
+[Git Sync](#-git-sync),
+[History](#-revision-history),
+[`history`](#history),
+[`remote`](#remote),
+[`status`](#status),
+[`sync`](#sync)
 
 ```text
 Usage:
@@ -5385,6 +5394,12 @@ Subcommands:
 
 Description:
   Run `git` commands within the current notebook directory.
+
+See Also:
+  nb help history
+  nb help remote
+  nb help status
+  nb help sync
 
 Examples:
   nb git status
@@ -5424,7 +5439,13 @@ Shortcut Alias: `nb h`
 
 #### `history`
 
-[↑](#help) · See also: [History](#-revision-history)
+[↑](#help) · See also:
+[History](#-revision-history),
+[Git Sync](#-git-sync),
+[`git`](#git),
+[`remote`](#remote),
+[`status`](#status),
+[`sync`](#sync)
 
 ```text
 Usage:
@@ -5435,6 +5456,12 @@ Description:
   When a note is specified, the history for that note is displayed.
 
     1. https://github.com/jonas/tig
+
+See Also:
+  nb help git
+  nb help remote
+  nb help status
+  nb help sync
 
 Examples:
   nb history
@@ -5519,7 +5546,9 @@ Examples:
 
 [↑](#help) · See also:
 [Listing & Filtering](#listing--filtering),
-[`ls`](#ls)
+[`browse`](#browse),
+[`ls`](#ls),
+[`search`](#search)
 
 ```text
 Usage:
@@ -5565,7 +5594,9 @@ Indicators:
   📹  Video
 
 See Also:
+  nb help browse
   nb help ls
+  nb help search
 
 Examples:
   nb list
@@ -5582,7 +5613,9 @@ Examples:
 
 [↑](#help) · See also:
 [Listing & Filtering](#listing--filtering),
-[`list`](#list)
+[`browse`](#browse),
+[`list`](#list),
+[`search`](#search)
 
 ```text
 Usage:
@@ -5643,7 +5676,9 @@ Indicators:
   📹  Video
 
 See Also:
+  nb help browse
   nb help list
+  nb help search
 
 Examples:
   nb
@@ -5954,6 +5989,8 @@ Plugin Extensions:
 
 [↑](#help) · See also:
 [Git Sync](#-git-sync),
+[History](#-revision-history),
+[`history`](#history),
 [`notebooks`](#notebooks),
 [`status`](#status),
 [`sync`](#sync)
@@ -5979,6 +6016,7 @@ Description:
   Configure the remote repository URL and branch for the current notebook.
 
 See Also:
+  nb help history
   nb help notebooks
   nb help status
   nb help sync
@@ -6008,7 +6046,11 @@ Examples:
 
 #### `search`
 
-[↑](#help) · See also: [Search](#-search)
+[↑](#help) · See also:
+[Search](#-search),
+[`browse`](#browse),
+[`list`](#list),
+[`ls`](#ls)
 
 ```text
 Usage:
@@ -6048,6 +6090,11 @@ Description:
     3. `ag`    https://github.com/ggreer/the_silver_searcher
     4. `ack`   https://beyondgrep.com/
     5. `grep`  https://en.wikipedia.org/wiki/Grep
+
+See Also:
+  nb help browse
+  nb help list
+  nb help ls
 
 Examples:
   # search current notebook for "example query"
@@ -6504,7 +6551,9 @@ Shortcut Alias: `nb s`
 
 [↑](#help) · See also:
 [Git Sync](#-git-sync),
+[History](#-revision-history),
 [`archive`](#archive),
+[`history`](#history),
 [`notebooks`](#notebooks),
 [`remote`](#remote),
 [`status`](#status),
@@ -6520,6 +6569,7 @@ Description:
 
 See Also:
   nb help archive
+  nb help history
   nb help notebooks
   nb help remote
   nb help status
@@ -6560,6 +6610,8 @@ Description:
 
 [↑](#help) · See also:
 [Git Sync](#-git-sync),
+[History](#-revision-history),
+[`history`](#history),
 [`notebooks`](#notebooks),
 [`remote`](#remote),
 [`status`](#status)
@@ -6599,6 +6651,7 @@ Sync Conflict Resolution:
     https://github.com/xwmx/nb#sync-conflict-resolution
 
 See Also:
+  nb help history
   nb help notebooks
   nb help remote
   nb help status

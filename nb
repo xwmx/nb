@@ -2859,6 +2859,12 @@ $(_color_primary "Subcommands"):
 $(_color_primary "Description"):
   Run \`git\` commands within the current notebook directory.
 
+$(_color_primary "See Also"):
+  ${_ME} help history
+  ${_ME} help remote
+  ${_ME} help status
+  ${_ME} help sync
+
 $(_color_primary "Examples"):
   ${_ME} git status
   ${_ME} git diff
@@ -4431,7 +4437,9 @@ $(_color_primary "Indicators"):
   ${_NB_INDICATOR_VIDEO:-} Video
 
 $(_color_primary "See Also"):
+  ${_ME} help browse
   ${_ME} help ls
+  ${_ME} help search
 
 $(_color_primary "Examples"):
   ${_ME} list
@@ -5402,7 +5410,9 @@ $(_color_primary "Indicators"):
   ${_NB_INDICATOR_VIDEO:-} Video
 
 $(_color_primary "See Also"):
+  ${_ME} help browse
   ${_ME} help list
+  ${_ME} help search
 
 $(_color_primary "Examples"):
   ${_ME}
@@ -12771,6 +12781,12 @@ $(_color_primary "Description"):
 
     1. https://github.com/jonas/tig
 
+$(_color_primary "See Also"):
+  ${_ME} help git
+  ${_ME} help remote
+  ${_ME} help status
+  ${_ME} help sync
+
 $(_color_primary "Examples"):
   ${_ME} history
   ${_ME} history example.md
@@ -13729,6 +13745,11 @@ $(_color_primary "Description"):
     3. \`ag\`    https://github.com/ggreer/the_silver_searcher
     4. \`ack\`   https://beyondgrep.com/
     5. \`grep\`  https://en.wikipedia.org/wiki/Grep
+
+$(_color_primary "See Also"):
+  ${_ME} help browse
+  ${_ME} help list
+  ${_ME} help ls
 
 $(_color_primary "Examples"):
   # search current notebook for "example query"
@@ -18645,6 +18666,7 @@ $(_color_primary "Description"):
   Configure the remote repository URL and branch for the current notebook.
 
 $(_color_primary "See Also"):
+  ${_ME} help history
   ${_ME} help notebooks
   ${_ME} help status
   ${_ME} help sync
@@ -20269,6 +20291,7 @@ $(_color_primary "Description"):
 
 $(_color_primary "See Also"):
   ${_ME} help archive
+  ${_ME} help history
   ${_ME} help notebooks
   ${_ME} help remote
   ${_ME} help status
@@ -20379,6 +20402,7 @@ $(_color_primary "Sync Conflict Resolution"):
     https://github.com/xwmx/nb#sync-conflict-resolution
 
 $(_color_primary "See Also"):
+  ${_ME} help history
   ${_ME} help notebooks
   ${_ME} help remote
   ${_ME} help status
