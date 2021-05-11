@@ -4439,7 +4439,9 @@ $(_color_primary "Indicators"):
 $(_color_primary "See Also"):
   ${_ME} help browse
   ${_ME} help ls
+  ${_ME} help pin
   ${_ME} help search
+  ${_ME} help unpin
 
 $(_color_primary "Examples"):
   ${_ME} list
@@ -5412,7 +5414,9 @@ $(_color_primary "Indicators"):
 $(_color_primary "See Also"):
   ${_ME} help browse
   ${_ME} help list
+  ${_ME} help pin
   ${_ME} help search
+  ${_ME} help unpin
 
 $(_color_primary "Examples"):
   ${_ME}
@@ -6210,6 +6214,7 @@ $(_color_primary "Description"):
 
 $(_color_primary "See Also"):
   ${_ME} help archive
+  ${_ME} help history
   ${_ME} help remote
   ${_ME} help status
   ${_ME} help sync
@@ -7732,6 +7737,9 @@ $(_color_primary "Description"):
   List, add, alias, and describe subcommands. New subcommands, aliases, and
   descriptions are not persisted, so \`add\`, \`alias\`, \`describe\` are
   primarily for plugins.
+
+$(_color_primary "See Also"):
+  ${_ME} help plugins
 HEREDOC
 }
 _subcommands() {
@@ -13582,6 +13590,9 @@ $(_color_primary "Description"):
   Pin an item so it appears first in lists.
 
 $(_color_primary "See Also"):
+  ${_ME} help browse
+  ${_ME} help list
+  ${_ME} help ls
   ${_ME} help unpin
 
 $(_color_primary "Examples"):
@@ -15724,6 +15735,9 @@ $(_color_primary "Description"):
   Unpin a pinned item.
 
 $(_color_primary "See Also"):
+  ${_ME} help browse
+  ${_ME} help list
+  ${_ME} help ls
   ${_ME} help pin
 
 $(_color_primary "Examples"):
@@ -15883,9 +15897,17 @@ $(_color_primary "Description"):
     5. https://pandoc.org/
 
 $(_color_primary "See Also"):
+  ${_ME} help add
+  ${_ME} help delete
+  ${_ME} help edit
+  ${_ME} help list
+  ${_ME} help ls
   ${_ME} help open
   ${_ME} help peek
+  ${_ME} help pin
+  ${_ME} help search
   ${_ME} help show
+  ${_ME} help unpin
 
 $(_color_primary "Examples"):
   ${_ME} browse
@@ -18455,6 +18477,9 @@ $(_color_primary "Description"):
 $(_color_primary "Plugin Extensions"):
   .nb-theme   Plugins defining color themes.
   .nb-plugin  Plugins defining new subcommands and functionality.
+
+$(_color_primary "See Also"):
+  ${_ME} help subcommands
 HEREDOC
 }
 _plugins() {

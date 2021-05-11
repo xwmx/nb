@@ -5117,9 +5117,17 @@ Shortcut Alias: `nb bk`
 
 [↑](#help) · See also:
 [Browsing](#-browsing),
+[`add`](#add),
+[`delete`](#delete),
+[`edit`](#edit),
+[`list`](#list),
+[`ls`](#ls),
 [`open`](#open),
 [`peek`](#peek),
-[`show`](#show)
+[`peek`](#pin),
+[`show`](#search),
+[`show`](#show),
+[`show`](#unpin)
 
 ```text
 Usage:
@@ -5180,9 +5188,17 @@ Description:
     5. https://pandoc.org/
 
 See Also:
+  nb help add
+  nb help delete
+  nb help edit
+  nb help list
+  nb help ls
   nb help open
   nb help peek
+  nb help pin
+  nb help search
   nb help show
+  nb help unpin
 
 Examples:
   nb browse
@@ -5554,7 +5570,9 @@ Examples:
 [Listing & Filtering](#listing--filtering),
 [`browse`](#browse),
 [`ls`](#ls),
-[`search`](#search)
+[`pin`](#pin),
+[`search`](#search),
+[`unpin`](#unpin)
 
 ```text
 Usage:
@@ -5602,7 +5620,9 @@ Indicators:
 See Also:
   nb help browse
   nb help ls
+  nb help pin
   nb help search
+  nb help unpin
 
 Examples:
   nb list
@@ -5621,7 +5641,9 @@ Examples:
 [Listing & Filtering](#listing--filtering),
 [`browse`](#browse),
 [`list`](#list),
-[`search`](#search)
+[`pin`](#pin),
+[`search`](#search),
+[`unpin`](#unpin)
 
 ```text
 Usage:
@@ -5684,7 +5706,9 @@ Indicators:
 See Also:
   nb help browse
   nb help list
+  nb help pin
   nb help search
+  nb help unpin
 
 Examples:
   nb
@@ -5754,6 +5778,7 @@ Shortcut Alias: `nb mv`
 [↑](#help) · See also:
 [Notebooks](#-notebooks),
 [`archive`](#archive),
+[`history`](#history),
 [`remote`](#remote),
 [`status`](#status),
 [`sync`](#sync),
@@ -5844,6 +5869,7 @@ Description:
 
 See Also:
   nb help archive
+  nb help history
   nb help remote
   nb help status
   nb help sync
@@ -5948,7 +5974,12 @@ Shortcut Alias: `nb p`
 
 #### `pin`
 
-[↑](#help) · See also: [Pinning](#-pinning), [`unpin`](#unpin)
+[↑](#help) · See also:
+[Pinning](#-pinning),
+[`browse`](#browse),
+[`list`](#list),
+[`ls`](#ls),
+[`unpin`](#unpin)
 
 ```text
 Usage:
@@ -5958,6 +5989,9 @@ Description:
   Pin an item so it appears first in lists.
 
 See Also:
+  nb help browse
+  nb help list
+  nb help ls
   nb help unpin
 
 Examples:
@@ -5967,7 +6001,9 @@ Examples:
 
 #### `plugins`
 
-[↑](#help) · See also: [Plugins](#-plugins)
+[↑](#help) · See also:
+[Plugins](#-plugins),
+[`subcommands`](#subcommands)
 
 ```text
 Usage:
@@ -5989,6 +6025,9 @@ Description:
 Plugin Extensions:
   .nb-theme   Plugins defining color themes.
   .nb-plugin  Plugins defining new subcommands and functionality.
+
+See Also:
+  nb help subcommands
 ```
 
 #### `remote`
@@ -6591,7 +6630,9 @@ Shortcut Alias: `nb st`
 
 #### `subcommands`
 
-[↑](#help) · See also: [Plugins](#-plugins)
+[↑](#help) · See also:
+[Plugins](#-plugins),
+[`plugins`](#plugins)
 
 ```text
 Usage:
@@ -6610,6 +6651,9 @@ Description:
   List, add, alias, and describe subcommands. New subcommands, aliases, and
   descriptions are not persisted, so `add`, `alias`, `describe` are
   primarily for plugins.
+
+See Also:
+  nb help plugins
 ```
 
 #### `sync`
@@ -6698,7 +6742,12 @@ Shortcut Alias: `nb unar`
 
 #### `unpin`
 
-[↑](#help) · See also: [Pinning](#-pinning), [`pin`](#pin)
+[↑](#help) · See also:
+[Pinning](#-pinning),
+[`browse`](#browse),
+[`list`](#list),
+[`ls`](#ls),
+[`pin`](#pin)
 
 ```text
 Usage:
@@ -6708,6 +6757,9 @@ Description:
   Unpin a pinned item.
 
 See Also:
+  nb help browse
+  nb help list
+  nb help ls
   nb help pin
 
 Examples:
