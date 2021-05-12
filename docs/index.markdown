@@ -398,9 +398,10 @@ files by default. The default file type can be changed to
 whatever you like
 using [`nb set default_extension`](#default_extension).
 
-`nb add` has smart argument parsing and behaves differently depending on
-the types of arguments it receives. When a filename with extension is
-specified, a new note with that filename is opened in the editor:
+`nb add` has intelligent argument parsing
+and behaves differently depending on the types of arguments it receives.
+When a filename with extension is specified,
+a new note with that filename is opened in the editor:
 
 ```bash
 nb add example.md
@@ -4734,7 +4735,7 @@ Subcommands:
   peek         View a note, bookmarked web page, or notebook in the terminal.
   pin          Pin an item so it appears first in lists.
   plugins      Install and uninstall plugins and themes.
-  remote       Get, set, and remove the remote URL for the notebook.
+  remote       Configure the remote URL and branch for the notebook.
   run          Run shell commands within the current notebook.
   search       Search notes.
   settings     Edit configuration settings.
@@ -6111,17 +6112,22 @@ See Also:
 Usage:
   nb remote
   nb remote branches [<url>]
+  nb remote delete <branch-name>
   nb remote remove
   nb remote rename [<branch-name>] <name>
+  nb remote reset <branch-name>
   nb remote set <url> [<branch>]
 
 Subcommands:
   (default)     Print the remote URL and branch for the notebook.
   branches      List branches on the current or given remote.
+  delete        Delete <branch-name> from the remote.
+                Caveat: only orphan branches can be deleted.
   remove        Remove the remote URL from the notebook.
                 Alias: `unset`
   rename        Rename the current orphan branch or <branch-name> to <name>.
                 Caveat: only orphan branches can be renamed.
+  delete        Reset <branch-name> on the remote to a blank initial state.
   set           Set the remote URL and branch for the notebook.
 
 Description:
