@@ -74,7 +74,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="6.2.1"
+_VERSION="6.2.2"
 
 # $_ME
 #
@@ -18765,7 +18765,7 @@ $(_color_primary "Subcommands"):
                 Alias: \`unset\`
   rename        Rename the current orphan branch or <branch-name> to <name>.
                 Caveat: only orphan branches can be renamed.
-  delete        Reset <branch-name> on the remote to a blank initial state.
+  reset         Reset <branch-name> on the remote to a blank initial state.
   set           Set the remote URL and branch for the notebook.
 
 $(_color_primary "Description"):

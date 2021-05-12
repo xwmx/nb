@@ -6127,7 +6127,7 @@ Subcommands:
                 Alias: `unset`
   rename        Rename the current orphan branch or <branch-name> to <name>.
                 Caveat: only orphan branches can be renamed.
-  delete        Reset <branch-name> on the remote to a blank initial state.
+  reset         Reset <branch-name> on the remote to a blank initial state.
   set           Set the remote URL and branch for the notebook.
 
 Description:
