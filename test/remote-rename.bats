@@ -4,7 +4,7 @@ load test_helper
 
 # `remote rename` #############################################################
 
-@test "'remote rename <remote-branch> <name>' with non-head <remote-branch> updates remote branch." {
+@test "'remote rename <remote-branch> <name>' with orphan <remote-branch> updates remote branch." {
   {
     mkdir "${_GIT_REMOTE_PATH}"
     cd "${_GIT_REMOTE_PATH}"
@@ -205,7 +205,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*updated-branch-name.*\)  ]]
     <(printf "* updated-branch-name\\n  remotes/origin/updated-branch-name\\n")
 }
 
-@test "'remote rename <name>' with non-HEAD current branch updates local and remote branch." {
+@test "'remote rename <name>' with orphan current branch updates local and remote branch." {
   {
     mkdir "${_GIT_REMOTE_PATH}"
     cd "${_GIT_REMOTE_PATH}"
