@@ -4674,7 +4674,8 @@ Usage:
   nb plugins install [<path> | <url>] [--force]
   nb plugins uninstall <name> [--force]
   nb remote [branches [<url>] | remove | rename [<branch-name>] <name>]
-  nb remote set <url> [<branch>]
+  nb remote [delete <branch-name> | rename <branch-name>]
+  nb remote set <url> [<branch-name>]
   nb run <command> [<arguments>...]
   nb search ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             <query>... [-a | --all] [--and <query>] [--or <query>]
@@ -6110,7 +6111,7 @@ Usage:
   nb remote remove
   nb remote rename [<branch-name>] <name>
   nb remote reset <branch-name>
-  nb remote set <url> [<branch>]
+  nb remote set <url> [<branch-name>]
 
 Subcommands:
   (default)     Print the remote URL and branch for the notebook.

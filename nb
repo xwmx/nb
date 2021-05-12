@@ -3655,7 +3655,8 @@ $(_color_primary "Usage"):
   ${_ME} plugins install [<path> | <url>] [--force]
   ${_ME} plugins uninstall <name> [--force]
   ${_ME} remote [branches [<url>] | remove | rename [<branch-name>] <name>]
-  ${_ME} remote set <url> [<branch>]
+  ${_ME} remote [delete <branch-name> | rename <branch-name>]
+  ${_ME} remote set <url> [<branch-name>]
   ${_ME} run <command> [<arguments>...]
   ${_ME} search ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             <query>... [-a | --all] [--and <query>] [--or <query>]
@@ -18754,7 +18755,7 @@ $(_color_primary "Usage"):
   ${_ME} remote remove
   ${_ME} remote rename [<branch-name>] <name>
   ${_ME} remote reset <branch-name>
-  ${_ME} remote set <url> [<branch>]
+  ${_ME} remote set <url> [<branch-name>]
 
 $(_color_primary "Subcommands"):
   (default)     Print the remote URL and branch for the notebook.
