@@ -3715,7 +3715,7 @@ $(_color_primary "Subcommands"):
   peek         View a note, bookmarked web page, or notebook in the terminal.
   pin          Pin an item so it appears first in lists.
   plugins      Install and uninstall plugins and themes.
-  remote       Get, set, and remove the remote URL for the notebook.
+  remote       Configure the remote URL and branch for the notebook.
   run          Run shell commands within the current notebook.
   search       Search notes.
   settings     Edit configuration settings.
@@ -18750,17 +18750,22 @@ _describe_remote() {
 $(_color_primary "Usage"):
   ${_ME} remote
   ${_ME} remote branches [<url>]
+  ${_ME} remote delete <branch-name>
   ${_ME} remote remove
   ${_ME} remote rename [<branch-name>] <name>
+  ${_ME} remote reset <branch-name>
   ${_ME} remote set <url> [<branch>]
 
 $(_color_primary "Subcommands"):
   (default)     Print the remote URL and branch for the notebook.
   branches      List branches on the current or given remote.
+  delete        Delete <branch-name> from the remote.
+                Caveat: only orphan branches can be deleted.
   remove        Remove the remote URL from the notebook.
                 Alias: \`unset\`
   rename        Rename the current orphan branch or <branch-name> to <name>.
                 Caveat: only orphan branches can be renamed.
+  delete        Reset <branch-name> on the remote to a blank initial state.
   set           Set the remote URL and branch for the notebook.
 
 $(_color_primary "Description"):
@@ -18786,6 +18791,7 @@ _remote() {
   local _new_branch=
   local _new_remote_url=
   local _only_url=0
+  local _remote_branch_name=
   local _rename_arguments=()
   local _skip_confirmation=0
   local _skip_preamble=0
@@ -18809,6 +18815,9 @@ _remote() {
             then
               _new_branch="${__arg:-}"
             fi
+            ;;
+          delete|reset)
+            _remote_branch_name="${__arg:-}"
             ;;
           rename)
             _rename_arguments+=("${__arg:-}")
@@ -18881,6 +18890,81 @@ _remote() {
 
       return 0
       ;;
+    delete)
+      if ! ((_remote_exists))
+      then
+        _exit_1 printf "No remote configured.\\n"
+      fi
+
+      if [[ -z "${_remote_branch_name:-}"       ]]
+      then
+        _exit_1 _help "remote"
+      fi
+
+      # TODO: combine into single `ls-remote` operation
+      local _remote_branches=()
+      _remote_branches=($(
+        git -C "${_notebook_path}" ls-remote        \
+          --heads "${_current_remote_url:-}"        \
+           2>/dev/null                              \
+          | sed "s/.*\///g" || :
+      ))
+
+      local _primary_remote_branch=
+      _primary_remote_branch="$(
+        git -C "${_notebook_path}" ls-remote        \
+          --symref "${_current_remote_url:-}" HEAD  \
+          2>/dev/null                               \
+          | awk '/^ref:/ {sub(/refs\/heads\//, "", $2); print $2}' || :
+      )"
+
+      if [[ -z "${_remote_branches[*]:-}"       ]] ||
+         [[ -z "${_primary_remote_branch:-}"    ]]
+      then
+        _exit_1 printf "Unable to contact remote.\\n"
+      fi
+
+      if ! _contains "${_remote_branch_name:-}" "${_remote_branches[@]:-}"
+      then
+        _exit_1 printf "Remote branch not found: %s\\n" \
+          "${_remote_branch_name:-}"
+      fi
+
+      if [[ "${_remote_branch_name:-}" == "${_primary_remote_branch:-}" ]]
+      then
+        _remote reset "${_remote_branch_name:-}"
+      fi
+
+      printf "Deleting remote branch: %s\\n"    \
+        "$(_color_primary "${_remote_branch_name:-}")"
+
+      _print_line "-----------------------"
+
+      while true
+      do
+        local __yn=
+        IFS='' read -r -e -d $'\n' -p           \
+"$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
+
+        case ${__yn} in
+          [Yy]*)
+            break
+            ;;
+          *)
+            printf "Exiting...\\n"
+            exit 0
+            ;;
+        esac
+      done
+
+      git -C "${_notebook_path:-}" push origin  \
+        ":${_remote_branch_name}"  --force      \
+        &>/dev/null                             ||
+        _exit_1 printf "Unable to delete remote branch: %s\\n" \
+          "${_remote_branch_name}"
+
+      printf "Remote branch deleted.\\n"
+      ;;
     remove|rm|unset)
       if ((_remote_exists))
       then
@@ -18907,79 +18991,75 @@ _remote() {
           done
         fi
 
+        # TODO: combine into single `ls-remote` operation
         local _remote_branches=()
         _remote_branches=($(
-          git -C "${_notebook_path}" ls-remote  \
-            --heads "${_current_remote_url:-}"  \
-             2>/dev/null                        \
+          git -C "${_notebook_path}" ls-remote        \
+            --heads "${_current_remote_url:-}"        \
+             2>/dev/null                              \
             | sed "s/.*\///g" || :
         ))
 
-        local _delete_remote_branch=0
+        local _primary_remote_branch=
+        _primary_remote_branch="$(
+          git -C "${_notebook_path}" ls-remote        \
+            --symref "${_current_remote_url:-}" HEAD  \
+            2>/dev/null                               \
+            | awk '/^ref:/ {sub(/refs\/heads\//, "", $2); print $2}' || :
+        )"
 
-        if _contains "${_current_branch}" "${_remote_branches[@]:-}"
+        if [[ -z "${_remote_branches[*]:-}"       ]] ||
+           [[ -z "${_primary_remote_branch:-}"    ]]
         then
-          local _delete_action="Remove"
+          _warn printf "Unable to contact remote.\\n"
+        else
+          local _delete_remote_branch=0
 
-          if [[ "${#_remote_branches[@]}" -eq 1 ]]
+          if _contains "${_current_branch}" "${_remote_branches[@]:-}"
           then
-            _delete_action="Reset"
-          fi
+            local _delete_action="Remove"
 
-          local _branch_delete_prompt=
-          _branch_delete_prompt="\
+            if [[ "${_current_branch:-}" == "${_primary_remote_branch:-}" ]]
+            then
+              _delete_action="Reset"
+            fi
+
+            local _branch_delete_prompt=
+            _branch_delete_prompt="\
 $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_current_branch}"))"
 
-          while true
-          do
-            local __yn=
-            IFS='' read -r -e -d $'\n' -p       \
-              "${_branch_delete_prompt} $(_color_brackets "y/N") " __yn
+            while true
+            do
+              local __yn=
+              IFS='' read -r -e -d $'\n' -p             \
+                "${_branch_delete_prompt} $(_color_brackets "y/N") " __yn
 
-            case ${__yn} in
-              [Yy]*)    _delete_remote_branch=1;  break   ;;
-              q*|exit)  printf "Exiting...\\n";   exit 0  ;;
-              *)                                  break   ;;
-            esac
-          done
-        fi
+              case ${__yn} in
+                [Yy]*)    _delete_remote_branch=1;  break   ;;
+                q*|exit)  printf "Exiting...\\n";   exit 0  ;;
+                *)                                  break   ;;
+              esac
+            done
+          fi
 
-        if ((_delete_remote_branch))
-        then
-          if [[ "${#_remote_branches[@]}" -eq 1 ]]
+          if ((_delete_remote_branch))
           then
-            local _blank_repo_path="${_NB_TEMP_DIRECTORY:-/tmp}/${RANDOM}"
-
-            mkdir -p "${_blank_repo_path}"
-            cd "${_blank_repo_path}" || return 1
-
-            {
-              git -C "${_blank_repo_path}" init                     \
-                  --initial-branch "${_remote_branches[0]}"         &&
-                touch "${_blank_repo_path}/.index"                  &&
-                git -C "${_blank_repo_path}" add --all              &&
-                git -C "${_blank_repo_path}" commit                 \
-                  -a -m "[nb] Initialize"                           &&
-                git -C "${_blank_repo_path}" remote add             \
-                  origin "${_current_remote_url:-}"                 &&
-                git -C "${_blank_repo_path}" push origin            \
-                  "${_remote_branches[0]}" --force
-            } &>/dev/null ||
-              _exit_1 printf "Unable to reset remote branch: %s\\n" \
-                "$(_color_primary "${_remote_branches[0]}")"
-
-            printf "Remote branch reset: %s\\n"                     \
-              "$(_color_primary "${_remote_branches[0]}")"
-          else
-            git -C "${_notebook_path:-}" push origin                \
-              ":${_current_branch}"  --force &>/dev/null
-
-            printf "Remote branch deleted: %s\\n"                   \
-              "$(_color_primary "${_current_branch}")"
+            if [[ "${_current_branch}" == "${_primary_remote_branch}" ]]
+            then
+              _remote reset "${_current_branch}"        \
+                <<< "y${_NEWLINE}" 1>/dev/null          &&
+                printf "Remote branch reset: %s\\n"     \
+                  "$(_color_primary "${_current_branch}")"
+            else
+              _remote delete "${_current_branch}"       \
+                <<< "y${_NEWLINE}" 1>/dev/null          &&
+                printf "Remote branch deleted: %s\\n"   \
+                  "$(_color_primary "${_current_branch}")"
+            fi
           fi
         fi
 
-        git -C "${_notebook_path:-}" remote rm origin               &&
+        git -C "${_notebook_path:-}" remote rm origin &&
           printf "Remote removed.\\n"
 
         return 0
@@ -18988,7 +19068,6 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
       fi
       ;;
     rename)
-      local _remote_branch_name=
       local _target_branch_name=
 
       local _remote_branches=()
@@ -19000,6 +19079,11 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
             --heads "${_current_remote_url:-}"  \
             | sed "s/.*\///g" || :
         ))
+
+        if [[ -z "${_remote_branches[*]:-}"       ]]
+        then
+          _exit_1 printf "Unable to contact remote.\\n"
+        fi
       fi
 
       if [[ "${#_rename_arguments[@]}" -gt 1    ]]
@@ -19009,7 +19093,8 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
           _remote_branch_name="${_rename_arguments[0]:-}"
           _target_branch_name="${_rename_arguments[1]:-}"
         else
-          _exit_1 printf "Remote branch not found: %s\\n"   \
+          _exit_1 printf                        \
+            "Remote branch not found: %s\\n"    \
             "$(_color_primary "${_rename_arguments[0]:-}")"
         fi
       else
@@ -19124,13 +19209,87 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
 
       printf "Renamed to: %s\\n" "$(_color_primary "${_target_branch_name}")"
       ;;
-    set|add)
-      if [[ -z "${_new_remote_url:-}"           ]]
+    reset)
+      if ! ((_remote_exists))
+      then
+        _exit_1 printf "No remote configured.\\n"
+      fi
+
+      if [[ -z "${_remote_branch_name:-}"     ]]
       then
         _exit_1 _help "remote"
       fi
 
-      if [[ -z "${_new_branch:-}"               ]]
+      local _remote_branches=()
+      _remote_branches=($(
+        git -C "${_notebook_path}" ls-remote        \
+          --heads "${_current_remote_url:-}"        \
+           2>/dev/null                              \
+          | sed "s/.*\///g" || :
+      ))
+
+      if [[ -z "${_remote_branches[*]:-}"       ]]
+      then
+        _exit_1 printf "Unable to contact remote.\\n"
+      fi
+
+      if ! _contains "${_remote_branch_name:-}" "${_remote_branches[@]:-}"
+      then
+        _exit_1 printf "Remote branch not found: %s\\n"   \
+          "${_remote_branch_name:-}"
+      fi
+
+      printf "Resetting remote branch: %s\\n"             \
+        "$(_color_primary "${_remote_branch_name:-}")"
+
+      _print_line "------------------------"
+
+      while true
+      do
+        local __yn=
+        IFS='' read -r -e -d $'\n' -p         \
+"$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
+
+        case ${__yn} in
+          [Yy]*)
+            break
+            ;;
+          *)
+            printf "Exiting...\\n"
+            exit 0
+            ;;
+        esac
+      done
+
+      local _blank_repo_path="${_NB_TEMP_DIRECTORY:-/tmp}/${RANDOM}"
+
+      mkdir -p "${_blank_repo_path}"
+      cd "${_blank_repo_path}" || return 1
+
+      {
+        git -C "${_blank_repo_path}" init                     \
+            --initial-branch "${_remote_branch_name}"         &&
+          touch "${_blank_repo_path}/.index"                  &&
+          git -C "${_blank_repo_path}" add --all              &&
+          git -C "${_blank_repo_path}" commit                 \
+            -a -m "[nb] Initialize"                           &&
+          git -C "${_blank_repo_path}" remote add             \
+            origin "${_current_remote_url:-}"                 &&
+          git -C "${_blank_repo_path}" push origin            \
+            "${_remote_branch_name}" --force
+      } &>/dev/null ||
+        _exit_1 printf "Unable to reset remote branch: %s\\n" \
+          "$(_color_primary "${_remote_branch_name}")"
+
+      printf "Remote branch reset.\\n"
+      ;;
+    set|add)
+      if [[ -z "${_new_remote_url:-}"         ]]
+      then
+        _exit_1 _help "remote"
+      fi
+
+      if [[ -z "${_new_branch:-}"             ]]
       then
         _new_branch="${_current_branch}"
       fi
@@ -19139,14 +19298,14 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
       then
         if ((_remote_exists))
         then
-          printf "Updating remote for: %s\\n"   \
+          printf "Updating remote for: %s\\n" \
             "$(_color_primary "$(_notebooks current --name)")"
 
           printf "From:   %s (%s)\\n" "${_current_remote_url}" "${_current_branch}"
 
           _print_line "Updating remote for: $(_notebooks current --name)"
         else
-          printf "Adding remote to: %s\\n"      \
+          printf "Adding remote to: %s\\n"    \
             "$(_color_primary "$(_notebooks current --name)")"
 
           _print_line "Adding remote to: $(_notebooks current --name)"

@@ -877,7 +877,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)              ]]
     <(printf "%s (master)\\n" "${_GIT_REMOTE_URL:-}")
 }
 
-@test "'remote set <url>' with existing remote sets remote and prints message." {
+@test "'remote set <url>' with existing invalid remote sets remote and prints message." {
   {
     "${_NB}" init
 
@@ -905,9 +905,10 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)              ]]
   [[ "${lines[5]}"  =~  [^-]--------------[^-]                                  ]]
   [[ "${lines[6]}"  =~  [^-]--------------[^-]                                  ]]
   [[ "${lines[7]}"  =~  Removing\ remote:\ .*https://example.test/example.git   ]]
-  [[ "${lines[8]}"  =~  Remote\ removed\.                                       ]]
-  [[ "${lines[9]}"  =~  [^-]---------------[^-]                                 ]]
-  [[ "${lines[10]}" =~  \
+  [[ "${lines[8]}"  =~  \!.*\ Unable\ to\ contact\ remote\.                     ]]
+  [[ "${lines[9]}"  =~  Remote\ removed\.                                       ]]
+  [[ "${lines[10]}" =~  [^-]---------------[^-]                                 ]]
+  [[ "${lines[11]}" =~  \
 Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)                        ]]
 
   diff                  \
