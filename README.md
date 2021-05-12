@@ -30,7 +30,7 @@ with:
 - customizable [color themes](#-color-themes),
 - extensibility through [plugins](#-plugins),
 
-and more, all in a single portable, user-friendly script.
+and more, in a single portable script.
 
 `nb` creates notes in text-based formats like
 [Markdown](https://en.wikipedia.org/wiki/Markdown),
