@@ -2866,6 +2866,7 @@ $(_color_primary "Read More"):
 $(_color_primary "See Also"):
   ${_ME} help history
   ${_ME} help remote
+  ${_ME} help run
   ${_ME} help status
   ${_ME} help sync
 
@@ -3507,7 +3508,7 @@ assigning the color environment variables to \`tput\` ANSI color numbers:
     $(_color_primary "  export NB_COLOR_SECONDARY=${_TPUT_SGR0}38${_TPUT_COLOR_PRIMARY}")
     $(_color_primary "fi")
 
-View this theme as a complete file:
+View this theme as a complete file
 
     $(_color_primary "https://github.com/xwmx/nb/blob/master/plugins/turquoise.nb-theme")
 
@@ -3655,7 +3656,7 @@ $(_color_primary "Usage"):
   ${_ME} plugins install [<path> | <url>] [--force]
   ${_ME} plugins uninstall <name> [--force]
   ${_ME} remote [branches [<url>] | remove | rename [<branch-name>] <name>]
-  ${_ME} remote [delete <branch-name> | rename <branch-name>]
+  ${_ME} remote [delete <branch-name> | reset <branch-name>]
   ${_ME} remote set <url> [<branch-name>]
   ${_ME} run <command> [<arguments>...]
   ${_ME} search ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
@@ -4248,6 +4249,9 @@ $(_color_primary "Description"):
 
   Pass optional <remote-url> and <branch> options to create the initial
   "home" notebook using a clone of an existing notebook.
+
+$(_color_primary "See Also"):
+  ${_ME} help notebooks
 
 $(_color_primary "Examples"):
   ${_ME} init
@@ -10474,7 +10478,9 @@ $(_color_primary "Read More"):
   ${_README_URL}#adding
 
 $(_color_primary "See Also"):
+  ${_ME} help bookmark
   ${_ME} help browse
+  ${_ME} help import
 
 $(_color_primary "Examples"):
   ${_ME} add
@@ -11738,6 +11744,9 @@ $(_color_primary "Description"):
 
 $(_color_primary "Read More"):
   https://github.com/${_REPO}/blob/${_REPO_MAIN_BRANCH}/etc/README.md
+
+$(_color_primary "See Also"):
+  ${_ME} help env
 HEREDOC
 }
 _completions() {
@@ -12005,6 +12014,7 @@ $(_color_primary "Read More"):
 
 $(_color_primary "See Also"):
   ${_ME} help browse
+  ${_ME} help move
 
 $(_color_primary "Examples"):
   ${_ME} delete 3
@@ -12193,6 +12203,7 @@ $(_color_primary "Read More"):
 
 $(_color_primary "See Also"):
   ${_ME} help browse
+  ${_ME} help move
 
 $(_color_primary "Examples"):
   ${_ME} edit 3
@@ -12415,6 +12426,12 @@ $(_color_primary "Description"):
 
 $(_color_primary "Read More"):
   ${_README_URL}#installation
+
+$(_color_primary "See Also"):
+  ${_ME} help completions
+  ${_ME} help init
+  ${_ME} help update
+  ${_ME} help version
 HEREDOC
 }
 _env() {
@@ -12933,6 +12950,7 @@ $(_color_primary "Read More"):
   ${_README_URL}#%EF%B8%8F-import--export
 
 $(_color_primary "See Also"):
+  ${_ME} help add
   ${_ME} help export
 
 $(_color_primary "Examples"):
@@ -13753,6 +13771,10 @@ $(_color_primary "Usage"):
 
 $(_color_primary "Description"):
   Run shell commands within the current notebook directory.
+
+$(_color_primary "See Also"):
+  ${_ME} help git
+  ${_ME} help shell
 
 $(_color_primary "Examples"):
   ${_ME} run ls -la
@@ -15855,6 +15877,10 @@ $(_color_primary "Usage"):
 
 $(_color_primary "Description"):
   Display version information.
+
+$(_color_primary "See Also"):
+  ${_ME} help env
+  ${_ME} help update
 HEREDOC
 }
 _version() {
@@ -18758,16 +18784,16 @@ $(_color_primary "Usage"):
   ${_ME} remote set <url> [<branch-name>]
 
 $(_color_primary "Subcommands"):
-  (default)     Print the remote URL and branch for the notebook.
-  branches      List branches on the current or given remote.
-  delete        Delete <branch-name> from the remote.
-                Caveat: only orphan branches can be deleted.
-  remove        Remove the remote URL from the notebook.
-                Alias: \`unset\`
-  rename        Rename the current orphan branch or <branch-name> to <name>.
-                Caveat: only orphan branches can be renamed.
-  reset         Reset <branch-name> on the remote to a blank initial state.
-  set           Set the remote URL and branch for the notebook.
+  (default)  Print the remote URL and branch for the notebook.
+  branches   List branches on the current or given remote.
+  delete     Delete <branch-name> from the remote.
+             Caveat: only orphan branches can be deleted.
+  remove     Remove the remote URL from the notebook.
+             Alias: \`unset\`
+  rename     Rename the current orphan branch or <branch-name> to <name>.
+             Caveat: only orphan branches can be renamed.
+  reset      Reset <branch-name> on the remote to a blank initial state.
+  set        Set the remote URL and branch for the notebook.
 
 $(_color_primary "Description"):
   Configure the remote repository URL and branch for the current notebook.
@@ -20430,6 +20456,9 @@ $(_color_primary "Description"):
 $(_color_primary "Read More"):
   ${_README_URL}#-nb-interactive-shell
 
+$(_color_primary "See Also"):
+  ${_ME} help run
+
 $(_color_primary "Example"):
   $ ${_ME} shell
   ${_ME}> ls 3
@@ -20932,6 +20961,10 @@ $(_color_primary "Description"):
 
 $(_color_primary "Read More"):
   ${_README_URL}#installation
+
+$(_color_primary "See Also"):
+  ${_ME} help env
+  ${_ME} help version
 HEREDOC
 }
 _update() {

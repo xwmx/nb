@@ -33,6 +33,7 @@ with:
 - <a href="#-linking">[[wiki-style linking]]</a>,
 - terminal and GUI web [browsing](#-browsing) and [editing](#browse-edit),
 - global and local [notebooks](#-notebooks),
+- [folders](#-folders),
 - customizable [color themes](#-color-themes),
 - extensibility through [plugins](#-plugins),
 
@@ -4680,7 +4681,7 @@ Usage:
   nb plugins install [<path> | <url>] [--force]
   nb plugins uninstall <name> [--force]
   nb remote [branches [<url>] | remove | rename [<branch-name>] <name>]
-  nb remote [delete <branch-name> | rename <branch-name>]
+  nb remote [delete <branch-name> | reset <branch-name>]
   nb remote set <url> [<branch-name>]
   nb run <command> [<arguments>...]
   nb search ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
@@ -4925,7 +4926,11 @@ For more information, see: `nb help`.
 
 #### `add`
 
-[↑](#help) · See also: [Adding](#adding), [`browse`](#browse)
+[↑](#help) · See also:
+[Adding](#adding),
+[`bookmark`](#bookmark),
+[`browse`](#browse),
+[`import`](#import)
 
 ```text
 Usage:
@@ -4973,7 +4978,9 @@ Read More:
   https://github.com/xwmx/nb#adding
 
 See Also:
+  nb help bookmark
   nb help browse
+  nb help import
 
 Examples:
   nb add
@@ -5237,7 +5244,8 @@ Shortcut Alias: `nb br`
 #### `completions`
 
 [↑](#help) · See also:
-[Tab Completion](https://github.com/xwmx/nb/tree/master/etc)
+[Tab Completion](https://github.com/xwmx/nb/tree/master/etc),
+[`env`](#env)
 
 ```text
 Usage:
@@ -5251,6 +5259,9 @@ Description:
 
 Read More:
   https://github.com/xwmx/nb/blob/master/etc/README.md
+
+See Also:
+  nb help env
 ```
 
 #### `count`
@@ -5268,7 +5279,10 @@ Description:
 
 #### `delete`
 
-[↑](#help) · See also: [Deleting](#deleting), [`browse`](#browse)
+[↑](#help) · See also:
+[Deleting](#deleting),
+[`browse`](#browse),
+[`move`](#move)
 
 ```text
 Usage:
@@ -5286,6 +5300,7 @@ Read More:
 
 See Also:
   nb help browse
+  nb help move
 
 Examples:
   nb delete 3
@@ -5305,7 +5320,10 @@ Shortcut Aliases: `nb d`, `nb -`
 
 #### `edit`
 
-[↑](#help) · See also: [Editing](#editing), [`browse`](#browse)
+[↑](#help) · See also:
+[Editing](#editing),
+[`browse`](#browse),
+[`move`](#move)
 
 ```text
 Usage:
@@ -5338,6 +5356,7 @@ Read More:
 
 See Also:
   nb help browse
+  nb help move
 
 Examples:
   nb edit 3
@@ -5358,7 +5377,12 @@ Shortcut Alias: `nb e`
 
 #### `env`
 
-[↑](#help) · See also: [Installation](#installation)
+[↑](#help) · See also:
+[Installation](#installation),
+[`completions`](#completions),
+[`init`](#init),
+[`update`](#update),
+[`version`](#version)
 
 ```text
 Usage:
@@ -5373,6 +5397,12 @@ Description:
 
 Read More:
   https://github.com/xwmx/nb#installation
+
+See Also:
+  nb help completions
+  nb help init
+  nb help update
+  nb help version
 ```
 
 #### `export`
@@ -5437,6 +5467,7 @@ Examples:
 [History](#-revision-history),
 [`history`](#history),
 [`remote`](#remote),
+[`run`](#run),
 [`status`](#status),
 [`sync`](#sync)
 
@@ -5461,6 +5492,7 @@ Read More:
 See Also:
   nb help history
   nb help remote
+  nb help run
   nb help status
   nb help sync
 
@@ -5545,6 +5577,7 @@ Examples:
 
 [↑](#help) · See also:
 [Import / Export](#%EF%B8%8F-import--export),
+[`add`](#add),
 [`export`](#export)
 
 ```text
@@ -5571,6 +5604,7 @@ Read More:
   https://github.com/xwmx/nb#%EF%B8%8F-import--export
 
 See Also:
+  nb help add
   nb help export
 
 Examples:
@@ -5584,7 +5618,7 @@ Examples:
   nb import ~/Documents/example.docx example-folder/
 ```
 
-#### `init`
+#### `init` · See also: [`notebooks`](#notebooks)
 
 [↑](#help)
 
@@ -5605,6 +5639,9 @@ Description:
 
   Pass optional <remote-url> and <branch> options to create the initial
   "home" notebook using a clone of an existing notebook.
+
+See Also:
+  nb help notebooks
 
 Examples:
   nb init
@@ -5781,7 +5818,7 @@ Examples:
 
 #### `move`
 
-[↑](#help)
+[↑](#help) · [`delete`](#delete), [`edit`](#edit)
 
 ```text
 Usage:
@@ -6120,16 +6157,16 @@ Usage:
   nb remote set <url> [<branch-name>]
 
 Subcommands:
-  (default)     Print the remote URL and branch for the notebook.
-  branches      List branches on the current or given remote.
-  delete        Delete <branch-name> from the remote.
-                Caveat: only orphan branches can be deleted.
-  remove        Remove the remote URL from the notebook.
-                Alias: `unset`
-  rename        Rename the current orphan branch or <branch-name> to <name>.
-                Caveat: only orphan branches can be renamed.
-  reset         Reset <branch-name> on the remote to a blank initial state.
-  set           Set the remote URL and branch for the notebook.
+  (default)  Print the remote URL and branch for the notebook.
+  branches   List branches on the current or given remote.
+  delete     Delete <branch-name> from the remote.
+             Caveat: only orphan branches can be deleted.
+  remove     Remove the remote URL from the notebook.
+             Alias: `unset`
+  rename     Rename the current orphan branch or <branch-name> to <name>.
+             Caveat: only orphan branches can be renamed.
+  reset      Reset <branch-name> on the remote to a blank initial state.
+  set        Set the remote URL and branch for the notebook.
 
 Description:
   Configure the remote repository URL and branch for the current notebook.
@@ -6152,7 +6189,7 @@ Examples:
 
 #### `run`
 
-[↑](#help)
+[↑](#help) · See also: [`git`](#git), [`shell`](#shell)
 
 ```text
 Usage:
@@ -6160,6 +6197,10 @@ Usage:
 
 Description:
   Run shell commands within the current notebook directory.
+
+See Also:
+  nb help git
+  nb help shell
 
 Examples:
   nb run ls -la
@@ -6544,7 +6585,9 @@ Alias: `nb set`
 
 #### `shell`
 
-[↑](#help) · See also: [Interactive Shell](#-nb-interactive-shell)
+[↑](#help) · See also:
+[Interactive Shell](#-nb-interactive-shell),
+[`run`](#run)
 
 ```text
 Usage:
@@ -6563,6 +6606,9 @@ Description:
 
 Read More:
   https://github.com/xwmx/nb#-nb-interactive-shell
+
+See Also:
+  nb help run
 
 Example:
   $ nb shell
@@ -6902,7 +6948,10 @@ Alias: `nb reset`
 
 #### `update`
 
-[↑](#help) · See also: [Installation](#installation)
+[↑](#help) · See also:
+[Installation](#installation),
+[`env`](#env),
+[`version`](#version)
 
 ```text
 Usage:
@@ -6918,6 +6967,10 @@ Description:
 
 Read More:
   https://github.com/xwmx/nb#installation
+
+See Also:
+  nb help env
+  nb help version
 ```
 
 #### `use`
@@ -6947,7 +7000,10 @@ Shortcut Alias: `nb u`
 
 #### `version`
 
-[↑](#help)
+[↑](#help) · See also:
+[Installation](#installation),
+[`env`](#env),
+[`update`](#update)
 
 ```text
 Usage:
@@ -6955,6 +7011,10 @@ Usage:
 
 Description:
   Display version information.
+
+See Also:
+  nb help env
+  nb help update
 ```
 
 ### Plugins
