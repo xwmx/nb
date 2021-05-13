@@ -6236,6 +6236,7 @@ $(_color_primary "Read More"):
 $(_color_primary "See Also"):
   ${_ME} help archive
   ${_ME} help history
+  ${_ME} help move
   ${_ME} help remote
   ${_ME} help status
   ${_ME} help sync
@@ -13274,6 +13275,10 @@ $(_color_primary "Description"):
   When file extension is omitted, the existing extension is used.
 
   \`move\` and \`rename\` are aliases and can be used interchangably.
+
+$(_color_primary "See Also"):
+  ${_ME} help delete
+  ${_ME} help edit
 
 $(_color_primary "Examples"):
   # Move "example.md" to "example.org"

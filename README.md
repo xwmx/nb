@@ -27,7 +27,7 @@ with:
 - <a href="#-linking">[[wiki-style linking]]</a>,
 - terminal and GUI web [browsing](#-browsing) and [editing](#browse-edit),
 - global and local [notebooks](#-notebooks),
-- [folders](#-folders),
+- organization with [folders](#-folders),
 - customizable [color themes](#-color-themes),
 - extensibility through [plugins](#-plugins),
 
@@ -5812,7 +5812,7 @@ Examples:
 
 #### `move`
 
-[↑](#help) · [`delete`](#delete), [`edit`](#edit)
+[↑](#help) · See also: [`delete`](#delete), [`edit`](#edit)
 
 ```text
 Usage:
@@ -5834,6 +5834,10 @@ Description:
   When file extension is omitted, the existing extension is used.
 
   `nb move` and `nb rename` are aliases and can be used interchangably.
+
+See Also:
+  nb help delete
+  nb help edit
 
 Examples:
   # Move "example.md" to "example.org"
@@ -5864,6 +5868,7 @@ Shortcut Alias: `nb mv`
 [Notebooks](#-notebooks),
 [`archive`](#archive),
 [`history`](#history),
+[`move`](#move),
 [`remote`](#remote),
 [`status`](#status),
 [`sync`](#sync),
@@ -5958,6 +5963,7 @@ Read More:
 See Also:
   nb help archive
   nb help history
+  nb help move
   nb help remote
   nb help status
   nb help sync
