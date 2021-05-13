@@ -10481,7 +10481,10 @@ $(_color_primary "Read More"):
 $(_color_primary "See Also"):
   ${_ME} help bookmark
   ${_ME} help browse
+  ${_ME} help delete
+  ${_ME} help edit
   ${_ME} help import
+  ${_ME} help show
 
 $(_color_primary "Examples"):
   ${_ME} add
@@ -12014,8 +12017,11 @@ $(_color_primary "Read More"):
   ${_README_URL}#deleting
 
 $(_color_primary "See Also"):
+  ${_ME} help add
   ${_ME} help browse
+  ${_ME} help edit
   ${_ME} help move
+  ${_ME} help show
 
 $(_color_primary "Examples"):
   ${_ME} delete 3
@@ -12203,8 +12209,11 @@ $(_color_primary "Read More"):
   ${_README_URL}#editing
 
 $(_color_primary "See Also"):
+  ${_ME} help add
   ${_ME} help browse
+  ${_ME} help delete
   ${_ME} help move
+  ${_ME} help show
 
 $(_color_primary "Examples"):
   ${_ME} edit 3

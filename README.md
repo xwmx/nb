@@ -1477,10 +1477,10 @@ collections of bookmarks.
 </p>
 
 Bookmarks in `nb` are stored as
-[simple, structured Markdown files](#nb-markdown-bookmark-file-format)
+[simple structured Markdown files](#nb-markdown-bookmark-file-format)
 containing information extracted from the bookmarked pages.
 
-To create a new bookmark pass a URL as the first argument to `nb`:
+To create a new bookmark, pass a URL as the first argument to `nb`:
 
 ```bash
 nb https://example.com
@@ -4924,7 +4924,10 @@ For more information, see: `nb help`.
 [Adding](#adding),
 [`bookmark`](#bookmark),
 [`browse`](#browse),
-[`import`](#import)
+[`delete`](#delete),
+[`edit`](#edit),
+[`import`](#import),
+[`show`](#show)
 
 ```text
 Usage:
@@ -4974,7 +4977,10 @@ Read More:
 See Also:
   nb help bookmark
   nb help browse
+  nb help delete
+  nb help edit
   nb help import
+  nb help show
 
 Examples:
   nb add
@@ -5275,8 +5281,11 @@ Description:
 
 [↑](#help) · See also:
 [Deleting](#deleting),
+[`add`](#add),
 [`browse`](#browse),
-[`move`](#move)
+[`edit`](#edit),
+[`move`](#move),
+[`show`](#show)
 
 ```text
 Usage:
@@ -5293,8 +5302,11 @@ Read More:
   https://github.com/xwmx/nb#deleting
 
 See Also:
+  nb help add
   nb help browse
+  nb help edit
   nb help move
+  nb help show
 
 Examples:
   nb delete 3
@@ -5316,8 +5328,11 @@ Shortcut Aliases: `nb d`, `nb -`
 
 [↑](#help) · See also:
 [Editing](#editing),
+[`add`](#add),
 [`browse`](#browse),
-[`move`](#move)
+[`delete`](#delete),
+[`move`](#move),
+[`show`](#show)
 
 ```text
 Usage:
@@ -5349,8 +5364,11 @@ Read More:
   https://github.com/xwmx/nb#editing
 
 See Also:
+  nb help add
   nb help browse
+  nb help delete
   nb help move
+  nb help show
 
 Examples:
   nb edit 3
