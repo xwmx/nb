@@ -5618,9 +5618,9 @@ Examples:
   nb import ~/Documents/example.docx example-folder/
 ```
 
-#### `init` · See also: [`notebooks`](#notebooks)
+#### `init`
 
-[↑](#help)
+[↑](#help) · See also: [`notebooks`](#notebooks)
 
 ```text
 Usage:
