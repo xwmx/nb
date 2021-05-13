@@ -123,8 +123,8 @@ or dozens of notebooks containing thousands of notes, bookmarks, and other items
 <h1 align="center" id="nb"><code>nb</code></h1>
 
 <p align="center">
-  <a href="#installation">Installation</a> •
-  <a href="#overview">Overview</a> •
+  <a href="#installation">Installation</a> ·
+  <a href="#overview">Overview</a> ·
   <a href="#help">Help</a>
 </p>
 
@@ -312,31 +312,31 @@ the [`nb update`](#update) subcommand.
 ## Overview
 
 <p align="center">
-  <a href="#-notes">Notes</a> •
-  <a href="#adding">Adding</a> •
-  <a href="#listing--filtering">Listing</a> •
-  <a href="#editing">Editing</a> •
-  <a href="#viewing">Viewing</a> •
-  <a href="#deleting">Deleting</a> •
-  <a href="#-bookmarks">Bookmarks</a> •
-  <a href="#-tagging">Tagging</a> •
-  <a href="#-linking">Linking</a> •
-  <a href="#-browsing">Browsing</a> •
-  <a href="#-zettelkasten">Zettelkasten</a> •
-  <a href="#-folders">Folders</a> •
-  <a href="#-pinning">Pinning</a> •
-  <a href="#-search">Search</a> •
-  <a href="#-revision-history">History</a> •
-  <a href="#-notebooks">Notebooks</a> •
-  <a href="#-git-sync">Git Sync</a> •
-  <a href="#%EF%B8%8F-import--export">Import / Export</a> •
-  <a href="#%EF%B8%8F-set--settings"><code>set</code> & <code>settings</code></a> •
-  <a href="#-color-themes">Color Themes</a> •
-  <a href="#-plugins">Plugins</a> •
-  <a href="#-nb-interactive-shell">Shell</a> •
-  <a href="#shortcut-aliases">Shortcuts</a> •
-  <a href="#help">Help</a> •
-  <a href="#specifications">Specifications</a> •
+  <a href="#-notes">Notes</a> ·
+  <a href="#adding">Adding</a> ·
+  <a href="#listing--filtering">Listing</a> ·
+  <a href="#editing">Editing</a> ·
+  <a href="#viewing">Viewing</a> ·
+  <a href="#deleting">Deleting</a> ·
+  <a href="#-bookmarks">Bookmarks</a> ·
+  <a href="#-tagging">Tagging</a> ·
+  <a href="#-linking">Linking</a> ·
+  <a href="#-browsing">Browsing</a> ·
+  <a href="#-zettelkasten">Zettelkasten</a> ·
+  <a href="#-folders">Folders</a> ·
+  <a href="#-pinning">Pinning</a> ·
+  <a href="#-search">Search</a> ·
+  <a href="#-revision-history">History</a> ·
+  <a href="#-notebooks">Notebooks</a> ·
+  <a href="#-git-sync">Git Sync</a> ·
+  <a href="#%EF%B8%8F-import--export">Import / Export</a> ·
+  <a href="#%EF%B8%8F-set--settings"><code>set</code> & <code>settings</code></a> ·
+  <a href="#-color-themes">Color Themes</a> ·
+  <a href="#-plugins">Plugins</a> ·
+  <a href="#-nb-interactive-shell">Shell</a> ·
+  <a href="#shortcut-aliases">Shortcuts</a> ·
+  <a href="#help">Help</a> ·
+  <a href="#specifications">Specifications</a> ·
   <a href="#tests">Tests</a>
 </p>
 
@@ -4518,50 +4518,50 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
 ### Help
 
 <p align="center">
-  <a href="#nb-help">nb</a> •
-  <a href="#bookmark-help">bookmark</a> •
-  <a href="#subcommands">subcommands</a> •
+  <a href="#nb-help">nb</a> ·
+  <a href="#bookmark-help">bookmark</a> ·
+  <a href="#subcommands">subcommands</a> ·
   <a href="#plugins-1">plugins</a>
 </p>
 
 <p align="center">
-  <a href="#add">add</a> •
-  <a href="#archive">archive</a> •
-  <a href="#bookmark">bookmark</a> •
-  <a href="#browse">browse</a> •
-  <a href="#completions">completions</a> •
-  <a href="#count">count</a> •
-  <a href="#delete">delete</a> •
-  <a href="#edit">edit</a> •
-  <a href="#env">env</a> •
-  <a href="#export">export</a> •
-  <a href="#git">git</a> •
-  <a href="#help-1">help</a> •
-  <a href="#history">history</a> •
-  <a href="#import">import</a> •
-  <a href="#init">init</a> •
-  <a href="#list">list</a> •
-  <a href="#ls">ls</a> •
-  <a href="#move">move</a> •
-  <a href="#notebooks">notebooks</a> •
-  <a href="#open">open</a> •
-  <a href="#peek">peek</a> •
-  <a href="#pin">pin</a> •
-  <a href="#plugins">plugins</a> •
-  <a href="#remote">remote</a> •
-  <a href="#run">run</a> •
-  <a href="#search">search</a> •
-  <a href="#settings">settings</a> •
-  <a href="#shell">shell</a> •
-  <a href="#show">show</a> •
-  <a href="#status">status</a> •
-  <a href="#subcommands-1">subcommands</a> •
-  <a href="#sync">sync</a> •
-  <a href="#unarchive">unarchive</a> •
-  <a href="#unpin">unpin</a> •
-  <a href="#unset">unset</a> •
-  <a href="#update">update</a> •
-  <a href="#use">use</a> •
+  <a href="#add">add</a> ·
+  <a href="#archive">archive</a> ·
+  <a href="#bookmark">bookmark</a> ·
+  <a href="#browse">browse</a> ·
+  <a href="#completions">completions</a> ·
+  <a href="#count">count</a> ·
+  <a href="#delete">delete</a> ·
+  <a href="#edit">edit</a> ·
+  <a href="#env">env</a> ·
+  <a href="#export">export</a> ·
+  <a href="#git">git</a> ·
+  <a href="#help-1">help</a> ·
+  <a href="#history">history</a> ·
+  <a href="#import">import</a> ·
+  <a href="#init">init</a> ·
+  <a href="#list">list</a> ·
+  <a href="#ls">ls</a> ·
+  <a href="#move">move</a> ·
+  <a href="#notebooks">notebooks</a> ·
+  <a href="#open">open</a> ·
+  <a href="#peek">peek</a> ·
+  <a href="#pin">pin</a> ·
+  <a href="#plugins">plugins</a> ·
+  <a href="#remote">remote</a> ·
+  <a href="#run">run</a> ·
+  <a href="#search">search</a> ·
+  <a href="#settings">settings</a> ·
+  <a href="#shell">shell</a> ·
+  <a href="#show">show</a> ·
+  <a href="#status">status</a> ·
+  <a href="#subcommands-1">subcommands</a> ·
+  <a href="#sync">sync</a> ·
+  <a href="#unarchive">unarchive</a> ·
+  <a href="#unpin">unpin</a> ·
+  <a href="#unset">unset</a> ·
+  <a href="#update">update</a> ·
+  <a href="#use">use</a> ·
   <a href="#version">version</a>
 </p>
 
@@ -4878,43 +4878,43 @@ For more information, see: `nb help`.
 ### Subcommands
 
 <p align="center">
-  <a href="#add">add</a> •
-  <a href="#archive">archive</a> •
-  <a href="#bookmark">bookmark</a> •
-  <a href="#browse">browse</a> •
-  <a href="#completions">completions</a> •
-  <a href="#count">count</a> •
-  <a href="#delete">delete</a> •
-  <a href="#edit">edit</a> •
-  <a href="#env">env</a> •
-  <a href="#export">export</a> •
-  <a href="#git">git</a> •
-  <a href="#help-1">help</a> •
-  <a href="#history">history</a> •
-  <a href="#import">import</a> •
-  <a href="#init">init</a> •
-  <a href="#list">list</a> •
-  <a href="#ls">ls</a> •
-  <a href="#move">move</a> •
-  <a href="#notebooks">notebooks</a> •
-  <a href="#open">open</a> •
-  <a href="#peek">peek</a> •
-  <a href="#pin">pin</a> •
-  <a href="#plugins">plugins</a> •
-  <a href="#remote">remote</a> •
-  <a href="#run">run</a> •
-  <a href="#search">search</a> •
-  <a href="#settings">settings</a> •
-  <a href="#shell">shell</a> •
-  <a href="#show">show</a> •
-  <a href="#status">status</a> •
-  <a href="#subcommands-1">subcommands</a> •
-  <a href="#sync">sync</a> •
-  <a href="#unarchive">unarchive</a> •
-  <a href="#unpin">unpin</a> •
-  <a href="#unset">unset</a> •
-  <a href="#update">update</a> •
-  <a href="#use">use</a> •
+  <a href="#add">add</a> ·
+  <a href="#archive">archive</a> ·
+  <a href="#bookmark">bookmark</a> ·
+  <a href="#browse">browse</a> ·
+  <a href="#completions">completions</a> ·
+  <a href="#count">count</a> ·
+  <a href="#delete">delete</a> ·
+  <a href="#edit">edit</a> ·
+  <a href="#env">env</a> ·
+  <a href="#export">export</a> ·
+  <a href="#git">git</a> ·
+  <a href="#help-1">help</a> ·
+  <a href="#history">history</a> ·
+  <a href="#import">import</a> ·
+  <a href="#init">init</a> ·
+  <a href="#list">list</a> ·
+  <a href="#ls">ls</a> ·
+  <a href="#move">move</a> ·
+  <a href="#notebooks">notebooks</a> ·
+  <a href="#open">open</a> ·
+  <a href="#peek">peek</a> ·
+  <a href="#pin">pin</a> ·
+  <a href="#plugins">plugins</a> ·
+  <a href="#remote">remote</a> ·
+  <a href="#run">run</a> ·
+  <a href="#search">search</a> ·
+  <a href="#settings">settings</a> ·
+  <a href="#shell">shell</a> ·
+  <a href="#show">show</a> ·
+  <a href="#status">status</a> ·
+  <a href="#subcommands-1">subcommands</a> ·
+  <a href="#sync">sync</a> ·
+  <a href="#unarchive">unarchive</a> ·
+  <a href="#unpin">unpin</a> ·
+  <a href="#unset">unset</a> ·
+  <a href="#update">update</a> ·
+  <a href="#use">use</a> ·
   <a href="#version">version</a>
 </p>
 
@@ -7014,10 +7014,10 @@ See Also:
 ### Plugins
 
 <p align="center">
-  <a href="#backlink">backlink</a> •
-  <a href="#clip">clip</a> •
-  <a href="#copy">copy</a> •
-  <a href="#ebook">ebook</a> •
+  <a href="#backlink">backlink</a> ·
+  <a href="#clip">clip</a> ·
+  <a href="#copy">copy</a> ·
+  <a href="#ebook">ebook</a> ·
   <a href="#example">example</a>
 </p>
 
@@ -7440,7 +7440,7 @@ tests with globbing, e.g., `bats test/browse*` and `bats test/folders*`.
 ---
 
 <p align="center">
-  Copyright (c) 2015-present <a href="https://www.williammelody.com/">William Melody</a> • See LICENSE for details.
+  Copyright (c) 2015-present <a href="https://www.williammelody.com/">William Melody</a> · See LICENSE for details.
 </p>
 
 <p align="center">
