@@ -3630,8 +3630,8 @@ $(_color_primary "Usage"):
         [-t <type> | --type <type> | --<type>]
         [<notebook>:][<id> | <filename> | <path> | <title> | <query>]
   ${_ME} move ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
-          ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note)
-          [-f | --force]
+          ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note |
+          --to-title) [-f | --force]
   ${_ME} notebooks [<name> | <query>] [--ar | --archived] [--global] [--local]
                [--names] [--paths] [--unar | --unarchived]
   ${_ME} notebooks add <name> [<remote-url> [<branch>]] [--author]
@@ -13267,8 +13267,8 @@ _describe_move() {
   cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} move ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
-          ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note)
-          [-f | --force]
+          ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note |
+          --to-title) [-f | --force]
 
 $(_color_primary "Options"):
   -f, --force     Skip the confirmation prompt.
@@ -13278,6 +13278,8 @@ $(_color_primary "Options"):
   --to-note       Preserve the existing filename and replace the bookmark's
                   ".bookmark.md" extension with ".md" to convert the bookmark
                   to a Markdown note.
+  --to-title      Set the filename to the note title, lowercased with spaces
+                  and disallowed filename characters replaced with underscores.
 
 $(_color_primary "Description"):
   Move or rename a note. Move the note to <path> or change the file type.
@@ -13336,6 +13338,9 @@ _move() {
         ;;
       --to*note)
         _to_target_type="note"
+        ;;
+      --to*title)
+        _to_target_type="title"
         ;;
       *)
         if [[ -z "${_source_selector}"    ]]
@@ -13406,8 +13411,47 @@ _move() {
     local _target_file_type="${_source_file_type:-"${NB_DEFAULT_EXTENSION}"}"
 
     _target_basename="${_target_file_name}.${_target_file_type}"
-  elif [[ -n "${_target_selector:-}"  ]] ||
-       [[ -n "${_to_target_type:-}"   ]]
+
+    if [[ "${_source_relative_path}" =~ /   ]]
+    then
+      _target_selector_relative_path="${_source_relative_path%/*}/${_target_basename}"
+    else
+      _target_selector_relative_path="${_target_basename}"
+    fi
+  elif [[ "${_to_target_type:-}" == "title" ]]
+  then
+    if ! _file_is_text "${_source_path:-}"
+    then
+      _exit_1 printf "Must be a text file.\\n"
+    fi
+
+    local _source_title=
+    _source_title="$(_get_content "${_source_path:-}" --title)"
+
+    if [[ -z "${_source_title:-}"           ]]
+    then
+      _exit_1 printf "Title not found.\\n"
+    fi
+
+    local _processed_title=
+    _processed_title="$(
+      printf "%s" "${_source_title}"        \
+        | tr '[:upper:]' '[:lower:]'        \
+        | tr '[:space:]:*/"\\<>?|' '_'
+    )"
+
+    local _target_file_type="${_source_file_type:-"${NB_DEFAULT_EXTENSION}"}"
+
+    _target_basename="${_processed_title}.${_target_file_type}"
+
+    if [[ "${_source_relative_path}" =~ /   ]]
+    then
+      _target_selector_relative_path="${_source_relative_path%/*}/${_target_basename}"
+    else
+      _target_selector_relative_path="${_target_basename}"
+    fi
+  elif [[ -n "${_target_selector:-}"        ]] ||
+       [[ -n "${_to_target_type:-}"         ]]
   then
     _target_selector_relative_path="${_target_selector#*:}"
 
@@ -13426,7 +13470,7 @@ _move() {
       fi
     fi
 
-    if [[ -n  "${_to_target_type:-}"  ]]
+    if [[ -n  "${_to_target_type:-}"              ]]
     then
       if [[   "${_to_target_type}" == "bookmark"  ]]
       then

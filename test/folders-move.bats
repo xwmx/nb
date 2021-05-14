@@ -2,6 +2,166 @@
 
 load test_helper
 
+# --reset #####################################################################
+
+@test "'move --reset' with nested <filename> argument renames without errors." {
+  {
+    "${_NB}" init
+    "${_NB}" add  "Example Folder/Sample Folder/Example File.md"      \
+      --content   "Example content."
+
+    [[ -e "${NB_DIR}/home/Example Folder/Sample Folder/Example File.md" ]]
+  }
+
+  run "${_NB}" rename "Example Folder/Sample Folder/Example File.md"  \
+    --reset <<< "y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}"    -eq 0                   ]]
+
+  # Moves file:
+
+  [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/Example File.md"  ]]
+
+  _files=($(ls "${NB_DIR}/home/Example Folder/Sample Folder/"))
+  printf "\${_files[0]}: '%s'\\n" "${_files[0]}"
+
+  [[ "${_files[0]}" =~ [A-Za-z0-9]+.md      ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)"   ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Move'
+
+  # Updates index:
+
+  cat "${NB_DIR}/home/.index"
+
+  declare _item_id=
+  _item_id="$(
+    "${_NB}" index get_id \
+      "${_files[0]}"      \
+      "${NB_DIR}/home/Example Folder/Sample Folder"
+  )"
+
+  [[ "${_item_id}"  ==  "1"                 ]]
+
+  # Prints output:
+
+  [[ "${output}"    =~  Moved\ to                                       ]]
+  [[ "${output}"    =~  Example\ Folder/Sample\ Folder/[A-Za-z0-9]+.md  ]]
+}
+
+# --to-title ##################################################################
+
+@test "'move --to-title' with title and nested note renames to title." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example Folder/Sample Folder/Example File.md"  \
+      --content   "Example content."                              \
+      --title                                                     \
+"Example Title: A*string•with/a\\bunch|of?invalid<filename\"characters>"
+
+    [[   -e "${NB_DIR}/home/Example Folder/Sample Folder/Example File.md"     ]]
+
+    declare _target_filename="example_title__a_string•with_a_bunch_of_invalid_filename_characters_.md"
+  }
+
+  run "${_NB}" move 1/1/1 --to-title <<< "y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0                        ]]
+
+  # Moves file:
+
+  [[ !  -e "${NB_DIR}/home/Example Folder/Sample Folder/Example File.md"      ]]
+  [[    -f "${NB_DIR}/home/Example Folder/Sample Folder/${_target_filename}"  ]]
+
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)"   ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Move'
+
+  # Prints output:
+
+  [[ "${lines[0]}" =~ \
+Moving:\ \ \ .*[.*1.*].*\ .*Example\ File\.md.*\ \"Example\ Title:\     ]]
+  [[ "${lines[0]}" =~ \
+Title:\ A\*string•with/a\\bunch\|of\?invalid\<filename\"characters\>\"  ]]
+  [[ "${lines[1]}" =~ \
+To:\ \ \ \ \ \ \ .*${_target_filename}            ]]
+  [[ "${lines[2]}" =~ \
+Moved\ to:\ .*[.*1.*].*\ .*${_target_filename}.*  ]]
+  [[ "${lines[2]}" =~ \
+ \"Example\ Title:\ A\*string•with/a\\bunch\|of\?invalid\<filename\"characters\>\"  ]]
+}
+
+@test "'move --to-title' with title and root-level note renames to title." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example File.md"   \
+      --content   "Example content."  \
+      --title                         \
+"Example Title: A*string•with/a\\bunch|of?invalid<filename\"characters>"
+  }
+
+  run "${_NB}" move 1 --to-title <<< "y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0                            ]]
+
+  # Moves file:
+
+  [[ !  -e "${NB_DIR}/home/Example File.md"     ]]
+  [[    -f \
+"${NB_DIR}/home/example_title__a_string•with_a_bunch_of_invalid_filename_characters_.md"    ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)"       ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Move'
+
+  # Prints output:
+
+  [[ "${lines[0]}" =~ \
+Moving:\ \ \ .*[.*1.*].*\ .*Example\ File\.md.*\ \"Example\ Title:\     ]]
+  [[ "${lines[0]}" =~ \
+Title:\ A\*string•with/a\\bunch\|of\?invalid\<filename\"characters\>\"  ]]
+  [[ "${lines[1]}" =~ \
+To:\ \ \ \ \ \ \ .*example_title__a_string•with_a_bunch_of_invalid_filename_characters_.md  ]]
+  [[ "${lines[2]}" =~ \
+Moved\ to:\ .*[.*1.*].*\ .*${_target_filename}.*  ]]
+  [[ "${lines[2]}" =~ \
+ \"Example\ Title:\ A\*string•with/a\\bunch\|of\?invalid\<filename\"characters\>\"  ]]
+}
+
 # edge cases ##################################################################
 
 @test "'move <folder> <new-name>' with conflicting notebook name moves folder." {

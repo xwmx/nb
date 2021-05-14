@@ -7,6 +7,312 @@ _setup_rename() {
   "${_NB}" add "initial example name.md"
 }
 
+# --to-title ##################################################################
+
+@test "'move --to-title' with title and root-level note renames to title." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example File.md"                                                         \
+      --title     "Example Title: A*string•with/a\\bunch|of?invalid<filename\"characters>"  \
+      --content   "Example content."
+  }
+
+  run "${_NB}" move 1 --to-title <<< "y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0                            ]]
+
+  # Moves file:
+
+  [[ !  -e "${NB_DIR}/home/Example File.md"     ]]
+  [[    -f \
+"${NB_DIR}/home/example_title__a_string•with_a_bunch_of_invalid_filename_characters_.md"    ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)"       ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Move'
+
+  # Prints output:
+
+  [[ "${lines[0]}" =~ \
+Moving:\ \ \ .*[.*1.*].*\ .*Example\ File\.md.*\ \"Example\ Title:\     ]]
+  [[ "${lines[0]}" =~ \
+Title:\ A\*string•with/a\\bunch\|of\?invalid\<filename\"characters\>\"  ]]
+  [[ "${lines[1]}" =~ \
+To:\ \ \ \ \ \ \ .*example_title__a_string•with_a_bunch_of_invalid_filename_characters_.md            ]]
+  [[ "${lines[2]}" =~ \
+Moved\ to:\ .*[.*1.*].*\ .*example_title__a_string•with_a_bunch_of_invalid_filename_characters_.md.*  ]]
+  [[ "${lines[2]}" =~ \
+ \"Example\ Title:\ A\*string•with/a\\bunch\|of\?invalid\<filename\"characters\>\"                    ]]
+}
+
+@test "'move --to-title' prints message with file with no title." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example File.md" --content "Example content."
+  }
+
+  run "${_NB}" move 1 --to-title
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 1:
+
+  [[ ${status} -eq 1                            ]]
+
+  # Does not move file:
+
+  [[ -e "${NB_DIR}/home/Example File.md"        ]]
+
+  # Does not create git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)"       ]]
+  do
+    sleep 1
+  done
+  ! git log | grep -q '\[nb\] Move'
+  ! git log | grep -q '\[nb\] Add'
+  ! git log | grep -q '\[nb\] Delete'
+
+  # Prints message:
+
+  [[ "${lines[0]}" =~ Title\ not\ found\.       ]]
+}
+
+@test "'move --to-title' prints message with non-text file." {
+  {
+    "${_NB}" init
+    "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/example.pdf"
+
+    [[ -e "${NB_DIR}/home/example.pdf"          ]]
+  }
+
+  run "${_NB}" move 1 --to-title
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 1:
+
+  [[ ${status} -eq 1                            ]]
+
+  # Does not move file:
+
+  [[ -e "${NB_DIR}/home/example.pdf"            ]]
+
+  # Does not create git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)"       ]]
+  do
+    sleep 1
+  done
+  ! git log | grep -q '\[nb\] Move'
+  ! git log | grep -q '\[nb\] Add'
+  ! git log | grep -q '\[nb\] Delete'
+
+  # Prints message:
+
+  [[ "${lines[0]}" =~ Must\ be\ a\ text\ file\. ]]
+}
+
+# <filename> --to-bookmark ####################################################
+
+@test "'move --to-bookmark' with note renames without errors." {
+  {
+    "${_NB}" init
+    "${_NB}" add "Example File.md"
+
+    [[ -e "${NB_DIR}/home/Example File.md"  ]]
+  }
+
+  run "${_NB}" move "Example File.md" --to-bookmark --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Moves file:
+
+  [[ !  -e "${NB_DIR}/home/Example File.md"          ]]
+  [[    -e "${NB_DIR}/home/Example File.bookmark.md" ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)"   ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Move'
+
+  # Updates index:
+
+  cat "${NB_DIR}/home/.index"
+
+  "${_NB}" index get_id "Example File.bookmark.md"
+
+  [[ "$("${_NB}" index get_id "Example File.bookmark.md")" == '1' ]]
+
+  # Prints output:
+
+  [[ "${output}" =~ Moved\ to                 ]]
+  [[ "${output}" =~ Example\ File.bookmark.md ]]
+}
+
+@test "'move 1 <name> --to-bookmark' with note renames without errors." {
+  {
+    "${_NB}" init
+    "${_NB}" add "Example File.md"
+
+    [[ -e "${NB_DIR}/home/Example File.md"  ]]
+  }
+
+  run "${_NB}" move "Example File.md" "New Name" --to-bookmark --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Moves file:
+
+  [[ !  -e "${NB_DIR}/home/Example File.md"      ]]
+  [[    -e "${NB_DIR}/home/New Name.bookmark.md" ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)"   ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Move'
+
+  # Updates index:
+
+  cat "${NB_DIR}/home/.index"
+
+  "${_NB}" index get_id "New Name.bookmark.md"
+
+  [[ "$("${_NB}" index get_id "New Name.bookmark.md")" == '1' ]]
+
+  # Prints output:
+
+  [[ "${output}" =~ Moved\ to             ]]
+  [[ "${output}" =~ New\ Name.bookmark.md ]]
+}
+
+@test "'move 1 New\ Name.demo --to-bookmark' discards extension and renames." {
+  {
+    "${_NB}" init
+    "${_NB}" add "Example File.md"
+
+    [[ -e "${NB_DIR}/home/Example File.md"  ]]
+  }
+
+  run "${_NB}" move "Example File.md" "New Name.demo" --to-bookmark --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Moves file:
+
+  [[ !  -e "${NB_DIR}/home/Example File.md"      ]]
+  [[    -e "${NB_DIR}/home/New Name.bookmark.md" ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)"   ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Move'
+
+  # Updates index:
+
+  cat "${NB_DIR}/home/.index"
+
+  "${_NB}" index get_id "New Name.bookmark.md"
+
+  [[ "$("${_NB}" index get_id "New Name.bookmark.md")" == '1' ]]
+
+  # Prints output:
+
+  [[ "${output}" =~ Moved\ to             ]]
+  [[ "${output}" =~ New\ Name.bookmark.md ]]
+}
+
+# <filename> --to-note ########################################################
+
+@test "'rename --to-note' with bookmark renames without errors." {
+  {
+    "${_NB}" init
+    "${_NB}" add "Example File.bookmark.md"
+
+    [[ -e "${NB_DIR}/home/Example File.bookmark.md" ]]
+  }
+
+  run "${_NB}" move "Example File.bookmark.md" --to-note --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Moves file:
+
+  [[ !  -e "${NB_DIR}/home/Example File.bookmark.md" ]]
+  [[    -e "${NB_DIR}/home/Example File.md"          ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Move'
+
+  # Updates index:
+
+  cat "${NB_DIR}/home/.index"
+
+  "${_NB}" index get_id "Example File.md"
+
+  [[ "$("${_NB}" index get_id "Example File.md")" == '1' ]]
+
+  # Prints output:
+
+  [[ "${output}" =~ Moved\ to         ]]
+  [[ "${output}" =~ Example\ File.md  ]]
+}
+
 # no argument #################################################################
 
 @test "'move' with no arguments exits with 1, does nothing, and prints help." {
@@ -412,188 +718,6 @@ _setup_rename() {
 
   [[ "${output}" =~ Moved\ to       ]]
   [[ "${output}" =~ [A-Za-z0-9]+.md ]]
-}
-
-# <filename> --to- ############################################################
-
-@test "'move --to-bookmark' with note renames without errors." {
-  {
-    "${_NB}" init
-    "${_NB}" add "Example File.md"
-
-    [[ -e "${NB_DIR}/home/Example File.md"  ]]
-  }
-
-  run "${_NB}" move "Example File.md" --to-bookmark --force
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  # Returns status 0:
-
-  [[ ${status} -eq 0 ]]
-
-  # Moves file:
-
-  [[ !  -e "${NB_DIR}/home/Example File.md"          ]]
-  [[    -e "${NB_DIR}/home/Example File.bookmark.md" ]]
-
-  # Creates git commit:
-
-  cd "${NB_DIR}/home" || return 1
-  while [[ -n "$(git status --porcelain)"   ]]
-  do
-    sleep 1
-  done
-  git log | grep -q '\[nb\] Move'
-
-  # Updates index:
-
-  cat "${NB_DIR}/home/.index"
-
-  "${_NB}" index get_id "Example File.bookmark.md"
-
-  [[ "$("${_NB}" index get_id "Example File.bookmark.md")" == '1' ]]
-
-  # Prints output:
-
-  [[ "${output}" =~ Moved\ to                 ]]
-  [[ "${output}" =~ Example\ File.bookmark.md ]]
-}
-
-@test "'move 1 <name> --to-bookmark' with note renames without errors." {
-  {
-    "${_NB}" init
-    "${_NB}" add "Example File.md"
-
-    [[ -e "${NB_DIR}/home/Example File.md"  ]]
-  }
-
-  run "${_NB}" move "Example File.md" "New Name" --to-bookmark --force
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  # Returns status 0:
-
-  [[ ${status} -eq 0 ]]
-
-  # Moves file:
-
-  [[ !  -e "${NB_DIR}/home/Example File.md"      ]]
-  [[    -e "${NB_DIR}/home/New Name.bookmark.md" ]]
-
-  # Creates git commit:
-
-  cd "${NB_DIR}/home" || return 1
-  while [[ -n "$(git status --porcelain)"   ]]
-  do
-    sleep 1
-  done
-  git log | grep -q '\[nb\] Move'
-
-  # Updates index:
-
-  cat "${NB_DIR}/home/.index"
-
-  "${_NB}" index get_id "New Name.bookmark.md"
-
-  [[ "$("${_NB}" index get_id "New Name.bookmark.md")" == '1' ]]
-
-  # Prints output:
-
-  [[ "${output}" =~ Moved\ to             ]]
-  [[ "${output}" =~ New\ Name.bookmark.md ]]
-}
-
-@test "'move 1 New\ Name.demo --to-bookmark' discards extension and renames." {
-  {
-    "${_NB}" init
-    "${_NB}" add "Example File.md"
-
-    [[ -e "${NB_DIR}/home/Example File.md"  ]]
-  }
-
-  run "${_NB}" move "Example File.md" "New Name.demo" --to-bookmark --force
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  # Returns status 0:
-
-  [[ ${status} -eq 0 ]]
-
-  # Moves file:
-
-  [[ !  -e "${NB_DIR}/home/Example File.md"      ]]
-  [[    -e "${NB_DIR}/home/New Name.bookmark.md" ]]
-
-  # Creates git commit:
-
-  cd "${NB_DIR}/home" || return 1
-  while [[ -n "$(git status --porcelain)"   ]]
-  do
-    sleep 1
-  done
-  git log | grep -q '\[nb\] Move'
-
-  # Updates index:
-
-  cat "${NB_DIR}/home/.index"
-
-  "${_NB}" index get_id "New Name.bookmark.md"
-
-  [[ "$("${_NB}" index get_id "New Name.bookmark.md")" == '1' ]]
-
-  # Prints output:
-
-  [[ "${output}" =~ Moved\ to             ]]
-  [[ "${output}" =~ New\ Name.bookmark.md ]]
-}
-
-@test "'rename --to-note' with bookmark renames without errors." {
-  {
-    "${_NB}" init
-    "${_NB}" add "Example File.bookmark.md"
-
-    [[ -e "${NB_DIR}/home/Example File.bookmark.md" ]]
-  }
-
-  run "${_NB}" move "Example File.bookmark.md" --to-note --force
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  # Returns status 0:
-
-  [[ ${status} -eq 0 ]]
-
-  # Moves file:
-
-  [[ !  -e "${NB_DIR}/home/Example File.bookmark.md" ]]
-  [[    -e "${NB_DIR}/home/Example File.md"          ]]
-
-  # Creates git commit:
-
-  cd "${NB_DIR}/home" || return 1
-  while [[ -n "$(git status --porcelain)" ]]
-  do
-    sleep 1
-  done
-  git log | grep -q '\[nb\] Move'
-
-  # Updates index:
-
-  cat "${NB_DIR}/home/.index"
-
-  "${_NB}" index get_id "Example File.md"
-
-  [[ "$("${_NB}" index get_id "Example File.md")" == '1' ]]
-
-  # Prints output:
-
-  [[ "${output}" =~ Moved\ to         ]]
-  [[ "${output}" =~ Example\ File.md  ]]
 }
 
 # <scope> #####################################################################

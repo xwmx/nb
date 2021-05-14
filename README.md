@@ -4649,8 +4649,8 @@ Usage:
         [-t <type> | --type <type> | --<type>]
         [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
   nb move ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
-          ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note)
-          [-f | --force]
+          ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note |
+          --to-title) [-f | --force]
   nb notebooks [<name> | <query>] [--ar | --archived] [--global] [--local]
                [--names] [--paths] [--unar | --unarchived]
   nb notebooks add <name> [<remote-url> [<branch>]] [--author]
@@ -5835,8 +5835,8 @@ Examples:
 ```text
 Usage:
   nb move ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
-          ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note)
-          [-f | --force]
+          ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note |
+          --to-title) [-f | --force]
 
 Options:
   -f, --force     Skip the confirmation prompt.
@@ -5846,6 +5846,8 @@ Options:
   --to-note       Preserve the existing filename and replace the bookmark's
                   ".bookmark.md" extension with ".md" to convert the bookmark
                   to a Markdown note.
+  --to-title      Set the filename to the note title, lowercased with spaces
+                  and disallowed filename characters replaced with underscores.
 
 Description:
   Move or rename a note. Move the note to <path> or change the file type.
