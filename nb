@@ -13411,13 +13411,6 @@ _move() {
     local _target_file_type="${_source_file_type:-"${NB_DEFAULT_EXTENSION}"}"
 
     _target_basename="${_target_file_name}.${_target_file_type}"
-
-    if [[ "${_source_relative_path}" =~ /   ]]
-    then
-      _target_selector_relative_path="${_source_relative_path%/*}/${_target_basename}"
-    else
-      _target_selector_relative_path="${_target_basename}"
-    fi
   elif [[ "${_to_target_type:-}" == "title" ]]
   then
     if ! _file_is_text "${_source_path:-}"
@@ -13443,13 +13436,6 @@ _move() {
     local _target_file_type="${_source_file_type:-"${NB_DEFAULT_EXTENSION}"}"
 
     _target_basename="${_processed_title}.${_target_file_type}"
-
-    if [[ "${_source_relative_path}" =~ /   ]]
-    then
-      _target_selector_relative_path="${_source_relative_path%/*}/${_target_basename}"
-    else
-      _target_selector_relative_path="${_target_basename}"
-    fi
   elif [[ -n "${_target_selector:-}"        ]] ||
        [[ -n "${_to_target_type:-}"         ]]
   then
@@ -13496,6 +13482,16 @@ _move() {
     fi
   else
     _exit_1 _help "move"
+  fi
+
+  if [[ -z  "${_target_selector_relative_path:-}" ]]
+  then
+    if [[   "${_source_relative_path}" =~ /       ]]
+    then
+      _target_selector_relative_path="${_source_relative_path%/*}/${_target_basename}"
+    else
+      _target_selector_relative_path="${_target_basename}"
+    fi
   fi
 
   local _target_info=

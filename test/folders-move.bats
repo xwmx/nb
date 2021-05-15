@@ -2,6 +2,116 @@
 
 load test_helper
 
+# --to-note ###############################################################
+
+@test "'move --to-note' with nested <filename> argument renames without errors." {
+  {
+    "${_NB}" init
+    "${_NB}" add  "Example Folder/Sample Folder/Example File.bookmark.md" \
+      --content   "Example content."
+
+    [[ -e "${NB_DIR}/home/Example Folder/Sample Folder/Example File.bookmark.md"  ]]
+  }
+
+  run "${_NB}" rename                                       \
+    "Example Folder/Sample Folder/Example File.bookmark.md" \
+    --to-note <<< "y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}"    -eq 0                   ]]
+
+  # Moves file:
+
+  [[ !  -e "${NB_DIR}/home/Example Folder/Sample Folder/Example File.bookmark.md" ]]
+  [[    -f "${NB_DIR}/home/Example Folder/Sample Folder/Example File.md"          ]]
+
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)"   ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Move'
+
+  # Updates index:
+
+  cat "${NB_DIR}/home/.index"
+
+  declare _item_id=
+  _item_id="$(
+    "${_NB}" index get_id                   \
+      "Example File.md"                     \
+      "${NB_DIR}/home/Example Folder/Sample Folder"
+  )"
+
+  [[ "${_item_id}"  ==  "1"                 ]]
+
+  # Prints output:
+
+  [[ "${output}"    =~  Moved\ to                                       ]]
+  [[ "${output}"    =~  Example\ Folder/Sample\ Folder/Example\ File.md ]]
+}
+
+# --to-bookmark ###############################################################
+
+@test "'move --to-bookmark' with nested <filename> argument renames without errors." {
+  {
+    "${_NB}" init
+    "${_NB}" add  "Example Folder/Sample Folder/Example File.md"      \
+      --content   "Example content."
+
+    [[ -e "${NB_DIR}/home/Example Folder/Sample Folder/Example File.md" ]]
+  }
+
+  run "${_NB}" rename "Example Folder/Sample Folder/Example File.md"  \
+    --to-bookmark <<< "y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}"    -eq 0                   ]]
+
+  # Moves file:
+
+  [[ !  -e "${NB_DIR}/home/Example Folder/Sample Folder/Example File.md"          ]]
+  [[    -f "${NB_DIR}/home/Example Folder/Sample Folder/Example File.bookmark.md" ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)"   ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Move'
+
+  # Updates index:
+
+  cat "${NB_DIR}/home/.index"
+
+  declare _item_id=
+  _item_id="$(
+    "${_NB}" index get_id                   \
+      "Example File.bookmark.md"            \
+      "${NB_DIR}/home/Example Folder/Sample Folder"
+  )"
+
+  [[ "${_item_id}"  ==  "1"                 ]]
+
+  # Prints output:
+
+  [[ "${output}"    =~  Moved\ to                                                 ]]
+  [[ "${output}"    =~  Example\ Folder/Sample\ Folder/Example\ File.bookmark.md  ]]
+}
+
 # --reset #####################################################################
 
 @test "'move --reset' with nested <filename> argument renames without errors." {
