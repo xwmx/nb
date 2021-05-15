@@ -13522,7 +13522,7 @@ _move() {
   if _notebooks current --selected ||
      [[ "${_target_notebook_path}" != "$(_notebooks current --path)" ]]
   then
-    _target_info="$(_notebooks show "${_target_notebook_path}" --escaped):"
+    _target_info="$(_notebooks show "${_target_notebook_path}" --name --no-color):"
   fi
 
   local _target_folder_path=

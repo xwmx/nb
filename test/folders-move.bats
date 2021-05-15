@@ -2,6 +2,109 @@
 
 load test_helper
 
+# edge cases ##################################################################
+
+@test "'move <notebook-1>: <notebook-2>:<folder>/' with <notebook-1> as current moves file." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example File.md" --content "Example content."
+
+    "${_NB}" notebooks add "Example Notebook"
+  }
+
+  run "${_NB}" move "home:Example File.md" "Example Notebook:Sample Folder/" <<< "y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Moves file:
+
+  [[ ! -e "${NB_DIR}/home/Example File.md"                            ]]
+  [[   -f "${NB_DIR}/Example Notebook/Sample Folder/Example File.md"  ]]
+
+  # Creates git commits:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log
+  git log | grep -q '\[nb\] Delete'
+
+  cd "${NB_DIR}/Example Notebook" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  # Prints output:
+
+  [[ "${lines[0]}"  =~  Moving:\ \ \ .*\[.*1.*\].*\ .*Example\ File.md  ]]
+  [[ "${lines[1]}"  =~  \
+To:\ \ \ \ \ \ \ .*Example\ Notebook:Sample\ Folder/Example\ File.md    ]]
+  [[ "${lines[2]}"  =~  \
+Moved\ to:\ .*Example\ Notebook:Sample\ Folder/Example\ File.md         ]]
+}
+
+@test "'move <notebook-1>: <notebook-2>:<folder>/' without either as current moves file." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example File.md" --content "Example content."
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" notebooks add "Sample Notebook"
+    "${_NB}" notebooks use "Sample Notebook"
+  }
+
+  run "${_NB}" move "home:Example File.md" "Example Notebook:Sample Folder/" <<< "y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Moves file:
+
+  [[ ! -e "${NB_DIR}/home/Example File.md"                            ]]
+  [[   -f "${NB_DIR}/Example Notebook/Sample Folder/Example File.md"  ]]
+
+  # Creates git commits:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log
+  git log | grep -q '\[nb\] Delete'
+
+  cd "${NB_DIR}/Example Notebook" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  # Prints output:
+
+  [[ "${lines[0]}"  =~  Moving:\ \ \ .*\[.*1.*\].*\ .*home:Example\ File.md ]]
+  [[ "${lines[1]}"  =~  \
+To:\ \ \ \ \ \ \ .*Example\ Notebook:Sample\ Folder/Example\ File.md        ]]
+  [[ "${lines[2]}"  =~  \
+Moved\ to:\ .*Example\ Notebook:Sample\ Folder/Example\ File.md             ]]
+}
+
 # only extension ##############################################################
 
 @test "'move .<extension>' with nested note changes the file extension while retaining the name and folder." {
@@ -313,54 +416,6 @@ To:\ \ \ \ \ \ \ .*example_title__a_string•with_a_bunch_of_invalid_filename_ch
 Moved\ to:\ .*[.*1.*].*\ .*${_target_filename}.*  ]]
   [[ "${lines[2]}" =~ \
  \"Example\ Title:\ A\*string•with/a\\bunch\|of\?invalid\<filename\"characters\>\"  ]]
-}
-
-# edge cases ##################################################################
-
-@test "'move <folder> <new-name>' with conflicting notebook name moves folder." {
-  {
-    "${_NB}" init
-
-    "${_NB}" add "Example Conflicting Name/Sample File.bookmark.md" \
-      --title   "Sample Title"                                      \
-      --content "<https://1.example.test>"
-
-
-    "${_NB}" notebooks add "Example Conflicting Name"
-
-    [[   -d "${NB_DIR}/home/Example Conflicting Name"                         ]]
-    [[   -f "${NB_DIR}/home/Example Conflicting Name/Sample File.bookmark.md" ]]
-    [[ ! -e "${NB_DIR}/home/Example New Name/Sample File.bookmark.md"         ]]
-  }
-
-  run "${_NB}" move "Example Conflicting Name" "Example New Name" <<< "y${_NEWLINE}"
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  # Returns status 0:
-
-  [[ ${status} -eq 0 ]]
-
-  # Moves folder:
-
-    [[ ! -e "${NB_DIR}/home/Example Conflicting Name"                         ]]
-    [[   -f "${NB_DIR}/home/Example New Name/Sample File.bookmark.md"         ]]
-
-  # Creates git commit:
-
-  cd "${NB_DIR}/home" || return 1
-  while [[ -n "$(git status --porcelain)" ]]
-  do
-    sleep 1
-  done
-  git log | grep -q '\[nb\] Move:'
-
-  # Prints output:
-
-  [[ "${lines[0]}"  =~  Moving:\ \ \ .*\[.*1.*\].*\ 📂\ .*Example\ Conflicting\ Name  ]]
-  [[ "${lines[1]}"  =~  To:\ \ \ \ \ \ \ .*Example\ New\ Name                         ]]
-  [[ "${lines[2]}"  =~  Moved\ to:\ .*Example\ New\ Name                              ]]
 }
 
 # intermediate folders ########################################################
