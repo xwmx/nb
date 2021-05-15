@@ -2951,14 +2951,14 @@ For more information, see [Browsing](#-browsing).
 
 Use [`nb move`](#move) to move and rename items.
 [`nb move`](#move) and [`nb rename`](#move)
-both refer to the same subcommand and can be used interchangably.
+both refer to the same subcommand and can be used interchangably:
 
 ```bash
-# move "example.md" to "example.org"
+# move "example.md" to "sample.org"
 nb move example.md sample.org
 
-# rename note 3 ("example.md") to "New Name.md"
-nb rename 3 "New Name"
+# rename note 2 ("example.md") to "New Name.md"
+nb rename 2 "New Name"
 ```
 
 Items can be moved between notebooks and folders:
@@ -2966,9 +2966,6 @@ Items can be moved between notebooks and folders:
 ```bash
 # move note 12 into "Sample Folder" in the "demo" notebook
 nb move example:12 demo:Sample\ Folder/
-
-# rename note 12 in the "example" notebook to "sample.md"
-nb rename example:12 "sample.md"
 ```
 
 When the file extension is omitted, the existing extension is used:
@@ -2978,7 +2975,7 @@ When the file extension is omitted, the existing extension is used:
 nb move example.bookmark.md "New Name"
 ```
 
-When only a file extension is specified, only the extension will be updated:
+When only a file extension is specified, only the extension is updated:
 
 ```bash
 # change the file extension of note 5 ("demo file.md") to .org ("demo file.org")
@@ -5926,7 +5923,7 @@ See Also:
   nb help edit
 
 Examples:
-  # move "example.md" to "example.org"
+  # move "example.md" to "sample.org"
   nb move example.md sample.org
 
   # rename note 3 ("example.md") to "New Name.md"

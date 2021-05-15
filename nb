@@ -13293,7 +13293,7 @@ $(_color_primary "See Also"):
   ${_ME} help edit
 
 $(_color_primary "Examples"):
-  # move "example.md" to "example.org"
+  # move "example.md" to "sample.org"
   ${_ME} move example.md sample.org
 
   # rename note 3 ("example.md") to "New Name.md"
