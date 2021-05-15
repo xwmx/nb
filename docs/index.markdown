@@ -332,6 +332,7 @@ the [`nb update`](#update) subcommand.
   <a href="#-folders">Folders</a> ·
   <a href="#-pinning">Pinning</a> ·
   <a href="#-search">Search</a> ·
+  <a href="#moving--renaming">Moving & Renaming</a> ·
   <a href="#-revision-history">History</a> ·
   <a href="#-notebooks">Notebooks</a> ·
   <a href="#-git-sync">Git Sync</a> ·
@@ -2954,7 +2955,8 @@ For more information, see [Browsing](#-browsing).
 
 ### Moving & Renaming
 
-Use [`nb move`](#move) to move and rename items. `nb move` and `nb rename`
+Use [`nb move`](#move) to move and rename items.
+[`nb move`](#move) and [`nb rename`](#move)
 both refer to the same subcommand and can be used interchangably.
 
 ```bash
@@ -2989,9 +2991,10 @@ When only a file extension is specified, only the extension will be updated:
 nb rename 5 .org
 ```
 
-Use `rename --to-bookmark` and `rename --to-note` options to update the
-extension to `.bookmark.md` and the extension set in
-[`nb set default_extension`](#default_extension) (efault: `.md`):
+Use [`rename --to-bookmark`](#move) to change the extension of a note
+to `.bookmark.md` and [`rename --to-note`](#move) change the extension
+to the one set in [`nb set default_extension`](#default_extension)
+(Default: `.md`):
 
 ```bash
 # rename note 3 ("example.md") to a bookmark named "example.bookmark.md"
@@ -3012,7 +3015,7 @@ To:       example_title.md
 Proceed?  [y/N]
 ```
 
-For details, see `nb help move`](#move).
+For details, see [`nb help move`](#move).
 
 ### 🗒 Revision History
 
