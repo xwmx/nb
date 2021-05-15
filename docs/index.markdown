@@ -2955,9 +2955,8 @@ For more information, see [Browsing](#-browsing).
 
 ### Moving & Renaming
 
-Use [`nb move`](#move) to move and rename items.
-[`nb move`](#move) and [`nb rename`](#move)
-both refer to the same subcommand and can be used interchangably:
+Use [`nb move`](#move) (alias: `nb rename`, shortcut: `nb mv`)
+to move and rename items:
 
 ```bash
 # move "example.md" to "sample.org"
@@ -2970,7 +2969,7 @@ nb rename 2 "New Name"
 Items can be moved between notebooks and folders:
 
 ```bash
-# move note 12 into "Sample Folder" in the "demo" notebook
+# move note 12 from the "example" notebook into "Sample Folder" in the "demo" notebook
 nb move example:12 demo:Sample\ Folder/
 ```
 
@@ -2989,9 +2988,9 @@ nb rename 5 .org
 ```
 
 Use [`rename --to-bookmark`](#move) to change the extension of a note
-to `.bookmark.md` and [`rename --to-note`](#move) change the extension
-to the one set in [`nb set default_extension`](#default_extension)
-(Default: `.md`):
+to `.bookmark.md` and [`rename --to-note`](#move) to change the extension
+of a bookmark to either `.md` or the extension set with
+[`nb set default_extension`](#default_extension):
 
 ```bash
 # rename note 3 ("example.md") to a bookmark named "example.bookmark.md"
@@ -3013,6 +3012,8 @@ Proceed?  [y/N]
 ```
 
 For details, see [`nb help move`](#move).
+
+To copy items, install the [`copy` / `duplicate` plugin](#copy).
 
 ### 🗒 Revision History
 
@@ -5898,7 +5899,10 @@ Examples:
 
 #### `move`
 
-[↑](#help) · See also: [`delete`](#delete), [`edit`](#edit)
+[↑](#help) · See also:
+[Moving & Renaming](#moving--renaming),
+[`delete`](#delete),
+[`edit`](#edit)
 
 ```text
 Usage:
@@ -7523,7 +7527,7 @@ at the root level of the notebook directory.
 
 ## Tests
 
-With more than 1,600 tests spanning tens of thousands of lines,
+With more than 1,700 tests spanning tens of thousands of lines,
 `nb` is really mostly a
 [test suite](https://github.com/xwmx/nb/tree/master/test).
 [Tests run continuously via GitHub Actions](https://github.com/xwmx/nb/actions)
