@@ -13283,7 +13283,7 @@ $(_color_primary "Options"):
 
 $(_color_primary "Description"):
   Move or rename a note. Move the note to <path> or change the file type.
-  When file extension is omitted, the existing extension is used.
+  When the file extension is omitted, the existing extension is used.
   When only a file extension is specified, only the extension will be updated.
 
   \`move\` and \`rename\` are aliases and can be used interchangably.
@@ -13471,7 +13471,7 @@ _move() {
         _target_file_type="bookmark.md"
       elif [[ "${_to_target_type}" == "note"      ]]
       then
-        _target_file_type="md"
+        _target_file_type="${NB_DEFAULT_EXTENSION:-md}"
       else
         _exit_1 _help "move"
       fi

@@ -310,6 +310,53 @@ Moved\ to:\ .*[.*1.*].*\ .*example_title__a_string•with_a_bunch_of_invalid_fil
 
 # <filename> --to-note ########################################################
 
+@test "'rename --to-note' with bookmark renames to updated default extension without errors." {
+  {
+    "${_NB}" init
+    "${_NB}" add "Example File.bookmark.md"
+
+    [[ -e "${NB_DIR}/home/Example File.bookmark.md" ]]
+
+    "${_NB}" set default_extension "org"
+  }
+
+  run "${_NB}" move "Example File.bookmark.md" --to-note --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Moves file:
+
+  [[ !  -e "${NB_DIR}/home/Example File.bookmark.md" ]]
+  [[    -e "${NB_DIR}/home/Example File.org"          ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Move'
+
+  # Updates index:
+
+  cat "${NB_DIR}/home/.index"
+
+  "${_NB}" index get_id "Example File.org"
+
+  [[ "$("${_NB}" index get_id "Example File.org")" == '1' ]]
+
+  # Prints output:
+
+  [[ "${output}" =~ Moved\ to         ]]
+  [[ "${output}" =~ Example\ File.org ]]
+}
+
 @test "'rename --to-note' with bookmark renames without errors." {
   {
     "${_NB}" init
