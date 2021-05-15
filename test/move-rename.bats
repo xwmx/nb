@@ -7,6 +7,48 @@ _setup_rename() {
   "${_NB}" add "initial example name.md"
 }
 
+# only extension ##############################################################
+
+@test "'move .<extension>' with root-level note changes the file extension while retaining the name." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example File.md" --content   "Example content."
+  }
+
+  run "${_NB}" move 1 .js <<< "y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0                            ]]
+
+  # Moves file:
+
+  [[ !  -e "${NB_DIR}/home/Example File.md"     ]]
+  [[    -f "${NB_DIR}/home/Example File.js"     ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)"       ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Move'
+
+  # Prints output:
+
+  [[ "${lines[0]}" =~ \
+Moving:\ \ \ .*[.*1.*].*\ .*Example\ File\.md.* ]]
+  [[ "${lines[1]}" =~ \
+To:\ \ \ \ \ \ \ .*Example\ File\.js.*          ]]
+  [[ "${lines[2]}" =~ \
+Moved\ to:\ .*[.*1.*].*\ .*Example\ File\.js.*  ]]
+}
+
 # --to-title ##################################################################
 
 @test "'move --to-title' with title and root-level note renames to title." {

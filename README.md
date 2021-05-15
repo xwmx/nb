@@ -5852,6 +5852,7 @@ Options:
 Description:
   Move or rename a note. Move the note to <path> or change the file type.
   When file extension is omitted, the existing extension is used.
+  When only a file extension is specified, only the extension will be updated.
 
   `nb move` and `nb rename` are aliases and can be used interchangably.
 
@@ -5877,6 +5878,9 @@ Examples:
 
   # Rename note 12 in the "example" notebook to "sample.md"
   nb rename example:12 "sample.md"
+
+  # Change the file extension of note 5 to .org
+  nb rename 5 .org
 
 Alias: `nb rename`
 Shortcut Alias: `nb mv`

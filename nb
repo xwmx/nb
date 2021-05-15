@@ -13284,6 +13284,7 @@ $(_color_primary "Options"):
 $(_color_primary "Description"):
   Move or rename a note. Move the note to <path> or change the file type.
   When file extension is omitted, the existing extension is used.
+  When only a file extension is specified, only the extension will be updated.
 
   \`move\` and \`rename\` are aliases and can be used interchangably.
 
@@ -13309,6 +13310,9 @@ $(_color_primary "Examples"):
 
   # Rename note 12 in the "example" notebook to "sample.md"
   ${_ME} rename example:12 "sample.md"
+
+  # Change the file extension of note 5 to .org
+  ${_ME} rename 5 .org
 
 $(_color_primary "Alias"): \`${_ME} rename\`
 $(_color_primary "Shortcut Alias"): \`${_ME} mv\`
@@ -13436,8 +13440,8 @@ _move() {
     local _target_file_type="${_source_file_type:-"${NB_DEFAULT_EXTENSION}"}"
 
     _target_basename="${_processed_title}.${_target_file_type}"
-  elif [[ -n "${_target_selector:-}"        ]] ||
-       [[ -n "${_to_target_type:-}"         ]]
+  elif [[ -n "${_target_selector:-}"              ]] ||
+       [[ -n "${_to_target_type:-}"               ]]
   then
     _target_selector_relative_path="${_target_selector#*:}"
 
@@ -13445,10 +13449,14 @@ _move() {
     local _target_file_name="${_target_basename%%.*}"
     local _target_file_type="${_target_basename#*.}"
 
-    if [[ -z "${_target_file_type:-}"                     ]] ||
-       [[ "${_target_file_type}" == "${_target_basename}" ]]
-    then # no file extension specified in _target_name
-      if [[ -n "${_source_file_type}"                     ]]
+    if [[   -n "${_target_file_type:-}"                         ]] &&
+       [[   -z "${_target_file_name:-}"                         ]]
+    then # only file extension in target
+      _target_selector_relative_path=""
+    elif [[ -z "${_target_file_type:-}"                         ]] ||
+         [[    "${_target_file_type}" == "${_target_basename}"  ]]
+    then # no file extension in target
+      if [[ -n "${_source_file_type}"                           ]]
       then
         _target_file_type="${_source_file_type}"
       else
@@ -13520,7 +13528,7 @@ _move() {
   local _target_folder_path=
   local _target_relative_path=
 
-  if [[     "${_target_selector_relative_path:-}" =~ /          ]]
+  if [[   "${_target_selector_relative_path:-}" =~ /            ]]
   then
     _target_folder_path="${_target_notebook_path}/${_target_selector_relative_path%\/*}"
     _target_relative_path="${_target_selector_relative_path%\/*}/${_target_basename}"

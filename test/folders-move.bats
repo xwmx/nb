@@ -2,6 +2,49 @@
 
 load test_helper
 
+# only extension ##############################################################
+
+@test "'move .<extension>' with nested note changes the file extension while retaining the name and folder." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example Folder/Sample Folder/Example File.md" \
+      --content   "Example content."
+  }
+
+  run "${_NB}" move Example\ Folder/Sample\ Folder/1 .js <<< "y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0                                                      ]]
+
+  # Moves file:
+
+  [[ !  -e "${NB_DIR}/home/Example Folder/Sample Folder/Example File.md"  ]]
+  [[    -f "${NB_DIR}/home/Example Folder/Sample Folder/Example File.js"  ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)"       ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Move'
+
+  # Prints output:
+
+  [[ "${lines[0]}" =~ \
+Moving:\ \ \ .*[.*1.*].*\ .*Example\ Folder/Sample\ Folder/Example\ File\.md.* ]]
+  [[ "${lines[1]}" =~ \
+To:\ \ \ \ \ \ \ .*Example\ Folder/Sample\ Folder/Example\ File\.js.*          ]]
+  [[ "${lines[2]}" =~ \
+Moved\ to:\ .*[.*1.*].*\ .*Example\ Folder/Sample\ Folder/Example\ File\.js.*  ]]
+}
+
 # --to-note ###############################################################
 
 @test "'move --to-note' with nested <filename> argument renames without errors." {
