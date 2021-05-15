@@ -2946,6 +2946,68 @@ search: [#example             ]
 
 For more information, see [Browsing](#-browsing).
 
+### Moving & Renaming
+
+Use [`nb move`](#move) to move and rename items. `nb move` and `nb rename`
+both refer to the same subcommand and can be used interchangably.
+
+```bash
+# move "example.md" to "example.org"
+nb move example.md sample.org
+
+# rename note 3 ("example.md") to "New Name.md"
+nb rename 3 "New Name"
+```
+
+Items can be moved between notebooks and folders:
+
+```bash
+# move note 12 into "Sample Folder" in the "demo" notebook
+nb move example:12 demo:Sample\ Folder/
+
+# rename note 12 in the "example" notebook to "sample.md"
+nb rename example:12 "sample.md"
+```
+
+When the file extension is omitted, the existing extension is used:
+
+```bash
+# rename "example.bookmark.md" to "New Name.bookmark.md"
+nb move example.bookmark.md "New Name"
+```
+
+When only a file extension is specified, only the extension will be updated:
+
+```bash
+# change the file extension of note 5 ("demo file.md") to .org ("demo file.org")
+nb rename 5 .org
+```
+
+Use `rename --to-bookmark` and `rename --to-note` options to update the
+extension to `.bookmark.md` and the extension set in
+[`nb set default_extension`](#default_extension) (efault: `.md`):
+
+```bash
+# rename note 3 ("example.md") to a bookmark named "example.bookmark.md"
+nb rename 3 --to-bookmark
+
+# rename bookmark 6 ("sample.bookmark.md") to a note named "sample.md"
+nb rename 6 --to-note
+```
+
+Use `rename --to-title` to set the filename to the note title,
+lowercased with spaces and disallowed filename characters replaced
+with underscores:
+
+```bash
+❯ nb rename 12 --to-title
+Moving:   [12] 20210101010000.md "Example Title"
+To:       example_title.md
+Proceed?  [y/N]
+```
+
+For details, see `nb help move`](#move).
+
 ### 🗒 Revision History
 
 Whenever a note is added, modified, or deleted,
@@ -5851,7 +5913,7 @@ Options:
 
 Description:
   Move or rename a note. Move the note to <path> or change the file type.
-  When file extension is omitted, the existing extension is used.
+  When the file extension is omitted, the existing extension is used.
   When only a file extension is specified, only the extension will be updated.
 
   `nb move` and `nb rename` are aliases and can be used interchangably.
@@ -5861,25 +5923,25 @@ See Also:
   nb help edit
 
 Examples:
-  # Move "example.md" to "example.org"
+  # move "example.md" to "example.org"
   nb move example.md sample.org
 
-  # Rename note 3 ("example.md") to "New Name.md"
+  # rename note 3 ("example.md") to "New Name.md"
   nb rename 3 "New Name"
 
-  # Rename "example.bookmark.md" to "New Name.bookmark.md"
+  # rename "example.bookmark.md" to "New Name.bookmark.md"
   nb move example.bookmark.md "New Name"
 
-  # Rename note 3 ("example.md") to bookmark named "example.bookmark.md"
+  # rename note 3 ("example.md") to a bookmark named "example.bookmark.md"
   nb rename 3 --to-bookmark
 
-  # Move note 12 into "Sample Folder" in the "demo" notebook
+  # move note 12 into "Sample Folder" in the "demo" notebook
   nb move example:12 demo:Sample\ Folder/
 
-  # Rename note 12 in the "example" notebook to "sample.md"
+  # rename note 12 in the "example" notebook to "sample.md"
   nb rename example:12 "sample.md"
 
-  # Change the file extension of note 5 to .org
+  # change the file extension of note 5 to .org
   nb rename 5 .org
 
 Alias: `nb rename`

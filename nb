@@ -13293,25 +13293,25 @@ $(_color_primary "See Also"):
   ${_ME} help edit
 
 $(_color_primary "Examples"):
-  # Move "example.md" to "example.org"
+  # move "example.md" to "example.org"
   ${_ME} move example.md sample.org
 
-  # Rename note 3 ("example.md") to "New Name.md"
+  # rename note 3 ("example.md") to "New Name.md"
   ${_ME} rename 3 "New Name"
 
-  # Rename "example.bookmark.md" to "New Name.bookmark.md"
+  # rename "example.bookmark.md" to "New Name.bookmark.md"
   ${_ME} move example.bookmark.md "New Name"
 
-  # Rename note 3 ("example.md") to bookmark named "example.bookmark.md"
+  # rename note 3 ("example.md") to a bookmark named "example.bookmark.md"
   ${_ME} rename 3 --to-bookmark
 
-  # Move note 12 into "Sample Folder" in the "demo" notebook
+  # move note 12 into "Sample Folder" in the "demo" notebook
   ${_ME} move example:12 demo:Sample\ Folder/
 
-  # Rename note 12 in the "example" notebook to "sample.md"
+  # rename note 12 in the "example" notebook to "sample.md"
   ${_ME} rename example:12 "sample.md"
 
-  # Change the file extension of note 5 to .org
+  # change the file extension of note 5 to .org
   ${_ME} rename 5 .org
 
 $(_color_primary "Alias"): \`${_ME} rename\`
