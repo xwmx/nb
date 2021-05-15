@@ -13547,7 +13547,7 @@ _move() {
 
   if ! ((_force))
   then
-    printf "Moving:   %s\\n" "$(_show "${_source_relative_path}" --info-line)"
+    printf "Moving:   %s\\n" "$(_show "${_source_path}" --info-line)"
     printf "To:       %s\\n" "$(_color_primary "${_target_info}")"
 
     while true
