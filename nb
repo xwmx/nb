@@ -13455,7 +13455,7 @@ _move() {
   fi
 
   local _target_info=
-  local _target_notebook_path
+  local _target_notebook_path=
 
   if [[       "${_target_selector:-}" =~ :  ]]
   then
@@ -13477,14 +13477,16 @@ _move() {
     _target_info="$(_notebooks show "${_target_notebook_path}" --escaped):"
   fi
 
-  local _target_folder_path="${_target_notebook_path}"
-  local _target_relative_path="${_target_basename}"
+  local _target_folder_path=
+  local _target_relative_path=
 
   if [[     "${_target_selector_relative_path:-}" =~ /          ]]
   then
     _target_folder_path="${_target_notebook_path}/${_target_selector_relative_path%\/*}"
-
     _target_relative_path="${_target_selector_relative_path%\/*}/${_target_basename}"
+  else
+    _target_folder_path="${_target_notebook_path}"
+    _target_relative_path="${_target_basename}"
   fi
 
   _target_info+="${_target_relative_path}"
