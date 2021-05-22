@@ -348,7 +348,7 @@ the [`nb update`](#update) subcommand.
 </p>
 
 <p align="center">
-  <a href="#nb">↑ top</a>
+  <sup><a href="#nb">↑ top</a></sup>
 </p>
 
 To get started, simply run:
@@ -367,6 +367,14 @@ regardless of the current working directory.
 ### 📝 Notes
 
 #### Adding
+
+<p>
+  <sup>
+    <a href="#overview">↑</a> ·
+    <a href="#add"><code>nb add</code></a>,
+    <a href="#browse"><code>nb browse add</code></a>
+  </sup>
+</p>
 
 Use [`nb add`](#add) (shortcuts: `nb a`, `nb +`) to create new notes:
 
@@ -678,6 +686,15 @@ pre-populating new notes with content:
 For more information, see [Browsing](#-browsing).
 
 #### Listing & Filtering
+
+<p>
+  <sup>
+    <a href="#overview">↑</a> ·
+    <a href="#ls"><code>nb ls</code></a>,
+    <a href="#list"><code>nb list</code></a>,
+    <a href="#browse"><code>nb browse</code></a>
+  </sup>
+</p>
 
 To list notes and notebooks, run [`nb ls`](#ls) (shortcut alias: `nb`):
 
@@ -1037,6 +1054,14 @@ For more information, see [Browsing](#-browsing).
 
 #### Editing
 
+<p>
+  <sup>
+    <a href="#overview">↑</a> ·
+    <a href="#edit"><code>nb edit</code></a>,
+    <a href="#browse"><code>nb browse edit</code></a>
+  </sup>
+</p>
+
 You can edit an item in your editor with
 [`nb edit`](#edit) (shortcut: `nb e`):
 
@@ -1158,6 +1183,16 @@ For more information, see
 [`browse edit`](#browse-edit) and [Browsing](#-browsing).
 
 #### Viewing
+
+<p>
+  <sup>
+    <a href="#overview">↑</a> ·
+    <a href="#show"><code>nb show</code></a>,
+    <a href="#browse"><code>nb browse</code></a>,
+    <a href="#open"><code>nb open</code></a>,
+    <a href="#peek"><code>nb peek</code></a>
+  </sup>
+</p>
 
 Notes and other items can be viewed using [`nb show`](#show) (shortcut: `nb s`):
 
@@ -1386,6 +1421,14 @@ For more information, see [Browsing](#-browsing).
 
 #### Deleting
 
+<p>
+  <sup>
+    <a href="#overview">↑</a> ·
+    <a href="#delete"><code>nb delete</code></a>,
+    <a href="#browse"><code>nb browse delete</code></a>
+  </sup>
+</p>
+
 To delete one or more notes, pass any number of
 ids, filenames, titles, and other [selectors](#selectors)
 to [`nb delete`](#delete) (shortcuts: `nb d`, `nb -`):
@@ -1476,6 +1519,17 @@ Items can be deleted within terminal and GUI web browsers using
 For more information, see [Browsing](#-browsing).
 
 ### 🔖 Bookmarks
+
+<p>
+  <sup>
+    <a href="#overview">↑</a> ·
+    <a href="#nb-help"><code>nb&nbsp;&lt;url&gt;</code></a>,
+    <a href="#bookmark"><code>nb&nbsp;bookmark</code></a>,
+    <a href="#browse"><code>nb&nbsp;browse</code></a>,
+    <a href="#open"><code>nb&nbsp;open</code></a>,
+    <a href="#peek"><code>nb&nbsp;peek</code></a>
+  </sup>
+</p>
 
 `nb` includes a bookmarking system to conveniently
 create, annotate, view, search, [browse](#-browsing), and manage
@@ -1963,6 +2017,12 @@ See [`bookmark help`](#bookmark-help) for more information.
 
 ### 🏷 #tagging
 
+<p>
+  <sup>
+    <a href="#overview">↑</a>
+  </sup>
+</p>
+
 `nb` recognizes [#hashtags](#-tagging) defined anywhere within a document.
 A hashtag is defined in `nb` as a `#` character followed by any number of
 letters, numbers, underscores, and dashes.
@@ -2121,6 +2181,12 @@ For more information about browsing, see
 
 ### 🔗 Linking
 
+<p>
+  <sup>
+    <a href="#overview">↑</a>
+  </sup>
+</p>
+
 Notes,
 bookmarks,
 files in text-based formats,
@@ -2175,6 +2241,13 @@ Linked items can be [browsed](#-browsing) with [`nb browse`](#browse).
 For more information about identifying items, see [Selectors](#selectors).
 
 ### 🌍 Browsing
+
+<p>
+  <sup>
+    <a href="#overview">↑</a> ·
+    <a href="#browse"><code>nb browse</code></a>
+  </sup>
+</p>
 
 Use [`nb browse`](#browse) (shortcut: `nb br`) to
 browse, view, edit, and search linked notes, bookmarks, notebooks, folders,
@@ -2566,6 +2639,12 @@ For more information, see [`nb browse`](#browse).
 
 ### 🗂 Zettelkasten
 
+<p>
+  <sup>
+    <a href="#overview">↑</a>
+  </sup>
+</p>
+
 Zettelkasten (German: "slip box") is a method of note-taking and
 personal knowledge management modeled around a few key features:
 
@@ -2593,6 +2672,12 @@ For more information about Zettelkasten, see
 [Wikipedia](https://en.wikipedia.org/wiki/Zettelkasten).
 
 ### 📂 Folders
+
+<p>
+  <sup>
+    <a href="#overview">↑</a>
+  </sup>
+</p>
 
 Items can be organized in folders.
 To add a note to a folder,
@@ -2703,6 +2788,16 @@ For more information about identifying folders, see [Selectors](#selectors).
 
 ### 📌 Pinning
 
+<p>
+  <sup>
+    <a href="#overview">↑</a> ·
+    <a href="#pin"><code>nb pin</code></a>,
+    <a href="#unpin"><code>nb unpin</code></a>,
+    <a href="#ls"><code>nb ls</code></a>,
+    <a href="#browse"><code>nb browse</code></a>
+  </sup>
+</p>
+
 Items can be pinned so they appear first in
 `nb`, [`nb ls`](#ls), and [`nb browse`](#browse):
 
@@ -2791,6 +2886,13 @@ home
 ```
 
 ### 🔍 Search
+
+<p>
+  <sup>
+    <a href="#overview">↑</a> ·
+    <a href="#search"><code>nb search</code></a>
+  </sup>
+</p>
 
 Use [`nb search`](#search) (shortcut: `nb q`) to
 perform full text searches, with support for regular expressions,
@@ -2959,6 +3061,13 @@ For more information, see [Browsing](#-browsing).
 
 ### Moving & Renaming
 
+<p>
+  <sup>
+    <a href="#overview">↑</a> ·
+    <a href="#move"><code>nb move</code></a>
+  </sup>
+</p>
+
 Use [`nb move`](#move) (alias: `nb rename`, shortcut: `nb mv`)
 to move and rename items:
 
@@ -3020,6 +3129,14 @@ For details, see [`nb help move`](#move).
 To copy items, install the [`copy` / `duplicate` plugin](#copy).
 
 ### 🗒 Revision History
+
+<p>
+  <sup>
+    <a href="#overview">↑</a> ·
+    <a href="#history"><code>nb history</code></a>,
+    <a href="#notebooks"><code>nb notebooks author</code></a>
+  </sup>
+</p>
 
 Whenever a note is added, modified, or deleted,
 `nb` automatically commits the change to git transparently in the background.
@@ -3089,6 +3206,13 @@ history, create the new notebook using
 [`nb notebooks init --author`](#notebooks).
 
 ### 📚 Notebooks
+
+<p>
+  <sup>
+    <a href="#overview">↑</a> ·
+    <a href="#notebooks"><code>nb notebooks</code></a>
+  </sup>
+</p>
 
 You can create additional notebooks, each of which has its own version history.
 
@@ -3495,6 +3619,14 @@ For technical details about notebooks, see
 
 ### 🔄 Git Sync
 
+<p>
+  <sup>
+    <a href="#overview">↑</a> ·
+    <a href="#remote"><code>nb remote</code></a>,
+    <a href="#sync"><code>nb sync</code></a>
+  </sup>
+</p>
+
 Each notebook can be synced with a remote git repository by
 setting the remote URL using [`nb remote`](#remote):
 
@@ -3701,6 +3833,14 @@ that could inform a strategy for handling any such cases automatically.
 
 ### ↕️ Import / Export
 
+<p>
+  <sup>
+    <a href="#overview">↑</a> ·
+    <a href="#export"><code>nb export</code></a>,
+    <a href="#import"><code>nb import</code></a>
+  </sup>
+</p>
+
 Files of any type can be imported into a notebook using [`nb import`](#import).
 [`nb edit`](#edit) and [`nb open`](#open)
 will open files in your system's default application for that file type.
@@ -3804,6 +3944,13 @@ For `nb import` and `nb export` help information, see
 
 ### ⚙️ `set` & `settings`
 
+<p>
+  <sup>
+    <a href="#overview">↑</a> ·
+    <a href="#settings"><code>nb settings</code></a>
+  </sup>
+</p>
+
 [`nb set`](#settings) and [`nb settings`](#settings)
 open the settings prompt,
 which provides an easy way to change your `nb` settings.
@@ -3902,6 +4049,16 @@ For more information about `set` and `settings`, see
 [`nb settings list --long`](#settings-list---long).
 
 ### 🎨 Color Themes
+
+<p>
+  <sup>
+    <a href="#overview">↑</a> ·
+    <a href="#color_theme"><code>nb&nbsp;set&nbsp;color_theme</code></a>,
+    <a href="#syntax_theme"><code>nb&nbsp;set&nbsp;syntax_theme</code></a>,
+    <a href="#color_primary"><code>nb&nbsp;set&nbsp;color_primary</code></a>,
+    <a href="#color_secondary"><code>nb&nbsp;set&nbsp;color_secondary</code></a>
+  </sup>
+</p>
 
 `nb` uses color to highlight various interface elements, including
 ids and [selectors](#selectors),
@@ -4110,6 +4267,13 @@ export  NB_INDICATOR_VIDEO="📹"
     current notebook name in the context line of the prompt.
 
 ### 🔌 Plugins
+
+<p>
+  <sup>
+    <a href="#overview">↑</a> ·
+    <a href="#plugins"><code>nb plugins</code></a>
+  </sup>
+</p>
 
 `nb` includes support for plugins, which can be used to create new
 subcommands, design themes, and otherwise extend the functionality of `nb`.
@@ -4481,6 +4645,13 @@ capabilities.
 
 ### ❯ `nb` Interactive Shell
 
+<p>
+  <sup>
+    <a href="#overview">↑</a> ·
+    <a href="#shell"><code>nb shell</code></a>
+  </sup>
+</p>
+
 `nb` has an interactive shell that can be started with
 [`nb shell`](#shell), `nb -i`, or `nb --interactive`:
 
@@ -4537,6 +4708,12 @@ The `nb` shell recognizes all `nb` subcommands and options,
 providing a streamlined, distraction-free approach for working with `nb`.
 
 ### Shortcut Aliases
+
+<p>
+  <sup>
+    <a href="#overview">↑</a>
+  </sup>
+</p>
 
 Several core `nb` subcommands have shortcut aliases to make
 them faster to work with:
@@ -4639,7 +4816,7 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
 </p>
 
 <p align="center">
-  <a href="#nb">↑ top</a>
+  <sup><a href="#nb">↑ top</a></sup>
 </p>
 
 #### `nb help`
@@ -4996,7 +5173,7 @@ For more information, see: `nb help`.
 </p>
 
 <p align="center">
-  <a href="#nb">↑ top</a>
+  <sup><a href="#nb">↑ top</a></sup>
 </p>
 
 #### `add`
@@ -7135,6 +7312,10 @@ See Also:
   <a href="#example">example</a>
 </p>
 
+<p align="center">
+  <a href="#help">↑</a>
+</p>
+
 #### `backlink`
 
 [↑](#plugins-1)
@@ -7262,6 +7443,12 @@ Description:
 ```
 
 ## Specifications
+
+<p>
+  <sup>
+    <a href="#overview">↑</a>
+  </sup>
+</p>
 
 ### `nb` Markdown Bookmark File Format
 
@@ -7550,6 +7737,10 @@ To run the tests locally, install
 and the [recommended dependencies](#optional),
 then run `bats test` within the project root directory. Run groups of
 tests with globbing, e.g., `bats test/browse*` and `bats test/folders*`.
+
+<p align="center">
+  <sup><a href="#nb">↑ top</a></sup>
+</p>
 
 ---
 
