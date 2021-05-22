@@ -347,6 +347,10 @@ the [`nb update`](#update) subcommand.
   <a href="#tests">Tests</a>
 </p>
 
+<p align="center">
+  <a href="#nb">↑ top</a>
+</p>
+
 To get started, simply run:
 
 ```bash
@@ -4634,6 +4638,10 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
   <a href="#version">version</a>
 </p>
 
+<p align="center">
+  <a href="#nb">↑ top</a>
+</p>
+
 #### `nb help`
 
 ```text
@@ -4985,6 +4993,10 @@ For more information, see: `nb help`.
   <a href="#update">update</a> ·
   <a href="#use">use</a> ·
   <a href="#version">version</a>
+</p>
+
+<p align="center">
+  <a href="#nb">↑ top</a>
 </p>
 
 #### `add`
