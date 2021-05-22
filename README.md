@@ -3830,8 +3830,8 @@ that could inform a strategy for handling any such cases automatically.
 <p>
   <sup>
     <a href="#overview">↑</a> ·
-    <a href="#export"><code>nb export</code></a>,
-    <a href="#import"><code>nb import</code></a>
+    <a href="#import"><code>nb import</code></a>,
+    <a href="#export"><code>nb export</code></a>
   </sup>
 </p>
 
