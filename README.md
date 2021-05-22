@@ -342,7 +342,7 @@ the [`nb update`](#update) subcommand.
 </p>
 
 <p align="center">
-  <sup><a href="#nb">↑ top</a></sup>
+  <sup><a href="#nb">↑</a></sup>
 </p>
 
 To get started, simply run:
@@ -4810,7 +4810,7 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
 </p>
 
 <p align="center">
-  <sup><a href="#nb">↑ top</a></sup>
+  <sup><a href="#overview">↑</a></sup>
 </p>
 
 #### `nb help`
@@ -5167,7 +5167,7 @@ For more information, see: `nb help`.
 </p>
 
 <p align="center">
-  <sup><a href="#nb">↑ top</a></sup>
+  <sup><a href="#overview">↑</a></sup>
 </p>
 
 #### `add`
@@ -7733,7 +7733,7 @@ then run `bats test` within the project root directory. Run groups of
 tests with globbing, e.g., `bats test/browse*` and `bats test/folders*`.
 
 <p align="center">
-  <sup><a href="#nb">↑ top</a></sup>
+  <sup><a href="#overview">↑</a></sup>
 </p>
 
 ---
