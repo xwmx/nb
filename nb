@@ -17576,7 +17576,8 @@ HEREDOC
             "${__name//\ /${_NBSP}}"
         else
           printf --                                             \
-            " %s <a href=\"http://localhost:%s/%s:%s\">%s</a>"  \
+            "%s%s <a href=\"http://localhost:%s/%s:%s\">%s</a>" \
+            "${_NBSP}"                                          \
             "${_separator}"                                     \
             "${NB_SERVER_PORT}"                                 \
             "${__name//' '/%20}"                                \
