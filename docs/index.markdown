@@ -4476,24 +4476,27 @@ subcommands called using their underscore-prefixed function names.
   </sup>
 </p>
 
-```text
-[<notebook>:][[<folder-path>/][<id> | <filename> | <title>] | <subcommand>]
-```
+
 
 Items in `nb` are primarily identified using structured arguments called
-"selectors."
-Selectors are like addresses for notebooks, folders, and items.
+"selectors." Selectors are like addresses for notebooks, folders, and items.
 A selector can be as simple as an id like `123` or folder path like `example/`,
 or it can combine multiple elements to identify
 an item in a nested folder within a particular notebook, such as
 `cli:tools/shellcheck/home-page.bookmark.md`.
 
-A selector is constructed by specifying the
-notebook name, folder path, and item identifier
+An item, folder, or notebook selector is constructed by specifying the
+notebook name, folder path, and / or item identifier
 in the following pattern:
 
 ```text
 notebook:folder/path/item-idenitifer
+```
+
+[docopt](http://docopt.org/) representation:
+
+```text
+[<notebook>:][<folder-path>/][<id> | <filename> | <title>]
 ```
 
 Notebooks are identified by the notebook name followed by a colon. When
