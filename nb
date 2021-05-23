@@ -74,7 +74,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="6.3.0"
+_VERSION="6.3.1"
 
 # $_ME
 #
@@ -1682,7 +1682,7 @@ _get_id_selector() {
   local _selector="${1:-}"
   local _trailing_slash=0
 
-  [[ -z "${_selector:-}" ]] && return 0
+  [[ -z "${_selector:-}"          ]] && return 0
 
   local _always_include_notebook=0
 
@@ -1712,8 +1712,8 @@ _get_id_selector() {
       _notebook_name="local"
 
       _notebook_path="$(
-        cd "${_selector%/*}"      &&
-          __set_notebook_paths    &&
+        cd "${_selector%/*}"                &&
+          __set_notebook_paths              &&
           _notebooks current --path --no-color
       )"
 
@@ -1725,7 +1725,7 @@ _get_id_selector() {
       fi
     fi
   else
-    if [[ "${_selector:-}" =~ :   ]]
+    if [[ "${_selector:-}" =~ :             ]]
     then
       _notebook_name="${_selector%%:*}"
       _selector_relative_path="${_selector#*:}"
@@ -1734,9 +1734,9 @@ _get_id_selector() {
     fi
   fi
 
-  if [[ -z "${_notebook_path:-}"  ]]
+  if [[ -z "${_notebook_path:-}"            ]]
   then
-    if [[ "${_notebook_name:-}" == "local" ]]
+    if [[  "${_notebook_name:-}" == "local" ]]
     then
       _notebook_path="$(_notebooks --local --path --no-color)"
     else
@@ -1746,7 +1746,7 @@ _get_id_selector() {
 
   local _parent_folder_path=
 
-  if [[ -n "${_notebook_name:-}"  ]]
+  if [[ -n "${_notebook_name:-}"            ]]
   then
     _id_selector+="${_notebook_name}:"
     _parent_folder_path="${_notebook_path:-}"
@@ -1766,7 +1766,7 @@ _get_id_selector() {
 
   local _id_path=
 
-  if [[ -n "${_selector_relative_path:-}" ]]
+  if [[ -n "${_selector_relative_path:-}"   ]]
   then
     local _selector_segments=()
 
@@ -1786,7 +1786,7 @@ _get_id_selector() {
         fi
       fi
 
-      if [[ -z "${_segment_id:-}" ]]
+      if [[ -z "${_segment_id:-}"         ]]
       then
         _segment_id="$(
           _index get_id                   \
@@ -1828,8 +1828,8 @@ _get_id_selector() {
     done
   fi
 
-  if [[ -n "${_id_path:-}"      ]] &&
-     [[ !  "${_id_path}" == "/" ]]
+  if [[ -n "${_id_path:-}"        ]] &&
+     [[ !  "${_id_path}" == "/"   ]]
   then
     _id_selector+="${_id_path}"
   fi
@@ -1904,10 +1904,10 @@ _highlight_syntax_if_available() {
   local _extension=
   local _path=
 
-  if [[ "${1:-}" =~ / ]]
+  if [[ "${1:-}" =~ /       ]]
   then
     _path="${1}"
-  elif [[ -n "${1:-}" ]]
+  elif [[ -n "${1:-}"       ]]
   then
     _extension="${1}"
   else
@@ -1916,7 +1916,7 @@ _highlight_syntax_if_available() {
 
   if ! ((_COLOR_ENABLED))
   then
-    if [[ -n "${_path:-}" ]]
+    if [[ -n "${_path:-}"   ]]
     then
       cat "${_path}"
     else
@@ -1930,7 +1930,7 @@ _highlight_syntax_if_available() {
   then
     local _arguments=()
 
-    if [[ -n "${_path:-}" ]]
+    if [[ -n "${_path:-}"   ]]
     then
       _arguments+=("${_path}")
     elif _highlight_syntax_with_extension "${_extension}"
@@ -1947,7 +1947,7 @@ _highlight_syntax_if_available() {
   then
     local _arguments=("-O" "ansi")
 
-    if [[ -n "${_path:-}" ]]
+    if [[ -n "${_path:-}"   ]]
     then
       _arguments+=("${_path}")
     elif _highlight_syntax_with_extension "${_extension}"
@@ -1960,7 +1960,7 @@ _highlight_syntax_if_available() {
   then # pygments is installed.
     local _arguments=("-O" "style=default" "-f" "terminal")
 
-    if [[ -n "${_path:-}" ]]
+    if [[ -n "${_path:-}"   ]]
     then
       _arguments+=("${_path}")
     elif _highlight_syntax_with_extension "${_extension}"
@@ -1970,7 +1970,7 @@ _highlight_syntax_if_available() {
 
     pygmentize "${_arguments[@]}" 2>/dev/null
   else
-    if [[ -n "${_path:-}" ]]
+    if [[ -n "${_path:-}"   ]]
     then
       cat "${_path}"
     else
@@ -2118,7 +2118,7 @@ _list_files() {
     shift
   done
 
-  if [[ -z "${_path:-}" ]]
+  if [[ -z "${_path:-}"   ]]
   then
     _path="$(_notebooks current --path)"
   fi
@@ -2161,8 +2161,8 @@ _list_files() {
           done
 
           grep --color=never "${_grep_patterns[@]}" \
-            | grep --color=never -v \
-                -e '\.bookmark\.'   \
+            | grep --color=never -v                 \
+                -e '\.bookmark\.'                   \
                 -e '\-bookmark\.'
           ;;
         folder|folders|directory|directories)
@@ -2249,7 +2249,7 @@ _list_files() {
 # Description:
 #   Display standard input in the preferred pager, `less`, or `cat`.
 _pager() {
-  if [[ -n "${PAGER:-}" ]] && [[ "${PAGER:-}" =~ less ]]
+  if [[   -n "${PAGER:-}" ]] && [[ "${PAGER:-}" =~ less ]]
   then
     "${PAGER}" -R --CLEAR-SCREEN --prompt="$(_less_prompt)"
   elif _command_exists "less"
@@ -3589,7 +3589,7 @@ $(_color_primary "Usage"):
               ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
   ${_ME} bookmark search <query>
   ${_ME} browse [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
-            [-g | --gui] [--notebooks] [--print] [-q | --query <query>]
+            [-g | --gui] [-n | --notebooks] [--print] [-q | --query <query>]
             [-s | --serve]
   ${_ME} browse add [<notebook>:][<folder-path>/][<filename>]
             [-c <content> | --content <content>] [--tags <tag1>,<tag2>...]
@@ -16002,7 +16002,7 @@ _describe_browse() {
   cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} browse [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
-            [-g | --gui] [--notebooks] [--print] [-q | --query <query>]
+            [-g | --gui] [-n | --notebooks] [-p | --print] [-q | --query <query>]
             [-s | --serve]
   ${_ME} browse add [<notebook>:][<folder-path>/][<filename>]
             [-c <content> | --content <content>] [--tags <tag1>,<tag2>...]
@@ -16022,8 +16022,8 @@ $(_color_primary "Subcommands"):
 $(_color_primary "Options"):
   -c, --content <content>      Add content to the new note.
   -g, --gui                    Open in the system's primary GUI web browser.
-  --notebooks                  Browse notebooks.
-  --print                      Print to standard output.
+  -n, --notebooks              Browse notebooks.
+  -p, --print                  Print to standard output.
   -q, --query <query>          Open to the search results for <query>.
   -s, --serve                  Start the web application server.
   -t, --tags <tag1>,<tag2>...  A comma-separated list of tags.
@@ -17576,7 +17576,8 @@ HEREDOC
             "${__name//\ /${_NBSP}}"
         else
           printf --                                             \
-            " %s <a href=\"http://localhost:%s/%s:%s\">%s</a>"  \
+            "%s%s <a href=\"http://localhost:%s/%s:%s\">%s</a>" \
+            "${_NBSP}"                                          \
             "${_separator}"                                     \
             "${NB_SERVER_PORT}"                                 \
             "${__name//' '/%20}"                                \
@@ -18194,7 +18195,7 @@ HEREDOC
       ls|list|--ls|--list)
         : # skip, since this is the default
         ;;
-      --notebooks)
+      -n|--notebook*|--nb*)
         _browse_notebooks=1
         ;;
       --page)
