@@ -142,9 +142,8 @@ td {
 .nav-list .nav-list-item .nav-list-link:hover,
 .nav-list .nav-list-item .nav-list-link.active,
 .site-title:hover {
-  background-image: linear-gradient(-90deg, #0f1217 0%,
-                    rgba(34, 42, 74, 0.8) 80%,
-                    rgba(255, 257, 255, 0) 100%);
+  background: 0;
+  background-color: #16191f;
 }
 
 .search-active .search-input,
@@ -163,7 +162,7 @@ td {
 
 .site-button:hover {
   background:       none;
-  background-color: lighten(#0f1217, 5%);
+  background-color: #16191f;
 }
 
 .side-bar {
