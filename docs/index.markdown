@@ -4426,6 +4426,10 @@ _notebooks current --path
 
 ##### Selectors
 
+```text
+[<notebook>:][[<folder-path>/][<id> | <filename> | <title>] | <subcommand>]
+```
+
 Items in `nb` are primarily identified using structured arguments
 that are referred to internally as "selectors". Selectors are like
 addresses for notebooks, folders, and items. A selector can be as simple
@@ -4434,8 +4438,9 @@ multiple elements to identify an item in a nested folder within a
 particular notebook, such as
 `cli:tools/shellcheck/home-page.bookmark.md`.
 
-A selector is constructed by specifying the notebook name, folder path,
-and item identifier in the following pattern:
+A selector is constructed by specifying the
+notebook name, folder path, and item identifier
+in the following pattern:
 
 ```text
 notebook:folder/path/item-idenitifer
@@ -7465,8 +7470,8 @@ Description:
 
 `nb` bookmarks are Markdown documents created using a combination of
 user input and data from the bookmarked page. The `nb` bookmark format
-is intended to be readable, editable, and clearly organized for
-greatest accessibility.
+is intended to be readable, editable, convertible, renderable, and
+clearly organized for greatest accessibility.
 
 Bookmarks are identified by a `.bookmark.md` file extension. The
 bookmark URL is the first URL in the file within `<` and `>` characters.
