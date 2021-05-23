@@ -749,7 +749,7 @@ title: Ideas
 [Org](https://orgmode.org/) and [LaTeX](https://www.latex-project.org/)
 titles are recognized in `.org` and `.latex` files:
 
-```org
+```text
 #+TITLE: Example Org Title
 ```
 
