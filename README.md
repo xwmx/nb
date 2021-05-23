@@ -334,6 +334,7 @@ the [`nb update`](#update) subcommand.
   <a href="#%EF%B8%8F-set--settings"><code>set</code> & <code>settings</code></a> ·
   <a href="#-color-themes">Color Themes</a> ·
   <a href="#-plugins">Plugins</a> ·
+  <a href="#selectors">Selectors</a> ·
   <a href="#-nb-interactive-shell">Shell</a> ·
   <a href="#shortcut-aliases">Shortcuts</a> ·
   <a href="#help">Help</a> ·
@@ -4418,7 +4419,56 @@ _list --filenames --no-id --no-indicator
 _notebooks current --path
 ```
 
-##### Selectors
+`nb` automatically scans arguments for
+[selectors](#selectors) with notebook names
+and updates the current notebook if a valid one is found.
+
+Identifier selectors are passed to subcommands as arguments along with
+any subcommand options. Use [`show <selector>`](#show) to query
+information about the file specified in the selector. For example, to
+obtain the filename of a selector-specified file, use
+`show <selector> --filename`:
+
+```bash
+_example() {
+  local _selector="${1:-}"
+  [[ -z "${_selector:-}" ]] && printf "Usage: example <selector>\\n" && exit 1
+
+  # Get the filename using the selector.
+  local _filename
+  _filename="$(_show "${_selector}" --filename)"
+
+  # Rest of subcommand function...
+}
+```
+
+[`notebooks current --path`](#notebooks) returns the path to the current
+notebook:
+
+```bash
+# _example() continued:
+
+# get the notebook path
+local _notebook_path
+_notebook_path="$(_notebooks current --path)"
+
+# print the file at "${_notebook_path}/${_filename}" to standard output
+cat "${_notebook_path}/${_filename}"
+```
+
+See
+[`copy.nb-plugin`](https://github.com/xwmx/nb/blob/master/plugins/copy.nb-plugin)
+for a practical example using both [`show <selector> --filename`](#show) and
+[`notebooks current --path`](#notebooks) along with other
+subcommands called using their underscore-prefixed function names.
+
+### Selectors
+
+<p>
+  <sup>
+    <a href="#overview">↑&nbsp;</a>
+  </sup>
+</p>
 
 ```text
 [<notebook>:][[<folder-path>/][<id> | <filename> | <title>] | <subcommand>]
@@ -4550,48 +4600,6 @@ notebook:history
 notebook:a
 notebook:q
 ```
-
-`nb` automatically scans arguments for selectors with notebook names and
-updates the current notebook if a valid one is found.
-
-Identifier selectors are passed to subcommands as arguments along with
-any subcommand options. Use [`show <selector>`](#show) to query
-information about the file specified in the selector. For example, to
-obtain the filename of a selector-specified file, use
-`show <selector> --filename`:
-
-```bash
-_example() {
-  local _selector="${1:-}"
-  [[ -z "${_selector:-}" ]] && printf "Usage: example <selector>\\n" && exit 1
-
-  # Get the filename using the selector.
-  local _filename
-  _filename="$(_show "${_selector}" --filename)"
-
-  # Rest of subcommand function...
-}
-```
-
-[`notebooks current --path`](#notebooks) returns the path to the current
-notebook:
-
-```bash
-# _example() continued:
-
-# get the notebook path
-local _notebook_path
-_notebook_path="$(_notebooks current --path)"
-
-# print the file at "${_notebook_path}/${_filename}" to standard output
-cat "${_notebook_path}/${_filename}"
-```
-
-See
-[`copy.nb-plugin`](https://github.com/xwmx/nb/blob/master/plugins/copy.nb-plugin)
-for a practical example using both [`show <selector> --filename`](#show) and
-[`notebooks current --path`](#notebooks) along with other
-subcommands called using their underscore-prefixed function names.
 
 ### Metadata
 
