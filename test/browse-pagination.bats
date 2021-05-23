@@ -182,11 +182,11 @@ export _AMP="&"
 "<span class=\"dim\">·</span> <span class=\"dim\">notebooks</span>"
 
   printf "%s\\n" "${output}" | grep       -q  \
-"<a.*href=\"http://localhost:6789/Demo%20Notebook:?--per-page=2&--columns=.*\">Demo${_S}Notebook</a> <span"
+"<a.*href=\"http://localhost:6789/Demo%20Notebook:?--per-page=2&--columns=.*\">Demo${_S}Notebook</a>${_S}<span"
   printf "%s\\n" "${output}" | grep       -q  \
-"span> <a.*href=\"http://localhost:6789/Example%20Notebook:?--per-page=2&--columns=.*\">Example${_S}Notebook</a> <span"
+"span> <a.*href=\"http://localhost:6789/Example%20Notebook:?--per-page=2&--columns=.*\">Example${_S}Notebook</a>${_S}<span"
   printf "%s\\n" "${output}" | grep       -q  \
-"span> <a.*href=\"http://localhost:6789/Sample%20Notebook:?--per-page=2&--columns=.*\">Sample${_S}Notebook</a> <span"
+"span> <a.*href=\"http://localhost:6789/Sample%20Notebook:?--per-page=2&--columns=.*\">Sample${_S}Notebook</a>${_S}<span"
   printf "%s\\n" "${output}" | grep       -q  \
 "span> <a.*href=\"http://localhost:6789/Test%20Notebook:?--per-page=2&--columns=.*\">Test${_S}Notebook</a>"
 }
