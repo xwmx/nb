@@ -74,7 +74,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="6.2.2"
+_VERSION="6.3.0"
 
 # $_ME
 #
@@ -2866,6 +2866,7 @@ $(_color_primary "Read More"):
 $(_color_primary "See Also"):
   ${_ME} help history
   ${_ME} help remote
+  ${_ME} help run
   ${_ME} help status
   ${_ME} help sync
 
@@ -3507,7 +3508,7 @@ assigning the color environment variables to \`tput\` ANSI color numbers:
     $(_color_primary "  export NB_COLOR_SECONDARY=${_TPUT_SGR0}38${_TPUT_COLOR_PRIMARY}")
     $(_color_primary "fi")
 
-View this theme as a complete file:
+View this theme as a complete file
 
     $(_color_primary "https://github.com/xwmx/nb/blob/master/plugins/turquoise.nb-theme")
 
@@ -3629,8 +3630,8 @@ $(_color_primary "Usage"):
         [-t <type> | --type <type> | --<type>]
         [<notebook>:][<id> | <filename> | <path> | <title> | <query>]
   ${_ME} move ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
-          ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note)
-          [-f | --force]
+          ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note |
+          --to-title) [-f | --force]
   ${_ME} notebooks [<name> | <query>] [--ar | --archived] [--global] [--local]
                [--names] [--paths] [--unar | --unarchived]
   ${_ME} notebooks add <name> [<remote-url> [<branch>]] [--author]
@@ -3655,7 +3656,8 @@ $(_color_primary "Usage"):
   ${_ME} plugins install [<path> | <url>] [--force]
   ${_ME} plugins uninstall <name> [--force]
   ${_ME} remote [branches [<url>] | remove | rename [<branch-name>] <name>]
-  ${_ME} remote set <url> [<branch>]
+  ${_ME} remote [delete <branch-name> | reset <branch-name>]
+  ${_ME} remote set <url> [<branch-name>]
   ${_ME} run <command> [<arguments>...]
   ${_ME} search ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             <query>... [-a | --all] [--and <query>] [--or <query>]
@@ -4247,6 +4249,9 @@ $(_color_primary "Description"):
 
   Pass optional <remote-url> and <branch> options to create the initial
   "home" notebook using a clone of an existing notebook.
+
+$(_color_primary "See Also"):
+  ${_ME} help notebooks
 
 $(_color_primary "Examples"):
   ${_ME} init
@@ -6231,6 +6236,7 @@ $(_color_primary "Read More"):
 $(_color_primary "See Also"):
   ${_ME} help archive
   ${_ME} help history
+  ${_ME} help move
   ${_ME} help remote
   ${_ME} help status
   ${_ME} help sync
@@ -10473,7 +10479,12 @@ $(_color_primary "Read More"):
   ${_README_URL}#adding
 
 $(_color_primary "See Also"):
+  ${_ME} help bookmark
   ${_ME} help browse
+  ${_ME} help delete
+  ${_ME} help edit
+  ${_ME} help import
+  ${_ME} help show
 
 $(_color_primary "Examples"):
   ${_ME} add
@@ -11737,6 +11748,9 @@ $(_color_primary "Description"):
 
 $(_color_primary "Read More"):
   https://github.com/${_REPO}/blob/${_REPO_MAIN_BRANCH}/etc/README.md
+
+$(_color_primary "See Also"):
+  ${_ME} help env
 HEREDOC
 }
 _completions() {
@@ -12003,7 +12017,11 @@ $(_color_primary "Read More"):
   ${_README_URL}#deleting
 
 $(_color_primary "See Also"):
+  ${_ME} help add
   ${_ME} help browse
+  ${_ME} help edit
+  ${_ME} help move
+  ${_ME} help show
 
 $(_color_primary "Examples"):
   ${_ME} delete 3
@@ -12191,7 +12209,11 @@ $(_color_primary "Read More"):
   ${_README_URL}#editing
 
 $(_color_primary "See Also"):
+  ${_ME} help add
   ${_ME} help browse
+  ${_ME} help delete
+  ${_ME} help move
+  ${_ME} help show
 
 $(_color_primary "Examples"):
   ${_ME} edit 3
@@ -12414,6 +12436,12 @@ $(_color_primary "Description"):
 
 $(_color_primary "Read More"):
   ${_README_URL}#installation
+
+$(_color_primary "See Also"):
+  ${_ME} help completions
+  ${_ME} help init
+  ${_ME} help update
+  ${_ME} help version
 HEREDOC
 }
 _env() {
@@ -12932,6 +12960,7 @@ $(_color_primary "Read More"):
   ${_README_URL}#%EF%B8%8F-import--export
 
 $(_color_primary "See Also"):
+  ${_ME} help add
   ${_ME} help export
 
 $(_color_primary "Examples"):
@@ -13238,8 +13267,8 @@ _describe_move() {
   cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} move ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
-          ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note)
-          [-f | --force]
+          ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note |
+          --to-title) [-f | --force]
 
 $(_color_primary "Options"):
   -f, --force     Skip the confirmation prompt.
@@ -13249,31 +13278,41 @@ $(_color_primary "Options"):
   --to-note       Preserve the existing filename and replace the bookmark's
                   ".bookmark.md" extension with ".md" to convert the bookmark
                   to a Markdown note.
+  --to-title      Set the filename to the note title, lowercased with spaces
+                  and disallowed filename characters replaced with underscores.
 
 $(_color_primary "Description"):
   Move or rename a note. Move the note to <path> or change the file type.
-  When file extension is omitted, the existing extension is used.
+  When the file extension is omitted, the existing extension is used.
+  When only a file extension is specified, only the extension will be updated.
 
   \`move\` and \`rename\` are aliases and can be used interchangably.
 
+$(_color_primary "See Also"):
+  ${_ME} help delete
+  ${_ME} help edit
+
 $(_color_primary "Examples"):
-  # Move "example.md" to "example.org"
+  # move "example.md" to "sample.org"
   ${_ME} move example.md sample.org
 
-  # Rename note 3 ("example.md") to "New Name.md"
+  # rename note 3 ("example.md") to "New Name.md"
   ${_ME} rename 3 "New Name"
 
-  # Rename "example.bookmark.md" to "New Name.bookmark.md"
+  # rename "example.bookmark.md" to "New Name.bookmark.md"
   ${_ME} move example.bookmark.md "New Name"
 
-  # Rename note 3 ("example.md") to bookmark named "example.bookmark.md"
+  # rename note 3 ("example.md") to a bookmark named "example.bookmark.md"
   ${_ME} rename 3 --to-bookmark
 
-  # Move note 12 into "Sample Folder" in the "demo" notebook
+  # move note 12 into "Sample Folder" in the "demo" notebook
   ${_ME} move example:12 demo:Sample\ Folder/
 
-  # Rename note 12 in the "example" notebook to "sample.md"
+  # rename note 12 in the "example" notebook to "sample.md"
   ${_ME} rename example:12 "sample.md"
+
+  # change the file extension of note 5 to .org
+  ${_ME} rename 5 .org
 
 $(_color_primary "Alias"): \`${_ME} rename\`
 $(_color_primary "Shortcut Alias"): \`${_ME} mv\`
@@ -13303,6 +13342,9 @@ _move() {
         ;;
       --to*note)
         _to_target_type="note"
+        ;;
+      --to*title)
+        _to_target_type="title"
         ;;
       *)
         if [[ -z "${_source_selector}"    ]]
@@ -13373,8 +13415,33 @@ _move() {
     local _target_file_type="${_source_file_type:-"${NB_DEFAULT_EXTENSION}"}"
 
     _target_basename="${_target_file_name}.${_target_file_type}"
-  elif [[ -n "${_target_selector:-}"  ]] ||
-       [[ -n "${_to_target_type:-}"   ]]
+  elif [[ "${_to_target_type:-}" == "title" ]]
+  then
+    if ! _file_is_text "${_source_path:-}"
+    then
+      _exit_1 printf "Must be a text file.\\n"
+    fi
+
+    local _source_title=
+    _source_title="$(_get_content "${_source_path:-}" --title)"
+
+    if [[ -z "${_source_title:-}"           ]]
+    then
+      _exit_1 printf "Title not found.\\n"
+    fi
+
+    local _processed_title=
+    _processed_title="$(
+      printf "%s" "${_source_title}"        \
+        | tr '[:upper:]' '[:lower:]'        \
+        | tr '[:space:]:*/"\\<>?|' '_'
+    )"
+
+    local _target_file_type="${_source_file_type:-"${NB_DEFAULT_EXTENSION}"}"
+
+    _target_basename="${_processed_title}.${_target_file_type}"
+  elif [[ -n "${_target_selector:-}"              ]] ||
+       [[ -n "${_to_target_type:-}"               ]]
   then
     _target_selector_relative_path="${_target_selector#*:}"
 
@@ -13382,10 +13449,14 @@ _move() {
     local _target_file_name="${_target_basename%%.*}"
     local _target_file_type="${_target_basename#*.}"
 
-    if [[ -z "${_target_file_type:-}"                     ]] ||
-       [[ "${_target_file_type}" == "${_target_basename}" ]]
-    then # no file extension specified in _target_name
-      if [[ -n "${_source_file_type}"                     ]]
+    if [[   -n "${_target_file_type:-}"                         ]] &&
+       [[   -z "${_target_file_name:-}"                         ]]
+    then # only file extension in target
+      _target_selector_relative_path=""
+    elif [[ -z "${_target_file_type:-}"                         ]] ||
+         [[    "${_target_file_type}" == "${_target_basename}"  ]]
+    then # no file extension in target
+      if [[ -n "${_source_file_type}"                           ]]
       then
         _target_file_type="${_source_file_type}"
       else
@@ -13393,14 +13464,14 @@ _move() {
       fi
     fi
 
-    if [[ -n  "${_to_target_type:-}"  ]]
+    if [[ -n  "${_to_target_type:-}"              ]]
     then
       if [[   "${_to_target_type}" == "bookmark"  ]]
       then
         _target_file_type="bookmark.md"
       elif [[ "${_to_target_type}" == "note"      ]]
       then
-        _target_file_type="md"
+        _target_file_type="${NB_DEFAULT_EXTENSION:-md}"
       else
         _exit_1 _help "move"
       fi
@@ -13421,8 +13492,18 @@ _move() {
     _exit_1 _help "move"
   fi
 
+  if [[ -z  "${_target_selector_relative_path:-}" ]]
+  then
+    if [[   "${_source_relative_path}" =~ /       ]]
+    then
+      _target_selector_relative_path="${_source_relative_path%/*}/${_target_basename}"
+    else
+      _target_selector_relative_path="${_target_basename}"
+    fi
+  fi
+
   local _target_info=
-  local _target_notebook_path
+  local _target_notebook_path=
 
   if [[       "${_target_selector:-}" =~ :  ]]
   then
@@ -13441,17 +13522,19 @@ _move() {
   if _notebooks current --selected ||
      [[ "${_target_notebook_path}" != "$(_notebooks current --path)" ]]
   then
-    _target_info="$(_notebooks show "${_target_notebook_path}" --escaped):"
+    _target_info="$(_notebooks show "${_target_notebook_path}" --name --no-color):"
   fi
 
-  local _target_folder_path="${_target_notebook_path}"
-  local _target_relative_path="${_target_basename}"
+  local _target_folder_path=
+  local _target_relative_path=
 
-  if [[     "${_target_selector_relative_path:-}" =~ /          ]]
+  if [[   "${_target_selector_relative_path:-}" =~ /            ]]
   then
     _target_folder_path="${_target_notebook_path}/${_target_selector_relative_path%\/*}"
-
     _target_relative_path="${_target_selector_relative_path%\/*}/${_target_basename}"
+  else
+    _target_folder_path="${_target_notebook_path}"
+    _target_relative_path="${_target_basename}"
   fi
 
   _target_info+="${_target_relative_path}"
@@ -13464,7 +13547,7 @@ _move() {
 
   if ! ((_force))
   then
-    printf "Moving:   %s\\n" "$(_show "${_source_relative_path}" --info-line)"
+    printf "Moving:   %s\\n" "$(_show "${_source_path}" --info-line)"
     printf "To:       %s\\n" "$(_color_primary "${_target_info}")"
 
     while true
@@ -13752,6 +13835,10 @@ $(_color_primary "Usage"):
 
 $(_color_primary "Description"):
   Run shell commands within the current notebook directory.
+
+$(_color_primary "See Also"):
+  ${_ME} help git
+  ${_ME} help shell
 
 $(_color_primary "Examples"):
   ${_ME} run ls -la
@@ -15854,6 +15941,10 @@ $(_color_primary "Usage"):
 
 $(_color_primary "Description"):
   Display version information.
+
+$(_color_primary "See Also"):
+  ${_ME} help env
+  ${_ME} help update
 HEREDOC
 }
 _version() {
@@ -18754,19 +18845,19 @@ $(_color_primary "Usage"):
   ${_ME} remote remove
   ${_ME} remote rename [<branch-name>] <name>
   ${_ME} remote reset <branch-name>
-  ${_ME} remote set <url> [<branch>]
+  ${_ME} remote set <url> [<branch-name>]
 
 $(_color_primary "Subcommands"):
-  (default)     Print the remote URL and branch for the notebook.
-  branches      List branches on the current or given remote.
-  delete        Delete <branch-name> from the remote.
-                Caveat: only orphan branches can be deleted.
-  remove        Remove the remote URL from the notebook.
-                Alias: \`unset\`
-  rename        Rename the current orphan branch or <branch-name> to <name>.
-                Caveat: only orphan branches can be renamed.
-  reset         Reset <branch-name> on the remote to a blank initial state.
-  set           Set the remote URL and branch for the notebook.
+  (default)  Print the remote URL and branch for the notebook.
+  branches   List branches on the current or given remote.
+  delete     Delete <branch-name> from the remote.
+             Caveat: only orphan branches can be deleted.
+  remove     Remove the remote URL from the notebook.
+             Alias: \`unset\`
+  rename     Rename the current orphan branch or <branch-name> to <name>.
+             Caveat: only orphan branches can be renamed.
+  reset      Reset <branch-name> on the remote to a blank initial state.
+  set        Set the remote URL and branch for the notebook.
 
 $(_color_primary "Description"):
   Configure the remote repository URL and branch for the current notebook.
@@ -20429,6 +20520,9 @@ $(_color_primary "Description"):
 $(_color_primary "Read More"):
   ${_README_URL}#-nb-interactive-shell
 
+$(_color_primary "See Also"):
+  ${_ME} help run
+
 $(_color_primary "Example"):
   $ ${_ME} shell
   ${_ME}> ls 3
@@ -20931,6 +21025,10 @@ $(_color_primary "Description"):
 
 $(_color_primary "Read More"):
   ${_README_URL}#installation
+
+$(_color_primary "See Also"):
+  ${_ME} help env
+  ${_ME} help version
 HEREDOC
 }
 _update() {

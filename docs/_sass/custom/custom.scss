@@ -26,23 +26,23 @@ a:not([class]):hover {
 }
 
 body {
-  background-color: #1e242d;
+  background-color: #16191f;
   color:            #e6e6e6;
 }
 
 code,
 div.highlighter-rouge {
-  background-color: #161b22;
+  background-color: #1b2027;
 }
 
 a:visited code,
 code {
-  border:           1px solid #2d3035;
+  border:           1px solid #1b2027;
   color:            #dedede;
   font-family:      'Courier Prime', 'SFMono-Regular', Menlo, Consolas, Monospace;
   font-size:        1rem;
   line-height:      1.4;
-  padding:          0.1rem 0.25rem;
+  padding:          0.1rem 0.5rem;
 }
 
 div.highlighter-rouge {
@@ -66,12 +66,16 @@ h3 {
 }
 
 input[type='text'] {
-  background-color: #1e242d;
+  background-color: #0f1217;
 }
 
 pre {
   font-size:        1.2rem;
   line-height:      1rem;
+}
+
+sup code {
+  font-size:        0.75rem;
 }
 
 th,
@@ -107,7 +111,7 @@ td {
 }
 
 .main-header {
-  background-color: #1e242d;
+  background-color: #0f1217;
   border:           0;
 }
 
@@ -138,9 +142,8 @@ td {
 .nav-list .nav-list-item .nav-list-link:hover,
 .nav-list .nav-list-item .nav-list-link.active,
 .site-title:hover {
-  background-image: linear-gradient(-90deg, #191a1d 0%,
-                    rgba(34, 42, 74, 0.8) 80%,
-                    rgba(255, 257, 255, 0) 100%);
+  background: 0;
+  background-color: #16191f;
 }
 
 .search-active .search-input,
@@ -152,14 +155,18 @@ td {
 }
 
 .search-result:hover,
-.search-result.active,
-.site-button:hover {
+.search-result.active {
   background:       none;
   background-color: #25272b;
 }
 
+.site-button:hover {
+  background:       none;
+  background-color: #16191f;
+}
+
 .side-bar {
-  background-color: #191a1d;
+  background-color: #0f1217;
   border:           0;
 }
 
