@@ -1524,10 +1524,11 @@ For more information, see [Browsing](#-browsing).
   <sup>
     <a href="#overview">↑</a> ·
     <a href="#nb-help"><code>nb&nbsp;&lt;url&gt;</code></a>,
-    <a href="#bookmark"><code>nb&nbsp;bookmark</code></a>,
     <a href="#browse"><code>nb&nbsp;browse</code></a>,
+    <a href="#bookmark"><code>nb&nbsp;bookmark</code></a>,
     <a href="#open"><code>nb&nbsp;open</code></a>,
-    <a href="#peek"><code>nb&nbsp;peek</code></a>
+    <a href="#peek"><code>nb&nbsp;peek</code></a>,
+    <a href="#show"><code>nb&nbsp;show</code></a>
   </sup>
 </p>
 
@@ -4816,7 +4817,7 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
 </p>
 
 <p align="center">
-  <sup><a href="#overview">&nbsp;↑&nbsp;</a></sup>
+  <a href="#overview">&nbsp;↑&nbsp;</a>
 </p>
 
 #### `nb help`
@@ -5173,7 +5174,7 @@ For more information, see: `nb help`.
 </p>
 
 <p align="center">
-  <sup><a href="#overview">&nbsp;↑&nbsp;</a></sup>
+  <a href="#overview">&nbsp;↑&nbsp;</a>
 </p>
 
 #### `add`
@@ -7739,7 +7740,7 @@ then run `bats test` within the project root directory. Run groups of
 tests with globbing, e.g., `bats test/browse*` and `bats test/folders*`.
 
 <p align="center">
-  <sup><a href="#overview">&nbsp;↑&nbsp;</a></sup>
+  <a href="#overview">&nbsp;↑&nbsp;</a>
 </p>
 
 ---
