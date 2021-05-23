@@ -4879,7 +4879,7 @@ Usage:
   nb bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
   nb bookmark search <query>
   nb browse [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
-            [-g | --gui] [--notebooks] [--print] [-q | --query <query>]
+            [-g | --gui] [-n | --notebooks] [--print] [-q | --query <query>]
             [-s | --serve]
   nb browse add [<notebook>:][<folder-path>/][<filename>]
             [-c <content> | --content <content>] [--tags <tag1>,<tag2>...]
@@ -5434,7 +5434,7 @@ Shortcut Alias: `nb bk`
 ```text
 Usage:
   nb browse [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
-            [-g | --gui] [--notebooks] [--print] [-q | --query <query>]
+            [-g | --gui] [-n | --notebooks] [--print] [-q | --query <query>]
             [-s | --serve]
   nb browse add [<notebook>:][<folder-path>/][<filename>]
             [-c <content> | --content <content>] [--tags <tag1>,<tag2>...]
@@ -5454,7 +5454,7 @@ Subcommands:
 Options:
   -c, --content <content>      Add content to the new note.
   -g, --gui                    Open in the system's primary GUI web browser.
-  --notebooks                  Browse notebooks.
+  -n, --notebooks              Browse notebooks.
   --print                      Print to standard output.
   -q, --query <query>          Open to the search results for <query>.
   -s, --serve                  Start the web application server.
