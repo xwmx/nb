@@ -4470,8 +4470,6 @@ subcommands called using their underscore-prefixed function names.
   </sup>
 </p>
 
-
-
 Items in `nb` are primarily identified using structured arguments called
 "selectors." Selectors are like addresses for notebooks, folders, and items.
 A selector can be as simple as an id like `123` or folder path like `example/`,
@@ -4493,9 +4491,12 @@ notebook:folder/path/item-idenitifer
 [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
 ```
 
-Notebooks are identified by the notebook name followed by a colon. When
-no folder path or item identifer is specified, the command runs in the
-root folder of the notebook:
+Notebooks are identified by the notebook name followed by a colon.
+Folder and item identifiers without a notebook name refer to
+items within the current notebook.
+When a selector consists of notebook name and colon
+with no folder path or item identifer,
+the command runs in the root folder of the notebook:
 
 ```bash
 # list items in the "example" notebook
@@ -4508,7 +4509,7 @@ nb add example: --title "Example Title"
 nb edit example:123
 ```
 
-A notebook selector can also be combined with a subcommand name to
+A notebook selector can be combined with a subcommand name to
 run the command within the notebook:
 
 ```bash
@@ -4522,8 +4523,9 @@ nb example:edit 123
 nb example:history
 ```
 
-Folders are identified by relative path from the notebook root,
-using either names or ids:
+Folders are identified by relative path from the notebook root.
+Folders can be referenced by either id or name, and segments
+in nested paths can mix and match names and ids:
 
 ```bash
 # list items in the folder named "sample" in the folder named demo"
