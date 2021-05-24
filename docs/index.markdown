@@ -4844,6 +4844,9 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
 
 #### `nb help`
 
+[↑&nbsp;](#help)· See also:
+[`help`](#help-1)
+
 ```text
 __          _
 \ \   _ __ | |__
