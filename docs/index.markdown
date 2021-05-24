@@ -7744,7 +7744,8 @@ list operations, including `nb` and `nb ls`. Entires are added to a
 
 #### Archived Notebooks
 
-A notebook is considered archived when it contains a file named `.archived`
+A notebook is considered [archived](#archiving-notebooks)
+when it contains a file named `.archived`
 at the root level of the notebook directory.
 
 ## Tests
