@@ -171,7 +171,7 @@ _contains() {
 #   _resolve_symlink <path>
 #
 # Description:
-#   Resolve the real path, or as close as poassible, for a symbolic link.
+#   Resolve the real path or target for a symbolic link.
 _resolve_symlink() {
   if hash "realpath" 2>/dev/null
   then
