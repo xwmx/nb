@@ -5795,7 +5795,8 @@ Examples:
 
 #### `help`
 
-[↑&nbsp;](#help)
+[↑&nbsp;](#help)· See also:
+[`nb help`](#nb-help)
 
 ```text
 Usage:
