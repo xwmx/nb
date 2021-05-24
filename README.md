@@ -3137,8 +3137,8 @@ To copy items, install the [`copy` / `duplicate` plugin](#copy).
 Whenever a note is added, modified, or deleted,
 `nb` automatically commits the change to git transparently in the background.
 
-Use [`nb history`](#history) to view the history of the notebook or an
-individual note:
+Use [`nb history`](#history) to view the revision history of
+any notebook, folder, or item:
 
 ```bash
 # show history for current notebook
@@ -7746,7 +7746,7 @@ at the root level of the notebook directory.
 With more than 1,700 tests spanning tens of thousands of lines,
 `nb` is really mostly a
 [test suite](https://github.com/xwmx/nb/tree/master/test).
-[Tests run continuously via GitHub Actions](https://github.com/xwmx/nb/actions)
+Tests run continuously [via GitHub Actions](https://github.com/xwmx/nb/actions)
 on recent versions of both Ubuntu and macOS to account for differences between
 BSD and GNU tools and Bash versions.
 To run the tests locally, install
