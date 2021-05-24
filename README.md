@@ -15,7 +15,7 @@
 <br>
 
 `nb` is a command line and local web
-note-taking, bookmarking, archiving,
+note‑taking, bookmarking, archiving,
 and knowledge base application
 with:
 
