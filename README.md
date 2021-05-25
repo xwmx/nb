@@ -5928,7 +5928,7 @@ Description:
 
       ~/.nbrc
 
-  Pass optional <remote-url> and <branch> options to create the initial
+  Pass optional <remote-url> and <branch> arguments to create the initial
   "home" notebook using a clone of an existing notebook.
 
 See Also:
