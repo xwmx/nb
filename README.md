@@ -4488,7 +4488,7 @@ notebook:folder/path/item-idenitifer
 [docopt](http://docopt.org/) representation:
 
 ```text
-[<notebook>:][<folder-path>/][<id> | <filename> | <title>]
+[<notebook>:][<folder/path>/][<id> | <filename> | <title>]
 ```
 
 Notebooks are identified by the notebook name followed by a colon.
@@ -4864,7 +4864,7 @@ Usage:
   nb
   nb [<ls options>...] [<id> | <filename> | <path> | <title> | <notebook>]
   nb [<url>] [<bookmark options>...]
-  nb add [<notebook>:][<folder-path>/][<filename>] [<content>]
+  nb add [<notebook>:][<folder/path>/][<filename>] [<content>]
          [-b | --browse] [-c <content> | --content <content>] [--edit]
          [-e | --encrypt] [-f <filename> | --filename <filename>]
          [--folder <folder-path>] [--tags <tag1>,<tag2>...]
@@ -4872,7 +4872,7 @@ Usage:
   nb add folder [<name>]
   nb archive [<notebook>]
   nb bookmark [<ls options>...]
-  nb bookmark [<notebook>:][<folder-path>/] <url>
+  nb bookmark [<notebook>:][<folder/path>/] <url>
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
               [-f <filename> | --filename <filename>] [-q | --quote]
               [-r <url> | --related <url>]... [--save-source] [--skip-content]
@@ -4881,33 +4881,33 @@ Usage:
   nb bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   nb bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
   nb bookmark search <query>
-  nb browse [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
+  nb browse [<notebook>:][<folder/path>/][<id> | <filename> | <title>]
             [-g | --gui] [-n | --notebooks] [-p | --print] [-q | --query <query>]
             [-s | --serve]
-  nb browse add [<notebook>:][<folder-path>/][<filename>]
+  nb browse add [<notebook>:][<folder/path>/][<filename>]
             [-c <content> | --content <content>] [--tags <tag1>,<tag2>...]
             [-t <title> | --title <title>]
-  nb browse delete ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
-  nb browse edit ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+  nb browse delete ([<notebook>:][<folder/path>/][<id> | <filename> | <title>])
+  nb browse edit ([<notebook>:][<folder/path>/][<id> | <filename> | <title>])
   nb completions (check | install [-d | --download] | uninstall)
-  nb count [<notebook>:][<folder-path>/]
-  nb delete ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])...
+  nb count [<notebook>:][<folder/path>/]
+  nb delete ([<notebook>:][<folder/path>/][<id> | <filename> | <title>])...
             [-f | --force]
-  nb edit ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+  nb edit ([<notebook>:][<folder/path>/][<id> | <filename> | <title>])
           [-c <content> | --content <content>] [--edit]
           [-e <editor> | --editor <editor>] [--overwrite] [--prepend]
-  nb export ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+  nb export ([<notebook>:][<folder/path>/][<id> | <filename> | <title>])
             <path> [-f | --force] [<pandoc options>...]
   nb export notebook <name> [<path>]
-  nb export pandoc ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+  nb export pandoc ([<notebook>:][<folder/path>/][<id> | <filename> | <title>])
             [<pandoc options>...]
   nb git [checkpoint [<message>] | dirty]
   nb git <git-options>...
   nb help [<subcommand>] [-p | --print]
   nb help [-c | --colors] | [-r | --readme] | [-s | --short] [-p | --print]
-  nb history [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
+  nb history [<notebook>:][<folder/path>/][<id> | <filename> | <title>]
   nb import [copy | download | move] (<path>... | <url>) [--convert]
-            [<notebook>:][<folder-path>/][<filename>]
+            [<notebook>:][<folder/path>/][<filename>]
   nb import notebook <path> [<name>]
   nb init [<remote-url> [<branch>]] [--author] [--email <email>]
           [--name <name>]
@@ -4915,14 +4915,14 @@ Usage:
           [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
           [--no-indicator] [-p | --pager] [--paths] [-s | --sort]
           [-r | --reverse] [--tags] [-t <type> | --type <type> | --<type>]
-          [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
+          [<notebook>:][<folder/path>/][<id> | <filename> | <path> | <query>]
   nb ls [-a | --all] [-b | --browse] [-e [<length>] | --excerpt [<length>]]
         [--filenames] [-g | --gui] [-n <limit> | --limit <limit> | --<limit>]
         [--no-footer] [--no-header] [--no-id] [--no-indicator] [-p | --pager]
         [--paths] [-s | --sort] [-r | --reverse] [--tags]
         [-t <type> | --type <type> | --<type>]
-        [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
-  nb move ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+        [<notebook>:][<folder/path>/][<id> | <filename> | <path> | <query>]
+  nb move ([<notebook>:][<folder/path>/][<id> | <filename> | <title>])
           ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note |
           --to-title) [-f | --force]
   nb notebooks [<name> | <query>] [--ar | --archived] [--global] [--local]
@@ -4942,9 +4942,9 @@ Usage:
   nb notebooks show (<name> | <path> | <selector>) [--ar | --archived]
                     [--escaped | --name | --path | --filename [<filename>]]
   nb notebooks use <name>
-  nb open ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
-  nb peek ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
-  nb pin  ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+  nb open ([<notebook>:][<folder/path>/][<id> | <filename> | <title>])
+  nb peek ([<notebook>:][<folder/path>/][<id> | <filename> | <title>])
+  nb pin  ([<notebook>:][<folder/path>/][<id> | <filename> | <title>])
   nb plugins [<name>] [--paths]
   nb plugins install [<path> | <url>] [--force]
   nb plugins uninstall <name> [--force]
@@ -4952,7 +4952,7 @@ Usage:
   nb remote [delete <branch-name> | reset <branch-name>]
   nb remote set <url> [<branch-name>]
   nb run <command> [<arguments>...]
-  nb search ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+  nb search ([<notebook>:][<folder/path>/][<id> | <filename> | <title>])
             <query>... [-a | --all] [--and <query>] [--or <query>]
             [-l | --list]  [--path] [-t <type> | --type <type> | --<type>]
             [--utility <name>]
@@ -4961,7 +4961,7 @@ Usage:
   nb settings (get | show | unset) (<name> | <number>)
   nb settings set (<name> | <number>) <value>
   nb shell [<subcommand> [<options>...] | --clear-history]
-  nb show ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+  nb show ([<notebook>:][<folder/path>/][<id> | <filename> | <title>])
           [[-a | --added] | [--authors] | [-b | --browse] | --filename | --id |
           --info-line | --path | [-p | --print] | --relative-path | [-r |
           --render] | --title | --type [<type>] | [-u | --updated]] [--no-color]
@@ -4971,7 +4971,7 @@ Usage:
                  [describe <name> <usage>]
   nb sync [-a | --all]
   nb unarchive [<notebook>]
-  nb unpin ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+  nb unpin ([<notebook>:][<folder/path>/][<id> | <filename> | <title>])
   nb unset (<name> | <number>)
   nb update
   nb use <notebook>
@@ -5064,7 +5064,7 @@ Usage:
               [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...] [--title <title>]
   bookmark list [<list-options>...]
   bookmark (edit | delete | open | peek | url)
-              ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+              ([<notebook>:][<folder/path>/][<id> | <filename> | <title>])
   bookmark search <query>
 
 Options:
@@ -5209,7 +5209,7 @@ For more information, see: `nb help`.
 
 ```text
 Usage:
-  nb add [<notebook>:][<folder-path>/][<filename>] [<content>]
+  nb add [<notebook>:][<folder/path>/][<filename>] [<content>]
          [-b | --browse] [-c <content> | --content <content>] [--edit]
          [-e | --encrypt] [-f <filename> | --filename <filename>]
          [--folder <folder-path>] [--tags <tag1>,<tag2>...]
@@ -5324,14 +5324,14 @@ Shortcut Alias: `nb ar`
 ```text
 Usage:
   nb bookmark [<ls options>...]
-  nb bookmark [<notebook>:][<folder-path>/] <url>
+  nb bookmark [<notebook>:][<folder/path>/] <url>
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
               [-f <filename> | --filename <filename>] [-q | --quote]
               [-r <url> | --related <url>]... [--save-source] [--skip-content]
               [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...] [--title <title>]
   nb bookmark list [<list-options>...]
   nb bookmark (edit | delete | open | peek | url)
-              ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+              ([<notebook>:][<folder/path>/][<id> | <filename> | <title>])
   nb bookmark search <query>
 
 Options:
@@ -5436,14 +5436,14 @@ Shortcut Alias: `nb bk`
 
 ```text
 Usage:
-  nb browse [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
+  nb browse [<notebook>:][<folder/path>/][<id> | <filename> | <title>]
             [-g | --gui] [-n | --notebooks] [-p | --print] [-q | --query <query>]
             [-s | --serve]
-  nb browse add [<notebook>:][<folder-path>/][<filename>]
+  nb browse add [<notebook>:][<folder/path>/][<filename>]
             [-c <content> | --content <content>] [--tags <tag1>,<tag2>...]
             [-t <title> | --title <title>]
-  nb browse delete ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
-  nb browse edit ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+  nb browse delete ([<notebook>:][<folder/path>/][<id> | <filename> | <title>])
+  nb browse edit ([<notebook>:][<folder/path>/][<id> | <filename> | <title>])
 
 Subcommands:
   (default)  Open a notebook, folder, or item in the terminal or GUI web browser.
@@ -5548,7 +5548,7 @@ See Also:
 
 ```text
 Usage:
-  nb count [<notebook>:][<folder-path>/]
+  nb count [<notebook>:][<folder/path>/]
 
 Description:
   Print the number of items in the first level of the current notebook,
@@ -5567,7 +5567,7 @@ Description:
 
 ```text
 Usage:
-  nb delete ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])...
+  nb delete ([<notebook>:][<folder/path>/][<id> | <filename> | <title>])...
             [-f | --force]
 
 Options:
@@ -5614,7 +5614,7 @@ Shortcut Aliases: `nb d`, `nb -`
 
 ```text
 Usage:
-  nb edit ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+  nb edit ([<notebook>:][<folder/path>/][<id> | <filename> | <title>])
           [-c <content> | --content <content>] [--edit]
           [-e <editor> | --editor <editor>] [--overwrite] [--prepend]
 
@@ -5703,10 +5703,10 @@ See Also:
 
 ```text
 Usage:
-  nb export ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+  nb export ([<notebook>:][<folder/path>/][<id> | <filename> | <title>])
             <path> [-f | --force] [<pandoc options>...]
   nb export notebook <name> [<path>]
-  nb export pandoc ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+  nb export pandoc ([<notebook>:][<folder/path>/][<id> | <filename> | <title>])
             [<pandoc options>...]
 
 Options:
@@ -5835,7 +5835,7 @@ Shortcut Alias: `nb h`
 
 ```text
 Usage:
-  nb history [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
+  nb history [<notebook>:][<folder/path>/][<id> | <filename> | <title>]
 
 Description:
   Display notebook history using `tig` [1] (if available) or `git log`.
@@ -5874,7 +5874,7 @@ Examples:
 ```text
 Usage:
   nb import [copy | download | move] (<path>... | <url>) [--convert]
-            [<notebook>:][<folder-path>/][<filename>]
+            [<notebook>:][<folder/path>/][<filename>]
   nb import notebook <path> [<name>]
 
 Options:
@@ -5956,7 +5956,7 @@ Usage:
           [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
           [--no-indicator] [-p | --pager] [--paths] [-s | --sort]
           [-r | --reverse] [--tags] [-t <type> | --type <type> | --<type>]
-          [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
+          [<notebook>:][<folder/path>/][<id> | <filename> | <path> | <query>]
 
 Options:
   -e, --excerpt [<length>]        Print an excerpt <length> lines long under
@@ -6031,7 +6031,7 @@ Usage:
         [--no-footer] [--no-header] [--no-id] [--no-indicator] [-p | --pager]
         [--paths] [-s | --sort] [-r | --reverse] [--tags]
         [-t <type> | --type <type> | --<type>]
-        [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
+        [<notebook>:][<folder/path>/][<id> | <filename> | <path> | <query>]
 
 Options:
   -a, --all                       Print all items in the notebook. Equivalent
@@ -6116,7 +6116,7 @@ Examples:
 
 ```text
 Usage:
-  nb move ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+  nb move ([<notebook>:][<folder/path>/][<id> | <filename> | <title>])
           ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note |
           --to-title) [-f | --force]
 
@@ -6297,7 +6297,7 @@ Shortcut Aliases: `nb n`, `nb nb`
 
 ```text
 Usage:
-  nb open ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+  nb open ([<notebook>:][<folder/path>/][<id> | <filename> | <title>])
 
 Description:
   Open an item or notebook. When the item is a bookmark, open the bookmarked
@@ -6340,7 +6340,7 @@ Shortcut Alias: `nb o`
 
 ```text
 Usage:
-  nb peek ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+  nb peek ([<notebook>:][<folder/path>/][<id> | <filename> | <title>])
 
 Description:
   View an item or notebook in the terminal. When the item is a bookmark, view
@@ -6389,7 +6389,7 @@ Shortcut Alias: `nb p`
 
 ```text
 Usage:
-  nb pin ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+  nb pin ([<notebook>:][<folder/path>/][<id> | <filename> | <title>])
 
 Description:
   Pin an item so it appears first in lists.
@@ -6524,7 +6524,7 @@ Examples:
 
 ```text
 Usage:
-  nb search ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+  nb search ([<notebook>:][<folder/path>/][<id> | <filename> | <title>])
             <query>... [-a | --all] [--and <query>] [--or <query>]
             [-l | --list]  [--path] [-t <type> | --type <type> | --<type>]
             [--utility <name>]
@@ -6941,7 +6941,7 @@ Example:
 
 ```text
 Usage:
-  nb show ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+  nb show ([<notebook>:][<folder/path>/][<id> | <filename> | <title>])
           [[-a | --added] | [--authors] | [-b | --browse] | --filename | --id |
           --info-line | --path | [-p | --print] | --relative-path | [-r |
           --render] | --title | --type [<type>] | [-u | --updated]] [--no-color]
@@ -7205,7 +7205,7 @@ Shortcut Alias: `nb unar`
 
 ```text
 Usage:
-  nb unpin ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+  nb unpin ([<notebook>:][<folder/path>/][<id> | <filename> | <title>])
 
 Description:
   Unpin a pinned item.
@@ -7390,7 +7390,7 @@ Examples:
 
 ```text
 Usage:
-  nb copy ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+  nb copy ([<notebook>:][<folder/path>/][<id> | <filename> | <title>])
 
 Description:
   Create a copy of the specified item in the current notebook.
