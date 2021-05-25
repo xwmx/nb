@@ -4485,7 +4485,7 @@ in the following pattern:
 notebook:folder/path/item-idenitifer
 ```
 
-[docopt](http://docopt.org/) representation:
+Represented in a [docopt-like](http://docopt.org/) format:
 
 ```text
 [<notebook>:][<folder/path>/][<id> | <filename> | <title>]
