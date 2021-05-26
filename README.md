@@ -5224,7 +5224,7 @@ Options:
   -e, --encrypt               Encrypt the note with a password.
   -f, --filename <filename>   The filename for the new note.
   --folder <folder-path>      Add within the folder located at <folder-path>.
-  --tags <tag1>,<tag2>....    A comma-separated list of tags.
+  --tags <tag1>,<tag2>...     A comma-separated list of tags.
   -t, --title <title>         The title for a new note. If `--title` is
                               present, the filename is derived from the
                               title, unless `--filename` is specified.
