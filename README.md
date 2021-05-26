@@ -1796,6 +1796,16 @@ Add: nb <url> Help: nb help bookmark
 
 #### Viewing Bookmarks
 
+<p>
+  <sup>
+    <a href="#overview">↑&nbsp;</a>·
+    <a href="#browse"><code>nb&nbsp;browse</code></a>,
+    <a href="#open"><code>nb&nbsp;open</code></a>,
+    <a href="#peek"><code>nb&nbsp;peek</code></a>,
+    <a href="#peek"><code>nb&nbsp;peek</code></a>
+  </sup>
+</p>
+
 `nb` provides multiple ways to view bookmark files, bookmarked content,
 and bookmarked URLs.
 
