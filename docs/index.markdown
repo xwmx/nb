@@ -1808,7 +1808,7 @@ Add: nb <url> Help: nb help bookmark
     <a href="#browse"><code>nb&nbsp;browse</code></a>,
     <a href="#open"><code>nb&nbsp;open</code></a>,
     <a href="#peek"><code>nb&nbsp;peek</code></a>,
-    <a href="#peek"><code>nb&nbsp;peek</code></a>
+    <a href="#show"><code>nb&nbsp;show</code></a>
   </sup>
 </p>
 
