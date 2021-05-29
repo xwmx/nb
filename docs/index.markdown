@@ -6867,7 +6867,7 @@ Alias: `nb set`
 
 ##### `syntax_theme`
 
-[↑&nbsp;](#help)· See also: [Terminal Syntax Highlighting Theme](#terminal-syntax-highlighting-theme)
+[↑&nbsp;](#help)· See also: [Terminal Syntax Highlighting](#terminal-syntax-highlighting-theme)
 
 ```text
 [12] syntax_theme
