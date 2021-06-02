@@ -2237,8 +2237,7 @@ add the notebook name with a colon before the identifier:
 [[sample:Example File.md]]
 ```
 
-The text for the link can be specified by adding a pipe character
-followed by the text:
+The text for a link can be specified after a pipe `|` character:
 
 ```bash
 # render link to item 123 in the "example" notebook as [[Example link text.]]

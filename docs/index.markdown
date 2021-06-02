@@ -2243,8 +2243,7 @@ add the notebook name with a colon before the identifier:
 [[sample:Example File.md]]
 ```
 
-The text for the link can be specified by adding a pipe character
-followed by the text:
+The text for a link can be specified after a pipe `|` character:
 
 ```bash
 # render link to item 123 in the "example" notebook as [[Example link text.]]
@@ -4281,7 +4280,7 @@ export  NB_INDICATOR_ENCRYPTED="🔒"
 export  NB_INDICATOR_FOLDER="📂"
 export  NB_INDICATOR_IMAGE="🌄"
 export  NB_INDICATOR_PINNED="📌"
-export  NB_INDICATOR_TODO="✅"
+export  NB_INDICATOR_TODO="✫�"
 export  NB_INDICATOR_VIDEO="📹"
 ```
 
@@ -4684,7 +4683,7 @@ More complex data can be defined using additional
 [YAML](https://en.wikipedia.org/wiki/YAML)
 capabilities.
 
-### ❯ `nb` Interactive Shell
+### ❫� `nb` Interactive Shell
 
 <p>
   <sup>
@@ -5628,7 +5627,7 @@ Shortcut Aliases: `nb d`, `nb -`
 
 #### `edit`
 
-[↑&nbsp;](#help)· See also:
+[↑&nbsp;](#help)«� See also:
 [Editing](#editing),
 [`add`](#add),
 [`browse`](#browse),
@@ -6807,7 +6806,7 @@ Alias: `nb set`
      ---------------
      The tool used for encrypting notes.
 
-     • Supported Values: openssl, gpg
+     ‫� Supported Values: openssl, gpg
      • Default Value:    openssl
 ```
 
@@ -7799,5 +7798,5 @@ tests with globbing, e.g., `bats test/browse*` and `bats test/folders*`.
 </p>
 
 <p align="center">
-  📝🔖🔒🔍📔
+  📝🔖🔒🔍📫�
 </p>
