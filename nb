@@ -74,7 +74,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="6.3.1"
+_VERSION="6.3.2"
 
 # $_ME
 #
@@ -171,7 +171,7 @@ _contains() {
 #   _resolve_symlink <path>
 #
 # Description:
-#   Resolve the real path, or as close as poassible, for a symbolic link.
+#   Resolve the real path or target for a symbolic link.
 _resolve_symlink() {
   if hash "realpath" 2>/dev/null
   then
@@ -4247,7 +4247,7 @@ $(_color_primary "Description"):
 
       ${NBRC_PATH}
 
-  Pass optional <remote-url> and <branch> options to create the initial
+  Pass optional <remote-url> and <branch> arguments to create the initial
   "home" notebook using a clone of an existing notebook.
 
 $(_color_primary "See Also"):
@@ -10033,11 +10033,18 @@ _resolve_links() {
 
     if ((_for_browsing)) && [[ "${_input_type:-}" == "html" ]]
     then
-      local _url_pattern="http:\/\/localhost:${NB_SERVER_PORT}\/\1\2${_url_params_pattern:-}"
-      local _replacement_pattern="<a\ href=\"${_url_pattern}\">[[\1\2]]<\/a>"
+      # patterns for wrapping [[wiki-style links]] in HTML links
+      local _link_match_pattern="\[\[([^#|][^]|]*)\]\]"
+      local _url_pattern="http:\/\/localhost:${NB_SERVER_PORT}\/\1${_url_params_pattern:-}"
+      local _replacement_pattern="<a\ href=\"${_url_pattern}\">[[\1]]<\/a>"
 
-      local _notebookless_pattern="localhost:${NB_SERVER_PORT}\/([^:?\"-]+)([\?\"])"
-      local _notebookless_replacement_pattern="localhost:${NB_SERVER_PORT}\/${_notebook_name}:\1\2"
+      local _labeled_link_match_pattern="\[\[([^#][^]|]+)\|([^]]+)\]\]"
+      local _labeled_url_pattern="http:\/\/localhost:${NB_SERVER_PORT}\/\1${_url_params_pattern:-}"
+      local _labeled_replacement_pattern="<a\ href=\"${_labeled_url_pattern}\">[[\2]]<\/a>"
+
+      # patterns for adding notebook prefixes to just-linked URLs
+      local _notebookless_pattern="localhost:${NB_SERVER_PORT}\/([^:?\"-]+[\?\"])"
+      local _notebookless_replacement_pattern="localhost:${NB_SERVER_PORT}\/${_notebook_name}:\1"
 
       local _linkable=1
 
@@ -10063,8 +10070,10 @@ _resolve_links() {
           fi
         done
       } | {
-         sed -E                                                       \
--e "/^•linkable•/ s/\[\[([^#])([^]]*)\]\]/${_replacement_pattern}/g"  \
+        # wrap [[wiki-style links]] in HTML links and add missing notebooks
+        sed -E                                                                        \
+-e "/^•linkable•/ s/${_link_match_pattern}/${_replacement_pattern}/g"                 \
+-e "/^•linkable•/ s/${_labeled_link_match_pattern}/${_labeled_replacement_pattern}/g" \
 -e "/^•linkable•/ s/${_notebookless_pattern}/${_notebookless_replacement_pattern}/g"
       } | {
          sed -E -e "s/^•linkable•//g"
@@ -10076,11 +10085,22 @@ _resolve_links() {
                           "${_input_temp_file_path}")
       do
         local _link=
+        local _link_label=
 
         [[ -z "${__match:-}" ]] && continue
 
         local _selector="${__match#[[}"
-        _selector="${_selector%]]}"
+
+        if [[ "${__match}" =~ \| ]]
+        then
+          _selector="${_selector%%|*}"
+
+          _link_label="${__match##*|}"
+          _link_label="${_link_label%]]}"
+        else
+          _selector="${_selector%]]}"
+          _link_label="${_selector}"
+        fi
 
         if ((_for_browsing))
         then
@@ -10116,10 +10136,10 @@ _resolve_links() {
 
               case "${_input_type:-}" in
                 html)
-                  _link="<a href=\"${_target_url//' '/%20}\">[[${_selector:-}]]</a>"
+                  _link="<a href=\"${_target_url//' '/%20}\">[[${_link_label:-}]]</a>"
                   ;;
                 org)
-                  _link="[[${_target_url:-}][[[${_selector:-}]]]]"
+                  _link="[[${_target_url:-}][[[${_link_label:-}]]]]"
                   ;;
                 *)
                   _link="[[${_selector:-}]]"
@@ -10137,10 +10157,10 @@ _resolve_links() {
           else
             case "${_input_type:-}" in
               html)
-                _link="<a href=\"file://${_link_path//' '/%20}\">[[${_selector:-}]]</a>"
+                _link="<a href=\"file://${_link_path//' '/%20}\">[[${_link_label:-}]]</a>"
                 ;;
               org)
-                _link="[[file://${_link_path//' '/%20}][[[${_selector:-}]]]]"
+                _link="[[file://${_link_path//' '/%20}][[[${_link_label:-}]]]]"
                 ;;
               *)
                 _link="[[${_selector:-}]]"
@@ -10450,7 +10470,7 @@ $(_color_primary "Options"):
   -e, --encrypt               Encrypt the note with a password.
   -f, --filename <filename>   The filename for the new note.
   --folder <folder-path>      Add within the folder located at <folder-path>.
-  --tags <tag1>,<tag2>....    A comma-separated list of tags.
+  --tags <tag1>,<tag2>...     A comma-separated list of tags.
   -t, --title <title>         The title for a new note. If \`--title\` is
                               present, the filename is derived from the
                               title, unless \`--filename\` is specified.

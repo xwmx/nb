@@ -21,7 +21,7 @@ permalink: /
 <br>
 
 `nb` is a command line and local web
-note-taking, bookmarking, archiving,
+note‑taking, bookmarking, archiving,
 and knowledge base application
 with:
 
@@ -1802,6 +1802,16 @@ Add: nb <url> Help: nb help bookmark
 
 #### Viewing Bookmarks
 
+<p>
+  <sup>
+    <a href="#overview">↑&nbsp;</a>·
+    <a href="#browse"><code>nb&nbsp;browse</code></a>,
+    <a href="#open"><code>nb&nbsp;open</code></a>,
+    <a href="#peek"><code>nb&nbsp;peek</code></a>,
+    <a href="#show"><code>nb&nbsp;show</code></a>
+  </sup>
+</p>
+
 `nb` provides multiple ways to view bookmark files, bookmarked content,
 and bookmarked URLs.
 
@@ -2231,6 +2241,13 @@ add the notebook name with a colon before the identifier:
 
 # link to the item with filename "Example File.md" in the "sample" notebook
 [[sample:Example File.md]]
+```
+
+The text for a link can be specified after a pipe `|` character:
+
+```bash
+# render link to item 123 in the "example" notebook as [[Example link text.]]
+[[example:123|Example link text.]]
 ```
 
 <a href="#-linking">[[wiki-style links]]</a> cooperate well with
@@ -3143,8 +3160,8 @@ To copy items, install the [`copy` / `duplicate` plugin](#copy).
 Whenever a note is added, modified, or deleted,
 `nb` automatically commits the change to git transparently in the background.
 
-Use [`nb history`](#history) to view the history of the notebook or an
-individual note:
+Use [`nb history`](#history) to view the revision history of
+any notebook, folder, or item:
 
 ```bash
 # show history for current notebook
@@ -4491,7 +4508,7 @@ in the following pattern:
 notebook:folder/path/item-idenitifer
 ```
 
-[docopt](http://docopt.org/) representation:
+Represented in a [docopt](http://docopt.org/)-like format:
 
 ```text
 [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
@@ -4843,6 +4860,9 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
 </p>
 
 #### `nb help`
+
+[↑&nbsp;](#help)· See also:
+[`help`](#help-1)
 
 ```text
 __          _
@@ -5227,7 +5247,7 @@ Options:
   -e, --encrypt               Encrypt the note with a password.
   -f, --filename <filename>   The filename for the new note.
   --folder <folder-path>      Add within the folder located at <folder-path>.
-  --tags <tag1>,<tag2>....    A comma-separated list of tags.
+  --tags <tag1>,<tag2>...     A comma-separated list of tags.
   -t, --title <title>         The title for a new note. If `--title` is
                               present, the filename is derived from the
                               title, unless `--filename` is specified.
@@ -5798,7 +5818,8 @@ Examples:
 
 #### `help`
 
-[↑&nbsp;](#help)
+[↑&nbsp;](#help)· See also:
+[`nb help`](#nb-help)
 
 ```text
 Usage:
@@ -5930,7 +5951,7 @@ Description:
 
       ~/.nbrc
 
-  Pass optional <remote-url> and <branch> options to create the initial
+  Pass optional <remote-url> and <branch> arguments to create the initial
   "home" notebook using a clone of an existing notebook.
 
 See Also:
@@ -6853,7 +6874,7 @@ Alias: `nb set`
 
 ##### `syntax_theme`
 
-[↑&nbsp;](#help)· See also: [Terminal Syntax Highlighting Theme](#terminal-syntax-highlighting-theme)
+[↑&nbsp;](#help)· See also: [Terminal Syntax Highlighting](#terminal-syntax-highlighting-theme)
 
 ```text
 [12] syntax_theme
@@ -7744,7 +7765,8 @@ list operations, including `nb` and `nb ls`. Entires are added to a
 
 #### Archived Notebooks
 
-A notebook is considered archived when it contains a file named `.archived`
+A notebook is considered [archived](#archiving-notebooks)
+when it contains a file named `.archived`
 at the root level of the notebook directory.
 
 ## Tests
@@ -7752,7 +7774,7 @@ at the root level of the notebook directory.
 With more than 1,700 tests spanning tens of thousands of lines,
 `nb` is really mostly a
 [test suite](https://github.com/xwmx/nb/tree/master/test).
-[Tests run continuously via GitHub Actions](https://github.com/xwmx/nb/actions)
+Tests run continuously [via GitHub Actions](https://github.com/xwmx/nb/actions)
 on recent versions of both Ubuntu and macOS to account for differences between
 BSD and GNU tools and Bash versions.
 To run the tests locally, install
