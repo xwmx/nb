@@ -10034,9 +10034,13 @@ _resolve_links() {
     if ((_for_browsing)) && [[ "${_input_type:-}" == "html" ]]
     then
       # patterns for wrapping [[wiki-style links]] in HTML links
-      local _wikistyle_link_match_pattern="\[\[([^#][^]]*)\]\]"
+      local _link_match_pattern="\[\[([^#|][^]|]*)\]\]"
       local _url_pattern="http:\/\/localhost:${NB_SERVER_PORT}\/\1${_url_params_pattern:-}"
       local _replacement_pattern="<a\ href=\"${_url_pattern}\">[[\1]]<\/a>"
+
+      local _labeled_link_match_pattern="\[\[([^#][^]|]+)\|([^]]+)\]\]"
+      local _labeled_url_pattern="http:\/\/localhost:${NB_SERVER_PORT}\/\1${_url_params_pattern:-}"
+      local _labeled_replacement_pattern="<a\ href=\"${_labeled_url_pattern}\">[[\2]]<\/a>"
 
       # patterns for adding notebook prefixes to just-linked URLs
       local _notebookless_pattern="localhost:${NB_SERVER_PORT}\/([^:?\"-]+[\?\"])"
@@ -10067,8 +10071,9 @@ _resolve_links() {
         done
       } | {
         # wrap [[wiki-style links]] in HTML links and add missing notebooks
-        sed -E                                                                  \
--e "/^•linkable•/ s/${_wikistyle_link_match_pattern}/${_replacement_pattern}/g" \
+        sed -E                                                                        \
+-e "/^•linkable•/ s/${_link_match_pattern}/${_replacement_pattern}/g"                 \
+-e "/^•linkable•/ s/${_labeled_link_match_pattern}/${_labeled_replacement_pattern}/g" \
 -e "/^•linkable•/ s/${_notebookless_pattern}/${_notebookless_replacement_pattern}/g"
       } | {
          sed -E -e "s/^•linkable•//g"
@@ -10080,11 +10085,22 @@ _resolve_links() {
                           "${_input_temp_file_path}")
       do
         local _link=
+        local _link_label=
 
         [[ -z "${__match:-}" ]] && continue
 
         local _selector="${__match#[[}"
-        _selector="${_selector%]]}"
+
+        if [[ "${__match}" =~ \| ]]
+        then
+          _selector="${_selector%%|*}"
+
+          _link_label="${__match##*|}"
+          _link_label="${_link_label%]]}"
+        else
+          _selector="${_selector%]]}"
+          _link_label="${_selector}"
+        fi
 
         if ((_for_browsing))
         then
@@ -10120,10 +10136,10 @@ _resolve_links() {
 
               case "${_input_type:-}" in
                 html)
-                  _link="<a href=\"${_target_url//' '/%20}\">[[${_selector:-}]]</a>"
+                  _link="<a href=\"${_target_url//' '/%20}\">[[${_link_label:-}]]</a>"
                   ;;
                 org)
-                  _link="[[${_target_url:-}][[[${_selector:-}]]]]"
+                  _link="[[${_target_url:-}][[[${_link_label:-}]]]]"
                   ;;
                 *)
                   _link="[[${_selector:-}]]"
@@ -10141,10 +10157,10 @@ _resolve_links() {
           else
             case "${_input_type:-}" in
               html)
-                _link="<a href=\"file://${_link_path//' '/%20}\">[[${_selector:-}]]</a>"
+                _link="<a href=\"file://${_link_path//' '/%20}\">[[${_link_label:-}]]</a>"
                 ;;
               org)
-                _link="[[file://${_link_path//' '/%20}][[[${_selector:-}]]]]"
+                _link="[[file://${_link_path//' '/%20}][[[${_link_label:-}]]]]"
                 ;;
               *)
                 _link="[[${_selector:-}]]"

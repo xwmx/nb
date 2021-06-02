@@ -2237,6 +2237,14 @@ add the notebook name with a colon before the identifier:
 [[sample:Example File.md]]
 ```
 
+The text for the link can be specified by adding a pipe character
+followed by the text:
+
+```bash
+# render link to item 123 in the "example" notebook as [[Example link text.]]
+[[example:123|Example link text.]]
+```
+
 <a href="#-linking">[[wiki-style links]]</a> cooperate well with
 [Org links](https://orgmode.org/guide/Hyperlinks.html),
 which have a similar syntax,

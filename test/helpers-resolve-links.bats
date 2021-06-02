@@ -32,6 +32,8 @@ load test_helper
     declare _content=
     _content+="Selector link one: [[local:2/1]] • "
     _content+="Selector link two: [[Root Title One]] • "
+    _content+="Labeled link one: [[local:2/1|Example label.]] • "
+    _content+="Labeled link two: [[Root Title One|Sample label.]] • "
     _content+="Tag one: #tag_1 • "
     _content+="Tag two: #tag-2 • "
     _content+="Tag not valid: 123#not-valid-tag • "
@@ -74,6 +76,12 @@ load test_helper
 
   printf "%s\\n" "${output}" | grep -q  \
 "Selector link two: \[\[http://localhost:6789/local:3${_expected_params}\]\[\[\[Root Title One\]\]\]\] •"
+
+  printf "%s\\n" "${output}" | grep -q  \
+"Labeled link one: \[\[http://localhost:6789/local:2/1${_expected_params}\]\[\[\[Example label.\]\]\]\] •"
+
+  printf "%s\\n" "${output}" | grep -q  \
+"Labeled link two: \[\[http://localhost:6789/local:3${_expected_params}\]\[\[\[Sample label.\]\]\]\] •"
 
   printf "%s\\n" "${output}" | grep -q  \
 "Tag one: \[\[http://localhost:6789/local:${_expected_params}&--query=%23tag_1\]\[#tag_1\]\] •"
@@ -121,6 +129,8 @@ load test_helper
     declare _content=
     _content+="Selector link one: [[local:2/1]] • "
     _content+="Selector link two: [[Root Title One]] • "
+    _content+="Labeled link one: [[local:2/1|Example label.]] • "
+    _content+="Labeled link two: [[Root Title One|Sample label.]] • "
     _content+="Tag one: #tag_1 • "
     _content+="Tag two: #tag-2 • "
     _content+="Tag not valid: 123#not-valid-tag • "
@@ -175,6 +185,12 @@ load test_helper
 
   printf "%s\\n" "${output}" | grep -q  \
 "Selector link two: <a.* href=\"http://localhost:6789/local:Root Title One${_expected_params}\">\[\[Root Title One\]\]</a> •"
+
+  printf "%s\\n" "${output}" | grep -q  \
+"Labeled link one: <a.* href=\"http://localhost:6789/local:2/1${_expected_params}\">\[\[Example label.\]\]</a> •"
+
+  printf "%s\\n" "${output}" | grep -q  \
+"Labeled link two: <a.* href=\"http://localhost:6789/local:Root Title One${_expected_params}\">\[\[Sample label.\]\]</a> •"
 
   printf "%s\\n" "${output}" | grep -q  \
 "Tag one: <a.* href=\"http://localhost:6789/local:${_expected_params}&--query=%23tag_1\">#tag_1</a> •"
@@ -312,6 +328,8 @@ HEREDOC
     declare _content=
     _content+="Selector link one: [[home:2/1]] • "
     _content+="Selector link two: [[Root Title One]] • "
+    _content+="Labeled link one: [[home:2/1|Example label.]] • "
+    _content+="Labeled link two: [[Root Title One|Sample label.]] • "
     _content+="Tag one: #tag_1 • "
     _content+="Tag two: #tag-2 • "
     _content+="Tag not valid: 123#not-valid-tag • "
@@ -366,6 +384,12 @@ HEREDOC
 "Selector link two: <a.* href=\"http://localhost:6789/home:Root Title One?--per-page=2&--columns=70\">\[\[Root Title One\]\]</a> •"
 
   printf "%s\\n" "${output}" | grep -q  \
+"Labeled link one: <a.* href=\"http://localhost:6789/home:2/1?--per-page=2&--columns=70\">\[\[Example label.\]\]</a> •"
+
+  printf "%s\\n" "${output}" | grep -q  \
+"Labeled link two: <a.* href=\"http://localhost:6789/home:Root Title One?--per-page=2&--columns=70\">\[\[Sample label.\]\]</a> •"
+
+  printf "%s\\n" "${output}" | grep -q  \
 "Tag one: <a.* href=\"http://localhost:6789/home:?--per-page=2&--columns=70&--query=%23tag_1\">#tag_1</a> •"
 
   printf "%s\\n" "${output}" | grep -q  \
@@ -409,6 +433,8 @@ HEREDOC
     declare _content=
     _content+="Selector link one: [[home:2/1]] • "
     _content+="Selector link two: [[Root Title One]] • "
+    _content+="Labeled link one: [[home:2/1|Example label.]] • "
+    _content+="Labeled link two: [[Root Title One|Sample label.]] • "
     _content+="Tag one: #tag_1 • "
     _content+="Tag two: #tag-2 • "
     _content+="Tag not valid: 123#not-valid-tag • "
@@ -460,6 +486,12 @@ HEREDOC
 "Selector link two: <a.* href=\"http://localhost:6789/home:Root Title One\">\[\[Root Title One\]\]</a> •"
 
   printf "%s\\n" "${output}" | grep -q  \
+"Labeled link one: <a.* href=\"http://localhost:6789/home:2/1\">\[\[Example label.\]\]</a> •"
+
+  printf "%s\\n" "${output}" | grep -q  \
+"Labeled link two: <a.* href=\"http://localhost:6789/home:Root Title One\">\[\[Sample label.\]\]</a> •"
+
+  printf "%s\\n" "${output}" | grep -q  \
 "Tag one: <a.* href=\"http://localhost:6789/home:?--query=%23tag_1\">#tag_1</a> •"
 
   printf "%s\\n" "${output}" | grep -q  \
@@ -497,6 +529,8 @@ HEREDOC
     declare _content=
     _content+="Selector link one: [[home:2/1]] • "
     _content+="Selector link two: [[Root Title One]] • "
+    _content+="Labeled link one: [[home:2/1|Example label.]] • "
+    _content+="Labeled link two: [[Root Title One|Sample label.]] • "
     _content+="Tag one: #tag_1 • "
     _content+="Tag two: #tag-2 • "
     _content+="Tag not valid: 123#not-valid-tag • "
@@ -549,6 +583,12 @@ HEREDOC
       "Selector link two: <a.* href=\"http://localhost:6789/home:Root Title One\">\[\[Root Title One\]\]</a> •"
 
   printf "%s\\n" "${output}" | grep -q  \
+      "Labeled link one: <a.* href=\"http://localhost:6789/home:2/1\">\[\[Example label.\]\]</a> •"
+
+  printf "%s\\n" "${output}" | grep -q  \
+      "Labeled link two: <a.* href=\"http://localhost:6789/home:Root Title One\">\[\[Sample label.\]\]</a> •"
+
+  printf "%s\\n" "${output}" | grep -q  \
       "Tag one: <a.* href=\"http://localhost:6789/home:?--query=%23tag_1\">#tag_1</a> •"
 
   printf "%s\\n" "${output}" | grep -q  \
@@ -589,6 +629,8 @@ HEREDOC
     declare _content=
     _content+="Selector link one: [[home:2/1]] • "
     _content+="Selector link two: [[Root Title One]] • "
+    _content+="Labeled link one: [[home:2/1|Example label.]] • "
+    _content+="Labeled link two: [[Root Title One|Sample label.]] • "
     _content+="Tag one: #tag_1 • "
     _content+="Tag two: #tag-2 • "
     _content+="Tag not valid: 123#not-valid-tag • "
@@ -638,6 +680,12 @@ HEREDOC
       "Selector link two: <a.* href=\"file://${NB_DIR}/home/Root%20File%20One.md\">\[\[Root Title One\]\]</a> •"
 
   printf "%s\\n" "${output}" | grep -q  \
+      "Labeled link one: <a.* href=\"file://${NB_DIR}/home/Example%20Folder/Example%20Nested%20File%20One.md\">\[\[Example label.\]\]</a> •"
+
+  printf "%s\\n" "${output}" | grep -q  \
+      "Labeled link two: <a.* href=\"file://${NB_DIR}/home/Root%20File%20One.md\">\[\[Sample label.\]\]</a> •"
+
+  printf "%s\\n" "${output}" | grep -q  \
       "Tag one: #tag_1 •"
 
   printf "%s\\n" "${output}" | grep -q  \
@@ -666,6 +714,8 @@ HEREDOC
     declare _content=
     _content+="Selector link one: [[home:2/1]] • "
     _content+="Selector link two: [[Root Title One]] • "
+    _content+="Labeled link one: [[home:2/1|Example label.]] • "
+    _content+="Labeled link two: [[Root Title One|Sample label.]] • "
     _content+="Tag one: #tag_1 • "
     _content+="Tag two: #tag-2 • "
     _content+="Tag not valid: 123#not-valid-tag • "
@@ -716,6 +766,12 @@ HEREDOC
       "Selector link two: <a.* href=\"file://${NB_DIR}/home/Root%20File%20One.md\">\[\[Root Title One\]\]</a> •"
 
   printf "%s\\n" "${output}" | grep -q  \
+      "Labeled link one: <a.* href=\"file://${NB_DIR}/home/Example%20Folder/Example%20Nested%20File%20One.md\">\[\[Example label.\]\]</a> •"
+
+  printf "%s\\n" "${output}" | grep -q  \
+      "Labeled link two: <a.* href=\"file://${NB_DIR}/home/Root%20File%20One.md\">\[\[Sample label.\]\]</a> •"
+
+  printf "%s\\n" "${output}" | grep -q  \
       "Tag one: #tag_1 •"
 
   printf "%s\\n" "${output}" | grep -q  \
@@ -749,6 +805,8 @@ HEREDOC
     declare _content=
     _content+="Selector link one: [[home:2/1]] • "
     _content+="Selector link two: [[Root Title One]] • "
+    _content+="Labeled link one: [[home:2/1|Example label.]] • "
+    _content+="Labeled link two: [[Root Title One|Sample label.]] • "
     _content+="Tag one: #tag_1 • "
     _content+="Tag two: #tag-2 • "
     _content+="Tag not valid: 123#not-valid-tag • "
@@ -791,6 +849,12 @@ HEREDOC
 "Selector link two: \[\[http://localhost:6789/home:3?--per-page=2&--columns=70\]\[\[\[Root Title One\]\]\]\] •"
 
   printf "%s\\n" "${output}" | grep -q  \
+"Labeled link one: \[\[http://localhost:6789/home:2/1?--per-page=2&--columns=70\]\[\[\[Example label.\]\]\]\] •"
+
+  printf "%s\\n" "${output}" | grep -q  \
+"Labeled link two: \[\[http://localhost:6789/home:3?--per-page=2&--columns=70\]\[\[\[Sample label.\]\]\]\] •"
+
+  printf "%s\\n" "${output}" | grep -q  \
 "Tag one: \[\[http://localhost:6789/home:?--per-page=2&--columns=70&--query=%23tag_1\]\[#tag_1\]\] •"
 
   printf "%s\\n" "${output}" | grep -q  \
@@ -831,6 +895,8 @@ HEREDOC
     declare _content=
     _content+="Selector link one: [[home:2/1]] • "
     _content+="Selector link two: [[Root Title One]] • "
+    _content+="Labeled link one: [[home:2/1|Example label.]] • "
+    _content+="Labeled link two: [[Root Title One|Sample label.]] • "
     _content+="Tag one: #tag_1 • "
     _content+="Tag two: #tag-2 • "
     _content+="Tag not valid: 123#not-valid-tag • "
@@ -869,6 +935,12 @@ HEREDOC
 
   printf "%s\\n" "${output}" | grep -q  \
 "Selector link two: \[\[http://localhost:6789/home:3\]\[\[\[Root Title One\]\]\]\] •"
+
+  printf "%s\\n" "${output}" | grep -q  \
+"Labeled link one: \[\[http://localhost:6789/home:2/1\]\[\[\[Example label.\]\]\]\] •"
+
+  printf "%s\\n" "${output}" | grep -q  \
+"Labeled link two: \[\[http://localhost:6789/home:3\]\[\[\[Sample label.\]\]\]\] •"
 
   printf "%s\\n" "${output}" | grep -q  \
 "Tag one: \[\[http://localhost:6789/home:?--query=%23tag_1\]\[#tag_1\]\] •"
@@ -911,6 +983,8 @@ HEREDOC
     declare _content=
     _content+="Selector link one: [[home:2/1]] • "
     _content+="Selector link two: [[Root Title One]] • "
+    _content+="Labeled link one: [[home:2/1|Example label.]] • "
+    _content+="Labeled link two: [[Root Title One|Sample label.]] • "
     _content+="Tag one: #tag_1 • "
     _content+="Tag two: #tag-2 • "
     _content+="Tag not valid: 123#not-valid-tag • "
@@ -948,6 +1022,12 @@ HEREDOC
 
   printf "%s\\n" "${output}" | grep -q  \
 "Selector link two: \[\[file://${NB_DIR}/home/Root%20File%20One.md\]\[\[\[Root Title One\]\]\]\] •"
+
+  printf "%s\\n" "${output}" | grep -q  \
+"Labeled link one: \[\[file://${NB_DIR}/home/Example%20Folder/Example%20Nested%20File%20One.md\]\[\[\[Example label.\]\]\]\] •"
+
+  printf "%s\\n" "${output}" | grep -q  \
+"Labeled link two: \[\[file://${NB_DIR}/home/Root%20File%20One.md\]\[\[\[Sample label.\]\]\]\] •"
 
   printf "%s\\n" "${output}" | grep -q  \
 "Tag one: #tag_1 •"
