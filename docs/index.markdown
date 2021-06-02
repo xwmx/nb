@@ -4280,7 +4280,7 @@ export  NB_INDICATOR_ENCRYPTED="🔒"
 export  NB_INDICATOR_FOLDER="📂"
 export  NB_INDICATOR_IMAGE="🌄"
 export  NB_INDICATOR_PINNED="📌"
-export  NB_INDICATOR_TODO="✫�"
+export  NB_INDICATOR_TODO="✅"
 export  NB_INDICATOR_VIDEO="📹"
 ```
 
@@ -4683,7 +4683,7 @@ More complex data can be defined using additional
 [YAML](https://en.wikipedia.org/wiki/YAML)
 capabilities.
 
-### ❫� `nb` Interactive Shell
+### ❯ `nb` Interactive Shell
 
 <p>
   <sup>
@@ -5627,7 +5627,7 @@ Shortcut Aliases: `nb d`, `nb -`
 
 #### `edit`
 
-[↑&nbsp;](#help)«� See also:
+[↑&nbsp;](#help)· See also:
 [Editing](#editing),
 [`add`](#add),
 [`browse`](#browse),
@@ -6806,7 +6806,7 @@ Alias: `nb set`
      ---------------
      The tool used for encrypting notes.
 
-     ‫� Supported Values: openssl, gpg
+     • Supported Values: openssl, gpg
      • Default Value:    openssl
 ```
 
@@ -7798,5 +7798,5 @@ tests with globbing, e.g., `bats test/browse*` and `bats test/folders*`.
 </p>
 
 <p align="center">
-  📝🔖🔒🔍📫�
+  📝🔖🔒🔍📔
 </p>
