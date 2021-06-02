@@ -10034,6 +10034,7 @@ _resolve_links() {
     if ((_for_browsing)) && [[ "${_input_type:-}" == "html" ]]
     then
       # patterns for wrapping [[wiki-style links]] in HTML links
+      local _wikistyle_link_match_pattern="\[\[([^#])([^]]*)\]\]"
       local _url_pattern="http:\/\/localhost:${NB_SERVER_PORT}\/\1\2${_url_params_pattern:-}"
       local _replacement_pattern="<a\ href=\"${_url_pattern}\">[[\1\2]]<\/a>"
 
@@ -10066,8 +10067,8 @@ _resolve_links() {
         done
       } | {
         # wrap [[wiki-style links]] in HTML links and add missing notebooks
-        sed -E                                                        \
--e "/^•linkable•/ s/\[\[([^#])([^]]*)\]\]/${_replacement_pattern}/g"  \
+        sed -E                                                                  \
+-e "/^•linkable•/ s/${_wikistyle_link_match_pattern}/${_replacement_pattern}/g" \
 -e "/^•linkable•/ s/${_notebookless_pattern}/${_notebookless_replacement_pattern}/g"
       } | {
          sed -E -e "s/^•linkable•//g"
