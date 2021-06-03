@@ -2246,8 +2246,8 @@ add the notebook name with a colon before the identifier:
 The text for a link can be specified after a pipe `|` character:
 
 ```bash
-# render link to item 123 in the "example" notebook as [[Example link text.]]
-[[example:123|Example link text.]]
+# render link to item 123 in the "example" notebook as [[Example Link Text]]
+[[example:123|Example Link Text]]
 ```
 
 <a href="#-linking">[[wiki-style links]]</a> cooperate well with
