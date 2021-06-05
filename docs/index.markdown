@@ -103,7 +103,7 @@ so notes can be edited in other apps on any device.
 `nb` is designed to be portable, future-focused, and vendor independent,
 providing a full-featured and intuitive experience within
 a highly composable user-centric text interface.
-The program is contained within
+`nb` is implemented as
 a single tightly engineered and [well-tested](#tests) shell script
 that can be
 installed, copied, or `curl`ed almost anywhere and just work,
