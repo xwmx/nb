@@ -104,7 +104,7 @@ so notes can be edited in other apps on any device.
 providing a full-featured and intuitive experience within
 a highly composable user-centric text interface.
 The entire program is contained within
-a single tightly engineered and [well-tested](#tests) shell script
+a single carefully crafted and [well-tested](#tests) shell script
 that can be
 installed, copied, or `curl`ed almost anywhere and just work,
 using a strategy inspired by
