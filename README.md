@@ -124,7 +124,7 @@ or dozens of notebooks containing thousands of notes, bookmarks, and other items
 
 <p align="center">
   <a href="#installation">Installation</a>&nbsp;·
-  <a href="#overview">Overview</a>
+  <a href="#overview">Overview</a>&nbsp;
 </p>
 
 <p align="center">
