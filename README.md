@@ -132,7 +132,7 @@ or dozens of notebooks containing thousands of notes, bookmarks, and other items
 </p>
 
 <p align="center">
-  <sup><a href="#top">&nbsp;↑&nbsp;</a></sup>
+  <a href="#top">&nbsp;↑&nbsp;</a>
 </p>
 
 ### Installation
@@ -350,7 +350,7 @@ the [`nb update`](#update) subcommand.
 </p>
 
 <p align="center">
-  <sup><a href="#nb">&nbsp;↑&nbsp;</a></sup>
+  <a href="#nb">&nbsp;↑&nbsp;</a>
 </p>
 
 To get started, simply run:
