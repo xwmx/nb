@@ -2038,7 +2038,13 @@ See [`bookmark help`](#bookmark-help) for more information.
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>
+    <a href="#overview">↑&nbsp;</a>·
+    <a href="#add"><code>nb add</code></a>,
+    <a href="#bookmark"><code>nb bookmark</code></a>,
+    <a href="#browse"><code>nb browse</code></a>,
+    <a href="#list"><code>nb list</code></a>,
+    <a href="#ls"><code>nb ls</code></a>,
+    <a href="#search"><code>nb search</code></a>
   </sup>
 </p>
 
@@ -2202,7 +2208,8 @@ For more information about browsing, see
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>
+    <a href="#overview">↑&nbsp;</a>·
+    <a href="#browse"><code>nb browse</code></a>
   </sup>
 </p>
 
