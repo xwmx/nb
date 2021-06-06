@@ -134,6 +134,10 @@ or dozens of notebooks containing thousands of notes, bookmarks, and other items
   <a href="#help">Help</a>
 </p>
 
+<p align="center">
+  <sup><a href="#top">&nbsp;↑&nbsp;</a></sup>
+</p>
+
 ### Installation
 
 #### Dependencies
