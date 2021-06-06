@@ -2,6 +2,67 @@
 
 load test_helper
 
+# pins ########################################################################
+
+@test "'delete' removes .pindex entry." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/File One.md"    --title "Title One"
+    "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
+    "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
+    "${_NB}" add "Example Folder/File Four.md"   --title "Title Four"
+
+    "${_NB}" pin Example\ Folder/1
+    "${_NB}" pin Example\ Folder/4
+
+    diff                                        \
+      <(printf "File One.md\\nFile Four.md\\n") \
+      <(cat "${NB_DIR}/home/Example Folder/.pindex")
+
+    run "${_NB}" list Example\ Folder/ --with-pinned
+
+    printf "\${status}: '%s'\\n" "${status}"
+    printf "\${output}: '%s'\\n" "${output}"
+
+    [[ "${status}"    -eq 0                             ]]
+    [[ "${#lines[@]}" -eq 4                             ]]
+
+    [[ "${lines[0]}"  =~  \.*[.*Example\ Folder/1.*].*\ 📌\ Title\ One  ]]
+    [[ "${lines[1]}"  =~  \.*[.*Example\ Folder/4.*].*\ 📌\ Title\ Four ]]
+    [[ "${lines[2]}"  =~  \.*[.*Example\ Folder/3.*].*\ Title\ Three    ]]
+    [[ "${lines[3]}"  =~  \.*[.*Example\ Folder/2.*].*\ Title\ Two      ]]
+  }
+
+  run "${_NB}" delete Example\ Folder/4 --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                               ]]
+  [[ "${#lines[@]}" -eq 1                               ]]
+
+  diff                          \
+    <(printf "File One.md\\n")  \
+    <(cat "${NB_DIR}/home/Example Folder/.pindex")
+
+  [[ "${lines[0]}"  =~  \
+Deleted\:\ \ .*[.*Example\ Folder/4.*].*\ .*File\ Four.md.*\ \"Title\ Four\"   ]]
+
+  run "${_NB}" list Example\ Folder/ --with-pinned
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                               ]]
+  [[ "${#lines[@]}" -eq 3                               ]]
+
+
+  [[ "${lines[0]}"  =~  \.*[.*Example\ Folder/1.*].*\ 📌\ Title\ One    ]]
+  [[ "${lines[1]}"  =~  \.*[.*Example\ Folder/3.*].*\ Title\ Three      ]]
+  [[ "${lines[2]}"  =~  \.*[.*Example\ Folder/2.*].*\ Title\ Two        ]]
+}
+
 # shortcut aliases ############################################################
 
 @test "'- <id>' deletes properly without errors." {

@@ -12166,7 +12166,9 @@ _delete() {
 
     if [[ -n "${_basename}" ]] && [[ -e "${_notebook_path}/${_relative_path}" ]]
     then
-      if [[ -d "${_notebook_path}/${_relative_path}"            ]] &&
+      _pin unpin "${_notebook_path}/${_relative_path}" &> /dev/null || :
+
+      if [[ -d "${_notebook_path}/${_relative_path}"            ]]  &&
          [[ -z "$(ls -A "${_notebook_path}/${_relative_path}")" ]]
       then
         rm -r "${_notebook_path:?}/${_relative_path:?}"
@@ -13773,7 +13775,8 @@ _pin() {
 
   if [[ -z "${_selector:-}" ]]
   then
-    _exit_1 _help "${_subcommand}"
+    _warn _help "${_subcommand}"
+    return 1
   fi
 
   local _item_path=
@@ -13798,7 +13801,8 @@ _pin() {
      [[   -z "${_notebook_path:-}"    ]] ||
      [[   -z "${_relative_path:-}"    ]]
   then
-    _exit_1 printf "Not found: %s\\n" "${_selector}"
+    _warn printf "Not found: %s\\n" "${_selector}"
+    return 1
   fi
 
   case "${_subcommand:-}" in
@@ -13806,9 +13810,10 @@ _pin() {
       if [[ ! -e "${_pindex_path}"    ]] ||
          ! grep -q "^${_basename}$" "${_pindex_path}"
       then
-        _exit_1 printf          \
-          "Not pinned: %s\\n"   \
+        _warn printf                  \
+          "Not pinned: %s\\n"         \
           "$(_color_primary "${_selector}")"
+        return 1
       fi
 
       _sed_i -e "s/^${_basename}$//g"   "${_pindex_path}"
@@ -13831,9 +13836,10 @@ _pin() {
 
       if grep -q "^${_basename}$" "${_pindex_path}"
       then
-        _exit_1 printf                \
+        _warn printf                  \
           "Already pinned: %s\\n"     \
           "$(_color_primary "${_selector}")"
+        return 1
       else
         printf "%s\\n" "${_basename}" >> "${_pindex_path}"
         _sed_i -e '/^[[:space:]]*$/d'    "${_pindex_path}" # remove blank lines
