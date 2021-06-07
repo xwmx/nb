@@ -57,7 +57,6 @@ Deleted\:\ \ .*[.*Example\ Folder/4.*].*\ .*File\ Four.md.*\ \"Title\ Four\"   ]
   [[ "${status}"    -eq 0                               ]]
   [[ "${#lines[@]}" -eq 3                               ]]
 
-
   [[ "${lines[0]}"  =~  \.*[.*Example\ Folder/1.*].*\ 📌\ Title\ One    ]]
   [[ "${lines[1]}"  =~  \.*[.*Example\ Folder/3.*].*\ Title\ Three      ]]
   [[ "${lines[2]}"  =~  \.*[.*Example\ Folder/2.*].*\ Title\ Two        ]]

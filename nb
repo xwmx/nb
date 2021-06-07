@@ -4450,7 +4450,6 @@ $(_color_primary "Indicators"):
   ${_NB_INDICATOR_DOCUMENT:-} PDF, Word, or Open Office document
   ${_NB_INDICATOR_VIDEO:-} Video
 
-
 $(_color_primary "See Also"):
   ${_ME} help browse
   ${_ME} help ls
@@ -6587,7 +6586,6 @@ HEREDOC
 
           IFS='' read -r -e -d $'\n' -p             \
 "local $(_color_primary "email:") " _new_local_email
-
 
           IFS='' read -r -e -d $'\n' -p             \
 "local $(_color_primary "name:")  " _new_local_name

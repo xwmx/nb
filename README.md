@@ -4665,7 +4665,6 @@ Front matter is defined within a Markdown file with triple-dashed lines
 (`---`) indicating the start and end of the block, with each field represented
 by a key name with a colon followed by the value:
 
-
 ```markdown
 ---
 title: Example Title
@@ -4805,7 +4804,6 @@ nb u example-notebook
 ```
 
 For more commands and options, run `nb help` or `nb help <subcommand>`
-
 
 <p align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/gui-browse-themes.png"
@@ -5382,7 +5380,6 @@ Options:
   -t, --tags <tag1>,<tag2>...  A comma-separated list of tags.
   --title <title>              The bookmark title. When not specified,
                                `nb` will use the html <title> tag.
-
 
 Subcommands:
   (default)  Add a new bookmark for <url>, or list bookmarks.
