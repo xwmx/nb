@@ -5454,7 +5454,6 @@ Shortcut Alias: `nb bk`
 [↑&nbsp;](#help)· See also:
 [Browsing](#-browsing),
 [Linking](#-linking),
-[Tagging](#-tagging),
 [`add`](#add),
 [`delete`](#delete),
 [`edit`](#edit),
