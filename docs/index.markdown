@@ -103,7 +103,7 @@ so notes can be edited in other apps on any device.
 `nb` is designed to be portable, future-focused, and vendor independent,
 providing a full-featured and intuitive experience within
 a highly composable user-centric text interface.
-The entire program is
+The entire program is contained within
 a single [well-tested](#tests) shell script
 that can be
 installed, copied, or `curl`ed almost anywhere and just work,
@@ -130,8 +130,15 @@ or dozens of notebooks containing thousands of notes, bookmarks, and other items
 
 <p align="center">
   <a href="#installation">Installation</a>&nbsp;·
-  <a href="#overview">Overview</a>&nbsp;·
+  <a href="#overview">Overview</a>&nbsp;&nbsp;
+</p>
+
+<p align="center">
   <a href="#help">Help</a>
+</p>
+
+<p align="center">
+  <a href="#top">&nbsp;↑&nbsp;</a>
 </p>
 
 ### Installation
@@ -349,7 +356,7 @@ the [`nb update`](#update) subcommand.
 </p>
 
 <p align="center">
-  <sup><a href="#nb">&nbsp;↑&nbsp;</a></sup>
+  <a href="#nb">&nbsp;↑&nbsp;</a>
 </p>
 
 To get started, simply run:
@@ -2031,7 +2038,13 @@ See [`bookmark help`](#bookmark-help) for more information.
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>
+    <a href="#overview">↑&nbsp;</a>·
+    <a href="#add"><code>nb add</code></a>,
+    <a href="#bookmark"><code>nb bookmark</code></a>,
+    <a href="#browse"><code>nb browse</code></a>,
+    <a href="#list"><code>nb list</code></a>,
+    <a href="#ls"><code>nb ls</code></a>,
+    <a href="#search"><code>nb search</code></a>
   </sup>
 </p>
 
@@ -2195,7 +2208,8 @@ For more information about browsing, see
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>
+    <a href="#overview">↑&nbsp;</a>·
+    <a href="#browse"><code>nb browse</code></a>
   </sup>
 </p>
 
@@ -2246,8 +2260,8 @@ add the notebook name with a colon before the identifier:
 The text for a link can be specified after a pipe `|` character:
 
 ```bash
-# render link to item 123 in the "example" notebook as [[Example link text.]]
-[[example:123|Example link text.]]
+# render link to item 123 in the "example" notebook as [[Example Link Text]]
+[[example:123|Example Link Text]]
 ```
 
 <a href="#-linking">[[wiki-style links]]</a> cooperate well with
@@ -4657,7 +4671,6 @@ Front matter is defined within a Markdown file with triple-dashed lines
 (`---`) indicating the start and end of the block, with each field represented
 by a key name with a colon followed by the value:
 
-
 ```markdown
 ---
 title: Example Title
@@ -4797,7 +4810,6 @@ nb u example-notebook
 ```
 
 For more commands and options, run `nb help` or `nb help <subcommand>`
-
 
 <p align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/gui-browse-themes.png"
@@ -5375,7 +5387,6 @@ Options:
   --title <title>              The bookmark title. When not specified,
                                `nb` will use the html <title> tag.
 
-
 Subcommands:
   (default)  Add a new bookmark for <url>, or list bookmarks.
              Bookmarks can also be added with `nb <url>`
@@ -5445,6 +5456,7 @@ Shortcut Alias: `nb bk`
 
 [↑&nbsp;](#help)· See also:
 [Browsing](#-browsing),
+[Linking](#-linking),
 [`add`](#add),
 [`delete`](#delete),
 [`edit`](#edit),
