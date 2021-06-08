@@ -7553,12 +7553,7 @@ HEREDOC
 
     if ((_print_unique_file_path))
     then
-      local _unique_file_path=
-      _unique_file_path="$(
-        _get_unique_relative_path "${_file_path:-".${NB_DEFAULT_EXTENSION}"}"
-      )"
-
-      printf "%s\\n" "${_unique_file_path:-}"
+      _get_unique_relative_path "${_file_path:-".${NB_DEFAULT_EXTENSION}"}"
       return 0
     fi
 
