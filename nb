@@ -1143,8 +1143,8 @@ _alias_subcommand() {
     return 1
   fi
 
-  eval "_describe_${_alias}() { _describe_${_subcommand}  \"\${@}\"; }"
-  eval "_${_alias}()          { _${_subcommand}           \"\${@}\"; }"
+  eval "_describe_${_alias}() { _describe_${_subcommand}  \"\${@:-}\"; }"
+  eval "_${_alias}()          { _${_subcommand}           \"\${@:-}\"; }"
 }
 
 # _file_is_archive()
