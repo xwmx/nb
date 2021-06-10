@@ -23,8 +23,12 @@ load test_helper
 
   [[ "${status}" -eq 0                              ]]
 
-  # Creates a new file:
+  # Prints output:
 
+  [[ "${output}" =~  \
+Added:\ .*\[.*Example\ Notebook:1.*\].*\ .*Example\ Notebook:File\ One\.md.*\ \"Example\ Title\"  ]]
+
+  # Creates a new file:
 
   [[ !  -f "${NB_DIR}/home/File One.md"             ]]
   [[    -f "${NB_DIR}/Example Notebook/File One.md" ]]
@@ -43,7 +47,7 @@ HEREDOC
 
   cd "${NB_DIR}/Example Notebook" || return 1
   printf "\$(git log): '%s'\n" "$(git log)"
-  while [[ -n "$(git status --porcelain)" ]]
+  while [[ -n "$(git status --porcelain)"           ]]
   do
     sleep 1
   done
@@ -69,8 +73,12 @@ HEREDOC
 
   [[ "${status}" -eq 0                              ]]
 
-  # Creates a new file:
+  # Prints output:
 
+  [[ "${output}" =~  \
+Added:\ .*\[.*Example\ Notebook:1.*\].*\ .*Example\ Notebook:File\ One\.md.*\ \"Example\ Title\"  ]]
+
+  # Creates a new file:
 
   [[ !  -f "${NB_DIR}/home/File One.md"             ]]
   [[    -f "${NB_DIR}/Example Notebook/File One.md" ]]
@@ -113,8 +121,12 @@ HEREDOC
 
   [[ "${status}" -eq 0                    ]]
 
-  # Creates a new file:
+  # Prints output:
 
+  [[ "${output}" =~  \
+Added:\ .*\[.*1.*\].*\ .*File\ One\.md.*\ \"Example\ Title\"  ]]
+
+  # Creates a new file:
 
   [[ -f "${NB_DIR}/home/File One.md"      ]]
 
@@ -151,13 +163,17 @@ HEREDOC
 
   # Returns status 0:
 
-  [[ "${status}" -eq 0      ]]
+  [[ "${status}"      -eq 0                     ]]
+
+  # Prints output:
+
+  [[ "${output}"      =~ Added:\ .*\[.*1.*\].*  ]]
 
   # Creates a new note file with $EDITOR:
 
   _files=($(ls "${NB_DIR}/home/"))
 
-  [[ "${#_files[@]}" -eq 1  ]]
+  [[ "${#_files[@]}"  -eq 1                     ]]
 
   grep -q '# mock_editor' "${NB_DIR}/home"/*
 
@@ -165,7 +181,7 @@ HEREDOC
 
   cd "${NB_DIR}/home" || return 1
   printf "\$(git log): '%s'\n" "$(git log)"
-  while [[ -n "$(git status --porcelain)" ]]
+  while [[ -n "$(git status --porcelain)"       ]]
   do
     sleep 1
   done
@@ -185,13 +201,17 @@ HEREDOC
 
   # Returns status 0:
 
-  [[ "${status}" -eq 0      ]]
+  [[ "${status}"      -eq 0                     ]]
+
+  # Prints output:
+
+  [[ "${output}"      =~ Added:\ .*\[.*1.*\].*  ]]
 
   # Creates a new note file with $EDITOR:
 
   _files=($(ls "${NB_DIR}/home/"))
 
-  [[ "${#_files[@]}" -eq 1  ]]
+  [[ "${#_files[@]}"  -eq 1                     ]]
 
   grep -q '# mock_editor' "${NB_DIR}/home"/*
 
@@ -199,7 +219,7 @@ HEREDOC
 
   cd "${NB_DIR}/home" || return 1
   printf "\$(git log): '%s'\n" "$(git log)"
-  while [[ -n "$(git status --porcelain)" ]]
+  while [[ -n "$(git status --porcelain)"       ]]
   do
     sleep 1
   done
@@ -212,20 +232,24 @@ HEREDOC
     run "${_NB}" init
   }
 
-  run "${_NB}" add
+  run "${_NB}" new
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0:
 
-  [[ "${status}" -eq 0      ]]
+  [[ "${status}"      -eq 0                     ]]
+
+  # Prints output:
+
+  [[ "${output}"      =~ Added:\ .*\[.*1.*\].*  ]]
 
   # Creates a new note file with $EDITOR:
 
   _files=($(ls "${NB_DIR}/home/"))
 
-  [[ "${#_files[@]}" -eq 1  ]]
+  [[ "${#_files[@]}"  -eq 1                     ]]
 
   grep -q '# mock_editor' "${NB_DIR}/home"/*
 
@@ -233,7 +257,7 @@ HEREDOC
 
   cd "${NB_DIR}/home" || return 1
   printf "\$(git log): '%s'\n" "$(git log)"
-  while [[ -n "$(git status --porcelain)" ]]
+  while [[ -n "$(git status --porcelain)"       ]]
   do
     sleep 1
   done
@@ -453,7 +477,7 @@ Example: content.\\n")
 
     # Creates new note file:
 
-    [[ -f "${NB_DIR}/home/example_title.markdown" ]]
+    [[ -f "${NB_DIR}/home/example_title.markdown"     ]]
 
     diff                                              \
       <(cat "${NB_DIR}/home/example_title.markdown")  \
@@ -486,8 +510,8 @@ HEREDOC
 
     [[ -e "${NB_DIR}/home/.index" ]]
 
-    diff                      \
-      <(ls "${NB_DIR}/home")  \
+    diff                          \
+      <(ls "${NB_DIR}/home")      \
       <(cat "${NB_DIR}/home/.index")
 
     # Prints output:
@@ -645,7 +669,7 @@ HEREDOC
 
   # Creates new note file with content:
 
-  [[ -f "${NB_DIR}/home/example_title.md" ]]
+  [[ -f "${NB_DIR}/home/example_title.md"     ]]
 
   diff                                        \
     <(cat "${NB_DIR}/home/example_title.md")  \
