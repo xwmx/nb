@@ -4902,9 +4902,12 @@ _list() {
     else
       if ((_with_pinned)) && ((${#_pinned_basenames[@]}))
       then
-        printf "%s\\n" "${_pinned_basenames[@]:-}"                    \
-          | _list_files "${_list_path}" "${_list_files_options[@]:-}" \
-              --standard-input || :
+        {
+          printf "%s\\n" "${_pinned_basenames[@]:-}"
+        } | {
+          _list_files "${_list_path}" "${_list_files_options[@]:-}" \
+            --standard-input || :
+        }
       fi
 
       if ! ((_only_pinned))
