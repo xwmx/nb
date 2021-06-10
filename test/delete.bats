@@ -2,6 +2,148 @@
 
 load test_helper
 
+# shortcut aliases ############################################################
+
+@test "'<notebook>:- <id>' deletes properly without errors." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" add "Example Notebook:Example File.md"
+
+    _original_index="$(cat "${NB_DIR}/Example Notebook/.index")"
+
+    [[ -e "${NB_DIR}/Example Notebook/Example File.md"  ]]
+  }
+
+  run "${_NB}" Example\ Notebook:- 1 --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0                                  ]]
+
+  # Deletes file:
+
+  [[ ! -e "${NB_DIR}/Example Notebook/Example File.md"  ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/Example Notebook" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Delete'
+
+  # Deletes entry from index:
+
+  [[ -e "${NB_DIR}/Example Notebook/.index"             ]]
+  [[    "$(ls "${NB_DIR}/Example Notebook")"  == \
+          "$(cat "${NB_DIR}/Example Notebook/.index")"  ]]
+  [[    "${_original_index}"                  != \
+          "$(cat "${NB_DIR}/Example Notebook/.index")"  ]]
+
+  # Prints output:
+
+  [[ "${status}" -eq  0                                                     ]]
+  [[ "${output}" =~   Deleted:                                              ]]
+  [[ "${output}" =~   Example\ Notebook:1.*Example\ File.md.*\"mock_editor  ]]
+}
+
+@test "'- <id>' deletes properly without errors." {
+  {
+    "${_NB}" init
+    "${_NB}" add "example.md"
+
+    _original_index="$(cat "${NB_DIR}/home/.index")"
+
+    [[ -e "${NB_DIR}/home/example.md"     ]]
+  }
+
+  run "${_NB}" - 1 --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0                    ]]
+
+  # Deletes file:
+
+  [[ ! -e "${NB_DIR}/home/example.md"     ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Delete'
+
+  # Deletes entry from index:
+
+  [[ -e "${NB_DIR}/home/.index"                                       ]]
+  [[    "$(ls "${NB_DIR}/home")"  == "$(cat "${NB_DIR}/home/.index")" ]]
+  [[    "${_original_index}"      != "$(cat "${NB_DIR}/home/.index")" ]]
+
+  # Prints output:
+
+  [[ "${status}" -eq  0                             ]]
+  [[ "${output}" =~   Deleted:                      ]]
+  [[ "${output}" =~   1.*example.md.*\"mock_editor  ]]
+}
+
+@test "'d <id>' deletes properly without errors." {
+  {
+    "${_NB}" init
+    "${_NB}" add "example.md"
+
+    _original_index="$(cat "${NB_DIR}/home/.index")"
+
+    [[ -e "${NB_DIR}/home/example.md"     ]]
+  }
+
+  run "${_NB}" d 1 --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0                    ]]
+
+  # Deletes file:
+
+  [[ ! -e "${NB_DIR}/home/example.md"     ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Delete'
+
+  # Deletes entry from index:
+
+  [[ -e "${NB_DIR}/home/.index"                                       ]]
+  [[    "$(ls "${NB_DIR}/home")"  == "$(cat "${NB_DIR}/home/.index")" ]]
+  [[    "${_original_index}"      != "$(cat "${NB_DIR}/home/.index")" ]]
+
+  # Prints output:
+
+  [[ "${status}" -eq  0                             ]]
+  [[ "${output}" =~   Deleted:                      ]]
+  [[ "${output}" =~   1.*example.md.*\"mock_editor  ]]
+}
+
 # pins ########################################################################
 
 @test "'delete' removes .pindex entry." {
@@ -60,98 +202,6 @@ Deleted\:\ \ .*[.*Example\ Folder/4.*].*\ .*File\ Four.md.*\ \"Title\ Four\"   ]
   [[ "${lines[0]}"  =~  \.*[.*Example\ Folder/1.*].*\ 📌\ Title\ One    ]]
   [[ "${lines[1]}"  =~  \.*[.*Example\ Folder/3.*].*\ Title\ Three      ]]
   [[ "${lines[2]}"  =~  \.*[.*Example\ Folder/2.*].*\ Title\ Two        ]]
-}
-
-# shortcut aliases ############################################################
-
-@test "'- <id>' deletes properly without errors." {
-  {
-    "${_NB}" init
-    "${_NB}" add "example.md"
-
-    _original_index="$(cat "${NB_DIR}/home/.index")"
-
-    [[ -e "${NB_DIR}/home/example.md"  ]]
-  }
-
-  run "${_NB}" - 1 --force
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  # Returns status 0:
-
-  [[ "${status}" -eq 0                    ]]
-
-  # Deletes file:
-
-  [[ ! -e "${NB_DIR}/home/example.md"     ]]
-
-  # Creates git commit:
-
-  cd "${NB_DIR}/home" || return 1
-  while [[ -n "$(git status --porcelain)" ]]
-  do
-    sleep 1
-  done
-  git log | grep -q '\[nb\] Delete'
-
-  # Deletes entry from index:
-
-  [[ -e "${NB_DIR}/home/.index"                                       ]]
-  [[    "$(ls "${NB_DIR}/home")"  == "$(cat "${NB_DIR}/home/.index")" ]]
-  [[    "${_original_index}"      != "$(cat "${NB_DIR}/home/.index")" ]]
-
-  # Prints output:
-
-  [[ "${status}" -eq  0                             ]]
-  [[ "${output}" =~   Deleted:                      ]]
-  [[ "${output}" =~   1.*example.md.*\"mock_editor  ]]
-}
-
-@test "'d <id>' deletes properly without errors." {
-  {
-    "${_NB}" init
-    "${_NB}" add "example.md"
-
-    _original_index="$(cat "${NB_DIR}/home/.index")"
-
-    [[ -e "${NB_DIR}/home/example.md"  ]]
-  }
-
-  run "${_NB}" d 1 --force
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  # Returns status 0:
-
-  [[ "${status}" -eq 0                    ]]
-
-  # Deletes file:
-
-  [[ ! -e "${NB_DIR}/home/example.md"     ]]
-
-  # Creates git commit:
-
-  cd "${NB_DIR}/home" || return 1
-  while [[ -n "$(git status --porcelain)" ]]
-  do
-    sleep 1
-  done
-  git log | grep -q '\[nb\] Delete'
-
-  # Deletes entry from index:
-
-  [[ -e "${NB_DIR}/home/.index"                                       ]]
-  [[    "$(ls "${NB_DIR}/home")"  == "$(cat "${NB_DIR}/home/.index")" ]]
-  [[    "${_original_index}"      != "$(cat "${NB_DIR}/home/.index")" ]]
-
-  # Prints output:
-
-  [[ "${status}" -eq  0                             ]]
-  [[ "${output}" =~   Deleted:                      ]]
-  [[ "${output}" =~   1.*example.md.*\"mock_editor  ]]
 }
 
 # multiple selectors ##########################################################
@@ -727,18 +777,38 @@ Deleted\:\ \ .*[.*Example\ Folder/4.*].*\ .*File\ Four.md.*\ \"Title\ Four\"   ]
 
 # help ########################################################################
 
-@test "'help delete' exits with status 0." {
-  run "${_NB}" help delete
-
-  [[ "${status}" -eq 0 ]]
-}
-
-@test "'help delete' prints help information." {
+@test "'help delete' exits with status 0 and prints help information." {
   run "${_NB}" help delete
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[0]}" =~ Usage.*:    ]]
-  [[ "${lines[1]}" =~ nb\ delete  ]]
+  [[ "${status}"    -eq 0           ]]
+
+  [[ "${lines[0]}"  =~  Usage.*:    ]]
+  [[ "${lines[1]}"  =~  nb\ delete  ]]
+}
+
+@test "'help d' exits with status 0 and prints help information." {
+  run "${_NB}" help d
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0           ]]
+
+  [[ "${lines[0]}"  =~  Usage.*:    ]]
+  [[ "${lines[1]}"  =~  nb\ delete  ]]
+}
+
+@test "'help -' exits with status 0 and prints help information." {
+  run "${_NB}" help -
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0           ]]
+
+  [[ "${lines[0]}"  =~  Usage.*:    ]]
+  [[ "${lines[1]}"  =~  nb\ delete  ]]
 }
