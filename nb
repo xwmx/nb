@@ -4905,6 +4905,33 @@ _list() {
         {
           printf "%s\\n" "${_pinned_basenames[@]:-}"
         } | {
+          local         __pinned_basename=
+          while read -r __pinned_basename
+          do
+            if [[ -e "${_list_path:-}/${__pinned_basename:-}" ]]
+            then
+              printf "%s\\n" "${__pinned_basename:-}"
+            else
+              _sed_i -e "s/^${__pinned_basename}$//g" "${_list_path}/.pindex"
+              _sed_i -e '/^[[:space:]]*$/d'           "${_list_path}/.pindex"
+
+              if [[ ! -s "${_list_path}/.pindex"              ]]
+              then
+                rm -f "${_list_path}/.pindex"
+              fi
+
+              local _deleted_pin_relative_path="${__pinned_basename:-}"
+
+              if [[ -n "${_folder_relative_path:-}" ]]
+              then
+                _deleted_pin_relative_path="${_folder_relative_path}/${__pinned_basename}"
+              fi
+
+              _git checkpoint "${_notebook_path}"                   \
+                "[nb] Unpinned: ${_deleted_pin_relative_path}"
+            fi
+          done
+        } | {
           _list_files "${_list_path}" "${_list_files_options[@]:-}" \
             --standard-input || :
         }
