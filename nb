@@ -4922,7 +4922,7 @@ _list() {
 
               local _deleted_pin_relative_path="${__pinned_basename:-}"
 
-              if [[ -n "${_folder_relative_path:-}" ]]
+              if [[ -n "${_folder_relative_path:-}"           ]]
               then
                 _deleted_pin_relative_path="${_folder_relative_path}/${__pinned_basename}"
               fi
