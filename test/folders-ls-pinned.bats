@@ -6,7 +6,7 @@ export NB_PINNED_PATTERN="#pinned"
 
 # search-based pinning ########################################################
 
-@test "'NB_PINNED_PATTERN list [<folder>/]' (slash) prints items tagged with #pinned in the current folder." {
+@test "'NB_PINNED_PATTERN ls [<folder>/]' (slash) prints items tagged with #pinned in the current folder." {
   {
     "${_NB}" init
 
