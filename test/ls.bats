@@ -25,6 +25,162 @@ line four
 HEREDOC
 }
 
+# pinning #####################################################################
+
+@test "'ls' reconciles .pindex when file is deleted and deletes .pindex when empty." {
+  {
+    "${_NB}" init
+    "${_NB}" add "Example Folder/File One.md"    --title "Title One"
+    "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
+    "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
+    "${_NB}" add "Example Folder/File Four.md"   --title "Title Four"
+
+    "${_NB}" pin Example\ Folder/3
+
+    diff                                          \
+      <(printf "File Three.md\\n")                \
+      <(cat "${NB_DIR}/home/Example Folder/.pindex")
+
+    rm "${NB_DIR}/home/Example Folder/File Three.md"
+
+    [[ ! -e "${NB_DIR}/home/Example Folder/File Three.md" ]]
+
+    diff                                          \
+      <(printf "File Three.md\\n")                \
+      <(cat "${NB_DIR}/home/Example Folder/.pindex")
+  }
+
+  NB_PINNED_PATTERN="#pinned" run "${_NB}" ls Example\ Folder/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                                             ]]
+
+  [[ "${lines[0]}"  =~  .*home.*                                      ]]
+  [[ "${lines[1]}"  =~  --------                                      ]]
+  [[ "${lines[2]}"  =~  \.*[.*Example\ Folder/4.*].*\ Title\ Four     ]]
+  [[ "${lines[3]}"  =~  \.*[.*Example\ Folder/2.*].*\ Title\ Two      ]]
+  [[ "${lines[4]}"  =~  \.*[.*Example\ Folder/1.*].*\ Title\ One      ]]
+
+  [[ ! -e "${NB_DIR}/home/Example Folder/.pindex"                     ]]
+}
+
+@test "'ls' reconciles .pindex when folder is deleted." {
+  {
+    "${_NB}" init
+    "${_NB}" add "Example Folder/File One.md"   --title "Title One"
+    "${_NB}" add "Example Folder/File Two.md"   --title "Title Two"
+    "${_NB}" add "Example Folder/Folder Three"  --type  folder
+    "${_NB}" add "Example Folder/File Four.md"  --title "Title Four"
+
+    "${_NB}" pin Example\ Folder/1
+    "${_NB}" pin Example\ Folder/3
+
+    diff                                          \
+      <(printf "File One.md\\nFolder Three\\n")   \
+      <(cat "${NB_DIR}/home/Example Folder/.pindex")
+
+    rm -r "${NB_DIR}/home/Example Folder/Folder Three"
+
+    [[ ! -e "${NB_DIR}/home/Example Folder/Folder Three" ]]
+
+    diff                                          \
+      <(printf "File One.md\\nFolder Three\\n")   \
+      <(cat "${NB_DIR}/home/Example Folder/.pindex")
+  }
+
+  NB_PINNED_PATTERN="#pinned" run "${_NB}" ls Example\ Folder/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                                             ]]
+
+  [[ "${lines[0]}"  =~  .*home.*                                      ]]
+  [[ "${lines[1]}"  =~  --------                                      ]]
+  [[ "${lines[2]}"  =~  \.*[.*Example\ Folder/1.*].*\ 📌\ Title\ One  ]]
+  [[ "${lines[3]}"  =~  \.*[.*Example\ Folder/4.*].*\ Title\ Four     ]]
+  [[ "${lines[4]}"  =~  \.*[.*Example\ Folder/2.*].*\ Title\ Two      ]]
+
+  diff                                            \
+    <(printf "File One.md\\n")                    \
+    <(cat "${NB_DIR}/home/Example Folder/.pindex")
+}
+
+@test "'ls' reconciles .pindex when file is deleted." {
+  {
+    "${_NB}" init
+    "${_NB}" add "Example Folder/File One.md"    --title "Title One"
+    "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
+    "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
+    "${_NB}" add "Example Folder/File Four.md"   --title "Title Four"
+
+    "${_NB}" pin Example\ Folder/1
+    "${_NB}" pin Example\ Folder/3
+
+    diff                                          \
+      <(printf "File One.md\\nFile Three.md\\n")  \
+      <(cat "${NB_DIR}/home/Example Folder/.pindex")
+
+    rm "${NB_DIR}/home/Example Folder/File Three.md"
+
+    [[ ! -e "${NB_DIR}/home/Example Folder/File Three.md" ]]
+
+    diff                                          \
+      <(printf "File One.md\\nFile Three.md\\n")  \
+      <(cat "${NB_DIR}/home/Example Folder/.pindex")
+  }
+
+  NB_PINNED_PATTERN="#pinned" run "${_NB}" ls Example\ Folder/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                                             ]]
+
+  [[ "${lines[0]}"  =~  .*home.*                                      ]]
+  [[ "${lines[1]}"  =~  --------                                      ]]
+  [[ "${lines[2]}"  =~  \.*[.*Example\ Folder/1.*].*\ 📌\ Title\ One  ]]
+  [[ "${lines[3]}"  =~  \.*[.*Example\ Folder/4.*].*\ Title\ Four     ]]
+  [[ "${lines[4]}"  =~  \.*[.*Example\ Folder/2.*].*\ Title\ Two      ]]
+
+  diff                                            \
+    <(printf "File One.md\\n")  \
+    <(cat "${NB_DIR}/home/Example Folder/.pindex")
+}
+
+@test "'ls' prints list with items pinned." {
+  {
+    "${_NB}" init
+    "${_NB}" add "File One.md"    --title "Title One"   --content "#pinned"
+    "${_NB}" add "File Two.md"    --title "Title Two"
+    "${_NB}" add "File Three.md"  --title "Title Three"
+    "${_NB}" add "File Four.md"   --title "Title Four"
+
+    "${_NB}" pin 1
+    "${_NB}" pin 4
+
+    diff                                          \
+      <(printf "File One.md\\nFile Four.md\\n")   \
+      <(cat "${NB_DIR}/home/.pindex")
+  }
+
+  NB_PINNED_PATTERN="#pinned" run "${_NB}" ls
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                             ]]
+
+  [[ "${lines[0]}"  =~  .*home.*                      ]]
+  [[ "${lines[1]}"  =~  --------                      ]]
+  [[ "${lines[2]}"  =~  \.*[.*1.*].*\ 📌\ Title\ One  ]]
+  [[ "${lines[3]}"  =~  \.*[.*4.*].*\ 📌\ Title\ Four ]]
+  [[ "${lines[4]}"  =~  \.*[.*3.*].*\ Title\ Three    ]]
+  [[ "${lines[5]}"  =~  \.*[.*2.*].*\ Title\ Two      ]]
+}
+
 # edge cases ##################################################################
 
 @test "'ls <query>' with partial notebook name match prints 'not found' message." {

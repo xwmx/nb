@@ -3,6 +3,267 @@
 
 load test_helper
 
+# aliases ####################################################################
+
+@test "'<notebook>:+' creates new note with editor." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+  }
+
+  run "${_NB}" Example\ Notebook:+  \
+    --title     "Example Title"     \
+    --filename  "File One.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0                              ]]
+
+  # Prints output:
+
+  [[ "${output}" =~  \
+Added:\ .*\[.*Example\ Notebook:1.*\].*\ .*Example\ Notebook:File\ One\.md.*\ \"Example\ Title\"  ]]
+
+  # Creates a new file:
+
+  [[ !  -f "${NB_DIR}/home/File One.md"             ]]
+  [[    -f "${NB_DIR}/Example Notebook/File One.md" ]]
+
+
+  diff                                              \
+    <(cat "${NB_DIR}/Example Notebook/File One.md") \
+    <(cat <<HEREDOC
+# Example Title
+
+# mock_editor ${NB_DIR}/Example Notebook/File One
+HEREDOC
+)
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/Example Notebook" || return 1
+  printf "\$(git log): '%s'\n" "$(git log)"
+  while [[ -n "$(git status --porcelain)"           ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+}
+
+@test "'<notebook>:+ --content <content>' creates new note without opening editor." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+  }
+
+  run "${_NB}" Example\ Notebook:+  \
+    --title     "Example Title"     \
+    --filename  "File One.md"       \
+    --content   "Content one."
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0                              ]]
+
+  # Prints output:
+
+  [[ "${output}" =~  \
+Added:\ .*\[.*Example\ Notebook:1.*\].*\ .*Example\ Notebook:File\ One\.md.*\ \"Example\ Title\"  ]]
+
+  # Creates a new file:
+
+  [[ !  -f "${NB_DIR}/home/File One.md"             ]]
+  [[    -f "${NB_DIR}/Example Notebook/File One.md" ]]
+
+
+  diff                                              \
+    <(cat "${NB_DIR}/Example Notebook/File One.md") \
+    <(cat <<HEREDOC
+# Example Title
+
+Content one.
+HEREDOC
+)
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/Example Notebook" || return 1
+  printf "\$(git log): '%s'\n" "$(git log)"
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+}
+
+@test "'+' creates new note." {
+  {
+    run "${_NB}" init
+  }
+
+  run "${_NB}" +                \
+    --title     "Example Title" \
+    --filename  "File One.md"   \
+    --content   "Content one."
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0                    ]]
+
+  # Prints output:
+
+  [[ "${output}" =~  \
+Added:\ .*\[.*1.*\].*\ .*File\ One\.md.*\ \"Example\ Title\"  ]]
+
+  # Creates a new file:
+
+  [[ -f "${NB_DIR}/home/File One.md"      ]]
+
+
+  diff                                    \
+    <(cat "${NB_DIR}/home/File One.md")   \
+    <(cat <<HEREDOC
+# Example Title
+
+Content one.
+HEREDOC
+)
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  printf "\$(git log): '%s'\n" "$(git log)"
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+}
+
+@test "'a' with no arguments creates new note file created with \$EDITOR." {
+  {
+    run "${_NB}" init
+  }
+
+  run "${_NB}" a
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}"      -eq 0                     ]]
+
+  # Prints output:
+
+  [[ "${output}"      =~ Added:\ .*\[.*1.*\].*  ]]
+
+  # Creates a new note file with $EDITOR:
+
+  _files=($(ls "${NB_DIR}/home/"))
+
+  [[ "${#_files[@]}"  -eq 1                     ]]
+
+  grep -q '# mock_editor' "${NB_DIR}/home"/*
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  printf "\$(git log): '%s'\n" "$(git log)"
+  while [[ -n "$(git status --porcelain)"       ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+}
+
+
+@test "'create' with no arguments creates new note file created with \$EDITOR." {
+  {
+    run "${_NB}" init
+  }
+
+  run "${_NB}" add
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}"      -eq 0                     ]]
+
+  # Prints output:
+
+  [[ "${output}"      =~ Added:\ .*\[.*1.*\].*  ]]
+
+  # Creates a new note file with $EDITOR:
+
+  _files=($(ls "${NB_DIR}/home/"))
+
+  [[ "${#_files[@]}"  -eq 1                     ]]
+
+  grep -q '# mock_editor' "${NB_DIR}/home"/*
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  printf "\$(git log): '%s'\n" "$(git log)"
+  while [[ -n "$(git status --porcelain)"       ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+}
+
+
+@test "'new' with no arguments creates new note file created with \$EDITOR." {
+  {
+    run "${_NB}" init
+  }
+
+  run "${_NB}" new
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}"      -eq 0                     ]]
+
+  # Prints output:
+
+  [[ "${output}"      =~ Added:\ .*\[.*1.*\].*  ]]
+
+  # Creates a new note file with $EDITOR:
+
+  _files=($(ls "${NB_DIR}/home/"))
+
+  [[ "${#_files[@]}"  -eq 1                     ]]
+
+  grep -q '# mock_editor' "${NB_DIR}/home"/*
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  printf "\$(git log): '%s'\n" "$(git log)"
+  while [[ -n "$(git status --porcelain)"       ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+}
+
 # --browse ####################################################################
 
 @test "'add --browse <item-selector>' creates new file with populated content and selector filename field." {
@@ -216,7 +477,7 @@ Example: content.\\n")
 
     # Creates new note file:
 
-    [[ -f "${NB_DIR}/home/example_title.markdown" ]]
+    [[ -f "${NB_DIR}/home/example_title.markdown"     ]]
 
     diff                                              \
       <(cat "${NB_DIR}/home/example_title.markdown")  \
@@ -249,8 +510,8 @@ HEREDOC
 
     [[ -e "${NB_DIR}/home/.index" ]]
 
-    diff                      \
-      <(ls "${NB_DIR}/home")  \
+    diff                          \
+      <(ls "${NB_DIR}/home")      \
       <(cat "${NB_DIR}/home/.index")
 
     # Prints output:
@@ -408,7 +669,7 @@ HEREDOC
 
   # Creates new note file with content:
 
-  [[ -f "${NB_DIR}/home/example_title.md" ]]
+  [[ -f "${NB_DIR}/home/example_title.md"     ]]
 
   diff                                        \
     <(cat "${NB_DIR}/home/example_title.md")  \
@@ -1731,166 +1992,64 @@ HEREDOC
   [[ "${#_files[@]}" -eq 0  ]]
 }
 
-# aliases ####################################################################
-
-@test "'+' creates new note." {
-  {
-    run "${_NB}" init
-  }
-
-  run "${_NB}" +                \
-    --title     "Example Title" \
-    --filename  "File One.md"   \
-    --content   "Content one."
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  # Returns status 0:
-
-  [[ "${status}" -eq 0      ]]
-
-  # Creates a new file:
-
-
-  [[ -f "${NB_DIR}/home/File One.md" ]]
-
-
-  diff \
-    <(cat "${NB_DIR}/home/File One.md") \
-    <(cat <<HEREDOC
-# Example Title
-
-Content one.
-HEREDOC
-)
-
-  # Creates git commit:
-
-  cd "${NB_DIR}/home" || return 1
-  printf "\$(git log): '%s'\n" "$(git log)"
-  while [[ -n "$(git status --porcelain)" ]]
-  do
-    sleep 1
-  done
-  git log | grep -q '\[nb\] Add'
-}
-
-@test "'a' with no arguments creates new note file created with \$EDITOR." {
-  {
-    run "${_NB}" init
-  }
-
-  run "${_NB}" a
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  # Returns status 0:
-
-  [[ "${status}" -eq 0      ]]
-
-  # Creates a new note file with $EDITOR:
-
-  _files=($(ls "${NB_DIR}/home/"))
-
-  [[ "${#_files[@]}" -eq 1  ]]
-
-  grep -q '# mock_editor' "${NB_DIR}/home"/*
-
-  # Creates git commit:
-
-  cd "${NB_DIR}/home" || return 1
-  printf "\$(git log): '%s'\n" "$(git log)"
-  while [[ -n "$(git status --porcelain)" ]]
-  do
-    sleep 1
-  done
-  git log | grep -q '\[nb\] Add'
-}
-
-
-@test "'create' with no arguments creates new note file created with \$EDITOR." {
-  {
-    run "${_NB}" init
-  }
-
-  run "${_NB}" add
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  # Returns status 0:
-
-  [[ "${status}" -eq 0      ]]
-
-  # Creates a new note file with $EDITOR:
-
-  _files=($(ls "${NB_DIR}/home/"))
-
-  [[ "${#_files[@]}" -eq 1  ]]
-
-  grep -q '# mock_editor' "${NB_DIR}/home"/*
-
-  # Creates git commit:
-
-  cd "${NB_DIR}/home" || return 1
-  printf "\$(git log): '%s'\n" "$(git log)"
-  while [[ -n "$(git status --porcelain)" ]]
-  do
-    sleep 1
-  done
-  git log | grep -q '\[nb\] Add'
-}
-
-
-@test "'new' with no arguments creates new note file created with \$EDITOR." {
-  {
-    run "${_NB}" init
-  }
-
-  run "${_NB}" add
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  # Returns status 0:
-
-  [[ "${status}" -eq 0      ]]
-
-  # Creates a new note file with $EDITOR:
-
-  _files=($(ls "${NB_DIR}/home/"))
-
-  [[ "${#_files[@]}" -eq 1  ]]
-
-  grep -q '# mock_editor' "${NB_DIR}/home"/*
-
-  # Creates git commit:
-
-  cd "${NB_DIR}/home" || return 1
-  printf "\$(git log): '%s'\n" "$(git log)"
-  while [[ -n "$(git status --porcelain)" ]]
-  do
-    sleep 1
-  done
-  git log | grep -q '\[nb\] Add'
-}
-
 # help ########################################################################
 
-@test "'help add' exits with status 0." {
-  run "${_NB}" help add
-
-  [[ "${status}" -eq 0 ]]
-}
-
-@test "'help add' returns usage information." {
+@test "'help add' exits with status 0 and prints help information." {
   run "${_NB}" help add
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[0]}" =~ Usage.*: ]]
-  [[ "${lines[1]}" =~  nb\ add ]]
+  [[ "${status}"    -eq 0         ]]
+
+  [[ "${lines[0]}"  =~  Usage.*:  ]]
+  [[ "${lines[1]}"  =~  nb\ add   ]]
+}
+
+@test "'help a' exits with status 0 and prints help information." {
+  run "${_NB}" help a
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0         ]]
+
+  [[ "${lines[0]}"  =~  Usage.*:  ]]
+  [[ "${lines[1]}"  =~  nb\ add   ]]
+}
+
+@test "'help +' exits with status 0 and prints help information." {
+  run "${_NB}" help +
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0         ]]
+
+  [[ "${lines[0]}"  =~  Usage.*:  ]]
+  [[ "${lines[1]}"  =~  nb\ add   ]]
+}
+
+@test "'help create' exits with status 0 and prints help information." {
+  run "${_NB}" help create
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0         ]]
+
+  [[ "${lines[0]}"  =~  Usage.*:  ]]
+  [[ "${lines[1]}"  =~  nb\ add   ]]
+}
+
+@test "'help new' exits with status 0 and prints help information." {
+  run "${_NB}" help new
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0         ]]
+
+  [[ "${lines[0]}"  =~  Usage.*:  ]]
+  [[ "${lines[1]}"  =~  nb\ add   ]]
 }

@@ -45,10 +45,10 @@ _mock_editor() {
     return 1
   fi
 
-  if [[ -e "${_path:-}"       ]]
-  then
-    printf "[mock_editor] Already exists: %s\\n" "${_path:-}"
-  fi
+  # if [[ -e "${_path:-}"       ]]
+  # then
+  #   printf "[mock_editor] Already exists: %s\\n" "${_path:-}"
+  # fi
 
   printf "# mock_editor %s\\n" "${_path%.*}" >> "${_path:-}"
 }

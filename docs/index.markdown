@@ -7772,7 +7772,7 @@ Description:
 Any folder may contain an optional plain text file named `.pindex`
 containing a list of basenames from that folder, one per line, that should
 be treated as [pinned](#-pinning), meaning they appear first in some
-list operations, including `nb` and `nb ls`. Entires are added to a
+list operations, including `nb` and `nb ls`. Entries are added to a
 `.pindex` file with [`nb pin`](#pin) and removed with [`nb unpin`](#unpin).
 
 #### Archived Notebooks

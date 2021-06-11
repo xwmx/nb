@@ -74,7 +74,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="6.3.3"
+_VERSION="6.3.4"
 
 # $_ME
 #
@@ -1143,8 +1143,8 @@ _alias_subcommand() {
     return 1
   fi
 
-  eval "_describe_${_alias}() { _describe_${_subcommand}  \"\${@}\"; }"
-  eval "_${_alias}()          { _${_subcommand}           \"\${@}\"; }"
+  eval "_describe_${_alias}() { _describe_${_subcommand}  \"\${@:-}\"; }"
+  eval "_${_alias}()          { _${_subcommand}           \"\${@:-}\"; }"
 }
 
 # _file_is_archive()
@@ -4902,9 +4902,39 @@ _list() {
     else
       if ((_with_pinned)) && ((${#_pinned_basenames[@]}))
       then
-        printf "%s\\n" "${_pinned_basenames[@]:-}"                    \
-          | _list_files "${_list_path}" "${_list_files_options[@]:-}" \
-              --standard-input || :
+        {
+          printf "%s\\n" "${_pinned_basenames[@]:-}"
+        } | {
+          local         __pinned_basename=
+          while read -r __pinned_basename
+          do
+            if [[ -e "${_list_path:-}/${__pinned_basename:-}" ]]
+            then
+              printf "%s\\n" "${__pinned_basename:-}"
+            else
+              _sed_i -e "s/^${__pinned_basename}$//g" "${_list_path}/.pindex"
+              _sed_i -e '/^[[:space:]]*$/d'           "${_list_path}/.pindex"
+
+              if [[ ! -s "${_list_path}/.pindex"              ]]
+              then
+                rm -f "${_list_path}/.pindex"
+              fi
+
+              local _deleted_pin_relative_path="${__pinned_basename:-}"
+
+              if [[ -n "${_folder_relative_path:-}"           ]]
+              then
+                _deleted_pin_relative_path="${_folder_relative_path}/${__pinned_basename}"
+              fi
+
+              _git checkpoint "${_notebook_path}"                   \
+                "[nb] Unpinned: ${_deleted_pin_relative_path}"
+            fi
+          done
+        } | {
+          _list_files "${_list_path}" "${_list_files_options[@]:-}" \
+            --standard-input || :
+        }
       fi
 
       if ! ((_only_pinned))
@@ -7553,12 +7583,7 @@ HEREDOC
 
     if ((_print_unique_file_path))
     then
-      local _unique_file_path=
-      _unique_file_path="$(
-        _get_unique_relative_path "${_file_path:-".${NB_DEFAULT_EXTENSION}"}"
-      )"
-
-      printf "%s\\n" "${_unique_file_path:-}"
+      _get_unique_relative_path "${_file_path:-".${NB_DEFAULT_EXTENSION}"}"
       return 0
     fi
 
@@ -7990,6 +8015,8 @@ _SUBCOMMANDS=(
 # Primary subcommands that appear in documentation. For example, some aliases
 # are omitted from this list. This list is also used for tab completion.
 _DOCUMENTED_SUBCOMMANDS=(
+  +
+  -
   a
   add
   ar
@@ -8112,12 +8139,12 @@ _GIT_SUBCOMMANDS=(
 # $_SUBCOMMANDS_PATTERN
 #
 # The contents of the `$_SUBCOMMANDS` array, joined with '|'.
-_SUBCOMMANDS_PATTERN="^$(_join '$|^' "${_SUBCOMMANDS[@]}")$"
+_SUBCOMMANDS_PATTERN="^$(_join '$|^' "${_SUBCOMMANDS[@]}")$|^\+$|^\-$"
 
 # $_GIT_SUBCOMMANDS_PATTERN
 #
 # The contents of the `$_GIT_SUBCOMMANDS` array, joined with '|'.
-_GIT_SUBCOMMANDS_PATTERN="^$(_join '$|^' "${_GIT_SUBCOMMANDS[@]}")$"
+_GIT_SUBCOMMANDS_PATTERN="^$(_join '$|^' "${_GIT_SUBCOMMANDS[@]}")$|^\+$|^\-$"
 
 # _is_valid_subcommand()
 #
@@ -10995,6 +11022,7 @@ _add() {
     printf "Added: %s\\n" "${_info}"
   fi
 }
+_alias_subcommand "add" "+"
 _alias_subcommand "add" "a"
 _alias_subcommand "add" "create"
 _alias_subcommand "add" "new"
@@ -12194,6 +12222,7 @@ _delete() {
     fi
   done
 }
+_alias_subcommand "delete" "-"
 _alias_subcommand "delete" "d"
 
 # edit ################################################################### edit
