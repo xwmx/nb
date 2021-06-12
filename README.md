@@ -96,7 +96,7 @@ so notes can be edited in other apps on any device.
 
 `nb` is designed to be portable, future-focused, and vendor independent,
 providing a full-featured and intuitive experience within
-a highly composable user-centric text interface.
+a highly composable multimodal user-centric text interface.
 The entire program is contained within
 a single [well-tested](#tests) shell script
 that can be
