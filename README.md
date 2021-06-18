@@ -6275,7 +6275,7 @@ Subcommands:
              first tool found in the following list:
              `ranger` [1], `mc` [2], `vifm` [3], `exa` [4], or `ls`.
              Shortcut Alias: `p`
-  rename     Rename a notebook.
+  rename     Rename a notebook. Aliases: `move`, `mv`
   select     Set the current notebook from a colon-prefixed selector.
              Not persisted. Selection format: <notebook>:<identifier>
   status     Print the archival status of the current notebook or

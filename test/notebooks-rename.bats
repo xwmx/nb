@@ -26,6 +26,46 @@ _setup_notebooks() {
   cd "${NB_DIR}" || return 1
 }
 
+# aliases #####################################################################
+
+@test "'notebooks move <valid-old> <valid-new>' exits with 0 and renames notebook." {
+  {
+    _setup_notebooks
+  }
+
+  run "${_NB}" notebooks move "one" "new-name"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[        "${status}" -eq 0                       ]]
+  [[        "${output}" =~  one                     ]]
+  [[        "${output}" =~  is\ now\ named          ]]
+  [[        "${output}" =~  new-name                ]]
+  [[    -e  "${NB_DIR}/new-name/.git"               ]]
+  [[ !  -e  "${NB_DIR}/one"                         ]]
+  [[        "$(cat "${NB_DIR}/.current")" == "home" ]]
+}
+
+@test "'notebooks mv <valid-old> <valid-new>' exits with 0 and renames notebook." {
+  {
+    _setup_notebooks
+  }
+
+  run "${_NB}" notebooks mv "one" "new-name"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[        "${status}" -eq 0                       ]]
+  [[        "${output}" =~  one                     ]]
+  [[        "${output}" =~  is\ now\ named          ]]
+  [[        "${output}" =~  new-name                ]]
+  [[    -e  "${NB_DIR}/new-name/.git"               ]]
+  [[ !  -e  "${NB_DIR}/one"                         ]]
+  [[        "$(cat "${NB_DIR}/.current")" == "home" ]]
+}
+
 # <name> validation ###########################################################
 
 @test "'notebooks rename <reserved> <new>' exits with 1 and prints error message." {
