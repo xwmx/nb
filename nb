@@ -17145,7 +17145,6 @@ HEREDOC
     local _bullet="·"
     local _columns="${NB_BROWSE_COLUMNS:-70}"
     local _encoded_local_notebook_path=
-    local _download_link_enabled=1 # TODO: remove
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
     local _selector=
     local _terminal_browser=0
@@ -17160,7 +17159,6 @@ HEREDOC
         --col*)         _columns="${2:?}"                     && shift  ;;
         --local)        _encoded_local_notebook_path="${2:?}" && shift  ;;
         --page)         _option_value_is_present     "${2:-}" && shift  ;;
-        --no*download)  _download_link_enabled=0                        ;;
         --per*)         _per_page="${2:?}"                    && shift  ;;
         --terminal)     _terminal_browser=1                             ;;
         --*)            _option_value_is_present "${2:-}"     && shift  ;;
@@ -17322,11 +17320,8 @@ HEREDOC
         _header_content+=" <span class=\"dim\">${_selector_id:-}</span>"
       fi
 
-      if ((_download_link_enabled))
-      then
-        _header_content+=" <span class=\"dim\">${_bullet}</span>"
-        _header_content+=" <a href=\"${_raw_url}\">↓</a>"
-      fi
+      _header_content+=" <span class=\"dim\">${_bullet}</span>"
+      _header_content+=" <a href=\"${_raw_url}\">↓</a>"
 
       if [[ "${_action:-}"  == "edit"   ]]
       then
