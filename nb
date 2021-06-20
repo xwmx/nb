@@ -17450,12 +17450,16 @@ HEREDOC
     local _render_type=
 
     if _file_is_text "${_source_path:-}"        ||
-       [[ "${_source_path:-}" =~ \.docx$|\.epub$|\.odt$ ]]
+       [[   "${_source_path:-}" =~ \.docx$|\.epub$|\.odt$ ]]
     then
       _render_type="pandoc"
-    elif   ((${NB_BROWSE_PDF_ENABLED:-0}))      &&
-       [[ "${_source_path}" =~ \.pdf    ]]      &&
-       _command_exists "pdftotext"
+    elif  ((${NB_BROWSE_IMAGES_ENABLED:-0}))    &&
+          [[ "${_source_path:-}" =~ \.gif$|\.jpg$|\.png$  ]]
+    then
+      _render_type="image"
+    elif  ((${NB_BROWSE_PDF_ENABLED:-0}))       &&
+          [[ "${_source_path}" =~ \.pdf   ]]    &&
+          _command_exists "pdftotext"
     then
       _render_type="pdf"
     else
@@ -17533,6 +17537,15 @@ HEREDOC
     else # render non-Org to HTML before resolving [[wiki-style links]]
       {
         case "${_render_type:-}" in
+          image)
+            {
+              # TODO
+              # printf "![](%s)" "${_raw_url}"
+              :
+            } | {
+              _render "${_source_path}" --pandoc --body
+            }
+            ;;
           pandoc)
             local _render_options=("--pandoc" "--body")
 
@@ -17550,7 +17563,7 @@ HEREDOC
               | tr -d '\014'              \
               | _render --from="md" --pandoc --body
             ;;
-          esac
+        esac
       } | {
         printf "%s\\n" "$(
           _browse_render_header           \
