@@ -9709,6 +9709,7 @@ HEREDOC
   local _only_body=0
   local _pandoc_arguments=("--highlight-style=zenburn")
   local _source_extension="${NB_DEFAULT_EXTENSION:-md}"
+  local _strip_bookmark_images=0
   local _use_pandoc=0
 
   while ((${#}))
@@ -9716,6 +9717,7 @@ HEREDOC
     case "${1:-}" in
       "")         :                                           ;;
       --body)     _only_body=1                                ;;
+      --bookmark) _strip_bookmark_images=1                    ;;
       --from)     _from="${2:?}" && _use_pandoc=1   && shift  ;;
       --*pandoc)  _use_pandoc=1                               ;;
       --source*)  _source_extension="${2:?}"        && shift  ;;
@@ -9901,7 +9903,35 @@ HEREDOC
 HEREDOC
     fi
   } | {
-    sed -e "s/<img[^>]*>//g"
+    if ((_strip_bookmark_images))
+    then
+      local _strip_images=0
+
+      {
+        local               __line=
+        while IFS= read -r  __line
+        do
+          if ! ((_strip_images)) &&
+             [[ "${__line:-}" =~ ^\<h2\ id=\"content\"|^\<h2\ id=\"source\" ]]
+          then
+            _strip_images=1
+          fi
+
+          if ((_strip_images))
+          then
+            printf "•strip•%s\\n" "${__line:-}"
+          else
+            printf "%s\\n" "${__line:-}"
+          fi
+        done
+      } | {
+        sed -E -e "/^•strip•/ s/<img[^>]*>//g"
+      } | {
+        sed -E -e "s/^•strip•//g"
+      }
+    else
+      cat
+    fi
   } | {
     sed -e "s/<a\ /<a\ rel=\"noopener\ noreferrer\"\ /g"
   }
@@ -17504,7 +17534,14 @@ HEREDOC
       {
         case "${_render_type:-}" in
           pandoc)
-            printf "" | _render "${_source_path}" --pandoc --body
+            local _render_options=("--pandoc" "--body")
+
+            if [[ "${_source_path:-}" =~ \.bookmark\.md ]]
+            then
+              _render_options+=("--bookmark")
+            fi
+
+            printf "" | _render "${_source_path}" "${_render_options[@]:-}"
             ;;
           pdf)
             # TODO: spacing
