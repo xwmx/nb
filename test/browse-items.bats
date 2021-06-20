@@ -6,14 +6,18 @@ export NB_SERVER_PORT=6789
 
 # img tags ####################################################################
 
-@test "'browse' strips <img> tags only within bookmark cached content." {
+@test "'browse' strips <img> tags after '## Content' heading." {
   {
     "${_NB}" init
 
-    "${_NB}" add                        \
-      --filename  "example.bookmark.md" \
-      --title     "Example Title"       \
+    "${_NB}" add                              \
+      --filename  "Example File.bookmark.md"  \
+      --title     "Example Title"             \
       --content   "$(<<HEREDOC cat
+<https://example.test>
+
+## Description
+
 Example image one: ![Example Image One](/not-valid-1.png)
 
 ## Content
@@ -39,14 +43,55 @@ HEREDOC
   [[    "${output}"    =~  \<p\>More\ example\ \ content\ \ here.\</p\> ]]
 }
 
-@test "'browse' renders <img> tags in non-bookmark items." {
+@test "'browse' strips <img> tags after '## Page Content' heading." {
   {
     "${_NB}" init
 
-    "${_NB}" add                  \
-      --filename  "example.md"    \
-      --title     "Example Title" \
+    "${_NB}" add                              \
+      --filename  "Example File.bookmark.md"  \
+      --title     "Example Title"             \
       --content   "$(<<HEREDOC cat
+<https://example.test>
+
+## Description
+
+Example image one: ![Example Image One](/not-valid-1.png)
+
+## Page Content
+
+More example ![Example Image Two](/not-valid-2.png) content ![Example Image Three](/not-valid-3.png) here.
+HEREDOC
+)"
+
+    sleep 1
+  }
+
+  run "${_NB}" browse 1 --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                            ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                          ]]
+
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>       ]]
+  [[    "${output}"    =~  \
+\<p\>Example\ image\ one:\ \<img\ src=\"/not-valid-1.png\"\ alt=\"Example\ Image\ One\"\ /\>\</p\>  ]]
+  [[    "${output}"    =~  \<p\>More\ example\ \ content\ \ here.\</p\> ]]
+}
+
+@test "'browse' renders <img> tags anywhere in non-bookmark items." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add                    \
+      --filename  "Example File.md" \
+      --title     "Example Title"   \
+      --content   "$(<<HEREDOC cat
+<https://example.test>
+
+## Description
+
 Example image one: ![Example Image One](/not-valid-1.png)
 
 ## Content

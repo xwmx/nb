@@ -9911,8 +9911,8 @@ HEREDOC
         local               __line=
         while IFS= read -r  __line
         do
-          if ! ((_strip_images)) &&
-             [[ "${__line:-}" =~ ^\<h2\ id=\"content\"|^\<h2\ id=\"source\" ]]
+          if ! ((_strip_images))  &&
+             [[ "${__line:-}" =~  ^\<h2\ id=\"content\"|^\<h2\ id=\"page-content\" ]]
           then
             _strip_images=1
           fi
