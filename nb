@@ -17636,7 +17636,7 @@ HEREDOC
     done
 
     local _notebook_names=()
-    _notebook_names=($(_notebooks --names --unarchived --no-color))
+    _notebook_names=($(_notebooks --names --unarchived --no-color --global))
 
     local _url_param_string=
 
