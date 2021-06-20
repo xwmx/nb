@@ -56,7 +56,75 @@ ${_S}Example${_S}Folder${_S}File.md${_S}·${_S}\"Example${_S}folder.*\</a\>\<br\
 
 # --original ##################################################################
 
-@test "GET to --original URL with .html extension serves original html file as 'Content Type: text/plain; charset=UTF-8'." {
+@test "GET to --original URL with .png file serves original png file as 'Content-Type: image/png'." {
+  {
+    "${_NB}" init
+
+    "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/nb.png"
+
+    (ncat                               \
+      --exec "${_NB} browse --respond"  \
+      --listen                          \
+      --source-port "6789"              \
+      2>/dev/null) &
+
+    sleep 1
+  }
+
+  run curl -sS -D - "http://localhost:6789/--original/home/nb.png"      \
+    -o "${_TMP_DIR}/nb.png"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0                               ]]
+
+  [[ "${output}"  =~  Content-Type:\ image/png        ]]
+
+  diff                                                \
+    <(wc -c <"${_TMP_DIR}/nb.png")                    \
+    <(wc -c <"${NB_TEST_BASE_PATH}/fixtures/nb.png")
+
+  diff                                                \
+    <(_get_hash "${_TMP_DIR}/nb.png")                 \
+    <(_get_hash "${NB_TEST_BASE_PATH}/fixtures/nb.png")
+}
+
+@test "GET to --original URL with .pdf file serves original pdf file as 'Content-Type: application/pdf'." {
+  {
+    "${_NB}" init
+
+    "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/example.pdf"
+
+    (ncat                               \
+      --exec "${_NB} browse --respond"  \
+      --listen                          \
+      --source-port "6789"              \
+      2>/dev/null) &
+
+    sleep 1
+  }
+
+  run curl -sS -D - "http://localhost:6789/--original/home/example.pdf" \
+    -o "${_TMP_DIR}/example.pdf"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0                               ]]
+
+  [[ "${output}"  =~  Content-Type:\ application/pdf  ]]
+
+  diff                                                \
+    <(wc -c <"${_TMP_DIR}/example.pdf")               \
+    <(wc -c <"${NB_TEST_BASE_PATH}/fixtures/example.pdf")
+
+  diff                                                \
+    <(_get_hash "${_TMP_DIR}/example.pdf")            \
+    <(_get_hash "${NB_TEST_BASE_PATH}/fixtures/example.pdf")
+}
+
+@test "GET to --original URL with .html extension serves original html file as 'Content-Type: text/plain; charset=UTF-8'." {
   {
     "${_NB}" init
 
@@ -86,7 +154,7 @@ ${_S}Example${_S}Folder${_S}File.md${_S}·${_S}\"Example${_S}folder.*\</a\>\<br\
   [[ "${output}"  =~  \<!DOCTYPE\ html\>\<html\>\<head\>\</head\>\<body\>Example\</body\>\</html\>  ]]
 }
 
-@test "GET to --original URL with .md extension serves original markdown file with html content as 'Content Type: text/plain; charset=UTF-8'." {
+@test "GET to --original URL with .md extension serves original markdown file with html content as 'Content-Type: text/plain; charset=UTF-8'." {
   {
     "${_NB}" init
 

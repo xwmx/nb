@@ -17145,7 +17145,7 @@ HEREDOC
     local _bullet="·"
     local _columns="${NB_BROWSE_COLUMNS:-70}"
     local _encoded_local_notebook_path=
-    local _download_link_enabled=1
+    local _download_link_enabled=1 # TODO: remove
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
     local _selector=
     local _terminal_browser=0
@@ -17438,8 +17438,7 @@ HEREDOC
         printf "%s\\n" "$(
           _browse_render_header                 \
             "${_source_path}"                   \
-            "${_pagination_options[@]:-}"       \
-            --no-download
+            "${_pagination_options[@]:-}"
         )"
 
         printf "<div class=\"main\">\\n<p>\\n"
@@ -18101,12 +18100,15 @@ HEREDOC
       esac
     done
 
+    local _binary_output=0
+
     if [[ -n "${_path:-}" ]]
     then
       if _file_is_text "${_path}" && ((_serve_original_file))
       then
         _response_headers+=("Content-Type: text/plain; charset=UTF-8")
       else
+        _binary_output=1
         _response_headers+=("Content-Type: $(file -b --mime-type "${_path}")")
       fi
 
@@ -18161,11 +18163,16 @@ HEREDOC
             | _render
         fi
       } | {
-        local               __line=
-        while IFS= read -r  __line || [[ -n "${__line:-}" ]]
-        do
-          printf "%s\\r\\n" "${__line:-}"
-        done
+        if ((_binary_output))
+        then
+          cat
+        else
+          local               __line=
+          while IFS= read -r  __line || [[ -n "${__line:-}" ]]
+          do
+            printf "%s\\r\\n" "${__line:-}"
+          done
+        fi
       }
     fi
 
