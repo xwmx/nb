@@ -18112,15 +18112,13 @@ HEREDOC
         _response_headers+=("Content-Type: $(file -b --mime-type "${_path}")")
       fi
 
-      # NOTE: Content length appears to be incorrect, since received content
-      # is truncated. TODO: Get correct content length.
-      # local _content_length=
-      # _content_length="$(wc -c < "${_path}")"
+      local _content_length=
+      _content_length="$(wc -c < "${_path}" | xargs)"
 
-      # if [[ -n "${_content_length:-}" ]]
-      # then
-      #   _response_headers+=("Content-Length: ${_content_length}")
-      # fi
+      if [[ -n "${_content_length:-}" ]]
+      then
+        _response_headers+=("Content-Length: ${_content_length}")
+      fi
     elif _contains "${_status_code:-}" "302"
     then
       _only_headers=1
@@ -18145,35 +18143,23 @@ HEREDOC
     if ! ((_only_headers))
     then
       printf "\\r\\n"
-      {
-        if ((_read_from_standard_input))
-        then
-          cat
-        elif [[ -n "${_string:-}"     ]]
-        then
-          printf "%s\\n" "${_string}" | _render
-        elif [[ "${_path:-}" =~ ^/    ]]
-        then
-          cat "${_path}"
-        else
-          printf                                                            \
-            "<div class=\"main\"><h1 class=\"center\">%s %s</h1></div>\\n"  \
-            "${_status_code}"                                               \
-            "$(_browse_http_response_message "${_status_code}")"            \
-            | _render
-        fi
-      } | {
-        if ((_binary_output))
-        then
-          cat
-        else
-          local               __line=
-          while IFS= read -r  __line || [[ -n "${__line:-}" ]]
-          do
-            printf "%s\\r\\n" "${__line:-}"
-          done
-        fi
-      }
+
+      if ((_read_from_standard_input))
+      then
+        cat
+      elif [[ -n "${_string:-}"     ]]
+      then
+        printf "%s\\n" "${_string}" | _render
+      elif [[ "${_path:-}" =~ ^/    ]]
+      then
+        cat "${_path}"
+      else
+        printf                                                            \
+          "<div class=\"main\"><h1 class=\"center\">%s %s</h1></div>\\n"  \
+          "${_status_code}"                                               \
+          "$(_browse_http_response_message "${_status_code}")"            \
+          | _render
+      fi
     fi
 
     if _contains "${1:-}" "200" "302"
