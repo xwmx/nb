@@ -6,6 +6,37 @@ export NB_SERVER_PORT=6789
 
 # images ######################################################################
 
+@test "'browse' with local notebook renders image item as '<img>' element." {
+  {
+    "${_NB}" init
+
+    mkdir -p "${_TMP_DIR}/Local Notebook"
+    cd "${_TMP_DIR}/Local Notebook"
+
+    "${_NB}" notebooks init
+
+    "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/nb.png"
+
+    declare _raw_url_pattern="http://localhost:6789/--original/local/nb.png"
+    _raw_url_pattern+="\?--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
+
+    sleep 1
+  }
+
+  run "${_NB}" browse 1 --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                                        ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                                      ]]
+
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                   ]]
+  [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
+  [[    "${output}"    =~  \
+\<p\>\<a.*\ href=\"${_raw_url_pattern}\"\>\<img\ src=\"${_raw_url_pattern}\"\ alt=\"nb.png\"\ /\>\</a\>\</p\> ]]
+}
+
 @test "'browse' renders image item as '<img>' element." {
   {
     "${_NB}" init
