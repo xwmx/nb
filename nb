@@ -17567,11 +17567,11 @@ HEREDOC
         case "${_render_type:-}" in
           image)
             {
-              # NOTE: trailing `\` to avoid generating figure. More info:
-              # https://pandoc.org/MANUAL.html#extension-implicit_figures
-              printf "![%s](%s)\\\\n" "${_source_path##*/}" "${_raw_url}"
+              printf "<p><img src=\"%s\" alt=\"%s\" /></p>\\n"  \
+                "${_raw_url}"                                   \
+                "${_source_path##*/}"
             } | {
-              _render --pandoc --body
+              _render --body
             }
             ;;
           pandoc)
