@@ -16307,7 +16307,7 @@ _browse() {
     while ((${#}))
     do
       case "${1:-}" in
-        --col*|--local|--page|--per*page)
+        --col*|--local|--page|--per*page|--raw-url)
           _option_value_is_present "${2:-}" && shift
           ;;
         --terminal)
@@ -16341,7 +16341,7 @@ _browse() {
     while ((${#}))
     do
       case "${1:-}" in
-        --col*|--local|--page|--per*page)
+        --col*|--local|--page|--per*page|--raw-url)
           _option_value_is_present "${2:-}" && shift
           ;;
         --message*body)
@@ -16941,6 +16941,7 @@ HEREDOC
     local _encoded_local_notebook_path=
     local _pagination_options=()
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
+    local _raw_url=
     local _source_path=
 
     while ((${#}))
@@ -16962,6 +16963,10 @@ HEREDOC
         --per-page)
           _per_page="${2:?}"
           _pagination_options+=("${1:?}" "${2:?}")
+          shift
+          ;;
+        --raw-url)
+          _raw_url="${2:?}"
           shift
           ;;
         --terminal)
@@ -17025,6 +17030,7 @@ HEREDOC
         _browse_render_header           \
           "${_source_path}"             \
           "${_pagination_options[@]:-}" \
+          --raw-url "${_raw_url}"       \
           --delete
       )"
 
@@ -17052,6 +17058,7 @@ HEREDOC
     local _encoded_local_notebook_path=
     local _pagination_options=()
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
+    local _raw_url=
     local _source_path=
     local _subcommand_options=()
 
@@ -17074,6 +17081,10 @@ HEREDOC
         --per-page)
           _per_page="${2:?}"
           _pagination_options+=("${1:?}" "${2:?}")
+          shift
+          ;;
+        --raw-url)
+          _raw_url="${2:?}"
           shift
           ;;
         --terminal)
@@ -17148,6 +17159,7 @@ HEREDOC
         _browse_render_header           \
           "${_source_path}"             \
           "${_pagination_options[@]:-}" \
+          --raw-url "${_raw_url}"       \
           --edit
       )"
 
@@ -17166,7 +17178,7 @@ HEREDOC
   # Usage:
   #   _browse_render_header <selector> [--columns <columns>]
   #                         [--local <url-encoded-path>] [--per-page <limit>]
-  #                         [--terminal]
+  #                         [--raw-url <url>] [--terminal]
   #
   # Description:
   #   Print a context-aware, linked nav header.
@@ -17176,6 +17188,7 @@ HEREDOC
     local _columns="${NB_BROWSE_COLUMNS:-70}"
     local _encoded_local_notebook_path=
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
+    local _raw_url=
     local _selector=
     local _terminal_browser=0
 
@@ -17190,6 +17203,7 @@ HEREDOC
         --local)        _encoded_local_notebook_path="${2:?}" && shift  ;;
         --page)         _option_value_is_present     "${2:-}" && shift  ;;
         --per*)         _per_page="${2:?}"                    && shift  ;;
+        --raw-url)      _raw_url="${2:?}"                     && shift  ;;
         --terminal)     _terminal_browser=1                             ;;
         --*)            _option_value_is_present "${2:-}"     && shift  ;;
         -*)             :                                               ;;
@@ -17322,19 +17336,6 @@ HEREDOC
 
     if [[ -f "${_item_path:-}"  ]]
     then
-      local _raw_url="http://localhost:${NB_SERVER_PORT}/--original/"
-
-      if [[ !   "${_item_path:-}" =~ ^${NB_DIR}     ]] &&
-         [[ -n  "${_encoded_local_notebook_path:-}" ]]
-      then
-        local _local_notebook_path=
-        _local_notebook_path="$(_get_uri --decode "${_encoded_local_notebook_path}")"
-
-        _raw_url+="local/${_item_path#${_local_notebook_path}/}?--local=${_encoded_local_notebook_path}"
-      else
-        _raw_url+="${_item_path#${NB_DIR}/}"
-      fi
-
       local _id_selector=
       _id_selector="$(_get_id_selector "${_selector:-}" --notebook)"
 
@@ -17350,8 +17351,28 @@ HEREDOC
         _header_content+=" <span class=\"dim\">${_selector_id:-}</span>"
       fi
 
-      _header_content+=" <span class=\"dim\">${_bullet}</span>"
-      _header_content+=" <a href=\"${_raw_url}\">↓</a>"
+      # NOTE: backup _raw_url calculation. TODO: remove
+      if [[ -z "${_raw_url:-}" ]]
+      then
+        local _raw_url="http://localhost:${NB_SERVER_PORT}/--original/"
+
+        if [[ !   "${_item_path:-}" =~ ^${NB_DIR}     ]] &&
+           [[ -n  "${_encoded_local_notebook_path:-}" ]]
+        then
+          local _local_notebook_path=
+          _local_notebook_path="$(_get_uri --decode "${_encoded_local_notebook_path}")"
+
+          _raw_url+="local/${_item_path#${_local_notebook_path}/}?--local=${_encoded_local_notebook_path}"
+        else
+          _raw_url+="${_item_path#${NB_DIR}/}"
+        fi
+      fi
+
+      if [[ -n "${_raw_url:-}" ]]
+      then
+        _header_content+=" <span class=\"dim\">${_bullet}</span>"
+        _header_content+=" <a href=\"${_raw_url}\">↓</a>"
+      fi
 
       if [[ "${_action:-}"  == "edit"   ]]
       then
@@ -17401,12 +17422,13 @@ HEREDOC
   # Usage:
   #   _browse_render_item <path> [--columns <columns>]
   #                       [--local <url-encoded-path>] [--per-page <limit>]
-  #                       [--terminal]
+  #                       [--raw-url <url>] [--terminal]
   #
   # Description:
   #   Render an item to HTML with links resolved to internal web server.
   _browse_render_item() {
     local _columns="${NB_BROWSE_COLUMNS:-70}"
+    local _header_options=()
     local _pagination_options=()
     local _respond_with_arguments=("--standard-input")
     local _source_path=
@@ -17433,6 +17455,10 @@ HEREDOC
           _pagination_options+=("${1:?}" "${2:?}")
           shift
           ;;
+        --raw-url)
+          _header_options+=("${1:?}" "${2:?}")
+          shift
+          ;;
         --terminal)
           _pagination_options+=("--terminal")
           ;;
@@ -17446,6 +17472,8 @@ HEREDOC
 
       shift
     done
+
+    _header_options+=("${_pagination_options[@]}")
 
     local _render_type=
 
@@ -17467,7 +17495,7 @@ HEREDOC
         printf "%s\\n" "$(
           _browse_render_header                 \
             "${_source_path}"                   \
-            "${_pagination_options[@]:-}"
+            "${_header_options[@]:-}"
         )"
 
         printf "<div class=\"main\">\\n<p>\\n"
@@ -17523,7 +17551,7 @@ HEREDOC
         printf "%s\\n" "$(
           _browse_render_header           \
             "${_source_path}"             \
-            "${_pagination_options[@]:-}"
+            "${_header_options[@]:-}"
         )"
 
         printf "<div class=\"main\">\\n"
@@ -17568,7 +17596,7 @@ HEREDOC
         printf "%s\\n" "$(
           _browse_render_header           \
             "${_source_path}"             \
-            "${_pagination_options[@]:-}"
+            "${_header_options[@]:-}"
         )"
 
         printf "<div class=\"main\">\\n"
@@ -18036,6 +18064,19 @@ HEREDOC
 
           return 0
         else
+          local _raw_url="http://localhost:${NB_SERVER_PORT}/--original/"
+
+          if [[ !   "${_selector_path:-}" =~ ^${NB_DIR} ]] &&
+             [[ -n  "${_encoded_local_notebook_path:-}" ]] &&
+             [[ -n  "${_local_notebook_path:-}"         ]]
+          then
+            _raw_url+="local/${_selector_path#${_local_notebook_path}/}?--local=${_encoded_local_notebook_path}"
+          else
+            _raw_url+="${_selector_path#${NB_DIR}/}"
+          fi
+
+          _render_function_options+=("--raw-url" "${_raw_url}")
+
           if [[ "${_action:-}" == "delete"  ]]
           then
             case "${_request_method:-}" in
