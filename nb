@@ -17428,8 +17428,8 @@ HEREDOC
   #   Render an item to HTML with links resolved to internal web server.
   _browse_render_item() {
     local _columns="${NB_BROWSE_COLUMNS:-70}"
-    local _header_options=()
     local _pagination_options=()
+    local _raw_url=
     local _respond_with_arguments=("--standard-input")
     local _source_path=
 
@@ -17456,7 +17456,7 @@ HEREDOC
           shift
           ;;
         --raw-url)
-          _header_options+=("${1:?}" "${2:?}")
+          _raw_url="${2:?}"
           shift
           ;;
         --terminal)
@@ -17473,7 +17473,7 @@ HEREDOC
       shift
     done
 
-    _header_options+=("${_pagination_options[@]}")
+    local _header_options=("--raw-url" "${_raw_url}" "${_pagination_options[@]}")
 
     local _render_type=
 
@@ -17481,8 +17481,8 @@ HEREDOC
        [[   "${_source_path:-}" =~ \.docx$|\.epub$|\.odt$ ]]
     then
       _render_type="pandoc"
-    elif  ((${NB_BROWSE_IMAGES_ENABLED:-0}))    &&
-          [[ "${_source_path:-}" =~ \.gif$|\.jpg$|\.png$  ]]
+    elif _contains "${_source_path##*.}" \
+           apng avif gif jfif jpeg jpg pjpeg pjp png svg webp
     then
       _render_type="image"
     elif  ((${NB_BROWSE_PDF_ENABLED:-0}))       &&
@@ -17567,11 +17567,11 @@ HEREDOC
         case "${_render_type:-}" in
           image)
             {
-              # TODO
-              # printf "![](%s)" "${_raw_url}"
-              :
+              # NOTE: trailing `\` to avoid generating figure. More info:
+              # https://pandoc.org/MANUAL.html#extension-implicit_figures
+              printf "![%s](%s)\\" "${_source_path##*/}" "${_raw_url}"
             } | {
-              _render "${_source_path}" --pandoc --body
+              _render --pandoc --body
             }
             ;;
           pandoc)
