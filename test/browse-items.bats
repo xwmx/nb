@@ -12,6 +12,8 @@ export NB_SERVER_PORT=6789
 
     "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/nb.png"
 
+    declare _raw_url="http://localhost:6789/--original/home/nb.png"
+
     sleep 1
   }
 
@@ -20,14 +22,13 @@ export NB_SERVER_PORT=6789
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"    ==  0                                            ]]
-  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                          ]]
+  [[    "${status}"    ==  0                                                ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                              ]]
 
-  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>       ]]
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>           ]]
+  [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url}\"\>↓\</a\>  ]]
   [[    "${output}"    =~  \
-\</span\>\ \<a.*\ href=\"http://localhost:6789/--original/home/nb.png\"\>↓\</a\>            ]]
-  [[    "${output}"    =~  \
-\<p\>\<img\ src=\"http://localhost:6789/--original/home/nb.png\"\ alt=\"nb.png\"\ /\>\</p\> ]]
+\<p\>\<a.*\ href=\"${_raw_url}\"\>\<img\ src=\"${_raw_url}\"\ alt=\"nb.png\"\ /\>\</a\>\</p\> ]]
 }
 
 # <img> stripping #############################################################

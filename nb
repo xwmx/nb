@@ -17567,8 +17567,10 @@ HEREDOC
         case "${_render_type:-}" in
           image)
             {
-              printf "<p><img src=\"%s\" alt=\"%s\" /></p>\\n"  \
-                "${_raw_url}"                                   \
+              printf                                                          \
+                "<p><a href=\"%s\"><img src=\"%s\" alt=\"%s\" /></a></p>\\n"  \
+                "${_raw_url}"                                                 \
+                "${_raw_url}"                                                 \
                 "${_source_path##*/}"
             } | {
               _render --body
