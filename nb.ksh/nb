@@ -1,3 +1,5 @@
 #!/usr/bin/env ksh
 
+alias local="typeset"
+
 source "$(cd "$(dirname "${0}")"; pwd)/../nb"
