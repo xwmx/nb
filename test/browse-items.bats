@@ -25,7 +25,9 @@ export NB_SERVER_PORT=6789
 
   [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>       ]]
   [[    "${output}"    =~  \
-\<p\>\<img\ src=\"http://localhost:6789/--original/home/nb.png\"\ alt=\"nb.png\"\ /\>\<br\ /\> ]]
+\</span\>\ \<a.*\ href=\"http://localhost:6789/--original/home/nb.png\"\>↓\</a\>            ]]
+  [[    "${output}"    =~  \
+\<p\>\<img\ src=\"http://localhost:6789/--original/home/nb.png\"\ alt=\"nb.png\"\ /\>\</p\> ]]
 }
 
 # <img> stripping #############################################################

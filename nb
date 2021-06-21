@@ -17569,7 +17569,7 @@ HEREDOC
             {
               # NOTE: trailing `\` to avoid generating figure. More info:
               # https://pandoc.org/MANUAL.html#extension-implicit_figures
-              printf "![%s](%s)\\" "${_source_path##*/}" "${_raw_url}"
+              printf "![%s](%s)\\\\n" "${_source_path##*/}" "${_raw_url}"
             } | {
               _render --pandoc --body
             }
