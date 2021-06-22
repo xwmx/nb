@@ -8766,7 +8766,7 @@ _encrypt_file() {
   local _encrypted_path="${2:-}"
   local _password="${3:-}"
 
-  if [[ -z "${_password}" ]]
+  if [[ -z "${_password}"         ]]
   then
     _exit_1 printf "Password required.\\n"
   fi
