@@ -17487,7 +17487,7 @@ HEREDOC
        [[   "${_source_path:-}" =~ \.docx$|\.epub$|\.odt$ ]]
     then
       _render_type="pandoc"
-    elif _contains "${_source_path##*.}" \
+    elif _contains "${_source_path##*.}"        \
            apng avif gif jfif jpeg jpg pjpeg pjp png svg webp
     then
       _render_type="image"
@@ -17621,6 +17621,31 @@ HEREDOC
         _render
       }
     fi | {
+      local _encoded_notebook_name="${_raw_url#http://localhost:${NB_SERVER_PORT}/--original/}"
+      _encoded_notebook_name="${_encoded_notebook_name%%/*}"
+
+      local _raw_url_base_pattern="http:\/\/localhost:${NB_SERVER_PORT}\/--original\/${_encoded_notebook_name}\/"
+      local _raw_url_pattern="${_raw_url_base_pattern}\1"
+
+      local _sed_arguments=()
+
+      _sed_arguments+=(
+-e "s/<img src=\"([^\"]+)\"/<img src=\"${_raw_url_pattern}\"/g"
+-e "s/<img src=\"${_raw_url_base_pattern}(https?:[^\"]+)\"/<img src=\"\1\"/g"
+      )
+
+      if [[ -n "${_encoded_local_notebook_path:-}" ]]
+      then
+        local _replacement_pattern="\1\?--local=${_encoded_local_notebook_path}"
+
+        _sed_arguments+=(
+-e "s/<img src=\"(${_raw_url_base_pattern}[^\"]+)\"/<img src=\"${_replacement_pattern}\"/g"
+-e "s/<img src=\"([^\"]+\?--local=[^\"]+)\?--local=[^\"]+\"/<img src=\"\1\"/g"
+        )
+      fi
+
+      sed -E "${_sed_arguments[@]:-}"
+    } | {
       _browse_respond_with 200 "${_respond_with_arguments[@]:-}"
     }
 

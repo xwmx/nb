@@ -4,7 +4,115 @@ load test_helper
 
 export NB_SERVER_PORT=6789
 
-# images ######################################################################
+# image URLs ##################################################################
+
+@test "'browse' with local notebook rewrites image paths to --original URLs." {
+  {
+    "${_NB}" init
+
+    mkdir -p "${_TMP_DIR}/Local Notebook"
+    cd "${_TMP_DIR}/Local Notebook"
+
+    "${_NB}" notebooks init
+
+    "${_NB}" add                    \
+      --filename  "Example File.md" \
+      --content   "$(<<HEREDOC cat
+# Example Title
+
+Example ![](nb.png) content ![](Example Folder/nb.png).
+
+More ![](https://example.test/example.png) demo content ![](http://example.test/sample.png).
+HEREDOC
+)"
+
+    "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/nb.png"
+
+    "${_NB}" add folder "Example Folder"
+
+    "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/nb.png" Example\ Folder/
+
+    [[ -f "${_TMP_DIR}/Local Notebook/nb.png"                 ]]
+    [[ -f "${_TMP_DIR}/Local Notebook/Example Folder/nb.png"  ]]
+
+    declare _raw_url_pattern_one="http://localhost:6789/--original/local/nb.png"
+    _raw_url_pattern_one+="\?--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
+
+    declare _raw_url_pattern_two="http://localhost:6789/--original/local/Example%20Folder/nb.png"
+    _raw_url_pattern_two+="\?--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
+
+    sleep 1
+  }
+
+  run "${_NB}" browse 1 --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                                      ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                                    ]]
+
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                 ]]
+  [[    "${output}"    =~  \
+\<p\>Example\ \<img\ src=\"${_raw_url_pattern_one}\"\ \/\>\ content\              ]]
+  [[    "${output}"    =~  \
+\/\>\ content\ \<img\ src=\"${_raw_url_pattern_two}\"\ /\>.\</p\>                 ]]
+  [[    "${output}"    =~  \
+\<p\>\More\ \<img\ src=\"https://example.test/example.png\"\ \/\>\ demo\ content  ]]
+  [[    "${output}"    =~  \
+\/\>\ demo\ content\ \<img\ src=\"http://example.test/sample.png\"\ /\>.\</p\>    ]]
+}
+
+@test "'browse' rewrites image paths to --original URLs." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add                    \
+      --filename  "Example File.md" \
+      --content   "$(<<HEREDOC cat
+# Example Title
+
+Example ![](nb.png) content ![](Example Folder/nb.png).
+
+More ![](https://example.test/example.png) demo content ![](http://example.test/sample.png).
+HEREDOC
+)"
+
+    "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/nb.png"
+
+    "${_NB}" add folder "Example Folder"
+
+    "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/nb.png" Example\ Folder/
+
+    [[ -f "${NB_DIR}/home/nb.png"                 ]]
+    [[ -f "${NB_DIR}/home/Example Folder/nb.png"  ]]
+
+    declare _raw_url_pattern_one="http://localhost:6789/--original/home/nb.png"
+    declare _raw_url_pattern_two="http://localhost:6789/--original/home/Example%20Folder/nb.png"
+
+    sleep 1
+  }
+
+  run "${_NB}" browse 1 --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                                      ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                                    ]]
+
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                 ]]
+  [[    "${output}"    =~  \
+\<p\>Example\ \<img\ src=\"${_raw_url_pattern_one}\"\ \/\>\ content\              ]]
+  [[    "${output}"    =~  \
+\/\>\ content\ \<img\ src=\"${_raw_url_pattern_two}\"\ /\>.\</p\>                 ]]
+  [[    "${output}"    =~  \
+\<p\>\More\ \<img\ src=\"https://example.test/example.png\"\ \/\>\ demo\ content  ]]
+  [[    "${output}"    =~  \
+\/\>\ demo\ content\ \<img\ src=\"http://example.test/sample.png\"\ /\>.\</p\>    ]]
+}
+
+# image items #################################################################
 
 @test "'browse' with local notebook renders image item as '<img>' element." {
   {
@@ -76,11 +184,11 @@ export NB_SERVER_PORT=6789
 
 ## Description
 
-Example image one: ![Example Image One](/not-valid-1.png)
+Example image one: ![Example Image One](not-valid-1.png)
 
 ## Content
 
-More example ![Example Image Two](/not-valid-2.png) content ![Example Image Three](/not-valid-3.png) here.
+More example ![Example Image Two](not-valid-2.png) content ![Example Image Three](not-valid-3.png) here.
 HEREDOC
 )"
 
@@ -97,7 +205,7 @@ HEREDOC
 
   [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>       ]]
   [[    "${output}"    =~  \
-\<p\>Example\ image\ one:\ \<img\ src=\"/not-valid-1.png\"\ alt=\"Example\ Image\ One\"\ /\>\</p\>  ]]
+\<p\>Example\ image\ one:\ \<img\ src=\".*not-valid-1.png\"\ alt=\"Example\ Image\ One\"\ /\>\</p\>  ]]
   [[    "${output}"    =~  \<p\>More\ example\ \ content\ \ here.\</p\> ]]
 }
 
@@ -113,11 +221,11 @@ HEREDOC
 
 ## Description
 
-Example image one: ![Example Image One](/not-valid-1.png)
+Example image one: ![Example Image One](not-valid-1.png)
 
 ## Page Content
 
-More example ![Example Image Two](/not-valid-2.png) content ![Example Image Three](/not-valid-3.png) here.
+More example ![Example Image Two](not-valid-2.png) content ![Example Image Three](not-valid-3.png) here.
 HEREDOC
 )"
 
@@ -134,7 +242,7 @@ HEREDOC
 
   [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>       ]]
   [[    "${output}"    =~  \
-\<p\>Example\ image\ one:\ \<img\ src=\"/not-valid-1.png\"\ alt=\"Example\ Image\ One\"\ /\>\</p\>  ]]
+\<p\>Example\ image\ one:\ \<img\ src=\".*not-valid-1.png\"\ alt=\"Example\ Image\ One\"\ /\>\</p\>  ]]
   [[    "${output}"    =~  \<p\>More\ example\ \ content\ \ here.\</p\> ]]
 }
 
@@ -150,11 +258,11 @@ HEREDOC
 
 ## Description
 
-Example image one: ![Example Image One](/not-valid-1.png)
+Example image one: ![Example Image One](not-valid-1.png)
 
 ## Content
 
-More example ![Example Image Two](/not-valid-2.png) content ![Example Image Three](/not-valid-3.png) here.
+More example ![Example Image Two](not-valid-2.png) content ![Example Image Three](not-valid-3.png) here.
 HEREDOC
 )"
 
@@ -171,11 +279,11 @@ HEREDOC
 
   [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\> ]]
   [[    "${output}"    =~  \
-\<p\>Example\ image\ one:\ \<img\ src=\"/not-valid-1.png\"\ alt=\"Example\ Image\ One\"\ /\>\</p\>  ]]
+\<p\>Example\ image\ one:\ \<img\ src=\".*not-valid-1.png\"\ alt=\"Example\ Image\ One\"\ /\>\</p\>  ]]
   [[    "${output}"    =~  \
-\<p\>More\ example\ \<img\ src=\"/not-valid-2.png\"\ alt=\"Example\ Image\ Two\"\ /\>\ content\     ]]
+\<p\>More\ example\ \<img\ src=\".*not-valid-2.png\"\ alt=\"Example\ Image\ Two\"\ /\>\ content\     ]]
   [[    "${output}"    =~  \
-\ content\ \<img\ src=\"/not-valid-3.png\"\ alt=\"Example\ Image\ Three\"\ /\>\ here.\</p\>         ]]
+\ content\ \<img\ src=\".*not-valid-3.png\"\ alt=\"Example\ Image\ Three\"\ /\>\ here.\</p\>         ]]
 
 }
 
