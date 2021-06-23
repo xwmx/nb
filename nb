@@ -17636,10 +17636,10 @@ HEREDOC
 
       if [[ -n "${_encoded_local_notebook_path:-}" ]]
       then
-        local _replacement_pattern="\1\?--local=${_encoded_local_notebook_path}"
+        local _local_param_pattern="\1\?--local=${_encoded_local_notebook_path}"
 
         _sed_arguments+=(
--e "s/<img src=\"(${_raw_url_base_pattern}[^\"]+)\"/<img src=\"${_replacement_pattern}\"/g"
+-e "s/<img src=\"(${_raw_url_base_pattern}[^\"]+)\"/<img src=\"${_local_param_pattern}\"/g"
 -e "s/<img src=\"([^\"]+\?--local=[^\"]+)\?--local=[^\"]+\"/<img src=\"\1\"/g"
         )
       fi
