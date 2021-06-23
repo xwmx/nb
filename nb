@@ -18219,11 +18219,14 @@ HEREDOC
       esac
     done
 
-    if [[ -n "${_path:-}" ]]
+    if [[ -n "${_path:-}"             ]]
     then
       if _file_is_text "${_path}" && ((_serve_original_file))
       then
         _response_headers+=("Content-Type: text/plain; charset=UTF-8")
+      elif [[ "${_path}" =~ \.svg$    ]]
+      then
+        _response_headers+=("Content-Type: image/svg+xml")
       else
         _response_headers+=("Content-Type: $(file -b --mime-type "${_path}")")
       fi

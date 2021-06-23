@@ -56,6 +56,54 @@ ${_S}Example${_S}Folder${_S}File.md${_S}·${_S}\"Example${_S}folder.*\</a\>\<br\
 
 # --original ##################################################################
 
+@test "GET to --original URL with .svg file serves original svg file as 'Content-Type: image/svg+xml'." {
+  {
+    "${_NB}" init
+
+    cat <<HEREDOC > "${_TMP_DIR}/example.svg"
+<svg width="100" height="100">
+  <circle cx="50" cy="50" r="40"
+  stroke="red" stroke-width="4" fill="blue" />
+</svg>
+HEREDOC
+
+    "${_NB}" import "${_TMP_DIR}/example.svg"
+
+    declare _original_file_size=
+    _original_file_size="$(
+      wc -c <"${_TMP_DIR}/example.svg" | xargs
+    )"
+
+    (ncat                               \
+      --exec "${_NB} browse --respond"  \
+      --listen                          \
+      --source-port "6789"              \
+      2>/dev/null) &
+
+    sleep 1
+  }
+
+  run curl -sS -D -                                           \
+    "http://localhost:6789/--original/home/example.svg"       \
+    -o "${_TMP_DIR}/download.svg"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0                                       ]]
+
+  [[ "${output}"  =~  Content-Type:\ image/svg\+xml           ]]
+  [[ "${output}"  =~  Content-Length:\ ${_original_file_size} ]]
+
+  diff                                                        \
+    <(wc -c <"${_TMP_DIR}/download.svg")                      \
+    <(wc -c <"${_TMP_DIR}/example.svg")
+
+  diff                                                        \
+    <(_get_hash "${_TMP_DIR}/download.svg")                   \
+    <(_get_hash "${_TMP_DIR}/example.svg")
+}
+
 @test "GET to --original URL with .png file serves original png file as 'Content-Type: image/png'." {
   {
     "${_NB}" init
