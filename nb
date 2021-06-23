@@ -13130,6 +13130,9 @@ _import() {
   local _target_notebook_name=
   local _url=
 
+  local _local_notebook_path=
+  _local_notebook_path="$(_notebooks --local --path || :)"
+
   if _piped_input
   then
     IFS=$' \n' _paths+=($(cat))
@@ -13172,7 +13175,10 @@ _import() {
           elif [[ "${_subcommand}" =~ ^copy$|^move$ ]] &&
                [[ -n "${_paths[*]:-}"               ]] &&
                [[ ! "${__arg}" =~ ^/                ]] &&
-               [[ ! -e "${PWD}/${__arg}"            ]]
+               {
+                 [[ -n "${_local_notebook_path}"    ]] ||
+                 [[ ! -e "${PWD}/${__arg}"          ]]
+               }
           then
             _selector="${__arg}"
           elif [[ "${_subcommand}" == "notebook"    ]] &&

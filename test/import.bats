@@ -2,6 +2,106 @@
 
 load test_helper
 
+# local notebook ##############################################################
+
+@test "'import <path> <folder>/' with local notebook imports file." {
+  {
+    "${_NB}" init
+
+    mkdir -p "${_TMP_DIR}/Local Notebook"
+    cd "${_TMP_DIR}/Local Notebook"
+
+    "${_NB}" notebooks init
+
+    "${_NB}" add folder "Example Folder"
+
+    [[ -d "${_TMP_DIR}/Local Notebook/Example Folder"       ]]
+  }
+
+  run "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/example.md" Example\ Folder/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  _files=($(ls "${_TMP_DIR}/Local Notebook/Example Folder/"))
+
+  [[ "${#_files[@]}" -eq 1                                  ]]
+  grep -q '# Example Title' "${_TMP_DIR}/Local Notebook/Example Folder"/*
+
+  # Adds to index:
+
+  [[ -e "${_TMP_DIR}/Local Notebook/Example Folder/.index"  ]]
+
+  diff                                                      \
+    <(ls "${_TMP_DIR}/Local Notebook/Example Folder")       \
+    <(cat "${_TMP_DIR}/Local Notebook/Example Folder/.index")
+
+  # Creates git commit:
+
+  cd "${_TMP_DIR}/Local Notebook" || return 1
+  printf "\$(git log): '%s'\n" "$(git log)"
+
+  while [[ -n "$(git status --porcelain)"                   ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Import'
+
+  # Prints output:
+
+  [[ "${lines[0]}" =~ \
+Imported\ .*[.*Example\ Folder/1.*].*\ .*Example\ Folder/example.md.*\ \"Example\ Title\" ]]
+  [[ "${lines[0]}" =~ \
+\"Example\ Title\"\ from\ .*${NB_TEST_BASE_PATH}/fixtures/example.md                      ]]
+}
+
+@test "'import <path>' with local notebook imports file." {
+  {
+    "${_NB}" init
+
+    mkdir -p "${_TMP_DIR}/Local Notebook"
+    cd "${_TMP_DIR}/Local Notebook"
+
+    "${_NB}" notebooks init
+  }
+
+  run "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/example.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  _files=($(ls "${_TMP_DIR}/Local Notebook/"))
+
+  [[ "${#_files[@]}" -eq 1                  ]]
+  grep -q '# Example Title' "${_TMP_DIR}/Local Notebook"/*
+
+  # Adds to index:
+
+  [[ -e "${_TMP_DIR}/Local Notebook/.index" ]]
+
+  diff                                      \
+    <(ls "${_TMP_DIR}/Local Notebook")      \
+    <(cat "${_TMP_DIR}/Local Notebook/.index")
+
+  # Creates git commit:
+
+  cd "${_TMP_DIR}/Local Notebook" || return 1
+  printf "\$(git log): '%s'\n" "$(git log)"
+
+  while [[ -n "$(git status --porcelain)"   ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Import'
+
+  # Prints output:
+
+  [[ "${lines[0]}" =~ \
+Imported\ .*[.*1.*].*\ .*example.md.*\ \"Example\ Title\"             ]]
+  [[ "${lines[0]}" =~ \
+\"Example\ Title\"\ from\ .*${NB_TEST_BASE_PATH}/fixtures/example.md  ]]
+}
+
 # no argument #################################################################
 
 @test "'import' with no arguments exits with status 1 and prints help." {
