@@ -16945,7 +16945,19 @@ HEREDOC
 
       printf "</div>\\n"
     } | {
-      _render --title "$(_join " " "${_ME} browse" "${_current_selector// /\\ }")"
+      local _html_title="${_ME} browse"
+
+      if [[ -n "${_current_selector:-}" ]]
+      then
+        _html_title+=" ${_current_selector// /\\ }"
+      fi
+
+      if [[ -n "${_escaped_query:-}"    ]]
+      then
+        _html_title+=" --query \"${_escaped_query:-}\""
+      fi
+
+      _render --title "${_html_title}"
     }
   }
 

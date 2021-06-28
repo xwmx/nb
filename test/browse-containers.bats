@@ -9,6 +9,27 @@ export _S=" "
 
 # HTML <title> ################################################################
 
+@test "'browse <folder>/ --query <query>' sets HTML <title> to CLI command." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/Example File.md" --content "Example content."
+
+    sleep 1
+  }
+
+  run "${_NB}" browse Example\ Folder/ --query "content" --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                              ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                            ]]
+  [[    "${output}"    =~  \
+\<title\>${_ME}\ browse\ home:1\ --query\ \"content\"\</title\>           ]]
+  [[ !  "${output}"    =~  \<title\>nb\</title\>                          ]]
+}
+
 @test "'browse <folder>/<folder>/<file>' sets HTML <title> to CLI command." {
   {
     "${_NB}" init
