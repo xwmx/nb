@@ -7,6 +7,93 @@ export NB_SERVER_PORT=6789
 # non-breaking space
 export _S=" "
 
+# HTML <title> ################################################################
+
+@test "'browse delete' sets HTML <title> to CLI command with nested file selector." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/Sample Folder/Example File.md" --content "Example content."
+
+    sleep 1
+  }
+
+  run "${_NB}" browse delete Example\ Folder/Sample\ Folder/Example\ File.md --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                            ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>          ]]
+  [[    "${output}"    =~  \
+\<title\>${_ME}\ browse\ delete\ home:1/1/1\</title\>   ]]
+  [[ !  "${output}"    =~  \<title\>nb\</title\>        ]]
+}
+
+@test "'browse delete' sets HTML <title> to CLI command with root-level file selector." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example File.md" --content "Example content."
+
+    sleep 1
+  }
+
+  run "${_NB}" browse delete 1 --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                            ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>          ]]
+  [[    "${output}"    =~  \
+\<title\>${_ME}\ browse\ delete\ home:1\</title\>       ]]
+  [[ !  "${output}"    =~  \<title\>nb\</title\>        ]]
+}
+
+@test "'browse delete' sets HTML <title> to CLI command with file in other notebook." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" add  "Example Notebook:Example File.md" --content "Example content."
+
+    sleep 1
+  }
+
+  run "${_NB}" browse delete Example\ Notebook:1 --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                      ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                    ]]
+  [[    "${output}"    =~  \
+\<title\>${_ME}\ browse\ delete\ Example\\\ Notebook:1\</title\>  ]]
+  [[ !  "${output}"    =~  \<title\>nb\</title\>                  ]]
+}
+
+@test "'browse' sets HTML <title> to CLI command with nested file selector." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/Example File.md" --content "Example content."
+
+    sleep 1
+  }
+
+  run "${_NB}" browse Example\ Folder/1 --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                            ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                          ]]
+  [[    "${output}"    =~  \<title\>${_ME}\ browse\ home:1/1\</title\>  ]]
+  [[ !  "${output}"    =~  \<title\>nb\</title\>                        ]]
+}
+
 # POST ########################################################################
 
 @test "POST to --delete URL with local notebook deletes the note and redirects."  {

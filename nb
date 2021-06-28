@@ -17062,7 +17062,7 @@ HEREDOC
 
       printf "</div>\\n"
     } | {
-      _render
+      _render --title "${_ME} browse delete ${_id_selector// /\\ }"
     }
   }
 
