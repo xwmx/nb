@@ -17499,6 +17499,7 @@ HEREDOC
 
     local _id_selector=
     _id_selector="$(_get_id_selector "${_source_path:-}" --notebook)"
+
     local _html_title="${_ME} browse ${_id_selector// /\\\ }"
 
     local _render_type=
