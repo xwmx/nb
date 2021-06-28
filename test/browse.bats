@@ -349,11 +349,11 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"  -eq 0                    ]]
+  [[    "${status}"  -eq 0                                  ]]
 
-  [[    "${output}"  =~  '<title>nb</title>'  ]]
-  [[ !  "${output}"  =~  'h1 class="title"'   ]]
-  [[ !  "${output}"  =~  'title-block-header' ]]
+  [[    "${output}"  =~  '<title>nb browse home:</title>'   ]]
+  [[ !  "${output}"  =~  'h1 class="title"'                 ]]
+  [[ !  "${output}"  =~  'title-block-header'               ]]
 }
 
 # css / styles ################################################################
