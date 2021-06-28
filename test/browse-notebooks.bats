@@ -7,6 +7,28 @@ export NB_SERVER_PORT=6789
 # non-breaking space
 export _S=" "
 
+# HTML <title> ################################################################
+
+@test "'browse --notebooks' sets HTML <title> to CLI command." {
+  {
+    "${_NB}" init
+
+    sleep 1
+  }
+
+  run "${_NB}" browse --notebooks --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                                ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                              ]]
+  [[    "${output}"    =~  \<title\>${_ME}\ browse\ \-\-notebooks\</title\> ]]
+  [[ !  "${output}"    =~  \<title\>nb\</title\>                            ]]
+}
+
+# local #######################################################################
+
 @test "'browse --notebooks'  with local notebook serves the list of unarchived notebooks with local notebook as a rendered HTML page with links to internal web server URLs." {
   {
     "${_NB}" init
