@@ -9,7 +9,7 @@ export _S=" "
 
 # HTML <title> ################################################################
 
-@test "'browse' sets HTML <title> to CLI command with nested file selector." {
+@test "'browse <folder>/<folder>/<file>' sets HTML <title> to CLI command." {
   {
     "${_NB}" init
 
@@ -49,7 +49,7 @@ export _S=" "
   [[ !  "${output}"    =~  \<title\>nb\</title\>                      ]]
 }
 
-@test "'browse' sets HTML <title> to CLI command with notebook selector." {
+@test "'browse <notebook>:' sets HTML <title> to CLI command." {
   {
     "${_NB}" init
 
@@ -71,7 +71,7 @@ export _S=" "
   [[ !  "${output}"    =~  \<title\>nb\</title\>                                    ]]
 }
 
-@test "'browse' sets HTML <title> to CLI command with folder selector." {
+@test "'browse <folder>/' sets HTML <title> to CLI command." {
   {
     "${_NB}" init
 

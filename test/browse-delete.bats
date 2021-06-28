@@ -9,7 +9,7 @@ export _S=" "
 
 # HTML <title> ################################################################
 
-@test "'browse delete' sets HTML <title> to CLI command with nested file selector." {
+@test "'browse delete <folder>/<folder>/<file>' sets HTML <title> to CLI command." {
   {
     "${_NB}" init
 
@@ -30,7 +30,7 @@ export _S=" "
   [[ !  "${output}"    =~  \<title\>nb\</title\>        ]]
 }
 
-@test "'browse delete' sets HTML <title> to CLI command with root-level file selector." {
+@test "'browse delete <id>' sets HTML <title> to CLI command." {
   {
     "${_NB}" init
 
@@ -51,7 +51,7 @@ export _S=" "
   [[ !  "${output}"    =~  \<title\>nb\</title\>        ]]
 }
 
-@test "'browse delete' sets HTML <title> to CLI command with file in other notebook." {
+@test "'browse delete <notebook>:<id>' sets HTML <title> to CLI command." {
   {
     "${_NB}" init
 
@@ -74,7 +74,7 @@ export _S=" "
   [[ !  "${output}"    =~  \<title\>nb\</title\>                  ]]
 }
 
-@test "'browse' sets HTML <title> to CLI command with nested file selector." {
+@test "'browse <folder>/<id>' sets HTML <title> to CLI command." {
   {
     "${_NB}" init
 
