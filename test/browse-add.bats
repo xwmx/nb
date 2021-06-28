@@ -9,7 +9,7 @@ export _S=" "
 
 # HTML <title> ################################################################
 
-@test "'browse add' sets HTML title to CLI command with nested file selector in other notebook." {
+@test "'browse add' sets HTML <title> to CLI command with nested file selector in other notebook." {
   {
     "${_NB}" init
 
@@ -31,7 +31,7 @@ export _S=" "
   [[ !  "${output}"    =~  \<title\>nb\</title\>                          ]]
 }
 
-@test "'browse add' sets HTML title to CLI command with folder selector." {
+@test "'browse add' sets HTML <title> to CLI command with folder selector." {
   {
     "${_NB}" init
 
@@ -52,7 +52,7 @@ export _S=" "
   [[ !  "${output}"    =~  \<title\>nb\</title\>                          ]]
 }
 
-@test "'browse add' sets HTML title to CLI command with notebook selector." {
+@test "'browse add' sets HTML <title> to CLI command with notebook selector." {
   {
     "${_NB}" init
 
@@ -73,7 +73,7 @@ export _S=" "
   [[ !  "${output}"    =~  \<title\>nb\</title\>                          ]]
 }
 
-@test "'browse add' sets HTML title to CLI command with no selector." {
+@test "'browse add' sets HTML <title> to CLI command with no selector." {
   {
     "${_NB}" init
 

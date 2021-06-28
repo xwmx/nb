@@ -16704,6 +16704,24 @@ HEREDOC
       _url_params+="--local=${_encoded_local_notebook_path:-}"
     fi
 
+    local _current_selector=
+    local _maybe_local_input=
+
+    local _local_notebook_path=
+    _local_notebook_path="$(_get_uri --decode "${_encoded_local_notebook_path:-}")"
+
+    if [[ "${_target_path%/}" == "${_local_notebook_path%/}" ]]
+    then
+      _current_selector="local:"
+      _maybe_local_input="\
+<input type=\"hidden\" name=\"--local\"     value=\"${_local_notebook_path}\">${_NEWLINE}"
+    else
+      _current_selector="$(_get_id_selector "${_target_path%/}" || :)"
+    fi
+
+    local _url_encoded_selector="${_current_selector//' '/%20}"
+
+
     {
       if [[ -n "${_query:-}" ]]
       then
@@ -16810,21 +16828,7 @@ HEREDOC
       local _list_count=
       _list_count="$(_count "${_target_path}")"
 
-      local _current_selector=
-      local _maybe_local_input=
 
-      local _local_notebook_path=
-      _local_notebook_path="$(_get_uri --decode "${_encoded_local_notebook_path:-}")"
-
-      if [[ "${_target_path%/}" == "${_local_notebook_path%/}" ]]
-      then
-        _current_selector="local:"
-        _maybe_local_input="\
-<input type=\"hidden\" name=\"--local\"     value=\"${_local_notebook_path}\">${_NEWLINE}"
-      else
-        _current_selector="$(_get_id_selector "${_target_path%/}" || :)"
-        _current_selector="${_current_selector//' '/%20}"
-      fi
 
       local _print_prev=0
 
@@ -16844,7 +16848,7 @@ HEREDOC
       cat <<HEREDOC
 <form
   accept-charset="UTF-8"
-  action="/${_current_selector}${_url_params:-}"
+  action="/${_url_encoded_selector}${_url_params:-}"
   id="search"
   method="get">
 <label for="search-input">search:</label>
@@ -16907,7 +16911,7 @@ HEREDOC
         printf                                                \
           "<a href=\"http://localhost:%s/%s?%s\">❮ prev</a>"  \
           "${NB_SERVER_PORT}"                                 \
-          "${_current_selector}"                              \
+          "${_url_encoded_selector}"                          \
           "${_prev_url_params#$'&'}"
       fi
 
@@ -16924,7 +16928,7 @@ HEREDOC
         printf                                                \
           "<a href=\"http://localhost:%s/%s?%s\">next ❯</a>"  \
           "${NB_SERVER_PORT}"                                 \
-          "${_current_selector}"                              \
+          "${_url_encoded_selector}"                          \
           "${_next_url_params#$'&'}"
       fi
 
@@ -16941,7 +16945,7 @@ HEREDOC
 
       printf "</div>\\n"
     } | {
-      _render
+      _render --title "$(_join " " "${_ME} browse" "${_current_selector// /\\ }")"
     }
   }
 

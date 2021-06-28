@@ -6,7 +6,7 @@ export NB_SERVER_PORT=6789
 
 # HTML <title> ################################################################
 
-@test "'browse' sets HTML title to CLI command with root-level file." {
+@test "'browse' sets HTML <title> to CLI command with root-level file." {
   {
     "${_NB}" init
 
@@ -26,7 +26,7 @@ export NB_SERVER_PORT=6789
   [[ !  "${output}"    =~  \<title\>nb\</title\>                      ]]
 }
 
-@test "'browse' sets HTML title to CLI command with nested file." {
+@test "'browse' sets HTML <title> to CLI command with nested file." {
   {
     "${_NB}" init
 
@@ -46,7 +46,7 @@ export NB_SERVER_PORT=6789
   [[ !  "${output}"    =~  \<title\>nb\</title\>                          ]]
 }
 
-@test "'browse' sets HTML title to CLI command with nested file in other notebook." {
+@test "'browse' sets HTML <title> to CLI command with nested file in other notebook." {
   {
     "${_NB}" init
 
