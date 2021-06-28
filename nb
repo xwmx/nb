@@ -4834,6 +4834,11 @@ _list() {
 
   if ((_with_pinned))
   then
+    if [[ -f "${_list_path}/.pindex"  ]]
+    then
+      _pinned_basenames=($(cat "${_list_path}/.pindex"))
+    fi
+
     # Search-Based Pinning
     #
     # Display pinned items first in the list by matching against a pattern
@@ -4846,25 +4851,18 @@ _list() {
     if [[ "${NB_PINNED_PATTERN:-}"    ]]
     then
       _pinned_basenames=($(
-        GIT_PAGER='' git -C "${_list_path}"     \
-          grep                                  \
-          --color=never                         \
-          --extended-regexp                     \
-          --files-with-matches                  \
-          --ignore-case                         \
-          --max-depth 0                         \
-          --text                                \
-          -e "${NB_PINNED_PATTERN:-"#pinned"}"  \
-          "${_list_path}" 2>/dev/null || :
-      ))
-    fi
-
-    if [[ -f "${_list_path}/.pindex"  ]]
-    then
-      _pinned_basenames=($(
         {
-          cat "${_list_path}/.pindex"
           printf "%s\\n" "${_pinned_basenames[@]:-}"
+          GIT_PAGER='' git -C "${_list_path}"     \
+            grep                                  \
+            --color=never                         \
+            --extended-regexp                     \
+            --files-with-matches                  \
+            --ignore-case                         \
+            --max-depth 0                         \
+            --text                                \
+            -e "${NB_PINNED_PATTERN:-"#pinned"}"  \
+            "${_list_path}" 2>/dev/null || :
         } | awk '!NF || !seen[$0]++'
       ))
     fi
