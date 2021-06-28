@@ -114,14 +114,14 @@ export NB_SERVER_PORT=6789
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"  -eq  0                             ]]
+  [[    "${status}"  -eq  0                                         ]]
 
-  [[    "${output}"   =~  html                          ]]
-  [[    "${output}"   =~  header-crumbs                 ]]
-  [[    "${output}"   =~  \<title\>nb\</title\>         ]]
-  [[    "${output}"   =~  415\ Unsupported\ Media\ Type ]]
-  [[ !  "${output}"   =~  encrypted                     ]]
-  [[    "${output}"   =~  ↓                             ]]
+  [[    "${output}"   =~  html                                      ]]
+  [[    "${output}"   =~  header-crumbs                             ]]
+  [[    "${output}"   =~  \<title\>${_ME}\ browse\ home:1\</title\> ]]
+  [[    "${output}"   =~  415\ Unsupported\ Media\ Type             ]]
+  [[ !  "${output}"   =~  encrypted                                 ]]
+  [[    "${output}"   =~  ↓                                         ]]
 }
 
 @test "'browse <file>' renders 415 with message when file is encrypted." {
@@ -145,7 +145,7 @@ export NB_SERVER_PORT=6789
 
   [[ "${output}" =~  html                                                 ]]
   [[ "${output}" =~  header-crumbs                                        ]]
-  [[ "${output}" =~  \<title\>nb\</title\>                                ]]
+  [[ "${output}" =~  \<title\>${_ME}\ browse\ home:1\</title\>            ]]
   [[ "${output}" =~  415\ Unsupported\ Media\ Type:\ File\ is\ encrypted  ]]
   [[ "${output}" =~  ↓                                                    ]]
 }
@@ -171,7 +171,7 @@ export NB_SERVER_PORT=6789
 
   [[ "${output}" =~  html                                                 ]]
   [[ "${output}" =~  header-crumbs                                        ]]
-  [[ "${output}" =~  \<title\>nb\</title\>                                ]]
+  [[ "${output}" =~  \<title\>${_ME}\ browse\ home:1/1\</title\>          ]]
   [[ "${output}" =~  415\ Unsupported\ Media\ Type:\ File\ is\ encrypted  ]]
   [[ "${output}" =~  ↓                                                    ]]
 }
