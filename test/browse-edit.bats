@@ -9,6 +9,32 @@ export _S=" "
 
 # HTML <title> ################################################################
 
+@test "'browse edit <folder>/<folder>/<file>' with local notebook sets HTML <title> to CLI command." {
+  {
+    "${_NB}" init
+
+    mkdir -p "${_TMP_DIR}/Local Notebook"
+    cd "${_TMP_DIR}/Local Notebook"
+
+    "${_NB}" notebooks init
+
+    "${_NB}" add "Example Folder/Sample Folder/Example File.md" --content "Example content."
+
+    sleep 1
+  }
+
+  run "${_NB}" browse edit Example\ Folder/Sample\ Folder/Example\ File.md --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                            ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>          ]]
+  [[    "${output}"    =~  \
+\<title\>${_ME}\ browse\ edit\ local:1/1/1\</title\>    ]]
+  [[ !  "${output}"    =~  \<title\>nb\</title\>        ]]
+}
+
 @test "'browse edit <folder>/<folder>/<file>' sets HTML <title> to CLI command." {
   {
     "${_NB}" init
