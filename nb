@@ -17490,6 +17490,10 @@ HEREDOC
 
     local _header_options=("--raw-url" "${_raw_url}" "${_pagination_options[@]}")
 
+    local _id_selector=
+    _id_selector="$(_get_id_selector "${_source_path:-}" --notebook)"
+    local _html_title="${_ME} browse ${_id_selector// /\\\ }"
+
     local _render_type=
 
     if _file_is_text "${_source_path:-}"        ||
@@ -17526,7 +17530,7 @@ HEREDOC
 
         printf "</p>\\n</div>\\n"
       } | {
-        _render
+        _render --title "${_html_title}"
       } | {
         _browse_respond_with 415 "${_respond_with_arguments[@]:-}"
       }
@@ -17575,7 +17579,7 @@ HEREDOC
 
         printf "</div>\\n"
       } | {
-        _render
+        _render --title "${_html_title}"
       }
     else # render non-Org to HTML before resolving [[wiki-style links]]
       {
@@ -17588,11 +17592,11 @@ HEREDOC
                 "${_raw_url}"                                                 \
                 "${_source_path##*/}"
             } | {
-              _render --body
+              _render --body  --title "${_html_title}"
             }
             ;;
           pandoc)
-            local _render_options=("--pandoc" "--body")
+            local _render_options=("--pandoc" "--body" "--title" "${_html_title}")
 
             if [[ "${_source_path:-}" =~ \.bookmark\.md ]]
             then
@@ -17606,7 +17610,7 @@ HEREDOC
             # NOTE: add uniform newlines: `sed  '/^$/d' | sed G`
             pdftotext "${_source_path}" - \
               | tr -d '\014'              \
-              | _render --from="md" --pandoc --body
+              | _render --from="md" --pandoc --body --title "${_html_title}"
             ;;
         esac
       } | {
@@ -17627,7 +17631,7 @@ HEREDOC
           "${_pagination_options[@]:-}"   \
           --browse
       } | {
-        _render
+        _render --title "${_html_title}"
       }
     fi | {
       local _encoded_notebook_name="${_raw_url#http://localhost:${NB_SERVER_PORT}/--original/}"
