@@ -46,8 +46,6 @@ load test_helper
   [[    "${output}"    =~  \<title\>nb\</title\>  ]]
 }
 
-
-
 @test "'_render --title <title> --pandoc' sets HTML '<title></title>' to <title>." {
   {
     "${_NB}" init
