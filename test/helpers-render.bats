@@ -2,6 +2,96 @@
 
 load test_helper
 
+# <title> #####################################################################
+
+@test "'_render --title <title>' sets HTML '<title></title>' to <title>." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example File One.md"   \
+      --title     "Example Title One"     \
+      --content   "Example content one."
+  }
+
+  run "${_NB}" helpers render             \
+    "${NB_DIR}/home/Example File.md"      \
+    --title "Example HTML Title"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                        ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                      ]]
+  [[    "${output}"    =~  \<title\>Example\ HTML\ Title\</title\>  ]]
+  [[ !  "${output}"    =~  \<title\>nb\</title\>                    ]]
+}
+
+@test "'_render' without '--title' sets HTML '<title></title>' to default." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example File One.md"   \
+      --title     "Example Title One"     \
+      --content   "Example content one."
+  }
+
+  run "${_NB}" helpers render             \
+    "${NB_DIR}/home/Example File.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                      ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>    ]]
+  [[    "${output}"    =~  \<title\>nb\</title\>  ]]
+}
+
+
+
+@test "'_render --title <title> --pandoc' sets HTML '<title></title>' to <title>." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example File One.md"   \
+      --title     "Example Title One"     \
+      --content   "Example content one."
+  }
+
+  run "${_NB}" helpers render             \
+    "${NB_DIR}/home/Example File.md"      \
+    --pandoc                              \
+    --title "Example HTML Title"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                        ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                      ]]
+  [[    "${output}"    =~  \<title\>Example\ HTML\ Title\</title\>  ]]
+  [[ !  "${output}"    =~  \<title\>nb\</title\>                    ]]
+}
+
+@test "'_render --pandoc' without '--title' sets HTML '<title></title>' to default." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example File One.md"   \
+      --title     "Example Title One"     \
+      --content   "Example content one."
+  }
+
+  run "${_NB}" helpers render             \
+    "${NB_DIR}/home/Example File.md"      \
+    --pandoc
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                      ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>    ]]
+  [[    "${output}"    =~  \<title\>nb\</title\>  ]]
+}
+
 # img tags ####################################################################
 
 @test "'_render --pandoc' with markdown file preserves <img> tags after '## Content' heading." {

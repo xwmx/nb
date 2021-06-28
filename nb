@@ -9062,7 +9062,8 @@ _option_get_tags() {
 #
 # Usage:
 #   [<input> |] _render [<path>] [--body] [--from] [--pandoc]
-#                       [--source-extension] [<pandoc-option>...]
+#                       [--source-extension] [--title <title>]
+#                       [<pandoc-option>...]
 #
 # Options:
 #   --body              Only render body, without <head> and <body> opening
@@ -9071,6 +9072,7 @@ _option_get_tags() {
 #   --pandoc            Use pandoc to convert file.
 #   --source-extension  The extension of the original file. Used to select
 #                       syntax mode in Ace.
+#   --title             <title> content.
 _render() {
   # Usage: _render_prepare_file_format <path> <pandoc-enabled>
   _render_prepare_file() {
@@ -9113,8 +9115,15 @@ _render() {
     printf "%s\\n" "${_prepared_file_path:-}"
   }
 
-  # Usage: _render_print_head
+  # Usage: _render_print_head [--title <title>]
   _render_print_head() {
+    local _html_title="nb"
+
+    if [[ "${1:-}" == "--title" ]] && [[ -n "${2:-}" ]]
+    then
+      _html_title="${2:-}"
+    fi
+
     local _ansi_hex_values=(
       '000000' '800000' '008000' '808000' '000080' '800080' '008080' 'c0c0c0'
       '808080' 'ff0000' '00ff00' 'ffff00' '0000ff' 'ff00ff' '00ffff' 'ffffff'
@@ -9173,7 +9182,7 @@ _render() {
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-<title>nb</title>
+<title>${_html_title}</title>
 <style>
 html {
   background-color:   #1a1a1a;
@@ -9702,6 +9711,7 @@ HEREDOC
   }
 
   local _from=
+  local _html_title=
   local _input_file_path=
   local _input_string=
   local _only_body=0
@@ -9719,6 +9729,7 @@ HEREDOC
       --from)     _from="${2:?}" && _use_pandoc=1   && shift  ;;
       --*pandoc)  _use_pandoc=1                               ;;
       --source*)  _source_extension="${2:?}"        && shift  ;;
+      --title)    _html_title="${2:?}"              && shift  ;;
       -*)         _pandoc_arguments+=("${1:-}")               ;;
       *)
         if [[ -z "${_input_file_path:-}"  ]] &&
@@ -9820,7 +9831,7 @@ HEREDOC
     # head
     if ! ((_only_body))
     then
-      _render_print_head
+      _render_print_head --title "${_html_title}"
     fi
 
     cat
