@@ -16509,8 +16509,9 @@ _browse() {
       fi
     fi
 
-    local _text_area_columns="${_columns:-}"
+    local _html_title="${_ME} browse add ${_selector// /\\\ }"
     local _rows=30
+    local _text_area_columns="${_columns:-}"
     local _url_params=
 
     if _contains "--terminal" "${_pagination_options[@]:-}"
@@ -16592,7 +16593,9 @@ HEREDOC
 
       printf "</div>\\n"
     } | {
-      _render --source-extension "${NB_DEFAULT_EXTENSION:-md}"
+      _render                                             \
+        --source-extension "${NB_DEFAULT_EXTENSION:-md}"  \
+        --title "${_html_title}"
     }
   }
 

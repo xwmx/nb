@@ -7,6 +7,90 @@ export NB_SERVER_PORT=6789
 # non-breaking space
 export _S=" "
 
+# HTML <title> ################################################################
+
+@test "'browse add' sets HTML title to CLI command with nested file selector in other notebook." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" add "Example Notebook:Example Folder" --type "folder"
+
+    sleep 1
+  }
+
+  run "${_NB}" browse add "Example Notebook:Example Folder/Example File.md" --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                              ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                            ]]
+  [[    "${output}"    =~  \
+\<title\>${_ME}\ browse\ add\ Example\\\ Notebook:Example\\\ Folder/Example\\\ File.md\</title\>  ]]
+  [[ !  "${output}"    =~  \<title\>nb\</title\>                          ]]
+}
+
+@test "'browse add' sets HTML title to CLI command with folder selector." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder" --type "folder"
+
+    sleep 1
+  }
+
+  run "${_NB}" browse add "Example Folder/" --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                              ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                            ]]
+  [[    "${output}"    =~  \
+\<title\>${_ME}\ browse\ add\ home:Example\\\ Folder/\</title\>           ]]
+  [[ !  "${output}"    =~  \<title\>nb\</title\>                          ]]
+}
+
+@test "'browse add' sets HTML title to CLI command with notebook selector." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    sleep 1
+  }
+
+  run "${_NB}" browse add "Example Notebook:" --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                              ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                            ]]
+  [[    "${output}"    =~  \
+\<title\>${_ME}\ browse\ add\ Example\\\ Notebook:\</title\>              ]]
+  [[ !  "${output}"    =~  \<title\>nb\</title\>                          ]]
+}
+
+@test "'browse add' sets HTML title to CLI command with no selector." {
+  {
+    "${_NB}" init
+
+    sleep 1
+  }
+
+  run "${_NB}" browse add --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                              ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                            ]]
+  [[    "${output}"    =~  \<title\>${_ME}\ browse\ add\ home:\</title\>  ]]
+  [[ !  "${output}"    =~  \<title\>nb\</title\>                          ]]
+}
+
 # local #######################################################################
 
 @test "POST to --add <folder-name>/<filename> URL with local notebook creates folder and note and redirects."  {
