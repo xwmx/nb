@@ -17131,8 +17131,11 @@ HEREDOC
     local _content=
     _content="$(_show "${_source_path}" --print --no-color)"
 
+    local _id_selector=
+    _id_selector="$(_get_id_selector "${_source_path}" --notebook)"
+
     local _form_action_selector=
-    _form_action_selector="$(_get_id_selector "${_source_path}")"
+    _form_action_selector="${_id_selector// /%20}"
 
     local _last_saved_at=
     _last_saved_at="$(_show "${_source_path}" --updated)"
@@ -17191,7 +17194,9 @@ HEREDOC
 
       printf "</div>\\n"
     } | {
-      _render --source-extension "${_source_path##*.}"
+      _render                                     \
+        --source-extension "${_source_path##*.}"  \
+        --title "${_ME} browse edit ${_id_selector// /\\ }"
     }
   }
 
