@@ -56,13 +56,148 @@ ${_S}Example${_S}Folder${_S}File.md${_S}·${_S}\"Example${_S}folder.*\</a\>\<br\
 
 # --original ##################################################################
 
-@test "GET to --original URL with .html extension serves original html file as 'Content Type: text/plain; charset=UTF-8'." {
+@test "GET to --original URL with .svg file serves original svg file as 'Content-Type: image/svg+xml'." {
+  {
+    "${_NB}" init
+
+    cat <<HEREDOC > "${_TMP_DIR}/example.svg"
+<svg width="100" height="100">
+  <circle cx="50" cy="50" r="40"
+  stroke="red" stroke-width="4" fill="blue" />
+</svg>
+HEREDOC
+
+    "${_NB}" import "${_TMP_DIR}/example.svg"
+
+    declare _original_file_size=
+    _original_file_size="$(
+      wc -c <"${_TMP_DIR}/example.svg" | xargs
+    )"
+
+    (ncat                               \
+      --exec "${_NB} browse --respond"  \
+      --listen                          \
+      --source-port "6789"              \
+      2>/dev/null) &
+
+    sleep 1
+  }
+
+  run curl -sS -D -                                           \
+    "http://localhost:6789/--original/home/example.svg"       \
+    -o "${_TMP_DIR}/download.svg"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0                                       ]]
+
+  [[ "${output}"  =~  Content-Type:\ image/svg\+xml           ]]
+  [[ "${output}"  =~  Content-Length:\ ${_original_file_size} ]]
+
+  diff                                                        \
+    <(wc -c <"${_TMP_DIR}/download.svg")                      \
+    <(wc -c <"${_TMP_DIR}/example.svg")
+
+  diff                                                        \
+    <(_get_hash "${_TMP_DIR}/download.svg")                   \
+    <(_get_hash "${_TMP_DIR}/example.svg")
+}
+
+@test "GET to --original URL with .png file serves original png file as 'Content-Type: image/png'." {
+  {
+    "${_NB}" init
+
+    "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/nb.png"
+
+    declare _original_file_size=
+    _original_file_size="$(
+      wc -c <"${NB_TEST_BASE_PATH}/fixtures/nb.png" | xargs
+    )"
+
+    (ncat                               \
+      --exec "${_NB} browse --respond"  \
+      --listen                          \
+      --source-port "6789"              \
+      2>/dev/null) &
+
+    sleep 1
+  }
+
+  run curl -sS -D -                                           \
+    "http://localhost:6789/--original/home/nb.png"            \
+    -o "${_TMP_DIR}/nb.png"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0                                       ]]
+
+  [[ "${output}"  =~  Content-Type:\ image/png                ]]
+  [[ "${output}"  =~  Content-Length:\ ${_original_file_size} ]]
+
+  diff                                                        \
+    <(wc -c <"${_TMP_DIR}/nb.png")                            \
+    <(wc -c <"${NB_TEST_BASE_PATH}/fixtures/nb.png")
+
+  diff                                                        \
+    <(_get_hash "${_TMP_DIR}/nb.png")                         \
+    <(_get_hash "${NB_TEST_BASE_PATH}/fixtures/nb.png")
+}
+
+@test "GET to --original URL with .pdf file serves original pdf file as 'Content-Type: application/pdf'." {
+  {
+    "${_NB}" init
+
+    "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/example.pdf"
+
+    declare _original_file_size=
+    _original_file_size="$(
+      wc -c <"${NB_TEST_BASE_PATH}/fixtures/nb.pdf" | xargs
+    )"
+
+    (ncat                               \
+      --exec "${_NB} browse --respond"  \
+      --listen                          \
+      --source-port "6789"              \
+      2>/dev/null) &
+
+    sleep 1
+  }
+
+  run curl -sS -D -                                           \
+    "http://localhost:6789/--original/home/example.pdf"       \
+    -o "${_TMP_DIR}/example.pdf"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0                                       ]]
+
+  [[ "${output}"  =~  Content-Type:\ application/pdf          ]]
+  [[ "${output}"  =~  Content-Length:\ ${_original_file_size} ]]
+
+  diff                                                        \
+    <(wc -c <"${_TMP_DIR}/example.pdf")                       \
+    <(wc -c <"${NB_TEST_BASE_PATH}/fixtures/example.pdf")
+
+  diff                                                        \
+    <(_get_hash "${_TMP_DIR}/example.pdf")                    \
+    <(_get_hash "${NB_TEST_BASE_PATH}/fixtures/example.pdf")
+}
+
+@test "GET to --original URL with .html extension serves original html file as 'Content-Type: text/plain; charset=UTF-8'." {
   {
     "${_NB}" init
 
     "${_NB}" add  "Example Folder/Example File.html"  \
       --title     "Example Title"                     \
       --content   "<!DOCTYPE html><html><head></head><body>Example</body></html>"
+
+    declare _original_file_size=
+    _original_file_size="$(
+      wc -c <"${NB_DIR}/home/Example Folder/Example File.html" | xargs
+    )"
 
     (ncat                               \
       --exec "${_NB} browse --respond"  \
@@ -78,21 +213,28 @@ ${_S}Example${_S}Folder${_S}File.md${_S}·${_S}\"Example${_S}folder.*\</a\>\<br\
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"  -eq 0                                                           ]]
+  [[ "${status}"  -eq 0                                                       ]]
 
-  [[ "${output}"  =~  Content-Type:\ text/plain\;\ charset=UTF-8                  ]]
+  [[ "${output}"  =~  Content-Type:\ text/plain\;\ charset=UTF-8              ]]
+  [[ "${output}"  =~  Content-Length:\ ${_original_file_size}                 ]]
 
-  [[ "${output}"  =~  \#\ Example\ Title                                          ]]
-  [[ "${output}"  =~  \<!DOCTYPE\ html\>\<html\>\<head\>\</head\>\<body\>Example\</body\>\</html\>  ]]
+  [[ "${output}"  =~  \#\ Example\ Title                                      ]]
+  [[ "${output}"  =~  \
+\<!DOCTYPE\ html\>\<html\>\<head\>\</head\>\<body\>Example\</body\>\</html\>  ]]
 }
 
-@test "GET to --original URL with .md extension serves original markdown file with html content as 'Content Type: text/plain; charset=UTF-8'." {
+@test "GET to --original URL with .md extension serves original markdown file with html content as 'Content-Type: text/plain; charset=UTF-8'." {
   {
     "${_NB}" init
 
     "${_NB}" add  "Example Folder/Example File.md"  \
       --title     "Example Title"                   \
       --content   "<html><head></head><body>Example</body></html>"
+
+    declare _original_file_size=
+    _original_file_size="$(
+      wc -c <"${NB_DIR}/home/Example Folder/Example File.md" | xargs
+    )"
 
     (ncat                               \
       --exec "${_NB} browse --respond"  \
@@ -108,12 +250,14 @@ ${_S}Example${_S}Folder${_S}File.md${_S}·${_S}\"Example${_S}folder.*\</a\>\<br\
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"  -eq 0                                                           ]]
+  [[ "${status}"  -eq 0                                           ]]
 
-  [[ "${output}"  =~  Content-Type:\ text/plain\;\ charset=UTF-8                  ]]
+  [[ "${output}"  =~  Content-Type:\ text/plain\;\ charset=UTF-8  ]]
+  [[ "${output}"  =~  Content-Length:\ ${_original_file_size}     ]]
 
-  [[ "${output}"  =~  \#\ Example\ Title                                          ]]
-  [[ "${output}"  =~  \<html\>\<head\>\</head\>\<body\>Example\</body\>\</html\>  ]]
+  [[ "${output}"  =~  \#\ Example\ Title                          ]]
+  [[ "${output}"  =~  \
+\<html\>\<head\>\</head\>\<body\>Example\</body\>\</html\>        ]]
 }
 
 @test "GET to --original URL serves file with no newlines." {
@@ -126,6 +270,11 @@ ${_S}Example${_S}Folder${_S}File.md${_S}·${_S}\"Example${_S}folder.*\</a\>\<br\
     printf "# Example Title" > "${NB_DIR}/home/Example Folder/Example File.md"
 
     "${_NB}" git checkpoint
+
+    declare _original_file_size=
+    _original_file_size="$(
+      wc -c <"${NB_DIR}/home/Example Folder/Example File.md" | xargs
+    )"
 
     (ncat                               \
       --exec "${_NB} browse --respond"  \
@@ -145,6 +294,7 @@ ${_S}Example${_S}Folder${_S}File.md${_S}·${_S}\"Example${_S}folder.*\</a\>\<br\
   [[ "${status}"  -eq 0                                           ]]
 
   [[ "${output}"  =~  Content-Type:\ text/plain\;\ charset=UTF-8  ]]
+  [[ "${output}"  =~  Content-Length:\ ${_original_file_size}     ]]
 
   [[ "${output}"  =~  \#\ Example\ Title                          ]]
 }
@@ -156,6 +306,11 @@ ${_S}Example${_S}Folder${_S}File.md${_S}·${_S}\"Example${_S}folder.*\</a\>\<br\
     "${_NB}" add  "Example Folder/Example File.md"  \
       --title       "Example Title"                 \
       --content     "Example content."
+
+    declare _original_file_size=
+    _original_file_size="$(
+      wc -c <"${NB_DIR}/home/Example Folder/Example File.md" | xargs
+    )"
 
     (ncat                               \
       --exec "${_NB} browse --respond"  \
@@ -174,6 +329,7 @@ ${_S}Example${_S}Folder${_S}File.md${_S}·${_S}\"Example${_S}folder.*\</a\>\<br\
   [[ "${status}"  -eq 0                                           ]]
 
   [[ "${output}"  =~  Content-Type:\ text/plain\;\ charset=UTF-8  ]]
+  [[ "${output}"  =~  Content-Length:\ ${_original_file_size}     ]]
 
   [[ "${output}"  =~  \#\ Example\ Title                          ]]
   [[ "${output}"  =~  Example\ content.                           ]]
@@ -193,11 +349,11 @@ ${_S}Example${_S}Folder${_S}File.md${_S}·${_S}\"Example${_S}folder.*\</a\>\<br\
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"  -eq 0                    ]]
+  [[    "${status}"  -eq 0                                  ]]
 
-  [[    "${output}"  =~  '<title>nb</title>'  ]]
-  [[ !  "${output}"  =~  'h1 class="title"'   ]]
-  [[ !  "${output}"  =~  'title-block-header' ]]
+  [[    "${output}"  =~  '<title>nb browse home:</title>'   ]]
+  [[ !  "${output}"  =~  'h1 class="title"'                 ]]
+  [[ !  "${output}"  =~  'title-block-header'               ]]
 }
 
 # css / styles ################################################################

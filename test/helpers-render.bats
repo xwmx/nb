@@ -2,50 +2,116 @@
 
 load test_helper
 
-# img tags ####################################################################
+# <title> #####################################################################
 
-@test "'_render' strips <img> tags." {
+@test "'_render --title <title>' sets HTML '<title></title>' to <title>." {
   {
     "${_NB}" init
 
-    "${_NB}" add  "Example File.html" \
-      --content   "$(<<HEREDOC cat
-<p>Example image one: <img src="/not-valid-1.png" alt="Example Image One" /></p>
-<p>More example <img src="/not-valid-2.png" alt="Example Image Two" /> content <img src="/not-valid-3.png" alt="Example Image Three" /> here.</p>
-HEREDOC
-)"
+    "${_NB}" add  "Example File One.md"   \
+      --title     "Example Title One"     \
+      --content   "Example content one."
   }
 
-  run "${_NB}" helpers render --pandoc "${NB_DIR}/home/Example File.html"
-
+  run "${_NB}" helpers render             \
+    "${NB_DIR}/home/Example File.md"      \
+    --title "Example HTML Title"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"    ==  0                                            ]]
-  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                          ]]
-
-  [[    "${output}"    =~  \<p\>Example\ image\ one:\ \</p\>            ]]
-  [[    "${output}"    =~  \<p\>More\ example\ \ content\ \ here.\</p\> ]]
-
-  [[ !  "${output}"    =~  \<img                                        ]]
+  [[    "${status}"    ==  0                                        ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                      ]]
+  [[    "${output}"    =~  \<title\>Example\ HTML\ Title\</title\>  ]]
+  [[ !  "${output}"    =~  \<title\>nb\</title\>                    ]]
 }
 
-@test "'_render --pandoc' strips <img> tags." {
+@test "'_render' without '--title' sets HTML '<title></title>' to default." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example File One.md"   \
+      --title     "Example Title One"     \
+      --content   "Example content one."
+  }
+
+  run "${_NB}" helpers render             \
+    "${NB_DIR}/home/Example File.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                      ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>    ]]
+  [[    "${output}"    =~  \<title\>nb\</title\>  ]]
+}
+
+@test "'_render --title <title> --pandoc' sets HTML '<title></title>' to <title>." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example File One.md"   \
+      --title     "Example Title One"     \
+      --content   "Example content one."
+  }
+
+  run "${_NB}" helpers render             \
+    "${NB_DIR}/home/Example File.md"      \
+    --pandoc                              \
+    --title "Example HTML Title"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                        ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                      ]]
+  [[    "${output}"    =~  \<title\>Example\ HTML\ Title\</title\>  ]]
+  [[ !  "${output}"    =~  \<title\>nb\</title\>                    ]]
+}
+
+@test "'_render --pandoc' without '--title' sets HTML '<title></title>' to default." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example File One.md"   \
+      --title     "Example Title One"     \
+      --content   "Example content one."
+  }
+
+  run "${_NB}" helpers render             \
+    "${NB_DIR}/home/Example File.md"      \
+    --pandoc
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                      ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>    ]]
+  [[    "${output}"    =~  \<title\>nb\</title\>  ]]
+}
+
+# img tags ####################################################################
+
+@test "'_render --pandoc' with markdown file preserves <img> tags after '## Content' heading." {
   {
     "${_NB}" init
 
     "${_NB}" add  "Example File.md" \
-      --title     "Example Title"   \
       --content   "$(<<HEREDOC cat
+<https://example.test>
+
+## Description
+
 Example image one: ![Example Image One](/not-valid-1.png)
+
+## Page Content
 
 More example ![Example Image Two](/not-valid-2.png) content ![Example Image Three](/not-valid-3.png) here.
 HEREDOC
 )"
   }
 
-  run "${_NB}" helpers render --pandoc "${NB_DIR}/home/Example File.md"
+  run "${_NB}" helpers render "${NB_DIR}/home/Example File.md" --pandoc
 
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -54,10 +120,136 @@ HEREDOC
   [[    "${status}"    ==  0                                            ]]
   [[    "${output}"    =~  \<\!DOCTYPE\ html\>                          ]]
 
-  [[    "${output}"    =~  \<p\>Example\ image\ one:\ \</p\>            ]]
-  [[    "${output}"    =~  \<p\>More\ example\ \ content\ \ here.\</p\> ]]
+  [[    "${output}"    =~  \
+\<p\>Example\ image\ one:\ \<img\ src=\"/not-valid-1.png\"\ alt=\"Example\ Image\ One\"\ /\>\</p\>  ]]
+  [[    "${output}"    =~  \
+\<p\>More\ example\ \<img\ src=\"/not-valid-2.png\"\ alt=\"Example\ Image\ Two\"\ /\>\ content\     ]]
+  [[    "${output}"    =~  \
+\ content\ \<img\ src=\"/not-valid-3.png\"\ alt=\"Example\ Image\ Three\"\ /\>\ here.\</p\>         ]]
+}
 
-  [[ !  "${output}"    =~  \<img                                        ]]
+@test "'_render --bookmark --pandoc' with markdown file strips <img> tags after '## Content' heading." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example File.md" \
+      --content   "$(<<HEREDOC cat
+<https://example.test>
+
+## Description
+
+Example image one: ![Example Image One](/not-valid-1.png)
+
+## Page Content
+
+More example ![Example Image Two](/not-valid-2.png) content ![Example Image Three](/not-valid-3.png) here.
+HEREDOC
+)"
+  }
+
+  run "${_NB}" helpers render "${NB_DIR}/home/Example File.md" --bookmark --pandoc
+
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                            ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                          ]]
+
+  [[    "${output}"    =~  \
+\<p\>Example\ image\ one:\ \<img\ src=\"/not-valid-1.png\"\ alt=\"Example\ Image\ One\"\ /\>\</p\>  ]]
+  [[    "${output}"    =~  \<p\>More\ example\ \ content\ \ here.\</p\> ]]
+}
+
+@test "'_render --bookmark --pandoc' with markdown file strips <img> tags after '## Page Content' heading." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example File.md" \
+      --content   "$(<<HEREDOC cat
+<https://example.test>
+
+## Description
+
+Example image one: ![Example Image One](/not-valid-1.png)
+
+## Page Content
+
+More example ![Example Image Two](/not-valid-2.png) content ![Example Image Three](/not-valid-3.png) here.
+HEREDOC
+)"
+  }
+
+  run "${_NB}" helpers render "${NB_DIR}/home/Example File.md" --bookmark --pandoc
+
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                            ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                          ]]
+
+  [[    "${output}"    =~  \
+\<p\>Example\ image\ one:\ \<img\ src=\"/not-valid-1.png\"\ alt=\"Example\ Image\ One\"\ /\>\</p\>  ]]
+  [[    "${output}"    =~  \<p\>More\ example\ \ content\ \ here.\</p\> ]]
+}
+
+@test "'_render --bookmark' with html file strips <img> tags after '## Content' heading." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example File.html" \
+      --content   "$(<<HEREDOC cat
+<p><a href="https://example.test" class="uri">https://example.test</a></p>
+<h2 id="description">Description</h2>
+<p>Example image one: <img src="/not-valid-1.png" alt="Example Image One" /></p>
+<h2 id="content">Content</h2>
+<p>More example <img src="/not-valid-2.png" alt="Example Image Two" /> content <img src="/not-valid-3.png" alt="Example Image Three" /> here.</p>
+HEREDOC
+)"
+  }
+
+  run "${_NB}" helpers render "${NB_DIR}/home/Example File.html" --bookmark
+
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                            ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                          ]]
+
+  [[    "${output}"    =~  \
+\<p\>Example\ image\ one:\ \<img\ src=\"/not-valid-1.png\"\ alt=\"Example\ Image\ One\"\ /\>\</p\>  ]]
+  [[    "${output}"    =~  \<p\>More\ example\ \ content\ \ here.\</p\> ]]
+}
+
+@test "'_render --bookmark' with html file strips <img> tags after '## Page Content' heading." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example File.html" \
+      --content   "$(<<HEREDOC cat
+<p><a href="https://example.test" class="uri">https://example.test</a></p>
+<h2 id="description">Description</h2>
+<p>Example image one: <img src="/not-valid-1.png" alt="Example Image One" /></p>
+<h2 id="page-content">Page Content</h2>
+<p>More example <img src="/not-valid-2.png" alt="Example Image Two" /> content <img src="/not-valid-3.png" alt="Example Image Three" /> here.</p>
+HEREDOC
+)"
+  }
+
+  run "${_NB}" helpers render "${NB_DIR}/home/Example File.html" --bookmark
+
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                            ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                          ]]
+
+  [[    "${output}"    =~  \
+\<p\>Example\ image\ one:\ \<img\ src=\"/not-valid-1.png\"\ alt=\"Example\ Image\ One\"\ /\>\</p\>  ]]
+  [[    "${output}"    =~  \<p\>More\ example\ \ content\ \ here.\</p\> ]]
 }
 
 # code ########################################################################

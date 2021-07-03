@@ -19,6 +19,8 @@ _setup() {
   # https://stackoverflow.com/a/6762399
   set +o noclobber
 
+  export _ME="nb"
+
   # Set terminal width.
   #
   # The number of lines with wrapped output depends on terminal width.

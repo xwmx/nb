@@ -31,7 +31,7 @@ with:
 - [Git](https://git-scm.com/)-backed [versioning](#-revision-history) and [syncing](#-git-sync),
 - [Pandoc](https://pandoc.org/)-backed [conversion](#%EF%B8%8F-import--export),
 - <a href="#-linking">[[wiki-style linking]]</a>,
-- terminal and GUI web [browsing](#-browsing) and [editing](#browse-edit),
+- terminal and GUI web [browsing](#-browsing),
 - global and local [notebooks](#-notebooks),
 - organization with [folders](#-folders),
 - customizable [color themes](#-color-themes),
@@ -102,7 +102,7 @@ so notes can be edited in other apps on any device.
 
 `nb` is designed to be portable, future-focused, and vendor independent,
 providing a full-featured and intuitive experience within
-a highly composable user-centric text interface.
+a highly composable multimodal user-centric text interface.
 The entire program is contained within
 a single [well-tested](#tests) shell script
 that can be
@@ -6281,7 +6281,7 @@ Subcommands:
              first tool found in the following list:
              `ranger` [1], `mc` [2], `vifm` [3], `exa` [4], or `ls`.
              Shortcut Alias: `p`
-  rename     Rename a notebook.
+  rename     Rename a notebook. Aliases: `move`, `mv`
   select     Set the current notebook from a colon-prefixed selector.
              Not persisted. Selection format: <notebook>:<identifier>
   status     Print the archival status of the current notebook or

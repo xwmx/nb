@@ -7,6 +7,136 @@ export NB_SERVER_PORT=6789
 # non-breaking space
 export _S=" "
 
+# HTML <title> ################################################################
+
+@test "'browse <folder>/<folder>/<file>' with local notebook sets HTML <title> to CLI command." {
+  {
+    "${_NB}" init
+
+    mkdir -p "${_TMP_DIR}/Local Notebook"
+    cd "${_TMP_DIR}/Local Notebook"
+
+    "${_NB}" notebooks init
+
+    "${_NB}" add "Example Folder/Sample Folder/Example File.md" --content "Example content."
+
+    sleep 1
+  }
+
+  run "${_NB}" browse Example\ Folder/Sample\ Folder/Example\ File.md --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                              ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                            ]]
+  [[    "${output}"    =~  \<title\>${_ME}\ browse\ local:1/1/1\</title\> ]]
+  [[ !  "${output}"    =~  \<title\>nb\</title\>                          ]]
+}
+
+@test "'browse <folder>/ --query <query>' sets HTML <title> to CLI command." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/Example File.md" --content "Example content."
+
+    sleep 1
+  }
+
+  run "${_NB}" browse Example\ Folder/ --query "content" --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                              ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                            ]]
+  [[    "${output}"    =~  \
+\<title\>${_ME}\ browse\ home:1\ --query\ \"content\"\</title\>           ]]
+  [[ !  "${output}"    =~  \<title\>nb\</title\>                          ]]
+}
+
+@test "'browse <folder>/<folder>/<file>' sets HTML <title> to CLI command." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/Sample Folder/Example File.md" --content "Example content."
+
+    sleep 1
+  }
+
+  run "${_NB}" browse Example\ Folder/Sample\ Folder/Example\ File.md --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                              ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                            ]]
+  [[    "${output}"    =~  \<title\>${_ME}\ browse\ home:1/1/1\</title\>  ]]
+  [[ !  "${output}"    =~  \<title\>nb\</title\>                          ]]
+}
+
+@test "'browse' sets HTML <title> to CLI command with no selector." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example File.md" --content "Example content."
+
+    sleep 1
+  }
+
+  run "${_NB}" browse --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                          ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                        ]]
+  [[    "${output}"    =~  \<title\>${_ME}\ browse\ home:\</title\>   ]]
+  [[ !  "${output}"    =~  \<title\>nb\</title\>                      ]]
+}
+
+@test "'browse <notebook>:' sets HTML <title> to CLI command." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" add  "Example Notebook:Example File.md" --content "Example content."
+
+    sleep 1
+  }
+
+  run "${_NB}" browse Example\ Notebook: --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                                        ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                                      ]]
+  [[    "${output}"    =~  \<title\>${_ME}\ browse\ Example\\\ Notebook:\</title\>  ]]
+  [[ !  "${output}"    =~  \<title\>nb\</title\>                                    ]]
+}
+
+@test "'browse <folder>/' sets HTML <title> to CLI command." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/Example File.md" --content "Example content."
+
+    sleep 1
+  }
+
+  run "${_NB}" browse Example\ Folder/ --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                          ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                        ]]
+  [[    "${output}"    =~  \<title\>${_ME}\ browse\ home:1\</title\>  ]]
+  [[ !  "${output}"    =~  \<title\>nb\</title\>                      ]]
+}
+
 # local notebook ##############################################################
 
 @test "'browse' with no arguments serves the local notebook contents as a rendered HTML page with links to internal web server URLs." {

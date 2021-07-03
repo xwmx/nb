@@ -74,7 +74,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="6.3.4"
+_VERSION="6.3.5"
 
 # $_ME
 #
@@ -4834,6 +4834,11 @@ _list() {
 
   if ((_with_pinned))
   then
+    if [[ -f "${_list_path}/.pindex"  ]]
+    then
+      _pinned_basenames=($(cat "${_list_path}/.pindex"))
+    fi
+
     # Search-Based Pinning
     #
     # Display pinned items first in the list by matching against a pattern
@@ -4846,25 +4851,18 @@ _list() {
     if [[ "${NB_PINNED_PATTERN:-}"    ]]
     then
       _pinned_basenames=($(
-        GIT_PAGER='' git -C "${_list_path}"     \
-          grep                                  \
-          --color=never                         \
-          --extended-regexp                     \
-          --files-with-matches                  \
-          --ignore-case                         \
-          --max-depth 0                         \
-          --text                                \
-          -e "${NB_PINNED_PATTERN:-"#pinned"}"  \
-          "${_list_path}" 2>/dev/null || :
-      ))
-    fi
-
-    if [[ -f "${_list_path}/.pindex"  ]]
-    then
-      _pinned_basenames=($(
         {
-          cat "${_list_path}/.pindex"
           printf "%s\\n" "${_pinned_basenames[@]:-}"
+          GIT_PAGER='' git -C "${_list_path}"     \
+            grep                                  \
+            --color=never                         \
+            --extended-regexp                     \
+            --files-with-matches                  \
+            --ignore-case                         \
+            --max-depth 0                         \
+            --text                                \
+            -e "${NB_PINNED_PATTERN:-"#pinned"}"  \
+            "${_list_path}" 2>/dev/null || :
         } | awk '!NF || !seen[$0]++'
       ))
     fi
@@ -6242,7 +6240,7 @@ $(_color_primary "Subcommands"):
              first tool found in the following list:
              \`ranger\` [1], \`mc\` [2], \`vifm\` [3], \`exa\` [4], or \`ls\`.
              Shortcut Alias: \`p\`
-  rename     Rename a notebook.
+  rename     Rename a notebook. Aliases: \`move\`, \`mv\`
   select     Set the current notebook from a colon-prefixed selector.
              Not persisted. Selection format: <notebook>:<identifier>
   status     Print the archival status of the current notebook or
@@ -7735,7 +7733,7 @@ HEREDOC
       shift
       _notebooks_list     "${@:-}"
       ;;
-    rename)
+    rename|mv|move)
       _notebooks_rename   "${_name:-}" "${3:-}"
       ;;
     select)
@@ -8766,7 +8764,7 @@ _encrypt_file() {
   local _encrypted_path="${2:-}"
   local _password="${3:-}"
 
-  if [[ -z "${_password}" ]]
+  if [[ -z "${_password}"         ]]
   then
     _exit_1 printf "Password required.\\n"
   fi
@@ -9064,7 +9062,8 @@ _option_get_tags() {
 #
 # Usage:
 #   [<input> |] _render [<path>] [--body] [--from] [--pandoc]
-#                       [--source-extension] [<pandoc-option>...]
+#                       [--source-extension] [--title <title>]
+#                       [<pandoc-option>...]
 #
 # Options:
 #   --body              Only render body, without <head> and <body> opening
@@ -9073,6 +9072,7 @@ _option_get_tags() {
 #   --pandoc            Use pandoc to convert file.
 #   --source-extension  The extension of the original file. Used to select
 #                       syntax mode in Ace.
+#   --title             <title> content.
 _render() {
   # Usage: _render_prepare_file_format <path> <pandoc-enabled>
   _render_prepare_file() {
@@ -9115,8 +9115,15 @@ _render() {
     printf "%s\\n" "${_prepared_file_path:-}"
   }
 
-  # Usage: _render_print_head
+  # Usage: _render_print_head [--title <title>]
   _render_print_head() {
+    local _html_title="nb"
+
+    if [[ "${1:-}" == "--title" ]] && [[ -n "${2:-}" ]]
+    then
+      _html_title="${2:-}"
+    fi
+
     local _ansi_hex_values=(
       '000000' '800000' '008000' '808000' '000080' '800080' '008080' 'c0c0c0'
       '808080' 'ff0000' '00ff00' 'ffff00' '0000ff' 'ff00ff' '00ffff' 'ffffff'
@@ -9175,7 +9182,7 @@ _render() {
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-<title>nb</title>
+<title>${_html_title}</title>
 <style>
 html {
   background-color:   #1a1a1a;
@@ -9704,11 +9711,13 @@ HEREDOC
   }
 
   local _from=
+  local _html_title=
   local _input_file_path=
   local _input_string=
   local _only_body=0
   local _pandoc_arguments=("--highlight-style=zenburn")
   local _source_extension="${NB_DEFAULT_EXTENSION:-md}"
+  local _strip_bookmark_images=0
   local _use_pandoc=0
 
   while ((${#}))
@@ -9716,9 +9725,11 @@ HEREDOC
     case "${1:-}" in
       "")         :                                           ;;
       --body)     _only_body=1                                ;;
+      --bookmark) _strip_bookmark_images=1                    ;;
       --from)     _from="${2:?}" && _use_pandoc=1   && shift  ;;
       --*pandoc)  _use_pandoc=1                               ;;
       --source*)  _source_extension="${2:?}"        && shift  ;;
+      --title)    _html_title="${2:?}"              && shift  ;;
       -*)         _pandoc_arguments+=("${1:-}")               ;;
       *)
         if [[ -z "${_input_file_path:-}"  ]] &&
@@ -9820,7 +9831,7 @@ HEREDOC
     # head
     if ! ((_only_body))
     then
-      _render_print_head
+      _render_print_head --title "${_html_title}"
     fi
 
     cat
@@ -9901,9 +9912,37 @@ HEREDOC
 HEREDOC
     fi
   } | {
-    sed                     \
-      -e 's/<img[^>]*>//g'  \
-      -e "s/<a\ /<a\ rel=\"noopener\ noreferrer\"\ /g"
+    if ((_strip_bookmark_images))
+    then
+      local _strip_images=0
+
+      {
+        local               __line=
+        while IFS= read -r  __line
+        do
+          if ! ((_strip_images))  &&
+             [[ "${__line:-}" =~  ^\<h2\ id=\"content\"|^\<h2\ id=\"page-content\" ]]
+          then
+            _strip_images=1
+          fi
+
+          if ((_strip_images))
+          then
+            printf "•strip•%s\\n" "${__line:-}"
+          else
+            printf "%s\\n" "${__line:-}"
+          fi
+        done
+      } | {
+        sed -E -e "/^•strip•/ s/<img[^>]*>//g"
+      } | {
+        sed -E -e "s/^•strip•//g"
+      }
+    else
+      cat
+    fi
+  } | {
+    sed -e "s/<a\ /<a\ rel=\"noopener\ noreferrer\"\ /g"
   }
 }
 
@@ -13100,6 +13139,9 @@ _import() {
   local _target_notebook_name=
   local _url=
 
+  local _local_notebook_path=
+  _local_notebook_path="$(_notebooks --local --path || :)"
+
   if _piped_input
   then
     IFS=$' \n' _paths+=($(cat))
@@ -13142,7 +13184,10 @@ _import() {
           elif [[ "${_subcommand}" =~ ^copy$|^move$ ]] &&
                [[ -n "${_paths[*]:-}"               ]] &&
                [[ ! "${__arg}" =~ ^/                ]] &&
-               [[ ! -e "${PWD}/${__arg}"            ]]
+               {
+                 [[ -n "${_local_notebook_path}"    ]] ||
+                 [[ ! -e "${PWD}/${__arg}"          ]]
+               }
           then
             _selector="${__arg}"
           elif [[ "${_subcommand}" == "notebook"    ]] &&
@@ -16277,7 +16322,7 @@ _browse() {
     while ((${#}))
     do
       case "${1:-}" in
-        --col*|--local|--page|--per*page)
+        --col*|--local|--page|--per*page|--raw-url)
           _option_value_is_present "${2:-}" && shift
           ;;
         --terminal)
@@ -16311,7 +16356,7 @@ _browse() {
     while ((${#}))
     do
       case "${1:-}" in
-        --col*|--local|--page|--per*page)
+        --col*|--local|--page|--per*page|--raw-url)
           _option_value_is_present "${2:-}" && shift
           ;;
         --message*body)
@@ -16464,8 +16509,9 @@ _browse() {
       fi
     fi
 
-    local _text_area_columns="${_columns:-}"
+    local _html_title="${_ME} browse add ${_selector// /\\\ }"
     local _rows=30
+    local _text_area_columns="${_columns:-}"
     local _url_params=
 
     if _contains "--terminal" "${_pagination_options[@]:-}"
@@ -16547,7 +16593,9 @@ HEREDOC
 
       printf "</div>\\n"
     } | {
-      _render --source-extension "${NB_DEFAULT_EXTENSION:-md}"
+      _render                                             \
+        --source-extension "${NB_DEFAULT_EXTENSION:-md}"  \
+        --title "${_html_title}"
     }
   }
 
@@ -16656,6 +16704,24 @@ HEREDOC
       _url_params+="--local=${_encoded_local_notebook_path:-}"
     fi
 
+    local _current_selector=
+    local _maybe_local_input=
+
+    local _local_notebook_path=
+    _local_notebook_path="$(_get_uri --decode "${_encoded_local_notebook_path:-}")"
+
+    if [[ "${_target_path%/}" == "${_local_notebook_path%/}" ]]
+    then
+      _current_selector="local:"
+      _maybe_local_input="\
+<input type=\"hidden\" name=\"--local\"     value=\"${_local_notebook_path}\">${_NEWLINE}"
+    else
+      _current_selector="$(_get_id_selector "${_target_path%/}" || :)"
+    fi
+
+    local _url_encoded_selector="${_current_selector//' '/%20}"
+
+
     {
       if [[ -n "${_query:-}" ]]
       then
@@ -16762,21 +16828,7 @@ HEREDOC
       local _list_count=
       _list_count="$(_count "${_target_path}")"
 
-      local _current_selector=
-      local _maybe_local_input=
 
-      local _local_notebook_path=
-      _local_notebook_path="$(_get_uri --decode "${_encoded_local_notebook_path:-}")"
-
-      if [[ "${_target_path%/}" == "${_local_notebook_path%/}" ]]
-      then
-        _current_selector="local:"
-        _maybe_local_input="\
-<input type=\"hidden\" name=\"--local\"     value=\"${_local_notebook_path}\">${_NEWLINE}"
-      else
-        _current_selector="$(_get_id_selector "${_target_path%/}" || :)"
-        _current_selector="${_current_selector//' '/%20}"
-      fi
 
       local _print_prev=0
 
@@ -16796,7 +16848,7 @@ HEREDOC
       cat <<HEREDOC
 <form
   accept-charset="UTF-8"
-  action="/${_current_selector}${_url_params:-}"
+  action="/${_url_encoded_selector}${_url_params:-}"
   id="search"
   method="get">
 <label for="search-input">search:</label>
@@ -16859,7 +16911,7 @@ HEREDOC
         printf                                                \
           "<a href=\"http://localhost:%s/%s?%s\">❮ prev</a>"  \
           "${NB_SERVER_PORT}"                                 \
-          "${_current_selector}"                              \
+          "${_url_encoded_selector}"                          \
           "${_prev_url_params#$'&'}"
       fi
 
@@ -16876,7 +16928,7 @@ HEREDOC
         printf                                                \
           "<a href=\"http://localhost:%s/%s?%s\">next ❯</a>"  \
           "${NB_SERVER_PORT}"                                 \
-          "${_current_selector}"                              \
+          "${_url_encoded_selector}"                          \
           "${_next_url_params#$'&'}"
       fi
 
@@ -16893,7 +16945,19 @@ HEREDOC
 
       printf "</div>\\n"
     } | {
-      _render
+      local _html_title="${_ME} browse"
+
+      if [[ -n "${_current_selector:-}" ]]
+      then
+        _html_title+=" ${_current_selector// /\\ }"
+      fi
+
+      if [[ -n "${_escaped_query:-}"    ]]
+      then
+        _html_title+=" --query \"${_escaped_query:-}\""
+      fi
+
+      _render --title "${_html_title}"
     }
   }
 
@@ -16911,6 +16975,7 @@ HEREDOC
     local _encoded_local_notebook_path=
     local _pagination_options=()
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
+    local _raw_url=
     local _source_path=
 
     while ((${#}))
@@ -16932,6 +16997,10 @@ HEREDOC
         --per-page)
           _per_page="${2:?}"
           _pagination_options+=("${1:?}" "${2:?}")
+          shift
+          ;;
+        --raw-url)
+          _raw_url="${2:?}"
           shift
           ;;
         --terminal)
@@ -16995,6 +17064,7 @@ HEREDOC
         _browse_render_header           \
           "${_source_path}"             \
           "${_pagination_options[@]:-}" \
+          --raw-url "${_raw_url}"       \
           --delete
       )"
 
@@ -17004,7 +17074,7 @@ HEREDOC
 
       printf "</div>\\n"
     } | {
-      _render
+      _render --title "${_ME} browse delete ${_id_selector// /\\ }"
     }
   }
 
@@ -17022,6 +17092,7 @@ HEREDOC
     local _encoded_local_notebook_path=
     local _pagination_options=()
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
+    local _raw_url=
     local _source_path=
     local _subcommand_options=()
 
@@ -17046,6 +17117,10 @@ HEREDOC
           _pagination_options+=("${1:?}" "${2:?}")
           shift
           ;;
+        --raw-url)
+          _raw_url="${2:?}"
+          shift
+          ;;
         --terminal)
           _pagination_options+=("--terminal")
           ;;
@@ -17068,8 +17143,11 @@ HEREDOC
     local _content=
     _content="$(_show "${_source_path}" --print --no-color)"
 
+    local _id_selector=
+    _id_selector="$(_get_id_selector "${_source_path}" --notebook)"
+
     local _form_action_selector=
-    _form_action_selector="$(_get_id_selector "${_source_path}")"
+    _form_action_selector="${_id_selector// /%20}"
 
     local _last_saved_at=
     _last_saved_at="$(_show "${_source_path}" --updated)"
@@ -17118,6 +17196,7 @@ HEREDOC
         _browse_render_header           \
           "${_source_path}"             \
           "${_pagination_options[@]:-}" \
+          --raw-url "${_raw_url}"       \
           --edit
       )"
 
@@ -17127,7 +17206,9 @@ HEREDOC
 
       printf "</div>\\n"
     } | {
-      _render --source-extension "${_source_path##*.}"
+      _render                                     \
+        --source-extension "${_source_path##*.}"  \
+        --title "${_ME} browse edit ${_id_selector// /\\ }"
     }
   }
 
@@ -17136,7 +17217,7 @@ HEREDOC
   # Usage:
   #   _browse_render_header <selector> [--columns <columns>]
   #                         [--local <url-encoded-path>] [--per-page <limit>]
-  #                         [--terminal]
+  #                         [--raw-url <url>] [--terminal]
   #
   # Description:
   #   Print a context-aware, linked nav header.
@@ -17145,8 +17226,8 @@ HEREDOC
     local _bullet="·"
     local _columns="${NB_BROWSE_COLUMNS:-70}"
     local _encoded_local_notebook_path=
-    local _download_link_enabled=1
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
+    local _raw_url=
     local _selector=
     local _terminal_browser=0
 
@@ -17160,8 +17241,8 @@ HEREDOC
         --col*)         _columns="${2:?}"                     && shift  ;;
         --local)        _encoded_local_notebook_path="${2:?}" && shift  ;;
         --page)         _option_value_is_present     "${2:-}" && shift  ;;
-        --no*download)  _download_link_enabled=0                        ;;
         --per*)         _per_page="${2:?}"                    && shift  ;;
+        --raw-url)      _raw_url="${2:?}"                     && shift  ;;
         --terminal)     _terminal_browser=1                             ;;
         --*)            _option_value_is_present "${2:-}"     && shift  ;;
         -*)             :                                               ;;
@@ -17294,19 +17375,6 @@ HEREDOC
 
     if [[ -f "${_item_path:-}"  ]]
     then
-      local _raw_url="http://localhost:${NB_SERVER_PORT}/--original/"
-
-      if [[ !   "${_item_path:-}" =~ ^${NB_DIR}     ]] &&
-         [[ -n  "${_encoded_local_notebook_path:-}" ]]
-      then
-        local _local_notebook_path=
-        _local_notebook_path="$(_get_uri --decode "${_encoded_local_notebook_path}")"
-
-        _raw_url+="local/${_item_path#${_local_notebook_path}/}?--local=${_encoded_local_notebook_path}"
-      else
-        _raw_url+="${_item_path#${NB_DIR}/}"
-      fi
-
       local _id_selector=
       _id_selector="$(_get_id_selector "${_selector:-}" --notebook)"
 
@@ -17322,7 +17390,24 @@ HEREDOC
         _header_content+=" <span class=\"dim\">${_selector_id:-}</span>"
       fi
 
-      if ((_download_link_enabled))
+      # NOTE: backup _raw_url calculation. TODO: remove
+      if [[ -z "${_raw_url:-}" ]]
+      then
+        local _raw_url="http://localhost:${NB_SERVER_PORT}/--original/"
+
+        if [[ !   "${_item_path:-}" =~ ^${NB_DIR}     ]] &&
+           [[ -n  "${_encoded_local_notebook_path:-}" ]]
+        then
+          local _local_notebook_path=
+          _local_notebook_path="$(_get_uri --decode "${_encoded_local_notebook_path}")"
+
+          _raw_url+="local/${_item_path#${_local_notebook_path}/}?--local=${_encoded_local_notebook_path}"
+        else
+          _raw_url+="${_item_path#${NB_DIR}/}"
+        fi
+      fi
+
+      if [[ -n "${_raw_url:-}" ]]
       then
         _header_content+=" <span class=\"dim\">${_bullet}</span>"
         _header_content+=" <a href=\"${_raw_url}\">↓</a>"
@@ -17376,13 +17461,14 @@ HEREDOC
   # Usage:
   #   _browse_render_item <path> [--columns <columns>]
   #                       [--local <url-encoded-path>] [--per-page <limit>]
-  #                       [--terminal]
+  #                       [--raw-url <url>] [--terminal]
   #
   # Description:
   #   Render an item to HTML with links resolved to internal web server.
   _browse_render_item() {
     local _columns="${NB_BROWSE_COLUMNS:-70}"
     local _pagination_options=()
+    local _raw_url=
     local _respond_with_arguments=("--standard-input")
     local _source_path=
 
@@ -17408,6 +17494,10 @@ HEREDOC
           _pagination_options+=("${1:?}" "${2:?}")
           shift
           ;;
+        --raw-url)
+          _raw_url="${2:?}"
+          shift
+          ;;
         --terminal)
           _pagination_options+=("--terminal")
           ;;
@@ -17422,15 +17512,26 @@ HEREDOC
       shift
     done
 
+    local _header_options=("--raw-url" "${_raw_url}" "${_pagination_options[@]}")
+
+    local _id_selector=
+    _id_selector="$(_get_id_selector "${_source_path:-}" --notebook)"
+
+    local _html_title="${_ME} browse ${_id_selector// /\\\ }"
+
     local _render_type=
 
     if _file_is_text "${_source_path:-}"        ||
-       [[ "${_source_path:-}" =~ \.docx$|\.epub$|\.odt$ ]]
+       [[   "${_source_path:-}" =~ \.docx$|\.epub$|\.odt$ ]]
     then
       _render_type="pandoc"
-    elif   ((${NB_BROWSE_PDF_ENABLED:-0}))      &&
-       [[ "${_source_path}" =~ \.pdf    ]]      &&
-       _command_exists "pdftotext"
+    elif _contains "${_source_path##*.}"        \
+           apng avif gif jfif jpeg jpg pjpeg pjp png svg webp
+    then
+      _render_type="image"
+    elif  ((${NB_BROWSE_PDF_ENABLED:-0}))       &&
+          [[ "${_source_path}" =~ \.pdf   ]]    &&
+          _command_exists "pdftotext"
     then
       _render_type="pdf"
     else
@@ -17438,8 +17539,7 @@ HEREDOC
         printf "%s\\n" "$(
           _browse_render_header                 \
             "${_source_path}"                   \
-            "${_pagination_options[@]:-}"       \
-            --no-download
+            "${_header_options[@]:-}"
         )"
 
         printf "<div class=\"main\">\\n<p>\\n"
@@ -17455,7 +17555,7 @@ HEREDOC
 
         printf "</p>\\n</div>\\n"
       } | {
-        _render
+        _render --title "${_html_title}"
       } | {
         _browse_respond_with 415 "${_respond_with_arguments[@]:-}"
       }
@@ -17495,7 +17595,7 @@ HEREDOC
         printf "%s\\n" "$(
           _browse_render_header           \
             "${_source_path}"             \
-            "${_pagination_options[@]:-}"
+            "${_header_options[@]:-}"
         )"
 
         printf "<div class=\"main\">\\n"
@@ -17504,27 +17604,45 @@ HEREDOC
 
         printf "</div>\\n"
       } | {
-        _render
+        _render --title "${_html_title}"
       }
     else # render non-Org to HTML before resolving [[wiki-style links]]
       {
         case "${_render_type:-}" in
+          image)
+            {
+              printf                                                          \
+                "<p><a href=\"%s\"><img src=\"%s\" alt=\"%s\" /></a></p>\\n"  \
+                "${_raw_url}"                                                 \
+                "${_raw_url}"                                                 \
+                "${_source_path##*/}"
+            } | {
+              _render --body  --title "${_html_title}"
+            }
+            ;;
           pandoc)
-            printf "" | _render "${_source_path}" --pandoc --body
+            local _render_options=("--pandoc" "--body" "--title" "${_html_title}")
+
+            if [[ "${_source_path:-}" =~ \.bookmark\.md ]]
+            then
+              _render_options+=("--bookmark")
+            fi
+
+            printf "" | _render "${_source_path}" "${_render_options[@]:-}"
             ;;
           pdf)
             # TODO: spacing
             # NOTE: add uniform newlines: `sed  '/^$/d' | sed G`
             pdftotext "${_source_path}" - \
               | tr -d '\014'              \
-              | _render --from="md" --pandoc --body
+              | _render --from="md" --pandoc --body --title "${_html_title}"
             ;;
-          esac
+        esac
       } | {
         printf "%s\\n" "$(
           _browse_render_header           \
             "${_source_path}"             \
-            "${_pagination_options[@]:-}"
+            "${_header_options[@]:-}"
         )"
 
         printf "<div class=\"main\">\\n"
@@ -17538,9 +17656,34 @@ HEREDOC
           "${_pagination_options[@]:-}"   \
           --browse
       } | {
-        _render
+        _render --title "${_html_title}"
       }
     fi | {
+      local _encoded_notebook_name="${_raw_url#http://localhost:${NB_SERVER_PORT}/--original/}"
+      _encoded_notebook_name="${_encoded_notebook_name%%/*}"
+
+      local _raw_url_base_pattern="http:\/\/localhost:${NB_SERVER_PORT}\/--original\/${_encoded_notebook_name}\/"
+      local _raw_url_pattern="${_raw_url_base_pattern}\1"
+
+      local _sed_arguments=()
+
+      _sed_arguments+=(
+-e "s/<img src=\"([^\"]+)\"/<img src=\"${_raw_url_pattern}\"/g"
+-e "s/<img src=\"${_raw_url_base_pattern}(https?:[^\"]+)\"/<img src=\"\1\"/g"
+      )
+
+      if [[ -n "${_encoded_local_notebook_path:-}" ]]
+      then
+        local _local_param_pattern="\1\?--local=${_encoded_local_notebook_path}"
+
+        _sed_arguments+=(
+-e "s/<img src=\"(${_raw_url_base_pattern}[^\"]+)\"/<img src=\"${_local_param_pattern}\"/g"
+-e "s/<img src=\"([^\"]+\?--local=[^\"]+)\?--local=[^\"]+\"/<img src=\"\1\"/g"
+        )
+      fi
+
+      sed -E "${_sed_arguments[@]:-}"
+    } | {
       _browse_respond_with 200 "${_respond_with_arguments[@]:-}"
     }
 
@@ -17592,7 +17735,7 @@ HEREDOC
     done
 
     local _notebook_names=()
-    _notebook_names=($(_notebooks --names --unarchived --no-color))
+    _notebook_names=($(_notebooks --names --unarchived --no-color --global))
 
     local _url_param_string=
 
@@ -17650,7 +17793,7 @@ HEREDOC
 
       printf "</div>\\n"
     } | {
-      _render
+      _render --title "${_ME} browse --notebooks"
     }
   }
 
@@ -17992,6 +18135,19 @@ HEREDOC
 
           return 0
         else
+          local _raw_url="http://localhost:${NB_SERVER_PORT}/--original/"
+
+          if [[ !   "${_selector_path:-}" =~ ^${NB_DIR} ]] &&
+             [[ -n  "${_encoded_local_notebook_path:-}" ]] &&
+             [[ -n  "${_local_notebook_path:-}"         ]]
+          then
+            _raw_url+="local/${_selector_path#${_local_notebook_path}/}?--local=${_encoded_local_notebook_path}"
+          else
+            _raw_url+="${_selector_path#${NB_DIR}/}"
+          fi
+
+          _render_function_options+=("--raw-url" "${_raw_url}")
+
           if [[ "${_action:-}" == "delete"  ]]
           then
             case "${_request_method:-}" in
@@ -18101,24 +18257,25 @@ HEREDOC
       esac
     done
 
-    if [[ -n "${_path:-}" ]]
+    if [[ -n "${_path:-}"             ]]
     then
       if _file_is_text "${_path}" && ((_serve_original_file))
       then
         _response_headers+=("Content-Type: text/plain; charset=UTF-8")
+      elif [[ "${_path}" =~ \.svg$    ]]
+      then
+        _response_headers+=("Content-Type: image/svg+xml")
       else
         _response_headers+=("Content-Type: $(file -b --mime-type "${_path}")")
       fi
 
-      # NOTE: Content length appears to be incorrect, since received content
-      # is truncated. TODO: Get correct content length.
-      # local _content_length=
-      # _content_length="$(wc -c < "${_path}")"
+      local _content_length=
+      _content_length="$(wc -c < "${_path}" | xargs)"
 
-      # if [[ -n "${_content_length:-}" ]]
-      # then
-      #   _response_headers+=("Content-Length: ${_content_length}")
-      # fi
+      if [[ -n "${_content_length:-}" ]]
+      then
+        _response_headers+=("Content-Length: ${_content_length}")
+      fi
     elif _contains "${_status_code:-}" "302"
     then
       _only_headers=1
@@ -18143,30 +18300,23 @@ HEREDOC
     if ! ((_only_headers))
     then
       printf "\\r\\n"
-      {
-        if ((_read_from_standard_input))
-        then
-          cat
-        elif [[ -n "${_string:-}"     ]]
-        then
-          printf "%s\\n" "${_string}" | _render
-        elif [[ "${_path:-}" =~ ^/    ]]
-        then
-          cat "${_path}"
-        else
-          printf                                                            \
-            "<div class=\"main\"><h1 class=\"center\">%s %s</h1></div>\\n"  \
-            "${_status_code}"                                               \
-            "$(_browse_http_response_message "${_status_code}")"            \
-            | _render
-        fi
-      } | {
-        local               __line=
-        while IFS= read -r  __line || [[ -n "${__line:-}" ]]
-        do
-          printf "%s\\r\\n" "${__line:-}"
-        done
-      }
+
+      if ((_read_from_standard_input))
+      then
+        cat
+      elif [[ -n "${_string:-}"     ]]
+      then
+        printf "%s\\n" "${_string}" | _render
+      elif [[ "${_path:-}" =~ ^/    ]]
+      then
+        cat "${_path}"
+      else
+        printf                                                            \
+          "<div class=\"main\"><h1 class=\"center\">%s %s</h1></div>\\n"  \
+          "${_status_code}"                                               \
+          "$(_browse_http_response_message "${_status_code}")"            \
+          | _render
+      fi
     fi
 
     if _contains "${1:-}" "200" "302"

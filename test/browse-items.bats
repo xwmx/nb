@@ -4,6 +4,380 @@ load test_helper
 
 export NB_SERVER_PORT=6789
 
+# HTML <title> ################################################################
+
+@test "'browse <folder>/<folder>/<id>' with local notebook sets HTML <title> to CLI command." {
+  {
+    "${_NB}" init
+
+    mkdir -p "${_TMP_DIR}/Local Notebook"
+    cd "${_TMP_DIR}/Local Notebook"
+
+    "${_NB}" notebooks init
+
+    "${_NB}" add  "Example Folder/Sample Folder/Example File.md"          \
+      --content "Example content."
+
+    sleep 1
+  }
+
+  run "${_NB}" browse "Example Folder/Sample Folder/1" --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                              ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                            ]]
+  [[    "${output}"    =~  \<title\>${_ME}\ browse\ local:1/1/1\</title\> ]]
+  [[ !  "${output}"    =~  \<title\>nb\</title\>                          ]]
+}
+
+@test "'browse <id>' sets HTML <title> to CLI command." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example File.md" --content "Example content."
+
+    sleep 1
+  }
+
+  run "${_NB}" browse 1 --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                          ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                        ]]
+  [[    "${output}"    =~  \<title\>${_ME}\ browse\ home:1\</title\>  ]]
+  [[ !  "${output}"    =~  \<title\>nb\</title\>                      ]]
+}
+
+@test "'browse <folder>/<folder>/<id>' sets HTML <title> to CLI command." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example Folder/Sample Folder/Example File.md" --content "Example content."
+
+    sleep 1
+  }
+
+  run "${_NB}" browse "Example Folder/Sample Folder/1" --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                              ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                            ]]
+  [[    "${output}"    =~  \<title\>${_ME}\ browse\ home:1/1/1\</title\>  ]]
+  [[ !  "${output}"    =~  \<title\>nb\</title\>                          ]]
+}
+
+@test "'browse <notebook>:<folder>/<folder>/<filename>' sets HTML <title> to CLI command." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" add  "Example Notebook:Example Folder/Sample Folder/Example File.md" \
+      --content "Example content."
+
+    sleep 1
+  }
+
+  run "${_NB}" browse "Example Notebook:Example Folder/Sample Folder/1" --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                                            ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                                          ]]
+  [[    "${output}"    =~  \<title\>${_ME}\ browse\ Example\\\ Notebook:1/1/1\</title\> ]]
+  [[ !  "${output}"    =~  \<title\>nb\</title\>                                        ]]
+}
+
+# image URLs ##################################################################
+
+@test "'browse' with local notebook rewrites image paths to --original URLs." {
+  {
+    "${_NB}" init
+
+    mkdir -p "${_TMP_DIR}/Local Notebook"
+    cd "${_TMP_DIR}/Local Notebook"
+
+    "${_NB}" notebooks init
+
+    "${_NB}" add                    \
+      --filename  "Example File.md" \
+      --content   "$(<<HEREDOC cat
+# Example Title
+
+Example ![](nb.png) content ![](Example Folder/nb.png).
+
+More ![](https://example.test/example.png) demo content ![](http://example.test/sample.png).
+HEREDOC
+)"
+
+    "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/nb.png"
+
+    "${_NB}" add folder "Example Folder"
+
+    "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/nb.png" Example\ Folder/
+
+    [[ -f "${_TMP_DIR}/Local Notebook/nb.png"                 ]]
+    [[ -f "${_TMP_DIR}/Local Notebook/Example Folder/nb.png"  ]]
+
+    declare _raw_url_pattern_one="http://localhost:6789/--original/local/nb.png"
+    _raw_url_pattern_one+="\?--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
+
+    declare _raw_url_pattern_two="http://localhost:6789/--original/local/Example%20Folder/nb.png"
+    _raw_url_pattern_two+="\?--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
+
+    sleep 1
+  }
+
+  run "${_NB}" browse 1 --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                                      ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                                    ]]
+
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                 ]]
+  [[    "${output}"    =~  \
+\<p\>Example\ \<img\ src=\"${_raw_url_pattern_one}\"\ \/\>\ content\              ]]
+  [[    "${output}"    =~  \
+\/\>\ content\ \<img\ src=\"${_raw_url_pattern_two}\"\ /\>.\</p\>                 ]]
+  [[    "${output}"    =~  \
+\<p\>\More\ \<img\ src=\"https://example.test/example.png\"\ \/\>\ demo\ content  ]]
+  [[    "${output}"    =~  \
+\/\>\ demo\ content\ \<img\ src=\"http://example.test/sample.png\"\ /\>.\</p\>    ]]
+}
+
+@test "'browse' rewrites image paths to --original URLs." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add                    \
+      --filename  "Example File.md" \
+      --content   "$(<<HEREDOC cat
+# Example Title
+
+Example ![](nb.png) content ![](Example Folder/nb.png).
+
+More ![](https://example.test/example.png) demo content ![](http://example.test/sample.png).
+HEREDOC
+)"
+
+    "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/nb.png"
+
+    "${_NB}" add folder "Example Folder"
+
+    "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/nb.png" Example\ Folder/
+
+    [[ -f "${NB_DIR}/home/nb.png"                 ]]
+    [[ -f "${NB_DIR}/home/Example Folder/nb.png"  ]]
+
+    declare _raw_url_pattern_one="http://localhost:6789/--original/home/nb.png"
+    declare _raw_url_pattern_two="http://localhost:6789/--original/home/Example%20Folder/nb.png"
+
+    sleep 1
+  }
+
+  run "${_NB}" browse 1 --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                                      ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                                    ]]
+
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                 ]]
+  [[    "${output}"    =~  \
+\<p\>Example\ \<img\ src=\"${_raw_url_pattern_one}\"\ \/\>\ content\              ]]
+  [[    "${output}"    =~  \
+\/\>\ content\ \<img\ src=\"${_raw_url_pattern_two}\"\ /\>.\</p\>                 ]]
+  [[    "${output}"    =~  \
+\<p\>\More\ \<img\ src=\"https://example.test/example.png\"\ \/\>\ demo\ content  ]]
+  [[    "${output}"    =~  \
+\/\>\ demo\ content\ \<img\ src=\"http://example.test/sample.png\"\ /\>.\</p\>    ]]
+}
+
+# image items #################################################################
+
+@test "'browse' with local notebook renders image item as '<img>' element." {
+  {
+    "${_NB}" init
+
+    mkdir -p "${_TMP_DIR}/Local Notebook"
+    cd "${_TMP_DIR}/Local Notebook"
+
+    "${_NB}" notebooks init
+
+    "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/nb.png"
+
+    declare _raw_url_pattern="http://localhost:6789/--original/local/nb.png"
+    _raw_url_pattern+="\?--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
+
+    sleep 1
+  }
+
+  run "${_NB}" browse 1 --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                                        ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                                      ]]
+
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                   ]]
+  [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
+  [[    "${output}"    =~  \
+\<p\>\<a.*\ href=\"${_raw_url_pattern}\"\>\<img\ src=\"${_raw_url_pattern}\"\ alt=\"nb.png\"\ /\>\</a\>\</p\> ]]
+}
+
+@test "'browse' renders image item as '<img>' element." {
+  {
+    "${_NB}" init
+
+    "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/nb.png"
+
+    declare _raw_url="http://localhost:6789/--original/home/nb.png"
+
+    sleep 1
+  }
+
+  run "${_NB}" browse 1 --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                                ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                              ]]
+
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>           ]]
+  [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url}\"\>↓\</a\>  ]]
+  [[    "${output}"    =~  \
+\<p\>\<a.*\ href=\"${_raw_url}\"\>\<img\ src=\"${_raw_url}\"\ alt=\"nb.png\"\ /\>\</a\>\</p\> ]]
+}
+
+# <img> stripping #############################################################
+
+@test "'browse' strips <img> tags after '## Content' heading." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add                              \
+      --filename  "Example File.bookmark.md"  \
+      --title     "Example Title"             \
+      --content   "$(<<HEREDOC cat
+<https://example.test>
+
+## Description
+
+Example image one: ![Example Image One](not-valid-1.png)
+
+## Content
+
+More example ![Example Image Two](not-valid-2.png) content ![Example Image Three](not-valid-3.png) here.
+HEREDOC
+)"
+
+    sleep 1
+  }
+
+  run "${_NB}" browse 1 --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                            ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                          ]]
+
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>       ]]
+  [[    "${output}"    =~  \
+\<p\>Example\ image\ one:\ \<img\ src=\".*not-valid-1.png\"\ alt=\"Example\ Image\ One\"\ /\>\</p\>  ]]
+  [[    "${output}"    =~  \<p\>More\ example\ \ content\ \ here.\</p\> ]]
+}
+
+@test "'browse' strips <img> tags after '## Page Content' heading." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add                              \
+      --filename  "Example File.bookmark.md"  \
+      --title     "Example Title"             \
+      --content   "$(<<HEREDOC cat
+<https://example.test>
+
+## Description
+
+Example image one: ![Example Image One](not-valid-1.png)
+
+## Page Content
+
+More example ![Example Image Two](not-valid-2.png) content ![Example Image Three](not-valid-3.png) here.
+HEREDOC
+)"
+
+    sleep 1
+  }
+
+  run "${_NB}" browse 1 --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                            ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                          ]]
+
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>       ]]
+  [[    "${output}"    =~  \
+\<p\>Example\ image\ one:\ \<img\ src=\".*not-valid-1.png\"\ alt=\"Example\ Image\ One\"\ /\>\</p\>  ]]
+  [[    "${output}"    =~  \<p\>More\ example\ \ content\ \ here.\</p\> ]]
+}
+
+@test "'browse' renders <img> tags anywhere in non-bookmark items." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add                    \
+      --filename  "Example File.md" \
+      --title     "Example Title"   \
+      --content   "$(<<HEREDOC cat
+<https://example.test>
+
+## Description
+
+Example image one: ![Example Image One](not-valid-1.png)
+
+## Content
+
+More example ![Example Image Two](not-valid-2.png) content ![Example Image Three](not-valid-3.png) here.
+HEREDOC
+)"
+
+    sleep 1
+  }
+
+  run "${_NB}" browse 1 --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                      ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                    ]]
+
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\> ]]
+  [[    "${output}"    =~  \
+\<p\>Example\ image\ one:\ \<img\ src=\".*not-valid-1.png\"\ alt=\"Example\ Image\ One\"\ /\>\</p\>  ]]
+  [[    "${output}"    =~  \
+\<p\>More\ example\ \<img\ src=\".*not-valid-2.png\"\ alt=\"Example\ Image\ Two\"\ /\>\ content\     ]]
+  [[    "${output}"    =~  \
+\ content\ \<img\ src=\".*not-valid-3.png\"\ alt=\"Example\ Image\ Three\"\ /\>\ here.\</p\>         ]]
+
+}
+
 # local notebook ##############################################################
 
 @test "'browse <folder-id>/<id>' with local notebook serves the rendered HTML page with [[wiki-style links]] resolved to internal web server URLs." {
@@ -224,39 +598,6 @@ export NB_SERVER_PORT=6789
 
   [[    "${output}"    =~  \
 \<span\ class=\"fu\"\>puts\</span\>\ \<span\ class=\"st\"\>\&quot\;Hello\ World\&quot\;\</span\> ]]
-}
-
-# img tags ####################################################################
-
-@test "'browse' strips <img> tags." {
-  {
-    "${_NB}" init
-
-    "${_NB}" add                  \
-      --title     "Example Title" \
-      --content   "$(<<HEREDOC cat
-Example image one: ![Example Image One](/not-valid-1.png)
-
-More example ![Example Image Two](/not-valid-2.png) content ![Example Image Three](/not-valid-3.png) here.
-HEREDOC
-)"
-
-    sleep 1
-  }
-
-  run "${_NB}" browse 1 --print
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[    "${status}"    ==  0                                            ]]
-  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                          ]]
-
-  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>       ]]
-  [[    "${output}"    =~  \<p\>Example\ image\ one:\ \</p\>            ]]
-  [[    "${output}"    =~  \<p\>More\ example\ \ content\ \ here.\</p\> ]]
-
-  [[ !  "${output}"    =~  \<img                                        ]]
 }
 
 # code ########################################################################
