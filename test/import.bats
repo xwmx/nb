@@ -203,7 +203,7 @@ example.md.*\ \"Example\ Title\"\ from\ .*${_TMP_DIR}/fixtures/example.md   ]]
   printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
   printf "\${#_files[@]}: '%s'\\n" "${#_files[@]}"
 
-  [[ "${#_files[@]}"  -eq 11 ]]
+  [[ "${#_files[@]}"  -eq 13 ]]
 
   grep -q '# Example Title' "${NB_DIR}/Example Notebook/Example Folder"/*
 
@@ -280,7 +280,7 @@ example.md.*\ \"Example\ Title\"\ from\ .*${_TMP_DIR}/fixtures/example.md   ]]
   printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
   printf "\${#_files[@]}: '%s'\\n" "${#_files[@]}"
 
-  [[ "${#_files[@]}"  -eq 11 ]]
+  [[ "${#_files[@]}"  -eq 13 ]]
 
   grep -q '# Example Title' "${NB_DIR}/Example Notebook/Example Destination/Example Folder"/*
 
@@ -357,7 +357,7 @@ example.md.*\ \"Example\ Title\"\ from\ .*${_TMP_DIR}/fixtures/example.md   ]]
   printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
   printf "\${#_files[@]}: '%s'\\n" "${#_files[@]}"
 
-  [[ "${#_files[@]}"  -eq 11 ]]
+  [[ "${#_files[@]}"  -eq 13 ]]
 
   grep -q '# Example Title' "${NB_DIR}/Example Notebook/Example Destination/Example Folder"/*
 
@@ -602,7 +602,7 @@ Folder/example.md.*\ \"Example\ Title\"\ from\ .*${_TMP_DIR}/fixtures/example.md
   printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
   printf "\${#_files[@]}: '%s'\\n" "${#_files[@]}"
 
-  [[ "${#_files[@]}"  -eq 11 ]]
+  [[ "${#_files[@]}"  -eq 13 ]]
 
   grep -q '# Example Title' "${NB_DIR}/home/Example Destination/Example Folder"/*
 
@@ -677,7 +677,7 @@ Folder/example.md.*\ \"Example\ Title\"\ from\ .*${_TMP_DIR}/fixtures/example.md
   printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
   printf "\${#_files[@]}: '%s'\\n" "${#_files[@]}"
 
-  [[ "${#_files[@]}"  -eq 11 ]]
+  [[ "${#_files[@]}"  -eq 13 ]]
 
   grep -q '# Example Title' "${NB_DIR}/home/Example Destination/Example Folder"/*
 
@@ -1197,7 +1197,7 @@ Folder/example.md.*\ \"Example\ Title\"\ from\ .*${_TMP_DIR}/fixtures/example.md
   printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
   printf "\${#_files[@]}: '%s'\\n" "${#_files[@]}"
 
-  [[ "${#_files[@]}" -eq 11                                   ]]
+  [[ "${#_files[@]}" -eq 13                                   ]]
 
   grep -q '# Example Title' "${NB_DIR}/home/Example Folder"/*
 
@@ -1392,7 +1392,7 @@ Folder/example.md.*\ \"Example\ Title\"\ from\ .*${_TMP_DIR}/fixtures/example.md
   printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
   printf "\${#_files[@]}: '%s'\\n" "${#_files[@]}"
 
-  [[ "${#_files[@]}" -eq 11                                 ]]
+  [[ "${#_files[@]}" -eq 13                                 ]]
 
   grep -q '# Example Title' "${NB_DIR}/home/Example Folder"/*
 

@@ -4,6 +4,142 @@ load test_helper
 
 export NB_SERVER_PORT=6789
 
+# audio items #################################################################
+
+@test "'browse' with local notebook renders audio item as '<audio>' element." {
+  {
+    "${_NB}" init
+
+    mkdir -p "${_TMP_DIR}/Local Notebook"
+    cd "${_TMP_DIR}/Local Notebook"
+
+    "${_NB}" notebooks init
+
+    declare _filename="nb.mp3"
+
+    "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/${_filename}"
+
+    declare _raw_url_pattern="http://localhost:6789/--original/local/${_filename}"
+    _raw_url_pattern+="\?--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
+
+    sleep 1
+  }
+
+  run "${_NB}" browse 1 --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                                        ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                                      ]]
+
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                   ]]
+  [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
+  [[    "${output}"    =~  \
+\<audio\ controls\>${_NEWLINE}.*\<source\ src=\"${_raw_url_pattern}\"\ type=\"audio/mpeg\"\>  ]]
+  [[    "${output}"    =~  \
+type=\"audio/mpeg\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</audio\>               ]]
+}
+
+@test "'browse' renders audio item as '<audio>' element." {
+  {
+    "${_NB}" init
+
+    declare _filename="nb.mp3"
+
+    "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/${_filename}"
+
+    declare _raw_url_pattern="http://localhost:6789/--original/home/${_filename}"
+
+    sleep 1
+  }
+
+  run "${_NB}" browse 1 --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                                        ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                                      ]]
+
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                   ]]
+  [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
+  [[    "${output}"    =~  \
+\<audio\ controls\>${_NEWLINE}.*\<source\ src=\"${_raw_url_pattern}\"\ type=\"audio/mpeg\"\>  ]]
+  [[    "${output}"    =~  \
+type=\"audio/mpeg\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</audio\>               ]]
+}
+
+# video items #################################################################
+
+@test "'browse' with local notebook renders video item as '<video>' element." {
+  {
+    "${_NB}" init
+
+    mkdir -p "${_TMP_DIR}/Local Notebook"
+    cd "${_TMP_DIR}/Local Notebook"
+
+    "${_NB}" notebooks init
+
+    declare _filename="nb.mp4"
+
+    "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/${_filename}"
+
+    declare _raw_url_pattern="http://localhost:6789/--original/local/${_filename}"
+    _raw_url_pattern+="\?--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
+
+    sleep 1
+  }
+
+  run "${_NB}" browse 1 --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                                        ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                                      ]]
+
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                   ]]
+  [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
+  [[    "${output}"    =~  \
+\<video\ width=\"320\"\ height=\"240\"\ controls\>${_NEWLINE}.*\<source\            ]]
+  [[    "${output}"    =~  \
+${_NEWLINE}.*\<source\ src=\"${_raw_url_pattern}\"\ type=\"video/mp4\"\>            ]]
+  [[    "${output}"    =~  \
+type=\"video/mp4\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</video\>                ]]
+}
+
+@test "'browse' renders video item as '<video>' element." {
+  {
+    "${_NB}" init
+
+    declare _filename="nb.mp4"
+
+    "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/${_filename}"
+
+    declare _raw_url_pattern="http://localhost:6789/--original/home/${_filename}"
+
+    sleep 1
+  }
+
+  run "${_NB}" browse 1 --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                                        ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                                      ]]
+
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                   ]]
+  [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
+  [[    "${output}"    =~  \
+\<video\ width=\"320\"\ height=\"240\"\ controls\>${_NEWLINE}.*\<source\            ]]
+  [[    "${output}"    =~  \
+${_NEWLINE}.*\<source\ src=\"${_raw_url_pattern}\"\ type=\"video/mp4\"\>            ]]
+  [[    "${output}"    =~  \
+type=\"video/mp4\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</video\>                ]]
+}
+
 # HTML <title> ################################################################
 
 @test "'browse <folder>/<folder>/<id>' with local notebook sets HTML <title> to CLI command." {

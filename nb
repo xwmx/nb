@@ -9360,6 +9360,20 @@ col {
   width:              auto !important;
 }
 
+audio {
+  padding:            3rem 0;
+}
+
+audio,
+video {
+  margin:             0 auto;
+  width:              100%;
+}
+
+video {
+  height:             100%;
+}
+
 header {
   margin-bottom:      4em;
   text-align:         center;
@@ -17529,6 +17543,13 @@ HEREDOC
            apng avif gif jfif jpeg jpg pjpeg pjp png svg webp
     then
       _render_type="image"
+
+    elif _file_is_audio "${_source_path:-}"
+    then
+      _render_type="audio"
+    elif _file_is_video "${_source_path:-}"
+    then
+      _render_type="video"
     elif  ((${NB_BROWSE_PDF_ENABLED:-0}))       &&
           [[ "${_source_path}" =~ \.pdf   ]]    &&
           _command_exists "pdftotext"
@@ -17637,6 +17658,35 @@ HEREDOC
               | tr -d '\014'              \
               | _render --from="md" --pandoc --body --title "${_html_title}"
             ;;
+          audio)
+            local _mime_type=
+            _mime_type="$(file -b --mime-type "${_source_path}")"
+
+            cat <<HEREDOC
+<p align="center">
+  <a href="${_raw_url}">
+    <audio controls>
+      <source src="${_raw_url}" type="${_mime_type}">
+      ${_source_path##*/}
+    </audio>
+  </a>
+</p>
+HEREDOC
+            ;;
+          video)
+            local _mime_type=
+            _mime_type="$(file -b --mime-type "${_source_path}")"
+
+            cat <<HEREDOC
+<p align="center">
+  <a href="${_raw_url}">
+    <video width="320" height="240" controls>
+      <source src="${_raw_url}" type="${_mime_type}">
+      ${_source_path##*/}
+    </video>
+  </a>
+</p>
+HEREDOC
         esac
       } | {
         printf "%s\\n" "$(
