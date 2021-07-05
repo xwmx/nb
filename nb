@@ -17687,6 +17687,7 @@ HEREDOC
   </a>
 </p>
 HEREDOC
+          ;;
         esac
       } | {
         printf "%s\\n" "$(
