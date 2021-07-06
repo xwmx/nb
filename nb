@@ -17667,7 +17667,7 @@ HEREDOC
             }
             ;;
           pdf)
-            if ((${NB_BROWSE_PDF_ENABLED:-0}))  &&
+            if ((${NB_BROWSE_PDF_TO_TEXT_ENABLED:-0}))  &&
                _command_exists "pdftotext"
             then
               # TODO: spacing
@@ -17682,6 +17682,8 @@ HEREDOC
     ${_source_path##*/}
   </a>
 </h1>
+
+<iframe src="${_raw_url}" width="100%" height="700px"></iframe>
 HEREDOC
             fi
             ;;

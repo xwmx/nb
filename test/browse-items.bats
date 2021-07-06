@@ -6,7 +6,7 @@ export NB_SERVER_PORT=6789
 
 # pdf items ###################################################################
 
-@test "'browse' with local notebook renders pdf item as '<h1>' link." {
+@test "'browse' with local notebook renders pdf item in '<iframe>'." {
   {
     "${_NB}" init
 
@@ -40,9 +40,11 @@ export NB_SERVER_PORT=6789
 \<h1\ align=\"center\"\ class=\"media\-title\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>    ]]
   [[    "${output}"    =~  \
 \<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</a\>${_NEWLINE}.*\</h1\> ]]
+  [[    "${output}"    =~  \
+\<iframe\ src=\"${_raw_url_pattern}\"\ width=\"100%\"\ height=\"700px\"\>\</iframe\>        ]]
 }
 
-@test "'browse' renders pdf item as '<h1>' link." {
+@test "'browse' renders pdf item in '<iframe>'." {
   {
     "${_NB}" init
 
@@ -70,6 +72,8 @@ export NB_SERVER_PORT=6789
 \<h1\ align=\"center\"\ class=\"media\-title\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>    ]]
   [[    "${output}"    =~  \
 \<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</a\>${_NEWLINE}.*\</h1\> ]]
+  [[    "${output}"    =~  \
+\<iframe\ src=\"${_raw_url_pattern}\"\ width=\"100%\"\ height=\"700px\"\>\</iframe\>        ]]
 }
 
 # audio items #################################################################
