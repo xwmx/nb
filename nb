@@ -17656,68 +17656,60 @@ HEREDOC
 
             printf "" | _render "${_source_path}" "${_render_options[@]:-}"
             ;;
-          image)
-            {
-                cat <<HEREDOC
+          *)
+            { # begin media markup pipeline
+              case "${_render_type:-}" in
+                image)
+                  {
+                    cat <<HEREDOC
 <p align="center">
   <a href="${_raw_url}">
     <img src="${_raw_url}" alt="${_source_path##*/}" />
   </a>
 </p>
-
-<div align="center" class="media-caption">
-  <a href="${_raw_url}">
-    ${_source_path##*/}
-  </a>
-</div>
 HEREDOC
-            } | {
-              _render --body  --title "${_html_title}"
-            }
-            ;;
-          pdf)
-            if ((${NB_BROWSE_PDF_TO_TEXT_ENABLED:-0}))  &&
-               _command_exists "pdftotext"
-            then
-              # TODO: spacing
-              # NOTE: add uniform newlines: `sed  '/^$/d' | sed G`
-              pdftotext "${_source_path}" - \
-                | tr -d '\014'              \
-                | _render --from="md" --pandoc --body --title "${_html_title}"
-            else
-              cat <<HEREDOC
+                  } | {
+                    _render --body --title "${_html_title}"
+                  }
+                  ;;
+                pdf)
+                  if ((${NB_BROWSE_PDF_TO_TEXT_ENABLED:-0}))  &&
+                     _command_exists "pdftotext"
+                  then
+                    # TODO: spacing
+                    # NOTE: add uniform newlines: `sed  '/^$/d' | sed G`
+                    pdftotext "${_source_path}" - \
+                      | tr -d '\014'              \
+                      | _render --from="md" --pandoc --body --title "${_html_title}"
+                  else
+                    cat <<HEREDOC
 <iframe src="${_raw_url}" width="100%" height="700px"></iframe>
-
-<div align="center" class="media-caption">
-  <a href="${_raw_url}">
-    ${_source_path##*/}
-  </a>
-</div>
 HEREDOC
-            fi
-            ;;
-          audio|video)
-            {
-              local _mime_type=
-              _mime_type="$(file -b --mime-type "${_source_path}")"
+                  fi
+                  ;;
+                audio|video)
+                  local _mime_type=
+                  _mime_type="$(file -b --mime-type "${_source_path}")"
 
-              case "${_render_type}" in
-                audio)
-                  cat <<HEREDOC
+                  case "${_render_type}" in
+                    audio)
+                      cat <<HEREDOC
 <audio controls>
   <source src="${_raw_url}" type="${_mime_type}">
 </audio>
 HEREDOC
-                  ;;
-                video)
-                  cat <<HEREDOC
+                      ;;
+                    video)
+                      cat <<HEREDOC
 <video width="320" height="240" controls>
   <source src="${_raw_url}" type="${_mime_type}">
 </video>
 HEREDOC
+                      ;;
+                  esac
                   ;;
               esac
-            } | {
+            } | { # media markup pipeline
               cat <<HEREDOC
 <p align="center">
   $(cat)
@@ -17729,7 +17721,7 @@ HEREDOC
   </a>
 </div>
 HEREDOC
-            }
+            } # end media markup pipeline
             ;;
         esac
       } | {
