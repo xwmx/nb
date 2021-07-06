@@ -16994,6 +16994,11 @@ HEREDOC
         _html_title+=" --query \"${_escaped_query:-}\""
       fi
 
+      if [[ "${_current_page:-0}" -gt 1 ]]
+      then
+        _html_title+=" --page ${_current_page}"
+      fi
+
       _render --title "${_html_title}"
     }
   }

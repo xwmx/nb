@@ -39,16 +39,19 @@ export _AMP="&"
 
     [[    -d "${NB_DIR}/Demo Notebook"  ]]
     [[ !  -e "${NB_DIR}/home"           ]]
+
+    sleep 1
   }
 
-  sleep 1
   run "${_NB}" browse --print --per-page 2 --terminal
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"  == 0                                      ]]
-  [[ "${output}"  =~ \<\!DOCTYPE\ html\>                    ]]
+  [[ "${status}"  == 0                                                  ]]
+  [[ "${output}"  =~ \<\!DOCTYPE\ html\>                                ]]
+
+  [[ "${output}"  =~ \<title\>nb\ browse\ Demo\\\ Notebook:\</title\>   ]]
 
   printf "%s\\n" "${output}" | grep       -q  \
 "<nav class=\"header-crumbs\"><h1><a.* href=\"http://localhost:6789/?--per-page=2&--columns=.*\">"
@@ -106,16 +109,19 @@ export _AMP="&"
 
     [[    -d "${NB_DIR}/Demo Notebook"  ]]
     [[ !  -e "${NB_DIR}/home"           ]]
+
+    sleep 1
   }
 
-  sleep 1
   run "${_NB}" browse 1 --print --per-page 2 --terminal
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"  == 0                                      ]]
-  [[ "${output}"  =~ \<\!DOCTYPE\ html\>                    ]]
+  [[ "${status}"  == 0                                                  ]]
+  [[ "${output}"  =~ \<\!DOCTYPE\ html\>                                ]]
+
+  [[ "${output}"  =~ \<title\>nb\ browse\ Demo\\\ Notebook:1\</title\>  ]]
 
   printf "%s\\n" "${output}" | grep       -q  \
 "<nav class=\"header-crumbs\"><h1>"
@@ -163,16 +169,19 @@ export _AMP="&"
 
     [[    -d "${NB_DIR}/Demo Notebook"  ]]
     [[ !  -e "${NB_DIR}/home"           ]]
+
+    sleep 1
   }
 
-  sleep 1
   run "${_NB}" browse --notebooks --print --per-page 2 --terminal
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"  == 0                                      ]]
-  [[ "${output}"  =~ \<\!DOCTYPE\ html\>                    ]]
+  [[ "${status}"  == 0                                            ]]
+  [[ "${output}"  =~ \<\!DOCTYPE\ html\>                          ]]
+
+  [[ "${output}"  =~ \<title\>nb\ browse\ \-\-notebooks\</title\> ]]
 
   printf "%s\\n" "${output}" | grep       -q  \
 "<nav class=\"header-crumbs\"><h1>"
@@ -200,9 +209,10 @@ export _AMP="&"
     do
       "${_NB}" add "File ${__number}.md" --title "Title ${__number}"
     done
+
+    sleep 1
   }
 
-  sleep 1
   run "${_NB}" browse --print --per-page 4
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -210,6 +220,8 @@ export _AMP="&"
 
   [[ "${status}"  == 0                                      ]]
   [[ "${output}"  =~ \<\!DOCTYPE\ html\>                    ]]
+
+  [[ "${output}"  =~ \<title\>nb\ browse\ home:\</title\>   ]]
 
   printf "%s\\n" "${output}" | grep -q \
 '<nav class="header-crumbs"><h1><a.* href="http://localhost:6789/?--per-page=4&--columns=.*"><span class="dim">❯</span>nb</a>'
@@ -286,13 +298,16 @@ export _AMP="&"
   # page 2
 
   sleep 1
+
   run "${_NB}" browse --print --per-page 4 --page 2
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"  == 0                                      ]]
-  [[ "${output}"  =~ \<\!DOCTYPE\ html\>                    ]]
+  [[ "${status}"  == 0                                                  ]]
+  [[ "${output}"  =~ \<\!DOCTYPE\ html\>                                ]]
+
+  [[ "${output}"  =~ \<title\>nb\ browse\ home:\ \-\-page\ 2\</title\>  ]]
 
   [[ "${output}"  =~ \
 \<nav\ class=\"header-crumbs\"\>\<h1\>.*\<a.*\ href=\"http://localhost:6789/\?--per-page=4${_AMP}--columns=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>  ]]
@@ -367,13 +382,16 @@ export _AMP="&"
   # page 3
 
   sleep 1
+
   run "${_NB}" browse --print --per-page 4 --page 3
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"  == 0                                      ]]
-  [[ "${output}"  =~ \<\!DOCTYPE\ html\>                    ]]
+  [[ "${status}"  == 0                                                  ]]
+  [[ "${output}"  =~ \<\!DOCTYPE\ html\>                                ]]
+
+  [[ "${output}"  =~ \<title\>nb\ browse\ home:\ \-\-page\ 3\</title\>  ]]
 
   [[ "${output}"  =~ \
 \<nav\ class=\"header-crumbs\"\>\<h1\>.*\<a.*\ href=\"http://localhost:6789/\?--per-page=4${_AMP}--columns=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>  ]]
@@ -446,6 +464,7 @@ export _AMP="&"
   # page with list of items under pagination limit
 
   sleep 1
+
   run "${_NB}" browse --print --per-page 11
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -453,6 +472,8 @@ export _AMP="&"
 
   [[ "${status}"  == 0                                      ]]
   [[ "${output}"  =~ \<\!DOCTYPE\ html\>                    ]]
+
+  [[ "${output}"  =~ \<title\>nb\ browse\ home:\</title\>   ]]
 
   [[ "${output}"  =~ \
 \<nav\ class=\"header-crumbs\"\>\<h1\>\<a.*\ href=\"http://localhost:6789/\?--per-page=11${_AMP}--columns=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\> ]]
