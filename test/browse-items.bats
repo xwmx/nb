@@ -6,7 +6,7 @@ export NB_SERVER_PORT=6789
 
 # pdf items ###################################################################
 
-@test "'browse' with local notebook renders pdf item in '<iframe>'." {
+@test "'browse' with local notebook renders pdf item in an '<iframe>'." {
   {
     "${_NB}" init
 
@@ -44,7 +44,7 @@ export NB_SERVER_PORT=6789
 \<iframe\ src=\"${_raw_url_pattern}\"\ width=\"100%\"\ height=\"700px\"\>\</iframe\>        ]]
 }
 
-@test "'browse' renders pdf item in '<iframe>'." {
+@test "'browse' renders pdf item in an '<iframe>'." {
   {
     "${_NB}" init
 
