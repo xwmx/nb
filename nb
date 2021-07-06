@@ -17664,6 +17664,13 @@ HEREDOC
           *)
             { # begin media markup pipeline
               case "${_render_type:-}" in
+                audio)
+                  cat <<HEREDOC
+<audio controls>
+  <source src="${_raw_url}" type="$(file -b --mime-type "${_source_path}")">
+</audio>
+HEREDOC
+                  ;;
                 image)
                   cat <<HEREDOC
 <a href="${_raw_url}">
@@ -17686,26 +17693,12 @@ HEREDOC
 HEREDOC
                   fi
                   ;;
-                audio|video)
-                  local _mime_type=
-                  _mime_type="$(file -b --mime-type "${_source_path}")"
-
-                  case "${_render_type}" in
-                    audio)
-                      cat <<HEREDOC
-<audio controls>
-  <source src="${_raw_url}" type="${_mime_type}">
-</audio>
-HEREDOC
-                      ;;
-                    video)
-                      cat <<HEREDOC
+                video)
+                  cat <<HEREDOC
 <video width="320" height="240" controls>
-  <source src="${_raw_url}" type="${_mime_type}">
+  <source src="${_raw_url}" type="$(file -b --mime-type "${_source_path}")">
 </video>
 HEREDOC
-                      ;;
-                  esac
                   ;;
               esac
             } | { # media markup pipeline
