@@ -35,10 +35,17 @@ export NB_SERVER_PORT=6789
 
   [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                   ]]
   [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
+
   [[    "${output}"    =~  \
-\<audio\ controls\>${_NEWLINE}.*\<source\ src=\"${_raw_url_pattern}\"\ type=\"audio/mpeg\"\>  ]]
+\<h1\ align=\"center\"\ class=\"media\-title\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>  ]]
   [[    "${output}"    =~  \
-type=\"audio/mpeg\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</audio\>               ]]
+\<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*nb.mp3${_NEWLINE}.*\</a\>${_NEWLINE}.*\</h1\>     ]]
+  [[    "${output}"    =~  \
+\<p\ align=\"center\"\>${_NEWLINE}.*\<audio\ controls\>${_NEWLINE}.*\<source\ src=  ]]
+  [[    "${output}"    =~  \
+\<source\ src=\"${_raw_url_pattern}\"\ type=\"audio/mpeg\"\>                        ]]
+  [[    "${output}"    =~  \
+type=\"audio/mpeg\"\>${_NEWLINE}.*\</audio\>${_NEWLINE}.*\</p\>                     ]]
 }
 
 @test "'browse' renders audio item as '<audio>' element." {
@@ -64,10 +71,17 @@ type=\"audio/mpeg\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</audio\>           
 
   [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                   ]]
   [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
+
   [[    "${output}"    =~  \
-\<audio\ controls\>${_NEWLINE}.*\<source\ src=\"${_raw_url_pattern}\"\ type=\"audio/mpeg\"\>  ]]
+\<h1\ align=\"center\"\ class=\"media\-title\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>  ]]
   [[    "${output}"    =~  \
-type=\"audio/mpeg\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</audio\>               ]]
+\<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*nb.mp3${_NEWLINE}.*\</a\>${_NEWLINE}.*\</h1\>     ]]
+  [[    "${output}"    =~  \
+\<p\ align=\"center\"\>${_NEWLINE}.*\<audio\ controls\>${_NEWLINE}.*\<source\ src=  ]]
+  [[    "${output}"    =~  \
+\<source\ src=\"${_raw_url_pattern}\"\ type=\"audio/mpeg\"\>                        ]]
+  [[    "${output}"    =~  \
+type=\"audio/mpeg\"\>${_NEWLINE}.*\</audio\>${_NEWLINE}.*\</p\>                     ]]
 }
 
 # video items #################################################################
@@ -101,12 +115,17 @@ type=\"audio/mpeg\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</audio\>           
 
   [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                   ]]
   [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
+
   [[    "${output}"    =~  \
-\<video\ width=\"320\"\ height=\"240\"\ controls\>${_NEWLINE}.*\<source\            ]]
+\<h1\ align=\"center\"\ class=\"media\-title\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>  ]]
   [[    "${output}"    =~  \
-${_NEWLINE}.*\<source\ src=\"${_raw_url_pattern}\"\ type=\"video/mp4\"\>            ]]
+\<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*nb.mp4${_NEWLINE}.*\</a\>${_NEWLINE}.*\</h1\>     ]]
   [[    "${output}"    =~  \
-type=\"video/mp4\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</video\>                ]]
+\<p\ align=\"center\"\>${_NEWLINE}.*\<video\ width=\"320\"\ height=\"240\"\ controls\>${_NEWLINE}   ]]
+  [[    "${output}"    =~  \
+controls\>${_NEWLINE}.*\<source\ src=\"${_raw_url_pattern}\"\ type=\"video/mp4\"\>  ]]
+  [[    "${output}"    =~  \
+type=\"video/mp4\"\>${_NEWLINE}.*\</video\>${_NEWLINE}.*\</p\>                      ]]
 }
 
 @test "'browse' renders video item as '<video>' element." {
@@ -132,12 +151,17 @@ type=\"video/mp4\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</video\>            
 
   [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                   ]]
   [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
+
   [[    "${output}"    =~  \
-\<video\ width=\"320\"\ height=\"240\"\ controls\>${_NEWLINE}.*\<source\            ]]
+\<h1\ align=\"center\"\ class=\"media\-title\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>  ]]
   [[    "${output}"    =~  \
-${_NEWLINE}.*\<source\ src=\"${_raw_url_pattern}\"\ type=\"video/mp4\"\>            ]]
+\<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*nb.mp4${_NEWLINE}.*\</a\>${_NEWLINE}.*\</h1\>     ]]
   [[    "${output}"    =~  \
-type=\"video/mp4\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</video\>                ]]
+\<p\ align=\"center\"\>${_NEWLINE}.*\<video\ width=\"320\"\ height=\"240\"\ controls\>${_NEWLINE}   ]]
+  [[    "${output}"    =~  \
+controls\>${_NEWLINE}.*\<source\ src=\"${_raw_url_pattern}\"\ type=\"video/mp4\"\>  ]]
+  [[    "${output}"    =~  \
+type=\"video/mp4\"\>${_NEWLINE}.*\</video\>${_NEWLINE}.*\</p\>                      ]]
 }
 
 # HTML <title> ################################################################

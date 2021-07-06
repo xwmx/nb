@@ -9361,7 +9361,7 @@ col {
 }
 
 audio {
-  padding:            3rem 0;
+  padding:            1rem 0;
 }
 
 audio,
@@ -9372,6 +9372,10 @@ video {
 
 video {
   height:             100%;
+}
+
+.media-title {
+  padding:            1rem 0;
 }
 
 header {
@@ -17676,13 +17680,16 @@ HEREDOC
             _mime_type="$(file -b --mime-type "${_source_path}")"
 
             cat <<HEREDOC
-<p align="center">
+<h1 align="center" class="media-title">
   <a href="${_raw_url}">
-    <audio controls>
-      <source src="${_raw_url}" type="${_mime_type}">
-      ${_source_path##*/}
-    </audio>
+    ${_source_path##*/}
   </a>
+</h1>
+
+<p align="center">
+  <audio controls>
+    <source src="${_raw_url}" type="${_mime_type}">
+  </audio>
 </p>
 HEREDOC
             ;;
@@ -17691,13 +17698,16 @@ HEREDOC
             _mime_type="$(file -b --mime-type "${_source_path}")"
 
             cat <<HEREDOC
-<p align="center">
+<h1 align="center" class="media-title">
   <a href="${_raw_url}">
-    <video width="320" height="240" controls>
-      <source src="${_raw_url}" type="${_mime_type}">
-      ${_source_path##*/}
-    </video>
+    ${_source_path##*/}
   </a>
+</h1>
+
+<p align="center">
+  <video width="320" height="240" controls>
+    <source src="${_raw_url}" type="${_mime_type}">
+  </video>
 </p>
 HEREDOC
           ;;
