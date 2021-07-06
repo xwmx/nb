@@ -16919,14 +16919,28 @@ HEREDOC
 
       if ((_print_prev))
       then
-        local _prev_url_params=
-        _prev_url_params="${_url_params#$'?'}&--page=$((_current_page - 1))"
+        local _prev_page_number=
+        _prev_page_number="$((_current_page - 1))"
+
+        local _prev_url_params="${_url_params#$'?'}"
+
+        if [[ "${_prev_page_number:-0}" -gt 1 ]]
+        then
+          _prev_url_params+="&--page=${_prev_page_number:-}"
+        fi
+
+        _prev_url_params="${_prev_url_params#$'&'}"
+
+        if [[ -n "${_prev_url_params:-}" ]]
+        then
+          _prev_url_params="?${_prev_url_params:-}"
+        fi
 
         printf                                                \
-          "<a href=\"http://localhost:%s/%s?%s\">❮ prev</a>"  \
+          "<a href=\"http://localhost:%s/%s%s\">❮ prev</a>"   \
           "${NB_SERVER_PORT}"                                 \
           "${_url_encoded_selector}"                          \
-          "${_prev_url_params#$'&'}"
+          "${_prev_url_params:-}"
       fi
 
       if ((_print_prev)) && ((_print_next))
