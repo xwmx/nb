@@ -673,7 +673,7 @@ HEREDOC
   }
 
   # TODO: improve
-  NB_BROWSE_PDF_ENABLED=1 run "${_NB}" browse 2/1 --print
+  NB_BROWSE_PDF_TO_TEXT_ENABLED=1 run "${_NB}" browse 2/1 --print
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
