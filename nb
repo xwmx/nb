@@ -17665,15 +17665,11 @@ HEREDOC
             { # begin media markup pipeline
               case "${_render_type:-}" in
                 image)
-                  {
-                    cat <<HEREDOC
+                  cat <<HEREDOC
 <a href="${_raw_url}">
   <img src="${_raw_url}" alt="${NB_INDICATOR_IMAGE} ${_source_path##*/}" />
 </a>
 HEREDOC
-                  } | {
-                    _render --body --title "${_html_title}"
-                  }
                   ;;
                 pdf)
                   if ((${NB_BROWSE_PDF_TO_TEXT_ENABLED:-0}))  &&
@@ -17683,7 +17679,7 @@ HEREDOC
                     # NOTE: add uniform newlines: `sed  '/^$/d' | sed G`
                     pdftotext "${_source_path}" - \
                       | tr -d '\014'              \
-                      | _render --from="md" --pandoc --body --title "${_html_title}"
+                      | _render --from="md" --pandoc --body
                   else
                     cat <<HEREDOC
 <iframe src="${_raw_url}" width="100%" height="700px"></iframe>
