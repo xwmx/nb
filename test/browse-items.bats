@@ -37,9 +37,9 @@ export NB_SERVER_PORT=6789
   [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
 
   [[    "${output}"    =~  \
-\<h1\ align=\"center\"\ class=\"media\-title\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>  ]]
+\<h1\ align=\"center\"\ class=\"media\-title\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>    ]]
   [[    "${output}"    =~  \
-\<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*nb.mp3${_NEWLINE}.*\</a\>${_NEWLINE}.*\</h1\>     ]]
+\<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</a\>${_NEWLINE}.*\</h1\> ]]
   [[    "${output}"    =~  \
 \<p\ align=\"center\"\>${_NEWLINE}.*\<audio\ controls\>${_NEWLINE}.*\<source\ src=  ]]
   [[    "${output}"    =~  \
@@ -73,9 +73,9 @@ type=\"audio/mpeg\"\>${_NEWLINE}.*\</audio\>${_NEWLINE}.*\</p\>                 
   [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
 
   [[    "${output}"    =~  \
-\<h1\ align=\"center\"\ class=\"media\-title\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>  ]]
+\<h1\ align=\"center\"\ class=\"media\-title\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>    ]]
   [[    "${output}"    =~  \
-\<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*nb.mp3${_NEWLINE}.*\</a\>${_NEWLINE}.*\</h1\>     ]]
+\<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</a\>${_NEWLINE}.*\</h1\> ]]
   [[    "${output}"    =~  \
 \<p\ align=\"center\"\>${_NEWLINE}.*\<audio\ controls\>${_NEWLINE}.*\<source\ src=  ]]
   [[    "${output}"    =~  \
@@ -117,11 +117,11 @@ type=\"audio/mpeg\"\>${_NEWLINE}.*\</audio\>${_NEWLINE}.*\</p\>                 
   [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
 
   [[    "${output}"    =~  \
-\<h1\ align=\"center\"\ class=\"media\-title\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>  ]]
+\<h1\ align=\"center\"\ class=\"media\-title\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>    ]]
   [[    "${output}"    =~  \
-\<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*nb.mp4${_NEWLINE}.*\</a\>${_NEWLINE}.*\</h1\>     ]]
+\<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</a\>${_NEWLINE}.*\</h1\> ]]
   [[    "${output}"    =~  \
-\<p\ align=\"center\"\>${_NEWLINE}.*\<video\ width=\"320\"\ height=\"240\"\ controls\>${_NEWLINE}   ]]
+\<p\ align=\"center\"\>${_NEWLINE}.*\<video\ width=\"320\"\ height=\"240\"\ controls\>${_NEWLINE}     ]]
   [[    "${output}"    =~  \
 controls\>${_NEWLINE}.*\<source\ src=\"${_raw_url_pattern}\"\ type=\"video/mp4\"\>  ]]
   [[    "${output}"    =~  \
@@ -153,11 +153,11 @@ type=\"video/mp4\"\>${_NEWLINE}.*\</video\>${_NEWLINE}.*\</p\>                  
   [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
 
   [[    "${output}"    =~  \
-\<h1\ align=\"center\"\ class=\"media\-title\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>  ]]
+\<h1\ align=\"center\"\ class=\"media\-title\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>    ]]
   [[    "${output}"    =~  \
-\<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*nb.mp4${_NEWLINE}.*\</a\>${_NEWLINE}.*\</h1\>     ]]
+\<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</a\>${_NEWLINE}.*\</h1\> ]]
   [[    "${output}"    =~  \
-\<p\ align=\"center\"\>${_NEWLINE}.*\<video\ width=\"320\"\ height=\"240\"\ controls\>${_NEWLINE}   ]]
+\<p\ align=\"center\"\>${_NEWLINE}.*\<video\ width=\"320\"\ height=\"240\"\ controls\>${_NEWLINE}     ]]
   [[    "${output}"    =~  \
 controls\>${_NEWLINE}.*\<source\ src=\"${_raw_url_pattern}\"\ type=\"video/mp4\"\>  ]]
   [[    "${output}"    =~  \
