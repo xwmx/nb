@@ -9375,6 +9375,10 @@ video {
   max-height:         50rem;
 }
 
+.media-item {
+  padding:            2rem 0 1rem;
+}
+
 .media-caption {
   padding:            1rem 0;
 }
@@ -17662,11 +17666,9 @@ HEREDOC
                 image)
                   {
                     cat <<HEREDOC
-<p align="center">
-  <a href="${_raw_url}">
-    <img src="${_raw_url}" alt="${_source_path##*/}" />
-  </a>
-</p>
+<a href="${_raw_url}">
+  <img src="${_raw_url}" alt="${_source_path##*/}" />
+</a>
 HEREDOC
                   } | {
                     _render --body --title "${_html_title}"
@@ -17711,9 +17713,9 @@ HEREDOC
               esac
             } | { # media markup pipeline
               cat <<HEREDOC
-<p align="center">
+<div align="center" class="media-item">
   $(cat)
-</p>
+</div>
 
 <div align="center" class="media-caption">
   <a href="${_raw_url}">

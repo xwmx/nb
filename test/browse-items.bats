@@ -30,14 +30,14 @@ export NB_SERVER_PORT=6789
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"    ==  0                                                        ]]
-  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                                      ]]
+  [[    "${status}"    ==  0                                                          ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                                        ]]
 
-  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                   ]]
-  [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                     ]]
+  [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>    ]]
 
   [[    "${output}"    =~  \
-\<iframe\ src=\"${_raw_url_pattern}\"\ width=\"100%\"\ height=\"700px\"\>\</iframe\>        ]]
+\<iframe\ src=\"${_raw_url_pattern}\"\ width=\"100%\"\ height=\"700px\"\>\</iframe\>  ]]
 
   [[    "${output}"    =~  \
 \<div\ align=\"center\"\ class=\"media\-caption\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>   ]]
@@ -63,14 +63,14 @@ export NB_SERVER_PORT=6789
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"    ==  0                                                        ]]
-  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                                      ]]
+  [[    "${status}"    ==  0                                                          ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                                        ]]
 
-  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                   ]]
-  [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                     ]]
+  [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>    ]]
 
   [[    "${output}"    =~  \
-\<iframe\ src=\"${_raw_url_pattern}\"\ width=\"100%\"\ height=\"700px\"\>\</iframe\>    ]]
+\<iframe\ src=\"${_raw_url_pattern}\"\ width=\"100%\"\ height=\"700px\"\>\</iframe\>  ]]
 
   [[    "${output}"    =~  \
 \<div\ align=\"center\"\ class=\"media\-caption\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>   ]]
@@ -111,11 +111,13 @@ export NB_SERVER_PORT=6789
   [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
 
   [[    "${output}"    =~  \
-\<p\ align=\"center\"\>${_NEWLINE}.*\<audio\ controls\>${_NEWLINE}.*\<source\ src=  ]]
+\<div\ align=\"center\"\ class=\"media-item\"\>${_NEWLINE}.*\<audio\ controls\>     ]]
+  [[    "${output}"    =~  \
+media-item\"\>${_NEWLINE}.*\<audio\ controls\>${_NEWLINE}.*\<source\ src=           ]]
   [[    "${output}"    =~  \
 \<source\ src=\"${_raw_url_pattern}\"\ type=\"audio/mpeg\"\>                        ]]
   [[    "${output}"    =~  \
-type=\"audio/mpeg\"\>${_NEWLINE}.*\</audio\>${_NEWLINE}.*\</p\>                     ]]
+type=\"audio/mpeg\"\>${_NEWLINE}.*\</audio\>${_NEWLINE}.*\</div\>                   ]]
 
   [[    "${output}"    =~  \
 \<div\ align=\"center\"\ class=\"media\-caption\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>   ]]
@@ -148,11 +150,13 @@ type=\"audio/mpeg\"\>${_NEWLINE}.*\</audio\>${_NEWLINE}.*\</p\>                 
   [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
 
   [[    "${output}"    =~  \
-\<p\ align=\"center\"\>${_NEWLINE}.*\<audio\ controls\>${_NEWLINE}.*\<source\ src=  ]]
+\<div\ align=\"center\"\ class=\"media-item\"\>${_NEWLINE}.*\<audio\ controls\>     ]]
+  [[    "${output}"    =~  \
+media-item\"\>${_NEWLINE}.*\<audio\ controls\>${_NEWLINE}.*\<source\ src=           ]]
   [[    "${output}"    =~  \
 \<source\ src=\"${_raw_url_pattern}\"\ type=\"audio/mpeg\"\>                        ]]
   [[    "${output}"    =~  \
-type=\"audio/mpeg\"\>${_NEWLINE}.*\</audio\>${_NEWLINE}.*\</p\>                     ]]
+type=\"audio/mpeg\"\>${_NEWLINE}.*\</audio\>${_NEWLINE}.*\</div\>                   ]]
 
   [[    "${output}"    =~  \
 \<div\ align=\"center\"\ class=\"media\-caption\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>   ]]
@@ -193,16 +197,18 @@ type=\"audio/mpeg\"\>${_NEWLINE}.*\</audio\>${_NEWLINE}.*\</p\>                 
   [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
 
   [[    "${output}"    =~  \
-\<div\ align=\"center\"\ class=\"media\-caption\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>   ]]
+\<div\ align=\"center\"\ class=\"media-item\"\>${_NEWLINE}.*\<video\ width=\"320\"  ]]
   [[    "${output}"    =~  \
-\<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</a\>${_NEWLINE}.*\</div\>  ]]
-
-  [[    "${output}"    =~  \
-\<p\ align=\"center\"\>${_NEWLINE}.*\<video\ width=\"320\"\ height=\"240\"\ controls\>${_NEWLINE}       ]]
+${_NEWLINE}.*\<video\ width=\"320\"\ height=\"240\"\ controls\>${_NEWLINE}          ]]
   [[    "${output}"    =~  \
 controls\>${_NEWLINE}.*\<source\ src=\"${_raw_url_pattern}\"\ type=\"video/mp4\"\>  ]]
   [[    "${output}"    =~  \
-type=\"video/mp4\"\>${_NEWLINE}.*\</video\>${_NEWLINE}.*\</p\>                      ]]
+type=\"video/mp4\"\>${_NEWLINE}.*\</video\>${_NEWLINE}.*\</div\>                    ]]
+
+  [[    "${output}"    =~  \
+\<div\ align=\"center\"\ class=\"media\-caption\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>   ]]
+  [[    "${output}"    =~  \
+\<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</a\>${_NEWLINE}.*\</div\>  ]]
 }
 
 @test "'browse' renders video item as '<video>' element." {
@@ -230,11 +236,13 @@ type=\"video/mp4\"\>${_NEWLINE}.*\</video\>${_NEWLINE}.*\</p\>                  
   [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
 
   [[    "${output}"    =~  \
-\<p\ align=\"center\"\>${_NEWLINE}.*\<video\ width=\"320\"\ height=\"240\"\ controls\>${_NEWLINE}       ]]
+\<div\ align=\"center\"\ class=\"media-item\"\>${_NEWLINE}.*\<video\ width=\"320\"  ]]
+  [[    "${output}"    =~  \
+${_NEWLINE}.*\<video\ width=\"320\"\ height=\"240\"\ controls\>${_NEWLINE}          ]]
   [[    "${output}"    =~  \
 controls\>${_NEWLINE}.*\<source\ src=\"${_raw_url_pattern}\"\ type=\"video/mp4\"\>  ]]
   [[    "${output}"    =~  \
-type=\"video/mp4\"\>${_NEWLINE}.*\</video\>${_NEWLINE}.*\</p\>                      ]]
+type=\"video/mp4\"\>${_NEWLINE}.*\</video\>${_NEWLINE}.*\</div\>                    ]]
 
   [[    "${output}"    =~  \
 \<div\ align=\"center\"\ class=\"media\-caption\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>   ]]
@@ -465,18 +473,18 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"    ==  0                                                        ]]
-  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                                      ]]
+  [[    "${status}"    ==  0                                                          ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                                        ]]
 
-  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                   ]]
-  [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                     ]]
+  [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>    ]]
 
   [[    "${output}"    =~  \
-\<p\ align=\"center\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\> ]]
+\<div\ align=\"center\"\ class=\"media-item\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\> ]]
   [[    "${output}"    =~  \
-${_raw_url_pattern}\"\>${_NEWLINE}.*\<img\ src=\"${_raw_url_pattern}\"\   ]]
+${_raw_url_pattern}\"\>${_NEWLINE}.*\<img\ src=\"${_raw_url_pattern}\"\               ]]
   [[    "${output}"    =~  \
-\"${_raw_url_pattern}\"\ alt=\"nb.png\"\ /\>${_NEWLINE}.*\</a\>${_NEWLINE}.*\</p\> ]]
+\"${_raw_url_pattern}\"\ alt=\"nb.png\"\ /\>${_NEWLINE}.*\</a\>${_NEWLINE}.*\</div\>  ]]
 }
 
 @test "'browse' renders image item as '<img>' element." {
@@ -495,18 +503,18 @@ ${_raw_url_pattern}\"\>${_NEWLINE}.*\<img\ src=\"${_raw_url_pattern}\"\   ]]
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"    ==  0                                                        ]]
-  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                                      ]]
+  [[    "${status}"    ==  0                                                          ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                                        ]]
 
-  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                   ]]
-  [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                     ]]
+  [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>    ]]
 
   [[    "${output}"    =~  \
-\<p\ align=\"center\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\> ]]
+\<div\ align=\"center\"\ class=\"media-item\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\> ]]
   [[    "${output}"    =~  \
-${_raw_url_pattern}\"\>${_NEWLINE}.*\<img\ src=\"${_raw_url_pattern}\"\   ]]
+${_raw_url_pattern}\"\>${_NEWLINE}.*\<img\ src=\"${_raw_url_pattern}\"\               ]]
   [[    "${output}"    =~  \
-\"${_raw_url_pattern}\"\ alt=\"nb.png\"\ /\>${_NEWLINE}.*\</a\>${_NEWLINE}.*\</p\> ]]
+\"${_raw_url_pattern}\"\ alt=\"nb.png\"\ /\>${_NEWLINE}.*\</a\>${_NEWLINE}.*\</div\>  ]]
 }
 
 # <img> stripping #############################################################
