@@ -17630,6 +17630,16 @@ HEREDOC
     else # render non-Org to HTML before resolving [[wiki-style links]]
       {
         case "${_render_type:-}" in
+          pandoc)
+            local _render_options=("--pandoc" "--body" "--title" "${_html_title}")
+
+            if [[ "${_source_path:-}" =~ \.bookmark\.md ]]
+            then
+              _render_options+=("--bookmark")
+            fi
+
+            printf "" | _render "${_source_path}" "${_render_options[@]:-}"
+            ;;
           image)
             {
               printf                                                          \
@@ -17640,16 +17650,6 @@ HEREDOC
             } | {
               _render --body  --title "${_html_title}"
             }
-            ;;
-          pandoc)
-            local _render_options=("--pandoc" "--body" "--title" "${_html_title}")
-
-            if [[ "${_source_path:-}" =~ \.bookmark\.md ]]
-            then
-              _render_options+=("--bookmark")
-            fi
-
-            printf "" | _render "${_source_path}" "${_render_options[@]:-}"
             ;;
           pdf)
             # TODO: spacing
