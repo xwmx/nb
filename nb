@@ -17674,7 +17674,7 @@ HEREDOC
                 image)
                   cat <<HEREDOC
 <a href="${_raw_url}">
-  <img src="${_raw_url}" alt="${NB_INDICATOR_IMAGE} ${_source_path##*/}" />
+  <img src="${_raw_url}" alt="${_NB_INDICATOR_IMAGE:-}${_source_path##*/}" />
 </a>
 HEREDOC
                   ;;
