@@ -17678,13 +17678,13 @@ HEREDOC
                 | _render --from="md" --pandoc --body --title "${_html_title}"
             else
               cat <<HEREDOC
+<iframe src="${_raw_url}" width="100%" height="700px"></iframe>
+
 <h1 align="center" class="media-title">
   <a href="${_raw_url}">
     ${_source_path##*/}
   </a>
 </h1>
-
-<iframe src="${_raw_url}" width="100%" height="700px"></iframe>
 HEREDOC
             fi
             ;;
@@ -17711,15 +17711,15 @@ HEREDOC
               esac
             } | {
               cat <<HEREDOC
+<p align="center">
+  $(cat)
+</p>
+
 <h1 align="center" class="media-title">
   <a href="${_raw_url}">
     ${_source_path##*/}
   </a>
 </h1>
-
-<p align="center">
-  $(cat)
-</p>
 HEREDOC
             }
             ;;
