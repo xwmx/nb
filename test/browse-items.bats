@@ -2,6 +2,7 @@
 
 load test_helper
 
+export _IMOGI="🌄"
 export NB_SERVER_PORT=6789
 
 # pdf items ###################################################################
@@ -40,9 +41,9 @@ export NB_SERVER_PORT=6789
 \<iframe\ src=\"${_raw_url_pattern}\"\ width=\"100%\"\ height=\"700px\"\>\</iframe\>  ]]
 
   [[    "${output}"    =~  \
-\<div\ align=\"center\"\ class=\"media\-caption\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>   ]]
+\<p\ align=\"center\"\ class=\"media\-caption\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>   ]]
   [[    "${output}"    =~  \
-\<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</a\>${_NEWLINE}.*\</div\>  ]]
+\<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</a\>${_NEWLINE}.*\</p\>  ]]
 }
 
 @test "'browse' renders pdf item in an '<iframe>'." {
@@ -73,9 +74,9 @@ export NB_SERVER_PORT=6789
 \<iframe\ src=\"${_raw_url_pattern}\"\ width=\"100%\"\ height=\"700px\"\>\</iframe\>  ]]
 
   [[    "${output}"    =~  \
-\<div\ align=\"center\"\ class=\"media\-caption\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>   ]]
+\<p\ align=\"center\"\ class=\"media\-caption\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>   ]]
   [[    "${output}"    =~  \
-\<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</a\>${_NEWLINE}.*\</div\>  ]]
+\<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</a\>${_NEWLINE}.*\</p\>  ]]
 }
 
 # audio items #################################################################
@@ -120,9 +121,9 @@ media-item\"\>${_NEWLINE}.*\<audio\ controls\>${_NEWLINE}.*\<source\ src=       
 type=\"audio/mpeg\"\>${_NEWLINE}.*\</audio\>${_NEWLINE}.*\</div\>                   ]]
 
   [[    "${output}"    =~  \
-\<div\ align=\"center\"\ class=\"media\-caption\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>   ]]
+\<p\ align=\"center\"\ class=\"media\-caption\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>   ]]
   [[    "${output}"    =~  \
-\<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</a\>${_NEWLINE}.*\</div\>  ]]
+\<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</a\>${_NEWLINE}.*\</p\>  ]]
 }
 
 @test "'browse' renders audio item as '<audio>' element." {
@@ -159,9 +160,9 @@ media-item\"\>${_NEWLINE}.*\<audio\ controls\>${_NEWLINE}.*\<source\ src=       
 type=\"audio/mpeg\"\>${_NEWLINE}.*\</audio\>${_NEWLINE}.*\</div\>                   ]]
 
   [[    "${output}"    =~  \
-\<div\ align=\"center\"\ class=\"media\-caption\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>   ]]
+\<p\ align=\"center\"\ class=\"media\-caption\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>   ]]
   [[    "${output}"    =~  \
-\<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</a\>${_NEWLINE}.*\</div\>  ]]
+\<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</a\>${_NEWLINE}.*\</p\>  ]]
 }
 
 # video items #################################################################
@@ -206,9 +207,9 @@ controls\>${_NEWLINE}.*\<source\ src=\"${_raw_url_pattern}\"\ type=\"video/mp4\"
 type=\"video/mp4\"\>${_NEWLINE}.*\</video\>${_NEWLINE}.*\</div\>                    ]]
 
   [[    "${output}"    =~  \
-\<div\ align=\"center\"\ class=\"media\-caption\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>   ]]
+\<p\ align=\"center\"\ class=\"media\-caption\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>   ]]
   [[    "${output}"    =~  \
-\<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</a\>${_NEWLINE}.*\</div\>  ]]
+\<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</a\>${_NEWLINE}.*\</p\>  ]]
 }
 
 @test "'browse' renders video item as '<video>' element." {
@@ -245,9 +246,9 @@ controls\>${_NEWLINE}.*\<source\ src=\"${_raw_url_pattern}\"\ type=\"video/mp4\"
 type=\"video/mp4\"\>${_NEWLINE}.*\</video\>${_NEWLINE}.*\</div\>                    ]]
 
   [[    "${output}"    =~  \
-\<div\ align=\"center\"\ class=\"media\-caption\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>   ]]
+\<p\ align=\"center\"\ class=\"media\-caption\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>   ]]
   [[    "${output}"    =~  \
-\<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</a\>${_NEWLINE}.*\</div\>  ]]
+\<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</a\>${_NEWLINE}.*\</p\>  ]]
 }
 
 # HTML <title> ################################################################
@@ -482,9 +483,9 @@ HEREDOC
   [[    "${output}"    =~  \
 \<div\ align=\"center\"\ class=\"media-item\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\> ]]
   [[    "${output}"    =~  \
-${_raw_url_pattern}\"\>${_NEWLINE}.*\<img\ src=\"${_raw_url_pattern}\"\               ]]
+${_raw_url_pattern}\"\>${_NEWLINE}.*\<img\ src=\"${_raw_url_pattern}\"\                           ]]
   [[    "${output}"    =~  \
-\"${_raw_url_pattern}\"\ alt=\"nb.png\"\ /\>${_NEWLINE}.*\</a\>${_NEWLINE}.*\</div\>  ]]
+\"${_raw_url_pattern}\"\ alt=\"${_IMOGI}\ nb.png\"\ /\>${_NEWLINE}.*\</a\>${_NEWLINE}.*\</div\>    ]]
 }
 
 @test "'browse' renders image item as '<img>' element." {
@@ -512,9 +513,9 @@ ${_raw_url_pattern}\"\>${_NEWLINE}.*\<img\ src=\"${_raw_url_pattern}\"\         
   [[    "${output}"    =~  \
 \<div\ align=\"center\"\ class=\"media-item\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\> ]]
   [[    "${output}"    =~  \
-${_raw_url_pattern}\"\>${_NEWLINE}.*\<img\ src=\"${_raw_url_pattern}\"\               ]]
+${_raw_url_pattern}\"\>${_NEWLINE}.*\<img\ src=\"${_raw_url_pattern}\"\                           ]]
   [[    "${output}"    =~  \
-\"${_raw_url_pattern}\"\ alt=\"nb.png\"\ /\>${_NEWLINE}.*\</a\>${_NEWLINE}.*\</div\>  ]]
+\"${_raw_url_pattern}\"\ alt=\"${_IMOGI}\ nb.png\"\ /\>${_NEWLINE}.*\</a\>${_NEWLINE}.*\</div\>   ]]
 }
 
 # <img> stripping #############################################################
@@ -552,7 +553,7 @@ HEREDOC
 
   [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>       ]]
   [[    "${output}"    =~  \
-\<p\>Example\ image\ one:\ \<img\ src=\".*not-valid-1.png\"\ alt=\"Example\ Image\ One\"\ /\>\</p\>  ]]
+\<p\>Example\ image\ one:\ \<img\ src=\".*not-valid-1.png\"\ alt=\"Example\ Image\ One\"\ /\>\</p\> ]]
   [[    "${output}"    =~  \<p\>More\ example\ \ content\ \ here.\</p\> ]]
 }
 
@@ -589,7 +590,7 @@ HEREDOC
 
   [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>       ]]
   [[    "${output}"    =~  \
-\<p\>Example\ image\ one:\ \<img\ src=\".*not-valid-1.png\"\ alt=\"Example\ Image\ One\"\ /\>\</p\>  ]]
+\<p\>Example\ image\ one:\ \<img\ src=\".*not-valid-1.png\"\ alt=\"Example\ Image\ One\"\ /\>\</p\> ]]
   [[    "${output}"    =~  \<p\>More\ example\ \ content\ \ here.\</p\> ]]
 }
 
@@ -626,11 +627,11 @@ HEREDOC
 
   [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\> ]]
   [[    "${output}"    =~  \
-\<p\>Example\ image\ one:\ \<img\ src=\".*not-valid-1.png\"\ alt=\"Example\ Image\ One\"\ /\>\</p\>  ]]
+\<p\>Example\ image\ one:\ \<img\ src=\".*not-valid-1.png\"\ alt=\"Example\ Image\ One\"\ /\>\</p\> ]]
   [[    "${output}"    =~  \
-\<p\>More\ example\ \<img\ src=\".*not-valid-2.png\"\ alt=\"Example\ Image\ Two\"\ /\>\ content\     ]]
+\<p\>More\ example\ \<img\ src=\".*not-valid-2.png\"\ alt=\"Example\ Image\ Two\"\ /\>\ content\    ]]
   [[    "${output}"    =~  \
-\ content\ \<img\ src=\".*not-valid-3.png\"\ alt=\"Example\ Image\ Three\"\ /\>\ here.\</p\>         ]]
+\ content\ \<img\ src=\".*not-valid-3.png\"\ alt=\"Example\ Image\ Three\"\ /\>\ here.\</p\>        ]]
 
 }
 

@@ -9379,10 +9379,6 @@ video {
   padding:            2rem 0 1rem;
 }
 
-.media-caption {
-  padding:            1rem 0;
-}
-
 header {
   margin-bottom:      4em;
   text-align:         center;
@@ -17672,7 +17668,7 @@ HEREDOC
                   {
                     cat <<HEREDOC
 <a href="${_raw_url}">
-  <img src="${_raw_url}" alt="${_source_path##*/}" />
+  <img src="${_raw_url}" alt="${NB_INDICATOR_IMAGE} ${_source_path##*/}" />
 </a>
 HEREDOC
                   } | {
@@ -17722,11 +17718,11 @@ HEREDOC
   $(cat)
 </div>
 
-<div align="center" class="media-caption">
+<p align="center" class="media-caption">
   <a href="${_raw_url}">
     ${_source_path##*/}
   </a>
-</div>
+</p>
 HEREDOC
             } # end media markup pipeline
             ;;
