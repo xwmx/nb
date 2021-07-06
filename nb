@@ -17675,7 +17675,7 @@ HEREDOC
               | tr -d '\014'              \
               | _render --from="md" --pandoc --body --title "${_html_title}"
             ;;
-          audio)
+          audio|video)
             local _mime_type=
             _mime_type="$(file -b --mime-type "${_source_path}")"
 
@@ -17685,32 +17685,28 @@ HEREDOC
     ${_source_path##*/}
   </a>
 </h1>
-
+HEREDOC
+            case "${_render_type}" in
+              audio)
+                cat <<HEREDOC
 <p align="center">
   <audio controls>
     <source src="${_raw_url}" type="${_mime_type}">
   </audio>
 </p>
 HEREDOC
-            ;;
-          video)
-            local _mime_type=
-            _mime_type="$(file -b --mime-type "${_source_path}")"
-
-            cat <<HEREDOC
-<h1 align="center" class="media-title">
-  <a href="${_raw_url}">
-    ${_source_path##*/}
-  </a>
-</h1>
-
+                ;;
+              video)
+                cat <<HEREDOC
 <p align="center">
   <video width="320" height="240" controls>
     <source src="${_raw_url}" type="${_mime_type}">
   </video>
 </p>
 HEREDOC
-          ;;
+                ;;
+            esac
+            ;;
         esac
       } | {
         printf "%s\\n" "$(
