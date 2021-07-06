@@ -4,6 +4,74 @@ load test_helper
 
 export NB_SERVER_PORT=6789
 
+# pdf items ###################################################################
+
+@test "'browse' with local notebook renders pdf item as '<h1>' link." {
+  {
+    "${_NB}" init
+
+    mkdir -p "${_TMP_DIR}/Local Notebook"
+    cd "${_TMP_DIR}/Local Notebook"
+
+    "${_NB}" notebooks init
+
+    declare _filename="example.pdf"
+
+    "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/${_filename}"
+
+    declare _raw_url_pattern="http://localhost:6789/--original/local/${_filename}"
+    _raw_url_pattern+="\?--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
+
+    sleep 1
+  }
+
+  run "${_NB}" browse 1 --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                                        ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                                      ]]
+
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                   ]]
+  [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
+
+  [[    "${output}"    =~  \
+\<h1\ align=\"center\"\ class=\"media\-title\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>    ]]
+  [[    "${output}"    =~  \
+\<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</a\>${_NEWLINE}.*\</h1\> ]]
+}
+
+@test "'browse' renders pdf item as '<h1>' link." {
+  {
+    "${_NB}" init
+
+    declare _filename="example.pdf"
+
+    "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/${_filename}"
+
+    declare _raw_url_pattern="http://localhost:6789/--original/home/${_filename}"
+
+    sleep 1
+  }
+
+  run "${_NB}" browse 1 --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                                        ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                                      ]]
+
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                   ]]
+  [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
+
+  [[    "${output}"    =~  \
+\<h1\ align=\"center\"\ class=\"media\-title\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>    ]]
+  [[    "${output}"    =~  \
+\<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</a\>${_NEWLINE}.*\</h1\> ]]
+}
+
 # audio items #################################################################
 
 @test "'browse' with local notebook renders audio item as '<audio>' element." {

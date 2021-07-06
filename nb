@@ -17567,9 +17567,7 @@ HEREDOC
     elif _file_is_video "${_source_path:-}"
     then
       _render_type="video"
-    elif  ((${NB_BROWSE_PDF_ENABLED:-0}))       &&
-          [[ "${_source_path}" =~ \.pdf   ]]    &&
-          _command_exists "pdftotext"
+    elif [[ "${_source_path}" =~ \.pdf          ]]
     then
       _render_type="pdf"
     else
@@ -17669,11 +17667,23 @@ HEREDOC
             }
             ;;
           pdf)
-            # TODO: spacing
-            # NOTE: add uniform newlines: `sed  '/^$/d' | sed G`
-            pdftotext "${_source_path}" - \
-              | tr -d '\014'              \
-              | _render --from="md" --pandoc --body --title "${_html_title}"
+            if ((${NB_BROWSE_PDF_ENABLED:-0}))  &&
+               _command_exists "pdftotext"
+            then
+              # TODO: spacing
+              # NOTE: add uniform newlines: `sed  '/^$/d' | sed G`
+              pdftotext "${_source_path}" - \
+                | tr -d '\014'              \
+                | _render --from="md" --pandoc --body --title "${_html_title}"
+            else
+              cat <<HEREDOC
+<h1 align="center" class="media-title">
+  <a href="${_raw_url}">
+    ${_source_path##*/}
+  </a>
+</h1>
+HEREDOC
+            fi
             ;;
           audio|video)
             {
