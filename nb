@@ -17557,7 +17557,6 @@ HEREDOC
            apng avif gif jfif jpeg jpg pjpeg pjp png svg webp
     then
       _render_type="image"
-
     elif _file_is_audio "${_source_path:-}"
     then
       _render_type="audio"
