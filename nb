@@ -9375,7 +9375,7 @@ video {
   max-height:         50rem;
 }
 
-.media-title {
+.media-caption {
   padding:            1rem 0;
 }
 
@@ -17658,11 +17658,19 @@ HEREDOC
             ;;
           image)
             {
-              printf                                                          \
-                "<p><a href=\"%s\"><img src=\"%s\" alt=\"%s\" /></a></p>\\n"  \
-                "${_raw_url}"                                                 \
-                "${_raw_url}"                                                 \
-                "${_source_path##*/}"
+                cat <<HEREDOC
+<p align="center">
+  <a href="${_raw_url}">
+    <img src="${_raw_url}" alt="${_source_path##*/}" />
+  </a>
+</p>
+
+<div align="center" class="media-caption">
+  <a href="${_raw_url}">
+    ${_source_path##*/}
+  </a>
+</div>
+HEREDOC
             } | {
               _render --body  --title "${_html_title}"
             }
@@ -17680,11 +17688,11 @@ HEREDOC
               cat <<HEREDOC
 <iframe src="${_raw_url}" width="100%" height="700px"></iframe>
 
-<h1 align="center" class="media-title">
+<div align="center" class="media-caption">
   <a href="${_raw_url}">
     ${_source_path##*/}
   </a>
-</h1>
+</div>
 HEREDOC
             fi
             ;;
@@ -17715,11 +17723,11 @@ HEREDOC
   $(cat)
 </p>
 
-<h1 align="center" class="media-title">
+<div align="center" class="media-caption">
   <a href="${_raw_url}">
     ${_source_path##*/}
   </a>
-</h1>
+</div>
 HEREDOC
             }
             ;;

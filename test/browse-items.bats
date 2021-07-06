@@ -37,11 +37,12 @@ export NB_SERVER_PORT=6789
   [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
 
   [[    "${output}"    =~  \
-\<h1\ align=\"center\"\ class=\"media\-title\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>    ]]
-  [[    "${output}"    =~  \
-\<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</a\>${_NEWLINE}.*\</h1\> ]]
-  [[    "${output}"    =~  \
 \<iframe\ src=\"${_raw_url_pattern}\"\ width=\"100%\"\ height=\"700px\"\>\</iframe\>        ]]
+
+  [[    "${output}"    =~  \
+\<div\ align=\"center\"\ class=\"media\-caption\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>   ]]
+  [[    "${output}"    =~  \
+\<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</a\>${_NEWLINE}.*\</div\>  ]]
 }
 
 @test "'browse' renders pdf item in an '<iframe>'." {
@@ -69,11 +70,12 @@ export NB_SERVER_PORT=6789
   [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
 
   [[    "${output}"    =~  \
-\<h1\ align=\"center\"\ class=\"media\-title\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>    ]]
+\<iframe\ src=\"${_raw_url_pattern}\"\ width=\"100%\"\ height=\"700px\"\>\</iframe\>    ]]
+
   [[    "${output}"    =~  \
-\<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</a\>${_NEWLINE}.*\</h1\> ]]
+\<div\ align=\"center\"\ class=\"media\-caption\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>   ]]
   [[    "${output}"    =~  \
-\<iframe\ src=\"${_raw_url_pattern}\"\ width=\"100%\"\ height=\"700px\"\>\</iframe\>        ]]
+\<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</a\>${_NEWLINE}.*\</div\>  ]]
 }
 
 # audio items #################################################################
@@ -109,15 +111,16 @@ export NB_SERVER_PORT=6789
   [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
 
   [[    "${output}"    =~  \
-\<h1\ align=\"center\"\ class=\"media\-title\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>    ]]
-  [[    "${output}"    =~  \
-\<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</a\>${_NEWLINE}.*\</h1\> ]]
-  [[    "${output}"    =~  \
 \<p\ align=\"center\"\>${_NEWLINE}.*\<audio\ controls\>${_NEWLINE}.*\<source\ src=  ]]
   [[    "${output}"    =~  \
 \<source\ src=\"${_raw_url_pattern}\"\ type=\"audio/mpeg\"\>                        ]]
   [[    "${output}"    =~  \
 type=\"audio/mpeg\"\>${_NEWLINE}.*\</audio\>${_NEWLINE}.*\</p\>                     ]]
+
+  [[    "${output}"    =~  \
+\<div\ align=\"center\"\ class=\"media\-caption\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>   ]]
+  [[    "${output}"    =~  \
+\<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</a\>${_NEWLINE}.*\</div\>  ]]
 }
 
 @test "'browse' renders audio item as '<audio>' element." {
@@ -145,15 +148,16 @@ type=\"audio/mpeg\"\>${_NEWLINE}.*\</audio\>${_NEWLINE}.*\</p\>                 
   [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
 
   [[    "${output}"    =~  \
-\<h1\ align=\"center\"\ class=\"media\-title\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>    ]]
-  [[    "${output}"    =~  \
-\<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</a\>${_NEWLINE}.*\</h1\> ]]
-  [[    "${output}"    =~  \
 \<p\ align=\"center\"\>${_NEWLINE}.*\<audio\ controls\>${_NEWLINE}.*\<source\ src=  ]]
   [[    "${output}"    =~  \
 \<source\ src=\"${_raw_url_pattern}\"\ type=\"audio/mpeg\"\>                        ]]
   [[    "${output}"    =~  \
 type=\"audio/mpeg\"\>${_NEWLINE}.*\</audio\>${_NEWLINE}.*\</p\>                     ]]
+
+  [[    "${output}"    =~  \
+\<div\ align=\"center\"\ class=\"media\-caption\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>   ]]
+  [[    "${output}"    =~  \
+\<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</a\>${_NEWLINE}.*\</div\>  ]]
 }
 
 # video items #################################################################
@@ -189,11 +193,12 @@ type=\"audio/mpeg\"\>${_NEWLINE}.*\</audio\>${_NEWLINE}.*\</p\>                 
   [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
 
   [[    "${output}"    =~  \
-\<h1\ align=\"center\"\ class=\"media\-title\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>    ]]
+\<div\ align=\"center\"\ class=\"media\-caption\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>   ]]
   [[    "${output}"    =~  \
-\<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</a\>${_NEWLINE}.*\</h1\> ]]
+\<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</a\>${_NEWLINE}.*\</div\>  ]]
+
   [[    "${output}"    =~  \
-\<p\ align=\"center\"\>${_NEWLINE}.*\<video\ width=\"320\"\ height=\"240\"\ controls\>${_NEWLINE}     ]]
+\<p\ align=\"center\"\>${_NEWLINE}.*\<video\ width=\"320\"\ height=\"240\"\ controls\>${_NEWLINE}       ]]
   [[    "${output}"    =~  \
 controls\>${_NEWLINE}.*\<source\ src=\"${_raw_url_pattern}\"\ type=\"video/mp4\"\>  ]]
   [[    "${output}"    =~  \
@@ -225,15 +230,16 @@ type=\"video/mp4\"\>${_NEWLINE}.*\</video\>${_NEWLINE}.*\</p\>                  
   [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
 
   [[    "${output}"    =~  \
-\<h1\ align=\"center\"\ class=\"media\-title\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>    ]]
-  [[    "${output}"    =~  \
-\<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</a\>${_NEWLINE}.*\</h1\> ]]
-  [[    "${output}"    =~  \
-\<p\ align=\"center\"\>${_NEWLINE}.*\<video\ width=\"320\"\ height=\"240\"\ controls\>${_NEWLINE}     ]]
+\<p\ align=\"center\"\>${_NEWLINE}.*\<video\ width=\"320\"\ height=\"240\"\ controls\>${_NEWLINE}       ]]
   [[    "${output}"    =~  \
 controls\>${_NEWLINE}.*\<source\ src=\"${_raw_url_pattern}\"\ type=\"video/mp4\"\>  ]]
   [[    "${output}"    =~  \
 type=\"video/mp4\"\>${_NEWLINE}.*\</video\>${_NEWLINE}.*\</p\>                      ]]
+
+  [[    "${output}"    =~  \
+\<div\ align=\"center\"\ class=\"media\-caption\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\>   ]]
+  [[    "${output}"    =~  \
+\<a.*\ href=\"${_raw_url_pattern}\"\>${_NEWLINE}.*${_filename}${_NEWLINE}.*\</a\>${_NEWLINE}.*\</div\>  ]]
 }
 
 # HTML <title> ################################################################
@@ -464,8 +470,13 @@ HEREDOC
 
   [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                   ]]
   [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
+
   [[    "${output}"    =~  \
-\<p\>\<a.*\ href=\"${_raw_url_pattern}\"\>\<img\ src=\"${_raw_url_pattern}\"\ alt=\"nb.png\"\ /\>\</a\>\</p\> ]]
+\<p\ align=\"center\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\> ]]
+  [[    "${output}"    =~  \
+${_raw_url_pattern}\"\>${_NEWLINE}.*\<img\ src=\"${_raw_url_pattern}\"\   ]]
+  [[    "${output}"    =~  \
+\"${_raw_url_pattern}\"\ alt=\"nb.png\"\ /\>${_NEWLINE}.*\</a\>${_NEWLINE}.*\</p\> ]]
 }
 
 @test "'browse' renders image item as '<img>' element." {
@@ -474,7 +485,7 @@ HEREDOC
 
     "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/nb.png"
 
-    declare _raw_url="http://localhost:6789/--original/home/nb.png"
+    declare _raw_url_pattern="http://localhost:6789/--original/home/nb.png"
 
     sleep 1
   }
@@ -484,13 +495,18 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"    ==  0                                                ]]
-  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                              ]]
+  [[    "${status}"    ==  0                                                        ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                                      ]]
 
-  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>           ]]
-  [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url}\"\>↓\</a\>  ]]
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                   ]]
+  [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
+
   [[    "${output}"    =~  \
-\<p\>\<a.*\ href=\"${_raw_url}\"\>\<img\ src=\"${_raw_url}\"\ alt=\"nb.png\"\ /\>\</a\>\</p\> ]]
+\<p\ align=\"center\"\>${_NEWLINE}.*\<a.*\ href=\"${_raw_url_pattern}\"\> ]]
+  [[    "${output}"    =~  \
+${_raw_url_pattern}\"\>${_NEWLINE}.*\<img\ src=\"${_raw_url_pattern}\"\   ]]
+  [[    "${output}"    =~  \
+\"${_raw_url_pattern}\"\ alt=\"nb.png\"\ /\>${_NEWLINE}.*\</a\>${_NEWLINE}.*\</p\> ]]
 }
 
 # <img> stripping #############################################################
