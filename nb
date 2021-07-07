@@ -9370,6 +9370,11 @@ video {
   width:              100%;
 }
 
+audio:focus,
+video:focus {
+  outline:            #1a1a1a;
+}
+
 video {
   height:             auto;
   max-height:         50rem;
