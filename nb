@@ -15272,8 +15272,6 @@ _show() {
   local _browse=0
   local _check_type=0
   local _list_page=1
-  local _unresolved_arguments=()
-  local _print_output=0
   local _password=
   local _per_page="${NB_BROWSE_PER_PAGE:-20}"
   local _print_added=0
@@ -15282,18 +15280,20 @@ _show() {
   local _print_filename=0
   local _print_folder_path=0
   local _print_id=0
+  local _print_indicators=0
   local _print_info=0
+  local _print_output=0
   local _print_path=0
   local _print_relative_path=0
   local _print_selector_id=0
+  local _print_title=0
   local _print_updated=0
   local _render=0
   local _selector=
   local _skip_notebook_fallback=0
-  local _print_indicators=0
-  local _print_title=0
   local _tool=
   local _type=
+  local _unresolved_arguments=()
 
   while ((${#}))
   do
