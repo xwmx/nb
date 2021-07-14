@@ -15802,6 +15802,12 @@ Can't show archives. Export archive and expand to edit.\\n"
           cat
         fi
       }
+    elif ((${NB_VIDEO_TO_ASCII_ENABLED:-0}))          &&
+         _command_exists "video-to-ascii"             &&
+         _file_is_video "${_target_path:-}"           &&
+         [[ "${_tool:-"video-to-ascii"}" == "video-to-ascii" ]]
+    then # https://github.com/joelibaceta/video-to-ascii
+      video-to-ascii -f "${_target_path:-}"
     elif _command_exists "mplayer"                    &&
          _file_is_audio "${_target_path}"             &&
          [[ "${_tool:-mplayer}"   == "mplayer"    ]]
