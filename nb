@@ -18750,7 +18750,8 @@ HEREDOC
   then
     local _display_params=
 
-    if _notebooks current --local ||
+    if _notebooks current --local     ||
+       _notebooks current --selected  ||
        [[ "${_selector}" != "$(_notebooks current --name):" ]]
     then
       _display_params="${_request_url#${_request_url_base}}"

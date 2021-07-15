@@ -9,6 +9,28 @@ export _S=" "
 
 # browse --serve ##############################################################
 
+@test "'browse --serve' displays message with selector when notebook selector is specified before subcommand." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" add "Example Notebook:Example File.md" --content "Example content."
+
+    sleep 1
+  }
+
+  run "${_NB}" Example\ Notebook: browse --serve <<< "${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq 0                                                ]]
+
+  [[    "${output}"  =~  \
+^Listening:\ .*http://localhost:${NB_SERVER_PORT}.*/Example%20Notebook:$  ]]
+}
+
 @test "'browse --serve' displays message with selector and --local parameter with local notebook and notebook selector." {
   {
     "${_NB}" init
