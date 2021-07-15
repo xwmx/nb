@@ -4910,8 +4910,9 @@ Usage:
   nb bookmark [<notebook>:][<folder-path>/] <url>
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
               [-f <filename> | --filename <filename>] [--no-request]
-              [-q | --quote] [-r <url> | --related <url>]... [--save-source]
-              [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...] [--title <title>]
+              [-q <quote> | --quote <quote>] [-r <url> | --related <url>]...
+              [--save-source] [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...]
+              [--title <title>]
   nb bookmark [list [<list-options>...]]
   nb bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   nb bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
@@ -5095,9 +5096,9 @@ Usage:
   bookmark [<notebook>:][<folder-path>] <url>
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
               [-f <filename> | --filename <filename>] [--no-request]
-              [-q | --quote] [-r <url> | --related <url>]... [--save-source]
-              [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...] [--title <title>]
-  bookmark list [<list-options>...]
+              [-q <quote> | --quote <quote>] [-r <url> | --related <url>]...
+              [--save-source] [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...]
+              [--title <title>]
   bookmark (edit | delete | open | peek | url)
               ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
   bookmark search <query>
@@ -5362,8 +5363,9 @@ Usage:
   nb bookmark [<notebook>:][<folder-path>/] <url>
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
               [-f <filename> | --filename <filename>] [--no-request]
-              [-q | --quote] [-r <url> | --related <url>]... [--save-source]
-              [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...] [--title <title>]
+              [-q <quote> | --quote <quote>] [-r <url> | --related <url>]...
+              [--save-source] [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...]
+              [--title <title>]
   nb bookmark list [<list-options>...]
   nb bookmark (edit | delete | open | peek | url)
               ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])

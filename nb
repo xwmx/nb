@@ -3582,8 +3582,9 @@ $(_color_primary "Usage"):
   ${_ME} bookmark [<notebook>:][<folder-path>/] <url>
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
               [-f <filename> | --filename <filename>] [--no-request]
-              [-q | --quote] [-r <url> | --related <url>]... [--save-source]
-              [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...] [--title <title>]
+              [-q <quote> | --quote <quote>] [-r <url> | --related <url>]...
+              [--save-source] [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...]
+              [--title <title>]
   ${_ME} bookmark [list [<list-options>...]]
   ${_ME} bookmark (edit | delete | open | peek | url)
               ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
@@ -11099,8 +11100,9 @@ $(_color_primary "Usage"):
   ${_ME} bookmark [<notebook>:][<folder-path>/] <url>
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
               [-f <filename> | --filename <filename>] [--no-request]
-              [-q | --quote] [-r <url> | --related <url>]... [--save-source]
-              [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...] [--title <title>]
+              [-q <quote> | --quote <quote>] [-r <url> | --related <url>]...
+              [--save-source] [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...]
+              [--title <title>]
   ${_ME} bookmark list [<list-options>...]
   ${_ME} bookmark (edit | delete | open | peek | url)
               ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
