@@ -11223,6 +11223,7 @@ _bookmark() {
   local _password=
   local _quote=
   local _related_urls=()
+  local _request_page=1
   local _save_source=0
   local _selector=
   local _skip_content=0
@@ -11251,6 +11252,9 @@ _bookmark() {
       -f|--filename)
         _target_filename="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
+        ;;
+      --no*fetch|--no*request|--offline)
+        _request_page=0
         ;;
       --password)
         _password="$(_option_get_value "${__arg}" "${__val:-}")"
@@ -11601,12 +11605,15 @@ _bookmark() {
       | sed 's/https:\/\/twitter.com/https:\/\/mobile.twitter.com/g'
   )"
 
-  if ! _download_from "${_download_url}" "${_temp_file}" ||
-     [[ ! -e "${_temp_file}"                          ]] ||
-     [[ "$(wc -c <"${_temp_file}")" == 0              ]]
+  if ((_request_page))
   then
-    _warn \
-      printf "Unable to download page at %s\\n" "$(_color_primary "${_url}")"
+    if ! _download_from "${_download_url}" "${_temp_file}" ||
+       [[ ! -e "${_temp_file}"                          ]] ||
+       [[ "$(wc -c <"${_temp_file}")" == 0              ]]
+    then
+      _warn \
+        printf "Unable to download page at %s\\n" "$(_color_primary "${_url}")"
+    fi
   fi
 
   if _file_is_text "${_temp_file}"
