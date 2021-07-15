@@ -16,6 +16,8 @@ export _S=" "
     mkdir -p "${_TMP_DIR}/Local Notebook"
     cd "${_TMP_DIR}/Local Notebook"
 
+    declare _encoded_tmp_dir="${_TMP_DIR//$'/'/%2F}"
+
     "${_NB}" notebooks init
 
     "${_NB}" notebooks add "Example Notebook"
@@ -25,15 +27,16 @@ export _S=" "
     sleep 1
   }
 
-  run "${_NB}" browse Example\ Notebook: --serve <<< "x"
+  run "${_NB}" browse Example\ Notebook: --serve <<< "${_NEWLINE}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${_encoded_tmp_dir}: '%s'\\n" "${_encoded_tmp_dir}"
 
   [[    "${status}"  -eq 0  ]]
 
   [[    "${output}"  =~  \
-^Listening:\ .*http://localhost:${NB_SERVER_PORT}.*/Example%20Notebook:\?--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook$ ]]
+^Listening:\ .*http://localhost:${NB_SERVER_PORT}.*/Example%20Notebook:\?--local=${_encoded_tmp_dir}%2FLocal%20Notebook$ ]]
 }
 
 @test "'browse --serve' displays message with selector and --local parameter with local notebook and folder." {
@@ -43,6 +46,8 @@ export _S=" "
     mkdir -p "${_TMP_DIR}/Local Notebook"
     cd "${_TMP_DIR}/Local Notebook"
 
+    declare _encoded_tmp_dir="${_TMP_DIR//$'/'/%2F}"
+
     "${_NB}" notebooks init
 
     "${_NB}" add "Example Folder/Example File.md" --content "Example content."
@@ -50,7 +55,7 @@ export _S=" "
     sleep 1
   }
 
-  run "${_NB}" browse Example\ Folder/ --serve <<< "x"
+  run "${_NB}" browse Example\ Folder/ --serve <<< "${_NEWLINE}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -58,7 +63,7 @@ export _S=" "
   [[    "${status}"  -eq 0  ]]
 
   [[    "${output}"  =~  \
-^Listening:\ .*http://localhost:${NB_SERVER_PORT}.*/local:Example%20Folder/\?--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook$ ]]
+^Listening:\ .*http://localhost:${NB_SERVER_PORT}.*/local:Example%20Folder/\?--local=${_encoded_tmp_dir}%2FLocal%20Notebook$ ]]
 }
 
 @test "'browse --serve' displays message with selector and --local parameter with local notebook." {
@@ -68,6 +73,8 @@ export _S=" "
     mkdir -p "${_TMP_DIR}/Local Notebook"
     cd "${_TMP_DIR}/Local Notebook"
 
+    declare _encoded_tmp_dir="${_TMP_DIR//$'/'/%2F}"
+
     "${_NB}" notebooks init
 
     "${_NB}" add "Example File.md" --content "Example content."
@@ -75,7 +82,7 @@ export _S=" "
     sleep 1
   }
 
-  run "${_NB}" browse --serve <<< "x"
+  run "${_NB}" browse --serve <<< "${_NEWLINE}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -83,7 +90,7 @@ export _S=" "
   [[    "${status}"  -eq 0  ]]
 
   [[    "${output}"  =~  \
-^Listening:\ .*http://localhost:${NB_SERVER_PORT}.*/local:\?--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook$ ]]
+^Listening:\ .*http://localhost:${NB_SERVER_PORT}.*/local:\?--local=${_encoded_tmp_dir}%2FLocal%20Notebook$ ]]
 }
 
 @test "'browse --serve' displays message without selector or params with current notebook." {
@@ -95,7 +102,7 @@ export _S=" "
     sleep 1
   }
 
-  run "${_NB}" browse --serve <<< "x"
+  run "${_NB}" browse --serve <<< "${_NEWLINE}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -119,7 +126,7 @@ export _S=" "
     sleep 1
   }
 
-  run "${_NB}" browse Example\ Notebook: --serve <<< "x"
+  run "${_NB}" browse Example\ Notebook: --serve <<< "${_NEWLINE}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -139,7 +146,7 @@ export _S=" "
     sleep 1
   }
 
-  run "${_NB}" browse Example\ Folder/ --serve <<< "x"
+  run "${_NB}" browse Example\ Folder/ --serve <<< "${_NEWLINE}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -161,7 +168,7 @@ export _S=" "
     sleep 1
   }
 
-  run "${_NB}" browse Example\ Notebook:Example\ Folder/ --serve <<< "x"
+  run "${_NB}" browse Example\ Notebook:Example\ Folder/ --serve <<< "${_NEWLINE}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"

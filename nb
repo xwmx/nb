@@ -18753,7 +18753,7 @@ HEREDOC
 
     printf "Listening: %s%s\\n"                   \
       "$(_color_primary "${_request_url_base}")"  \
-      "${_display_params//\ /\%20}"
+      "${_display_params//\ /%20}"
 
     if _web_browser --gui
     then
