@@ -4903,8 +4903,8 @@ Usage:
   nb bookmark [<ls options>...]
   nb bookmark [<notebook>:][<folder-path>/] <url>
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
-              [-f <filename> | --filename <filename>] [-q | --quote]
-              [-r <url> | --related <url>]... [--save-source] [--skip-content]
+              [-f <filename> | --filename <filename>] [--no-request]
+              [-q | --quote] [-r <url> | --related <url>]... [--save-source]
               [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...] [--title <title>]
   nb bookmark [list [<list-options>...]]
   nb bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
@@ -5088,8 +5088,8 @@ Usage:
   bookmark [<ls options>...]
   bookmark [<notebook>:][<folder-path>] <url>
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
-              [-f <filename> | --filename <filename>] [-q | --quote]
-              [-r <url> | --related <url>]... [--save-source] [--skip-content]
+              [-f <filename> | --filename <filename>] [--no-request]
+              [-q | --quote] [-r <url> | --related <url>]... [--save-source]
               [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...] [--title <title>]
   bookmark list [<list-options>...]
   bookmark (edit | delete | open | peek | url)
@@ -5103,13 +5103,13 @@ Options:
   -f, --filename <filename>    The filename for the bookmark. It is
                                recommended to omit the extension so the
                                default bookmark extension is used.
+  --no-request                 Don't request or download the target page.
   -q, --quote <quote>          A quote or excerpt from the saved page.
                                Alias: `--excerpt`
   -r, --related <url>          A URL for a page related to the bookmarked page.
                                Multiple `--related` flags can be used in a
                                command to save multiple related URLs.
   --save-source                Save the page source as HTML.
-  --skip-content               Omit page content from the note.
   -t, --tags <tag1>,<tag2>...  A comma-separated list of tags.
   --title <title>              The bookmark title. When not specified,
                                `nb` will use the html <title> tag.
@@ -5355,8 +5355,8 @@ Usage:
   nb bookmark [<ls options>...]
   nb bookmark [<notebook>:][<folder-path>/] <url>
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
-              [-f <filename> | --filename <filename>] [-q | --quote]
-              [-r <url> | --related <url>]... [--save-source] [--skip-content]
+              [-f <filename> | --filename <filename>] [--no-request]
+              [-q | --quote] [-r <url> | --related <url>]... [--save-source]
               [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...] [--title <title>]
   nb bookmark list [<list-options>...]
   nb bookmark (edit | delete | open | peek | url)
@@ -5370,13 +5370,13 @@ Options:
   -f, --filename <filename>    The filename for the bookmark. It is
                                recommended to omit the extension so the
                                default bookmark extension is used.
+  --no-request                 Don't request or download the target page.
   -q, --quote <quote>          A quote or excerpt from the saved page.
                                Alias: `--excerpt`
   -r, --related <url>          A URL for a page related to the bookmarked page.
                                Multiple `--related` flags can be used in a
                                command to save multiple related URLs.
   --save-source                Save the page source as HTML.
-  --skip-content               Omit page content from the note.
   -t, --tags <tag1>,<tag2>...  A comma-separated list of tags.
   --title <title>              The bookmark title. When not specified,
                                `nb` will use the html <title> tag.

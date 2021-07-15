@@ -3581,8 +3581,8 @@ $(_color_primary "Usage"):
   ${_ME} bookmark [<ls options>...]
   ${_ME} bookmark [<notebook>:][<folder-path>/] <url>
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
-              [-f <filename> | --filename <filename>] [-q | --quote]
-              [-r <url> | --related <url>]... [--save-source] [--skip-content]
+              [-f <filename> | --filename <filename>] [--no-request]
+              [-q | --quote] [-r <url> | --related <url>]... [--save-source]
               [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...] [--title <title>]
   ${_ME} bookmark [list [<list-options>...]]
   ${_ME} bookmark (edit | delete | open | peek | url)
@@ -11098,8 +11098,8 @@ $(_color_primary "Usage"):
   ${_ME} bookmark [<ls options>...]
   ${_ME} bookmark [<notebook>:][<folder-path>/] <url>
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
-              [-f <filename> | --filename <filename>] [-q | --quote]
-              [-r <url> | --related <url>]... [--save-source] [--skip-content]
+              [-f <filename> | --filename <filename>] [--no-request]
+              [-q | --quote] [-r <url> | --related <url>]... [--save-source]
               [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...] [--title <title>]
   ${_ME} bookmark list [<list-options>...]
   ${_ME} bookmark (edit | delete | open | peek | url)
@@ -11113,13 +11113,13 @@ $(_color_primary "Options"):
   -f, --filename <filename>    The filename for the bookmark. It is
                                recommended to omit the extension so the
                                default bookmark extension is used.
+  --no-request                 Don't request or download the target page.
   -q, --quote <quote>          A quote or excerpt from the saved page.
                                Alias: \`--excerpt\`
   -r, --related <url>          A URL for a page related to the bookmarked page.
                                Multiple \`--related\` flags can be used in a
                                command to save multiple related URLs.
   --save-source                Save the page source as HTML.
-  --skip-content               Omit page content from the note.
   -t, --tags <tag1>,<tag2>...  A comma-separated list of tags.
   --title <title>              The bookmark title. When not specified,
                                \`${_ME}\` will use the html <title> tag.
@@ -11243,6 +11243,9 @@ _bookmark() {
         _comment="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
+      --download|--fetch|--online|--request)
+        _request_page=1
+        ;;
       --edit)
         _edit_before_commit=1
         ;;
@@ -11253,7 +11256,7 @@ _bookmark() {
         _target_filename="$(_option_get_value "${__arg}" "${__val:-}")"
         shift
         ;;
-      --no*fetch|--no*request|--offline)
+      --no*download|--no*fetch|--no*request|--offline)
         _request_page=0
         ;;
       --password)
