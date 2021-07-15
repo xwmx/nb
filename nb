@@ -18736,7 +18736,17 @@ HEREDOC
     fi
   elif ((_open_gui))  || _web_browser --gui || ((_only_serve))
   then
-    printf "Listening: %s\\n" "$(_color_primary "${_request_url_base}")"
+    local _display_params=
+
+    if _notebooks current --local ||
+       [[ "${_selector}" != "$(_notebooks current --name):" ]]
+    then
+      _display_params="${_request_url#${_request_url_base}}"
+    fi
+
+    printf "Listening: %s%s\\n"                   \
+      "$(_color_primary "${_request_url_base}")"  \
+      "${_display_params//\ /\%20}"
 
     if _web_browser --gui
     then
