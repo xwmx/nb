@@ -1097,7 +1097,7 @@ trap "exit"           INT
 
 # $_BT
 #
-# Assign backtick with ANSI-C quoting for string building.
+# Backtick with ANSI-C quoting for string building.
 _BT=$'`'
 
 # $_COLUMNS
@@ -1117,12 +1117,12 @@ _NBSP=" "
 
 # $_NEWLINE
 #
-# Assign newline with ANSI-C quoting for string building.
+# Newline with ANSI-C quoting for string building.
 _NEWLINE=$'\n'
 
 # $_SLASH
 #
-# Assign slash with ANSI-C quoting for string building support for macOS Bash
+# Slash with ANSI-C quoting for string building support for macOS Bash
 # string substitution.
 _SLASH=$'/'
 
