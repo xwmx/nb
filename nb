@@ -1122,7 +1122,7 @@ _NEWLINE=$'\n'
 
 # $_SLASH
 #
-# Slash with ANSI-C quoting for string building support for macOS Bash
+# Slash with ANSI-C quoting for string building support and macOS Bash
 # string substitution.
 _SLASH=$'/'
 
