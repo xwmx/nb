@@ -3293,7 +3293,7 @@ HEREDOC
         done
 
         GIT_EDITOR=true git -C "${_notebook_path}" rebase \
-          --continue &>/dev/null &&
+          --continue &>/dev/null                          &&
             _merge_error=0
       fi
 
@@ -3301,8 +3301,8 @@ HEREDOC
       then
         git -C "${_notebook_path}" rebase --abort
 
-        _warn printf \
-          "Merge conflict. Use \`%s git\` to merge manually.\\n" \
+        _warn printf                                              \
+          "Merge conflict. Use \`%s git\` to merge manually.\\n"  \
           "${_ME}"
         return 1
       else
