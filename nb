@@ -6412,8 +6412,8 @@ _notebooks() {
     local _name=0
     local _new_local_email=
     local _new_local_name=
-    local _selector=
     local _print_current=0
+    local _selector=
     local _skip_prompt=0
     local _unset=0
 
@@ -6869,6 +6869,7 @@ HEREDOC
   #   _notebooks_export <name> [<path>]
   _notebooks_export() {
     local _name="${1:-}"
+
     if [[ -z "${_name:-}" ]]
     then
       _exit_1 _help "notebooks"
@@ -7068,7 +7069,6 @@ HEREDOC
   #                   [--global] [--names] [--paths] [--unar | --unarchived]
   _notebooks_list() {
     local _counter=0
-    local _query_names=()
     local _notebook_color_enabled="${_COLOR_ENABLED}"
     local _notebook_names=()
     local _notebook_paths=()
@@ -7079,6 +7079,7 @@ HEREDOC
     local _only_paths=0
     local _only_unarchived=0
     local _options=()
+    local _query_names=()
 
     local __arg=
     for   __arg in "${@:-}"
@@ -7280,9 +7281,9 @@ HEREDOC
   # Usage:
   #   _notebooks_notebook [archive | open | peek | status | unarchive] <name>
   _notebooks_notebook() {
-    local _subcommand="${1:-}"
     local _notebook_name="${2%:}"
     local _notebook_path=
+    local _subcommand="${1:-}"
 
     if [[ -n "${_notebook_name:-}"  ]]
     then
@@ -7380,8 +7381,8 @@ HEREDOC
   # Usage:
   #   _notebooks_rename <old> <new>
   _notebooks_rename() {
-    local _old="${1:-}"
     local _new="${2:-}"
+    local _old="${1:-}"
 
     _notebooks_validate_name "${_old}"
     _notebooks_validate_name "${_new}"
@@ -7458,10 +7459,10 @@ HEREDOC
     local _local_notebook_path="${_LOCAL_NOTEBOOK_PATH:-}"
     local _notebook_color_enabled=1
     local _notebook_path=
-    local _print_escaped_name=0
-    local _print_unique_file_path=0
     local _only_name=0
     local _only_path=0
+    local _print_escaped_name=0
+    local _print_unique_file_path=0
     local _selector=
     local _test_archived=0
 
@@ -7696,8 +7697,8 @@ HEREDOC
     fi
   }
 
-  local _subcommand="${1:-}"
   local _name="${2:-}"
+  local _subcommand="${1:-}"
 
   if ! _contains "${_subcommand:-}" "add" "author" "current" "init" "list" "show"
   then
