@@ -5,9 +5,9 @@ load test_helper
 export _IMOGI="🌄"
 export NB_SERVER_PORT=6789
 
-# browse <id> #################################################################
+# response handling ###########################################################
 
-@test "'browse <id>' with no parameters successfully serves item." {
+@test "'browse' responds to request with no parameters and successfully serves item." {
   {
     "${_NB}" init
 
