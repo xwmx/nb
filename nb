@@ -17574,7 +17574,9 @@ HEREDOC
       shift
     done
 
-    local _header_options=("--raw-url" "${_raw_url}" "${_pagination_options[@]}")
+    local _header_options=("${_pagination_options[@]:-}")
+
+    _header_options+=("--raw-url" "${_raw_url}")
 
     local _id_selector=
     _id_selector="$(_get_id_selector "${_source_path:-}" --notebook)"

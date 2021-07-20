@@ -5,6 +5,39 @@ load test_helper
 export _IMOGI="🌄"
 export NB_SERVER_PORT=6789
 
+# browse <id> #################################################################
+
+@test "'browse <id>' with no parameters successfully serves item." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example File.md"     \
+      --title     "Example Title"       \
+      --content   "Example content."
+
+    (ncat                               \
+      --exec "${_NB} browse --respond"  \
+      --listen                          \
+      --source-port "6789"              \
+      2>/dev/null) &
+
+    sleep 1
+  }
+
+  run curl -sS -D - "http://localhost:6789/home:1"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    ==  0                   ]]
+  [[ "${output}"    =~  \<\!DOCTYPE\ html\> ]]
+
+  [[ "${output}"    =~  header\-crumbs.*↓   ]]
+
+  printf "%s\\n" "${output}" | grep -q \
+"<h1 id=\"example-title\">Example Title</h1>"
+}
+
 # pdf items ###################################################################
 
 @test "'browse' with local notebook renders pdf item in an '<iframe>'." {
