@@ -64,7 +64,7 @@ export _S=" "
 "<nav class=\"header-crumbs\"><h1>"
 
   printf "%s\\n" "${output}" | grep     -q \
-"<a.* href=\"http://localhost:6789/?${_expected_param_pattern}\"><span "
+"<a.* href=\"//localhost:6789/?${_expected_param_pattern}\"><span "
 
   printf "%s\\n" "${output}" | grep     -q \
 "<span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> <span class=\"dim\">notebooks</span>"
@@ -73,22 +73,22 @@ export _S=" "
 "</h1>"
 
   printf "%s\\n" "${output}" | grep -v  -q \
-"<p><a.* href=\"http://localhost:6789/local:?.*<a.* href=\"http://localhost:6789/local:?"
+"<p><a.* href=\"//localhost:6789/local:?.*<a.* href=\"//localhost:6789/local:?"
 
   printf "%s\\n" "${output}" | grep     -q \
-"<p><a.* href=\"http://localhost:6789/local:?${_expected_param_pattern}\">local</a>${_S}.*·.*"
+"<p><a.* href=\"//localhost:6789/local:?${_expected_param_pattern}\">local</a>${_S}.*·.*"
 
   printf "%s\\n" "${output}" | grep     -q \
-"<p><a.* href=\"http://localhost:6789/Demo%20Notebook:?${_expected_param_pattern}\">Demo${_S}Notebook</a>${_S}.*·.*"
+"<p><a.* href=\"//localhost:6789/Demo%20Notebook:?${_expected_param_pattern}\">Demo${_S}Notebook</a>${_S}.*·.*"
 
   printf "%s\\n" "${output}" | grep     -q \
-"<a.* href=\"http://localhost:6789/Example%20Notebook:?${_expected_param_pattern}\">Example${_S}Notebook</a>${_S}.*·.*"
+"<a.* href=\"//localhost:6789/Example%20Notebook:?${_expected_param_pattern}\">Example${_S}Notebook</a>${_S}.*·.*"
 
   printf "%s\\n" "${output}" | grep     -q \
-"<a.* href=\"http://localhost:6789/Sample%20Notebook:?${_expected_param_pattern}\">Sample${_S}Notebook</a>${_S}.*·.*"
+"<a.* href=\"//localhost:6789/Sample%20Notebook:?${_expected_param_pattern}\">Sample${_S}Notebook</a>${_S}.*·.*"
 
   printf "%s\\n" "${output}" | grep     -q \
-"<a.* href=\"http://localhost:6789/Test%20Notebook:?${_expected_param_pattern}\">Test${_S}Notebook</a></p>"
+"<a.* href=\"//localhost:6789/Test%20Notebook:?${_expected_param_pattern}\">Test${_S}Notebook</a></p>"
 }
 
 # browse -n ###################################################################
@@ -120,7 +120,7 @@ export _S=" "
 "<nav class=\"header-crumbs\"><h1>"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<a.* href=\"http://localhost:6789/?--per-page=.*&--columns=.*\"><span "
+"<a.* href=\"//localhost:6789/?--per-page=.*&--columns=.*\"><span "
 
   printf "%s\\n" "${output}" | grep   -q \
 "<span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> <span class=\"dim\">notebooks</span>"
@@ -129,16 +129,16 @@ export _S=" "
 "</h1>"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<p><a.* href=\"http://localhost:6789/Demo%20Notebook:?--per-page=.*&--columns=.*\">Demo${_S}Notebook</a>${_S}.*·.*"
+"<p><a.* href=\"//localhost:6789/Demo%20Notebook:?--per-page=.*&--columns=.*\">Demo${_S}Notebook</a>${_S}.*·.*"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<a.* href=\"http://localhost:6789/Example%20Notebook:?--per-page=.*&--columns=.*\">Example${_S}Notebook</a>${_S}.*·.*"
+"<a.* href=\"//localhost:6789/Example%20Notebook:?--per-page=.*&--columns=.*\">Example${_S}Notebook</a>${_S}.*·.*"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<a.* href=\"http://localhost:6789/Sample%20Notebook:?--per-page=.*&--columns=.*\">Sample${_S}Notebook</a>${_S}.*·.*"
+"<a.* href=\"//localhost:6789/Sample%20Notebook:?--per-page=.*&--columns=.*\">Sample${_S}Notebook</a>${_S}.*·.*"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<a.* href=\"http://localhost:6789/Test%20Notebook:?--per-page=.*&--columns=.*\">Test${_S}Notebook</a></p>"
+"<a.* href=\"//localhost:6789/Test%20Notebook:?--per-page=.*&--columns=.*\">Test${_S}Notebook</a></p>"
 }
 
 # browse --notebooks ##########################################################
@@ -170,7 +170,7 @@ export _S=" "
 "<nav class=\"header-crumbs\"><h1>"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<a.* href=\"http://localhost:6789/?--per-page=.*&--columns=.*\"><span "
+"<a.* href=\"//localhost:6789/?--per-page=.*&--columns=.*\"><span "
 
   printf "%s\\n" "${output}" | grep   -q \
 "<span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> <span class=\"dim\">notebooks</span>"
@@ -179,16 +179,16 @@ export _S=" "
 "</h1>"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<p><a.* href=\"http://localhost:6789/Demo%20Notebook:?--per-page=.*&--columns=.*\">Demo${_S}Notebook</a>${_S}.*·.*"
+"<p><a.* href=\"//localhost:6789/Demo%20Notebook:?--per-page=.*&--columns=.*\">Demo${_S}Notebook</a>${_S}.*·.*"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<a.* href=\"http://localhost:6789/Example%20Notebook:?--per-page=.*&--columns=.*\">Example${_S}Notebook</a>${_S}.*·.*"
+"<a.* href=\"//localhost:6789/Example%20Notebook:?--per-page=.*&--columns=.*\">Example${_S}Notebook</a>${_S}.*·.*"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<a.* href=\"http://localhost:6789/Sample%20Notebook:?--per-page=.*&--columns=.*\">Sample${_S}Notebook</a>${_S}.*·.*"
+"<a.* href=\"//localhost:6789/Sample%20Notebook:?--per-page=.*&--columns=.*\">Sample${_S}Notebook</a>${_S}.*·.*"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<a.* href=\"http://localhost:6789/Test%20Notebook:?--per-page=.*&--columns=.*\">Test${_S}Notebook</a></p>"
+"<a.* href=\"//localhost:6789/Test%20Notebook:?--per-page=.*&--columns=.*\">Test${_S}Notebook</a></p>"
 }
 
 @test "GET to 'browse --notebooks' URL serves the list of unarchived notebooks as a rendered HTML page with links to internal web server URLs without dimensional parameters." {
@@ -227,7 +227,7 @@ export _S=" "
 "<nav class=\"header-crumbs\"><h1>"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<a.* href=\"http://localhost:6789/\"><span "
+"<a.* href=\"//localhost:6789/\"><span "
 
   printf "%s\\n" "${output}" | grep   -q \
 "<span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> <span class=\"dim\">notebooks</span>"
@@ -236,14 +236,14 @@ export _S=" "
 "</h1>"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<p><a.* href=\"http://localhost:6789/Demo%20Notebook:\">Demo${_S}Notebook</a>${_S}.*·.*"
+"<p><a.* href=\"//localhost:6789/Demo%20Notebook:\">Demo${_S}Notebook</a>${_S}.*·.*"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<a.* href=\"http://localhost:6789/Example%20Notebook:\">Example${_S}Notebook</a>${_S}.*·.*"
+"<a.* href=\"//localhost:6789/Example%20Notebook:\">Example${_S}Notebook</a>${_S}.*·.*"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<a.* href=\"http://localhost:6789/Sample%20Notebook:\">Sample${_S}Notebook</a>${_S}.*·.*"
+"<a.* href=\"//localhost:6789/Sample%20Notebook:\">Sample${_S}Notebook</a>${_S}.*·.*"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<a.* href=\"http://localhost:6789/Test%20Notebook:\">Test${_S}Notebook</a></p>"
+"<a.* href=\"//localhost:6789/Test%20Notebook:\">Test${_S}Notebook</a></p>"
 }

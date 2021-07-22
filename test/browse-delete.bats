@@ -173,12 +173,12 @@ export _S=" "
 
   declare _expected_param_pattern="--per-page=30\&--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
 
-  [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Found                            ]]
-  [[ "${lines[1]}"  =~  Date:\ .*                                       ]]
-  [[ "${lines[2]}"  =~  Expires:\ .*                                    ]]
-  [[ "${lines[3]}"  =~  Server:\ nb                                     ]]
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Found                      ]]
+  [[ "${lines[1]}"  =~  Date:\ .*                                 ]]
+  [[ "${lines[2]}"  =~  Expires:\ .*                              ]]
+  [[ "${lines[3]}"  =~  Server:\ nb                               ]]
   [[ "${lines[4]}"  =~  \
-Location:\ http:\/\/localhost:6789\/local:\?${_expected_param_pattern}  ]]
+Location:\ \/\/localhost:6789\/local:\?${_expected_param_pattern} ]]
 }
 
 @test "POST to --delete URL deletes the note and redirects."  {
@@ -223,11 +223,11 @@ Location:\ http:\/\/localhost:6789\/local:\?${_expected_param_pattern}  ]]
 
   # Prints output:
 
-  [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Found                                      ]]
-  [[ "${lines[1]}"  =~  Date:\ .*                                                 ]]
-  [[ "${lines[2]}"  =~  Expires:\ .*                                              ]]
-  [[ "${lines[3]}"  =~  Server:\ nb                                               ]]
-  [[ "${lines[4]}"  =~  Location:\ http:\/\/localhost:6789\/home:\?--per-page=.*  ]]
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Found                                ]]
+  [[ "${lines[1]}"  =~  Date:\ .*                                           ]]
+  [[ "${lines[2]}"  =~  Expires:\ .*                                        ]]
+  [[ "${lines[3]}"  =~  Server:\ nb                                         ]]
+  [[ "${lines[4]}"  =~  Location:\ \/\/localhost:6789\/home:\?--per-page=.* ]]
 }
 
 # GET #########################################################################
@@ -294,7 +294,7 @@ Location:\ http:\/\/localhost:6789\/local:\?${_expected_param_pattern}  ]]
   [[ "${output}"    =~  header-crumbs.*↓                          ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"href=\"http://localhost:6789/?${_expected_param_pattern}\"><span class=\"dim\">❯</span>nb</a>"
+"href=\"//localhost:6789/?${_expected_param_pattern}\"><span class=\"dim\">❯</span>nb</a>"
 
   printf "%s\\n" "${output}" | grep -q \
 "❯</span>nb</a>.*<span class=\"dim\">·</span> <span class=\"dim\">-</span> <span class=\"dim\">|</span>"
@@ -303,7 +303,7 @@ Location:\ http:\/\/localhost:6789\/local:\?${_expected_param_pattern}  ]]
 "<h2 align=\"center\">deleting</h2>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<p align=\"center\">${_NEWLINE}  <a rel=\"noopener noreferrer\" href=\"http://localhost:6789/local:1?${_expected_param_pattern}\">\[1\] Example\ File.md \"Example Title\"</a>${_NEWLINE}</p>"
+"<p align=\"center\">${_NEWLINE}  <a rel=\"noopener noreferrer\" href=\"//localhost:6789/local:1?${_expected_param_pattern}\">\[1\] Example\ File.md \"Example Title\"</a>${_NEWLINE}</p>"
 
   printf "%s\\n" "${output}" | grep -q \
 "action=\"/local:1?--delete&${_expected_param_pattern}\""
@@ -366,7 +366,7 @@ Location:\ http:\/\/localhost:6789\/local:\?${_expected_param_pattern}  ]]
   [[ "${output}"    =~  header-crumbs.*↓                          ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"href=\"http://localhost:6789/?--per-page=30&--columns=20\"><span class=\"dim\">❯</span>nb</a> "
+"href=\"//localhost:6789/?--per-page=30&--columns=20\"><span class=\"dim\">❯</span>nb</a> "
 
   printf "%s\\n" "${output}" | grep -q \
 "❯</span>nb</a>.*<span class=\"dim\">·</span> <span class=\"dim\">-</span> <span class=\"dim\">|</span>"
@@ -375,7 +375,7 @@ Location:\ http:\/\/localhost:6789\/local:\?${_expected_param_pattern}  ]]
 "<h2 align=\"center\">deleting</h2>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<p align=\"center\">${_NEWLINE}  <a rel=\"noopener noreferrer\" href=\"http://localhost:6789/home:1?--per-page=.*&--columns=.*\">\[1\] Example\ File.md \"Example Title\"</a>${_NEWLINE}</p>"
+"<p align=\"center\">${_NEWLINE}  <a rel=\"noopener noreferrer\" href=\"//localhost:6789/home:1?--per-page=.*&--columns=.*\">\[1\] Example\ File.md \"Example Title\"</a>${_NEWLINE}</p>"
 
   printf "%s\\n" "${output}" | grep -q \
 "action=\"/home:1?--delete&--per-page=.*&--columns=.*\""
@@ -466,13 +466,13 @@ Location:\ http:\/\/localhost:6789\/local:\?${_expected_param_pattern}  ]]
   [[ "${output}"    =~  header-crumbs.*↓                          ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"href=\"http://localhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a> "
+"href=\"//localhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a> "
 
   printf "%s\\n" "${output}" | grep -q \
 "<h2 align=\"center\">deleting</h2>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<p align=\"center\">${_NEWLINE}<a rel=\"noopener noreferrer\" href=\"http://localhost:6789/home:1?--per-page=.*&--columns=.*\">\[1\] Example\ File.md \"Example Title\"</a>${_NEWLINE}</p>"
+"<p align=\"center\">${_NEWLINE}<a rel=\"noopener noreferrer\" href=\"//localhost:6789/home:1?--per-page=.*&--columns=.*\">\[1\] Example\ File.md \"Example Title\"</a>${_NEWLINE}</p>"
 
   printf "%s\\n" "${output}" | grep -q \
 "action=\"/home:1?--delete&--per-page=.*&--columns=.*\""

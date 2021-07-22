@@ -53,7 +53,7 @@ export NB_SERVER_PORT=6789
 
     "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/${_filename}"
 
-    declare _raw_url_pattern="http://localhost:6789/--original/local/${_filename}"
+    declare _raw_url_pattern="//localhost:6789/--original/local/${_filename}"
     _raw_url_pattern+="\?--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
 
     sleep 1
@@ -87,7 +87,7 @@ export NB_SERVER_PORT=6789
 
     "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/${_filename}"
 
-    declare _raw_url_pattern="http://localhost:6789/--original/home/${_filename}"
+    declare _raw_url_pattern="//localhost:6789/--original/home/${_filename}"
 
     sleep 1
   }
@@ -127,7 +127,7 @@ export NB_SERVER_PORT=6789
 
     "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/${_filename}"
 
-    declare _raw_url_pattern="http://localhost:6789/--original/local/${_filename}"
+    declare _raw_url_pattern="//localhost:6789/--original/local/${_filename}"
     _raw_url_pattern+="\?--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
 
     sleep 1
@@ -167,7 +167,7 @@ type=\"audio/mpeg\"\>${_NEWLINE}.*\</audio\>${_NEWLINE}.*\</div\>               
 
     "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/${_filename}"
 
-    declare _raw_url_pattern="http://localhost:6789/--original/home/${_filename}"
+    declare _raw_url_pattern="//localhost:6789/--original/home/${_filename}"
 
     sleep 1
   }
@@ -213,7 +213,7 @@ type=\"audio/mpeg\"\>${_NEWLINE}.*\</audio\>${_NEWLINE}.*\</div\>               
 
     "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/${_filename}"
 
-    declare _raw_url_pattern="http://localhost:6789/--original/local/${_filename}"
+    declare _raw_url_pattern="//localhost:6789/--original/local/${_filename}"
     _raw_url_pattern+="\?--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
 
     sleep 1
@@ -253,7 +253,7 @@ type=\"video/mp4\"\>${_NEWLINE}.*\</video\>${_NEWLINE}.*\</div\>                
 
     "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/${_filename}"
 
-    declare _raw_url_pattern="http://localhost:6789/--original/home/${_filename}"
+    declare _raw_url_pattern="//localhost:6789/--original/home/${_filename}"
 
     sleep 1
   }
@@ -406,10 +406,10 @@ HEREDOC
     [[ -f "${_TMP_DIR}/Local Notebook/nb.png"                 ]]
     [[ -f "${_TMP_DIR}/Local Notebook/Example Folder/nb.png"  ]]
 
-    declare _raw_url_pattern_one="http://localhost:6789/--original/local/nb.png"
+    declare _raw_url_pattern_one="//localhost:6789/--original/local/nb.png"
     _raw_url_pattern_one+="\?--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
 
-    declare _raw_url_pattern_two="http://localhost:6789/--original/local/Example%20Folder/nb.png"
+    declare _raw_url_pattern_two="//localhost:6789/--original/local/Example%20Folder/nb.png"
     _raw_url_pattern_two+="\?--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
 
     sleep 1
@@ -458,8 +458,8 @@ HEREDOC
     [[ -f "${NB_DIR}/home/nb.png"                 ]]
     [[ -f "${NB_DIR}/home/Example Folder/nb.png"  ]]
 
-    declare _raw_url_pattern_one="http://localhost:6789/--original/home/nb.png"
-    declare _raw_url_pattern_two="http://localhost:6789/--original/home/Example%20Folder/nb.png"
+    declare _raw_url_pattern_one="//localhost:6789/--original/home/nb.png"
+    declare _raw_url_pattern_two="//localhost:6789/--original/home/Example%20Folder/nb.png"
 
     sleep 1
   }
@@ -496,7 +496,7 @@ HEREDOC
 
     "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/nb.png"
 
-    declare _raw_url_pattern="http://localhost:6789/--original/local/nb.png"
+    declare _raw_url_pattern="//localhost:6789/--original/local/nb.png"
     _raw_url_pattern+="\?--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
 
     sleep 1
@@ -527,7 +527,7 @@ ${_raw_url_pattern}\"\>${_NEWLINE}.*\<img\ src=\"${_raw_url_pattern}\"\         
 
     "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/nb.png"
 
-    declare _raw_url_pattern="http://localhost:6789/--original/home/nb.png"
+    declare _raw_url_pattern="//localhost:6789/--original/home/nb.png"
 
     sleep 1
   }
@@ -704,7 +704,7 @@ HEREDOC
 "<h1 id=\"title-one\">Title One</h1>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<p>Example content. <a.* href=\"http://localhost:6789/local:Example Title${_expected_params}\">"
+"<p>Example content. <a.* href=\"//localhost:6789/local:Example Title${_expected_params}\">"
 
   printf "%s\\n" "${output}" | grep -q \
 "\[\[Example Title\]\]</a></p>"
@@ -743,13 +743,13 @@ HEREDOC
 "<p>Example PDF File"
 
   printf "%s\\n" "${output}" | grep -q \
-"<a.* href=\"http://localhost:6789/home:1?--per-page=.*&--columns=.*\">\[\[home:1\]\]</a>"
+"<a.* href=\"//localhost:6789/home:1?--per-page=.*&--columns=.*\">\[\[home:1\]\]</a>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<a.* href=\"http://localhost:6789/home:1?--per-page=.*&--columns=.*&--query=%23tag1\">\#tag1</a>"
+"<a.* href=\"//localhost:6789/home:1?--per-page=.*&--columns=.*&--query=%23tag1\">\#tag1</a>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<a.* href=\"http://localhost:6789/home:1?--per-page=.*&--columns=.*&--query=%23tag2\">\#tag2</a>"
+"<a.* href=\"//localhost:6789/home:1?--per-page=.*&--columns=.*&--query=%23tag2\">\#tag2</a>"
 }
 
 # nb --browse / nb -b #########################################################
@@ -781,7 +781,7 @@ HEREDOC
 "<h1 id=\"title-one\">Title One</h1>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<p>Example content. <a.* href=\"http://localhost:6789/home:Example Title?--per-page=.*&--columns=.*\">"
+"<p>Example content. <a.* href=\"//localhost:6789/home:Example Title?--per-page=.*&--columns=.*\">"
 
   printf "%s\\n" "${output}" | grep -q \
 "\[\[Example Title\]\]</a></p>"
@@ -814,7 +814,7 @@ HEREDOC
 "<h1 id=\"title-one\">Title One</h1>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<p>Example content. <a.* href=\"http://localhost:6789/home:Example Title?--per-page=.*&--columns=.*\">"
+"<p>Example content. <a.* href=\"//localhost:6789/home:Example Title?--per-page=.*&--columns=.*\">"
 
   printf "%s\\n" "${output}" | grep -q \
 "\[\[Example Title\]\]</a></p>"
@@ -849,10 +849,10 @@ HEREDOC
 "<h1 id=\"title-one\">Title One</h1>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<a.* href=\"http://localhost:6789/?--per-page.*&--columns.*\"><span class=\"dim\">❯</span>nb</a>"
+"<a.* href=\"//localhost:6789/?--per-page.*&--columns.*\"><span class=\"dim\">❯</span>nb</a>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<p>Example content. <a.* href=\"http://localhost:6789/home:Example Title?--per-page=.*&--columns=.*\">"
+"<p>Example content. <a.* href=\"//localhost:6789/home:Example Title?--per-page=.*&--columns=.*\">"
 
   printf "%s\\n" "${output}" | grep -q \
 "\[\[Example Title\]\]</a></p>"
@@ -912,10 +912,10 @@ HEREDOC
   [[ "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>  ]]
 
   printf "%s\\n" "${output}" | grep -q \
-'<a.* href="http://localhost:6789/?--per-page=.*"><span class="dim">❯</span>nb</a>'
+'<a.* href="//localhost:6789/?--per-page=.*"><span class="dim">❯</span>nb</a>'
 
   printf "%s\\n" "${output}" | grep -q \
-'<span class="dim">·</span> <a.* href="http://localhost:6789/home:?--per-page=.*">home</a\>'
+'<span class="dim">·</span> <a.* href="//localhost:6789/home:?--per-page=.*">home</a\>'
 
   [[ "${output}"    =~  \<div\ class=\"sourceCode\"             ]]
   [[ "${output}"    =~  \<pre\ class=\"sourceCode\ bash\"\>     ]]
@@ -943,10 +943,10 @@ HEREDOC
   [[ "${output}"    =~  header-crumbs.*↓                        ]]
 
   printf "%s\\n" "${output}" | grep -q \
-'<a.* href="http://localhost:6789/?--per-page=.*"><span class="dim">❯</span>nb</a>'
+'<a.* href="//localhost:6789/?--per-page=.*"><span class="dim">❯</span>nb</a>'
 
   printf "%s\\n" "${output}" | grep -q \
-'<span class="dim">·</span> <a.* href="http://localhost:6789/home:?--per-page=.*">home</a\>'
+'<span class="dim">·</span> <a.* href="//localhost:6789/home:?--per-page=.*">home</a\>'
 
   [[ "${output}"    =~  \<div\ class=\"sourceCode\"             ]]
   [[ "${output}"    =~  \<pre\ class=\"sourceCode\ js\"\>       ]]
@@ -991,7 +991,7 @@ HEREDOC
 "<h1 id=\"title-one\"><span id=\"anchor\"></span>Title One</h1>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<p>Example content. <a.* href=\"http://localhost:6789/home:Example Title?--per-page=.*&--columns=.*\">"
+"<p>Example content. <a.* href=\"//localhost:6789/home:Example Title?--per-page=.*&--columns=.*\">"
 
   printf "%s\\n" "${output}" | grep -q \
 "\[\[Example Title\]\]</a></p>"
@@ -1034,7 +1034,7 @@ HEREDOC
 "<h1 id=\"title-one\">Title One</h1>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<p>Example content. <a.* href=\"http://localhost:6789/home:Example Title?--per-page=.*&--columns=.*\">"
+"<p>Example content. <a.* href=\"//localhost:6789/home:Example Title?--per-page=.*&--columns=.*\">"
 
   printf "%s\\n" "${output}" | grep -q \
 "\[\[Example Title\]\]</a></p>"
@@ -1074,7 +1074,7 @@ HEREDOC
 "<nav class=\"header-crumbs\"><h1>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<p>Example content. <a.* href=\"http://localhost:6789/home:1?--per-page=.*&amp;--columns=.*\">"
+"<p>Example content. <a.* href=\"//localhost:6789/home:1?--per-page=.*&amp;--columns=.*\">"
 
   printf "%s\\n" "${output}" | grep -q \
 "\[\[Example Title\]\]</a></p>"
@@ -1111,7 +1111,7 @@ HEREDOC
 "<h1 id=\"title-one\">Title One</h1>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<p>Example content. <a.* href=\"http://localhost:6789/home:Example Title?--per-page=.*&--columns=.*\">"
+"<p>Example content. <a.* href=\"//localhost:6789/home:Example Title?--per-page=.*&--columns=.*\">"
 
   printf "%s\\n" "${output}" | grep -q \
 "\[\[Example Title\]\]</a></p>"
@@ -1144,7 +1144,7 @@ HEREDOC
 "<h1 id=\"title-one\">Title One</h1>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<p>Example content. <a.* href=\"http://localhost:6789/home:Example Title?--per-page=.*&--columns=.*\">"
+"<p>Example content. <a.* href=\"//localhost:6789/home:Example Title?--per-page=.*&--columns=.*\">"
 
   printf "%s\\n" "${output}" | grep -q \
 "\[\[Example Title\]\]</a></p>"
@@ -1191,13 +1191,13 @@ HEREDOC
   [[ "${status}" -eq 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-'one: <a.* href="http://localhost:6789/home:Root Title Two?--per-page.*&--columns=.*">\[\[Root Title Two\]\]</a>'
+'one: <a.* href="//localhost:6789/home:Root Title Two?--per-page.*&--columns=.*">\[\[Root Title Two\]\]</a>'
 
   printf "%s\\n" "${output}" | grep -q \
-'example <a.* href="http://localhost:6789/Example Notebook:Example Folder/1?--per-page.*&--columns=.*">\[\[Example Notebook:Example Folder/1\]\]</a> content'
+'example <a.* href="//localhost:6789/Example Notebook:Example Folder/1?--per-page.*&--columns=.*">\[\[Example Notebook:Example Folder/1\]\]</a> content'
 
   printf "%s\\n" "${output}" | grep -q \
-'content <a.* href="http://localhost:6789/home:3/1?--per-page.*&--columns=.*">\[\[3/1\]\]</a> here'
+'content <a.* href="//localhost:6789/home:3/1?--per-page.*&--columns=.*">\[\[3/1\]\]</a> here'
 }
 
 @test "'browse <item-selector>' properly resolves titled [[wiki-style links]] and skips links with non-resolving selectors." {
@@ -1241,13 +1241,13 @@ HEREDOC
   [[ "${status}" -eq 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-'one: <a.* href="http://localhost:6789/home:Root Title Two?--per-page.*&--columns=.*">\[\[Root Title Two\]\]</a>'
+'one: <a.* href="//localhost:6789/home:Root Title Two?--per-page.*&--columns=.*">\[\[Root Title Two\]\]</a>'
 
   printf "%s\\n" "${output}" | grep -q \
-'example <a.* href="http://localhost:6789/Example Notebook:Example Folder/1?--per-page.*&--columns=.*">\[\[Example Notebook:Example Folder/1\]\]</a> content'
+'example <a.* href="//localhost:6789/Example Notebook:Example Folder/1?--per-page.*&--columns=.*">\[\[Example Notebook:Example Folder/1\]\]</a> content'
 
   printf "%s\\n" "${output}" | grep -q \
-'content <a.* href="http://localhost:6789/home:2/1?--per-page.*&--columns=.*">\[\[2/1\]\]</a> here'
+'content <a.* href="//localhost:6789/home:2/1?--per-page.*&--columns=.*">\[\[2/1\]\]</a> here'
 }
 
 @test "'browse <selector>' properly resolves duplicated [[wiki-style links]] in HTML." {
@@ -1280,11 +1280,11 @@ HEREDOC
   [[ "${status}" -eq 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-'link one: <a.* href="http://localhost:6789/Example Notebook:Example Folder/1?--per-page.*&--columns=.*">\[\[Example Notebook:Example Folder/1\]\]</a>'
+'link one: <a.* href="//localhost:6789/Example Notebook:Example Folder/1?--per-page.*&--columns=.*">\[\[Example Notebook:Example Folder/1\]\]</a>'
 
 
   printf "%s\\n" "${output}" | grep -q -v\
-'example <a.* href="http://localhost:6789/Example Notebook:Example Folder/1?--per-page.*&--columns=.*">\[\[Example Notebook:Example Folder/1\]\]</a>'
+'example <a.* href="//localhost:6789/Example Notebook:Example Folder/1?--per-page.*&--columns=.*">\[\[Example Notebook:Example Folder/1\]\]</a>'
 }
 
 @test "'browse <selector>' resolves [[wiki-style links]] in a different arrangement in HTML." {
@@ -1341,11 +1341,11 @@ HEREDOC
   [[ "${status}" -eq 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-'<a.* href="http://localhost:6789/home:Sample Folder/Nested Title One?--per-page.*&--columns=.*">\[\[Sample Folder/Nested Title One\]\]</a>'
+'<a.* href="//localhost:6789/home:Sample Folder/Nested Title One?--per-page.*&--columns=.*">\[\[Sample Folder/Nested Title One\]\]</a>'
 
   printf "%s\\n" "${output}" | grep -q \
-'<a.* href="http://localhost:6789/Example Notebook:File Two.md?--per-page.*&--columns=.*">\[\[Example Notebook:File Two.md\]\]</a>'
+'<a.* href="//localhost:6789/Example Notebook:File Two.md?--per-page.*&--columns=.*">\[\[Example Notebook:File Two.md\]\]</a>'
 
   printf "%s\\n" "${output}" | grep -q \
-'<a.* href="http://localhost:6789/Example Notebook:Example Folder/1?--per-page.*&--columns=.*">\[\[Example Notebook:Example Folder/1\]\]</a>'
+'<a.* href="//localhost:6789/Example Notebook:Example Folder/1?--per-page.*&--columns=.*">\[\[Example Notebook:Example Folder/1\]\]</a>'
 }
