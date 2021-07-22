@@ -461,6 +461,11 @@ export NB_LIMIT="${NB_LIMIT:-15}"
 # Default: '6789'
 export NB_SERVER_PORT="${NB_SERVER_PORT:-6789}"
 
+# $NB_SERVER_HOST
+#
+# Default: 'localhost'
+export NB_SERVER_HOST="${NB_SERVER_HOST:-localhost}"
+
 # $NB_SYNTAX_THEME
 #
 # Default: 'base16'
@@ -10091,7 +10096,7 @@ _resolve_links() {
     then
       cat
     else
-      local _replacement_url="http:\/\/localhost:${NB_SERVER_PORT}\/${_notebook_name}:"
+      local _replacement_url="http:\/\/${NB_SERVER_HOST}:${NB_SERVER_PORT}\/${_notebook_name}:"
 
       case "${_url_params_pattern:-}" in
         '') _replacement_url+="?--query=%23\\2"                         ;;
@@ -10125,16 +10130,16 @@ _resolve_links() {
     then
       # patterns for wrapping [[wiki-style links]] in HTML links
       local _link_match_pattern="\[\[([^#|][^]|]*)\]\]"
-      local _url_pattern="http:\/\/localhost:${NB_SERVER_PORT}\/\1${_url_params_pattern:-}"
+      local _url_pattern="http:\/\/${NB_SERVER_HOST}:${NB_SERVER_PORT}\/\1${_url_params_pattern:-}"
       local _replacement_pattern="<a\ href=\"${_url_pattern}\">[[\1]]<\/a>"
 
       local _labeled_link_match_pattern="\[\[([^#][^]|]+)\|([^]]+)\]\]"
-      local _labeled_url_pattern="http:\/\/localhost:${NB_SERVER_PORT}\/\1${_url_params_pattern:-}"
+      local _labeled_url_pattern="http:\/\/${NB_SERVER_HOST}:${NB_SERVER_PORT}\/\1${_url_params_pattern:-}"
       local _labeled_replacement_pattern="<a\ href=\"${_labeled_url_pattern}\">[[\2]]<\/a>"
 
       # patterns for adding notebook prefixes to just-linked URLs
-      local _notebookless_pattern="localhost:${NB_SERVER_PORT}\/([^:?\"-]+[\?\"])"
-      local _notebookless_replacement_pattern="localhost:${NB_SERVER_PORT}\/${_notebook_name}:\1"
+      local _notebookless_pattern="${NB_SERVER_HOST}:${NB_SERVER_PORT}\/([^:?\"-]+[\?\"])"
+      local _notebookless_replacement_pattern="${NB_SERVER_HOST}:${NB_SERVER_PORT}\/${_notebook_name}:\1"
 
       local _linkable=1
 
@@ -10222,7 +10227,7 @@ _resolve_links() {
             then
               _link="[[${_selector:-}]]"
             else
-              local _target_url="http://localhost:${NB_SERVER_PORT}/${_id_selector}${_url_params_pattern:-}"
+              local _target_url="http://${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_id_selector}${_url_params_pattern:-}"
 
               case "${_input_type:-}" in
                 html)
@@ -10306,7 +10311,7 @@ _resolve_links() {
       do
         [[ -z "${__match:-}" ]] && continue
 
-        if [[ "${__match}" =~ https?://localhost ]]
+        if [[ "${__match}" =~ https?://${NB_SERVER_HOST} ]]
         then
           continue
         fi
@@ -10336,7 +10341,7 @@ _resolve_links() {
         _encoding="${_encoding//'['/%5B}"
         local _encoded_url="${_encoding//']'/%5D}"
 
-        local _replacement_url="http://localhost:${NB_SERVER_PORT}?url=${_encoded_url}"
+        local _replacement_url="http://${NB_SERVER_HOST}:${NB_SERVER_PORT}?url=${_encoded_url}"
         local _replacement="${_replacement_url}"
 
         case "${_input_type:-}" in
@@ -16537,7 +16542,7 @@ _browse() {
        [[ -d "${_selector}"         ]]
     then # file alteady exists
       _browse_respond_with 302 \
-"http://localhost:${NB_SERVER_PORT}/$(_get_id_selector "${_selector:-}"  --notebook)"
+"http://${NB_SERVER_HOST}:${NB_SERVER_PORT}/$(_get_id_selector "${_selector:-}"  --notebook)"
     elif [[ -n "${_selector:-}"     ]]
     then
       local _notebook_name=
@@ -16861,10 +16866,11 @@ HEREDOC
         _link_selector="$(_get_id_selector "${_item_selector}" --notebook)"
         _link_selector="${_link_selector//' '/%20}"
 
-        printf "<a href=\"http://localhost:%s/%s%s\" class=\"list-item\">%s</a><br>\\n" \
-          "${NB_SERVER_PORT}"                                                           \
-          "${_link_selector:-}"                                                         \
-          "${_url_params:-}"                                                            \
+        printf "<a href=\"http://%s:%s/%s%s\" class=\"list-item\">%s</a><br>\\n"  \
+          "${NB_SERVER_HOST}"                                                     \
+          "${NB_SERVER_PORT}"                                                     \
+          "${_link_selector:-}"                                                   \
+          "${_url_params:-}"                                                      \
           "${_display_item:-}"
       done
     } | {
@@ -16965,10 +16971,11 @@ HEREDOC
           _prev_url_params="?${_prev_url_params:-}"
         fi
 
-        printf                                                \
-          "<a href=\"http://localhost:%s/%s%s\">❮ prev</a>"   \
-          "${NB_SERVER_PORT}"                                 \
-          "${_url_encoded_selector}"                          \
+        printf                                        \
+          "<a href=\"http://%s:%s/%s%s\">❮ prev</a>"  \
+          "${NB_SERVER_HOST}"                         \
+          "${NB_SERVER_PORT}"                         \
+          "${_url_encoded_selector}"                  \
           "${_prev_url_params:-}"
       fi
 
@@ -16982,10 +16989,11 @@ HEREDOC
         local _next_url_params=
         _next_url_params="${_url_params#$'?'}&--page=$((_current_page + 1))"
 
-        printf                                                \
-          "<a href=\"http://localhost:%s/%s?%s\">next ❯</a>"  \
-          "${NB_SERVER_PORT}"                                 \
-          "${_url_encoded_selector}"                          \
+        printf                                        \
+          "<a href=\"http://%s:%s/%s?%s\">next ❯</a>" \
+          "${NB_SERVER_HOST}"                         \
+          "${NB_SERVER_PORT}"                         \
+          "${_url_encoded_selector}"                  \
           "${_next_url_params#$'&'}"
       fi
 
@@ -17101,7 +17109,7 @@ HEREDOC
 <h2 align="center">deleting</h2>
 
 <p align="center">
-<a href="http://localhost:${NB_SERVER_PORT}/${_id_selector}${_url_params/&/?}">
+<a href="http://${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_id_selector}${_url_params/&/?}">
 ${_info_line//'\ '/ }
 </a>
 </p>
@@ -17338,7 +17346,7 @@ HEREDOC
     fi
 
     local _header_content="\
-<a href=\"http://localhost:${NB_SERVER_PORT}/${_url_param_string:-}\"><span class=\"dim\">❯</span>nb</a>"
+<a href=\"http://${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_url_param_string:-}\"><span class=\"dim\">❯</span>nb</a>"
     _header_content+=" <span class=\"dim\">${_bullet}</span>"
 
     if [[ -z "${_selector:-}"       ]]
@@ -17363,7 +17371,7 @@ HEREDOC
       _notebooks select "${_notebook_path}"
 
       _header_content+="\
- <a href=\"http://localhost:${NB_SERVER_PORT}/${_notebook_name//' '/%20}:${_url_param_string:-}\">${_notebook_name}</a>"
+ <a href=\"http://${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_notebook_name//' '/%20}:${_url_param_string:-}\">${_notebook_name}</a>"
       _header_content+=" <span class=\"dim\">:</span>"
 
       local _relative_folder_path=
@@ -17426,7 +17434,7 @@ HEREDOC
           _url_path+="${_selector_folder_ids[i]:-}/"
 
           _header_content+="\
- <a href=\"http://localhost:${NB_SERVER_PORT}/${_url_path}${_url_param_string:-}\">${_selector_folders[i]}</a>"
+ <a href=\"http://${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_url_path}${_url_param_string:-}\">${_selector_folders[i]}</a>"
           _header_content+=" <span class=\"dim\">/</span>"
         done
       fi
@@ -17446,7 +17454,7 @@ HEREDOC
       if _contains "${_action:-}" "edit" "delete"
       then
         _header_content+="\
- <a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_param_string:-}\">${_selector_id:-}</a>"
+ <a href=\"http://${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_id_selector:-}${_url_param_string:-}\">${_selector_id:-}</a>"
       elif [[ "${_action:-}" != "add"   ]]
       then
         _header_content+=" <span class=\"dim\">${_selector_id:-}</span>"
@@ -17455,7 +17463,7 @@ HEREDOC
       # NOTE: backup _raw_url calculation. TODO: remove
       if [[ -z "${_raw_url:-}" ]]
       then
-        local _raw_url="http://localhost:${NB_SERVER_PORT}/--original/"
+        local _raw_url="http://${NB_SERVER_HOST}:${NB_SERVER_PORT}/--original/"
 
         if [[ !   "${_item_path:-}" =~ ^${NB_DIR}     ]] &&
            [[ -n  "${_encoded_local_notebook_path:-}" ]]
@@ -17483,7 +17491,7 @@ HEREDOC
       then
         _header_content+=" <span class=\"dim\">${_bullet}</span>"
         _header_content+="\
- <a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_params_ext:-}--edit\">edit</a>"
+ <a href=\"http://${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_id_selector:-}${_url_params_ext:-}--edit\">edit</a>"
       fi
 
       case "${_action:-}" in
@@ -17495,7 +17503,7 @@ HEREDOC
         edit)
           _header_content+=" <span class=\"dim\">${_bullet}</span>"
           _header_content+="\
- <a href=\"http://localhost:${NB_SERVER_PORT}/${_id_selector:-}${_url_params_ext:-}--delete\">-</a>"
+ <a href=\"http://${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_id_selector:-}${_url_params_ext:-}--delete\">-</a>"
           _header_content+=" <span class=\"dim\">|</span>"
           ;;
         *)
@@ -17511,7 +17519,7 @@ HEREDOC
         _header_content+=" <span class=\"dim\">+</span>"
       else
         _header_content+="\
- <a href=\"http://localhost:${NB_SERVER_PORT}/${_notebook_name}:${_folder_id_path:-}${_url_params_ext:-}--add\">+</a>"
+ <a href=\"http://${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_notebook_name}:${_folder_id_path:-}${_url_params_ext:-}--add\">+</a>"
       fi
     fi
 
@@ -17763,10 +17771,10 @@ HEREDOC
         _render --title "${_html_title}"
       }
     fi | {
-      local _encoded_notebook_name="${_raw_url#http://localhost:${NB_SERVER_PORT}/--original/}"
+      local _encoded_notebook_name="${_raw_url#http://${NB_SERVER_HOST}:${NB_SERVER_PORT}/--original/}"
       _encoded_notebook_name="${_encoded_notebook_name%%/*}"
 
-      local _raw_url_base_pattern="http:\/\/localhost:${NB_SERVER_PORT}\/--original\/${_encoded_notebook_name}\/"
+      local _raw_url_base_pattern="http:\/\/${NB_SERVER_HOST}:${NB_SERVER_PORT}\/--original\/${_encoded_notebook_name}\/"
       local _raw_url_pattern="${_raw_url_base_pattern}\1"
 
       local _sed_arguments=()
@@ -17868,20 +17876,22 @@ HEREDOC
         then
           _first=0
 
-          printf --                                             \
-            "<a href=\"http://localhost:%s/%s:%s\">%s</a>"      \
-            "${NB_SERVER_PORT}"                                 \
-            "${__name//' '/%20}"                                \
-            "${_url_param_string/&/?}"                          \
+          printf --                                       \
+            "<a href=\"http://%s:%s/%s:%s\">%s</a>"       \
+            "${NB_SERVER_HOST}"                           \
+            "${NB_SERVER_PORT}"                           \
+            "${__name//' '/%20}"                          \
+            "${_url_param_string/&/?}"                    \
             "${__name//\ /${_NBSP}}"
         else
-          printf --                                             \
-            "%s%s <a href=\"http://localhost:%s/%s:%s\">%s</a>" \
-            "${_NBSP}"                                          \
-            "${_separator}"                                     \
-            "${NB_SERVER_PORT}"                                 \
-            "${__name//' '/%20}"                                \
-            "${_url_param_string/&/?}"                          \
+          printf --                                       \
+            "%s%s <a href=\"http://%s:%s/%s:%s\">%s</a>"  \
+            "${_NBSP}"                                    \
+            "${_separator}"                               \
+            "${NB_SERVER_HOST}"                           \
+            "${NB_SERVER_PORT}"                           \
+            "${__name//' '/%20}"                          \
+            "${_url_param_string/&/?}"                    \
             "${__name//\ /${_NBSP}}"
         fi
 
@@ -18207,7 +18217,7 @@ HEREDOC
             )"
 
             _browse_respond_with 302                \
-"http://localhost:${NB_SERVER_PORT}/${_new_selector}${_response_url_params:-}"
+"http://${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_new_selector}${_response_url_params:-}"
 
             return 0
             ;;
@@ -18239,7 +18249,7 @@ HEREDOC
 
           return 0
         else
-          local _raw_url="http://localhost:${NB_SERVER_PORT}/--original/"
+          local _raw_url="http://${NB_SERVER_HOST}:${NB_SERVER_PORT}/--original/"
 
           if [[ !   "${_selector_path:-}" =~ ^${NB_DIR} ]] &&
              [[ -n  "${_encoded_local_notebook_path:-}" ]] &&
@@ -18270,7 +18280,7 @@ HEREDOC
                   "${_render_function_options[@]:-}"  &>/dev/null
 
                 _browse_respond_with 302              \
-"http://localhost:${NB_SERVER_PORT}/${_container_id_selector}${_response_url_params:-}"
+"http://${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_container_id_selector}${_response_url_params:-}"
                 ;;
             esac
 
@@ -18690,7 +18700,7 @@ HEREDOC
 
   # build initial request URL
 
-  local _request_url_base="http://localhost:${NB_SERVER_PORT}"
+  local _request_url_base="http://${NB_SERVER_HOST}:${NB_SERVER_PORT}"
 
   if [[ "${_action:-}" == "add" ]]
   then
@@ -18710,7 +18720,7 @@ HEREDOC
     _arguments=("${_selector:-}" "${_arguments[@]:-}")
   fi
 
-  local _request_url_base="http://localhost:${NB_SERVER_PORT}"
+  local _request_url_base="http://${NB_SERVER_HOST}:${NB_SERVER_PORT}"
   local _request_url="${_request_url_base}/${_selector:-}"
 
   if ((${#_url_params[@]}))

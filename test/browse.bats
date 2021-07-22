@@ -7,6 +7,80 @@ export NB_SERVER_PORT=6789
 # non-breaking space
 export _S=" "
 
+# configuration ###############################################################
+
+@test "'browse' sets the server hostname to localhost by default." {
+  {
+    "${_NB}" init
+
+    sleep 1
+  }
+
+  run "${_NB}" browse --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq  0                           ]]
+
+  [[    "${output}"  =~   http://localhost:6789/home: ]]
+  [[ !  "${output}"  =~   http://127.0.0.1:6789/home: ]]
+}
+
+@test "'browse' sets the server hostname to the value in \$NB_SERVER_HOST." {
+  {
+    "${_NB}" init
+
+    sleep 1
+  }
+
+  NB_SERVER_HOST="127.0.0.1" run "${_NB}" browse --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq  0                           ]]
+
+  [[    "${output}"  =~   http://127.0.0.1:6789/home: ]]
+  [[ !  "${output}"  =~   http://localhost:6789/home: ]]
+}
+
+@test "'browse' sets the server port to 6789 by default." {
+  {
+    "${_NB}" init
+
+    sleep 1
+  }
+
+  run "${_NB}" browse --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq  0                           ]]
+
+  [[    "${output}"  =~   http://localhost:6789/home: ]]
+  [[ !  "${output}"  =~   http://localhost:4321/home: ]]
+}
+
+@test "'browse' sets the server port to the value in \$NB_SERVER_PORT." {
+  {
+    "${_NB}" init
+
+    sleep 1
+  }
+
+  NB_SERVER_PORT="4321" run "${_NB}" browse --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq  0                           ]]
+
+  [[    "${output}"  =~   http://localhost:4321/home: ]]
+  [[ !  "${output}"  =~   http://localhost:6789/home: ]]
+}
+
 # conflicting folder and notebook names #######################################
 
 @test "'browse <folder-id>' with conflicting folder and notebook names renders folder." {
