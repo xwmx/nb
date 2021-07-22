@@ -456,15 +456,15 @@ export NB_HEADER="${NB_HEADER:-2}"
 # Supported Values: any positive number
 export NB_LIMIT="${NB_LIMIT:-15}"
 
-# $NB_SERVER_PORT
-#
-# Default: '6789'
-export NB_SERVER_PORT="${NB_SERVER_PORT:-6789}"
-
 # $NB_SERVER_HOST
 #
 # Default: 'localhost'
 export NB_SERVER_HOST="${NB_SERVER_HOST:-localhost}"
+
+# $NB_SERVER_PORT
+#
+# Default: '6789'
+export NB_SERVER_PORT="${NB_SERVER_PORT:-6789}"
 
 # $NB_SYNTAX_THEME
 #
