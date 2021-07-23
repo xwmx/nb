@@ -6360,8 +6360,7 @@ _notebooks() {
           "${NB_DIR}/${_name}"
       else
         git clone --no-local --single-branch "${_remote_url}" "${NB_DIR}/${_name}"
-      fi &&
-        printf "%s\\n" "${_name}" > "${NB_DIR}/.current"
+      fi
     else
       mkdir -p "${NB_DIR}/${_name}"
         git -C "${NB_DIR}/${_name}" init &>/dev/null  &&

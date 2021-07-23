@@ -85,7 +85,7 @@ _setup_notebooks() {
       <(printf "example-branch\\nmaster\\n")
   }
 
-  run "${_NB}" notebooks add example "${_GIT_REMOTE_URL}"
+  run "${_NB}" notebooks add "Sample Notebook" "${_GIT_REMOTE_URL}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -94,24 +94,26 @@ _setup_notebooks() {
 
   [[    "${status}"   -eq 0                                     ]]
   [[    "${lines[1]}" =~  Added\ notebook\:                     ]]
-  [[    "${lines[1]}" =~  example                               ]]
+  [[    "${lines[1]}" =~  Sample\ Notebook                      ]]
   [[    "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)" -eq 8 ]]
-  [[ -d "${NB_DIR}/example/.git"                                ]]
+  [[ -d "${NB_DIR}/Sample Notebook/.git"                        ]]
 
-  diff                                                              \
-    <(cd "${NB_DIR}/example" && git config --get remote.origin.url) \
+  diff                                                                      \
+    <(cd "${NB_DIR}/Sample Notebook" && git config --get remote.origin.url) \
     <(printf "%s\\n" "${_GIT_REMOTE_URL}")
 
-  diff                                                              \
-    <(cd "${NB_DIR}/example" && git rev-parse --abbrev-ref HEAD)    \
+  diff                                                                      \
+    <(cd "${NB_DIR}/Sample Notebook" && git rev-parse --abbrev-ref HEAD)    \
     <(printf "master\\n")
 
-  "${_NB}" git branch --all
-
-  [[    "$("${_NB}" git branch --all)"  =~  \*\ master                                ]]
-  [[    "$("${_NB}" git branch --all)"  =~  remotes/origin/HEAD\ \-\>\ origin/master  ]]
-  [[    "$("${_NB}" git branch --all)"  =~  remotes/origin/master                     ]]
-  [[ !  "$("${_NB}" git branch --all)"  =~  example-branch                            ]]
+  diff                                            \
+    <("${_NB}" Sample\ Notebook:git branch --all) \
+    <(cat <<HEREDOC
+* master
+  remotes/origin/HEAD -> origin/master
+  remotes/origin/master
+HEREDOC
+)
 }
 
 # config ######################################################################
