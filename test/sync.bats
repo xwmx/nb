@@ -119,7 +119,7 @@ _setup_notebooks() {
 #   do
 #     sleep 1
 #   done
-#   git log | grep -q '\[nb\] Sync .index'
+#   git log | grep -q '\[nb\] Reconcile .index'
 #   cd "${_TMP_DIR}"
 
 #   {
@@ -254,13 +254,12 @@ Example File Three.md
 HEREDOC
 )
 
-  cd "${NB_DIR}/Notebook Two" || return 1
-  while [[ -n "$(git status --porcelain)"   ]]
+  while [[ -n "$(git -C "${NB_DIR}/Notebook Two" status --porcelain)" ]]
   do
     sleep 1
   done
-  git log | grep -q '\[nb\] Sync .index'
-  cd "${_TMP_DIR}"
+
+  git -C "${NB_DIR}/Notebook Two" log | grep -q '\[nb\] Reconcile .index'
 
   {
     "${_NB}" add "Notebook One:Example File Four.md" --content "Example content four."
@@ -301,8 +300,8 @@ HEREDOC
     <(cat <<HEREDOC
 Example File One.md
 Example File Two.md
-Example File Four.md
 Example File Three.md
+Example File Four.md
 HEREDOC
 )
 
@@ -311,8 +310,8 @@ HEREDOC
     <(cat <<HEREDOC
 Example File One.md
 Example File Two.md
-Example File Four.md
 Example File Three.md
+Example File Four.md
 HEREDOC
 )
 }

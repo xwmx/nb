@@ -4177,8 +4177,7 @@ _index() {
 
       if ((_commit_changes))
       then
-        NB_AUTO_SYNC=0 _git checkpoint "${_notebook_path}"  \
-          "[nb] Reconcile .index" &
+        NB_AUTO_SYNC=0 _git checkpoint "${_notebook_path}" "[nb] Reconcile .index"
       fi
       ;;
     show)
@@ -4238,9 +4237,13 @@ _index() {
 
       if ! ((_valid))
       then
-        _exit_1 \
-          printf "Index corrupted. To fix, run:\\n  %s index reconcile\\n" \
+        _warn                                                               \
+          printf "Index corrupted. To fix, run:\\n  %s index reconcile\\n"  \
           "${_ME}"
+
+        return 1
+      else
+        return 0
       fi
       ;;
     *)
@@ -21207,7 +21210,17 @@ HEREDOC
 
       _git sync "${NB_NOTEBOOK_PATH}"
 
-      _index reconcile --commit
+      if ! _index verify "${NB_NOTEBOOK_PATH}" &>/dev/null
+      then
+        _index reconcile "${NB_NOTEBOOK_PATH}" --commit
+
+        while [[ -n "$(git -C "${NB_NOTEBOOK_PATH}" status --porcelain)" ]]
+        do
+          sleep 1
+        done
+
+        _git sync "${NB_NOTEBOOK_PATH}"
+      fi
     fi && _notebook_sync_successful=1
 
     if ! ((_notebook_sync_successful))            ||
