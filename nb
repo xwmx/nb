@@ -11014,13 +11014,13 @@ _add() {
 
     local _print_spacing=0
 
-    if [[ -n "${_tag_list:-}"   ]]
+    if [[ -n "${_tag_list:-}"             ]]
     then
       printf "%s\\n" "${_tag_list}" >> "${_target_path}"
       _print_spacing=1
     fi
 
-    if [[ -n "${_selector_content:-}"   ]]
+    if [[ -n "${_selector_content:-}"     ]]
     then # argument content
       ((_print_spacing)) && printf "\\n"    >> "${_target_path}"
 
@@ -11028,7 +11028,7 @@ _add() {
       _print_spacing=1
     fi
 
-    if [[ -n "${_option_content:-}"     ]]
+    if [[ -n "${_option_content:-}"       ]]
     then # argument content
       ((_print_spacing)) && printf "\\n"  >> "${_target_path}"
 
@@ -11044,11 +11044,11 @@ _add() {
       cat             >> "${_target_path}"
     fi
 
-    if ((_edit_before_commit))              ||
+    if ((_edit_before_commit))                ||
        {
-         ! _piped_input                     &&
-         [[ -z "${_selector_content:-}" ]]  &&
-         [[ -z "${_option_content:-}"   ]]
+         ! _piped_input                       &&
+         [[ -z "${_selector_content:-}"   ]]  &&
+         [[ -z "${_option_content:-}"     ]]
        }
     then
       _edit_file "${_target_path}"
