@@ -21187,6 +21187,11 @@ HEREDOC
         _git checkpoint "${NB_NOTEBOOK_PATH}" "[nb] Sync" --spinner
 
       _git sync "${NB_NOTEBOOK_PATH}"
+
+      _index reconcile
+
+      GIT_TERMINAL_PROMPT=1 NB_AUTO_SYNC=0 \
+        _git checkpoint "${NB_NOTEBOOK_PATH}" "[nb] Sync .index" --spinner
     fi && _notebook_sync_successful=1
 
     if ! ((_notebook_sync_successful))            ||

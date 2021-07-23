@@ -34,6 +34,289 @@ _setup_notebooks() {
   [[ "${lines[1]}"  =~  \ \ nb\ sync  ]]
 }
 
+# .index ######################################################################
+
+# TODO
+# @test "'sync' reconciles nested index." {
+#   # skip
+#   {
+#     _setup_remote_repo
+
+#     "${_NB}" init "${_GIT_REMOTE_URL}"
+#     "${_NB}" notebooks rename "home"  "Notebook One"
+#     "${_NB}" notebooks add            "Notebook Two" "${_GIT_REMOTE_URL}"
+
+#     [[ "$("${_NB}" notebooks current --name)" == "Notebook One" ]]
+
+#     "${_NB}" add "Notebook One:Folder/Example File One.md" --content "Example content one."
+#     "${_NB}" add "Notebook One:Folder/Example File Two.md" --content "Example content two."
+
+#     echo "Example content three." > "${NB_DIR}/Notebook One/Folder/Example File Three.md"
+
+#     "${_NB}" git add --all
+#     "${_NB}" git commit -am "Example commit message."
+
+#     [[    -e "${NB_DIR}/Notebook One/Folder/Example File One.md"    ]]
+#     [[    -e "${NB_DIR}/Notebook One/Folder/Example File Two.md"    ]]
+#     [[    -e "${NB_DIR}/Notebook One/Folder/Example File Three.md"  ]]
+
+#     [[ !  -e "${NB_DIR}/Notebook Two/Folder/Example File One.md"    ]]
+#     [[ !  -e "${NB_DIR}/Notebook Two/Folder/Example File Two.md"    ]]
+#     [[ !  -e "${NB_DIR}/Notebook Two/Folder/Example File Three.md"  ]]
+
+#     diff                                            \
+#       <(cat "${NB_DIR}/Notebook One/Folder/.index") \
+#       <(cat <<HEREDOC
+# Example File One.md
+# Example File Two.md
+# HEREDOC
+
+#     "${_NB}" git push origin master
+# )
+
+#     diff                                            \
+#       <(cat "${NB_DIR}/Notebook Two/Folder/.index") \
+#       <(cat <<HEREDOC
+# HEREDOC
+# )
+#   }
+
+#   run "${_NB}" Notebook\ Two:sync
+
+#   printf "\${status}: '%s'\\n" "${status}"
+#   printf "\${output}: '%s'\\n" "${output}"
+
+#   [[ "${status}" -eq  0                                           ]]
+#   [[ "${output}" =~   Syncing:\ .*Notebook\ Two.*...Done\!        ]]
+
+#   [[    -e "${NB_DIR}/Notebook One/Folder/Example File One.md"    ]]
+#   [[    -e "${NB_DIR}/Notebook One/Folder/Example File Two.md"    ]]
+#   [[    -e "${NB_DIR}/Notebook One/Folder/Example File Three.md"  ]]
+
+#   [[    -e "${NB_DIR}/Notebook Two/Folder/Example File One.md"    ]]
+#   [[    -e "${NB_DIR}/Notebook Two/Folder/Example File Two.md"    ]]
+#   [[    -e "${NB_DIR}/Notebook Two/Folder/Example File Three.md"  ]]
+
+#   diff                                            \
+#     <(cat "${NB_DIR}/Notebook One/Folder/.index") \
+#     <(cat <<HEREDOC
+# Example File One.md
+# Example File Two.md
+# HEREDOC
+# )
+
+#   diff                                            \
+#     <(cat "${NB_DIR}/Notebook Two/Folder/.index") \
+#     <(cat <<HEREDOC
+# Example File One.md
+# Example File Two.md
+# Example File Three.md
+# HEREDOC
+# )
+
+#   cd "${NB_DIR}/Notebook Two" || return 1
+#   while [[ -n "$(git status --porcelain)"   ]]
+#   do
+#     sleep 1
+#   done
+#   git log | grep -q '\[nb\] Sync .index'
+#   cd "${_TMP_DIR}"
+
+#   {
+#     "${_NB}" add "Notebook One:Folder/Example File Four.md" --content "Example content four."
+
+#     [[    -e "${NB_DIR}/Notebook One/Folder/Example File One.md"    ]]
+#     [[    -e "${NB_DIR}/Notebook One/Folder/Example File Two.md"    ]]
+#     [[    -e "${NB_DIR}/Notebook One/Folder/Example File Three.md"  ]]
+#     [[    -e "${NB_DIR}/Notebook One/Folder/Example File Four.md"   ]]
+
+#     [[    -e "${NB_DIR}/Notebook Two/Folder/Example File One.md"    ]]
+#     [[    -e "${NB_DIR}/Notebook Two/Folder/Example File Two.md"    ]]
+#     [[    -e "${NB_DIR}/Notebook Two/Folder/Example File Three.md"  ]]
+#     [[ !  -e "${NB_DIR}/Notebook Two/Folder/Example File Four.md"   ]]
+
+#     "${_NB}" Notebook\ One:sync
+#   }
+
+#   run "${_NB}" Notebook\ Two:sync
+
+#   printf "\${status}: '%s'\\n" "${status}"
+#   printf "\${output}: '%s'\\n" "${output}"
+
+#   [[ "${status}" -eq  0                                             ]]
+#   [[ "${output}" =~   Syncing:\ .*Notebook\ Two.*...Done\!          ]]
+
+#   [[    -e "${NB_DIR}/Notebook One/Folder/Example File One.md"      ]]
+#   [[    -e "${NB_DIR}/Notebook One/Folder/Example File Two.md"      ]]
+#   [[    -e "${NB_DIR}/Notebook One/Folder/Example File Three.md"    ]]
+#   [[    -e "${NB_DIR}/Notebook One/Folder/Example File Four.md"     ]]
+
+#   [[    -e "${NB_DIR}/Notebook Two/Folder/Example File One.md"      ]]
+#   [[    -e "${NB_DIR}/Notebook Two/Folder/Example File Two.md"      ]]
+#   [[    -e "${NB_DIR}/Notebook Two/Folder/Example File Three.md"    ]]
+#   [[    -e "${NB_DIR}/Notebook Two/Folder/Example File Four.md"     ]]
+
+#   diff                                            \
+#     <(cat "${NB_DIR}/Notebook One/Folder/.index") \
+#     <(cat <<HEREDOC
+# Example File One.md
+# Example File Two.md
+# Example File Four.md
+# Example File Three.md
+# HEREDOC
+# )
+
+#   diff                                            \
+#     <(cat "${NB_DIR}/Notebook Two/Folder/.index") \
+#     <(cat <<HEREDOC
+# Example File One.md
+# Example File Two.md
+# Example File Four.md
+# Example File Three.md
+# HEREDOC
+# )
+# }
+
+@test "'sync' reconciles root-level index." {
+  # skip
+  {
+    _setup_remote_repo
+
+    "${_NB}" init "${_GIT_REMOTE_URL}"
+    "${_NB}" notebooks rename "home"  "Notebook One"
+    "${_NB}" notebooks add            "Notebook Two" "${_GIT_REMOTE_URL}"
+
+    [[ "$("${_NB}" notebooks current --name)" == "Notebook One" ]]
+
+    "${_NB}" add "Notebook One:Example File One.md" --content "Example content one."
+    "${_NB}" add "Notebook One:Example File Two.md" --content "Example content two."
+
+    echo "Example content three." > "${NB_DIR}/Notebook One/Example File Three.md"
+
+    "${_NB}" git add --all
+    "${_NB}" git commit -am "Example commit message."
+
+    [[    -e "${NB_DIR}/Notebook One/Example File One.md"   ]]
+    [[    -e "${NB_DIR}/Notebook One/Example File Two.md"   ]]
+    [[    -e "${NB_DIR}/Notebook One/Example File Three.md" ]]
+
+    [[ !  -e "${NB_DIR}/Notebook Two/Example File One.md"   ]]
+    [[ !  -e "${NB_DIR}/Notebook Two/Example File Two.md"   ]]
+    [[ !  -e "${NB_DIR}/Notebook Two/Example File Three.md" ]]
+
+  diff                                      \
+    <(cat "${NB_DIR}/Notebook One/.index")  \
+    <(cat <<HEREDOC
+Example File One.md
+Example File Two.md
+HEREDOC
+
+  "${_NB}" git push origin master
+)
+
+  diff                                      \
+    <(cat "${NB_DIR}/Notebook Two/.index")  \
+    <(cat <<HEREDOC
+HEREDOC
+)
+  }
+
+  run "${_NB}" Notebook\ Two:sync
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq  0                                     ]]
+  [[ "${output}" =~   Syncing:\ .*Notebook\ Two.*...Done\!  ]]
+
+  [[    -e "${NB_DIR}/Notebook One/Example File One.md"     ]]
+  [[    -e "${NB_DIR}/Notebook One/Example File Two.md"     ]]
+  [[    -e "${NB_DIR}/Notebook One/Example File Three.md"   ]]
+
+  [[    -e "${NB_DIR}/Notebook Two/Example File One.md"     ]]
+  [[    -e "${NB_DIR}/Notebook Two/Example File Two.md"     ]]
+  [[    -e "${NB_DIR}/Notebook Two/Example File Three.md"   ]]
+
+  diff                                      \
+    <(cat "${NB_DIR}/Notebook One/.index")  \
+    <(cat <<HEREDOC
+Example File One.md
+Example File Two.md
+HEREDOC
+)
+
+  diff                                      \
+    <(cat "${NB_DIR}/Notebook Two/.index")  \
+    <(cat <<HEREDOC
+Example File One.md
+Example File Two.md
+Example File Three.md
+HEREDOC
+)
+
+  cd "${NB_DIR}/Notebook Two" || return 1
+  while [[ -n "$(git status --porcelain)"   ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Sync .index'
+  cd "${_TMP_DIR}"
+
+  {
+    "${_NB}" add "Notebook One:Example File Four.md" --content "Example content four."
+
+    [[    -e "${NB_DIR}/Notebook One/Example File One.md"   ]]
+    [[    -e "${NB_DIR}/Notebook One/Example File Two.md"   ]]
+    [[    -e "${NB_DIR}/Notebook One/Example File Three.md" ]]
+    [[    -e "${NB_DIR}/Notebook One/Example File Four.md"  ]]
+
+    [[    -e "${NB_DIR}/Notebook Two/Example File One.md"   ]]
+    [[    -e "${NB_DIR}/Notebook Two/Example File Two.md"   ]]
+    [[    -e "${NB_DIR}/Notebook Two/Example File Three.md" ]]
+    [[ !  -e "${NB_DIR}/Notebook Two/Example File Four.md"  ]]
+
+    "${_NB}" Notebook\ One:sync
+  }
+
+  run "${_NB}" Notebook\ Two:sync
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq  0                                     ]]
+  [[ "${output}" =~   Syncing:\ .*Notebook\ Two.*...Done\!  ]]
+
+  [[    -e "${NB_DIR}/Notebook One/Example File One.md"     ]]
+  [[    -e "${NB_DIR}/Notebook One/Example File Two.md"     ]]
+  [[    -e "${NB_DIR}/Notebook One/Example File Three.md"   ]]
+  [[    -e "${NB_DIR}/Notebook One/Example File Four.md"    ]]
+
+  [[    -e "${NB_DIR}/Notebook Two/Example File One.md"     ]]
+  [[    -e "${NB_DIR}/Notebook Two/Example File Two.md"     ]]
+  [[    -e "${NB_DIR}/Notebook Two/Example File Three.md"   ]]
+  [[    -e "${NB_DIR}/Notebook Two/Example File Four.md"    ]]
+
+  diff                                      \
+    <(cat "${NB_DIR}/Notebook One/.index")  \
+    <(cat <<HEREDOC
+Example File One.md
+Example File Two.md
+Example File Four.md
+Example File Three.md
+HEREDOC
+)
+
+  diff                                      \
+    <(cat "${NB_DIR}/Notebook Two/.index")  \
+    <(cat <<HEREDOC
+Example File One.md
+Example File Two.md
+Example File Four.md
+Example File Three.md
+HEREDOC
+)
+}
+
 # sync --all #################################################################
 
 @test "'sync --all' with no local syncs global notebooks." {
