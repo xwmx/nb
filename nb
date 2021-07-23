@@ -3897,6 +3897,7 @@ _index() {
      [[ ! "${_subcommand}" == "reconcile" ]]
   then
     _index reconcile "${_folder_path}" --ancestors
+    NB_AUTO_SYNC=0 _git checkpoint "${_notebook_path}" "[nb] Reconcile .index" &
   fi
 
   case "${_subcommand}" in
@@ -5172,9 +5173,15 @@ _list() {
       else
         local _item_id=
         # use `sed` directly instead of `_index get_id` for performance
-        _item_id="$(
-          sed -n "/^${__basename:-}$/=" "${_list_path:-}/.index"
-        )"
+        _item_id="$(sed -n "/^${__basename:-}$/=" "${_list_path:-}/.index")"
+
+        if [[ -z "${_item_id:-}" ]]
+        then
+          _index reconcile "${_list_path:-}" --ancestors
+          NB_AUTO_SYNC=0 _git checkpoint "${_notebook_path}" "[nb] Reconcile .index" &
+
+          _item_id="$(sed -n "/^${__basename:-}$/=" "${_list_path:-}/.index")"
+        fi
 
         local _item_identifier="${_maybe_selector_context:-}${_item_id:-}"
         local _max_identifier="${_maybe_selector_context:-}${_max_id:-}"

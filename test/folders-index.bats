@@ -81,9 +81,25 @@ HEREDOC
 
   cat "${NB_DIR}/home/Example Folder/Sample Folder/.index"
 
-  [[ "$(cat "${NB_DIR}/home/Example Folder/Sample Folder/.index")"   =~ one.bookmark.md    ]]
-  [[ "$(cat "${NB_DIR}/home/Example Folder/Sample Folder/.index")"   =~ two.bookmark.md    ]]
-  [[ "$(cat "${NB_DIR}/home/Example Folder/Sample Folder/.index")"   =~ three.bookmark.md  ]]
+  diff                                                          \
+    <(cat "${NB_DIR}/home/Example Folder/Sample Folder/.index") \
+    <(cat <<HEREDOC
+one.bookmark.md
+two.bookmark.md
+three.bookmark.md
+HEREDOC
+)
+
+  # Create git commit:
+
+  git -C "${NB_DIR}/home" log
+
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
+  do
+    sleep 1
+  done
+
+  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Reconcile .index'
 }
 
 # add #########################################################################
