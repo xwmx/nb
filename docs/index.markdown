@@ -7732,7 +7732,7 @@ Usage:
   nb index get_id <filename>
   nb index get_max_id
   nb index rebuild [--ancestors]
-  nb index reconcile [--ancestors]
+  nb index reconcile [--ancestors] [--commit]
   nb index show
   nb index update <existing-filename> <new-filename>
   nb index verify
@@ -7741,6 +7741,7 @@ Usage:
 Options:
   --ancestors   Perform the action on all folders within the notebook that
                 are ancestors of the current folder.
+  --commit      Commit changes to git.
 
 Subcommands:
   add           Add <filename> to the index.

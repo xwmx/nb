@@ -3811,7 +3811,7 @@ $(_color_primary "Usage"):
   ${_ME} index get_id <filename>
   ${_ME} index get_max_id
   ${_ME} index rebuild [--ancestors]
-  ${_ME} index reconcile [--ancestors]
+  ${_ME} index reconcile [--ancestors] [--commit]
   ${_ME} index show
   ${_ME} index update <existing-filename> <new-filename>
   ${_ME} index verify
@@ -3820,6 +3820,7 @@ $(_color_primary "Usage"):
 $(_color_primary "Options"):
   --ancestors   Perform the action on all folders within the notebook that
                 are ancestors of the current folder.
+  --commit      Commit changes to git.
 
 $(_color_primary "Subcommands"):
   add           Add <filename> to the index.
@@ -3851,6 +3852,7 @@ HEREDOC
 _index() {
   local _ancestors=0
   local _folder_path=
+  local _commit_changes=0
   local _subcommand="${1:-}"
 
   case "${_subcommand:-}" in
@@ -3858,11 +3860,17 @@ _index() {
       _folder_path="${2:-}"
       ;;
     rebuild|reconcile)
-      for __arg in "${@:1}"
+      shift
+
+      local __arg=
+      for   __arg in "${@:-}"
       do
         case "${__arg:-}" in
           --ancestors)
             _ancestors=1
+            ;;
+          --commit|--checkpoint)
+            _commit_changes=1
             ;;
           *)
             _folder_path="${__arg:-}"
@@ -3896,8 +3904,7 @@ _index() {
      [[ ! "${_subcommand}" == "rebuild"   ]] &&
      [[ ! "${_subcommand}" == "reconcile" ]]
   then
-    _index reconcile "${_folder_path}" --ancestors
-    NB_AUTO_SYNC=0 _git checkpoint "${_notebook_path}" "[nb] Reconcile .index" &
+    _index reconcile "${_folder_path}" --ancestors --commit
   fi
 
   case "${_subcommand}" in
@@ -4167,6 +4174,12 @@ _index() {
 
         _current_folder_path="${_current_folder_path%/*}"
       done
+
+      if ((_commit_changes))
+      then
+        NB_AUTO_SYNC=0 _git checkpoint "${_notebook_path}"  \
+          "[nb] Reconcile .index" &
+      fi
       ;;
     show)
       cat "${_index_path}"
@@ -5177,8 +5190,7 @@ _list() {
 
         if [[ -z "${_item_id:-}" ]]
         then
-          _index reconcile "${_list_path:-}" --ancestors
-          NB_AUTO_SYNC=0 _git checkpoint "${_notebook_path}" "[nb] Reconcile .index" &
+          _index reconcile "${_list_path:-}" --ancestors --commit
 
           _item_id="$(sed -n "/^${__basename:-}$/=" "${_list_path:-}/.index")"
         fi
@@ -21195,10 +21207,7 @@ HEREDOC
 
       _git sync "${NB_NOTEBOOK_PATH}"
 
-      _index reconcile
-
-      GIT_TERMINAL_PROMPT=1 NB_AUTO_SYNC=0 \
-        _git checkpoint "${NB_NOTEBOOK_PATH}" "[nb] Sync .index" --spinner
+      _index reconcile --commit
     fi && _notebook_sync_successful=1
 
     if ! ((_notebook_sync_successful))            ||
