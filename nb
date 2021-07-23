@@ -16798,7 +16798,6 @@ HEREDOC
 
     local _url_encoded_selector="${_current_selector//' '/%20}"
 
-
     {
       if [[ -n "${_query:-}" ]]
       then
@@ -16896,10 +16895,10 @@ HEREDOC
         _link_selector="${_link_selector//' '/%20}"
 
         printf "<a href=\"//%s:%s/%s%s\" class=\"list-item\">%s</a><br>\\n"  \
-          "${NB_SERVER_HOST}"                                                     \
-          "${NB_SERVER_PORT}"                                                     \
-          "${_link_selector:-}"                                                   \
-          "${_url_params:-}"                                                      \
+          "${NB_SERVER_HOST}"                                                \
+          "${NB_SERVER_PORT}"                                                \
+          "${_link_selector:-}"                                              \
+          "${_url_params:-}"                                                 \
           "${_display_item:-}"
       done
     } | {
@@ -16988,14 +16987,14 @@ HEREDOC
 
         local _prev_url_params="${_url_params#$'?'}"
 
-        if [[ "${_prev_page_number:-0}" -gt 1 ]]
+        if [[ "${_prev_page_number:-0}" -gt 1   ]]
         then
           _prev_url_params+="&--page=${_prev_page_number:-}"
         fi
 
         _prev_url_params="${_prev_url_params#$'&'}"
 
-        if [[ -n "${_prev_url_params:-}" ]]
+        if [[ -n "${_prev_url_params:-}"        ]]
         then
           _prev_url_params="?${_prev_url_params:-}"
         fi
