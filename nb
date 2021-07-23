@@ -4700,7 +4700,8 @@ _list() {
         then
           _folder_relative_path=
           _selector_basename="${_selector_relative_path}"
-        else
+        elif [[ "${__argument:-}" != "${_notebook_path:-}" ]]
+        then
           _filter_patterns+=("${__argument}")
         fi
       elif [[ "${__argument:-}" =~ /$           ]]
@@ -7569,9 +7570,9 @@ HEREDOC
         if [[ -n "${_local_notebook_path:-}"                          ]] &&
            [[ "${_maybe_notebook_path}" == "${_local_notebook_path}"  ]]
         then
-          _notebook_path="${_local_notebook_path}"
+          _notebook_path="${_local_notebook_path%/}"
         else
-          _notebook_path="${_maybe_notebook_path}"
+          _notebook_path="${_maybe_notebook_path%/}"
         fi
       fi
     elif [[ -n "${_selector:-}" ]]
@@ -7583,11 +7584,11 @@ HEREDOC
         if [[ "${_selector_notebook:-}" == "local"  ]] &&
            [[ -n "${_local_notebook_path:-}"        ]]
         then
-          _notebook_path="${_local_notebook_path}"
+          _notebook_path="${_local_notebook_path%/}"
         elif [[ -d "${NB_DIR}/${_selector_notebook:-}/.git"    ]] &&
              [[ -f "${NB_DIR}/${_selector_notebook:-}/.index"  ]]
         then
-          _notebook_path="${NB_DIR}/${_selector_notebook}"
+          _notebook_path="${NB_DIR}/${_selector_notebook%/}"
         fi
       fi
     fi
