@@ -3850,7 +3850,7 @@ HEREDOC
 }
 _index() {
   local _ancestors=0
-  local _folder_path
+  local _folder_path=
   local _subcommand="${1:-}"
 
   case "${_subcommand:-}" in
@@ -3858,17 +3858,17 @@ _index() {
       _folder_path="${2:-}"
       ;;
     rebuild|reconcile)
-      if [[ "${3:-}"    == "--ancestors" ]]
-      then
-        _ancestors=1
-        _folder_path="${2:-}"
-      elif [[ "${2:-}"  == "--ancestors" ]]
-      then
-        _ancestors=1
-        _folder_path="${3:-}"
-      else
-        _folder_path="${2:-}"
-      fi
+      for __arg in "${@:1}"
+      do
+        case "${__arg:-}" in
+          --ancestors)
+            _ancestors=1
+            ;;
+          *)
+            _folder_path="${__arg:-}"
+            ;;
+        esac
+      done
       ;;
     add|delete|get_basename|get_id)
       _folder_path="${3:-}"
