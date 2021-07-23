@@ -7,6 +7,184 @@ export NB_SERVER_PORT=6789
 # non-breaking space
 export _S=" "
 
+# .index ######################################################################
+
+@test "'browse' reconciles ancestor .index files with incomplete nested .index file." {
+  {
+    "${_NB}" init
+
+    mkdir -p "${NB_DIR}/home/Example/Sample/Demo"
+
+    printf "# Title" > "${NB_DIR}/home/Example/Sample/Demo/File.md"
+
+    touch "${NB_DIR}/home/Example/Sample/Demo/.index"
+
+    git -C "${NB_DIR}/home" add --all
+    git -C "${NB_DIR}/home" commit -am "Example commit message."
+
+    [[ !  -e "${NB_DIR}/home/Example/.index"              ]]
+    [[ !  -e "${NB_DIR}/home/Example/Sample/.index"       ]]
+    [[    -e "${NB_DIR}/home/Example/Sample/Demo/.index"  ]]
+    [[    -e "${NB_DIR}/home/Example/Sample/Demo/File.md" ]]
+
+    git -C "${NB_DIR}/home" status
+
+    [[ -z "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
+
+    sleep 1
+  }
+
+  run "${_NB}" browse "Example/Sample/Demo/" --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                                       ]]
+
+  [[ "${output}"  =~  \
+\[\</span\>\<span\ class=\"identifier\"\>Example/Sample/Demo/1\</span\>\<span\ class=\"dim\"\>\] ]]
+
+  diff                                                  \
+    <(cat "${NB_DIR}/home/Example/.index")              \
+    <(printf "Sample\\n")
+
+  diff                                                  \
+    <(cat "${NB_DIR}/home/Example/Sample/.index")       \
+    <(printf "Demo\\n")
+
+  diff                                                  \
+    <(cat "${NB_DIR}/home/Example/Sample/Demo/.index")  \
+    <(printf "File.md\\n")
+
+  cd "${NB_DIR}/home" || return 1
+
+  git -C "${NB_DIR}/home" status
+  git -C "${NB_DIR}/home" log
+
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
+  do
+    sleep 1
+  done
+
+  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Reconcile .index'
+}
+
+@test "'browse' reconciles root-level .index." {
+  {
+    "${_NB}" init
+    "${_NB}" add "File One.md"    --title "Title One"
+    "${_NB}" add "File Two.md"    --title "Title Two"
+    "${_NB}" add "File Three.md"  --title "Title Three"
+
+    printf "# Title Four" > "${NB_DIR}/home/File Four.md"
+
+    "${_NB}" git -C "${NB_DIR}/home" add --all
+    "${_NB}" git -C "${NB_DIR}/home" commit -am "Example commit message."
+
+    git -C "${NB_DIR}/home" status
+
+    [[ -z "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
+
+    diff                              \
+      <(cat "${NB_DIR}/home/.index")  \
+      <(cat <<HEREDOC
+File One.md
+File Two.md
+File Three.md
+HEREDOC
+)
+
+    [[  -e "${NB_DIR}/home/File One.md"    ]]
+    [[  -e "${NB_DIR}/home/File Two.md"    ]]
+    [[  -e "${NB_DIR}/home/File Three.md"  ]]
+    [[  -e "${NB_DIR}/home/File Four.md"   ]]
+  }
+
+  run "${_NB}" browse --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                  ]]
+
+  [[ "${output}"    =~  \
+\[\</span\>\<span\ class=\"identifier\"\>home:4\</span\>\<span\ class=\"dim\"\>\] ]]
+
+  diff                              \
+    <(cat "${NB_DIR}/home/.index")  \
+    <(cat <<HEREDOC
+File One.md
+File Two.md
+File Three.md
+File Four.md
+HEREDOC
+)
+
+  git -C "${NB_DIR}/home" log
+
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
+  do
+    sleep 1
+  done
+
+  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Reconcile .index'
+}
+
+@test "'browse' reconciles nested .index." {
+  {
+    "${_NB}" init
+    "${_NB}" add "Example Folder/File One.md"    --title "Title One"
+    "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
+    "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
+
+    printf "# Title Four" > "${NB_DIR}/home/Example Folder/File Four.md"
+
+    diff                                            \
+      <(cat "${NB_DIR}/home/Example Folder/.index") \
+      <(cat <<HEREDOC
+File One.md
+File Two.md
+File Three.md
+HEREDOC
+)
+
+    [[  -e "${NB_DIR}/home/Example Folder/File One.md"    ]]
+    [[  -e "${NB_DIR}/home/Example Folder/File Two.md"    ]]
+    [[  -e "${NB_DIR}/home/Example Folder/File Three.md"  ]]
+    [[  -e "${NB_DIR}/home/Example Folder/File Four.md"   ]]
+  }
+
+  run "${_NB}" browse Example\ Folder/ --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                                 ]]
+
+  [[ "${output}"    =~  href=\"//localhost:6789/home:1/4  ]]
+  [[ "${output}"    =~  \
+\[\</span\>\<span\ class=\"identifier\"\>Example${_S}Folder/4\</span\>\<span\ class=\"dim\"\>\] ]]
+
+  diff                                            \
+    <(cat "${NB_DIR}/home/Example Folder/.index") \
+    <(cat <<HEREDOC
+File One.md
+File Two.md
+File Three.md
+File Four.md
+HEREDOC
+)
+
+  git -C "${NB_DIR}/home" log
+
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
+  do
+    sleep 1
+  done
+
+  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Reconcile .index'
+}
+
 # HTML <title> ################################################################
 
 @test "'browse <folder>/<folder>/<file>' with local notebook sets HTML <title> to CLI command." {
