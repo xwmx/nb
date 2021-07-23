@@ -3900,11 +3900,19 @@ _index() {
     _notebook_path="${NB_DIR}/${_notebook_and_relative_path%%/*}"
   fi
 
-  if [[ ! -e "${_index_path}"             ]] &&
-     [[ ! "${_subcommand}" == "rebuild"   ]] &&
-     [[ ! "${_subcommand}" == "reconcile" ]]
+  if [[ ! -e "${_index_path}" ]]
   then
-    _index reconcile "${_folder_path}" --ancestors --commit
+    case "${_subcommand}" in
+      add)
+        _index reconcile "${_folder_path}" --ancestors
+        ;;
+      rebuild|reconcile)
+        :
+        ;;
+      *)
+        _index reconcile "${_folder_path}" --ancestors --commit
+        ;;
+    esac
   fi
 
   case "${_subcommand}" in
