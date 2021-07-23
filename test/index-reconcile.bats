@@ -4,6 +4,33 @@ load test_helper
 
 # reconcile ###################################################################
 
+@test "'index reconcile' does not create a git commit." {
+  {
+    "${_NB}" init
+    "${_NB}" add "first.md"  --title "one"
+    "${_NB}" add "second.md" --title "two"
+
+    echo "# Example" > "${NB_DIR}/home/example.md"
+
+    [[ "$(cat "${NB_DIR}/home/.index")" != "$(ls "${NB_DIR}/home")" ]]
+  }
+
+  run "${_NB}" index reconcile
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  cat "${NB_DIR}/home/.index"
+
+  [[ ${status} -eq 0                                ]]
+  [[ "$(cat "${NB_DIR}/home/.index")" =~ example.md ]]
+
+  cd "${NB_DIR}/home" || return 1
+
+  [[ -n "$(git status --porcelain)"                 ]]
+
+  "${_NB}" index verify
+}
+
 @test "'index reconcile' does not modify a valid index." {
   {
     "${_NB}" init
