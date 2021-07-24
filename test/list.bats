@@ -243,7 +243,7 @@ load test_helper
     sleep 1
   done
 
-  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Reconcile .index'
+  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Reconcile Index'
 }
 
 @test "'list' reconciles ancestor .index files with missing nested .index file." {
@@ -299,7 +299,7 @@ load test_helper
     sleep 1
   done
 
-  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Reconcile .index'
+  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Reconcile Index'
 }
 
 @test "'list' reconciles root-level .index." {
@@ -363,7 +363,7 @@ HEREDOC
     sleep 1
   done
 
-  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Reconcile .index'
+  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Reconcile Index'
 }
 
 @test "'list' reconciles nested .index." {
@@ -420,7 +420,7 @@ HEREDOC
     sleep 1
   done
 
-  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Reconcile .index'
+  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Reconcile Index'
 }
 
 # pinning #####################################################################

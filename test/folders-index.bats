@@ -4,7 +4,7 @@ load test_helper
 
 # #############################################################################
 
-@test "'index' with folder path reconciles ancestors indexes if .index doesn't exist." {
+@test "'index' with folder path reconciles ancestors' indexes if .index doesn't exist." {
   {
     "${_NB}" init
 
@@ -62,8 +62,8 @@ HEREDOC
 
   "${_NB}" git log --stat
 
-  [[ ${status} -eq 0  ]]
-  [[ -z "${output}"   ]]
+  [[    "${status}" -eq 0 ]]
+  [[ -z "${output}"       ]]
 
   # .index is reconciled in notebook root:
 
@@ -99,7 +99,7 @@ HEREDOC
     sleep 1
   done
 
-  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Reconcile .index'
+  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Reconcile Index'
 }
 
 # add #########################################################################

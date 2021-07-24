@@ -119,7 +119,7 @@ _setup_notebooks() {
 #   do
 #     sleep 1
 #   done
-#   git log | grep -q '\[nb\] Reconcile .index'
+#   git log | grep -q '\[nb\] Reconcile Index'
 #   cd "${_TMP_DIR}"
 
 #   {
@@ -259,7 +259,7 @@ HEREDOC
     sleep 1
   done
 
-  git -C "${NB_DIR}/Notebook Two" log | grep -q '\[nb\] Reconcile .index'
+  git -C "${NB_DIR}/Notebook Two" log | grep -q '\[nb\] Reconcile Index'
 
   {
     "${_NB}" add "Notebook One:Example File Four.md" --content "Example content four."

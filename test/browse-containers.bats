@@ -172,7 +172,7 @@ export _S=" "
     sleep 1
   done
 
-  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Reconcile .index'
+  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Reconcile Index'
 }
 
 @test "'browse' reconciles root-level .index." {
@@ -233,7 +233,7 @@ HEREDOC
     sleep 1
   done
 
-  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Reconcile .index'
+  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Reconcile Index'
 }
 
 @test "'browse' reconciles nested .index." {
@@ -288,7 +288,7 @@ HEREDOC
     sleep 1
   done
 
-  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Reconcile .index'
+  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Reconcile Index'
 }
 
 # HTML <title> ################################################################

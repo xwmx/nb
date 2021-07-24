@@ -4185,7 +4185,7 @@ _index() {
 
       if ((_commit_changes))
       then
-        NB_AUTO_SYNC=0 _git checkpoint "${_notebook_path}" "[nb] Reconcile .index"
+        _git checkpoint "${_notebook_path}" "[nb] Reconcile Index"
       fi
       ;;
     show)
