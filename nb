@@ -14127,6 +14127,7 @@ _search() {
   local _or_queries=()
   local _page=1
   local _per_page=0
+  local _print_notebook_selectors=0
   local _print_paths=0
   local _query=
   local _search_args=()
@@ -14158,6 +14159,9 @@ _search() {
         ;;
       --no*recur*)
         _max_depth=1
+        ;;
+      --notebook-selectors)
+        _print_notebook_selectors=1
         ;;
       --or)
         [[ "${2:-}" == "-e" ]] && shift
@@ -14992,8 +14996,9 @@ _search() {
             local _info_line_color=
             local _max_identifier=
 
-            if ((_all)) ||
-               [[ "$(_notebooks current --global --path)" != "${_notebook_path}" ]]
+            if ((_all))                       ||
+               ((_print_notebook_selectors))  ||
+               _notebooks current --selected
             then
               local _notebook_name=
               _notebook_name="$(
