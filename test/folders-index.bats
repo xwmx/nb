@@ -29,11 +29,16 @@ HEREDOC
 <https://1.example.test>
 HEREDOC
 
+    sleep 1
+
     cat <<HEREDOC > "${NB_DIR}/home/Example Folder/Sample Folder/two.bookmark.md"
 # Example Title Two
 
 <https://2.example.test>
 HEREDOC
+
+    sleep 1
+
     cat <<HEREDOC > "${NB_DIR}/home/Example Folder/Sample Folder/three.bookmark.md"
 # Example Title Three
 
