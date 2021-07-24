@@ -7,6 +7,112 @@ export NB_SERVER_PORT=6789
 # non-breaking space
 export _S=" "
 
+# notebook: selectors #########################################################
+
+@test "'browse' includes notebook selectors for items in the current notebook." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example One.md" --content "Example content one."
+    "${_NB}" add "Example Two.md" --content "Example content two."
+
+    "${_NB}" add "Sample Folder/Sample One.md" --content "Sample content one."
+    "${_NB}" add "Sample Folder/Sample Two.md" --content "Sample content two."
+  }
+
+  run "${_NB}" browse --print
+
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 0 ]]
+
+  [[    "${output}" =~  \
+\[\</span\>\<span\ class=\"identifier\"\>home:3\</span\>\<span\ class=\"dim\"\>\] ]]
+  [[    "${output}" =~  \
+\[\</span\>\<span\ class=\"identifier\"\>home:2\</span\>\<span\ class=\"dim\"\>\] ]]
+  [[    "${output}" =~  \
+\[\</span\>\<span\ class=\"identifier\"\>home:1\</span\>\<span\ class=\"dim\"\>\] ]]
+
+  run "${_NB}" browse Sample\ Folder/ --print
+
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 0 ]]
+
+  [[    "${output}" =~  \
+\[\</span\>\<span\ class=\"identifier\"\>home:Sample${_S}Folder/2\</span\>\<span\ class=\"dim\"\>\] ]]
+  [[    "${output}" =~  \
+\[\</span\>\<span\ class=\"identifier\"\>home:Sample${_S}Folder/1\</span\>\<span\ class=\"dim\"\>\] ]]
+}
+
+@test "'browse' includes notebook selectors for items in a selected notebook." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" add "Example Notebook:Example One.md" --content "Example content one."
+    "${_NB}" add "Example Notebook:Example Two.md" --content "Example content two."
+
+    "${_NB}" add "Example Notebook:Sample Folder/Sample One.md" --content "Sample content one."
+    "${_NB}" add "Example Notebook:Sample Folder/Sample Two.md" --content "Sample content two."
+  }
+
+  run "${_NB}" Example\ Notebook:browse --print
+
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 0 ]]
+
+  [[    "${output}" =~  \
+\[\</span\>\<span\ class=\"identifier\"\>Example${_S}Notebook:3\</span\>\<span\ class=\"dim\"\>\] ]]
+  [[    "${output}" =~  \
+\[\</span\>\<span\ class=\"identifier\"\>Example${_S}Notebook:2\</span\>\<span\ class=\"dim\"\>\] ]]
+  [[    "${output}" =~  \
+\[\</span\>\<span\ class=\"identifier\"\>Example${_S}Notebook:1\</span\>\<span\ class=\"dim\"\>\] ]]
+
+  run "${_NB}" browse Example\ Notebook:Sample\ Folder/ --print
+
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 0 ]]
+
+  [[    "${output}" =~  \
+\[\</span\>\<span\ class=\"identifier\"\>Example${_S}Notebook:Sample${_S}Folder/2\</span\>\<span\ class=\"dim\"\>\] ]]
+  [[    "${output}" =~  \
+\[\</span\>\<span\ class=\"identifier\"\>Example${_S}Notebook:Sample${_S}Folder/1\</span\>\<span\ class=\"dim\"\>\] ]]
+}
+
+@test "'browse --query <query>' includes notebook selectors for results in a selected notebook." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" add "Example Notebook:Example One.md" --content "Example 123 content."
+    "${_NB}" add "Example Notebook:Example Two.md" --content "Example content."
+
+    "${_NB}" add "Example Notebook:Sample Folder/Sample One.md" --content "Sample content."
+    "${_NB}" add "Example Notebook:Sample Folder/Sample Two.md" --content "Sample 123 content."
+  }
+
+  run "${_NB}" Example\ Notebook:browse --query "123" --print
+
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 0 ]]
+
+  [[    "${output}" =~  \
+\[\</span\>\<span\ class=\"identifier\"\>Example${_S}Notebook:1\</span\>\<span\ class=\"dim\"\>\]                   ]]
+  [[    "${output}" =~  \
+\[\</span\>\<span\ class=\"identifier\"\>Example${_S}Notebook:Sample${_S}Folder/2\</span\>\<span\ class=\"dim\"\>\] ]]
+}
+
 # .index ######################################################################
 
 @test "'browse' reconciles ancestor .index files with incomplete nested .index file." {
@@ -42,7 +148,7 @@ export _S=" "
   [[ "${status}"    -eq 0                                       ]]
 
   [[ "${output}"  =~  \
-\[\</span\>\<span\ class=\"identifier\"\>Example/Sample/Demo/1\</span\>\<span\ class=\"dim\"\>\] ]]
+\[\</span\>\<span\ class=\"identifier\"\>home:Example/Sample/Demo/1\</span\>\<span\ class=\"dim\"\>\] ]]
 
   diff                                                  \
     <(cat "${NB_DIR}/home/Example/.index")              \
@@ -163,7 +269,7 @@ HEREDOC
 
   [[ "${output}"    =~  href=\"//localhost:6789/home:1/4  ]]
   [[ "${output}"    =~  \
-\[\</span\>\<span\ class=\"identifier\"\>Example${_S}Folder/4\</span\>\<span\ class=\"dim\"\>\] ]]
+\[\</span\>\<span\ class=\"identifier\"\>home:Example${_S}Folder/4\</span\>\<span\ class=\"dim\"\>\] ]]
 
   diff                                            \
     <(cat "${NB_DIR}/home/Example Folder/.index") \
