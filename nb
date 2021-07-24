@@ -4691,7 +4691,7 @@ _list() {
           _notebook_path="${_selector_notebook_path}"
         fi
 
-        if [[ "${__argument}" =~ /$ ]]
+        if [[ "${__argument}" =~ /$ ]] && [[ -d "${__argument}" ]]
         then
           _selector_relative_path="${_selector_relative_path}/"
           _folder_relative_path="${_selector_relative_path%\/*}"

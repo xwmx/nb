@@ -312,7 +312,7 @@ load test_helper
   [[   "${status}"    -eq 1     ]]
   [[   "${#lines[@]}" -eq 1     ]]
 
-  [[   "${lines[0]}"  =~  Not\ found:\ .*${NB_DIR}/home/not-valid/does-not-match/  ]]
+  [[   "${lines[0]}"  =~  Not\ found:\ .*${NB_DIR}/home/not-valid/does-not-match  ]]
 }
 
 @test "'list /not/valid/full/path/to/folder' (no slash) with existing notebook exits with 1 and prints message." {
@@ -338,7 +338,7 @@ load test_helper
   [[   "${status}"    -eq 1     ]]
   [[   "${#lines[@]}" -eq 1     ]]
 
-  [[   "${lines[0]}"  =~  Not\ found:\ .*${NB_DIR}/home/not-valid/does-not-match/  ]]
+  [[   "${lines[0]}"  =~  Not\ found:\ .*${NB_DIR}/home/not-valid/does-not-match  ]]
 }
 
 @test "'list /not/valid/full/path/to/folder/' (slash) without existing notebook treats exits with 1 and prints message." {
@@ -364,7 +364,7 @@ load test_helper
   [[   "${status}"    -eq 1     ]]
   [[   "${#lines[@]}" -eq 1     ]]
 
-  [[   "${lines[0]}"  =~  Not\ found:\ .*${NB_DIR}/example/not-valid/does-not-match/  ]]
+  [[   "${lines[0]}"  =~  Not\ found:\ .*${NB_DIR}/example/not-valid/does-not-match  ]]
 }
 
 @test "'list /not/valid/full/path/to/folder' (no slash) without existing notebook treats exits with 1 and prints message." {
@@ -390,7 +390,7 @@ load test_helper
   [[   "${status}"    -eq 1     ]]
   [[   "${#lines[@]}" -eq 1     ]]
 
-  [[   "${lines[0]}"  =~  Not\ found:\ .*${NB_DIR}/example/not-valid/does-not-match/  ]]
+  [[   "${lines[0]}"  =~  Not\ found:\ .*${NB_DIR}/example/not-valid/does-not-match  ]]
 }
 
 @test "'list /full/path/to/folder/' (slash) exits with 0 and lists files in folder in reverse order." {
