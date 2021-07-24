@@ -2,6 +2,190 @@
 
 load test_helper
 
+# notebook: selectors #########################################################
+
+@test "'list --notebook-selectors' includes notebook selectors when listing the root level of the current notebook." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md"    --title "Title One"
+    "${_NB}" add "File Two.md"    --title "Title Two"
+    "${_NB}" add "File Three.md"  --title "Title Three"
+  }
+
+  run "${_NB}" list --notebook-selectors
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                                 ]]
+
+  [[ "${lines[0]}"  =~  .*\[.*home:3.*\].*\ Title\ Three  ]]
+  [[ "${lines[1]}"  =~  .*\[.*home:2.*\].*\ Title\ Two    ]]
+  [[ "${lines[2]}"  =~  .*\[.*home:1.*\].*\ Title\ One    ]]
+}
+
+@test "'list --notebook-selectors' includes notebook selectors when listing a nested folder in the current notebook." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/File One.md"    --title "Title One"
+    "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
+    "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
+  }
+
+  run "${_NB}" list Example\ Folder/ --notebook-selectors
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                                           ]]
+
+  [[ "${lines[0]}"  =~  .*\[.*Example\ Folder/3.*\].*\ Title\ Three ]]
+  [[ "${lines[1]}"  =~  .*\[.*Example\ Folder/2.*\].*\ Title\ Two   ]]
+  [[ "${lines[2]}"  =~  .*\[.*Example\ Folder/1.*\].*\ Title\ One   ]]
+}
+
+@test "'list --notebook-selectors' includes notebook selectors when listing root level of a selected notebook." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" add "Example Notebook:File One.md"    --title "Title One"
+    "${_NB}" add "Example Notebook:File Two.md"    --title "Title Two"
+    "${_NB}" add "Example Notebook:File Three.md"  --title "Title Three"
+  }
+
+  run "${_NB}" list Example\ Notebook: --notebook-selectors
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                                             ]]
+
+  [[ "${lines[0]}"  =~  .*\[.*Example\ Notebook:3.*\].*\ Title\ Three ]]
+  [[ "${lines[1]}"  =~  .*\[.*Example\ Notebook:2.*\].*\ Title\ Two   ]]
+  [[ "${lines[2]}"  =~  .*\[.*Example\ Notebook:1.*\].*\ Title\ One   ]]
+}
+
+@test "'list --notebook-selectors' includes notebook selectors when listing a nested folder of a selected notebook." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" add "Example Notebook:Sample Folder/File One.md"    --title "Title One"
+    "${_NB}" add "Example Notebook:Sample Folder/File Two.md"    --title "Title Two"
+    "${_NB}" add "Example Notebook:Sample Folder/File Three.md"  --title "Title Three"
+  }
+
+  run "${_NB}" list Example\ Notebook:Sample\ Folder/ --notebook-selectors
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                                     ]]
+
+  [[ "${lines[0]}"  =~  \
+.*\[.*Example\ Notebook:Sample\ Folder/3.*\].*\ Title\ Three  ]]
+  [[ "${lines[1]}"  =~  \
+.*\[.*Example\ Notebook:Sample\ Folder/2.*\].*\ Title\ Two    ]]
+  [[ "${lines[2]}"  =~  \
+.*\[.*Example\ Notebook:Sample\ Folder/1.*\].*\ Title\ One    ]]
+}
+
+@test "'list' does not use notebook selectors when listing the root level of the current notebook by default." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md"    --title "Title One"
+    "${_NB}" add "File Two.md"    --title "Title Two"
+    "${_NB}" add "File Three.md"  --title "Title Three"
+  }
+
+  run "${_NB}" list
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                           ]]
+
+  [[ "${lines[0]}"  =~  .*\[.*3.*\].*\ Title\ Three ]]
+  [[ "${lines[1]}"  =~  .*\[.*2.*\].*\ Title\ Two   ]]
+  [[ "${lines[2]}"  =~  .*\[.*1.*\].*\ Title\ One   ]]
+}
+
+@test "'list' does not use notebook selectors when listing a nested folder in the current notebook by default." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/File One.md"    --title "Title One"
+    "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
+    "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
+  }
+
+  run "${_NB}" list Example\ Folder/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                                           ]]
+
+  [[ "${lines[0]}"  =~  .*\[.*Example\ Folder/3.*\].*\ Title\ Three ]]
+  [[ "${lines[1]}"  =~  .*\[.*Example\ Folder/2.*\].*\ Title\ Two   ]]
+  [[ "${lines[2]}"  =~  .*\[.*Example\ Folder/1.*\].*\ Title\ One   ]]
+}
+
+@test "'list' includes notebook selectors when listing root level of a selected notebook by default." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" add "Example Notebook:File One.md"    --title "Title One"
+    "${_NB}" add "Example Notebook:File Two.md"    --title "Title Two"
+    "${_NB}" add "Example Notebook:File Three.md"  --title "Title Three"
+  }
+
+  run "${_NB}" list Example\ Notebook:
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                                             ]]
+
+  [[ "${lines[0]}"  =~  .*\[.*Example\ Notebook:3.*\].*\ Title\ Three ]]
+  [[ "${lines[1]}"  =~  .*\[.*Example\ Notebook:2.*\].*\ Title\ Two   ]]
+  [[ "${lines[2]}"  =~  .*\[.*Example\ Notebook:1.*\].*\ Title\ One   ]]
+}
+
+@test "'list' includes notebook selectors when listing a nested folder of a selected notebook by default." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" add "Example Notebook:Sample Folder/File One.md"    --title "Title One"
+    "${_NB}" add "Example Notebook:Sample Folder/File Two.md"    --title "Title Two"
+    "${_NB}" add "Example Notebook:Sample Folder/File Three.md"  --title "Title Three"
+  }
+
+  run "${_NB}" list Example\ Notebook:Sample\ Folder/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                                     ]]
+
+  [[ "${lines[0]}"  =~  \
+.*\[.*Example\ Notebook:Sample\ Folder/3.*\].*\ Title\ Three  ]]
+  [[ "${lines[1]}"  =~  \
+.*\[.*Example\ Notebook:Sample\ Folder/2.*\].*\ Title\ Two    ]]
+  [[ "${lines[2]}"  =~  \
+.*\[.*Example\ Notebook:Sample\ Folder/1.*\].*\ Title\ One    ]]
+}
+
 # .index ######################################################################
 
 @test "'list' reconciles ancestor .index files with incomplete nested .index file." {

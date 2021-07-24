@@ -4512,6 +4512,7 @@ _list() {
   local _per_page=0
   local _print_excerpt=0
   local _print_indicators=1
+  local _print_notebook_selectors=0
   local _recursive=0
   local _recursive_arguments=()
   local _reverse=0
@@ -4570,6 +4571,9 @@ _list() {
           _limit="${__val:-}"
           shift
         fi
+        ;;
+      --notebook-selectors)
+        _print_notebook_selectors=1
         ;;
       --page)
         _page="$(_option_get_value "${__arg}" "${__val:-}")"
@@ -4824,7 +4828,7 @@ _list() {
     )"
   fi
 
-  if _notebooks current --selected
+  if _notebooks current --selected || ((_print_notebook_selectors))
   then
     local _selected_notebook_name=
     _selected_notebook_name="$(
