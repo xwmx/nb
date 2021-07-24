@@ -25,7 +25,7 @@ load test_helper
 
   ls -t -r "${NB_DIR}/home"
 
-  [[ ${status} -eq 0                                                    ]]
+  [[ "${status}" -eq 0                                                  ]]
   [[ "$(cat "${NB_DIR}/home/.index")" == "$(ls -t -r "${NB_DIR}/home")" ]]
 }
 

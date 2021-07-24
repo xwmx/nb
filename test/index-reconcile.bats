@@ -21,7 +21,7 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
   cat "${NB_DIR}/home/.index"
 
-  [[ ${status} -eq 0                                ]]
+  [[ "${status}" -eq 0                              ]]
   [[ "$(cat "${NB_DIR}/home/.index")" =~ example.md ]]
 
   cd "${NB_DIR}/home" || return 1
@@ -54,8 +54,8 @@ load test_helper
 
   "${_NB}" index verify
 
-  [[ ${status} -eq 0                                              ]]
-  [[ "$(cat "${NB_DIR}/home/.index")" == "${_existing_index}"  ]]
+  [[ "${status}" -eq 0                                        ]]
+  [[ "$(cat "${NB_DIR}/home/.index")" == "${_existing_index}" ]]
 }
 
 @test "'index reconcile' updates when file has been deleted." {
@@ -75,8 +75,8 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
   cat "${NB_DIR}/home/.index"
 
-  [[ ${status} -eq 0                                      ]]
-  [[ ! "$(cat "${NB_DIR}/home/.index")" =~ not-a-file  ]]
+  [[ "${status}" -eq 0                                ]]
+  [[ ! "$(cat "${NB_DIR}/home/.index")" =~ not-a-file ]]
 
   "${_NB}" index verify
 }
@@ -98,8 +98,8 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
   cat "${NB_DIR}/home/.index"
 
-  [[ ${status} -eq 0                                ]]
-  [[ "$(cat "${NB_DIR}/home/.index")" =~ example.md ]]
+  [[ "${status}" -eq 0                                ]]
+  [[ "$(cat "${NB_DIR}/home/.index")" =~ example.md   ]]
 
   "${_NB}" index verify
 }

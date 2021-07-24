@@ -358,9 +358,9 @@ Enter\ a\ new\ value,\ .*unset.*\ to\ use\ the\ global\ value,                ]]
     printf "\${status}: '%s'\\n" "${status}"
     printf "\${output}: '%s'\\n" "${output}"
 
-    [[ ${status} -eq 1                  ]]
-    [[ "${lines[0]}" =~ Name\ reserved  ]]
-    [[ "${lines[0]}" =~ ${__name}       ]]
+    [[ "${status}"    -eq 1               ]]
+    [[ "${lines[0]}"  =~  Name\ reserved  ]]
+    [[ "${lines[0]}"  =~  ${__name}       ]]
   done
 }
 
@@ -379,8 +379,8 @@ Enter\ a\ new\ value,\ .*unset.*\ to\ use\ the\ global\ value,                ]]
     "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)"
   printf "%s\\n" "$(cd "${NB_DIR}" && find . -maxdepth 1)"
 
-  [[ ${status} -eq 1                                          ]]
-  [[ "${lines[1]}" =~ \ \ nb\ notebooks\                      ]]
+  [[ "${status}"    -eq 1                                     ]]
+  [[ "${lines[1]}"  =~  \ \ nb\ notebooks\                    ]]
   [[ "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)" -eq 6  ]]
 }
 
@@ -395,8 +395,8 @@ Enter\ a\ new\ value,\ .*unset.*\ to\ use\ the\ global\ value,                ]]
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1                                          ]]
-  [[ "${lines[0]}" =~ Already\ exists                         ]]
+  [[ "${status}"    -eq 1                                     ]]
+  [[ "${lines[0]}"  =~  Already\ exists                       ]]
   [[ "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)" -eq 6  ]]
 }
 
@@ -411,9 +411,9 @@ Enter\ a\ new\ value,\ .*unset.*\ to\ use\ the\ global\ value,                ]]
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0                                          ]]
-  [[ "${lines[0]}" =~ Added\ notebook\:                       ]]
-  [[ "${lines[0]}" =~ example                                 ]]
+  [[ "${status}"    -eq 0                                     ]]
+  [[ "${lines[0]}"  =~  Added\ notebook\:                     ]]
+  [[ "${lines[0]}"  =~  example                               ]]
   [[ "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)" -eq 7  ]]
 }
 
@@ -427,18 +427,20 @@ Enter\ a\ new\ value,\ .*unset.*\ to\ use\ the\ global\ value,                ]]
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  printf "\$(ls -la \"${NB_DIR}/example/\"): '%s'\\n" \
+  printf                                          \
+    "\$(ls -la \"${NB_DIR}/example/\"): '%s'\\n"  \
     "$(ls -la "${NB_DIR}/example/")"
 
   [[ ${status} -eq 0 ]]
 
-  cd "${NB_DIR}/example" || return 1
-  printf "\$(git log): '%s'\n" "$(git log)"
-  while [[ -n "$(git status --porcelain)" ]]
+  printf "\$(git log): '%s'\n" "$(git -C "${NB_DIR}/example" log)"
+
+  while [[ -n "$(git -C "${NB_DIR}/example" status --porcelain)" ]]
   do
     sleep 1
   done
-  git log | grep -q '\[nb\] Initialize'
+
+  git -C "${NB_DIR}/example" log | grep -q '\[nb\] Initialize'
 }
 
 @test "'notebooks a <name>' exits with 0 and adds a notebook." {
@@ -452,9 +454,9 @@ Enter\ a\ new\ value,\ .*unset.*\ to\ use\ the\ global\ value,                ]]
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0                                          ]]
-  [[ "${output}" =~ Added                                     ]]
-  [[ "${output}" =~ example                                   ]]
+  [[ "${status}"  -eq 0                                       ]]
+  [[ "${output}"  =~  Added                                   ]]
+  [[ "${output}"  =~  example                                 ]]
   [[ "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)" -eq 7  ]]
 }
 
@@ -468,9 +470,9 @@ Enter\ a\ new\ value,\ .*unset.*\ to\ use\ the\ global\ value,                ]]
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0                                          ]]
-  [[ "${output}" =~ Added                                     ]]
-  [[ "${output}" =~ example                                   ]]
+  [[ "${status}"  -eq 0                                       ]]
+  [[ "${output}"  =~  Added                                   ]]
+  [[ "${output}"  =~  example                                 ]]
   [[ "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)" -eq 7  ]]
 }
 
@@ -485,8 +487,8 @@ Enter\ a\ new\ value,\ .*unset.*\ to\ use\ the\ global\ value,                ]]
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0                                          ]]
-  [[ "${output}" =~ Added                                     ]]
-  [[ "${output}" =~ example                                   ]]
+  [[ "${status}"  -eq 0                                       ]]
+  [[ "${output}"  =~  Added                                   ]]
+  [[ "${output}"  =~  example                                 ]]
   [[ "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)" -eq 7  ]]
 }
