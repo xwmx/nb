@@ -10933,7 +10933,6 @@ _add() {
 
   local _target_unique_relative_path=
 
-
   if [[     "${_target_relative_path}" =~ ^\..* ]] &&
      [[ -n  "${_option_relative_path:-}"        ]]
   then

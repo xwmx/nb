@@ -468,7 +468,7 @@ Example: content.\\n")
 
   # Returns status 0:
 
-  [[ "${status}" -eq 0      ]]
+  [[ "${status}" -eq 0                        ]]
 
   # Creates new note file:
 
@@ -503,10 +503,10 @@ HEREDOC
 
   # Adds to index:
 
-  [[ -e "${NB_DIR}/home/.index" ]]
+  [[ -e "${NB_DIR}/home/.index"           ]]
 
-  diff                          \
-    <(ls "${NB_DIR}/home")      \
+  diff                                    \
+    <(ls "${NB_DIR}/home")                \
     <(cat "${NB_DIR}/home/.index")
 
   # Prints output:
@@ -515,7 +515,6 @@ HEREDOC
 }
 
 @test "'add' with piped content includes content from --title and multiple --tags, --content, and arguments separated by newlines and names file to value in --filename when it starts with a '.' (period)." {
-
   {
     "${_NB}" init
   }
@@ -572,8 +571,8 @@ HEREDOC
 
   [[ -e "${NB_DIR}/home/.index"           ]]
 
-  diff                      \
-    <(ls "${NB_DIR}/home")  \
+  diff                                    \
+    <(ls "${NB_DIR}/home")                \
     <(cat "${NB_DIR}/home/.index")
 
   # Prints output:
@@ -583,7 +582,6 @@ HEREDOC
 }
 
 @test "'add' with piped content includes content from --title and multiple --tags, --content, and arguments separated by newlines and names file to value in --filename." {
-
   {
     "${_NB}" init
   }
