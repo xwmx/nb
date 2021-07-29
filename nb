@@ -10662,6 +10662,7 @@ _add() {
   local _edit_before_commit=0
   local _encrypt=0
   local _file_type="${NB_DEFAULT_EXTENSION}"
+  local _file_type_option_specified=0
   local _notebook_path
   _notebook_path="$(_notebooks current --path)"
   local _option_content=
@@ -10734,11 +10735,13 @@ _add() {
       --type)
         _file_type="$(_option_get_value "${__arg}" "${__val:-}")"
         _browse_arguments+=("${__arg}" "${__val:-}")
+        _file_type_option_specified=1
         shift
         ;;
       folder|directory)
         _file_type="folder"
         _browse_arguments+=("${__arg}")
+        _file_type_option_specified=1
         ;;
       *)
         _arguments+=("${__arg:-}")
@@ -10861,15 +10864,22 @@ _add() {
 
   local _target_filename=
 
-  if [[ -n "${_option_relative_path:-}" ]]
+  if [[ -n "${_option_relative_path:-}"   ]]
   then
     _target_filename="${_option_relative_path##*\/}"
-  elif [[ -n "${_selector_filename:-}"  ]]
+  elif [[ -n "${_selector_filename:-}"    ]]
   then
     _target_filename="${_selector_filename:-}"
   fi
 
-  if [[ -z "${_target_filename:-}"      ]]
+  if [[ "${_target_filename:-}" =~ ^\..*  ]] &&
+     ! ((_file_type_option_specified))
+  then
+    _file_type="${_target_filename#\.}"
+    _target_filename=
+  fi
+
+  if [[ -z "${_target_filename:-}"        ]]
   then
     if [[ -n "${_title:-}" ]] &&
        ! _contains "${_file_type:-}" "folder" "directory"
