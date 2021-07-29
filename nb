@@ -10662,8 +10662,7 @@ _add() {
   local _edit_before_commit=0
   local _encrypt=0
   local _file_type="${NB_DEFAULT_EXTENSION}"
-  local _file_type_option_specified=0
-  local _notebook_path
+  local _notebook_path=
   _notebook_path="$(_notebooks current --path)"
   local _option_content=
   local _option_folder_relative_path=
@@ -10735,13 +10734,11 @@ _add() {
       --type)
         _file_type="$(_option_get_value "${__arg}" "${__val:-}")"
         _browse_arguments+=("${__arg}" "${__val:-}")
-        _file_type_option_specified=1
         shift
         ;;
       folder|directory)
         _file_type="folder"
         _browse_arguments+=("${__arg}")
-        _file_type_option_specified=1
         ;;
       *)
         _arguments+=("${__arg:-}")
@@ -10872,14 +10869,8 @@ _add() {
     _target_filename="${_selector_filename:-}"
   fi
 
-  if [[ "${_target_filename:-}" =~ ^\..*  ]] &&
-     ! ((_file_type_option_specified))
-  then
-    _file_type="${_target_filename#\.}"
-    _target_filename=
-  fi
-
-  if [[ -z "${_target_filename:-}"        ]]
+  if [[ -z "${_target_filename:-}"        ]] &&
+     [[ -z "${_option_relative_path:-}"   ]]
   then
     if [[ -n "${_title:-}" ]] &&
        ! _contains "${_file_type:-}" "folder" "directory"
@@ -10938,11 +10929,25 @@ _add() {
   # ------
 
   local _target_relative_path="${_target_folder_relative_path:-}/${_target_filename:-}"
+  _target_relative_path="${_target_relative_path#/}"
+
   local _target_unique_relative_path=
 
-  _target_unique_relative_path="$(
-    _notebooks current --filename "${_target_relative_path}"
-  )"
+
+  if [[     "${_target_relative_path}" =~ ^\..* ]] &&
+     [[ -n  "${_option_relative_path:-}"        ]]
+  then
+    local _target_unique_path=
+    _target_unique_path="$(
+      _get_unique_path "${_notebook_path}/${_target_relative_path}"
+    )"
+
+    _target_unique_relative_path="${_target_unique_path#${_notebook_path}/}"
+  else
+    _target_unique_relative_path="$(
+      _notebooks current --filename "${_target_relative_path}"
+    )"
+  fi
 
   local _target_basename
   _target_basename="$(basename "${_target_unique_relative_path}")"
@@ -11121,13 +11126,15 @@ _add() {
     fi
   fi
 
-  if [[ -e "${_target_path}" ]]
+  if [[ -e "${_target_path}"              ]]
   then
-    _index add                                                \
-      "${_target_basename}"                                   \
-      "${_notebook_path:?}/${_target_folder_relative_path:-}" &&
-      _git checkpoint                                         \
-        "${_notebook_path}"                                   \
+    if [[ ! "${_target_path##*/}" =~ ^\.  ]]
+    then
+      _index add                                                \
+        "${_target_basename}"                                   \
+        "${_notebook_path:?}/${_target_folder_relative_path:-}"
+      fi && _git checkpoint                                     \
+        "${_notebook_path}"                                     \
         "[nb] Add: ${_target_unique_relative_path}"
 
     local _info

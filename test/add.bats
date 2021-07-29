@@ -514,7 +514,7 @@ HEREDOC
   [[ "${lines[0]}" =~ Added:\ .*[.*1.*].*\ .*example_title.md.*\ \"Example\ Title\" ]]
 }
 
-@test "'add' with piped content includes content from --title and multiple --tags, --content, and arguments separated by newlines and a specified file extension." {
+@test "'add' with piped content includes content from --title and multiple --tags, --content, and arguments separated by newlines and names file to value in --filename when it starts with a '.' (period)." {
 
   {
     "${_NB}" init
@@ -528,21 +528,21 @@ HEREDOC
     --tags    tag3,tag4             \
     --content "Option content two." \
     "Argument content two."         \
-    --filename ".markdown" <<< "Piped content."
+    --filename "example.markdown" <<< "Piped content."
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   # Returns status 0:
 
-  [[ "${status}" -eq 0      ]]
+  [[ "${status}" -eq 0                        ]]
 
   # Creates new note file:
 
-  [[ -f "${NB_DIR}/home/example_title.markdown" ]]
+  [[ -f "${NB_DIR}/home/example.markdown"     ]]
 
-  diff                                              \
-    <(cat "${NB_DIR}/home/example_title.markdown")  \
+  diff                                        \
+    <(cat "${NB_DIR}/home/example.markdown")  \
     <(cat <<HEREDOC
 # Example Title
 
@@ -566,11 +566,11 @@ HEREDOC
     sleep 1
   done
   git log --stat
-  git log | grep -q '\[nb\] Add: example_title.markdown'
+  git log | grep -q "\[nb\] Add: example.markdown"
 
   # Adds to index:
 
-  [[ -e "${NB_DIR}/home/.index" ]]
+  [[ -e "${NB_DIR}/home/.index"           ]]
 
   diff                      \
     <(ls "${NB_DIR}/home")  \
@@ -578,7 +578,77 @@ HEREDOC
 
   # Prints output:
 
-  [[ "${lines[0]}" =~ Added:\ .*[.*1.*].*\ .*example_title.markdown.*\ \"Example\ Title\" ]]
+  [[ "${lines[0]}" =~ Added:\ .*[.*1.*].*\ .*                   ]]
+  [[ "${lines[0]}" =~ \example.markdown.*\ \"Example\ Title\"   ]]
+}
+
+@test "'add' with piped content includes content from --title and multiple --tags, --content, and arguments separated by newlines and names file to value in --filename." {
+
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" add                  \
+    "Argument content one."         \
+    --tags    tag1,tag2             \
+    --title   "Example Title"       \
+    --content "Option content one." \
+    --tags    tag3,tag4             \
+    --content "Option content two." \
+    "Argument content two."         \
+    --filename ".markdown" <<< "Piped content."
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0                ]]
+
+  # Creates new note file:
+
+  [[ -f "${NB_DIR}/home/.markdown"    ]]
+
+  diff                                \
+    <(cat "${NB_DIR}/home/.markdown") \
+    <(cat <<HEREDOC
+# Example Title
+
+#tag1 #tag2 #tag3 #tag4
+
+Argument content one. Argument content two.
+
+Option content one.
+
+Option content two.
+
+Piped content.
+HEREDOC
+)
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log --stat
+  git log | grep -q '\[nb\] Add: .markdown'
+
+  # Does not add to index:
+
+  [[ -e "${NB_DIR}/home/.index"           ]]
+  [[ -z "$(cat "${NB_DIR}/home/.index")"  ]]
+
+  diff                      \
+    <(ls "${NB_DIR}/home")  \
+    <(cat "${NB_DIR}/home/.index")
+
+  # Prints output:
+
+  [[ "${lines[0]}" =~ Added:\ .*[.*].*\ .*              ]]
+  [[ "${lines[0]}" =~ \.markdown.*\ \"Example\ Title\"  ]]
 }
 
 # no argument #################################################################
@@ -1779,7 +1849,7 @@ HEREDOC
 
 # --filename option ###########################################################
 
-@test "'add' with --filename option containing extension creates new note with that extension." {
+@test "'add' with --filename option starting with a '.' (period) uses the specified filename without adding to .index." {
   {
     "${_NB}" init
   }
@@ -1789,23 +1859,22 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}" -eq 0      ]]
+  [[ "${status}" -eq  0                                             ]]
+  [[ "${output}" =~   Added:\ .*[.*].*\                             ]]
+  [[ "${output}" =~   .markdown.*\ \"mock_editor\ ${NB_DIR}/home/\" ]]
 
-  _files=($(ls "${NB_DIR}/home/"))
+  [[ -e "${NB_DIR}/home/.markdown"                                  ]]
 
-  printf "\${_files[*]}: '%s'\\n" "${_files[*]:-}"
+  [[ -z "$(cat "${NB_DIR}/home/.index")"                            ]]
 
-  [[ "${#_files[@]}" -eq 1  ]]
 
-  [[ "${_files[0]}" =~ [a-z0-9]+\.markdown ]]
-
-  grep -q '# mock_editor' "${NB_DIR}/home"/*
-
-  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)"       ]]
   do
     sleep 1
   done
-  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Add'
+
+  git -C "${NB_DIR}/home" log
+  git -C "${NB_DIR}/home" log | grep -q "\[nb\] Add: .markdown"
 }
 
 @test "'add' with --filename option exits with 0, creates new note, creates commit." {
