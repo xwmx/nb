@@ -10681,7 +10681,8 @@ _add() {
         _browse=1
         ;;
       -c|--content)
-        _option_content="$(_option_get_value "${__arg}" "${__val:-}")"
+        [[ -n "${_option_content:-}" ]] && _option_content+="${_NEWLINE}${_NEWLINE}"
+        _option_content+="$(_option_get_value "${__arg}" "${__val:-}")"
         _browse_arguments+=("${__arg}" "${__val:-}")
         shift
         ;;
@@ -10719,7 +10720,8 @@ _add() {
         shift
         ;;
       --tag*)
-        _tag_list="$(_option_get_tags "${__arg}" "${__val:-}")"
+        [[ -n "${_tag_list:-}" ]] && _tag_list+=" "
+        _tag_list+="$(_option_get_tags "${__arg}" "${__val:-}")"
         _browse_arguments+=("${__arg}" "${__val:-}")
         shift
         ;;

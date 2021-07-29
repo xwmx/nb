@@ -453,35 +453,33 @@ Example: content.\\n")
 # content #####################################################################
 
 @test "'add' with piped content includes content from --title and multiple --tags, --content, and arguments separated by newlines." {
-  skip "TODO"
   {
     "${_NB}" init
   }
 
-  echo "Piped content." | {
-    run "${_NB}" add                  \
-      "Argument content one."         \
-      --tags    tag1,tag2             \
-      --title   "Example Title"       \
-      --content "Option content one." \
-      --tags    tag3,tag4             \
-      --content "Option content two." \
-      "Argument content two."
+  run "${_NB}" add                  \
+    "Argument content one."         \
+    --tags    tag1,tag2             \
+    --title   "Example Title"       \
+    --content "Option content one." \
+    --tags    tag3,tag4             \
+    --content "Option content two." \
+    "Argument content two." <<< "Piped content."
 
-    printf "\${status}: '%s'\\n" "${status}"
-    printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-    # Returns status 0:
+  # Returns status 0:
 
-    [[ "${status}" -eq 0      ]]
+  [[ "${status}" -eq 0      ]]
 
-    # Creates new note file:
+  # Creates new note file:
 
-    [[ -f "${NB_DIR}/home/example_title.markdown"     ]]
+  [[ -f "${NB_DIR}/home/example_title.md"     ]]
 
-    diff                                              \
-      <(cat "${NB_DIR}/home/example_title.markdown")  \
-      <(cat <<HEREDOC
+  diff                                        \
+    <(cat "${NB_DIR}/home/example_title.md")  \
+    <(cat <<HEREDOC
 # Example Title
 
 #tag1 #tag2 #tag3 #tag4
@@ -496,28 +494,27 @@ Piped content.
 HEREDOC
 )
 
-    # Creates git commit:
+  # Creates git commit:
 
-    cd "${NB_DIR}/home" || return 1
-    while [[ -n "$(git status --porcelain)" ]]
-    do
-      sleep 1
-    done
-    git log --stat
-    git log | grep -q '\[nb\] Add: example_title.markdown'
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log --stat
+  git log | grep -q '\[nb\] Add: example_title.md'
 
-    # Adds to index:
+  # Adds to index:
 
-    [[ -e "${NB_DIR}/home/.index" ]]
+  [[ -e "${NB_DIR}/home/.index" ]]
 
-    diff                          \
-      <(ls "${NB_DIR}/home")      \
-      <(cat "${NB_DIR}/home/.index")
+  diff                          \
+    <(ls "${NB_DIR}/home")      \
+    <(cat "${NB_DIR}/home/.index")
 
-    # Prints output:
+  # Prints output:
 
-    [[ "${lines[0]}" =~ Added:\ .*[.*1.*].*\ .*example_title.markdown.*\ \"Example\ Title\" ]]
-  }
+  [[ "${lines[0]}" =~ Added:\ .*[.*1.*].*\ .*example_title.md.*\ \"Example\ Title\" ]]
 }
 
 @test "'add' with piped content includes content from --title and multiple --tags, --content, and arguments separated by newlines and a specified file extension." {
