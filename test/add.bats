@@ -1779,6 +1779,35 @@ HEREDOC
 
 # --filename option ###########################################################
 
+@test "'add' with --filename option containing extension creates new note with that extension." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" add --filename .markdown
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0      ]]
+
+  _files=($(ls "${NB_DIR}/home/"))
+
+  printf "\${_files[*]}: '%s'\\n" "${_files[*]:-}"
+
+  [[ "${#_files[@]}" -eq 1  ]]
+
+  [[ "${_files[0]}" =~ [a-z0-9]+\.markdown ]]
+
+  grep -q '# mock_editor' "${NB_DIR}/home"/*
+
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Add'
+}
+
 @test "'add' with --filename option exits with 0, creates new note, creates commit." {
   {
     "${_NB}" init
