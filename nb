@@ -20985,6 +20985,9 @@ HEREDOC
     if [[ "${__input}" =~ ^exit$|^quit$|^q$ ]]
     then
       return 0
+    elif [[ "${__input}" =~ ^clear$ ]]
+    then
+      clear
     else
       # Strip leading 'n', 'nb', or 'notes'.
       local _normalized_input=
