@@ -2,6 +2,47 @@
 
 load test_helper
 
+# shortcut alias ##############################################################
+
+@test "'i' with valid <path> argument creates a new note file." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" i "${NB_TEST_BASE_PATH}/fixtures/example.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${lines[0]}" =~ \
+Imported\ .*\[.*1.*\].*\ .*example.md.*\ \"Example\ Title\"\ from\    ]]
+  [[ "${lines[0]}" =~ \
+ \"Example\ Title\"\ from\ .*${NB_TEST_BASE_PATH}/fixtures/example.md ]]
+
+  # Adds file.
+
+  diff                                                                \
+    <(cat "${NB_TEST_BASE_PATH}/fixtures/example.md")                 \
+    <(cat "${NB_DIR}/home/example.md")
+
+  # Adds to index.
+
+  [[ -e "${NB_DIR}/home/.index"                                       ]]
+
+  diff                                                                \
+    <(ls "${NB_DIR}/home")                                            \
+    <(cat "${NB_DIR}/home/.index")
+
+  # Creates git commit.
+
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)"         ]]
+  do
+    sleep 1
+  done
+
+  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Import'
+}
+
 # local notebook ##############################################################
 
 @test "'import <path> <folder>/' with local notebook imports file." {

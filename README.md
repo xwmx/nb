@@ -3871,9 +3871,10 @@ that could inform a strategy for handling any such cases automatically.
   </sup>
 </p>
 
-Files of any type can be imported into a notebook using [`nb import`](#import).
-[`nb edit`](#edit) and [`nb open`](#open)
-will open files in your system's default application for that file type.
+Files of any type can be imported into a notebook using
+[`nb import`](#import) (shortcut: `nb i`).
+[`nb edit`](#edit) and [`nb open`](#open) open files in
+your system's default application for that file type.
 
 ```bash
 # import an image file
@@ -5938,6 +5939,8 @@ Examples:
   nb import ./*.md
   nb import ~/Pictures/example.png example-notebook:
   nb import ~/Documents/example.docx example-folder/
+
+Shortcut Alias: `nb i`
 ```
 
 #### `init`
