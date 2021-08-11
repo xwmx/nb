@@ -4,7 +4,7 @@ load test_helper
 
 # shortcut alias ##############################################################
 
-@test "'i' with valid <path> argument creates a new note file." {
+@test "'i' with valid <path> argument imports file." {
   {
     "${_NB}" init
   }
