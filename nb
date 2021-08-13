@@ -17936,8 +17936,7 @@ HEREDOC
       printf "<p>"
 
       local _first=1
-      local _separator="<span class=\"dim\">·</span>"
-      local _test_line=
+      local _separator="·"
 
       local __name=
       for   __name in "${_notebook_names[@]:-}"
@@ -17945,26 +17944,17 @@ HEREDOC
         if ((_first))
         then
           _first=0
-
-          printf --                                 \
-            "<a href=\"//%s:%s/%s:%s\">%s</a>"      \
-            "${NB_SERVER_HOST}"                     \
-            "${NB_SERVER_PORT}"                     \
-            "${__name//' '/%20}"                    \
-            "${_url_param_string/&/?}"              \
-            "${__name//\ /${_NBSP}}"
         else
-          printf --                                 \
-            "%s%s <a href=\"//%s:%s/%s:%s\">%s</a>" \
-            "${_NBSP}"                              \
-            "${_separator}"                         \
-            "${NB_SERVER_HOST}"                     \
-            "${NB_SERVER_PORT}"                     \
-            "${__name//' '/%20}"                    \
-            "${_url_param_string/&/?}"              \
-            "${__name//\ /${_NBSP}}"
+          printf "%s<span class=\"dim\">%s</span> " "${_NBSP}" "${_separator}"
         fi
 
+        printf                                \
+          "<a href=\"//%s:%s/%s:%s\">%s</a>"  \
+          "${NB_SERVER_HOST}"                 \
+          "${NB_SERVER_PORT}"                 \
+          "${__name//' '/%20}"                \
+          "${_url_param_string/&/?}"          \
+          "${__name//\ /${_NBSP}}"
       done
 
       printf "</p>\\n"
