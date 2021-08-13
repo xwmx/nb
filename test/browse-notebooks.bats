@@ -31,7 +31,6 @@ export _S=" "
   [[ "${status}"  ==  0                   ]]
   [[ "${output}"  =~  \<\!DOCTYPE\ html\> ]]
 
-
   printf "%s\\n" "${output}" | grep   -q \
 "<nav class=\"header-crumbs\"><h1>"
 
@@ -63,7 +62,6 @@ export _S=" "
 
   [[ "${status}"  ==  0                   ]]
   [[ "${output}"  =~  \<\!DOCTYPE\ html\> ]]
-
 
   printf "%s\\n" "${output}" | grep   -q \
 "<nav class=\"header-crumbs\"><h1>"
@@ -142,7 +140,6 @@ export _S=" "
   [[ "${status}"  ==  0                   ]]
   [[ "${output}"  =~  \<\!DOCTYPE\ html\> ]]
 
-
   printf "%s\\n" "${output}" | grep     -q \
 "<nav class=\"header-crumbs\"><h1>"
 
@@ -198,7 +195,6 @@ export _S=" "
   [[ "${status}"  ==  0                   ]]
   [[ "${output}"  =~  \<\!DOCTYPE\ html\> ]]
 
-
   printf "%s\\n" "${output}" | grep   -q \
 "<nav class=\"header-crumbs\"><h1>"
 
@@ -248,7 +244,6 @@ export _S=" "
   [[ "${status}"  ==  0                   ]]
   [[ "${output}"  =~  \<\!DOCTYPE\ html\> ]]
 
-
   printf "%s\\n" "${output}" | grep   -q \
 "<nav class=\"header-crumbs\"><h1>"
 
@@ -287,7 +282,6 @@ export _S=" "
     [[    -d "${NB_DIR}/Demo Notebook"  ]]
     [[ !  -e "${NB_DIR}/home"           ]]
 
-
     (ncat                                   \
       --exec "${_NB} browse --respond"      \
       --listen                              \
@@ -304,7 +298,6 @@ export _S=" "
 
   [[ "${status}"  ==  0                   ]]
   [[ "${output}"  =~  \<\!DOCTYPE\ html\> ]]
-
 
   printf "%s\\n" "${output}" | grep   -q \
 "<nav class=\"header-crumbs\"><h1>"
