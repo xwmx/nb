@@ -17940,6 +17940,7 @@ HEREDOC
       printf "<p>"
 
       local _first=1
+      local _test_line=
 
       local __name=
       for   __name in "${_notebook_names[@]:-}"
@@ -17947,8 +17948,18 @@ HEREDOC
         if ((_first))
         then
           _first=0
+          _test_line+="${__name}${_NBSP}${_MD}"
         else
-          printf "%s<span class=\"dim\">%s</span> " "${_NBSP}" "${_MD}"
+          _test_line+=" ${__name}${_NBSP}${_MD}"
+
+          if _contains "--columns" "${_pagination_options[@]:-}" &&
+             [[ "${#_test_line}" -gt "${_columns}" ]]
+          then
+            printf "<br>\\n"
+            _test_line="${__name}${_NBSP}${_MD}"
+          else
+            printf "%s<span class=\"dim\">%s</span> " "${_NBSP}" "${_MD}"
+          fi
         fi
 
         printf                                \
