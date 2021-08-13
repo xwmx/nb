@@ -1115,9 +1115,14 @@ _COLUMNS="$(tput cols)"
 # An array of supported aggregate file types.
 _FILE_TYPES=(archive audio bookmark document folder image text video)
 
+# $_MD
+#
+# Middle dot character.
+_MD="·"
+
 # $_NBSP
 #
-# Unicode non-breaking space.
+# No-break space character.
 _NBSP=" "
 
 # $_NEWLINE
@@ -5188,7 +5193,7 @@ _list() {
       then
         if [[ -n "${_first_line:-}" ]]
         then
-          _item_info="${_item_info} · \"${_first_line}\""
+          _item_info="${_item_info} ${_MD} \"${_first_line}\""
         fi
       fi
 
@@ -5527,7 +5532,7 @@ _ls() {
   _ls_print_footer() {
     local _footer_line_hi=
     local _footer_line_raw=
-    local _footer_separator_raw=" ·"
+    local _footer_separator_raw=" ${_MD}"
     local _footer_test_line=
     local _maybe_notebook=
     local _maybe_selector_scope=
@@ -5722,7 +5727,7 @@ _ls() {
 
     if ! ((_plain))
     then
-      _separator=" ·"
+      _separator=" ${_MD}"
       _separator_hi="$(_color_dim "${_separator}")"
     fi
 
@@ -14987,8 +14992,8 @@ _search() {
               if [[ -n "${_content}"                  ]] &&
                  [[ ! "${_content}" =~ ^__first_line: ]]
               then
-                _file_info="${_filename} · ${_content}"
-                _file_info_color="${_filename_color} · ${_content}"
+                _file_info="${_filename} ${_MD} ${_content}"
+                _file_info_color="${_filename_color} ${_MD} ${_content}"
               else
                 _file_info="${_filename}"
                 _file_info_color="${_filename_color}"
@@ -14998,8 +15003,8 @@ _search() {
 
               if [[ "${_content:-}" =~ ^__first_line: ]]
               then
-                _file_info="${_filename} · \"${_content#__first_line:}\""
-                _file_info_color="${_filename_color} · \"${_content#__first_line:}\""
+                _file_info="${_filename} ${_MD} \"${_content#__first_line:}\""
+                _file_info_color="${_filename_color} ${_MD} \"${_content#__first_line:}\""
               elif [[ -n "${_content:-}" ]]
               then
                 _file_info="${_content}"
@@ -17045,7 +17050,7 @@ HEREDOC
 
       if ((_print_prev)) && ((_print_next))
       then
-        printf " <span class=\"dim\">·</span> "
+        printf " <span class=\"dim\">%s</span> " "${_MD}"
       fi
 
       if ((_print_next))
@@ -17321,7 +17326,7 @@ HEREDOC
 <br><br>
 <input
   type="submit"
-  value="save"> <span class="dim">·</span> <span class="dim last-saved">last: ${_last_saved_at}</span>
+  value="save"> <span class="dim">${_MD}</span> <span class="dim last-saved">last: ${_last_saved_at}</span>
 $(_browse_render_option_fields "${_subcommand_options[@]:-}")
 </form>
 HEREDOC
@@ -17357,7 +17362,6 @@ HEREDOC
   #   Print a context-aware, linked nav header.
   _browse_render_header() {
     local _action=
-    local _bullet="·"
     local _columns="${NB_BROWSE_COLUMNS:-70}"
     local _encoded_local_notebook_path=
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
@@ -17411,7 +17415,7 @@ HEREDOC
 
     local _header_content="\
 <a href=\"//${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_url_param_string:-}\"><span class=\"dim\">❯</span>nb</a>"
-    _header_content+=" <span class=\"dim\">${_bullet}</span>"
+    _header_content+=" <span class=\"dim\">${_MD}</span>"
 
     if [[ -z "${_selector:-}"       ]]
     then
@@ -17543,29 +17547,29 @@ HEREDOC
 
       if [[ -n "${_raw_url:-}" ]]
       then
-        _header_content+=" <span class=\"dim\">${_bullet}</span>"
+        _header_content+=" <span class=\"dim\">${_MD}</span>"
         _header_content+=" <a href=\"${_raw_url}\">↓</a>"
       fi
 
       if [[ "${_action:-}"  == "edit"   ]]
       then
-        _header_content+=" <span class=\"dim\">${_bullet}</span>"
+        _header_content+=" <span class=\"dim\">${_MD}</span>"
         _header_content+=" <span class=\"dim\">editing</span>"
       elif _file_is_text "${_selector:-}"
       then
-        _header_content+=" <span class=\"dim\">${_bullet}</span>"
+        _header_content+=" <span class=\"dim\">${_MD}</span>"
         _header_content+="\
  <a href=\"//${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_id_selector:-}${_url_params_ext:-}--edit\">edit</a>"
       fi
 
       case "${_action:-}" in
         delete)
-          _header_content+=" <span class=\"dim\">${_bullet}</span>"
+          _header_content+=" <span class=\"dim\">${_MD}</span>"
           _header_content+=" <span class=\"dim\">-</span>"
           _header_content+=" <span class=\"dim\">|</span>"
           ;;
         edit)
-          _header_content+=" <span class=\"dim\">${_bullet}</span>"
+          _header_content+=" <span class=\"dim\">${_MD}</span>"
           _header_content+="\
  <a href=\"//${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_id_selector:-}${_url_params_ext:-}--delete\">-</a>"
           _header_content+=" <span class=\"dim\">|</span>"
@@ -17936,7 +17940,6 @@ HEREDOC
       printf "<p>"
 
       local _first=1
-      local _separator="·"
 
       local __name=
       for   __name in "${_notebook_names[@]:-}"
@@ -17945,7 +17948,7 @@ HEREDOC
         then
           _first=0
         else
-          printf "%s<span class=\"dim\">%s</span> " "${_NBSP}" "${_separator}"
+          printf "%s<span class=\"dim\">%s</span> " "${_NBSP}" "${_MD}"
         fi
 
         printf                                \
