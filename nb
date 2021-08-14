@@ -17886,6 +17886,7 @@ HEREDOC
   # Description:
   #   Print an HTML page listing notebooks.
   _browse_render_notebooks() {
+    local _add_line_breaks=0
     local _columns="${NB_BROWSE_COLUMNS:-70}"
     local _encoded_local_notebook_path=
     local _pagination_options=()
@@ -17897,6 +17898,7 @@ HEREDOC
         --col*)
           _columns="$(_option_get_value "${1:-}" "${2:-}")"
           _pagination_options+=("${1:-}" "${2:?}")
+          _add_line_breaks=1
           shift
           ;;
         --local)
@@ -17914,6 +17916,7 @@ HEREDOC
           ;;
         --terminal)
           _pagination_options+=("--terminal")
+          _add_line_breaks=1
           ;;
       esac
 
@@ -17952,8 +17955,7 @@ HEREDOC
         else
           _test_line+=" ${__name}${_NBSP}${_MD}"
 
-          if _contains "--columns" "${_pagination_options[@]:-}" &&
-             [[ "${#_test_line}" -gt "${_columns}" ]]
+          if ((_add_line_breaks)) && [[ "${#_test_line}" -gt "${_columns}" ]]
           then
             printf "<br>\\n"
             _test_line="${__name}${_NBSP}${_MD}"
