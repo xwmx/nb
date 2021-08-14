@@ -40,6 +40,32 @@ _search_all_setup() {
   [[ -e "${NB_DIR}/two/.archived" ]]
 }
 
+# binary ######################################################################
+
+@test "'search <query>' prints single match message when matching binary content." {
+  {
+    "${_NB}" init
+    "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/example.pdf"
+  }
+
+  run "${_NB}" search "a"
+
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
+  printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
+
+  [[    "${status}"     -eq 0                                       ]]
+  [[    "${#lines[@]}"  -eq 6                                       ]]
+
+  [[    "${lines[0]}"   =~  .*\[.*1.*\].*\ 📄\ .*ex.*a.*mple.pdf    ]]
+  [[    "${lines[1]}"   =~  ^.*------------------.*$                ]]
+  [[    "${lines[2]}"   =~  Filename\ Match:.*\ .*ex.*a.*mple.pdf   ]]
+  [[    "${lines[3]}"   =~  .*\[.*1.*\].*\ 📄\ .*ex.*a.*mple.pdf    ]]
+  [[    "${lines[4]}"   =~  ^.*------------------.*$                ]]
+  [[    "${lines[5]}"   =~  Binary\ file\ matches.                  ]]
+  [[ -z "${lines[6]}"                                               ]]
+}
+
 # `search` ####################################################################
 
 @test "'search' with no arguments exits with status 1 and prints help information." {

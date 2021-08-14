@@ -14811,6 +14811,7 @@ _search() {
           fi
         fi
       } | {
+        local _binary_match_message_printed=0
         local _paginated_count=0
         local _pagination_max="$((_page * _per_page))"
         local _pagination_min="$(((_page * _per_page) - _per_page))"
@@ -15075,9 +15076,11 @@ _search() {
               printf "%s" "${_info_line_color}"
               ((_COLOR_ENABLED)) && _wrap on
               printf "\\n"
+
+              _binary_match_message_printed=0
             fi
 
-            if ((_only_list))
+            if ((_only_list)) || ((_binary_match_message_printed))
             then
               [[ -n "${_path}" ]] && _last_path="${_path}"
               continue
@@ -15112,6 +15115,7 @@ _search() {
             elif ! _file_is_text "${_folder_path}/${_filename}"
             then
               _content_line_with_hit="Binary file matches."
+              _binary_match_message_printed=1
             else
               _content_line_with_hit="$(
                 printf "%s\\n" "${__line}" | cut -d: -f 2-
