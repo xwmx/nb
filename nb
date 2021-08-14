@@ -16361,7 +16361,10 @@ _browse() {
       shift
     done
 
-    [[ -z "${_selector:-}" ]] && _browse_respond_with 404
+    if [[ -z "${_selector:-}" ]]
+    then
+      _browse_respond_with 404
+    fi
 
     local _notebook_path=
     _notebook_path="$(
@@ -16495,7 +16498,10 @@ _browse() {
       shift
     done
 
-    [[ -z "${_source_path:-}" ]] && _browse_respond_with 404
+    if [[ -z "${_source_path:-}" ]]
+    then
+      _browse_respond_with 404
+    fi
 
     local _notebook_path=
     _notebook_path="$(
