@@ -16779,7 +16779,7 @@ HEREDOC
       _target_path="$(_notebooks current --path)"
     fi
 
-    local _escaped_query=
+    local _encoded_query=
 
     if [[ -n "${_query:-}" ]]
     then
@@ -16788,7 +16788,7 @@ HEREDOC
         printf "%s" "${_query}" | xargs -n 1 printf "%s\\n"
       ))
 
-      _escaped_query="$(
+      _encoded_query="$(
         sed                     \
           -e 's/&/\&amp;/g'     \
           -e 's/</\&lt;/g'      \
@@ -16977,7 +16977,7 @@ HEREDOC
   name="--query"
   placeholder="search"
   type="text"
-  value="${_escaped_query}">
+  value="${_encoded_query}">
 <i></i>
 <input type="hidden" name="--page"      value="${_current_page}">
 <input type="hidden" name="--per-page"  value="${_per_page}">
@@ -17086,9 +17086,9 @@ HEREDOC
         _html_title+=" ${_current_selector// /\\ }"
       fi
 
-      if [[ -n "${_escaped_query:-}"    ]]
+      if [[ -n "${_encoded_query:-}"    ]]
       then
-        _html_title+=" --query \"${_escaped_query:-}\""
+        _html_title+=" --query \"${_encoded_query:-}\""
       fi
 
       if [[ "${_current_page:-0}" -gt 1 ]]
