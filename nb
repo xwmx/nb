@@ -2259,6 +2259,9 @@ _list_files() {
 # Description:
 #   Display standard input in the preferred pager, `less`, `bat`, or `cat`.
 _pager() {
+  local _less_options=()
+  _less_options=(-R --CLEAR-SCREEN --prompt="$(_less_prompt)")
+
   if [[ -n  "${PAGER:-}"          ]]
   then
     local _pager_command=()
@@ -2266,16 +2269,16 @@ _pager() {
 
     if [[   "${PAGER:-}" =~ less  ]]
     then
-      "${_pager_command[@]:-less}" -R --CLEAR-SCREEN --prompt="$(_less_prompt)"
+      "${_pager_command[@]:-less}" "${_less_options[@]:-}"
     else
-      "${_pager_command[@]:-}"
+      "${_pager_command[@]:-cat}"
     fi
+  elif _command_exists "less"
+  then
+    less "${_less_options[@]:-}"
   elif _command_exists "bat"
   then
       bat --style numbers,grid
-  elif _command_exists "less"
-  then
-    less -R --CLEAR-SCREEN --prompt="$(_less_prompt)"
   else
     cat
   fi
