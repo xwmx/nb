@@ -3,6 +3,34 @@
 
 load test_helper
 
+# error handling ##############################################################
+
+@test "'help example' exits with 0 and prints message." {
+  run "${_NB}" help example
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                               ]]
+  [[ "${#lines[@]}" -eq 1                               ]]
+
+  [[ "${lines[0]}"  =~  \
+No\ additional\ information\ for\ .*\`.*example.*\`.*$  ]]
+}
+
+@test "'help example:' exits with 0 and prints message." {
+  run "${_NB}" help example:
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                               ]]
+  [[ "${#lines[@]}" -eq 1                               ]]
+
+  [[ "${lines[0]}"  =~  \
+No\ additional\ information\ for\ .*\`.*example:.*\`.*$ ]]
+}
+
 # color #######################################################################
 
 @test "'help' and 'help <subcommand>' respect --no-color option." {

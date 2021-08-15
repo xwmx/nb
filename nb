@@ -2757,7 +2757,9 @@ describe() {
     local _name="${2:-}"
     local _describe_var="____DESCRIBE_${_name}"
 
-    if [[ ! "${_name}" =~ ^\- ]] && [[ -n "${!_describe_var:-}" ]]
+    if [[ !   "${_name}" =~ ^\-             ]] &&
+       [[     "${_name}" =~ ^[A-Za-z0-0]+$  ]] &&
+       [[ -n  "${!_describe_var:-}"         ]]
     then
       printf "%s\\n" "${!_describe_var}"
     elif _command_exists "_describe_${_name:-}"
