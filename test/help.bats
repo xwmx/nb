@@ -6,29 +6,29 @@ load test_helper
 # error handling ##############################################################
 
 @test "'help example' exits with 0 and prints message." {
-  run "${_NB}" help example
+  run "${_NB}" help example_name_123
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0                               ]]
-  [[ "${#lines[@]}" -eq 1                               ]]
+  [[ "${status}"    -eq 0                                       ]]
+  [[ "${#lines[@]}" -eq 1                                       ]]
 
   [[ "${lines[0]}"  =~  \
-No\ additional\ information\ for\ .*\`.*example.*\`.*$  ]]
+No\ additional\ information\ for\ .*\`.*example_name_123.*\`.*$ ]]
 }
 
 @test "'help example:' exits with 0 and prints message." {
-  run "${_NB}" help example:
+  run "${_NB}" help example:name:123
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0                               ]]
-  [[ "${#lines[@]}" -eq 1                               ]]
+  [[ "${status}"    -eq 0                                       ]]
+  [[ "${#lines[@]}" -eq 1                                       ]]
 
   [[ "${lines[0]}"  =~  \
-No\ additional\ information\ for\ .*\`.*example:.*\`.*$ ]]
+No\ additional\ information\ for\ .*\`.*example:name:123.*\`.*$ ]]
 }
 
 # color #######################################################################
