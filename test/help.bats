@@ -39,8 +39,7 @@ No\ additional\ information\ for\ .*\`.*example:.*\`.*$ ]]
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}" -eq 0             ]]
-
+  [[    "${status}" -eq 0                                           ]]
   [[    "${output}" =~  \
 nb\ -h\ \|\ \-\-help\ \|\ help\ \[\<subcommand\>\ \|\ \-\-readme\]  ]]
 
@@ -49,8 +48,7 @@ nb\ -h\ \|\ \-\-help\ \|\ help\ \[\<subcommand\>\ \|\ \-\-readme\]  ]]
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}" -eq  0            ]]
-
+  [[    "${status}" -eq  0                                          ]]
   [[    "${output}" =~  \[\-s\ \|\ \-\-serve\]                      ]]
 }
 
@@ -60,7 +58,7 @@ nb\ -h\ \|\ \-\-help\ \|\ help\ \[\<subcommand\>\ \|\ \-\-readme\]  ]]
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}" -eq 0             ]]
+  [[    "${status}" -eq 0                                                             ]]
 
   [[    "${output}" =~  \
 nb\ -h\ .*\|.*\ \-\-help\ .*\|.*\ help\ .*\[.*\<subcommand\>\ .*\|.*\ \-\-readme.*\]  ]]
@@ -72,7 +70,7 @@ nb\ -h\ \|\ \-\-help\ \|\ help\ \[\<subcommand\>\ \|\ \-\-readme\]              
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}" -eq  0            ]]
+  [[    "${status}" -eq  0                              ]]
 
   [[    "${output}" =~  \[.*\-s\ .*\|.*\ \-\-serve.*\]  ]]
   [[ !  "${output}" =~  \[\-s\ \|\ \-\-serve\]          ]]
