@@ -5313,8 +5313,13 @@ Examples:
   nb example:a
   nb example:a -t "Title"
 
-Aliases: `nb create`, `nb new`
-Shortcut Aliases: `nb a`, `nb +`
+Aliases:
+  nb create
+  nb new
+
+Shortcut Aliases:
+  nb a
+  nb +
 ```
 
 #### `archive`
@@ -5346,7 +5351,8 @@ Examples:
   nb archive
   nb archive example
 
-Shortcut Alias: `nb ar`
+Shortcut Alias:
+  nb ar
 ```
 
 #### `bookmark`
@@ -5452,7 +5458,8 @@ Examples:
   nb bookmark open 5
   nb bk
 
-Shortcut Alias: `nb bk`
+Shortcut Alias:
+  nb bk
 ```
 
 #### `browse`
@@ -5554,7 +5561,8 @@ Examples:
   nb browse demo:456
   nb br
 
-Shortcut Alias: `nb br`
+Shortcut Alias:
+  nb br
 ```
 
 #### `completions`
@@ -5637,7 +5645,9 @@ Examples:
   nb d example:12
   nb example:12 d
 
-Shortcut Aliases: `nb d`, `nb -`
+Shortcut Aliases:
+  nb d
+  nb -
 ```
 
 #### `edit`
@@ -5700,7 +5710,8 @@ Examples:
   nb e example:12
   nb example:12 e
 
-Shortcut Alias: `nb e`
+Shortcut Alias:
+  nb e
 ```
 
 #### `env`
@@ -5858,7 +5869,8 @@ Examples:
   nb h notebooks
   nb h e
 
-Shortcut Alias: `nb h`
+Shortcut Alias:
+  nb h
 ```
 
 #### `history`
@@ -5946,7 +5958,8 @@ Examples:
   nb import ~/Pictures/example.png example-notebook:
   nb import ~/Documents/example.docx example-folder/
 
-Shortcut Alias: `nb i`
+Shortcut Alias:
+  nb i
 ```
 
 #### `init`
@@ -6204,8 +6217,11 @@ Examples:
   # change the file extension of note 5 to .org
   nb rename 5 .org
 
-Alias: `nb rename`
-Shortcut Alias: `nb mv`
+Alias:
+  nb rename
+
+Shortcut Alias:
+  nb mv
 ```
 
 #### `notebooks`
@@ -6323,7 +6339,9 @@ Examples:
   nb nb current --path
   nb nb archive example
 
-Shortcut Aliases: `nb n`, `nb nb`
+Shortcut Aliases:
+  nb n
+  nb nb
 ```
 
 #### `open`
@@ -6366,7 +6384,8 @@ Examples:
   nb o example:12
   nb example:12 o
 
-Shortcut Alias: `nb o`
+Shortcut Alias:
+  nb o
 ```
 
 #### `peek`
@@ -6414,8 +6433,11 @@ Examples:
   nb p example:12
   nb example:12 p
 
-Alias: `nb preview`
-Shortcut Alias: `nb p`
+Alias:
+  nb preview
+
+Shortcut Alias:
+  nb p
 ```
 
 #### `pin`
@@ -6636,7 +6658,8 @@ Examples:
   # search all notebooks for "example query" and list matching items
   nb q -la "example query"
 
-Shortcut Alias: `nb q`
+Shortcut Alias:
+  nb q
 ```
 
 #### `settings`
@@ -6694,7 +6717,8 @@ Examples:
   nb settings colors 105
   nb set limit 15
 
-Alias: `nb set`
+Alias:
+  nb set
 ```
 
 ##### `auto_sync`
@@ -7109,7 +7133,8 @@ Examples:
   nb status
   nb status example
 
-Shortcut Alias: `nb st`
+Shortcut Alias:
+  nb st
 ```
 
 #### `subcommands`
@@ -7231,7 +7256,8 @@ Examples:
   nb unarchive
   nb unarchive example
 
-Shortcut Alias: `nb unar`
+Shortcut Alias:
+  nb unar
 ```
 
 #### `unpin`
@@ -7289,7 +7315,8 @@ Examples:
   nb unset color_primary
   nb unset 2
 
-Alias: `nb reset`
+Alias:
+  nb reset
 ```
 
 #### `update`
@@ -7341,7 +7368,8 @@ See Also:
 Example:
   nb use example
 
-Shortcut Alias: `nb u`
+Shortcut Alias:
+  nb u
 ```
 
 #### `version`

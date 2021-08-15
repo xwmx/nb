@@ -3419,7 +3419,8 @@ $(_color_primary "Examples"):
   ${_ME} h notebooks
   ${_ME} h e
 
-$(_color_primary "Shortcut Alias"): \`${_ME} h\`
+$(_color_primary "Shortcut Alias"):
+  ${_ME} h
 HEREDOC
 }
 _help() {
@@ -6323,7 +6324,9 @@ $(_color_primary "Examples"):
   ${_ME} nb current --path
   ${_ME} nb archive example
 
-$(_color_primary "Shortcut Aliases"): \`${_ME} n\`, \`${_ME} nb\`
+$(_color_primary "Shortcut Aliases"):
+  ${_ME} n
+  ${_ME} nb
 HEREDOC
 }
 _RESERVED_NOTEBOOK_NAMES=(
@@ -10659,8 +10662,13 @@ $(_color_primary "Examples"):
   ${_ME} example:a
   ${_ME} example:a -t "Title"
 
-$(_color_primary "Aliases"): \`${_ME} create\`, \`${_ME} new\`
-$(_color_primary "Shortcut Aliases"): \`${_ME} a\`, \`${_ME} +\`
+$(_color_primary "Aliases"):
+  ${_ME} create
+  ${_ME} new
+
+$(_color_primary "Shortcut Aliases"):
+  ${_ME} a
+  ${_ME} +
 HEREDOC
 }
 _add() {
@@ -11254,7 +11262,8 @@ $(_color_primary "Examples"):
   ${_ME} bookmark open 5
   ${_ME} bk
 
-$(_color_primary "Shortcut Alias"): \`${_ME} bk\`
+$(_color_primary "Shortcut Alias"):
+  ${_ME} bk
 HEREDOC
 }
 _bookmark() {
@@ -12223,7 +12232,9 @@ $(_color_primary "Examples"):
   ${_ME} d example:12
   ${_ME} example:12 d
 
-$(_color_primary "Shortcut Aliases"): \`${_ME} d\`, \`${_ME} -\`
+$(_color_primary "Shortcut Aliases"):
+  ${_ME} d
+  ${_ME} -
 HEREDOC
 }
 _delete() {
@@ -12419,7 +12430,8 @@ $(_color_primary "Examples"):
   ${_ME} e example:12
   ${_ME} example:12 e
 
-$(_color_primary "Shortcut Alias"): \`${_ME} e\`
+$(_color_primary "Shortcut Alias"):
+  ${_ME} e
 HEREDOC
 }
 _edit() {
@@ -13163,7 +13175,8 @@ $(_color_primary "Examples"):
   ${_ME} import ~/Pictures/example.png example-notebook:
   ${_ME} import ~/Documents/example.docx example-folder/
 
-$(_color_primary "Shortcut Alias"): \`${_ME} i\`
+$(_color_primary "Shortcut Alias"):
+  ${_ME} i
 HEREDOC
 }
 _import() {
@@ -13513,8 +13526,11 @@ $(_color_primary "Examples"):
   # change the file extension of note 5 to .org
   ${_ME} rename 5 .org
 
-$(_color_primary "Alias"): \`${_ME} rename\`
-$(_color_primary "Shortcut Alias"): \`${_ME} mv\`
+$(_color_primary "Alias"):
+  ${_ME} rename
+
+$(_color_primary "Shortcut Alias"):
+  ${_ME} mv
 HEREDOC
 }
 _move() {
@@ -13845,7 +13861,8 @@ $(_color_primary "Examples"):
   ${_ME} o example:12
   ${_ME} example:12 o
 
-$(_color_primary "Shortcut Alias"): \`${_ME} o\`
+$(_color_primary "Shortcut Alias"):
+  ${_ME} o
 HEREDOC
 }
 _open() {
@@ -13898,8 +13915,11 @@ $(_color_primary "Examples"):
   ${_ME} p example:12
   ${_ME} example:12 p
 
-$(_color_primary "Alias"): \`${_ME} preview\`
-$(_color_primary "Shortcut Alias"): \`${_ME} p\`
+$(_color_primary "Alias"):
+  ${_ME} preview
+
+$(_color_primary "Shortcut Alias"):
+  ${_ME} p
 HEREDOC
 }
 _peek() {
@@ -14137,7 +14157,8 @@ $(_color_primary "Examples"):
   # search all notebooks for "example query" and list matching items
   ${_ME} q -la "example query"
 
-$(_color_primary "Shortcut Alias"): \`${_ME} q\`
+$(_color_primary "Shortcut Alias"):
+  ${_ME} q
 HEREDOC
 }
 _search() {
@@ -15315,8 +15336,11 @@ $(_color_primary "Examples"):
   ${_ME} s example:12
   ${_ME} example:12 s
 
-$(_color_primary "Alias"): \`${_ME} view\`
-$(_color_primary "Shortcut Alias"): \`${_ME} s\`
+$(_color_primary "Alias"):
+  ${_ME} view
+
+$(_color_primary "Shortcut Alias"):
+  ${_ME} s
 HEREDOC
 }
 _show() {
@@ -16137,7 +16161,8 @@ $(_color_primary "See Also"):
 $(_color_primary "Example"):
   ${_ME} use example
 
-$(_color_primary "Shortcut Alias"): \`${_ME} u\`
+$(_color_primary "Shortcut Alias"):
+  ${_ME} u
 HEREDOC
 }
 _use() {
@@ -16206,7 +16231,8 @@ $(_color_primary "Examples"):
   ${_ME} archive
   ${_ME} archive example
 
-$(_color_primary "Shortcut Alias"): \`${_ME} ar\`
+$(_color_primary "Shortcut Alias"):
+  ${_ME} ar
 HEREDOC
 }
 _archive() {
@@ -16299,7 +16325,8 @@ $(_color_primary "Examples"):
   ${_ME} browse demo:456
   ${_ME} br
 
-$(_color_primary "Shortcut Alias"): \`${_ME} br\`
+$(_color_primary "Shortcut Alias"):
+  ${_ME} br
 HEREDOC
 }
 _browse() {
@@ -20210,7 +20237,8 @@ $(_color_primary "Examples"):
   ${_ME} settings colors 105
   ${_ME} set limit 15
 
-$(_color_primary "Alias"): \`${_ME} set\`
+$(_color_primary "Alias"):
+  ${_ME} set
 HEREDOC
 }
 _settings() {
@@ -21084,7 +21112,8 @@ $(_color_primary "Examples"):
   ${_ME} status
   ${_ME} status example
 
-$(_color_primary "Shortcut Alias"): \`${_ME} st\`
+$(_color_primary "Shortcut Alias"):
+  ${_ME} st
 HEREDOC
 }
 _status() {
@@ -21393,7 +21422,8 @@ $(_color_primary "Examples"):
   ${_ME} unarchive
   ${_ME} unarchive example
 
-$(_color_primary "Shortcut Alias"): \`${_ME} unar\`
+$(_color_primary "Shortcut Alias"):
+  ${_ME} unar
 HEREDOC
 }
 _unarchive() {
@@ -21423,7 +21453,8 @@ $(_color_primary "Examples"):
   ${_ME} unset color_primary
   ${_ME} unset 2
 
-$(_color_primary "Alias"): \`${_ME} reset\`
+$(_color_primary "Alias"):
+  ${_ME} reset
 HEREDOC
 }
 _unset() {

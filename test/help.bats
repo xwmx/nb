@@ -114,9 +114,10 @@ nb\ -h\ \|\ \-\-help\ \|\ help\ \[\<subcommand\>\ \|\ \-\-readme\]              
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}" -eq  0                                     ]]
+  [[ "${status}" -eq  0                       ]]
 
-  [[ "${output}" =~ Shortcut\ Alias.*\:\ .*\`.*nb\ h.*\`.*  ]]
+  [[ "${lines[17]}" =~ Shortcut\ Alias.*\:$   ]]
+  [[ "${lines[18]}" =~ ^\ \ nb\ h$            ]]
 }
 
 @test "'help settings' exits with 0 and prints 'settings' subcommand usage." {
