@@ -6113,7 +6113,7 @@ _ls() {
       else
         local _count_arguments=()
 
-        if [[ -n "${_selector:-}" ]]
+        if [[ -n "${_selector:-}"   ]]
         then
           _count_arguments+=("${_selector}")
         fi
