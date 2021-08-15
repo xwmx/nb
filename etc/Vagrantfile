@@ -114,6 +114,36 @@ HEREDOC
   #   ubuntu1804.vm.provision :shell, inline: $ubuntu_setup, privileged: false
   # end
 
+  $nixos_setup = <<-HEREDOC
+# install git
+nix-env -iA nixos.pkgs.gitAndTools.gitFull
+
+# install nvm (https://github.com/nvm-sh/nvm)
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.36.0/install.sh | bash
+
+# add project root to $PATH
+if [[ -f "${HOME}/.bashrc" ]] && grep -q -v vagrant "${HOME}/.bashrc"
+then
+  touch "${HOME}/.bashrc"
+  printf "\\nexport PATH=\"/vagrant:\${PATH}\"\\n" >> "${HOME}/.bashrc"
+fi
+HEREDOC
+
+  # NixOS 20.03
+  # https://app.vagrantup.com/nixos/boxes/nixos-20.03-test
+  # config.vm.define "nixos2003" do |nixos2003|
+  #   nixos2003.vm.box = "nixos/nixos-20.03-test"
+  #   nixos2003.vm.box_version = "0.0.1"
+  #   nixos2003.vm.provision :shell, inline: $nixos_setup, privileged: false
+  # end
+
+  # NixOS 18.03
+  # https://app.vagrantup.com/nixos/boxes/nixos-18.03-i686
+  # config.vm.define "nixos1803" do |nixos1803|
+  #   nixos1803.vm.box = "nixos/nixos-18.03-i686"
+  #   nixos1803.vm.provision :shell, inline: $nixos_setup, privileged: false
+  # end
+
   #############################################################################
   # Configuration
   # -------------
