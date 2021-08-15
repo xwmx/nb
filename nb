@@ -10044,8 +10044,8 @@ HEREDOC
 #   root level of the app to avoid leaking information via the referer header.
 #
 #   By default, links are created with file:// URLs to the item on the
-#   local filesystem. With --browse, links are created with http:// URLs
-#   for the internal web server.
+#   local filesystem. With --browse, links are created with internal web
+#   server URLs.
 _resolve_links() {
   # Usage: <input> | _resolve_links_get_matches <pattern> [<path>]
   _resolve_links_get_matches() {
