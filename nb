@@ -14842,6 +14842,7 @@ _search() {
         local         __line=
         while read -r __line
         do
+          local _content=
           local _content_line_with_hit=
           local _file_info=
           local _file_info_color=
@@ -14849,11 +14850,9 @@ _search() {
           local _filename_color=
           local _filename_hit=0
           local _id=
+          local _line_path_segment="${__line%%:*}"
           local _path=
           local _skip=0
-          local _content=
-
-          local _line_path_segment="${__line%%:*}"
 
           if ((_print_paths))
           then
