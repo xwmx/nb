@@ -6224,8 +6224,6 @@ _ls() {
 
 # notebooks · ##################################################### · notebooks
 
-# TODO: Vim highlighting bug. "
-
 _describe_notebooks() {
   cat <<HEREDOC
 $(_color_primary "Usage"):
@@ -12627,8 +12625,6 @@ _alias_subcommand "edit" "e"
 
 # env ##################################################################### env
 
-# TODO: vim highlighting bug \`"
-
 _describe_env() {
   cat <<HEREDOC
 $(_color_primary "Usage"):
@@ -15245,8 +15241,6 @@ _alias_subcommand "search" "q"
 _alias_subcommand "search" "grep"
 
 # show · ############################################################### · show
-
-# TODO: Vim highlighting bug. "\`
 
 _describe_show() {
   cat <<HEREDOC
