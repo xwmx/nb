@@ -6044,7 +6044,7 @@ _ls() {
 
   if ((_with_pinned))
   then
-    _list_options+=("--with--pinned")
+    _list_options+=("--with-pinned")
   fi
 
   local _selector_relative_path="${_selector#*:}"
