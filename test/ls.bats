@@ -27,6 +27,122 @@ HEREDOC
 
 # pinning #####################################################################
 
+@test "'ls --reverse' prints list without pinning." {
+  {
+    "${_NB}" init
+    "${_NB}" add "File One.md"    --title "Title One"   --content "#pinned"
+    "${_NB}" add "File Two.md"    --title "Title Two"
+    "${_NB}" add "File Three.md"  --title "Title Three"
+    "${_NB}" add "File Four.md"   --title "Title Four"
+
+    "${_NB}" pin 1
+    "${_NB}" pin 4
+
+    diff                                          \
+      <(printf "File One.md\\nFile Four.md\\n")   \
+      <(cat "${NB_DIR}/home/.pindex")
+  }
+
+  run "${_NB}" ls --reverse
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                           ]]
+
+  [[ "${lines[0]}"  =~  \.*[.*1.*].*\ Title\ One    ]]
+  [[ "${lines[1]}"  =~  \.*[.*2.*].*\ Title\ Two    ]]
+  [[ "${lines[2]}"  =~  \.*[.*3.*].*\ Title\ Three  ]]
+  [[ "${lines[3]}"  =~  \.*[.*4.*].*\ Title\ Four   ]]
+}
+
+@test "'ls -r' prints list without pinning." {
+  {
+    "${_NB}" init
+    "${_NB}" add "File One.md"    --title "Title One"   --content "#pinned"
+    "${_NB}" add "File Two.md"    --title "Title Two"
+    "${_NB}" add "File Three.md"  --title "Title Three"
+    "${_NB}" add "File Four.md"   --title "Title Four"
+
+    "${_NB}" pin 1
+    "${_NB}" pin 4
+
+    diff                                          \
+      <(printf "File One.md\\nFile Four.md\\n")   \
+      <(cat "${NB_DIR}/home/.pindex")
+  }
+
+  run "${_NB}" ls -r
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                           ]]
+
+  [[ "${lines[0]}"  =~  \.*[.*1.*].*\ Title\ One    ]]
+  [[ "${lines[1]}"  =~  \.*[.*2.*].*\ Title\ Two    ]]
+  [[ "${lines[2]}"  =~  \.*[.*3.*].*\ Title\ Three  ]]
+  [[ "${lines[3]}"  =~  \.*[.*4.*].*\ Title\ Four   ]]
+}
+
+@test "'ls --sort' prints list without pinning." {
+  {
+    "${_NB}" init
+    "${_NB}" add "File One.md"    --title "Title One"   --content "#pinned"
+    "${_NB}" add "File Two.md"    --title "Title Two"
+    "${_NB}" add "File Three.md"  --title "Title Three"
+    "${_NB}" add "File Four.md"   --title "Title Four"
+
+    "${_NB}" pin 1
+    "${_NB}" pin 4
+
+    diff                                          \
+      <(printf "File One.md\\nFile Four.md\\n")   \
+      <(cat "${NB_DIR}/home/.pindex")
+  }
+
+  run "${_NB}" ls --sort
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                           ]]
+
+  [[ "${lines[0]}"  =~  \.*[.*1.*].*\ Title\ One    ]]
+  [[ "${lines[1]}"  =~  \.*[.*2.*].*\ Title\ Two    ]]
+  [[ "${lines[2]}"  =~  \.*[.*3.*].*\ Title\ Three  ]]
+  [[ "${lines[3]}"  =~  \.*[.*4.*].*\ Title\ Four   ]]
+}
+
+@test "'ls -s' prints list without pinning." {
+  {
+    "${_NB}" init
+    "${_NB}" add "File One.md"    --title "Title One"   --content "#pinned"
+    "${_NB}" add "File Two.md"    --title "Title Two"
+    "${_NB}" add "File Three.md"  --title "Title Three"
+    "${_NB}" add "File Four.md"   --title "Title Four"
+
+    "${_NB}" pin 1
+    "${_NB}" pin 4
+
+    diff                                          \
+      <(printf "File One.md\\nFile Four.md\\n")   \
+      <(cat "${NB_DIR}/home/.pindex")
+  }
+
+  run "${_NB}" ls -s
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                           ]]
+
+  [[ "${lines[0]}"  =~  \.*[.*1.*].*\ Title\ One    ]]
+  [[ "${lines[1]}"  =~  \.*[.*2.*].*\ Title\ Two    ]]
+  [[ "${lines[2]}"  =~  \.*[.*3.*].*\ Title\ Three  ]]
+  [[ "${lines[3]}"  =~  \.*[.*4.*].*\ Title\ Four   ]]
+}
+
 @test "'ls' reconciles .pindex when file is deleted and deletes .pindex when empty." {
   {
     "${_NB}" init
@@ -153,10 +269,11 @@ HEREDOC
 @test "'ls' prints list with items pinned." {
   {
     "${_NB}" init
-    "${_NB}" add "File One.md"    --title "Title One"   --content "#pinned"
+    "${_NB}" add "File One.md"    --title "Title One"
     "${_NB}" add "File Two.md"    --title "Title Two"
     "${_NB}" add "File Three.md"  --title "Title Three"
     "${_NB}" add "File Four.md"   --title "Title Four"
+    "${_NB}" add "File Five.md"   --title "Title Five" --content "#pinned"
 
     "${_NB}" pin 1
     "${_NB}" pin 4
@@ -177,8 +294,9 @@ HEREDOC
   [[ "${lines[1]}"  =~  --------                      ]]
   [[ "${lines[2]}"  =~  \.*[.*1.*].*\ 📌\ Title\ One  ]]
   [[ "${lines[3]}"  =~  \.*[.*4.*].*\ 📌\ Title\ Four ]]
-  [[ "${lines[4]}"  =~  \.*[.*3.*].*\ Title\ Three    ]]
-  [[ "${lines[5]}"  =~  \.*[.*2.*].*\ Title\ Two      ]]
+  [[ "${lines[4]}"  =~  \.*[.*5.*].*\ 📌\ Title\ Five ]]
+  [[ "${lines[5]}"  =~  \.*[.*3.*].*\ Title\ Three    ]]
+  [[ "${lines[6]}"  =~  \.*[.*2.*].*\ Title\ Two      ]]
 }
 
 # edge cases ##################################################################

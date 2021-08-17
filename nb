@@ -5880,6 +5880,7 @@ _ls() {
   local _selector=
   local _selector_folder_path=
   local _use_pager=0
+  local _with_pinned=1
 
   while ((${#}))
   do
@@ -5928,6 +5929,10 @@ _ls() {
         ;;
       --no*header)
         NB_HEADER=0
+        ;;
+      -s|--sort|-r|--reverse)
+        _arguments+=("${__arg}")
+        _with_pinned=0
         ;;
       --tags)
         _delegate_arguments+=("${__arg}")
@@ -6036,7 +6041,11 @@ _ls() {
   # Build list options.
 
   local _list_options=(${_arguments[@]:-})
-  _list_options+=("--with--pinned")
+
+  if ((_with_pinned))
+  then
+    _list_options+=("--with--pinned")
+  fi
 
   local _selector_relative_path="${_selector#*:}"
 
