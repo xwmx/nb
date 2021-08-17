@@ -4668,7 +4668,7 @@ _list() {
   local __argument=
   for   __argument in "${_selector_arguments[@]:-}"
   do
-    if [[ -z "${__argument:-}"    ]]
+    if [[   -z "${__argument:-}"  ]]
     then
       continue
     elif [[ -n "${_selector:-}"   ]]
@@ -4710,26 +4710,26 @@ _list() {
           _notebook_path="${_selector_notebook_path}"
         fi
 
-        if [[ "${__argument}" =~ /$ ]] && [[ -d "${__argument}" ]]
+        if [[ "${__argument}" =~ /$ ]] && [[ -d "${__argument}"   ]]
         then
           _selector_relative_path="${_selector_relative_path}/"
           _folder_relative_path="${_selector_relative_path%\/*}"
           _selector_basename="${_selector_relative_path##*\/}"
-        elif [[     "${_selector_relative_path}" =~ /   ]]
+        elif [[     "${_selector_relative_path}" =~ /             ]]
         then
           _folder_relative_path="${_selector_relative_path%\/*}"
           _selector_basename="${_selector_relative_path##*\/}"
-        elif [[ -n  "${_selector_relative_path:-}"      ]]
+        elif [[ -n  "${_selector_relative_path:-}"                ]]
         then
           _folder_relative_path=
           _selector_basename="${_selector_relative_path}"
-        elif [[ "${__argument:-}" != "${_notebook_path:-}" ]]
+        elif [[ "${__argument:-}" != "${_notebook_path:-}"        ]]
         then
           _filter_patterns+=("${__argument}")
         fi
-      elif [[ "${__argument:-}" =~ /$           ]]
+      elif [[ "${__argument:-}" =~ /$                             ]]
       then
-        if [[ -n "${_selector_relative_path:-}" ]]
+        if [[ -n "${_selector_relative_path:-}"                   ]]
         then
           if [[ -d "${_notebook_path}/${_selector_relative_path}" ]]
           then # argument is a folder selector with trailing /
@@ -4737,7 +4737,7 @@ _list() {
             _selector="${__argument}"
             _selector_basename=
           else # argument is a file selector
-            if [[ "${_selector_relative_path:-}" =~ /   ]]
+            if [[ "${_selector_relative_path:-}" =~ /             ]]
             then # argument is a nested file selector
               _folder_relative_path="${_selector_relative_path%\/*}"
             else # argument does not include a folder
