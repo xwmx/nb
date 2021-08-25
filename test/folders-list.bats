@@ -177,6 +177,62 @@ load test_helper
 
 # full path ###################################################################
 
+@test "'list /full/path/to/notebook' (no slash) exits with 0 and lists files in notebook in reverse order." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "one.md"                  \
+      --title     "Title One"
+    "${_NB}" add  "two.bookmark.md"         \
+      --content   "<https://example.test>"
+    "${_NB}" add  "three.bookmark.md"       \
+      --content   "<https://example.test>"  \
+      --encrypt   --password=password
+  }
+
+  # full path (no slash)
+
+  run "${_NB}" list "${NB_DIR}/home"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0                                     ]]
+  [[   "${#lines[@]}" -eq 3                                     ]]
+
+  [[   "${lines[0]}"  =~  [.*3.*].*\ 🔖\ 🔒\ three.bookmark.md  ]]
+  [[   "${lines[1]}"  =~  [.*2.*].*\ 🔖\ two.bookmark.md        ]]
+  [[   "${lines[2]}"  =~  [.*1.*].*\ Title\ One                 ]]
+}
+
+@test "'list /full/path/to/notebook/' (slash) exits with 0 and lists files in notebook in reverse order." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "one.md"                  \
+      --title     "Title One"
+    "${_NB}" add  "two.bookmark.md"         \
+      --content   "<https://example.test>"
+    "${_NB}" add  "three.bookmark.md"       \
+      --content   "<https://example.test>"  \
+      --encrypt   --password=password
+  }
+
+  # full path (slash)
+
+  run "${_NB}" list "${NB_DIR}/home/"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0                                     ]]
+  [[   "${#lines[@]}" -eq 3                                     ]]
+
+  [[   "${lines[0]}"  =~  [.*3.*].*\ 🔖\ 🔒\ three.bookmark.md  ]]
+  [[   "${lines[1]}"  =~  [.*2.*].*\ 🔖\ two.bookmark.md        ]]
+  [[   "${lines[2]}"  =~  [.*1.*].*\ Title\ One                 ]]
+}
+
 @test "'list /full/path/to/folder/' (slash) with conflicting notebook name exits with 0 and lists files in folder in reverse order." {
   {
     "${_NB}" init
@@ -248,6 +304,32 @@ load test_helper
 
   # full path (slash)
 
+  run "${_NB}" list "${NB_DIR}/home/not-valid/does-not-match/"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 1     ]]
+  [[   "${#lines[@]}" -eq 1     ]]
+
+  [[   "${lines[0]}"  =~  Not\ found:\ .*${NB_DIR}/home/not-valid/does-not-match  ]]
+}
+
+@test "'list /not/valid/full/path/to/folder' (no slash) with existing notebook exits with 1 and prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example Folder/one.md"             \
+      --title     "Title One"
+    "${_NB}" add  "Example Folder/two.bookmark.md"    \
+      --content   "<https://example.test>"
+    "${_NB}" add  "Example Folder/three.bookmark.md"  \
+      --content   "<https://example.test>"            \
+      --encrypt   --password=password
+  }
+
+  # full path (slash)
+
   run "${_NB}" list "${NB_DIR}/home/not-valid/does-not-match"
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -260,6 +342,32 @@ load test_helper
 }
 
 @test "'list /not/valid/full/path/to/folder/' (slash) without existing notebook treats exits with 1 and prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example Folder/one.md"             \
+      --title     "Title One"
+    "${_NB}" add  "Example Folder/two.bookmark.md"    \
+      --content   "<https://example.test>"
+    "${_NB}" add  "Example Folder/three.bookmark.md"  \
+      --content   "<https://example.test>"            \
+      --encrypt   --password=password
+  }
+
+  # full path (slash)
+
+  run "${_NB}" list "${NB_DIR}/example/not-valid/does-not-match/"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 1     ]]
+  [[   "${#lines[@]}" -eq 1     ]]
+
+  [[   "${lines[0]}"  =~  Not\ found:\ .*${NB_DIR}/example/not-valid/does-not-match  ]]
+}
+
+@test "'list /not/valid/full/path/to/folder' (no slash) without existing notebook treats exits with 1 and prints message." {
   {
     "${_NB}" init
 

@@ -40,6 +40,32 @@ _search_all_setup() {
   [[ -e "${NB_DIR}/two/.archived" ]]
 }
 
+# binary ######################################################################
+
+@test "'search <query>' prints single match message when matching binary content." {
+  {
+    "${_NB}" init
+    "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/example.pdf"
+  }
+
+  run "${_NB}" search "a"
+
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
+  printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
+
+  [[    "${status}"     -eq 0                                       ]]
+  [[    "${#lines[@]}"  -eq 6                                       ]]
+
+  [[    "${lines[0]}"   =~  .*\[.*1.*\].*\ 📄\ .*ex.*a.*mple.pdf    ]]
+  [[    "${lines[1]}"   =~  ^.*------------------.*$                ]]
+  [[    "${lines[2]}"   =~  Filename\ Match:.*\ .*ex.*a.*mple.pdf   ]]
+  [[    "${lines[3]}"   =~  .*\[.*1.*\].*\ 📄\ .*ex.*a.*mple.pdf    ]]
+  [[    "${lines[4]}"   =~  ^.*------------------.*$                ]]
+  [[    "${lines[5]}"   =~  Binary\ file\ matches.                  ]]
+  [[ -z "${lines[6]}"                                               ]]
+}
+
 # `search` ####################################################################
 
 @test "'search' with no arguments exits with status 1 and prints help information." {
@@ -56,6 +82,161 @@ _search_all_setup() {
 
   [[ "${lines[0]}"  =~  Usage.*\:   ]]
   [[ "${lines[1]}"  =~  nb\ search  ]]
+}
+
+# notebook: selectors #########################################################
+
+@test "'search <query> --notebook-selectors' includes notebook selectors for results in the current notebook." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example One.md" --content "Example 123 content."
+    "${_NB}" add "Example Two.md" --content "Example content."
+
+    "${_NB}" add "Sample Folder/Sample One.md" --content "Sample content."
+    "${_NB}" add "Sample Folder/Sample Two.md" --content "Sample 123 content."
+  }
+
+  run "${_NB}" search "123" -l --notebook-selectors
+
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
+  printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
+
+  [[    "${status}"   -eq 0 ]]
+
+  [[    "${lines[0]}" =~  \
+.*\[.*home:1.*\].*\ Example\ One.md\ ·\ \"Example\ 123\ content.\"  ]]
+
+  [[    "${lines[1]}" =~  \
+.*\[.*home:Sample\ Folder/2.*\].*\ Sample\ Two.md\ ·\ \"Sample\ 123\ content.\" ]]
+}
+
+@test "'search <query>' does not include notebook selectors for results in the current notebook." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example One.md" --content "Example 123 content."
+    "${_NB}" add "Example Two.md" --content "Example content."
+
+    "${_NB}" add "Sample Folder/Sample One.md" --content "Sample content."
+    "${_NB}" add "Sample Folder/Sample Two.md" --content "Sample 123 content."
+  }
+
+  run "${_NB}" search "123" -l
+
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
+  printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
+
+  [[    "${status}"   -eq 0 ]]
+
+  [[    "${lines[0]}" =~  \
+.*\[.*1.*\].*\ Example\ One.md\ ·\ \"Example\ 123\ content.\"       ]]
+  [[ !  "${lines[0]}" =~  \
+.*\[.*home:1.*\].*\ Example\ One.md\ ·\ \"Example\ 123\ content.\"  ]]
+
+  [[    "${lines[1]}" =~  \
+.*\[.*Sample\ Folder/2.*\].*\ Sample\ Two.md\ ·\ \"Sample\ 123\ content.\"      ]]
+  [[ !  "${lines[1]}" =~  \
+.*\[.*home:Sample\ Folder/2.*\].*\ Sample\ Two.md\ ·\ \"Sample\ 123\ content.\" ]]
+}
+
+@test "'search notebook: <query> --notebook-selectors' includes notebook selectors for results in selected notebook." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" add "Example Notebook:Example One.md" --content "Example 123 content."
+    "${_NB}" add "Example Notebook:Example Two.md" --content "Example content."
+
+    "${_NB}" add "Example Notebook:Sample Folder/Sample One.md" --content "Sample content."
+    "${_NB}" add "Example Notebook:Sample Folder/Sample Two.md" --content "Sample 123 content."
+  }
+
+  run "${_NB}" Example\ Notebook:search "123" -l --notebook-selectors
+
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
+  printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
+
+  [[    "${status}"   -eq 0 ]]
+
+  [[    "${lines[0]}" =~  \
+.*\[.*1.*\].*\ Example\ One.md\ ·\ \"Example\ 123\ content.\"       ]]
+  [[ !  "${lines[0]}" =~  \
+.*\[.*home:1.*\].*\ Example\ One.md\ ·\ \"Example\ 123\ content.\"  ]]
+
+  [[    "${lines[1]}" =~  \
+.*\[.*Sample\ Folder/2.*\].*\ Sample\ Two.md\ ·\ \"Sample\ 123\ content.\"      ]]
+  [[ !  "${lines[1]}" =~  \
+.*\[.*home:Sample\ Folder/2.*\].*\ Sample\ Two.md\ ·\ \"Sample\ 123\ content.\" ]]
+}
+
+@test "'search notebook: <query>' includes notebook selectors for results in selected notebook." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" add "Example Notebook:Example One.md" --content "Example 123 content."
+    "${_NB}" add "Example Notebook:Example Two.md" --content "Example content."
+
+    "${_NB}" add "Example Notebook:Sample Folder/Sample One.md" --content "Sample content."
+    "${_NB}" add "Example Notebook:Sample Folder/Sample Two.md" --content "Sample 123 content."
+  }
+
+  run "${_NB}" Example\ Notebook:search "123" -l
+
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
+  printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
+
+  [[    "${status}"   -eq 0 ]]
+
+  [[    "${lines[0]}" =~  \
+.*\[.*Example\ Notebook:1.*\].*\ Example\ One.md\ ·\ \"Example\ 123\ content.\"               ]]
+  [[    "${lines[1]}" =~  \
+.*\[.*Example\ Notebook:Sample\ Folder/2.*\].*\ Sample\ Two.md\ ·\ \"Sample\ 123\ content.\"  ]]
+}
+
+@test "'search <query> -la' includes notebook selectors for all results." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" add "Example Notebook:Example One.md" --content "Example 123 content."
+    "${_NB}" add "Example Notebook:Example Two.md" --content "Example content."
+
+    "${_NB}" add "Example Notebook:Sample Folder/Sample One.md" --content "Sample content."
+    "${_NB}" add "Example Notebook:Sample Folder/Sample Two.md" --content "Sample 123 content."
+
+
+    "${_NB}" add "Demo One.md" --content "Demo 123 content."
+    "${_NB}" add "Demo Two.md" --content "Demo content."
+
+    "${_NB}" add "Test Folder/Test One.md" --content "Test content."
+    "${_NB}" add "Test Folder/Test Two.md" --content "Test 123 content."
+  }
+
+  run "${_NB}" search "123" -la
+
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
+  printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
+
+  [[    "${status}"   -eq 0 ]]
+
+  [[    "${lines[0]}" =~  \
+.*\[.*Example\ Notebook:1.*\].*\ Example\ One.md\ ·\ \"Example\ 123\ content.\"               ]]
+  [[    "${lines[1]}" =~  \
+.*\[.*Example\ Notebook:Sample\ Folder/2.*\].*\ Sample\ Two.md\ ·\ \"Sample\ 123\ content.\"  ]]
+  [[    "${lines[2]}" =~  \
+.*\[.*home:1.*\].*\ Demo\ One.md\ ·\ \"Demo\ 123\ content.\"              ]]
+  [[    "${lines[3]}" =~  \
+.*\[.*home:Test\ Folder/2.*\].*\ Test\ Two.md\ ·\ \"Test\ 123\ content.\" ]]
 }
 
 # aliases #####################################################################

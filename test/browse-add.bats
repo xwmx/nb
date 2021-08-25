@@ -179,16 +179,16 @@ HEREDOC
 
   # Prints output:
 
-  [[ "${#lines[@]}" -eq 5                                                         ]]
+  [[ "${#lines[@]}" -eq 5                                                     ]]
 
   declare _expected_param_pattern="--per-page=30\&--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
 
-  [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Found                                      ]]
-  [[ "${lines[1]}"  =~  Date:\ .*                                                 ]]
-  [[ "${lines[2]}"  =~  Expires:\ .*                                              ]]
-  [[ "${lines[3]}"  =~  Server:\ nb                                               ]]
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Found                                  ]]
+  [[ "${lines[1]}"  =~  Date:\ .*                                             ]]
+  [[ "${lines[2]}"  =~  Expires:\ .*                                          ]]
+  [[ "${lines[3]}"  =~  Server:\ nb                                           ]]
   [[ "${lines[4]}"  =~  \
-Location:\ http:\/\/localhost:6789\/Example\ Folder/1\?${_expected_param_pattern} ]]
+Location:\ \/\/localhost:6789\/Example\ Folder/1\?${_expected_param_pattern}  ]]
 }
 
 @test "GET to --add URL with local notebook renders form." {
@@ -301,14 +301,14 @@ HEREDOC
 
   # Prints output:
 
-  [[ "${#lines[@]}" -eq 5                                                           ]]
+  [[ "${#lines[@]}" -eq 5                                                       ]]
 
-  [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Found                                        ]]
-  [[ "${lines[1]}"  =~  Date:\ .*                                                   ]]
-  [[ "${lines[2]}"  =~  Expires:\ .*                                                ]]
-  [[ "${lines[3]}"  =~  Server:\ nb                                                 ]]
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Found                                    ]]
+  [[ "${lines[1]}"  =~  Date:\ .*                                               ]]
+  [[ "${lines[2]}"  =~  Expires:\ .*                                            ]]
+  [[ "${lines[3]}"  =~  Server:\ nb                                             ]]
   [[ "${lines[4]}"  =~  \
-Location:\ http:\/\/localhost:6789\/Example\ Folder/Sample\ Folder/2\?--per-page=30 ]]
+Location:\ \/\/localhost:6789\/Example\ Folder/Sample\ Folder/2\?--per-page=30  ]]
 }
 
 @test "POST to --add <folder-name>/<folder-name> (no slash) URL creates folder and file named 'Sample Folder' and redirects."  {
@@ -364,14 +364,14 @@ HEREDOC
 
   # Prints output:
 
-  [[ "${#lines[@]}" -eq 5                                             ]]
+  [[ "${#lines[@]}" -eq 5                                       ]]
 
-  [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Found                          ]]
-  [[ "${lines[1]}"  =~  Date:\ .*                                     ]]
-  [[ "${lines[2]}"  =~  Expires:\ .*                                  ]]
-  [[ "${lines[3]}"  =~  Server:\ nb                                   ]]
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Found                    ]]
+  [[ "${lines[1]}"  =~  Date:\ .*                               ]]
+  [[ "${lines[2]}"  =~  Expires:\ .*                            ]]
+  [[ "${lines[3]}"  =~  Server:\ nb                             ]]
   [[ "${lines[4]}"  =~  \
-Location:\ http:\/\/localhost:6789\/Example\ Folder/1\?--per-page=30  ]]
+Location:\ \/\/localhost:6789\/Example\ Folder/1\?--per-page=30 ]]
 }
 
 @test "POST to --add <folder-name>/<folder-name>/ (slash) URL creates folders and note and redirects."  {
@@ -431,14 +431,14 @@ HEREDOC
 
   # Prints output:
 
-  [[ "${#lines[@]}" -eq 5                                                           ]]
+  [[ "${#lines[@]}" -eq 5                                                       ]]
 
-  [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Found                                        ]]
-  [[ "${lines[1]}"  =~  Date:\ .*                                                   ]]
-  [[ "${lines[2]}"  =~  Expires:\ .*                                                ]]
-  [[ "${lines[3]}"  =~  Server:\ nb                                                 ]]
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Found                                    ]]
+  [[ "${lines[1]}"  =~  Date:\ .*                                               ]]
+  [[ "${lines[2]}"  =~  Expires:\ .*                                            ]]
+  [[ "${lines[3]}"  =~  Server:\ nb                                             ]]
   [[ "${lines[4]}"  =~  \
-Location:\ http:\/\/localhost:6789\/Example\ Folder/Sample\ Folder/1\?--per-page=30 ]]
+Location:\ \/\/localhost:6789\/Example\ Folder/Sample\ Folder/1\?--per-page=30  ]]
 }
 
 @test "POST to --add <folder-name>/<folder-name>/<filename> URL creates folders and note and redirects."  {
@@ -496,14 +496,14 @@ HEREDOC
 
   # Prints output:
 
-  [[ "${#lines[@]}" -eq 5                                                           ]]
+  [[ "${#lines[@]}" -eq 5                                                       ]]
 
-  [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Found                                        ]]
-  [[ "${lines[1]}"  =~  Date:\ .*                                                   ]]
-  [[ "${lines[2]}"  =~  Expires:\ .*                                                ]]
-  [[ "${lines[3]}"  =~  Server:\ nb                                                 ]]
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Found                                    ]]
+  [[ "${lines[1]}"  =~  Date:\ .*                                               ]]
+  [[ "${lines[2]}"  =~  Expires:\ .*                                            ]]
+  [[ "${lines[3]}"  =~  Server:\ nb                                             ]]
   [[ "${lines[4]}"  =~  \
-Location:\ http:\/\/localhost:6789\/Example\ Folder/Sample\ Folder/1\?--per-page=30 ]]
+Location:\ \/\/localhost:6789\/Example\ Folder/Sample\ Folder/1\?--per-page=30  ]]
 }
 
 @test "POST to --add <folder-name>/<filename> URL creates folder and note and redirects."  {
@@ -561,13 +561,13 @@ HEREDOC
 
   # Prints output:
 
-  [[ "${#lines[@]}" -eq 5                                                                     ]]
+  [[ "${#lines[@]}" -eq 5                                                               ]]
 
-  [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Found                                                  ]]
-  [[ "${lines[1]}"  =~  Date:\ .*                                                             ]]
-  [[ "${lines[2]}"  =~  Expires:\ .*                                                          ]]
-  [[ "${lines[3]}"  =~  Server:\ nb                                                           ]]
-  [[ "${lines[4]}"  =~  Location:\ http:\/\/localhost:6789\/Example\ Folder/1\?--per-page=30  ]]
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Found                                            ]]
+  [[ "${lines[1]}"  =~  Date:\ .*                                                       ]]
+  [[ "${lines[2]}"  =~  Expires:\ .*                                                    ]]
+  [[ "${lines[3]}"  =~  Server:\ nb                                                     ]]
+  [[ "${lines[4]}"  =~  Location:\ \/\/localhost:6789\/Example\ Folder/1\?--per-page=30 ]]
 }
 
 @test "POST to --add <filename> URL creates note and redirects."  {
@@ -625,13 +625,13 @@ HEREDOC
 
   # Prints output:
 
-  [[ "${#lines[@]}" -eq 5                                                     ]]
+  [[ "${#lines[@]}" -eq 5                                               ]]
 
-  [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Found                                  ]]
-  [[ "${lines[1]}"  =~  Date:\ .*                                             ]]
-  [[ "${lines[2]}"  =~  Expires:\ .*                                          ]]
-  [[ "${lines[3]}"  =~  Server:\ nb                                           ]]
-  [[ "${lines[4]}"  =~  Location:\ http:\/\/localhost:6789\/1\?--per-page=30  ]]
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Found                            ]]
+  [[ "${lines[1]}"  =~  Date:\ .*                                       ]]
+  [[ "${lines[2]}"  =~  Expires:\ .*                                    ]]
+  [[ "${lines[3]}"  =~  Server:\ nb                                     ]]
+  [[ "${lines[4]}"  =~  Location:\ \/\/localhost:6789\/1\?--per-page=30 ]]
 }
 
 # CLI #########################################################################
@@ -660,13 +660,13 @@ HEREDOC
   [[    "${output}"  =~  ❯.*nb.*\ .*·.*\ .*Example\ Notebook.*\ .*:.*\ .*1  ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><h1><a rel=\"noopener noreferrer\" href=\"http://lo"
+"<nav class=\"header-crumbs\"><h1><a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
 "calhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"
 
   printf "%s\\n" "${output}" | grep -q \
-" <span class=\"dim\">·</span> <a rel=\"noopener noreferrer\" href=\"http://lo"
+" <span class=\"dim\">·</span> <a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
 "calhost:6789/Example%20Notebook:?--per-page=.*&--columns=.*\">Example Notebook</a>"
@@ -706,13 +706,13 @@ HEREDOC
   [[    "${output}"  =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><h1><a rel=\"noopener noreferrer\" href=\"http://lo"
+"<nav class=\"header-crumbs\"><h1><a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
 "calhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"
 
   printf "%s\\n" "${output}" | grep -q \
-" <span class=\"dim\">·</span> <a rel=\"noopener noreferrer\" href=\"http://lo"
+" <span class=\"dim\">·</span> <a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
 "calhost:6789/home:?--per-page=.*&--columns=.*\">home</a>"
@@ -755,13 +755,13 @@ HEREDOC
   [[    "${output}"  =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><h1><a rel=\"noopener noreferrer\" href=\"http://lo"
+"<nav class=\"header-crumbs\"><h1><a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
 "calhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"
 
   printf "%s\\n" "${output}" | grep -q \
-" <span class=\"dim\">·</span> <a rel=\"noopener noreferrer\" href=\"http://lo"
+" <span class=\"dim\">·</span> <a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
 "calhost:6789/home:?--per-page=.*&--columns=.*\">home</a>"
@@ -803,13 +803,13 @@ HEREDOC
   [[    "${output}"  =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*Example\ Folder ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><h1><a rel=\"noopener noreferrer\" href=\"http://lo"
+"<nav class=\"header-crumbs\"><h1><a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
 "calhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"
 
   printf "%s\\n" "${output}" | grep -q \
-" <span class=\"dim\">·</span> <a rel=\"noopener noreferrer\" href=\"http://lo"
+" <span class=\"dim\">·</span> <a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
 "calhost:6789/home:?--per-page=.*&--columns=.*\">home</a>"
@@ -848,13 +848,13 @@ HEREDOC
   [[    "${output}"  =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><h1><a rel=\"noopener noreferrer\" href=\"http://lo"
+"<nav class=\"header-crumbs\"><h1><a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
 "calhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"
 
   printf "%s\\n" "${output}" | grep -q \
-" <span class=\"dim\">·</span> <a rel=\"noopener noreferrer\" href=\"http://lo"
+" <span class=\"dim\">·</span> <a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
 "calhost:6789/home:?--per-page=.*&--columns=.*\">home</a>"
@@ -959,7 +959,7 @@ HEREDOC
   [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1      ]]
 
   printf "%s\\n" "${output}" | grep -q \
-    "href=\"http://localhost:6789/?--per-page=30&--columns=20\"><span class=\"dim\">❯</span>nb</a> "
+    "href=\"//localhost:6789/?--per-page=30&--columns=20\"><span class=\"dim\">❯</span>nb</a> "
 
   printf "%s\\n" "${output}" | grep -q "cols=\"17\">"
   printf "%s\\n" "${output}" | grep -q \
@@ -1016,13 +1016,13 @@ HEREDOC
   [[ "${lines[4]}"  =~  Content-Type:\ text/html\;\ charset=UTF-8 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><h1><a rel=\"noopener noreferrer\" href=\"http://lo"
+"<nav class=\"header-crumbs\"><h1><a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
 "calhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"
 
   printf "%s\\n" "${output}" | grep -q \
-" <span class=\"dim\">·</span> <a rel=\"noopener noreferrer\" href=\"http://lo"
+" <span class=\"dim\">·</span> <a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
 "calhost:6789/home:?--per-page=.*&--columns=.*\">home</a>"

@@ -609,7 +609,7 @@ action=\"/local:1/1\?--edit\&--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'
   [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1      ]]
 
   printf "%s\\n" "${output}" | grep -q \
-    "href=\"http://localhost:6789/?--per-page=30&--columns=20\"><span class=\"dim\">❯</span>nb</a> "
+    "href=\"//localhost:6789/?--per-page=30&--columns=20\"><span class=\"dim\">❯</span>nb</a> "
 
   printf "%s\\n" "${output}" | grep -q "cols=\"17\"># Example Title"
   printf "%s\\n" "${output}" | grep -q \
@@ -670,34 +670,34 @@ action=\"/local:1/1\?--edit\&--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'
   [[ "${lines[4]}"  =~  Content-Type:\ text/html\;\ charset=UTF-8 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><h1><a rel=\"noopener noreferrer\" href=\"http://lo"
+"<nav class=\"header-crumbs\"><h1><a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
 "calhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"
 
   printf "%s\\n" "${output}" | grep -q \
-" <span class=\"dim\">·</span> <a rel=\"noopener noreferrer\" href=\"http://lo"
+" <span class=\"dim\">·</span> <a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
 "calhost:6789/home:?--per-page=.*&--columns=.*\">home</a> <span class=\"dim\""
 
   printf "%s\\n" "${output}" | grep -q \
-">:</span> <a rel=\"noopener noreferrer\" href=\"http://localhost:6789/home:"
+">:</span> <a rel=\"noopener noreferrer\" href=\"//localhost:6789/home:"
 
   printf "%s\\n" "${output}" | grep -q \
 "1?--per-page=.*&--columns=.*\">1</a> <span class=\"dim\">·</span> <a.* "
 
   printf "%s\\n" "${output}" | grep -q \
-"rel=\"noopener noreferrer\" href=\"http://localhost:6789/--original/home/Example File.md\">↓</a> <span class=\"dim\">·</span> <span cl"
+"rel=\"noopener noreferrer\" href=\"//localhost:6789/--original/home/Example File.md\">↓</a> <span class=\"dim\">·</span> <span cl"
 
   printf "%s\\n" "${output}" | grep -q \
 "ss=\"dim\">editing</span> <span class=\"dim\">·</span> <a rel=\"noopener noreferrer\" "
 
   printf "%s\\n" "${output}" | grep -q \
-"href=\"http://localhost:6789/home:1?--per-page=30&--columns=.*&--delete\">-</a> <span class=\"dim\">|</span> <a "
+"href=\"//localhost:6789/home:1?--per-page=30&--columns=.*&--delete\">-</a> <span class=\"dim\">|</span> <a "
 
   printf "%s\\n" "${output}" | grep -q \
-"rel=\"noopener noreferrer\" href=\"http://localhost:6789/home:?--per-page=30&--columns=.*&--add\">+</a></h1>"
+"rel=\"noopener noreferrer\" href=\"//localhost:6789/home:?--per-page=30&--columns=.*&--add\">+</a></h1>"
 
   printf "%s\\n" "${output}" | grep -q "cols=\"67\"># Example Title"
 

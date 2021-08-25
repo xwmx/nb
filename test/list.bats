@@ -2,6 +2,427 @@
 
 load test_helper
 
+# notebook: selectors #########################################################
+
+@test "'list --notebook-selectors' includes notebook selectors when listing the root level of the current notebook." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md"    --title "Title One"
+    "${_NB}" add "File Two.md"    --title "Title Two"
+    "${_NB}" add "File Three.md"  --title "Title Three"
+  }
+
+  run "${_NB}" list --notebook-selectors
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                                 ]]
+
+  [[ "${lines[0]}"  =~  .*\[.*home:3.*\].*\ Title\ Three  ]]
+  [[ "${lines[1]}"  =~  .*\[.*home:2.*\].*\ Title\ Two    ]]
+  [[ "${lines[2]}"  =~  .*\[.*home:1.*\].*\ Title\ One    ]]
+}
+
+@test "'list --notebook-selectors' includes notebook selectors when listing a nested folder in the current notebook." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/File One.md"    --title "Title One"
+    "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
+    "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
+  }
+
+  run "${_NB}" list Example\ Folder/ --notebook-selectors
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                                           ]]
+
+  [[ "${lines[0]}"  =~  .*\[.*Example\ Folder/3.*\].*\ Title\ Three ]]
+  [[ "${lines[1]}"  =~  .*\[.*Example\ Folder/2.*\].*\ Title\ Two   ]]
+  [[ "${lines[2]}"  =~  .*\[.*Example\ Folder/1.*\].*\ Title\ One   ]]
+}
+
+@test "'list --notebook-selectors' includes notebook selectors when listing root level of a selected notebook." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" add "Example Notebook:File One.md"    --title "Title One"
+    "${_NB}" add "Example Notebook:File Two.md"    --title "Title Two"
+    "${_NB}" add "Example Notebook:File Three.md"  --title "Title Three"
+  }
+
+  run "${_NB}" list Example\ Notebook: --notebook-selectors
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                                             ]]
+
+  [[ "${lines[0]}"  =~  .*\[.*Example\ Notebook:3.*\].*\ Title\ Three ]]
+  [[ "${lines[1]}"  =~  .*\[.*Example\ Notebook:2.*\].*\ Title\ Two   ]]
+  [[ "${lines[2]}"  =~  .*\[.*Example\ Notebook:1.*\].*\ Title\ One   ]]
+}
+
+@test "'list --notebook-selectors' includes notebook selectors when listing a nested folder of a selected notebook." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" add "Example Notebook:Sample Folder/File One.md"    --title "Title One"
+    "${_NB}" add "Example Notebook:Sample Folder/File Two.md"    --title "Title Two"
+    "${_NB}" add "Example Notebook:Sample Folder/File Three.md"  --title "Title Three"
+  }
+
+  run "${_NB}" list Example\ Notebook:Sample\ Folder/ --notebook-selectors
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                                     ]]
+
+  [[ "${lines[0]}"  =~  \
+.*\[.*Example\ Notebook:Sample\ Folder/3.*\].*\ Title\ Three  ]]
+  [[ "${lines[1]}"  =~  \
+.*\[.*Example\ Notebook:Sample\ Folder/2.*\].*\ Title\ Two    ]]
+  [[ "${lines[2]}"  =~  \
+.*\[.*Example\ Notebook:Sample\ Folder/1.*\].*\ Title\ One    ]]
+}
+
+@test "'list' does not use notebook selectors when listing the root level of the current notebook by default." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md"    --title "Title One"
+    "${_NB}" add "File Two.md"    --title "Title Two"
+    "${_NB}" add "File Three.md"  --title "Title Three"
+  }
+
+  run "${_NB}" list
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                           ]]
+
+  [[ "${lines[0]}"  =~  .*\[.*3.*\].*\ Title\ Three ]]
+  [[ "${lines[1]}"  =~  .*\[.*2.*\].*\ Title\ Two   ]]
+  [[ "${lines[2]}"  =~  .*\[.*1.*\].*\ Title\ One   ]]
+}
+
+@test "'list' does not use notebook selectors when listing a nested folder in the current notebook by default." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/File One.md"    --title "Title One"
+    "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
+    "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
+  }
+
+  run "${_NB}" list Example\ Folder/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                                           ]]
+
+  [[ "${lines[0]}"  =~  .*\[.*Example\ Folder/3.*\].*\ Title\ Three ]]
+  [[ "${lines[1]}"  =~  .*\[.*Example\ Folder/2.*\].*\ Title\ Two   ]]
+  [[ "${lines[2]}"  =~  .*\[.*Example\ Folder/1.*\].*\ Title\ One   ]]
+}
+
+@test "'list' includes notebook selectors when listing root level of a selected notebook by default." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" add "Example Notebook:File One.md"    --title "Title One"
+    "${_NB}" add "Example Notebook:File Two.md"    --title "Title Two"
+    "${_NB}" add "Example Notebook:File Three.md"  --title "Title Three"
+  }
+
+  run "${_NB}" list Example\ Notebook:
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                                             ]]
+
+  [[ "${lines[0]}"  =~  .*\[.*Example\ Notebook:3.*\].*\ Title\ Three ]]
+  [[ "${lines[1]}"  =~  .*\[.*Example\ Notebook:2.*\].*\ Title\ Two   ]]
+  [[ "${lines[2]}"  =~  .*\[.*Example\ Notebook:1.*\].*\ Title\ One   ]]
+}
+
+@test "'list' includes notebook selectors when listing a nested folder of a selected notebook by default." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" add "Example Notebook:Sample Folder/File One.md"    --title "Title One"
+    "${_NB}" add "Example Notebook:Sample Folder/File Two.md"    --title "Title Two"
+    "${_NB}" add "Example Notebook:Sample Folder/File Three.md"  --title "Title Three"
+  }
+
+  run "${_NB}" list Example\ Notebook:Sample\ Folder/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                                     ]]
+
+  [[ "${lines[0]}"  =~  \
+.*\[.*Example\ Notebook:Sample\ Folder/3.*\].*\ Title\ Three  ]]
+  [[ "${lines[1]}"  =~  \
+.*\[.*Example\ Notebook:Sample\ Folder/2.*\].*\ Title\ Two    ]]
+  [[ "${lines[2]}"  =~  \
+.*\[.*Example\ Notebook:Sample\ Folder/1.*\].*\ Title\ One    ]]
+}
+
+# .index ######################################################################
+
+@test "'list' reconciles ancestor .index files with incomplete nested .index file." {
+  {
+    "${_NB}" init
+
+    mkdir -p "${NB_DIR}/home/Example/Sample/Demo"
+
+    printf "# Title" > "${NB_DIR}/home/Example/Sample/Demo/File.md"
+
+    touch "${NB_DIR}/home/Example/Sample/Demo/.index"
+
+    git -C "${NB_DIR}/home" add --all
+    git -C "${NB_DIR}/home" commit -am "Example commit message."
+
+    [[ !  -e "${NB_DIR}/home/Example/.index"              ]]
+    [[ !  -e "${NB_DIR}/home/Example/Sample/.index"       ]]
+    [[    -e "${NB_DIR}/home/Example/Sample/Demo/.index"  ]]
+    [[    -e "${NB_DIR}/home/Example/Sample/Demo/File.md" ]]
+
+    git -C "${NB_DIR}/home" status
+
+    [[ -z "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
+  }
+
+  run "${_NB}" list "Example/Sample/Demo/"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                                       ]]
+  [[ "${#lines[@]}" -eq 1                                       ]]
+
+  [[ "${lines[0]}"  =~  \.*[.*Example/Sample/Demo/1.*].*\ Title ]]
+
+  diff                                                  \
+    <(cat "${NB_DIR}/home/Example/.index")              \
+    <(printf "Sample\\n")
+
+  diff                                                  \
+    <(cat "${NB_DIR}/home/Example/Sample/.index")       \
+    <(printf "Demo\\n")
+
+  diff                                                  \
+    <(cat "${NB_DIR}/home/Example/Sample/Demo/.index")  \
+    <(printf "File.md\\n")
+
+  cd "${NB_DIR}/home" || return 1
+
+  git -C "${NB_DIR}/home" status
+  git -C "${NB_DIR}/home" log
+
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
+  do
+    sleep 1
+  done
+
+  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Reconcile Index'
+}
+
+@test "'list' reconciles ancestor .index files with missing nested .index file." {
+  {
+    "${_NB}" init
+
+    mkdir -p "${NB_DIR}/home/Example/Sample/Demo"
+
+    printf "# Title" > "${NB_DIR}/home/Example/Sample/Demo/File.md"
+
+    git -C "${NB_DIR}/home" add --all
+    git -C "${NB_DIR}/home" commit -am "Example commit message."
+
+    [[ !  -e "${NB_DIR}/home/Example/.index"              ]]
+    [[ !  -e "${NB_DIR}/home/Example/Sample/.index"       ]]
+    [[ !  -e "${NB_DIR}/home/Example/Sample/Demo/.index"  ]]
+    [[    -e "${NB_DIR}/home/Example/Sample/Demo/File.md" ]]
+
+    git -C "${NB_DIR}/home" status
+
+    [[ -z "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
+  }
+
+  run "${_NB}" list "Example/Sample/Demo/"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                                       ]]
+  [[ "${#lines[@]}" -eq 1                                       ]]
+
+  [[ "${lines[0]}"  =~  \.*[.*Example/Sample/Demo/1.*].*\ Title ]]
+
+  diff                                                  \
+    <(cat "${NB_DIR}/home/Example/.index")              \
+    <(printf "Sample\\n")
+
+  diff                                                  \
+    <(cat "${NB_DIR}/home/Example/Sample/.index")       \
+    <(printf "Demo\\n")
+
+  diff                                                  \
+    <(cat "${NB_DIR}/home/Example/Sample/Demo/.index")  \
+    <(printf "File.md\\n")
+
+  cd "${NB_DIR}/home" || return 1
+
+  git -C "${NB_DIR}/home" status
+  git -C "${NB_DIR}/home" log
+
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
+  do
+    sleep 1
+  done
+
+  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Reconcile Index'
+}
+
+@test "'list' reconciles root-level .index." {
+  {
+    "${_NB}" init
+    "${_NB}" add "File One.md"    --title "Title One"
+    "${_NB}" add "File Two.md"    --title "Title Two"
+    "${_NB}" add "File Three.md"  --title "Title Three"
+
+    printf "# Title Four" > "${NB_DIR}/home/File Four.md"
+
+    "${_NB}" git -C "${NB_DIR}/home" add --all
+    "${_NB}" git -C "${NB_DIR}/home" commit -am "Example commit message."
+
+    git -C "${NB_DIR}/home" status
+
+    [[ -z "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
+
+    diff                              \
+      <(cat "${NB_DIR}/home/.index")  \
+      <(cat <<HEREDOC
+File One.md
+File Two.md
+File Three.md
+HEREDOC
+)
+
+    [[  -e "${NB_DIR}/home/File One.md"    ]]
+    [[  -e "${NB_DIR}/home/File Two.md"    ]]
+    [[  -e "${NB_DIR}/home/File Three.md"  ]]
+    [[  -e "${NB_DIR}/home/File Four.md"   ]]
+  }
+
+  run "${_NB}" list
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                           ]]
+  [[ "${#lines[@]}" -eq 4                           ]]
+
+  [[ "${lines[0]}"  =~  \.*[.*4.*].*\ Title\ Four   ]]
+  [[ "${lines[1]}"  =~  \.*[.*3.*].*\ Title\ Three  ]]
+  [[ "${lines[2]}"  =~  \.*[.*2.*].*\ Title\ Two    ]]
+  [[ "${lines[3]}"  =~  \.*[.*1.*].*\ Title\ One    ]]
+
+  diff                              \
+    <(cat "${NB_DIR}/home/.index")  \
+    <(cat <<HEREDOC
+File One.md
+File Two.md
+File Three.md
+File Four.md
+HEREDOC
+)
+
+  git -C "${NB_DIR}/home" log
+
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
+  do
+    sleep 1
+  done
+
+  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Reconcile Index'
+}
+
+@test "'list' reconciles nested .index." {
+  {
+    "${_NB}" init
+    "${_NB}" add "Example Folder/File One.md"    --title "Title One"
+    "${_NB}" add "Example Folder/File Two.md"    --title "Title Two"
+    "${_NB}" add "Example Folder/File Three.md"  --title "Title Three"
+
+    printf "# Title Four" > "${NB_DIR}/home/Example Folder/File Four.md"
+
+    diff                                            \
+      <(cat "${NB_DIR}/home/Example Folder/.index") \
+      <(cat <<HEREDOC
+File One.md
+File Two.md
+File Three.md
+HEREDOC
+)
+
+    [[  -e "${NB_DIR}/home/Example Folder/File One.md"    ]]
+    [[  -e "${NB_DIR}/home/Example Folder/File Two.md"    ]]
+    [[  -e "${NB_DIR}/home/Example Folder/File Three.md"  ]]
+    [[  -e "${NB_DIR}/home/Example Folder/File Four.md"   ]]
+  }
+
+  run "${_NB}" list Example\ Folder/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                                             ]]
+  [[ "${#lines[@]}" -eq 4                                             ]]
+
+  [[ "${lines[0]}"  =~  \.*[.*Example\ Folder/4.*].*\ Title\ Four     ]]
+  [[ "${lines[1]}"  =~  \.*[.*Example\ Folder/3.*].*\ Title\ Three    ]]
+  [[ "${lines[2]}"  =~  \.*[.*Example\ Folder/2.*].*\ Title\ Two      ]]
+  [[ "${lines[3]}"  =~  \.*[.*Example\ Folder/1.*].*\ Title\ One      ]]
+
+  diff                                            \
+    <(cat "${NB_DIR}/home/Example Folder/.index") \
+    <(cat <<HEREDOC
+File One.md
+File Two.md
+File Three.md
+File Four.md
+HEREDOC
+)
+
+  git -C "${NB_DIR}/home" log
+
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
+  do
+    sleep 1
+  done
+
+  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Reconcile Index'
+}
+
 # pinning #####################################################################
 
 @test "'list --with-pinned' reconciles .pindex when file is deleted and deletes .pindex when empty." {

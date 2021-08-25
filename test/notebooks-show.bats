@@ -61,13 +61,28 @@ load test_helper
   [[ "${output}"  ==  "${NB_DIR}/Example Notebook"  ]]
 }
 
-@test "'notebooks show <notebook-path> --path' exits with 0 and prints the notebook path." {
+@test "'notebooks show <notebook-path> --path' (no slash) exits with 0 and prints the notebook path." {
   {
     "${_NB}" init
     "${_NB}" notebooks add "Example Notebook"
   }
 
   run "${_NB}" notebooks show "${NB_DIR}/Example Notebook" --path
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0                             ]]
+  [[ "${output}"  ==  "${NB_DIR}/Example Notebook"  ]]
+}
+
+@test "'notebooks show <notebook-path>/ --path' (slash) exits with 0 and prints the notebook path." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add "Example Notebook"
+  }
+
+  run "${_NB}" notebooks show "${NB_DIR}/Example Notebook/" --path
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"

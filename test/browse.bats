@@ -7,6 +7,80 @@ export NB_SERVER_PORT=6789
 # non-breaking space
 export _S=" "
 
+# configuration ###############################################################
+
+@test "'browse' sets the server hostname to localhost by default." {
+  {
+    "${_NB}" init
+
+    sleep 1
+  }
+
+  run "${_NB}" browse --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq  0                       ]]
+
+  [[    "${output}"  =~   //localhost:6789/home:  ]]
+  [[ !  "${output}"  =~   //127.0.0.1:6789/home:  ]]
+}
+
+@test "'browse' sets the server hostname to the value in \$NB_SERVER_HOST." {
+  {
+    "${_NB}" init
+
+    sleep 1
+  }
+
+  NB_SERVER_HOST="127.0.0.1" run "${_NB}" browse --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq  0                       ]]
+
+  [[    "${output}"  =~   //127.0.0.1:6789/home:  ]]
+  [[ !  "${output}"  =~   //localhost:6789/home:  ]]
+}
+
+@test "'browse' sets the server port to 6789 by default." {
+  {
+    "${_NB}" init
+
+    sleep 1
+  }
+
+  run "${_NB}" browse --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq  0                       ]]
+
+  [[    "${output}"  =~   //localhost:6789/home:  ]]
+  [[ !  "${output}"  =~   //localhost:4321/home:  ]]
+}
+
+@test "'browse' sets the server port to the value in \$NB_SERVER_PORT." {
+  {
+    "${_NB}" init
+
+    sleep 1
+  }
+
+  NB_SERVER_PORT="4321" run "${_NB}" browse --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq  0                       ]]
+
+  [[    "${output}"  =~   //localhost:4321/home:  ]]
+  [[ !  "${output}"  =~   //localhost:6789/home:  ]]
+}
+
 # conflicting folder and notebook names #######################################
 
 @test "'browse <folder-id>' with conflicting folder and notebook names renders folder." {
@@ -38,16 +112,16 @@ export _S=" "
   [[ "${status}"  ==  0 ]]
 
   [[ "${output}"  =~  \
-href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>       ]]
+href=\"//localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>        ]]
   [[ "${output}"  =~  \
-\<nav\ class=\"header-crumbs\"\>\<h1\>.*\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\"\> ]]
+\<nav\ class=\"header-crumbs\"\>\<h1\>.*\<a.*\ href=\"//localhost:6789/\?--per-page=.*\"\>  ]]
   [[ "${output}"  =~  \
-.*·.*\ \<a.*\ href=\"http://localhost:6789/home:\?--per-page=.*\"\>home\</a\>\ .*:.*\           ]]
+.*·.*\ \<a.*\ href=\"//localhost:6789/home:\?--per-page=.*\"\>home\</a\>\ .*:.*\            ]]
   [[ "${output}"  =~  \
-\<a.*\ href=\"http://localhost:6789/home:1/\?--per-page=.*\"\>Example\ Conflicting\ Name\</a\>\ .*/.*\</h1\>  ]]
+\<a.*\ href=\"//localhost:6789/home:1/\?--per-page=.*\"\>Example\ Conflicting\ Name\</a\>\ .*/.*\</h1\>  ]]
 
   [[ "${output}"  =~  \
-\<a.*\ href=\"http://localhost:6789/home:1/1\?--per-page=.*\"\ class=\"list-item\"\>.*\[.*Example${_S}Conflicting${_S}Name/1.*\].*   ]]
+\<a.*\ href=\"//localhost:6789/home:1/1\?--per-page=.*\"\ class=\"list-item\"\>.*\[.*Example${_S}Conflicting${_S}Name/1.*\].* ]]
   [[ "${output}"  =~  \
 class=\"list-item\"\>.*\[.*Example${_S}Conflicting${_S}Name/1.*\].*${_S}Example${_S}Folder${_S}File.md${_S}·  ]]
   [[ "${output}"  =~  \
@@ -400,13 +474,13 @@ HEREDOC
   [[ "${status}"  ==  0 ]]
 
   [[ "${output}"  =~  \
-href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>             ]]
+href=\"//localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>          ]]
   [[ "${output}"  =~  \
-\<nav\ class=\"header-crumbs\"\>\<h1\>.*\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\"\>       ]]
+\<nav\ class=\"header-crumbs\"\>\<h1\>.*\<a.*\ href=\"//localhost:6789/\?--per-page=.*\"\>    ]]
   [[ "${output}"  =~  \
-.*·.*\ \<a.*\ href=\"http://localhost:6789/home:\?--per-page=.*\"\>home\</a\>\ .*:.*\                 ]]
+.*·.*\ \<a.*\ href=\"//localhost:6789/home:\?--per-page=.*\"\>home\</a\>\ .*:.*\              ]]
   [[ "${output}"  =~  \
-\<a.*\ href=\"http://localhost:6789/home:1/\?--per-page=.*\"\>Example\ Folder\</a\>\ .*/.*\</h1\>     ]]
+\<a.*\ href=\"//localhost:6789/home:1/\?--per-page=.*\"\>Example\ Folder\</a\>\ .*/.*\</h1\>  ]]
 
   [[ "${output}"  =~  0\ items. ]]
 
@@ -418,16 +492,16 @@ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</spa
   [[ "${status}"  ==  0 ]]
 
   [[ "${output}"  =~  \
-\<nav\ class=\"header-crumbs\"\>\<h1\>\<a.*\ href=\"http://localhost:6789/\?--per-page=.*\"\>\<span\  ]]
+\<nav\ class=\"header-crumbs\"\>\<h1\>\<a.*\ href=\"//localhost:6789/\?--per-page=.*\"\>\<span  ]]
   [[ "${output}"  =~  \
-\<span\ class=\"dim\"\>❯\</span\>nb\</a\>                               ]]
+\<span\ class=\"dim\"\>❯\</span\>nb\</a\>                                         ]]
   [[ "${output}"  =~  \
-.*·.*\ \<a.*\ href=\"http://localhost:6789/home:\?--per-page=.*\"\>home\</a\>\ .*:.*\   ]]
+.*·.*\ \<a.*\ href=\"//localhost:6789/home:\?--per-page=.*\"\>home\</a\>\ .*:.*\  ]]
   [[ "${output}"  =~  \
-\<a.*\ href=\"http://localhost:6789/home:2/\?--per-page=.*\"\>1\</a\>\ .*/.*\</h1\>     ]]
+\<a.*\ href=\"//localhost:6789/home:2/\?--per-page=.*\"\>1\</a\>\ .*/.*\</h1\>    ]]
 
   [[ "${output}"  =~  \
-\<a.*\ href=\"http://localhost:6789/home:2/1\?--per-page=.*\"\ class=\"list-item\"\>.*\[.*1/1.*\].*       ]]
+\<a.*\ href=\"//localhost:6789/home:2/1\?--per-page=.*\"\ class=\"list-item\"\>.*\[.*1/1.*\].*  ]]
   [[ "${output}"  =~  \
 class=\"list-item\"\>.*\[.*1/1.*\].*${_S}File${_S}One.md${_S}·${_S}\"Example${_S}content\.\"\</a\>\<br\>  ]]
 }

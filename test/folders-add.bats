@@ -33,12 +33,14 @@ load test_helper
     <(cat "${_TMP_DIR}/Example Local/Example Folder/Sample Folder/Demo Folder/Example File.md") \
     <(printf "# Title One\\n\\nContent one.\\n")
 
-  cd "${_TMP_DIR}/Example Local" || return 1
-  while [[ -n "$(git status --porcelain)" ]]
+  while [[ -n "$(git -C "${_TMP_DIR}/Example Local" status --porcelain)" ]]
   do
     sleep 1
   done
-  git log | grep -q '\[nb\] Add'
+
+  git -C "${_TMP_DIR}/Example Local" log
+
+  git -C "${_TMP_DIR}/Example Local" log | grep -q '\[nb\] Add'
 
   [[ "${output}" =~ \
        \ .*Example\ Folder/Sample\ Folder/Demo\ Folder/Example\ File.md ]]

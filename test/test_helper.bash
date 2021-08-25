@@ -19,6 +19,9 @@ _setup() {
   # https://stackoverflow.com/a/6762399
   set +o noclobber
 
+  # Allow globbing.
+  set +o noglob
+
   export _ME="nb"
 
   # Set terminal width.

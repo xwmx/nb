@@ -4,7 +4,7 @@ load test_helper
 
 # #############################################################################
 
-@test "'index' with folder path reconciles ancestors indexes if .index doesn't exist." {
+@test "'index' with folder path reconciles ancestors' indexes if .index doesn't exist." {
   {
     "${_NB}" init
 
@@ -29,11 +29,16 @@ HEREDOC
 <https://1.example.test>
 HEREDOC
 
+    sleep 1
+
     cat <<HEREDOC > "${NB_DIR}/home/Example Folder/Sample Folder/two.bookmark.md"
 # Example Title Two
 
 <https://2.example.test>
 HEREDOC
+
+    sleep 1
+
     cat <<HEREDOC > "${NB_DIR}/home/Example Folder/Sample Folder/three.bookmark.md"
 # Example Title Three
 
@@ -62,8 +67,8 @@ HEREDOC
 
   "${_NB}" git log --stat
 
-  [[ ${status} -eq 0  ]]
-  [[ -z "${output}"   ]]
+  [[    "${status}" -eq 0 ]]
+  [[ -z "${output}"       ]]
 
   # .index is reconciled in notebook root:
 
@@ -81,9 +86,25 @@ HEREDOC
 
   cat "${NB_DIR}/home/Example Folder/Sample Folder/.index"
 
-  [[ "$(cat "${NB_DIR}/home/Example Folder/Sample Folder/.index")"   =~ one.bookmark.md    ]]
-  [[ "$(cat "${NB_DIR}/home/Example Folder/Sample Folder/.index")"   =~ two.bookmark.md    ]]
-  [[ "$(cat "${NB_DIR}/home/Example Folder/Sample Folder/.index")"   =~ three.bookmark.md  ]]
+  diff                                                          \
+    <(cat "${NB_DIR}/home/Example Folder/Sample Folder/.index") \
+    <(cat <<HEREDOC
+one.bookmark.md
+two.bookmark.md
+three.bookmark.md
+HEREDOC
+)
+
+  # Create git commit:
+
+  git -C "${NB_DIR}/home" log
+
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
+  do
+    sleep 1
+  done
+
+  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Reconcile Index'
 }
 
 # add #########################################################################

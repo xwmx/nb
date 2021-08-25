@@ -3871,9 +3871,10 @@ that could inform a strategy for handling any such cases automatically.
   </sup>
 </p>
 
-Files of any type can be imported into a notebook using [`nb import`](#import).
-[`nb edit`](#edit) and [`nb open`](#open)
-will open files in your system's default application for that file type.
+Files of any type can be imported into a notebook using
+[`nb import`](#import) (shortcut: `nb i`).
+[`nb edit`](#edit) and [`nb open`](#open) open files in
+your system's default application for that file type.
 
 ```bash
 # import an image file
@@ -4645,7 +4646,7 @@ content. For example, displayed timestamps are derived from
 displaying the datetime of the first commit containing the file and
 [`nb show --updated`](#show) displaying the datetime of the last commit in
 which the file was modified. Meanwhile, the file system's modified
-timestamp used for sorting.
+timestamp is used for sorting.
 
 `nb` also uses plain text files to store ids and state information in
 git, including
@@ -4903,9 +4904,10 @@ Usage:
   nb bookmark [<ls options>...]
   nb bookmark [<notebook>:][<folder-path>/] <url>
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
-              [-f <filename> | --filename <filename>] [-q | --quote]
-              [-r <url> | --related <url>]... [--save-source] [--skip-content]
-              [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...] [--title <title>]
+              [-f <filename> | --filename <filename>] [--no-request]
+              [-q <quote> | --quote <quote>] [-r <url> | --related <url>]...
+              [--save-source] [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...]
+              [--title <title>]
   nb bookmark [list [<list-options>...]]
   nb bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   nb bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
@@ -5088,10 +5090,10 @@ Usage:
   bookmark [<ls options>...]
   bookmark [<notebook>:][<folder-path>] <url>
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
-              [-f <filename> | --filename <filename>] [-q | --quote]
-              [-r <url> | --related <url>]... [--save-source] [--skip-content]
-              [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...] [--title <title>]
-  bookmark list [<list-options>...]
+              [-f <filename> | --filename <filename>] [--no-request]
+              [-q <quote> | --quote <quote>] [-r <url> | --related <url>]...
+              [--save-source] [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...]
+              [--title <title>]
   bookmark (edit | delete | open | peek | url)
               ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
   bookmark search <query>
@@ -5103,13 +5105,13 @@ Options:
   -f, --filename <filename>    The filename for the bookmark. It is
                                recommended to omit the extension so the
                                default bookmark extension is used.
+  --no-request                 Don't request or download the target page.
   -q, --quote <quote>          A quote or excerpt from the saved page.
                                Alias: `--excerpt`
   -r, --related <url>          A URL for a page related to the bookmarked page.
                                Multiple `--related` flags can be used in a
                                command to save multiple related URLs.
   --save-source                Save the page source as HTML.
-  --skip-content               Omit page content from the note.
   -t, --tags <tag1>,<tag2>...  A comma-separated list of tags.
   --title <title>              The bookmark title. When not specified,
                                `nb` will use the html <title> tag.
@@ -5305,8 +5307,13 @@ Examples:
   nb example:a
   nb example:a -t "Title"
 
-Aliases: `nb create`, `nb new`
-Shortcut Aliases: `nb a`, `nb +`
+Aliases:
+  nb create
+  nb new
+
+Shortcut Aliases:
+  nb a
+  nb +
 ```
 
 #### `archive`
@@ -5338,7 +5345,8 @@ Examples:
   nb archive
   nb archive example
 
-Shortcut Alias: `nb ar`
+Shortcut Alias:
+  nb ar
 ```
 
 #### `bookmark`
@@ -5355,9 +5363,10 @@ Usage:
   nb bookmark [<ls options>...]
   nb bookmark [<notebook>:][<folder-path>/] <url>
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
-              [-f <filename> | --filename <filename>] [-q | --quote]
-              [-r <url> | --related <url>]... [--save-source] [--skip-content]
-              [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...] [--title <title>]
+              [-f <filename> | --filename <filename>] [--no-request]
+              [-q <quote> | --quote <quote>] [-r <url> | --related <url>]...
+              [--save-source] [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...]
+              [--title <title>]
   nb bookmark list [<list-options>...]
   nb bookmark (edit | delete | open | peek | url)
               ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
@@ -5370,13 +5379,13 @@ Options:
   -f, --filename <filename>    The filename for the bookmark. It is
                                recommended to omit the extension so the
                                default bookmark extension is used.
+  --no-request                 Don't request or download the target page.
   -q, --quote <quote>          A quote or excerpt from the saved page.
                                Alias: `--excerpt`
   -r, --related <url>          A URL for a page related to the bookmarked page.
                                Multiple `--related` flags can be used in a
                                command to save multiple related URLs.
   --save-source                Save the page source as HTML.
-  --skip-content               Omit page content from the note.
   -t, --tags <tag1>,<tag2>...  A comma-separated list of tags.
   --title <title>              The bookmark title. When not specified,
                                `nb` will use the html <title> tag.
@@ -5443,7 +5452,8 @@ Examples:
   nb bookmark open 5
   nb bk
 
-Shortcut Alias: `nb bk`
+Shortcut Alias:
+  nb bk
 ```
 
 #### `browse`
@@ -5545,7 +5555,8 @@ Examples:
   nb browse demo:456
   nb br
 
-Shortcut Alias: `nb br`
+Shortcut Alias:
+  nb br
 ```
 
 #### `completions`
@@ -5628,7 +5639,9 @@ Examples:
   nb d example:12
   nb example:12 d
 
-Shortcut Aliases: `nb d`, `nb -`
+Shortcut Aliases:
+  nb d
+  nb -
 ```
 
 #### `edit`
@@ -5691,7 +5704,8 @@ Examples:
   nb e example:12
   nb example:12 e
 
-Shortcut Alias: `nb e`
+Shortcut Alias:
+  nb e
 ```
 
 #### `env`
@@ -5849,7 +5863,8 @@ Examples:
   nb h notebooks
   nb h e
 
-Shortcut Alias: `nb h`
+Shortcut Alias:
+  nb h
 ```
 
 #### `history`
@@ -5936,6 +5951,9 @@ Examples:
   nb import ./*.md
   nb import ~/Pictures/example.png example-notebook:
   nb import ~/Documents/example.docx example-folder/
+
+Shortcut Alias:
+  nb i
 ```
 
 #### `init`
@@ -6193,8 +6211,11 @@ Examples:
   # change the file extension of note 5 to .org
   nb rename 5 .org
 
-Alias: `nb rename`
-Shortcut Alias: `nb mv`
+Alias:
+  nb rename
+
+Shortcut Alias:
+  nb mv
 ```
 
 #### `notebooks`
@@ -6312,7 +6333,9 @@ Examples:
   nb nb current --path
   nb nb archive example
 
-Shortcut Aliases: `nb n`, `nb nb`
+Shortcut Aliases:
+  nb n
+  nb nb
 ```
 
 #### `open`
@@ -6355,7 +6378,8 @@ Examples:
   nb o example:12
   nb example:12 o
 
-Shortcut Alias: `nb o`
+Shortcut Alias:
+  nb o
 ```
 
 #### `peek`
@@ -6403,8 +6427,11 @@ Examples:
   nb p example:12
   nb example:12 p
 
-Alias: `nb preview`
-Shortcut Alias: `nb p`
+Alias:
+  nb preview
+
+Shortcut Alias:
+  nb p
 ```
 
 #### `pin`
@@ -6625,7 +6652,8 @@ Examples:
   # search all notebooks for "example query" and list matching items
   nb q -la "example query"
 
-Shortcut Alias: `nb q`
+Shortcut Alias:
+  nb q
 ```
 
 #### `settings`
@@ -6683,7 +6711,8 @@ Examples:
   nb settings colors 105
   nb set limit 15
 
-Alias: `nb set`
+Alias:
+  nb set
 ```
 
 ##### `auto_sync`
@@ -7098,7 +7127,8 @@ Examples:
   nb status
   nb status example
 
-Shortcut Alias: `nb st`
+Shortcut Alias:
+  nb st
 ```
 
 #### `subcommands`
@@ -7220,7 +7250,8 @@ Examples:
   nb unarchive
   nb unarchive example
 
-Shortcut Alias: `nb unar`
+Shortcut Alias:
+  nb unar
 ```
 
 #### `unpin`
@@ -7278,7 +7309,8 @@ Examples:
   nb unset color_primary
   nb unset 2
 
-Alias: `nb reset`
+Alias:
+  nb reset
 ```
 
 #### `update`
@@ -7330,7 +7362,8 @@ See Also:
 Example:
   nb use example
 
-Shortcut Alias: `nb u`
+Shortcut Alias:
+  nb u
 ```
 
 #### `version`
@@ -7724,7 +7757,7 @@ Usage:
   nb index get_id <filename>
   nb index get_max_id
   nb index rebuild [--ancestors]
-  nb index reconcile [--ancestors]
+  nb index reconcile [--ancestors] [--commit]
   nb index show
   nb index update <existing-filename> <new-filename>
   nb index verify
@@ -7733,6 +7766,7 @@ Usage:
 Options:
   --ancestors   Perform the action on all folders within the notebook that
                 are ancestors of the current folder.
+  --commit      Commit changes to git.
 
 Subcommands:
   add           Add <filename> to the index.
@@ -7777,7 +7811,7 @@ at the root level of the notebook directory.
 
 ## Tests
 
-With more than 1,700 tests spanning tens of thousands of lines,
+With more than 1,800 tests spanning tens of thousands of lines,
 `nb` is really mostly a
 [test suite](https://github.com/xwmx/nb/tree/master/test).
 Tests run continuously [via GitHub Actions](https://github.com/xwmx/nb/actions)

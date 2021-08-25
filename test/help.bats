@@ -3,6 +3,34 @@
 
 load test_helper
 
+# error handling ##############################################################
+
+@test "'help example' exits with 0 and prints message." {
+  run "${_NB}" help example_name_123
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                                       ]]
+  [[ "${#lines[@]}" -eq 1                                       ]]
+
+  [[ "${lines[0]}"  =~  \
+No\ additional\ information\ for\ .*\`.*example_name_123.*\`.*$ ]]
+}
+
+@test "'help example:' exits with 0 and prints message." {
+  run "${_NB}" help example:name:123
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                                       ]]
+  [[ "${#lines[@]}" -eq 1                                       ]]
+
+  [[ "${lines[0]}"  =~  \
+No\ additional\ information\ for\ .*\`.*example:name:123.*\`.*$ ]]
+}
+
 # color #######################################################################
 
 @test "'help' and 'help <subcommand>' respect --no-color option." {
@@ -11,8 +39,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}" -eq 0             ]]
-
+  [[    "${status}" -eq 0                                           ]]
   [[    "${output}" =~  \
 nb\ -h\ \|\ \-\-help\ \|\ help\ \[\<subcommand\>\ \|\ \-\-readme\]  ]]
 
@@ -21,8 +48,7 @@ nb\ -h\ \|\ \-\-help\ \|\ help\ \[\<subcommand\>\ \|\ \-\-readme\]  ]]
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}" -eq  0            ]]
-
+  [[    "${status}" -eq  0                                          ]]
   [[    "${output}" =~  \[\-s\ \|\ \-\-serve\]                      ]]
 }
 
@@ -32,7 +58,7 @@ nb\ -h\ \|\ \-\-help\ \|\ help\ \[\<subcommand\>\ \|\ \-\-readme\]  ]]
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}" -eq 0             ]]
+  [[    "${status}" -eq 0                                                             ]]
 
   [[    "${output}" =~  \
 nb\ -h\ .*\|.*\ \-\-help\ .*\|.*\ help\ .*\[.*\<subcommand\>\ .*\|.*\ \-\-readme.*\]  ]]
@@ -44,7 +70,7 @@ nb\ -h\ \|\ \-\-help\ \|\ help\ \[\<subcommand\>\ \|\ \-\-readme\]              
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}" -eq  0            ]]
+  [[    "${status}" -eq  0                              ]]
 
   [[    "${output}" =~  \[.*\-s\ .*\|.*\ \-\-serve.*\]  ]]
   [[ !  "${output}" =~  \[\-s\ \|\ \-\-serve\]          ]]
@@ -114,9 +140,10 @@ nb\ -h\ \|\ \-\-help\ \|\ help\ \[\<subcommand\>\ \|\ \-\-readme\]              
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}" -eq  0                                     ]]
+  [[ "${status}" -eq  0                       ]]
 
-  [[ "${output}" =~ Shortcut\ Alias.*\:\ .*\`.*nb\ h.*\`.*  ]]
+  [[ "${lines[17]}" =~ Shortcut\ Alias.*\:$   ]]
+  [[ "${lines[18]}" =~ ^\ \ nb\ h$            ]]
 }
 
 @test "'help settings' exits with 0 and prints 'settings' subcommand usage." {
