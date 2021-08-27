@@ -16998,8 +16998,6 @@ HEREDOC
       local _list_count=
       _list_count="$(_count "${_target_path}")"
 
-
-
       local _print_prev=0
 
       if ((_list_count)) && [[ "${_current_page}" -gt 1 ]]
