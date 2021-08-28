@@ -7049,7 +7049,7 @@ HEREDOC
 
     if [[ -n "${_remote_url:-}"     ]]  && [[ -z "${_path}"         ]]
     then
-      _exit_1 printf \
+      _exit_1 printf                                                    \
         "Must specify a <path> when cloning from <remote-url>.\\n%s\\n" \
         "$(_help "notebooks")"
     fi
@@ -8589,8 +8589,8 @@ _decrypt_file() {
           --output "${_unencrypted_path}" \
           --decrypt "${_encrypted_path}"
     else
-      _exit_1 printf "\
-This item was encrypted with GPG, but the GPG command was not found.\\n"
+      _exit_1 printf                      \
+"This item was encrypted with GPG, but the GPG command was not found.\\n"
     fi
   elif [[ "${_file_command_response}" =~ openssl ]]
   then
@@ -8737,15 +8737,15 @@ _edit_file() {
   then
     if _file_is_encrypted "${_file_path}"
     then
-      _exit_1 printf "\
-File must be decrypted before editing.\\n"
+      _exit_1 printf                  \
+"File must be decrypted before editing.\\n"
     fi
 
     if _file_is_archive "${_file_path}"   &&
        [[ ! "${_file_path}" =~ docx$  ]]
     then
-      _exit_1 printf "\
-Can't edit archives. Export archive and expand to edit.\\n"
+      _exit_1 printf                  \
+"Can't edit archives. Export archive and expand to edit.\\n"
     fi
 
     if ! _file_is_text "${_file_path}"    &&
@@ -8848,8 +8848,8 @@ _encrypt_file() {
       -out "${_encrypted_path}"       \
       -pass file:<(printf "%s\\n" "${_password}") 2> /dev/null
   else
-    _exit_1 \
-      printf "\$NB_ENCRYPTION_TOOL must be set to 'gpg' or 'openssl'.\\n"
+    _exit_1 printf                    \
+      "\$NB_ENCRYPTION_TOOL must be set to 'gpg' or 'openssl'.\\n"
   fi
 
   if [[ ! -e "${_encrypted_path}" ]]
@@ -12667,9 +12667,9 @@ _env() {
          [[ "${_name}" == "ripgrep" ]]  && ! ((_x86_64_bit))
        }
     then
-      _warn printf "\
-Please install %s manually. No .deb package available for %s."  \
-        "$(_color_primary "${_name}")"                          \
+      _warn printf                                                      \
+        "Please install %s manually. No .deb package available for %s." \
+        "$(_color_primary "${_name}")"                                  \
         "$(_color_primary "${_arch}")"
       return 0
     fi
