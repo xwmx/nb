@@ -2095,10 +2095,7 @@ _list_files() {
 
   while ((${#}))
   do
-    local __arg="${1:-}"
-    local __val="${2:-}"
-
-    case "${__arg}" in
+    case "${1:-}" in
       --reverse)
         _reverse=1
         ;;
@@ -2109,19 +2106,19 @@ _list_files() {
         _read_from_standard_input=1
         ;;
       --type)
-        if _option_value_is_present "${__val:-}"
+        if _option_value_is_present "${2:-}"
         then
-          _type="${__val}"
+          _type="${2}"
           shift
         fi
         ;;
       --[A-Za-z]*)
-        _type="${__arg:2}"
+        _type="${1:2}"
         ;;
       [^-]*)
-        if [[ -z "${_path:-}" ]] && [[ "${__arg:-}" =~ ^/ ]]
+        if [[ -z "${_path:-}" ]] && [[ "${1:-}" =~ ^/ ]]
         then
-          _path="${__arg}"
+          _path="${1}"
         fi
     esac
 
@@ -2822,23 +2819,20 @@ _count() {
 
   while ((${#}))
   do
-    local __arg="${1:-}"
-    local __val="${2:-}"
-
-    case "${__arg}" in
+    case "${1:-}" in
       --type)
-        _list_files_options+=("${__arg}")
-        _list_files_options+=(_option_get_value "${__arg}" "${__val:-}")
+        _list_files_options+=("${1}")
+        _list_files_options+=(_option_get_value "${1}" "${2:-}")
         shift
         ;;
       --skip-unmatched-selector)
         _skip_unmatched_selector=1
         ;;
       -*|/*)
-        _list_files_options+=("${__arg}")
+        _list_files_options+=("${1}")
         ;;
       *)
-        _selector="${__arg}"
+        _selector="${1}"
         ;;
     esac
 
@@ -4543,10 +4537,7 @@ _list() {
 
   while ((${#}))
   do
-    local __arg="${1:-}"
-    local __val="${2:-}"
-
-    case "${__arg}" in
+    case "${1:-}" in
       -a|--all)
         _limit=
         ;;
@@ -4554,10 +4545,10 @@ _list() {
         _print_excerpt=1
         _recursive_arguments+=("--excerpt")
 
-        if _option_value_is_present "${__val:-}"
+        if _option_value_is_present "${2:-}"
         then
-          _excerpt_length="${__val:-}"
-          _recursive_arguments+=("${__val:-}")
+          _excerpt_length="${2:-}"
+          _recursive_arguments+=("${2:-}")
           shift
         fi
         ;;
@@ -4585,9 +4576,9 @@ _list() {
         _recursive_arguments+=("--no-wrap")
         ;;
       -n|--limit|--num|--number)
-        if _option_value_is_present "${__val:-}"
+        if _option_value_is_present "${2:-}"
         then
-          _limit="${__val:-}"
+          _limit="${2:-}"
           shift
         fi
         ;;
@@ -4595,7 +4586,7 @@ _list() {
         _print_notebook_selectors=1
         ;;
       --page)
-        _page="$(_option_get_value "${__arg}" "${__val:-}")"
+        _page="$(_option_get_value "${1}" "${2:-}")"
         ((_page)) || _page=1
         shift
         ;;
@@ -4607,7 +4598,7 @@ _list() {
         _recursive_arguments+=("--paths")
         ;;
       --per*)
-        _per_page="$(_option_get_value "${__arg}" "${__val:-}")"
+        _per_page="$(_option_get_value "${1}" "${2:-}")"
         shift
         ;;
       --pinned)
@@ -4632,24 +4623,24 @@ _list() {
         : # Do nothing. This is the default behavior.
         ;;
       -t|--type)
-        _type="$(_option_get_value "${__arg}" "${__val:-}")"
+        _type="$(_option_get_value "${1}" "${2:-}")"
         shift
         ;;
       --with*pinned)
         _with_pinned=1
         ;;
       *)
-        if   [[   "${__arg:-}" =~ ^--[0-9]+$  ]]
+        if   [[   "${1:-}" =~ ^--[0-9]+$  ]]
         then
-          _limit="${__arg:2}"
-        elif [[   "${__arg:-}" =~ ^--         ]]
+          _limit="${1:2}"
+        elif [[   "${1:-}" =~ ^--         ]]
         then
-          if ! _contains "${__arg:-}" "--ar" "--archived" "--unar" "--unarchived"
+          if ! _contains "${1:-}" "--ar" "--archived" "--unar" "--unarchived"
           then
-            _type="${__arg:2}"
+            _type="${1:2}"
           fi
         else
-          _selector_arguments+=("${__arg:-}")
+          _selector_arguments+=("${1:-}")
         fi
         ;;
     esac
@@ -5884,26 +5875,23 @@ _ls() {
 
   while ((${#}))
   do
-    local __arg="${1:-}"
-    local __val="${2:-}"
-
-    case "${__arg}" in
+    case "${1:-}" in
       --added|--ar|--archived|--unar|--unarchived|--updated)
-        _delegate_arguments+=("${__arg}")
+        _delegate_arguments+=("${1}")
         ;;
       -a|--all)
         _all=1
         ;;
       --auto*align|--centered|--justified|--plain)
-        _header_flags+=("${__arg}")
+        _header_flags+=("${1}")
         ;;
       -b|--browse)
         _delegate_to_browse=1
         ;;
       --content|--title)
-        if _option_value_is_present "${__val:-}"
+        if _option_value_is_present "${2:-}"
         then
-          _delegate_arguments+=("${__arg}" "${__val:-}")
+          _delegate_arguments+=("${1}" "${2:-}")
           shift
         fi
         ;;
@@ -5912,10 +5900,10 @@ _ls() {
         ;;
       -g|--gui)
         _delegate_to_browse=1
-        _delegate_arguments+=("${__arg}")
+        _delegate_arguments+=("${1}")
         ;;
       -n|--limit|--num|--number)
-        _limit="$(_option_get_value "${__arg}" "${__val:-}")"
+        _limit="$(_option_get_value "${1}" "${2:-}")"
         shift
         ;;
       -p|--pager|--less)
@@ -5931,60 +5919,60 @@ _ls() {
         NB_HEADER=0
         ;;
       -s|--sort|-r|--reverse)
-        _arguments+=("${__arg}")
+        _arguments+=("${1}")
         _with_pinned=0
         ;;
       --tags)
-        _delegate_arguments+=("${__arg}")
+        _delegate_arguments+=("${1}")
         ;;
       -t|--type)
-        _maybe_type="$(_option_get_value "${__arg}" "${__val:-}")"
-        _arguments+=("${__arg}" "${__val:-}")
+        _maybe_type="$(_option_get_value "${1}" "${2:-}")"
+        _arguments+=("${1}" "${2:-}")
         shift
         ;;
       --[0-9]*)
-        if [[ "${__arg:-}" =~ ^--[0-9]+$ ]]
+        if [[ "${1:-}" =~ ^--[0-9]+$ ]]
         then
-          _limit="${__arg#\-\-}"
+          _limit="${1#\-\-}"
         else
-          _arguments+=("${__arg}")
+          _arguments+=("${1}")
         fi
         ;;
       --[A-Za-z]*)
-        _maybe_type="${__arg:2}"
+        _maybe_type="${1:2}"
 
-        _arguments+=("${__arg}")
+        _arguments+=("${1}")
         ;;
       -*)
-        _arguments+=("${__arg}")
+        _arguments+=("${1}")
 
-        if _option_value_is_present "${__val:-}"
+        if _option_value_is_present "${2:-}"
         then
-          _arguments+=("${__val:-}")
+          _arguments+=("${2:-}")
 
           shift
         fi
         ;;
       *:*)
         local _selector_id=
-        _selector_id="$(_selector_get_identifier "${__arg}")"
+        _selector_id="$(_selector_get_identifier "${1}")"
 
         if [[ -n "${_selector_id:-}" ]]
         then
           _arguments+=("${_selector_id}")
         fi
 
-        _selector="${__arg:-}"
-        _filter_patterns+=("${__arg}")
+        _selector="${1:-}"
+        _filter_patterns+=("${1}")
         ;;
       *)
         if [[ -z "${_selector:-}" ]]
         then
-          _selector="${__arg}"
+          _selector="${1}"
         fi
 
-        _arguments+=("${__arg}")
-        _filter_patterns+=("${__arg}")
+        _arguments+=("${1}")
+        _filter_patterns+=("${1}")
         ;;
     esac
 
@@ -6739,10 +6727,7 @@ HEREDOC
 
     while ((${#}))
     do
-      local __arg="${1:-}"
-      local __val="${2:-}"
-
-      case "${__arg:-}" in
+      case "${1:-}" in
         --global)
           _print_global=1
           ;;
@@ -6758,14 +6743,14 @@ HEREDOC
         --filename|--basename|--file*path)
           _print_unique_file_path=1
 
-          if _option_value_is_present "${__val:-}"
+          if _option_value_is_present "${2:-}"
           then
-            _file_path="${__val}"
+            _file_path="${2}"
             shift
           fi
           ;;
         [^-]*)
-          _selector="${__arg}"
+          _selector="${1}"
           ;;
       esac
 
@@ -7535,10 +7520,7 @@ HEREDOC
 
     while ((${#}))
     do
-      local __arg="${1:-}"
-      local __val="${2:-}"
-
-      case "${__arg}" in
+      case "${1:-}" in
         --archived)
           _test_archived=1
           ;;
@@ -7557,16 +7539,16 @@ HEREDOC
         --filename|--basename|--file*path)
           _print_unique_file_path=1
 
-          if _option_value_is_present "${__val:-}"
+          if _option_value_is_present "${2:-}"
           then
-            _file_path="${__val}"
+            _file_path="${2}"
             shift
           fi
           ;;
         *)
           if [[ -z "${_selector}"   ]]
           then
-            _selector="${__arg}"
+            _selector="${1:-}"
           fi
           ;;
       esac
@@ -10709,17 +10691,14 @@ _add() {
 
   while ((${#}))
   do
-    local __arg="${1:-}"
-    local __val="${2:-}"
-
-    case "${__arg}" in
+    case "${1:-}" in
       -b|-br|--browse)
         _browse=1
         ;;
       -c|--content)
         [[ -n "${_option_content:-}" ]] && _option_content+="${_NEWLINE}${_NEWLINE}"
-        _option_content+="$(_option_get_value "${__arg}" "${__val:-}")"
-        _browse_arguments+=("${__arg}" "${__val:-}")
+        _option_content+="$(_option_get_value "${1}" "${2:-}")"
+        _browse_arguments+=("${1}" "${2:-}")
         shift
         ;;
       --edit)
@@ -10737,47 +10716,47 @@ _add() {
         fi
         ;;
       -f|--file*|--*path|--target*)
-        _option_relative_path="$(_option_get_value "${__arg}" "${__val:-}")"
-        _browse_arguments+=("${__arg}" "${__val:-}")
+        _option_relative_path="$(_option_get_value "${1}" "${2:-}")"
+        _browse_arguments+=("${1}" "${2:-}")
         shift
         ;;
       --folder)
         _option_folder_relative_path="$(
-          _option_get_value "${__arg}" "${__val:-}" | sed -e 's/\/$//'
+          _option_get_value "${1}" "${2:-}" | sed -e 's/\/$//'
         )"
-        _browse_arguments+=("${__arg}" "${_option_folder_relative_path:-}")
+        _browse_arguments+=("${1}" "${_option_folder_relative_path:-}")
         shift
         ;;
       --no*color)
         _COLOR_ENABLED=0
         ;;
       --password)
-        _password="$(_option_get_value "${__arg}" "${__val:-}")"
+        _password="$(_option_get_value "${1}" "${2:-}")"
         shift
         ;;
       --tag*)
         [[ -n "${_tag_list:-}" ]] && _tag_list+=" "
-        _tag_list+="$(_option_get_tags "${__arg}" "${__val:-}")"
-        _browse_arguments+=("${__arg}" "${__val:-}")
+        _tag_list+="$(_option_get_tags "${1}" "${2:-}")"
+        _browse_arguments+=("${1}" "${2:-}")
         shift
         ;;
       -t|--title|--name)
         # TODO: Detect tag list for dynamic -t for --titles and --tags?
-        _title="$(_option_get_value "${__arg}" "${__val:-}")"
-        _browse_arguments+=("${__arg}" "${__val:-}")
+        _title="$(_option_get_value "${1}" "${2:-}")"
+        _browse_arguments+=("${1}" "${2:-}")
         shift
         ;;
       --type)
-        _file_type="$(_option_get_value "${__arg}" "${__val:-}")"
-        _browse_arguments+=("${__arg}" "${__val:-}")
+        _file_type="$(_option_get_value "${1}" "${2:-}")"
+        _browse_arguments+=("${1}" "${2:-}")
         shift
         ;;
       folder|directory)
         _file_type="folder"
-        _browse_arguments+=("${__arg}")
+        _browse_arguments+=("${1}")
         ;;
       *)
-        _arguments+=("${__arg:-}")
+        _arguments+=("${1:-}")
         ;;
     esac
 
@@ -11332,12 +11311,9 @@ _bookmark() {
 
   while ((${#}))
   do
-    local __arg="${1:-}"
-    local __val="${2:-}"
-
-    case "${__arg}" in
+    case "${1:-}" in
       -c|--comment*)
-        _comment="$(_option_get_value "${__arg}" "${__val:-}")"
+        _comment="$(_option_get_value "${1}" "${2:-}")"
         shift
         ;;
       --download|--fetch|--online|--request)
@@ -11350,22 +11326,22 @@ _bookmark() {
         _encrypt=1
         ;;
       -f|--filename)
-        _target_filename="$(_option_get_value "${__arg}" "${__val:-}")"
+        _target_filename="$(_option_get_value "${1}" "${2:-}")"
         shift
         ;;
       --no*download|--no*fetch|--no*request|--offline)
         _request_page=0
         ;;
       --password)
-        _password="$(_option_get_value "${__arg}" "${__val:-}")"
+        _password="$(_option_get_value "${1}" "${2:-}")"
         shift
         ;;
       -q|--quote|--excerpt)
-        _quote="$(_option_get_value "${__arg}" "${__val:-}")"
+        _quote="$(_option_get_value "${1}" "${2:-}")"
         shift
         ;;
       -r|--via|--also|--related)
-        _related_urls+=("$(_option_get_value "${__arg}" "${__val:-}")")
+        _related_urls+=("$(_option_get_value "${1}" "${2:-}")")
         shift
         ;;
       --save*source|--source|--save*html|--html|--raw*content|--raw*html)
@@ -11375,19 +11351,19 @@ _bookmark() {
         _skip_content=1
         ;;
       -t|--tag*)
-        _tag_list="$(_option_get_tags "${__arg}" "${__val:-}")"
+        _tag_list="$(_option_get_tags "${1}" "${2:-}")"
         shift
         ;;
       --title)
-        _title="$(_option_get_value "${__arg}" "${__val:-}")"
+        _title="$(_option_get_value "${1}" "${2:-}")"
         shift
         ;;
       delete)
-        _delete "${__val:-}" "${3:-}"
+        _delete "${2:-}" "${3:-}"
         return 0
         ;;
       edit)
-        _edit "${__val:-}"
+        _edit "${2:-}"
         return 0
         ;;
       help)
@@ -11401,38 +11377,38 @@ _bookmark() {
         _subcommand="search"
         ;;
       open|o|peek|p|preview|url)
-        if _option_value_is_present "${__val:-}"
+        if _option_value_is_present "${2:-}"
         then
-          if [[ "${__arg}" =~ ^open$|^o$  ]]
+          if [[ "${1}" =~ ^open$|^o$  ]]
           then
             _subcommand="open"
-          elif [[ "${__arg}" =~ ^peek$|^p$|^preview$ ]]
+          elif [[ "${1}" =~ ^peek$|^p$|^preview$ ]]
           then
             _subcommand="peek"
-          elif [[ "${__arg}" == "url"     ]]
+          elif [[ "${1}" == "url"     ]]
           then
             _subcommand="url"
           fi
 
-          _selector="${__val:-}"
+          _selector="${2:-}"
 
           shift
         else
           _exit_1 \
             printf "%s requires a valid argument.\\n"  \
-            "$(_color_primary "bookmark ${__arg}")"
+            "$(_color_primary "bookmark ${1}")"
         fi
         ;;
       *)
         if [[ ! "${_subcommand:-}" =~ ^list$|^search$ ]] &&
            [[ -z "${_url:-}"                          ]] &&
-           _string_is_url "${__arg}"
+           _string_is_url "${1}"
         then
-          _url="${__arg}"
+          _url="${1}"
         elif [[ -z "${_subcommand:-}"                 ]] ||
              [[ "${_subcommand}" =~ ^list$|^search$   ]]
         then
-          _arguments+=("${__arg}")
+          _arguments+=("${1}")
         fi
         ;;
     esac
@@ -12463,26 +12439,23 @@ _edit() {
 
   while ((${#}))
   do
-    local __arg="${1:-}"
-    local __val="${2:-}"
-
-    case "${__arg}" in
+    case "${1:-}" in
       -c|--content)
-        _content="$(_option_get_value "${__arg}" "${__val:-}")"
+        _content="$(_option_get_value "${1}" "${2:-}")"
         shift
         ;;
       --edit)
         _edit_before_commit=1
         ;;
       -e|--editor)
-        _local_editor="$(_option_get_value "${__arg}" "${__val:-}")"
+        _local_editor="$(_option_get_value "${1}" "${2:-}")"
         shift
         ;;
       --overwrite)
         _edit_type="overwrite"
         ;;
       --password)
-        _password="$(_option_get_value "${__arg}" "${__val:-}")"
+        _password="$(_option_get_value "${1}" "${2:-}")"
         shift
         ;;
       --prepend)
@@ -12491,7 +12464,7 @@ _edit() {
       *)
         if [[ -z "${_selector:-}" ]]
         then
-          _selector="${__arg:-}"
+          _selector="${1:-}"
         fi
         ;;
     esac
@@ -13560,10 +13533,7 @@ _move() {
 
   while ((${#}))
   do
-    local __arg="${1:-}"
-    local __val="${2:-}"
-
-    case "${__arg}" in
+    case "${1:-}" in
       -f|--force)
         _force=1
         ;;
@@ -13582,10 +13552,10 @@ _move() {
       *)
         if [[ -z "${_source_selector}"    ]]
         then
-          _source_selector="${__arg}"
+          _source_selector="${1}"
         elif [[ -z "${_target_selector}"  ]]
         then
-          _target_selector="${__arg}"
+          _target_selector="${1}"
         fi
         ;;
     esac
@@ -14207,10 +14177,7 @@ _search() {
 
   while ((${#}))
   do
-    local __arg="${1:-}"
-    local __val="${2:-}"
-
-    case "${__arg}" in
+    case "${1:-}" in
       -a|--all)
         _all=1
         ;;
@@ -14237,7 +14204,7 @@ _search() {
         shift
         ;;
       --page)
-        _page="$(_option_get_value "${__arg}" "${__val:-}")"
+        _page="$(_option_get_value "${1}" "${2:-}")"
         ((_page)) || _page=1
         shift
         ;;
@@ -14246,11 +14213,11 @@ _search() {
         _COLOR_ENABLED=0
         ;;
       --per*)
-        _per_page="$(_option_get_value "${__arg}" "${__val:-}")"
+        _per_page="$(_option_get_value "${1}" "${2:-}")"
         shift
         ;;
       -q|--query|-e)
-        _and_queries+=("$(_option_get_value "${__arg}" "${__val:-}")")
+        _and_queries+=("$(_option_get_value "${1}" "${2:-}")")
         shift
         ;;
       -s|--sort)
@@ -14260,11 +14227,11 @@ _search() {
         _search_tags=1
         ;;
       --*tool|--*utility)
-        _search_utility="$(_option_get_value "${__arg}" "${__val:-}")"
+        _search_utility="$(_option_get_value "${1}" "${2:-}")"
         shift
         ;;
       --type)
-        _type="$(_option_get_value "${__arg}" "${__val:-}")"
+        _type="$(_option_get_value "${1}" "${2:-}")"
         shift
         ;;
       --use*grep)
@@ -14272,11 +14239,11 @@ _search() {
         _search_utility="grep"
         ;;
       *)
-        if [[ "${__arg:-}" =~ ^-- ]]
+        if [[ "${1:-}" =~ ^-- ]]
         then
-          _type="${__arg:2}"
+          _type="${1:2}"
         else
-          _arguments+=("${__arg}")
+          _arguments+=("${1}")
         fi
         ;;
     esac
@@ -15431,10 +15398,7 @@ _show() {
 
   while ((${#}))
   do
-    local __arg="${1:-}"
-    local __val="${2:-}"
-
-    case "${__arg}" in
+    case "${1:-}" in
       --path)
         _print_path=1
         _skip_notebook_fallback=1
@@ -15475,16 +15439,16 @@ _show() {
         _skip_notebook_fallback=0
         ;;
       --page)
-        _list_page="$(_option_get_value "${__arg}" "${__val:-}")"
+        _list_page="$(_option_get_value "${1}" "${2:-}")"
         ((_list_page)) || _list_page=1
         shift
         ;;
       --per*)
-        _per_page="$(_option_get_value "${__arg}" "${__val:-}")"
+        _per_page="$(_option_get_value "${1}" "${2:-}")"
         shift
         ;;
       --password)
-        _password="$(_option_get_value "${__arg}" "${__val:-}")"
+        _password="$(_option_get_value "${1}" "${2:-}")"
         shift
         ;;
       -p|--print|--dump|--skip*pager|--no*pager)
@@ -15506,16 +15470,16 @@ _show() {
         _skip_notebook_fallback=1
         ;;
       --tool|--utility)
-        _tool="$(_option_get_value "${__arg}" "${__val:-}")"
+        _tool="$(_option_get_value "${1}" "${2:-}")"
         shift
         ;;
       --type)
         _check_type=1
         _skip_notebook_fallback=1
 
-        if _option_value_is_present "${__val:-}"
+        if _option_value_is_present "${2:-}"
         then
-          _type="${__val}"
+          _type="${2}"
           shift
         fi
         ;;
@@ -15529,9 +15493,9 @@ _show() {
       *)
         if [[ -z "${_selector:-}" ]]
         then
-          _selector="${__arg}"
+          _selector="${1}"
         else
-          _unresolved_arguments+=("${__arg}")
+          _unresolved_arguments+=("${1}")
         fi
         ;;
     esac
@@ -20843,9 +20807,7 @@ $(local __editor=
 
   while ((${#}))
   do
-    local __arg="${1:-}"
-
-    case "${__arg}" in
+    case "${1:-}" in
       color|colors)
         _settings_colors "${2:-}"
         return 0
