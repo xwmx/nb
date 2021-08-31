@@ -1022,33 +1022,33 @@ or `--per-page <limit>` when present:
 ❯ nb
 home
 ----
-[6]  Example Six
-[5]  Example Five
-[4]  Example Four
-[3]  Example Three
-[2]  Example Two
-[1]  Example One
+[6] Example Six
+[5] Example Five
+[4] Example Four
+[3] Example Three
+[2] Example Two
+[1] Example One
 
 ❯ nb set limit 3
 NB_LIMIT set to 3
 
 ❯ nb --page 1
-[6]  Example Six
-[5]  Example Five
-[4]  Example Four
+[6] Example Six
+[5] Example Five
+[4] Example Four
 
 ❯ nb -p 2
-[3]  Example Three
-[2]  Example Two
-[1]  Example One
+[3] Example Three
+[2] Example Two
+[1] Example One
 
 ❯ nb -p 2 --per-page 2
-[4]  Example Four
-[3]  Example Three
+[4] Example Four
+[3] Example Three
 
 ❯ nb -p 3 --2
-[2]  Example Two
-[1]  Example One
+[2] Example Two
+[1] Example One
 ```
 
 `nb ls` is a combination of
