@@ -5087,6 +5087,19 @@ _list() {
         fi
       fi
 
+      if ((_paginate))
+      then
+        _paginated_count=$((_paginated_count+1))
+
+        if [[ "${_paginated_count}"   -le "${_pagination_min}"  ]]
+        then
+          continue
+        elif [[ "${_paginated_count}" -gt "${_pagination_max}"  ]]
+        then
+          break
+        fi
+      fi
+
       if [[ -n "${_limit:-}" ]] && [[ "${_printed_count}" -ge "${_limit}" ]]
       then # the limit has been reached
         if [[ -n "${_filter_pattern:-}" ]]
@@ -5175,19 +5188,6 @@ _list() {
         then
           _indicators+="${_NB_INDICATOR_TODO:-}"
           _extra_length=1
-        fi
-      fi
-
-      if ((_paginate))
-      then
-        _paginated_count=$((_paginated_count+1))
-
-        if [[ "${_paginated_count}"   -le "${_pagination_min}"  ]]
-        then
-          continue
-        elif [[ "${_paginated_count}" -gt "${_pagination_max}"  ]]
-        then
-          break
         fi
       fi
 
