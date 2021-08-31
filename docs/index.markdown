@@ -6009,7 +6009,7 @@ Examples:
 Usage:
   nb list [-e [<length>] | --excerpt [<length>]] [--filenames]
           [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
-          [--no-indicator] [--page <number>] [-p | --pager] [--paths]
+          [--no-indicator] [-p <number> | --page <number>] [--pager] [--paths]
           [--per-page <limit>] [-s | --sort] [-r | --reverse] [--tags]
           [-t <type> | --type <type> | --<type>]
           [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
@@ -6021,9 +6021,9 @@ Options:
   -n, --limit <limit>, --<limit>  The maximum number of notes to list.
   --no-id                         Don't include the id in list items.
   --no-indicator                  Don't include the indicator in list items.
-  --page <number>                 The page to view in the list paginated by
+  -p, --page <number>             The page to view in the list paginated by
                                   --per-page <limit> or `nb set limit`.
-  -p, --pager                     Display output in the pager.
+  --pager                         Display output in the pager.
   --paths                         Print the full path to each item.
   --per-page <limit>              The number of items displayed on each page.
   -s, --sort                      Order notes by id.
@@ -6088,7 +6088,7 @@ Usage:
   nb ls [-a | --all] [-b | --browse] [-e [<length>] | --excerpt [<length>]]
         [--filenames] [-g | --gui] [-n <limit> | --limit <limit> | --<limit>]
         [--no-footer] [--no-header] [--no-id] [--no-indicator]
-        [--page <number>] [-p | --pager] [--paths] [--per-page <limit>]
+        [-p <number> | --page <number>] [--pager] [--paths] [--per-page <limit>]
         [-s | --sort] [-r | --reverse] [--tags]
         [-t <type> | --type <type> | --<type>]
         [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
@@ -6109,9 +6109,9 @@ Options:
   --no-footer                     Print without footer.
   --no-id                         Don't include the id in list items.
   --no-indicator                  Don't include the indicator in list items.
-  --page <number>                 The page to view in the list paginated by
+  -p, --page <number>             The page to view in the list paginated by
                                   --per-page <limit> or \`nb set limit\`.
-  -p, --pager                     Display output in the pager.
+  --pager                         Display output in the pager.
   --paths                         Print the full path to each item.
   --per-page <limit>              The number of items displayed on each page.
   -s, --sort                      Order notes by id.

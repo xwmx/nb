@@ -3639,14 +3639,14 @@ $(_color_primary "Usage"):
           [--name <name>]
   ${_ME} list [-e [<length>] | --excerpt [<length>]] [--filenames]
           [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
-          [--no-indicator] [--page <number>] [-p | --pager] [--paths]
+          [--no-indicator] [-p <number> | --page <number>] [--pager] [--paths]
           [--per-page <limit>] [-s | --sort] [-r | --reverse] [--tags]
           [-t <type> | --type <type> | --<type>]
           [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
   ${_ME} ls [-a | --all] [-b | --browse] [-e [<length>] | --excerpt [<length>]]
         [--filenames] [-g | --gui] [-n <limit> | --limit <limit> | --<limit>]
         [--no-footer] [--no-header] [--no-id] [--no-indicator]
-        [--page <number>] [-p | --pager] [--paths] [--per-page <limit>]
+        [-p <number> | --page <number>] [--pager] [--paths] [--per-page <limit>]
         [-s | --sort] [-r | --reverse] [--tags]
         [-t <type> | --type <type> | --<type>]
         [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
@@ -4454,7 +4454,7 @@ _describe_list() {
 $(_color_primary "Usage"):
   ${_ME} list [-e [<length>] | --excerpt [<length>]] [--filenames]
           [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
-          [--no-indicator] [--page <number>] [-p | --pager] [--paths]
+          [--no-indicator] [-p <number> | --page <number>] [--pager] [--paths]
           [--per-page <limit>] [-s | --sort] [-r | --reverse] [--tags]
           [-t <type> | --type <type> | --<type>]
           [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
@@ -4466,9 +4466,9 @@ $(_color_primary "Options"):
   -n, --limit <limit>, --<limit>  The maximum number of notes to list.
   --no-id                         Don't include the id in list items.
   --no-indicator                  Don't include the indicator in list items.
-  --page <number>                 The page to view in the list paginated by
+  -p, --page <number>             The page to view in the list paginated by
                                   --per-page <limit> or \`nb set limit\`.
-  -p, --pager                     Display output in the pager.
+  --pager                         Display output in the pager.
   --paths                         Print the full path to each item.
   --per-page <limit>              The number of items displayed on each page.
   -s, --sort                      Order notes by id.
@@ -4592,13 +4592,13 @@ _list() {
       --notebook-selectors)
         _print_notebook_selectors=1
         ;;
-      --page)
+      -p|--page)
         _page="$(_option_get_value "${1}" "${2:-}")"
         ((_page)) || _page=1
         _paginate=1
         shift
         ;;
-      -p|--pager|--less)
+      --pager|--less)
         _use_pager=1
         ;;
       --path*)
@@ -5302,7 +5302,7 @@ ${_TPUT_SGR0}"
 
     # end main loop
 
-    if [[   -n "${_limit:-}"          ]]
+    if [[   -n "${_limit:-}"          ]] && ! ((_paginate))
     then
       if [[ -n "${_filter_pattern:-}" ]]
       then
@@ -5460,7 +5460,7 @@ $(_color_primary "Usage"):
   ${_ME} ls [-a | --all] [-b | --browse] [-e [<length>] | --excerpt [<length>]]
         [--filenames] [-g | --gui] [-n <limit> | --limit <limit> | --<limit>]
         [--no-footer] [--no-header] [--no-id] [--no-indicator]
-        [--page <number>] [-p | --pager] [--paths] [--per-page <limit>]
+        [-p <number> | --page <number>] [--pager] [--paths] [--per-page <limit>]
         [-s | --sort] [-r | --reverse] [--tags]
         [-t <type> | --type <type> | --<type>]
         [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
@@ -5481,9 +5481,9 @@ $(_color_primary "Options"):
   --no-footer                     Print without footer.
   --no-id                         Don't include the id in list items.
   --no-indicator                  Don't include the indicator in list items.
-  --page <number>                 The page to view in the list paginated by
+  -p, --page <number>             The page to view in the list paginated by
                                   --per-page <limit> or \`nb set limit\`.
-  -p, --pager                     Display output in the pager.
+  --pager                         Display output in the pager.
   --paths                         Print the full path to each item.
   --per-page <limit>              The number of items displayed on each page.
   -s, --sort                      Order notes by id.
@@ -5919,7 +5919,7 @@ _ls() {
         _limit="$(_option_get_value "${1}" "${2:-}")"
         shift
         ;;
-      -p|--pager|--less)
+      --pager|--less)
         _use_pager=1
         ;;
       -l)
