@@ -5091,7 +5091,7 @@ _list() {
       then
         _paginated_count=$((_paginated_count+1))
 
-        if [[ "${_paginated_count}"   -le "${_pagination_min}"  ]]
+        if   [[ "${_paginated_count}" -le "${_pagination_min}"  ]]
         then
           continue
         elif [[ "${_paginated_count}" -gt "${_pagination_max}"  ]]
