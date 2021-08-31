@@ -982,7 +982,6 @@ To list a different number of items on a per-command basis, use the
 `-n <limit>`,
 `--limit <limit>`,
 `--<limit>`,
-`--per-page <limit>`,
 `-a`,
 and `--all`
 flags:
@@ -1021,8 +1020,11 @@ home
 
 Lists can be paginated with `-p <number>` / `--page <number>`,
 which paginates by the value of [`nb set limit`](#limit) by
-default, or the value of `-n <limit>`, `--limit <limit>`, `--<limit>`,
-or `--per-page <limit>` when present:
+default, or the value of
+`-n <limit>`,
+`--limit <limit>`,
+or `--<limit>`
+when present:
 
 ```bash
 ❯ nb
@@ -1048,7 +1050,7 @@ NB_LIMIT set to 3
 [2] Example Two
 [1] Example One
 
-❯ nb -p 2 --per-page 2
+❯ nb -p 2 --limit 2
 [4] Example Four
 [3] Example Three
 
@@ -4988,17 +4990,16 @@ Usage:
   nb init [<remote-url> [<branch>]] [--author] [--email <email>]
           [--name <name>]
   nb list [-e [<length>] | --excerpt [<length>]] [--filenames]
-          [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
-          [--no-indicator] [--page <number>] [-p | --pager] [--paths]
-          [--per-page <limit>] [-s | --sort] [-r | --reverse] [--tags]
+          [-n <limit> | --limit <limit> | --<limit>] [--no-id]
+          [--no-indicator] [-p <number> | --page <number>] [--pager]
+          [--paths] [-s | --sort] [-r | --reverse] [--tags]
           [-t <type> | --type <type> | --<type>]
           [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
   nb ls [-a | --all] [-b | --browse] [-e [<length>] | --excerpt [<length>]]
         [--filenames] [-g | --gui] [-n <limit> | --limit <limit> | --<limit>]
         [--no-footer] [--no-header] [--no-id] [--no-indicator]
-        [--page <number>] [-p | --pager] [--paths] [--per-page <limit>]
-        [-s | --sort] [-r | --reverse] [--tags]
-        [-t <type> | --type <type> | --<type>]
+        [-p <number> | --page <number>] [--pager] [--paths] [-s | --sort]
+        [-r | --reverse] [--tags] [-t <type> | --type <type> | --<type>]
         [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
   nb move ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note |
@@ -6047,9 +6048,9 @@ Examples:
 ```text
 Usage:
   nb list [-e [<length>] | --excerpt [<length>]] [--filenames]
-          [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
-          [--no-indicator] [-p <number> | --page <number>] [--pager] [--paths]
-          [--per-page <limit>] [-s | --sort] [-r | --reverse] [--tags]
+          [-n <limit> | --limit <limit> | --<limit>] [--no-id]
+          [--no-indicator] [-p <number> | --page <number>] [--pager]
+          [--paths] [-s | --sort] [-r | --reverse] [--tags]
           [-t <type> | --type <type> | --<type>]
           [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
 
@@ -6061,10 +6062,9 @@ Options:
   --no-id                         Don't include the id in list items.
   --no-indicator                  Don't include the indicator in list items.
   -p, --page <number>             The page to view in the list paginated by
-                                  --per-page <limit> or `nb set limit`.
+                                  a <limit> option or `nb set limit`.
   --pager                         Display output in the pager.
   --paths                         Print the full path to each item.
-  --per-page <limit>              The number of items displayed on each page.
   -s, --sort                      Order notes by id.
   -r, --reverse                   List items in reverse order.
   --tags                          List tags in the notebook or folder.
@@ -6127,9 +6127,8 @@ Usage:
   nb ls [-a | --all] [-b | --browse] [-e [<length>] | --excerpt [<length>]]
         [--filenames] [-g | --gui] [-n <limit> | --limit <limit> | --<limit>]
         [--no-footer] [--no-header] [--no-id] [--no-indicator]
-        [-p <number> | --page <number>] [--pager] [--paths] [--per-page <limit>]
-        [-s | --sort] [-r | --reverse] [--tags]
-        [-t <type> | --type <type> | --<type>]
+        [-p <number> | --page <number>] [--pager] [--paths] [-s | --sort]
+        [-r | --reverse] [--tags] [-t <type> | --type <type> | --<type>]
         [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
 
 Options:
@@ -6149,10 +6148,9 @@ Options:
   --no-id                         Don't include the id in list items.
   --no-indicator                  Don't include the indicator in list items.
   -p, --page <number>             The page to view in the list paginated by
-                                  --per-page <limit> or \`nb set limit\`.
+                                  a <limit> option or `nb set limit`.
   --pager                         Display output in the pager.
   --paths                         Print the full path to each item.
-  --per-page <limit>              The number of items displayed on each page.
   -s, --sort                      Order notes by id.
   -r, --reverse                   List items in reverse order.
   --tags                          List tags in the notebook or folder.

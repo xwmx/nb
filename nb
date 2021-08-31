@@ -3638,17 +3638,16 @@ $(_color_primary "Usage"):
   ${_ME} init [<remote-url> [<branch>]] [--author] [--email <email>]
           [--name <name>]
   ${_ME} list [-e [<length>] | --excerpt [<length>]] [--filenames]
-          [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
-          [--no-indicator] [-p <number> | --page <number>] [--pager] [--paths]
-          [--per-page <limit>] [-s | --sort] [-r | --reverse] [--tags]
+          [-n <limit> | --limit <limit> | --<limit>] [--no-id]
+          [--no-indicator] [-p <number> | --page <number>] [--pager]
+          [--paths] [-s | --sort] [-r | --reverse] [--tags]
           [-t <type> | --type <type> | --<type>]
           [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
   ${_ME} ls [-a | --all] [-b | --browse] [-e [<length>] | --excerpt [<length>]]
         [--filenames] [-g | --gui] [-n <limit> | --limit <limit> | --<limit>]
         [--no-footer] [--no-header] [--no-id] [--no-indicator]
-        [-p <number> | --page <number>] [--pager] [--paths] [--per-page <limit>]
-        [-s | --sort] [-r | --reverse] [--tags]
-        [-t <type> | --type <type> | --<type>]
+        [-p <number> | --page <number>] [--pager] [--paths] [-s | --sort]
+        [-r | --reverse] [--tags] [-t <type> | --type <type> | --<type>]
         [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
   ${_ME} move ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note |
@@ -4453,9 +4452,9 @@ _describe_list() {
   cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} list [-e [<length>] | --excerpt [<length>]] [--filenames]
-          [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
-          [--no-indicator] [-p <number> | --page <number>] [--pager] [--paths]
-          [--per-page <limit>] [-s | --sort] [-r | --reverse] [--tags]
+          [-n <limit> | --limit <limit> | --<limit>] [--no-id]
+          [--no-indicator] [-p <number> | --page <number>] [--pager]
+          [--paths] [-s | --sort] [-r | --reverse] [--tags]
           [-t <type> | --type <type> | --<type>]
           [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
 
@@ -4467,10 +4466,9 @@ $(_color_primary "Options"):
   --no-id                         Don't include the id in list items.
   --no-indicator                  Don't include the indicator in list items.
   -p, --page <number>             The page to view in the list paginated by
-                                  --per-page <limit> or \`nb set limit\`.
+                                  a <limit> option or \`nb set limit\`.
   --pager                         Display output in the pager.
   --paths                         Print the full path to each item.
-  --per-page <limit>              The number of items displayed on each page.
   -s, --sort                      Order notes by id.
   -r, --reverse                   List items in reverse order.
   --tags                          List tags in the notebook or folder.
@@ -4529,7 +4527,6 @@ _list() {
   local _only_pinned=0
   local _page=1
   local _paginate=0
-  local _per_page="${NB_LIMIT}"
   local _print_excerpt=0
   local _print_indicators=1
   local _print_notebook_selectors=0
@@ -4582,11 +4579,10 @@ _list() {
         _line_wrap=0
         _recursive_arguments+=("--no-wrap")
         ;;
-      -n|--limit|--num|--number)
+      -n|--limit|--num|--number|--per*page)
         if _option_value_is_present "${2:-}"
         then
           _limit="${2:-}"
-          _per_page="${_limit:-}"
           shift
         fi
         ;;
@@ -4595,7 +4591,8 @@ _list() {
         ;;
       -p|--page)
         _page="$(_option_get_value "${1}" "${2:-}")"
-        ((_page)) || _page=1
+        ((_page))               || _page=1
+        [[ -z "${_limit:-}" ]]  && _limit="${NB_LIMIT}"
         _paginate=1
         shift
         ;;
@@ -4605,11 +4602,6 @@ _list() {
       --path*)
         _list_paths=1
         _recursive_arguments+=("--paths")
-        ;;
-      --per*)
-        _per_page="$(_option_get_value "${1}" "${2:-}")"
-        _paginate=1
-        shift
         ;;
       --pinned)
         _only_pinned=1
@@ -4643,7 +4635,6 @@ _list() {
         if   [[   "${1:-}" =~ ^--[0-9]+$  ]]
         then
           _limit="${1:2}"
-          _per_page="${_limit:-}"
         elif [[   "${1:-}" =~ ^--         ]]
         then
           if ! _contains "${1:-}" "--ar" "--archived" "--unar" "--unarchived"
@@ -5001,8 +4992,8 @@ _list() {
     local _filenames_count=0
     local _matches=0
     local _paginated_count=0
-    local _pagination_max="$((_page * _per_page))"
-    local _pagination_min="$(((_page * _per_page) - _per_page))"
+    local _pagination_max="$((_page * _limit))"
+    local _pagination_min="$(((_page * _limit) - _limit))"
     local _pinned_basenames_seen=()
     local _printed_count=0
 
@@ -5462,9 +5453,8 @@ $(_color_primary "Usage"):
   ${_ME} ls [-a | --all] [-b | --browse] [-e [<length>] | --excerpt [<length>]]
         [--filenames] [-g | --gui] [-n <limit> | --limit <limit> | --<limit>]
         [--no-footer] [--no-header] [--no-id] [--no-indicator]
-        [-p <number> | --page <number>] [--pager] [--paths] [--per-page <limit>]
-        [-s | --sort] [-r | --reverse] [--tags]
-        [-t <type> | --type <type> | --<type>]
+        [-p <number> | --page <number>] [--pager] [--paths] [-s | --sort]
+        [-r | --reverse] [--tags] [-t <type> | --type <type> | --<type>]
         [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
 
 $(_color_primary "Options"):
@@ -5484,10 +5474,9 @@ $(_color_primary "Options"):
   --no-id                         Don't include the id in list items.
   --no-indicator                  Don't include the indicator in list items.
   -p, --page <number>             The page to view in the list paginated by
-                                  --per-page <limit> or \`nb set limit\`.
+                                  a <limit> option or \`nb set limit\`.
   --pager                         Display output in the pager.
   --paths                         Print the full path to each item.
-  --per-page <limit>              The number of items displayed on each page.
   -s, --sort                      Order notes by id.
   -r, --reverse                   List items in reverse order.
   --tags                          List tags in the notebook or folder.
@@ -5917,7 +5906,7 @@ _ls() {
         _delegate_to_browse=1
         _delegate_arguments+=("${1}")
         ;;
-      -n|--limit|--num|--number)
+      -n|--limit|--num|--number|--per*page)
         _limit="$(_option_get_value "${1}" "${2:-}")"
         shift
         ;;

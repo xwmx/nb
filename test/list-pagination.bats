@@ -547,11 +547,12 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}"    -eq 0                         ]]
-  [[ "${#lines[@]}" -eq 3                         ]]
+  [[ "${#lines[@]}" -eq 4                         ]]
 
   [[ "${lines[0]}"  =~  .*[.*10.*].*\ Title\ Ten  ]]
   [[ "${lines[1]}"  =~  .*[.*9.*].*\ Title\ Nine  ]]
   [[ "${lines[2]}"  =~  .*[.*8.*].*\ Title\ Eight ]]
+  [[ "${lines[3]}"  =~  7\ omitted.\ 10\ total.   ]]
 
   run "${_NB}" list --per-page 3 --page 1
 
@@ -621,13 +622,14 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}"    -eq 0                         ]]
-  [[ "${#lines[@]}" -eq 5                         ]]
+  [[ "${#lines[@]}" -eq 6                         ]]
 
   [[ "${lines[0]}"  =~  .*[.*10.*].*\ Title\ Ten  ]]
   [[ "${lines[1]}"  =~  .*[.*9.*].*\ Title\ Nine  ]]
   [[ "${lines[2]}"  =~  .*[.*8.*].*\ Title\ Eight ]]
   [[ "${lines[3]}"  =~  .*[.*7.*].*\ Title\ Seven ]]
   [[ "${lines[4]}"  =~  .*[.*6.*].*\ Title\ Six   ]]
+  [[ "${lines[5]}"  =~  5\ omitted.\ 10\ total.   ]]
 
   run "${_NB}" list --per-page 5 --page 2
 
