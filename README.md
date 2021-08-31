@@ -976,6 +976,7 @@ To list a different number of items on a per-command basis, use the
 `-n <limit>`,
 `--limit <limit>`,
 `--<limit>`,
+`--per-page <limit>`,
 `-a`,
 and `--all`
 flags:
@@ -1010,6 +1011,44 @@ home
 [3] Example Three
 [2] Example Two
 [1] Example One
+```
+
+Lists can be paginated with `-p <number>` / `--page <number>`,
+which paginates by the value of [`nb set limit`](#limit) by
+default, or the value of `-n <limit>`, `--limit <limit>`, `--<limit>`,
+or `--per-page <limit>` when present:
+
+```bash
+❯ nb
+home
+----
+[6]  Example Six
+[5]  Example Five
+[4]  Example Four
+[3]  Example Three
+[2]  Example Two
+[1]  Example One
+
+❯ nb set limit 3
+NB_LIMIT set to 3
+
+❯ nb --page 1
+[6]  Example Six
+[5]  Example Five
+[4]  Example Four
+
+❯ nb -p 2
+[3]  Example Three
+[2]  Example Two
+[1]  Example One
+
+❯ nb -p 2 --per-page 2
+[4]  Example Four
+[3]  Example Three
+
+❯ nb -p 3 --2
+[2]  Example Two
+[1]  Example One
 ```
 
 `nb ls` is a combination of
