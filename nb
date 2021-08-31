@@ -4586,6 +4586,7 @@ _list() {
         if _option_value_is_present "${2:-}"
         then
           _limit="${2:-}"
+          _per_page="${_limit:-}"
           shift
         fi
         ;;
@@ -4642,6 +4643,7 @@ _list() {
         if   [[   "${1:-}" =~ ^--[0-9]+$  ]]
         then
           _limit="${1:2}"
+          _per_page="${_limit:-}"
         elif [[   "${1:-}" =~ ^--         ]]
         then
           if ! _contains "${1:-}" "--ar" "--archived" "--unar" "--unarchived"
