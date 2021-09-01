@@ -3964,7 +3964,7 @@ _index() {
       fi
       ;;
     get_basename)
-      # Usage: _index_get_basename <id> <index path>
+      # Usage: _index_get_basename <id> <index-path>
       _index_get_basename() {
         if [[ -z "${1:-}" ]] || [[ "${1:-}" == "0" ]]
         then
@@ -3997,7 +3997,7 @@ _index() {
       fi
       ;;
     get_id)
-      # Usage: _index_get_id <basename> <index path>
+      # Usage: _index_get_id <basename> <index-path>
       _index_get_id() {
         # Alternatives:
         # git -C "${3:?}" grep  \
@@ -4099,6 +4099,7 @@ _index() {
       return 0
       ;;
     reconcile)
+      # Usage: _index_reconcile_remove_duplicates <index-path>
       _index_reconcile_remove_duplicates() {
         local _reconcile_index_path="${1:-}"
         [[ -z "${_reconcile_index_path:-}" ]] && return 1
