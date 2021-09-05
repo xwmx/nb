@@ -329,6 +329,7 @@ the [`nb update`](#update) subcommand.
   <a href="#-tagging">Tagging</a>&nbsp;·
   <a href="#-linking">Linking</a>&nbsp;·
   <a href="#-browsing">Browsing</a>&nbsp;·
+  <a href="#-images">Images</a>&nbsp;·
   <a href="#-zettelkasten">Zettelkasten</a>&nbsp;·
   <a href="#-folders">Folders</a>&nbsp;·
   <a href="#-pinning">Pinning</a>&nbsp;·
@@ -2704,6 +2705,140 @@ nb br sample: -g
 ```
 
 For more information, see [`nb browse`](#browse).
+
+### 🌄 Images
+
+<p>
+  <sup>
+    <a href="#overview">↑&nbsp;</a>·
+    <a href="#browse"><code>nb browse</code></a>,
+    <a href="#import"><code>nb import</code></a>,
+    <a href="#open"><code>nb open</code></a>,
+    <a href="#show"><code>nb show</code></a>
+  </sup>
+</p>
+
+`nb` can be used to organize image files and
+provides commands for viewing images in
+supported terminal configurations,
+web browsers,
+and GUI applications.
+
+#### Image Items
+
+Image files can be [imported](#%EF%B8%8F-import--export) with
+[`nb import`](#import):
+
+```bash
+# import the image file "example.png" into the current notebook
+nb import example.png
+
+# import an image file from a URL into the current notebook
+nb import https://raw.githubusercontent.com/xwmx/nb/master/docs/images/nb.png
+
+# nb import "sample.jpg" into the "demo" folder in the "example" notebook
+nb import sample.jpg example:demo/
+```
+
+Imported images are displayed with an `🌄` [indicator](#indicators) in
+[lists](#listing--filtering):
+
+```bash
+❯ nb
+home
+----
+[5] Example Five
+[4] 🌄 example-image.png
+[3] Example Four
+[2] Example Two
+[1] Example One
+```
+
+Imported image items can be opened in the system GUI application for
+that file type using [`nb open`](#open):
+
+```
+# open the image "example-image.png" in the system GUI photo viewer
+nb open example-image.png
+
+# open the image with id "4" in the system GUI photo viewer
+nb o 4
+```
+
+Image items can be viewed in web browsers with [`nb browse`](#browse) and
+in terminals in supported configurations with [`nb show`](#show):
+
+<p align="center">
+  <img  src="https://xwmx.github.io/misc/nb/images/unix-magic.png"
+        alt="unix magic"
+        width="500">
+  <br>
+  <sup>
+    <a href="https://archive.org/details/unix-magic-poster-gary-overcare-1">
+      UNIX Magic
+    </a> poster by Gary Overcare
+  </sup>
+</p>
+
+[`nb browse`](#browse) renders each image item on a page in an `<img>` tag,
+providing a convenient mechanism for [browsing](#-browsing)
+notebooks and folders containing image collections.
+
+```bash
+# open item with id "123" in the terminal web browser
+nb browse 123
+
+# open item with id "456" in the "example" notebook in the GUI web browser
+nb browse example:456 --gui
+
+# open item "example:456" in the GUI web browser, alternative
+nb example:456 br -g
+```
+
+The original file can be viewed or downloaded from the item page
+by either clicking the image item or using the down arrow (`↓`) link.
+
+[`nb browse --gui`](#browse---gui) displays images in any GUI web browser.
+Some terminals and terminal web browsers, including
+[`w3m`](http://w3m.sourceforge.net/), can be configured to display
+images directly within the terminal.
+
+[`nb show`](#show) can display images directly within terminals using
+the following tools:
+
+- [ImageMagick](https://imagemagick.org/) with a terminal that
+  supports [sixels](https://en.wikipedia.org/wiki/Sixel)
+- [`imgcat`](https://www.iterm2.com/documentation-images.html) with
+  [iTerm2](https://www.iterm2.com/)
+- [kitty's `icat` kitten](https://sw.kovidgoyal.net/kitty/kittens/icat.html)
+
+#### Inline Images
+
+Images can be referenced and rendered inline within
+notes, bookmarks, and other items.
+
+To reference an image in the same notebook,
+specify the image's relative path within the notebook:
+
+```markdown
+# reference "example.jpg" from markdown
+![](example.jpg)
+
+# reference "demo.png" in the "sample" folder from markdown
+![](sample/demo.png)
+```
+
+Images in any notebook can be referenced using the `--original` URL,
+obtainable from the image's [`nb browse`](#browse) item page
+by either clicking the image item or using the down arrow (`↓`) link.
+
+```markdown
+# reference "example.jpg" in the "home" notebook with the --original URL
+![](http://localhost:6789/--original/home/example.jpg)
+```
+
+`<img>` tags are stripped from bookmarked content when rendering to HTML.
+Inline images can still be used with other bookmark fields like `# Comment`.
 
 ### 🗂 Zettelkasten
 
@@ -5502,6 +5637,7 @@ Shortcut Alias:
 
 [↑&nbsp;](#help)· See also:
 [Browsing](#-browsing),
+[Images](#-images),
 [Linking](#-linking),
 [`add`](#add),
 [`delete`](#delete),
@@ -5954,6 +6090,7 @@ Examples:
 
 [↑&nbsp;](#help)· See also:
 [Import / Export](#%EF%B8%8F-import--export),
+[Images](#-images),
 [`add`](#add),
 [`export`](#export)
 
@@ -6389,6 +6526,7 @@ Shortcut Aliases:
 
 [↑&nbsp;](#help)· See also:
 [Viewing Bookmarks](#viewing-bookmarks),
+[Images](#-images),
 [`bookmark`](#bookmark),
 [`browse`](#browse),
 [`peek`](#peek),
@@ -7040,6 +7178,7 @@ Example:
 
 [↑&nbsp;](#help)· See also:
 [Viewing](#viewing),
+[Images](#-images),
 [`browse`](#browse),
 [`open`](#open),
 [`peek`](#peek)
