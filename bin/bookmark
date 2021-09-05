@@ -18,11 +18,11 @@
 #  / / | | | | |_) |
 # /_/  |_| |_|_.__/
 #
-# `nb` · notes & bookmarks
-#
-# Command line note-taking, bookmarking, and archiving with encryption, search,
-# Git-backed versioning and syncing, Pandoc-backed format conversion, and more
-# in a single portable script.
+# [nb] Command line and local web note-taking, bookmarking, and archiving with
+# plain text data storage, encryption, filtering and search, pinning, #tagging,
+# Git-backed versioning and syncing, Pandoc-backed conversion, global and local
+# notebooks, customizable color themes, [[wiki-style linking]], plugins, and
+# more in a single portable, user-friendly script.
 #
 # https://github.com/xwmx/nb
 #
@@ -59,21 +59,22 @@ _main() {
          [[ "${_count}" == 6 ]] ||
          [[ "${_count}" == 8 ]]
       then
-        printf "%s\\n" "${__line}" \
-          | sed -e 's/nb help bookmark/bookmark help/' \
+        printf "%s\\n" "${__line}"                      \
+          | sed -e 's/nb help bookmark/bookmark help/'  \
           | sed -e 's/nb/bookmark/'
       elif [[ "${_count}" == 2 ]]
       then
-        printf "%s\\n" "${__line}" \
+        printf "%s\\n" "${__line}"                      \
           | sed -e 's/-------------------------/----------------------------/'
       else
         printf "%s\\n" "${__line}"
       fi
     done < <("${_NB_PATH:-}" bookmark)
-  elif [[ "${1:-}" =~ ^-h$|^--help$|^h$|^help$ ]] ||
-     {
-       [[ "${1:-}" =~ ^q$|^search$ ]] && [[ -z "${2:-}" ]]
-     }
+  elif [[   "${1:-}" =~ ^-h$|^--help$|^h$|^help$  ]] || {
+         [[ "${1:-}" =~ ^q$|^search$              ]] &&
+         [[ -z "${2:-}"                           ]]
+
+       }
   then
     {
       cat <<HEREDOC
@@ -109,8 +110,8 @@ HEREDOC
           "${PAGER}"
         elif hash "less" 2>/dev/null
         then
-          less \
-            --CLEAR-SCREEN \
+          less              \
+            --CLEAR-SCREEN  \
             --prompt="> scroll for more, h for help, or q to quit"
         else
           cat

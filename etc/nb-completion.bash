@@ -6,11 +6,11 @@
 #  / / | | | | |_) |
 # /_/  |_| |_|_.__/
 #
-# `nb` · `notes` && `bookmark`
-#
-# Command line note-taking, bookmarking, and archiving with encryption, search,
-# Git-backed versioning and syncing, Pandoc-backed format conversion, and more
-# in a single portable script.
+# [nb] Command line and local web note-taking, bookmarking, and archiving with
+# plain text data storage, encryption, filtering and search, pinning, #tagging,
+# Git-backed versioning and syncing, Pandoc-backed conversion, global and local
+# notebooks, customizable color themes, [[wiki-style linking]], plugins, and
+# more in a single portable, user-friendly script.
 #
 # https://github.com/xwmx/nb
 ###############################################################################
@@ -32,9 +32,9 @@ _nb_subcommands() {
     # Remove outdated cache files.
 
     local _base_cache_path="${_cache_path%-*}"
-    local __suffix
 
-    for __suffix in "zsh" "v1"
+    local __suffix=
+    for   __suffix in "zsh" "v1"
     do
       if [[ -e "${_base_cache_path:?}-${__suffix:?}" ]]
       then
@@ -44,10 +44,10 @@ _nb_subcommands() {
 
     # Rebuild completion cache.
 
-    local _commands
+    local _commands=()
     IFS=$'\n' _commands=($(nb subcommands))
 
-    local _notebooks
+    local _notebooks=()
     IFS=$'\n' _notebooks=($(nb notebooks --names --no-color --unarchived))
 
     local _completions=()
@@ -56,7 +56,7 @@ _nb_subcommands() {
     local _commands_cached=
     local _notebooks_cached=
 
-    if [[ -e "${_cache_path}" ]]
+    if [[ -e "${_cache_path}"       ]]
     then
       local _counter=0
 
@@ -64,10 +64,10 @@ _nb_subcommands() {
       do
         _counter=$((_counter+1))
 
-        if [[ "${_counter}" == 1 ]]
+        if [[   "${_counter}" == 1  ]]
         then
           _commands_cached="${__line}"
-        elif [[ "${_counter}" == 2 ]]
+        elif [[ "${_counter}" == 2  ]]
         then
           _notebooks_cached="${__line}"
         else
@@ -80,18 +80,21 @@ _nb_subcommands() {
        [[ "${_notebooks_cached}" != "${_notebooks[*]:-}"  ]]
     then
       # Construct <notebook>:<subcommand> completions.
-      for __notebook in "${_notebooks[@]}"
+      local __notebook=
+      for   __notebook in "${_notebooks[@]}"
       do
-        for __command in "${_commands[@]}"
+        local __command=
+        for   __command in "${_commands[@]}"
         do
-          if [[ -n "${__notebook:-}" ]] && [[ -n "${__command:-}" ]]
+          if [[ -n "${__notebook:-}"  ]] &&
+             [[ -n "${__command:-}"   ]]
           then
             _completions+=("${__notebook}:${__command}")
           fi
         done
       done
 
-      local _directory_path
+      local _directory_path=
       _directory_path="$(dirname "${_cache_path}")"
 
       mkdir -p "${_directory_path}"
@@ -114,8 +117,8 @@ _nb_subcommands() {
   local _nb_dir=
   _nb_dir="$(nb env | grep 'NB_DIR' | cut -d = -f 2)"
 
-  if [[ -z "${_nb_dir:?}"  ]] ||
-     [[ ! -e "${_nb_dir}"  ]]
+  if [[ -z "${_nb_dir:?}" ]] ||
+     [[ ! -e "${_nb_dir}" ]]
   then
     return 0
   elif [[ -L "${_nb_dir}" ]]
@@ -128,7 +131,7 @@ _nb_subcommands() {
     fi
   fi
 
-  if [[ ! -d "${_nb_dir}"  ]]
+  if [[ ! -d "${_nb_dir}" ]]
   then
     return 0
   fi
@@ -136,15 +139,16 @@ _nb_subcommands() {
   local _cache_path="${_nb_dir:?}/.cache/nb-completion-cache-v2"
   local _completions_cached=()
 
-  if [[ ! -e "${_cache_path}" ]]
+  if [[ ! -e "${_cache_path}"   ]]
   then
     _nb_cache_completions "${_cache_path}"
   fi
 
-  if [[ -e "${_cache_path}" ]]
+  if [[ -e "${_cache_path}"     ]]
   then
     local _counter=0
 
+    local              __line=
     while IFS= read -r __line
     do
       _counter=$((_counter+1))
