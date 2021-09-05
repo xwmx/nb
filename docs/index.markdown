@@ -2724,55 +2724,10 @@ For more information, see [`nb browse`](#browse).
   </sup>
 </p>
 
-`nb` can be used to organize image files and
-provides commands for viewing images in
-supported terminal configurations,
+`nb` can be used to view, organize, browse, reference, and work with images in
+terminals,
 web browsers,
 and GUI applications.
-
-#### Image Items
-
-Image files can be [imported](#%EF%B8%8F-import--export) with
-[`nb import`](#import):
-
-```bash
-# import the image file "example.png" into the current notebook
-nb import example.png
-
-# import an image file from a URL into the current notebook
-nb import https://raw.githubusercontent.com/xwmx/nb/master/docs/images/nb.png
-
-# nb import "sample.jpg" into the "demo" folder in the "example" notebook
-nb import sample.jpg example:demo/
-```
-
-Imported images are displayed with an `🌄` [indicator](#indicators) in
-[lists](#listing--filtering):
-
-```bash
-❯ nb
-home
-----
-[5] Example Five
-[4] 🌄 example-image.png
-[3] Example Four
-[2] Example Two
-[1] Example One
-```
-
-Imported image items can be opened in the system GUI application for
-that file type using [`nb open`](#open):
-
-```
-# open the image "example-image.png" in the system GUI photo viewer
-nb open example-image.png
-
-# open the image with id "4" in the system GUI photo viewer
-nb o 4
-```
-
-Image items can be viewed in web browsers with [`nb browse`](#browse) and
-in terminals in supported configurations with [`nb show`](#show):
 
 <p align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/unix-magic.png"
@@ -2786,9 +2741,52 @@ in terminals in supported configurations with [`nb show`](#show):
   </sup>
 </p>
 
-[`nb browse`](#browse) renders each image item on a page in an `<img>` tag,
-providing a convenient mechanism for [browsing](#-browsing)
-notebooks and folders containing image collections.
+#### Image Items
+
+[Import](#%EF%B8%8F-import--export) images with [`nb import`](#import):
+
+```bash
+# import the image file "example.png" into the current notebook
+nb import example.png
+
+# import an image file from a URL into the current notebook
+nb import https://raw.githubusercontent.com/xwmx/nb/master/docs/images/nb.png
+
+# nb import "sample.jpg" into the "demo" folder in the "example" notebook
+nb import sample.jpg example:demo/
+```
+
+Imported images are displayed with `🌄` [indicators](#indicators) in
+[lists](#listing--filtering):
+
+```bash
+❯ nb
+home
+----
+[5] Example Five
+[4] 🌄 example-image.png
+[3] Example Three
+[2] Example Two
+[1] Example One
+```
+
+Imported image items can be opened in the system GUI application for
+the item's file type using [`nb open`](#open):
+
+```
+# open the image "example-image.png" in the system GUI photo viewer
+nb open example-image.png
+
+# open the image with id "4" in the system GUI photo viewer
+nb 4 o
+```
+
+Image items can be viewed in web browsers with [`nb browse`](#browse),
+providing a convenient mechanism for
+[browsing](#-browsing) notebooks and folders containing image collections.
+
+[`nb browse`](#browse) renders image items within in an `<img>` tag
+on the item page:
 
 ```bash
 # open item with id "123" in the terminal web browser
@@ -2809,8 +2807,8 @@ Some terminals and terminal web browsers, including
 [`w3m`](http://w3m.sourceforge.net/), can be configured to display
 images directly within the terminal.
 
-[`nb show`](#show) can display images directly within terminals using
-the following tools:
+[`nb show`](#show) can display images directly within the terminal.
+Supported tools and configurations:
 
 - [ImageMagick](https://imagemagick.org/) with a terminal that
   supports [sixels](https://en.wikipedia.org/wiki/Sixel)
@@ -2842,6 +2840,9 @@ by either clicking the image item or using the down arrow (`↓`) link.
 # reference "example.jpg" in the "home" notebook with the --original URL
 ![](http://localhost:6789/--original/home/example.jpg)
 ```
+
+Image references are rendered inline in web browsers with
+[`nb browse`](#browse) and [`nb show --render`](#show).
 
 `<img>` tags are stripped from bookmarked content when rendering to HTML.
 Inline images can still be used with other bookmark fields like `# Comment`.
@@ -5654,8 +5655,7 @@ Shortcut Alias:
 [`peek`](#peek),
 [`pin`](#pin),
 [`search`](#search),
-[`show`](#show),
-[`unpin`](#unpin)
+[`show`](#show)
 
 ```text
 Usage:
