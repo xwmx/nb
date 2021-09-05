@@ -25,8 +25,8 @@ with:
 - [Git](https://git-scm.com/)-backed [versioning](#-revision-history) and [syncing](#-git-sync),
 - [Pandoc](https://pandoc.org/)-backed [conversion](#%EF%B8%8F-import--export),
 - <a href="#-linking">[[wiki-style linking]]</a>,
-- terminal and GUI web [browsing](#-browsing),
 - inline [images](#-images),
+- terminal and GUI web [browsing](#-browsing),
 - global and local [notebooks](#-notebooks),
 - organization with [folders](#-folders),
 - customizable [color themes](#-color-themes),
@@ -2842,7 +2842,7 @@ Image references in content are rendered inline within web browsers with
 [`nb browse`](#browse) and [`nb show --render`](#show).
 
 `<img>` tags are stripped from bookmarked content when rendering to HTML.
-Inline images can still be used in other bookmark sections like `# Comment`.
+Inline images can still be used in other bookmark sections like `## Comment`.
 
 ### 🗂 Zettelkasten
 
