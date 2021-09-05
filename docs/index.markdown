@@ -32,6 +32,7 @@ with:
 - [Pandoc](https://pandoc.org/)-backed [conversion](#%EF%B8%8F-import--export),
 - <a href="#-linking">[[wiki-style linking]]</a>,
 - terminal and GUI web [browsing](#-browsing),
+- inline [images](#-images),
 - global and local [notebooks](#-notebooks),
 - organization with [folders](#-folders),
 - customizable [color themes](#-color-themes),
@@ -2756,7 +2757,7 @@ nb import https://raw.githubusercontent.com/xwmx/nb/master/docs/images/nb.png
 nb import sample.jpg example:demo/
 ```
 
-Imported images are displayed with `🌄` [indicators](#indicators) in
+Imported images are displayed with [`🌄` indicators](#indicators) in
 [lists](#listing--filtering):
 
 ```bash
@@ -2786,7 +2787,9 @@ providing a convenient mechanism for
 [browsing](#-browsing) notebooks and folders containing image collections.
 
 [`nb browse`](#browse) renders image items within in an `<img>` tag
-on the item page:
+on the item page. Open the item page for an image item by passing a
+[selector](#selectors) to `nb browse`, optionally including the
+`-g` / `--gui` option to open the page in the system GUI web browser:
 
 ```bash
 # open item with id "123" in the terminal web browser
@@ -2808,7 +2811,7 @@ Some terminals and terminal web browsers, including
 images directly within the terminal.
 
 [`nb show`](#show) can display images directly within the terminal.
-Supported tools and configurations:
+Supported tools and configurations include:
 
 - [ImageMagick](https://imagemagick.org/) with a terminal that
   supports [sixels](https://en.wikipedia.org/wiki/Sixel)
@@ -2841,11 +2844,11 @@ by either clicking the image item or using the down arrow (`↓`) link.
 ![](http://localhost:6789/--original/home/example.jpg)
 ```
 
-Image references are rendered inline in web browsers with
+Image references in content are rendered inline within web browsers with
 [`nb browse`](#browse) and [`nb show --render`](#show).
 
 `<img>` tags are stripped from bookmarked content when rendering to HTML.
-Inline images can still be used with other bookmark fields like `# Comment`.
+Inline images can still be used in other bookmark sections like `# Comment`.
 
 ### 🗂 Zettelkasten
 
