@@ -2805,12 +2805,11 @@ The original file can be viewed or downloaded from the item page
 by either clicking the image item or using the down arrow (`↓`) link.
 
 [`nb browse --gui`](#browse---gui) displays images in any GUI web browser.
-Some terminals and terminal web browsers, including
-[`w3m`](http://w3m.sourceforge.net/), can be configured to display
-images directly within the terminal.
+Some terminal web browsers, such as [`w3m`](http://w3m.sourceforge.net/),
+can be configured to display images.
 
-[`nb show`](#show) can display images directly within the terminal.
-Supported tools and configurations include:
+[`nb show`](#show) can display images directly in the terminal with
+supported tools and configurations, including:
 
 - [ImageMagick](https://imagemagick.org/) with a terminal that
   supports [sixels](https://en.wikipedia.org/wiki/Sixel)
