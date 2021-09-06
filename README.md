@@ -25,7 +25,6 @@ with:
 - [Git](https://git-scm.com/)-backed [versioning](#-revision-history) and [syncing](#-git-sync),
 - [Pandoc](https://pandoc.org/)-backed [conversion](#%EF%B8%8F-import--export),
 - <a href="#-linking">[[wiki-style linking]]</a>,
-- inline [images](#-images),
 - terminal and GUI web [browsing](#-browsing),
 - global and local [notebooks](#-notebooks),
 - organization with [folders](#-folders),
