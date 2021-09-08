@@ -1333,7 +1333,7 @@ Supported file types and tools include:
   - [`afplay`](https://ss64.com/osx/afplay.html)
   - [`mpg123`](https://en.wikipedia.org/wiki/Mpg123)
   - [`ffplay`](https://ffmpeg.org/ffplay.html)
-- Images:
+- [Images](#-images):
   - [ImageMagick](https://imagemagick.org/) with a terminal that
     supports [sixels](https://en.wikipedia.org/wiki/Sixel)
   - [`imgcat`](https://www.iterm2.com/documentation-images.html) with
@@ -2722,18 +2722,6 @@ For more information, see [`nb browse`](#browse).
 terminals,
 web browsers,
 and GUI applications.
-
-<p align="center">
-  <img  src="https://xwmx.github.io/misc/nb/images/unix-magic.png"
-        alt="unix magic"
-        width="500">
-  <br>
-  <sup>
-    <a href="https://archive.org/details/unix-magic-poster-gary-overcare-1">
-      UNIX Magic
-    </a> poster by Gary Overcare
-  </sup>
-</p>
 
 #### Image Items
 
