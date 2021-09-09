@@ -7317,9 +7317,9 @@ HEREDOC
           _query_pattern="$(_join "|" "${_query_names[@]:-}")"
 
           {
-            _notebooks_list "${_options[@]}"  2>/dev/null
+            _notebooks_list "${_options[@]:-}"  2>/dev/null
           } | {
-            grep -i "${_query_pattern:-}"     2>/dev/null
+            grep -i "${_query_pattern:-}"       2>/dev/null
           }
         } || {
           _warn printf                      \
