@@ -9370,6 +9370,7 @@ hr  {
 }
 
 img {
+  border-radius:      1px;
   max-width:          100%;
 }
 
