@@ -18426,9 +18426,9 @@ HEREDOC
   _browse_respond_with() {
     local _only_headers=0
     local _path=
+    local _read_from_standard_input=0
     local _serve_original_file=0
     local _status_code="${1:-}"
-    local _read_from_standard_input=0
     local _string=
 
     local _date=
