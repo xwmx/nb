@@ -2275,7 +2275,7 @@ _pager() {
     less "${_less_options[@]:-}"
   elif _command_exists "bat"
   then
-      bat --style numbers,grid
+    bat --style numbers,grid
   else
     cat
   fi
@@ -11149,12 +11149,12 @@ _add() {
   then
     if [[ ! "${_target_path##*/}" =~ ^\.  ]]
     then
-      _index add                                                \
-        "${_target_basename}"                                   \
+      _index add                          \
+        "${_target_basename}"             \
         "${_notebook_path:?}/${_target_folder_relative_path:-}"
-      fi && _git checkpoint                                     \
-        "${_notebook_path}"                                     \
-        "[nb] Add: ${_target_unique_relative_path}"
+    fi && _git checkpoint                 \
+      "${_notebook_path}"                 \
+      "[nb] Add: ${_target_unique_relative_path}"
 
     local _info
     _info="$(
