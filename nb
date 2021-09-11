@@ -1307,6 +1307,7 @@ export _IMAGE_FILE_EXTENSIONS=(
   ai
   bmp
   gif
+  heic
   ind
   indd
   jpg
