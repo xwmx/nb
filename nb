@@ -20706,11 +20706,13 @@ HEREDOC
 
      • Available themes:
 
-$(local __theme=
+$(
+  local __theme=
   for   __theme in "${_NB_COLOR_THEMES[@]}"
   do
     printf "         %s\\n" "$(_color_primary "${__theme}")"
-  done)
+  done
+)
 
      • Default Value: $(_color_primary "nb")")
 
@@ -20730,14 +20732,16 @@ $(local __theme=
 
      • Example Values:
 
-$(local __editor=
+$(
+  local __editor=
   for   __editor in atom code emacs macdown mate micro nano pico subl vi vim
   do
     if _command_exists "${__editor}"
     then
       printf "         %s\\n" "$(_color_primary "${__editor}")"
     fi
-  done)")
+  done
+)")
 
   _settings_list_items+=("$(_color_brackets '7')  encryption_tool")
   _settings_help_items+=("\
@@ -20796,19 +20800,21 @@ $(local __editor=
 
          $(_color_primary 'bat --list-themes')
 
-     $(if ! hash "bat" 2>/dev/null
-       then
-         printf "Install \`bat\` to enable themes: https://github.com/sharkdp/bat\\n"
-       else
-         printf "• Available themes:\\n"
-         printf "\\n"
+$(
+  if ! hash "bat" 2>/dev/null
+  then
+    printf "     Install \`bat\` to enable themes: https://github.com/sharkdp/bat\\n"
+  else
+    printf "     • Available themes:\\n"
+    printf "\\n"
 
-         local __theme=
-         for   __theme in $(bat --list-themes --color never)
-         do
-           printf "         %s\\n" "$(_color_primary "${__theme}")"
-         done
-       fi)
+    local __theme=
+    for   __theme in $(bat --list-themes --color never)
+    do
+      printf "         %s\\n" "$(_color_primary "${__theme}")"
+    done
+  fi
+)
 
      • Default Value: $(_color_primary 'base16')")
 
