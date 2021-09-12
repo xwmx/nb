@@ -9458,7 +9458,7 @@ header {
   font-size:          1rem;
   font-weight:        normal;
   margin:             0;
-  padding:            1.5rem 2rem 0rem;
+  padding:            2rem 2rem 0rem;
   text-align:         center;
 }
 
@@ -9478,7 +9478,14 @@ header {
   padding:            0rem 2rem 2rem;
 }
 
-.main p:first-child,
+.main h1:first-child {
+  padding-top:        0rem;
+}
+
+.main p:first-child {
+  padding-top:        0.8rem;
+}
+
 .main .sourceCode:first-child {
   padding-top:        1rem;
 }
@@ -9500,7 +9507,7 @@ header {
 .identifier {         color: ${_color_primary_hex}; }
 
 form {
-  padding-top:        0.5rem;
+  padding-top:        1rem;
 }
 
 #search {
