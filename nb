@@ -3507,7 +3507,7 @@ _help() {
       _color_secondary \
                       " ---------------------------------------------------"
       printf "\\n"
-  cat <<HEREDOC
+      cat <<HEREDOC
 \`${_ME}\` uses color to highlight various interface elements, including ids,
 the current notebook name, the shell prompt, and divider lines.
 
