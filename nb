@@ -184,7 +184,7 @@ _resolve_symlink() {
 # _sed_i()
 #
 # Usage:
-#   _sed_id <sed-argument>...
+#   _sed_i <sed-argument>...
 #
 # Description:
 #   `sed -i` takes an extension on macOS, but that extension can cause errors
