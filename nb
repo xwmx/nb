@@ -9614,10 +9614,6 @@ textarea {
   background:         none;
 }
 
-div.sourceCode {
-  background-color:   transparent;
-}
-
 #TOC li {
   list-style:         none;
 }
@@ -9639,13 +9635,21 @@ div.hanging-indent {
 
 .display.math {
   display:            block;
-  text-align:         center;
   margin:             0.5rem auto;
+  text-align:         center;
 }
 
-span.smallcaps        { font-variant: small-caps;   }
-span.underline        { text-decoration: underline; }
-ul.task-list          { list-style: none;           }
+span.smallcaps {
+  font-variant:       small-caps;
+}
+
+span.underline {
+  text-decoration:    underline;
+}
+
+ul.task-list {
+  list-style:         none;
+}
 
 /*
  * #93a5cc #ffcfaf #7f9f7f #dca3a3 #f0dfaf #dfdfbf #dcdccc #c3bf9f #c0bed1
@@ -9686,21 +9690,40 @@ ul.task-list          { list-style: none;           }
 
 /* Pandoc Syntax */
 
-pre > code.sourceCode         { position: relative;     white-space: pre;   }
-pre > code.sourceCode > span  { display:  inline-block; line-height: 1.25;  }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre > code.sourceCode {
+  position:           relative;
+  white-space:        pre;
+}
 
-div.sourceCode  {     margin: 1em 0;  }
-pre.sourceCode  {     margin: 0;      }
+pre > code.sourceCode > span  {
+  display:            inline-block;
+  line-height:        1.25;
+}
+
+pre > code.sourceCode > span:empty {
+  height:             1.2em;
+}
+
+code.sourceCode > span {
+  color:              inherit;
+  text-decoration:    inherit;
+}
 
 @media screen {
-  div.sourceCode  {   overflow: auto; }
+  div.sourceCode {
+    overflow:         auto;
+  }
 }
 
 @media print {
-  pre > code.sourceCode         { white-space: pre-wrap;                      }
-  pre > code.sourceCode > span  { text-indent: -5em;      padding-left: 5em;  }
+  pre > code.sourceCode {
+    white-space:      pre-wrap;
+  }
+
+  pre > code.sourceCode > span {
+    padding-left:     5em;
+    text-indent:      -5em;
+  }
 }
 
 pre.numberSource code {
@@ -9731,11 +9754,27 @@ pre.numberSource code > span > a:first-child::before {
   width:              4em;
 }
 
-pre.numberSource  {   margin-left:  3em;      padding-left:     4px;      }
-div.sourceCode    {   color:        #cccccc;  background-color: #1a1a1a;  }
+pre.numberSource {
+  margin-left:        3em;
+  padding-left:       4px;
+}
+
+div.sourceCode {
+  background-color:   transparent;
+  color:              #cccccc;
+  margin:             1em 0;
+}
+
+pre.sourceCode {
+  background-color:   #212121;
+  margin:             0;
+  padding:            1rem;
+}
 
 @media screen {
-  pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+  pre > code.sourceCode > span > a:first-child::before {
+    text-decoration:  underline;
+  }
 }
 
 code span.al { color: #ffcfaf;                                    } /* Alert */
