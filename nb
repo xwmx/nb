@@ -9479,7 +9479,7 @@ header {
 }
 
 .main h1:first-child {
-  padding-top:        0rem;
+  padding-top:        0.35rem;
 }
 
 .main p:first-child {
