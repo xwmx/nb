@@ -11447,8 +11447,8 @@ _bookmark() {
 
           shift
         else
-          _exit_1 \
-            printf "%s requires a valid argument.\\n"  \
+          _exit_1                                     \
+            printf "%s requires a valid argument.\\n" \
             "$(_color_primary "bookmark ${1}")"
         fi
         ;;
@@ -11640,7 +11640,7 @@ _bookmark() {
         then
           local _wayback_response
           _wayback_response="$(
-            _download_from \
+            _download_from                                                \
               "https://archive.org/wayback/available?url=${_target_url}"  \
               | grep --color=never 'closest'                              \
               | sed -E 's/.*"closest": {([^}]+)}.*/\1/g'                  \
