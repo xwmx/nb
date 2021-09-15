@@ -373,7 +373,7 @@ regardless of the current working directory.
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#add"><code>nb add</code></a>,
     <a href="#browse"><code>nb browse add</code></a>
   </sup>
@@ -692,7 +692,7 @@ For more information, see [Browsing](#-browsing).
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#ls"><code>nb ls</code></a>,
     <a href="#list"><code>nb list</code></a>,
     <a href="#browse"><code>nb browse</code></a>
@@ -1100,7 +1100,7 @@ For more information, see [Browsing](#-browsing).
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#edit"><code>nb edit</code></a>,
     <a href="#browse"><code>nb browse edit</code></a>
   </sup>
@@ -1230,7 +1230,7 @@ For more information, see
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#show"><code>nb show</code></a>,
     <a href="#browse"><code>nb browse</code></a>,
     <a href="#open"><code>nb open</code></a>,
@@ -1467,7 +1467,7 @@ For more information, see [Browsing](#-browsing).
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#delete"><code>nb delete</code></a>,
     <a href="#browse"><code>nb browse delete</code></a>
   </sup>
@@ -1566,7 +1566,7 @@ For more information, see [Browsing](#-browsing).
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#nb-help"><code>nb&nbsp;&lt;url&gt;</code></a>,
     <a href="#browse"><code>nb&nbsp;browse</code></a>,
     <a href="#bookmark"><code>nb&nbsp;bookmark</code></a>,
@@ -1847,7 +1847,7 @@ Add: nb <url> Help: nb help bookmark
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#browse"><code>nb&nbsp;browse</code></a>,
     <a href="#open"><code>nb&nbsp;open</code></a>,
     <a href="#peek"><code>nb&nbsp;peek</code></a>,
@@ -2074,7 +2074,7 @@ See [`bookmark help`](#bookmark-help) for more information.
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#add"><code>nb add</code></a>,
     <a href="#bookmark"><code>nb bookmark</code></a>,
     <a href="#browse"><code>nb browse</code></a>,
@@ -2244,7 +2244,7 @@ For more information about browsing, see
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#browse"><code>nb browse</code></a>
   </sup>
 </p>
@@ -2313,7 +2313,7 @@ For more information about identifying items, see [Selectors](#selectors).
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#browse"><code>nb browse</code></a>
   </sup>
 </p>
@@ -2710,7 +2710,7 @@ For more information, see [`nb browse`](#browse).
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#browse"><code>nb browse</code></a>,
     <a href="#import"><code>nb import</code></a>,
     <a href="#open"><code>nb open</code></a>,
@@ -2834,7 +2834,7 @@ Inline images can still be used in other bookmark sections like `## Comment`.
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>
+    <a href="#overview">↑</a>
   </sup>
 </p>
 
@@ -2868,7 +2868,7 @@ For more information about Zettelkasten, see
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>
+    <a href="#overview">↑</a>
   </sup>
 </p>
 
@@ -2983,7 +2983,7 @@ For more information about identifying folders, see [Selectors](#selectors).
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#pin"><code>nb pin</code></a>,
     <a href="#unpin"><code>nb unpin</code></a>,
     <a href="#ls"><code>nb ls</code></a>,
@@ -3082,7 +3082,7 @@ home
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#search"><code>nb search</code></a>
   </sup>
 </p>
@@ -3256,7 +3256,7 @@ For more information, see [Browsing](#-browsing).
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#move"><code>nb move</code></a>
   </sup>
 </p>
@@ -3325,7 +3325,7 @@ To copy items, install the [`copy` / `duplicate` plugin](#copy).
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#history"><code>nb history</code></a>,
     <a href="#notebooks"><code>nb notebooks author</code></a>
   </sup>
@@ -3402,7 +3402,7 @@ history, create the new notebook using
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#notebooks"><code>nb&nbsp;notebooks</code></a>,
     <a href="#archive"><code>nb&nbsp;archive</code></a>,
     <a href="#unarchive"><code>nb&nbsp;unarchive</code></a>,
@@ -3817,7 +3817,7 @@ For technical details about notebooks, see
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#remote"><code>nb remote</code></a>,
     <a href="#sync"><code>nb sync</code></a>
   </sup>
@@ -4031,7 +4031,7 @@ that could inform a strategy for handling any such cases automatically.
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#import"><code>nb import</code></a>,
     <a href="#export"><code>nb export</code></a>
   </sup>
@@ -4143,7 +4143,7 @@ For `nb import` and `nb export` help information, see
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#settings"><code>nb settings</code></a>,
     <a href="#unset"><code>nb unset</code></a>
   </sup>
@@ -4250,7 +4250,7 @@ For more information about `set` and `settings`, see
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#color_theme"><code>nb&nbsp;set&nbsp;color_theme</code></a>,
     <a href="#syntax_theme"><code>nb&nbsp;set&nbsp;syntax_theme</code></a>,
     <a href="#color_primary"><code>nb&nbsp;set&nbsp;color_primary</code></a>,
@@ -4468,7 +4468,7 @@ export  NB_INDICATOR_VIDEO="📹"
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#plugins"><code>nb plugins</code></a>
   </sup>
 </p>
@@ -4664,7 +4664,7 @@ subcommands called using their underscore-prefixed function names.
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>
+    <a href="#overview">↑</a>
   </sup>
 </p>
 
@@ -4861,7 +4861,7 @@ capabilities.
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#shell"><code>nb shell</code></a>
   </sup>
 </p>
@@ -4925,7 +4925,7 @@ providing a streamlined, distraction-free approach for working with `nb`.
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>
+    <a href="#overview">↑</a>
   </sup>
 </p>
 
@@ -5034,7 +5034,7 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
 
 #### `nb help`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [`help`](#help-1)
 
 ```text
@@ -5236,7 +5236,7 @@ More Information:
 
 #### `bookmark help`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Bookmarks](#-bookmarks),
 [`bookmark`](#bookmark),
 [`browse`](#browse)
@@ -5396,7 +5396,7 @@ For more information, see: `nb help`.
 
 #### `add`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Adding](#adding),
 [`bookmark`](#bookmark),
 [`browse`](#browse),
@@ -5485,7 +5485,7 @@ Shortcut Aliases:
 
 #### `archive`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Archiving Notebooks](#archiving-notebooks),
 [`notebooks`](#notebooks),
 [`status`](#status),
@@ -5518,7 +5518,7 @@ Shortcut Alias:
 
 #### `bookmark`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Bookmarks](#-bookmarks),
 [`browse`](#browse),
 [`open`](#open),
@@ -5625,7 +5625,7 @@ Shortcut Alias:
 
 #### `browse`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Browsing](#-browsing),
 [Images](#-images),
 [Linking](#-linking),
@@ -5728,7 +5728,7 @@ Shortcut Alias:
 
 #### `completions`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Tab Completion](https://github.com/xwmx/nb/tree/master/etc),
 [`env`](#env)
 
@@ -5764,7 +5764,7 @@ Description:
 
 #### `delete`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Deleting](#deleting),
 [`add`](#add),
 [`browse`](#browse),
@@ -5813,7 +5813,7 @@ Shortcut Aliases:
 
 #### `edit`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Editing](#editing),
 [`add`](#add),
 [`browse`](#browse),
@@ -5877,7 +5877,7 @@ Shortcut Alias:
 
 #### `env`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Installation](#installation),
 [`completions`](#completions),
 [`init`](#init),
@@ -5907,7 +5907,7 @@ See Also:
 
 #### `export`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Import / Export](#%EF%B8%8F-import--export),
 [`import`](#import)
 
@@ -5962,7 +5962,7 @@ Examples:
 
 #### `git`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Git Sync](#-git-sync),
 [History](#-revision-history),
 [`history`](#history),
@@ -6005,7 +6005,7 @@ Examples:
 
 #### `help`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [`nb help`](#nb-help)
 
 ```text
@@ -6036,7 +6036,7 @@ Shortcut Alias:
 
 #### `history`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [History](#-revision-history),
 [Git Sync](#-git-sync),
 [`git`](#git),
@@ -6077,7 +6077,7 @@ Examples:
 
 #### `import`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Import / Export](#%EF%B8%8F-import--export),
 [Images](#-images),
 [`add`](#add),
@@ -6126,7 +6126,7 @@ Shortcut Alias:
 
 #### `init`
 
-[↑&nbsp;](#help)· See also: [`notebooks`](#notebooks)
+[↑](#help) · See also: [`notebooks`](#notebooks)
 
 ```text
 Usage:
@@ -6157,7 +6157,7 @@ Examples:
 
 #### `list`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Listing & Filtering](#listing--filtering),
 [`browse`](#browse),
 [`ls`](#ls),
@@ -6234,7 +6234,7 @@ Examples:
 
 #### `ls`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Listing & Filtering](#listing--filtering),
 [`browse`](#browse),
 [`list`](#list),
@@ -6329,7 +6329,7 @@ Examples:
 
 #### `move`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Moving & Renaming](#moving--renaming),
 [`delete`](#delete),
 [`edit`](#edit)
@@ -6393,7 +6393,7 @@ Shortcut Alias:
 
 #### `notebooks`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Notebooks](#-notebooks),
 [`archive`](#archive),
 [`history`](#history),
@@ -6513,7 +6513,7 @@ Shortcut Aliases:
 
 #### `open`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Viewing Bookmarks](#viewing-bookmarks),
 [Images](#-images),
 [`bookmark`](#bookmark),
@@ -6558,7 +6558,7 @@ Shortcut Alias:
 
 #### `peek`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Viewing Bookmarks](#viewing-bookmarks),
 [`bookmark`](#bookmark),
 [`browse`](#browse),
@@ -6610,7 +6610,7 @@ Shortcut Alias:
 
 #### `pin`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Pinning](#-pinning),
 [`browse`](#browse),
 [`list`](#list),
@@ -6640,7 +6640,7 @@ Examples:
 
 #### `plugins`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Plugins](#-plugins),
 [`subcommands`](#subcommands-1)
 
@@ -6674,7 +6674,7 @@ See Also:
 
 #### `remote`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Git Sync](#-git-sync),
 [History](#-revision-history),
 [`history`](#history),
@@ -6725,7 +6725,7 @@ Examples:
 
 #### `run`
 
-[↑&nbsp;](#help)· See also: [`git`](#git), [`shell`](#shell)
+[↑](#help) · See also: [`git`](#git), [`shell`](#shell)
 
 ```text
 Usage:
@@ -6746,7 +6746,7 @@ Examples:
 
 #### `search`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Search](#-search),
 [`browse`](#browse),
 [`list`](#list),
@@ -6832,7 +6832,7 @@ Shortcut Alias:
 
 #### `settings`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [`set` & `settings`](#%EF%B8%8F-set--settings),
 [`unset`](#unset)
 
@@ -6891,7 +6891,7 @@ Alias:
 
 ##### `auto_sync`
 
-[↑&nbsp;](#help)· See also: [Git Sync](#-git-sync)
+[↑](#help) · See also: [Git Sync](#-git-sync)
 
 ```text
 [1]  auto_sync
@@ -6905,7 +6905,7 @@ Alias:
 
 ##### `color_primary`
 
-[↑&nbsp;](#help)· See also: [Color Themes](#-color-themes), [Custom Color Themes](#custom-color-themes)
+[↑](#help) · See also: [Color Themes](#-color-themes), [Custom Color Themes](#custom-color-themes)
 
 ```text
 [2]  color_primary
@@ -6919,7 +6919,7 @@ Alias:
 
 ##### `color_secondary`
 
-[↑&nbsp;](#help)· See also: [Color Themes](#-color-themes), [Custom Color Themes](#custom-color-themes)
+[↑](#help) · See also: [Color Themes](#-color-themes), [Custom Color Themes](#custom-color-themes)
 
 ```text
 [3]  color_secondary
@@ -6932,7 +6932,7 @@ Alias:
 
 ##### `color_theme`
 
-[↑&nbsp;](#help)· See also: [Color Themes](#-color-themes)
+[↑](#help) · See also: [Color Themes](#-color-themes)
 
 ```text
 [4]  color_theme
@@ -6970,7 +6970,7 @@ Alias:
 
 ##### `default_extension`
 
-[↑&nbsp;](#help)· See also: [Adding](#adding)
+[↑](#help) · See also: [Adding](#adding)
 
 ```text
 [5]  default_extension
@@ -6984,7 +6984,7 @@ Alias:
 
 ##### `editor`
 
-[↑&nbsp;](#help)· See also: [Editing](#editing), [Adding](#adding)
+[↑](#help) · See also: [Editing](#editing), [Adding](#adding)
 
 ```text
 [6]  editor
@@ -7008,7 +7008,7 @@ Alias:
 
 ##### `encryption_tool`
 
-[↑&nbsp;](#help)· See also: [Password-Protected Encrypted Notes and Bookmarks](#password-protected-encrypted-notes-and-bookmarks)
+[↑](#help) · See also: [Password-Protected Encrypted Notes and Bookmarks](#password-protected-encrypted-notes-and-bookmarks)
 
 ```text
 [7]  encryption_tool
@@ -7021,7 +7021,7 @@ Alias:
 
 ##### `footer`
 
-[↑&nbsp;](#help)· See also: [Listing & Filtering](#listing--filtering)
+[↑](#help) · See also: [Listing & Filtering](#listing--filtering)
 
 ```text
 [8]  footer
@@ -7034,7 +7034,7 @@ Alias:
 
 ##### `header`
 
-[↑&nbsp;](#help)· See also: [Listing & Filtering](#listing--filtering)
+[↑](#help) · See also: [Listing & Filtering](#listing--filtering)
 
 ```text
 [9]  header
@@ -7056,7 +7056,7 @@ Alias:
 
 ##### `limit`
 
-[↑&nbsp;](#help)· See also: [Listing & Filtering](#listing--filtering)
+[↑](#help) · See also: [Listing & Filtering](#listing--filtering)
 
 ```text
 [10] limit
@@ -7083,7 +7083,7 @@ Alias:
 
 ##### `syntax_theme`
 
-[↑&nbsp;](#help)· See also: [Terminal Syntax Highlighting](#terminal-syntax-highlighting-theme)
+[↑](#help) · See also: [Terminal Syntax Highlighting](#terminal-syntax-highlighting-theme)
 
 ```text
 [12] syntax_theme
@@ -7123,7 +7123,7 @@ Alias:
 
 #### `shell`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Interactive Shell](#-nb-interactive-shell),
 [`run`](#run)
 
@@ -7165,7 +7165,7 @@ Example:
 
 #### `show`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Viewing](#viewing),
 [Images](#-images),
 [`browse`](#browse),
@@ -7269,7 +7269,7 @@ Shortcut Alias: `nb s`
 
 #### `status`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Git Sync](#-git-sync),
 [History](#-revision-history),
 [`archive`](#archive),
@@ -7308,7 +7308,7 @@ Shortcut Alias:
 
 #### `subcommands`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Plugins](#-plugins),
 [`plugins`](#plugins)
 
@@ -7339,7 +7339,7 @@ See Also:
 
 #### `sync`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Git Sync](#-git-sync),
 [History](#-revision-history),
 [`history`](#history),
@@ -7398,7 +7398,7 @@ Examples:
 
 #### `unarchive`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Archiving Notebooks](#archiving-notebooks),
 [`archive`](#archive),
 [`notebooks`](#notebooks),
@@ -7431,7 +7431,7 @@ Shortcut Alias:
 
 #### `unpin`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Pinning](#-pinning),
 [`browse`](#browse),
 [`list`](#list),
@@ -7461,7 +7461,7 @@ Examples:
 
 #### `unset`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [`set` & `settings`](#%EF%B8%8F-set--settings),
 [`settings`](#settings)
 
@@ -7490,7 +7490,7 @@ Alias:
 
 #### `update`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Installation](#installation),
 [`env`](#env),
 [`version`](#version)
@@ -7517,7 +7517,7 @@ See Also:
 
 #### `use`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Notebooks](#-notebooks),
 [`notebooks`](#notebooks)
 
@@ -7543,7 +7543,7 @@ Shortcut Alias:
 
 #### `version`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Installation](#installation),
 [`env`](#env),
 [`update`](#update)
@@ -7704,7 +7704,7 @@ Description:
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>
+    <a href="#overview">↑</a>
   </sup>
 </p>
 
