@@ -139,11 +139,20 @@ td {
   }
 }
 
+.nav-list .nav-list-item .nav-list-link {
+  @media only screen and (min-width: 50rem) {
+    line-height:    1rem !important;
+  }
+
+  line-height:      1.5rem !important;
+  min-height:       auto;
+
+}
+
 .nav-list .nav-list-item .nav-list-link:hover,
-.nav-list .nav-list-item .nav-list-link.active,
-.site-title:hover {
+.nav-list .nav-list-item .nav-list-link.active {
   background: 0;
-  background-color: #16191f;
+  background-color:  #16191f;
 }
 
 .search-active .search-input,
@@ -160,14 +169,14 @@ td {
   background-color: #25272b;
 }
 
-.site-button:hover {
-  background:       none;
-  background-color: #16191f;
-}
-
 .side-bar {
   background-color: #0f1217;
   border:           0;
+}
+
+.site-button:hover {
+  background:       none;
+  background-color: #0c0e10;
 }
 
 .site-header {
@@ -180,6 +189,11 @@ td {
 
 .site-title {
   padding-left:     1.5rem;
+}
+
+.site-title:hover {
+  background: 0;
+  background-color: #0c0e10;
 }
 
 .table-wrapper {
