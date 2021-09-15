@@ -340,7 +340,7 @@ the [`nb update`](#update) subcommand.
   <a href="#-folders">Folders</a>&nbsp;·
   <a href="#-pinning">Pinning</a>&nbsp;·
   <a href="#-search">Search</a>&nbsp;·
-  <a href="#moving--renaming">Moving&nbsp;&&nbsp;Renaming</a>&nbsp;·
+  <a href="#-moving--renaming">Moving&nbsp;&&nbsp;Renaming</a>&nbsp;·
   <a href="#-revision-history">History</a>&nbsp;·
   <a href="#-notebooks">Notebooks</a>&nbsp;·
   <a href="#-git-sync">Git&nbsp;Sync</a>&nbsp;·
@@ -3258,7 +3258,7 @@ search: [#example             ]
 
 For more information, see [Browsing](#-browsing).
 
-### Moving & Renaming
+### ↔ Moving & Renaming
 
 <p>
   <sup>
@@ -6336,7 +6336,7 @@ Examples:
 #### `move`
 
 [↑](#help) · See also:
-[Moving & Renaming](#moving--renaming),
+[Moving & Renaming](#-moving--renaming),
 [`delete`](#delete),
 [`edit`](#edit)
 
