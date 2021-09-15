@@ -16677,7 +16677,7 @@ _browse() {
 
     if [[ "${_selector:-}" =~ ^/    ]] &&
        [[ -d "${_selector}"         ]]
-    then # file alteady exists
+    then # file already exists
       _browse_respond_with 302 \
 "//${NB_SERVER_HOST}:${NB_SERVER_PORT}/$(_get_id_selector "${_selector:-}"  --notebook)"
     elif [[ -n "${_selector:-}"     ]]
