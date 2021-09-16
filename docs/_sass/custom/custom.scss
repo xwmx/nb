@@ -44,6 +44,7 @@ body {
 
 code.highlighter-rouge {
   background-color:     lighten($body-background-color, 10%);
+  vertical-align:       middle;
 }
 
 code,
