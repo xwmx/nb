@@ -51,8 +51,9 @@ div.highlighter-rouge {
   background-color:     lighten($body-background-color, 5%);
 }
 
-a:visited code,
-code {
+code,
+a code,
+a:visited code {
   border:               1px solid #1b2027;
   color:                #dedede;
   font-family:          'Courier Prime',
@@ -63,6 +64,10 @@ code {
   font-size:            0.85rem;
   line-height:          1.4;
   padding:              0.2rem 0.4rem 0.1rem;
+}
+
+a code {
+  white-space:          nowrap;
 }
 
 div.highlighter-rouge {
@@ -144,6 +149,10 @@ td {
     margin-bottom:      1.15rem;
   }
 
+  a {
+    white-space:        normal;
+  }
+
   h2, h3, h4, h5, h6 {
     margin-bottom:      1rem    !important;
     margin-top:         1.15rem !important;
@@ -162,6 +171,7 @@ td {
     }
   }
 }
+
 .nav-list .nav-list-item .nav-list-link {
   @media only screen and (min-width: 50rem) {
     line-height:        1rem    !important;
@@ -175,6 +185,15 @@ td {
 .nav-list .nav-list-item .nav-list-link.active {
   background:           0;
   background-color:     $body-background-color;
+}
+
+.nav-list .nav-list-item:first-child .nav-list-link.active {
+  background:           0;
+  background-color:     $side-bar-background-color;
+
+  &:hover {
+    background-color:   $body-background-color;
+  }
 }
 
 .search-active .search-input,
@@ -217,6 +236,10 @@ td {
   @media (max-width: 50rem) {
     background-color:   $body-background-color;
   }
+
+  @media (min-width: 50rem) {
+    display:            none;
+  }
 }
 
 .site-nav {
@@ -224,6 +247,10 @@ td {
 
   @media (max-width: 50rem) {
     background-color:   $body-background-color;
+  }
+
+  @media (min-width: 50rem) {
+    padding-top:        1rem;
   }
 }
 
