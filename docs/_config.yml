@@ -28,7 +28,7 @@ remote_theme: pmarsceill/just-the-docs
 
 # Aux links for the upper right navigation
 aux_links:
-  "nb on GitHub":
+  "<code>&lt;code&gt;</code>":
     - "//github.com/xwmx/nb"
 
 color_scheme: "light"
