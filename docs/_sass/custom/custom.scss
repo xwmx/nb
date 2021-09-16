@@ -12,8 +12,9 @@
 
 /* #1a1a1a #1b1b1b #1e1f25 #4da6dc #65bcfb #6cb2b5 #222327 #232529 */
 
-$body-background-color:     #16191f;
-$body-color:                #c1c1c1;
+// $body-background-color:     #16191f;
+$body-background-color:     #15181d;
+$body-color:                #b9bbc5;
 $dim-color:                 #636363;
 $side-bar-background-color: #0f1217;
 
@@ -21,12 +22,15 @@ $side-bar-background-color: #0f1217;
 // Styles
 
 ::selection {
-  background-color:       #572879;
+  // background-color:       #572879;
+  background-color:       #393f67;
 }
 
 a,
 a code {
-  color:                  #58a6ff !important;
+  // color:                  #58a6ff !important;
+  // color:                  #68abf7 !important;
+  color:                  #5e8bd0 !important;
 }
 
 a:not([class]),
@@ -50,21 +54,24 @@ code.highlighter-rouge {
 }
 
 code,
-div.highlighter-rouge {
-  background-color:       lighten($body-background-color, 5%);
+div.highlighter-rouge,
+.highlight {
+  background-color:       #1c1f25;
 }
 
 code,
 a code,
 a:visited code {
   border:                 1px solid #1b2027;
-  color:                  #dedede;
-  font-family:            'Courier Prime',
-                          'SFMono-Regular',
+  color:                  #cbcbd6;
+  font-family:            ui-monospace,
+                          SFMono-Regular,
+                          SF Mono,
                           Menlo,
                           Consolas,
-                          Monospace;
-  font-size:              1rem;
+                          Liberation Mono,
+                          monospace;
+  font-size:              0.85rem;
   line-height:            1.4;
   padding:                0.2rem 0.4rem 0.1rem;
 }
@@ -121,29 +128,80 @@ td {
   }
 }
 
-.highlight .k   {
-  color:                  #fff56f;
-}
+.highlight {
+  .c  {
+    // color:                  #69667b;
+    color:                  #7c7992;
+  }
 
-.highlight .gh  {
-  color:                  #8ee6ea;
-}
+  .se {
+    color:                  #986492;
+  }
 
-.highlight .nb  {
-  color:                  #e095ff;
-}
+  .gh {
+    // color:                  #8ee6ea;
+    color:                  #9ea6d0;
+  }
 
-.highlight .gu  {
-  color:                  #268bd2;
-}
+  .gu {
+      // color:                  #268bd2;
+      // color:                  #71abd4;
+      color:                #7178d4;
+    }
 
-.highlight .o   {
-  color:                  #60548c;
-}
+  .k  {
+    // color:                  #fff56f;
+    color:                  #d6d3a9;
+  }
 
-.hightlight .s2 {
-  color:                  #2aa198;
-}
+  .nb {
+    // color:                  #e095ff;
+    // color:                  #9f67f7;
+    // color:                  #f5ecac;
+    // color:                  #c1a6ff;
+    // color:                  #9786bd;
+    // color:                  #aaa0bf;
+    // color:                  #d1d2b1;
+    color:                  #a29eab;
+  }
+
+  .nt {
+    // color:                  #faffaf;
+    // color:                  #6e91c7;
+    // color:                  #6281b3;
+    color:                  #89b1f3;
+  }
+
+  .nv {
+    color:                  #6590bf;
+  }
+
+  .o  {
+    // color:                  #60548c;
+    // color:                  #c76caf;
+    color:                  #949494;
+  }
+
+  .s  {
+    color:                  #66afa9;
+  }
+
+    .s2 {
+    // color:                  #2aa198;
+    // color:                  #2a90a1;
+    // color:                  #8a8cff;
+    // color:                  #8ab8ff;
+    // color:                  #9f96e8;
+    // color:                  #b5acff;
+    color:                  #ada7e0;
+  }
+
+  .sx {
+    // color:                  #6c538c;
+    // color:                  #b19bcc;
+    color:                  #99b7b6;
+  }
+} // .highlight
 
 .main-header {
   background-color:       $body-background-color;
@@ -192,7 +250,7 @@ td {
       display:            inline-block;
     }
 
-    &:first-child .nav-list-link:active {
+    &:first-child .nav-list-link.active {
       background:         0;
       background-color:   $side-bar-background-color;
 
