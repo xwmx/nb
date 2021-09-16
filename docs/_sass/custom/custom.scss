@@ -174,7 +174,15 @@ td {
 }
 
 .nav-list {
+  @media (max-width: 50rem) {
+    text-align:             center;
+  }
+
   .nav-list-item {
+    @media (max-width: 50rem) {
+      display:              inline-block;
+    }
+
     &:first-child .nav-list-link:active {
       background:           0;
       background-color:     $side-bar-background-color;
@@ -191,6 +199,10 @@ td {
     .nav-list-link {
       @media only screen and (min-width: 50rem) {
         line-height:        1rem    !important;
+      }
+
+      @media (max-width: 50rem) {
+        padding:            0.2rem 0.5rem;
       }
 
       line-height:          1.5rem  !important;

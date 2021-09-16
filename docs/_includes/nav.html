@@ -1,39 +1,163 @@
 {% comment %}{% include toc.html html=content class="navigation-list" h_max=3 %}{% endcomment %}
 
 <ul class="nav-list">
-  <li class="nav-list-item"><a class="nav-list-link" href="#top">❯</a></li>
-  <!-- <li class="nav-list-item"><a class="nav-list-link" href="#nb"><code class="language-plaintext highlighter-rouge">nb</code></a></li> -->
-  <li class="nav-list-item"><a class="nav-list-link" href="#installation">Installation</a></li>
-  <li class="nav-list-item"><a class="nav-list-link" href="#overview">Overview</a></li>
-  <li class="nav-list-item"><a class="nav-list-link" href="#-notes">📝 Notes</a></li>
-  <li class="nav-list-item"><a class="nav-list-link" href="#-bookmarks">🔖 Bookmarks</a></li>
-  <li class="nav-list-item"><a class="nav-list-link" href="#-tagging">🏷 Tagging</a></li>
-  <li class="nav-list-item"><a class="nav-list-link" href="#-linking">🔗 Linking</a></li>
-  <li class="nav-list-item"><a class="nav-list-link" href="#-browsing">🌍 Browsing</a></li>
-  <li class="nav-list-item"><a class="nav-list-link" href="#-images">🌄 Images</a></li>
-  <li class="nav-list-item"><a class="nav-list-link" href="#-zettelkasten">🗂 Zettelkasten</a></li>
-  <li class="nav-list-item"><a class="nav-list-link" href="#-folders">📂 Folders</a></li>
-  <li class="nav-list-item"><a class="nav-list-link" href="#-pinning">📌 Pinning</a></li>
-  <li class="nav-list-item"><a class="nav-list-link" href="#-search">🔍 Search</a></li>
-  <li class="nav-list-item"><a class="nav-list-link" href="#-moving--renaming">↔ Moving & Renaming</a></li>
-  <li class="nav-list-item"><a class="nav-list-link" href="#-revision-history">🗒 Revision History</a></li>
-  <li class="nav-list-item"><a class="nav-list-link" href="#-notebooks">📚 Notebooks</a></li>
-  <li class="nav-list-item"><a class="nav-list-link" href="#-git-sync">🔄 Git Sync</a></li>
-  <li class="nav-list-item"><a class="nav-list-link" href="#️-import--export">↕️ Import / Export</a></li>
-  <li class="nav-list-item"><a class="nav-list-link" href="#️-set--settings">
-      ⚙️ <code class="language-plaintext highlighter-rouge">set</code> &amp; <code class="language-plaintext highlighter-rouge">settings</code></a>
+  <li class="nav-list-item">
+    <a class="nav-list-link" href="#top">
+      ❯
+    </a>
   </li>
-  <li class="nav-list-item"><a class="nav-list-link" href="#-color-themes">🎨 Color Themes</a></li>
-  <li class="nav-list-item"><a class="nav-list-link" href="#-plugins">🔌 Plugins</a></li>
-  <li class="nav-list-item"><a class="nav-list-link" href="#-selectors"><code>:/</code> Selectors</a></li>
-  <li class="nav-list-item"><a class="nav-list-link" href="#01-metadata"><code>01</code> Metadata</a></li>
-  <li class="nav-list-item"><a class="nav-list-link" href="#-nb-interactive-shell"><code>❯</code> Shell</a></li>
-  <li class="nav-list-item"><a class="nav-list-link" href="#shortcut-aliases"> Shortcut Aliases</a></li>
-  <li class="nav-list-item"><a class="nav-list-link" href="#help">Help / Usage</a></li>
-  <li class="nav-list-item"><a class="nav-list-link" href="#subcommands">Subcommands</a></li>
-  <li class="nav-list-item"><a class="nav-list-link" href="#nb-markdown-bookmark-file-format">Bookmark File Format</a></li>
-  <li class="nav-list-item"><a class="nav-list-link" href="#nb-notebook-specification">Notebook Specification</a></li>
-  <li class="nav-list-item"><a class="nav-list-link" href="#tests">Tests</a></li>
+  <!-- <li class="nav-list-item"> -->
+  <!--   <a class="nav-list-link" href="#nb"> -->
+  <!--     <code class="language-plaintext highlighter-rouge">nb</code> -->
+  <!--   </a> -->
+  <!-- </li> -->
+  <li class="nav-list-item">
+    <a class="nav-list-link" href="#installation">
+      Installation
+    </a>
+  </li>
+  <li class="nav-list-item">
+    <a class="nav-list-link" href="#overview">
+      Overview
+    </a>
+  </li>
+  <li class="nav-list-item">
+    <a class="nav-list-link" href="#-notes">
+      📝 Notes
+    </a>
+  </li>
+  <li class="nav-list-item">
+    <a class="nav-list-link" href="#-bookmarks">
+      🔖 Bookmarks
+    </a>
+  </li>
+  <li class="nav-list-item">
+    <a class="nav-list-link" href="#-tagging">
+      🏷 Tagging
+    </a>
+  </li>
+  <li class="nav-list-item">
+    <a class="nav-list-link" href="#-linking">
+      🔗 Linking
+    </a>
+  </li>
+  <li class="nav-list-item">
+    <a class="nav-list-link" href="#-browsing">
+      🌍 Browsing
+    </a>
+  </li>
+  <li class="nav-list-item">
+    <a class="nav-list-link" href="#-images">
+      🌄 Images
+    </a>
+  </li>
+  <li class="nav-list-item">
+    <a class="nav-list-link" href="#-zettelkasten">
+      🗂 Zettelkasten
+    </a>
+  </li>
+  <li class="nav-list-item">
+    <a class="nav-list-link" href="#-folders">
+      📂 Folders
+    </a>
+  </li>
+  <li class="nav-list-item">
+    <a class="nav-list-link" href="#-pinning">
+      📌 Pinning
+    </a>
+  </li>
+  <li class="nav-list-item">
+    <a class="nav-list-link" href="#-search">
+      🔍 Search
+    </a>
+  </li>
+  <li class="nav-list-item">
+    <a class="nav-list-link" href="#-moving--renaming">
+      ↔ Moving & Renaming
+    </a>
+  </li>
+  <li class="nav-list-item">
+    <a class="nav-list-link" href="#-revision-history">
+      🗒 Revision History
+    </a>
+  </li>
+  <li class="nav-list-item">
+    <a class="nav-list-link" href="#-notebooks">
+      📚 Notebooks
+    </a>
+  </li>
+  <li class="nav-list-item">
+    <a class="nav-list-link" href="#-git-sync">
+      🔄 Git Sync
+    </a>
+  </li>
+  <li class="nav-list-item">
+    <a class="nav-list-link" href="#️-import--export">
+      ↕️ Import / Export
+    </a>
+  </li>
+  <li class="nav-list-item">
+    <a class="nav-list-link" href="#️-set--settings">
+      ⚙️ <code class="language-plaintext highlighter-rouge">set</code>
+      &amp;
+      <code class="language-plaintext highlighter-rouge">settings</code>
+    </a>
+  </li>
+  <li class="nav-list-item">
+    <a class="nav-list-link" href="#-color-themes">
+      🎨 Color Themes
+    </a>
+  </li>
+  <li class="nav-list-item">
+    <a class="nav-list-link" href="#-plugins">
+      🔌 Plugins
+    </a>
+  </li>
+  <li class="nav-list-item">
+    <a class="nav-list-link" href="#-selectors">
+      <code>:/</code> Selectors
+    </a>
+  </li>
+  <li class="nav-list-item">
+    <a class="nav-list-link" href="#01-metadata">
+      <code>01</code> Metadata
+    </a>
+  </li>
+  <li class="nav-list-item">
+    <a class="nav-list-link" href="#-nb-interactive-shell">
+      <code>❯</code> Shell
+    </a>
+  </li>
+  <li class="nav-list-item">
+    <a class="nav-list-link" href="#shortcut-aliases">
+      Shortcut Aliases
+    </a>
+  </li>
+  <li class="nav-list-item">
+    <a class="nav-list-link" href="#help">
+      Help / Usage
+    </a>
+  </li>
+  <li class="nav-list-item">
+    <a class="nav-list-link" href="#subcommands">
+      Subcommands
+    </a>
+  </li>
+  <li class="nav-list-item">
+    <a class="nav-list-link" href="#nb-markdown-bookmark-file-format">
+      Bookmark File Format
+    </a>
+  </li>
+  <li class="nav-list-item">
+    <a class="nav-list-link" href="#nb-notebook-specification">
+      Notebook Specification
+    </a>
+  </li>
+  <li class="nav-list-item">
+    <a class="nav-list-link" href="#tests">
+      Tests
+    </a>
+  </li>
 </ul>
 
 <script
