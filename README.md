@@ -342,7 +342,7 @@ the [`nb update`](#update) subcommand.
   <a href="#%EF%B8%8F-set--settings"><code>set</code>&nbsp;&&nbsp;<code>settings</code></a>&nbsp;·
   <a href="#-color-themes">Color&nbsp;Themes</a>&nbsp;·
   <a href="#-plugins">Plugins</a>&nbsp;·
-  <a href="#selectors">Selectors</a>&nbsp;·
+  <a href="#-selectors">Selectors</a>&nbsp;·
   <a href="#-nb-interactive-shell">Shell</a>&nbsp;·
   <a href="#shortcut-aliases">Shortcuts</a>&nbsp;·
   <a href="#help">Help</a>&nbsp;·
@@ -1474,7 +1474,7 @@ For more information, see [Browsing](#-browsing).
 </p>
 
 To delete one or more notes, pass any number of
-ids, filenames, titles, and other [selectors](#selectors)
+ids, filenames, titles, and other [selectors](#-selectors)
 to [`nb delete`](#delete) (shortcuts: `nb d`, `nb -`):
 
 ```bash
@@ -2307,7 +2307,7 @@ providing a convenient option for linking collections of Org files.
 
 Linked items can be [browsed](#-browsing) with [`nb browse`](#browse).
 
-For more information about identifying items, see [Selectors](#selectors).
+For more information about identifying items, see [Selectors](#-selectors).
 
 ### 🌍 Browsing
 
@@ -2392,7 +2392,7 @@ or in the browser set in the `$BROWSER` environment variable.
 Use [`nb browse --gui`](#browse) / [`nb br -g`](#browse) to
 open in the system's primary [GUI web browser](#browse---gui).
 
-To open a specific item in `nb browse`, pass the [selector](#selectors)
+To open a specific item in `nb browse`, pass the [selector](#-selectors)
 for the item, folder, or notebook to `nb browse`:
 
 ```bash
@@ -2769,7 +2769,7 @@ providing a convenient mechanism for
 
 [`nb browse`](#browse) renders image items within in an `<img>` tag
 on the item page. Open the item page for an image item by passing a
-[selector](#selectors) to `nb browse`, optionally including the
+[selector](#-selectors) to `nb browse`, optionally including the
 `-g` / `--gui` option to open the page in the system GUI web browser:
 
 ```bash
@@ -2854,7 +2854,7 @@ organized in normal system directories in normal git repositories,
 |    Zettelkasten   |                       `nb`                    |
 |:-----------------:|:---------------------------------------------:|
 | index cards       | [notes](#-notes) & [bookmarks](#-bookmarks)   |
-| numbering         | ids & [selectors](#selectors)                 |
+| numbering         | ids & [selectors](#-selectors)                 |
 | slip boxes        | [notebooks](#-notebooks)                      |
 | tags              | [#tags](#-tagging)                            |
 | metadata          | [front matter](#front-matter)                 |
@@ -2977,7 +2977,7 @@ search: [                    ]
 [example:sample/demo/1] Title One
 ```
 
-For more information about identifying folders, see [Selectors](#selectors).
+For more information about identifying folders, see [Selectors](#-selectors).
 
 ### 📌 Pinning
 
@@ -4259,7 +4259,7 @@ For more information about `set` and `settings`, see
 </p>
 
 `nb` uses color to highlight various interface elements, including
-ids and [selectors](#selectors),
+ids and [selectors](#-selectors),
 the current notebook name,
 the shell prompt,
 divider lines,
@@ -4618,7 +4618,7 @@ _notebooks current --path
 ```
 
 `nb` automatically scans arguments for
-[selectors](#selectors) with notebook names
+[selectors](#-selectors) with notebook names
 and updates the current notebook if a valid one is found.
 
 Identifier selectors are passed to subcommands as arguments along with
@@ -4660,7 +4660,7 @@ for a practical example using both [`show <selector> --filename`](#show) and
 [`notebooks current --path`](#notebooks) along with other
 subcommands called using their underscore-prefixed function names.
 
-### Selectors
+### `:/` Selectors
 
 <p>
   <sup>
