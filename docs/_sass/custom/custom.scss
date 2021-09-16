@@ -14,204 +14,221 @@
 
 $body-background-color:     #16191f;
 $body-color:                #c1c1c1;
+$dim-color:                 #636363;
 $side-bar-background-color: #0f1217;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Styles
 
 ::selection {
-  background-color:     #572879;
+  background-color:       #572879;
 }
 
 a,
 a code {
-  color:                #58a6ff !important;
+  color:                  #58a6ff !important;
 }
 
 a:not([class]),
 a:not([class]):hover {
-  background:           none;
+  background:             none;
 }
 
 a:not([class]):hover {
-  text-decoration:      underline;
+  text-decoration:        underline;
 }
 
 body {
-  background-color:     $body-background-color;
-  color:                $body-color;
+  background-color:       $body-background-color;
+  color:                  $body-color;
 }
 
 code.highlighter-rouge {
-  background-color:     lighten($body-background-color, 10%);
-  vertical-align:       middle;
+  background-color:       lighten($body-background-color, 10%);
+  vertical-align:         middle;
 }
 
 code,
 div.highlighter-rouge {
-  background-color:     lighten($body-background-color, 5%);
+  background-color:       lighten($body-background-color, 5%);
 }
 
 code,
 a code,
 a:visited code {
-  border:               1px solid #1b2027;
-  color:                #dedede;
-  font-family:          'Courier Prime',
-                        'SFMono-Regular',
-                        Menlo,
-                        Consolas,
-                        Monospace;
-  font-size:            0.85rem;
-  line-height:          1.4;
-  padding:              0.2rem 0.4rem 0.1rem;
+  border:                 1px solid #1b2027;
+  color:                  #dedede;
+  font-family:            'Courier Prime',
+                          'SFMono-Regular',
+                          Menlo,
+                          Consolas,
+                          Monospace;
+  font-size:              0.85rem;
+  line-height:            1.4;
+  padding:                0.2rem 0.4rem 0.1rem;
 }
 
 a code {
-  white-space:          nowrap;
+  white-space:            nowrap;
 }
 
 div.highlighter-rouge {
-  padding:              0.75rem 1rem;
+  padding:                0.75rem 1rem;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  color:                #e6e6e6 !important;
+  color:                  #e6e6e6 !important;
 }
 
 h1, h1 code {
-  font-size:            2rem    !important;
+  font-size:              2rem    !important;
 }
 
 h2 {
-  font-size:            1.35rem !important;
+  font-size:              1.35rem !important;
 }
 
 h3 {
-  font-size:            1.25rem !important;
+  font-size:              1.25rem !important;
 }
 
 input[type='text'] {
-  background-color:     $body-background-color;
+  background-color:       $body-background-color;
 }
 
 pre {
-  font-size:            1.2rem;
-  line-height:          1rem;
+  font-size:              1.2rem;
+  line-height:            1rem;
 }
 
 sup code {
-  font-size:            0.75rem;
+  font-size:              0.75rem;
 }
 
 th,
 thead th,
 td {
-  background-color:     transparent;
-  border-bottom:        1px solid #3a3a3a;
-  border-left:          1px solid #3a3a3a;
+  background-color:       transparent;
+  border-bottom:          1px solid #3a3a3a;
+  border-left:            1px solid #3a3a3a;
+}
+
+.aux-nav .aux-nav-list {
+  @media (max-width: 50rem) {
+    display:              block;
+    text-align:           center;
+  }
 }
 
 .highlight .k   {
-  color:                #fff56f;
+  color:                  #fff56f;
 }
 
 .highlight .gh  {
-  color:                #8ee6ea;
+  color:                  #8ee6ea;
 }
 
 .highlight .nb  {
-  color:                #e095ff;
+  color:                  #e095ff;
 }
 
 .highlight .gu  {
-  color:                #268bd2;
+  color:                  #268bd2;
 }
 
 .highlight .o   {
-  color:                #60548c;
+  color:                  #60548c;
 }
 
 .hightlight .s2 {
-  color:                #2aa198;
+  color:                  #2aa198;
 }
 
 .main-header {
-  background-color:     $body-background-color;
-  border:               0;
+  background-color:       $body-background-color;
+  border:                 0;
 
   @media (max-width: 50rem) {
-    background-color:   $body-background-color;
+    background-color:     $body-background-color;
   }
 }
 
 .main-content {
   .highlighter-rouge {
-    margin-bottom:      1.15rem;
+    margin-bottom:        1.15rem;
   }
 
   a {
-    white-space:        normal;
+    white-space:          normal;
   }
 
   h2, h3, h4, h5, h6 {
-    margin-bottom:      1rem    !important;
-    margin-top:         1.15rem !important;
+    margin-bottom:        1rem    !important;
+    margin-top:           1.15rem !important;
   }
 
   h4 {
-    font-size:          14px    !important;
+    font-size:            14px    !important;
   }
 
   h4, h5, h6 {
-    font-weight:        bold;
-    text-transform:     none;
+    font-weight:          bold;
+    text-transform:       none;
 
     code {
-      font-size:        1rem    !important;
+      font-size:          1rem    !important;
     }
   }
 }
 
 .nav-list {
   @media (max-width: 50rem) {
-    text-align:             center;
+    text-align:           center;
   }
 
   .nav-list-item {
     @media (max-width: 50rem) {
-      display:              inline-block;
+      display:            inline-block;
     }
 
     &:first-child .nav-list-link:active {
-      background:           0;
-      background-color:     $side-bar-background-color;
+      background:         0;
+      background-color:   $side-bar-background-color;
 
       @media (max-width: 50rem) {
-        background-color:   $body-background-color;
+        background-color: $body-background-color;
       }
 
       &:hover {
-        background-color:   $body-background-color;
+        background-color: $body-background-color;
       }
     }
 
     .nav-list-link {
       @media only screen and (min-width: 50rem) {
-        line-height:        1rem    !important;
+        line-height:      1rem    !important;
       }
 
       @media (max-width: 50rem) {
-        padding:            0.2rem 0.5rem;
+        display:          inline-block;
+        padding:          0.2rem 0.5rem;
       }
 
-      line-height:          1.5rem  !important;
-      min-height:           auto;
+      line-height:        1.5rem  !important;
+      min-height:         auto;
 
       &:hover,
       &.active {
-        background:         0;
-        background-color:   $body-background-color;
+        background:       0;
+        background-color: $body-background-color;
+      }
+    }
+
+    .nav-separator {
+      color:                $dim-color;
+
+      @media (min-width: 50rem) {
+        display:          none;
       }
     }
   }
@@ -221,78 +238,78 @@ td {
 .search-input,
 .search-results,
 .search-result-previews {
-  background-color:     #1e1f25;
-  color:                #c7c5ce;
+  background-color:       #1e1f25;
+  color:                  #c7c5ce;
 }
 
 .search-result:hover,
 .search-result.active {
-  background:           none;
-  background-color:     #25272b;
+  background:             none;
+  background-color:       #25272b;
 }
 
 .side-bar {
-  background-color:     $side-bar-background-color;
-  border:               0;
+  background-color:       $side-bar-background-color;
+  border:                 0;
 }
 
 .site-button:hover {
-  background:           none;
-  background-color:     darken($body-background-color, 2%);
-  border-radius:        0 0 5px 5px;
+  background:             none;
+  background-color:       darken($body-background-color, 2%);
+  border-radius:          0 0 5px 5px;
 
   @media (max-width: 50rem) {
-    background-color:   $body-background-color;
+    background-color:     $body-background-color;
   }
 }
 
 .site-button,
 .site-button .icon {
-  color:                $body-color;
+  color:                  $body-color;
 }
 
 .site-header {
-  border:               0;
+  border:                 0;
 
   @media (max-width: 50rem) {
-    background-color:   $body-background-color;
+    background-color:     $body-background-color;
   }
 
   @media (min-width: 50rem) {
-    display:            none;
+    display:              none;
   }
 }
 
 .site-nav {
-  padding-top:          0;
+  padding-top:            0;
 
   @media (max-width: 50rem) {
-    background-color:   $body-background-color;
+    background-color:     $body-background-color;
   }
 
   @media (min-width: 50rem) {
-    padding-top:        1rem;
+    padding-top:          1rem;
   }
 
   code {
-    font-size:          0.8rem;
-    padding:            0;
+    font-size:            0.8rem;
+    padding:              0;
   }
 }
 
 .site-title {
-  padding-left:         1.5rem;
+  padding-left:           1.5rem;
 
   @media (max-width: 50rem) {
-    display:            none;
+    display:              none;
   }
 }
 
 .site-title:hover {
-  background:           0;
-  background-color:     darken($side-bar-background-color, 2%);
+  background:             0;
+  background-color:       darken($side-bar-background-color, 2%);
 }
 
 .table-wrapper {
-  box-shadow:           none;
+  box-shadow:             none;
 }
