@@ -41,6 +41,7 @@ a:not([class]):hover {
 body {
   background-color:       $body-background-color;
   color:                  $body-color;
+  font-size:              16px;
 }
 
 code.highlighter-rouge {
@@ -63,7 +64,7 @@ a:visited code {
                           Menlo,
                           Consolas,
                           Monospace;
-  font-size:              0.85rem;
+  font-size:              1rem;
   line-height:            1.4;
   padding:                0.2rem 0.4rem 0.1rem;
 }
