@@ -173,31 +173,35 @@ td {
   }
 }
 
-.nav-list .nav-list-item .nav-list-link {
-  @media only screen and (min-width: 50rem) {
-    line-height:        1rem    !important;
-  }
+.nav-list {
+  .nav-list-item {
+    &:first-child .nav-list-link:active {
+      background:           0;
+      background-color:     $side-bar-background-color;
 
-  line-height:          1.5rem  !important;
-  min-height:           auto;
-}
+      @media (max-width: 50rem) {
+        background-color:   $body-background-color;
+      }
 
-.nav-list .nav-list-item .nav-list-link:hover,
-.nav-list .nav-list-item .nav-list-link.active {
-  background:           0;
-  background-color:     $body-background-color;
-}
+      &:hover {
+        background-color:   $body-background-color;
+      }
+    }
 
-.nav-list .nav-list-item:first-child .nav-list-link.active {
-  background:           0;
-  background-color:     $side-bar-background-color;
+    .nav-list-link {
+      @media only screen and (min-width: 50rem) {
+        line-height:        1rem    !important;
+      }
 
-  @media (max-width: 50rem) {
-    background-color:   $body-background-color;
-  }
+      line-height:          1.5rem  !important;
+      min-height:           auto;
 
-  &:hover {
-    background-color:   $body-background-color;
+      &:hover,
+      &.active {
+        background:         0;
+        background-color:   $body-background-color;
+      }
+    }
   }
 }
 
