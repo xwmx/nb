@@ -192,6 +192,10 @@ td {
   background:           0;
   background-color:     $side-bar-background-color;
 
+  @media (max-width: 50rem) {
+    background-color:   $body-background-color;
+  }
+
   &:hover {
     background-color:   $body-background-color;
   }
