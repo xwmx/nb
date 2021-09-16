@@ -4810,7 +4810,7 @@ notebook:a
 notebook:q
 ```
 
-### Metadata
+### `01` Metadata
 
 Metadata in `nb` is primarily derived from git, the filesystem, and file
 content. For example, displayed timestamps are derived from
