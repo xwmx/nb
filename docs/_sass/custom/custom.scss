@@ -57,7 +57,7 @@ dt code,
 sup code,
 code.highlighter-rouge {
   background-color:       lighten($body-background-color, 10%);
-  font-size:              0.85rem;
+  font-size:              0.85em;
   vertical-align:         middle;
 }
 
@@ -123,10 +123,6 @@ input[type='text'] {
 pre {
   font-size:              1.2rem;
   line-height:            1rem;
-}
-
-sup code {
-  font-size:              0.75rem;
 }
 
 th,
@@ -257,9 +253,9 @@ td {
     font-weight:          bold;
     text-transform:       none;
 
-    code {
-      font-size:          1rem    !important;
-    }
+    // code {
+    //   font-size:          1rem    !important;
+    // }
   }
 
   // override theme list styles
