@@ -421,6 +421,7 @@ th {
 .search-input-wrap {
   @media (max-width: 50rem) {
     border-bottom:          1px solid lighten($body-background-color, 5%);
+    box-shadow:             0 3px 10px rgba(0, 0, 0, 0.08);
   }
 }
 
