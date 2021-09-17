@@ -53,7 +53,7 @@ code {
   border-radius:            6px;
 }
 
-dt code,
+dl code,
 sup code,
 code.highlighter-rouge {
   background-color:         lighten($body-background-color, 10%);
@@ -276,7 +276,7 @@ td {
   h5,
   h6,
   .text-zeta {
-    font-size:              0.875rem  !important;
+    font-size:              0.9rem    !important;
   }
 
 
@@ -378,7 +378,7 @@ td {
 
 .search-input:focus + .search-label .search-icon,
 .search-result-doc .search-result-icon {
-  color:                    #51B09B;
+  color:                    lighten($link-color, 15%);
 }
 
 .search-input-wrap {
