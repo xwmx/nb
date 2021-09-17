@@ -143,6 +143,14 @@ td {
   font-size:                0.95rem !important;
 }
 
+th {
+  padding:                  0.5rem 0 0.5rem 0.45rem;
+
+  @media (min-width: 50rem) {
+    padding-left:           0.75rem;
+  }
+}
+
 .aux-nav .aux-nav-list {
   @media (max-width: 50rem) {
     display:                block;
@@ -258,6 +266,7 @@ td {
 
     code {
       font-weight:          bold;
+      padding:              0.1rem 0.4rem;
     }
   }
 
@@ -274,7 +283,7 @@ td {
     margin-top:             -0.6rem   !important;
   }
 
-  h2 {
+  h2, h3 {
     margin-top:             -1rem     !important;
   }
 
@@ -282,12 +291,19 @@ td {
     font-size:              1rem      !important;
   }
 
+  h4,
+  h5,
+  h6 {
+    code {
+      font-size:            0.93em    !important;
+    }
+  }
+
   h5,
   h6,
   .text-zeta {
-    font-size:              0.9rem    !important;
+    font-size:              1rem      !important;
   }
-
 
   // override theme list styles
   ul > li::before {
