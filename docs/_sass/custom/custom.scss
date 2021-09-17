@@ -279,8 +279,8 @@ th {
   }
 
   h2, h3, h4, h5, h6 {
-    text-transform:         none;
     margin-top:             -0.6rem   !important;
+    text-transform:         none;
   }
 
   h2, h3 {
@@ -307,10 +307,10 @@ th {
 
   // override theme list styles
   ul > li::before {
-    position:               inherit;
-    margin-left:            inherit;
     color:                  inherit;
     content:                none;
+    margin-left:            inherit;
+    position:               inherit;
   }
 
   ul {
@@ -325,7 +325,7 @@ th {
     width:                  1rem;
 
     svg {
-      color:                  $link-color;
+      color:                $link-color;
     }
   }
 
