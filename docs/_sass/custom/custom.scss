@@ -53,6 +53,7 @@ code {
   border-radius:          6px;
 }
 
+dt code,
 sup code,
 code.highlighter-rouge {
   background-color:       lighten($body-background-color, 10%);
@@ -212,6 +213,27 @@ td {
 
   a {
     white-space:          normal;
+  }
+
+  dl {
+    display:              block;
+
+    dt {
+      font-size:          1rem;
+      font-style:         italic;
+      font-weight:        600;
+      margin-top:         1rem;
+      padding:            0;
+      text-align:         left;
+
+      &::after {
+        content:          "";
+      }
+
+      code {
+        font-weight:      bold;
+      }
+    }
   }
 
   h2, h3, h4, h5, h6 {
