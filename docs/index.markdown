@@ -1,6 +1,6 @@
 ---
 layout: home
-title: nb · CLI plain text note-taking, bookmarking, and archiving.
+title: nb · CLI and local web plain text note-taking, bookmarking, archiving.
 permalink: /
 ---
 
