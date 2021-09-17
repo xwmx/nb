@@ -53,6 +53,7 @@ code {
   border-radius:          6px;
 }
 
+sup code,
 code.highlighter-rouge {
   background-color:       lighten($body-background-color, 10%);
   vertical-align:         middle;
@@ -76,9 +77,13 @@ a:visited code {
                           Consolas,
                           Liberation Mono,
                           monospace;
-  font-size:              0.85rem;
+  font-size:              0.9rem;
   line-height:            1.4;
   padding:                0.2rem 0.4rem;
+
+  @media (min-width: 50rem) {
+    font-size:            0.85rem;
+  }
 }
 
 a code {

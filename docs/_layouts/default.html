@@ -40,7 +40,7 @@ layout: table_wrappers
     </symbol>
   </svg>
 
-  <div class="side-bar" id="top">
+  <div class="side-bar">
     <div class="site-header">
       <a href="{{ '/' | absolute_url }}" class="site-title lh-tight">{% include title.html %}</a>
       <a href="#" id="menu-button" class="site-button">
@@ -66,7 +66,7 @@ layout: table_wrappers
       {% endif %}
     </nav>
   </div>
-  <div class="main">
+  <div class="main" id="start">
     <div id="main-header" class="main-header">
       {% if site.search_enabled != false %}
         <div class="search">
