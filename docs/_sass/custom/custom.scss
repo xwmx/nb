@@ -13,7 +13,7 @@
 /* #1a1a1a #1b1b1b #1e1f25 #4da6dc #65bcfb #6cb2b5 #222327 #232529 */
 
 $body-background-color:     #15181d;
-$body-color:                #acb0bf;
+$body-color:                #c5c7cf;
 $dim-color:                 #636363;
 $link-color:                #5e8bd0;
 $side-bar-background-color: #0f1217;
@@ -22,126 +22,126 @@ $side-bar-background-color: #0f1217;
 // Styles
 
 ::selection {
-  background-color:       #393f67;
+  background-color:         #393f67;
 }
 
 a,
 a code {
-  color:                  $link-color !important;
+  color:                    $link-color !important;
 }
 
 a:not([class]),
 a:not([class]):hover {
-  background:             none;
+  background:               none;
 }
 
 a:not([class]):hover {
-  text-decoration:        underline;
+  text-decoration:          underline;
 }
 
 body,
 html {
-  font-size:              16px !important;
+  font-size:                16px !important;
 }
 
 body {
-  background-color:       $body-background-color;
-  color:                  $body-color;
+  background-color:         $body-background-color;
+  color:                    $body-color;
 }
 
 code {
-  border-radius:          6px;
+  border-radius:            6px;
 }
 
 dt code,
 sup code,
 code.highlighter-rouge {
-  background-color:       lighten($body-background-color, 10%);
-  font-size:              0.85em;
-  vertical-align:         middle;
+  background-color:         lighten($body-background-color, 10%);
+  font-size:                0.85em;
+  vertical-align:           middle;
 }
 
 code,
 div.highlighter-rouge,
 .highlight {
-  background-color:       #1c1f25;
+  background-color:         #1c1f25;
 }
 
 code,
 a code,
 a:visited code {
-  border:                 1px solid #1b2027;
-  color:                  #cbcbd6;
-  font-family:            ui-monospace,
-                          SFMono-Regular,
-                          SF Mono,
-                          Menlo,
-                          Consolas,
-                          Liberation Mono,
-                          monospace;
-  font-size:              0.9rem;
-  line-height:            1.4;
-  padding:                0.2rem 0.4rem;
+  border:                   1px solid #1b2027;
+  color:                    #cbcbd6;
+  font-family:              ui-monospace,
+                            SFMono-Regular,
+                            SF Mono,
+                            Menlo,
+                            Consolas,
+                            Liberation Mono,
+                            monospace;
+  font-size:                0.9rem;
+  line-height:              1.4;
+  padding:                  0.2rem 0.4rem;
 
   @media (min-width: 50rem) {
-    font-size:            0.85rem;
+    font-size:              0.85rem;
   }
 }
 
 sup code {
-  font-size:              0.85em;
+  font-size:                0.85em;
 }
 
 a code {
-  white-space:            nowrap;
+  white-space:              nowrap;
 }
 
 div.highlighter-rouge {
-  padding:                0.75rem 1rem;
+  padding:                  0.75rem 1rem;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  color:                  $body-color !important;
+  color:                    $body-color !important;
 }
 
 h1, h1 code {
-  font-size:              2rem        !important;
+  font-size:                2rem        !important;
 }
 
 h2 {
-  font-size:              1.35rem     !important;
+  font-size:                1.35rem     !important;
 }
 
 h3 {
-  font-size:              1.25rem     !important;
+  font-size:                1.25rem     !important;
 }
 
 hr {
-  background-color:       lighten($body-background-color, 10%);
+  background-color:         lighten($body-background-color, 10%);
 }
 
 input[type='text'] {
-  background-color:       $body-background-color;
+  background-color:         $body-background-color;
 }
 
 pre {
-  font-size:              1.2rem;
-  line-height:            1rem;
+  font-size:                1.2rem;
+  line-height:              1rem;
 }
 
 th,
 thead th,
 td {
-  background-color:       transparent;
-  border-bottom:          1px solid lighten($body-background-color, 5%);
-  border-left:            1px solid lighten($body-background-color, 5%);
-  font-size:              0.95rem !important;
+  background-color:         transparent;
+  border-bottom:            1px solid lighten($body-background-color, 5%);
+  border-left:              1px solid lighten($body-background-color, 5%);
+  font-size:                0.95rem !important;
 }
 
 .aux-nav .aux-nav-list {
   @media (max-width: 50rem) {
-    display:              block;
-    text-align:           center;
+    display:                block;
+    text-align:             center;
   }
 }
 
