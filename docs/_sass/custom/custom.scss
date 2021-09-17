@@ -56,6 +56,7 @@ code {
 sup code,
 code.highlighter-rouge {
   background-color:       lighten($body-background-color, 10%);
+  font-size:              0.85rem;
   vertical-align:         middle;
 }
 
@@ -104,6 +105,10 @@ h1, h1 code {
 
 h2 {
   font-size:              1.35rem !important;
+}
+
+hr {
+  background-color:       lighten($body-background-color, 10%);
 }
 
 h3 {
@@ -275,7 +280,7 @@ td {
 
       @media (max-width: 50rem) {
         display:          inline-block;
-        padding:          0.2rem 0.5rem;
+        padding:          0.2rem;
       }
 
       line-height:        1.5rem  !important;
@@ -308,12 +313,12 @@ td {
 
 .search-input:focus + .search-label .search-icon,
 .search-result-doc .search-result-icon {
-  color:                  #a6b7ed;
+  color:                  #51B09B;
 }
 
 .search-input-wrap {
   @media (max-width: 50rem) {
-    border-bottom:        1px solid darken($body-background-color, 1%);
+    border-bottom:        1px solid lighten($body-background-color, 5%);
   }
 }
 
