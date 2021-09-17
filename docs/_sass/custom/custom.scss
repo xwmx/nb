@@ -415,7 +415,7 @@ th {
 
 .search-input:focus + .search-label .search-icon,
 .search-result-doc .search-result-icon {
-  color:                    #dbdbdb;
+  color:                    lighten($body-color, 2.5%);
 }
 
 .search-input-wrap {
