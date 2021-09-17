@@ -11750,17 +11750,17 @@ _bookmark() {
     if [[ -z "${_title}"    ]]
     then
       _title="$(
-        cat "${_temp_file}"               \
-          | grep                          \
-            --only-matching               \
-            --extended-regexp             \
-            --ignore-case                 \
-            '.*<title[^>]*>[^<]*</title>' \
-          | head -n 1                     \
-          | sed                           \
-            -e 's/.*<title[^>]*>//'       \
-            -e 's/.*<TITLE[^>]*>//'       \
-            -e 's/<\/title>.*//'          \
+        cat "${_temp_file}"             \
+          | grep                        \
+            --only-matching             \
+            --extended-regexp           \
+            --ignore-case               \
+            '<title[^>]*>[^<]*</title>' \
+          | head -n 1                   \
+          | sed                         \
+            -e 's/.*<title[^>]*>//'     \
+            -e 's/.*<TITLE[^>]*>//'     \
+            -e 's/<\/title>.*//'        \
             -e 's/<\/TITLE>.*//'
       )" || : # TODO: pipeline returns error status but still returns title
     fi
