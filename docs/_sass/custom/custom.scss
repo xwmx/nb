@@ -39,10 +39,14 @@ a:not([class]):hover {
   text-decoration:        underline;
 }
 
+body,
+html {
+  font-size:              16px !important;
+}
+
 body {
   background-color:       $body-background-color;
   color:                  $body-color;
-  font-size:              16px;
 }
 
 code.highlighter-rouge {
@@ -116,6 +120,7 @@ td {
   background-color:       transparent;
   border-bottom:          1px solid lighten($body-background-color, 5%);
   border-left:            1px solid lighten($body-background-color, 5%);
+  font-size:              0.95rem !important;
 }
 
 .aux-nav .aux-nav-list {
