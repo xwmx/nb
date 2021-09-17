@@ -526,6 +526,14 @@ th {
   }
 }
 
+.site-nav,
+.site-header,
+.site-footer {
+  @media (min-width: 66.5rem) {
+    width:                  14rem;
+  }
+}
+
 .site-title {
   padding-left:             1.5rem;
 
