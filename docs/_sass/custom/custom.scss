@@ -269,14 +269,13 @@ td {
     margin-bottom:          1rem      !important;
   }
 
-  h2, h3 {
-    // margin-top:             1.15rem   !important;
-    margin-top:             0.15rem   !important;
+  h2, h3, h4, h5, h6 {
+    text-transform:         none;
+    margin-top:             -0.6rem   !important;
   }
 
-  h4, h5, h6 {
-    text-transform:         none;
-    margin-top:             -0.5rem    !important;
+  h2 {
+    margin-top:             -1rem     !important;
   }
 
   h4 {
@@ -493,7 +492,7 @@ td {
 }
 
 .site-nav {
-  padding:                  0 0.1rem;
+  padding:                  0 0.5rem;
 
   @media (max-width: 50rem) {
     background-color:       $body-background-color;
