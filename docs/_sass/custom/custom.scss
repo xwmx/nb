@@ -49,6 +49,10 @@ body {
   color:                  $body-color;
 }
 
+code {
+  border-radius:          6px;
+}
+
 code.highlighter-rouge {
   background-color:       lighten($body-background-color, 10%);
   vertical-align:         middle;
@@ -74,7 +78,7 @@ a:visited code {
                           monospace;
   font-size:              0.85rem;
   line-height:            1.4;
-  padding:                0.2rem 0.4rem 0.1rem;
+  padding:                0.2rem 0.4rem;
 }
 
 a code {
@@ -190,6 +194,8 @@ td {
 }
 
 .main-content {
+  padding: 0 1rem;
+
   .highlighter-rouge {
     margin-bottom:        1.15rem;
   }
@@ -241,6 +247,7 @@ td {
   .nav-list-item {
     @media (max-width: 50rem) {
       display:            inline-block;
+      font-size:          1rem !important;
     }
 
     &:first-child .nav-list-link.active {
@@ -344,7 +351,7 @@ td {
 }
 
 .site-footer {
-  font-size:              1rem !important;
+  font-size:              0.85rem !important;
   padding:                1rem 0 0;
   position:               relative;
   text-align:             center;
