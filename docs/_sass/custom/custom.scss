@@ -21,6 +21,10 @@ $side-bar-background-color: #0f1217;
 ///////////////////////////////////////////////////////////////////////////////
 // Styles
 
+::placeholder {
+  color:                    $dim-color;
+}
+
 ::selection {
   background-color:         #393f67;
 }
@@ -378,7 +382,7 @@ td {
 
 .search-input:focus + .search-label .search-icon,
 .search-result-doc .search-result-icon {
-  color:                    lighten($link-color, 15%);
+  color:                    #dbdbdb;
 }
 
 .search-input-wrap {
