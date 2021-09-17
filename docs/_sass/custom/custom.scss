@@ -493,7 +493,7 @@ td {
 }
 
 .site-nav {
-  padding-top:              0;
+  padding:                  0 0.5rem;
 
   @media (max-width: 50rem) {
     background-color:       $body-background-color;
