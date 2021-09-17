@@ -211,17 +211,8 @@ td {
   }
 } // .highlight
 
-.main-header {
-  background-color:         $body-background-color;
-  border:                   0;
-
-  @media (max-width: 50rem) {
-    background-color:       $body-background-color;
-  }
-}
-
 .main-content {
-  padding: 0 1rem;
+  padding:                  1rem 2.5rem;
 
   .highlighter-rouge {
     margin-bottom:          1.15rem;
@@ -299,6 +290,19 @@ td {
 
   .anchor-heading svg {
     color:                  $link-color;
+  }
+}
+
+.main-content-wrap {
+  padding:                  0;
+}
+
+.main-header {
+  background-color:         $body-background-color;
+  border:                   0;
+
+  @media (max-width: 50rem) {
+    background-color:       $body-background-color;
   }
 }
 
