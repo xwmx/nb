@@ -402,19 +402,39 @@ td {
   border:                   0;
 }
 
-.site-button:hover {
-  background:               none;
-  background-color:         darken($body-background-color, 2%);
-  border-radius:            0 0 5px 5px;
+.site-button {
+  &:hover {
+    background:             none;
+    background-color:       darken($body-background-color, 2%);
+    border-radius:          0 0 5px 5px;
 
-  @media (max-width: 50rem) {
-    background-color:       $body-background-color;
+    @media (max-width: 50rem) {
+      background-color:     $body-background-color;
+    }
   }
-}
 
-.site-button,
-.site-button .icon {
-  color:                    $body-color;
+  &,
+  .icon,
+  .bi-x-lg {
+    color:                  $body-color;
+  }
+
+  .bi-x-lg {
+    display:                none;
+  }
+
+  &.nav-open {
+    .icon {
+      display:              none;
+    }
+
+    .bi-x-lg {
+      display:              block;
+      margin-left:          0.2rem;
+    }
+  }
+
+  text-align:               center;
 }
 
 .site-footer {
@@ -431,47 +451,47 @@ td {
 }
 
 .site-header {
-  border:                 0;
+  border:                   0;
 
   @media (max-width: 50rem) {
-    background-color:     $body-background-color;
+    background-color:       $body-background-color;
   }
 
   @media (min-width: 50rem) {
-    display:              none;
+    display:                none;
   }
 }
 
 .site-nav {
-  padding-top:            0;
+  padding-top:              0;
 
   @media (max-width: 50rem) {
-    background-color:     $body-background-color;
+    background-color:       $body-background-color;
   }
 
   @media (min-width: 50rem) {
-    padding-top:          1rem;
+    padding-top:            1rem;
   }
 
   code {
-    font-size:            0.8rem;
-    padding:              0;
+    font-size:              0.8rem;
+    padding:                0;
   }
 }
 
 .site-title {
-  padding-left:           1.5rem;
+  padding-left:             1.5rem;
 
   @media (max-width: 50rem) {
-    display:              none;
+    display:                none;
   }
 }
 
 .site-title:hover {
-  background:             0;
-  background-color:       darken($side-bar-background-color, 2%);
+  background:               0;
+  background-color:         darken($side-bar-background-color, 2%);
 }
 
 .table-wrapper {
-  box-shadow:             none;
+  box-shadow:               none;
 }
