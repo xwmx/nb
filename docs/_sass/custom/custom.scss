@@ -279,7 +279,7 @@ th {
   }
 
   h2, h3, h4, h5, h6 {
-    margin-top:             -0.6rem   !important;
+    margin-top:             -0.6rem;
     text-transform:         none;
   }
 
@@ -541,3 +541,17 @@ th {
 .table-wrapper {
   box-shadow:               none;
 }
+
+#console,
+#desert,
+#electro,
+#forest,
+#nb-default,
+#ocean,
+#raspberry,
+#smoke,
+#unicorn,
+#utility {
+  margin-top:               -1rem;
+}
+
