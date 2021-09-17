@@ -15,6 +15,7 @@
 $body-background-color:     #15181d;
 $body-color:                #b9bbc5;
 $dim-color:                 #636363;
+$link-color:                #5e8bd0;
 $side-bar-background-color: #0f1217;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -26,7 +27,7 @@ $side-bar-background-color: #0f1217;
 
 a,
 a code {
-  color:                  #5e8bd0 !important;
+  color:                  $link-color !important;
 }
 
 a:not([class]),
@@ -221,6 +222,10 @@ td {
   ul {
     list-style-type:      disc;
   }
+
+  .anchor-heading svg {
+    color:                $link-color;
+  }
 }
 
 .nav-list {
@@ -331,6 +336,19 @@ td {
 .site-button,
 .site-button .icon {
   color:                  $body-color;
+}
+
+.site-footer {
+  font-size:              1rem !important;
+  padding:                1rem 0 0;
+  position:               relative;
+  text-align:             center;
+  text-transform:         lowercase;
+  width:                  100% !important;
+
+  @media (min-width: 50rem) {
+    padding:              0 0 3rem;
+  }
 }
 
 .site-header {
