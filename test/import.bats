@@ -244,7 +244,7 @@ example.md.*\ \"Example\ Title\"\ from\ .*${_TMP_DIR}/fixtures/example.md   ]]
   printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
   printf "\${#_files[@]}: '%s'\\n" "${#_files[@]}"
 
-  [[ "${#_files[@]}"  -eq 13 ]]
+  [[ "${#_files[@]}"  -eq 14 ]]
 
   grep -q '# Example Title' "${NB_DIR}/Example Notebook/Example Folder"/*
 
@@ -321,7 +321,7 @@ example.md.*\ \"Example\ Title\"\ from\ .*${_TMP_DIR}/fixtures/example.md   ]]
   printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
   printf "\${#_files[@]}: '%s'\\n" "${#_files[@]}"
 
-  [[ "${#_files[@]}"  -eq 13 ]]
+  [[ "${#_files[@]}"  -eq 14 ]]
 
   grep -q '# Example Title' "${NB_DIR}/Example Notebook/Example Destination/Example Folder"/*
 
@@ -398,7 +398,7 @@ example.md.*\ \"Example\ Title\"\ from\ .*${_TMP_DIR}/fixtures/example.md   ]]
   printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
   printf "\${#_files[@]}: '%s'\\n" "${#_files[@]}"
 
-  [[ "${#_files[@]}"  -eq 13 ]]
+  [[ "${#_files[@]}"  -eq 14 ]]
 
   grep -q '# Example Title' "${NB_DIR}/Example Notebook/Example Destination/Example Folder"/*
 
@@ -643,7 +643,7 @@ Folder/example.md.*\ \"Example\ Title\"\ from\ .*${_TMP_DIR}/fixtures/example.md
   printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
   printf "\${#_files[@]}: '%s'\\n" "${#_files[@]}"
 
-  [[ "${#_files[@]}"  -eq 13 ]]
+  [[ "${#_files[@]}"  -eq 14 ]]
 
   grep -q '# Example Title' "${NB_DIR}/home/Example Destination/Example Folder"/*
 
@@ -718,7 +718,7 @@ Folder/example.md.*\ \"Example\ Title\"\ from\ .*${_TMP_DIR}/fixtures/example.md
   printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
   printf "\${#_files[@]}: '%s'\\n" "${#_files[@]}"
 
-  [[ "${#_files[@]}"  -eq 13 ]]
+  [[ "${#_files[@]}"  -eq 14 ]]
 
   grep -q '# Example Title' "${NB_DIR}/home/Example Destination/Example Folder"/*
 
@@ -1005,12 +1005,14 @@ Folder/example.md.*\ \"Example\ Title\"\ from\ .*${_TMP_DIR}/fixtures/example.md
 
   # Prints output:
 
-  [[ "${lines[0]}" =~ Imported            ]]
-  [[ "${lines[0]}" =~ example.com-og.html ]]
-  [[ "${lines[1]}" =~ Imported            ]]
-  [[ "${lines[1]}" =~ example.com.html    ]]
-  [[ "${lines[2]}" =~ Imported            ]]
-  [[ "${lines[2]}" =~ example.com.md      ]]
+  [[ "${lines[0]}" =~ \
+Imported\ .*[.*1.*].*\ .*example.com-og.html.*\ from\ .*${_TMP_DIR}/fixtures/example.com-og.html          ]]
+  [[ "${lines[1]}" =~ \
+Imported\ .*[.*2.*].*\ .*example.com-titles.html.*\ from\ .*${_TMP_DIR}/fixtures/example.com-titles.html  ]]
+  [[ "${lines[2]}" =~ \
+Imported\ .*[.*3.*].*\ .*example.com.html.*\ from\ .*${_TMP_DIR}/fixtures/example.com.html  ]]
+  [[ "${lines[3]}" =~ \
+Imported\ .*[.*4.*].*\ .*example.com.md.*\ from\ .*${_TMP_DIR}/fixtures/example.com.md      ]]
 }
 
 @test "'import' with piped \`ls\` imports files." {
@@ -1060,12 +1062,14 @@ Folder/example.md.*\ \"Example\ Title\"\ from\ .*${_TMP_DIR}/fixtures/example.md
 
   # Prints output:
 
-  [[ "${lines[0]}" =~ Imported            ]]
-  [[ "${lines[0]}" =~ example.com-og.html ]]
-  [[ "${lines[1]}" =~ Imported            ]]
-  [[ "${lines[1]}" =~ example.com.html    ]]
-  [[ "${lines[2]}" =~ Imported            ]]
-  [[ "${lines[2]}" =~ example.com.md      ]]
+  [[ "${lines[0]}" =~ \
+Imported\ .*[.*1.*].*\ .*example.com-og.html.*\ from\ .*example.com-og.html         ]]
+  [[ "${lines[1]}" =~ \
+Imported\ .*[.*2.*].*\ .*example.com-titles.html.*\ from\ .*example.com-titles.html ]]
+  [[ "${lines[2]}" =~ \
+Imported\ .*[.*3.*].*\ .*example.com.html.*\ from\ .*example.com.html ]]
+  [[ "${lines[3]}" =~ \
+Imported\ .*[.*4.*].*\ .*example.com.md.*\ from\ .*example.com.md     ]]
 }
 
 # <path> ######################################################################
@@ -1238,7 +1242,7 @@ Folder/example.md.*\ \"Example\ Title\"\ from\ .*${_TMP_DIR}/fixtures/example.md
   printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
   printf "\${#_files[@]}: '%s'\\n" "${#_files[@]}"
 
-  [[ "${#_files[@]}" -eq 13                                   ]]
+  [[ "${#_files[@]}" -eq 14                                   ]]
 
   grep -q '# Example Title' "${NB_DIR}/home/Example Folder"/*
 
@@ -1433,7 +1437,7 @@ Folder/example.md.*\ \"Example\ Title\"\ from\ .*${_TMP_DIR}/fixtures/example.md
   printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
   printf "\${#_files[@]}: '%s'\\n" "${#_files[@]}"
 
-  [[ "${#_files[@]}" -eq 13                                 ]]
+  [[ "${#_files[@]}" -eq 14                                 ]]
 
   grep -q '# Example Title' "${NB_DIR}/home/Example Folder"/*
 
