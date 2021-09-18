@@ -1557,13 +1557,12 @@ Items can be deleted within terminal and GUI web browsers using
 ❯ nb browse delete example:4
 ❯nb · example : 4 · ↓ · edit · - | +
 
-                deleting
+              deleting
 
 [4] example_file.md "Example Title"
 
-                [delete]
-
-
+              [delete]
+ 
 ```
 
 For more information, see [Browsing](#-browsing).
@@ -2575,8 +2574,7 @@ to delete an item:
 [4] example_file.md "Example Title"
 
               [delete]
-
-
+ 
 ```
 
 #### `browse` Search
