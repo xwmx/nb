@@ -12,12 +12,13 @@
 
 /* #1a1a1a #1b1b1b #1e1f25 #4da6dc #65bcfb #6cb2b5 #222327 #232529 */
 
-$body-background-color:     #15181d;
-$body-color:                #c5c7cf;
-$dim-color:                 #636363;
-$hr-color:                  lighten($body-background-color, 10%);
-$link-color:                #5e8bd0;
-$side-bar-background-color: #0f1217;
+$body-background-color:       #15181d;
+$body-color:                  #c5c7cf;
+$code-block-background-color: #1c1f25;
+$dim-color:                   #636363;
+$hr-color:                    lighten($body-background-color, 10%);
+$link-color:                  #5e8bd0;
+$side-bar-background-color:   #0f1217;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Styles
@@ -58,6 +59,12 @@ code {
   border-radius:            6px;
 }
 
+// NOTE:
+//   `code.highlighter-rouge`:        inline code
+//   `code`, `div.highlighter-rouge`: code blocks
+
+a code,
+ul code,
 dl code,
 sup code,
 code.highlighter-rouge {
@@ -66,10 +73,19 @@ code.highlighter-rouge {
   vertical-align:           middle;
 }
 
+code.highlighter-rouge {
+  white-space:              nowrap;
+
+  h1 &, h2 &, h3 &, h4 &, h5 &, h6 &,
+  li & {
+    white-space:            normal;
+  }
+}
+
 code,
 div.highlighter-rouge,
 .highlight {
-  background-color:         #1c1f25;
+  background-color:         $code-block-background-color;
 }
 
 code,
@@ -102,7 +118,7 @@ a code {
 }
 
 div.highlighter-rouge {
-  padding:                  0.75rem 1rem;
+  padding:                  1rem;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -155,6 +171,10 @@ th {
   @media (max-width: 50rem) {
     display:                block;
     text-align:             center;
+  }
+
+  code {
+    background-color:       $code-block-background-color;
   }
 }
 
@@ -374,6 +394,13 @@ th {
 
     &.nav-settings code {
       padding:              0 0.4em;
+    }
+
+    code,
+    &.nav-settings code {
+      @media (max-width: 50rem) {
+        padding:              0.1rem;
+      }
     }
 
     .nav-list-link {
