@@ -4676,8 +4676,11 @@ Items in `nb` are primarily identified using structured arguments called
 "selectors." Selectors are like addresses for notebooks, folders, and items.
 A selector can be as simple as an id like `123` or folder path like `example/`,
 or it can combine multiple elements to identify
-an item in a nested folder within a particular notebook, such as
-`cli:tools/shellcheck/home-page.bookmark.md`.
+an item in a nested folder within a particular notebook, such as:
+
+```bash
+cli:tools/shellcheck/home-page.bookmark.md
+```
 
 An item, folder, or notebook selector is constructed by specifying the
 notebook name, folder path, and / or item identifier
