@@ -17886,7 +17886,10 @@ HEREDOC
               then
                 cat
               else
-                printf "<br>"
+                if ! _contains "--terminal" "${_pagination_options[@]:-}"
+                then
+                  printf "<br>"
+                fi
 
                 sed -E -e "s/</\&lt;/g" -e "s/\//\&#47;/g" -e "s/.*/&<br>/g"
               fi
