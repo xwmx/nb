@@ -1315,7 +1315,9 @@ _file_is_encrypted() {
         "${_DOCUMENT_FILE_EXTENSIONS[@]}"   \
         "${_AUDIO_FILE_EXTENSIONS[@]}"      \
         "${_VIDEO_FILE_EXTENSIONS[@]}"      &&
-      [[ "$(file "${_file_path:-}"          \
+      if _command_exists "file"
+      then
+        [[ "$(file "${_file_path:-}"        \
               --exclude=apptype             \
               --exclude=encoding            \
               --exclude=tokens              \
@@ -1323,6 +1325,9 @@ _file_is_encrypted() {
               --exclude=compress            \
               --exclude=elf                 \
               --exclude=tar)" =~ encrypted|openssl ]]
+      else
+        return 1
+      fi
     }
 }
 
@@ -1419,15 +1424,20 @@ _file_is_text() {
         "${_ARCHIVE_FILE_EXTENSIONS[@]}"    &&
       [[ ! "${_file_type}" =~ \.epub$   ]]  &&
       [[ ! -d "${_file_path:-}"         ]]  &&
-      [[ "$(file "${_file_path:-}"          \
-              --exclude=apptype             \
-              --exclude=encoding            \
-              --exclude=tokens              \
-              --exclude=cdf                 \
-              --exclude=compress            \
-              --exclude=elf                 \
-              --exclude=tar                 \
-              -b --mime-type)" =~ ^text ]]
+      if _command_exists "file"
+      then
+        [[ "$(file "${_file_path:-}"        \
+                --exclude=apptype           \
+                --exclude=encoding          \
+                --exclude=tokens            \
+                --exclude=cdf               \
+                --exclude=compress          \
+                --exclude=elf               \
+                --exclude=tar               \
+                -b --mime-type)" =~ ^text ]]
+      else
+        return 0
+      fi
     }
 }
 
@@ -8613,7 +8623,7 @@ _decrypt_file() {
   _unencrypted_path="$(_temp file "${_notebook_and_relative_path%.enc}")"
 
   local _file_command_response
-  _file_command_response="$(file "${_encrypted_path}")"
+  _file_command_response="$(file "${_encrypted_path}" 2>/dev/null || :)"
 
   if [[   "${_file_command_response}" =~ GPG|PGP ]]
   then
@@ -17870,9 +17880,12 @@ HEREDOC
             { # begin media markup pipeline
               case "${_render_type:-}" in
                 audio)
+                  local _mime_type=
+                  _mime_type="$(file -b --mime-type "${_source_path}" 2>/dev/null || :)"
+
                   cat <<HEREDOC
 <audio controls>
-  <source src="${_raw_url}" type="$(file -b --mime-type "${_source_path}")">
+  <source src="${_raw_url}" type="${_mime_type:-}">
 </audio>
 HEREDOC
                   ;;
@@ -17899,9 +17912,12 @@ HEREDOC
                   fi
                   ;;
                 video)
+                  local _mime_type=
+                  _mime_type="$(file -b --mime-type "${_source_path}" 2>/dev/null || :)"
+
                   cat <<HEREDOC
 <video width="320" height="240" controls>
-  <source src="${_raw_url}" type="$(file -b --mime-type "${_source_path}")">
+  <source src="${_raw_url}" type="${_mime_type}">
 </video>
 HEREDOC
                   ;;
@@ -18556,7 +18572,10 @@ HEREDOC
       then
         _response_headers+=("Content-Type: image/svg+xml")
       else
-        _response_headers+=("Content-Type: $(file -b --mime-type "${_path}")")
+        if _command_exists "file"
+        then
+          _response_headers+=("Content-Type: $(file -b --mime-type "${_path}")")
+        fi
       fi
 
       local _content_length=
