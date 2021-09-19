@@ -169,6 +169,8 @@ th {
 }
 
 .aux-nav .aux-nav-list {
+  font-size:                0.95rem !important;
+
   @media (max-width: 50rem) {
     display:                block;
     text-align:             center;
