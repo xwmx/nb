@@ -211,20 +211,23 @@ _sed_i() {
 # Description:
 #   Run `tput` commands. TODO: Currently does not work with `tput cols`.
 _tput() {
-  tput "${@:-}" 2>/dev/null || {
-    # fall back to termcap names for FreeBSD
-    case "${1:-}" in
-      sgr0)
-        tput me
-        ;;
-      smul)
-        tput us
-        ;;
-      setaf)
-        tput AF "${@:2}"
-        ;;
-    esac
-  } 2>/dev/null || printf ""
+  if _command_exists "tput"
+  then
+    tput "${@:-}" 2>/dev/null || {
+      # fall back to termcap names for FreeBSD
+      case "${1:-}" in
+        sgr0)
+          tput me
+          ;;
+        smul)
+          tput us
+          ;;
+        setaf)
+          tput AF "${@:2}"
+          ;;
+      esac
+    } 2>/dev/null || printf ""
+  fi
 }
 
 ###############################################################################
@@ -756,7 +759,7 @@ __load_themes() {
 # Supported Values: [0..255+]
 __set_color_primary() {
   local _colors=
-  _colors="$(tput colors)"
+  _colors="$(_tput colors)"
 
   if [[ -n "${_colors}" ]] && [[ "${_colors}" -gt 8 ]]
   then
@@ -1108,7 +1111,7 @@ _BT=$'`'
 # $_COLUMNS
 #
 # The terminal width in number of columns (characters).
-_COLUMNS="$(tput cols)"
+_COLUMNS="$(_tput cols)"
 
 # $_FILE_TYPES
 #
@@ -18811,12 +18814,12 @@ HEREDOC
     then # set per page based on terminal height
       if [[ "${BROWSER:-}" =~ links   ]]
       then
-        _browse_per_page="$(($(tput lines) - 9))"
+        _browse_per_page="$(($(_tput lines) - 9))"
       elif [[ "${BROWSER:-}" =~ lynx  ]]
       then
-        _browse_per_page="$(($(tput lines) - 10))"
+        _browse_per_page="$(($(_tput lines) - 10))"
       else
-        _browse_per_page="$(($(tput lines) - 8))"
+        _browse_per_page="$(($(_tput lines) - 8))"
       fi
     fi
 
