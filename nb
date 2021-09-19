@@ -17888,11 +17888,7 @@ HEREDOC
               else
                 printf "<br>"
 
-                local         __line=
-                while read -r __line
-                do
-                  printf "%s<br>" "${__line//</&lt;}"
-                done
+                sed -E -e "s/</\&lt;/g" -e "s/\//\&#47;/g" -e "s/.*/&<br>/g"
               fi
             }
             ;;
