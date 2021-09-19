@@ -17840,7 +17840,12 @@ HEREDOC
             -e "s/\]\[\[\[/\]\[••/g"      \
             -e "s/\]\]\]\]/••\]\]/g"
       } | {
-        pandoc --from org --to html
+        if _command_exists "pandoc"
+        then
+          pandoc --from org --to html
+        else
+          cat
+        fi
       } | {
         sed -E                            \
             -e "s/>••/>\[\[/g"            \
@@ -17872,11 +17877,6 @@ HEREDOC
             if [[ "${_source_path:-}" =~ \.bookmark\.md ]]
             then
               _render_options+=("--bookmark")
-            fi
-
-            if _command_exists "pandoc"
-            then
-              _render_options+=("--pandoc")
             fi
 
             {
