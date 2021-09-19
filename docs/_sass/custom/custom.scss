@@ -327,7 +327,8 @@ th {
     font-size:              1rem      !important;
   }
 
-  p:last-child {
+  p:last-child,
+  p:nth-last-child(5) {
     margin:                 2rem 0 1rem;
   }
 
