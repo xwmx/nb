@@ -10059,15 +10059,15 @@ HEREDOC
 
           if ((_strip_images))
           then
-            printf "•strip•%s\\n" "${__line:-}"
+            printf "nb-img-strip-nb%s\\n" "${__line:-}"
           else
             printf "%s\\n" "${__line:-}"
           fi
         done
       } | {
-        sed -E -e "/^•strip•/ s/<img[^>]*>//g"
+        sed -E -e "/^nb-img-strip-nb/ s/<img[^>]*>//g"
       } | {
-        sed -E -e "s/^•strip•//g"
+        sed -E -e "s/^nb-img-strip-nb//g"
       }
     else
       cat
@@ -10255,7 +10255,7 @@ _resolve_links() {
 
           if ((_linkable))
           then
-            printf "•linkable•%s\\n" "${__line:-}"
+            printf "nb-linkable-nb%s\\n" "${__line:-}"
           else
             printf "%s\\n" "${__line:-}"
           fi
@@ -10267,12 +10267,12 @@ _resolve_links() {
         done
       } | {
         # wrap [[wiki-style links]] in HTML links and add missing notebooks
-        sed -E                                                                        \
--e "/^•linkable•/ s/${_link_match_pattern}/${_replacement_pattern}/g"                 \
--e "/^•linkable•/ s/${_labeled_link_match_pattern}/${_labeled_replacement_pattern}/g" \
--e "/^•linkable•/ s/${_notebookless_pattern}/${_notebookless_replacement_pattern}/g"
+        sed -E                                                                            \
+-e "/^nb-linkable-nb/ s/${_link_match_pattern}/${_replacement_pattern}/g"                 \
+-e "/^nb-linkable-nb/ s/${_labeled_link_match_pattern}/${_labeled_replacement_pattern}/g" \
+-e "/^nb-linkable-nb/ s/${_notebookless_pattern}/${_notebookless_replacement_pattern}/g"
       } | {
-         sed -E -e "s/^•linkable•//g"
+         sed -E -e "s/^nb-linkable-nb//g"
       }
     else
       local __match=
