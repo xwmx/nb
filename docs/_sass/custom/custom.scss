@@ -53,6 +53,7 @@ html {
 body {
   background-color:         $body-background-color;
   color:                    $body-color;
+  padding-bottom:           2rem;
 }
 
 code {
@@ -326,6 +327,10 @@ th {
     font-size:              1rem      !important;
   }
 
+  p:last-child {
+    margin:                 2rem 0 1rem;
+  }
+
   // override theme list styles
   ul > li::before {
     color:                  inherit;
@@ -513,14 +518,19 @@ th {
 
 .site-footer {
   font-size:                0.85rem     !important;
-  padding:                  1rem 0 0;
+  padding:                  0;
   position:                 relative;
   text-align:               center;
   text-transform:           lowercase;
   width:                    100%        !important;
 
-  @media (min-width: 50rem) {
-    padding:                0 0 3rem;
+  p {
+    margin:                 0;
+  }
+
+
+  .up-arrow {
+    padding-top:            2rem;
   }
 }
 
