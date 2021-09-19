@@ -227,6 +227,35 @@ _tput() {
           ;;
       esac
     } 2>/dev/null || printf ""
+  else
+    case "${1:-}" in
+      cols|lines)
+        {
+          stty size 2>/dev/null || printf "1"
+        } | if [[ "${1:-}" == "cols"    ]]
+            then
+              cut -d " " -f 2
+            else
+              cut -d " " -f 1
+            fi
+        ;;
+      setaf)
+        local _color_value="${2:-}"
+
+        if [[ "${_color_value:-}" -lt 8 ]]
+        then
+          printf '\033[3%d '      "${_color_value:-}"
+        else
+          printf '\033[38;5;%sm'  "${_color_value:-}"
+        fi
+        ;;
+      sgr0)
+        printf '\033[m'
+        ;;
+      smul)
+        printf '\033[4m'
+        ;;
+    esac
   fi
 }
 
