@@ -4807,6 +4807,12 @@ notebook:q
 
 ### `01` Metadata
 
+<p>
+  <sup>
+    <a href="#overview">↑</a>
+  </sup>
+</p>
+
 Metadata in `nb` is primarily derived from git, the filesystem, and file
 content. For example, displayed timestamps are derived from
 [`git log`](https://git-scm.com/docs/git-log), with [`nb show --added`](#show)
@@ -4835,9 +4841,9 @@ by a key name with a colon followed by the value:
 
 ```markdown
 ---
-title: Example Title
+title:  Example Title
 author: xwmx
-year: 2021
+year:   2021
 ---
 
 Example content.
