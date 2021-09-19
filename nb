@@ -17874,7 +17874,27 @@ HEREDOC
               _render_options+=("--bookmark")
             fi
 
-            printf "" | _render "${_source_path}" "${_render_options[@]:-}"
+            if _command_exists "pandoc"
+            then
+              _render_options+=("--pandoc")
+            fi
+
+            {
+              printf "" | _render "${_source_path}" "${_render_options[@]:-}"
+            } | {
+              if _command_exists "pandoc"
+              then
+                cat
+              else
+                printf "<br>"
+
+                local         __line=
+                while read -r __line
+                do
+                  printf "%s<br>" "${__line//</&lt;}"
+                done
+              fi
+            }
             ;;
           *)
             { # begin media markup pipeline
