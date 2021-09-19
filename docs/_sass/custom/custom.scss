@@ -56,30 +56,59 @@ body {
   padding-bottom:           2rem;
 }
 
-code {
-  border-radius:            6px;
-}
 
 // NOTE:
 //   `code.highlighter-rouge`:        inline code
 //   `code`, `div.highlighter-rouge`: code blocks
+code {
+  border-radius:            6px;
 
-a code,
-ul code,
-dl code,
-sup code,
-code.highlighter-rouge {
-  background-color:         lighten($body-background-color, 10%);
-  font-size:                0.85em;
-  vertical-align:           middle;
-}
+  &,
+  a &,
+  a:visited & {
+    border:                 1px solid #1b2027;
+    color:                  #cbcbd6;
+    font-family:            ui-monospace,
+                            SFMono-Regular,
+                            SF Mono,
+                            Menlo,
+                            Consolas,
+                            Liberation Mono,
+                            monospace;
+    font-size:              0.9rem;
+    line-height:            1.4;
+    padding:                0.2rem 0.4rem;
 
-code.highlighter-rouge {
-  white-space:              nowrap;
+    @media (min-width: 50rem) {
+      font-size:            0.85rem;
+    }
+  }
 
-  h1 &, h2 &, h3 &, h4 &, h5 &, h6 &,
-  li & {
-    white-space:            normal;
+  a & {
+    white-space:            nowrap;
+  }
+
+  a   &,
+  ul  &,
+  dl  &,
+  sup &,
+  &.highlighter-rouge {
+    background-color:       lighten($body-background-color, 10%);
+    font-size:              0.85em;
+    vertical-align:         middle;
+  }
+
+  sup & {
+    font-size:              0.85em;
+  }
+
+  &.highlighter-rouge {
+    white-space:            nowrap;
+
+    h1 &, h2 &, h3 &, h4 &, h5 &, h6 &,
+    li & {
+      white-space:          normal;
+    }
   }
 }
 
@@ -87,35 +116,6 @@ code,
 div.highlighter-rouge,
 .highlight {
   background-color:         $code-block-background-color;
-}
-
-code,
-a code,
-a:visited code {
-  border:                   1px solid #1b2027;
-  color:                    #cbcbd6;
-  font-family:              ui-monospace,
-                            SFMono-Regular,
-                            SF Mono,
-                            Menlo,
-                            Consolas,
-                            Liberation Mono,
-                            monospace;
-  font-size:                0.9rem;
-  line-height:              1.4;
-  padding:                  0.2rem 0.4rem;
-
-  @media (min-width: 50rem) {
-    font-size:              0.85rem;
-  }
-}
-
-sup code {
-  font-size:                0.85em;
-}
-
-a code {
-  white-space:              nowrap;
 }
 
 div.highlighter-rouge {
