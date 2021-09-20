@@ -18813,7 +18813,8 @@ HEREDOC
   then
     _show "${_selector:-}" --render
     _warn cat <<HEREDOC
-Install \`ncat\` for improved browsing and linking: https://nmap.org/ncat/
+Install \`ncat\` for full browsing and linking:
+$(_color_primary "https://nmap.org/ncat/")
 HEREDOC
     exit 0
   fi
