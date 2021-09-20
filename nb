@@ -3286,9 +3286,10 @@ HEREDOC
       fi
     fi
 
-    if git -C "${_notebook_path}" show-branch             \
-         "remotes/origin/${_git_branch}" > /dev/null 2>&1 &&
-       ! git -C "${_notebook_path}" rebase "origin/${_git_branch}" &>/dev/null
+    if git -C "${_notebook_path}" show-branch \
+         "remotes/origin/${_git_branch}"      \
+         > /dev/null 2>&1                     &&
+         ! git -C "${_notebook_path}" rebase "origin/${_git_branch}" &>/dev/null
     then
       local _merge_error=1
 
