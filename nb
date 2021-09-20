@@ -213,9 +213,16 @@ _sed_i() {
 _tput() {
   if _command_exists "tput"
   then
+    # Call `tput cols` without redirecting output. More info:
+    # https://stackoverflow.com/a/64186803
+    if [[ "${1:-}" == "cols" ]]
+    then
+      tput cols
+      return 0
+    fi
+
     tput "${@:-}" 2>/dev/null || {
       # fall back to termcap names for FreeBSD
-      #  TODO: Currently does not work with `tput cols`.
       case "${1:-}" in
         sgr0)
           tput me
