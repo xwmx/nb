@@ -213,11 +213,19 @@ _sed_i() {
 _tput() {
   if _command_exists "tput"
   then
-    # Call `tput cols` without redirecting output. More info:
-    # https://stackoverflow.com/a/64186803
+    # More info: https://stackoverflow.com/a/64214019
     if [[ "${1:-}" == "cols" ]]
     then
-      tput cols
+      if tput cols &>/dev/null 2>&1
+      then
+        tput cols
+      elif tput co &>/dev/null 2>&1
+      then
+        tput co
+      else
+        printf "80\\n"
+      fi
+
       return 0
     fi
 
@@ -239,7 +247,7 @@ _tput() {
     case "${1:-}" in
       cols|lines)
         {
-          stty size 2>/dev/null || printf "1"
+          stty size 2>/dev/null || printf "20 80\\n"
         } | if [[ "${1:-}" == "cols"    ]]
             then
               cut -d " " -f 2
