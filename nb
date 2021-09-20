@@ -3146,7 +3146,7 @@ Welcome to $(_color_primary "${_ME}")!
 
 Git is required, but wasn't found. Install Git, then run \`${_ME}\` again.
 
-About Git: https://git-scm.com/
+About Git: $(_color_primary "https://git-scm.com")
 HEREDOC
     fi
 
@@ -10588,7 +10588,10 @@ _web_browser() {
 
   if [[ -z "${_web_browser_command[*]:-}" ]]
   then
-    return 1
+    _warn cat <<HEREDOC
+Web browser not found. Try \`w3m\`: $(_color_primary "http://w3m.sourceforge.net")
+HEREDOC
+    exit 1
   fi
 
   if ((_check_gui))
