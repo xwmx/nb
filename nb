@@ -14282,6 +14282,7 @@ _search() {
   local _search_utility=
   local _selectors=()
   local _sort=0
+  local _tag_queries=()
   local _type=
 
   while ((${#}))
@@ -14331,6 +14332,12 @@ _search() {
         ;;
       -s|--sort)
         _sort=1
+        ;;
+      --tag)
+        local _tag_option_argument=
+        _tag_option_argument="$(_option_get_value "--or" "${2:-}")"
+        _tag_queries+=("#${_tag_option_argument#\#}")
+        shift
         ;;
       --tags|--hashtags)
         _search_tags=1
@@ -14564,7 +14571,18 @@ _search() {
     return 0
   fi
 
-  if [[ -z "${_and_queries[*]:-}" ]]
+  if [[   -n "${#_tag_queries[@]}"  ]]
+  then
+    if [[ -z "${_and_queries[*]:-}" ]]
+    then
+      _and_queries+=("${_tag_queries[0]:-}")
+      _or_queries+=("${_tag_queries[@]:1}")
+    else
+      _or_queries+=("${_tag_queries[@]}")
+    fi
+  fi
+
+  if [[ -z "${_and_queries[*]:-}"   ]]
   then
     _exit_1 _help "search"
   fi

@@ -40,6 +40,150 @@ _search_all_setup() {
   [[ -e "${NB_DIR}/two/.archived" ]]
 }
 
+# tags ########################################################################
+
+@test "'search --tag \"tag1\" --tag \"tag2\"' exits with status 0 and prints matches as an OR query." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md"    --content "Content one.   #tag1"
+    "${_NB}" add "File Two.md"    --content "Content two.   #tag2"
+    "${_NB}" add "File Three.md"  --content "Content three. tag2"
+    "${_NB}" add "File Four.md"   --content "Content four.  #tag2"
+    "${_NB}" add "File Five.md"   --content "Content five.  #tag3"
+    "${_NB}" add "File Six.md"    --content "Content six.   #tag3"
+  }
+
+  run "${_NB}" search --tag "tag2" --tag "tag3"
+
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
+  printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
+
+  [[    "${status}"     -eq 0                                 ]]
+  [[    "${#lines[@]}"  -eq 12                                ]]
+
+  [[    "${lines[0]}"   =~  \
+.*[.*5.*].*\ File\ Five.md\ ·\ \"Content\ five.\ \ #tag3\"    ]]
+  [[    "${lines[1]}"   =~  ^.*------------------.*$          ]]
+  [[    "${lines[2]}"   =~  \
+1.*:.*Content\ five.\ \ .*#tag3                               ]]
+  [[    "${lines[3]}"   =~  \
+.*[.*4.*].*\ File\ Four.md\ \·\ \"Content\ four.\ \ #tag2\"   ]]
+  [[    "${lines[4]}"   =~  ^.*------------------.*$          ]]
+  [[    "${lines[5]}"   =~  \
+1.*:.*Content\ four.\ \ .*#tag2                               ]]
+  [[    "${lines[6]}"   =~  \
+.*[.*6.*].*\ File\ Six.md\ ·\ \"Content\ six.\ \ \ #tag3\"    ]]
+  [[    "${lines[7]}"   =~  ^.*------------------.*$          ]]
+  [[    "${lines[8]}"   =~  \
+1.*:.*Content\ six.\ \ .*#tag3                                ]]
+  [[    "${lines[9]}"   =~  \
+.*[.*2.*].*\ File\ Two.md\ ·\ \"Content\ two.\ \ \ #tag2\"    ]]
+  [[    "${lines[10]}"  =~  ^.*------------------.*$          ]]
+  [[    "${lines[11]}"  =~  \
+1.*:.*Content\ two.\ \ .*#tag2                                ]]
+}
+
+@test "'search --tag \"tag\"' (no #) exits with status 0 and prints matches." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md"    --content "Content one.   #tag1"
+    "${_NB}" add "File Two.md"    --content "Content two.   #tag2"
+    "${_NB}" add "File Three.md"  --content "Content three. tag2"
+    "${_NB}" add "File Four.md"   --content "Content four.  #tag2"
+    "${_NB}" add "File Five.md"   --content "Content five.  #tag3"
+    "${_NB}" add "File Six.md"    --content "Content six.   #tag3"
+  }
+
+  run "${_NB}" search --tag "#tag2"
+
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
+  printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
+
+  [[    "${status}"     -eq 0                               ]]
+  [[    "${#lines[@]}"  -eq 6                               ]]
+
+  [[    "${lines[0]}"   =~  \
+.*[.*4.*].*\ File\ Four.md\ \·\ \"Content\ four.\ \ #tag2\" ]]
+  [[    "${lines[1]}"   =~  ^.*------------------.*$        ]]
+  [[    "${lines[2]}"   =~  \
+1.*:.*Content\ four.\ \ .*#tag2                             ]]
+  [[    "${lines[3]}"   =~  \
+.*[.*2.*].*\ File\ Two.md\ ·\ \"Content\ two.\ \ \ #tag2\"  ]]
+  [[    "${lines[4]}"   =~  ^.*------------------.*$        ]]
+  [[    "${lines[5]}"   =~  \
+1.*:.*Content\ two.\ \ .*#tag2                              ]]
+}
+
+@test "'search --tag \"#tag\"' (yes #) exits with status 0 and prints matches." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md"    --content "Content one.   #tag1"
+    "${_NB}" add "File Two.md"    --content "Content two.   #tag2"
+    "${_NB}" add "File Three.md"  --content "Content three. tag2"
+    "${_NB}" add "File Four.md"   --content "Content four.  #tag2"
+    "${_NB}" add "File Five.md"   --content "Content five.  #tag3"
+    "${_NB}" add "File Six.md"    --content "Content six.   #tag3"
+  }
+
+  run "${_NB}" search --tag "#tag2"
+
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
+  printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
+
+  [[    "${status}"     -eq 0                               ]]
+  [[    "${#lines[@]}"  -eq 6                               ]]
+
+  [[    "${lines[0]}"   =~  \
+.*[.*4.*].*\ File\ Four.md\ \·\ \"Content\ four.\ \ #tag2\" ]]
+  [[    "${lines[1]}"   =~  ^.*------------------.*$        ]]
+  [[    "${lines[2]}"   =~  \
+1.*:.*Content\ four.\ \ .*#tag2                             ]]
+  [[    "${lines[3]}"   =~  \
+.*[.*2.*].*\ File\ Two.md\ ·\ \"Content\ two.\ \ \ #tag2\"  ]]
+  [[    "${lines[4]}"   =~  ^.*------------------.*$        ]]
+  [[    "${lines[5]}"   =~  \
+1.*:.*Content\ two.\ \ .*#tag2                              ]]
+}
+
+@test "'search \"#tag\"' exits with status 0 and prints matches." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md"    --content "Content one.   #tag1"
+    "${_NB}" add "File Two.md"    --content "Content two.   #tag2"
+    "${_NB}" add "File Three.md"  --content "Content three. tag2"
+    "${_NB}" add "File Four.md"   --content "Content four.  #tag2"
+    "${_NB}" add "File Five.md"   --content "Content five.  #tag3"
+    "${_NB}" add "File Six.md"    --content "Content six.   #tag3"
+  }
+
+  run "${_NB}" search "#tag2"
+
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
+  printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
+
+  [[    "${status}"     -eq 0                               ]]
+  [[    "${#lines[@]}"  -eq 6                               ]]
+
+  [[    "${lines[0]}"   =~  \
+.*[.*4.*].*\ File\ Four.md\ \·\ \"Content\ four.\ \ #tag2\" ]]
+  [[    "${lines[1]}"   =~  ^.*------------------.*$        ]]
+  [[    "${lines[2]}"   =~  \
+1.*:.*Content\ four.\ \ .*#tag2                             ]]
+  [[    "${lines[3]}"   =~  \
+.*[.*2.*].*\ File\ Two.md\ ·\ \"Content\ two.\ \ \ #tag2\"  ]]
+  [[    "${lines[4]}"   =~  ^.*------------------.*$        ]]
+  [[    "${lines[5]}"   =~  \
+1.*:.*Content\ two.\ \ .*#tag2                              ]]
+}
+
 # binary ######################################################################
 
 @test "'search <query>' prints single match message when matching binary content." {
