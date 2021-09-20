@@ -240,14 +240,7 @@ _tput() {
             fi
         ;;
       setaf)
-        local _color_value="${2:-}"
-
-        if [[ "${_color_value:-}" -lt 8 ]]
-        then
-          printf '\033[3%d '      "${_color_value:-}"
-        else
-          printf '\033[38;5;%sm'  "${_color_value:-}"
-        fi
+        printf '\033[38;5;%sm'  "${2:-}"
         ;;
       sgr0)
         printf '\033[m'
