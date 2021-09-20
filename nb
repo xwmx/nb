@@ -14571,7 +14571,7 @@ _search() {
     return 0
   fi
 
-  if [[   -n "${#_tag_queries[@]}"  ]]
+  if [[   -n "${_tag_queries[*]:-}" ]]
   then
     if [[ -z "${_and_queries[*]:-}" ]]
     then
