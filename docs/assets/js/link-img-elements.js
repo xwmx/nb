@@ -3,7 +3,7 @@
     $('img').each(function() {
       $(this).wrap(function() {
         return '\
-<a target="_blank" rel="noopener noreferrer" href="' + $( this ).attr('src') + '"></a>';
+<a target="_blank" rel="noopener noreferrer" href="' + $(this).attr('src') + '"></a>';
       })
     })
   });
