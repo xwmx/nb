@@ -209,12 +209,13 @@ _sed_i() {
 #   _tput <tput options>...
 #
 # Description:
-#   Run `tput` commands. TODO: Currently does not work with `tput cols`.
+#   Run `tput` commands, with backup options.
 _tput() {
   if _command_exists "tput"
   then
     tput "${@:-}" 2>/dev/null || {
       # fall back to termcap names for FreeBSD
+      #  TODO: Currently does not work with `tput cols`.
       case "${1:-}" in
         sgr0)
           tput me
