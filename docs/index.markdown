@@ -8018,7 +8018,9 @@ tests with globbing, e.g., `bats test/browse*` and `bats test/folders*`.
 ---
 
 <p align="center">
-  Copyright (c) 2015-present <a href="https://www.williammelody.com/">William Melody</a> · See LICENSE for details.
+  Copyright (c) 2015-present ·
+  <a href="https://www.williammelody.com/">William Melody</a> ·
+  See&nbsp;LICENSE&nbsp;for&nbsp;details.
 </p>
 
 <p align="center">
@@ -8028,4 +8030,8 @@ tests with globbing, e.g., `bats test/browse*` and `bats test/folders*`.
 
 <p align="center">
   📝🔖🔒🔍📔
+</p>
+
+<p align="center">
+  <a href="#top">&nbsp;↑&nbsp;</a>
 </p>

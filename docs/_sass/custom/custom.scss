@@ -328,8 +328,12 @@ th {
     font-size:              1rem      !important;
   }
 
-  p:last-child,
-  p:nth-last-child(5) {
+  p:last-child {
+    display:                none;
+  }
+
+  p:nth-last-child(2),
+  p:nth-last-child(6) {
     margin:                 2rem 0 1rem;
   }
 
