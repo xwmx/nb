@@ -8022,6 +8022,7 @@ tests with globbing, e.g., `bats test/browse*` and `bats test/folders*`.
 </p>
 
 <p align="center">
+  <a href="https://xwmx.github.io/nb">xwmx.github.io/nb</a>&nbsp;·
   <a href="https://github.com/xwmx/nb">github.com/xwmx/nb</a>
 </p>
 
