@@ -708,15 +708,6 @@ For more information, see [Browsing](#-browsing).
 
 To list notes and notebooks, run [`nb ls`](#ls) (shortcut alias: `nb`):
 
-```bash
-❯ nb ls
-home
-----
-[3] example.md · "Example content."
-[2] todos.md · "Todos:"
-[1] ideas.md · "- Example idea one."
-```
-
 <p align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/nb-theme-utility-home.png"
         alt="nb ls"
@@ -730,6 +721,15 @@ depending on terminal capabilities.
 The notebook header and command footer can be configured or hidden with
 [`nb set header`](#header) and
 [`nb set footer`](#footer).
+
+```bash
+❯ nb ls
+home
+----
+[3] example.md · "Example content."
+[2] todos.md · "Todos:"
+[1] ideas.md · "- Example idea one."
+```
 
 Notes from the current notebook are listed in the order they were last modified.
 By default, each note is listed with its
