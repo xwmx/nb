@@ -5987,8 +5987,8 @@ Usage:
 Subcommands:
   checkpoint    Create a new git commit in the current notebook and sync with
                 the remote if `nb set auto_sync` is enabled.
-  dirty         0 (success, true) if there are uncommitted changes in
-                <notebook-path>. 1 (error, false) if <notebook-path> is clean.
+  dirty         0 (success, true) if there are uncommitted changes in the
+                current notebook. 1 (error, false) if the notebook is clean.
 
 Description:
   Run `git` commands within the current notebook directory.
