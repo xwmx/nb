@@ -8015,7 +8015,7 @@ tests with globbing, e.g., `bats test/browse*` and `bats test/folders*`.
 <p align="center">
   Copyright (c) 2015-present ·
   <a href="https://www.williammelody.com/">William Melody</a> ·
-  See&nbsp;LICENSE&nbsp;for&nbsp;details.
+  <a href="https://github.com/xwmx/nb/blob/master/LICENSE">AGPLv3</a>
 </p>
 
 <p align="center">
