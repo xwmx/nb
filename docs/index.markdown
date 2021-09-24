@@ -349,7 +349,7 @@ the [`nb update`](#update) subcommand.
   <a href="#-color-themes">🎨&nbsp;Color&nbsp;Themes</a>&nbsp;·
   <a href="#-plugins">🔌&nbsp;Plugins</a>&nbsp;·
   <a href="#-selectors"><code>:/</code>&nbsp;Selectors</a>&nbsp;·
-  <a href="#-metadata"><code>01</code>&nbsp;Metadata</a>&nbsp;·
+  <a href="#01-metadata"><code>01</code>&nbsp;Metadata</a>&nbsp;·
   <a href="#-nb-interactive-shell"><code>❯</code>&nbsp;Shell</a>&nbsp;·
   <a href="#shortcut-aliases">Shortcuts</a>&nbsp;·
   <a href="#help">Help</a>&nbsp;·
