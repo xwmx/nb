@@ -74,7 +74,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="6.4.0"
+_VERSION="6.5.0"
 
 # $_ME
 #
@@ -184,7 +184,7 @@ _resolve_symlink() {
 # _sed_i()
 #
 # Usage:
-#   _sed_id <sed-argument>...
+#   _sed_i <sed-argument>...
 #
 # Description:
 #   `sed -i` takes an extension on macOS, but that extension can cause errors
@@ -209,22 +209,63 @@ _sed_i() {
 #   _tput <tput options>...
 #
 # Description:
-#   Run `tput` commands. TODO: Currently does not work with `tput cols`.
+#   Run `tput` commands, with backup options.
 _tput() {
-  tput "${@:-}" 2>/dev/null || {
-    # fall back to termcap names for FreeBSD
+  if _command_exists "tput"
+  then
+    # More info: https://stackoverflow.com/a/64214019
+    if [[ "${1:-}" == "cols" ]]
+    then
+      if tput cols &>/dev/null 2>&1
+      then
+        tput cols
+      elif tput co &>/dev/null 2>&1
+      then
+        tput co
+      else
+        printf "80\\n"
+      fi
+
+      return 0
+    fi
+
+    tput "${@:-}" 2>/dev/null || {
+      # fall back to termcap names for FreeBSD
+      case "${1:-}" in
+        sgr0)
+          tput me
+          ;;
+        smul)
+          tput us
+          ;;
+        setaf)
+          tput AF "${@:2}"
+          ;;
+      esac
+    } 2>/dev/null || printf ""
+  else
     case "${1:-}" in
-      sgr0)
-        tput me
-        ;;
-      smul)
-        tput us
+      cols|lines)
+        {
+          stty size 2>/dev/null || printf "20 80\\n"
+        } | if [[ "${1:-}" == "cols"    ]]
+            then
+              cut -d " " -f 2
+            else
+              cut -d " " -f 1
+            fi
         ;;
       setaf)
-        tput AF "${@:2}"
+        printf '\033[38;5;%sm'  "${2:-}"
+        ;;
+      sgr0)
+        printf '\033[m'
+        ;;
+      smul)
+        printf '\033[4m'
         ;;
     esac
-  } 2>/dev/null || printf ""
+  fi
 }
 
 ###############################################################################
@@ -756,7 +797,7 @@ __load_themes() {
 # Supported Values: [0..255+]
 __set_color_primary() {
   local _colors=
-  _colors="$(tput colors)"
+  _colors="$(_tput colors)"
 
   if [[ -n "${_colors}" ]] && [[ "${_colors}" -gt 8 ]]
   then
@@ -1108,7 +1149,7 @@ _BT=$'`'
 # $_COLUMNS
 #
 # The terminal width in number of columns (characters).
-_COLUMNS="$(tput cols)"
+_COLUMNS="$(_tput cols)"
 
 # $_FILE_TYPES
 #
@@ -1283,7 +1324,9 @@ _file_is_encrypted() {
         "${_DOCUMENT_FILE_EXTENSIONS[@]}"   \
         "${_AUDIO_FILE_EXTENSIONS[@]}"      \
         "${_VIDEO_FILE_EXTENSIONS[@]}"      &&
-      [[ "$(file "${_file_path:-}"          \
+      if _command_exists "file"
+      then
+        [[ "$(file "${_file_path:-}"        \
               --exclude=apptype             \
               --exclude=encoding            \
               --exclude=tokens              \
@@ -1291,6 +1334,9 @@ _file_is_encrypted() {
               --exclude=compress            \
               --exclude=elf                 \
               --exclude=tar)" =~ encrypted|openssl ]]
+      else
+        return 1
+      fi
     }
 }
 
@@ -1307,6 +1353,7 @@ export _IMAGE_FILE_EXTENSIONS=(
   ai
   bmp
   gif
+  heic
   ind
   indd
   jpg
@@ -1386,15 +1433,20 @@ _file_is_text() {
         "${_ARCHIVE_FILE_EXTENSIONS[@]}"    &&
       [[ ! "${_file_type}" =~ \.epub$   ]]  &&
       [[ ! -d "${_file_path:-}"         ]]  &&
-      [[ "$(file "${_file_path:-}"          \
-              --exclude=apptype             \
-              --exclude=encoding            \
-              --exclude=tokens              \
-              --exclude=cdf                 \
-              --exclude=compress            \
-              --exclude=elf                 \
-              --exclude=tar                 \
-              -b --mime-type)" =~ ^text ]]
+      if _command_exists "file"
+      then
+        [[ "$(file "${_file_path:-}"        \
+                --exclude=apptype           \
+                --exclude=encoding          \
+                --exclude=tokens            \
+                --exclude=cdf               \
+                --exclude=compress          \
+                --exclude=elf               \
+                --exclude=tar               \
+                -b --mime-type)" =~ ^text ]]
+      else
+        return 0
+      fi
     }
 }
 
@@ -2095,10 +2147,7 @@ _list_files() {
 
   while ((${#}))
   do
-    local __arg="${1:-}"
-    local __val="${2:-}"
-
-    case "${__arg}" in
+    case "${1:-}" in
       --reverse)
         _reverse=1
         ;;
@@ -2109,19 +2158,19 @@ _list_files() {
         _read_from_standard_input=1
         ;;
       --type)
-        if _option_value_is_present "${__val:-}"
+        if _option_value_is_present "${2:-}"
         then
-          _type="${__val}"
+          _type="${2}"
           shift
         fi
         ;;
       --[A-Za-z]*)
-        _type="${__arg:2}"
+        _type="${1:2}"
         ;;
       [^-]*)
-        if [[ -z "${_path:-}" ]] && [[ "${__arg:-}" =~ ^/ ]]
+        if [[ -z "${_path:-}" ]] && [[ "${1:-}" =~ ^/ ]]
         then
-          _path="${__arg}"
+          _path="${1}"
         fi
     esac
 
@@ -2278,7 +2327,7 @@ _pager() {
     less "${_less_options[@]:-}"
   elif _command_exists "bat"
   then
-      bat --style numbers,grid
+    bat --style numbers,grid
   else
     cat
   fi
@@ -2822,23 +2871,20 @@ _count() {
 
   while ((${#}))
   do
-    local __arg="${1:-}"
-    local __val="${2:-}"
-
-    case "${__arg}" in
+    case "${1:-}" in
       --type)
-        _list_files_options+=("${__arg}")
-        _list_files_options+=(_option_get_value "${__arg}" "${__val:-}")
+        _list_files_options+=("${1}")
+        _list_files_options+=(_option_get_value "${1}" "${2:-}")
         shift
         ;;
       --skip-unmatched-selector)
         _skip_unmatched_selector=1
         ;;
       -*|/*)
-        _list_files_options+=("${__arg}")
+        _list_files_options+=("${1}")
         ;;
       *)
-        _selector="${__arg}"
+        _selector="${1}"
         ;;
     esac
 
@@ -2876,8 +2922,8 @@ $(_color_primary "Usage"):
 $(_color_primary "Subcommands"):
   checkpoint    Create a new git commit in the current notebook and sync with
                 the remote if \`${_ME} set auto_sync\` is enabled.
-  dirty         0 (success, true) if there are uncommitted changes in
-                <notebook-path>. 1 (error, false) if <notebook-path> is clean.
+  dirty         0 (success, true) if there are uncommitted changes in the
+                current notebook. 1 (error, false) if the notebook is clean.
 
 $(_color_primary "Description"):
   Run \`git\` commands within the current notebook directory.
@@ -3108,7 +3154,7 @@ Welcome to $(_color_primary "${_ME}")!
 
 Git is required, but wasn't found. Install Git, then run \`${_ME}\` again.
 
-About Git: https://git-scm.com/
+About Git: $(_color_primary "https://git-scm.com")
 HEREDOC
     fi
 
@@ -3248,9 +3294,10 @@ HEREDOC
       fi
     fi
 
-    if git -C "${_notebook_path}" show-branch             \
-         "remotes/origin/${_git_branch}" > /dev/null 2>&1 &&
-       ! git -C "${_notebook_path}" rebase "origin/${_git_branch}" &>/dev/null
+    if git -C "${_notebook_path}" show-branch \
+         "remotes/origin/${_git_branch}"      \
+         > /dev/null 2>&1                     &&
+         ! git -C "${_notebook_path}" rebase "origin/${_git_branch}" &>/dev/null
     then
       local _merge_error=1
 
@@ -3512,7 +3559,7 @@ _help() {
       _color_secondary \
                       " ---------------------------------------------------"
       printf "\\n"
-  cat <<HEREDOC
+      cat <<HEREDOC
 \`${_ME}\` uses color to highlight various interface elements, including ids,
 the current notebook name, the shell prompt, and divider lines.
 
@@ -3644,16 +3691,17 @@ $(_color_primary "Usage"):
   ${_ME} init [<remote-url> [<branch>]] [--author] [--email <email>]
           [--name <name>]
   ${_ME} list [-e [<length>] | --excerpt [<length>]] [--filenames]
-          [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
-          [--no-indicator] [-p | --pager] [--paths] [-s | --sort]
-          [-r | --reverse] [--tags] [-t <type> | --type <type> | --<type>]
-          [<id> | <filename> | <path> | <title> | <query>]
+          [-n <limit> | --limit <limit> | --<limit>] [--no-id]
+          [--no-indicator] [-p <number> | --page <number>] [--pager]
+          [--paths] [-s | --sort] [-r | --reverse] [--tags]
+          [-t <type> | --type <type> | --<type>]
+          [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
   ${_ME} ls [-a | --all] [-b | --browse] [-e [<length>] | --excerpt [<length>]]
         [--filenames] [-g | --gui] [-n <limit> | --limit <limit> | --<limit>]
-        [--no-footer] [--no-header] [--no-id] [--no-indicator] [-p | --pager]
-        [--paths] [-s | --sort] [-r | --reverse] [--tags]
-        [-t <type> | --type <type> | --<type>]
-        [<notebook>:][<id> | <filename> | <path> | <title> | <query>]
+        [--no-footer] [--no-header] [--no-id] [--no-indicator]
+        [-p <number> | --page <number>] [--pager] [--paths] [-s | --sort]
+        [-r | --reverse] [--tags] [-t <type> | --type <type> | --<type>]
+        [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
   ${_ME} move ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note |
           --to-title) [-f | --force]
@@ -3969,7 +4017,7 @@ _index() {
       fi
       ;;
     get_basename)
-      # Usage: _index_get_basename <id> <index path>
+      # Usage: _index_get_basename <id> <index-path>
       _index_get_basename() {
         if [[ -z "${1:-}" ]] || [[ "${1:-}" == "0" ]]
         then
@@ -4002,7 +4050,7 @@ _index() {
       fi
       ;;
     get_id)
-      # Usage: _index_get_id <basename> <index path>
+      # Usage: _index_get_id <basename> <index-path>
       _index_get_id() {
         # Alternatives:
         # git -C "${3:?}" grep  \
@@ -4104,6 +4152,7 @@ _index() {
       return 0
       ;;
     reconcile)
+      # Usage: _index_reconcile_remove_duplicates <index-path>
       _index_reconcile_remove_duplicates() {
         local _reconcile_index_path="${1:-}"
         [[ -z "${_reconcile_index_path:-}" ]] && return 1
@@ -4457,9 +4506,10 @@ _describe_list() {
   cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} list [-e [<length>] | --excerpt [<length>]] [--filenames]
-          [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
-          [--no-indicator] [-p | --pager] [--paths] [-s | --sort]
-          [-r | --reverse] [--tags] [-t <type> | --type <type> | --<type>]
+          [-n <limit> | --limit <limit> | --<limit>] [--no-id]
+          [--no-indicator] [-p <number> | --page <number>] [--pager]
+          [--paths] [-s | --sort] [-r | --reverse] [--tags]
+          [-t <type> | --type <type> | --<type>]
           [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
 
 $(_color_primary "Options"):
@@ -4469,7 +4519,9 @@ $(_color_primary "Options"):
   -n, --limit <limit>, --<limit>  The maximum number of notes to list.
   --no-id                         Don't include the id in list items.
   --no-indicator                  Don't include the indicator in list items.
-  -p, --pager                     Display output in the pager.
+  -p, --page <number>             The page to view in the list paginated by
+                                  a <limit> option or \`nb set limit\`.
+  --pager                         Display output in the pager.
   --paths                         Print the full path to each item.
   -s, --sort                      Order notes by id.
   -r, --reverse                   List items in reverse order.
@@ -4528,7 +4580,7 @@ _list() {
   local _no_id=0
   local _only_pinned=0
   local _page=1
-  local _per_page=0
+  local _paginate=0
   local _print_excerpt=0
   local _print_indicators=1
   local _print_notebook_selectors=0
@@ -4543,10 +4595,7 @@ _list() {
 
   while ((${#}))
   do
-    local __arg="${1:-}"
-    local __val="${2:-}"
-
-    case "${__arg}" in
+    case "${1:-}" in
       -a|--all)
         _limit=
         ;;
@@ -4554,10 +4603,10 @@ _list() {
         _print_excerpt=1
         _recursive_arguments+=("--excerpt")
 
-        if _option_value_is_present "${__val:-}"
+        if _option_value_is_present "${2:-}"
         then
-          _excerpt_length="${__val:-}"
-          _recursive_arguments+=("${__val:-}")
+          _excerpt_length="${2:-}"
+          _recursive_arguments+=("${2:-}")
           shift
         fi
         ;;
@@ -4584,31 +4633,29 @@ _list() {
         _line_wrap=0
         _recursive_arguments+=("--no-wrap")
         ;;
-      -n|--limit|--num|--number)
-        if _option_value_is_present "${__val:-}"
+      -n|--limit|--num|--number|--per*page)
+        if _option_value_is_present "${2:-}"
         then
-          _limit="${__val:-}"
+          _limit="${2:-}"
           shift
         fi
         ;;
       --notebook-selectors)
         _print_notebook_selectors=1
         ;;
-      --page)
-        _page="$(_option_get_value "${__arg}" "${__val:-}")"
-        ((_page)) || _page=1
+      -p|--page)
+        _page="$(_option_get_value "${1}" "${2:-}")"
+        ((_page))               || _page=1
+        [[ -z "${_limit:-}" ]]  && _limit="${NB_LIMIT}"
+        _paginate=1
         shift
         ;;
-      -p|--pager|--less)
+      --pager|--less)
         _use_pager=1
         ;;
       --path*)
         _list_paths=1
         _recursive_arguments+=("--paths")
-        ;;
-      --per*)
-        _per_page="$(_option_get_value "${__arg}" "${__val:-}")"
-        shift
         ;;
       --pinned)
         _only_pinned=1
@@ -4632,24 +4679,24 @@ _list() {
         : # Do nothing. This is the default behavior.
         ;;
       -t|--type)
-        _type="$(_option_get_value "${__arg}" "${__val:-}")"
+        _type="$(_option_get_value "${1}" "${2:-}")"
         shift
         ;;
       --with*pinned)
         _with_pinned=1
         ;;
       *)
-        if   [[   "${__arg:-}" =~ ^--[0-9]+$  ]]
+        if   [[   "${1:-}" =~ ^--[0-9]+$  ]]
         then
-          _limit="${__arg:2}"
-        elif [[   "${__arg:-}" =~ ^--         ]]
+          _limit="${1:2}"
+        elif [[   "${1:-}" =~ ^--         ]]
         then
-          if ! _contains "${__arg:-}" "--ar" "--archived" "--unar" "--unarchived"
+          if ! _contains "${1:-}" "--ar" "--archived" "--unar" "--unarchived"
           then
-            _type="${__arg:2}"
+            _type="${1:2}"
           fi
         else
-          _selector_arguments+=("${__arg:-}")
+          _selector_arguments+=("${1:-}")
         fi
         ;;
     esac
@@ -4999,8 +5046,8 @@ _list() {
     local _filenames_count=0
     local _matches=0
     local _paginated_count=0
-    local _pagination_max="$((_page * _per_page))"
-    local _pagination_min="$(((_page * _per_page) - _per_page))"
+    local _pagination_max="$((_page * _limit))"
+    local _pagination_min="$(((_page * _limit) - _limit))"
     local _pinned_basenames_seen=()
     local _printed_count=0
 
@@ -5094,6 +5141,19 @@ _list() {
         fi
       fi
 
+      if ((_paginate))
+      then
+        _paginated_count=$((_paginated_count+1))
+
+        if   [[ "${_paginated_count}" -le "${_pagination_min}"  ]]
+        then
+          continue
+        elif [[ "${_paginated_count}" -gt "${_pagination_max}"  ]]
+        then
+          break
+        fi
+      fi
+
       if [[ -n "${_limit:-}" ]] && [[ "${_printed_count}" -ge "${_limit}" ]]
       then # the limit has been reached
         if [[ -n "${_filter_pattern:-}" ]]
@@ -5182,19 +5242,6 @@ _list() {
         then
           _indicators+="${_NB_INDICATOR_TODO:-}"
           _extra_length=1
-        fi
-      fi
-
-      if ((_per_page))
-      then
-        _paginated_count=$((_paginated_count+1))
-
-        if [[ "${_paginated_count}"   -le "${_pagination_min}"  ]]
-        then
-          continue
-        elif [[ "${_paginated_count}" -gt "${_pagination_max}"  ]]
-        then
-          break
         fi
       fi
 
@@ -5302,7 +5349,7 @@ ${_TPUT_SGR0}"
 
     # end main loop
 
-    if [[   -n "${_limit:-}"          ]]
+    if [[   -n "${_limit:-}"          ]] && ! ((_paginate))
     then
       if [[ -n "${_filter_pattern:-}" ]]
       then
@@ -5459,9 +5506,9 @@ _describe_ls() {
 $(_color_primary "Usage"):
   ${_ME} ls [-a | --all] [-b | --browse] [-e [<length>] | --excerpt [<length>]]
         [--filenames] [-g | --gui] [-n <limit> | --limit <limit> | --<limit>]
-        [--no-footer] [--no-header] [--no-id] [--no-indicator] [-p | --pager]
-        [--paths] [-s | --sort] [-r | --reverse] [--tags]
-        [-t <type> | --type <type> | --<type>]
+        [--no-footer] [--no-header] [--no-id] [--no-indicator]
+        [-p <number> | --page <number>] [--pager] [--paths] [-s | --sort]
+        [-r | --reverse] [--tags] [-t <type> | --type <type> | --<type>]
         [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
 
 $(_color_primary "Options"):
@@ -5480,7 +5527,9 @@ $(_color_primary "Options"):
   --no-footer                     Print without footer.
   --no-id                         Don't include the id in list items.
   --no-indicator                  Don't include the indicator in list items.
-  -p, --pager                     Display output in the pager.
+  -p, --page <number>             The page to view in the list paginated by
+                                  a <limit> option or \`nb set limit\`.
+  --pager                         Display output in the pager.
   --paths                         Print the full path to each item.
   -s, --sort                      Order notes by id.
   -r, --reverse                   List items in reverse order.
@@ -5884,26 +5933,23 @@ _ls() {
 
   while ((${#}))
   do
-    local __arg="${1:-}"
-    local __val="${2:-}"
-
-    case "${__arg}" in
+    case "${1:-}" in
       --added|--ar|--archived|--unar|--unarchived|--updated)
-        _delegate_arguments+=("${__arg}")
+        _delegate_arguments+=("${1}")
         ;;
       -a|--all)
         _all=1
         ;;
       --auto*align|--centered|--justified|--plain)
-        _header_flags+=("${__arg}")
+        _header_flags+=("${1}")
         ;;
       -b|--browse)
         _delegate_to_browse=1
         ;;
       --content|--title)
-        if _option_value_is_present "${__val:-}"
+        if _option_value_is_present "${2:-}"
         then
-          _delegate_arguments+=("${__arg}" "${__val:-}")
+          _delegate_arguments+=("${1}" "${2:-}")
           shift
         fi
         ;;
@@ -5912,13 +5958,13 @@ _ls() {
         ;;
       -g|--gui)
         _delegate_to_browse=1
-        _delegate_arguments+=("${__arg}")
+        _delegate_arguments+=("${1}")
         ;;
-      -n|--limit|--num|--number)
-        _limit="$(_option_get_value "${__arg}" "${__val:-}")"
+      -n|--limit|--num|--number|--per*page)
+        _limit="$(_option_get_value "${1}" "${2:-}")"
         shift
         ;;
-      -p|--pager|--less)
+      --pager|--less)
         _use_pager=1
         ;;
       -l)
@@ -5931,60 +5977,60 @@ _ls() {
         NB_HEADER=0
         ;;
       -s|--sort|-r|--reverse)
-        _arguments+=("${__arg}")
+        _arguments+=("${1}")
         _with_pinned=0
         ;;
       --tags)
-        _delegate_arguments+=("${__arg}")
+        _delegate_arguments+=("${1}")
         ;;
       -t|--type)
-        _maybe_type="$(_option_get_value "${__arg}" "${__val:-}")"
-        _arguments+=("${__arg}" "${__val:-}")
+        _maybe_type="$(_option_get_value "${1}" "${2:-}")"
+        _arguments+=("${1}" "${2:-}")
         shift
         ;;
       --[0-9]*)
-        if [[ "${__arg:-}" =~ ^--[0-9]+$ ]]
+        if [[ "${1:-}" =~ ^--[0-9]+$ ]]
         then
-          _limit="${__arg#\-\-}"
+          _limit="${1#\-\-}"
         else
-          _arguments+=("${__arg}")
+          _arguments+=("${1}")
         fi
         ;;
       --[A-Za-z]*)
-        _maybe_type="${__arg:2}"
+        _maybe_type="${1:2}"
 
-        _arguments+=("${__arg}")
+        _arguments+=("${1}")
         ;;
       -*)
-        _arguments+=("${__arg}")
+        _arguments+=("${1}")
 
-        if _option_value_is_present "${__val:-}"
+        if _option_value_is_present "${2:-}"
         then
-          _arguments+=("${__val:-}")
+          _arguments+=("${2:-}")
 
           shift
         fi
         ;;
       *:*)
         local _selector_id=
-        _selector_id="$(_selector_get_identifier "${__arg}")"
+        _selector_id="$(_selector_get_identifier "${1}")"
 
         if [[ -n "${_selector_id:-}" ]]
         then
           _arguments+=("${_selector_id}")
         fi
 
-        _selector="${__arg:-}"
-        _filter_patterns+=("${__arg}")
+        _selector="${1:-}"
+        _filter_patterns+=("${1}")
         ;;
       *)
         if [[ -z "${_selector:-}" ]]
         then
-          _selector="${__arg}"
+          _selector="${1}"
         fi
 
-        _arguments+=("${__arg}")
-        _filter_patterns+=("${__arg}")
+        _arguments+=("${1}")
+        _filter_patterns+=("${1}")
         ;;
     esac
 
@@ -6739,10 +6785,7 @@ HEREDOC
 
     while ((${#}))
     do
-      local __arg="${1:-}"
-      local __val="${2:-}"
-
-      case "${__arg:-}" in
+      case "${1:-}" in
         --global)
           _print_global=1
           ;;
@@ -6758,14 +6801,14 @@ HEREDOC
         --filename|--basename|--file*path)
           _print_unique_file_path=1
 
-          if _option_value_is_present "${__val:-}"
+          if _option_value_is_present "${2:-}"
           then
-            _file_path="${__val}"
+            _file_path="${2}"
             shift
           fi
           ;;
         [^-]*)
-          _selector="${__arg}"
+          _selector="${1}"
           ;;
       esac
 
@@ -7064,7 +7107,7 @@ HEREDOC
 
     if [[ -n "${_remote_url:-}"     ]]  && [[ -z "${_path}"         ]]
     then
-      _exit_1 printf \
+      _exit_1 printf                                                    \
         "Must specify a <path> when cloning from <remote-url>.\\n%s\\n" \
         "$(_help "notebooks")"
     fi
@@ -7327,9 +7370,9 @@ HEREDOC
           _query_pattern="$(_join "|" "${_query_names[@]:-}")"
 
           {
-            _notebooks_list "${_options[@]}"  2>/dev/null
+            _notebooks_list "${_options[@]:-}"  2>/dev/null
           } | {
-            grep -i "${_query_pattern:-}"     2>/dev/null
+            grep -i "${_query_pattern:-}"       2>/dev/null
           }
         } || {
           _warn printf                      \
@@ -7535,10 +7578,7 @@ HEREDOC
 
     while ((${#}))
     do
-      local __arg="${1:-}"
-      local __val="${2:-}"
-
-      case "${__arg}" in
+      case "${1:-}" in
         --archived)
           _test_archived=1
           ;;
@@ -7557,16 +7597,16 @@ HEREDOC
         --filename|--basename|--file*path)
           _print_unique_file_path=1
 
-          if _option_value_is_present "${__val:-}"
+          if _option_value_is_present "${2:-}"
           then
-            _file_path="${__val}"
+            _file_path="${2}"
             shift
           fi
           ;;
         *)
           if [[ -z "${_selector}"   ]]
           then
-            _selector="${__arg}"
+            _selector="${1:-}"
           fi
           ;;
       esac
@@ -8593,7 +8633,7 @@ _decrypt_file() {
   _unencrypted_path="$(_temp file "${_notebook_and_relative_path%.enc}")"
 
   local _file_command_response
-  _file_command_response="$(file "${_encrypted_path}")"
+  _file_command_response="$(file "${_encrypted_path}" 2>/dev/null || :)"
 
   if [[   "${_file_command_response}" =~ GPG|PGP ]]
   then
@@ -8607,8 +8647,8 @@ _decrypt_file() {
           --output "${_unencrypted_path}" \
           --decrypt "${_encrypted_path}"
     else
-      _exit_1 printf "\
-This item was encrypted with GPG, but the GPG command was not found.\\n"
+      _exit_1 printf                      \
+"This item was encrypted with GPG, but the GPG command was not found.\\n"
     fi
   elif [[ "${_file_command_response}" =~ openssl ]]
   then
@@ -8755,15 +8795,15 @@ _edit_file() {
   then
     if _file_is_encrypted "${_file_path}"
     then
-      _exit_1 printf "\
-File must be decrypted before editing.\\n"
+      _exit_1 printf                  \
+"File must be decrypted before editing.\\n"
     fi
 
     if _file_is_archive "${_file_path}"   &&
        [[ ! "${_file_path}" =~ docx$  ]]
     then
-      _exit_1 printf "\
-Can't edit archives. Export archive and expand to edit.\\n"
+      _exit_1 printf                  \
+"Can't edit archives. Export archive and expand to edit.\\n"
     fi
 
     if ! _file_is_text "${_file_path}"    &&
@@ -8866,8 +8906,8 @@ _encrypt_file() {
       -out "${_encrypted_path}"       \
       -pass file:<(printf "%s\\n" "${_password}") 2> /dev/null
   else
-    _exit_1 \
-      printf "\$NB_ENCRYPTION_TOOL must be set to 'gpg' or 'openssl'.\\n"
+    _exit_1 printf                    \
+      "\$NB_ENCRYPTION_TOOL must be set to 'gpg' or 'openssl'.\\n"
   fi
 
   if [[ ! -e "${_encrypted_path}" ]]
@@ -9383,6 +9423,7 @@ hr  {
 }
 
 img {
+  border-radius:      1px;
   max-width:          100%;
 }
 
@@ -9469,7 +9510,7 @@ header {
   font-size:          1rem;
   font-weight:        normal;
   margin:             0;
-  padding:            1.5rem 2rem 0rem;
+  padding:            2rem 2rem 0rem;
   text-align:         center;
 }
 
@@ -9489,7 +9530,14 @@ header {
   padding:            0rem 2rem 2rem;
 }
 
-.main p:first-child,
+.main h1:first-child {
+  padding-top:        0.35rem;
+}
+
+.main p:first-child {
+  padding-top:        0.8rem;
+}
+
 .main .sourceCode:first-child {
   padding-top:        1rem;
 }
@@ -9511,7 +9559,7 @@ header {
 .identifier {         color: ${_color_primary_hex}; }
 
 form {
-  padding-top:        0.5rem;
+  padding-top:        1rem;
 }
 
 #search {
@@ -9625,10 +9673,6 @@ textarea {
   background:         none;
 }
 
-div.sourceCode {
-  background-color:   transparent;
-}
-
 #TOC li {
   list-style:         none;
 }
@@ -9650,13 +9694,21 @@ div.hanging-indent {
 
 .display.math {
   display:            block;
-  text-align:         center;
   margin:             0.5rem auto;
+  text-align:         center;
 }
 
-span.smallcaps        { font-variant: small-caps;   }
-span.underline        { text-decoration: underline; }
-ul.task-list          { list-style: none;           }
+span.smallcaps {
+  font-variant:       small-caps;
+}
+
+span.underline {
+  text-decoration:    underline;
+}
+
+ul.task-list {
+  list-style:         none;
+}
 
 /*
  * #93a5cc #ffcfaf #7f9f7f #dca3a3 #f0dfaf #dfdfbf #dcdccc #c3bf9f #c0bed1
@@ -9697,21 +9749,40 @@ ul.task-list          { list-style: none;           }
 
 /* Pandoc Syntax */
 
-pre > code.sourceCode         { position: relative;     white-space: pre;   }
-pre > code.sourceCode > span  { display:  inline-block; line-height: 1.25;  }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre > code.sourceCode {
+  position:           relative;
+  white-space:        pre;
+}
 
-div.sourceCode  {     margin: 1em 0;  }
-pre.sourceCode  {     margin: 0;      }
+pre > code.sourceCode > span  {
+  display:            inline-block;
+  line-height:        1.25;
+}
+
+pre > code.sourceCode > span:empty {
+  height:             1.2em;
+}
+
+code.sourceCode > span {
+  color:              inherit;
+  text-decoration:    inherit;
+}
 
 @media screen {
-  div.sourceCode  {   overflow: auto; }
+  div.sourceCode {
+    overflow:         auto;
+  }
 }
 
 @media print {
-  pre > code.sourceCode         { white-space: pre-wrap;                      }
-  pre > code.sourceCode > span  { text-indent: -5em;      padding-left: 5em;  }
+  pre > code.sourceCode {
+    white-space:      pre-wrap;
+  }
+
+  pre > code.sourceCode > span {
+    padding-left:     5em;
+    text-indent:      -5em;
+  }
 }
 
 pre.numberSource code {
@@ -9742,11 +9813,27 @@ pre.numberSource code > span > a:first-child::before {
   width:              4em;
 }
 
-pre.numberSource  {   margin-left:  3em;      padding-left:     4px;      }
-div.sourceCode    {   color:        #cccccc;  background-color: #1a1a1a;  }
+pre.numberSource {
+  margin-left:        3em;
+  padding-left:       4px;
+}
+
+div.sourceCode {
+  background-color:   transparent;
+  color:              #cccccc;
+  margin:             1em 0;
+}
+
+pre.sourceCode {
+  background-color:   #212121;
+  margin:             0;
+  padding:            1rem;
+}
 
 @media screen {
-  pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+  pre > code.sourceCode > span > a:first-child::before {
+    text-decoration:  underline;
+  }
 }
 
 code span.al { color: #ffcfaf;                                    } /* Alert */
@@ -10024,15 +10111,15 @@ HEREDOC
 
           if ((_strip_images))
           then
-            printf "•strip•%s\\n" "${__line:-}"
+            printf "nb-img-strip-nb%s\\n" "${__line:-}"
           else
             printf "%s\\n" "${__line:-}"
           fi
         done
       } | {
-        sed -E -e "/^•strip•/ s/<img[^>]*>//g"
+        sed -E -e "/^nb-img-strip-nb/ s/<img[^>]*>//g"
       } | {
-        sed -E -e "s/^•strip•//g"
+        sed -E -e "s/^nb-img-strip-nb//g"
       }
     else
       cat
@@ -10194,17 +10281,18 @@ _resolve_links() {
     if ((_for_browsing)) && [[ "${_input_type:-}" == "html" ]]
     then
       # patterns for wrapping [[wiki-style links]] in HTML links
+      local _host_port_pattern="${NB_SERVER_HOST}:${NB_SERVER_PORT}"
       local _link_match_pattern="\[\[([^#|][^]|]*)\]\]"
-      local _url_pattern="\/\/${NB_SERVER_HOST}:${NB_SERVER_PORT}\/\1${_url_params_pattern:-}"
+      local _url_pattern="\/\/${_host_port_pattern}\/\1${_url_params_pattern:-}"
       local _replacement_pattern="<a\ href=\"${_url_pattern}\">[[\1]]<\/a>"
 
       local _labeled_link_match_pattern="\[\[([^#][^]|]+)\|([^]]+)\]\]"
-      local _labeled_url_pattern="\/\/${NB_SERVER_HOST}:${NB_SERVER_PORT}\/\1${_url_params_pattern:-}"
+      local _labeled_url_pattern="\/\/${_host_port_pattern}\/\1${_url_params_pattern:-}"
       local _labeled_replacement_pattern="<a\ href=\"${_labeled_url_pattern}\">[[\2]]<\/a>"
 
       # patterns for adding notebook prefixes to just-linked URLs
-      local _notebookless_pattern="${NB_SERVER_HOST}:${NB_SERVER_PORT}\/([^:?\"-]+[\?\"])"
-      local _notebookless_replacement_pattern="${NB_SERVER_HOST}:${NB_SERVER_PORT}\/${_notebook_name}:\1"
+      local _notebookless_pattern="${_host_port_pattern}\/([^:?\"-]+[\?\"])"
+      local _notebookless_replacement_pattern="${_host_port_pattern}\/${_notebook_name}:\1"
 
       local _linkable=1
 
@@ -10219,7 +10307,7 @@ _resolve_links() {
 
           if ((_linkable))
           then
-            printf "•linkable•%s\\n" "${__line:-}"
+            printf "nb-linkable-nb%s\\n" "${__line:-}"
           else
             printf "%s\\n" "${__line:-}"
           fi
@@ -10231,12 +10319,12 @@ _resolve_links() {
         done
       } | {
         # wrap [[wiki-style links]] in HTML links and add missing notebooks
-        sed -E                                                                        \
--e "/^•linkable•/ s/${_link_match_pattern}/${_replacement_pattern}/g"                 \
--e "/^•linkable•/ s/${_labeled_link_match_pattern}/${_labeled_replacement_pattern}/g" \
--e "/^•linkable•/ s/${_notebookless_pattern}/${_notebookless_replacement_pattern}/g"
+        sed -E                                                                            \
+-e "/^nb-linkable-nb/ s/${_link_match_pattern}/${_replacement_pattern}/g"                 \
+-e "/^nb-linkable-nb/ s/${_labeled_link_match_pattern}/${_labeled_replacement_pattern}/g" \
+-e "/^nb-linkable-nb/ s/${_notebookless_pattern}/${_notebookless_replacement_pattern}/g"
       } | {
-         sed -E -e "s/^•linkable•//g"
+         sed -E -e "s/^nb-linkable-nb//g"
       }
     else
       local __match=
@@ -10509,7 +10597,10 @@ _web_browser() {
 
   if [[ -z "${_web_browser_command[*]:-}" ]]
   then
-    return 1
+    _warn cat <<HEREDOC
+Web browser not found. Try \`w3m\`: $(_color_primary "http://w3m.sourceforge.net")
+HEREDOC
+    exit 1
   fi
 
   if ((_check_gui))
@@ -10709,17 +10800,14 @@ _add() {
 
   while ((${#}))
   do
-    local __arg="${1:-}"
-    local __val="${2:-}"
-
-    case "${__arg}" in
+    case "${1:-}" in
       -b|-br|--browse)
         _browse=1
         ;;
       -c|--content)
         [[ -n "${_option_content:-}" ]] && _option_content+="${_NEWLINE}${_NEWLINE}"
-        _option_content+="$(_option_get_value "${__arg}" "${__val:-}")"
-        _browse_arguments+=("${__arg}" "${__val:-}")
+        _option_content+="$(_option_get_value "${1}" "${2:-}")"
+        _browse_arguments+=("${1}" "${2:-}")
         shift
         ;;
       --edit)
@@ -10737,47 +10825,47 @@ _add() {
         fi
         ;;
       -f|--file*|--*path|--target*)
-        _option_relative_path="$(_option_get_value "${__arg}" "${__val:-}")"
-        _browse_arguments+=("${__arg}" "${__val:-}")
+        _option_relative_path="$(_option_get_value "${1}" "${2:-}")"
+        _browse_arguments+=("${1}" "${2:-}")
         shift
         ;;
       --folder)
         _option_folder_relative_path="$(
-          _option_get_value "${__arg}" "${__val:-}" | sed -e 's/\/$//'
+          _option_get_value "${1}" "${2:-}" | sed -e 's/\/$//'
         )"
-        _browse_arguments+=("${__arg}" "${_option_folder_relative_path:-}")
+        _browse_arguments+=("${1}" "${_option_folder_relative_path:-}")
         shift
         ;;
       --no*color)
         _COLOR_ENABLED=0
         ;;
       --password)
-        _password="$(_option_get_value "${__arg}" "${__val:-}")"
+        _password="$(_option_get_value "${1}" "${2:-}")"
         shift
         ;;
       --tag*)
         [[ -n "${_tag_list:-}" ]] && _tag_list+=" "
-        _tag_list+="$(_option_get_tags "${__arg}" "${__val:-}")"
-        _browse_arguments+=("${__arg}" "${__val:-}")
+        _tag_list+="$(_option_get_tags "${1}" "${2:-}")"
+        _browse_arguments+=("${1}" "${2:-}")
         shift
         ;;
       -t|--title|--name)
         # TODO: Detect tag list for dynamic -t for --titles and --tags?
-        _title="$(_option_get_value "${__arg}" "${__val:-}")"
-        _browse_arguments+=("${__arg}" "${__val:-}")
+        _title="$(_option_get_value "${1}" "${2:-}")"
+        _browse_arguments+=("${1}" "${2:-}")
         shift
         ;;
       --type)
-        _file_type="$(_option_get_value "${__arg}" "${__val:-}")"
-        _browse_arguments+=("${__arg}" "${__val:-}")
+        _file_type="$(_option_get_value "${1}" "${2:-}")"
+        _browse_arguments+=("${1}" "${2:-}")
         shift
         ;;
       folder|directory)
         _file_type="folder"
-        _browse_arguments+=("${__arg}")
+        _browse_arguments+=("${1}")
         ;;
       *)
-        _arguments+=("${__arg:-}")
+        _arguments+=("${1:-}")
         ;;
     esac
 
@@ -11165,12 +11253,12 @@ _add() {
   then
     if [[ ! "${_target_path##*/}" =~ ^\.  ]]
     then
-      _index add                                                \
-        "${_target_basename}"                                   \
+      _index add                          \
+        "${_target_basename}"             \
         "${_notebook_path:?}/${_target_folder_relative_path:-}"
-      fi && _git checkpoint                                     \
-        "${_notebook_path}"                                     \
-        "[nb] Add: ${_target_unique_relative_path}"
+    fi && _git checkpoint                 \
+      "${_notebook_path}"                 \
+      "[nb] Add: ${_target_unique_relative_path}"
 
     local _info
     _info="$(
@@ -11332,12 +11420,9 @@ _bookmark() {
 
   while ((${#}))
   do
-    local __arg="${1:-}"
-    local __val="${2:-}"
-
-    case "${__arg}" in
+    case "${1:-}" in
       -c|--comment*)
-        _comment="$(_option_get_value "${__arg}" "${__val:-}")"
+        _comment="$(_option_get_value "${1}" "${2:-}")"
         shift
         ;;
       --download|--fetch|--online|--request)
@@ -11350,22 +11435,22 @@ _bookmark() {
         _encrypt=1
         ;;
       -f|--filename)
-        _target_filename="$(_option_get_value "${__arg}" "${__val:-}")"
+        _target_filename="$(_option_get_value "${1}" "${2:-}")"
         shift
         ;;
       --no*download|--no*fetch|--no*request|--offline)
         _request_page=0
         ;;
       --password)
-        _password="$(_option_get_value "${__arg}" "${__val:-}")"
+        _password="$(_option_get_value "${1}" "${2:-}")"
         shift
         ;;
       -q|--quote|--excerpt)
-        _quote="$(_option_get_value "${__arg}" "${__val:-}")"
+        _quote="$(_option_get_value "${1}" "${2:-}")"
         shift
         ;;
       -r|--via|--also|--related)
-        _related_urls+=("$(_option_get_value "${__arg}" "${__val:-}")")
+        _related_urls+=("$(_option_get_value "${1}" "${2:-}")")
         shift
         ;;
       --save*source|--source|--save*html|--html|--raw*content|--raw*html)
@@ -11375,19 +11460,19 @@ _bookmark() {
         _skip_content=1
         ;;
       -t|--tag*)
-        _tag_list="$(_option_get_tags "${__arg}" "${__val:-}")"
+        _tag_list="$(_option_get_tags "${1}" "${2:-}")"
         shift
         ;;
       --title)
-        _title="$(_option_get_value "${__arg}" "${__val:-}")"
+        _title="$(_option_get_value "${1}" "${2:-}")"
         shift
         ;;
       delete)
-        _delete "${__val:-}" "${3:-}"
+        _delete "${2:-}" "${3:-}"
         return 0
         ;;
       edit)
-        _edit "${__val:-}"
+        _edit "${2:-}"
         return 0
         ;;
       help)
@@ -11401,38 +11486,38 @@ _bookmark() {
         _subcommand="search"
         ;;
       open|o|peek|p|preview|url)
-        if _option_value_is_present "${__val:-}"
+        if _option_value_is_present "${2:-}"
         then
-          if [[ "${__arg}" =~ ^open$|^o$  ]]
+          if [[ "${1}" =~ ^open$|^o$  ]]
           then
             _subcommand="open"
-          elif [[ "${__arg}" =~ ^peek$|^p$|^preview$ ]]
+          elif [[ "${1}" =~ ^peek$|^p$|^preview$ ]]
           then
             _subcommand="peek"
-          elif [[ "${__arg}" == "url"     ]]
+          elif [[ "${1}" == "url"     ]]
           then
             _subcommand="url"
           fi
 
-          _selector="${__val:-}"
+          _selector="${2:-}"
 
           shift
         else
-          _exit_1 \
-            printf "%s requires a valid argument.\\n"  \
-            "$(_color_primary "bookmark ${__arg}")"
+          _exit_1                                     \
+            printf "%s requires a valid argument.\\n" \
+            "$(_color_primary "bookmark ${1}")"
         fi
         ;;
       *)
         if [[ ! "${_subcommand:-}" =~ ^list$|^search$ ]] &&
            [[ -z "${_url:-}"                          ]] &&
-           _string_is_url "${__arg}"
+           _string_is_url "${1}"
         then
-          _url="${__arg}"
+          _url="${1}"
         elif [[ -z "${_subcommand:-}"                 ]] ||
              [[ "${_subcommand}" =~ ^list$|^search$   ]]
         then
-          _arguments+=("${__arg}")
+          _arguments+=("${1}")
         fi
         ;;
     esac
@@ -11611,7 +11696,7 @@ _bookmark() {
         then
           local _wayback_response
           _wayback_response="$(
-            _download_from \
+            _download_from                                                \
               "https://archive.org/wayback/available?url=${_target_url}"  \
               | grep --color=never 'closest'                              \
               | sed -E 's/.*"closest": {([^}]+)}.*/\1/g'                  \
@@ -11721,17 +11806,17 @@ _bookmark() {
     if [[ -z "${_title}"    ]]
     then
       _title="$(
-        cat "${_temp_file}"               \
-          | grep                          \
-            --only-matching               \
-            --extended-regexp             \
-            --ignore-case                 \
-            '.*<title[^>]*>[^<]*</title>' \
-          | head -n 1                     \
-          | sed                           \
-            -e 's/.*<title[^>]*>//'       \
-            -e 's/.*<TITLE[^>]*>//'       \
-            -e 's/<\/title>.*//'          \
+        cat "${_temp_file}"             \
+          | grep                        \
+            --only-matching             \
+            --extended-regexp           \
+            --ignore-case               \
+            '<title[^>]*>[^<]*</title>' \
+          | head -n 1                   \
+          | sed                         \
+            -e 's/.*<title[^>]*>//'     \
+            -e 's/.*<TITLE[^>]*>//'     \
+            -e 's/<\/title>.*//'        \
             -e 's/<\/TITLE>.*//'
       )" || : # TODO: pipeline returns error status but still returns title
     fi
@@ -12463,26 +12548,23 @@ _edit() {
 
   while ((${#}))
   do
-    local __arg="${1:-}"
-    local __val="${2:-}"
-
-    case "${__arg}" in
+    case "${1:-}" in
       -c|--content)
-        _content="$(_option_get_value "${__arg}" "${__val:-}")"
+        _content="$(_option_get_value "${1}" "${2:-}")"
         shift
         ;;
       --edit)
         _edit_before_commit=1
         ;;
       -e|--editor)
-        _local_editor="$(_option_get_value "${__arg}" "${__val:-}")"
+        _local_editor="$(_option_get_value "${1}" "${2:-}")"
         shift
         ;;
       --overwrite)
         _edit_type="overwrite"
         ;;
       --password)
-        _password="$(_option_get_value "${__arg}" "${__val:-}")"
+        _password="$(_option_get_value "${1}" "${2:-}")"
         shift
         ;;
       --prepend)
@@ -12491,7 +12573,7 @@ _edit() {
       *)
         if [[ -z "${_selector:-}" ]]
         then
-          _selector="${__arg:-}"
+          _selector="${1:-}"
         fi
         ;;
     esac
@@ -12694,9 +12776,9 @@ _env() {
          [[ "${_name}" == "ripgrep" ]]  && ! ((_x86_64_bit))
        }
     then
-      _warn printf "\
-Please install %s manually. No .deb package available for %s."  \
-        "$(_color_primary "${_name}")"                          \
+      _warn printf                                                      \
+        "Please install %s manually. No .deb package available for %s." \
+        "$(_color_primary "${_name}")"                                  \
         "$(_color_primary "${_arch}")"
       return 0
     fi
@@ -13560,10 +13642,7 @@ _move() {
 
   while ((${#}))
   do
-    local __arg="${1:-}"
-    local __val="${2:-}"
-
-    case "${__arg}" in
+    case "${1:-}" in
       -f|--force)
         _force=1
         ;;
@@ -13582,10 +13661,10 @@ _move() {
       *)
         if [[ -z "${_source_selector}"    ]]
         then
-          _source_selector="${__arg}"
+          _source_selector="${1}"
         elif [[ -z "${_target_selector}"  ]]
         then
-          _target_selector="${__arg}"
+          _target_selector="${1}"
         fi
         ;;
     esac
@@ -14203,14 +14282,12 @@ _search() {
   local _search_utility=
   local _selectors=()
   local _sort=0
+  local _tag_queries=()
   local _type=
 
   while ((${#}))
   do
-    local __arg="${1:-}"
-    local __val="${2:-}"
-
-    case "${__arg}" in
+    case "${1:-}" in
       -a|--all)
         _all=1
         ;;
@@ -14237,7 +14314,7 @@ _search() {
         shift
         ;;
       --page)
-        _page="$(_option_get_value "${__arg}" "${__val:-}")"
+        _page="$(_option_get_value "${1}" "${2:-}")"
         ((_page)) || _page=1
         shift
         ;;
@@ -14246,25 +14323,31 @@ _search() {
         _COLOR_ENABLED=0
         ;;
       --per*)
-        _per_page="$(_option_get_value "${__arg}" "${__val:-}")"
+        _per_page="$(_option_get_value "${1}" "${2:-}")"
         shift
         ;;
       -q|--query|-e)
-        _and_queries+=("$(_option_get_value "${__arg}" "${__val:-}")")
+        _and_queries+=("$(_option_get_value "${1}" "${2:-}")")
         shift
         ;;
       -s|--sort)
         _sort=1
         ;;
+      --tag)
+        local _tag_option_argument=
+        _tag_option_argument="$(_option_get_value "--or" "${2:-}")"
+        _tag_queries+=("#${_tag_option_argument#\#}")
+        shift
+        ;;
       --tags|--hashtags)
         _search_tags=1
         ;;
       --*tool|--*utility)
-        _search_utility="$(_option_get_value "${__arg}" "${__val:-}")"
+        _search_utility="$(_option_get_value "${1}" "${2:-}")"
         shift
         ;;
       --type)
-        _type="$(_option_get_value "${__arg}" "${__val:-}")"
+        _type="$(_option_get_value "${1}" "${2:-}")"
         shift
         ;;
       --use*grep)
@@ -14272,11 +14355,11 @@ _search() {
         _search_utility="grep"
         ;;
       *)
-        if [[ "${__arg:-}" =~ ^-- ]]
+        if [[ "${1:-}" =~ ^-- ]]
         then
-          _type="${__arg:2}"
+          _type="${1:2}"
         else
-          _arguments+=("${__arg}")
+          _arguments+=("${1}")
         fi
         ;;
     esac
@@ -14488,7 +14571,18 @@ _search() {
     return 0
   fi
 
-  if [[ -z "${_and_queries[*]:-}" ]]
+  if [[   -n "${_tag_queries[*]:-}" ]]
+  then
+    if [[ -z "${_and_queries[*]:-}" ]]
+    then
+      _and_queries+=("${_tag_queries[0]:-}")
+      _or_queries+=("${_tag_queries[@]:1}")
+    else
+      _or_queries+=("${_tag_queries[@]}")
+    fi
+  fi
+
+  if [[ -z "${_and_queries[*]:-}"   ]]
   then
     _exit_1 _help "search"
   fi
@@ -15431,10 +15525,7 @@ _show() {
 
   while ((${#}))
   do
-    local __arg="${1:-}"
-    local __val="${2:-}"
-
-    case "${__arg}" in
+    case "${1:-}" in
       --path)
         _print_path=1
         _skip_notebook_fallback=1
@@ -15475,16 +15566,16 @@ _show() {
         _skip_notebook_fallback=0
         ;;
       --page)
-        _list_page="$(_option_get_value "${__arg}" "${__val:-}")"
+        _list_page="$(_option_get_value "${1}" "${2:-}")"
         ((_list_page)) || _list_page=1
         shift
         ;;
       --per*)
-        _per_page="$(_option_get_value "${__arg}" "${__val:-}")"
+        _per_page="$(_option_get_value "${1}" "${2:-}")"
         shift
         ;;
       --password)
-        _password="$(_option_get_value "${__arg}" "${__val:-}")"
+        _password="$(_option_get_value "${1}" "${2:-}")"
         shift
         ;;
       -p|--print|--dump|--skip*pager|--no*pager)
@@ -15506,16 +15597,16 @@ _show() {
         _skip_notebook_fallback=1
         ;;
       --tool|--utility)
-        _tool="$(_option_get_value "${__arg}" "${__val:-}")"
+        _tool="$(_option_get_value "${1}" "${2:-}")"
         shift
         ;;
       --type)
         _check_type=1
         _skip_notebook_fallback=1
 
-        if _option_value_is_present "${__val:-}"
+        if _option_value_is_present "${2:-}"
         then
-          _type="${__val}"
+          _type="${2}"
           shift
         fi
         ;;
@@ -15529,9 +15620,9 @@ _show() {
       *)
         if [[ -z "${_selector:-}" ]]
         then
-          _selector="${__arg}"
+          _selector="${1}"
         else
-          _unresolved_arguments+=("${__arg}")
+          _unresolved_arguments+=("${1}")
         fi
         ;;
     esac
@@ -16034,15 +16125,15 @@ Can't show archives. Export archive and expand to edit.\\n"
           _resolve_links "${_notebook_path}" --type org
         } | {
           # avoid pandoc bug with brackets in Org link descriptions
-          sed -E                        \
-              -e "s/\]\[\[\[/\]\[••/g"  \
-              -e "s/\]\]\]\]/••\]\]/g"
+          sed -E                                      \
+              -e "s/\]\[\[\[/\]\[nb-placeholder-nb/g" \
+              -e "s/\]\]\]\]/nb-placeholder-nb\]\]/g"
         } | {
           pandoc --from org --to html
         } | {
-          sed -E                        \
-              -e "s/>••/>\[\[/g"        \
-              -e "s/••</\]\]</g"
+          sed -E                                      \
+              -e "s/>nb-placeholder-nb/>\[\[/g"       \
+              -e "s/nb-placeholder-nb</\]\]</g"
         } | {
           _render
         } | {
@@ -16106,12 +16197,14 @@ Can't show archives. Export archive and expand to edit.\\n"
           _target_extension="${_target_filename##*.}"
         fi
 
-        # NOTE: Temp character is U+241F (unit separator)
-        # https://graphemica.com/%E2%90%9F
         cat "${_target_path}"                                       \
-          | sed -e 's/^- /-␟/g' -e 's/^\* /\*␟/g'                   \
+          | sed -E                                                  \
+              -e "s/^([[:space:]]*-) /\1nb-ph-nb/g"                 \
+              -e "s/^([[:space:]]*\*) /\1nb-ph-nb/g"                \
           | fold -s -w "${_COLUMNS}"                                \
-          | sed -e 's/^-␟/- /g' -e 's/^\*␟/\* /g'                   \
+          | sed -E                                                  \
+              -e "s/^([[:space:]]*-)nb-ph-nb/\1 /g"                 \
+              -e "s/^([[:space:]]*\*)nb-ph-nb/\1 /g"                \
           | _highlight_syntax_if_available "${_target_extension:-}" \
           | _pager
       fi
@@ -16660,7 +16753,7 @@ _browse() {
 
     if [[ "${_selector:-}" =~ ^/    ]] &&
        [[ -d "${_selector}"         ]]
-    then # file alteady exists
+    then # file already exists
       _browse_respond_with 302 \
 "//${NB_SERVER_HOST}:${NB_SERVER_PORT}/$(_get_id_selector "${_selector:-}"  --notebook)"
     elif [[ -n "${_selector:-}"     ]]
@@ -16997,8 +17090,6 @@ HEREDOC
     } | {
       local _list_count=
       _list_count="$(_count "${_target_path}")"
-
-
 
       local _print_prev=0
 
@@ -17428,15 +17519,15 @@ HEREDOC
         --add|--delete|--edit)
           _action="${1#--}"
           ;;
-        --col*)         _columns="${2:?}"                     && shift  ;;
-        --local)        _encoded_local_notebook_path="${2:?}" && shift  ;;
-        --page)         _option_value_is_present     "${2:-}" && shift  ;;
-        --per*)         _per_page="${2:?}"                    && shift  ;;
-        --raw-url)      _raw_url="${2:?}"                     && shift  ;;
-        --terminal)     _terminal_browser=1                             ;;
-        --*)            _option_value_is_present "${2:-}"     && shift  ;;
-        -*)             :                                               ;;
-        *)              _selector="${1:-}"                              ;;
+        --col*)     _columns="${2:?}"                     && shift  ;;
+        --local)    _encoded_local_notebook_path="${2:?}" && shift  ;;
+        --page)     _option_value_is_present     "${2:-}" && shift  ;;
+        --per*)     _per_page="${2:?}"                    && shift  ;;
+        --raw-url)  _raw_url="${2:?}"                     && shift  ;;
+        --terminal) _terminal_browser=1                             ;;
+        --*)        _option_value_is_present "${2:-}"     && shift  ;;
+        -*)         :                                               ;;
+        *)          _selector="${1:-}"                              ;;
       esac
 
       shift
@@ -17778,15 +17869,20 @@ HEREDOC
           --type org
       } | {
         # avoid pandoc bug with brackets in Org link descriptions
-        sed -E                            \
-            -e "s/\]\[\[\[/\]\[••/g"      \
-            -e "s/\]\]\]\]/••\]\]/g"
+        sed -E                                      \
+            -e "s/\]\[\[\[/\]\[nb-placeholder-nb/g" \
+            -e "s/\]\]\]\]/nb-placeholder-nb\]\]/g"
       } | {
-        pandoc --from org --to html
+        if _command_exists "pandoc"
+        then
+          pandoc --from org --to html
+        else
+          cat
+        fi
       } | {
-        sed -E                            \
-            -e "s/>••/>\[\[/g"            \
-            -e "s/••</\]\]</g"
+        sed -E                                      \
+            -e "s/>nb-placeholder-nb/>\[\[/g"       \
+            -e "s/nb-placeholder-nb</\]\]</g"
       } | {
         # undo pandoc prepending "file://" to protocol-relative URLs
         sed -E -e "s/file:\/\/\/\//\/\//g"
@@ -17816,15 +17912,32 @@ HEREDOC
               _render_options+=("--bookmark")
             fi
 
-            printf "" | _render "${_source_path}" "${_render_options[@]:-}"
+            {
+              printf "" | _render "${_source_path}" "${_render_options[@]:-}"
+            } | {
+              if _command_exists "pandoc"
+              then
+                cat
+              else
+                if ! _contains "--terminal" "${_pagination_options[@]:-}"
+                then
+                  printf "<br>"
+                fi
+
+                sed -E -e "s/</\&lt;/g" -e "s/\//\&#47;/g" -e "s/.*/&<br>/g"
+              fi
+            }
             ;;
           *)
             { # begin media markup pipeline
               case "${_render_type:-}" in
                 audio)
+                  local _mime_type=
+                  _mime_type="$(file -b --mime-type "${_source_path}" 2>/dev/null || :)"
+
                   cat <<HEREDOC
 <audio controls>
-  <source src="${_raw_url}" type="$(file -b --mime-type "${_source_path}")">
+  <source src="${_raw_url}" type="${_mime_type:-}">
 </audio>
 HEREDOC
                   ;;
@@ -17851,9 +17964,12 @@ HEREDOC
                   fi
                   ;;
                 video)
+                  local _mime_type=
+                  _mime_type="$(file -b --mime-type "${_source_path}" 2>/dev/null || :)"
+
                   cat <<HEREDOC
 <video width="320" height="240" controls>
-  <source src="${_raw_url}" type="$(file -b --mime-type "${_source_path}")">
+  <source src="${_raw_url}" type="${_mime_type}">
 </video>
 HEREDOC
                   ;;
@@ -18459,9 +18575,9 @@ HEREDOC
   _browse_respond_with() {
     local _only_headers=0
     local _path=
+    local _read_from_standard_input=0
     local _serve_original_file=0
     local _status_code="${1:-}"
-    local _read_from_standard_input=0
     local _string=
 
     local _date=
@@ -18508,7 +18624,10 @@ HEREDOC
       then
         _response_headers+=("Content-Type: image/svg+xml")
       else
-        _response_headers+=("Content-Type: $(file -b --mime-type "${_path}")")
+        if _command_exists "file"
+        then
+          _response_headers+=("Content-Type: $(file -b --mime-type "${_path}")")
+        fi
       fi
 
       local _content_length=
@@ -18726,7 +18845,8 @@ HEREDOC
   then
     _show "${_selector:-}" --render
     _warn cat <<HEREDOC
-Install \`ncat\` for improved browsing and linking: https://nmap.org/ncat/
+Install \`ncat\` for full browsing and linking:
+$(_color_primary "https://nmap.org/ncat/")
 HEREDOC
     exit 0
   fi
@@ -18795,12 +18915,12 @@ HEREDOC
     then # set per page based on terminal height
       if [[ "${BROWSER:-}" =~ links   ]]
       then
-        _browse_per_page="$(($(tput lines) - 9))"
+        _browse_per_page="$(($(_tput lines) - 9))"
       elif [[ "${BROWSER:-}" =~ lynx  ]]
       then
-        _browse_per_page="$(($(tput lines) - 10))"
+        _browse_per_page="$(($(_tput lines) - 10))"
       else
-        _browse_per_page="$(($(tput lines) - 8))"
+        _browse_per_page="$(($(_tput lines) - 8))"
       fi
     fi
 
@@ -20737,11 +20857,13 @@ HEREDOC
 
      • Available themes:
 
-$(local __theme=
+$(
+  local __theme=
   for   __theme in "${_NB_COLOR_THEMES[@]}"
   do
     printf "         %s\\n" "$(_color_primary "${__theme}")"
-  done)
+  done
+)
 
      • Default Value: $(_color_primary "nb")")
 
@@ -20761,14 +20883,16 @@ $(local __theme=
 
      • Example Values:
 
-$(local __editor=
+$(
+  local __editor=
   for   __editor in atom code emacs macdown mate micro nano pico subl vi vim
   do
     if _command_exists "${__editor}"
     then
       printf "         %s\\n" "$(_color_primary "${__editor}")"
     fi
-  done)")
+  done
+)")
 
   _settings_list_items+=("$(_color_brackets '7')  encryption_tool")
   _settings_help_items+=("\
@@ -20827,27 +20951,27 @@ $(local __editor=
 
          $(_color_primary 'bat --list-themes')
 
-     $(if ! hash "bat" 2>/dev/null
-       then
-         printf "Install \`bat\` to enable themes: https://github.com/sharkdp/bat\\n"
-       else
-         printf "• Available themes:\\n"
-         printf "\\n"
+$(
+  if ! hash "bat" 2>/dev/null
+  then
+    printf "     Install \`bat\` to enable themes: https://github.com/sharkdp/bat\\n"
+  else
+    printf "     • Available themes:\\n"
+    printf "\\n"
 
-         local __theme=
-         for   __theme in $(bat --list-themes --color never)
-         do
-           printf "         %s\\n" "$(_color_primary "${__theme}")"
-         done
-       fi)
+    local __theme=
+    for   __theme in $(bat --list-themes --color never)
+    do
+      printf "         %s\\n" "$(_color_primary "${__theme}")"
+    done
+  fi
+)
 
      • Default Value: $(_color_primary 'base16')")
 
   while ((${#}))
   do
-    local __arg="${1:-}"
-
-    case "${__arg}" in
+    case "${1:-}" in
       color|colors)
         _settings_colors "${2:-}"
         return 0

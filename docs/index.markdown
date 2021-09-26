@@ -1,6 +1,6 @@
 ---
 layout: home
-title: nb · CLI plain text note-taking, bookmarking, and archiving.
+title: nb · command line and local web plain text note-taking, bookmarking, archiving, and knowledge base application
 permalink: /
 ---
 
@@ -325,30 +325,32 @@ the [`nb update`](#update) subcommand.
 ## Overview
 
 <p align="center">
-  <a href="#-notes">Notes</a>&nbsp;·
+  <a href="#-notes">📝&nbsp;Notes</a>&nbsp;·
   <a href="#adding">Adding</a>&nbsp;·
   <a href="#listing--filtering">Listing</a>&nbsp;·
   <a href="#editing">Editing</a>&nbsp;·
   <a href="#viewing">Viewing</a>&nbsp;·
   <a href="#deleting">Deleting</a>&nbsp;·
-  <a href="#-bookmarks">Bookmarks</a>&nbsp;·
-  <a href="#-tagging">Tagging</a>&nbsp;·
-  <a href="#-linking">Linking</a>&nbsp;·
-  <a href="#-browsing">Browsing</a>&nbsp;·
-  <a href="#-zettelkasten">Zettelkasten</a>&nbsp;·
-  <a href="#-folders">Folders</a>&nbsp;·
-  <a href="#-pinning">Pinning</a>&nbsp;·
-  <a href="#-search">Search</a>&nbsp;·
-  <a href="#moving--renaming">Moving&nbsp;&&nbsp;Renaming</a>&nbsp;·
-  <a href="#-revision-history">History</a>&nbsp;·
-  <a href="#-notebooks">Notebooks</a>&nbsp;·
-  <a href="#-git-sync">Git&nbsp;Sync</a>&nbsp;·
-  <a href="#%EF%B8%8F-import--export">Import&nbsp;/&nbsp;Export</a>&nbsp;·
-  <a href="#%EF%B8%8F-set--settings"><code>set</code>&nbsp;&&nbsp;<code>settings</code></a>&nbsp;·
-  <a href="#-color-themes">Color&nbsp;Themes</a>&nbsp;·
-  <a href="#-plugins">Plugins</a>&nbsp;·
-  <a href="#selectors">Selectors</a>&nbsp;·
-  <a href="#-nb-interactive-shell">Shell</a>&nbsp;·
+  <a href="#-bookmarks">🔖&nbsp;Bookmarks</a>&nbsp;·
+  <a href="#-tagging">🏷&nbsp;Tagging</a>&nbsp;·
+  <a href="#-linking">🔗&nbsp;Linking</a>&nbsp;·
+  <a href="#-browsing">🌍&nbsp;Browsing</a>&nbsp;·
+  <a href="#-images">🌄&nbsp;Images</a>&nbsp;·
+  <a href="#-zettelkasten">🗂&nbsp;Zettelkasten</a>&nbsp;·
+  <a href="#-folders">📂&nbsp;Folders</a>&nbsp;·
+  <a href="#-pinning">📌&nbsp;Pinning</a>&nbsp;·
+  <a href="#-search">🔍&nbsp;Search</a>&nbsp;·
+  <a href="#-moving--renaming">↔&nbsp;Moving&nbsp;&&nbsp;Renaming</a>&nbsp;·
+  <a href="#-revision-history">🗒&nbsp;History</a>&nbsp;·
+  <a href="#-notebooks">📚&nbsp;Notebooks</a>&nbsp;·
+  <a href="#-git-sync">🔄&nbsp;Git&nbsp;Sync</a>&nbsp;·
+  <a href="#%EF%B8%8F-import--export">↕️&nbsp;Import&nbsp;/&nbsp;Export</a>&nbsp;·
+  <a href="#%EF%B8%8F-set--settings">⚙️&nbsp;<code>set</code>&nbsp;&&nbsp;<code>settings</code></a>&nbsp;·
+  <a href="#-color-themes">🎨&nbsp;Color&nbsp;Themes</a>&nbsp;·
+  <a href="#-plugins">🔌&nbsp;Plugins</a>&nbsp;·
+  <a href="#-selectors"><code>:/</code>&nbsp;Selectors</a>&nbsp;·
+  <a href="#01-metadata"><code>01</code>&nbsp;Metadata</a>&nbsp;·
+  <a href="#-nb-interactive-shell"><code>❯</code>&nbsp;Shell</a>&nbsp;·
   <a href="#shortcut-aliases">Shortcuts</a>&nbsp;·
   <a href="#help">Help</a>&nbsp;·
   <a href="#specifications">Specifications</a>&nbsp;·
@@ -378,7 +380,7 @@ regardless of the current working directory.
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#add"><code>nb add</code></a>,
     <a href="#browse"><code>nb browse add</code></a>
   </sup>
@@ -697,7 +699,7 @@ For more information, see [Browsing](#-browsing).
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#ls"><code>nb ls</code></a>,
     <a href="#list"><code>nb list</code></a>,
     <a href="#browse"><code>nb browse</code></a>
@@ -705,15 +707,6 @@ For more information, see [Browsing](#-browsing).
 </p>
 
 To list notes and notebooks, run [`nb ls`](#ls) (shortcut alias: `nb`):
-
-```bash
-❯ nb ls
-home
-----
-[3] example.md · "Example content."
-[2] todos.md · "Todos:"
-[1] ideas.md · "- Example idea one."
-```
 
 <p align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/nb-theme-utility-home.png"
@@ -728,6 +721,15 @@ depending on terminal capabilities.
 The notebook header and command footer can be configured or hidden with
 [`nb set header`](#header) and
 [`nb set footer`](#footer).
+
+```bash
+❯ nb ls
+home
+----
+[3] example.md · "Example content."
+[2] todos.md · "Todos:"
+[1] ideas.md · "- Example idea one."
+```
 
 Notes from the current notebook are listed in the order they were last modified.
 By default, each note is listed with its
@@ -1018,6 +1020,47 @@ home
 [1] Example One
 ```
 
+Lists can be paginated with `-p <number>` / `--page <number>`,
+which paginates by the value of [`nb set limit`](#limit) by
+default, or the value of
+`-n <limit>`,
+`--limit <limit>`,
+or `--<limit>`
+when present:
+
+```bash
+❯ nb
+home
+----
+[6] Example Six
+[5] Example Five
+[4] Example Four
+[3] Example Three
+[2] Example Two
+[1] Example One
+
+❯ nb set limit 3
+NB_LIMIT set to 3
+
+❯ nb --page 1
+[6] Example Six
+[5] Example Five
+[4] Example Four
+
+❯ nb -p 2
+[3] Example Three
+[2] Example Two
+[1] Example One
+
+❯ nb -p 2 --limit 2
+[4] Example Four
+[3] Example Three
+
+❯ nb -p 3 --2
+[2] Example Two
+[1] Example One
+```
+
 `nb ls` is a combination of
 [`nb notebooks`](#notebooks) and [`nb list`](#list)
 in one view and accepts the same arguments as `nb list`,
@@ -1064,7 +1107,7 @@ For more information, see [Browsing](#-browsing).
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#edit"><code>nb edit</code></a>,
     <a href="#browse"><code>nb browse edit</code></a>
   </sup>
@@ -1194,7 +1237,7 @@ For more information, see
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#show"><code>nb show</code></a>,
     <a href="#browse"><code>nb browse</code></a>,
     <a href="#open"><code>nb open</code></a>,
@@ -1297,7 +1340,7 @@ Supported file types and tools include:
   - [`afplay`](https://ss64.com/osx/afplay.html)
   - [`mpg123`](https://en.wikipedia.org/wiki/Mpg123)
   - [`ffplay`](https://ffmpeg.org/ffplay.html)
-- Images:
+- [Images](#-images):
   - [ImageMagick](https://imagemagick.org/) with a terminal that
     supports [sixels](https://en.wikipedia.org/wiki/Sixel)
   - [`imgcat`](https://www.iterm2.com/documentation-images.html) with
@@ -1431,14 +1474,14 @@ For more information, see [Browsing](#-browsing).
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#delete"><code>nb delete</code></a>,
     <a href="#browse"><code>nb browse delete</code></a>
   </sup>
 </p>
 
 To delete one or more notes, pass any number of
-ids, filenames, titles, and other [selectors](#selectors)
+ids, filenames, titles, and other [selectors](#-selectors)
 to [`nb delete`](#delete) (shortcuts: `nb d`, `nb -`):
 
 ```bash
@@ -1515,13 +1558,12 @@ Items can be deleted within terminal and GUI web browsers using
 ❯ nb browse delete example:4
 ❯nb · example : 4 · ↓ · edit · - | +
 
-                deleting
+              deleting
 
 [4] example_file.md "Example Title"
 
-                [delete]
-
-
+              [delete]
+ 
 ```
 
 For more information, see [Browsing](#-browsing).
@@ -1530,7 +1572,7 @@ For more information, see [Browsing](#-browsing).
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#nb-help"><code>nb&nbsp;&lt;url&gt;</code></a>,
     <a href="#browse"><code>nb&nbsp;browse</code></a>,
     <a href="#bookmark"><code>nb&nbsp;bookmark</code></a>,
@@ -1811,7 +1853,7 @@ Add: nb <url> Help: nb help bookmark
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#browse"><code>nb&nbsp;browse</code></a>,
     <a href="#open"><code>nb&nbsp;open</code></a>,
     <a href="#peek"><code>nb&nbsp;peek</code></a>,
@@ -2038,7 +2080,7 @@ See [`bookmark help`](#bookmark-help) for more information.
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#add"><code>nb add</code></a>,
     <a href="#bookmark"><code>nb bookmark</code></a>,
     <a href="#browse"><code>nb browse</code></a>,
@@ -2208,7 +2250,7 @@ For more information about browsing, see
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#browse"><code>nb browse</code></a>
   </sup>
 </p>
@@ -2271,13 +2313,13 @@ providing a convenient option for linking collections of Org files.
 
 Linked items can be [browsed](#-browsing) with [`nb browse`](#browse).
 
-For more information about identifying items, see [Selectors](#selectors).
+For more information about identifying items, see [Selectors](#-selectors).
 
 ### 🌍 Browsing
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#browse"><code>nb browse</code></a>
   </sup>
 </p>
@@ -2356,7 +2398,7 @@ or in the browser set in the `$BROWSER` environment variable.
 Use [`nb browse --gui`](#browse) / [`nb br -g`](#browse) to
 open in the system's primary [GUI web browser](#browse---gui).
 
-To open a specific item in `nb browse`, pass the [selector](#selectors)
+To open a specific item in `nb browse`, pass the [selector](#-selectors)
 for the item, folder, or notebook to `nb browse`:
 
 ```bash
@@ -2533,8 +2575,7 @@ to delete an item:
 [4] example_file.md "Example Title"
 
               [delete]
-
-
+ 
 ```
 
 #### `browse` Search
@@ -2670,11 +2711,135 @@ nb br sample: -g
 
 For more information, see [`nb browse`](#browse).
 
+### 🌄 Images
+
+<p>
+  <sup>
+    <a href="#overview">↑</a> ·
+    <a href="#browse"><code>nb browse</code></a>,
+    <a href="#import"><code>nb import</code></a>,
+    <a href="#open"><code>nb open</code></a>,
+    <a href="#show"><code>nb show</code></a>
+  </sup>
+</p>
+
+`nb` can be used to view, organize, browse, reference, and work with images in
+terminals,
+web browsers,
+and GUI applications.
+
+#### Image Items
+
+[Import](#%EF%B8%8F-import--export) images with [`nb import`](#import):
+
+```bash
+# import the image file "example.png" into the current notebook
+nb import example.png
+
+# import an image file from a URL into the current notebook
+nb import https://raw.githubusercontent.com/xwmx/nb/master/docs/images/nb.png
+
+# nb import "sample.jpg" into the "demo" folder in the "example" notebook
+nb import sample.jpg example:demo/
+```
+
+Imported images are displayed with [`🌄` indicators](#indicators) in
+[lists](#listing--filtering):
+
+```bash
+❯ nb
+home
+----
+[5] Example Five
+[4] 🌄 example-image.png
+[3] Example Three
+[2] Example Two
+[1] Example One
+```
+
+Imported image items can be opened in the system GUI application for
+the item's file type using [`nb open`](#open):
+
+```
+# open the image "example-image.png" in the system GUI photo viewer
+nb open example-image.png
+
+# open the image with id "4" in the system GUI photo viewer
+nb 4 o
+```
+
+Image items can be viewed in web browsers with [`nb browse`](#browse),
+providing a convenient mechanism for
+[browsing](#-browsing) notebooks and folders containing image collections.
+
+[`nb browse`](#browse) renders image items within in an `<img>` tag
+on the item page. Open the item page for an image item by passing a
+[selector](#-selectors) to `nb browse`, optionally including the
+`-g` / `--gui` option to open the page in the system GUI web browser:
+
+```bash
+# open item with id "123" in the terminal web browser
+nb browse 123
+
+# open item with id "456" in the "example" notebook in the GUI web browser
+nb browse example:456 --gui
+
+# open item "example:456" in the GUI web browser, alternative
+nb example:456 br -g
+```
+
+The original file can be viewed or downloaded from the item page
+by either clicking the image item or using the down arrow (`↓`) link.
+
+[`nb browse --gui`](#browse---gui) displays images in any GUI web browser.
+Some terminal web browsers, such as [`w3m`](http://w3m.sourceforge.net/),
+can be configured to display images.
+
+[`nb show`](#show) can display images directly in the terminal with
+supported tools and configurations, including:
+
+- [ImageMagick](https://imagemagick.org/) with a terminal that
+  supports [sixels](https://en.wikipedia.org/wiki/Sixel)
+- [`imgcat`](https://www.iterm2.com/documentation-images.html) with
+  [iTerm2](https://www.iterm2.com/)
+- [kitty's `icat` kitten](https://sw.kovidgoyal.net/kitty/kittens/icat.html)
+
+#### Inline Images
+
+Images can be referenced and rendered inline within
+notes, bookmarks, and other items.
+
+To reference an image in the same notebook,
+specify the image's relative path within the notebook:
+
+```markdown
+# reference "example.jpg" from markdown
+![](example.jpg)
+
+# reference "demo.png" in the "sample" folder from markdown
+![](sample/demo.png)
+```
+
+Images in any notebook can be referenced using the `--original` URL,
+obtainable from the image's [`nb browse`](#browse) item page
+by either clicking the image item or using the down arrow (`↓`) link.
+
+```markdown
+# reference "example.jpg" in the "home" notebook with the --original URL
+![](http://localhost:6789/--original/home/example.jpg)
+```
+
+Image references in content are rendered inline within web browsers with
+[`nb browse`](#browse) and [`nb show --render`](#show).
+
+`<img>` tags are stripped from bookmarked content when rendering to HTML.
+Inline images can still be used in other bookmark sections like `## Comment`.
+
 ### 🗂 Zettelkasten
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>
+    <a href="#overview">↑</a>
   </sup>
 </p>
 
@@ -2694,7 +2859,7 @@ organized in normal system directories in normal git repositories,
 |    Zettelkasten   |                       `nb`                    |
 |:-----------------:|:---------------------------------------------:|
 | index cards       | [notes](#-notes) & [bookmarks](#-bookmarks)   |
-| numbering         | ids & [selectors](#selectors)                 |
+| numbering         | ids & [selectors](#-selectors)                 |
 | slip boxes        | [notebooks](#-notebooks)                      |
 | tags              | [#tags](#-tagging)                            |
 | metadata          | [front matter](#front-matter)                 |
@@ -2708,7 +2873,7 @@ For more information about Zettelkasten, see
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>
+    <a href="#overview">↑</a>
   </sup>
 </p>
 
@@ -2817,13 +2982,13 @@ search: [                    ]
 [example:sample/demo/1] Title One
 ```
 
-For more information about identifying folders, see [Selectors](#selectors).
+For more information about identifying folders, see [Selectors](#-selectors).
 
 ### 📌 Pinning
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#pin"><code>nb pin</code></a>,
     <a href="#unpin"><code>nb unpin</code></a>,
     <a href="#ls"><code>nb ls</code></a>,
@@ -2922,7 +3087,7 @@ home
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#search"><code>nb search</code></a>
   </sup>
 </p>
@@ -3092,11 +3257,11 @@ search: [#example             ]
 
 For more information, see [Browsing](#-browsing).
 
-### Moving & Renaming
+### ↔ Moving & Renaming
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#move"><code>nb move</code></a>
   </sup>
 </p>
@@ -3165,7 +3330,7 @@ To copy items, install the [`copy` / `duplicate` plugin](#copy).
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#history"><code>nb history</code></a>,
     <a href="#notebooks"><code>nb notebooks author</code></a>
   </sup>
@@ -3242,7 +3407,7 @@ history, create the new notebook using
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#notebooks"><code>nb&nbsp;notebooks</code></a>,
     <a href="#archive"><code>nb&nbsp;archive</code></a>,
     <a href="#unarchive"><code>nb&nbsp;unarchive</code></a>,
@@ -3657,7 +3822,7 @@ For technical details about notebooks, see
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#remote"><code>nb remote</code></a>,
     <a href="#sync"><code>nb sync</code></a>
   </sup>
@@ -3871,7 +4036,7 @@ that could inform a strategy for handling any such cases automatically.
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#import"><code>nb import</code></a>,
     <a href="#export"><code>nb export</code></a>
   </sup>
@@ -3983,7 +4148,7 @@ For `nb import` and `nb export` help information, see
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#settings"><code>nb settings</code></a>,
     <a href="#unset"><code>nb unset</code></a>
   </sup>
@@ -4090,7 +4255,7 @@ For more information about `set` and `settings`, see
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#color_theme"><code>nb&nbsp;set&nbsp;color_theme</code></a>,
     <a href="#syntax_theme"><code>nb&nbsp;set&nbsp;syntax_theme</code></a>,
     <a href="#color_primary"><code>nb&nbsp;set&nbsp;color_primary</code></a>,
@@ -4099,7 +4264,7 @@ For more information about `set` and `settings`, see
 </p>
 
 `nb` uses color to highlight various interface elements, including
-ids and [selectors](#selectors),
+ids and [selectors](#-selectors),
 the current notebook name,
 the shell prompt,
 divider lines,
@@ -4308,7 +4473,7 @@ export  NB_INDICATOR_VIDEO="📹"
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#plugins"><code>nb plugins</code></a>
   </sup>
 </p>
@@ -4458,7 +4623,7 @@ _notebooks current --path
 ```
 
 `nb` automatically scans arguments for
-[selectors](#selectors) with notebook names
+[selectors](#-selectors) with notebook names
 and updates the current notebook if a valid one is found.
 
 Identifier selectors are passed to subcommands as arguments along with
@@ -4500,11 +4665,11 @@ for a practical example using both [`show <selector> --filename`](#show) and
 [`notebooks current --path`](#notebooks) along with other
 subcommands called using their underscore-prefixed function names.
 
-### Selectors
+### `:/` Selectors
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>
+    <a href="#overview">↑</a>
   </sup>
 </p>
 
@@ -4512,8 +4677,11 @@ Items in `nb` are primarily identified using structured arguments called
 "selectors." Selectors are like addresses for notebooks, folders, and items.
 A selector can be as simple as an id like `123` or folder path like `example/`,
 or it can combine multiple elements to identify
-an item in a nested folder within a particular notebook, such as
-`cli:tools/shellcheck/home-page.bookmark.md`.
+an item in a nested folder within a particular notebook, such as:
+
+```bash
+cli:tools/shellcheck/home-page.bookmark.md
+```
 
 An item, folder, or notebook selector is constructed by specifying the
 notebook name, folder path, and / or item identifier
@@ -4644,7 +4812,13 @@ notebook:a
 notebook:q
 ```
 
-### Metadata
+### `01` Metadata
+
+<p>
+  <sup>
+    <a href="#overview">↑</a>
+  </sup>
+</p>
 
 Metadata in `nb` is primarily derived from git, the filesystem, and file
 content. For example, displayed timestamps are derived from
@@ -4674,9 +4848,9 @@ by a key name with a colon followed by the value:
 
 ```markdown
 ---
-title: Example Title
+title:  Example Title
 author: xwmx
-year: 2021
+year:   2021
 ---
 
 Example content.
@@ -4701,7 +4875,7 @@ capabilities.
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>·
+    <a href="#overview">↑</a> ·
     <a href="#shell"><code>nb shell</code></a>
   </sup>
 </p>
@@ -4765,7 +4939,7 @@ providing a streamlined, distraction-free approach for working with `nb`.
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>
+    <a href="#overview">↑</a>
   </sup>
 </p>
 
@@ -4874,7 +5048,7 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
 
 #### `nb help`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [`help`](#help-1)
 
 ```text
@@ -4949,15 +5123,16 @@ Usage:
   nb init [<remote-url> [<branch>]] [--author] [--email <email>]
           [--name <name>]
   nb list [-e [<length>] | --excerpt [<length>]] [--filenames]
-          [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
-          [--no-indicator] [-p | --pager] [--paths] [-s | --sort]
-          [-r | --reverse] [--tags] [-t <type> | --type <type> | --<type>]
+          [-n <limit> | --limit <limit> | --<limit>] [--no-id]
+          [--no-indicator] [-p <number> | --page <number>] [--pager]
+          [--paths] [-s | --sort] [-r | --reverse] [--tags]
+          [-t <type> | --type <type> | --<type>]
           [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
   nb ls [-a | --all] [-b | --browse] [-e [<length>] | --excerpt [<length>]]
         [--filenames] [-g | --gui] [-n <limit> | --limit <limit> | --<limit>]
-        [--no-footer] [--no-header] [--no-id] [--no-indicator] [-p | --pager]
-        [--paths] [-s | --sort] [-r | --reverse] [--tags]
-        [-t <type> | --type <type> | --<type>]
+        [--no-footer] [--no-header] [--no-id] [--no-indicator]
+        [-p <number> | --page <number>] [--pager] [--paths] [-s | --sort]
+        [-r | --reverse] [--tags] [-t <type> | --type <type> | --<type>]
         [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
   nb move ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note |
@@ -5075,7 +5250,7 @@ More Information:
 
 #### `bookmark help`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Bookmarks](#-bookmarks),
 [`bookmark`](#bookmark),
 [`browse`](#browse)
@@ -5235,7 +5410,7 @@ For more information, see: `nb help`.
 
 #### `add`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Adding](#adding),
 [`bookmark`](#bookmark),
 [`browse`](#browse),
@@ -5324,7 +5499,7 @@ Shortcut Aliases:
 
 #### `archive`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Archiving Notebooks](#archiving-notebooks),
 [`notebooks`](#notebooks),
 [`status`](#status),
@@ -5357,7 +5532,7 @@ Shortcut Alias:
 
 #### `bookmark`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Bookmarks](#-bookmarks),
 [`browse`](#browse),
 [`open`](#open),
@@ -5464,8 +5639,9 @@ Shortcut Alias:
 
 #### `browse`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Browsing](#-browsing),
+[Images](#-images),
 [Linking](#-linking),
 [`add`](#add),
 [`delete`](#delete),
@@ -5476,8 +5652,7 @@ Shortcut Alias:
 [`peek`](#peek),
 [`pin`](#pin),
 [`search`](#search),
-[`show`](#show),
-[`unpin`](#unpin)
+[`show`](#show)
 
 ```text
 Usage:
@@ -5567,7 +5742,7 @@ Shortcut Alias:
 
 #### `completions`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Tab Completion](https://github.com/xwmx/nb/tree/master/etc),
 [`env`](#env)
 
@@ -5603,7 +5778,7 @@ Description:
 
 #### `delete`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Deleting](#deleting),
 [`add`](#add),
 [`browse`](#browse),
@@ -5652,7 +5827,7 @@ Shortcut Aliases:
 
 #### `edit`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Editing](#editing),
 [`add`](#add),
 [`browse`](#browse),
@@ -5716,7 +5891,7 @@ Shortcut Alias:
 
 #### `env`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Installation](#installation),
 [`completions`](#completions),
 [`init`](#init),
@@ -5746,7 +5921,7 @@ See Also:
 
 #### `export`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Import / Export](#%EF%B8%8F-import--export),
 [`import`](#import)
 
@@ -5801,7 +5976,7 @@ Examples:
 
 #### `git`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Git Sync](#-git-sync),
 [History](#-revision-history),
 [`history`](#history),
@@ -5818,8 +5993,8 @@ Usage:
 Subcommands:
   checkpoint    Create a new git commit in the current notebook and sync with
                 the remote if `nb set auto_sync` is enabled.
-  dirty         0 (success, true) if there are uncommitted changes in
-                <notebook-path>. 1 (error, false) if <notebook-path> is clean.
+  dirty         0 (success, true) if there are uncommitted changes in the
+                current notebook. 1 (error, false) if the notebook is clean.
 
 Description:
   Run `git` commands within the current notebook directory.
@@ -5844,7 +6019,7 @@ Examples:
 
 #### `help`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [`nb help`](#nb-help)
 
 ```text
@@ -5875,7 +6050,7 @@ Shortcut Alias:
 
 #### `history`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [History](#-revision-history),
 [Git Sync](#-git-sync),
 [`git`](#git),
@@ -5916,8 +6091,9 @@ Examples:
 
 #### `import`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Import / Export](#%EF%B8%8F-import--export),
+[Images](#-images),
 [`add`](#add),
 [`export`](#export)
 
@@ -5964,7 +6140,7 @@ Shortcut Alias:
 
 #### `init`
 
-[↑&nbsp;](#help)· See also: [`notebooks`](#notebooks)
+[↑](#help) · See also: [`notebooks`](#notebooks)
 
 ```text
 Usage:
@@ -5995,7 +6171,7 @@ Examples:
 
 #### `list`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Listing & Filtering](#listing--filtering),
 [`browse`](#browse),
 [`ls`](#ls),
@@ -6006,9 +6182,10 @@ Examples:
 ```text
 Usage:
   nb list [-e [<length>] | --excerpt [<length>]] [--filenames]
-          [-n <limit> | --limit <limit> |  --<limit>] [--no-id]
-          [--no-indicator] [-p | --pager] [--paths] [-s | --sort]
-          [-r | --reverse] [--tags] [-t <type> | --type <type> | --<type>]
+          [-n <limit> | --limit <limit> | --<limit>] [--no-id]
+          [--no-indicator] [-p <number> | --page <number>] [--pager]
+          [--paths] [-s | --sort] [-r | --reverse] [--tags]
+          [-t <type> | --type <type> | --<type>]
           [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
 
 Options:
@@ -6018,7 +6195,9 @@ Options:
   -n, --limit <limit>, --<limit>  The maximum number of notes to list.
   --no-id                         Don't include the id in list items.
   --no-indicator                  Don't include the indicator in list items.
-  -p, --pager                     Display output in the pager.
+  -p, --page <number>             The page to view in the list paginated by
+                                  a <limit> option or `nb set limit`.
+  --pager                         Display output in the pager.
   --paths                         Print the full path to each item.
   -s, --sort                      Order notes by id.
   -r, --reverse                   List items in reverse order.
@@ -6069,7 +6248,7 @@ Examples:
 
 #### `ls`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Listing & Filtering](#listing--filtering),
 [`browse`](#browse),
 [`list`](#list),
@@ -6081,9 +6260,9 @@ Examples:
 Usage:
   nb ls [-a | --all] [-b | --browse] [-e [<length>] | --excerpt [<length>]]
         [--filenames] [-g | --gui] [-n <limit> | --limit <limit> | --<limit>]
-        [--no-footer] [--no-header] [--no-id] [--no-indicator] [-p | --pager]
-        [--paths] [-s | --sort] [-r | --reverse] [--tags]
-        [-t <type> | --type <type> | --<type>]
+        [--no-footer] [--no-header] [--no-id] [--no-indicator]
+        [-p <number> | --page <number>] [--pager] [--paths] [-s | --sort]
+        [-r | --reverse] [--tags] [-t <type> | --type <type> | --<type>]
         [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
 
 Options:
@@ -6102,7 +6281,9 @@ Options:
   --no-footer                     Print without footer.
   --no-id                         Don't include the id in list items.
   --no-indicator                  Don't include the indicator in list items.
-  -p, --pager                     Display output in the pager.
+  -p, --page <number>             The page to view in the list paginated by
+                                  a <limit> option or `nb set limit`.
+  --pager                         Display output in the pager.
   --paths                         Print the full path to each item.
   -s, --sort                      Order notes by id.
   -r, --reverse                   List items in reverse order.
@@ -6162,8 +6343,8 @@ Examples:
 
 #### `move`
 
-[↑&nbsp;](#help)· See also:
-[Moving & Renaming](#moving--renaming),
+[↑](#help) · See also:
+[Moving & Renaming](#-moving--renaming),
 [`delete`](#delete),
 [`edit`](#edit)
 
@@ -6226,7 +6407,7 @@ Shortcut Alias:
 
 #### `notebooks`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Notebooks](#-notebooks),
 [`archive`](#archive),
 [`history`](#history),
@@ -6346,8 +6527,9 @@ Shortcut Aliases:
 
 #### `open`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Viewing Bookmarks](#viewing-bookmarks),
+[Images](#-images),
 [`bookmark`](#bookmark),
 [`browse`](#browse),
 [`peek`](#peek),
@@ -6390,7 +6572,7 @@ Shortcut Alias:
 
 #### `peek`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Viewing Bookmarks](#viewing-bookmarks),
 [`bookmark`](#bookmark),
 [`browse`](#browse),
@@ -6442,7 +6624,7 @@ Shortcut Alias:
 
 #### `pin`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Pinning](#-pinning),
 [`browse`](#browse),
 [`list`](#list),
@@ -6472,7 +6654,7 @@ Examples:
 
 #### `plugins`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Plugins](#-plugins),
 [`subcommands`](#subcommands-1)
 
@@ -6506,7 +6688,7 @@ See Also:
 
 #### `remote`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Git Sync](#-git-sync),
 [History](#-revision-history),
 [`history`](#history),
@@ -6557,7 +6739,7 @@ Examples:
 
 #### `run`
 
-[↑&nbsp;](#help)· See also: [`git`](#git), [`shell`](#shell)
+[↑](#help) · See also: [`git`](#git), [`shell`](#shell)
 
 ```text
 Usage:
@@ -6578,7 +6760,7 @@ Examples:
 
 #### `search`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Search](#-search),
 [`browse`](#browse),
 [`list`](#list),
@@ -6664,7 +6846,7 @@ Shortcut Alias:
 
 #### `settings`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [`set` & `settings`](#%EF%B8%8F-set--settings),
 [`unset`](#unset)
 
@@ -6723,7 +6905,7 @@ Alias:
 
 ##### `auto_sync`
 
-[↑&nbsp;](#help)· See also: [Git Sync](#-git-sync)
+[↑](#help) · See also: [Git Sync](#-git-sync)
 
 ```text
 [1]  auto_sync
@@ -6737,7 +6919,7 @@ Alias:
 
 ##### `color_primary`
 
-[↑&nbsp;](#help)· See also: [Color Themes](#-color-themes), [Custom Color Themes](#custom-color-themes)
+[↑](#help) · See also: [Color Themes](#-color-themes), [Custom Color Themes](#custom-color-themes)
 
 ```text
 [2]  color_primary
@@ -6751,7 +6933,7 @@ Alias:
 
 ##### `color_secondary`
 
-[↑&nbsp;](#help)· See also: [Color Themes](#-color-themes), [Custom Color Themes](#custom-color-themes)
+[↑](#help) · See also: [Color Themes](#-color-themes), [Custom Color Themes](#custom-color-themes)
 
 ```text
 [3]  color_secondary
@@ -6764,7 +6946,7 @@ Alias:
 
 ##### `color_theme`
 
-[↑&nbsp;](#help)· See also: [Color Themes](#-color-themes)
+[↑](#help) · See also: [Color Themes](#-color-themes)
 
 ```text
 [4]  color_theme
@@ -6802,7 +6984,7 @@ Alias:
 
 ##### `default_extension`
 
-[↑&nbsp;](#help)· See also: [Adding](#adding)
+[↑](#help) · See also: [Adding](#adding)
 
 ```text
 [5]  default_extension
@@ -6816,7 +6998,7 @@ Alias:
 
 ##### `editor`
 
-[↑&nbsp;](#help)· See also: [Editing](#editing), [Adding](#adding)
+[↑](#help) · See also: [Editing](#editing), [Adding](#adding)
 
 ```text
 [6]  editor
@@ -6840,7 +7022,7 @@ Alias:
 
 ##### `encryption_tool`
 
-[↑&nbsp;](#help)· See also: [Password-Protected Encrypted Notes and Bookmarks](#password-protected-encrypted-notes-and-bookmarks)
+[↑](#help) · See also: [Password-Protected Encrypted Notes and Bookmarks](#password-protected-encrypted-notes-and-bookmarks)
 
 ```text
 [7]  encryption_tool
@@ -6853,7 +7035,7 @@ Alias:
 
 ##### `footer`
 
-[↑&nbsp;](#help)· See also: [Listing & Filtering](#listing--filtering)
+[↑](#help) · See also: [Listing & Filtering](#listing--filtering)
 
 ```text
 [8]  footer
@@ -6866,7 +7048,7 @@ Alias:
 
 ##### `header`
 
-[↑&nbsp;](#help)· See also: [Listing & Filtering](#listing--filtering)
+[↑](#help) · See also: [Listing & Filtering](#listing--filtering)
 
 ```text
 [9]  header
@@ -6888,7 +7070,7 @@ Alias:
 
 ##### `limit`
 
-[↑&nbsp;](#help)· See also: [Listing & Filtering](#listing--filtering)
+[↑](#help) · See also: [Listing & Filtering](#listing--filtering)
 
 ```text
 [10] limit
@@ -6915,7 +7097,7 @@ Alias:
 
 ##### `syntax_theme`
 
-[↑&nbsp;](#help)· See also: [Terminal Syntax Highlighting](#terminal-syntax-highlighting-theme)
+[↑](#help) · See also: [Terminal Syntax Highlighting](#terminal-syntax-highlighting-theme)
 
 ```text
 [12] syntax_theme
@@ -6955,7 +7137,7 @@ Alias:
 
 #### `shell`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Interactive Shell](#-nb-interactive-shell),
 [`run`](#run)
 
@@ -6997,8 +7179,9 @@ Example:
 
 #### `show`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Viewing](#viewing),
+[Images](#-images),
 [`browse`](#browse),
 [`open`](#open),
 [`peek`](#peek)
@@ -7100,7 +7283,7 @@ Shortcut Alias: `nb s`
 
 #### `status`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Git Sync](#-git-sync),
 [History](#-revision-history),
 [`archive`](#archive),
@@ -7139,7 +7322,7 @@ Shortcut Alias:
 
 #### `subcommands`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Plugins](#-plugins),
 [`plugins`](#plugins)
 
@@ -7170,7 +7353,7 @@ See Also:
 
 #### `sync`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Git Sync](#-git-sync),
 [History](#-revision-history),
 [`history`](#history),
@@ -7229,7 +7412,7 @@ Examples:
 
 #### `unarchive`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Archiving Notebooks](#archiving-notebooks),
 [`archive`](#archive),
 [`notebooks`](#notebooks),
@@ -7262,7 +7445,7 @@ Shortcut Alias:
 
 #### `unpin`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Pinning](#-pinning),
 [`browse`](#browse),
 [`list`](#list),
@@ -7292,7 +7475,7 @@ Examples:
 
 #### `unset`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [`set` & `settings`](#%EF%B8%8F-set--settings),
 [`settings`](#settings)
 
@@ -7321,7 +7504,7 @@ Alias:
 
 #### `update`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Installation](#installation),
 [`env`](#env),
 [`version`](#version)
@@ -7348,7 +7531,7 @@ See Also:
 
 #### `use`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Notebooks](#-notebooks),
 [`notebooks`](#notebooks)
 
@@ -7374,7 +7557,7 @@ Shortcut Alias:
 
 #### `version`
 
-[↑&nbsp;](#help)· See also:
+[↑](#help) · See also:
 [Installation](#installation),
 [`env`](#env),
 [`update`](#update)
@@ -7535,7 +7718,7 @@ Description:
 
 <p>
   <sup>
-    <a href="#overview">↑&nbsp;</a>
+    <a href="#overview">↑</a>
   </sup>
 </p>
 
@@ -7836,13 +8019,20 @@ tests with globbing, e.g., `bats test/browse*` and `bats test/folders*`.
 ---
 
 <p align="center">
-  Copyright (c) 2015-present <a href="https://www.williammelody.com/">William Melody</a> · See LICENSE for details.
+  Copyright (c) 2015-present ·
+  <a href="https://www.williammelody.com/">William Melody</a> ·
+  <a href="https://github.com/xwmx/nb/blob/master/LICENSE">AGPLv3</a>
 </p>
 
 <p align="center">
+  <a href="https://xwmx.github.io/nb">xwmx.github.io/nb</a>&nbsp;·
   <a href="https://github.com/xwmx/nb">github.com/xwmx/nb</a>
 </p>
 
 <p align="center">
   📝🔖🔒🔍📔
+</p>
+
+<p align="center">
+  <a href="#top">&nbsp;↑&nbsp;</a>
 </p>

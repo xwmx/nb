@@ -28,7 +28,7 @@ remote_theme: pmarsceill/just-the-docs
 
 # Aux links for the upper right navigation
 aux_links:
-  "nb on GitHub":
+  "<code>&lt;code&gt;</code>":
     - "//github.com/xwmx/nb"
 
 color_scheme: "light"
@@ -49,9 +49,9 @@ toc_list: true
 title: nb
 email: hi@williammelody.com
 description: >- # this means to ignore newlines until "baseurl:"
-  CLI plain text note-taking, bookmarking, and archiving with encryption,
-  filtering and search, Git-backed versioning and syncing, Pandoc-backed
-  conversion, and more in a single portable script.
+  A CLI and local web plain text
+  note-taking, bookmarking, archiving,
+  and knowledge base application.
 # the subpath of your site, e.g. /blog
 baseurl: "/nb"
 # the base hostname & protocol for your site, e.g. http://example.com

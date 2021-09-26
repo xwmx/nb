@@ -15,11 +15,11 @@
 #  / / | | | | |_) |
 # /_/  |_| |_|_.__/
 #
-# `nb` · notes & bookmarks
-#
-# Command line note-taking, bookmarking, and archiving with encryption, search,
-# Git-backed versioning and syncing, Pandoc-backed format conversion, and more
-# in a single portable script.
+# [nb] Command line and local web note-taking, bookmarking, and archiving with
+# plain text data storage, encryption, filtering and search, pinning, #tagging,
+# Git-backed versioning and syncing, Pandoc-backed conversion, global and local
+# notebooks, customizable color themes, [[wiki-style linking]], plugins, and
+# more in a single portable, user-friendly script.
 #
 # https://github.com/xwmx/nb
 #
@@ -54,26 +54,29 @@ _main() {
 
       shift
 
-      if [[ -n "${*:-}" ]]
-      then
-        "${_NB_PATH:-}" help "${@}"
-      else
-        cat <<HEREDOC
-__                _
-\ \   _ __   ___ | |_ ___  ___
- \ \ | '_ \ / _ \| __/ _ \/ __|
- / / | | | | (_) | ||  __/\__ \\
-/_/  |_| |_|\___/ \__\___||___/
+      {
+        if [[ -n "${*:-}" ]]
+        then
+          "${_NB_PATH:-}" help "${@}"
+        else
+          cat <<HEREDOC
+  __                _
+  \ \   _ __   ___ | |_ ___  ___
+   \ \ | '_ \ / _ \| __/ _ \/ __|
+   / / | | | | (_) | ||  __/\__ \\
+  /_/  |_| |_|\___/ \__\___||___/
 
-Part of [nb]
+ Part of [nb]
 HEREDOC
-        "${_NB_PATH:-}" help | sed -e '1,6d'
-      fi  | sed -e "s/^  nb$/  notes/g"     \
-          | sed -e "s/  nb /  notes /g"     \
-          | sed -e "s/\`nb/\`notes/g"       \
-          | sed -e "s/^\`notes\`/\`nb\`/g"  \
-          | sed -E "s/nb(.*Command)/notes\1/g"  \
-          | sed -e '$ d'
+          "${_NB_PATH:-}" help | sed -e '1,6d'
+
+        fi
+      } | sed -e "s/^  nb$/  notes/g"         \
+        | sed -e "s/  nb /  notes /g"         \
+        | sed -e "s/\`nb/\`notes/g"           \
+        | sed -e "s/^\`notes\`/\`nb\`/g"      \
+        | sed -E "s/nb(.*Command)/notes\1/g"  \
+        | sed -e '$ d'
 
       cat <<HEREDOC
 ------------------------------------------
@@ -85,8 +88,8 @@ HEREDOC
           "${PAGER}"
         elif hash "less" 2>/dev/null
         then
-          less \
-            --CLEAR-SCREEN \
+          less              \
+            --CLEAR-SCREEN  \
             --prompt="> scroll for more, h for help, or q to quit"
         else
           cat

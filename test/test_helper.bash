@@ -69,6 +69,7 @@ _setup() {
 
   export _BOOKMARK_URL="file://${NB_TEST_BASE_PATH}/fixtures/example.com.html"
   export _OG_BOOKMARK_URL="file://${NB_TEST_BASE_PATH}/fixtures/example.com-og.html"
+  export _TITLES_BOOKMARK_URL="file://${NB_TEST_BASE_PATH}/fixtures/example.com-titles.html"
 
   # `$_ERROR_PREFIX`
   #
