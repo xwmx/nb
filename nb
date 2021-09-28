@@ -21100,7 +21100,7 @@ $(_color_primary "Description"):
   When <subcommand> is present, the command will run as the shell is opened.
 
 $(_color_primary "Read More"):
-  ${_README_URL}#-nb-interactive-shell
+  ${_README_URL}#-interactive-shell
 
 $(_color_primary "See Also"):
   ${_ME} help run
