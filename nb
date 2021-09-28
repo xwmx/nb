@@ -6037,7 +6037,7 @@ _ls() {
     shift
   done
 
-  # Delegate to `add` or `show` when detected.
+  # Delegate to `add`, `show`, and other subcommands.
 
   if ((${#_delegate_arguments[@]})) || ((_delegate_to_browse))
   then
