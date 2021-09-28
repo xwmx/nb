@@ -344,7 +344,7 @@ the [`nb update`](#update) subcommand.
   <a href="#-plugins">🔌&nbsp;Plugins</a>&nbsp;·
   <a href="#-selectors"><code>:/</code>&nbsp;Selectors</a>&nbsp;·
   <a href="#01-metadata"><code>01</code>&nbsp;Metadata</a>&nbsp;·
-  <a href="#-nb-interactive-shell"><code>❯</code>&nbsp;Shell</a>&nbsp;·
+  <a href="#-interactive-shell"><code>❯</code>&nbsp;Shell</a>&nbsp;·
   <a href="#shortcut-aliases">Shortcuts</a>&nbsp;·
   <a href="#help">Help</a>&nbsp;·
   <a href="#specifications">Specifications</a>&nbsp;·
@@ -4865,7 +4865,7 @@ More complex data can be defined using additional
 [YAML](https://en.wikipedia.org/wiki/YAML)
 capabilities.
 
-### ❯ `nb` Interactive Shell
+### `❯` Interactive Shell
 
 <p>
   <sup>
@@ -7132,7 +7132,7 @@ Alias:
 #### `shell`
 
 [↑](#help) · See also:
-[Interactive Shell](#-nb-interactive-shell),
+[Interactive Shell](#-interactive-shell),
 [`run`](#run)
 
 ```text
@@ -7151,7 +7151,7 @@ Description:
   When <subcommand> is present, the command will run as the shell is opened.
 
 Read More:
-  https://github.com/xwmx/nb#-nb-interactive-shell
+  https://github.com/xwmx/nb#-interactive-shell
 
 See Also:
   nb help run
