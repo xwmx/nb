@@ -5404,9 +5404,9 @@ ${_TPUT_SGR0}"
          _filter_message="${_filter_message} Type: $(_color_primary "${_type}")"
       fi
 
-      _warn \
-        printf "Not found: %s\\n" "${_filter_message}" &&
-        return 1
+      _warn printf "Not found: %s\\n" "${_filter_message}"
+
+      return 1
     fi
 
     if ! ((_filenames_count)) && [[ -z "${_filter_pattern:-}" ]]
