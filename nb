@@ -1960,7 +1960,7 @@ _get_visible_length() {
 _highlight_syntax_if_available() {
   # Usage: _highlight_syntax_with_extension <extension>
   _highlight_syntax_with_extension() {
-    ! _contains "${_extension}" "db" # TODO
+    ! _contains "${1:-}" "db" # TODO
   }
 
   local _extension=
