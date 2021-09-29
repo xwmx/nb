@@ -10324,7 +10324,7 @@ _resolve_links() {
 -e "/^nb-linkable-nb/ s/${_labeled_link_match_pattern}/${_labeled_replacement_pattern}/g" \
 -e "/^nb-linkable-nb/ s/${_notebookless_pattern}/${_notebookless_replacement_pattern}/g"
       } | {
-         sed -E -e "s/^nb-linkable-nb//g"
+        sed -E -e "s/^nb-linkable-nb//g"
       }
     else
       local __match=
