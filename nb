@@ -11375,6 +11375,22 @@ $(_color_primary "Shortcut Alias"):
 HEREDOC
 }
 _bookmark() {
+    # Usage: _bookmark_cleanup_tag_content <string>
+  _bookmark_cleanup_tag_content() {
+    printf "%s\\n" "${1:-}"   \
+      | awk '$1=$1'           \
+      | sed -E                \
+            -e "s/‪//g"  \
+            -e "s/‫//g"  \
+            -e "s/‬//g"  \
+      | if _command_exists "w3m"
+        then # convert html entities TODO: _web_browser --convert-entities
+           w3m -dump -T text/html -cols 99999
+         else
+           cat
+        fi
+  }
+
   # Usage: _bookmark_view_in_terminal_browser (<url>)
   _bookmark_view_in_terminal_browser() {
     local _target_url="${1:-}"
@@ -11843,12 +11859,7 @@ _bookmark() {
 
   if [[ -n "${_title:-}"    ]]
   then
-    if _command_exists "w3m"
-    then # convert html entities TODO: _web_browser --convert-entities
-      _title="$(
-        printf "%s\\n" "${_title}" | w3m -dump -T text/html -cols 99999
-      )"
-    fi
+    _title="$(_bookmark_cleanup_tag_content "${_title}")"
 
     _bookmark_content="# ${_title}${_NEWLINE}${_NEWLINE}"
   fi
@@ -11877,12 +11888,7 @@ _bookmark() {
 
     if [[ -n "${_description:-}"    ]]
     then
-      if _command_exists "w3m"
-      then # convert html entities TODO: _web_browser --convert-entities
-        _description="$(
-          printf "%s\\n" "${_description}" | w3m -dump -T text/html -cols 99999
-        )"
-      fi
+      _description="$(_bookmark_cleanup_tag_content "${_description}")"
 
       _bookmark_content+="${_NEWLINE}## Description${_NEWLINE}"
       _bookmark_content+="${_NEWLINE}${_description}${_NEWLINE}"
