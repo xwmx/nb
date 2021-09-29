@@ -11377,6 +11377,7 @@ HEREDOC
 _bookmark() {
     # Usage: _bookmark_cleanup_tag_content <string>
   _bookmark_cleanup_tag_content() {
+    # NOTE: `sed` operations contain invisible unicode characters
     printf "%s\\n" "${1:-}"   \
       | awk '$1=$1'           \
       | sed -E                \
