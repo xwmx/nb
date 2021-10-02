@@ -2,6 +2,21 @@
 
 load test_helper
 
+# _GIT_ENABLED ################################################################
+
+@test "_GIT_ENABLED=0 'init' exits with status 0 and creates notebook directory without .git." {
+  _GIT_ENABLED=0 run "${_NB}" init
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  ls -la "${NB_DIR}/home"
+
+  [[        "${status}" == 0      ]]
+
+  [[    -d  "${NB_DIR}/home"      ]]
+  [[ !  -e  "${NB_DIR}/home/.git" ]]
+}
+
 # remote ######################################################################
 
 @test "'init <remote-url> <branch>' creates a clone in '\$NB_NOTEBOOK_PATH' / '\$NB_DIR/home'." {

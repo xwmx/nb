@@ -1051,10 +1051,11 @@ export _NB_TEMP_PIDS=()
 _temp() {
   # Usage: _temp_validate_path <path>
   _temp_validate_path() {
-    [[ -n "${1:?}"          ]] &&
-    [[ "${1}" != "/"        ]] &&
-    [[ "${1}" != "${HOME}"  ]] &&
-    [[ "${1}" != "${PWD}"   ]]
+    [[ -n "${1:?}"              ]] &&
+    [[    "${1}" != "/"         ]] &&
+    [[    "${1}" != "${HOME}"   ]] &&
+    [[    "${1}" != "${PWD}"    ]] &&
+    [[ -e "${1}"                ]]
   }
 
   local _subcommand="${1:-}"
@@ -4411,16 +4412,23 @@ _init() {
               _notebooks author "${_author_arguments[@]:-}"
             fi
     else
-      mkdir -p  "${NB_DIR}/home"                    &&
-        git -C  "${NB_DIR}/home" init   &>/dev/null &&
-        {
-          if ((_author))
-          then
-            _notebooks author "${_author_arguments[@]:-}"
-          fi
-        } &&
-        touch   "${NB_DIR}/home/.index"             &&
+      {
+        mkdir -p  "${NB_DIR}/home"
+      } && {
+        if ((_GIT_ENABLED))
+        then
+          git -C  "${NB_DIR}/home" init   &>/dev/null
+        fi
+      } && {
+        if ((_author))
+        then
+          _notebooks author "${_author_arguments[@]:-}"
+        fi
+      } && {
+        touch  "${NB_DIR}/home/.index"
+      } && {
         _git checkpoint "${NB_DIR}/home" "[nb] Initialize"
+      }
     fi
 
     _notebooks use "home" 1>/dev/null
@@ -6500,12 +6508,16 @@ _notebooks() {
     local __notebook_name=
     for   __notebook_name in "${_notebook_list[@]:-}"
     do
-      if [[ -d "${NB_DIR}/${__notebook_name}"         ]] &&
-         [[ ! -d "${NB_DIR}/${__notebook_name}/.git"  ]]
+      if [[   -d "${NB_DIR}/${__notebook_name}"         ]]  &&
+         [[ ! -e "${NB_DIR}/${__notebook_name}/.index"  ]]
       then
-          git -C "${NB_DIR}/${__notebook_name}" init &>/dev/null  &&
-          touch "${NB_DIR}/${__notebook_name}/.index"             &&
-          _temp cache clear                                       &&
+          {
+            if ((_GIT_ENABLED))
+            then
+              git -C "${NB_DIR}/${__notebook_name}" init &>/dev/null
+            fi
+          } && touch "${NB_DIR}/${__notebook_name}/.index"  &&
+          _temp cache clear                                 &&
           _git checkpoint "${NB_DIR}/${__notebook_name}" "[nb] Initialize"
       fi
     done
@@ -7779,7 +7791,7 @@ $(_color_primary "Examples"):
 HEREDOC
     fi
 
-    if [[ -d "${NB_DIR}/${_name}/.git" ]]
+    if [[ -e "${NB_DIR}/${_name}/.index" ]]
     then
       printf "%s\\n" "${_name}" > "${NB_DIR}/.current"
 
