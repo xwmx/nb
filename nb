@@ -11965,21 +11965,26 @@ _bookmark() {
       if _command_exists "pandoc"   || _command_exists "readable"
       then
         _processed_content="$(
-          cat "${_temp_file}" \
-            | if _command_exists "readable"
-              then
-                readable --base "${_url}" 2>/dev/null || cat
-              else
-                cat
-              fi |  if _command_exists "pandoc"
-                    then
-                      pandoc                                  \
-                        --from html-native_divs-native_spans  \
-                        --to markdown-grid_tables --wrap=none \
-                        2>/dev/null || cat
-                    else
-                      cat
-                    fi
+          {
+            cat "${_temp_file}"
+          } | {
+            if _command_exists "readable"
+            then
+              readable --base "${_url}" 2>/dev/null || cat
+            else
+              cat
+            fi
+          } | {
+            if _command_exists "pandoc"
+            then
+              pandoc                                  \
+                --from html-native_divs-native_spans  \
+                --to markdown-grid_tables --wrap=none \
+                2>/dev/null || cat
+            else
+              cat
+            fi
+          }
         )"
 
         if [[ -n "${_processed_content}" ]]
