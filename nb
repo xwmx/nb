@@ -244,7 +244,7 @@ _tput() {
         ;;
     esac
 
-    tput "${@:-}" || {
+    tput "${@:-}" 2>/dev/null || {
       case "${1:-}" in
         sgr0)
           tput me
