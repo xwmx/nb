@@ -209,18 +209,18 @@ _sed_i() {
 #   _tput <tput options>...
 #
 # Description:
-#   Run `tput` commands, with fallbacks to termcap names for FreeBSD and `stty`
-#   when `tput` is not found.
+#   Run `tput` commands, with fallbacks to termcap names for FreeBSD and
+#   `stty` and escape sequences when `tput` is not found.
 _tput() {
   if _command_exists "tput"
   then
     # More info: https://stackoverflow.com/a/64214019
     case "${1:-}" in
       cols)
-        if tput cols &>/dev/null 2>&1
+        if tput cols  &>/dev/null
         then
           tput cols
-        elif tput co &>/dev/null 2>&1
+        elif tput co  &>/dev/null
         then
           tput co
         else
@@ -230,10 +230,10 @@ _tput() {
         return 0
         ;;
       lines)
-        if tput lines &>/dev/null 2>&1
+        if tput lines &>/dev/null
         then
           tput lines
-        elif tput li &>/dev/null 2>&1
+        elif tput li  &>/dev/null
         then
           tput li
         else
