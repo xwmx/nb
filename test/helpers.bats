@@ -17,11 +17,11 @@ load test_helper
 
   run "${_NB}" notebooks add "example"
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0                  ]]
+  [[    "${status}" -eq 0             ]]
   [[ -e "${NB_DIR}/.cache"            ]]
   [[ -z "$(ls -A "${NB_DIR}/.cache")" ]]
 }
@@ -36,13 +36,13 @@ load test_helper
 
   run "${_NB}" helpers _file_is_bookmark "${NB_DIR}/home/example.bookmark.md"
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
   file "${NB_DIR}/home/example.bookmark.md"
 
-  [[ ${status} -eq 0  ]]
-  [[ -z "${output}"   ]]
+  [[    "${status}" -eq 0 ]]
+  [[ -z "${output}"       ]]
 }
 
 @test "'_file_is_bookmark()' is true for encrypted .bookmark.md.enc file." {
@@ -54,13 +54,13 @@ load test_helper
 
   run "${_NB}" helpers _file_is_bookmark "${NB_DIR}/home/example.bookmark.md.enc"
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
   file "${NB_DIR}/home/example.bookmark.md.enc"
 
-  [[ ${status} -eq 0  ]]
-  [[ -z "${output}"   ]]
+  [[    "${status}" -eq 0 ]]
+  [[ -z "${output}"       ]]
 }
 
 @test "'_file_is_bookmark()' is false for .md file." {
@@ -71,13 +71,13 @@ load test_helper
 
   run "${_NB}" helpers _file_is_bookmark "${NB_DIR}/home/example.md"
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
   file "${NB_DIR}/home/example.md"
 
-  [[ ${status} -eq 1  ]]
-  [[ -z "${output}"   ]]
+  [[    "${status}" -eq 1 ]]
+  [[ -z "${output}"       ]]
 }
 
 @test "'_file_is_bookmark()' is false for encrypted non-bookmark .enc file." {
@@ -88,13 +88,13 @@ load test_helper
 
   run "${_NB}" helpers _file_is_bookmark "${NB_DIR}/home/example.md.enc"
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
   file "${NB_DIR}/home/example.md.enc"
 
-  [[ ${status} -eq 1  ]]
-  [[ -z "${output}"   ]]
+  [[    "${status}" -eq 1 ]]
+  [[ -z "${output}"       ]]
 }
 
 @test "'_file_is_bookmark()' is false for extensionless file." {
@@ -108,13 +108,13 @@ load test_helper
 
   run "${_NB}" helpers _file_is_bookmark "${NB_DIR}/home/example"
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
   file "${NB_DIR}/home/example"
 
-  [[ ${status} -eq 1  ]]
-  [[ -z "${output}"   ]]
+  [[    "${status}" -eq 1 ]]
+  [[ -z "${output}"       ]]
 }
 
 # `_file_is_encrypted()` ######################################################
@@ -122,36 +122,39 @@ load test_helper
 @test "'_file_is_encrypted()' is true for encrypted .enc file." {
   {
     "${_NB}" init
-    "${_NB}" add "example.md" --content "Example" --encrypt --password=password
+    "${_NB}" add "example.md" \
+      --content "Example"     \
+      --encrypt --password=password
   }
 
   run "${_NB}" helpers file_is_encrypted "${NB_DIR}/home/example.md.enc"
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
   file "${NB_DIR}/home/example.md.enc"
 
-  [[ ${status} -eq 0  ]]
-  [[ -z "${output}"   ]]
+  [[    "${status}" -eq 0 ]]
+  [[ -z "${output}"       ]]
 }
 
 @test "'_file_is_encrypted()' is true for encrypted bookmark.md.enc file." {
   {
     "${_NB}" init
-    "${_NB}" add "example.bookmark.md" \
-      --content "<https://example.test>" --encrypt --password=password
+    "${_NB}" add "example.bookmark.md"    \
+      --content "<https://example.test>"  \
+      --encrypt --password=password
   }
 
   run "${_NB}" helpers file_is_encrypted "${NB_DIR}/home/example.bookmark.md.enc"
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
   file "${NB_DIR}/home/example.bookmark.md.enc"
 
-  [[ ${status} -eq 0  ]]
-  [[ -z "${output}"   ]]
+  [[    "${status}" -eq 0 ]]
+  [[ -z "${output}"       ]]
 }
 
 @test "'_file_is_encrypted()' is true for encrypted .not-valid file." {
@@ -167,13 +170,13 @@ load test_helper
 
   run "${_NB}" helpers file_is_encrypted "${NB_DIR}/home/example.not-valid"
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
   file "${NB_DIR}/home/example.not-valid"
 
-  [[ ${status} -eq 0  ]]
-  [[ -z "${output}"   ]]
+  [[    "${status}" -eq 0 ]]
+  [[ -z "${output}"       ]]
 }
 
 @test "'_file_is_encrypted()' is false for .md file." {
@@ -184,13 +187,13 @@ load test_helper
 
   run "${_NB}" helpers file_is_encrypted "${NB_DIR}/home/example.md"
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
   file "${NB_DIR}/home/example.md"
 
-  [[ ${status} -eq 1  ]]
-  [[ -z "${output}"   ]]
+  [[    "${status}" -eq 1 ]]
+  [[ -z "${output}"       ]]
 }
 
 @test "'_file_is_encrypted()' is false for extensionless text file." {
@@ -204,13 +207,13 @@ load test_helper
 
   run "${_NB}" helpers file_is_encrypted "${NB_DIR}/home/example"
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
   file "${NB_DIR}/home/example"
 
-  [[ ${status} -eq 1  ]]
-  [[ -z "${output}"   ]]
+  [[    "${status}" -eq 1 ]]
+  [[ -z "${output}"       ]]
 }
 
 @test "'_file_is_encrypted()' is true for encrypted extensionless file." {
@@ -228,13 +231,13 @@ load test_helper
 
   run "${_NB}" helpers file_is_encrypted "${NB_DIR}/home/example"
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
   file "${NB_DIR}/home/example"
 
-  [[ ${status} -eq 0  ]]
-  [[ -z "${output}"   ]]
+  [[    "${status}" -eq 0 ]]
+  [[ -z "${output}"       ]]
 }
 
 # `_file_is_text()` ###########################################################
@@ -247,13 +250,13 @@ load test_helper
 
   run "${_NB}" helpers file_is_text "${NB_DIR}/home/example.md.enc"
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
   file "${NB_DIR}/home/example.md.enc"
 
-  [[ ${status} -eq 1  ]]
-  [[ -z "${output}"   ]]
+  [[    "${status}" -eq 1 ]]
+  [[ -z "${output}"       ]]
 }
 
 @test "'_file_is_text()' is true for .md file." {
@@ -264,13 +267,13 @@ load test_helper
 
   run "${_NB}" helpers file_is_text "${NB_DIR}/home/example.md"
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
   file "${NB_DIR}/home/example.md"
 
-  [[ ${status} -eq 0  ]]
-  [[ -z "${output}"   ]]
+  [[    "${status}" -eq 0 ]]
+  [[ -z "${output}"       ]]
 }
 
 @test "'_file_is_text()' is true for extensionless text file." {
@@ -284,13 +287,13 @@ load test_helper
 
   run "${_NB}" helpers file_is_text "${NB_DIR}/home/example"
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
   file "${NB_DIR}/home/example"
 
-  [[ ${status} -eq 0  ]]
-  [[ -z "${output}"   ]]
+  [[    "${status}" -eq 0 ]]
+  [[ -z "${output}"       ]]
 }
 
 @test "'_file_is_text()' is false for encrypted .not-valid file." {
@@ -304,13 +307,13 @@ load test_helper
 
   run "${_NB}" helpers file_is_text "${NB_DIR}/home/example.not-valid"
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
   file "${NB_DIR}/home/example.not-valid"
 
-  [[ ${status} -eq 1  ]]
-  [[ -z "${output}"   ]]
+  [[    "${status}" -eq 1 ]]
+  [[ -z "${output}"       ]]
 }
 
 @test "'_file_is_text()' is false for encrypted extensionless file." {
@@ -328,13 +331,13 @@ load test_helper
 
   run "${_NB}" helpers file_is_text "${NB_DIR}/home/example"
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
   file "${NB_DIR}/home/example"
 
-  [[ ${status} -eq 1  ]]
-  [[ -z "${output}"   ]]
+  [[    "${status}" -eq 1 ]]
+  [[ -z "${output}"       ]]
 }
 
 # `_highlight_syntax_if_available()` ####################################################
@@ -347,13 +350,13 @@ load test_helper
 
   run "${_NB}" helpers highlight "${NB_DIR}/home/example.md"
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0              ]]
-  [[ -n "${output:-}"             ]]
-  [[ "${output}" !=  "# Example"  ]]
+  [[    "${status}"   -eq 0           ]]
+  [[ -n "${output:-}"                 ]]
+  [[    "${output}"   !=  "# Example" ]]
 }
 
 @test "'_highlight_syntax_if_available <path> --no-color' skips highlighting." {
@@ -364,12 +367,12 @@ load test_helper
 
   run "${_NB}" helpers highlight "${NB_DIR}/home/example.md" --no-color
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0                      ]]
-  [[ "${output}" ==  "# Example _Title_"  ]]
+  [[  "${status}" -eq 0                   ]]
+  [[  "${output}" ==  "# Example _Title_" ]]
 }
 
 @test "'_highlight_syntax_if_available' highlights piped content." {
@@ -379,13 +382,13 @@ load test_helper
 
   run bash -c "echo \"# Example _Title_\" | \"${_NB}\" helpers highlight"
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0                      ]]
-  [[ -n "${output:-}"                     ]]
-  [[ "${output}" !=  "# Example _Title_"  ]]
+  [[    "${status}"   -eq 0                   ]]
+  [[ -n "${output:-}"                         ]]
+  [[    "${output}"   !=  "# Example _Title_" ]]
 }
 
 @test "'_highlight_syntax_if_available() --no-color' skips highlighting piped content." {
@@ -395,12 +398,12 @@ load test_helper
 
   run bash -c "echo \"# Example _Title_\" | \"${_NB}\" helpers highlight --no-color"
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0                      ]]
-  [[ "${output}" ==  "# Example _Title_"  ]]
+  [[ "${status}" -eq  0                   ]]
+  [[ "${output}" ==   "# Example _Title_" ]]
 }
 
 @test "'_highlight_syntax_if_available <extension>' highlights piped content." {
@@ -410,9 +413,9 @@ load test_helper
 
   run bash -c "echo \"# Example _Title_\" | \"${_NB}\" helpers highlight 'md'"
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
   [[ ${status} -eq 0                      ]]
   [[ -n "${output:-}"                     ]]
@@ -426,10 +429,10 @@ load test_helper
 
   run bash -c "echo \"# Example _Title_\" | \"${_NB}\" helpers highlight 'md' --no-color"
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ ${status} -eq 0                      ]]
-  [[ "${output}" ==  "# Example _Title_"  ]]
+  [[ "${status}" -eq  0                   ]]
+  [[ "${output}" ==   "# Example _Title_" ]]
 }

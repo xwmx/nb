@@ -74,7 +74,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="6.5.0"
+_VERSION="6.5.1"
 
 # $_ME
 #
@@ -209,28 +209,42 @@ _sed_i() {
 #   _tput <tput options>...
 #
 # Description:
-#   Run `tput` commands, with backup options.
+#   Run `tput` commands, with fallbacks to termcap names for FreeBSD and
+#   `stty` and escape sequences when `tput` is not found.
 _tput() {
   if _command_exists "tput"
   then
     # More info: https://stackoverflow.com/a/64214019
-    if [[ "${1:-}" == "cols" ]]
-    then
-      if tput cols &>/dev/null 2>&1
-      then
-        tput cols
-      elif tput co &>/dev/null 2>&1
-      then
-        tput co
-      else
-        printf "80\\n"
-      fi
+    case "${1:-}" in
+      cols)
+        if tput cols  &>/dev/null
+        then
+          tput cols
+        elif tput co  &>/dev/null
+        then
+          tput co
+        else
+          printf "80\\n"
+        fi
 
-      return 0
-    fi
+        return 0
+        ;;
+      lines)
+        if tput lines &>/dev/null
+        then
+          tput lines
+        elif tput li  &>/dev/null
+        then
+          tput li
+        else
+          printf "20\\n"
+        fi
+
+        return 0
+        ;;
+    esac
 
     tput "${@:-}" 2>/dev/null || {
-      # fall back to termcap names for FreeBSD
       case "${1:-}" in
         sgr0)
           tput me
@@ -1051,10 +1065,11 @@ export _NB_TEMP_PIDS=()
 _temp() {
   # Usage: _temp_validate_path <path>
   _temp_validate_path() {
-    [[ -n "${1:?}"          ]] &&
-    [[ "${1}" != "/"        ]] &&
-    [[ "${1}" != "${HOME}"  ]] &&
-    [[ "${1}" != "${PWD}"   ]]
+    [[ -n "${1:?}"              ]] &&
+    [[    "${1}" != "/"         ]] &&
+    [[    "${1}" != "${HOME}"   ]] &&
+    [[    "${1}" != "${PWD}"    ]] &&
+    [[ -e "${1}"                ]]
   }
 
   local _subcommand="${1:-}"
@@ -1960,7 +1975,7 @@ _get_visible_length() {
 _highlight_syntax_if_available() {
   # Usage: _highlight_syntax_with_extension <extension>
   _highlight_syntax_with_extension() {
-    ! _contains "${_extension}" "db" # TODO
+    ! _contains "${1:-}" "db" # TODO
   }
 
   local _extension=
@@ -4411,16 +4426,23 @@ _init() {
               _notebooks author "${_author_arguments[@]:-}"
             fi
     else
-      mkdir -p  "${NB_DIR}/home"                    &&
-        git -C  "${NB_DIR}/home" init   &>/dev/null &&
-        {
-          if ((_author))
-          then
-            _notebooks author "${_author_arguments[@]:-}"
-          fi
-        } &&
-        touch   "${NB_DIR}/home/.index"             &&
+      {
+        mkdir -p  "${NB_DIR}/home"
+      } && {
+        if ((_GIT_ENABLED))
+        then
+          git -C  "${NB_DIR}/home" init   &>/dev/null
+        fi
+      } && {
+        if ((_author))
+        then
+          _notebooks author "${_author_arguments[@]:-}"
+        fi
+      } && {
+        touch  "${NB_DIR}/home/.index"
+      } && {
         _git checkpoint "${NB_DIR}/home" "[nb] Initialize"
+      }
     fi
 
     _notebooks use "home" 1>/dev/null
@@ -5404,9 +5426,9 @@ ${_TPUT_SGR0}"
          _filter_message="${_filter_message} Type: $(_color_primary "${_type}")"
       fi
 
-      _warn \
-        printf "Not found: %s\\n" "${_filter_message}" &&
-        return 1
+      _warn printf "Not found: %s\\n" "${_filter_message}"
+
+      return 1
     fi
 
     if ! ((_filenames_count)) && [[ -z "${_filter_pattern:-}" ]]
@@ -6037,7 +6059,7 @@ _ls() {
     shift
   done
 
-  # Delegate to `add` or `show` when detected.
+  # Delegate to `add`, `show`, and other subcommands.
 
   if ((${#_delegate_arguments[@]})) || ((_delegate_to_browse))
   then
@@ -6500,12 +6522,16 @@ _notebooks() {
     local __notebook_name=
     for   __notebook_name in "${_notebook_list[@]:-}"
     do
-      if [[ -d "${NB_DIR}/${__notebook_name}"         ]] &&
-         [[ ! -d "${NB_DIR}/${__notebook_name}/.git"  ]]
+      if [[   -d "${NB_DIR}/${__notebook_name}"         ]]  &&
+         [[ ! -e "${NB_DIR}/${__notebook_name}/.index"  ]]
       then
-          git -C "${NB_DIR}/${__notebook_name}" init &>/dev/null  &&
-          touch "${NB_DIR}/${__notebook_name}/.index"             &&
-          _temp cache clear                                       &&
+          {
+            if ((_GIT_ENABLED))
+            then
+              git -C "${NB_DIR}/${__notebook_name}" init &>/dev/null
+            fi
+          } && touch "${NB_DIR}/${__notebook_name}/.index"  &&
+          _temp cache clear                                 &&
           _git checkpoint "${NB_DIR}/${__notebook_name}" "[nb] Initialize"
       fi
     done
@@ -7779,7 +7805,7 @@ $(_color_primary "Examples"):
 HEREDOC
     fi
 
-    if [[ -d "${NB_DIR}/${_name}/.git" ]]
+    if [[ -e "${NB_DIR}/${_name}/.index" ]]
     then
       printf "%s\\n" "${_name}" > "${NB_DIR}/.current"
 
@@ -10324,7 +10350,7 @@ _resolve_links() {
 -e "/^nb-linkable-nb/ s/${_labeled_link_match_pattern}/${_labeled_replacement_pattern}/g" \
 -e "/^nb-linkable-nb/ s/${_notebookless_pattern}/${_notebookless_replacement_pattern}/g"
       } | {
-         sed -E -e "s/^nb-linkable-nb//g"
+        sed -E -e "s/^nb-linkable-nb//g"
       }
     else
       local __match=
@@ -11375,6 +11401,25 @@ $(_color_primary "Shortcut Alias"):
 HEREDOC
 }
 _bookmark() {
+    # Usage: _bookmark_cleanup_tag_content <string>
+  _bookmark_cleanup_tag_content() {
+    # `awk` condenses and trims whitespace
+    # `sed` removes select unicode characters
+    # `w3m` converts HTML entities
+    printf "%s\\n" "${1:-}"   \
+      | awk '$1=$1'           \
+      | sed -E                \
+            -e "s/‪//g"  \
+            -e "s/‫//g"  \
+            -e "s/‬//g"  \
+      | if _command_exists "w3m"
+        then
+           w3m -dump -T text/html -cols 99999
+         else
+           cat
+        fi
+  }
+
   # Usage: _bookmark_view_in_terminal_browser (<url>)
   _bookmark_view_in_terminal_browser() {
     local _target_url="${1:-}"
@@ -11843,12 +11888,7 @@ _bookmark() {
 
   if [[ -n "${_title:-}"    ]]
   then
-    if _command_exists "w3m"
-    then # convert html entities TODO: _web_browser --convert-entities
-      _title="$(
-        printf "%s\\n" "${_title}" | w3m -dump -T text/html -cols 99999
-      )"
-    fi
+    _title="$(_bookmark_cleanup_tag_content "${_title}")"
 
     _bookmark_content="# ${_title}${_NEWLINE}${_NEWLINE}"
   fi
@@ -11877,12 +11917,7 @@ _bookmark() {
 
     if [[ -n "${_description:-}"    ]]
     then
-      if _command_exists "w3m"
-      then # convert html entities TODO: _web_browser --convert-entities
-        _description="$(
-          printf "%s\\n" "${_description}" | w3m -dump -T text/html -cols 99999
-        )"
-      fi
+      _description="$(_bookmark_cleanup_tag_content "${_description}")"
 
       _bookmark_content+="${_NEWLINE}## Description${_NEWLINE}"
       _bookmark_content+="${_NEWLINE}${_description}${_NEWLINE}"
@@ -11944,21 +11979,26 @@ _bookmark() {
       if _command_exists "pandoc"   || _command_exists "readable"
       then
         _processed_content="$(
-          cat "${_temp_file}" \
-            | if _command_exists "readable"
-              then
-                readable --base "${_url}" 2>/dev/null || cat
-              else
-                cat
-              fi |  if _command_exists "pandoc"
-                    then
-                      pandoc                                  \
-                        --from html-native_divs-native_spans  \
-                        --to markdown-grid_tables --wrap=none \
-                        2>/dev/null || cat
-                    else
-                      cat
-                    fi
+          {
+            cat "${_temp_file}"
+          } | {
+            if _command_exists "readable"
+            then
+              readable --base "${_url}" 2>/dev/null || cat
+            else
+              cat
+            fi
+          } | {
+            if _command_exists "pandoc"
+            then
+              pandoc                                  \
+                --from html-native_divs-native_spans  \
+                --to markdown-grid_tables --wrap=none \
+                2>/dev/null || cat
+            else
+              cat
+            fi
+          }
         )"
 
         if [[ -n "${_processed_content}" ]]
@@ -21100,7 +21140,7 @@ $(_color_primary "Description"):
   When <subcommand> is present, the command will run as the shell is opened.
 
 $(_color_primary "Read More"):
-  ${_README_URL}#-nb-interactive-shell
+  ${_README_URL}#-interactive-shell
 
 $(_color_primary "See Also"):
   ${_ME} help run
