@@ -209,28 +209,42 @@ _sed_i() {
 #   _tput <tput options>...
 #
 # Description:
-#   Run `tput` commands, with backup options.
+#   Run `tput` commands, with fallbacks to termcap names for FreeBSD and `stty`
+#   when `tput` is not found.
 _tput() {
   if _command_exists "tput"
   then
     # More info: https://stackoverflow.com/a/64214019
-    if [[ "${1:-}" == "cols" ]]
-    then
-      if tput cols &>/dev/null 2>&1
-      then
-        tput cols
-      elif tput co &>/dev/null 2>&1
-      then
-        tput co
-      else
-        printf "80\\n"
-      fi
+    case "${1:-}" in
+      cols)
+        if tput cols &>/dev/null 2>&1
+        then
+          tput cols
+        elif tput co &>/dev/null 2>&1
+        then
+          tput co
+        else
+          printf "80\\n"
+        fi
 
-      return 0
-    fi
+        return 0
+        ;;
+      lines)
+        if tput lines &>/dev/null 2>&1
+        then
+          tput lines
+        elif tput li &>/dev/null 2>&1
+        then
+          tput li
+        else
+          printf "20\\n"
+        fi
 
-    tput "${@:-}" 2>/dev/null || {
-      # fall back to termcap names for FreeBSD
+        return 0
+        ;;
+    esac
+
+    tput "${@:-}" || {
       case "${1:-}" in
         sgr0)
           tput me
