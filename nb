@@ -2155,9 +2155,9 @@ _wrap() {
 #   List files in the current notebook or filenames from standard input.
 _list_files() {
   local _path=
+  local _read_from_standard_input=0
   local _reverse=0
   local _sort=0
-  local _read_from_standard_input=0
   local _type=
 
   while ((${#}))
