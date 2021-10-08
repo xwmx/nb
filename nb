@@ -16864,15 +16864,15 @@ _browse() {
       # TODO: https://stackoverflow.com/a/15844977
       cat <<HEREDOC
 <form
-  action="/${_selector//' '/%20}?--add${_url_params:-}"
   accept-charset="UTF-8"
+  action="/${_selector//' '/%20}?--add${_url_params:-}"
   method="post">
 <textarea
   class="content"
+  cols="${_text_area_columns}"
   id="content"
   name="content"
-  rows="${_rows}"
-  cols="${_text_area_columns}">${_form_content:-}</textarea>
+  rows="${_rows}">${_form_content:-}</textarea>
 <br><br>
 <input
   type="submit"
@@ -17370,9 +17370,9 @@ ${_info_line//'\ '/ }
 </p>
 <div align="center">
 <form
+  accept-charset="UTF-8"
   action="/${_id_selector:-}?--delete${_url_params:-}"
   align="center"
-  accept-charset="UTF-8"
   method="post">
 <input
   align="center"
@@ -17497,15 +17497,15 @@ HEREDOC
       # TODO: https://stackoverflow.com/a/15844977
       cat <<HEREDOC
 <form
-  action="/${_form_action_selector:-}?--edit${_url_params:-}"
   accept-charset="UTF-8"
+  action="/${_form_action_selector:-}?--edit${_url_params:-}"
   method="post">
 <textarea
   class="content"
+  cols="${_text_area_columns}"
   id="content"
   name="content"
-  rows="${_rows}"
-  cols="${_text_area_columns}">${_content}</textarea>
+  rows="${_rows}">${_content}</textarea>
 <br><br>
 <input
   type="submit"

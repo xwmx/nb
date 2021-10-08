@@ -611,7 +611,7 @@ action=\"/local:1/1\?--edit\&--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'
   printf "%s\\n" "${output}" | grep -q \
     "href=\"//localhost:6789/?--per-page=30&--columns=20\"><span class=\"dim\">❯</span>nb</a> "
 
-  printf "%s\\n" "${output}" | grep -q "cols=\"17\"># Example Title"
+  printf "%s\\n" "${output}" | grep -q "rows=\"32\"># Example Title"
   printf "%s\\n" "${output}" | grep -q \
     "<form${_NEWLINE}action=\"/home:1?--edit&--per-page=30--columns=20"
 
@@ -699,7 +699,7 @@ action=\"/local:1/1\?--edit\&--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'
   printf "%s\\n" "${output}" | grep -q \
 "rel=\"noopener noreferrer\" href=\"//localhost:6789/home:?--per-page=30&--columns=.*&--add\">+</a></h1>"
 
-  printf "%s\\n" "${output}" | grep -q "cols=\"67\"># Example Title"
+  printf "%s\\n" "${output}" | grep -q "rows=\"32\"># Example Title"
 
   printf "%s\\n" "${output}" | grep -q \
 "value=\"save\"> <span class=\"dim\">·</span> <span class=\"dim last-saved\">last: .*</span>"
