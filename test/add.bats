@@ -296,7 +296,7 @@ HEREDOC
   printf "%s\\n" "${output}" | grep -q \
 "calhost:6789/home:?--per-page=.*&--columns=.*\">home</a>"
 
-  printf "%s\\n" "${output}" | grep -q "cols=\".*\">"
+  printf "%s\\n" "${output}" | grep -q "rows=\".*\">"
 
   printf "%s\\n" "${output}" | grep -q \
 "action=\"/home:Example%20Folder/Example%20File.md?--add&--per-page=.*&--columns=.*\""
@@ -305,7 +305,7 @@ HEREDOC
 "value=\"add\">"
 
   printf "%s\\n" "${output}" | grep -q \
-"cols=\".*\"># Example Title${_NEWLINE}${_NEWLINE}#tag1 #tag2${_NEWLINE}${_NEWLINE}Example content.${_NEWLINE}</textarea>"
+"rows=\".*\"># Example Title${_NEWLINE}${_NEWLINE}#tag1 #tag2${_NEWLINE}${_NEWLINE}Example content.${_NEWLINE}</textarea>"
 
   printf "%s\\n" "${output}" | grep -q -v \
 "<input type=\"hidden\" name=\"--title\""
