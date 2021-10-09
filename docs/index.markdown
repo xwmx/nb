@@ -4038,7 +4038,8 @@ that could inform a strategy for handling any such cases automatically.
   <sup>
     <a href="#overview">↑</a> ·
     <a href="#import"><code>nb import</code></a>,
-    <a href="#export"><code>nb export</code></a>
+    <a href="#export"><code>nb export</code></a>,
+    <a href="#browse"><code>nb browse</code></a>
   </sup>
 </p>
 
@@ -4143,6 +4144,21 @@ For more information about imported and exported notebooks, see
 
 For `nb import` and `nb export` help information, see
 [`nb help import`](#import) and [`nb help export`](#export).
+
+#### Exporting with `browse`
+
+Items can be exported using terminal and GUI [web browsers](#-browsing).
+Use the down arrow (`↓`) link
+on the [`nb browse`](#browse) item page
+to download the original file.
+
+```bash
+❯ nb browse 123
+❯nb · home : 123 · ↓ | +
+
+    example.pdf
+ 
+```
 
 ### ⚙️ `set` & `settings`
 
