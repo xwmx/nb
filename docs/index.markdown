@@ -5939,6 +5939,7 @@ See Also:
 
 [↑](#help) · See also:
 [Import / Export](#%EF%B8%8F-import--export),
+[`browse`](#browse),
 [`import`](#import)
 
 ```text
@@ -5974,6 +5975,7 @@ Read More:
   https://github.com/xwmx/nb#%EF%B8%8F-import--export
 
 See Also:
+  nb help browse
   nb help import
 
 Examples:
