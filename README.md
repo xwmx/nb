@@ -4144,7 +4144,7 @@ For `nb import` and `nb export` help information, see
 Items can be exported using terminal and GUI [web browsers](#-browsing).
 Use the down arrow (`↓`) link
 on the [`nb browse`](#browse) item page
-to download the original file.
+to download the original file:
 
 ```bash
 ❯ nb browse 123
