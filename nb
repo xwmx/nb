@@ -12642,7 +12642,7 @@ _edit() {
 
   if [[ -n "${_relative_path}"                    ]] &&
      [[ -e "${_notebook_path}/${_relative_path}"  ]]
-  then # _basename is assigned and a note exists with that name.
+  then
     local _before
     _before="$(_get_hash "${_notebook_path}/${_relative_path}")"
 
