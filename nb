@@ -9433,8 +9433,17 @@ code {
   white-space:        pre-wrap;
 }
 
-pre       { margin:   1em 0;  overflow: auto;     }
-pre code  { padding:  0;      overflow: visible;  }
+pre {
+  background-color:   #212121;
+  border-radius:      1px;
+  margin:             1rem 0;
+  overflow:           auto;
+  padding:            1rem;
+}
+
+pre code {
+  overflow:           visible;
+}
 
 .sourceCode {
   background-color:   transparent;
@@ -9851,7 +9860,6 @@ div.sourceCode {
 }
 
 pre.sourceCode {
-  background-color:   #212121;
   margin:             0;
   padding:            1rem;
 }
