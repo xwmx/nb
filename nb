@@ -9441,12 +9441,11 @@ pre {
   padding:            1rem;
 }
 
-pre code {
-  overflow:           visible;
+pre.sourceCode {
+  padding:            1rem 0;
 }
 
-.sourceCode {
-  background-color:   transparent;
+pre code {
   overflow:           visible;
 }
 
@@ -9854,14 +9853,7 @@ pre.numberSource {
 }
 
 div.sourceCode {
-  background-color:   transparent;
   color:              #cccccc;
-  margin:             1em 0;
-}
-
-pre.sourceCode {
-  margin:             0;
-  padding:            1rem;
 }
 
 @media screen {
