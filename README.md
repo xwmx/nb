@@ -6460,11 +6460,11 @@ Options:
                            <filename> is provided, check for an existing file
                            and provide a filename with an appended sequence
                            number for uniqueness.
+  -f, --force              Skip the confirmation prompt.
   --global                 List global notebooks or the notebook set globally
                            with `use`.
   --local                  Exit with 0 if current within a local notebook,
                            otherwise exit with 1.
-  -f, --force              Skip the confirmation prompt.
   --name, --names          Print the notebook name.
   --name <name>            Set the notebook's commit author name to <name>.
   --path, --paths          Print the notebook path.
