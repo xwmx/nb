@@ -3770,8 +3770,8 @@ $(_color_primary "Usage"):
   ${_ME} unset (<name> | <number>)
   ${_ME} update
   ${_ME} use <notebook>
-  ${_ME} -i | --interactive [<subcommand> [<options>...]]
   ${_ME} -h | --help | help [<subcommand> | --readme]
+  ${_ME} -i | --interactive [<subcommand> [<options>...]]
   ${_ME} --no-color
   ${_ME} --version | version
 HEREDOC

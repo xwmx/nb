@@ -5197,8 +5197,8 @@ Usage:
   nb unset (<name> | <number>)
   nb update
   nb use <notebook>
-  nb -i | --interactive [<subcommand> [<options>...]]
   nb -h | --help | help [<subcommand> | --readme]
+  nb -i | --interactive [<subcommand> [<options>...]]
   nb --no-color
   nb --version | version
 
