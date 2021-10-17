@@ -3750,7 +3750,7 @@ $(_color_primary "Usage"):
   ${_ME} search ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             <query>... [-a | --all] [--and <query>] [--or <query>]
             [-l | --list]  [--path] [-t <tag1>,<tag2>... | --tag <tag1>,<tag2>...]
-            [--tags] [--type <type> | --<type>] [--utility <name>]
+            [-t | --tags] [--type <type> | --<type>] [--utility <name>]
   ${_ME} set [<name> [<value>] | <number> [<value>]]
   ${_ME} settings [colors [<number> | themes] | edit | list [--long]]
   ${_ME} settings (get | show | unset) (<name> | <number>)
@@ -14226,7 +14226,7 @@ $(_color_primary "Usage"):
   ${_ME} search ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             <query>... [-a | --all] [--and <query>] [--or <query>]
             [-l | --list]  [--path] [-t <tag1>,<tag2>... | --tag <tag1>,<tag2>...]
-            [--tags] [--type <type> | --<type>] [--utility <name>]
+            [-t | --tags] [--type <type> | --<type>] [--utility <name>]
 
 $(_color_primary "Options"):
   -a, --all                     Search all unarchived notebooks.
@@ -14236,7 +14236,7 @@ $(_color_primary "Options"):
   --or <query>                  Add an OR query.
   --path                        Print the full path for each matching file.
   -t, --tag <tag1>,<tag2>...    A comma-separated list of tags to search for.
-  --tags                        List all tags found in the notebook.
+  -t, --tags                    List all tags found in the notebook.
   --type <type>, --<type>       Search items of <type>. <type> can be a file
                                 extension or one of the following types:
                                 note, bookmark, document, archive, image,
@@ -14379,7 +14379,7 @@ _search() {
       -s|--sort)
         _sort=1
         ;;
-      --tag*|--hashtag*)
+      -t|--tag*|--hashtag*)
         if _option_value_is_present "${2:-}"
         then
           local _option_tags=()

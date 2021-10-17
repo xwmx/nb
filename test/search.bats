@@ -42,6 +42,49 @@ _search_all_setup() {
 
 # tags ########################################################################
 
+@test "'search -t tag1 -t tag2,'#tag3' exits with status 0 and prints matches as an OR query." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md"    --content "Content one.   #tag3"
+    "${_NB}" add "File Two.md"    --content "Content two.   #tag1"
+    "${_NB}" add "File Three.md"  --content "Content three. tag1"
+    "${_NB}" add "File Four.md"   --content "Content four.  #tag1"
+    "${_NB}" add "File Five.md"   --content "Content five."
+    "${_NB}" add "File Six.md"    --content "Content six.   #tag2"
+  }
+
+  run "${_NB}" search -t tag1 -t tag2,'#tag3'
+
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
+  printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
+
+  [[    "${status}"     -eq 0                                 ]]
+  [[    "${#lines[@]}"  -eq 12                                ]]
+
+  [[    "${lines[0]}"   =~  \
+.*[.*4.*].*\ File\ Four.md\ \·\ \"Content\ four.\ \ #tag1\"   ]]
+  [[    "${lines[1]}"   =~  ^.*------------------.*$          ]]
+  [[    "${lines[2]}"   =~  \
+1.*:.*Content\ four.\ \ .*#tag1                               ]]
+  [[    "${lines[3]}"   =~  \
+.*[.*1.*].*\ File\ One.md\ ·\ \"Content\ one.\ \ \ #tag3\"    ]]
+  [[    "${lines[4]}"   =~  ^.*------------------.*$          ]]
+  [[    "${lines[5]}"   =~  \
+1.*:.*Content\ one.\ \ .*#tag3                                ]]
+  [[    "${lines[6]}"   =~  \
+.*[.*6.*].*\ File\ Six.md\ ·\ \"Content\ six.\ \ \ #tag2\"    ]]
+  [[    "${lines[7]}"   =~  ^.*------------------.*$          ]]
+  [[    "${lines[8]}"   =~  \
+1.*:.*Content\ six.\ \ .*#tag2                                ]]
+  [[    "${lines[9]}"   =~  \
+.*[.*2.*].*\ File\ Two.md\ ·\ \"Content\ two.\ \ \ #tag1\"    ]]
+  [[    "${lines[10]}"  =~  ^.*------------------.*$          ]]
+  [[    "${lines[11]}"  =~  \
+1.*:.*Content\ two.\ \ .*#tag1                                ]]
+}
+
 @test "'search --tags tag1 --tag tag2,'#tag3' exits with status 0 and prints matches as an OR query." {
   {
     "${_NB}" init

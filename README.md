@@ -5180,7 +5180,7 @@ Usage:
   nb search ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             <query>... [-a | --all] [--and <query>] [--or <query>]
             [-l | --list]  [--path] [-t <tag1>,<tag2>... | --tag <tag1>,<tag2>...]
-            [--tags] [--type <type> | --<type>] [--utility <name>]
+            [-t | --tags] [--type <type> | --<type>] [--utility <name>]
   nb set [<name> [<value>] | <number> [<value>]]
   nb settings [colors [<number> | themes] | edit | list [--long]]
   nb settings (get | show | unset) (<name> | <number>)
@@ -6786,7 +6786,7 @@ Usage:
   nb search ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             <query>... [-a | --all] [--and <query>] [--or <query>]
             [-l | --list]  [--path] [-t <tag1>,<tag2>... | --tag <tag1>,<tag2>...]
-            [--tags] [--type <type> | --<type>] [--utility <name>]
+            [-t | --tags] [--type <type> | --<type>] [--utility <name>]
 
 Options:
   -a, --all                     Search all unarchived notebooks.
@@ -6796,7 +6796,7 @@ Options:
   --or <query>                  Add an OR query.
   --path                        Print the full path for each matching file.
   -t, --tag <tag1>,<tag2>...    A comma-separated list of tags to search for.
-  --tags                        List all tags found in the notebook.
+  -t, --tags                    List all tags found in the notebook.
   --type <type>, --<type>       Search items of <type>. <type> can be a file
                                 extension or one of the following types:
                                 note, bookmark, document, archive, image,
