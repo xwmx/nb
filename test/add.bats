@@ -817,6 +817,61 @@ HEREDOC
   [[ "${lines[0]}" =~ Added:\ .*[.*1.*].*\ .*example_title.md ]]
 }
 
+@test "'add --tags <tag-list> --tag <tag-list>' with a mix of tag formatting creates new note with tags." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" add                \
+    --tags    '#tag1',tag2        \
+    --title   "Example Title"     \
+    --content "Example content."  \
+    --tag     tag3,'#tag4',tag5
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0 ]]
+
+  # Creates new note file with content:
+
+  [[ -f "${NB_DIR}/home/example_title.md" ]]
+
+  diff                                        \
+    <(cat "${NB_DIR}/home/example_title.md")  \
+    <(cat <<HEREDOC
+# Example Title
+
+#tag1 #tag2 #tag3 #tag4 #tag5
+
+Example content.
+HEREDOC
+)
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  # Adds to index:
+
+  [[ -e "${NB_DIR}/home/.index" ]]
+
+  diff                      \
+    <(ls "${NB_DIR}/home")  \
+    <(cat "${NB_DIR}/home/.index")
+
+  # Prints output:
+
+  [[ "${lines[0]}" =~ Added:\ .*[.*1.*].*\ .*example_title.md ]]
+}
+
 # piped #######################################################################
 
 @test "'add' with piped content includes content from --title, --tags, --content, and arguments separated by newlines." {
