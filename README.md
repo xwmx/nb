@@ -5179,8 +5179,8 @@ Usage:
   nb run <command> [<arguments>...]
   nb search ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             <query>... [-a | --all] [--and <query>] [--or <query>]
-            [-l | --list]  [--path] [-t <type> | --type <type> | --<type>]
-            [--utility <name>]
+            [-l | --list]  [--path] [-t <tag1>,<tag2>... | --tag <tag1>,<tag2>...]
+            [--tags] [--type <type> | --<type>] [--utility <name>]
   nb set [<name> [<value>] | <number> [<value>]]
   nb settings [colors [<number> | themes] | edit | list [--long]]
   nb settings (get | show | unset) (<name> | <number>)
@@ -6785,8 +6785,8 @@ Examples:
 Usage:
   nb search ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             <query>... [-a | --all] [--and <query>] [--or <query>]
-            [-l | --list]  [--path] [-t <type> | --type <type> | --<type>]
-            [--utility <name>]
+            [-l | --list]  [--path] [-t <tag1>,<tag2>... | --tag <tag1>,<tag2>...]
+            [--tags] [--type <type> | --<type>] [--utility <name>]
 
 Options:
   -a, --all                     Search all unarchived notebooks.
@@ -6795,7 +6795,9 @@ Options:
                                 each matching file, without the excerpt.
   --or <query>                  Add an OR query.
   --path                        Print the full path for each matching file.
-  -t, --type <type>, --<type>   Search items of <type>. <type> can be a file
+  -t, --tag <tag1>,<tag2>...    A comma-separated list of tags to search for.
+  --tags                        List all tags found in the notebook.
+  --type <type>, --<type>       Search items of <type>. <type> can be a file
                                 extension or one of the following types:
                                 note, bookmark, document, archive, image,
                                 video, audio, folder, text
@@ -6848,6 +6850,9 @@ Examples:
 
   # search with a regular expression
   nb search "\d\d\d-\d\d\d\d"
+
+  # search for tags
+  nb search -t tag1 --tag "#tag2"
 
   # search the current notebook for "example query"
   nb q "example query"
