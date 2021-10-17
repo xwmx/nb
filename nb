@@ -14632,18 +14632,6 @@ _search() {
     return 0
   fi
 
-  # if [[   -n "${_tag_queries[*]:-}" ]]
-  # then
-  #   if [[ -z "${_and_queries[*]:-}" ]]
-  #   then
-  #     _and_queries+=("${_tag_queries[0]:-}")
-  #     _or_queries+=("${_tag_queries[@]:1}")
-  #   else
-  #     _or_queries+=("${_tag_queries[@]}")
-  #   fi
-  # fi
-
-
   if [[ -z "${_and_queries[*]:-}"   ]]
   then
     _exit_1 _help "search"
