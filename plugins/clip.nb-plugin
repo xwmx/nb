@@ -28,6 +28,9 @@ Examples:
 
   # save the clipboard contents to a new file with a \`.js\` file extension
   nb clip .js
+
+  # save the clipboard contents as a new \`.cr\` file in the "snippets" notebook
+  nb snippets:clip .cr
 HEREDOC
 
 # Define the subcommand as a function, named with a leading underscore.

@@ -576,6 +576,9 @@ Option content.
 Clipboard content.
 ```
 
+The [`clip` plugin](#clip) can also be used to create notes from
+clipboard content.
+
 For a full list of options available for `nb add`, run
 [`nb help add`](#add).
 
@@ -7645,6 +7648,9 @@ Examples:
 
   # save the clipboard contents to a new file with a `.js` file extension
   nb clip .js
+
+  # save the clipboard contents as a new `.cr` file in the "snippets" notebook
+  nb snippets:clip .cr
 ```
 
 #### `copy`
