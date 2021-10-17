@@ -14374,14 +14374,17 @@ _search() {
       -s|--sort)
         _sort=1
         ;;
-      --tag)
-        local _tag_option_argument=
-        _tag_option_argument="$(_option_get_value "--or" "${2:-}")"
-        _tag_queries+=("#${_tag_option_argument#\#}")
-        shift
-        ;;
-      --tags|--hashtags)
-        _search_tags=1
+      --tag*|--hashtag*)
+        if _option_value_is_present "${2:-}"
+        then
+          local _option_tags=()
+          IFS=' ' read -ra _option_tags <<< "$(_option_get_tags "${1:-}" "${2:-}")"
+          _tag_queries+=(${_option_tags[@]:-})
+
+          shift
+        else
+          _search_tags=1
+        fi
         ;;
       --*tool|--*utility)
         _search_utility="$(_option_get_value "${1}" "${2:-}")"
@@ -14623,6 +14626,7 @@ _search() {
     fi
   fi
 
+
   if [[ -z "${_and_queries[*]:-}"   ]]
   then
     _exit_1 _help "search"
@@ -14637,13 +14641,17 @@ _search() {
 
     if ((${#_or_queries[@]}))
     then
+      local _or_query_string=
+
       local __or_query=
       for   __or_query in "${_or_queries[@]:-}"
       do
         [[ -n "${__or_query:-}"   ]] || continue
 
-        _queries+=("${__and_query}|${__or_query}")
+        _or_query_string="${_or_query_string}|${__or_query}"
       done
+
+      _queries+=("${__and_query}${_or_query_string}")
     else
       _queries+=("${__and_query}")
     fi
