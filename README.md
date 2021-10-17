@@ -5179,7 +5179,7 @@ Usage:
   nb run <command> [<arguments>...]
   nb search ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             <query>... [-a | --all] [--and <query>] [--or <query>]
-            [-l | --list]  [--path] [-t <tag1>,<tag2>... | --tag <tag1>,<tag2>...]
+            [-l | --list] [--path] [-t <tag1>,<tag2>... | --tag <tag1>,<tag2>...]
             [-t | --tags] [--type <type> | --<type>] [--utility <name>]
   nb set [<name> [<value>] | <number> [<value>]]
   nb settings [colors [<number> | themes] | edit | list [--long]]
@@ -6785,7 +6785,7 @@ Examples:
 Usage:
   nb search ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             <query>... [-a | --all] [--and <query>] [--or <query>]
-            [-l | --list]  [--path] [-t <tag1>,<tag2>... | --tag <tag1>,<tag2>...]
+            [-l | --list] [--path] [-t <tag1>,<tag2>... | --tag <tag1>,<tag2>...]
             [-t | --tags] [--type <type> | --<type>] [--utility <name>]
 
 Options:
