@@ -14338,8 +14338,13 @@ _search() {
         _all=1
         ;;
       --and)
-        _contains "${2:-}" "-e" "--tags" && shift
+        if _contains "${2:-}" "-e" "--tags"
+        then
+          shift
+        fi
+
         _and_queries+=("$(_option_get_value "--and" "${2:-}")")
+
         shift
         ;;
       -l|--list)
@@ -14355,14 +14360,20 @@ _search() {
         _print_notebook_selectors=1
         ;;
       --or)
-        [[ "${2:-}" == "-e" ]] && shift
+        if [[ "${2:-}" == "-e" ]]
+        then
+          shift
+        fi
 
         if [[ "${2:-}" =~ ^-t$|^--tag*|^--hashtag* ]] &&
            _option_value_is_present "${3:-}"
         then
           shift
 
-          IFS=' ' read -ra _option_tags <<< "$(_option_get_tags "${1:-}" "${2:-}")"
+          IFS=' ' read -ra _option_tags <<< "$(
+            _option_get_tags "${1:-}" "${2:-}"
+          )"
+
           _or_queries+=(${_option_tags[@]:-})
 
           shift
@@ -14383,10 +14394,12 @@ _search() {
         ;;
       --per*)
         _per_page="$(_option_get_value "${1}" "${2:-}")"
+
         shift
         ;;
       -q|--query|-e)
         _and_queries+=("$(_option_get_value "${1}" "${2:-}")")
+
         shift
         ;;
       -s|--sort)
@@ -14395,7 +14408,10 @@ _search() {
       -t|--tag*|--hashtag*)
         if _option_value_is_present "${2:-}"
         then
-          IFS=' ' read -ra _option_tags <<< "$(_option_get_tags "${1:-}" "${2:-}")"
+          IFS=' ' read -ra _option_tags <<< "$(
+            _option_get_tags "${1:-}" "${2:-}"
+          )"
+
           _and_queries+=(${_option_tags[@]:-})
 
           shift
@@ -14405,6 +14421,7 @@ _search() {
         ;;
       --*tool|--*utility)
         _search_utility="$(_option_get_value "${1}" "${2:-}")"
+
         shift
         ;;
       --type)
@@ -14632,7 +14649,7 @@ _search() {
     return 0
   fi
 
-  if [[ -z "${_and_queries[*]:-}"   ]]
+  if [[ -z "${_and_queries[*]:-}" ]]
   then
     _exit_1 _help "search"
   fi
