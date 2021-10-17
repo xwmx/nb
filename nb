@@ -14317,6 +14317,7 @@ _search() {
   local _max_columns="2000"
   local _max_depth=0
   local _only_list=0
+  local _option_tags=()
   local _or_queries=()
   local _page=1
   local _per_page=0
@@ -14328,7 +14329,6 @@ _search() {
   local _search_utility=
   local _selectors=()
   local _sort=0
-  local _tag_queries=()
   local _type=
 
   while ((${#}))
@@ -14338,7 +14338,7 @@ _search() {
         _all=1
         ;;
       --and)
-        [[ "${2:-}" == "-e" ]] && shift
+        _contains "${2:-}" "-e" "--tags" && shift
         _and_queries+=("$(_option_get_value "--and" "${2:-}")")
         shift
         ;;
@@ -14356,8 +14356,21 @@ _search() {
         ;;
       --or)
         [[ "${2:-}" == "-e" ]] && shift
-        _or_queries+=("$(_option_get_value "--or" "${2:-}")")
-        shift
+
+        if [[ "${2:-}" =~ ^-t$|^--tag*|^--hashtag* ]] &&
+           _option_value_is_present "${3:-}"
+        then
+          shift
+
+          IFS=' ' read -ra _option_tags <<< "$(_option_get_tags "${1:-}" "${2:-}")"
+          _or_queries+=(${_option_tags[@]:-})
+
+          shift
+        else
+          _or_queries+=("$(_option_get_value "--or" "${2:-}")")
+
+          shift
+        fi
         ;;
       --page)
         _page="$(_option_get_value "${1}" "${2:-}")"
@@ -14382,9 +14395,8 @@ _search() {
       -t|--tag*|--hashtag*)
         if _option_value_is_present "${2:-}"
         then
-          local _option_tags=()
           IFS=' ' read -ra _option_tags <<< "$(_option_get_tags "${1:-}" "${2:-}")"
-          _tag_queries+=(${_option_tags[@]:-})
+          _and_queries+=(${_option_tags[@]:-})
 
           shift
         else
@@ -14620,16 +14632,16 @@ _search() {
     return 0
   fi
 
-  if [[   -n "${_tag_queries[*]:-}" ]]
-  then
-    if [[ -z "${_and_queries[*]:-}" ]]
-    then
-      _and_queries+=("${_tag_queries[0]:-}")
-      _or_queries+=("${_tag_queries[@]:1}")
-    else
-      _or_queries+=("${_tag_queries[@]}")
-    fi
-  fi
+  # if [[   -n "${_tag_queries[*]:-}" ]]
+  # then
+  #   if [[ -z "${_and_queries[*]:-}" ]]
+  #   then
+  #     _and_queries+=("${_tag_queries[0]:-}")
+  #     _or_queries+=("${_tag_queries[@]:1}")
+  #   else
+  #     _or_queries+=("${_tag_queries[@]}")
+  #   fi
+  # fi
 
 
   if [[ -z "${_and_queries[*]:-}"   ]]
