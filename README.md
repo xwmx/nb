@@ -506,7 +506,14 @@ Example content.
 Search for tagged items with [`nb search` / `nb q`](#search):
 
 ```bash
-nb search "#tag1" "#tag2"
+# search for items tagged with "#tag1"
+nb search --tag tag1
+
+# search for items tagged with "#tag1" AND "#tag2", short options
+nb q -t tag1 -t tag2
+
+# search for items tagged with "#tag1" AND "#tag2", arguments
+nb q "#tag1" "#tag2"
 ```
 
 Files can be created with any file type by specifying the extension either
@@ -1727,12 +1734,14 @@ permission.
 [More information\...](https://www.iana.org/domains/example)
 ```
 
-Search for tagged bookmarks with [`nb search` / `nb q`](#search):
+[Search](#-search) for tagged bookmarks with [`nb search` / `nb q`](#search):
 
 ```bash
-nb search "#tag1"
+nb search --tag tag1
 
-nb q "#tag"
+nb q -t tag1
+
+nb q "#tag1"
 ```
 
 `nb search` / `nb q` automatically searches archived page content:
@@ -2164,7 +2173,7 @@ nb example/ --tags
 nb sample:123 --tags
 ```
 
-Tagged items can be searched with [`nb search` / `nb q`](#search):
+Tagged items can be [searched](#-search) with [`nb search` / `nb q`](#search):
 
 ```bash
 # search for and list items in any notebook tagged with "#tag1"
@@ -2176,13 +2185,16 @@ nb q -t tag1 -al
 # search for and list items in any notebook tagged with "#tag1", alternative
 nb q "#tag1" -al
 
-# search for items in the current notebook tagged with both "#tag1" AND "#tag2"
+# search for items tagged with "#tag1" AND "#tag2"
 nb q --tag tag1 --tag tag2
 
-# search for items in the current notebook tagged with both "#tag1" AND "#tag2", alternative
-nb q "#tag1" --and -t tag2
+# search for items tagged with "#tag1" AND "#tag2", short options
+nb q -t tag1 --and -t tag2
 
-# search for items in the "sample" notebook tagged with "#tag1" AND "#tag2"
+# search for items tagged with "#tag1" AND "#tag2", arguments
+nb q "#tag1" --and "#tag2"
+
+# search for items tagged with "#tag1" AND "#tag2", tag list
 nb q --tags tag1,tag2
 
 # search for items in the current notebook tagged with either "#tag1" OR "#tag2"
@@ -3215,8 +3227,8 @@ nb q "example" --or "sample" --and "demo"
 # equivalent: example|sample AND demo|sample
 ```
 
-Search for [#tags](#-tagging) with a flexible
-[`nb search --tags [<tags>]`](#search) option:
+Search for [#tags](#-tagging) with flexible
+[`nb search --tags [<tags>]` / `nb q -t [<tags>]`](#search) options:
 
 ```bash
 # search for tags in the current notebook
@@ -3342,8 +3354,8 @@ When only a file extension is specified, only the extension is updated:
 nb rename 5 .org
 ```
 
-Use [`rename --to-bookmark`](#move) to change the extension of a note
-to `.bookmark.md` and [`rename --to-note`](#move) to change the extension
+Use [`nb rename --to-bookmark`](#move) to change the extension of a note
+to `.bookmark.md` and [`nb rename --to-note`](#move) to change the extension
 of a bookmark to either `.md` or the extension set with
 [`nb set default_extension`](#default_extension):
 
@@ -3355,7 +3367,7 @@ nb rename 3 --to-bookmark
 nb rename 6 --to-note
 ```
 
-Use `rename --to-title` to set the filename to the note title,
+Use `nb rename --to-title` to set the filename to the note title,
 lowercased with spaces and disallowed filename characters replaced
 with underscores:
 
@@ -3658,12 +3670,12 @@ Search for a tag in or across notebooks with
 
 ```bash
 # search for #tag in the current notebook
-nb q "#tag"
+nb q --tag tag
 
-# search for #tag in all notebooks
-nb q "#tag" -a
+# search for #tag in all notebooks, short options
+nb q -t tag -a
 
-# search for #tag in the "example" notebook
+# search for #tag in the "example" notebook, argument
 nb q example: "#tag"
 ```
 
