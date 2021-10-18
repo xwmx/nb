@@ -3248,10 +3248,9 @@ nb sample:search --tag tag1 --tag tag2
 
 # search for items in the "sample" notebook tagged with "#tag1" AND "#tag2",
 # alternative
-nb q --tags tag1,tag2
+nb sample:q --tags tag1,tag2
 
-# search for items in the "sample" notebook tagged with "#tag1" AND "#tag2",
-# alternative
+# search for items in the current notebook tagged with "#tag1" AND "#tag2"
 nb q --tag tag1 --and --tag tag2
 
 # search for items in the current notebook tagged with "#tag1" OR "#tag2",
