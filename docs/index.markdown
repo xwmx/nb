@@ -7649,6 +7649,10 @@ See Also:
 
 ### Plugins
 
+[↑](#help) · See also:
+[Plugins](#-plugins),
+[`plugins`](#plugins)
+
 <p align="center">
   <a href="#backlink">backlink</a>&nbsp;·
   <a href="#clip">clip</a>&nbsp;·
