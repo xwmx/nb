@@ -3232,7 +3232,7 @@ nb q -t example
 nb q "#example"
 
 # search for items in the "sample" notebook tagged with "#tag1" AND "#tag2"
-nb sample:search --tag tag1 --tag tag
+nb sample:search --tag tag1 --tag tag2
 
 # search for items in the "sample" notebook tagged with "#tag1" AND "#tag2",
 # alternative
