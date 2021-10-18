@@ -14337,29 +14337,14 @@ _search() {
       -a|--all)
         _all=1
         ;;
-      --and)
-        if _contains "${2:-}" "-e" "--tags"
+      --and|--or)
+        local _option_and=1
+
+        if [[ "${1:-}" == "--or" ]]
         then
-          shift
+          _option_and=0
         fi
 
-        _and_queries+=("$(_option_get_value "--and" "${2:-}")")
-
-        shift
-        ;;
-      -l|--list)
-        _only_list=1
-        ;;
-      --no*color)
-        _COLOR_ENABLED=0
-        ;;
-      --no*recur*)
-        _max_depth=1
-        ;;
-      --notebook-selectors)
-        _print_notebook_selectors=1
-        ;;
-      --or)
         if [[ "${2:-}" == "-e" ]]
         then
           shift
@@ -14374,14 +14359,36 @@ _search() {
             _option_get_tags "${1:-}" "${2:-}"
           )"
 
-          _or_queries+=(${_option_tags[@]:-})
+          if ((_option_and))
+          then
+            _and_queries+=(${_option_tags[@]:-})
+          else
+            _or_queries+=(${_option_tags[@]:-})
+          fi
 
           shift
         else
-          _or_queries+=("$(_option_get_value "--or" "${2:-}")")
+          if ((_option_and))
+          then
+            _and_queries+=("$(_option_get_value "--and" "${2:-}")")
+          else
+            _or_queries+=("$(_option_get_value "--or" "${2:-}")")
+          fi
 
           shift
         fi
+        ;;
+      -l|--list)
+        _only_list=1
+        ;;
+      --no*color)
+        _COLOR_ENABLED=0
+        ;;
+      --no*recur*)
+        _max_depth=1
+        ;;
+      --notebook-selectors)
+        _print_notebook_selectors=1
         ;;
       --page)
         _page="$(_option_get_value "${1}" "${2:-}")"
