@@ -54,7 +54,7 @@ HEREDOC
   [[    "${lines[2]}"   =~  \#tag3  ]]
 }
 
-@test "'--tag tag1,'#tag2' exits with status 0 and prints matches as an OR query." {
+@test "'--tag tag1,'#tag2' exits with status 0 and prints matches as an AND query." {
   {
     "${_NB}" init
 
