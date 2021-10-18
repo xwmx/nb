@@ -14235,7 +14235,7 @@ $(_color_primary "Options"):
                                 each matching file, without the excerpt.
   --or <query>                  Add an OR query.
   --path                        Print the full path for each matching file.
-  -t, --tag <tag1>,<tag2>...    A comma-separated list of tags to search for.
+  -t, --tag <tag1>,<tag2>...    A comma-separated list of tags.
   -t, --tags                    List all tags found in the notebook.
   --type <type>, --<type>       Search items of <type>. <type> can be a file
                                 extension or one of the following types:
