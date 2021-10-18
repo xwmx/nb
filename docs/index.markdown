@@ -6917,7 +6917,7 @@ Examples:
   nb search "\d\d\d-\d\d\d\d"
 
   # search for tags
-  nb search -t tag1 --tag "#tag2"
+  nb search --tag tag1 -t tag2
 
   # search the current notebook for "example query"
   nb q "example query"
