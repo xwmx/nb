@@ -25,6 +25,70 @@ line four
 HEREDOC
 }
 
+# tags ########################################################################
+
+@test "'--tags' exits with status 0 and prints tags in the current notebook." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md"    --content "Content one. #tag3"
+    "${_NB}" add "File Two.md"    --content "Content two. #tag1"
+    "${_NB}" add "File Three.md"  --content "Content three. tag1 #tag2"
+    "${_NB}" add "File Four.md"   --content "Content #tag1 four. #tag2"
+    "${_NB}" add "File Five.md"   --content "Content five."
+    "${_NB}" add "File Six.md"    --content "Content six. #tag2"
+    "${_NB}" add "File Seven.md"  --content "Content #tag2 Seven. #tag3 #tag1"
+  }
+
+  run "${_NB}" --tags
+
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
+  printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
+
+  [[    "${status}"     -eq 0       ]]
+  [[    "${#lines[@]}"  -eq 3       ]]
+
+  [[    "${lines[0]}"   =~  \#tag1  ]]
+  [[    "${lines[1]}"   =~  \#tag2  ]]
+  [[    "${lines[2]}"   =~  \#tag3  ]]
+}
+
+@test "'--tag tag1,'#tag2' exits with status 0 and prints matches as an OR query." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md"    --content "Content one. #tag3"
+    "${_NB}" add "File Two.md"    --content "Content two. #tag1"
+    "${_NB}" add "File Three.md"  --content "Content three. tag1 #tag2"
+    "${_NB}" add "File Four.md"   --content "Content #tag1 four. #tag2"
+    "${_NB}" add "File Five.md"   --content "Content five."
+    "${_NB}" add "File Six.md"    --content "Content six. #tag2"
+    "${_NB}" add "File Seven.md"  --content "Content #tag2 Seven. #tag3 #tag1"
+  }
+
+  run "${_NB}" --tag tag1,'#tag2'
+
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
+  printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
+
+  [[    "${status}"     -eq 0                                             ]]
+  [[    "${#lines[@]}"  -eq 6                                             ]]
+
+  [[    "${lines[0]}"   =~  \
+.*[.*4.*].*\ File\ Four.md\ \·\ \"Content\ #tag1\ four.\ #tag2\"          ]]
+  [[    "${lines[1]}"   =~  ^.*------------------.*$                      ]]
+  [[    "${lines[2]}"   =~  \
+1.*:.*Content\ .*#tag1.*\ four.\ .*#tag2                                  ]]
+
+  [[    "${lines[3]}"   =~  \
+.*[.*7.*].*\ File\ Seven.md\ \·\ \"Content\ #tag2\ Seven.\ #tag3\ #tag1\" ]]
+  [[    "${lines[4]}"   =~  ^.*------------------.*$                      ]]
+  [[    "${lines[5]}"   =~  \
+1.*:.*Content\ .*#tag2.*\ Seven.\ #tag3\ .*#tag1                          ]]
+}
+
 # pinning #####################################################################
 
 @test "'ls --reverse' prints list without pinning." {

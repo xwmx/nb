@@ -6002,8 +6002,15 @@ _ls() {
         _arguments+=("${1}")
         _with_pinned=0
         ;;
-      --tags)
+      --tag*)
         _delegate_arguments+=("${1}")
+
+        if _option_value_is_present "${2:-}"
+        then
+          _delegate_arguments+=("${2:-}")
+
+          shift
+        fi
         ;;
       -t|--type)
         _maybe_type="$(_option_get_value "${1}" "${2:-}")"
@@ -6090,9 +6097,9 @@ _ls() {
               return 0
             fi
             ;;
-          --tags)
+          --tag*)
             ((_all)) && _delegate_arguments+=("--all")
-            _defer "_list"  "${_arguments[@]:-}" "${_delegate_arguments[@]:-}"
+            _defer "_search"  "${_arguments[@]:-}" "${_delegate_arguments[@]:-}"
             return 0
             ;;
           *)
