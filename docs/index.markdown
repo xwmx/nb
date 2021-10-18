@@ -2174,22 +2174,34 @@ Tagged items can be searched with [`nb search` / `nb q`](#search):
 
 ```bash
 # search for and list items in any notebook tagged with "#tag1"
-nb search "#tag1" --all --list
+nb search --tag tag1 --all --list
 
 # search for and list items in any notebook tagged with "#tag1", shortcut and short options
+nb q -t tag1 -al
+
+# search for and list items in any notebook tagged with "#tag1", alternative
 nb q "#tag1" -al
 
 # search for items in the current notebook tagged with both "#tag1" AND "#tag2"
-nb q "#tag1" "#tag2"
+nb q --tag tag1 --tag tag2
 
-# search for items in the current notebook tagged with both "#tag1" AND "#tag2", long option
-nb q "#tag1" --and "#tag2"
+# search for items in the current notebook tagged with both "#tag1" AND "#tag2", alternative
+nb q "#tag1" --and -t tag2
+
+# search for items in the "sample" notebook tagged with "#tag1" AND "#tag2"
+nb q --tags tag1,tag2
 
 # search for items in the current notebook tagged with either "#tag1" OR "#tag2"
 nb q "#tag1|#tag2"
 
-# search for items in the current notebook tagged with either "#tag1" OR "#tag2", long option
+# search for items in the current notebook tagged with either "#tag1" OR "#tag2", options
+nb q --tag tag1 --or -t tag2
+
+# search for items in the current notebook tagged with either "#tag1" OR "#tag2", arguments
 nb q "#tag1" --or "#tag2"
+
+# search for items tagged with "#tag1" OR "#tag2" OR "#tag3"
+nb q -t tag1 --or --tags tag2,tag3
 ```
 
 Linked tags can be [browsed](#-browsing) with [`nb browse`](#browse),
@@ -3207,6 +3219,41 @@ nb q "example" --or "sample"
 ```bash
 nb q "example" --or "sample" --and "demo"
 # equivalent: example|sample AND demo|sample
+```
+
+Search for [#tags](#-tagging) with a flexible
+[`nb search --tags [<tags>]`](#search) option:
+
+```bash
+# search for tags in the current notebook
+nb search --tags
+
+# search for items tagged with "#example"
+nb search --tag example
+
+# search for items tagged with "#example", shortcut alias and short option
+nb q -t example
+
+# search for items tagged with "#example", shortcut alias and argument
+nb q "#example"
+
+# search for items in the "sample" notebook tagged with "#tag1" AND "#tag2"
+nb sample:search --tag tag1 --tag tag
+
+# search for items in the "sample" notebook tagged with "#tag1" AND "#tag2",
+# alternative
+nb q --tags tag1,tag2
+
+# search for items in the "sample" notebook tagged with "#tag1" AND "#tag2",
+# alternative
+nb q --tag tag1 --and --tag tag2
+
+# search for items in the current notebook tagged with "#tag1" OR "#tag2",
+# shortcut alias and short options
+nb q -t tag1 --or -t tag2
+
+# search for items tagged with "#tag1" OR "#tag2" OR "#tag3"
+nb q -t tag1 --or --tags tag2,tag3
 ```
 
 `nb search` leverages Git's powerful built-in
