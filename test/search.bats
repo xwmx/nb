@@ -42,7 +42,7 @@ _search_all_setup() {
 
 # tags ########################################################################
 
-@test "'search -t tag1 --and -t tag2,'#tag3' exits with status 0 and prints matches as an OR query." {
+@test "'search -t tag1 --and -t tag2,'#tag3' exits with status 0 and prints matches as an AND query." {
   {
     "${_NB}" init
 
