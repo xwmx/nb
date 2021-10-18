@@ -509,7 +509,7 @@ Added: [11] tagged_example.md "Tagged Example"
 Example content.
 ```
 
-Search for tagged items with [`nb search` / `nb q`](#search):
+[Search](#-search) for tagged items with [`nb search` / `nb q`](#search):
 
 ```bash
 # search for items tagged with "#tag1"
