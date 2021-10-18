@@ -103,7 +103,7 @@ _search_all_setup() {
 .*[.*1.*].*\ File\ One.md\ ·\ \"Content\ one.\ #tag3\"            ]]
   [[    "${lines[4]}"   =~  ^.*------------------.*$              ]]
   [[    "${lines[5]}"   =~  \
-1.*:.*Content\ one.\ \ .*#tag3                                    ]]
+1.*:.*Content\ one.\ .*#tag3                                      ]]
 
   [[    "${lines[6]}"   =~  \
 .*[.*7.*].*\ File\ Seven.md\ ·\ \"Content\ #tag2\ Seven.\ #tag1\" ]]
@@ -115,10 +115,10 @@ _search_all_setup() {
 .*[.*6.*].*\ File\ Six.md\ ·\ \"Content\ six.\ #tag2\"            ]]
   [[    "${lines[10]}"  =~  ^.*------------------.*$              ]]
   [[    "${lines[11]}"  =~  \
-1.*:.*Content\ six.\ *#tag2                                       ]]
+1.*:.*Content\ six.\ .*#tag2                                      ]]
 
   [[    "${lines[12]}"  =~  \
-.*[.*6.*].*\ File\ Three.md\ ·\ \"Content\ three.\ tag1\ #tag2\"  ]]
+.*[.*3.*].*\ File\ Three.md\ ·\ \"Content\ three.\ tag1\ #tag2\"  ]]
   [[    "${lines[13]}"  =~  ^.*------------------.*$              ]]
   [[    "${lines[14]}"  =~  \
 1.*:.*Content\ three.\ tag1\ .*#tag2                              ]]
