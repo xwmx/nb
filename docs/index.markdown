@@ -2203,13 +2203,13 @@ nb q "#tag1" --and "#tag2"
 # search for items tagged with "#tag1" AND "#tag2", tag list
 nb q --tags tag1,tag2
 
-# search for items in the current notebook tagged with either "#tag1" OR "#tag2"
+# search for items tagged with either "#tag1" OR "#tag2"
 nb q "#tag1|#tag2"
 
-# search for items in the current notebook tagged with either "#tag1" OR "#tag2", options
+# search for items tagged with either "#tag1" OR "#tag2", options
 nb q --tag tag1 --or -t tag2
 
-# search for items in the current notebook tagged with either "#tag1" OR "#tag2", arguments
+# search for items tagged with either "#tag1" OR "#tag2", arguments
 nb q "#tag1" --or "#tag2"
 
 # search for items tagged with "#tag1" OR "#tag2" OR "#tag3"
