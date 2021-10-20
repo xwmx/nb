@@ -6541,14 +6541,14 @@ Subcommands:
              Aliases: `nb notebooks create`, `nb notebooks new`
   archive    Set the current notebook or notebook <name> to "archived" status.
   author     Configure the commit author email and name for the notebook.
+  current    Print the current notebook name or path.
+  delete     Delete a notebook.
   export     Export the notebook <name> to the current directory or <path>,
              making it usable as a local notebook.
   import     Import the local notebook at <path> to make it global.
   init       Create a new local notebook. Specify a <path> or omit to
              initialize the current working directory as a local notebook.
              Specify <remote-url> to clone an existing notebook.
-  current    Print the current notebook name or path.
-  delete     Delete a notebook.
   open       Open the current notebook directory or notebook <name> in the
              file browser, explorer, or finder.
              Shortcut Alias: `o`
