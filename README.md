@@ -180,6 +180,7 @@ Also supported for various enhancements:
 [Ack](https://beyondgrep.com/),
 [`afplay`](https://ss64.com/osx/afplay.html),
 [Ag - The Silver Searcher](https://github.com/ggreer/the_silver_searcher),
+[`catimg`](https://github.com/posva/catimg),
 [`exa`](https://github.com/ogham/exa),
 [`ffplay`](https://ffmpeg.org/ffplay.html),
 [ImageMagick](https://imagemagick.org/),
@@ -1350,6 +1351,7 @@ Supported file types and tools include:
   - [`imgcat`](https://www.iterm2.com/documentation-images.html) with
     [iTerm2](https://www.iterm2.com/)
   - [kitty's `icat` kitten](https://sw.kovidgoyal.net/kitty/kittens/icat.html)
+  - [`catimg`](https://github.com/posva/catimg)
 - Folders / Directories:
   - [`ranger`](https://ranger.github.io/)
   - [Midnight Commander (`mc`)](https://en.wikipedia.org/wiki/Midnight_Commander)

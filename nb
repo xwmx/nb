@@ -16065,14 +16065,17 @@ Can't show archives. Export archive and expand to edit.\\n"
          [[   "${TERM_PROGRAM:-}" == "iTerm.app"  ]]  &&
          [[   "${_tool:-imgcat}"  == "imgcat"     ]]
     then
-      imgcat "${_target_path}"  | {
-        if _command_exists "less"   &&  ! ((_print_output))
+      imgcat "${_target_path}"    | {
+        if _command_exists "less" &&  ! ((_print_output))
         then
           less -r --prompt="$(_less_prompt)"
         else
           cat
         fi
       }
+    elif _command_exists "catimg"
+    then
+      catimg "${_target_path}"
     elif _command_exists "magick"                     &&
          _file_is_image "${_target_path}"             &&
          [[ ! "${_target_path}"   =~ afphoto$     ]]  &&
