@@ -2783,7 +2783,7 @@ home
 Imported image items can be opened in the system GUI application for
 the item's file type using [`nb open`](#open):
 
-```
+```bash
 # open the image "example-image.png" in the system GUI photo viewer
 nb open example-image.png
 
