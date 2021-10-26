@@ -19122,14 +19122,22 @@ HEREDOC
       _web_browser "${_request_url:-}"
     elif ((_open_gui))
     then
-      if _command_exists "${NB_GUI_BROWSER:-}"
+      local _gui_browser_command=()
+
+      if [[ -n "${NB_GUI_BROWSER:-}"          ]]
       then
-        "${NB_GUI_BROWSER}" "${_request_url:-}"
+        _gui_browser_command=("${NB_GUI_BROWSER:-}")
+      fi
+
+      if _command_exists "${_gui_browser_command[0]:-}" ||
+         [[ -f "${_gui_browser_command[0]:-}" ]]
+      then
+        "${_gui_browser_command[@]:-}" "${_request_url:-}" 2>/dev/null &
       else
         if _command_exists "xdg-open"
         then
           xdg-open "${_request_url:-}"
-        elif [[ "${OSTYPE}" =~ ^darwin ]]
+        elif [[ "${OSTYPE}" =~ ^darwin        ]]
         then
           open "${_request_url:-}"
         fi
