@@ -497,6 +497,13 @@ export NB_ENCRYPTION_TOOL="${NB_ENCRYPTION_TOOL:-openssl}"
 # Supported Values: '0' '1'
 export NB_FOOTER="${NB_FOOTER:-1}"
 
+# $NB_GUI_BROWSER
+#
+# Default: ''
+#
+# Example Value: 'firefox'
+export NB_GUI_BROWSER="${NB_GUI_BROWSER:-}"
+
 # $NB_HEADER
 #
 # Default: '2'
@@ -19115,12 +19122,17 @@ HEREDOC
       _web_browser "${_request_url:-}"
     elif ((_open_gui))
     then
-      if _command_exists "xdg-open"
+      if _command_exists "${NB_GUI_BROWSER:-}"
       then
-        xdg-open "${_request_url:-}"
-      elif [[ "${OSTYPE}" =~ ^darwin ]]
-      then
-        open "${_request_url:-}"
+        "${NB_GUI_BROWSER}" "${_request_url:-}"
+      else
+        if _command_exists "xdg-open"
+        then
+          xdg-open "${_request_url:-}"
+        elif [[ "${OSTYPE}" =~ ^darwin ]]
+        then
+          open "${_request_url:-}"
+        fi
       fi
     fi
 
