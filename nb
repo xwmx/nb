@@ -19856,7 +19856,7 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
             | sed "s/.*\///g" || :
         ))
 
-        if [[ -z "${_remote_branches[*]:-}"       ]]
+        if [[ -z "${_remote_branches[*]:-}"     ]]
         then
           _exit_1 printf "Unable to contact remote.\\n"
         fi
