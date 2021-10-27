@@ -2832,6 +2832,7 @@ supported tools and configurations, including:
 - [`imgcat`](https://www.iterm2.com/documentation-images.html) with
   [iTerm2](https://www.iterm2.com/)
 - [kitty's `icat` kitten](https://sw.kovidgoyal.net/kitty/kittens/icat.html)
+- [`catimg`](https://github.com/posva/catimg)
 
 #### Inline Images
 
