@@ -3635,8 +3635,8 @@ and makes working with notebooks easy, fluid, and fun.
 
 For example, listing the contents of a notebook is usually as simple as typing
 the first two or three characters of the name,
-then pressing the \<tab\> key,
-then pressing \<enter\>:
+then pressing the `<tab>` key,
+then pressing `<enter>` / `<return>`:
 
 ```bash
 ❯ nb exa<tab>
