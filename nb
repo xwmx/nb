@@ -10926,8 +10926,8 @@ _add() {
     store tech top tk tv uk us vip wang website work xyz
   )
 
-  local _selector_filename=
   local _selector_content=
+  local _selector_filename=
   local _selector_folder_relative_path=
 
   local i=
