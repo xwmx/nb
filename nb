@@ -74,7 +74,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="6.5.1"
+_VERSION="6.6.0"
 
 # $_ME
 #
@@ -496,6 +496,13 @@ export NB_ENCRYPTION_TOOL="${NB_ENCRYPTION_TOOL:-openssl}"
 #
 # Supported Values: '0' '1'
 export NB_FOOTER="${NB_FOOTER:-1}"
+
+# $NB_GUI_BROWSER
+#
+# Default: ''
+#
+# Example Value: 'firefox'
+export NB_GUI_BROWSER="${NB_GUI_BROWSER:-}"
 
 # $NB_HEADER
 #
@@ -2155,9 +2162,9 @@ _wrap() {
 #   List files in the current notebook or filenames from standard input.
 _list_files() {
   local _path=
+  local _read_from_standard_input=0
   local _reverse=0
   local _sort=0
-  local _read_from_standard_input=0
   local _type=
 
   while ((${#}))
@@ -3749,8 +3756,8 @@ $(_color_primary "Usage"):
   ${_ME} run <command> [<arguments>...]
   ${_ME} search ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             <query>... [-a | --all] [--and <query>] [--or <query>]
-            [-l | --list]  [--path] [-t <type> | --type <type> | --<type>]
-            [--utility <name>]
+            [-l | --list] [--path] [-t <tag1>,<tag2>... | --tag <tag1>,<tag2>...]
+            [-t | --tags] [--type <type> | --<type>] [--utility <name>]
   ${_ME} set [<name> [<value>] | <number> [<value>]]
   ${_ME} settings [colors [<number> | themes] | edit | list [--long]]
   ${_ME} settings (get | show | unset) (<name> | <number>)
@@ -3770,8 +3777,8 @@ $(_color_primary "Usage"):
   ${_ME} unset (<name> | <number>)
   ${_ME} update
   ${_ME} use <notebook>
-  ${_ME} -i | --interactive [<subcommand> [<options>...]]
   ${_ME} -h | --help | help [<subcommand> | --readme]
+  ${_ME} -i | --interactive [<subcommand> [<options>...]]
   ${_ME} --no-color
   ${_ME} --version | version
 HEREDOC
@@ -6002,8 +6009,15 @@ _ls() {
         _arguments+=("${1}")
         _with_pinned=0
         ;;
-      --tags)
+      --tag*)
         _delegate_arguments+=("${1}")
+
+        if _option_value_is_present "${2:-}"
+        then
+          _delegate_arguments+=("${2:-}")
+
+          shift
+        fi
         ;;
       -t|--type)
         _maybe_type="$(_option_get_value "${1}" "${2:-}")"
@@ -6090,9 +6104,9 @@ _ls() {
               return 0
             fi
             ;;
-          --tags)
+          --tag*)
             ((_all)) && _delegate_arguments+=("--all")
-            _defer "_list"  "${_arguments[@]:-}" "${_delegate_arguments[@]:-}"
+            _defer "_search"  "${_arguments[@]:-}" "${_delegate_arguments[@]:-}"
             return 0
             ;;
           *)
@@ -6340,11 +6354,11 @@ $(_color_primary "Options"):
                            <filename> is provided, check for an existing file
                            and provide a filename with an appended sequence
                            number for uniqueness.
+  -f, --force              Skip the confirmation prompt.
   --global                 List global notebooks or the notebook set globally
                            with \`use\`.
   --local                  Exit with 0 if current within a local notebook,
                            otherwise exit with 1.
-  -f, --force              Skip the confirmation prompt.
   --name, --names          Print the notebook name.
   --name <name>            Set the notebook's commit author name to <name>.
   --path, --paths          Print the notebook path.
@@ -6360,14 +6374,14 @@ $(_color_primary "Subcommands"):
              Aliases: \`${_ME} notebooks create\`, \`${_ME} notebooks new\`
   archive    Set the current notebook or notebook <name> to "archived" status.
   author     Configure the commit author email and name for the notebook.
+  current    Print the current notebook name or path.
+  delete     Delete a notebook.
   export     Export the notebook <name> to the current directory or <path>,
              making it usable as a local notebook.
   import     Import the local notebook at <path> to make it global.
   init       Create a new local notebook. Specify a <path> or omit to
              initialize the current working directory as a local notebook.
              Specify <remote-url> to clone an existing notebook.
-  current    Print the current notebook name or path.
-  delete     Delete a notebook.
   open       Open the current notebook directory or notebook <name> in the
              file browser, explorer, or finder.
              Shortcut Alias: \`o\`
@@ -9433,11 +9447,19 @@ code {
   white-space:        pre-wrap;
 }
 
-pre       { margin:   1em 0;  overflow: auto;     }
-pre code  { padding:  0;      overflow: visible;  }
+pre {
+  background-color:   #212121;
+  border-radius:      1px;
+  margin:             1rem 0;
+  overflow:           auto;
+  padding:            1rem;
+}
 
-.sourceCode {
-  background-color:   transparent;
+pre.sourceCode {
+  padding:            1rem;
+}
+
+pre code {
   overflow:           visible;
 }
 
@@ -9845,15 +9867,7 @@ pre.numberSource {
 }
 
 div.sourceCode {
-  background-color:   transparent;
   color:              #cccccc;
-  margin:             1em 0;
-}
-
-pre.sourceCode {
-  background-color:   #212121;
-  margin:             0;
-  padding:            1rem;
 }
 
 @media screen {
@@ -9862,35 +9876,35 @@ pre.sourceCode {
   }
 }
 
-code span.al { color: #ffcfaf;                                    } /* Alert */
-code span.an { color: #7f9f7f;                font-weight: bold;  } /* Annotation */
-code span.at {                                                    } /* Attribute */
-code span.bn { color: #dca3a3;                                    } /* BaseN */
-code span.bu {                                                    } /* BuiltIn */
-code span.cf { color: #7290b1;                                    } /* ControlFlow */
-code span.ch { color: #8987a0;                                    } /* Char */
-code span.cn { color: #8987a0;                font-weight: bold;  } /* Constant */
-code span.co { color: ${_color_dim_hex};                          } /* Comment */
-code span.cv { color: #7f9f7f;                font-weight: bold;  } /* CommentVar */
-code span.do { color: ${_color_dim_hex};                          } /* Documentation */
-code span.dt { color: #cccc96;                                    } /* DataType */
-code span.dv { color: #cccc96;                                    } /* DecVal */
-code span.er { color: #cccc96;                                    } /* Error */
-code span.ex {                                                    } /* Extension */
-code span.fl { color: #c0bed1;                                    } /* Float */
-code span.fu { color: #7290b1;                                    } /* Function */
-code span.im {                                                    } /* Import */
-code span.in { color: #7f9f7f;                font-weight: bold;  } /* Information */
-code span.kw { color: #7290b1;                                    } /* Keyword */
-code span.op { color: #f0efd0;                                    } /* Operator */
-code span.ot { color: #cccc96;                                    } /* Other */
-code span.pp { color: #ffcfaf;                font-weight: bold;  } /* Preprocessor */
-code span.sc { color: #8987a0;                                    } /* SpecialChar */
-code span.ss { color: ${_color_primary_hex};                      } /* SpecialString */
-code span.st { color: ${_color_primary_hex};                      } /* String */
-code span.va {                                                    } /* Variable */
-code span.vs { color: ${_color_primary_hex};                      } /* VerbatimString */
-code span.wa { color: #93a5cc;                font-weight: bold;  } /* Warning */
+code span.al { color: #ffcfaf;                          } /*     Alert      */
+code span.an { color: #7f9f7f;      font-weight: bold;  } /*   Annotation   */
+code span.at {                                          } /*   Attribute    */
+code span.bn { color: #dca3a3;                          } /*     BaseN      */
+code span.bu {                                          } /*    BuiltIn     */
+code span.cf { color: #7290b1;                          } /*  ControlFlow   */
+code span.ch { color: #8987a0;                          } /*      Char      */
+code span.cn { color: #8987a0;      font-weight: bold;  } /*    Constant    */
+code span.co { color: ${_color_dim_hex};                } /*    Comment     */
+code span.cv { color: #7f9f7f;      font-weight: bold;  } /*   CommentVar   */
+code span.do { color: ${_color_dim_hex};                } /* Documentation  */
+code span.dt { color: #cccc96;                          } /*    DataType    */
+code span.dv { color: #cccc96;                          } /*     DecVal     */
+code span.er { color: #cccc96;                          } /*     Error      */
+code span.ex {                                          } /*   Extension    */
+code span.fl { color: #c0bed1;                          } /*     Float      */
+code span.fu { color: #7290b1;                          } /*    Function    */
+code span.im {                                          } /*     Import     */
+code span.in { color: #7f9f7f;      font-weight: bold;  } /*  Information   */
+code span.kw { color: #7290b1;                          } /*    Keyword     */
+code span.op { color: #f0efd0;                          } /*   Operator     */
+code span.ot { color: #cccc96;                          } /*     Other      */
+code span.pp { color: #ffcfaf;      font-weight: bold;  } /*  Preprocessor  */
+code span.sc { color: #8987a0;                          } /*  SpecialChar   */
+code span.ss { color: ${_color_primary_hex};            } /* SpecialString  */
+code span.st { color: ${_color_primary_hex};            } /*     String     */
+code span.va {                                          } /*    Variable    */
+code span.vs { color: ${_color_primary_hex};            } /* VerbatimString */
+code span.wa { color: #93a5cc;      font-weight: bold;  } /*    Warning     */
 </style>
 
 <script>
@@ -10912,8 +10926,8 @@ _add() {
     store tech top tk tv uk us vip wang website work xyz
   )
 
-  local _selector_filename=
   local _selector_content=
+  local _selector_filename=
   local _selector_folder_relative_path=
 
   local i=
@@ -12642,7 +12656,7 @@ _edit() {
 
   if [[ -n "${_relative_path}"                    ]] &&
      [[ -e "${_notebook_path}/${_relative_path}"  ]]
-  then # _basename is assigned and a note exists with that name.
+  then
     local _before
     _before="$(_get_hash "${_notebook_path}/${_relative_path}")"
 
@@ -13034,6 +13048,7 @@ $(_color_primary "Read More"):
   ${_README_URL}#%EF%B8%8F-import--export
 
 $(_color_primary "See Also"):
+  ${_ME} help browse
   ${_ME} help import
 
 $(_color_primary "Examples"):
@@ -14224,8 +14239,8 @@ _describe_search() {
 $(_color_primary "Usage"):
   ${_ME} search ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             <query>... [-a | --all] [--and <query>] [--or <query>]
-            [-l | --list]  [--path] [-t <type> | --type <type> | --<type>]
-            [--utility <name>]
+            [-l | --list] [--path] [-t <tag1>,<tag2>... | --tag <tag1>,<tag2>...]
+            [-t | --tags] [--type <type> | --<type>] [--utility <name>]
 
 $(_color_primary "Options"):
   -a, --all                     Search all unarchived notebooks.
@@ -14234,7 +14249,9 @@ $(_color_primary "Options"):
                                 each matching file, without the excerpt.
   --or <query>                  Add an OR query.
   --path                        Print the full path for each matching file.
-  -t, --type <type>, --<type>   Search items of <type>. <type> can be a file
+  -t, --tag <tag1>,<tag2>...    A comma-separated list of tags.
+  -t, --tags                    List all tags found in the notebook.
+  --type <type>, --<type>       Search items of <type>. <type> can be a file
                                 extension or one of the following types:
                                 note, bookmark, document, archive, image,
                                 video, audio, folder, text
@@ -14288,6 +14305,9 @@ $(_color_primary "Examples"):
   # search with a regular expression
   ${_ME} search "\d\d\d-\d\d\d\d"
 
+  # search for tags
+  ${_ME} search --tag tag1 -t tag2
+
   # search the current notebook for "example query"
   ${_ME} q "example query"
 
@@ -14311,6 +14331,7 @@ _search() {
   local _max_columns="2000"
   local _max_depth=0
   local _only_list=0
+  local _option_tags=()
   local _or_queries=()
   local _page=1
   local _per_page=0
@@ -14322,7 +14343,6 @@ _search() {
   local _search_utility=
   local _selectors=()
   local _sort=0
-  local _tag_queries=()
   local _type=
 
   while ((${#}))
@@ -14331,10 +14351,46 @@ _search() {
       -a|--all)
         _all=1
         ;;
-      --and)
-        [[ "${2:-}" == "-e" ]] && shift
-        _and_queries+=("$(_option_get_value "--and" "${2:-}")")
-        shift
+      --and|--or)
+        local _option_and=1
+
+        if [[ "${1:-}" == "--or" ]]
+        then
+          _option_and=0
+        fi
+
+        if [[ "${2:-}" == "-e" ]]
+        then
+          shift
+        fi
+
+        if [[ "${2:-}" =~ ^-t$|^--tag*|^--hashtag* ]] &&
+           _option_value_is_present "${3:-}"
+        then
+          shift
+
+          IFS=' ' read -ra _option_tags <<< "$(
+            _option_get_tags "${1:-}" "${2:-}"
+          )"
+
+          if ((_option_and))
+          then
+            _and_queries+=(${_option_tags[@]:-})
+          else
+            _or_queries+=(${_option_tags[@]:-})
+          fi
+
+          shift
+        else
+          if ((_option_and))
+          then
+            _and_queries+=("$(_option_get_value "--and" "${2:-}")")
+          else
+            _or_queries+=("$(_option_get_value "--or" "${2:-}")")
+          fi
+
+          shift
+        fi
         ;;
       -l|--list)
         _only_list=1
@@ -14348,11 +14404,6 @@ _search() {
       --notebook-selectors)
         _print_notebook_selectors=1
         ;;
-      --or)
-        [[ "${2:-}" == "-e" ]] && shift
-        _or_queries+=("$(_option_get_value "--or" "${2:-}")")
-        shift
-        ;;
       --page)
         _page="$(_option_get_value "${1}" "${2:-}")"
         ((_page)) || _page=1
@@ -14364,26 +14415,34 @@ _search() {
         ;;
       --per*)
         _per_page="$(_option_get_value "${1}" "${2:-}")"
+
         shift
         ;;
       -q|--query|-e)
         _and_queries+=("$(_option_get_value "${1}" "${2:-}")")
+
         shift
         ;;
       -s|--sort)
         _sort=1
         ;;
-      --tag)
-        local _tag_option_argument=
-        _tag_option_argument="$(_option_get_value "--or" "${2:-}")"
-        _tag_queries+=("#${_tag_option_argument#\#}")
-        shift
-        ;;
-      --tags|--hashtags)
-        _search_tags=1
+      -t|--tag*|--hashtag*)
+        if _option_value_is_present "${2:-}"
+        then
+          IFS=' ' read -ra _option_tags <<< "$(
+            _option_get_tags "${1:-}" "${2:-}"
+          )"
+
+          _and_queries+=(${_option_tags[@]:-})
+
+          shift
+        else
+          _search_tags=1
+        fi
         ;;
       --*tool|--*utility)
         _search_utility="$(_option_get_value "${1}" "${2:-}")"
+
         shift
         ;;
       --type)
@@ -14611,18 +14670,7 @@ _search() {
     return 0
   fi
 
-  if [[   -n "${_tag_queries[*]:-}" ]]
-  then
-    if [[ -z "${_and_queries[*]:-}" ]]
-    then
-      _and_queries+=("${_tag_queries[0]:-}")
-      _or_queries+=("${_tag_queries[@]:1}")
-    else
-      _or_queries+=("${_tag_queries[@]}")
-    fi
-  fi
-
-  if [[ -z "${_and_queries[*]:-}"   ]]
+  if [[ -z "${_and_queries[*]:-}" ]]
   then
     _exit_1 _help "search"
   fi
@@ -14636,13 +14684,17 @@ _search() {
 
     if ((${#_or_queries[@]}))
     then
+      local _or_query_string=
+
       local __or_query=
       for   __or_query in "${_or_queries[@]:-}"
       do
         [[ -n "${__or_query:-}"   ]] || continue
 
-        _queries+=("${__and_query}|${__or_query}")
+        _or_query_string="${_or_query_string}|${__or_query}"
       done
+
+      _queries+=("${__and_query}${_or_query_string}")
     else
       _queries+=("${__and_query}")
     fi
@@ -16020,14 +16072,17 @@ Can't show archives. Export archive and expand to edit.\\n"
          [[   "${TERM_PROGRAM:-}" == "iTerm.app"  ]]  &&
          [[   "${_tool:-imgcat}"  == "imgcat"     ]]
     then
-      imgcat "${_target_path}"  | {
-        if _command_exists "less"   &&  ! ((_print_output))
+      imgcat "${_target_path}"    | {
+        if _command_exists "less" &&  ! ((_print_output))
         then
           less -r --prompt="$(_less_prompt)"
         else
           cat
         fi
       }
+    elif _command_exists "catimg"
+    then
+      catimg "${_target_path}"
     elif _command_exists "magick"                     &&
          _file_is_image "${_target_path}"             &&
          [[ ! "${_target_path}"   =~ afphoto$     ]]  &&
@@ -16864,15 +16919,15 @@ _browse() {
       # TODO: https://stackoverflow.com/a/15844977
       cat <<HEREDOC
 <form
-  action="/${_selector//' '/%20}?--add${_url_params:-}"
   accept-charset="UTF-8"
+  action="/${_selector//' '/%20}?--add${_url_params:-}"
   method="post">
 <textarea
   class="content"
+  cols="${_text_area_columns}"
   id="content"
   name="content"
-  rows="${_rows}"
-  cols="${_text_area_columns}">${_form_content:-}</textarea>
+  rows="${_rows}">${_form_content:-}</textarea>
 <br><br>
 <input
   type="submit"
@@ -17370,9 +17425,9 @@ ${_info_line//'\ '/ }
 </p>
 <div align="center">
 <form
+  accept-charset="UTF-8"
   action="/${_id_selector:-}?--delete${_url_params:-}"
   align="center"
-  accept-charset="UTF-8"
   method="post">
 <input
   align="center"
@@ -17497,15 +17552,15 @@ HEREDOC
       # TODO: https://stackoverflow.com/a/15844977
       cat <<HEREDOC
 <form
-  action="/${_form_action_selector:-}?--edit${_url_params:-}"
   accept-charset="UTF-8"
+  action="/${_form_action_selector:-}?--edit${_url_params:-}"
   method="post">
 <textarea
   class="content"
+  cols="${_text_area_columns}"
   id="content"
   name="content"
-  rows="${_rows}"
-  cols="${_text_area_columns}">${_content}</textarea>
+  rows="${_rows}">${_content}</textarea>
 <br><br>
 <input
   type="submit"
@@ -19067,12 +19122,25 @@ HEREDOC
       _web_browser "${_request_url:-}"
     elif ((_open_gui))
     then
-      if _command_exists "xdg-open"
+      local _gui_browser_command=()
+
+      if [[ -n "${NB_GUI_BROWSER:-}"          ]]
       then
-        xdg-open "${_request_url:-}"
-      elif [[ "${OSTYPE}" =~ ^darwin ]]
+        _gui_browser_command=("${NB_GUI_BROWSER:-}")
+      fi
+
+      if _command_exists "${_gui_browser_command[0]:-}" ||
+         [[ -f "${_gui_browser_command[0]:-}" ]]
       then
-        open "${_request_url:-}"
+        "${_gui_browser_command[@]:-}" "${_request_url:-}" 2>/dev/null &
+      else
+        if _command_exists "xdg-open"
+        then
+          xdg-open "${_request_url:-}"
+        elif [[ "${OSTYPE}" =~ ^darwin        ]]
+        then
+          open "${_request_url:-}"
+        fi
       fi
     fi
 
@@ -19788,7 +19856,7 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
             | sed "s/.*\///g" || :
         ))
 
-        if [[ -z "${_remote_branches[*]:-}"       ]]
+        if [[ -z "${_remote_branches[*]:-}"     ]]
         then
           _exit_1 printf "Unable to contact remote.\\n"
         fi

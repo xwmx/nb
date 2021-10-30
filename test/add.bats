@@ -296,7 +296,7 @@ HEREDOC
   printf "%s\\n" "${output}" | grep -q \
 "calhost:6789/home:?--per-page=.*&--columns=.*\">home</a>"
 
-  printf "%s\\n" "${output}" | grep -q "cols=\".*\">"
+  printf "%s\\n" "${output}" | grep -q "rows=\".*\">"
 
   printf "%s\\n" "${output}" | grep -q \
 "action=\"/home:Example%20Folder/Example%20File.md?--add&--per-page=.*&--columns=.*\""
@@ -305,7 +305,7 @@ HEREDOC
 "value=\"add\">"
 
   printf "%s\\n" "${output}" | grep -q \
-"cols=\".*\"># Example Title${_NEWLINE}${_NEWLINE}#tag1 #tag2${_NEWLINE}${_NEWLINE}Example content.${_NEWLINE}</textarea>"
+"rows=\".*\"># Example Title${_NEWLINE}${_NEWLINE}#tag1 #tag2${_NEWLINE}${_NEWLINE}Example content.${_NEWLINE}</textarea>"
 
   printf "%s\\n" "${output}" | grep -q -v \
 "<input type=\"hidden\" name=\"--title\""
@@ -790,6 +790,61 @@ HEREDOC
 # Example Title
 
 #tag1 #tag2
+
+Example content.
+HEREDOC
+)
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  # Adds to index:
+
+  [[ -e "${NB_DIR}/home/.index" ]]
+
+  diff                      \
+    <(ls "${NB_DIR}/home")  \
+    <(cat "${NB_DIR}/home/.index")
+
+  # Prints output:
+
+  [[ "${lines[0]}" =~ Added:\ .*[.*1.*].*\ .*example_title.md ]]
+}
+
+@test "'add --tags <tag-list> --tag <tag-list>' with a mix of tag formatting creates new note with tags." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" add                \
+    --tags    '#tag1',tag2        \
+    --title   "Example Title"     \
+    --content "Example content."  \
+    --tag     tag3,'#tag4',tag5
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0 ]]
+
+  # Creates new note file with content:
+
+  [[ -f "${NB_DIR}/home/example_title.md" ]]
+
+  diff                                        \
+    <(cat "${NB_DIR}/home/example_title.md")  \
+    <(cat <<HEREDOC
+# Example Title
+
+#tag1 #tag2 #tag3 #tag4 #tag5
 
 Example content.
 HEREDOC

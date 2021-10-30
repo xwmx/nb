@@ -671,7 +671,7 @@ HEREDOC
   printf "%s\\n" "${output}" | grep -q \
 "calhost:6789/Example%20Notebook:?--per-page=.*&--columns=.*\">Example Notebook</a>"
 
-  printf "%s\\n" "${output}" | grep -q "cols=\".*\">"
+  printf "%s\\n" "${output}" | grep -q "rows=\".*\">"
 
   printf "%s\\n" "${output}" | grep -q \
 "action=\"/Example%20Notebook:Example%20Folder/Example%20File.md?--add&--per-page=.*&--columns=.*\""
@@ -680,7 +680,7 @@ HEREDOC
 "value=\"add\">"
 
   printf "%s\\n" "${output}" | grep -q \
-"cols=\".*\"># Example Title${_NEWLINE}${_NEWLINE}#tag1 #tag2${_NEWLINE}${_NEWLINE}Example content.${_NEWLINE}</textarea>"
+"rows=\".*\"># Example Title${_NEWLINE}${_NEWLINE}#tag1 #tag2${_NEWLINE}${_NEWLINE}Example content.${_NEWLINE}</textarea>"
 
   printf "%s\\n" "${output}" | grep -q -v \
 "<input type=\"hidden\" name=\"--title\""
@@ -717,7 +717,7 @@ HEREDOC
   printf "%s\\n" "${output}" | grep -q \
 "calhost:6789/home:?--per-page=.*&--columns=.*\">home</a>"
 
-  printf "%s\\n" "${output}" | grep -q "cols=\".*\">"
+  printf "%s\\n" "${output}" | grep -q "rows=\".*\">"
 
   printf "%s\\n" "${output}" | grep -q \
 "action=\"/home:Example%20Folder/Example%20File.md?--add&--per-page=.*&--columns=.*\""
@@ -726,7 +726,7 @@ HEREDOC
 "value=\"add\">"
 
   printf "%s\\n" "${output}" | grep -q \
-"cols=\".*\"># Example Title${_NEWLINE}${_NEWLINE}#tag1 #tag2${_NEWLINE}${_NEWLINE}Example content.${_NEWLINE}</textarea>"
+"rows=\".*\"># Example Title${_NEWLINE}${_NEWLINE}#tag1 #tag2${_NEWLINE}${_NEWLINE}Example content.${_NEWLINE}</textarea>"
 
   printf "%s\\n" "${output}" | grep -q -v \
 "<input type=\"hidden\" name=\"--title\""
@@ -766,7 +766,7 @@ HEREDOC
   printf "%s\\n" "${output}" | grep -q \
 "calhost:6789/home:?--per-page=.*&--columns=.*\">home</a>"
 
-  printf "%s\\n" "${output}" | grep -q "cols=\".*\">"
+  printf "%s\\n" "${output}" | grep -q "rows=\".*\">"
 
   printf "%s\\n" "${output}" | grep -q \
 "action=\"/home:Example%20Folder/Example%20File.md?--add&--per-page=.*&--columns=.*\""
@@ -775,7 +775,7 @@ HEREDOC
 "value=\"add\">"
 
   printf "%s\\n" "${output}" | grep -q \
-"cols=\".*\"># Example Title${_NEWLINE}${_NEWLINE}#tag1 #tag2${_NEWLINE}${_NEWLINE}Example content.${_NEWLINE}</textarea>"
+"rows=\".*\"># Example Title${_NEWLINE}${_NEWLINE}#tag1 #tag2${_NEWLINE}${_NEWLINE}Example content.${_NEWLINE}</textarea>"
 
   printf "%s\\n" "${output}" | grep -q -v \
 "<input type=\"hidden\" name=\"--title\""
@@ -814,7 +814,7 @@ HEREDOC
   printf "%s\\n" "${output}" | grep -q \
 "calhost:6789/home:?--per-page=.*&--columns=.*\">home</a>"
 
-  printf "%s\\n" "${output}" | grep -q "cols=\".*\">"
+  printf "%s\\n" "${output}" | grep -q "rows=\".*\">"
 
   printf "%s\\n" "${output}" | grep -q \
 "action=\"/home:Example%20Folder/Example%20File.md?--add&--per-page=.*&--columns=.*\""
@@ -823,7 +823,7 @@ HEREDOC
 "value=\"add\">"
 
   printf "%s\\n" "${output}" | grep -q \
-"cols=\".*\"># Example Title${_NEWLINE}${_NEWLINE}#tag1 #tag2${_NEWLINE}${_NEWLINE}Example content.${_NEWLINE}</textarea>"
+"rows=\".*\"># Example Title${_NEWLINE}${_NEWLINE}#tag1 #tag2${_NEWLINE}${_NEWLINE}Example content.${_NEWLINE}</textarea>"
 
   printf "%s\\n" "${output}" | grep -q -v \
 "<input type=\"hidden\" name=\"--title\""
@@ -859,7 +859,7 @@ HEREDOC
   printf "%s\\n" "${output}" | grep -q \
 "calhost:6789/home:?--per-page=.*&--columns=.*\">home</a>"
 
-  printf "%s\\n" "${output}" | grep -q "cols=\".*\">"
+  printf "%s\\n" "${output}" | grep -q "rows=\".*\">"
 
   printf "%s\\n" "${output}" | grep -q \
 "action=\"/home:Example%20Folder/?--add&--per-page=.*&--columns=.*\""
@@ -961,7 +961,7 @@ HEREDOC
   printf "%s\\n" "${output}" | grep -q \
     "href=\"//localhost:6789/?--per-page=30&--columns=20\"><span class=\"dim\">❯</span>nb</a> "
 
-  printf "%s\\n" "${output}" | grep -q "cols=\"17\">"
+  printf "%s\\n" "${output}" | grep -q "rows=\"32\">"
   printf "%s\\n" "${output}" | grep -q \
     "<form${_NEWLINE}action=\"/home:?--add&--per-page=30--columns=20"
 
@@ -1027,7 +1027,7 @@ HEREDOC
   printf "%s\\n" "${output}" | grep -q \
 "calhost:6789/home:?--per-page=.*&--columns=.*\">home</a>"
 
-  printf "%s\\n" "${output}" | grep -q "cols=\"67\">"
+  printf "%s\\n" "${output}" | grep -q "rows=\"32\">"
 
   printf "%s\\n" "${output}" | grep -q \
 "value=\"add\">"

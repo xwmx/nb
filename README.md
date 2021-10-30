@@ -180,6 +180,7 @@ Also supported for various enhancements:
 [Ack](https://beyondgrep.com/),
 [`afplay`](https://ss64.com/osx/afplay.html),
 [Ag - The Silver Searcher](https://github.com/ggreer/the_silver_searcher),
+[`catimg`](https://github.com/posva/catimg),
 [`exa`](https://github.com/ogham/exa),
 [`ffplay`](https://ffmpeg.org/ffplay.html),
 [ImageMagick](https://imagemagick.org/),
@@ -503,10 +504,17 @@ Added: [11] tagged_example.md "Tagged Example"
 Example content.
 ```
 
-Search for tagged items with [`nb search` / `nb q`](#search):
+[Search](#-search) for tagged items with [`nb search` / `nb q`](#search):
 
 ```bash
-nb search "#tag1" "#tag2"
+# search for items tagged with "#tag1"
+nb search --tag tag1
+
+# search for items tagged with "#tag1" AND "#tag2", short options
+nb q -t tag1 -t tag2
+
+# search for items tagged with "#tag1" AND "#tag2", arguments
+nb q "#tag1" "#tag2"
 ```
 
 Files can be created with any file type by specifying the extension either
@@ -575,6 +583,9 @@ Option content.
 
 Clipboard content.
 ```
+
+The [`clip` plugin](#clip) can also be used to create notes from
+clipboard content.
 
 For a full list of options available for `nb add`, run
 [`nb help add`](#add).
@@ -1340,6 +1351,7 @@ Supported file types and tools include:
   - [`imgcat`](https://www.iterm2.com/documentation-images.html) with
     [iTerm2](https://www.iterm2.com/)
   - [kitty's `icat` kitten](https://sw.kovidgoyal.net/kitty/kittens/icat.html)
+  - [`catimg`](https://github.com/posva/catimg)
 - Folders / Directories:
   - [`ranger`](https://ranger.github.io/)
   - [Midnight Commander (`mc`)](https://en.wikipedia.org/wiki/Midnight_Commander)
@@ -1724,12 +1736,14 @@ permission.
 [More information\...](https://www.iana.org/domains/example)
 ```
 
-Search for tagged bookmarks with [`nb search` / `nb q`](#search):
+[Search](#-search) for tagged bookmarks with [`nb search` / `nb q`](#search):
 
 ```bash
-nb search "#tag1"
+nb search --tag tag1
 
-nb q "#tag"
+nb q -t tag1
+
+nb q "#tag1"
 ```
 
 `nb search` / `nb q` automatically searches archived page content:
@@ -2161,26 +2175,41 @@ nb example/ --tags
 nb sample:123 --tags
 ```
 
-Tagged items can be searched with [`nb search` / `nb q`](#search):
+Tagged items can be [searched](#-search) with [`nb search` / `nb q`](#search):
 
 ```bash
 # search for and list items in any notebook tagged with "#tag1"
-nb search "#tag1" --all --list
+nb search --tag tag1 --all --list
 
 # search for and list items in any notebook tagged with "#tag1", shortcut and short options
+nb q -t tag1 -al
+
+# search for and list items in any notebook tagged with "#tag1", alternative
 nb q "#tag1" -al
 
-# search for items in the current notebook tagged with both "#tag1" AND "#tag2"
-nb q "#tag1" "#tag2"
+# search for items tagged with "#tag1" AND "#tag2"
+nb q --tag tag1 --tag tag2
 
-# search for items in the current notebook tagged with both "#tag1" AND "#tag2", long option
+# search for items tagged with "#tag1" AND "#tag2", short options
+nb q -t tag1 --and -t tag2
+
+# search for items tagged with "#tag1" AND "#tag2", arguments
 nb q "#tag1" --and "#tag2"
 
-# search for items in the current notebook tagged with either "#tag1" OR "#tag2"
+# search for items tagged with "#tag1" AND "#tag2", tag list
+nb q --tags tag1,tag2
+
+# search for items tagged with either "#tag1" OR "#tag2"
 nb q "#tag1|#tag2"
 
-# search for items in the current notebook tagged with either "#tag1" OR "#tag2", long option
+# search for items tagged with either "#tag1" OR "#tag2", options
+nb q --tag tag1 --or -t tag2
+
+# search for items tagged with either "#tag1" OR "#tag2", arguments
 nb q "#tag1" --or "#tag2"
+
+# search for items tagged with "#tag1" OR "#tag2" OR "#tag3"
+nb q -t tag1 --or --tags tag2,tag3
 ```
 
 Linked tags can be [browsed](#-browsing) with [`nb browse`](#browse),
@@ -2754,7 +2783,7 @@ home
 Imported image items can be opened in the system GUI application for
 the item's file type using [`nb open`](#open):
 
-```
+```bash
 # open the image "example-image.png" in the system GUI photo viewer
 nb open example-image.png
 
@@ -2797,6 +2826,7 @@ supported tools and configurations, including:
 - [`imgcat`](https://www.iterm2.com/documentation-images.html) with
   [iTerm2](https://www.iterm2.com/)
 - [kitty's `icat` kitten](https://sw.kovidgoyal.net/kitty/kittens/icat.html)
+- [`catimg`](https://github.com/posva/catimg)
 
 #### Inline Images
 
@@ -3200,6 +3230,40 @@ nb q "example" --or "sample" --and "demo"
 # equivalent: example|sample AND demo|sample
 ```
 
+Search for [#tags](#-tagging) with flexible
+[`nb search --tags [<tags>]` / `nb q -t [<tags>]`](#search) options:
+
+```bash
+# search for tags in the current notebook
+nb search --tags
+
+# search for items tagged with "#example"
+nb search --tag example
+
+# search for items tagged with "#example", shortcut alias and short option
+nb q -t example
+
+# search for items tagged with "#example", shortcut alias and argument
+nb q "#example"
+
+# search for items in the "sample" notebook tagged with "#tag1" AND "#tag2"
+nb sample:search --tag tag1 --tag tag2
+
+# search for items in the "sample" notebook tagged with "#tag1" AND "#tag2",
+# alternative
+nb sample:q --tags tag1,tag2
+
+# search for items in the current notebook tagged with "#tag1" AND "#tag2"
+nb q --tag tag1 --and --tag tag2
+
+# search for items in the current notebook tagged with "#tag1" OR "#tag2",
+# shortcut alias and short options
+nb q -t tag1 --or -t tag2
+
+# search for items tagged with "#tag1" OR "#tag2" OR "#tag3"
+nb q -t tag1 --or --tags tag2,tag3
+```
+
 `nb search` leverages Git's powerful built-in
 [`git grep`](https://git-scm.com/docs/git-grep).
 `nb` also supports performing searches with alternative search tools
@@ -3292,8 +3356,8 @@ When only a file extension is specified, only the extension is updated:
 nb rename 5 .org
 ```
 
-Use [`rename --to-bookmark`](#move) to change the extension of a note
-to `.bookmark.md` and [`rename --to-note`](#move) to change the extension
+Use [`nb rename --to-bookmark`](#move) to change the extension of a note
+to `.bookmark.md` and [`nb rename --to-note`](#move) to change the extension
 of a bookmark to either `.md` or the extension set with
 [`nb set default_extension`](#default_extension):
 
@@ -3305,7 +3369,7 @@ nb rename 3 --to-bookmark
 nb rename 6 --to-note
 ```
 
-Use `rename --to-title` to set the filename to the note title,
+Use `nb rename --to-title` to set the filename to the note title,
 lowercased with spaces and disallowed filename characters replaced
 with underscores:
 
@@ -3571,8 +3635,8 @@ and makes working with notebooks easy, fluid, and fun.
 
 For example, listing the contents of a notebook is usually as simple as typing
 the first two or three characters of the name,
-then pressing the \<tab\> key,
-then pressing \<enter\>:
+then pressing the `<tab>` key,
+then pressing `<enter>` / `<return>`:
 
 ```bash
 ❯ nb exa<tab>
@@ -3608,12 +3672,12 @@ Search for a tag in or across notebooks with
 
 ```bash
 # search for #tag in the current notebook
-nb q "#tag"
+nb q --tag tag
 
-# search for #tag in all notebooks
-nb q "#tag" -a
+# search for #tag in all notebooks, short options
+nb q -t tag -a
 
-# search for #tag in the "example" notebook
+# search for #tag in the "example" notebook, argument
 nb q example: "#tag"
 ```
 
@@ -4032,7 +4096,8 @@ that could inform a strategy for handling any such cases automatically.
   <sup>
     <a href="#overview">↑</a> ·
     <a href="#import"><code>nb import</code></a>,
-    <a href="#export"><code>nb export</code></a>
+    <a href="#export"><code>nb export</code></a>,
+    <a href="#browse"><code>nb browse</code></a>
   </sup>
 </p>
 
@@ -4137,6 +4202,21 @@ For more information about imported and exported notebooks, see
 
 For `nb import` and `nb export` help information, see
 [`nb help import`](#import) and [`nb help export`](#export).
+
+#### Exporting with `browse`
+
+Items can be exported using terminal and GUI [web browsers](#-browsing).
+Use the down arrow (`↓`) link
+on the [`nb browse`](#browse) item page
+to download the original file:
+
+```bash
+❯ nb browse 123
+❯nb · home : 123 · ↓ | +
+
+    example.pdf
+ 
+```
 
 ### ⚙️ `set` & `settings`
 
@@ -5160,8 +5240,8 @@ Usage:
   nb run <command> [<arguments>...]
   nb search ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             <query>... [-a | --all] [--and <query>] [--or <query>]
-            [-l | --list]  [--path] [-t <type> | --type <type> | --<type>]
-            [--utility <name>]
+            [-l | --list] [--path] [-t <tag1>,<tag2>... | --tag <tag1>,<tag2>...]
+            [-t | --tags] [--type <type> | --<type>] [--utility <name>]
   nb set [<name> [<value>] | <number> [<value>]]
   nb settings [colors [<number> | themes] | edit | list [--long]]
   nb settings (get | show | unset) (<name> | <number>)
@@ -5181,8 +5261,8 @@ Usage:
   nb unset (<name> | <number>)
   nb update
   nb use <notebook>
-  nb -i | --interactive [<subcommand> [<options>...]]
   nb -h | --help | help [<subcommand> | --readme]
+  nb -i | --interactive [<subcommand> [<options>...]]
   nb --no-color
   nb --version | version
 
@@ -5917,6 +5997,7 @@ See Also:
 
 [↑](#help) · See also:
 [Import / Export](#%EF%B8%8F-import--export),
+[`browse`](#browse),
 [`import`](#import)
 
 ```text
@@ -5952,6 +6033,7 @@ Read More:
   https://github.com/xwmx/nb#%EF%B8%8F-import--export
 
 See Also:
+  nb help browse
   nb help import
 
 Examples:
@@ -6442,11 +6524,11 @@ Options:
                            <filename> is provided, check for an existing file
                            and provide a filename with an appended sequence
                            number for uniqueness.
+  -f, --force              Skip the confirmation prompt.
   --global                 List global notebooks or the notebook set globally
                            with `use`.
   --local                  Exit with 0 if current within a local notebook,
                            otherwise exit with 1.
-  -f, --force              Skip the confirmation prompt.
   --name, --names          Print the notebook name.
   --name <name>            Set the notebook's commit author name to <name>.
   --path, --paths          Print the notebook path.
@@ -6462,14 +6544,14 @@ Subcommands:
              Aliases: `nb notebooks create`, `nb notebooks new`
   archive    Set the current notebook or notebook <name> to "archived" status.
   author     Configure the commit author email and name for the notebook.
+  current    Print the current notebook name or path.
+  delete     Delete a notebook.
   export     Export the notebook <name> to the current directory or <path>,
              making it usable as a local notebook.
   import     Import the local notebook at <path> to make it global.
   init       Create a new local notebook. Specify a <path> or omit to
              initialize the current working directory as a local notebook.
              Specify <remote-url> to clone an existing notebook.
-  current    Print the current notebook name or path.
-  delete     Delete a notebook.
   open       Open the current notebook directory or notebook <name> in the
              file browser, explorer, or finder.
              Shortcut Alias: `o`
@@ -6764,8 +6846,8 @@ Examples:
 Usage:
   nb search ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             <query>... [-a | --all] [--and <query>] [--or <query>]
-            [-l | --list]  [--path] [-t <type> | --type <type> | --<type>]
-            [--utility <name>]
+            [-l | --list] [--path] [-t <tag1>,<tag2>... | --tag <tag1>,<tag2>...]
+            [-t | --tags] [--type <type> | --<type>] [--utility <name>]
 
 Options:
   -a, --all                     Search all unarchived notebooks.
@@ -6774,7 +6856,9 @@ Options:
                                 each matching file, without the excerpt.
   --or <query>                  Add an OR query.
   --path                        Print the full path for each matching file.
-  -t, --type <type>, --<type>   Search items of <type>. <type> can be a file
+  -t, --tag <tag1>,<tag2>...    A comma-separated list of tags.
+  -t, --tags                    List all tags found in the notebook.
+  --type <type>, --<type>       Search items of <type>. <type> can be a file
                                 extension or one of the following types:
                                 note, bookmark, document, archive, image,
                                 video, audio, folder, text
@@ -6827,6 +6911,9 @@ Examples:
 
   # search with a regular expression
   nb search "\d\d\d-\d\d\d\d"
+
+  # search for tags
+  nb search --tag tag1 -t tag2
 
   # search the current notebook for "example query"
   nb q "example query"
@@ -7570,6 +7657,10 @@ See Also:
 
 ### Plugins
 
+[↑](#help) · See also:
+[Plugins](#-plugins),
+[`plugins`](#plugins)
+
 <p align="center">
   <a href="#backlink">backlink</a>&nbsp;·
   <a href="#clip">clip</a>&nbsp;·
@@ -7627,6 +7718,9 @@ Examples:
 
   # save the clipboard contents to a new file with a `.js` file extension
   nb clip .js
+
+  # save the clipboard contents as a new `.cr` file in the "snippets" notebook
+  nb snippets:clip .cr
 ```
 
 #### `copy`
