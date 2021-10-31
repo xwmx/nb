@@ -14227,6 +14227,7 @@ _run() {
 
   cd "${_notebook_path}"  || _exit_1 printf "_run() \`cd\` failed.\\n"
   [[ -n "${*}" ]]         || _exit_1 printf "Command required.\\n"
+  type "${1}" >/dev/null 2>&1 || _exit_1 printf "Command \`${1}\` not available.\\n"
 
   ("${@}")
 }
