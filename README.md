@@ -2187,6 +2187,9 @@ nb q -t tag1 -al
 # search for and list items in any notebook tagged with "#tag1", alternative
 nb q "#tag1" -al
 
+# search for and list items in any notebook tagged with "#tag1", alternative
+nb q \#tag1 -al
+
 # search for items tagged with "#tag1" AND "#tag2"
 nb q --tag tag1 --tag tag2
 
@@ -2194,7 +2197,7 @@ nb q --tag tag1 --tag tag2
 nb q -t tag1 --and -t tag2
 
 # search for items tagged with "#tag1" AND "#tag2", arguments
-nb q "#tag1" --and "#tag2"
+nb q \#tag1 --and \#tag2
 
 # search for items tagged with "#tag1" AND "#tag2", tag list
 nb q --tags tag1,tag2
@@ -2693,7 +2696,7 @@ If neither `ncat` nor `pandoc` is available,
 #### `browse` Privacy
 
 `nb browse` is completely local and self-contained within `nb`,
-from the CSS and vanilla JavaScript
+from the CSS and JavaScript
 all the way down through the HTTP request parsing and response building,
 with no imports, libraries, frameworks, or third-party code
 outside of the few binary dependencies (`bash`, `git`, `ncat`, `pandoc`),
@@ -3245,6 +3248,9 @@ nb q -t example
 
 # search for items tagged with "#example", shortcut alias and argument
 nb q "#example"
+
+# search for items tagged with "#example", shortcut alias and argument
+nb q \#example
 
 # search for items in the "sample" notebook tagged with "#tag1" AND "#tag2"
 nb sample:search --tag tag1 --tag tag2
