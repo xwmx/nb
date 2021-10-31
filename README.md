@@ -3268,6 +3268,9 @@ nb q -t tag1 --or -t tag2
 
 # search for items tagged with "#tag1" OR "#tag2" OR "#tag3"
 nb q -t tag1 --or --tags tag2,tag3
+
+# search for items tagged with "#tag1" OR "#tag2" OR "#tag3"
+nb q \#tag1 --or -t tag2 --or "#tag3"
 ```
 
 `nb search` leverages Git's powerful built-in
