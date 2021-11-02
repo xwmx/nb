@@ -14225,8 +14225,8 @@ _run() {
   local _notebook_path
   _notebook_path="$(_notebooks current --path)"
 
-  cd "${_notebook_path}"    || _exit_1 printf "_run() \`cd\` failed.\\n"
-  [[ -n "${*}" ]]           || _exit_1 printf "Command required.\\n"
+  cd "${_notebook_path}"  || _exit_1 printf "_run() \`cd\` failed.\\n"
+  [[ -n "${*}" ]]         || _exit_1 printf "Command required.\\n"
 
   if ! _command_exists "${1:-}"
   then
