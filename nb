@@ -11417,15 +11417,17 @@ HEREDOC
 _bookmark() {
     # Usage: _bookmark_cleanup_tag_content <string>
   _bookmark_cleanup_tag_content() {
+    local _character_removal_pattern=
+    _character_removal_pattern="$(
+      printf "\xE2\x80\xAA|\xE2\x80\xAB|\xE2\x80\xAC"
+    )"
+
     # `awk` condenses and trims whitespace
     # `sed` removes select unicode characters
     # `w3m` converts HTML entities
-    printf "%s\\n" "${1:-}"   \
-      | awk '$1=$1'           \
-      | sed -E                \
-            -e "s/‪//g"  \
-            -e "s/‫//g"  \
-            -e "s/‬//g"  \
+    printf "%s\\n" "${1:-}"                             \
+      | awk '$1=$1'                                     \
+      | sed -E -e "s/${_character_removal_pattern}//g"  \
       | if _command_exists "w3m"
         then
            w3m -dump -T text/html -cols 99999
