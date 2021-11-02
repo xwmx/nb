@@ -17,16 +17,13 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status}  -eq 0           ]]
-  [[ "${output}" == "${_files}" ]]
+  [[ "${status}"  -eq 0           ]]
+  [[ "${output}"  ==  "${_files}" ]]
 }
 
 @test "'run' with no command exits with status 1 and prints message." {
   {
     "${_NB}" init
-    "${_NB}" add "one.md" --title "one"
-    "${_NB}" add "two.md" --title "two"
-    "${_NB}" add "three.md" --title "three"
   }
 
   run "${_NB}" run
@@ -34,6 +31,20 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status}  -eq 1                   ]]
-  [[ "${output}" =~ Command\ required\. ]]
+  [[ "${status}"  -eq 1                   ]]
+  [[ "${output}"  =~  Command\ required\. ]]
+}
+
+@test "'run' with non-existent command exits with status 1 and prints message." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" run not-a-valid-command
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 1                                           ]]
+  [[ "${output}"  =~  Command\ not\ found:\ .*not-a-valid-command ]]
 }
