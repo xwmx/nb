@@ -18672,7 +18672,11 @@ HEREDOC
   #
   # Description:
   #   Send a response with <status-code> as status and an optional <file>
-  #   or <string>, then exit with 0 for status 200 and 1 for all others.
+  #   or <string>.
+  #
+  # Exit / Error Status:
+  #   0 (success, true)  HTTP status 200 or 302.
+  #   1 (error,  false)  All others.
   _browse_respond_with() {
     local _only_headers=0
     local _path=
