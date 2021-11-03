@@ -446,7 +446,7 @@ via the command line. Quoting content is optional, but recommended.
 When no filename is specified, `nb add` uses the current datetime as
 the filename.
 
-`nb add` can also recieve piped content, which behaves the same as
+`nb add` can also receive piped content, which behaves the same as
 `nb add <string>`:
 
 ```bash
