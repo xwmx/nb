@@ -17030,10 +17030,9 @@ HEREDOC
 
     if [[ -n "${_query:-}" ]]
     then
-      local _query_arguments=()
       _query_arguments=($(
-        printf "%s" "${_query}" | xargs -n 1 printf "%s\\n"
-      ))
+        printf "%s\\n" "${_query}" | xargs -n 1 printf "%s\\n" 2>/dev/null
+      )) || IFS=' ' read -ra _query_arguments <<< "${_query}"
 
       _encoded_query="$(
         sed                     \

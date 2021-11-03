@@ -130,7 +130,7 @@ action=\"/local:\?--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'/'/%2F}%2FL
 
 # normalization ###############################################################
 
-@test "'browse --container --query' with spaces performs search." {
+@test "'browse --query' with spaces performs search." {
   {
     "${_NB}" init
 
@@ -252,6 +252,35 @@ identifier\"\>home:2\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Two\</
 }
 
 # query #######################################################################
+
+@test "'browse --container --query' with quotes performs search." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "File One.md"     \
+      --title     "Title One"       \
+      --content   "One's content."
+    "${_NB}" add  "File Two.md"     \
+      --title     "Title Two"       \
+      --content   "Two's \"quoted\" and unquoted content."
+  }
+
+  run "${_NB}" browse --container --query "Two's \"quoted\" and"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq  0         ]]
+
+  [[ !  "${output}"   =~ Title\ One ]]
+
+  [[    "${output}"   =~  \
+\<a.*\ href=\"//localhost:6789/home:2\?--per-page=.*\"\ class=\"list-item\"\>           ]]
+  [[    "${output}"   =~   \
+class=\"list-item\"\>\<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>   ]]
+  [[    "${output}"   =~   \
+identifier\"\>home:2\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Two\</a\>\<br\> ]]
+}
 
 @test "'browse --container --query' with tag performs search." {
   {
