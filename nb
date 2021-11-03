@@ -18978,7 +18978,7 @@ HEREDOC
     _url_params+=("--query=${_encoded_query}")
   fi
 
-  if [[ -n "${_action:-}" ]]
+  if [[ -n "${_action:-}"       ]]
   then
     _arguments+=("--${_action}")
     _url_params+=("--${_action}")
