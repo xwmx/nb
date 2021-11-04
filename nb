@@ -18519,7 +18519,7 @@ HEREDOC
 
     # respond
 
-    if [[ -z "${_target_selector:-}"              ]]
+    if [[ -z "${_target_selector:-}"  ]]
     then
       _browse_render_notebooks  "${_render_function_options[@]:-}"  \
         | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
@@ -18527,29 +18527,7 @@ HEREDOC
       return 0
     fi
 
-    local _selector_path=
-
-    if [[ "${_target_selector}" =~ ^local:        ]]
-    then
-      if [[ -z "${_local_notebook_path:-}"        ]]
-      then
-        _browse_respond_with 400
-
-        return 1
-      fi
-
-      _selector_path="$(
-        cd "${_local_notebook_path:-}"            &&
-          __set_notebook_paths                    &&
-          _show "${_target_selector%%\?*}" --path --no-color 2>&1 || :
-      )"
-    else
-      _selector_path="$(
-        _show "${_target_selector%%\?*}" --path 2>/dev/null || :
-      )"
-    fi
-
-    if [[ "${_action:-}" == "add"       ]]
+    if [[ "${_action:-}" == "add"     ]]
     then
       _render_function_options+=("${_target_selector:-}")
 
@@ -18572,28 +18550,52 @@ HEREDOC
       esac
 
       return 0
-    elif [[ -z "${_selector_path:-}"    ]]
+    fi
+
+    local _selector_path=
+
+    if [[ "${_target_selector}" =~ ^local:  ]]
     then
+      if [[ -z "${_local_notebook_path:-}"  ]]
+      then
+        _browse_respond_with 400
+
+        return 1
+      fi
+
+      _selector_path="$(
+        cd "${_local_notebook_path:-}"      &&
+          __set_notebook_paths              &&
+          _show "${_target_selector%%\?*}" --path --no-color 2>&1 || :
+      )"
+    else
+      _selector_path="$(
+        _show "${_target_selector%%\?*}" --path 2>/dev/null || :
+      )"
+    fi
+
+    if [[ -n "${_selector_path:-}"    ]]
+    then
+      _render_function_options+=("${_selector_path}")
+    else
       _browse_respond_with 404
 
       return 1
     fi
 
-    _render_function_options+=("${_selector_path}")
-
-    if [[ -d "${_selector_path:-}"      ]]
+    if [[   -d "${_selector_path:-}"  ]]
     then
-      if [[ -n "${_page_number:-}"      ]]
+      if [[ -n "${_page_number:-}"    ]]
       then
         _render_function_options+=("--page" "${_page_number}")
       fi
 
-      if [[ -n "${_query:-}"            ]]
+      if [[ -n "${_query:-}"          ]]
       then
         _render_function_options+=("--query" "${_query}")
       fi
 
-      _browse_render_container "${_render_function_options[@]:-}"     \
+      _browse_render_container "${_render_function_options[@]:-}"   \
         | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
 
       return 0
@@ -18627,7 +18629,7 @@ HEREDOC
 
           _browse_item_delete "${_render_function_options[@]:-}" &>/dev/null
 
-          _browse_respond_with 302              \
+          _browse_respond_with 302    \
 "//${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_container_id_selector}${_response_url_params:-}"
           ;;
       esac
