@@ -18534,6 +18534,8 @@ HEREDOC
       if [[ -z "${_local_notebook_path:-}"        ]]
       then
         _browse_respond_with 400
+
+        return 1
       fi
 
       _selector_path="$(
@@ -18574,7 +18576,7 @@ HEREDOC
     then
       _browse_respond_with 404
 
-      return 0
+      return 1
     fi
 
     _render_function_options+=("${_selector_path}")
@@ -18655,6 +18657,8 @@ HEREDOC
     # fall back to 500 response
 
     _browse_respond_with 500
+
+    return 1
   }
 
   # _browse_respond_with()
