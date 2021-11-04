@@ -18503,7 +18503,7 @@ HEREDOC
       _response_url_params+="&--per-page=${_per_page}"
     fi
 
-    if [[ -n "${_encoded_local_notebook_path:-}"    ]]
+    if [[ -n "${_encoded_local_notebook_path:-}"  ]]
     then
       _render_function_options+=("--local" "${_encoded_local_notebook_path:-}")
       _response_url_params+="&--local=${_encoded_local_notebook_path:-}"
@@ -18519,141 +18519,137 @@ HEREDOC
 
     # respond
 
-    if [[ -z "${_target_selector:-}"                ]]
+    if [[ -z "${_target_selector:-}"              ]]
     then
-      _browse_render_notebooks "${_render_function_options[@]:-}" \
+      _browse_render_notebooks  "${_render_function_options[@]:-}"  \
+        | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
+
+      return 0
+    fi
+
+    local _selector_path=
+
+    if [[ "${_target_selector}" =~ ^local:        ]]
+    then
+      if [[ -z "${_local_notebook_path:-}"        ]]
+      then
+        _browse_respond_with 400
+      fi
+
+      _selector_path="$(
+        cd "${_local_notebook_path:-}"            &&
+          __set_notebook_paths                    &&
+          _show "${_target_selector%%\?*}" --path --no-color 2>&1 || :
+      )"
+    else
+      _selector_path="$(
+        _show "${_target_selector%%\?*}" --path 2>/dev/null || :
+      )"
+    fi
+
+    if [[ "${_action:-}" == "add"       ]]
+    then
+      _render_function_options+=("${_target_selector:-}")
+
+      case "${_request_method:-}" in
+        GET)
+            _browse_render_add "${_render_function_options[@]:-}"   \
+              | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
+          ;;
+        POST)
+          local _new_selector=
+          _new_selector="$(
+            _browse_item_create                   \
+              "${_render_function_options[@]:-}"  \
+              --message-body "${_message_body:-}"
+          )"
+
+          _browse_respond_with 302                \
+"//${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_new_selector}${_response_url_params:-}"
+          ;;
+      esac
+
+      return 0
+    elif [[ -z "${_selector_path:-}"    ]]
+    then
+      _browse_respond_with 404
+
+      return 0
+    fi
+
+    _render_function_options+=("${_selector_path}")
+
+    if [[ -d "${_selector_path:-}"      ]]
+    then
+      if [[ -n "${_page_number:-}"      ]]
+      then
+        _render_function_options+=("--page" "${_page_number}")
+      fi
+
+      if [[ -n "${_query:-}"            ]]
+      then
+        _render_function_options+=("--query" "${_query}")
+      fi
+
+      _browse_render_container "${_render_function_options[@]:-}"     \
+        | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
+
+      return 0
+    fi
+
+    local _raw_url="//${NB_SERVER_HOST}:${NB_SERVER_PORT}/--original/"
+
+    if [[ !   "${_selector_path:-}" =~ ^${NB_DIR} ]] &&
+       [[ -n  "${_encoded_local_notebook_path:-}" ]] &&
+       [[ -n  "${_local_notebook_path:-}"         ]]
+    then
+      _raw_url+="local/${_selector_path#${_local_notebook_path}/}?--local=${_encoded_local_notebook_path}"
+    else
+      _raw_url+="${_selector_path#${NB_DIR}/}"
+    fi
+
+    _render_function_options+=("--raw-url" "${_raw_url}")
+
+    if [[ "${_action:-}" == "delete"  ]]
+    then
+      case "${_request_method:-}" in
+        GET)
+          _browse_render_delete "${_render_function_options[@]:-}"  \
+            | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
+          ;;
+        POST)
+          local _container_id_selector=
+          _container_id_selector="$(
+            _get_id_selector "${_selector_path%/*}" --notebook
+          )"
+
+          _browse_item_delete "${_render_function_options[@]:-}" &>/dev/null
+
+          _browse_respond_with 302              \
+"//${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_container_id_selector}${_response_url_params:-}"
+          ;;
+      esac
+
+      return 0
+    elif [[ "${_action:-}" == "edit"  ]] && _file_is_text "${_selector_path:-}"
+    then
+      if [[ "${_request_method}"  == "POST"     ]]
+      then
+        _browse_item_update                     \
+          "${_render_function_options[@]:-}"    \
+          --message-body "${_message_body:-}"
+      fi
+
+      _browse_render_edit "${_render_function_options[@]:-}"        \
         | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
 
       return 0
     else
-      local _selector_path=
+      _browse_render_item                       \
+        "${_render_function_options[@]:-}"      \
+        "${_respond_with_200_arguments[@]:-}"
 
-      if [[ "${_target_selector}" =~ ^local:        ]]
-      then
-        [[ -z "${_local_notebook_path:-}"   ]]  &&  _browse_respond_with 400
-
-        _selector_path="$(
-          cd "${_local_notebook_path:-}"        &&
-            __set_notebook_paths                &&
-            _show "${_target_selector%%\?*}" --path --no-color 2>&1 || :
-        )"
-      else
-        _selector_path="$(
-          _show "${_target_selector%%\?*}" --path 2>/dev/null || :
-        )"
-      fi
-
-      if [[ "${_action:-}" == "add"         ]]
-      then
-        _render_function_options+=("${_target_selector:-}")
-
-        case "${_request_method:-}" in
-          GET)
-            _browse_render_add                      \
-              "${_render_function_options[@]:-}"    \
-              | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
-            ;;
-          POST)
-            local _new_selector=
-            _new_selector="$(
-              _browse_item_create                   \
-                "${_render_function_options[@]:-}"  \
-                --message-body "${_message_body:-}"
-            )"
-
-            _browse_respond_with 302                \
-"//${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_new_selector}${_response_url_params:-}"
-
-            return 0
-            ;;
-        esac
-
-        return 0
-      elif [[   -z "${_selector_path:-}"    ]]
-      then
-        _browse_respond_with 404
-
-        return 0
-      else
-        _render_function_options+=("${_selector_path}")
-
-        if [[ -d "${_selector_path:-}"      ]]
-        then
-          if [[ -n "${_page_number:-}"      ]]
-          then
-            _render_function_options+=("--page" "${_page_number}")
-          fi
-
-          if [[ -n "${_query:-}"            ]]
-          then
-            _render_function_options+=("--query" "${_query}")
-          fi
-
-          _browse_render_container "${_render_function_options[@]:-}" \
-            | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
-
-          return 0
-        else
-          local _raw_url="//${NB_SERVER_HOST}:${NB_SERVER_PORT}/--original/"
-
-          if [[ !   "${_selector_path:-}" =~ ^${NB_DIR} ]] &&
-             [[ -n  "${_encoded_local_notebook_path:-}" ]] &&
-             [[ -n  "${_local_notebook_path:-}"         ]]
-          then
-            _raw_url+="local/${_selector_path#${_local_notebook_path}/}?--local=${_encoded_local_notebook_path}"
-          else
-            _raw_url+="${_selector_path#${NB_DIR}/}"
-          fi
-
-          _render_function_options+=("--raw-url" "${_raw_url}")
-
-          if [[ "${_action:-}" == "delete"  ]]
-          then
-            case "${_request_method:-}" in
-              GET)
-                _browse_render_delete                 \
-                  "${_render_function_options[@]:-}"  \
-                  | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
-                ;;
-              POST)
-                local _container_id_selector=
-                _container_id_selector="$(
-                  _get_id_selector "${_selector_path%/*}" --notebook
-                )"
-
-                _browse_item_delete                   \
-                  "${_render_function_options[@]:-}"  &>/dev/null
-
-                _browse_respond_with 302              \
-"//${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_container_id_selector}${_response_url_params:-}"
-                ;;
-            esac
-
-            return 0
-          elif [[ "${_action:-}" == "edit"  ]]        &&
-               _file_is_text "${_selector_path:-}"
-          then
-            if [[ "${_request_method}"  == "POST"     ]]
-            then
-              _browse_item_update                     \
-                "${_render_function_options[@]:-}"    \
-                --message-body "${_message_body:-}"
-            fi
-
-            _browse_render_edit                       \
-              "${_render_function_options[@]:-}"      \
-              | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
-
-            return 0
-          else
-            _browse_render_item                       \
-              "${_render_function_options[@]:-}"      \
-              "${_respond_with_200_arguments[@]:-}"
-
-            return 0
-          fi
-        fi
-      fi
+      return 0
     fi
 
     # fall back to 500 response
