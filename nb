@@ -18789,9 +18789,9 @@ HEREDOC
 
     if _contains "${1:-}" "200" "302"
     then
-      exit 0
+      return 0
     else
-      exit 1
+      return 1
     fi
   }
 
