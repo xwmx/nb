@@ -520,7 +520,7 @@ nb search --tag tag1
 nb q -t tag1 -t tag2
 
 # search for items tagged with "#tag1" AND "#tag2", arguments
-nb q "#tag1" "#tag2"
+nb q \#tag1 "#tag2"
 ```
 
 Files can be created with any file type by specifying the extension either
