@@ -9269,7 +9269,7 @@ _render() {
 
   # Usage: _render_print_head [--title <title>]
   _render_print_head() {
-    local _html_title="nb"
+    local _html_title="${_ME}"
 
     if [[ "${1:-}" == "--title" ]] && [[ -n "${2:-}" ]]
     then
@@ -18693,7 +18693,7 @@ HEREDOC
     local _response_headers=(
          "Date: ${_date}"
       "Expires: ${_date}"
-       "Server: nb"
+       "Server: ${_ME}"
     )
 
     local __arg=
