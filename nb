@@ -2410,7 +2410,7 @@ _print_padding() {
 # Description:
 #   Print the welcome message.
 _print_welcome() {
-  local _padding
+  local _padding=
   _padding="$(_print_padding " / / | | | | |_) |" "${_COLUMNS}")"
 
   _print_line "$(printf "%-${_COLUMNS}s" '.')"
@@ -3039,8 +3039,8 @@ _git() {
 
     # Usage: _git_checkpoint_commit <notebook-path> <message>
     _git_checkpoint_commit() {
-     local _notebook_path="${1:-}"
      local _message="${2:-}"
+     local _notebook_path="${1:-}"
 
       if [[ -z "${_notebook_path:-}" ]] || [[ -z "${_message:-}" ]]
       then
@@ -3053,8 +3053,8 @@ _git() {
     }
 
     local _message=
-    local _show_spinner=0
     local _notebook_path=
+    local _show_spinner=0
 
     local __arg=
     for   __arg in "${@:-}"
@@ -3323,7 +3323,7 @@ HEREDOC
     then
       local _merge_error=1
 
-      local _conflicted_files
+      local _conflicted_files=
       _conflicted_files=($(
         GIT_PAGER='' git -C "${_notebook_path}" diff --name-only --diff-filter=U
       ))
@@ -3461,7 +3461,7 @@ HEREDOC
       _git_sync "${2:-}" "${3:-}"
       ;;
     *)
-      local _notebook_path
+      local _notebook_path=
       _notebook_path="$(_notebooks current --path)"
 
       if [[ -n "${1:-}" ]]
@@ -4055,7 +4055,7 @@ _index() {
         _exit_1 _help index
       fi
 
-      local _basename
+      local _basename=
       _basename="$(_index_get_basename "${_id_number}" "${_index_path}")"
 
       if [[ -z "${_basename}"   ]]
@@ -4093,7 +4093,7 @@ _index() {
         return 1
       fi
 
-      local _id
+      local _id=
       _id="$(_index_get_id "${_basename}" "${_index_path}")"
 
       if [[ -z "${_id}" ]]
@@ -4179,7 +4179,7 @@ _index() {
         local _reconcile_index_path="${1:-}"
         [[ -z "${_reconcile_index_path:-}" ]] && return 1
 
-        local _temp_file
+        local _temp_file=
         _temp_file="$(_temp file)"
 
         exec 3> "${_temp_file}"
@@ -4323,7 +4323,7 @@ _index() {
       local __item=
       for   __item in $(printf "%s\\n" "${_index_list[@]:-}" | uniq -c)
       do
-        local _count
+        local _count=
         _count="$(printf "%s\\n" "${__item}" | awk '{print $1}')"
 
         if [[ "${_count}" -gt 1 ]]
@@ -4733,7 +4733,7 @@ _list() {
     shift
   done
 
-  local _notebook_path
+  local _notebook_path=
   _notebook_path="$(_notebooks current --path)"
 
   local _filter_patterns=()
@@ -4763,7 +4763,7 @@ _list() {
         _filter_patterns+=("${__argument}")
       fi
     else
-      local _selector_relative_path
+      local _selector_relative_path=
       _selector_relative_path="$(
         # resolve selector relative path without a trailing /
         _selector_resolve_path "${__argument%\/}" --relative
@@ -5386,7 +5386,7 @@ ${_TPUT_SGR0}"
            [[ "${_printed_count}" -ge "${_limit}" ]]
         then
           local _label="matches"
-          local _omitted_count
+          local _omitted_count=
           _omitted_count=$((_matches-_printed_count))
 
           [[ "${_omitted_count}" -eq 1 ]] && _label="match"
@@ -6222,7 +6222,7 @@ _ls() {
           _count_arguments+=("--${_maybe_type}")
         fi
 
-        local _local_count
+        local _local_count=
         _local_count="$(
           _count "${_count_arguments[@]:-}" --skip-unmatched-selector || :
         )"
@@ -8022,9 +8022,8 @@ _normalize_options() {
     case "${1}" in
       # if option is of type -ab
       -[!-]?*)
-        local i
-
         # loop over each character starting with the second
+        local i=
         for ((i=1; i < ${#1}; i++))
         do
           # extract 1 character from position 'i'
@@ -8669,10 +8668,10 @@ _decrypt_file() {
 
   local _notebook_and_relative_path="${_encrypted_path#${NB_DIR}/}"
 
-  local _unencrypted_path
+  local _unencrypted_path=
   _unencrypted_path="$(_temp file "${_notebook_and_relative_path%.enc}")"
 
-  local _file_command_response
+  local _file_command_response=
   _file_command_response="$(file "${_encrypted_path}" 2>/dev/null || :)"
 
   if [[   "${_file_command_response}" =~ GPG|PGP ]]
@@ -8826,7 +8825,7 @@ _edit_file() {
     return 1
   fi
 
-  local _current_notebook_path
+  local _current_notebook_path=
   _current_notebook_path="$(_notebooks current --path)"
 
   cd "${_current_notebook_path}"  ||  return 1
@@ -8912,9 +8911,9 @@ _edit_file() {
 # Usage:
 #   _encrypt_file <unencrypted-path> <encrypted-path> <password>
 _encrypt_file() {
-  local _unencrypted_path="${1:-}"
   local _encrypted_path="${2:-}"
   local _password="${3:-}"
+  local _unencrypted_path="${1:-}"
 
   if [[ -z "${_password}"         ]]
   then
@@ -11112,7 +11111,7 @@ _add() {
     )"
   fi
 
-  local _target_basename
+  local _target_basename=
   _target_basename="$(basename "${_target_unique_relative_path}")"
 
   local _target_path="${_notebook_path}/${_target_unique_relative_path}"
@@ -11300,7 +11299,7 @@ _add() {
       "${_notebook_path}"                 \
       "[nb] Add: ${_target_unique_relative_path}"
 
-    local _info
+    local _info=
     _info="$(
       _show "${_notebook_path:?}/${_target_unique_relative_path:?}" --info-line
     )"
@@ -11617,7 +11616,7 @@ _bookmark() {
   {
     if [[ "${_subcommand}" =~ ^open$|^peek$|^url$ ]]
     then
-      local _relative_path
+      local _relative_path=
       _relative_path="$(_show "${_selector}" --relative-path)"
 
       local _notebook_path
@@ -11755,7 +11754,7 @@ _bookmark() {
 
         if ((_check_wayback))
         then
-          local _wayback_response
+          local _wayback_response=
           _wayback_response="$(
             _download_from                                                \
               "https://archive.org/wayback/available?url=${_target_url}"  \
@@ -11819,7 +11818,7 @@ _bookmark() {
             _notebooks show "$(_notebooks current)" --no-color --escaped
           ): "
 
-          local _padded_header_selector_length
+          local _padded_header_selector_length=
           _padded_header_selector_length="$(
             _get_visible_length "${_maybe_header_selector}"
           )"
@@ -11990,7 +11989,7 @@ _bookmark() {
   then
     if ! ((_skip_content))
     then
-      local _processed_content
+      local _processed_content=
 
       if _command_exists "pandoc"   || _command_exists "readable"
       then
@@ -12169,7 +12168,7 @@ _completions() {
 
     if [[ -z "${_bash_completion_path:-}" ]]
     then
-      local _maybe_path
+      local _maybe_path=
       _maybe_path="$(
         pkg-config \
           --variable=completionsdir bash-completion 2>/dev/null || true
@@ -12642,13 +12641,13 @@ _edit() {
     _exit_1 _help "edit"
   fi
 
-  local _relative_path
+  local _relative_path=
   _relative_path="$(_show "${_selector:-}" --relative-path)"
 
   local _basename="${_relative_path##*\/}"
   local _folder_path="${_relative_path%\/*}"
 
-  local _notebook_path
+  local _notebook_path=
   _notebook_path="$(_notebooks current --path)"
 
   if [[ -z "${_relative_path:-}"  ]]
@@ -12705,7 +12704,7 @@ _edit() {
           cat > "${_target_file}"
         elif [[ "${_edit_type:-}" == "prepend"    ]]
         then
-          local _prepend_temp
+          local _prepend_temp=
           _prepend_temp="$(_temp file)"
 
           cat                       >   "${_prepend_temp:?}"
@@ -12767,7 +12766,7 @@ _edit() {
 
     if [[ "${_before}" != "${_after}"   ]]
     then
-      local _info
+      local _info=
       _info="$(_show "${_relative_path}" --info-line)"
 
       printf "Updated: %s\\n" "${_info}"
@@ -12811,7 +12810,7 @@ _env() {
     local _version="${2:?}"
     local _x86_64_bit=1
 
-    local _arch
+    local _arch=
     _arch="$(uname -m)"
 
     case "${_arch:-}" in
@@ -13115,7 +13114,7 @@ _export() {
     return 0
   fi
 
-  local _relative_path
+  local _relative_path=
   _relative_path="$(_show "${_selector}" --relative-path)"
 
   local _basename="${_relative_path##*\/}"
@@ -14137,7 +14136,7 @@ _pin() {
   local _folder_path="${_item_path%\/*}"
   local _pindex_path="${_folder_path}/.pindex"
 
-  local _notebook_path
+  local _notebook_path=
   _notebook_path="$(
     _notebooks show "${_selector}" --path 2>/dev/null ||
       _notebooks current --path
@@ -14224,7 +14223,7 @@ $(_color_primary "Examples"):
 HEREDOC
 }
 _run() {
-  local _notebook_path
+  local _notebook_path=
   _notebook_path="$(_notebooks current --path)"
 
   cd "${_notebook_path}"  || _exit_1 printf "_run() \`cd\` failed.\\n"
@@ -14721,7 +14720,7 @@ _search() {
         local _target_folder_path="${__target_path%\/*}"
       fi
 
-      local _max_id
+      local _max_id=
       _max_id="$(_index get_max_id "${_target_folder_path}")"
 
       {
@@ -14901,10 +14900,10 @@ _search() {
           }
           set -f
         else
-          local _notebook_path
+          local _notebook_path=
           _notebook_path="$(_notebooks show "${__target_path:-}" --path)"
 
-          local _escaped_notebook_path
+          local _escaped_notebook_path=
           _escaped_notebook_path="$(
             printf "%s\\n" "${_notebook_path:-}" | sed 's/\//\\\//g'
           )"
@@ -15321,7 +15320,7 @@ _search() {
             then # match is in a different file than the last match
               ((_COLOR_ENABLED)) && _wrap off
 
-              local _visible_line_length
+              local _visible_line_length=
               _visible_line_length="$(
                 _get_visible_length "${_info_line:-}"
               )"
@@ -15358,7 +15357,7 @@ _search() {
             _line_length="$(
               printf "%s\\n" "${_content_line_with_hit}" | awk '{print length}'
             )"
-            local _line_length_diff
+            local _line_length_diff=
             _line_length_diff=$((_line_length-_max_columns-100))
 
             if [[ "${_line_length_diff}" -gt 0 ]]
@@ -15928,13 +15927,13 @@ _show() {
 
     local _maybe_scoped_relative_path="${_relative_path}"
 
-    local _maybe_scoped_id
+    local _maybe_scoped_id=
     _maybe_scoped_id="${_relative_folder_path:+"${_relative_folder_path}/"}${_id}"
 
     if _notebooks current --selected ||
        [[ "${_notebook_path}" != "$(_notebooks current --path)" ]]
     then
-      local _notebook_name
+      local _notebook_name=
       _notebook_name="$(
         _notebooks show "${_notebook_path}" --name --no-color
       )"
@@ -15943,10 +15942,10 @@ _show() {
       _maybe_scoped_relative_path="${_notebook_name}:${_maybe_scoped_relative_path}"
     fi
 
-    local _info_line
+    local _info_line=
     _info_line+="$(_color_brackets "${_maybe_scoped_id}") "
 
-    local _indicators
+    local _indicators=
     _indicators="$(_show "${_notebook_path}/${_relative_path}" --indicators)"
 
     if [[ -n "${_indicators:-}" ]]
@@ -15956,7 +15955,7 @@ _show() {
 
     _info_line+="$(_color_primary "${_maybe_scoped_relative_path}") "
 
-    local _title
+    local _title=
     _title="$(_get_content "${_notebook_path}/${_relative_path}" --title)"
 
     if [[ -n "${_title:-}"      ]]
@@ -16000,7 +15999,7 @@ _show() {
 
   if _file_is_encrypted "${_target_path}"
   then
-    local _encrypted_path
+    local _encrypted_path=
     _encrypted_path="${_target_path}"
 
     if [[ -z "${_password}" ]]
@@ -16018,7 +16017,7 @@ _show() {
       _exit_1 printf "Password required.\\n"
     fi
 
-    local _decrypted_path
+    local _decrypted_path=
     _decrypted_path="$(_decrypt_file "${_target_path}" "${_password}")"
 
     _target_path="${_decrypted_path}"
@@ -16288,9 +16287,8 @@ Can't show archives. Export archive and expand to edit.\\n"
           cat "${_target_path}"
         fi
       else # `show`
-        local _target_filename="${_target_path##*/}"
-
         local _target_extension=
+        local _target_filename="${_target_path##*/}"
 
         if [[ "${_target_filename:-}" =~ \. ]]
         then
@@ -19451,7 +19449,7 @@ _plugins() {
       fi
       ;;
     uninstall)
-      local _plugin_path
+      local _plugin_path=
 
       if ! _plugin_path="$(_plugins "${_name}" --paths 2>/dev/null)"  ||
            [[ -z "${_plugin_path:-}"  ]]                              ||
@@ -20626,7 +20624,7 @@ _settings() {
   _settings_prompt() {
     local _setting_name="${1:-}"
 
-    local _padding
+    local _padding=
     _padding="$(_print_padding "-----------" "${_COLUMNS}")"
 
     printf "%s%s Settings\\n" "${_padding}" "$(_color_primary "${_ME}")"
@@ -20910,7 +20908,7 @@ HEREDOC
       then
         printf "bat required: https://github.com/sharkdp/bat\\n"
       else
-        local _theme_list
+        local _theme_list=
         _theme_list=($(bat --list-themes --color never))
 
         if _contains "${2:-}" "${_theme_list[@]}"
@@ -21495,7 +21493,7 @@ _sync() {
   then
     _sync_all=1
 
-    local _notebook_names
+    local _notebook_names=()
     _notebooks=($(_notebooks --names --no-color --unarchived))
   else
     _notebooks=($(_notebooks current))
@@ -21750,7 +21748,7 @@ $(_color_primary "See Also"):
 HEREDOC
 }
 _update() {
-  local _current_path
+  local _current_path=
   _current_path="${BASH_SOURCE[0]}"
 
   if [[ -n "${_current_path}" ]]  &&
@@ -21785,7 +21783,7 @@ HEREDOC
   else
     local _nb_url="${_REPO_RAW_URL}/nb"
 
-    local _temp_file
+    local _temp_file=
     _temp_file="$(_temp file)"
 
     if ! _download_from "${_nb_url}" "${_temp_file}"
