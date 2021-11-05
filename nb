@@ -15096,7 +15096,7 @@ _search() {
           then
             if [[ -n "${_type:-}"             ]]
             then
-              if [[ "${_path}"  =~ ${_type}$  ]]
+              if [[  "${_path}" =~ ${_type}$  ]]
               then
                 _skip=0
               elif {
