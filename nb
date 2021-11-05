@@ -15942,10 +15942,7 @@ _show() {
       _maybe_scoped_id="${_notebook_name}:${_maybe_scoped_id}"
       _maybe_scoped_relative_path="${_notebook_name}:${_maybe_scoped_relative_path}"
     fi
-  fi
 
-  if ((_print_info))
-  then
     local _info_line
     _info_line+="$(_color_brackets "${_maybe_scoped_id}") "
 
@@ -15971,6 +15968,7 @@ _show() {
     IFS=' ' read -r _info_line <<<"${_info_line:-}"
 
     printf "%s\\n" "${_info_line:-}"
+
     return 0
   fi
 
