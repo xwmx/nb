@@ -520,7 +520,7 @@ nb search --tag tag1
 nb q -t tag1 -t tag2
 
 # search for items tagged with "#tag1" AND "#tag2", arguments
-nb q \#tag1 "#tag2"
+nb q \#tag1 \#tag2
 ```
 
 Files can be created with any file type by specifying the extension either
@@ -562,6 +562,9 @@ Use [`nb show`](#show) and [`nb browse`](#browse) to view code snippets
 with automatic syntax highlighting and
 use [`nb edit`](#edit) to open in your editor.
 
+The [`clip` plugin](#clip) can also be used to
+create notes from clipboard content.
+
 Piping,
 `--title <title>`,
 `--tags <tag-list>`,
@@ -589,9 +592,6 @@ Option content.
 
 Clipboard content.
 ```
-
-The [`clip` plugin](#clip) can also be used to create notes from
-clipboard content.
 
 For a full list of options available for `nb add`, run
 [`nb help add`](#add).

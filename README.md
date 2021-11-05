@@ -556,6 +556,9 @@ Use [`nb show`](#show) and [`nb browse`](#browse) to view code snippets
 with automatic syntax highlighting and
 use [`nb edit`](#edit) to open in your editor.
 
+The [`clip` plugin](#clip) can also be used to
+create notes from clipboard content.
+
 Piping,
 `--title <title>`,
 `--tags <tag-list>`,
@@ -583,9 +586,6 @@ Option content.
 
 Clipboard content.
 ```
-
-The [`clip` plugin](#clip) can also be used to create notes from
-clipboard content.
 
 For a full list of options available for `nb add`, run
 [`nb help add`](#add).
