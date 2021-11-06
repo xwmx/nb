@@ -519,8 +519,8 @@ nb search --tag tag1
 # search for items tagged with "#tag1" AND "#tag2", short options
 nb q -t tag1 -t tag2
 
-# search for items tagged with "#tag1" AND "#tag2", arguments
-nb q \#tag1 \#tag2
+# search for items tagged with "#tag1" OR "#tag2", arguments
+nb q \#tag1 --or \#tag2
 ```
 
 Files can be created with any file type by specifying the extension either
@@ -2184,17 +2184,17 @@ nb sample:123 --tags
 Tagged items can be [searched](#-search) with [`nb search` / `nb q`](#search):
 
 ```bash
-# search for and list items in any notebook tagged with "#tag1"
-nb search --tag tag1 --all --list
+# search for items tagged with "#tag1"
+nb search --tag tag1
 
-# search for and list items in any notebook tagged with "#tag1", shortcut and short options
-nb q -t tag1 -al
+# search for items tagged with "#tag1", shortcut and short option
+nb q -t tag1
 
-# search for and list items in any notebook tagged with "#tag1", alternative
-nb q "#tag1" -al
+# search for items tagged with "#tag1", shortcut and argument
+nb q \#tag1
 
-# search for and list items in any notebook tagged with "#tag1", alternative
-nb q \#tag1 -al
+# search for items tagged with "#tag1", shortcut and argument, alternative
+nb q "#tag1"
 
 # search for items tagged with "#tag1" AND "#tag2"
 nb q --tag tag1 --tag tag2
@@ -2212,10 +2212,10 @@ nb q --tags tag1,tag2
 nb q "#tag1|#tag2"
 
 # search for items tagged with either "#tag1" OR "#tag2", options
-nb q --tag tag1 --or -t tag2
+nb q -t tag1 --or -t tag2
 
 # search for items tagged with either "#tag1" OR "#tag2", arguments
-nb q "#tag1" --or "#tag2"
+nb q \#tag1 --or \#tag2
 
 # search for items tagged with "#tag1" OR "#tag2" OR "#tag3"
 nb q -t tag1 --or --tags tag2,tag3
