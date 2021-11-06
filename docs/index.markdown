@@ -3270,15 +3270,13 @@ nb q "#tag1"
 # search for items in the "sample" notebook tagged with "#tag1" AND "#tag2"
 nb sample:search --tag tag1 --tag tag2
 
-# search for items in the "sample" notebook tagged with "#tag1" AND "#tag2",
-# alternative
+# search for items in the "sample" notebook tagged with "#tag1" AND "#tag2"
 nb sample:q --tags tag1,tag2
 
 # search for items in the current notebook tagged with "#tag1" AND "#tag2"
 nb q --tag tag1 --tag tag2
 
-# search for items in the current notebook tagged with "#tag1" OR "#tag2",
-# shortcut alias and short options
+# search for items in the current notebook tagged with "#tag1" OR "#tag2"
 nb q -t tag1 --or -t tag2
 
 # search for items tagged with "#tag1" AND "#tag2" AND "#tag3"
