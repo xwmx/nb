@@ -2194,22 +2194,25 @@ nb q "#tag1"
 nb q --tag tag1 --tag tag2
 
 # search for items tagged with "#tag1" AND "#tag2", short options
-nb q -t tag1 --and -t tag2
+nb q -t tag1 -t tag2
 
 # search for items tagged with "#tag1" AND "#tag2", arguments
-nb q \#tag1 --and \#tag2
+nb q \#tag1 \#tag2
 
 # search for items tagged with "#tag1" AND "#tag2", tag list
 nb q --tags tag1,tag2
-
-# search for items tagged with either "#tag1" OR "#tag2"
-nb q "#tag1|#tag2"
 
 # search for items tagged with either "#tag1" OR "#tag2", options
 nb q -t tag1 --or -t tag2
 
 # search for items tagged with either "#tag1" OR "#tag2", arguments
 nb q \#tag1 --or \#tag2
+
+# search for items tagged with either "#tag1" OR "#tag2", single argument
+nb q "#tag1|#tag2"
+
+# search for items tagged with "#tag1" AND "#tag2" AND "#tag3"
+nb q -t tag1 --tags tag2,tag3
 
 # search for items tagged with "#tag1" OR "#tag2" OR "#tag3"
 nb q -t tag1 --or --tags tag2,tag3
@@ -3243,17 +3246,20 @@ Search for [#tags](#-tagging) with flexible
 # search for tags in the current notebook
 nb search --tags
 
-# search for items tagged with "#example"
-nb search --tag example
+# search for tags in the "sample" notebook, shortcut alias
+nb sample:q --tags
 
-# search for items tagged with "#example", shortcut alias and short option
-nb q -t example
+# search for items tagged with "#tag1"
+nb search --tag tag1
 
-# search for items tagged with "#example", shortcut alias and argument
-nb q "#example"
+# search for items tagged with "#tag1", shortcut alias and short option
+nb q -t tag1
 
-# search for items tagged with "#example", shortcut alias and argument
-nb q \#example
+# search for items tagged with "#tag1", shortcut alias and argument
+nb q \#tag1
+
+# search for items tagged with "#tag1", shortcut alias and argument, alternative
+nb q "#tag1"
 
 # search for items in the "sample" notebook tagged with "#tag1" AND "#tag2"
 nb sample:search --tag tag1 --tag tag2
@@ -3263,11 +3269,14 @@ nb sample:search --tag tag1 --tag tag2
 nb sample:q --tags tag1,tag2
 
 # search for items in the current notebook tagged with "#tag1" AND "#tag2"
-nb q --tag tag1 --and --tag tag2
+nb q --tag tag1 --tag tag2
 
 # search for items in the current notebook tagged with "#tag1" OR "#tag2",
 # shortcut alias and short options
 nb q -t tag1 --or -t tag2
+
+# search for items tagged with "#tag1" AND "#tag2" AND "#tag3"
+nb q -t tag1 --tags tag2,tag3
 
 # search for items tagged with "#tag1" OR "#tag2" OR "#tag3"
 nb q -t tag1 --or --tags tag2,tag3
