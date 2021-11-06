@@ -8863,14 +8863,16 @@ _edit_file() {
   # turn on case-insensitive matching
   shopt -s nocasematch
 
-  if ((_wait)) &&
-     [[   "${EDITOR}" =~ gvim|mvim      ]]
+  if ((_wait))
   then
-    _editor_command="${_editor_command} -f"
-  elif ((_wait)) &&
-       [[ "${EDITOR}" =~ code|mate|subl ]]
-  then
-    _editor_command="${_editor_command} --wait"
+    case "${EDITOR}" in
+      *gvim*|*mvim*)
+        _editor_command="${_editor_command} -f"
+        ;;
+      *code*|*mate*|*subl*)
+        _editor_command="${_editor_command} --wait"
+        ;;
+    esac
   fi
 
   if [[ -d "${_file_path}" ]] &&
