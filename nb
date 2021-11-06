@@ -17718,9 +17718,7 @@ HEREDOC
          [[ -d "${_notebook_path}/${_relative_folder_path}"  ]]
       then
         local _selector_folders=()
-        IFS='/' read -ra _selector_folders < <(
-          printf "%s\\n" "${_relative_folder_path}"
-        )
+        IFS='/' read -ra _selector_folders <<< "${_relative_folder_path}"
 
         local _folder_id_path=
         _folder_id_path="$(
@@ -17730,9 +17728,7 @@ HEREDOC
         )"
 
         local _selector_folder_ids=()
-        IFS='/' read -ra _selector_folder_ids < <(
-          printf "%s\\n" "${_folder_id_path}"
-        )
+        IFS='/' read -ra _selector_folder_ids <<< "${_folder_id_path}"
 
         local _url_path="${_notebook_name}:"
 
