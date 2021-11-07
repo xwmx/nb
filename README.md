@@ -1743,7 +1743,7 @@ nb search --tag tag1
 
 nb q -t tag1
 
-nb q "#tag1"
+nb q \#tag1
 ```
 
 `nb search` / `nb q` automatically searches archived page content:
@@ -2620,23 +2620,45 @@ Use the `-q` / `--query` option to open `nb browse` to
 the results page for a search:
 
 ```bash
-# open to a list of items tagged with "#tag2" in the "example" notebook
-❯ nb browse --query "#tag2"
-❯nb · example
+# open to a list of items containing "example" in the current notebook
+❯ nb browse --query "example"
+❯nb · home
 
-search: [#tag2               ]
+search: [example             ]
 
-[home:321] Example Title
+[home:321] Test Title
 [home:654] Sample Title
 [home:789] Demo Title
 
 # using shortcut alias and short option
-❯ nb br -q "#tag2"
-❯nb · example
+❯ nb br -q "example"
+❯nb · home
+
+search: [example             ]
+
+[home:321] Test Title
+[home:654] Sample Title
+[home:789] Demo Title
+```
+
+Search for [#tags](#-tagging) with the `-t` / `--tag` / `--tags` options:
+
+```bash
+# open to a list of items tagged with "#tag2" in the current notebook
+❯ nb browse --tag tag2
+❯nb · home
 
 search: [#tag2               ]
 
-[home:321] Example Title
+[home:654] Sample Title
+[home:789] Demo Title
+
+# using shortcut alias and short option
+❯ nb br -t tag2
+❯nb · home
+
+search: [#tag2               ]
+
 [home:654] Sample Title
 [home:789] Demo Title
 ```
@@ -5187,7 +5209,7 @@ Usage:
   nb bookmark search <query>
   nb browse [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
             [-g | --gui] [-n | --notebooks] [-p | --print] [-q | --query <query>]
-            [-s | --serve]
+            [-s | --serve] [-t <tag> | --tag <tag> | --tags <tag1>,<tag2>...]
   nb browse add [<notebook>:][<folder-path>/][<filename>]
             [-c <content> | --content <content>] [--tags <tag1>,<tag2>...]
             [-t <title> | --title <title>]
@@ -5751,7 +5773,7 @@ Shortcut Alias:
 Usage:
   nb browse [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
             [-g | --gui] [-n | --notebooks] [-p | --print] [-q | --query <query>]
-            [-s | --serve]
+            [-s | --serve] [-t <tag> | --tag <tag> | --tags <tag1>,<tag2>...]
   nb browse add [<notebook>:][<folder-path>/][<filename>]
             [-c <content> | --content <content>] [--tags <tag1>,<tag2>...]
             [-t <title> | --title <title>]
@@ -5774,7 +5796,8 @@ Options:
   -p, --print                  Print to standard output.
   -q, --query <query>          Open to the search results for <query>.
   -s, --serve                  Start the web application server.
-  -t, --tags <tag1>,<tag2>...  A comma-separated list of tags.
+  -t, --tag <tag>              Search for a tag.
+  --tags <tag1>,<tag2>...      A comma-separated list of tags.
   -t, --title <title>          Add a title to the new note.
 
 Description:

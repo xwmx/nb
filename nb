@@ -3682,8 +3682,8 @@ $(_color_primary "Usage"):
               ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
   ${_ME} bookmark search <query>
   ${_ME} browse [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
-            [-g | --gui] [-n | --notebooks] [--print] [-q | --query <query>]
-            [-s | --serve]
+            [-g | --gui] [-n | --notebooks] [-p | --print] [-q | --query <query>]
+            [-s | --serve] [-t <tag> | --tag <tag> | --tags <tag1>,<tag2>...]
   ${_ME} browse add [<notebook>:][<folder-path>/][<filename>]
             [-c <content> | --content <content>] [--tags <tag1>,<tag2>...]
             [-t <title> | --title <title>]
@@ -16451,7 +16451,7 @@ _describe_browse() {
 $(_color_primary "Usage"):
   ${_ME} browse [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
             [-g | --gui] [-n | --notebooks] [-p | --print] [-q | --query <query>]
-            [-s | --serve]
+            [-s | --serve] [-t <tag> | --tag <tag> | --tags <tag1>,<tag2>...]
   ${_ME} browse add [<notebook>:][<folder-path>/][<filename>]
             [-c <content> | --content <content>] [--tags <tag1>,<tag2>...]
             [-t <title> | --title <title>]
@@ -16474,7 +16474,8 @@ $(_color_primary "Options"):
   -p, --print                  Print to standard output.
   -q, --query <query>          Open to the search results for <query>.
   -s, --serve                  Start the web application server.
-  -t, --tags <tag1>,<tag2>...  A comma-separated list of tags.
+  -t, --tag <tag>              Search for a tag.
+  --tags <tag1>,<tag2>...      A comma-separated list of tags.
   -t, --title <title>          Add a title to the new note.
 
 $(_color_primary "Description"):
@@ -16999,7 +17000,15 @@ HEREDOC
           shift
           ;;
         --query)
-          _query="$(_option_get_value "${1:-}" "${2:-}")"
+          if [[ -n "${2:-}" ]]
+          then
+            _query="${2:-}"
+          else
+            _exit_1 printf                        \
+              "%s requires a valid argument.\\n"  \
+              "$(_color_primary "${1:-}")"
+          fi
+
           shift
           ;;
         --terminal)
@@ -18838,6 +18847,15 @@ HEREDOC
       a|add|-a|--add|--create|--new|+)
         _action="add"
         ;;
+      --and)
+        [[ -n "${_search_query:-}" ]] && _search_query="${_search_query:-} "
+
+        shift
+
+        _search_query+="--and ${*:-}"
+
+        break
+        ;;
       --col*)
         _browse_columns="$(_option_get_value "${1:-}" "${2:-}")"
         shift
@@ -18869,6 +18887,15 @@ HEREDOC
       -n|--notebook*|--nb*)
         _browse_notebooks=1
         ;;
+      --or)
+        [[ -n "${_search_query:-}" ]] && _search_query="${_search_query:-} "
+
+        shift
+
+        _search_query+="--or ${*:-}"
+
+        break
+        ;;
       --page)
         _target_page="$(_option_get_value "${1:-}" "${2:-}")"
         shift
@@ -18899,12 +18926,27 @@ HEREDOC
         _browse_respond
         exit 0
         ;;
-      q|-q|--query|--search|search)
-        _search_query="$(_option_get_value "${1:-}" "${2:-}")"
+      --search|search|q|-q|--query)
+        if [[ -n "${2:-}" ]]
+        then
+          _search_query="${2:-}"
+        else
+          _exit_1 printf                        \
+            "%s requires a valid argument.\\n"  \
+            "$(_color_primary "${1:-}")"
+        fi
+
         shift
         ;;
       s|serve|-s|--serve*)
         _only_serve=1
+        ;;
+      -t|--tag*)
+        [[ -n "${_search_query:-}" ]] && _search_query="${_search_query:-} "
+
+        _search_query+="--tags $(_option_get_value "${1:-}" "${2:-}")"
+
+        shift
         ;;
       --terminal)
         _force_terminal_request=1
