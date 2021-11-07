@@ -18363,7 +18363,7 @@ HEREDOC
 
     local _message_body=
 
-    if [[ "${_request_method}"  == "POST"               ]]    &&
+    if [[ "${_request_method}"  == "POST"     ]]  &&
        ((${_content_length:-0}))
     then
       read -r -n "${_content_length}" _message_body
@@ -18371,7 +18371,7 @@ HEREDOC
 
     # serve ace editor files
 
-    if [[ "${_request_uri}"     =~ /--ace/.*            ]]
+    if [[ "${_request_uri}"     =~ /--ace/.*  ]]
     then
       local _target_relative_path="${_request_uri#/--ace/}"
 
