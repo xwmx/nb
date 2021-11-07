@@ -1766,21 +1766,22 @@ _get_id_selector() {
   local _selector="${1:-}"
   local _trailing_slash=0
 
-  [[ -z "${_selector:-}"          ]] && return 0
+  case "${2:-}" in
+    --notebook) local _always_include_notebook=1 ;;
+    *)          local _always_include_notebook=0 ;;
+  esac
 
-  local _always_include_notebook=0
-
-  if [[ "${2:-}" == "--notebook"  ]]
+  if [[ -z "${_selector:-}"     ]]
   then
-    _always_include_notebook=1
+    return 0
   fi
 
-  if [[ "${_selector:-}" =~ /$    ]]
+  if [[ "${_selector:-}" =~ /$  ]]
   then
     _trailing_slash=1
   fi
 
-  if [[ "${_selector:-}" =~ ^/    ]]
+  if [[ "${_selector:-}" =~ ^/  ]]
   then # selector is full path
     if [[ "${_selector}" =~ ^${NB_DIR}      ]]
     then
@@ -1796,8 +1797,8 @@ _get_id_selector() {
       _notebook_name="local"
 
       _notebook_path="$(
-        cd "${_selector%/*}"                &&
-          __set_notebook_paths              &&
+        cd "${_selector%/*}"    &&
+          __set_notebook_paths  &&
           _notebooks current --path --no-color
       )"
 
@@ -1809,7 +1810,7 @@ _get_id_selector() {
       fi
     fi
   else
-    if [[ "${_selector:-}" =~ :             ]]
+    if [[ "${_selector:-}" =~ :   ]]
     then
       _notebook_name="${_selector%%:*}"
       _selector_relative_path="${_selector#*:}"
@@ -1818,19 +1819,17 @@ _get_id_selector() {
     fi
   fi
 
-  if [[ -z "${_notebook_path:-}"            ]]
+  if [[ -z "${_notebook_path:-}"  ]]
   then
-    if [[  "${_notebook_name:-}" == "local" ]]
-    then
-      _notebook_path="$(_notebooks --local --path --no-color)"
-    else
-      _notebook_path="${NB_DIR}/${_notebook_name}"
-    fi
+    case "${_notebook_name:-}" in
+      local) _notebook_path="$(_notebooks --local --path --no-color)" ;;
+      *)     _notebook_path="${NB_DIR}/${_notebook_name}"             ;;
+    esac
   fi
 
   local _parent_folder_path=
 
-  if [[ -n "${_notebook_name:-}"            ]]
+  if [[ -n "${_notebook_name:-}"  ]]
   then
     _id_selector+="${_notebook_name}:"
     _parent_folder_path="${_notebook_path:-}"
@@ -1850,7 +1849,7 @@ _get_id_selector() {
 
   local _id_path=
 
-  if [[ -n "${_selector_relative_path:-}"   ]]
+  if [[ -n "${_selector_relative_path:-}" ]]
   then
     local _selector_segments=()
 
@@ -1881,8 +1880,8 @@ _get_id_selector() {
 
       local _segment_basename=
 
-      if [[ -z "${_segment_id:-}"                           ]] &&
-         [[ "${_selector_segments[i]:-}"  =~ ^[0-9]+$       ]]
+      if [[ -z "${_segment_id:-}"                     ]] &&
+         [[ "${_selector_segments[i]:-}"  =~ ^[0-9]+$ ]]
       then
         _segment_basename="$(
           _index get_basename             \
