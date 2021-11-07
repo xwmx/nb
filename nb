@@ -17766,7 +17766,7 @@ HEREDOC
       fi
 
       # NOTE: backup _raw_url calculation. TODO: remove
-      if [[ -z "${_raw_url:-}" ]]
+      if [[ -z "${_raw_url:-}"  ]]
       then
         local _raw_url="//${NB_SERVER_HOST}:${NB_SERVER_PORT}/--original/"
 
@@ -17782,7 +17782,7 @@ HEREDOC
         fi
       fi
 
-      if [[ -n "${_raw_url:-}" ]]
+      if [[ -n "${_raw_url:-}"  ]]
       then
         _header_content+=" <span class=\"dim\">${_MD}</span>"
         _header_content+=" <a href=\"${_raw_url}\">↓</a>"
@@ -17863,7 +17863,7 @@ HEREDOC
           shift
           ;;
         --page)
-          _option_value_is_present "${2:-}"     && shift
+          _option_value_is_present "${2:-}" && shift
           ;;
         --per-page)
           _pagination_options+=("${1:?}" "${2:?}")
@@ -17898,11 +17898,11 @@ HEREDOC
 
     local _render_type=
 
-    if _file_is_text "${_source_path:-}"        ||
+    if _file_is_text "${_source_path:-}"  ||
        [[   "${_source_path:-}" =~ \.docx$|\.epub$|\.odt$ ]]
     then
       _render_type="pandoc"
-    elif _contains "${_source_path##*.}"        \
+    elif _contains "${_source_path##*.}"  \
            apng avif gif jfif jpeg jpg pjpeg pjp png svg webp
     then
       _render_type="image"
@@ -17912,14 +17912,14 @@ HEREDOC
     elif _file_is_video "${_source_path:-}"
     then
       _render_type="video"
-    elif [[ "${_source_path}" =~ \.pdf          ]]
+    elif [[ "${_source_path}" =~ \.pdf    ]]
     then
       _render_type="pdf"
     else
       {
         printf "%s\\n" "$(
-          _browse_render_header                 \
-            "${_source_path}"                   \
+          _browse_render_header           \
+            "${_source_path}"             \
             "${_header_options[@]:-}"
         )"
 
