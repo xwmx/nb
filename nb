@@ -10987,11 +10987,11 @@ _add() {
               _selector_folder_relative_path="${_selector_relative_path%\/*}"
             fi
 
-            if [[ -z "${_option_relative_path}"                     ]]  &&
-               [[ -z "${_selector_filename}"                        ]]  &&
+            if [[ -z "${_option_relative_path}"                 ]]  &&
+               [[ -z "${_selector_filename}"                    ]]  &&
                {
-                 _contains "${_file_type:-}" "folder" "directory"       ||
-                 [[ "${_arguments[i]:-}" =~ \.[A-Za-z0-9]+$|/|:     ]]
+                 _contains "${_file_type:-}" "folder" "directory"   ||
+                 [[ "${_arguments[i]:-}" =~ \.[A-Za-z0-9]+$|/|: ]]
                }
             then
               _selector_filename="${_selector_relative_path##*\/}"
@@ -11589,9 +11589,9 @@ _bookmark() {
   # `bookmark list`
 
   {
-    if [[ "${_subcommand}" == "list" ]]
+    if [[ "${_subcommand}" == "list"  ]]
     then
-      if [[ -n "${_arguments[*]:-}" ]]
+      if [[ -n "${_arguments[*]:-}"   ]]
       then
         _list --bookmarks "${_arguments[@]}"
         return 0
@@ -11623,9 +11623,9 @@ _bookmark() {
       local _notebook_path
       _notebook_path="$(_notebooks current --path)"
 
-      if [[ -z "${_relative_path}" ]]
+      if [[ -z "${_relative_path}"                ]]
       then
-        if [[ "${_subcommand}" =~ ^open$|^peek$ ]]
+        if [[ "${_subcommand}" =~ ^open$|^peek$   ]]
         then
           local _maybe_notebook="${_selector:-}"
           _maybe_notebook="$(printf "%s\\n" "${_maybe_notebook}" | sed 's/\:$//')"
@@ -12138,9 +12138,9 @@ _completions() {
 
     local _zsh_completion_path="/usr/local/share/zsh/site-functions"
 
-    if [[ -d "${_zsh_completion_path}" ]]
+    if [[ -d "${_zsh_completion_path}"    ]]
     then
-      if [[ -w "${_zsh_completion_path}" ]]
+      if [[ -w "${_zsh_completion_path}"  ]]
       then
         if [[ -e "${_zsh_completion_path}/${_ZSH_COMP_NAME}" ]]
         then
@@ -12162,12 +12162,12 @@ _completions() {
   _get_bash_completion_path() {
     local _bash_completion_path=
 
-    if [[ -n "${BASH_COMPLETION_COMPAT_DIR:-}" ]]
+    if [[ -n "${BASH_COMPLETION_COMPAT_DIR:-}"  ]]
     then
       _bash_completion_path="${BASH_COMPLETION_COMPAT_DIR}"
     fi
 
-    if [[ -z "${_bash_completion_path:-}" ]]
+    if [[ -z "${_bash_completion_path:-}"       ]]
     then
       local _maybe_path=
       _maybe_path="$(
@@ -12637,10 +12637,7 @@ _edit() {
     shift
   done
 
-  if [[ -z "${_selector:-}"       ]]
-  then
-    _exit_1 _help "edit"
-  fi
+  [[ -z "${_selector:-}" ]] && _exit_1 _help "edit"
 
   local _relative_path=
   _relative_path="$(_show "${_selector:-}" --relative-path)"
@@ -12670,7 +12667,7 @@ _edit() {
     then
       _encrypted_path="${_target_file}"
 
-      if [[ -z "${_password}" ]]
+      if [[ -z "${_password}"   ]]
       then
         # request password without displaying it
         printf "%s: " "$(_color_primary "Password")"
@@ -12687,10 +12684,10 @@ _edit() {
       _before="$(_get_hash "${_decrypted_path}")"
     fi
 
-    if [[ -n "${_content:-}" ]] || _piped_input
+    if [[ -n "${_content:-}"    ]] || _piped_input
     then
       {
-        if [[ -n "${_content}" ]]
+        if [[ -n "${_content}"  ]]
         then
           printf "%s\\n" "${_content}"
         fi
@@ -12866,10 +12863,10 @@ _env() {
 
   case "${_subcommand}" in
     install)
-      if [[ ! "${2:-}" == "--ace" ]]
+      if [[ ! "${2:-}" == "--ace"     ]]
       then # skip to next section if `_env install --ace`
         # packages: curl pandoc pygments w3m ripgrep tig
-        if [[ -x "$(command -v apk)" ]]
+        if [[ -x "$(command -v apk)"  ]]
         then
           _completions install --download
 
@@ -13145,7 +13142,7 @@ _export() {
       _exit_1 _help "export"
     fi
 
-    if [[ -d "${_target_path}"    ]]
+    if [[ -d "${_target_path:-}"  ]]
     then
       _target_path="${_target_path%/}/${_basename}"
     fi
@@ -13260,7 +13257,7 @@ _history() {
 
   if [[ -n "${_selector:-}"       ]]
   then
-    if [[ "${_selector}" =~ :$    ]] ||
+    if [[  "${_selector}" =~ :$   ]] ||
        ! _relative_path="$(_show "${_selector}" --relative-path 2>/dev/null)"
     then
       if ! _notebook_path="$(_notebooks show "${_selector}" --path 2>/dev/null)"
@@ -13716,10 +13713,10 @@ _move() {
         _to_target_type="title"
         ;;
       *)
-        if [[ -z "${_source_selector}"    ]]
+        if [[ -z "${_source_selector:-}"    ]]
         then
           _source_selector="${1}"
-        elif [[ -z "${_target_selector}"  ]]
+        elif [[ -z "${_target_selector:-}"  ]]
         then
           _target_selector="${1}"
         fi
@@ -13729,7 +13726,7 @@ _move() {
     shift
   done
 
-  if [[ -z "${_source_selector}"          ]]
+  if [[ -z "${_source_selector:-}"      ]]
   then
     _exit_1 _help "move"
   fi
@@ -13737,20 +13734,20 @@ _move() {
   local _source_relative_path=
   _source_relative_path="$(_show "${_source_selector}" --relative-path)"
 
-  if [[ -z "${_source_relative_path}"     ]]
+  if [[ -z "${_source_relative_path:-}" ]]
   then
     _exit_1 _help "move"
   fi
 
   local _source_notebook_path=
-  if [[ "${_source_selector:-}" =~ :      ]]
+  if [[ "${_source_selector:-}" =~ :    ]]
   then
     _source_notebook_path="$(
       _notebooks show "${_source_selector}" --path 2>/dev/null || :
     )"
   fi
 
-  if [[ -z "${_source_notebook_path:-}"   ]]
+  if [[ -z "${_source_notebook_path:-}" ]]
   then
     _source_notebook_path="$(_notebooks current --path)"
   fi
@@ -14361,12 +14358,12 @@ _search() {
       --and|--or)
         local _option_and=1
 
-        if [[ "${1:-}" == "--or" ]]
+        if [[ "${1:-}" == "--or"  ]]
         then
           _option_and=0
         fi
 
-        if [[ "${2:-}" == "-e" ]]
+        if [[ "${2:-}" == "-e"    ]]
         then
           shift
         fi
