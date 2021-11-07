@@ -18446,7 +18446,7 @@ HEREDOC
             if [[ "${__parameter:-}" =~ \=    ]]
             then
               _render_function_options+=("$(
-                _get_uri --encode "${__parameter#*=}"
+                _get_uri --decode "${__parameter#*=}"
               )")
             fi
             ;;
