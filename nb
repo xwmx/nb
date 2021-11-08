@@ -5305,8 +5305,11 @@ _list() {
           # fi
           # _title_basename_or_path="${_title_basename_or_path#\[[\ |x]\]\ }"
 
-          _title_basename_or_path="\
+          if ((_COLOR_ENABLED))
+          then
+            _title_basename_or_path="\
 ${_title_basename_or_path/\[x\]/[${_TPUT_COLOR_PRIMARY}x${_TPUT_SGR0}]}"
+          fi
         fi
       fi
 
@@ -5519,7 +5522,7 @@ HEREDOC
             then
               local _empty_type_label="folders"
             else
-              local _empty_type_label="${_type} files"
+              local _empty_type_label="${_type} items"
             fi
 
             cat <<HEREDOC

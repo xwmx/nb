@@ -31,11 +31,11 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
     [[   "${status}"    -eq 0                                     ]]
     [[   "${lines[2]}"  =~  ^Example\ Folder                      ]]
     [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder                  ]]
-    [[   "${lines[4]}"  =~  0\ audio\ files\.                     ]]
+    [[   "${lines[4]}"  =~  0\ audio\ items\.                     ]]
     [[   "${lines[6]}"  =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/ ]]
   else
     [[   "${status}"    -eq 0                                     ]]
-    [[   "${lines[2]}"  =~  0\ audio\ files\.                     ]]
+    [[   "${lines[2]}"  =~  0\ audio\ items\.                     ]]
     [[   "${lines[4]}"  =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/ ]]
   fi
 }
@@ -57,11 +57,11 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
     [[   "${status}"    -eq 0                                     ]]
     [[   "${lines[2]}"  =~  ^Example\ Folder                      ]]
     [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder                  ]]
-    [[   "${lines[4]}"  =~  0\ audio\ files\.                     ]]
+    [[   "${lines[4]}"  =~  0\ audio\ items\.                     ]]
     [[   "${lines[6]}"  =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/ ]]
   else
     [[   "${status}"    -eq 0                                     ]]
-    [[   "${lines[2]}"  =~  0\ audio\ files\.                     ]]
+    [[   "${lines[2]}"  =~  0\ audio\ items\.                     ]]
     [[   "${lines[4]}"  =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/ ]]
 
   fi

@@ -1803,7 +1803,7 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
 
   [[   "${status}"    -eq 0               ]]
-  [[   "${lines[0]}"  =~  0\ todo\ files. ]]
+  [[   "${lines[0]}"  =~  0\ todo\ items. ]]
 }
 
 @test "'list --type todo' with todos lists todos." {
@@ -1925,7 +1925,7 @@ HEREDOC
 
   [[ "${status}"    -eq 0                     ]]
   [[ "${#lines[@]}" ==  5                     ]]
-  [[ "${lines[0]}"  =~  0\ document\ files\.  ]]
+  [[ "${lines[0]}"  =~  0\ document\ items\.  ]]
 }
 
 
@@ -1954,7 +1954,7 @@ HEREDOC
 
   [[ "${status}"    -eq 0                     ]]
   [[ "${#lines[@]}" ==  5                     ]]
-  [[ "${lines[0]}"  =~  0\ document\ files\.  ]]
+  [[ "${lines[0]}"  =~  0\ document\ items\.  ]]
 }
 
 @test "'list --js' exits with 0, displays empty list, and retains trailing 's'." {
@@ -1982,7 +1982,7 @@ HEREDOC
 
   [[ "${status}"    -eq 0               ]]
   [[ "${#lines[@]}" ==  5               ]]
-  [[ "${lines[0]}"  =~  0\ js\ files\.  ]]
+  [[ "${lines[0]}"  =~  0\ js\ items\.  ]]
 }
 
 @test "'list <selector> --type' filters by type." {
@@ -2548,7 +2548,7 @@ Help information:
   printf "\${output}:     '%s'\\n" "${output}"
   printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  _expected="0 document files.
+  _expected="0 document items.
 
 Import a file:
   $(_color_primary 'nb import (<path> | <url>) one:')
