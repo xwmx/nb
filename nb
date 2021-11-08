@@ -8122,6 +8122,7 @@ _SUBCOMMANDS=(
   create
   d
   delete
+  "do"
   e
   edit
   export
@@ -8179,6 +8180,7 @@ _SUBCOMMANDS=(
   u
   unar
   unarchive
+  undo
   unpin
   unset
   update
@@ -8280,6 +8282,7 @@ _GIT_SUBCOMMANDS=(
   create
   d
   delete
+  "do"
   e
   edit
   export
@@ -8315,6 +8318,7 @@ _GIT_SUBCOMMANDS=(
   u
   unar
   unarchive
+  undo
   unpin
   use
   view
@@ -8588,10 +8592,10 @@ _call_deferred_command() {
 
   local _group="${2:-}"
   local _group_3_names=(
-    "_ar" "_archive" "_b" "_br" "_browse" "_browser" "_config" "_h" "_help" \
-    "_helpers" "_set" "_plugin" "_plugins" "_remote" "_reset" "_settings"   \
-    "_shell" "_st" "_stat" "_status" "_sync" "_t" "_to" "_todo" "_todos"    \
-    "_unar" "_unarchive" "_unset" "_update" "_upgrade"
+    "_ar" "_archive" "_b" "_br" "_browse" "_browser" "_config" "_do" "_h"   \
+    "_help" "_helpers" "_set" "_plugin" "_plugins" "_remote" "_reset"       \
+    "_settings" "_shell" "_st" "_stat" "_status" "_sync" "_t" "_to" "_todo" \
+    "_todos" "_unar" "_unarchive"  "_undo" "_unset" "_update" "_upgrade"
   )
 
   if {
@@ -19270,6 +19274,32 @@ _alias_subcommand "browse" "b"
 _alias_subcommand "browse" "br"
 _alias_subcommand "browse" "browser"
 
+# do ####################################################################### do
+
+_describe_do() {
+  cat <<HEREDOC
+$(_color_primary "Usage"):
+  ${_ME} do ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+
+$(_color_primary "Description"):
+  Mark a todo done.
+
+$(_color_primary "Read More"):
+  ${_README_URL}#-todos
+
+$(_color_primary "See Also"):
+  ${_ME} help todo
+  ${_ME} help undo
+
+$(_color_primary "Examples"):
+  ${_ME} do 123
+  ${_ME} do example:sample/321
+HEREDOC
+}
+_do() {
+  _todo "do" "${@:-}"
+}
+
 # helpers ############################################################# helpers
 
 _describe_helpers() {
@@ -21923,6 +21953,32 @@ _unarchive() {
   _notebooks unarchive "${@:-}"
 }
 _alias_subcommand "unarchive" "unar"
+
+# undo ################################################################### undo
+
+_describe_undo() {
+  cat <<HEREDOC
+$(_color_primary "Usage"):
+  ${_ME} undo ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+
+$(_color_primary "Description"):
+  Mark a todo as not done.
+
+$(_color_primary "Read More"):
+  ${_README_URL}#-todos
+
+$(_color_primary "See Also"):
+  ${_ME} help do
+  ${_ME} help todo
+
+$(_color_primary "Examples"):
+  ${_ME} undo 123
+  ${_ME} undo example:sample/321
+HEREDOC
+}
+_undo() {
+  _todo "undo" "${@:-}"
+}
 
 # unset ################################################################# unset
 
