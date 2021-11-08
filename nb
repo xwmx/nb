@@ -5287,14 +5287,18 @@ _list() {
           _indicators+="${_NB_INDICATOR_TODO:-}"
           _extra_length=1
 
-          # TODO
+          # TODO: review
           # if [[ "${_title_basename_or_path}" =~ \[x\]\  ]]
           # then
-          #   _indicators+="${_NB_INDICATOR_TODO:-}"
+          #   _indicators+="${_NB_INDICATOR_TODO% } "
           #   _extra_length=1
           # else
           #   _indicators+="✔️  "
           # fi
+          # _title_basename_or_path="${_title_basename_or_path#\[[\ |x]\]\ }"
+
+          _title_basename_or_path="\
+${_title_basename_or_path/\[x\]/[${_TPUT_COLOR_PRIMARY}x${_TPUT_SGR0}]}"
         fi
       fi
 

@@ -1019,7 +1019,7 @@ Help information:
 
   [[ "${status}"    -eq 0                                                 ]]
 
-  [[ "${lines[0]}"  =~  \[.*5.*\].*\ ✅\ \[x\]\ Example\ done\ todo\.     ]]
+  [[ "${lines[0]}"  =~  \[.*5.*\].*\ ✅\ \[.*x.*\]\ Example\ done\ todo\. ]]
   [[ "${lines[1]}"  =~  \[.*4.*\].*\ ✅\ \[\ \]\ Example\ undone\ todo\.  ]]
   [[ "${lines[2]}"  =~  \[.*3.*\].*\ 🔒\ three.md.enc                     ]]
   [[ "${lines[3]}"  =~  \[.*2.*\].*\ two.md                               ]]
