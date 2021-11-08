@@ -13125,7 +13125,7 @@ _export() {
 
   if ((_pandoc_only))
   then
-    if _command_exists 'pandoc'
+    if _command_exists "pandoc"
     then
       if [[ -n "${_args[*]:-}"    ]]
       then
@@ -13175,8 +13175,8 @@ _export() {
     _source_file_type="${_basename##*.}"
     _target_file_type="${_target_path##*.}"
 
-    if _command_exists 'pandoc' &&
-       [[ "${_source_file_type}" != "${_target_file_type}" ]]
+    if _command_exists "pandoc"   &&
+       [[ "${_source_file_type}"  != "${_target_file_type}" ]]
     then
       if [[ -n "${_args[*]:-}"    ]]
       then
