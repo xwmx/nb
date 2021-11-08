@@ -18850,11 +18850,18 @@ HEREDOC
       --and)
         [[ -n "${_search_query:-}" ]] && _search_query="${_search_query:-} "
 
+        case "${2:-}" in
+          -t|--tag*)
+            _search_query+="--and $(_option_get_tags "${2:-}" "${3:-}")"
+
+            shift
+            ;;
+          *)
+            _search_query+="--and ${2:-}"
+            ;;
+        esac
+
         shift
-
-        _search_query+="--and ${*:-}"
-
-        break
         ;;
       --col*)
         _browse_columns="$(_option_get_value "${1:-}" "${2:-}")"
@@ -18890,11 +18897,18 @@ HEREDOC
       --or)
         [[ -n "${_search_query:-}" ]] && _search_query="${_search_query:-} "
 
+        case "${2:-}" in
+          -t|--tag*)
+            _search_query+="--or $(_option_get_tags "${2:-}" "${3:-}")"
+
+            shift
+            ;;
+          *)
+            _search_query+="--or ${2:-}"
+            ;;
+        esac
+
         shift
-
-        _search_query+="--or ${*:-}"
-
-        break
         ;;
       --page)
         _target_page="$(_option_get_value "${1:-}" "${2:-}")"
@@ -18944,7 +18958,7 @@ HEREDOC
       -t|--tag*)
         [[ -n "${_search_query:-}" ]] && _search_query="${_search_query:-} "
 
-        _search_query+="--tags $(_option_get_value "${1:-}" "${2:-}")"
+        _search_query+="$(_option_get_tags "${1:-}" "${2:-}")"
 
         shift
         ;;
