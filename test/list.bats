@@ -995,9 +995,21 @@ Help information:
 @test "'list' includes indicators." {
   {
     "${_NB}" init
-    "${_NB}" add "one.bookmark.md" --content "<https://example.com>"
-    "${_NB}" add "two.md" --content "Example Content."
-    "${_NB}" add "three.md" --title "Three" --encrypt --password=example
+
+    "${_NB}" add "one.bookmark.md"      \
+      --content "<https://example.com>"
+
+    "${_NB}" add "two.md"               \
+      --content "Example Content."
+
+    "${_NB}" add "three.md"             \
+      --title "Three" --encrypt --password=example
+
+    "${_NB}" add "four.todo.md"         \
+      --content "# [ ] Example undone todo."
+
+    "${_NB}" add "Five.todo.md"         \
+      --content "# [x] Example done todo."
   }
 
   run "${_NB}" list
@@ -1005,22 +1017,26 @@ Help information:
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0                                 ]]
+  [[ "${status}"    -eq 0                                                 ]]
 
-  [[ "${lines[0]}"  =~  \[.*3.*\].*\ 🔒\ three.md.enc     ]]
-  [[ "${lines[1]}"  =~  \[.*2.*\].*\ two.md               ]]
-  [[ "${lines[2]}"  =~  \[.*1.*\].*\ 🔖\ one.bookmark.md  ]]
+  [[ "${lines[0]}"  =~  \[.*5.*\].*\ ✅\ \[x\]\ Example\ done\ todo\.     ]]
+  [[ "${lines[1]}"  =~  \[.*4.*\].*\ ✅\ \[\ \]\ Example\ undone\ todo\.  ]]
+  [[ "${lines[2]}"  =~  \[.*3.*\].*\ 🔒\ three.md.enc                     ]]
+  [[ "${lines[3]}"  =~  \[.*2.*\].*\ two.md                               ]]
+  [[ "${lines[4]}"  =~  \[.*1.*\].*\ 🔖\ one.bookmark.md                  ]]
 
   run "${_NB}" list --no-color
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0                                 ]]
+  [[ "${status}"    -eq 0                                           ]]
 
-  [[ "${lines[0]}"  =~  \[3\]\ 🔒\ three.md.enc           ]]
-  [[ "${lines[1]}"  =~  \[2\]\ two.md                     ]]
-  [[ "${lines[2]}"  =~  \[1\]\ 🔖\ one.bookmark.md        ]]
+  [[ "${lines[0]}"  =~  \[5\]\ ✅\ \[x\]\ Example\ done\ todo\.     ]]
+  [[ "${lines[1]}"  =~  \[4\]\ ✅\ \[\ \]\ Example\ undone\ todo\.  ]]
+  [[ "${lines[2]}"  =~  \[3\]\ 🔒\ three.md.enc                     ]]
+  [[ "${lines[3]}"  =~  \[2\]\ two.md                               ]]
+  [[ "${lines[4]}"  =~  \[1\]\ 🔖\ one.bookmark.md                  ]]
 }
 
 @test "'list' indicators are configurable with environment variables." {

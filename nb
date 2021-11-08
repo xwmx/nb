@@ -1472,6 +1472,22 @@ _file_is_text() {
     }
 }
 
+# _file_is_todo()
+#
+# Usage:
+#   _file_is_todo (<path> | <filename>)
+#
+# Exit / Error / Return Status:
+#   0 (success, true) If file is a todo.
+#   1 (error,  false) if not.
+export _TODO_FILE_EXTENSIONS=(
+  todo.md
+  todo.md.enc
+)
+_file_is_todo() {
+  [[ "${1:-}" =~ \.todo\.md|todo\.md\.enc ]]
+}
+
 # _file_is_video()
 #
 # Usage:
@@ -5266,10 +5282,19 @@ _list() {
           _indicators+="${_NB_INDICATOR_ENCRYPTED:-}"
         fi
 
-        if [[ "${_title_basename_or_path}" =~ todo|Todo|TODO ]]
+        if _file_is_todo "${_list_path}/${__basename}"
         then
           _indicators+="${_NB_INDICATOR_TODO:-}"
           _extra_length=1
+
+          # TODO
+          # if [[ "${_title_basename_or_path}" =~ \[x\]\  ]]
+          # then
+          #   _indicators+="${_NB_INDICATOR_TODO:-}"
+          #   _extra_length=1
+          # else
+          #   _indicators+="✔️  "
+          # fi
         fi
       fi
 
@@ -8143,6 +8168,9 @@ _SUBCOMMANDS=(
   status
   subcommands
   sync
+  t
+  todo
+  todos
   u
   unar
   unarchive
@@ -8275,6 +8303,9 @@ _GIT_SUBCOMMANDS=(
   s
   show
   search
+  t
+  todo
+  todos
   u
   unar
   unarchive
@@ -8553,7 +8584,7 @@ _call_deferred_command() {
   local _group_3_names=(
     "_ar" "_archive" "_b" "_br" "_browse" "_browser" "_config" "_h" "_help" \
     "_helpers" "_set" "_plugin" "_plugins" "_remote" "_reset" "_settings"   \
-    "_shell" "_st" "_stat" "_status" "_sync" "_todo" "_todos" "_unar"       \
+    "_shell" "_st" "_stat" "_status" "_sync" "_t" "_todo" "_todos" "_unar"  \
     "_unarchive" "_unset" "_update" "_upgrade"
   )
 
@@ -21672,49 +21703,185 @@ HEREDOC
   fi
 }
 
-# todos ################################################################# todos
+# todo ################################################################### todo
 
-_describe_todos() {
+_describe_todo() {
   cat <<HEREDOC
 $(_color_primary "Usage"):
-  ${_ME} todos [open | closed] [-a | --all]
+  ${_ME} todo add [<notebook>:][<folder-path>/][<filename>] <description>
+  ${_ME} todo [do | undo] ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
+  ${_ME} todos [<notebook>:][<folder-path>/] [open | closed] [-a | --all]
 
 $(_color_primary "Options"):
-  -a, --all  Search all unarchived notebooks.
+  -a, --all  List todos from all unarchived notebooks.
+
+$(_color_primary "Subcommands"):
+  (default)  List todos.
+  add        Add a new todo.
+  do         Mark a todo as done.
+  undo       Unmark a todo as done.
 
 $(_color_primary "Description"):
-  List todos.
+  Manage todos.
+
+$(_color_primary "Aliases"):
+  ${_ME} todo
+  ${_ME} todos
+
+$(_color_primary "Shortcut Alias"):
+  ${_ME} t
 HEREDOC
 }
-_todos() {
-  local _pattern='\- \[ \]|\- \[x\]'
-  local _search_all=0
+_todo() {
+  local _action="list"
+  local _arguments=()
+  local _content=
+  local _description=
+  local _list_all=0
+  local _pattern='\# \[ \]|\# \[x\]'
+  local _title=
 
   while ((${#}))
   do
     case "${1:-}" in
       -a|--all)
-        _search_all=1
+        _list_all=1
         ;;
-      closed)
-        _pattern='\- \[x\]'
+      -c|--content)
+        _content="$(_option_get_value "${1:-}" "${2:-}")"
+        shift
         ;;
-      open)
-        _pattern='\- \[ \]'
+      -t|--title)
+        local _title=
+        _title="$(_option_get_value "${1:-}" "${2:-}")"
+
+        if [[ -n "${_description:-}" ]]
+        then
+          _description="${_title} ${_MD} ${_description}"
+        else
+          _description="${_title}"
+        fi
+
+        shift
+        ;;
+      a|add)
+        _action="add"
+        _description+="$(_option_get_value "${1:-}" "${2:-}")"
+
+        shift
+
+        while [[ -n "${2:-}" ]] && [[ ! "${2:-}" =~ ^- ]]
+        do
+          _description+=" ${2:-}"
+
+          shift
+        done
+        ;;
+      c|closed)
+        _action="list"
+        _pattern='\# \[x\]'
+        ;;
+      d|do|complete*|done|finish*|check*)
+        _action="do"
+        ;;
+      l|list)
+        _action="list"
+        ;;
+      o|open)
+        _action="list"
+        _pattern='\# \[ \]'
+        ;;
+      u|undo|*ncomplete*|undone|unfinish*|uncheck*)
+        _action="undo"
+        ;;
+      *)
+        _arguments+=("${1:-}")
         ;;
     esac
 
     shift
   done
 
-  if ((_search_all))
-  then
-    _search "${_pattern}" --all
-  else
-    _search "${_pattern}"
-  fi | sed -e '/^$/d'
+  case "${_action:-}" in
+    add)
+      local _todo_content="# [ ] ${_description:-}"
+
+      if [[ -n "${_content:-}" ]]
+      then
+        _todo_content+="${_NEWLINE}${_NEWLINE}${_content}"
+      fi
+
+      _add                              \
+        --content "${_todo_content:-}"  \
+        --type    "todo.md"             \
+        "${_arguments[@]:-}"
+      ;;
+    do|undo)
+      if [[ -z "${_arguments[*]:-}" ]]
+      then
+        _exit_1 _help "todo"
+      fi
+
+      local __selector=
+      for   __selector in "${_arguments[@]:-}"
+      do
+        [[ -n "${__selector:-}" ]] || continue
+
+        local _selector_path=
+        _selector_path="$(_show "${__selector:-}" --path)"
+
+        local _notebook_path=
+        _notebook_path="$(
+          _notebooks show "${__selector:-}" --path 2>/dev/null ||
+            _notebooks current --path 2>/dev/null
+        )"
+
+        case "${_action:-}" in
+          do)
+            _sed_i -e "s/# \[ \]/# \[x\]/" "${_selector_path}"
+
+            if grep -q "# \[x\]" "${_selector_path}"
+            then
+              printf "Done: %s\\n"                \
+                "$(_show "${__selector}" --info-line)"
+
+              _git checkpoint "${_notebook_path}" \
+                "[nb] Done: $(_show "${__selector:-}" --relative-path)"
+            else
+              printf "Unable to mark done: %s\\n" \
+                "$(_color_primary "${__selector:-}")"
+            fi
+            ;;
+          undo)
+            _sed_i -e "s/# \[x\]/# \[ \]/" "${_selector_path}"
+
+            if grep -q "# \[ \]" "${_selector_path}"
+            then
+              printf "Undone: %s\\n"              \
+                "$(_show "${__selector}" --info-line)"
+
+              _git checkpoint "${_notebook_path}" \
+                "[nb] Undone: $(_show "${__selector:-}" --relative-path)"
+            else
+              printf "Unable to undo: %s\\n"      \
+                "$(_color_primary "${__selector:-}")"
+            fi
+            ;;
+        esac
+      done
+      ;;
+    list)
+      if ((_list_all))
+      then
+        _search "${_pattern}" --list --all
+      else
+        _search "${_pattern}" --list
+      fi | sed -e '/^$/d'
+      ;;
+  esac
 }
-_alias_subcommand "todos" "todo"
+_alias_subcommand "todo" "t"
+_alias_subcommand "todo" "todos"
 
 # unarchive ######################################################### unarchive
 
