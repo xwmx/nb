@@ -8173,6 +8173,7 @@ _SUBCOMMANDS=(
   subcommands
   sync
   t
+  to
   todo
   todos
   u
@@ -8308,6 +8309,7 @@ _GIT_SUBCOMMANDS=(
   show
   search
   t
+  to
   todo
   todos
   u
@@ -8588,8 +8590,8 @@ _call_deferred_command() {
   local _group_3_names=(
     "_ar" "_archive" "_b" "_br" "_browse" "_browser" "_config" "_h" "_help" \
     "_helpers" "_set" "_plugin" "_plugins" "_remote" "_reset" "_settings"   \
-    "_shell" "_st" "_stat" "_status" "_sync" "_t" "_todo" "_todos" "_unar"  \
-    "_unarchive" "_unset" "_update" "_upgrade"
+    "_shell" "_st" "_stat" "_status" "_sync" "_t" "_to" "_todo" "_todos"    \
+    "_unar" "_unarchive" "_unset" "_update" "_upgrade"
   )
 
   if {
@@ -21731,6 +21733,7 @@ $(_color_primary "Description"):
 $(_color_primary "Aliases"):
   ${_ME} todo
   ${_ME} todos
+  ${_ME} to
 
 $(_color_primary "Shortcut Alias"):
   ${_ME} t
@@ -21885,6 +21888,7 @@ _todo() {
   esac
 }
 _alias_subcommand "todo" "t"
+_alias_subcommand "todo" "to"
 _alias_subcommand "todo" "todos"
 
 # unarchive ######################################################### unarchive
