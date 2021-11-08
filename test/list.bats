@@ -1789,6 +1789,46 @@ HEREDOC
 
 # `list --type` ###############################################################
 
+@test "'list --type todo' without todos prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example File One.md" --content "Example content one."
+    "${_NB}" add "Example File Two.md" --content "Example content two."
+  }
+
+  run "${_NB}" list --type todo
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0               ]]
+  [[   "${lines[0]}"  =~  0\ todo\ files. ]]
+}
+
+@test "'list --type todo' with todos lists todos." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example File One.md" --content "Example content one."
+    "${_NB}" add "Example File Two.md" --content "Example content two."
+
+    "${_NB}" add "Example Todo One.todo.md" --content "# [ ] Example not done todo."
+    "${_NB}" add "Example Todo Two.todo.md" --content "# [x] Example done todo."
+  }
+
+  run "${_NB}" list --type todo
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0                           ]]
+  [[   "${lines[0]}"  =~  \
+.*\[.*4.*\].*\ ✅\ \[.*x.*\]\ Example\ done\ todo\.   ]]
+  [[   "${lines[1]}"  =~  \
+.*\[.*3.*\].*\ ✅\ \[\ \]\ Example\ not\ done\ todo\. ]]
+}
+
 @test "'list --document' exits with 0 and displays a list of documents." {
   {
     "${_NB}" init

@@ -2319,6 +2319,14 @@ _list_files() {
 
           grep --color=never "${_grep_patterns[@]}"
           ;;
+        todo|todos)
+          for __extension in "${_TODO_FILE_EXTENSIONS[@]}"
+          do
+            _grep_patterns+=("-e" "\.${__extension}$")
+          done
+
+          grep --color=never "${_grep_patterns[@]}"
+          ;;
         video|videos)
           for __extension in "${_VIDEO_FILE_EXTENSIONS[@]}"
           do
