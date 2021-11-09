@@ -22106,24 +22106,55 @@ _todo() {
           "$(_color_primary "${_arguments[0]:-}")"
       fi
 
-      local _pattern_expressions=(
-        -e "\- \[[[:space:]]*\] "
-        -e "\- \[x\] "
-      )
+      {
+        grep --color=never          \
+          -e "\- \[[[:space:]]*\] " \
+          -e "\- \[x\] "            \
+          "${_selector_path:-}"
+      } | {
+        local _counter=0
+        local _printed_counter=0
 
-      case "${_filter:-}" in
-        closed)
-          _pattern_expressions=(-e "\- \[x\] ")
-          ;;
-        open)
-          _pattern_expressions=(-e "\- \[[[:space:]]*\] ")
-          ;;
-      esac
+        local         __task=
+        while read -r __task
+        do
+          _counter="$((_counter+1))"
 
-      grep --color=never                \
-        "${_pattern_expressions[@]:-}"  \
-        "${_selector_path:-}"           ||
-        {
+          local _print_task=0
+
+          case "${_filter:-}" in
+            closed)
+              if [[ "${__task}" =~ \-\ \[x\] ]]
+              then
+                _print_task=1
+              fi
+              ;;
+            open)
+              if [[ "${__task}" =~ \-\ \[\ \]|\-\ \[\] ]]
+              then
+                _print_task=1
+              fi
+              ;;
+            *)
+              _print_task=1
+              ;;
+          esac
+
+          if ((_print_task))
+          then
+            local _formatted_task="${__task#- }"
+            _formatted_task="${_formatted_task//\[x\]/["$(_color_primary "x")"]}"
+
+            printf "%s %s\\n"                     \
+              "$(_color_brackets "${_counter}")"  \
+              "${_formatted_task}"
+
+            _printed_counter="$((_counter+1))"
+          fi
+        done
+
+        if ! ((_printed_counter))
+        then
           local _maybe_padded_filter=
 
           if [[ -n "${_filter:-}" ]]
@@ -22134,7 +22165,8 @@ _todo() {
           _warn printf "No ${_maybe_padded_filter:-}tasks found.\\n"
 
           return 1
-        }
+        fi
+      }
       ;;
   esac
 }
