@@ -22033,62 +22033,60 @@ _todo() {
         "${_arguments[@]:-}"
       ;;
     do|undo)
-      if [[ -z "${_arguments[*]:-}" ]]
+      local _selector="${_arguments[0]:-}"
+      # TODO
+      # local _task_number="${_arguments[1]:-}"
+
+      if [[ -z "${_selector:-}" ]]
       then
         _exit_1 _help "todo"
       fi
 
-      local __selector=
-      for   __selector in "${_arguments[@]:-}"
-      do
-        [[ -n "${__selector:-}" ]] || continue
+      local _selector_path=
+      _selector_path="$(_show "${_selector:-}" --path)"
 
-        local _selector_path=
-        _selector_path="$(_show "${__selector:-}" --path)"
+      local _notebook_path=
+      _notebook_path="$(
+        _notebooks show "${_selector:-}" --path 2>/dev/null ||
+          _notebooks current --path 2>/dev/null
+      )"
 
-        local _notebook_path=
-        _notebook_path="$(
-          _notebooks show "${__selector:-}" --path 2>/dev/null ||
-            _notebooks current --path 2>/dev/null
-        )"
+      if [[ ! "${_selector_path}" =~ \.todo\.md$    ]]
+      then
+        _exit_1 printf "Item must be a todo: %s\\n" \
+          "$(_color_primary "${_selector:-}")"
+      fi
 
-        if [[ ! "${_selector_path}" =~ \.todo\.md$    ]]
-        then
-          _exit_1 printf "Item must be a todo: %s\\n" \
-            "$(_color_primary "${__selector:-}")"
-        fi
+      case "${_action:-}" in
+        do)
+          _sed_i -e "s/# \[ \]/# \[x\]/" "${_selector_path}"
 
-        case "${_action:-}" in
-          do)
-            _sed_i -e "s/# \[ \]/# \[x\]/" "${_selector_path}"
+          if grep -q "# \[x\]" "${_selector_path}"
+          then
+            printf "Done: %s\\n" "$(_list "${_selector}")"
 
-            if grep -q "# \[x\]" "${_selector_path}"
-            then
-              printf "Done: %s\\n" "$(_list "${__selector}")"
+            _git checkpoint "${_notebook_path}" \
+              "[nb] Done: $(_show "${_selector:-}" --relative-path)"
+          else
+            printf "Unable to mark done: %s\\n" \
+              "$(_color_primary "${_selector:-}")"
+          fi
+          ;;
+        undo)
+          _sed_i -e "s/# \[x\]/# \[ \]/" "${_selector_path}"
 
-              _git checkpoint "${_notebook_path}" \
-                "[nb] Done: $(_show "${__selector:-}" --relative-path)"
-            else
-              printf "Unable to mark done: %s\\n" \
-                "$(_color_primary "${__selector:-}")"
-            fi
-            ;;
-          undo)
-            _sed_i -e "s/# \[x\]/# \[ \]/" "${_selector_path}"
+          if grep -q "# \[ \]" "${_selector_path}"
+          then
+            printf "Undone: %s\\n" "$(_list "${_selector}")"
 
-            if grep -q "# \[ \]" "${_selector_path}"
-            then
-              printf "Undone: %s\\n" "$(_list "${__selector}")"
-
-              _git checkpoint "${_notebook_path}" \
-                "[nb] Undone: $(_show "${__selector:-}" --relative-path)"
-            else
-              printf "Unable to undo: %s\\n"      \
-                "$(_color_primary "${__selector:-}")"
-            fi
-            ;;
-        esac
-      done
+            _git checkpoint "${_notebook_path}" \
+              "[nb] Undone: $(_show "${_selector:-}" --relative-path)"
+          else
+            printf "Unable to undo: %s\\n"      \
+              "$(_color_primary "${_selector:-}")"
+          fi
+          ;;
+      esac
       ;;
     list)
       {
