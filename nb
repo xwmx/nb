@@ -3698,9 +3698,9 @@ $(_color_primary "Usage"):
   ${_ME} bookmark [<notebook>:][<folder-path>/] <url>
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
               [-f <filename> | --filename <filename>] [--no-request]
-              [-q <quote> | --quote <quote>] [-r <url> | --related <url>]...
-              [--save-source] [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...]
-              [--title <title>]
+              [-q <quote> | --quote <quote>] [--save-source]
+              [-r (<url> | <selector>) | --related (<url> | <selector>)]...
+              [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...] [--title <title>]
   ${_ME} bookmark [list [<list-options>...]]
   ${_ME} bookmark (edit | delete | open | peek | url)
               ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
@@ -11382,9 +11382,9 @@ $(_color_primary "Usage"):
   ${_ME} bookmark [<notebook>:][<folder-path>/] <url>
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
               [-f <filename> | --filename <filename>] [--no-request]
-              [-q <quote> | --quote <quote>] [-r <url> | --related <url>]...
-              [--save-source] [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...]
-              [--title <title>]
+              [-q <quote> | --quote <quote>] [--save-source]
+              [-r (<url> | <selector>) | --related (<url> | <selector>)]...
+              [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...] [--title <title>]
   ${_ME} bookmark list [<list-options>...]
   ${_ME} bookmark (edit | delete | open | peek | url)
               ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
@@ -11400,9 +11400,12 @@ $(_color_primary "Options"):
   --no-request                 Don't request or download the target page.
   -q, --quote <quote>          A quote or excerpt from the saved page.
                                Alias: \`--excerpt\`
+  -r, --related <selector>     A selector for an item related to the
+                               bookmarked page.
   -r, --related <url>          A URL for a page related to the bookmarked page.
                                Multiple \`--related\` flags can be used in a
-                               command to save multiple related URLs.
+                               command to save multiple related URLs and
+                               selectors.
   --save-source                Save the page source as HTML.
   -t, --tags <tag1>,<tag2>...  A comma-separated list of tags.
   --title <title>              The bookmark title. When not specified,
@@ -11528,7 +11531,7 @@ _bookmark() {
   local _encrypt=0
   local _password=
   local _quote=
-  local _related_urls=()
+  local _related_identifiers=()
   local _request_page=1
   local _save_source=0
   local _selector=
@@ -11571,7 +11574,7 @@ _bookmark() {
         shift
         ;;
       -r|--via|--also|--related)
-        _related_urls+=("$(_option_get_value "${1}" "${2:-}")")
+        _related_identifiers+=("$(_option_get_value "${1}" "${2:-}")")
         shift
         ;;
       --save*source|--source|--save*html|--html|--raw*content|--raw*html)
@@ -12029,14 +12032,19 @@ _bookmark() {
     _bookmark_content+="${_NEWLINE}${_comment}${_NEWLINE}"
   fi
 
-  if [[ -n "${_related_urls[*]:-}"  ]]
+  if [[ -n "${_related_identifiers[*]:-}" ]]
   then
     _bookmark_content+="${_NEWLINE}## Related${_NEWLINE}${_NEWLINE}"
 
-    local __related_url=
-    for   __related_url in "${_related_urls[@]:-}"
+    local __identifier=
+    for   __identifier in "${_related_identifiers[@]:-}"
     do
-      _bookmark_content+="- <${__related_url}>${_NEWLINE}"
+      if _string_is_url "${__identifier:-}"
+      then
+        _bookmark_content+="- <${__identifier:-}>${_NEWLINE}"
+      else
+        _bookmark_content+="- [[${__identifier:-}]]${_NEWLINE}"
+      fi
     done
   fi
 
@@ -21787,15 +21795,26 @@ HEREDOC
 _describe_todo() {
   cat <<HEREDOC
 $(_color_primary "Usage"):
-  ${_ME} todo add [<notebook>:][<folder-path>/][<filename>] <description>
-  ${_ME} todo [do | undo] ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
+  ${_ME} todo add [<notebook>:][<folder-path>/][<filename>] <title>
+              [--description <description>] [--due <date>]
+              [-r (<url> | <selector>) | --related (<url> | <selector>)]
+              [--tags <tag1>,<tag2>...] [--task <title>]...
+  ${_ME} todo do   ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
+  ${_ME} todo undo ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
   ${_ME} todos [<notebook>:][<folder-path>/] [open | closed]
 
+$(_color_primary "Options"):
+  --description <description>         Description for the todo
+  --due <date>                        Due date and / or time for the todo.
+  -r, --related (<url> | <selector>)  Related URL or selector.
+  --tags <tag1>,<tag2>...             Comma-separated list of tags.
+  --task <title>                      Task to add to the tasklist.
+
 $(_color_primary "Subcommands"):
-  (default)  List todos.
-  add        Add a new todo.
-  do         Mark a todo as done.
-  undo       Unmark a todo as done.
+  (default)       List todos.
+  add             Add a new todo.
+  do              Mark a todo as done.
+  undo            Unmark a todo as done.
 
 $(_color_primary "Description"):
   Manage todos.
@@ -21812,40 +21831,60 @@ HEREDOC
 _todo() {
   local _action="list"
   local _arguments=()
-  local _content=
   local _description=
+  local _due_datetime=
   local _filter=
+  local _related_identifiers=()
+  local _tag_list=
+  local _tasks=()
   local _title=
 
   while ((${#}))
   do
     case "${1:-}" in
-      -c|--content)
-        _content="$(_option_get_value "${1:-}" "${2:-}")"
+      --description)
+        _description="$(_option_get_value "${1:-}" "${2:-}")"
         shift
         ;;
-      -t|--title)
-        local _title=
-        _title="$(_option_get_value "${1:-}" "${2:-}")"
+      --due)
+        _due_datetime="$(_option_get_value "${1:-}" "${2:-}")"
+        shift
+        ;;
+      -r|--via|--also|--related)
+        _related_identifiers+=("$(_option_get_value "${1:-}" "${2:-}")")
+        shift
+        ;;
+      --tag*)
+        [[ -n "${_tag_list:-}" ]] && _tag_list+=" "
+        _tag_list+="$(_option_get_tags "${1}" "${2:-}")"
+        shift
+        ;;
+      --task)
+        _tasks+=("$(_option_get_value "${1:-}" "${2:-}")")
+        shift
+        ;;
+      --title)
+        local _option_title=
+        _option_title="$(_option_get_value "${1:-}" "${2:-}")"
 
-        if [[ -n "${_description:-}" ]]
+        if [[ -n "${_title:-}" ]]
         then
-          _description="${_title} ${_MD} ${_description}"
+          _title="${_option_title} ${_MD} ${_title}"
         else
-          _description="${_title}"
+          _title="${_option_title}"
         fi
 
         shift
         ;;
       a|add)
         _action="add"
-        _description+="$(_option_get_value "${1:-}" "${2:-}")"
+        _title+="$(_option_get_value "${1:-}" "${2:-}")"
 
         shift
 
         while [[ -n "${2:-}" ]] && [[ ! "${2:-}" =~ ^- ]]
         do
-          _description+=" ${2:-}"
+          _title+=" ${2:-}"
 
           shift
         done
@@ -21895,11 +21934,51 @@ _todo() {
 
   case "${_action:-}" in
     add)
-      local _todo_content="# [ ] ${_description:-}"
+      local _todo_content="# [ ] ${_title:-}${_NEWLINE}"
 
-      if [[ -n "${_content:-}" ]]
+      if [[ -n "${_due_datetime:-}" ]]
       then
-        _todo_content+="${_NEWLINE}${_NEWLINE}${_content}"
+        _todo_content+="${_NEWLINE}## Due${_NEWLINE}"
+        _todo_content+="${_NEWLINE}${_due_datetime:-}${_NEWLINE}"
+      fi
+
+      if [[ -n "${_description:-}" ]]
+      then
+        _todo_content+="${_NEWLINE}## Description${_NEWLINE}"
+        _todo_content+="${_NEWLINE}${_description}${_NEWLINE}"
+      fi
+
+      if ((${#_tasks[@]}))
+      then
+        _todo_content+="${_NEWLINE}## Tasks${_NEWLINE}${_NEWLINE}"
+
+        local __task=
+        for   __task in "${_tasks[@]:-}"
+        do
+          _todo_content+="- [ ] ${__task}${_NEWLINE}"
+        done
+      fi
+
+      if ((${#_related_identifiers[@]}))
+      then
+        _todo_content+="${_NEWLINE}## Related${_NEWLINE}${_NEWLINE}"
+
+        local __identifier=
+        for   __identifier in "${_related_identifiers[@]:-}"
+        do
+          if _string_is_url "${__identifier:-}"
+          then
+            _todo_content+="- <${__identifier:-}>${_NEWLINE}"
+          else
+            _todo_content+="- [[${__identifier:-}]]${_NEWLINE}"
+          fi
+        done
+      fi
+
+      if [[ -n "${_tag_list:-}"         ]]
+      then
+        _todo_content+="${_NEWLINE}## Tags${_NEWLINE}"
+        _todo_content+="${_NEWLINE}${_tag_list}${_NEWLINE}"
       fi
 
       _add                              \

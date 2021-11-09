@@ -5200,9 +5200,9 @@ Usage:
   nb bookmark [<notebook>:][<folder-path>/] <url>
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
               [-f <filename> | --filename <filename>] [--no-request]
-              [-q <quote> | --quote <quote>] [-r <url> | --related <url>]...
-              [--save-source] [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...]
-              [--title <title>]
+              [-q <quote> | --quote <quote>] [--save-source]
+              [-r (<url> | <selector>) | --related (<url> | <selector>)]...
+              [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...] [--title <title>]
   nb bookmark [list [<list-options>...]]
   nb bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   nb bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
@@ -5387,9 +5387,9 @@ Usage:
   bookmark [<notebook>:][<folder-path>] <url>
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
               [-f <filename> | --filename <filename>] [--no-request]
-              [-q <quote> | --quote <quote>] [-r <url> | --related <url>]...
-              [--save-source] [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...]
-              [--title <title>]
+              [-q <quote> | --quote <quote>] [--save-source]
+              [-r (<url> | <selector>) | --related (<url> | <selector>)]...
+              [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...] [--title <title>]
   bookmark (edit | delete | open | peek | url)
               ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
   bookmark search <query>
@@ -5404,6 +5404,8 @@ Options:
   --no-request                 Don't request or download the target page.
   -q, --quote <quote>          A quote or excerpt from the saved page.
                                Alias: `--excerpt`
+  -r, --related <selector>     A selector for an item related to the
+                               bookmarked page.
   -r, --related <url>          A URL for a page related to the bookmarked page.
                                Multiple `--related` flags can be used in a
                                command to save multiple related URLs.
@@ -5660,9 +5662,9 @@ Usage:
   nb bookmark [<notebook>:][<folder-path>/] <url>
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
               [-f <filename> | --filename <filename>] [--no-request]
-              [-q <quote> | --quote <quote>] [-r <url> | --related <url>]...
-              [--save-source] [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...]
-              [--title <title>]
+              [-q <quote> | --quote <quote>] [--save-source]
+              [-r (<url> | <selector>) | --related (<url> | <selector>)]...
+              [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...] [--title <title>]
   nb bookmark list [<list-options>...]
   nb bookmark (edit | delete | open | peek | url)
               ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
@@ -5678,6 +5680,8 @@ Options:
   --no-request                 Don't request or download the target page.
   -q, --quote <quote>          A quote or excerpt from the saved page.
                                Alias: `--excerpt`
+  -r, --related <selector>     A selector for an item related to the
+                               bookmarked page.
   -r, --related <url>          A URL for a page related to the bookmarked page.
                                Multiple `--related` flags can be used in a
                                command to save multiple related URLs.

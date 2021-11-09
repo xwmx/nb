@@ -1018,6 +1018,71 @@ $(cat "${NB_TEST_BASE_PATH}/fixtures/example.com.md")"
   [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }
 
+@test "'bookmark' with --related URLs and selectors creates new note." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" bookmark "${_BOOKMARK_URL}"  \
+    --related https://example.net           \
+    --related example:123                   \
+    --related https://example.example       \
+    --related "Example Title"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0
+  [[ ${status} -eq 0 ]]
+
+  # Creates new note file with content
+  _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
+  [[ "${#_files[@]}" -eq 1 ]]
+
+  _bookmark_content="\
+# Example Domain
+
+<file://${NB_TEST_BASE_PATH}/fixtures/example.com.html>
+
+## Description
+
+Example description.
+
+## Related
+
+- <https://example.net>
+- [[example:123]]
+- <https://example.example>
+- [[Example Title]]
+
+## Content
+
+$(cat "${NB_TEST_BASE_PATH}/fixtures/example.com.md")"
+
+  printf "cat file: '%s'\\n" "$(cat "${NB_DIR}/home/${_filename}")"
+  printf "\${_bookmark_content}: '%s'\\n" "${_bookmark_content}"
+
+  [[ "$(cat "${NB_DIR}/home/${_filename}")" == "${_bookmark_content}" ]]
+  grep -q '# Example Domain' "${NB_DIR}/home"/*
+
+  # Creates git commit
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  # Adds to index
+  [[ -e "${NB_DIR}/home/.index"                                   ]]
+  [[ "$(ls "${NB_DIR}/home")" == "$(cat "${NB_DIR}/home/.index")" ]]
+
+  # Prints output
+  [[ "${output}" =~ Added:                    ]]
+  [[ "${output}" =~ [0-9]+                    ]]
+  [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
+}
+
 # --encrypt option ############################################################
 
 @test "'bookmark --encrypt' with content argument creates a new .enc bookmark." {
