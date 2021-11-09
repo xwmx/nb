@@ -21853,8 +21853,23 @@ _todo() {
       c|closed)
         _filter="closed"
         ;;
-      d|do|close|complete*|done|finish*|check*)
+      d|do|close|complete*|finish*|check*)
         _action="do"
+        ;;
+      done)
+        local _selector_path=
+
+        if [[ -n "${2:-}" ]]
+        then
+          _selector_path="$(_show "${2:-}" --path)"
+        fi
+
+        if [[ "${_selector_path:-}" =~ \.todo\.md$ ]]
+        then
+          _action="do"
+        else
+          _filter="closed"
+        fi
         ;;
       l|list)
         _action="list"
