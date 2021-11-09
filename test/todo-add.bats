@@ -3,6 +3,90 @@
 
 load test_helper
 
+# container selectors #########################################################
+
+@test "'todo add <notebook>: <multi-word> <description>' exits with 0, creates new todo in <notebook> with <multi-word> <description>, creates commit." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+  }
+
+  run "${_NB}" todo add Example\ Notebook: Example multi-word description.
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0                      ]]
+
+  _home_files=($(ls "${NB_DIR}/home/"))
+
+  [[ "${#_home_files[@]}" -eq 0             ]]
+
+  _files=($(ls "${NB_DIR}/Example Notebook/"))
+
+  printf "\${_files[*]}: '%s'\\n" "${_files[*]:-}"
+
+  [[ "${#_files[@]}" -eq 1                  ]]
+  [[ "${_files[0]}"   =~ ^[0-9]+\.todo\.md$ ]]
+
+  cat "${NB_DIR}/Example Notebook/${_files[0]}"
+
+  diff                                                \
+    <(cat "${NB_DIR}/Example Notebook/${_files[0]}")  \
+    <(printf "# [ ] Example multi-word description.\\n")
+
+  while [[ -n "$(git -C "${NB_DIR}/Example Notebook" status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git -C "${NB_DIR}/Example Notebook" log | grep -q '\[nb\] Add'
+
+  [[ "${lines[0]}"  =~  \
+Added:\ .*\[.*Example\ Notebook:1.*\].*\ ✅\ .*Example\ Notebook:[0-9]+\.todo\.md         ]]
+  [[ "${lines[0]}"  =~  \
+Example\ Notebook:[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ multi-word\ description\.\"  ]]
+}
+
+@test "'todo add <folder> <multi-word> <description>' exits with 0, creates new todo in <folder> with <multi-word> <description>, creates commit." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder" --type "folder"
+  }
+
+  run "${_NB}" todo add Example\ Folder/ Example multi-word description.
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0                      ]]
+
+  _files=($(ls "${NB_DIR}/home/Example Folder/"))
+
+  printf "\${_files[*]}: '%s'\\n" "${_files[*]:-}"
+
+  [[ "${#_files[@]}" -eq 1                  ]]
+  [[ "${_files[0]}"   =~ ^[0-9]+\.todo\.md$ ]]
+
+  cat "${NB_DIR}/home/Example Folder/${_files[0]}"
+
+  diff                                                        \
+    <(cat "${NB_DIR}/home/Example Folder/${_files[0]}")       \
+    <(printf "# [ ] Example multi-word description.\\n")
+
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Add'
+
+  [[ "${lines[0]}"  =~  \
+Added:\ .*\[.*Example\ Folder/1.*\].*\ ✅\ .*Example\ Folder/[0-9]+\.todo\.md           ]]
+  [[ "${lines[0]}"  =~  \
+Example\ Folder/[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ multi-word\ description\.\"  ]]
+}
+
 # --task and --tags options ###################################################
 
 @test "'todo add <title> --related <URL> --relared <selector>' exits with 0, creates new todo with <title> as title and related items, creates commit." {

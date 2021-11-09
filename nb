@@ -21993,13 +21993,24 @@ _todo() {
         ;;
       a|add)
         _action="add"
-        _title+="$(_option_get_value "${1:-}" "${2:-}")"
+
+        local _maybe_selector=
+        _maybe_selector="$(_option_get_value "${1:-}" "${2:-}")"
+
+        if [[ "${_maybe_selector:-}" =~ :$|/$ ]]
+        then
+          _arguments+=("${_maybe_selector}")
+        else
+          _title+="${_maybe_selector}"
+        fi
 
         shift
 
         while [[ -n "${2:-}" ]] && [[ ! "${2:-}" =~ ^- ]]
         do
-          _title+=" ${2:-}"
+          [[ -n "${_title:-}" ]] && _title+=" "
+
+          _title+="${2:-}"
 
           shift
         done
@@ -22394,7 +22405,7 @@ _todo() {
 
             if ! ((_printed_task_counter))
             then
-              printf "0 ${_maybe_padded_empty_qualifier:-}tasks.\\n"
+              printf "0 %stasks.\\n" "${_maybe_padded_empty_qualifier:-}"
             fi
           }
         done
@@ -22410,7 +22421,7 @@ _todo() {
 
         if ! ((_printed_line_counter))
         then
-          _warn printf "0 ${_maybe_padded_qualifier:-}tasks.\\n"
+          _warn printf "0 %stasks.\\n" "${_maybe_padded_empty_qualifier:-}"
 
           return 1
         fi
