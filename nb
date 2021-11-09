@@ -21868,6 +21868,82 @@ $(_color_primary "Shortcut Alias"):
 HEREDOC
 }
 _todo() {
+  # Usage: _todo_get_task <path> <task-number>
+  _todo_get_task() {
+    local _counter=0
+    local _task_number="${2:?}"
+    local _todo_path="${1:?}"
+
+    {
+      cat "${_todo_path:-}"
+    } | {
+      local         __line=
+      while read -r __line
+      do
+        if [[ "${__line}" =~ \-\ \[\]|\-\ \[\ \]|\-\ \[\x\] ]]
+        then
+          _counter="$((_counter+1))"
+
+          if [[ "${_counter:-}" == "${_task_number:-}" ]]
+          then
+            printf "%s\\n" "${__line}"
+
+            return 0
+          fi
+        fi
+      done
+
+      return 1
+    }
+  }
+
+  # Usage: _todo_update_task <path> <number> <action>
+  _todo_update_task() {
+    local _action="${3:?}"
+    local _counter=0
+    local _task_number="${2:?}"
+    local _todo_path="${1:?}"
+
+    local _temp_file_path=
+    _temp_file_path="$(_temp file)"
+
+    case "${_action:-}" in
+      do)   local _replacement_box="- [x]" ;;
+      undo) local _replacement_box="- [ ]" ;;
+    esac
+
+    {
+      cat "${_todo_path:-}"
+    } | {
+      local         __line=
+      while read -r __line
+      do
+        if [[ "${__line}" =~ \-\ \[\]|\-\ \[\ \]|\-\ \[\x\] ]]
+        then
+          _counter="$((_counter+1))"
+
+          if [[ "${_counter:-}" == "${_task_number:-}"      ]]
+          then
+            printf "%s\\n" "${__line}"                      \
+              | sed -e "s/- \[\]/${_replacement_box}/"      \
+                    -e "s/- \[ \]/${_replacement_box}/"     \
+                    -e "s/- \[x\]/${_replacement_box}/"
+          else
+            printf "%s\\n" "${__line}"
+          fi
+        else
+          printf "%s\\n" "${__line}"
+        fi
+      done
+    } | {
+      cat > "${_temp_file_path}"
+    }
+
+    cat "${_temp_file_path}"  > "${_selector_path}"
+
+    [[ -f "${_temp_file_path:?}" ]] && rm -rf "${_temp_file_path:?}"
+  }
+
   local _action="list"
   local _arguments=()
   local _description=
@@ -22042,7 +22118,7 @@ _todo() {
       fi
 
       local _selector_path=
-      _selector_path="$(_show "${_selector:-}" --path)"
+      _selector_path="$(_show "${_selector:-}" --path 2>/dev/null || :)"
 
       local _notebook_path=
       _notebook_path="$(
@@ -22058,50 +22134,81 @@ _todo() {
 
       case "${_action:-}" in
         do)
-          local _replacement_pattern="s/# \[ \]/# \[x\]/"
-
           if [[ -n "${_task_number:-}" ]]
           then
-            _replacement_pattern=":a;N;\$!ba;s/- \[ \]|- \[\]|- \[x\]/- \[x\]/${_task_number}"
+            _todo_update_task "${_selector_path:-}" "${_task_number:-}" "do"
+
+            local _updated_task=
+            _updated_task="$(
+              _todo_get_task "${_selector_path:-}" "${_task_number:-}"
+            )"
+
+            if [[ ! "${_updated_task:-}" =~ ^-\ \[x\] ]]
+            then
+              _warn cat "${_selector_path}"
+              _exit_1 printf                      \
+                "Unable to mark done: %s\\n"      \
+                "$(_todos tasks "${_selector:-}" "${_task_number}")"
+            else
+              _todos tasks "${_selector:-}" "${_task_number}" \
+                | sed "3s/^/Done: /"
+
+              _git checkpoint "${_notebook_path}" \
+                "[nb] Task Done: $(_show "${_selector:-}" --relative-path) ${_task_number}"
+            fi
+          else
+            _sed_i -e "s/# \[ \]/# \[x\]/" "${_selector_path}"
+
+            if grep -v -q "# \[x\]" "${_selector_path}"
+            then
+              _exit_1 printf                      \
+                "Unable to mark done: %s\\n"      \
+                "$(_color_primary "${_selector:-}")"
+            else
+              printf "Done: %s\\n" "$(_list "${_selector}")"
+
+              _git checkpoint "${_notebook_path}" \
+                "[nb] Done: $(_show "${_selector:-}" --relative-path)"
+            fi
           fi
-
-          _sed_i -e "${_replacement_pattern}" "${_selector_path}"
-
-          if [[ -z "${_task_number:-}" ]]      &&
-             grep -v -q "# \[x\]" "${_selector_path}"
-          then
-            _exit_1 printf                    \
-              "Unable to mark done: %s\\n"    \
-              "$(_color_primary "${_selector:-}")"
-          fi
-
-          printf "Done: %s\\n" "$(_list "${_selector}")"
-
-          _git checkpoint "${_notebook_path}" \
-            "[nb] Done: $(_show "${_selector:-}" --relative-path)"
           ;;
         undo)
-          local _replacement_pattern="s/# \[x\]/# \[ \]/"
-
           if [[ -n "${_task_number:-}" ]]
           then
-            _replacement_pattern=":a;N;$!ba;s/- \[ \]|- \[\]|- \[x\]/- \[ \]/${_task_number}"
+            _todo_update_task "${_selector_path}" "${_task_number:-}" "undo"
+
+            local _updated_task=
+            _updated_task="$(
+              _todo_get_task "${_selector_path:-}" "${_task_number:-}"
+            )"
+
+            if [[ ! "${_updated_task:-}" =~ ^-\ \[\ \] ]]
+            then
+              _exit_1 printf                      \
+                "Unable to undo: %s\\n"           \
+                "$(_todos tasks "${_selector:-}" "${_task_number}")"
+            else
+              _todos tasks "${_selector:-}" "${_task_number}" \
+                | sed "3s/^/Undone: /"
+
+              _git checkpoint "${_notebook_path}" \
+                "[nb] Task Undone: $(_show "${_selector:-}" --relative-path) ${_task_number}"
+            fi
+          else
+            _sed_i -e "s/# \[x\]/# \[ \]/" "${_selector_path}"
+
+            if grep -v -q "# \[ \]" "${_selector_path}"
+            then
+              _exit_1 printf                      \
+                "Unable to undo: %s\\n"           \
+                "$(_color_primary "${_selector:-}")"
+            else
+              printf "Undone: %s\\n" "$(_list "${_selector}")"
+
+              _git checkpoint "${_notebook_path}" \
+                "[nb] Undone: $(_show "${_selector:-}" --relative-path)"
+            fi
           fi
-
-          _sed_i -e "${_replacement_pattern}" "${_selector_path}"
-
-          if [[ -z "${_task_number:-}" ]]     &&
-             grep -v -q "# \[ \]" "${_selector_path}"
-          then
-            _exit_1 printf                    \
-              "Unable to undo: %s\\n"         \
-              "$(_color_primary "${_selector:-}")"
-          fi
-
-          printf "Undone: %s\\n" "$(_list "${_selector}")"
-
-          _git checkpoint "${_notebook_path}" \
-            "[nb] Undone: $(_show "${_selector:-}" --relative-path)"
           ;;
       esac
       ;;
@@ -22143,29 +22250,32 @@ _todo() {
       }
       ;;
     tasks)
+      local _selector="${_arguments[0]:-}"
+      local _task_number="${_arguments[1]:-}"
+
       local _selector_path=
-      _selector_path="$(_show "${_arguments[0]:-}" --path)"
+      _selector_path="$(_show "${_selector:-}" --path 2>/dev/null || :)"
 
       if ! _file_is_todo "${_selector_path:-}"
       then
         _exit_1 printf        \
           "Not a todo: %s\\n" \
-          "$(_color_primary "${_arguments[0]:-}")"
+          "$(_color_primary "${_selector:-}")"
       fi
 
       local _item_selector=
       _item_selector="$(
-        _list "${_arguments[0]:-}" --filename --no-color --no-indicator
+        _list "${_selector:-}" --filename --no-color --no-indicator
       )"
 
       _item_selector="${_item_selector#[}"
       _item_selector="${_item_selector%]*}"
 
-      _list "${_arguments[0]:-}"
+      _list "${_selector:-}"
 
       local _info_line_no_color=
       _info_line_no_color="$(
-        _list "${_arguments[0]:-}" --no-color
+        _list "${_selector:-}" --no-color
       ) "
 
        local _visible_info_line_length=
@@ -22199,13 +22309,13 @@ _todo() {
 
           case "${_filter:-}" in
             closed)
-              if [[ "${__task}" =~ \-\ \[x\] ]]
+              if [[ "${__task}" =~ \-\ \[x\]            ]]
               then
                 _print_task=1
               fi
               ;;
             open)
-              if [[ "${__task}" =~ \-\ \[\ \]|\-\ \[\] ]]
+              if [[ "${__task}" =~ \-\ \[\ \]|\-\ \[\]  ]]
               then
                 _print_task=1
               fi
@@ -22214,6 +22324,12 @@ _todo() {
               _print_task=1
               ;;
           esac
+
+          if [[ -n "${_task_number:-}"                  ]] &&
+             [[    "${_task_number}" != "${_counter:-}" ]]
+          then
+            _print_task=0
+          fi
 
           if ((_print_task))
           then
@@ -22230,14 +22346,17 @@ _todo() {
 
         if ! ((_printed_counter))
         then
-          local _maybe_padded_filter=
+          local _maybe_padded_qualifier=
 
           if [[ -n "${_filter:-}" ]]
           then
-            _maybe_padded_filter="${_filter:-} "
+            _maybe_padded_qualifier="${_filter:-} "
+          elif [[ -n "${_task_number:-}" ]]
+          then
+            _maybe_padded_qualifier="matching "
           fi
 
-          _warn printf "No ${_maybe_padded_filter:-}tasks found.\\n"
+          _warn printf "No ${_maybe_padded_qualifier:-}tasks found.\\n"
 
           return 1
         fi
