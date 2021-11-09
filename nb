@@ -22170,7 +22170,7 @@ _todo() {
           else
             _sed_i -e "s/# \[ \]/# \[x\]/" "${_selector_path}"
 
-            if grep -v -q "# \[x\]" "${_selector_path}"
+            if ! grep -q "# \[x\]" "${_selector_path}"
             then
               _exit_1 printf                      \
                 "Unable to mark done: %s\\n"      \
@@ -22208,7 +22208,7 @@ _todo() {
           else
             _sed_i -e "s/# \[x\]/# \[ \]/" "${_selector_path}"
 
-            if grep -v -q "# \[ \]" "${_selector_path}"
+            if ! grep -q "# \[ \]" "${_selector_path}"
             then
               _exit_1 printf                      \
                 "Unable to undo: %s\\n"           \
