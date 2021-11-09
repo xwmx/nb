@@ -22064,8 +22064,7 @@ _todo() {
 
             if grep -q "# \[x\]" "${_selector_path}"
             then
-              printf "Done: %s\\n"                \
-                "$(_show "${__selector}" --info-line)"
+              printf "Done: %s\\n" "$(_list "${__selector}")"
 
               _git checkpoint "${_notebook_path}" \
                 "[nb] Done: $(_show "${__selector:-}" --relative-path)"
@@ -22079,8 +22078,7 @@ _todo() {
 
             if grep -q "# \[ \]" "${_selector_path}"
             then
-              printf "Undone: %s\\n"              \
-                "$(_show "${__selector}" --info-line)"
+              printf "Undone: %s\\n" "$(_list "${__selector}")"
 
               _git checkpoint "${_notebook_path}" \
                 "[nb] Undone: $(_show "${__selector:-}" --relative-path)"
@@ -22148,11 +22146,11 @@ _todo() {
       _item_selector="${_item_selector#[}"
       _item_selector="${_item_selector%]*}"
 
-      _show "${_arguments[0]:-}" --info-line
+      _list "${_arguments[0]:-}"
 
       local _info_line_no_color=
       _info_line_no_color="$(
-        _show "${_arguments[0]:-}" --info-line --no-color
+        _list "${_arguments[0]:-}" --no-color
       ) "
 
        local _visible_info_line_length=
