@@ -21970,7 +21970,7 @@ _todo() {
         shift
         ;;
       --tag*)
-        [[ -n "${_tag_list:-}" ]] && _tag_list+=" "
+        [[ -n "${_tag_list:-}"  ]] && _tag_list+=" "
         _tag_list+="$(_option_get_tags "${1}" "${2:-}")"
         shift
         ;;
@@ -21982,7 +21982,7 @@ _todo() {
         local _option_title=
         _option_title="$(_option_get_value "${1:-}" "${2:-}")"
 
-        if [[ -n "${_title:-}" ]]
+        if [[ -n "${_title:-}"  ]]
         then
           _title="${_option_title} ${_MD} ${_title}"
         else
@@ -22006,7 +22006,7 @@ _todo() {
 
         shift
 
-        while [[ -n "${2:-}" ]] && [[ ! "${2:-}" =~ ^- ]]
+        while [[ -n "${2:-}"  ]] && [[ ! "${2:-}" =~ ^- ]]
         do
           [[ -n "${_title:-}" ]] && _title+=" "
 
@@ -22024,7 +22024,7 @@ _todo() {
       done)
         local _selector_path=
 
-        if [[ -n "${2:-}" ]]
+        if [[ -n "${2:-}"     ]]
         then
           _selector_path="$(_show "${2:-}" --path)"
         fi
@@ -22075,7 +22075,7 @@ _todo() {
         _todo_content+="${_NEWLINE}${_due_datetime:-}${_NEWLINE}"
       fi
 
-      if [[ -n "${_description:-}" ]]
+      if [[ -n "${_description:-}"  ]]
       then
         _todo_content+="${_NEWLINE}## Description${_NEWLINE}"
         _todo_content+="${_NEWLINE}${_description}${_NEWLINE}"
@@ -22123,7 +22123,7 @@ _todo() {
       local _selector="${_arguments[0]:-}"
       local _task_number="${_arguments[1]:-}"
 
-      if [[ -z "${_selector:-}" ]]
+      if [[ -z "${_selector:-}"         ]]
       then
         _exit_1 _help "todo"
       fi
@@ -22145,7 +22145,7 @@ _todo() {
 
       case "${_action:-}" in
         do)
-          if [[ -n "${_task_number:-}" ]]
+          if [[ -n "${_task_number:-}"  ]]
           then
             _todo_update_task "${_selector_path:-}" "${_task_number:-}" "do"
 
@@ -22184,7 +22184,7 @@ _todo() {
           fi
           ;;
         undo)
-          if [[ -n "${_task_number:-}" ]]
+          if [[ -n "${_task_number:-}"            ]]
           then
             _todo_update_task "${_selector_path}" "${_task_number:-}" "undo"
 
@@ -22251,7 +22251,7 @@ _todo() {
 
         if ! ((_counter))
         then
-          if [[ -n "${_filter:-}" ]]
+          if [[ -n "${_filter:-}"     ]]
           then
             _exit_1 printf "No %s todos found.\\n" "${_filter:-}"
           else
@@ -22266,10 +22266,10 @@ _todo() {
 
       local _maybe_padded_empty_qualifier=
 
-      if [[ -n "${_filter:-}" ]]
+      if [[ -n "${_filter:-}"         ]]
       then
         _maybe_padded_empty_qualifier="${_filter:-} "
-      elif [[ -n "${_task_number:-}" ]]
+      elif [[ -n "${_task_number:-}"  ]]
       then
         _maybe_padded_empty_qualifier="matching "
       fi
@@ -22306,13 +22306,13 @@ _todo() {
         local         __todo_path=
         while read -r __todo_path
         do
-          [[ -z "${__todo_path:-}" ]] && continue
-          [[ -d "${__todo_path:-}" ]] && continue
+          [[ -z "${__todo_path:-}"  ]] && continue
+          [[ -d "${__todo_path:-}"  ]] && continue
 
           if ! _file_is_todo "${__todo_path:-}"
           then
-            _exit_1 printf        \
-              "Not a todo: %s\\n" \
+            _exit_1 printf          \
+              "Not a todo: %s\\n"   \
               "$(_color_primary "${_selector:-}")"
           fi
 
