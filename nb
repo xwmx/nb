@@ -21778,10 +21778,7 @@ _describe_todo() {
 $(_color_primary "Usage"):
   ${_ME} todo add [<notebook>:][<folder-path>/][<filename>] <description>
   ${_ME} todo [do | undo] ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
-  ${_ME} todos [<notebook>:][<folder-path>/] [open | closed] [-a | --all]
-
-$(_color_primary "Options"):
-  -a, --all  List todos from all unarchived notebooks.
+  ${_ME} todos [<notebook>:][<folder-path>/] [open | closed]
 
 $(_color_primary "Subcommands"):
   (default)  List todos.
@@ -21807,15 +21804,11 @@ _todo() {
   local _content=
   local _description=
   local _filter=
-  local _list_all=0
   local _title=
 
   while ((${#}))
   do
     case "${1:-}" in
-      -a|--all)
-        _list_all=1
-        ;;
       -c|--content)
         _content="$(_option_get_value "${1:-}" "${2:-}")"
         shift
