@@ -22034,8 +22034,7 @@ _todo() {
       ;;
     do|undo)
       local _selector="${_arguments[0]:-}"
-      # TODO
-      # local _task_number="${_arguments[1]:-}"
+      local _task_number="${_arguments[1]:-}"
 
       if [[ -z "${_selector:-}" ]]
       then
@@ -22059,32 +22058,50 @@ _todo() {
 
       case "${_action:-}" in
         do)
-          _sed_i -e "s/# \[ \]/# \[x\]/" "${_selector_path}"
+          local _replacement_pattern="s/# \[ \]/# \[x\]/"
 
-          if grep -q "# \[x\]" "${_selector_path}"
+          if [[ -n "${_task_number:-}" ]]
           then
-            printf "Done: %s\\n" "$(_list "${_selector}")"
+            _replacement_pattern=":a;N;\$!ba;s/- \[ \]|- \[\]|- \[x\]/- \[x\]/${_task_number}"
+          fi
 
-            _git checkpoint "${_notebook_path}" \
-              "[nb] Done: $(_show "${_selector:-}" --relative-path)"
-          else
-            printf "Unable to mark done: %s\\n" \
+          _sed_i -e "${_replacement_pattern}" "${_selector_path}"
+
+          if [[ -z "${_task_number:-}" ]]      &&
+             grep -v -q "# \[x\]" "${_selector_path}"
+          then
+            _exit_1 printf                    \
+              "Unable to mark done: %s\\n"    \
               "$(_color_primary "${_selector:-}")"
           fi
+
+          printf "Done: %s\\n" "$(_list "${_selector}")"
+
+          _git checkpoint "${_notebook_path}" \
+            "[nb] Done: $(_show "${_selector:-}" --relative-path)"
           ;;
         undo)
-          _sed_i -e "s/# \[x\]/# \[ \]/" "${_selector_path}"
+          local _replacement_pattern="s/# \[x\]/# \[ \]/"
 
-          if grep -q "# \[ \]" "${_selector_path}"
+          if [[ -n "${_task_number:-}" ]]
           then
-            printf "Undone: %s\\n" "$(_list "${_selector}")"
+            _replacement_pattern=":a;N;$!ba;s/- \[ \]|- \[\]|- \[x\]/- \[ \]/${_task_number}"
+          fi
 
-            _git checkpoint "${_notebook_path}" \
-              "[nb] Undone: $(_show "${_selector:-}" --relative-path)"
-          else
-            printf "Unable to undo: %s\\n"      \
+          _sed_i -e "${_replacement_pattern}" "${_selector_path}"
+
+          if [[ -z "${_task_number:-}" ]]     &&
+             grep -v -q "# \[ \]" "${_selector_path}"
+          then
+            _exit_1 printf                    \
+              "Unable to undo: %s\\n"         \
               "$(_color_primary "${_selector:-}")"
           fi
+
+          printf "Undone: %s\\n" "$(_list "${_selector}")"
+
+          _git checkpoint "${_notebook_path}" \
+            "[nb] Undone: $(_show "${_selector:-}" --relative-path)"
           ;;
       esac
       ;;

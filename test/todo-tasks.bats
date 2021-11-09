@@ -3,6 +3,55 @@
 
 load test_helper
 
+# do task #####################################################################
+
+# @test "'tasks do <folder>/<id> <task-number>' with open task with no space in brackets exits with 0 and marks task done." {
+#   {
+#     "${_NB}" init
+
+#     "${_NB}" add                                    \
+#       --filename "Example Folder/Todo One.todo.md"  \
+#       --content "$(cat <<HEREDOC
+# # [ ] Example todo description one.
+
+# ## Due
+
+# 2200-02-02
+
+# ## Tasks
+
+# - [ ] Task one.
+# - [] Task two.
+# - [x] Task three.
+# - [ ] Task four.
+
+# ## Tags
+
+# #tag1 #tag2
+# HEREDOC
+# )"
+#   }
+
+#   run "${_NB}" tasks "do" Example\ Folder/1 2
+
+#   printf "\${status}: '%s'\\n" "${status}"
+#   printf "\${output}: '%s'\\n" "${output}"
+
+#   [[    "${status}"     -eq 0                         ]]
+#   [[    "${#lines[@]}"  -eq 5                         ]]
+
+#   [[    "${lines[0]}"   =~  \
+# .*\[.*Example\ Folder/1.*].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ one\. ]]
+#   [[    "${lines[1]}"   =~  .*------------------------------------.*            ]]
+
+#   [[    "${lines[2]}"   =~  \
+# .*[.*Example\ Folder/1\ 1.*].*\ \[\ \]\ Task\ one\.   ]]
+#   [[    "${lines[3]}"   =~  \
+# .*[.*Example\ Folder/1\ 2.*].*\ \[\]\ Task\ two\.     ]]
+#   [[    "${lines[4]}"   =~  \
+# .*[.*Example\ Folder/1\ 4.*].*\ \[\ \]\ Task\ four\.  ]]
+# }
+
 # tasks subcommand ############################################################
 
 @test "'tasks open <folder>/<id>' exits with 0 and lists open tasks." {
