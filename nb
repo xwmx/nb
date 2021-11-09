@@ -8136,6 +8136,7 @@ _SUBCOMMANDS=(
   d
   delete
   "do"
+  "done"
   e
   edit
   export
@@ -8194,6 +8195,7 @@ _SUBCOMMANDS=(
   unar
   unarchive
   undo
+  undone
   unpin
   unset
   update
@@ -8296,6 +8298,7 @@ _GIT_SUBCOMMANDS=(
   d
   delete
   "do"
+  "done"
   e
   edit
   export
@@ -8332,6 +8335,7 @@ _GIT_SUBCOMMANDS=(
   unar
   unarchive
   undo
+  undone
   unpin
   use
   view
@@ -8605,10 +8609,10 @@ _call_deferred_command() {
 
   local _group="${2:-}"
   local _group_3_names=(
-    "_ar" "_archive" "_b" "_br" "_browse" "_browser" "_config" "_do" "_h"   \
-    "_help" "_helpers" "_set" "_plugin" "_plugins" "_remote" "_reset"       \
-    "_settings" "_shell" "_st" "_stat" "_status" "_sync" "_t" "_to" "_todo" \
-    "_todos" "_unar" "_unarchive"  "_undo" "_unset" "_update" "_upgrade"
+    "_ar" "_archive" "_b" "_br" "_browse" "_browser" "_config" "_do" "_done"  \
+    "_h" "_help" "_helpers" "_set" "_plugin" "_plugins" "_remote" "_reset"    \
+    "_settings" "_shell" "_st" "_stat" "_status" "_sync" "_t" "_to" "_todo"   \
+    "_todos" "_unar" "_unarchive"  "_undo" "_undone" "_unset" "_update" "_upgrade"
   )
 
   if {
@@ -19326,6 +19330,7 @@ HEREDOC
 _do() {
   _todo "do" "${@:-}"
 }
+_alias_subcommand "do" "done"
 
 # helpers ############################################################# helpers
 
@@ -22006,6 +22011,7 @@ HEREDOC
 _undo() {
   _todo "undo" "${@:-}"
 }
+_alias_subcommand "undo" "undone"
 
 # unset ################################################################# unset
 
