@@ -5308,7 +5308,9 @@ _list() {
           if ((_COLOR_ENABLED))
           then
             _title_basename_or_path="\
-${_title_basename_or_path/\[x\]/[${_TPUT_COLOR_PRIMARY}x${_TPUT_SGR0}]}"
+${_title_basename_or_path/\[x\]/${_TPUT_SETAF_8}[${_TPUT_COLOR_PRIMARY}x${_TPUT_SETAF_8}]${_TPUT_SGR0}}"
+            _title_basename_or_path="\
+${_title_basename_or_path/\[$' '\]/${_TPUT_SETAF_8}[ ]${_TPUT_SGR0}}"
           fi
         fi
       fi
@@ -16018,7 +16020,10 @@ _show() {
     then
       if [[ "${_relative_path}"  =~ \.todo\.md$ ]] && ((_COLOR_ENABLED))
       then
-        _title="${_title/\[x\]/[${_TPUT_COLOR_PRIMARY}x${_TPUT_SGR0}]}"
+        _title="\
+${_title/\[x\]/${_TPUT_SETAF_8}[${_TPUT_COLOR_PRIMARY}x${_TPUT_SETAF_8}]${_TPUT_SGR0}}"
+        _title="\
+${_title/\[$' '\]/${_TPUT_SETAF_8}[ ]${_TPUT_SGR0}}"
       fi
 
       _info_line+="\"${_title}\""
