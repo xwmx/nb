@@ -8128,6 +8128,7 @@ _SUBCOMMANDS=(
   browse
   browser
   bs
+  close
   commands
   completions
   config
@@ -8293,6 +8294,7 @@ _GIT_SUBCOMMANDS=(
   browse
   browser
   bs
+  close
   count
   create
   d
@@ -8609,10 +8611,11 @@ _call_deferred_command() {
 
   local _group="${2:-}"
   local _group_3_names=(
-    "_ar" "_archive" "_b" "_br" "_browse" "_browser" "_config" "_do" "_done"  \
-    "_h" "_help" "_helpers" "_set" "_plugin" "_plugins" "_remote" "_reset"    \
-    "_settings" "_shell" "_st" "_stat" "_status" "_sync" "_t" "_to" "_todo"   \
-    "_todos" "_unar" "_unarchive"  "_undo" "_undone" "_unset" "_update" "_upgrade"
+    "_ar" "_archive" "_b" "_br" "_browse" "_browser" "_close" "_config" "_do" \
+    "_done" "_h" "_help" "_helpers" "_set" "_plugin" "_plugins" "_remote"     \
+    "_reset" "_settings" "_shell" "_st" "_stat" "_status" "_sync" "_t" "_to"  \
+    "_todo" "_todos" "_unar" "_unarchive"  "_undo" "_undone" "_unset"         \
+    "_update" "_upgrade"
   )
 
   if {
@@ -14080,7 +14083,15 @@ _open() {
     _exit_1 _help "open"
   fi
 
-  _bookmark open "${@}"
+  local _selector_path=
+  _selector_path="$(_show "${1:-}" --path)"
+
+  if [[ "${_selector_path:-}" =~ \.todo\.md$ ]]
+  then
+    _defer "_todo" "undo" "${@:-}"
+  else
+    _bookmark open "${@:-}"
+  fi
 }
 _alias_subcommand "open" "o"
 
@@ -19331,6 +19342,7 @@ _do() {
   _todo "do" "${@:-}"
 }
 _alias_subcommand "do" "done"
+_alias_subcommand "do" "close"
 
 # helpers ############################################################# helpers
 
@@ -21842,14 +21854,19 @@ _todo() {
       c|closed)
         _filter="closed"
         ;;
-      d|do|complete*|done|finish*|check*)
+      d|do|close|complete*|done|finish*|check*)
         _action="do"
         ;;
       l|list)
         _action="list"
         ;;
       o|open)
-        _filter="open"
+        if [[ -n "${2:-}" ]]
+        then
+          _action="undo"
+        else
+          _filter="open"
+        fi
         ;;
       u|undo|*ncomplete*|undone|unfinish*|uncheck*)
         _action="undo"
