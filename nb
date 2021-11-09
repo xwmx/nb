@@ -8611,11 +8611,10 @@ _call_deferred_command() {
 
   local _group="${2:-}"
   local _group_3_names=(
-    "_ar" "_archive" "_b" "_br" "_browse" "_browser" "_close" "_config" "_do" \
-    "_done" "_h" "_help" "_helpers" "_set" "_plugin" "_plugins" "_remote"     \
-    "_reset" "_settings" "_shell" "_st" "_stat" "_status" "_sync" "_t" "_to"  \
-    "_todo" "_todos" "_unar" "_unarchive"  "_undo" "_undone" "_unset"         \
-    "_update" "_upgrade"
+    _ar _archive _b _br _browse _browser _close _config _do _done _h _help    \
+    _helpers _set _plugin _plugins _remote _reset _settings _shell _st _stat  \
+    _status _sync _t _to _todo _todos _unar _unarchive _undo _undone _unset   \
+    _update _upgrade
   )
 
   if {
