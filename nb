@@ -15642,6 +15642,12 @@ _show() {
       _indicators+="${_NB_INDICATOR_ENCRYPTED:-}"
     fi
 
+    if _file_is_todo "${_path}"
+    then
+      _indicators+="${_NB_INDICATOR_TODO:-}"
+      _extra_length=1
+    fi
+
     printf "%s\\n" "${_indicators:-}"
   }
 
@@ -16010,6 +16016,11 @@ _show() {
 
     if [[ -n "${_title:-}"      ]]
     then
+      if [[ "${_relative_path}"  =~ \.todo\.md$ ]] && ((_COLOR_ENABLED))
+      then
+        _title="${_title/\[x\]/[${_TPUT_COLOR_PRIMARY}x${_TPUT_SGR0}]}"
+      fi
+
       _info_line+="\"${_title}\""
     fi
 

@@ -2,6 +2,44 @@
 
 load test_helper
 
+# todos #######################################################################
+
+@test "'show <id> --info-line' exits with status 0 and prints undone todo info line." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example File.todo.md" \
+      --content "# [ ] Example todo description."
+  }
+
+  run "${_NB}" show 1 --info-line
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}" -eq 0               ]]
+  [[    "${output}" =~  \
+.*\[.*1.*\].*\ ✅\ .*Example\ File.todo.md.*\ \"\[\ \]\ Example\ todo\ description\.\"  ]]
+}
+
+@test "'show <id> --info-line' exits with status 0 and prints done todo info line." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example File.todo.md" \
+      --content "# [x] Example todo description."
+  }
+
+  run "${_NB}" show 1 --info-line
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}" -eq 0               ]]
+  [[    "${output}" =~  \
+.*\[.*1.*\].*\ ✅\ .*Example\ File.todo.md.*\ \"\[.*x.*\]\ Example\ todo\ description\.\"  ]]
+}
+
 # error handling ##############################################################
 
 @test "'show <not-valid> --info-line' exits with status 1 and prints message." {
