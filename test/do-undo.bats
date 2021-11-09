@@ -3,6 +3,64 @@
 
 load test_helper
 
+# error handling ##############################################################
+
+@test "'do' with non-todo exits with 1 and prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add                          \
+      --content   "Example content one."  \
+      --filename  "File One.md"
+  }
+
+  run "${_NB}" "do" 1
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 1                                   ]]
+  [[ "${output}"    =~  \!.*\ Item\ must\ be\ a\ todo:\ .*1 ]]
+
+  diff                                    \
+    <(cat "${NB_DIR}/home/File One.md")   \
+    <(printf "Example content one.\\n")
+
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git -C "${NB_DIR}/home" log | grep -v -q '\[nb\] Done'
+}
+
+@test "'undo' with non-todo exits with 1 and prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add                          \
+      --content   "Example content one."  \
+      --filename  "File One.md"
+  }
+
+  run "${_NB}" "undo" 1
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 1                                   ]]
+  [[ "${output}"    =~  \!.*\ Item\ must\ be\ a\ todo:\ .*1 ]]
+
+  diff                                    \
+    <(cat "${NB_DIR}/home/File One.md")   \
+    <(printf "Example content one.\\n")
+
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git -C "${NB_DIR}/home" log | grep -v -q '\[nb\] Done'
+}
+
 # done ########################################################################
 
 @test "'done <id>' exits with 0, updates todo, and commits." {

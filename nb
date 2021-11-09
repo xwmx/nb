@@ -21905,6 +21905,12 @@ _todo() {
             _notebooks current --path 2>/dev/null
         )"
 
+        if [[ ! "${_selector_path}" =~ \.todo\.md$    ]]
+        then
+          _exit_1 printf "Item must be a todo: %s\\n" \
+            "$(_color_primary "${__selector:-}")"
+        fi
+
         case "${_action:-}" in
           do)
             _sed_i -e "s/# \[ \]/# \[x\]/" "${_selector_path}"
