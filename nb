@@ -8189,6 +8189,8 @@ _SUBCOMMANDS=(
   subcommands
   sync
   t
+  task
+  tasks
   to
   todo
   todos
@@ -8330,6 +8332,8 @@ _GIT_SUBCOMMANDS=(
   show
   search
   t
+  task
+  tasks
   to
   todo
   todos
@@ -8613,8 +8617,8 @@ _call_deferred_command() {
   local _group_3_names=(
     _ar _archive _b _br _browse _browser _close _config _do _done _h _help    \
     _helpers _set _plugin _plugins _remote _reset _settings _shell _st _stat  \
-    _status _sync _t _to _todo _todos _unar _unarchive _undo _undone _unset   \
-    _update _upgrade
+    _status _sync _t _task _tasks _to _todo _todos _unar _unarchive _undo     \
+    _undone _unset _update _upgrade
   )
 
   if {
@@ -21789,6 +21793,36 @@ HEREDOC
     _exit_1 printf "Sync failed.\\n"
   fi
 }
+
+# tasks ################################################################# tasks
+
+_describe_tasks() {
+  cat <<HEREDOC
+$(_color_primary "Usage"):
+  ${_ME} tasks ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
+           [open | closed]
+
+$(_color_primary "Description"):
+  List tasks in a todo.
+
+$(_color_primary "Read More"):
+  ${_README_URL}#-todos
+
+$(_color_primary "See Also"):
+  ${_ME} help do
+  ${_ME} help todo
+  ${_ME} help undo
+
+$(_color_primary "Examples"):
+  ${_ME} tasks 123
+  ${_ME} tasks open example:sample/321
+  ${_ME} tasks closed demo:456
+HEREDOC
+}
+_tasks() {
+  _todo "tasks" "${@:-}"
+}
+_alias_subcommand "tasks" "task"
 
 # todo ################################################################### todo
 
