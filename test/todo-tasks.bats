@@ -314,15 +314,15 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"     -eq 1       ]]
-  [[    "${#lines[@]}"  -eq 3       ]]
+  [[    "${status}"     -eq 1 ]]
+  [[    "${#lines[@]}"  -eq 3 ]]
 
   [[    "${lines[0]}"   =~  \
 .*\[.*Example\ Folder/1.*].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ one\. ]]
   [[    "${lines[1]}"   =~  .*------------------------------------.*            ]]
 
   [[    "${lines[2]}"   =~  \
-.*!.*\ No\ matching\ tasks\ found.  ]]
+.*!.*\ 0\ matching\ tasks.    ]]
 }
 
 @test "'todos tasks closed <folder>/<id> 3' exits with 0 and lists task." {
@@ -550,6 +550,200 @@ HEREDOC
 .*[.*Example\ Folder/1\ 4.*].*\ .*\[\ \].*\ Task\ four\.      ]]
 }
 
+@test "'todos tasks <folder>' exits with 0 and lists todos and tasks in folder." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add                                    \
+      --filename "Example Folder/Todo One.todo.md"  \
+      --content "$(cat <<HEREDOC
+# [ ] Example todo description one.
+
+## Due
+
+2200-02-02
+
+## Tasks
+
+- [ ] Task one.
+- [] Task two.
+- [x] Task three.
+- [ ] Task four.
+
+## Tags
+
+#tag1 #tag2
+HEREDOC
+)"
+
+    "${_NB}" add                                    \
+      --filename  "Example Folder/Note One.md"      \
+      --content   "Example note content one."
+
+    "${_NB}" add                                    \
+      --filename "Example Folder/Todo Two.todo.md"  \
+      --content "$(cat <<HEREDOC
+# [x] Example todo description two.
+
+## Due
+
+2200-02-02
+
+## Tasks
+
+- [ ] Task one.
+- [x] Task two.
+
+## Tags
+
+#tag2 #tag3
+HEREDOC
+)"
+  }
+
+  run "${_NB}" todos tasks Example\ Folder/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 0                                 ]]
+  [[    "${#lines[@]}"  -eq 10                                ]]
+
+  [[    "${lines[0]}"   =~  \
+.*\[.*Example\ Folder/3.*].*\ ✅\ .*\[.*x.*\].*\ Example\ todo\ description\ two\.  ]]
+  [[    "${lines[1]}"   =~  .*------------------------------------.*                ]]
+
+  [[    "${lines[2]}"   =~  \
+.*[.*Example\ Folder/1\ 1.*].*\ .*\[\ \].*\ Task\ one\.       ]]
+  [[    "${lines[3]}"   =~  \
+.*[.*Example\ Folder/1\ 2.*].*\ .*\[.*x.*\].*\ Task\ two\.    ]]
+
+  [[    "${lines[4]}"   =~  \
+.*\[.*Example\ Folder/1.*].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ one\. ]]
+  [[    "${lines[5]}"   =~  .*------------------------------------.*            ]]
+
+  [[    "${lines[6]}"   =~  \
+.*[.*Example\ Folder/1\ 1.*].*\ .*\[\ \].*\ Task\ one\.       ]]
+  [[    "${lines[7]}"   =~  \
+.*[.*Example\ Folder/1\ 2.*].*\ .*\[\].*\ Task\ two\.         ]]
+  [[    "${lines[8]}"   =~  \
+.*[.*Example\ Folder/1\ 3.*].*\ .*\[.*x.*\].*\ Task\ three\.  ]]
+  [[    "${lines[9]}"   =~  \
+.*[.*Example\ Folder/1\ 4.*].*\ .*\[\ \].*\ Task\ four\.      ]]
+}
+
+@test "'todos tasks <folder>' exits with 0 and lists todos with and without tasks in folder." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add                                    \
+      --filename "Example Folder/Todo One.todo.md"  \
+      --content "$(cat <<HEREDOC
+# [ ] Example todo description one.
+
+## Due
+
+2200-02-02
+
+## Tasks
+
+- [ ] Task one.
+- [] Task two.
+- [x] Task three.
+- [ ] Task four.
+
+## Tags
+
+#tag1 #tag2
+HEREDOC
+)"
+
+    "${_NB}" add                                    \
+      --filename  "Example Folder/Note One.md"      \
+      --content   "Example note content one."
+
+    "${_NB}" add                                    \
+      --filename "Example Folder/Todo Two.todo.md"  \
+      --content "$(cat <<HEREDOC
+# [x] Example todo description two.
+
+## Due
+
+2200-02-02
+
+## Tags
+
+#tag2 #tag3
+HEREDOC
+)"
+  }
+
+  run "${_NB}" todos tasks Example\ Folder/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 0                                 ]]
+  [[    "${#lines[@]}"  -eq 8                                 ]]
+
+  [[    "${lines[0]}"   =~  \
+.*\[.*Example\ Folder/3.*].*\ ✅\ .*\[.*x.*\].*\ Example\ todo\ description\ two\.  ]]
+  [[    "${lines[1]}"   =~  .*------------------------------------.*                ]]
+
+  [[    "${lines[2]}"   =~  \
+.*\[.*Example\ Folder/1.*].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ one\. ]]
+  [[    "${lines[3]}"   =~  .*------------------------------------.*            ]]
+
+  [[    "${lines[4]}"   =~  \
+.*[.*Example\ Folder/1\ 1.*].*\ .*\[\ \].*\ Task\ one\.       ]]
+  [[    "${lines[5]}"   =~  \
+.*[.*Example\ Folder/1\ 2.*].*\ .*\[\].*\ Task\ two\.         ]]
+  [[    "${lines[6]}"   =~  \
+.*[.*Example\ Folder/1\ 3.*].*\ .*\[.*x.*\].*\ Task\ three\.  ]]
+  [[    "${lines[7]}"   =~  \
+.*[.*Example\ Folder/1\ 4.*].*\ .*\[\ \].*\ Task\ four\.      ]]
+}
+
+@test "'todos tasks <folder>' exits with 0 and lists only todo without tasks." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add                                    \
+      --filename "Example Folder/Todo One.todo.md"  \
+      --content "$(cat <<HEREDOC
+# [ ] Example todo description one.
+
+## Due
+
+2200-02-02
+
+## Tags
+
+#tag1 #tag2
+HEREDOC
+)"
+
+    "${_NB}" add                                    \
+      --filename  "Example Folder/Note One.md"      \
+      --content   "Example note content one."
+  }
+
+  run "${_NB}" todos tasks Example\ Folder/
+
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
+
+  [[    "${status}"     -eq 0                 ]]
+  [[    "${#lines[@]}"  -eq 2                 ]]
+
+  [[    "${lines[0]}"   =~  \
+.*\[.*Example\ Folder/1.*].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ one\. ]]
+  [[    "${lines[1]}"   =~  .*------------------------------------.*            ]]
+
+  # [[    "${lines[2]}"   =~  .*!.*\ 0\ tasks\. ]]
+}
+
 # empty messages ##############################################################
 
 @test "'todos tasks open <folder>/<id>' with no open tasks exits with 1 and prints message." {
@@ -584,14 +778,14 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"     -eq 1                               ]]
-  [[    "${#lines[@]}"  -eq 3                               ]]
+  [[    "${status}"     -eq 1                       ]]
+  [[    "${#lines[@]}"  -eq 3                       ]]
 
   [[    "${lines[0]}"   =~  \
 .*\[.*Example\ Folder/1.*].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ one\. ]]
   [[    "${lines[1]}"   =~  .*------------------------------------.*            ]]
 
-  [[    "${lines[2]}"   =~  .*!.*\ No\ open\ tasks\ found\. ]]
+  [[    "${lines[2]}"   =~  .*!.*\ 0\ open\ tasks.  ]]
 }
 
 @test "'todos tasks closed <folder>/<id>' with no closed tasks exits with 1 and prints message." {
@@ -626,14 +820,14 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"     -eq 1                                 ]]
-  [[    "${#lines[@]}"  -eq 3                                 ]]
+  [[    "${status}"     -eq 1                         ]]
+  [[    "${#lines[@]}"  -eq 3                         ]]
 
   [[    "${lines[0]}"   =~  \
 .*\[.*Example\ Folder/1.*].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ one\. ]]
   [[    "${lines[1]}"   =~  .*------------------------------------.*            ]]
 
-  [[    "${lines[2]}"   =~  .*!.*\ No\ closed\ tasks\ found\. ]]
+  [[    "${lines[2]}"   =~  .*!.*\ 0\ closed\ tasks\. ]]
 }
 
 @test "'todos tasks <folder>/<id>' with no tasks exits with 1 and prints message." {
@@ -661,12 +855,12 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"     -eq 1                         ]]
-  [[    "${#lines[@]}"  -eq 3                         ]]
+  [[    "${status}"     -eq 1                 ]]
+  [[    "${#lines[@]}"  -eq 3                 ]]
 
   [[    "${lines[0]}"   =~  \
 .*\[.*Example\ Folder/1.*].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ one\. ]]
   [[    "${lines[1]}"   =~  .*------------------------------------.*            ]]
 
-  [[    "${lines[2]}"   =~  .*!.*\ No\ tasks\ found\. ]]
+  [[    "${lines[2]}"   =~  .*!.*\ 0\ tasks\. ]]
 }

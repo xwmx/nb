@@ -22254,97 +22254,154 @@ _todo() {
       local _task_number="${_arguments[1]:-}"
 
       local _selector_path=
-      _selector_path="$(_show "${_selector:-}" --path 2>/dev/null || :)"
 
-      if ! _file_is_todo "${_selector_path:-}"
+      if [[ -n "${_selector:-}"       ]]
       then
-        _exit_1 printf        \
-          "Not a todo: %s\\n" \
-          "$(_color_primary "${_selector:-}")"
+        _selector_path="$(
+          _show "${_selector:-}" --path 2>/dev/null || :
+        )"
       fi
 
-      local _item_selector=
-      _item_selector="$(
-        _list "${_selector:-}" --filename --no-color --no-indicator
-      )"
+      if [[ -z "${_selector_path:-}"  ]]
+      then
+        _selector_path="$(_notebooks current --path)"
+      fi
 
-      _item_selector="${_item_selector#[}"
-      _item_selector="${_item_selector%]*}"
-
-      _list "${_selector:-}"
-
-      local _info_line_no_color=
-      _info_line_no_color="$(
-        _list "${_selector:-}" --no-color
-      ) "
-
-       local _visible_info_line_length=
-        _visible_info_line_length="$(
-          _get_visible_length "${_info_line_no_color:-}"
-        )"
-
-        if [[ -z "${_visible_info_line_length:-}"               ]] ||
-           [[ "${_visible_info_line_length}" -gt "${_COLUMNS}"  ]]
-        then
-          _print_line "$(printf "%-${_COLUMNS}s" '.')" | tr -d '\n'
-        else
-          _print_line "$(printf "%-${_visible_info_line_length}s" '.')"
-        fi
+      if [[ -d "${_selector_path:-}"  ]]
+      then
+        _selector_path="${_selector_path:-}/"
+      fi
 
       {
-        grep --color=never          \
-          -e "\- \[[[:space:]]*\] " \
-          -e "\- \[x\] "            \
-          "${_selector_path:-}"
+        _list "${_selector_path:-}"   \
+          --error-on-empty            \
+          --no-indicator              \
+          --no-id                     \
+          --path                      \
+          --type todo 2>/dev/null || printf ""
       } | {
-        local _counter=0
-        local _printed_counter=0
+        local _first=1
 
-        local         __task=
-        while read -r __task
+        local         __todo_path=
+        while read -r __todo_path
         do
-          _counter="$((_counter+1))"
+          [[ -z "${__todo_path:-}" ]] && continue
+          [[ -d "${__todo_path:-}" ]] && continue
 
-          local _print_task=0
-
-          case "${_filter:-}" in
-            closed)
-              if [[ "${__task}" =~ \-\ \[x\]            ]]
-              then
-                _print_task=1
-              fi
-              ;;
-            open)
-              if [[ "${__task}" =~ \-\ \[\ \]|\-\ \[\]  ]]
-              then
-                _print_task=1
-              fi
-              ;;
-            *)
-              _print_task=1
-              ;;
-          esac
-
-          if [[ -n "${_task_number:-}"                  ]] &&
-             [[    "${_task_number}" != "${_counter:-}" ]]
+          if ! _file_is_todo "${__todo_path:-}"
           then
-            _print_task=0
+            _exit_1 printf        \
+              "Not a todo: %s\\n" \
+              "$(_color_primary "${_selector:-}")"
           fi
 
-          if ((_print_task))
+          if ((_first))
           then
-            local _formatted_task="${__task#- }"
-            _formatted_task="${_formatted_task//\[x\]/["$(_color_primary "x")"]}"
-
-            printf "%s %s\\n"                                       \
-              "$(_color_brackets "${_item_selector} ${_counter}")"  \
-              "${_formatted_task}"
-
-            _printed_counter="$((_counter+1))"
+            _first=0
+          else
+            printf "\\n"
           fi
+
+          local _item_selector=
+          _item_selector="$(
+            _list "${__todo_path:-}" --filename --no-color --no-indicator
+          )"
+
+          _item_selector="${_item_selector#[}"
+          _item_selector="${_item_selector%]*}"
+
+          _list "${__todo_path:-}"
+
+          local _info_line_no_color=
+          _info_line_no_color="$(
+            _list "${__todo_path:-}" --no-color
+          ) "
+
+          local _visible_info_line_length=
+          _visible_info_line_length="$(
+            _get_visible_length "${_info_line_no_color:-}"
+          )"
+
+          if [[ -z "${_visible_info_line_length:-}"               ]] ||
+             [[ "${_visible_info_line_length}" -gt "${_COLUMNS}"  ]]
+          then
+            _print_line "$(printf "%-${_COLUMNS}s" '.')" | tr -d '\n'
+          else
+            _print_line "$(printf "%-${_visible_info_line_length}s" '.')"
+          fi
+
+          {
+            grep --color=never          \
+              -e "\- \[[[:space:]]*\] " \
+              -e "\- \[x\] "            \
+              "${__todo_path:-}" || :
+          } | {
+            local _counter=0
+
+            local         __task=
+            while read -r __task
+            do
+              _counter="$((_counter+1))"
+
+              local _print_task=0
+
+              case "${_filter:-}" in
+                closed)
+                  if [[ "${__task}" =~ \-\ \[x\]            ]]
+                  then
+                    _print_task=1
+                  fi
+                  ;;
+                open)
+                  if [[ "${__task}" =~ \-\ \[\ \]|\-\ \[\]  ]]
+                  then
+                    _print_task=1
+                  fi
+                  ;;
+                *)
+                  _print_task=1
+                  ;;
+              esac
+
+              if [[ "${_task_number:-${_counter:-}}" != "${_counter:-}" ]]
+              then
+                _print_task=0
+              fi
+
+              if ((_print_task))
+              then
+                local _formatted_task="${__task#- }"
+                _formatted_task="${_formatted_task//\[x\]/["$(_color_primary "x")"]}"
+
+                printf "%s %s\\n"                                       \
+                  "$(_color_brackets "${_item_selector} ${_counter}")"  \
+                  "${_formatted_task}"
+
+              fi
+            done
+
+
+          }
+        done
+      } | {
+        local _printed_line_counter=0
+        local _printed_task_counter=0
+
+        local         __task_line=
+        while read -r __task_line
+        do
+          if [[ ! "${__task_line}" =~ \[.*\].*✅|--------- ]]
+          then
+            _printed_task_counter="$((_printed_task_counter+1))"
+          fi
+
+          printf "%s\\n" "${__task_line:-}"
+          _printed_line_counter="$((_printed_line_counter+1))"
         done
 
-        if ! ((_printed_counter))
+        if ! ((_printed_line_counter)) || {
+             [[ -f "${_selector_path:-}" ]] && ! ((_printed_task_counter))
+           }
         then
           local _maybe_padded_qualifier=
 
@@ -22356,7 +22413,7 @@ _todo() {
             _maybe_padded_qualifier="matching "
           fi
 
-          _warn printf "No ${_maybe_padded_qualifier:-}tasks found.\\n"
+          _warn printf "0 ${_maybe_padded_qualifier:-}tasks.\\n"
 
           return 1
         fi
