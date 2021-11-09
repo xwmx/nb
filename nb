@@ -21800,11 +21800,12 @@ $(_color_primary "Usage"):
               [-r (<url> | <selector>) | --related (<url> | <selector>)]
               [--tags <tag1>,<tag2>...] [--task <title>]...
   ${_ME} todo do   ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
-                   [<task-number>]
+               [<task-number>]
   ${_ME} todo undo ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
-                   [<task-number>]
+               [<task-number>]
   ${_ME} todos [<notebook>:][<folder-path>/] [open | closed]
   ${_ME} todos tasks ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
+                 [open | closed]
 
 $(_color_primary "Options"):
   --description <description>         Description for the todo
@@ -21817,6 +21818,7 @@ $(_color_primary "Subcommands"):
   (default)       List todos.
   add             Add a new todo.
   do              Mark a todo as done.
+  tasks           List tasks in a todo.
   undo            Unmark a todo as done.
 
 $(_color_primary "Description"):
@@ -21917,12 +21919,19 @@ _todo() {
         _action="list"
         ;;
       o|open)
-        if [[ -n "${2:-}" ]]
+        if [[ -n "${2:-}"                 ]] &&
+           {
+             [[ "${_action:-}" != "tasks" ]] ||
+             [[ -n "${3:-}"               ]]
+           }
         then
           _action="undo"
         else
           _filter="open"
         fi
+        ;;
+      tasks)
+        _action="tasks"
         ;;
       u|undo|*ncomplete*|undone|unfinish*|uncheck*)
         _action="undo"
@@ -22085,6 +22094,33 @@ _todo() {
           fi
         fi
       }
+      ;;
+    tasks)
+      local _selector_path=
+      _selector_path="$(_show "${_arguments[0]:-}" --path)"
+
+      if ! _file_is_todo "${_selector_path:-}"
+      then
+        _exit_1 printf        \
+          "Not a todo: %s\\n" \
+          "$(_color_primary "${_arguments[0]:-}")"
+      fi
+
+      local _pattern_expressions=(
+        -e "\- \[[[:space:]]*\] "
+        -e "\- \[x\] "
+      )
+
+      case "${_filter:-}" in
+        closed)
+          _pattern_expressions=(-e "\- \[x\] ")
+          ;;
+        open)
+          _pattern_expressions=(-e "\- \[[[:space:]]*\] ")
+          ;;
+      esac
+
+      grep "${_pattern_expressions[@]:-}" "${_selector_path:-}"
       ;;
   esac
 }
