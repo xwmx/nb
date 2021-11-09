@@ -21800,8 +21800,11 @@ $(_color_primary "Usage"):
               [-r (<url> | <selector>) | --related (<url> | <selector>)]
               [--tags <tag1>,<tag2>...] [--task <title>]...
   ${_ME} todo do   ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
+                   [<task-number>]
   ${_ME} todo undo ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
+                   [<task-number>]
   ${_ME} todos [<notebook>:][<folder-path>/] [open | closed]
+  ${_ME} todos tasks ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
 
 $(_color_primary "Options"):
   --description <description>         Description for the todo
