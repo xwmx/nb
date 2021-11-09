@@ -22148,6 +22148,26 @@ _todo() {
       _item_selector="${_item_selector#[}"
       _item_selector="${_item_selector%]*}"
 
+      _show "${_arguments[0]:-}" --info-line
+
+      local _info_line_no_color=
+      _info_line_no_color="$(
+        _show "${_arguments[0]:-}" --info-line --no-color
+      ) "
+
+       local _visible_info_line_length=
+        _visible_info_line_length="$(
+          _get_visible_length "${_info_line_no_color:-}"
+        )"
+
+        if [[ -z "${_visible_info_line_length:-}"               ]] ||
+           [[ "${_visible_info_line_length}" -gt "${_COLUMNS}"  ]]
+        then
+          _print_line "$(printf "%-${_COLUMNS}s" '.')" | tr -d '\n'
+        else
+          _print_line "$(printf "%-${_visible_info_line_length}s" '.')"
+        fi
+
       {
         grep --color=never          \
           -e "\- \[[[:space:]]*\] " \
