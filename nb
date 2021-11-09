@@ -22120,7 +22120,21 @@ _todo() {
           ;;
       esac
 
-      grep "${_pattern_expressions[@]:-}" "${_selector_path:-}"
+      grep --color=never                \
+        "${_pattern_expressions[@]:-}"  \
+        "${_selector_path:-}"           ||
+        {
+          local _maybe_padded_filter=
+
+          if [[ -n "${_filter:-}" ]]
+          then
+            _maybe_padded_filter="${_filter:-} "
+          fi
+
+          _warn printf "No ${_maybe_padded_filter:-}tasks found.\\n"
+
+          return 1
+        }
       ;;
   esac
 }
