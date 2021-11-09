@@ -173,19 +173,19 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"     -eq 0                         ]]
-  [[    "${#lines[@]}"  -eq 5                         ]]
+  [[    "${status}"     -eq 0                           ]]
+  [[    "${#lines[@]}"  -eq 5                           ]]
 
   [[    "${lines[0]}"   =~  \
 .*\[.*Example\ Folder/1.*].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ one\. ]]
   [[    "${lines[1]}"   =~  .*------------------------------------.*            ]]
 
   [[    "${lines[2]}"   =~  \
-.*[.*Example\ Folder/1\ 1.*].*\ \[\ \]\ Task\ one\.   ]]
+.*[.*Example\ Folder/1\ 1.*].*\ .*[\ ].*\ Task\ one\.   ]]
   [[    "${lines[3]}"   =~  \
-.*[.*Example\ Folder/1\ 2.*].*\ \[\]\ Task\ two\.     ]]
+.*[.*Example\ Folder/1\ 2.*].*\ .*[\ ].*\ Task\ two\.   ]]
   [[    "${lines[4]}"   =~  \
-.*[.*Example\ Folder/1\ 4.*].*\ \[\ \]\ Task\ four\.  ]]
+.*[.*Example\ Folder/1\ 4.*].*\ .*[\ ].*\ Task\ four\.  ]]
 }
 
 @test "'tasks closed <folder>/<id>' exits with 0 and lists closed tasks." {
@@ -263,21 +263,21 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"     -eq 0                                 ]]
-  [[    "${#lines[@]}"  -eq 6                                 ]]
+  [[    "${status}"     -eq 0                               ]]
+  [[    "${#lines[@]}"  -eq 6                               ]]
 
   [[    "${lines[0]}"   =~  \
 .*\[.*Example\ Folder/1.*].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ one\. ]]
   [[    "${lines[1]}"   =~  .*------------------------------------.*            ]]
 
   [[    "${lines[2]}"   =~  \
-.*[.*Example\ Folder/1\ 1.*].*\ .*\[\ \].*\ Task\ one\.       ]]
+.*[.*Example\ Folder/1\ 1.*].*\ .*[\ ].*\ Task\ one\.       ]]
   [[    "${lines[3]}"   =~  \
-.*[.*Example\ Folder/1\ 2.*].*\ .*\[\].*\ Task\ two\.         ]]
+.*[.*Example\ Folder/1\ 2.*].*\ .*[\ ].*\ Task\ two\.       ]]
   [[    "${lines[4]}"   =~  \
-.*[.*Example\ Folder/1\ 3.*].*\ .*\[.*x.*\].*\ Task\ three\.  ]]
+.*[.*Example\ Folder/1\ 3.*].*\ .*[.*x.*].*\ Task\ three\.  ]]
   [[    "${lines[5]}"   =~  \
-.*[.*Example\ Folder/1\ 4.*].*\ .*\[\ \].*\ Task\ four\.      ]]
+.*[.*Example\ Folder/1\ 4.*].*\ .*[\ ].*\ Task\ four\.      ]]
 }
 
 # todos tasks <id> <task-number> ##############################################
@@ -356,14 +356,14 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"     -eq 0                             ]]
-  [[    "${#lines[@]}"  -eq 3                             ]]
+  [[    "${status}"     -eq 0                               ]]
+  [[    "${#lines[@]}"  -eq 3                               ]]
 
   [[    "${lines[0]}"   =~  \
 .*\[.*Example\ Folder/1.*].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ one\. ]]
   [[    "${lines[1]}"   =~  .*------------------------------------.*            ]]
   [[    "${lines[2]}"   =~  \
-.*[.*Example\ Folder/1\ 3.*].*\ \[.*x.*\]\ Task\ three\.  ]]
+.*[.*Example\ Folder/1\ 3.*].*\ .*[.*x.*].*\ Task\ three\.  ]]
 }
 
 @test "'todos tasks <folder>/<id> 3' exits with 0 and lists task." {
@@ -398,14 +398,14 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"     -eq 0                             ]]
-  [[    "${#lines[@]}"  -eq 3                             ]]
+  [[    "${status}"     -eq 0                               ]]
+  [[    "${#lines[@]}"  -eq 3                               ]]
 
   [[    "${lines[0]}"   =~  \
 .*\[.*Example\ Folder/1.*].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ one\. ]]
   [[    "${lines[1]}"   =~  .*------------------------------------.*            ]]
   [[    "${lines[2]}"   =~  \
-.*[.*Example\ Folder/1\ 3.*].*\ \[.*x.*\]\ Task\ three\.  ]]
+.*[.*Example\ Folder/1\ 3.*].*\ .*[.*x.*].*\ Task\ three\.  ]]
 }
 
 # todos tasks #################################################################
@@ -442,19 +442,19 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"     -eq 0                         ]]
-  [[    "${#lines[@]}"  -eq 5                         ]]
+  [[    "${status}"     -eq 0                           ]]
+  [[    "${#lines[@]}"  -eq 5                           ]]
 
   [[    "${lines[0]}"   =~  \
 .*\[.*Example\ Folder/1.*].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ one\. ]]
   [[    "${lines[1]}"   =~  .*------------------------------------.*            ]]
 
   [[    "${lines[2]}"   =~  \
-.*[.*Example\ Folder/1\ 1.*].*\ \[\ \]\ Task\ one\.   ]]
+.*[.*Example\ Folder/1\ 1.*].*\ .*[\ ].*\ Task\ one\.   ]]
   [[    "${lines[3]}"   =~  \
-.*[.*Example\ Folder/1\ 2.*].*\ \[\]\ Task\ two\.     ]]
+.*[.*Example\ Folder/1\ 2.*].*\ .*[\ ].*\ Task\ two\.   ]]
   [[    "${lines[4]}"   =~  \
-.*[.*Example\ Folder/1\ 4.*].*\ \[\ \]\ Task\ four\.  ]]
+.*[.*Example\ Folder/1\ 4.*].*\ .*[\ ].*\ Task\ four\.  ]]
 }
 
 @test "'todos tasks closed <folder>/<id>' exits with 0 and lists closed tasks." {
@@ -532,21 +532,21 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"     -eq 0                                 ]]
-  [[    "${#lines[@]}"  -eq 6                                 ]]
+  [[    "${status}"     -eq 0                               ]]
+  [[    "${#lines[@]}"  -eq 6                               ]]
 
   [[    "${lines[0]}"   =~  \
 .*\[.*Example\ Folder/1.*].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ one\. ]]
   [[    "${lines[1]}"   =~  .*------------------------------------.*            ]]
 
   [[    "${lines[2]}"   =~  \
-.*[.*Example\ Folder/1\ 1.*].*\ .*\[\ \].*\ Task\ one\.       ]]
+.*[.*Example\ Folder/1\ 1.*].*\ .*[\ ].*\ Task\ one\.       ]]
   [[    "${lines[3]}"   =~  \
-.*[.*Example\ Folder/1\ 2.*].*\ .*\[\].*\ Task\ two\.         ]]
+.*[.*Example\ Folder/1\ 2.*].*\ .*[\ ].*\ Task\ two\.       ]]
   [[    "${lines[4]}"   =~  \
-.*[.*Example\ Folder/1\ 3.*].*\ .*\[.*x.*\].*\ Task\ three\.  ]]
+.*[.*Example\ Folder/1\ 3.*].*\ .*[.*x.*].*\ Task\ three\.  ]]
   [[    "${lines[5]}"   =~  \
-.*[.*Example\ Folder/1\ 4.*].*\ .*\[\ \].*\ Task\ four\.      ]]
+.*[.*Example\ Folder/1\ 4.*].*\ .*[\ ].*\ Task\ four\.      ]]
 }
 
 @test "'todos tasks <folder>' exits with 0 and lists todos and tasks in folder." {
@@ -605,30 +605,30 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"     -eq 0                                 ]]
-  [[    "${#lines[@]}"  -eq 10                                ]]
+  [[    "${status}"     -eq 0                               ]]
+  [[    "${#lines[@]}"  -eq 10                              ]]
 
   [[    "${lines[0]}"   =~  \
 .*\[.*Example\ Folder/3.*].*\ ✅\ .*\[.*x.*\].*\ Example\ todo\ description\ two\.  ]]
   [[    "${lines[1]}"   =~  .*------------------------------------.*                ]]
 
   [[    "${lines[2]}"   =~  \
-.*[.*Example\ Folder/1\ 1.*].*\ .*\[\ \].*\ Task\ one\.       ]]
+.*[.*Example\ Folder/1\ 1.*].*\ .*[\ ].*\ Task\ one\.       ]]
   [[    "${lines[3]}"   =~  \
-.*[.*Example\ Folder/1\ 2.*].*\ .*\[.*x.*\].*\ Task\ two\.    ]]
+.*[.*Example\ Folder/1\ 2.*].*\ .*[.*x.*].*\ Task\ two\.    ]]
 
   [[    "${lines[4]}"   =~  \
 .*\[.*Example\ Folder/1.*].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ one\. ]]
   [[    "${lines[5]}"   =~  .*------------------------------------.*            ]]
 
   [[    "${lines[6]}"   =~  \
-.*[.*Example\ Folder/1\ 1.*].*\ .*\[\ \].*\ Task\ one\.       ]]
+.*[.*Example\ Folder/1\ 1.*].*\ .*[\ ].*\ Task\ one\.       ]]
   [[    "${lines[7]}"   =~  \
-.*[.*Example\ Folder/1\ 2.*].*\ .*\[\].*\ Task\ two\.         ]]
+.*[.*Example\ Folder/1\ 2.*].*\ .*[\ ].*\ Task\ two\.       ]]
   [[    "${lines[8]}"   =~  \
-.*[.*Example\ Folder/1\ 3.*].*\ .*\[.*x.*\].*\ Task\ three\.  ]]
+.*[.*Example\ Folder/1\ 3.*].*\ .*[.*x.*].*\ Task\ three\.  ]]
   [[    "${lines[9]}"   =~  \
-.*[.*Example\ Folder/1\ 4.*].*\ .*\[\ \].*\ Task\ four\.      ]]
+.*[.*Example\ Folder/1\ 4.*].*\ .*[\ ].*\ Task\ four\.      ]]
 }
 
 @test "'todos tasks <folder>' exits with 0 and lists todos with and without tasks in folder." {
@@ -682,8 +682,8 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"     -eq 0                                 ]]
-  [[    "${#lines[@]}"  -eq 9                                 ]]
+  [[    "${status}"     -eq 0                               ]]
+  [[    "${#lines[@]}"  -eq 9                               ]]
 
   [[    "${lines[0]}"   =~  \
 .*\[.*Example\ Folder/3.*].*\ ✅\ .*\[.*x.*\].*\ Example\ todo\ description\ two\.  ]]
@@ -695,13 +695,13 @@ HEREDOC
   [[    "${lines[4]}"   =~  .*------------------------------------.*            ]]
 
   [[    "${lines[5]}"   =~  \
-.*[.*Example\ Folder/1\ 1.*].*\ .*\[\ \].*\ Task\ one\.       ]]
+.*[.*Example\ Folder/1\ 1.*].*\ .*[\ ].*\ Task\ one\.       ]]
   [[    "${lines[6]}"   =~  \
-.*[.*Example\ Folder/1\ 2.*].*\ .*\[\].*\ Task\ two\.         ]]
+.*[.*Example\ Folder/1\ 2.*].*\ .*[\ ].*\ Task\ two\.       ]]
   [[    "${lines[7]}"   =~  \
-.*[.*Example\ Folder/1\ 3.*].*\ .*\[.*x.*\].*\ Task\ three\.  ]]
+.*[.*Example\ Folder/1\ 3.*].*\ .*[.*x.*].*\ Task\ three\.  ]]
   [[    "${lines[8]}"   =~  \
-.*[.*Example\ Folder/1\ 4.*].*\ .*\[\ \].*\ Task\ four\.      ]]
+.*[.*Example\ Folder/1\ 4.*].*\ .*[\ ].*\ Task\ four\.      ]]
 }
 
 @test "'todos tasks <folder>' exits with 0 and lists only todo without tasks." {

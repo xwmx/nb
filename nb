@@ -22393,7 +22393,9 @@ _todo() {
               if ((_print_task))
               then
                 local _formatted_task="${__task#- }"
-                _formatted_task="${_formatted_task//\[x\]/["$(_color_primary "x")"]}"
+                _formatted_task="${_formatted_task//\[x\]/"$(_color_brackets "$(_color_primary "x")")"}"
+                _formatted_task="${_formatted_task//\[\]/"$(_color_brackets " ")"}"
+                _formatted_task="${_formatted_task//\[ \]/"$(_color_brackets " ")"}"
 
                 printf "%s %s\\n"                                       \
                   "$(_color_brackets "${_item_selector} ${_counter}")"  \
