@@ -22253,6 +22253,16 @@ _todo() {
       local _selector="${_arguments[0]:-}"
       local _task_number="${_arguments[1]:-}"
 
+      local _maybe_padded_empty_qualifier=
+
+      if [[ -n "${_filter:-}" ]]
+      then
+        _maybe_padded_empty_qualifier="${_filter:-} "
+      elif [[ -n "${_task_number:-}" ]]
+      then
+        _maybe_padded_empty_qualifier="matching "
+      fi
+
       local _selector_path=
 
       if [[ -n "${_selector:-}"       ]]
@@ -22337,6 +22347,7 @@ _todo() {
               "${__todo_path:-}" || :
           } | {
             local _counter=0
+            local _printed_task_counter=0
 
             local         __task=
             while read -r __task
@@ -22377,42 +22388,28 @@ _todo() {
                   "$(_color_brackets "${_item_selector} ${_counter}")"  \
                   "${_formatted_task}"
 
+                _printed_task_counter="$((_printed_task_counter+1))"
               fi
             done
 
-
+            if ! ((_printed_task_counter))
+            then
+              printf "0 ${_maybe_padded_empty_qualifier:-}tasks.\\n"
+            fi
           }
         done
       } | {
         local _printed_line_counter=0
-        local _printed_task_counter=0
 
         local         __task_line=
         while read -r __task_line
         do
-          if [[ ! "${__task_line}" =~ \[.*\].*✅|--------- ]]
-          then
-            _printed_task_counter="$((_printed_task_counter+1))"
-          fi
-
           printf "%s\\n" "${__task_line:-}"
           _printed_line_counter="$((_printed_line_counter+1))"
         done
 
-        if ! ((_printed_line_counter)) || {
-             [[ -f "${_selector_path:-}" ]] && ! ((_printed_task_counter))
-           }
+        if ! ((_printed_line_counter))
         then
-          local _maybe_padded_qualifier=
-
-          if [[ -n "${_filter:-}" ]]
-          then
-            _maybe_padded_qualifier="${_filter:-} "
-          elif [[ -n "${_task_number:-}" ]]
-          then
-            _maybe_padded_qualifier="matching "
-          fi
-
           _warn printf "0 ${_maybe_padded_qualifier:-}tasks.\\n"
 
           return 1
