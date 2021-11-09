@@ -75,12 +75,15 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"     -eq 0                                 ]]
-  [[    "${#lines[@]}"  -eq 3                                 ]]
+  [[    "${status}"     -eq 0                         ]]
+  [[    "${#lines[@]}"  -eq 3                         ]]
 
-  [[    "${lines[0]}"   =~  .*[.*1.*].*\ \[\ \]\ Task\ one\.  ]]
-  [[    "${lines[1]}"   =~  .*[.*2.*].*\ \[\]\ Task\ two\.    ]]
-  [[    "${lines[2]}"   =~  .*[.*4.*].*\ \[\ \]\ Task\ four\. ]]
+  [[    "${lines[0]}"   =~  \
+.*[.*Example\ Folder/1\ 1.*].*\ \[\ \]\ Task\ one\.   ]]
+  [[    "${lines[1]}"   =~  \
+.*[.*Example\ Folder/1\ 2.*].*\ \[\]\ Task\ two\.     ]]
+  [[    "${lines[2]}"   =~  \
+.*[.*Example\ Folder/1\ 4.*].*\ \[\ \]\ Task\ four\.  ]]
 }
 
 @test "'todos tasks closed <folder>/<id>' with no closed tasks exits with 1 and prints message." {
@@ -153,10 +156,11 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"     -eq 0                                           ]]
-  [[    "${#lines[@]}"  -eq 1                                           ]]
+  [[    "${status}"     -eq 0                                   ]]
+  [[    "${#lines[@]}"  -eq 1                                   ]]
 
-  [[    "${lines[0]}"   =~  .*\[.*3.*\].*\ .*\[.*x.*\].*\ Task\ three\. ]]
+  [[    "${lines[0]}"   =~  \
+.*\[.*Example\ Folder/1\ 3.*\].*\ .*\[.*x.*\].*\ Task\ three\.  ]]
 }
 
 @test "'todos tasks <folder>/<id>' with no tasks exits with 1 and prints message." {
@@ -222,11 +226,15 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"     -eq 0                                         ]]
-  [[    "${#lines[@]}"  -eq 4                                         ]]
+  [[    "${status}"     -eq 0                                 ]]
+  [[    "${#lines[@]}"  -eq 4                                 ]]
 
-  [[    "${lines[0]}"   =~  .*[.*1.*].*\ .*\[\ \].*\ Task\ one\.      ]]
-  [[    "${lines[1]}"   =~  .*[.*2.*].*\ .*\[\].*\ Task\ two\.        ]]
-  [[    "${lines[2]}"   =~  .*[.*3.*].*\ .*\[.*x.*\].*\ Task\ three\. ]]
-  [[    "${lines[3]}"   =~  .*[.*4.*].*\ .*\[\ \].*\ Task\ four\.     ]]
+  [[    "${lines[0]}"   =~  \
+.*[.*Example\ Folder/1\ 1.*].*\ .*\[\ \].*\ Task\ one\.       ]]
+  [[    "${lines[1]}"   =~  \
+.*[.*Example\ Folder/1\ 2.*].*\ .*\[\].*\ Task\ two\.         ]]
+  [[    "${lines[2]}"   =~  \
+.*[.*Example\ Folder/1\ 3.*].*\ .*\[.*x.*\].*\ Task\ three\.  ]]
+  [[    "${lines[3]}"   =~  \
+.*[.*Example\ Folder/1\ 4.*].*\ .*\[\ \].*\ Task\ four\.      ]]
 }

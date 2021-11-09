@@ -22106,6 +22106,14 @@ _todo() {
           "$(_color_primary "${_arguments[0]:-}")"
       fi
 
+      local _item_selector=
+      _item_selector="$(
+        _list "${_arguments[0]:-}" --filename --no-color --no-indicator
+      )"
+
+      _item_selector="${_item_selector#[}"
+      _item_selector="${_item_selector%]*}"
+
       {
         grep --color=never          \
           -e "\- \[[[:space:]]*\] " \
@@ -22145,8 +22153,8 @@ _todo() {
             local _formatted_task="${__task#- }"
             _formatted_task="${_formatted_task//\[x\]/["$(_color_primary "x")"]}"
 
-            printf "%s %s\\n"                     \
-              "$(_color_brackets "${_counter}")"  \
+            printf "%s %s\\n"                                       \
+              "$(_color_brackets "${_item_selector} ${_counter}")"  \
               "${_formatted_task}"
 
             _printed_counter="$((_counter+1))"
