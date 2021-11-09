@@ -47,12 +47,13 @@ load test_helper
 
   [[ !  "${output}" =~  Four  ]]
 
-  [[    "${output}" =~  \
-.*\[.*Example\ Notebook:Example\ Folder/1.*\].*\ \[\ \]\ Example\ todo\ description\ one\.  ]]
-  [[    "${output}" =~  \
-.*\[.*Example\ Notebook:Example\ Folder/2.*\].*\ \[\ \]\ Example\ todo\ description\ two\.  ]]
-  [[    "${output}" =~  \
-.*\[.*Example\ Notebook:Example\ Folder/3.*\].*\ \[x\]\ Example\ todo\ description\ three\. ]]
+  [[    "${lines[0]}" =~  \
+.*\[.*Example\ Notebook:Example\ Folder/3.*\].*\ ✅\ .*\[.*x.*\].*\ Example\ todo\ description\ three\. ]]
+  [[    "${lines[1]}" =~  \
+.*\[.*Example\ Notebook:Example\ Folder/2.*\].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ two\.      ]]
+  [[    "${lines[2]}" =~  \
+.*\[.*Example\ Notebook:Example\ Folder/1.*\].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ one\.      ]]
+
 }
 
 @test "'todos closed <notebook>:<folder>/' exits with 0 and lists todos." {
@@ -99,8 +100,8 @@ load test_helper
   [[ !  "${output}" =~  Two   ]]
   [[ !  "${output}" =~  Four  ]]
 
-  [[    "${output}" =~  \
-.*\[.*Example\ Notebook:Example\ Folder/3.*\].*\ \[x\]\ Example\ todo\ description\ three\. ]]
+  [[    "${lines[0]}" =~  \
+.*\[.*Example\ Notebook:Example\ Folder/3.*\].*\ ✅\ .*\[.*x.*\].*\ Example\ todo\ description\ three\. ]]
 }
 
 @test "'todos open <notebook>:<folder>/' exits with 0 and lists todos." {
@@ -146,10 +147,10 @@ load test_helper
   [[ !  "${output}" =~  Three ]]
   [[ !  "${output}" =~  Four  ]]
 
-  [[    "${output}" =~  \
-.*\[.*Example\ Notebook:Example\ Folder/1.*\].*\ \[\ \]\ Example\ todo\ description\ one\. ]]
-  [[    "${output}" =~  \
-.*\[.*Example\ Notebook:Example\ Folder/2.*\].*\ \[\ \]\ Example\ todo\ description\ two\. ]]
+  [[    "${lines[0]}" =~  \
+.*\[.*Example\ Notebook:Example\ Folder/2.*\].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ two\.  ]]
+  [[    "${lines[1]}" =~  \
+.*\[.*Example\ Notebook:Example\ Folder/1.*\].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ one\.  ]]
 }
 
 # todo do #####################################################################
@@ -184,9 +185,9 @@ load test_helper
 
   [[ "${status}"    -eq 0       ]]
   [[ "${output}"    =~  \
-Done:\ .*\[.*Example\ Notebook:Example\ Folder/2.*\].*\ .*Example\ Notebook:  ]]
+Done:\ .*\[.*Example\ Notebook:Example\ Folder/2.*\].*\ ✅\ .*Example\ Notebook:  ]]
   [[ "${output}"    =~  \
-Example\ Notebook:Example\ Folder/Two.todo.md.*\ \"\[\x\]\ Example\ todo\ description\ two\.\"  ]]
+Example\ Notebook:Example\ Folder/Two.todo.md.*\ \".*\[.*x.*\].*\ Example\ todo\ description\ two\.\"  ]]
 
   diff                                                                \
     <(cat "${NB_DIR}/Example Notebook/Example Folder/One.todo.md")    \
@@ -231,7 +232,7 @@ Example\ Notebook:Example\ Folder/Two.todo.md.*\ \"\[\x\]\ Example\ todo\ descri
 
   [[ "${status}"    -eq 0       ]]
   [[ "${output}"    =~  \
-Done:\ .*\[.*2.*\].*\ .*Two.todo.md.*\ \"\[\x\]\ Example\ todo\ description\ two\.\"  ]]
+Done:\ .*\[.*2.*\].*\ ✅\ .*Two.todo.md.*\ \".*\[.*x.*\].*\ Example\ todo\ description\ two\.\" ]]
 
   diff                                    \
     <(cat "${NB_DIR}/home/One.todo.md")   \
@@ -309,9 +310,9 @@ Done:\ .*\[.*2.*\].*\ .*Two.todo.md.*\ \"\[\x\]\ Example\ todo\ description\ two
 
   [[ "${status}"    -eq 0       ]]
   [[ "${output}"    =~  \
-Undone:\ .*\[.*Example\ Notebook:Example\ Folder/3.*\].*\ .*Example\ Notebook:  ]]
+Undone:\ .*\[.*Example\ Notebook:Example\ Folder/3.*\].*\ ✅\ .*Example\ Notebook:  ]]
   [[ "${output}"    =~  \
-Example\ Notebook:Example\ Folder/Three.todo.md.*\ \"\[\ \]\ Example\ todo\ description\ three\.\"  ]]
+Example\ Notebook:Example\ Folder/Three.todo.md.*\ \".*\[\ \].*\ Example\ todo\ description\ three\.\"  ]]
 
   diff                                                                \
     <(cat "${NB_DIR}/Example Notebook/Example Folder/One.todo.md")    \
@@ -356,7 +357,7 @@ Example\ Notebook:Example\ Folder/Three.todo.md.*\ \"\[\ \]\ Example\ todo\ desc
 
   [[ "${status}"    -eq 0       ]]
   [[ "${output}"    =~  \
-Undone:\ .*\[.*3.*\].*\ .*Three.todo.md.*\ \"\[\ \]\ Example\ todo\ description\ three\.\"  ]]
+Undone:\ .*\[.*3.*\].*\ ✅\ .*Three.todo.md.*\ \".*\[\ \].*\ Example\ todo\ description\ three\.\"  ]]
 
   diff                                    \
     <(cat "${NB_DIR}/home/One.todo.md")   \
@@ -439,9 +440,9 @@ Undone:\ .*\[.*3.*\].*\ .*Three.todo.md.*\ \"\[\ \]\ Example\ todo\ description\
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}" -eq 0                      ]]
+  [[ "${status}" -eq  0                     ]]
   [[ "${output}"  =~  \
-Added:\ .*\[.*1.*\].*\ .*[0-9]+\.todo\.md.*\ \"\[\ \]\ Example\ todo\ description\.\" ]]
+Added:\ .*\[.*1.*\].*\ ✅\ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ todo\ description\.\" ]]
 
   _files=($(ls "${NB_DIR}/home/"))
 
@@ -473,9 +474,9 @@ Added:\ .*\[.*1.*\].*\ .*[0-9]+\.todo\.md.*\ \"\[\ \]\ Example\ todo\ descriptio
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}" -eq 0                      ]]
+  [[ "${status}" -eq  0                     ]]
   [[ "${output}"  =~  \
-Added:\ .*\[.*1.*\].*\ .*[0-9]+\.todo\.md.*\ \"\[\ \]\ Example\ todo\ description\.\" ]]
+Added:\ .*\[.*1.*\].*\ ✅\ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ todo\ description\.\" ]]
 
   _files=($(ls "${NB_DIR}/home/"))
 
@@ -509,9 +510,9 @@ Added:\ .*\[.*1.*\].*\ .*[0-9]+\.todo\.md.*\ \"\[\ \]\ Example\ todo\ descriptio
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}" -eq 0                      ]]
+  [[ "${status}" -eq  0                     ]]
   [[ "${output}"  =~  \
-Added:\ .*\[.*1.*\].*\ .*[0-9]+\.todo\.md.*\ \"\[\ \]\ Example\ todo\ description\.\" ]]
+Added:\ .*\[.*1.*\].*\ ✅\ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ todo\ description\.\" ]]
 
   _files=($(ls "${NB_DIR}/home/"))
 
@@ -551,7 +552,7 @@ Example content.\\n")
 
   [[ "${status}" -eq 0                      ]]
   [[ "${output}"  =~  \
-Added:\ .*\[.*1.*\].*\ .*[0-9]+\.todo\.md.*\ \"\[\ \]\ Example\ Title\ ·\ Example\ todo\ description.\" ]]
+Added:\ .*\[.*1.*\].*\ ✅\ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ Title\ ·\ Example\ todo\ description\.\" ]]
 
   _files=($(ls "${NB_DIR}/home/"))
 
@@ -609,5 +610,5 @@ Example content.\\n")
   git -C "${NB_DIR}/home" log | grep -q '\[nb\] Add'
 
   [[ "${output}"  =~  \
-Added:\ .*\[.*1.*\].*\ .*[0-9]+\.todo\.md.*\ \"\[\ \]\ Example\ multi-word\ description\.\" ]]
+Added:\ .*\[.*1.*\].*\ ✅\ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ multi-word\ description\.\" ]]
 }

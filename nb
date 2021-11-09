@@ -21806,8 +21806,8 @@ _todo() {
   local _arguments=()
   local _content=
   local _description=
+  local _filter=
   local _list_all=0
-  local _pattern='\# \[ \]|\# \[x\]'
   local _title=
 
   while ((${#}))
@@ -21847,8 +21847,7 @@ _todo() {
         done
         ;;
       c|closed)
-        _action="list"
-        _pattern='\# \[x\]'
+        _filter="closed"
         ;;
       d|do|complete*|done|finish*|check*)
         _action="do"
@@ -21857,8 +21856,7 @@ _todo() {
         _action="list"
         ;;
       o|open)
-        _action="list"
-        _pattern='\# \[ \]'
+        _filter="open"
         ;;
       u|undo|*ncomplete*|undone|unfinish*|uncheck*)
         _action="undo"
@@ -21946,12 +21944,41 @@ _todo() {
       done
       ;;
     list)
-      if ((_list_all))
-      then
-        _search "${_pattern}" --list --all
-      else
-        _search "${_pattern}" --list
-      fi | sed -e '/^$/d'
+      {
+        _list "${_arguments[@]:-}" --type todo
+      } | {
+        case "${_filter:-}" in
+          closed)
+            sed -E -e "/${NB_INDICATOR_TODO:-} .*\[\ \].*/d"
+            ;;
+          open)
+            sed -E -e "/${NB_INDICATOR_TODO:-} .*\[.*x.*\].*/d"
+            ;;
+          *)
+            cat
+            ;;
+        esac
+      } | {
+        local _counter=0
+
+        local         __line=
+        while read -r __line
+        do
+          _counter+=1
+
+          printf "%s\\n" "${__line:-}"
+        done
+
+        if ! ((_counter))
+        then
+          if [[ -n "${_filter:-}" ]]
+          then
+            _exit_1 printf "No %s todos found.\\n" "${_filter:-}"
+          else
+            _exit_1 printf "No todos found.\\n"
+          fi
+        fi
+      }
       ;;
   esac
 }
