@@ -2274,22 +2274,14 @@ for more information.
   </sup>
 </p>
 
-`nb` can list and update the state of tasks in any Markdown document.
-[`nb todo add`](#todo) accepts any number of `--task <title>` flags.
-Tasks are turned into a Markdown task list and added to a `## Tasks` section:
+`nb` can list and update tasks in [todos](#todos) and other Markdown documents.
 
-```bash
-❯ nb todo add "Example todo seven." --task "Task one." --task "Task two." --task "Task three."
-Added: [7] ✔️ [ ] Example todo seven.
+Tasks are defined as one or more Markdown list items starting with
+`- [ ]` to indicate an open task or `- [x]` to indicate a closed task:
 
-❯ nb show 7 --print
-# [ ] Example todo seven.
-
-## Tasks
-
-- [ ] Task one.
-- [ ] Task two.
-- [ ] Task three.
+```markdown
+- [ ] Example incomplete task.
+- [x] Example completed task.
 ```
 
 List tasks in notebooks, folders, and items with [`nb tasks`](#tasks-1),
