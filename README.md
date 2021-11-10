@@ -2087,6 +2087,16 @@ See [`bookmark help`](#bookmark-help) for more information.
 
 ### ✅ Todos
 
+<p>
+  <sup>
+    <a href="#overview">↑</a> ·
+    <a href="#do"><code>nb do</code></a>,
+    <a href="#tasks"><code>nb tasks</code></a>,
+    <a href="#todo"><code>nb todo</code></a>,
+    <a href="#undo"><code>nb undo</code></a>
+  </sup>
+</p>
+
 Use `nb todo` to create and manage todo-formatted notes.
 `nb` todos are [structured Markdown documents](#nb-markdown-todo-file-format)
 referencing a single primary todo,
@@ -2249,7 +2259,13 @@ Undone: [7 2] [ ] Task two.
 [7 3] [ ] Task three.
 ```
 
-See [`todo help`](#todo-help) for more information.
+See
+[`nb help todo`](#todo),
+[`nb help tasks`](#tasks),
+[`nb help do`](#do),
+and
+[`nb help undo`](#undo),
+for more information.
 
 ### 🏷 #tagging
 
@@ -2275,8 +2291,9 @@ which is available with
 [`nb add`](#add),
 [`nb <url>`](#nb-help),
 [`nb browse add`](#browse),
+[`nb bookmark`](#bookmark),
 and
-[`nb bookmark`](#bookmark).
+[`nb todo`](#todo).
 `--tags` takes a comma-separated list of tags, converts them to
 [#hashtags](#-tagging),
 and adds them to the document.
