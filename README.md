@@ -2348,7 +2348,8 @@ and body text:
 Example note content.
 ```
 
-Tags added to bookmarks with `nb <url> --tags` and `nb bookmark <url> --tags`
+Tags added to [bookmarks](#bookmarks) with
+`nb <url> --tags` and `nb bookmark <url> --tags`
 are placed in a _Tags_ section:
 
 ```bash
@@ -2378,6 +2379,22 @@ use this domain in literature without prior coordination or asking for
 permission.
 
 [More information\...](https://www.iana.org/domains/example)
+```
+
+Tags added to [todos](#todos) with
+`nb todo add --tags`
+are placed in a _Tags_ section:
+
+```bash
+❯ nb todo add --tags tag1,tag2 "Example todo."
+```
+
+```markdown
+# [ ] Example todo.
+
+## Tags
+
+#tag1 #tag2
 ```
 
 Use `nb --tags`, [`nb ls --tags`](#ls), and [`nb list --tags`](#list) to
