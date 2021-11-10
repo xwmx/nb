@@ -36,7 +36,7 @@ HEREDOC
   [[    "${#lines[@]}"  -eq 3                                     ]]
 
   [[    "${lines[0]}"   =~  .*\[.*Example\ Folder/1.*].*\ Example\ Title\ One ]]
-  [[    "${lines[1]}"   =~  [^-]-------------------------------------[^-]     ]]
+  [[    "${lines[1]}"   =~  [^-]------------------------------------[^-]      ]]
   [[    "${lines[2]}"   =~  \
 Undone:\ .*\[.*Example\ Folder/1\ 3.*\].*\ .*[\ ].*\ Task\ three\.            ]]
 }
@@ -118,7 +118,7 @@ HEREDOC
   [[    "${#lines[@]}"  -eq 3                                     ]]
 
   [[    "${lines[0]}"   =~  .*\[.*Example\ Folder/1.*].*\ Example\ Title\ One ]]
-  [[    "${lines[1]}"   =~  [^-]-------------------------------------[^-]     ]]
+  [[    "${lines[1]}"   =~  [^-]------------------------------------[^-]      ]]
   [[    "${lines[2]}"   =~  \
 Done:\ .*\[.*Example\ Folder/1\ 2.*\].*\ .*[.*x.*].*\ Task\ two\.             ]]
 }
@@ -154,7 +154,7 @@ HEREDOC
   [[    "${#lines[@]}"  -eq 3                                     ]]
 
   [[    "${lines[0]}"   =~  .*\[.*Example\ Folder/1.*].*\ Example\ Title\ One ]]
-  [[    "${lines[1]}"   =~  [^-]-------------------------------------[^-]     ]]
+  [[    "${lines[1]}"   =~  [^-]------------------------------------[^-]      ]]
   [[    "${lines[2]}"   =~  \
 Done:\ .*\[.*Example\ Folder/1\ 2.*\].*\ .*[.*x.*].*\ Task\ two\.             ]]
 }
@@ -733,17 +733,17 @@ HEREDOC
   [[    "${#lines[@]}"  -eq 15                              ]]
 
   [[    "${lines[0]}"   =~  \
-.*\[.*Example\ Folder/3.*].*\ ✅\ .*\[.*x.*\].*\ Example\ todo\ description\ two\.  ]]
-  [[    "${lines[1]}"   =~  .*------------------------------------.*                ]]
+.*\[.*Example\ Folder/4.*].*\ ✅\ .*\[.*x.*\].*\ Example\ todo\ description\ three\.  ]]
+  [[    "${lines[1]}"   =~  .*------------------------------------.*                  ]]
 
   [[    "${lines[2]}"   =~  \
-.*[.*Example\ Folder/1\ 1.*].*\ .*[\ ].*\ Task\ one\.       ]]
+.*[.*Example\ Folder/4\ 1.*].*\ .*[\ ].*\ Task\ one\.       ]]
   [[    "${lines[3]}"   =~  \
-.*[.*Example\ Folder/1\ 2.*].*\ .*[.*x.*].*\ Task\ two\.    ]]
+.*[.*Example\ Folder/4\ 2.*].*\ .*[.*x.*].*\ Task\ two\.    ]]
 
   [[    "${lines[4]}"   =~  \
 .*\[.*Example\ Folder/2.*].*\ Example\ Note\ Title\ One.    ]]
-  [[    "${lines[5]}"   =~  .*------------------------------------.*                ]]
+  [[    "${lines[5]}"   =~  .*------------------------------------.*              ]]
 
   [[    "${lines[6]}"   =~  \
 .*[.*Example\ Folder/2\ 1.*].*\ .*[.*x.*].*\ Task\ one\.    ]]
@@ -818,13 +818,13 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
 
   [[    "${status}"     -eq 0                               ]]
-  [[    "${#lines[@]}"  -eq 9                               ]]
+  [[    "${#lines[@]}"  -eq 7                               ]]
 
   [[    "${lines[0]}"   =~  \
 .*\[.*Example\ Folder/3.*].*\ ✅\ .*\[.*x.*\].*\ Example\ todo\ description\ two\.  ]]
   [[    "${lines[1]}"   =~  \
-.*\[.*Example\ Folder/1.*].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ one\.  ]]
-  [[    "${lines[2]}"   =~  .*------------------------------------.*              ]]
+.*\[.*Example\ Folder/1.*].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ one\.    ]]
+  [[    "${lines[2]}"   =~  .*------------------------------------.*                ]]
 
   [[    "${lines[3]}"   =~  \
 .*[.*Example\ Folder/1\ 1.*].*\ .*[\ ].*\ Task\ one\.       ]]
