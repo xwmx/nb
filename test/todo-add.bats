@@ -3,6 +3,57 @@
 
 load test_helper
 
+# `add todo` ##################################################################
+
+@test "'add todo <title> --related <URL> --related <selector> --tag <tag>' exits with 0, creates new todo with <title> as title, related items, and tag, creates commit." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" add todo "Example todo title." \
+    --related "http://example.com"            \
+    --related "example:123"                   \
+    --tag     tag1
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"      -eq 0                 ]]
+  [[ "${output}"      =~  \
+Added:\ .*\[.*1.*\].*\ ✔️\ \ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ todo\ title\.\"  ]]
+
+  _files=($(ls "${NB_DIR}/home/"))
+
+  printf "\${_files[*]}: '%s'\\n" "${_files[*]:-}"
+
+  [[ "${#_files[@]}" -eq 1                  ]]
+  [[ "${_files[0]}"   =~ ^[0-9]+\.todo\.md$ ]]
+
+  cat "${NB_DIR}/home/${_files[0]}"
+
+  diff                                      \
+    <(cat "${NB_DIR}/home/${_files[0]}")    \
+    <(cat <<HEREDOC
+# [ ] Example todo title.
+
+## Related
+
+- <http://example.com>
+- [[example:123]]
+
+## Tags
+
+#tag1
+HEREDOC
+)
+
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Add'
+}
+
 # aliases #####################################################################
 
 @test "'todo a <multi-word> <description>' exits with 0, creates new todo with <multi-word> <description>, creates commit." {
@@ -161,7 +212,7 @@ Added:\ .*\[.*Example\ Folder/1.*\].*\ ✔️\ \ .*Example\ Folder/[0-9]+\.todo\
 Example\ Folder/[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ multi-word\ description\.\"  ]]
 }
 
-# --task and --tags options ###################################################
+# --related ###################################################################
 
 @test "'todo add <title> --related <URL> --relared <selector>' exits with 0, creates new todo with <title> as title and related items, creates commit." {
   {
@@ -207,6 +258,8 @@ HEREDOC
   git -C "${NB_DIR}/home" log | grep -q '\[nb\] Add'
 }
 
+# --tag #######################################################################
+
 @test "'todo add <title> --tag <one> --tag <two>' exits with 0, creates new todo with <title> as title and tags, creates commit." {
   {
     "${_NB}" init
@@ -249,6 +302,8 @@ HEREDOC
   done
   git -C "${NB_DIR}/home" log | grep -q '\[nb\] Add'
 }
+
+# --task ######################################################################
 
 @test "'todo add <title> --task <one> --task <two>' exits with 0, creates new todo with <title> as title and tasklist, creates commit." {
   {
@@ -294,7 +349,7 @@ HEREDOC
   git -C "${NB_DIR}/home" log | grep -q '\[nb\] Add'
 }
 
-# --description and --due options #############################################
+# --description ###############################################################
 
 @test "'todo add --description' with no <description> exits with 1 and prints message." {
   {
@@ -320,6 +375,8 @@ HEREDOC
   done
   git -C "${NB_DIR}/home" log | grep -v -q '\[nb\] Add'
 }
+
+# --due #######################################################################
 
 @test "'todo add --due' with no <date> exits with 1 and prints message." {
   {

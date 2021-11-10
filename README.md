@@ -5468,16 +5468,18 @@ Help:
 
 Usage:
   nb
-  nb [<ls options>...] [<id> | <filename> | <path> | <title> | <notebook>]
+  nb [<ls-options>...] [<id> | <filename> | <path> | <title> | <notebook>]
   nb [<url>] [<bookmark options>...]
   nb add [<notebook>:][<folder-path>/][<filename>] [<content>]
          [-b | --browse] [-c <content> | --content <content>] [--edit]
          [-e | --encrypt] [-f <filename> | --filename <filename>]
          [--folder <folder-path>] [--tags <tag1>,<tag2>...]
          [-t <title> | --title <title>] [--type <type>]
+  nb add bookmark [<bookmark-options>...]
   nb add folder [<name>]
+  nb add todo [<todo-options>...]
   nb archive [<notebook>]
-  nb bookmark [<ls options>...]
+  nb bookmark [<ls-options>...]
   nb bookmark [<notebook>:][<folder-path>/] <url>
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
               [-f <filename> | --filename <filename>] [--no-request]
@@ -5685,7 +5687,7 @@ GUI and terminal browser support, and data stored in plain text
 Markdown files with Git-backed versioning and syncing.
 
 Usage:
-  bookmark [<ls options>...]
+  bookmark [<ls-options>...]
   bookmark [<notebook>:][<folder-path>] <url>
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
               [-f <filename> | --filename <filename>] [--no-request]
@@ -5840,7 +5842,8 @@ For more information, see: `nb help`.
 [`delete`](#delete),
 [`edit`](#edit),
 [`import`](#import),
-[`show`](#show)
+[`show`](#show),
+[`todo`](#todo)
 
 ```text
 Usage:
@@ -5849,7 +5852,9 @@ Usage:
          [-e | --encrypt] [-f <filename> | --filename <filename>]
          [--folder <folder-path>] [--tags <tag1>,<tag2>...]
          [-t <title> | --title <title>] [--type <type>]
+  nb add bookmark [<bookmark-options>...]
   nb add folder [<name>]
+  nb add todo [<todo-options>...]
 
 Options:
   -b, --browse                Add using a terminal or GUI web browser.
@@ -5894,6 +5899,7 @@ See Also:
   nb help edit
   nb help import
   nb help show
+  nb help todo
 
 Examples:
   nb add
@@ -5964,7 +5970,7 @@ Shortcut Alias:
 
 ```text
 Usage:
-  nb bookmark [<ls options>...]
+  nb bookmark [<ls-options>...]
   nb bookmark [<notebook>:][<folder-path>/] <url>
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
               [-f <filename> | --filename <filename>] [--no-request]

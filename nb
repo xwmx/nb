@@ -3707,16 +3707,18 @@ $(_color_primary "Help"):
 
 $(_color_primary "Usage"):
   ${_ME}
-  ${_ME} [<ls options>...] [<id> | <filename> | <path> | <title> | <notebook>]
+  ${_ME} [<ls-options>...] [<id> | <filename> | <path> | <title> | <notebook>]
   ${_ME} [<url>] [<bookmark options>...]
   ${_ME} add [<notebook>:][<folder-path>/][<filename>] [<content>]
          [-b | --browse] [-c <content> | --content <content>] [--edit]
          [-e | --encrypt] [-f <filename> | --filename <filename>]
          [--folder <folder-path>] [--tags <tag1>,<tag2>...]
          [-t <title> | --title <title>] [--type <type>]
+  ${_ME} add bookmark [<bookmark-options>...]
   ${_ME} add folder [<name>]
+  ${_ME} add todo [<todo-options>...]
   ${_ME} archive [<notebook>]
-  ${_ME} bookmark [<ls options>...]
+  ${_ME} bookmark [<ls-options>...]
   ${_ME} bookmark [<notebook>:][<folder-path>/] <url>
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
               [-f <filename> | --filename <filename>] [--no-request]
@@ -8667,10 +8669,10 @@ _call_deferred_command() {
 
   local _group="${2:-}"
   local _group_3_names=(
-    _ar _archive _b _br _browse _browser _close _config _do _done _h _help    \
-    _helpers _set _plugin _plugins _remote _reset _settings _shell _st _stat  \
-    _status _sync _t _task _tasks _to _todo _todos _unar _unarchive _undo     \
-    _undone _unset _update _upgrade
+    _ar _archive _b _bookmark _br _browse _browser _close _config _do _done   \
+    _h _help _helpers _set _plugin _plugins _remote _reset _settings _shell   \
+    _st _stat _status _sync _t _task _tasks _to _todo _todos _unar _unarchive \
+    _undo _undone _unset _update _upgrade
   )
 
   if {
@@ -10867,7 +10869,9 @@ $(_color_primary "Usage"):
          [-e | --encrypt] [-f <filename> | --filename <filename>]
          [--folder <folder-path>] [--tags <tag1>,<tag2>...]
          [-t <title> | --title <title>] [--type <type>]
+  ${_ME} add bookmark [<bookmark-options>...]
   ${_ME} add folder [<name>]
+  ${_ME} add todo [<todo-options>...]
 
 $(_color_primary "Options"):
   -b, --browse                Add using a terminal or GUI web browser.
@@ -10912,6 +10916,7 @@ $(_color_primary "See Also"):
   ${_ME} help edit
   ${_ME} help import
   ${_ME} help show
+  ${_ME} help todo
 
 $(_color_primary "Examples"):
   ${_ME} add
@@ -10939,9 +10944,10 @@ $(_color_primary "Shortcut Aliases"):
 HEREDOC
 }
 _add() {
+  local _add_type=
   local _arguments=()
   local _browse=0
-  local _browse_arguments=()
+  local _defer_arguments=()
   local _edit_before_commit=0
   local _encrypt=0
   local _file_type="${NB_DEFAULT_EXTENSION}"
@@ -10963,7 +10969,7 @@ _add() {
       -c|--content)
         [[ -n "${_option_content:-}" ]] && _option_content+="${_NEWLINE}${_NEWLINE}"
         _option_content+="$(_option_get_value "${1}" "${2:-}")"
-        _browse_arguments+=("${1}" "${2:-}")
+        _defer_arguments+=("${1}" "${2:-}")
         shift
         ;;
       --edit)
@@ -10982,14 +10988,14 @@ _add() {
         ;;
       -f|--file*|--*path|--target*)
         _option_relative_path="$(_option_get_value "${1}" "${2:-}")"
-        _browse_arguments+=("${1}" "${2:-}")
+        _defer_arguments+=("${1}" "${2:-}")
         shift
         ;;
       --folder)
         _option_folder_relative_path="$(
           _option_get_value "${1}" "${2:-}" | sed -e 's/\/$//'
         )"
-        _browse_arguments+=("${1}" "${_option_folder_relative_path:-}")
+        _defer_arguments+=("${1}" "${_option_folder_relative_path:-}")
         shift
         ;;
       --no*color)
@@ -11002,23 +11008,29 @@ _add() {
       --tag*)
         [[ -n "${_tag_list:-}" ]] && _tag_list+=" "
         _tag_list+="$(_option_get_tags "${1}" "${2:-}")"
-        _browse_arguments+=("${1}" "${2:-}")
+        _defer_arguments+=("${1}" "${2:-}")
         shift
         ;;
       -t|--title|--name)
         # TODO: Detect tag list for dynamic -t for --titles and --tags?
         _title="$(_option_get_value "${1}" "${2:-}")"
-        _browse_arguments+=("${1}" "${2:-}")
+        _defer_arguments+=("${1}" "${2:-}")
         shift
         ;;
       --type)
         _file_type="$(_option_get_value "${1}" "${2:-}")"
-        _browse_arguments+=("${1}" "${2:-}")
+        _defer_arguments+=("${1}" "${2:-}")
         shift
+        ;;
+      bookmark)
+        _add_type="bookmark"
         ;;
       folder|directory)
         _file_type="folder"
-        _browse_arguments+=("${1}")
+        _defer_arguments+=("${1}")
+        ;;
+      todo)
+        _add_type="todo"
         ;;
       *)
         _arguments+=("${1:-}")
@@ -11028,10 +11040,20 @@ _add() {
     shift
   done
 
+  case "${_add_type:-}" in
+    bookmark)
+      _defer "_bookmark" "${_arguments[@]:-}" "${_defer_arguments[@]:-}"
+      return 0
+      ;;
+    todo)
+      _defer "_todo" "add" "${_arguments[@]:-}" "${_defer_arguments[@]:-}"
+      return 0
+      ;;
+  esac
+
   if ((_browse))
   then
-    _defer "_browse" "add" "${_arguments[@]:-}" "${_browse_arguments[@]:-}"
-
+    _defer "_browse" "add" "${_arguments[@]:-}" "${_defer_arguments[@]:-}"
     return 0
   fi
 
@@ -11434,7 +11456,7 @@ _alias_subcommand "add" "new"
 _describe_bookmark() {
   cat <<HEREDOC
 $(_color_primary "Usage"):
-  ${_ME} bookmark [<ls options>...]
+  ${_ME} bookmark [<ls-options>...]
   ${_ME} bookmark [<notebook>:][<folder-path>/] <url>
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
               [-f <filename> | --filename <filename>] [--no-request]
