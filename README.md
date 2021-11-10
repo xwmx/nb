@@ -2119,18 +2119,71 @@ Added: [2] ✅ [ ] Example todo two.
 2100-01-01
 ```
 
+Add an optional description with the `--description <description>` option:
+
+```bash
+❯ nb todo add "Example todo three." --description "Example description."
+Added: [3] ✅ [ ] Example todo three.
+
+❯ nb show 3 --print
+# [ ] Example todo three.
+
+## Description
+
+Example description.
+```
+
+Related URLs and selectors can be added to a `## Related` field
+using the `-r (<url> | <selector>)` / `--related (<url> | <selector>)`
+option:
+
+```bash
+❯ nb todo add "Example todo four." --related example:123 --related https://example.com
+Added: [4] ✅ [ ] Example todo four.
+
+❯ nb show 4 --print
+# [ ] Example todo four.
+
+## Related
+
+- [[example:123]]
+- <https://example.com>
+```
+
+Tags can be added to todos with the `--tags <tag1>,<tag2>...` option:
+
+```bash
+❯ nb todo add "Example todo five." --tags tag1,tag2
+Added: [5] ✅ [ ] Example todo five.
+
+❯ nb show 5 --print
+# [ ] Example todo five.
+
+## Tags
+
+#tag1 #tag2
+```
+
+Linked tags, selectors, and URLs can be [browsed](#-browsing)
+in terminal and GUI web browers with [`nb browse`](#browse).
+
+#### `do` / `undo`
+
 Mark a todo as done or closed with [`nb do`](#do):
 
 ```bash
-❯ nb do 2
-Done: [2] ✅ [x] Example todo two.
+❯ nb todo add "Example todo six."
+Added: [6] ✅ [ ] Example todo six.
+
+❯ nb do 6
+Done: [6] ✅ [x] Example todo two.
 ```
 
 Re-open a closed todo with [`nb undo`](#undo):
 
 ```bash
-❯ nb undo 2
-Undone: [2] ✅ [ ] Example todo two.
+❯ nb undo 6
+Undone: [6] ✅ [ ] Example todo two.
 ```
 
 #### Tasks
@@ -2139,11 +2192,11 @@ Todos can have tasks. Tasks are represented as a markdown task list and
 are placed in a `## Tasks` section:
 
 ```bash
-❯ nb todo add "Example todo three." --task "Task one." --task "Task two." --task "Task three."
-Added: [3] ✅ [ ] Example todo three.
+❯ nb todo add "Example todo seven." --task "Task one." --task "Task two." --task "Task three."
+Added: [7] ✅ [ ] Example todo seven.
 
-❯ nb show 3 --print
-# [ ] Example todo three.
+❯ nb show 7 --print
+# [ ] Example todo seven.
 
 - [ ] Task one.
 - [ ] Task two.
@@ -2153,12 +2206,12 @@ Added: [3] ✅ [ ] Example todo three.
 List tasks in a todo with [`nb tasks`](#tasks):
 
 ```
-❯ nb tasks 3
-[3] ✅ [ ] Example todo three.
+❯ nb tasks 7
+[7] ✅ [ ] Example todo seven.
 ------------------------------
-[3 1] [ ] Task one.
-[3 2] [ ] Task two.
-[3 3] [ ] Task three.
+[7 1] [ ] Task one.
+[7 2] [ ] Task two.
+[7 3] [ ] Task three.
 ```
 
 Todos are identified by the item [selector](#-selectors), followed by
@@ -2167,33 +2220,33 @@ a space, then followed by the sequential number of the task in the file.
 Use [`nb do`](#do) to mark tasks as complete:
 
 ```bash
-❯ nb do 3 2
-[3] ✅ [ ] Example todo three.
+❯ nb do 7 2
+[7] ✅ [ ] Example todo seven.
 ------------------------------
-Done: [3 2] [x] Task two.
+Done: [7 2] [x] Task two.
 
-❯ nb tasks 3
-[3] ✅ [ ] Example todo three.
+❯ nb tasks 7
+[7] ✅ [ ] Example todo seven.
 ------------------------------
-[3 1] [ ] Task one.
-[3 2] [x] Task two.
-[3 3] [ ] Task three.
+[7 1] [ ] Task one.
+[7 2] [x] Task two.
+[7 3] [ ] Task three.
 ```
 
 Undo a completed task with [`nb undo`](#undo):
 
 ```bash
-❯ nb undo 3 2
-[3] ✅ [ ] Example todo three.
+❯ nb undo 7 2
+[7] ✅ [ ] Example todo seven.
 ------------------------------
-Undone: [3 2] [ ] Task two.
+Undone: [7 2] [ ] Task two.
 
-❯ nb tasks 3
-[3] ✅ [ ] Example todo three.
+❯ nb tasks 7
+[7] ✅ [ ] Example todo seven.
 ------------------------------
-[3 1] [ ] Task one.
-[3 2] [ ] Task two.
-[3 3] [ ] Task three.
+[7 1] [ ] Task one.
+[7 2] [ ] Task two.
+[7 3] [ ] Task three.
 ```
 
 See [`todo help`](#todo-help) for more information.
