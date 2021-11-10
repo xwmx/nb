@@ -7936,7 +7936,7 @@ Usage:
                  [open | closed]
 
 Options:
-  --description <description>         Description for the todo
+  --description <description>         Description for the todo.
   --due <date>                        Due date and / or time for the todo.
   -r, --related (<url> | <selector>)  Related URL or selector.
   --tags <tag1>,<tag2>...             Comma-separated list of tags.
