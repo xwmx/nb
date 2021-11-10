@@ -5424,6 +5424,7 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
   <a href="#completions">completions</a>&nbsp;·
   <a href="#count">count</a>&nbsp;·
   <a href="#delete">delete</a>&nbsp;·
+  <a href="#do">do</a>&nbsp;·
   <a href="#edit">edit</a>&nbsp;·
   <a href="#env">env</a>&nbsp;·
   <a href="#export">export</a>&nbsp;·
@@ -5449,7 +5450,10 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
   <a href="#status">status</a>&nbsp;·
   <a href="#subcommands-1">subcommands</a>&nbsp;·
   <a href="#sync">sync</a>&nbsp;·
+  <a href="#tasks">tasks</a>&nbsp;·
+  <a href="#todo">todo</a>&nbsp;·
   <a href="#unarchive">unarchive</a>&nbsp;·
+  <a href="#undo">undo</a>&nbsp;·
   <a href="#unpin">unpin</a>&nbsp;·
   <a href="#unset">unset</a>&nbsp;·
   <a href="#update">update</a>&nbsp;·
