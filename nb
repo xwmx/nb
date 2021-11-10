@@ -1172,6 +1172,16 @@ trap "exit"           INT
 # Backtick with ANSI-C quoting for string building.
 _BT=$'`'
 
+# $_CHEVRON_LEFT
+#
+# A left-pointing chevron character.
+_CHEVRON_LEFT="❮"
+
+# $_CHEVRON_RIGHT
+#
+# A right-pointing chevron character.
+_CHEVRON_RIGHT="❯"
+
 # $_COLUMNS
 #
 # The terminal width in number of columns (characters).
@@ -1186,11 +1196,6 @@ _FILE_TYPES=(archive audio bookmark document folder image text video)
 #
 # Middle dot character.
 _MD="·"
-
-if [[ ! "${LANG:-x}" =~ utf-8|UTF-8 ]]
-then
-  _MD="-"
-fi
 
 # $_NBSP
 #
@@ -1207,6 +1212,14 @@ _NEWLINE=$'\n'
 # Slash with ANSI-C quoting for string building support and macOS Bash
 # string substitution.
 _SLASH=$'/'
+
+# Fallbacks for non-unicode environments.
+if [[ ! "${LANG:-x}" =~ utf-|UTF- ]]
+then
+  _CHEVRON_LEFT="<"
+  _CHEVRON_RIGHT=">"
+  _MD="-"
+fi
 
 # _alias_subcommand()
 #
@@ -5752,7 +5765,7 @@ _ls() {
     set -f
 
     local _commands_raw=(
-      "❯ ${_ME}${_maybe_selector_scope_padded_left}"
+      "${_CHEVRON_RIGHT} ${_ME}${_maybe_selector_scope_padded_left}"
       "${_ME} add${_maybe_selector_scope_padded_left}"
       "${_ME} ${_maybe_selector_scope_padded_right}<url>"
       "${_ME} edit ${_maybe_selector_scope}<id>"
@@ -5767,7 +5780,7 @@ _ls() {
     )
 
     local _commands_hi=(
-      "$(_color_dim '❯') $(_color_secondary "${_ME}${_maybe_selector_scope_padded_left}")"
+      "$(_color_dim "${_CHEVRON_RIGHT}") $(_color_secondary "${_ME}${_maybe_selector_scope_padded_left}")"
       "$(_color_secondary "${_commands_raw[1]}")"
       "$(_color_secondary "${_commands_raw[2]}")"
       "$(_color_secondary "${_commands_raw[3]}")"
@@ -17430,24 +17443,25 @@ HEREDOC
 
         local _prev_url_params="${_url_params#$'?'}"
 
-        if [[ "${_prev_page_number:-0}" -gt 1   ]]
+        if [[ "${_prev_page_number:-0}" -gt 1     ]]
         then
           _prev_url_params+="&--page=${_prev_page_number:-}"
         fi
 
         _prev_url_params="${_prev_url_params#$'&'}"
 
-        if [[ -n "${_prev_url_params:-}"        ]]
+        if [[ -n "${_prev_url_params:-}"          ]]
         then
           _prev_url_params="?${_prev_url_params:-}"
         fi
 
-        printf                                  \
-          "<a href=\"//%s:%s/%s%s\">❮ prev</a>" \
-          "${NB_SERVER_HOST}"                   \
-          "${NB_SERVER_PORT}"                   \
-          "${_url_encoded_selector}"            \
-          "${_prev_url_params:-}"
+        printf                                    \
+          "<a href=\"//%s:%s/%s%s\">%s prev</a>"  \
+          "${NB_SERVER_HOST}"                     \
+          "${NB_SERVER_PORT}"                     \
+          "${_url_encoded_selector}"              \
+          "${_prev_url_params:-}"                 \
+          "${_CHEVRON_LEFT}"
       fi
 
       if ((_print_prev)) && ((_print_next))
@@ -17461,11 +17475,12 @@ HEREDOC
         _next_url_params="${_url_params#$'?'}&--page=$((_current_page + 1))"
 
         printf                                    \
-          "<a href=\"//%s:%s/%s?%s\">next ❯</a>"  \
+          "<a href=\"//%s:%s/%s?%s\">next %s</a>" \
           "${NB_SERVER_HOST}"                     \
           "${NB_SERVER_PORT}"                     \
           "${_url_encoded_selector}"              \
-          "${_next_url_params#$'&'}"
+          "${_next_url_params#$'&'}"              \
+          "${_CHEVRON_RIGHT}"
       fi
 
       if ((_print_prev)) || ((_print_next))
@@ -17816,7 +17831,8 @@ HEREDOC
     fi
 
     local _header_content="\
-<a href=\"//${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_url_param_string:-}\"><span class=\"dim\">❯</span>nb</a>"
+<a href=\"//${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_url_param_string:-}\">"
+    _header_content+="<span class=\"dim\">${_CHEVRON_RIGHT}</span>nb</a>"
     _header_content+=" <span class=\"dim\">${_MD}</span>"
 
     if [[ -z "${_selector:-}"       ]]
@@ -21488,7 +21504,7 @@ _shell() {
 
   local _initial_command=
   local _prompt=
-  _prompt="$(_color_primary "${_ME}")$(_color_secondary "❯") "
+  _prompt="$(_color_primary "${_ME}")$(_color_secondary "${_CHEVRON_RIGHT}") "
 
   local __arg=
   for   __arg in "${@:-}"
