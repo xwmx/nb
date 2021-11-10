@@ -7945,9 +7945,10 @@ Options:
 Subcommands:
   (default)   List todos.
   add         Add a new todo.
-  do          Mark a todo as done.
-  tasks       List tasks in a todo.
-  undo        Unmark a todo as done.
+              Shortcut Aliases: `nb todo a`, `nb todo +`
+  do          Mark a todo or task as done.
+  tasks       List tasks in todos, notebooks, folders, and other item.
+  undo        Unmark a todo or task as done.
 
 Description:
   Manage todos and tasks.
@@ -8579,7 +8580,7 @@ Example description.
 
 ##### Title
 
-`Preferred`
+`Required`
 
 A markdown `h1` heading containing a Markdown checkbox followed by the todo title.
 An `x` within the checkbox (`[ ]`) indicates that the todo is done.

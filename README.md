@@ -8574,7 +8574,7 @@ Example description.
 
 ##### Title
 
-`Preferred`
+`Required`
 
 A markdown `h1` heading containing a Markdown checkbox followed by the todo title.
 An `x` within the checkbox (`[ ]`) indicates that the todo is done.
