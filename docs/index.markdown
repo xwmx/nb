@@ -8255,9 +8255,13 @@ Description:
 
 ## Specifications
 
-[↑](#help) · See also:
-[Bookmarks](#-bookmarks),
-[Todos](#-todos)
+<p>
+  <sup>
+    <a href="#help">↑</a> ·
+    <a href="#-bookmarks">Bookmarks</a>,
+    <a href="#-todos">Todos</a>
+  </sup>
+</p>
 
 <p align="center">
   <a href="#nb-markdown-bookmark-file-format">Bookmark File Format</a>&nbsp;·
@@ -8271,9 +8275,13 @@ Description:
 
 ### `nb` Markdown Bookmark File Format
 
-[↑](#specifications) · See also:
-[Bookmarks](#-bookmarks),
-[`bookmark`](#bookmark)
+<p>
+  <sup>
+    <a href="#specifications">↑</a> ·
+    <a href="#-bookmarks">Bookmarks</a>,
+    <a href="#bookmark"><code>nb bookmark</code></a>
+  </sup>
+</p>
 
 #### Extension
 
@@ -8458,9 +8466,13 @@ Markdown.
 
 ### `nb` Markdown Todo File Format
 
-[↑](#specifications) · See also:
-[Todos](#-todos),
-[`todo`](#todo)
+<p>
+  <sup>
+    <a href="#specifications">↑</a> ·
+    <a href="#-todos">Todos</a>,
+    <a href="#todo"><code>nb todo</code></a>
+  </sup>
+</p>
 
 *(draft)*
 
@@ -8548,9 +8560,13 @@ spaces.
 
 ### `nb` Notebook Specification
 
-[↑](#specifications) · See also:
-[Notebooks](#-notebooks),
-[`notebooks`](#notebooks)
+<p>
+  <sup>
+    <a href="#specifications">↑</a> ·
+    <a href="#-notebooks">Notebooks</a>,
+    <a href="#notebooks"><code>nb notebooks</code></a>
+  </sup>
+</p>
 
 An `nb` notebook is a directory that contains a valid `.git` directory,
 indicating that it has been initialized as a git repository, and a `.index`
