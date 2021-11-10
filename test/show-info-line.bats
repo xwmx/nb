@@ -19,7 +19,7 @@ load test_helper
 
   [[    "${status}" -eq 0               ]]
   [[    "${output}" =~  \
-.*\[.*1.*\].*\ ✅\ .*Example\ File.todo.md.*\ \".*\[.*\ .*\].*\ Example\ todo\ description\.\"  ]]
+.*\[.*1.*\].*\ ✔️\ \ .*Example\ File.todo.md.*\ \".*\[.*\ .*\].*\ Example\ todo\ description\.\"  ]]
 }
 
 @test "'show <id> --info-line' exits with status 0 and prints done todo info line." {

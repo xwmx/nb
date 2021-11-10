@@ -42,8 +42,8 @@ HEREDOC
   [[    "${#lines[@]}"  -eq 3                                       ]]
 
   [[    "${lines[0]}"   =~  \
-.*\[.*Example\ Folder/1.*].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ one\. ]]
-  [[    "${lines[1]}"   =~  .*------------------------------------.*            ]]
+.*\[.*Example\ Folder/1.*].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ one\.  ]]
+  [[    "${lines[1]}"   =~  .*------------------------------------.*              ]]
 
   [[    "${lines[2]}"   =~  \
 Undone:\ .*\[.*Example\ Folder/1\ 3.*\].*\ .*[\ ].*\ Task\ three\.  ]]
@@ -88,8 +88,8 @@ HEREDOC
   [[    "${#lines[@]}"  -eq 3                                     ]]
 
   [[    "${lines[0]}"   =~  \
-.*\[.*Example\ Folder/1.*].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ one\. ]]
-  [[    "${lines[1]}"   =~  .*------------------------------------.*            ]]
+.*\[.*Example\ Folder/1.*].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ one\.  ]]
+  [[    "${lines[1]}"   =~  .*------------------------------------.*              ]]
 
   [[    "${lines[2]}"   =~  \
 Done:\ .*\[.*Example\ Folder/1\ 2.*\].*\ .*[.*x.*].*\ Task\ two\. ]]
@@ -132,8 +132,8 @@ HEREDOC
   [[    "${#lines[@]}"  -eq 3                                     ]]
 
   [[    "${lines[0]}"   =~  \
-.*\[.*Example\ Folder/1.*].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ one\. ]]
-  [[    "${lines[1]}"   =~  .*------------------------------------.*            ]]
+.*\[.*Example\ Folder/1.*].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ one\.  ]]
+  [[    "${lines[1]}"   =~  .*------------------------------------.*              ]]
 
   [[    "${lines[2]}"   =~  \
 Done:\ .*\[.*Example\ Folder/1\ 2.*\].*\ .*[.*x.*].*\ Task\ two\. ]]
@@ -177,8 +177,8 @@ HEREDOC
   [[    "${#lines[@]}"  -eq 5                           ]]
 
   [[    "${lines[0]}"   =~  \
-.*\[.*Example\ Folder/1.*].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ one\. ]]
-  [[    "${lines[1]}"   =~  .*------------------------------------.*            ]]
+.*\[.*Example\ Folder/1.*].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ one\.  ]]
+  [[    "${lines[1]}"   =~  .*------------------------------------.*              ]]
 
   [[    "${lines[2]}"   =~  \
 .*[.*Example\ Folder/1\ 1.*].*\ .*[\ ].*\ Task\ one\.   ]]
@@ -224,8 +224,8 @@ HEREDOC
   [[    "${#lines[@]}"  -eq 3                                   ]]
 
   [[    "${lines[0]}"   =~  \
-.*\[.*Example\ Folder/1.*].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ one\. ]]
-  [[    "${lines[1]}"   =~  .*------------------------------------.*            ]]
+.*\[.*Example\ Folder/1.*].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ one\.  ]]
+  [[    "${lines[1]}"   =~  .*------------------------------------.*              ]]
 
   [[    "${lines[2]}"   =~  \
 .*\[.*Example\ Folder/1\ 3.*\].*\ .*\[.*x.*\].*\ Task\ three\.  ]]
@@ -267,8 +267,8 @@ HEREDOC
   [[    "${#lines[@]}"  -eq 6                               ]]
 
   [[    "${lines[0]}"   =~  \
-.*\[.*Example\ Folder/1.*].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ one\. ]]
-  [[    "${lines[1]}"   =~  .*------------------------------------.*            ]]
+.*\[.*Example\ Folder/1.*].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ one\.  ]]
+  [[    "${lines[1]}"   =~  .*------------------------------------.*              ]]
 
   [[    "${lines[2]}"   =~  \
 .*[.*Example\ Folder/1\ 1.*].*\ .*[\ ].*\ Task\ one\.       ]]
@@ -318,8 +318,8 @@ HEREDOC
   [[    "${#lines[@]}"  -eq 3                   ]]
 
   [[    "${lines[0]}"   =~  \
-.*\[.*Example\ Folder/1.*].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ one\. ]]
-  [[    "${lines[1]}"   =~  .*------------------------------------.*            ]]
+.*\[.*Example\ Folder/1.*].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ one\.  ]]
+  [[    "${lines[1]}"   =~  .*------------------------------------.*              ]]
 
   [[    "${lines[2]}"   =~  0\ matching\ tasks. ]]
 }
@@ -360,8 +360,8 @@ HEREDOC
   [[    "${#lines[@]}"  -eq 3                               ]]
 
   [[    "${lines[0]}"   =~  \
-.*\[.*Example\ Folder/1.*].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ one\. ]]
-  [[    "${lines[1]}"   =~  .*------------------------------------.*            ]]
+.*\[.*Example\ Folder/1.*].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ one\.  ]]
+  [[    "${lines[1]}"   =~  .*------------------------------------.*              ]]
   [[    "${lines[2]}"   =~  \
 .*[.*Example\ Folder/1\ 3.*].*\ .*[.*x.*].*\ Task\ three\.  ]]
 }
@@ -402,8 +402,8 @@ HEREDOC
   [[    "${#lines[@]}"  -eq 3                               ]]
 
   [[    "${lines[0]}"   =~  \
-.*\[.*Example\ Folder/1.*].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ one\. ]]
-  [[    "${lines[1]}"   =~  .*------------------------------------.*            ]]
+.*\[.*Example\ Folder/1.*].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ one\.  ]]
+  [[    "${lines[1]}"   =~  .*------------------------------------.*              ]]
   [[    "${lines[2]}"   =~  \
 .*[.*Example\ Folder/1\ 3.*].*\ .*[.*x.*].*\ Task\ three\.  ]]
 }
@@ -446,8 +446,8 @@ HEREDOC
   [[    "${#lines[@]}"  -eq 5                           ]]
 
   [[    "${lines[0]}"   =~  \
-.*\[.*Example\ Folder/1.*].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ one\. ]]
-  [[    "${lines[1]}"   =~  .*------------------------------------.*            ]]
+.*\[.*Example\ Folder/1.*].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ one\.  ]]
+  [[    "${lines[1]}"   =~  .*------------------------------------.*              ]]
 
   [[    "${lines[2]}"   =~  \
 .*[.*Example\ Folder/1\ 1.*].*\ .*[\ ].*\ Task\ one\.   ]]
@@ -493,8 +493,8 @@ HEREDOC
   [[    "${#lines[@]}"  -eq 3                                   ]]
 
   [[    "${lines[0]}"   =~  \
-.*\[.*Example\ Folder/1.*].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ one\. ]]
-  [[    "${lines[1]}"   =~  .*------------------------------------.*            ]]
+.*\[.*Example\ Folder/1.*].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ one\.  ]]
+  [[    "${lines[1]}"   =~  .*------------------------------------.*              ]]
 
   [[    "${lines[2]}"   =~  \
 .*\[.*Example\ Folder/1\ 3.*\].*\ .*\[.*x.*\].*\ Task\ three\.  ]]
@@ -536,8 +536,8 @@ HEREDOC
   [[    "${#lines[@]}"  -eq 6                               ]]
 
   [[    "${lines[0]}"   =~  \
-.*\[.*Example\ Folder/1.*].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ one\. ]]
-  [[    "${lines[1]}"   =~  .*------------------------------------.*            ]]
+.*\[.*Example\ Folder/1.*].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ one\.  ]]
+  [[    "${lines[1]}"   =~  .*------------------------------------.*              ]]
 
   [[    "${lines[2]}"   =~  \
 .*[.*Example\ Folder/1\ 1.*].*\ .*[\ ].*\ Task\ one\.       ]]
@@ -618,8 +618,8 @@ HEREDOC
 .*[.*Example\ Folder/1\ 2.*].*\ .*[.*x.*].*\ Task\ two\.    ]]
 
   [[    "${lines[4]}"   =~  \
-.*\[.*Example\ Folder/1.*].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ one\. ]]
-  [[    "${lines[5]}"   =~  .*------------------------------------.*            ]]
+.*\[.*Example\ Folder/1.*].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ one\.  ]]
+  [[    "${lines[5]}"   =~  .*------------------------------------.*              ]]
 
   [[    "${lines[6]}"   =~  \
 .*[.*Example\ Folder/1\ 1.*].*\ .*[\ ].*\ Task\ one\.       ]]
@@ -691,8 +691,8 @@ HEREDOC
   [[    "${lines[2]}"   =~  0\ tasks\.                                              ]]
 
   [[    "${lines[3]}"   =~  \
-.*\[.*Example\ Folder/1.*].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ one\. ]]
-  [[    "${lines[4]}"   =~  .*------------------------------------.*            ]]
+.*\[.*Example\ Folder/1.*].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ one\.  ]]
+  [[    "${lines[4]}"   =~  .*------------------------------------.*              ]]
 
   [[    "${lines[5]}"   =~  \
 .*[.*Example\ Folder/1\ 1.*].*\ .*[\ ].*\ Task\ one\.       ]]
@@ -738,9 +738,9 @@ HEREDOC
   [[    "${#lines[@]}"  -eq 3                 ]]
 
   [[    "${lines[0]}"   =~  \
-.*\[.*Example\ Folder/1.*].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ one\. ]]
-  [[    "${lines[1]}"   =~  .*------------------------------------.*            ]]
-  [[    "${lines[2]}"   =~  0\ tasks\.                                          ]]
+.*\[.*Example\ Folder/1.*].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ one\.  ]]
+  [[    "${lines[1]}"   =~  .*------------------------------------.*              ]]
+  [[    "${lines[2]}"   =~  0\ tasks\.                                            ]]
 }
 
 # empty messages ##############################################################
@@ -781,8 +781,8 @@ HEREDOC
   [[    "${#lines[@]}"  -eq 3               ]]
 
   [[    "${lines[0]}"   =~  \
-.*\[.*Example\ Folder/1.*].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ one\. ]]
-  [[    "${lines[1]}"   =~  .*------------------------------------.*            ]]
+.*\[.*Example\ Folder/1.*].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ one\.  ]]
+  [[    "${lines[1]}"   =~  .*------------------------------------.*              ]]
 
   [[    "${lines[2]}"   =~  0\ open\ tasks. ]]
 }
@@ -823,8 +823,8 @@ HEREDOC
   [[    "${#lines[@]}"  -eq 3                   ]]
 
   [[    "${lines[0]}"   =~  \
-.*\[.*Example\ Folder/1.*].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ one\. ]]
-  [[    "${lines[1]}"   =~  .*------------------------------------.*            ]]
+.*\[.*Example\ Folder/1.*].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ one\.  ]]
+  [[    "${lines[1]}"   =~  .*------------------------------------.*              ]]
 
   [[    "${lines[2]}"   =~  0\ closed\ tasks\.  ]]
 }
@@ -858,8 +858,8 @@ HEREDOC
   [[    "${#lines[@]}"  -eq 3           ]]
 
   [[    "${lines[0]}"   =~  \
-.*\[.*Example\ Folder/1.*].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ one\. ]]
-  [[    "${lines[1]}"   =~  .*------------------------------------.*            ]]
+.*\[.*Example\ Folder/1.*].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ one\.  ]]
+  [[    "${lines[1]}"   =~  .*------------------------------------.*              ]]
 
   [[    "${lines[2]}"   =~  0\ tasks\.  ]]
 }

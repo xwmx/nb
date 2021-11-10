@@ -304,7 +304,7 @@ Done:\ .*\[.*2.*\].*\ ✅\ .*\[.*x.*\].*\ Example\ todo\ description\ two\.  ]]
 
   [[ "${status}"    -eq 0       ]]
   [[ "${output}"    =~  \
-Undone:\ .*\[.*3.*\].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ three\. ]]
+Undone:\ .*\[.*3.*\].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ three\. ]]
 
   diff                                    \
     <(cat "${NB_DIR}/home/One.todo.md")   \
@@ -351,7 +351,7 @@ Undone:\ .*\[.*3.*\].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ three\. ]]
 
   [[ "${status}"    -eq 0       ]]
   [[ "${output}"    =~  \
-Undone:\ .*\[.*3.*\].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ three\. ]]
+Undone:\ .*\[.*3.*\].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ three\. ]]
 
   diff                                    \
     <(cat "${NB_DIR}/home/One.todo.md")   \
@@ -404,7 +404,7 @@ Undone:\ .*\[.*3.*\].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ three\. ]]
 
   [[ "${status}"    -eq 0       ]]
   [[ "${output}"    =~  \
-Undone:\ .*\[.*Example\ Notebook:Example\ Folder/3.*\].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ three\.  ]]
+Undone:\ .*\[.*Example\ Notebook:Example\ Folder/3.*\].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ three\.  ]]
 
   diff                                                                \
     <(cat "${NB_DIR}/Example Notebook/Example Folder/One.todo.md")    \
@@ -449,7 +449,7 @@ Undone:\ .*\[.*Example\ Notebook:Example\ Folder/3.*\].*\ ✅\ .*\[\ \].*\ Examp
 
   [[ "${status}"    -eq 0       ]]
   [[ "${output}"    =~  \
-Undone:\ .*\[.*3.*\].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ three\. ]]
+Undone:\ .*\[.*3.*\].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ three\. ]]
 
   diff                                    \
     <(cat "${NB_DIR}/home/One.todo.md")   \

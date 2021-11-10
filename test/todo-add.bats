@@ -43,7 +43,7 @@ load test_helper
   git -C "${NB_DIR}/Example Notebook" log | grep -q '\[nb\] Add'
 
   [[ "${lines[0]}"  =~  \
-Added:\ .*\[.*Example\ Notebook:1.*\].*\ ✅\ .*Example\ Notebook:[0-9]+\.todo\.md         ]]
+Added:\ .*\[.*Example\ Notebook:1.*\].*\ ✔️\ \ .*Example\ Notebook:[0-9]+\.todo\.md        ]]
   [[ "${lines[0]}"  =~  \
 Example\ Notebook:[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ multi-word\ description\.\"  ]]
 }
@@ -82,7 +82,7 @@ Example\ Notebook:[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ multi-word\ descrip
   git -C "${NB_DIR}/home" log | grep -q '\[nb\] Add'
 
   [[ "${lines[0]}"  =~  \
-Added:\ .*\[.*Example\ Folder/1.*\].*\ ✅\ .*Example\ Folder/[0-9]+\.todo\.md           ]]
+Added:\ .*\[.*Example\ Folder/1.*\].*\ ✔️\ \ .*Example\ Folder/[0-9]+\.todo\.md          ]]
   [[ "${lines[0]}"  =~  \
 Example\ Folder/[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ multi-word\ description\.\"  ]]
 }
@@ -103,7 +103,7 @@ Example\ Folder/[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ multi-word\ descripti
 
   [[ "${status}" -eq  0                     ]]
   [[ "${output}"  =~  \
-Added:\ .*\[.*1.*\].*\ ✅\ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ todo\ title\.\" ]]
+Added:\ .*\[.*1.*\].*\ ✔️\ \ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ todo\ title\.\"  ]]
 
   _files=($(ls "${NB_DIR}/home/"))
 
@@ -147,7 +147,7 @@ HEREDOC
 
   [[ "${status}" -eq  0                     ]]
   [[ "${output}"  =~  \
-Added:\ .*\[.*1.*\].*\ ✅\ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ todo\ title\.\" ]]
+Added:\ .*\[.*1.*\].*\ ✔️\ \ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ todo\ title\.\"  ]]
 
   _files=($(ls "${NB_DIR}/home/"))
 
@@ -190,7 +190,7 @@ HEREDOC
 
   [[ "${status}" -eq  0                     ]]
   [[ "${output}"  =~  \
-Added:\ .*\[.*1.*\].*\ ✅\ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ todo\ title\.\" ]]
+Added:\ .*\[.*1.*\].*\ ✔️\ \ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ todo\ title\.\"  ]]
 
   _files=($(ls "${NB_DIR}/home/"))
 
@@ -286,7 +286,7 @@ HEREDOC
 
   [[ "${status}" -eq  0                     ]]
   [[ "${output}"  =~  \
-Added:\ .*\[.*1.*\].*\ ✅\ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ todo\ title\.\" ]]
+Added:\ .*\[.*1.*\].*\ ✔️\ \ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ todo\ title\.\"  ]]
 
   _files=($(ls "${NB_DIR}/home/"))
 
@@ -358,7 +358,7 @@ HEREDOC
 
   [[ "${status}" -eq  0                     ]]
   [[ "${output}"  =~  \
-Added:\ .*\[.*1.*\].*\ ✅\ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ todo\ title\.\" ]]
+Added:\ .*\[.*1.*\].*\ ✔️\ \ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ todo\ title\.\"  ]]
 
   _files=($(ls "${NB_DIR}/home/"))
 
@@ -392,7 +392,7 @@ Added:\ .*\[.*1.*\].*\ ✅\ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ todo\ t
 
   [[ "${status}" -eq  0                     ]]
   [[ "${output}"  =~  \
-Added:\ .*\[.*1.*\].*\ ✅\ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ todo\ title\.\" ]]
+Added:\ .*\[.*1.*\].*\ ✔️\ \ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ todo\ title\.\"  ]]
 
   _files=($(ls "${NB_DIR}/home/"))
 
@@ -428,7 +428,7 @@ Added:\ .*\[.*1.*\].*\ ✅\ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ todo\ t
 
   [[ "${status}" -eq  0                     ]]
   [[ "${output}"  =~  \
-Added:\ .*\[.*1.*\].*\ ✅\ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ todo\ title\.\" ]]
+Added:\ .*\[.*1.*\].*\ ✔️\ \ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ todo\ title\.\"  ]]
 
   _files=($(ls "${NB_DIR}/home/"))
 
@@ -470,7 +470,7 @@ Example description.\\n")
 
   [[ "${status}" -eq 0                      ]]
   [[ "${output}"  =~  \
-Added:\ .*\[.*1.*\].*\ ✅\ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ Title\ ·\ Example\ todo\ description\.\" ]]
+Added:\ .*\[.*1.*\].*\ ✔️\ \ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ Title\ ·\ Example\ todo\ description\.\"  ]]
 
   _files=($(ls "${NB_DIR}/home/"))
 
@@ -528,5 +528,5 @@ Example content.\\n")
   git -C "${NB_DIR}/home" log | grep -q '\[nb\] Add'
 
   [[ "${output}"  =~  \
-Added:\ .*\[.*1.*\].*\ ✅\ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ multi-word\ description\.\" ]]
+Added:\ .*\[.*1.*\].*\ ✔️\ \ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ multi-word\ description\.\"  ]]
 }

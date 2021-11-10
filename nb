@@ -666,8 +666,12 @@ export  NB_INDICATOR_PINNED="${NB_INDICATOR_PINNED-📌}"
 export _NB_INDICATOR_PINNED="${NB_INDICATOR_PINNED:+"${NB_INDICATOR_PINNED} "}"
 
 # $NB_INDICATOR_TODO
-export  NB_INDICATOR_TODO="${NB_INDICATOR_TODO-✅}"
+export  NB_INDICATOR_TODO="${NB_INDICATOR_TODO-✔️ }"
 export _NB_INDICATOR_TODO="${NB_INDICATOR_TODO:+"${NB_INDICATOR_TODO} "}"
+
+# $NB_INDICATOR_TODO_DONE
+export  NB_INDICATOR_TODO_DONE="${NB_INDICATOR_TODO_DONE-✅}"
+export _NB_INDICATOR_TODO_DONE="${NB_INDICATOR_TODO_DONE:+"${NB_INDICATOR_TODO_DONE} "}"
 
 # $NB_INDICATOR_VIDEO
 export  NB_INDICATOR_VIDEO="${NB_INDICATOR_VIDEO-📹}"
@@ -5313,17 +5317,18 @@ _list() {
 
         if _file_is_todo "${_list_path}/${__basename}"
         then
-          _indicators+="${_NB_INDICATOR_TODO:-}"
-          _extra_length=1
+          # _indicators+="${_NB_INDICATOR_TODO:-}"
+          # _extra_length=1
 
           # TODO: review
-          # if [[ "${_title_basename_or_path}" =~ \[x\]\  ]]
-          # then
-          #   _indicators+="${_NB_INDICATOR_TODO% } "
-          #   _extra_length=1
-          # else
-          #   _indicators+="✔️  "
-          # fi
+          if [[ "${_title_basename_or_path}" =~ \[x\]\  ]]
+          then
+            _indicators+="${_NB_INDICATOR_TODO_DONE% } "
+            _extra_length=1
+          else
+            _indicators+="${_NB_INDICATOR_TODO% } "
+            _extra_length=1
+          fi
           # _title_basename_or_path="${_title_basename_or_path#\[[\ |x]\]\ }"
 
           if ((_COLOR_ENABLED))
@@ -15657,15 +15662,20 @@ _show() {
   # _show_indicators()
   #
   # Usage:
-  #   _show_indicators <path>
+  #   _show_indicators <path> [--done]
   #
   # Description:
   #   Print a list of indicators based on the file type.
   #
   # NOTE: Indicator logic is also specified in `list` for performance.
   _show_indicators() {
+    local _done=0
     local _indicators=
     local _path="${1:-}"
+
+    case "${2:-}" in
+      --done) _done=1 ;;
+    esac
 
     if _file_is_bookmark "${_path}"
     then
@@ -15697,8 +15707,13 @@ _show() {
 
     if _file_is_todo "${_path}"
     then
-      _indicators+="${_NB_INDICATOR_TODO:-}"
-      _extra_length=1
+      if ((_done))
+      then
+        _indicators+="${_NB_INDICATOR_TODO_DONE% } "
+        _extra_length=1
+      else
+        _indicators+="${_NB_INDICATOR_TODO% } "
+      fi
     fi
 
     printf "%s\\n" "${_indicators:-}"
@@ -15997,7 +16012,23 @@ _show() {
 
   if ((_print_indicators))
   then
-    _show_indicators "${_notebook_path}/${_relative_path}"
+    local _indicator_arguments=("${_notebook_path}/${_relative_path}")
+
+    if [[ "${_relative_path:-}" =~ \.todo\.md ]]
+    then
+      local _todo_title=
+      _todo_title="$(
+        _get_content "${_notebook_path}/${_relative_path}" --title
+      )"
+
+      if [[ "${_todo_title}" =~ ^\[x\] ]]
+      then
+        _indicator_arguments+=(--done)
+      fi
+    fi
+
+    _show_indicators "${_indicator_arguments[@]:-}"
+
     return 0
   fi
 

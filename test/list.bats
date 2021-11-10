@@ -1020,7 +1020,7 @@ Help information:
   [[ "${status}"    -eq 0                                                     ]]
 
   [[ "${lines[0]}"  =~  \[.*5.*\].*\ ✅\ .*\[.*x.*\].*\ Example\ done\ todo\. ]]
-  [[ "${lines[1]}"  =~  \[.*4.*\].*\ ✅\ .*\[\ \].*\ Example\ undone\ todo\.  ]]
+  [[ "${lines[1]}"  =~  \[.*4.*\].*\ ✔️\ \ .*\[\ \].*\ Example\ undone\ todo\.  ]]
   [[ "${lines[2]}"  =~  \[.*3.*\].*\ 🔒\ three.md.enc                         ]]
   [[ "${lines[3]}"  =~  \[.*2.*\].*\ two.md                                   ]]
   [[ "${lines[4]}"  =~  \[.*1.*\].*\ 🔖\ one.bookmark.md                      ]]
@@ -1033,7 +1033,7 @@ Help information:
   [[ "${status}"    -eq 0                                           ]]
 
   [[ "${lines[0]}"  =~  \[5\]\ ✅\ \[x\]\ Example\ done\ todo\.     ]]
-  [[ "${lines[1]}"  =~  \[4\]\ ✅\ \[\ \]\ Example\ undone\ todo\.  ]]
+  [[ "${lines[1]}"  =~  \[4\]\ ✔️\ \ \[\ \]\ Example\ undone\ todo\.  ]]
   [[ "${lines[2]}"  =~  \[3\]\ 🔒\ three.md.enc                     ]]
   [[ "${lines[3]}"  =~  \[2\]\ two.md                               ]]
   [[ "${lines[4]}"  =~  \[1\]\ 🔖\ one.bookmark.md                  ]]
@@ -1822,11 +1822,11 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 0                               ]]
+  [[   "${status}"    -eq 0                                 ]]
   [[   "${lines[0]}"  =~  \
-.*\[.*4.*\].*\ ✅\ .*\[.*x.*\].*\ Example\ done\ todo\.   ]]
+.*\[.*4.*\].*\ ✅\ .*\[.*x.*\].*\ Example\ done\ todo\.     ]]
   [[   "${lines[1]}"  =~  \
-.*\[.*3.*\].*\ ✅\ .*\[\ \].*\ Example\ not\ done\ todo\. ]]
+.*\[.*3.*\].*\ ✔️\ \ .*\[\ \].*\ Example\ not\ done\ todo\.  ]]
 }
 
 @test "'list --document' exits with 0 and displays a list of documents." {

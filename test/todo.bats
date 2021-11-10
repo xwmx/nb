@@ -50,9 +50,9 @@ load test_helper
   [[    "${lines[0]}" =~  \
 .*\[.*Example\ Notebook:Example\ Folder/3.*\].*\ ✅\ .*\[.*x.*\].*\ Example\ todo\ description\ three\. ]]
   [[    "${lines[1]}" =~  \
-.*\[.*Example\ Notebook:Example\ Folder/2.*\].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ two\.      ]]
+.*\[.*Example\ Notebook:Example\ Folder/2.*\].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ two\.     ]]
   [[    "${lines[2]}" =~  \
-.*\[.*Example\ Notebook:Example\ Folder/1.*\].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ one\.      ]]
+.*\[.*Example\ Notebook:Example\ Folder/1.*\].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ one\.     ]]
 }
 
 # todos closed / done #########################################################
@@ -194,7 +194,7 @@ load test_helper
   [[ !  "${output}" =~  Four  ]]
 
   [[    "${lines[0]}" =~  \
-Undone:\ .*[.*Example\ Folder/3.*].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ three\. ]]
+Undone:\ .*[.*Example\ Folder/3.*].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ three\.  ]]
 }
 
 # todo do #####################################################################
@@ -438,7 +438,7 @@ Done:\ .*[.*Example\ Folder/2.*].*\ ✅\ .*\[.*x.*\].*\ Example\ todo\ descripti
 
   [[ "${status}"    -eq 0       ]]
   [[ "${output}"    =~  \
-Undone:\ .*\[.*Example\ Notebook:Example\ Folder/3.*\].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ three\. ]]
+Undone:\ .*\[.*Example\ Notebook:Example\ Folder/3.*\].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ three\.  ]]
 
   diff                                                                \
     <(cat "${NB_DIR}/Example Notebook/Example Folder/One.todo.md")    \
@@ -483,7 +483,7 @@ Undone:\ .*\[.*Example\ Notebook:Example\ Folder/3.*\].*\ ✅\ .*\[\ \].*\ Examp
 
   [[ "${status}"    -eq 0       ]]
   [[ "${output}"    =~  \
-Undone:\ .*\[.*3.*\].*\ ✅\ .*\[\ \].*\ Example\ todo\ description\ three\. ]]
+Undone:\ .*\[.*3.*\].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ three\.  ]]
 
   diff                                    \
     <(cat "${NB_DIR}/home/One.todo.md")   \
