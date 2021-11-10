@@ -3,6 +3,45 @@
 
 load test_helper
 
+# aliases #####################################################################
+
+
+@test "'todo + <multi-word> <description>' exits with 0, creates new todo with <multi-word> <description>, creates commit." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" todo + Example multi-word description.
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0                      ]]
+
+
+  _files=($(ls "${NB_DIR}/home/"))
+
+  printf "\${_files[*]}: '%s'\\n" "${_files[*]:-}"
+
+  [[ "${#_files[@]}" -eq 1                  ]]
+  [[ "${_files[0]}"   =~ ^[0-9]+\.todo\.md$ ]]
+
+  cat "${NB_DIR}/home/${_files[0]}"
+
+  diff                                      \
+    <(cat "${NB_DIR}/home/${_files[0]}")    \
+    <(printf "# [ ] Example multi-word description.\\n")
+
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Add'
+
+  [[ "${output}"  =~  \
+Added:\ .*\[.*1.*\].*\ ✔️\ \ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ multi-word\ description\.\"  ]]
+}
+
 # container selectors #########################################################
 
 @test "'todo add <notebook>: <multi-word> <description>' exits with 0, creates new todo in <notebook> with <multi-word> <description>, creates commit." {
