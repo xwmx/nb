@@ -2216,6 +2216,10 @@ Added: [5] ✔️ [ ] Example todo five.
 Linked tags, selectors, and URLs can be [browsed](#-browsing)
 in terminal and GUI web browers with [`nb browse`](#browse).
 
+See
+[`nb help todo`](#todo)
+for more information.
+
 #### `do` / `undo`
 
 Mark a todo as done or closed with [`nb do`](#do):
@@ -2234,6 +2238,12 @@ Re-open a closed todo with [`nb undo`](#undo):
 ❯ nb undo 6
 Undone: [6] ✔️ [ ] Example todo two.
 ```
+
+See
+[`nb help do`](#do)
+and
+[`nb help undo`](#undo),
+for more information.
 
 #### Tasks
 
@@ -2311,11 +2321,7 @@ Undone: [7 2] [ ] Task two.
 ```
 
 See
-[`nb help todo`](#todo),
-[`nb help tasks`](#tasks-1),
-[`nb help do`](#do),
-and
-[`nb help undo`](#undo),
+[`nb help tasks`](#tasks-1)
 for more information.
 
 ### 🏷 #tagging
