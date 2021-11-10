@@ -2185,8 +2185,9 @@ Added: [3] ✔️ [ ] Example todo three.
 Example description.
 ```
 
-Todos can have [tasks](#%EF%B8%8F-tasks). Tasks are represented as a markdown task list
-and are placed in a `## Tasks` section:
+Todos can have [tasks](#%EF%B8%8F-tasks).
+Tasks added with one or more [`nb todo add --task <task>`](#todo) options
+are represented as a markdown task list and placed in a `## Tasks` section:
 
 ```bash
 ❯ nb todo add "Example todo seven." --task "Task one." --task "Task two." --task "Task three."
