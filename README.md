@@ -2297,7 +2297,7 @@ which lists both tasks and todos:
 [example:8] ✅ [x] Example todo eight.
 --------------------------------------
 [example:8 1] [x] Task one.
-[example:8 2] [ ] Task two.
+[example:8 2] [x] Task two.
 
 [example:6] ✔️ [ ] Example todo six.
 [example:4] Example Note Title
