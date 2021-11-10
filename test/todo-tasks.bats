@@ -5,7 +5,43 @@ load test_helper
 
 # undo task ###################################################################
 
-@test "'tasks undo <folder>/<id> <task-number>' with closed task with space in brackets exits with 0 and marks task open." {
+@test "'tasks undo <folder>/<id> <task-number>' with non-todo and closed task exits with 0 and marks task done." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add                              \
+      --filename "Example Folder/File One.md" \
+      --content "$(cat <<HEREDOC
+# Example Title One
+
+- [ ] Task one.
+- [ ] Task two.
+- [x] Task three.
+- [ ] Task four.
+
+## Tags
+
+#tag1 #tag2
+HEREDOC
+)"
+  }
+
+  run "${_NB}" tasks "undo" Example\ Folder/1 3
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  cat "${NB_DIR}/home/Example Folder/File One.md"
+
+  [[    "${status}"     -eq 0                                     ]]
+  [[    "${#lines[@]}"  -eq 3                                     ]]
+
+  [[    "${lines[0]}"   =~  .*\[.*Example\ Folder/1.*].*\ Example\ Title\ One ]]
+  [[    "${lines[1]}"   =~  [^-]-------------------------------------[^-]     ]]
+  [[    "${lines[2]}"   =~  \
+Undone:\ .*\[.*Example\ Folder/1\ 3.*\].*\ .*[\ ].*\ Task\ three\.            ]]
+}
+
+@test "'tasks undo <folder>/<id> <task-number>' with closed task exits with 0 and marks task open." {
   {
     "${_NB}" init
 
@@ -50,6 +86,78 @@ Undone:\ .*\[.*Example\ Folder/1\ 3.*\].*\ .*[\ ].*\ Task\ three\.  ]]
 }
 
 # do task #####################################################################
+
+@test "'tasks do <folder>/<id> <task-number>' with non-todo and open task with no space in brackets exits with 0 and marks task done." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add                              \
+      --filename "Example Folder/File One.md" \
+      --content "$(cat <<HEREDOC
+# Example Title One
+
+- [ ] Task one.
+- [] Task two.
+- [x] Task three.
+- [ ] Task four.
+
+## Tags
+
+#tag1 #tag2
+HEREDOC
+)"
+  }
+
+  run "${_NB}" tasks "do" Example\ Folder/1 2
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  cat "${NB_DIR}/home/Example Folder/File One.md"
+
+  [[    "${status}"     -eq 0                                     ]]
+  [[    "${#lines[@]}"  -eq 3                                     ]]
+
+  [[    "${lines[0]}"   =~  .*\[.*Example\ Folder/1.*].*\ Example\ Title\ One ]]
+  [[    "${lines[1]}"   =~  [^-]-------------------------------------[^-]     ]]
+  [[    "${lines[2]}"   =~  \
+Done:\ .*\[.*Example\ Folder/1\ 2.*\].*\ .*[.*x.*].*\ Task\ two\.             ]]
+}
+
+@test "'tasks do <folder>/<id> <task-number>' with non-todo and open task with space in brackets exits with 0 and marks task done." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add                              \
+      --filename "Example Folder/File One.md" \
+      --content "$(cat <<HEREDOC
+# Example Title One
+
+- [ ] Task one.
+- [ ] Task two.
+- [x] Task three.
+- [ ] Task four.
+
+## Tags
+
+#tag1 #tag2
+HEREDOC
+)"
+  }
+
+  run "${_NB}" tasks "do" Example\ Folder/1 2
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  cat "${NB_DIR}/home/Example Folder/File One.md"
+
+  [[    "${status}"     -eq 0                                     ]]
+  [[    "${#lines[@]}"  -eq 3                                     ]]
+
+  [[    "${lines[0]}"   =~  .*\[.*Example\ Folder/1.*].*\ Example\ Title\ One ]]
+  [[    "${lines[1]}"   =~  [^-]-------------------------------------[^-]     ]]
+  [[    "${lines[2]}"   =~  \
+Done:\ .*\[.*Example\ Folder/1\ 2.*\].*\ .*[.*x.*].*\ Task\ two\.             ]]
+}
 
 @test "'tasks do <folder>/<id> <task-number>' with open task with no space in brackets exits with 0 and marks task done." {
   {
@@ -704,7 +812,7 @@ HEREDOC
 .*[.*Example\ Folder/1\ 4.*].*\ .*[\ ].*\ Task\ four\.      ]]
 }
 
-@test "'todos tasks <folder>' exits with 0 and lists only todo without tasks." {
+@test "'todos tasks <folder>' exits with 0 and lists todos with 0 tasks message." {
   {
     "${_NB}" init
 
@@ -858,8 +966,8 @@ HEREDOC
   [[    "${#lines[@]}"  -eq 3           ]]
 
   [[    "${lines[0]}"   =~  \
-.*\[.*Example\ Folder/1.*].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ one\.  ]]
-  [[    "${lines[1]}"   =~  .*------------------------------------.*              ]]
+.*\[.*Example\ Folder/1.*].*\ ✔️\ [\ ].*\ Example\ todo\ description\ one\.  ]]
+  [[    "${lines[1]}"   =~  .*------------------------------------.*        ]]
 
   [[    "${lines[2]}"   =~  0\ tasks\.  ]]
 }

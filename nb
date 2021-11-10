@@ -22234,9 +22234,10 @@ _todo() {
           _notebooks current --path 2>/dev/null
       )"
 
-      if [[ ! "${_selector_path}" =~ todo\.md$        ]]
+      if [[ !  "${_selector_path}" =~ todo\.md$       ]] &&
+         [[ -z "${_task_number:-}"                    ]]
       then
-        _exit_1 printf "Item must be a todo: %s\\n" \
+        _exit_1 printf "Item must be a todo: %s\\n"   \
           "$(_color_primary "${_selector:-}")"
       fi
 
@@ -22405,13 +22406,6 @@ _todo() {
         do
           [[ -z "${__item_path:-}"  ]] && continue
           [[ -d "${__item_path:-}"  ]] && continue
-
-          if ! _file_is_todo "${__item_path:-}"
-          then
-            _exit_1 printf          \
-              "Not a todo: %s\\n"   \
-              "$(_color_primary "${_selector:-}")"
-          fi
 
           if ((_first))
           then
