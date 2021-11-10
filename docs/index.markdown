@@ -8255,19 +8255,13 @@ Description:
 
 ## Specifications
 
-<p>
-  <sup>
-    <a href="#overview">↑</a>
-  </sup>
-</p>
-
 [↑](#help) · See also:
 [Bookmarks](#-bookmarks),
 [Todos](#-todos)
 
 <p align="center">
   <a href="#nb-markdown-bookmark-file-format">Bookmark File Format</a>&nbsp;·
-  <a href="#nb-todo-bookmark-file-format">Todo File Format</a>
+  <a href="#nb-todo-file-format">Todo File Format</a>&nbsp;·
   <a href="#nb-notebook-specification">Notebook Specification</a>
 </p>
 
