@@ -5646,7 +5646,7 @@ Subcommands:
   subcommands  List, add, alias, and describe subcommands.
   status       Print notebook status information.
   sync         Sync local notebook with the remote repository.
-  tasks        List tasks in a todo.
+  tasks        List tasks in todos, notebooks, folders, and other items.
   todo         Manage todos and tasks.
   unarchive    Unarchive the current or specified notebook.
   undo         Mark a todo or task as not done.
@@ -7897,7 +7897,7 @@ Usage:
            [open | closed]
 
 Description:
-  List tasks in a todo.
+  List tasks in todos, notebooks, folders, and other items.
 
 Read More:
   https://github.com/xwmx/nb#-todos
