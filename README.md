@@ -8562,8 +8562,12 @@ Markdown.
 
 #### Description
 
-`nb` todos are Markdown documents identified by a `.todo.md` file
-extension.
+`nb` todos are Markdown documents identified by a `.todo.md` file extension.
+Todos contain a
+[Markdown atx-style `h1` heading
+](https://daringfireball.net/projects/markdown/syntax#header)
+starting with a Markdown checkbox (`[ ]` / `[x]`) indicating
+the todo completion state, followed by the todo title.
 
 #### Example
 
@@ -8581,8 +8585,8 @@ Example description.
 ## Tasks
 
 - [ ] One
-- [ ] Two
-- [x] Three
+- [x] Two
+- [ ] Three
 
 ## Related
 
