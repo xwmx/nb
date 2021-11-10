@@ -1712,6 +1712,38 @@ permission.
 [More information\...](https://www.iana.org/domains/example)
 ```
 
+Add related URLs and selectors to a `## Related` section
+using the `-r (<url> | <selector>)` / `--related (<url> | <selector>)`
+option:
+
+```bash
+nb https://example.com --related example:123 -r https://example.com
+```
+```markdown
+# Example Title (example.com)
+
+<https://example.com>
+
+## Description
+
+Example description.
+
+## Related
+
+- [[example:123]]
+- <https://example.com>
+
+## Content
+
+Example Title
+=============
+
+This domain is for use in illustrative examples in documents. You may
+use this domain in literature without prior coordination or asking for
+permission.
+
+[More information\...](https://www.iana.org/domains/example)
+```
 Bookmarks can be tagged using the `-t` / `--tags` option. Tags are converted
 into [#hashtags](#-tagging):
 
@@ -2097,7 +2129,7 @@ See [`bookmark help`](#bookmark-help) for more information.
   <sup>
     <a href="#overview">↑</a> ·
     <a href="#do"><code>nb do</code></a>,
-    <a href="#tasks"><code>nb tasks</code></a>,
+    <a href="#tasks-1"><code>nb tasks</code></a>,
     <a href="#todo"><code>nb todo</code></a>,
     <a href="#undo"><code>nb undo</code></a>
   </sup>
@@ -2113,7 +2145,7 @@ Use `nb todo add` to create a new todo:
 ```bash
 # create a new todo titled "Example todo one."
 ❯ nb todo add "Example todo one."
-Added: [1] ✔️  [ ] Example todo one.
+Added: [1] ✔️ [ ] Example todo one.
 
 ❯ nb show 1 --print
 # [ ] Example todo one.
@@ -2125,7 +2157,7 @@ in a free-form text field:
 ```bash
 # create a new todo titled "Example todo two." with a due date of "2100-01-01"
 ❯ nb todo add "Example todo two." --due "2100-01-01"
-Added: [2] ✔️  [ ] Example todo two.
+Added: [2] ✔️ [ ] Example todo two.
 
 ❯ nb show 2 --print
 # [ ] Example todo two.
@@ -2139,7 +2171,7 @@ Add an optional description with the `--description <description>` option:
 
 ```bash
 ❯ nb todo add "Example todo three." --description "Example description."
-Added: [3] ✔️  [ ] Example todo three.
+Added: [3] ✔️ [ ] Example todo three.
 
 ❯ nb show 3 --print
 # [ ] Example todo three.
@@ -2154,8 +2186,8 @@ using the `-r (<url> | <selector>)` / `--related (<url> | <selector>)`
 option:
 
 ```bash
-❯ nb todo add "Example todo four." --related example:123 --related https://example.com
-Added: [4] ✔️  [ ] Example todo four.
+❯ nb todo add "Example todo four." --related example:123 -r https://example.com
+Added: [4] ✔️ [ ] Example todo four.
 
 ❯ nb show 4 --print
 # [ ] Example todo four.
@@ -2170,7 +2202,7 @@ Tags can be added to todos with the `--tags <tag1>,<tag2>...` option:
 
 ```bash
 ❯ nb todo add "Example todo five." --tags tag1,tag2
-Added: [5] ✔️  [ ] Example todo five.
+Added: [5] ✔️ [ ] Example todo five.
 
 ❯ nb show 5 --print
 # [ ] Example todo five.
@@ -2189,7 +2221,7 @@ Mark a todo as done or closed with [`nb do`](#do):
 
 ```bash
 ❯ nb todo add "Example todo six."
-Added: [6] ✔️  [ ] Example todo six.
+Added: [6] ✔️ [ ] Example todo six.
 
 ❯ nb do 6
 Done: [6] ✅ [x] Example todo two.
@@ -2199,7 +2231,7 @@ Re-open a closed todo with [`nb undo`](#undo):
 
 ```bash
 ❯ nb undo 6
-Undone: [6] ✔️  [ ] Example todo two.
+Undone: [6] ✔️ [ ] Example todo two.
 ```
 
 #### Tasks
@@ -2209,7 +2241,7 @@ are placed in a `## Tasks` section:
 
 ```bash
 ❯ nb todo add "Example todo seven." --task "Task one." --task "Task two." --task "Task three."
-Added: [7] ✔️  [ ] Example todo seven.
+Added: [7] ✔️ [ ] Example todo seven.
 
 ❯ nb show 7 --print
 # [ ] Example todo seven.
@@ -2219,11 +2251,11 @@ Added: [7] ✔️  [ ] Example todo seven.
 - [ ] Task three.
 ```
 
-List tasks in a todo with [`nb tasks`](#tasks):
+List tasks in a todo with [`nb tasks`](#tasks-1):
 
 ```
 ❯ nb tasks 7
-[7] ✔️  [ ] Example todo seven.
+[7] ✔️ [ ] Example todo seven.
 ------------------------------
 [7 1] [ ] Task one.
 [7 2] [ ] Task two.
@@ -2237,12 +2269,12 @@ Use [`nb do`](#do) to mark tasks as complete:
 
 ```bash
 ❯ nb do 7 2
-[7] ✔️  [ ] Example todo seven.
+[7] ✔️ [ ] Example todo seven.
 ------------------------------
 Done: [7 2] [x] Task two.
 
 ❯ nb tasks 7
-[7] ✔️  [ ] Example todo seven.
+[7] ✔️ [ ] Example todo seven.
 ------------------------------
 [7 1] [ ] Task one.
 [7 2] [x] Task two.
@@ -2253,12 +2285,12 @@ Undo a completed task with [`nb undo`](#undo):
 
 ```bash
 ❯ nb undo 7 2
-[7] ✔️  [ ] Example todo seven.
+[7] ✔️ [ ] Example todo seven.
 ------------------------------
 Undone: [7 2] [ ] Task two.
 
 ❯ nb tasks 7
-[7] ✔️  [ ] Example todo seven.
+[7] ✔️ [ ] Example todo seven.
 ------------------------------
 [7 1] [ ] Task one.
 [7 2] [ ] Task two.
@@ -2267,7 +2299,7 @@ Undone: [7 2] [ ] Task two.
 
 See
 [`nb help todo`](#todo),
-[`nb help tasks`](#tasks),
+[`nb help tasks`](#tasks-1),
 [`nb help do`](#do),
 and
 [`nb help undo`](#undo),
@@ -5726,7 +5758,7 @@ For more information, see: `nb help`.
   <a href="#status">status</a>&nbsp;·
   <a href="#subcommands-1">subcommands</a>&nbsp;·
   <a href="#sync">sync</a>&nbsp;·
-  <a href="#tasks">tasks</a>&nbsp;·
+  <a href="#tasks-1">tasks</a>&nbsp;·
   <a href="#todos">todos</a>&nbsp;·
   <a href="#unarchive">unarchive</a>&nbsp;·
   <a href="#undo">undo</a>&nbsp;·
@@ -6165,7 +6197,7 @@ Shortcut Aliases:
 
 [↑](#help) · See also:
 [Todos](#-todos),
-[`tasks`](#tasks),
+[`tasks`](#tasks-1),
 [`todo`](#todo),
 [`undo`](#undo)
 
@@ -7818,7 +7850,7 @@ Examples:
 [↑](#help) · See also:
 [Todos](#-todos),
 [`do`](#do),
-[`tasks`](#tasks),
+[`tasks`](#tasks-1),
 [`undo`](#undo)
 
 ```text
@@ -7907,7 +7939,7 @@ Shortcut Alias:
 [↑](#help) · See also:
 [Todos](#-todos),
 [`do`](#do),
-[`tasks`](#tasks),
+[`tasks`](#tasks-1),
 [`todo`](#todo)
 
 ```text
