@@ -799,9 +799,7 @@ Pass an id, filename, or title to view the listing for that note:
 ```bash
 ❯ nb ls Sample\ Title
 [2] Sample Title
-```
 
-```bash
 ❯ nb ls 3
 [3] Example Title
 ```
