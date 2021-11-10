@@ -804,17 +804,12 @@ If there is no exact match, `nb` will list items with
 titles and filenames that fuzzy match the query:
 
 ```bash
-❯ nb ls ex
+❯ nb ls exa
 [3] Example Title
-```
 
-A case-insensitive regular expression can also be used to
-filter filenames and titles:
-
-```bash
-❯ nb ls ".*ample.*"
+❯ nb ls ample
 [3] Example Title
-[3] Sample Title
+[2] Sample Title
 ```
 
 Multiple words act like an `OR` filter, listing any
