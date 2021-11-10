@@ -2256,7 +2256,7 @@ and
 [`nb help undo`](#undo),
 for more information.
 
-#### `x` Tasks
+#### `[ ]` Tasks
 
 <p>
   <sup>
