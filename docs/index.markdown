@@ -2152,8 +2152,8 @@ Added: [1] ✔️ [ ] Example todo one.
 # [ ] Example todo one.
 ```
 
-Use the `--due <date>` option to add an optional due date.
-in a free-form text field:
+Use the `--due <date>` option to add an optional due date in a
+`## Due` section:
 
 ```bash
 # create a new todo titled "Example todo two." with a due date of "2100-01-01"
