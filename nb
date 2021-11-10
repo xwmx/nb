@@ -21912,7 +21912,7 @@ $(_color_primary "Description"):
   List tasks in todos, notebooks, folders, and other items.
 
 $(_color_primary "Read More"):
-  ${_README_URL}#-tasks
+  ${_README_URL}#%EF%B8%8F-tasks
   ${_README_URL}#-todos
 
 $(_color_primary "See Also"):
