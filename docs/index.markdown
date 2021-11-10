@@ -32,6 +32,8 @@ with:
 - [Pandoc](https://pandoc.org/)-backed [conversion](#%EF%B8%8F-import--export),
 - <a href="#-linking">[[wiki-style linking]]</a>,
 - terminal and GUI web [browsing](#-browsing),
+- [todos](#-todos) with [tasks](#--tasks),
+- inline [images](#-images),
 - global and local [notebooks](#-notebooks),
 - organization with [folders](#-folders),
 - customizable [color themes](#-color-themes),
