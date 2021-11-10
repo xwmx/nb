@@ -2136,10 +2136,10 @@ See [`bookmark help`](#bookmark-help) for more information.
   </sup>
 </p>
 
-Use `nb todo` to create and manage todo-formatted notes.
-`nb` todos are [structured Markdown documents](#nb-markdown-todo-file-format)
+Use [`nb todo`](#todo) (shortcut: `nb t`) to create, list, and check off todos.
+`nb` todos are [formatted Markdown documents](#nb-markdown-todo-file-format)
 referencing a single primary todo,
-with optional tasks.
+with optional [tasks](#tasks).
 
 Use `nb todo add` to create a new todo:
 
@@ -2246,6 +2246,8 @@ Added: [7] ✔️ [ ] Example todo seven.
 
 ❯ nb show 7 --print
 # [ ] Example todo seven.
+
+## Tasks
 
 - [ ] Task one.
 - [ ] Task two.
@@ -8324,6 +8326,7 @@ Example comment.
 
 - <https://example.net>
 - <https://example.org>
+- [[example:123]]
 
 ## Tags
 
@@ -8417,8 +8420,10 @@ A text element containing a comment written by the user.
 
 `Optional`
 
-A Markdown list of angle bracketed (`<`, `>`) URLs that are related to the
-bookmarked resource.
+A Markdown list of
+angle bracketed (`<`, `>`) URLs and
+[[[wiki-style links]]](#-linking)
+that are related to the bookmarked resource.
 
 ##### `## Tags`
 
@@ -8501,10 +8506,8 @@ Example description.
 
 `Preferred`
 
-A markdown `h1` heading starting with Markdown checkbox followed by
-the
-todo title. An `x` within the checkbox (`[ ]`) indicates that the todo
-is done.
+A markdown `h1` heading containing a Markdown checkbox followed by the todo title.
+An `x` within the checkbox (`[ ]`) indicates that the todo is done.
 
 ##### `## Due`
 
