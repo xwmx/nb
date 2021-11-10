@@ -2286,14 +2286,14 @@ which lists both tasks and todos:
 ❯ nb tasks 7
 [7] ✔️ [ ] Example todo seven.
 ------------------------------
-[7 1] [ ] Task one.
-[7 2] [ ] Task two.
+[7 1] [x] Task one.
+[7 2] [x] Task two.
 [7 3] [ ] Task three.
 
 ❯ nb tasks example:
-[example:9] ✔️ [ ] Example todo none.
+[example:9] ✔️ [ ] Example todo nine.
 [example:8] ✅[x] Example todo eight.
-------------------------------
+-------------------------------------
 [example:8 1] [x] Task one.
 [example:8 2] [ ] Task two.
 
@@ -2302,6 +2302,7 @@ which lists both tasks and todos:
 ------------------------------
 [example:4 1] [ ] Task one.
 [example:4 2] [x] Task two.
+[example:4 3] [ ] Task three.
 
 [example:3] ✔️ [ ] Example todo three.
 ```
