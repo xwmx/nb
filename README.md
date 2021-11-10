@@ -8337,7 +8337,7 @@ extension.
 #### Example
 
 ```markdown
-# [x] 2100-01-01 11:11:11 Example todo title.
+# [x] Example todo title.
 
 ## Due
 
