@@ -2268,7 +2268,7 @@ for more information.
   </sup>
 </p>
 
-`nb` can list and update tasks in [todos](#todos) and other Markdown documents.
+`nb` can list and update tasks in [todos](#-todos) and other Markdown documents.
 
 Tasks are defined as one or more Markdown list items starting with
 `- [ ]` to indicate an open task or `- [x]` to indicate a closed task:
@@ -2423,7 +2423,7 @@ permission.
 [More information\...](https://www.iana.org/domains/example)
 ```
 
-Tags added to [todos](#todos) with
+Tags added to [todos](#-todos) with
 `nb todo add --tags`
 are placed in a _Tags_ section:
 
@@ -5815,7 +5815,7 @@ For more information, see: `nb help`.
   <a href="#subcommands-1">subcommands</a>&nbsp;·
   <a href="#sync">sync</a>&nbsp;·
   <a href="#tasks-1">tasks</a>&nbsp;·
-  <a href="#todos">todos</a>&nbsp;·
+  <a href="#todo">todo</a>&nbsp;·
   <a href="#unarchive">unarchive</a>&nbsp;·
   <a href="#undo">undo</a>&nbsp;·
   <a href="#unpin">unpin</a>&nbsp;·
