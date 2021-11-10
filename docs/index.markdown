@@ -2300,8 +2300,8 @@ which lists both tasks and todos:
 
 ❯ nb tasks example:
 [example:9] ✔️ [ ] Example todo nine.
-[example:8] ✅[x] Example todo eight.
--------------------------------------
+[example:8] ✅ [x] Example todo eight.
+--------------------------------------
 [example:8 1] [x] Task one.
 [example:8 2] [ ] Task two.
 
