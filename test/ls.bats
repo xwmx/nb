@@ -557,7 +557,7 @@ HEREDOC
   [[ "${status}"    -eq 0                     ]]
 
   [[ "${#lines[@]}" ==  10                    ]]
-  [[ "${lines[2]}"  =~  0\ document\ files\.  ]]
+  [[ "${lines[2]}"  =~  0\ document\ items\.  ]]
 }
 
 @test "'ls --documents' exits with 0 and displays empty list." {
@@ -586,7 +586,7 @@ HEREDOC
   [[ "${status}"    -eq 0                     ]]
 
   [[ "${#lines[@]}" ==  10                    ]]
-  [[ "${lines[2]}"  =~  0\ document\ files\.  ]]
+  [[ "${lines[2]}"  =~  0\ document\ items\.  ]]
 }
 
 @test "'ls --js' exits with 0, displays empty list, and retains trailing 's'." {
@@ -615,7 +615,7 @@ HEREDOC
   [[ "${status}"    -eq 0               ]]
 
   [[ "${#lines[@]}" ==  10              ]]
-  [[ "${lines[2]}"  =~  0\ js\ files\.  ]]
+  [[ "${lines[2]}"  =~  0\ js\ items\.  ]]
 }
 
 @test "'ls <selection> --type' filters by type." {
@@ -1059,7 +1059,7 @@ HEREDOC
   [[    "${lines[0]}"   =~  Example\ Notebook.*\ .*·.*\ .*home  ]]
   [[    "${lines[1]}"   =~  ---                                 ]]
 
-  [[    "${lines[2]}"   =~  0\ not-valid\ files.                ]]
+  [[    "${lines[2]}"   =~  0\ not-valid\ items.                ]]
 
   [[    "${lines[7]}"   =~  ---                                 ]]
   [[    "${lines[8]}"   =~  nb\ add                             ]]
@@ -1082,7 +1082,7 @@ HEREDOC
   [[    "${lines[0]}"   =~  Example\ Notebook.*\ .*·.*\ .*home  ]]
   [[    "${lines[1]}"   =~  ---                                 ]]
 
-  [[    "${lines[2]}"   =~  0\ not-valid\ files.                ]]
+  [[    "${lines[2]}"   =~  0\ not-valid\ items.                ]]
 
   [[    "${lines[7]}"   =~  ---                                 ]]
   [[    "${lines[8]}"   =~  nb\ add\ Example\\\ Notebook:       ]]
@@ -1534,7 +1534,7 @@ Help information:
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  _expected="0 document files.
+  _expected="0 document items.
 
 Import a file:
   $(_color_primary 'nb import (<path> | <url>) one:')

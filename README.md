@@ -26,6 +26,8 @@ with:
 - [Pandoc](https://pandoc.org/)-backed [conversion](#%EF%B8%8F-import--export),
 - <a href="#-linking">[[wiki-style linking]]</a>,
 - terminal and GUI web [browsing](#-browsing),
+- inline [images](#-images),
+- [todos](#-todos) with [tasks](#--tasks),
 - global and local [notebooks](#-notebooks),
 - organization with [folders](#-folders),
 - customizable [color themes](#-color-themes),
@@ -327,6 +329,8 @@ the [`nb update`](#update) subcommand.
   <a href="#viewing">Viewing</a>&nbsp;·
   <a href="#deleting">Deleting</a>&nbsp;·
   <a href="#-bookmarks">🔖&nbsp;Bookmarks</a>&nbsp;·
+  <a href="#-todos">✅&nbsp;Todos</a>&nbsp;·
+  <a href="#--tasks">Tasks</a>&nbsp;·
   <a href="#-tagging">🏷&nbsp;Tagging</a>&nbsp;·
   <a href="#-linking">🔗&nbsp;Linking</a>&nbsp;·
   <a href="#-browsing">🌍&nbsp;Browsing</a>&nbsp;·
@@ -440,7 +444,7 @@ via the command line. Quoting content is optional, but recommended.
 When no filename is specified, `nb add` uses the current datetime as
 the filename.
 
-`nb add` can also recieve piped content, which behaves the same as
+`nb add` can also receive piped content, which behaves the same as
 `nb add <string>`:
 
 ```bash
@@ -513,8 +517,8 @@ nb search --tag tag1
 # search for items tagged with "#tag1" AND "#tag2", short options
 nb q -t tag1 -t tag2
 
-# search for items tagged with "#tag1" AND "#tag2", arguments
-nb q "#tag1" "#tag2"
+# search for items tagged with "#tag1" OR "#tag2", arguments
+nb q \#tag1 --or \#tag2
 ```
 
 Files can be created with any file type by specifying the extension either
@@ -556,6 +560,9 @@ Use [`nb show`](#show) and [`nb browse`](#browse) to view code snippets
 with automatic syntax highlighting and
 use [`nb edit`](#edit) to open in your editor.
 
+The [`clip` plugin](#clip) can also be used to
+create notes from clipboard content.
+
 Piping,
 `--title <title>`,
 `--tags <tag-list>`,
@@ -583,9 +590,6 @@ Option content.
 
 Clipboard content.
 ```
-
-The [`clip` plugin](#clip) can also be used to create notes from
-clipboard content.
 
 For a full list of options available for `nb add`, run
 [`nb help add`](#add).
@@ -732,8 +736,8 @@ The notebook header and command footer can be configured or hidden with
 home
 ----
 [3] example.md · "Example content."
-[2] todos.md · "Todos:"
-[1] ideas.md · "- Example idea one."
+[2] sample.md · "Sample content."
+[1] demo.md · "- Demo list item one."
 ```
 
 Notes from the current notebook are listed in the order they were last modified.
@@ -751,13 +755,13 @@ or [YAML front matter](#front-matter):
 ```
 
 ```markdown
-Todos
-=====
+Sample Title
+============
 ```
 
 ```markdown
 ---
-title: Ideas
+title: Demo Title
 ---
 ```
 
@@ -780,15 +784,15 @@ in the output of `nb ls`:
 home
 ----
 [3] Example Title
-[2] Todos
-[1] Ideas
+[2] Sample Title
+[1] Demo Title
 ```
 
 Pass an id, filename, or title to view the listing for that note:
 
 ```bash
-❯ nb ls Todos
-[2] Todos
+❯ nb ls Sample\ Title
+[2] Sample Title
 ```
 
 ```bash
@@ -800,25 +804,26 @@ If there is no exact match, `nb` will list items with
 titles and filenames that fuzzy match the query:
 
 ```bash
-❯ nb ls "idea"
-[1] Ideas
+❯ nb ls ex
+[3] Example Title
 ```
 
 A case-insensitive regular expression can also be used to
 filter filenames and titles:
 
 ```bash
-❯ nb ls "^example.*"
+❯ nb ls ".*ample.*"
 [3] Example Title
+[3] Sample Title
 ```
 
 Multiple words act like an `OR` filter, listing any
 titles or filenames that match any of the words:
 
 ```bash
-❯ nb ls example ideas
+❯ nb ls example demo
 [3] Example Title
-[1] Ideas
+[1] Demo Title
 ```
 
 When multiple words are quoted, filter titles and filenames for that phrase:
@@ -905,19 +910,19 @@ which can be combined with `-r` / `--reverse`:
 ❯ nb ls
 home
 ----
-[2] Todos
+[2] Sample Title
 [3] Example Title
-[1] Ideas
+[1] Demo Title
 
 ❯ nb ls --sort
-[1] Ideas
-[2] Todos
+[1] Demo Title
+[2] Sample Title
 [3] Example Title
 
 ❯ nb ls --sort --reverse
 [3] Example Title
-[2] Todos
-[1] Ideas
+[2] Sample Title
+[1] Demo Title
 ```
 
 `nb` with no subcommand behaves like an alias for `nb ls`,
@@ -927,11 +932,11 @@ so the examples above can be run without the `ls`:
 ❯ nb
 home
 ----
-[2] Todos
+[2] Sample Title
 [3] Example Title
-[1] Ideas
+[1] Demo Title
 
-❯ nb "^example.*"
+❯ nb example
 [3] Example Title
 
 ❯ nb 3 --excerpt
@@ -954,14 +959,14 @@ More example content:
 - three
 
 ❯ nb --sort
-[1] Ideas
-[2] Todos
+[1] Demo Title
+[2] Sample Title
 [3] Example Title
 
 ❯ nb --sort --reverse
 [3] Example Title
-[2] Todos
-[1] Ideas
+[2] Sample Title
+[1] Demo Title
 ```
 
 Short options can be combined for brevity:
@@ -973,14 +978,14 @@ Short options can be combined for brevity:
 -----------------
 # Example Title
 
-[2] Todos
----------
-Todos
-=====
-[1] Ideas
----------
+[2] Sample Title
+----------------
+Sample Title
+============
+[1] Demo Title
+--------------
 ---
-title: Ideas
+title: Demo Title
 ```
 
 `nb` and `nb ls` display the 15 most recently modified items.
@@ -1705,6 +1710,38 @@ permission.
 [More information\...](https://www.iana.org/domains/example)
 ```
 
+Add related URLs and selectors to a `## Related` section
+using the `-r (<url> | <selector>)` / `--related (<url> | <selector>)`
+option:
+
+```bash
+nb https://example.com --related example:123 -r https://example.com
+```
+```markdown
+# Example Title (example.com)
+
+<https://example.com>
+
+## Description
+
+Example description.
+
+## Related
+
+- [[example:123]]
+- <https://example.com>
+
+## Content
+
+Example Title
+=============
+
+This domain is for use in illustrative examples in documents. You may
+use this domain in literature without prior coordination or asking for
+permission.
+
+[More information\...](https://www.iana.org/domains/example)
+```
 Bookmarks can be tagged using the `-t` / `--tags` option. Tags are converted
 into [#hashtags](#-tagging):
 
@@ -1743,7 +1780,7 @@ nb search --tag tag1
 
 nb q -t tag1
 
-nb q "#tag1"
+nb q \#tag1
 ```
 
 `nb search` / `nb q` automatically searches archived page content:
@@ -2084,6 +2121,233 @@ Perform a full text search of bookmarks and archived page content:
 
 See [`bookmark help`](#bookmark-help) for more information.
 
+### ✅ Todos
+
+<p>
+  <sup>
+    <a href="#overview">↑</a> ·
+    <a href="#do"><code>nb do</code></a>,
+    <a href="#tasks"><code>nb tasks</code></a>,
+    <a href="#todo"><code>nb todo</code></a>,
+    <a href="#undo"><code>nb undo</code></a>
+  </sup>
+</p>
+
+Use [`nb todo`](#todo) (shortcut: `nb t`) to create, list, and check off todos.
+`nb` todos are [structured Markdown documents](#nb-markdown-todo-file-format)
+referencing a single primary todo,
+with optional [tasks](#--tasks).
+
+Use `nb todo add` to create a new todo:
+
+```bash
+# create a new todo titled "Example todo one."
+❯ nb todo add "Example todo one."
+Added: [1] ✔️ [ ] Example todo one.
+
+❯ nb show 1 --print
+# [ ] Example todo one.
+```
+
+Use the `--due <date>` option to add an optional due date in a
+`## Due` section:
+
+```bash
+# create a new todo titled "Example todo two." with a due date of "2100-01-01"
+❯ nb todo add "Example todo two." --due "2100-01-01"
+Added: [2] ✔️ [ ] Example todo two.
+
+❯ nb show 2 --print
+# [ ] Example todo two.
+
+## Due
+
+2100-01-01
+```
+
+Add an optional description with the `--description <description>` option:
+
+```bash
+❯ nb todo add "Example todo three." --description "Example description."
+Added: [3] ✔️ [ ] Example todo three.
+
+❯ nb show 3 --print
+# [ ] Example todo three.
+
+## Description
+
+Example description.
+```
+
+Todos can have [tasks](#--tasks). Tasks are represented as a markdown task list
+and are placed in a `## Tasks` section:
+
+```bash
+❯ nb todo add "Example todo seven." --task "Task one." --task "Task two." --task "Task three."
+Added: [7] ✔️ [ ] Example todo seven.
+
+❯ nb show 7 --print
+# [ ] Example todo seven.
+
+## Tasks
+
+- [ ] Task one.
+- [ ] Task two.
+- [ ] Task three.
+```
+
+Related URLs and selectors can be added to a `## Related` field
+using the `-r (<url> | <selector>)` / `--related (<url> | <selector>)`
+option:
+
+```bash
+❯ nb todo add "Example todo four." --related example:123 -r https://example.com
+Added: [4] ✔️ [ ] Example todo four.
+
+❯ nb show 4 --print
+# [ ] Example todo four.
+
+## Related
+
+- [[example:123]]
+- <https://example.com>
+```
+
+Tags can be added to todos with the `--tags <tag1>,<tag2>...` option:
+
+```bash
+❯ nb todo add "Example todo five." --tags tag1,tag2
+Added: [5] ✔️ [ ] Example todo five.
+
+❯ nb show 5 --print
+# [ ] Example todo five.
+
+## Tags
+
+#tag1 #tag2
+```
+
+Linked tags, selectors, and URLs can be [browsed](#-browsing)
+in terminal and GUI web browers with [`nb browse`](#browse).
+
+See
+[`nb help todo`](#todo)
+for more information.
+
+#### `do` / `undo`
+
+Mark a todo as done or closed with [`nb do`](#do):
+
+```bash
+❯ nb todo add "Example todo six."
+Added: [6] ✔️ [ ] Example todo six.
+
+❯ nb do 6
+Done: [6] ✅ [x] Example todo two.
+```
+
+Re-open a closed todo with [`nb undo`](#undo):
+
+```bash
+❯ nb undo 6
+Undone: [6] ✔️ [ ] Example todo two.
+```
+
+See
+[`nb help do`](#do)
+and
+[`nb help undo`](#undo),
+for more information.
+
+#### `-[]` Tasks
+
+<p>
+  <sup>
+    <a href="#-todos">↑</a> ·
+    <a href="#do"><code>nb do</code></a>,
+    <a href="#tasks"><code>nb tasks</code></a>,
+    <a href="#todo"><code>nb todo</code></a>,
+    <a href="#undo"><code>nb undo</code></a>
+  </sup>
+</p>
+
+`nb` can list and update tasks in [todos](#-todos) and other Markdown documents.
+
+Tasks are defined as one or more Markdown list items starting with
+`- [ ]` to indicate an open task or `- [x]` to indicate a closed task:
+
+```markdown
+- [ ] Example incomplete task.
+- [x] Example completed task.
+```
+
+List tasks in notebooks, folders, and items with [`nb tasks`](#tasks),
+which lists both tasks and todos:
+
+```
+❯ nb tasks 7
+[7] ✔️ [ ] Example todo seven.
+------------------------------
+[7 1] [x] Task one.
+[7 2] [x] Task two.
+[7 3] [ ] Task three.
+
+❯ nb tasks example:
+[example:9] ✔️ [ ] Example todo nine.
+[example:8] ✅ [x] Example todo eight.
+--------------------------------------
+[example:8 1] [x] Task one.
+[example:8 2] [ ] Task two.
+
+[example:6] ✔️ [ ] Example todo six.
+[example:4] Example Note Title
+------------------------------
+[example:4 1] [ ] Task one.
+[example:4 2] [x] Task two.
+[example:4 3] [ ] Task three.
+
+[example:3] ✔️ [ ] Example todo three.
+```
+
+Tasks are identified by the item [selector](#-selectors), followed by
+a space, then followed by the sequential number of the task in the file.
+
+Use [`nb do`](#do) to mark tasks as complete:
+
+```bash
+❯ nb do 7 2
+[7] ✔️ [ ] Example todo seven.
+------------------------------
+Done: [7 2] [x] Task two.
+
+❯ nb tasks 7
+[7] ✔️ [ ] Example todo seven.
+------------------------------
+[7 1] [ ] Task one.
+[7 2] [x] Task two.
+[7 3] [ ] Task three.
+```
+
+Undo a completed task with [`nb undo`](#undo):
+
+```bash
+❯ nb undo 7 2
+[7] ✔️ [ ] Example todo seven.
+------------------------------
+Undone: [7 2] [ ] Task two.
+
+❯ nb tasks 7
+[7] ✔️ [ ] Example todo seven.
+------------------------------
+[7 1] [ ] Task one.
+[7 2] [ ] Task two.
+[7 3] [ ] Task three.
+```
+
+See
+[`nb help tasks`](#tasks)
+for more information.
+
 ### 🏷 #tagging
 
 <p>
@@ -2108,8 +2372,9 @@ which is available with
 [`nb add`](#add),
 [`nb <url>`](#nb-help),
 [`nb browse add`](#browse),
+[`nb bookmark`](#bookmark),
 and
-[`nb bookmark`](#bookmark).
+[`nb todo`](#todo).
 `--tags` takes a comma-separated list of tags, converts them to
 [#hashtags](#-tagging),
 and adds them to the document.
@@ -2129,7 +2394,8 @@ and body text:
 Example note content.
 ```
 
-Tags added to bookmarks with `nb <url> --tags` and `nb bookmark <url> --tags`
+Tags added to [bookmarks](#bookmarks) with
+`nb <url> --tags` and `nb bookmark <url> --tags`
 are placed in a _Tags_ section:
 
 ```bash
@@ -2161,6 +2427,22 @@ permission.
 [More information\...](https://www.iana.org/domains/example)
 ```
 
+Tags added to [todos](#-todos) with
+`nb todo add --tags`
+are placed in a _Tags_ section:
+
+```bash
+❯ nb todo add --tags tag1,tag2 "Example todo."
+```
+
+```markdown
+# [ ] Example todo.
+
+## Tags
+
+#tag1 #tag2
+```
+
 Use `nb --tags`, [`nb ls --tags`](#ls), and [`nb list --tags`](#list) to
 list the tags present in a notebook, folder, or item:
 
@@ -2178,38 +2460,47 @@ nb sample:123 --tags
 Tagged items can be [searched](#-search) with [`nb search` / `nb q`](#search):
 
 ```bash
-# search for and list items in any notebook tagged with "#tag1"
-nb search --tag tag1 --all --list
+# search for items tagged with "#tag1"
+nb search --tag tag1
 
-# search for and list items in any notebook tagged with "#tag1", shortcut and short options
-nb q -t tag1 -al
+# search for items tagged with "#tag1", shortcut and short option
+nb q -t tag1
 
-# search for and list items in any notebook tagged with "#tag1", alternative
-nb q "#tag1" -al
+# search for items tagged with "#tag1", shortcut and argument
+nb q \#tag1
+
+# search for items tagged with "#tag1", shortcut and argument, alternative
+nb q "#tag1"
 
 # search for items tagged with "#tag1" AND "#tag2"
 nb q --tag tag1 --tag tag2
 
 # search for items tagged with "#tag1" AND "#tag2", short options
-nb q -t tag1 --and -t tag2
+nb q -t tag1 -t tag2
 
 # search for items tagged with "#tag1" AND "#tag2", arguments
-nb q "#tag1" --and "#tag2"
+nb q \#tag1 \#tag2
 
 # search for items tagged with "#tag1" AND "#tag2", tag list
 nb q --tags tag1,tag2
 
-# search for items tagged with either "#tag1" OR "#tag2"
-nb q "#tag1|#tag2"
-
 # search for items tagged with either "#tag1" OR "#tag2", options
-nb q --tag tag1 --or -t tag2
+nb q -t tag1 --or -t tag2
 
 # search for items tagged with either "#tag1" OR "#tag2", arguments
-nb q "#tag1" --or "#tag2"
+nb q \#tag1 --or \#tag2
+
+# search for items tagged with either "#tag1" OR "#tag2", single argument
+nb q "#tag1|#tag2"
+
+# search for items tagged with "#tag1" AND "#tag2" AND "#tag3"
+nb q -t tag1 --tags tag2,tag3
 
 # search for items tagged with "#tag1" OR "#tag2" OR "#tag3"
 nb q -t tag1 --or --tags tag2,tag3
+
+# search for items tagged with "#tag1" OR "#tag2" OR "#tag3"
+nb q \#tag1 --or -t tag2 --or "#tag3"
 ```
 
 Linked tags can be [browsed](#-browsing) with [`nb browse`](#browse),
@@ -2611,23 +2902,45 @@ Use the `-q` / `--query` option to open `nb browse` to
 the results page for a search:
 
 ```bash
-# open to a list of items tagged with "#tag2" in the "example" notebook
-❯ nb browse --query "#tag2"
-❯nb · example
+# open to a list of items containing "example" in the current notebook
+❯ nb browse --query "example"
+❯nb · home
 
-search: [#tag2               ]
+search: [example             ]
 
-[home:321] Example Title
+[home:321] Test Title
 [home:654] Sample Title
 [home:789] Demo Title
 
 # using shortcut alias and short option
-❯ nb br -q "#tag2"
-❯nb · example
+❯ nb br -q "example"
+❯nb · home
+
+search: [example             ]
+
+[home:321] Test Title
+[home:654] Sample Title
+[home:789] Demo Title
+```
+
+Search for [#tags](#-tagging) with the `-t` / `--tag` / `--tags` options:
+
+```bash
+# open to a list of items tagged with "#tag2" in the current notebook
+❯ nb browse --tag tag2
+❯nb · home
 
 search: [#tag2               ]
 
-[home:321] Example Title
+[home:654] Sample Title
+[home:789] Demo Title
+
+# using shortcut alias and short option
+❯ nb br -t tag2
+❯nb · home
+
+search: [#tag2               ]
+
 [home:654] Sample Title
 [home:789] Demo Title
 ```
@@ -2693,7 +3006,7 @@ If neither `ncat` nor `pandoc` is available,
 #### `browse` Privacy
 
 `nb browse` is completely local and self-contained within `nb`,
-from the CSS and vanilla JavaScript
+from the CSS and JavaScript
 all the way down through the HTTP request parsing and response building,
 with no imports, libraries, frameworks, or third-party code
 outside of the few binary dependencies (`bash`, `git`, `ncat`, `pandoc`),
@@ -3237,31 +3550,41 @@ Search for [#tags](#-tagging) with flexible
 # search for tags in the current notebook
 nb search --tags
 
-# search for items tagged with "#example"
-nb search --tag example
+# search for tags in the "sample" notebook, shortcut alias
+nb sample:q --tags
 
-# search for items tagged with "#example", shortcut alias and short option
-nb q -t example
+# search for items tagged with "#tag1"
+nb search --tag tag1
 
-# search for items tagged with "#example", shortcut alias and argument
-nb q "#example"
+# search for items tagged with "#tag1", shortcut alias and short option
+nb q -t tag1
+
+# search for items tagged with "#tag1", shortcut alias and argument
+nb q \#tag1
+
+# search for items tagged with "#tag1", shortcut alias and argument, alternative
+nb q "#tag1"
 
 # search for items in the "sample" notebook tagged with "#tag1" AND "#tag2"
 nb sample:search --tag tag1 --tag tag2
 
-# search for items in the "sample" notebook tagged with "#tag1" AND "#tag2",
-# alternative
+# search for items in the "sample" notebook tagged with "#tag1" AND "#tag2"
 nb sample:q --tags tag1,tag2
 
 # search for items in the current notebook tagged with "#tag1" AND "#tag2"
-nb q --tag tag1 --and --tag tag2
+nb q --tag tag1 --tag tag2
 
-# search for items in the current notebook tagged with "#tag1" OR "#tag2",
-# shortcut alias and short options
+# search for items in the current notebook tagged with "#tag1" OR "#tag2"
 nb q -t tag1 --or -t tag2
+
+# search for items tagged with "#tag1" AND "#tag2" AND "#tag3"
+nb q -t tag1 --tags tag2,tag3
 
 # search for items tagged with "#tag1" OR "#tag2" OR "#tag3"
 nb q -t tag1 --or --tags tag2,tag3
+
+# search for items tagged with "#tag1" OR "#tag2" OR "#tag3"
+nb q \#tag1 --or -t tag2 --or "#tag3"
 ```
 
 `nb search` leverages Git's powerful built-in
@@ -3357,8 +3680,10 @@ nb rename 5 .org
 ```
 
 Use [`nb rename --to-bookmark`](#move) to change the extension of a note
-to `.bookmark.md` and [`nb rename --to-note`](#move) to change the extension
-of a bookmark to either `.md` or the extension set with
+to `.bookmark.md`,
+[`nb rename --to-todo`](#move) to change the extension to `.todo.md`,
+and [`nb rename --to-note`](#move) to change the extension
+of a bookmark or todo to either `.md` or the extension set with
 [`nb set default_extension`](#default_extension):
 
 ```bash
@@ -3789,6 +4114,15 @@ home
 ```
 
 #### Archiving Notebooks
+
+<p>
+  <sup>
+    <a href="#-notebooks">↑</a> ·
+    <a href="#archive"><code>nb&nbsp;archive</code></a>,
+    <a href="#status"><code>nb&nbsp;status</code></a>,
+    <a href="#unarchive"><code>nb&nbsp;unarchive</code></a>
+  </sup>
+</p>
 
 Notebooks can be archived using [`nb archive`](#archive) (shortcut: `nb ar`):
 
@@ -4319,7 +4653,7 @@ vim
 ```
 
 `nb set` and `nb settings` are aliases that refer to the same subcommand,
-so the two subcommand names can be used interchangably.
+so the two subcommand names can be used interchangeably.
 
 For more information about `set` and `settings`, see
 [`nb help settings`](#settings) and
@@ -4520,7 +4854,7 @@ export NB_INDICATOR_PINNED="✨"
 To turn off an indicator, assign the variable to an empty string:
 
 ```bash
-export NB_INDICATOR_TODO=""
+export NB_INDICATOR_PINNED=""
 ```
 
 Available indicator variables with default values:
@@ -4534,7 +4868,8 @@ export  NB_INDICATOR_ENCRYPTED="🔒"
 export  NB_INDICATOR_FOLDER="📂"
 export  NB_INDICATOR_IMAGE="🌄"
 export  NB_INDICATOR_PINNED="📌"
-export  NB_INDICATOR_TODO="✅"
+export  NB_INDICATOR_TODO="✔️ "
+export  NB_INDICATOR_TODO_DONE="✅"
 export  NB_INDICATOR_VIDEO="📹"
 ```
 
@@ -4586,7 +4921,7 @@ nb plugins install plugins/example.nb-plugin
 
 The `<url>` should be the full URL to the plugin file.
 `nb` also recognizes regular GitHub URLs,
-which can be used interchangably with raw GitHub URLs.
+which can be used interchangeably with raw GitHub URLs.
 
 Installed plugins can be listed with [`nb plugins`](#plugins),
 which optionally takes a name and prints full paths:
@@ -5083,6 +5418,7 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
   <a href="#completions">completions</a>&nbsp;·
   <a href="#count">count</a>&nbsp;·
   <a href="#delete">delete</a>&nbsp;·
+  <a href="#do">do</a>&nbsp;·
   <a href="#edit">edit</a>&nbsp;·
   <a href="#env">env</a>&nbsp;·
   <a href="#export">export</a>&nbsp;·
@@ -5108,7 +5444,10 @@ For more commands and options, run `nb help` or `nb help <subcommand>`
   <a href="#status">status</a>&nbsp;·
   <a href="#subcommands-1">subcommands</a>&nbsp;·
   <a href="#sync">sync</a>&nbsp;·
+  <a href="#tasks">tasks</a>&nbsp;·
+  <a href="#todo">todo</a>&nbsp;·
   <a href="#unarchive">unarchive</a>&nbsp;·
+  <a href="#undo">undo</a>&nbsp;·
   <a href="#unpin">unpin</a>&nbsp;·
   <a href="#unset">unset</a>&nbsp;·
   <a href="#update">update</a>&nbsp;·
@@ -5146,29 +5485,31 @@ Help:
 
 Usage:
   nb
-  nb [<ls options>...] [<id> | <filename> | <path> | <title> | <notebook>]
+  nb [<ls-options>...] [<id> | <filename> | <path> | <title> | <notebook>]
   nb [<url>] [<bookmark options>...]
   nb add [<notebook>:][<folder-path>/][<filename>] [<content>]
          [-b | --browse] [-c <content> | --content <content>] [--edit]
          [-e | --encrypt] [-f <filename> | --filename <filename>]
          [--folder <folder-path>] [--tags <tag1>,<tag2>...]
          [-t <title> | --title <title>] [--type <type>]
+  nb add bookmark [<bookmark-options>...]
   nb add folder [<name>]
+  nb add todo [<todo-options>...]
   nb archive [<notebook>]
-  nb bookmark [<ls options>...]
+  nb bookmark [<ls-options>...]
   nb bookmark [<notebook>:][<folder-path>/] <url>
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
               [-f <filename> | --filename <filename>] [--no-request]
-              [-q <quote> | --quote <quote>] [-r <url> | --related <url>]...
-              [--save-source] [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...]
-              [--title <title>]
+              [-q <quote> | --quote <quote>] [--save-source]
+              [-r (<url> | <selector>) | --related (<url> | <selector>)]...
+              [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...] [--title <title>]
   nb bookmark [list [<list-options>...]]
   nb bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   nb bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
   nb bookmark search <query>
   nb browse [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
             [-g | --gui] [-n | --notebooks] [-p | --print] [-q | --query <query>]
-            [-s | --serve]
+            [-s | --serve] [-t <tag> | --tag <tag> | --tags <tag1>,<tag2>...]
   nb browse add [<notebook>:][<folder-path>/][<filename>]
             [-c <content> | --content <content>] [--tags <tag1>,<tag2>...]
             [-t <title> | --title <title>]
@@ -5178,6 +5519,8 @@ Usage:
   nb count [<notebook>:][<folder-path>/]
   nb delete ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])...
             [-f | --force]
+  nb do ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+        [<task-number>]
   nb edit ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           [-c <content> | --content <content>] [--edit]
           [-e <editor> | --editor <editor>] [--overwrite] [--prepend]
@@ -5210,7 +5553,7 @@ Usage:
         [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
   nb move ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note |
-          --to-title) [-f | --force]
+          --to-title | --to-todo) [-f | --force]
   nb notebooks [<name> | <query>] [--ar | --archived] [--global] [--local]
                [--names] [--paths] [--unar | --unarchived]
   nb notebooks add <name> [<remote-url> [<branch>]] [--author]
@@ -5256,7 +5599,22 @@ Usage:
   nb subcommands [add <name>...] [alias <name> <alias>]
                  [describe <name> <usage>]
   nb sync [-a | --all]
+  nb tasks ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
+           [open | closed]
+  nb todo add [<notebook>:][<folder-path>/][<filename>] <title>
+              [--description <description>] [--due <date>]
+              [-r (<url> | <selector>) | --related (<url> | <selector>)]
+              [--tags <tag1>,<tag2>...] [--task <title>]...
+  nb todo do   ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
+               [<task-number>]
+  nb todo undo ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
+               [<task-number>]
+  nb todos [<notebook>:][<folder-path>/] [open | closed]
+  nb todos tasks ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
+                 [open | closed]
   nb unarchive [<notebook>]
+  nb undo ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+          [<task-number>]
   nb unpin ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
   nb unset (<name> | <number>)
   nb update
@@ -5276,6 +5634,7 @@ Subcommands:
   completions  Install and uninstall completion scripts.
   count        Print the number of items in a notebook or folder.
   delete       Delete a note.
+  do           Mark a todo or task as done.
   edit         Edit a note.
   export       Export a note to a variety of different formats.
   git          Run `git` commands within the current notebook.
@@ -5301,7 +5660,10 @@ Subcommands:
   subcommands  List, add, alias, and describe subcommands.
   status       Print notebook status information.
   sync         Sync local notebook with the remote repository.
+  tasks        List tasks in todos, notebooks, folders, and other items.
+  todo         Manage todos and tasks.
   unarchive    Unarchive the current or specified notebook.
+  undo         Mark a todo or task as not done.
   unpin        Unpin a pinned item.
   unset        Return a setting to its default value.
   update       Update `nb` to the latest version.
@@ -5342,13 +5704,13 @@ GUI and terminal browser support, and data stored in plain text
 Markdown files with Git-backed versioning and syncing.
 
 Usage:
-  bookmark [<ls options>...]
+  bookmark [<ls-options>...]
   bookmark [<notebook>:][<folder-path>] <url>
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
               [-f <filename> | --filename <filename>] [--no-request]
-              [-q <quote> | --quote <quote>] [-r <url> | --related <url>]...
-              [--save-source] [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...]
-              [--title <title>]
+              [-q <quote> | --quote <quote>] [--save-source]
+              [-r (<url> | <selector>) | --related (<url> | <selector>)]...
+              [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...] [--title <title>]
   bookmark (edit | delete | open | peek | url)
               ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
   bookmark search <query>
@@ -5363,6 +5725,8 @@ Options:
   --no-request                 Don't request or download the target page.
   -q, --quote <quote>          A quote or excerpt from the saved page.
                                Alias: `--excerpt`
+  -r, --related <selector>     A selector for an item related to the
+                               bookmarked page.
   -r, --related <url>          A URL for a page related to the bookmarked page.
                                Multiple `--related` flags can be used in a
                                command to save multiple related URLs.
@@ -5445,6 +5809,7 @@ For more information, see: `nb help`.
   <a href="#completions">completions</a>&nbsp;·
   <a href="#count">count</a>&nbsp;·
   <a href="#delete">delete</a>&nbsp;·
+  <a href="#do">do</a>&nbsp;·
   <a href="#edit">edit</a>&nbsp;·
   <a href="#env">env</a>&nbsp;·
   <a href="#export">export</a>&nbsp;·
@@ -5470,7 +5835,10 @@ For more information, see: `nb help`.
   <a href="#status">status</a>&nbsp;·
   <a href="#subcommands-1">subcommands</a>&nbsp;·
   <a href="#sync">sync</a>&nbsp;·
+  <a href="#tasks">tasks</a>&nbsp;·
+  <a href="#todo">todo</a>&nbsp;·
   <a href="#unarchive">unarchive</a>&nbsp;·
+  <a href="#undo">undo</a>&nbsp;·
   <a href="#unpin">unpin</a>&nbsp;·
   <a href="#unset">unset</a>&nbsp;·
   <a href="#update">update</a>&nbsp;·
@@ -5491,7 +5859,8 @@ For more information, see: `nb help`.
 [`delete`](#delete),
 [`edit`](#edit),
 [`import`](#import),
-[`show`](#show)
+[`show`](#show),
+[`todo`](#todo)
 
 ```text
 Usage:
@@ -5500,7 +5869,9 @@ Usage:
          [-e | --encrypt] [-f <filename> | --filename <filename>]
          [--folder <folder-path>] [--tags <tag1>,<tag2>...]
          [-t <title> | --title <title>] [--type <type>]
+  nb add bookmark [<bookmark-options>...]
   nb add folder [<name>]
+  nb add todo [<todo-options>...]
 
 Options:
   -b, --browse                Add using a terminal or GUI web browser.
@@ -5545,6 +5916,7 @@ See Also:
   nb help edit
   nb help import
   nb help show
+  nb help todo
 
 Examples:
   nb add
@@ -5615,13 +5987,13 @@ Shortcut Alias:
 
 ```text
 Usage:
-  nb bookmark [<ls options>...]
+  nb bookmark [<ls-options>...]
   nb bookmark [<notebook>:][<folder-path>/] <url>
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
               [-f <filename> | --filename <filename>] [--no-request]
-              [-q <quote> | --quote <quote>] [-r <url> | --related <url>]...
-              [--save-source] [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...]
-              [--title <title>]
+              [-q <quote> | --quote <quote>] [--save-source]
+              [-r (<url> | <selector>) | --related (<url> | <selector>)]...
+              [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...] [--title <title>]
   nb bookmark list [<list-options>...]
   nb bookmark (edit | delete | open | peek | url)
               ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
@@ -5637,6 +6009,8 @@ Options:
   --no-request                 Don't request or download the target page.
   -q, --quote <quote>          A quote or excerpt from the saved page.
                                Alias: `--excerpt`
+  -r, --related <selector>     A selector for an item related to the
+                               bookmarked page.
   -r, --related <url>          A URL for a page related to the bookmarked page.
                                Multiple `--related` flags can be used in a
                                command to save multiple related URLs.
@@ -5732,7 +6106,7 @@ Shortcut Alias:
 Usage:
   nb browse [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
             [-g | --gui] [-n | --notebooks] [-p | --print] [-q | --query <query>]
-            [-s | --serve]
+            [-s | --serve] [-t <tag> | --tag <tag> | --tags <tag1>,<tag2>...]
   nb browse add [<notebook>:][<folder-path>/][<filename>]
             [-c <content> | --content <content>] [--tags <tag1>,<tag2>...]
             [-t <title> | --title <title>]
@@ -5755,7 +6129,8 @@ Options:
   -p, --print                  Print to standard output.
   -q, --query <query>          Open to the search results for <query>.
   -s, --serve                  Start the web application server.
-  -t, --tags <tag1>,<tag2>...  A comma-separated list of tags.
+  -t, --tag <tag>              Search for a tag.
+  --tags <tag1>,<tag2>...      A comma-separated list of tags.
   -t, --title <title>          Add a title to the new note.
 
 Description:
@@ -5897,6 +6272,37 @@ Examples:
 Shortcut Aliases:
   nb d
   nb -
+```
+
+#### `do`
+
+[↑](#help) · See also:
+[Todos](#-todos),
+[Tasks](#--tasks),
+[`tasks`](#tasks),
+[`todo`](#todo),
+[`undo`](#undo)
+
+```text
+Usage:
+  nb do ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+        [<task-number>]
+
+Description:
+  Mark a todo or task as done.
+
+Read More:
+  https://github.com/xwmx/nb#-todos
+
+See Also:
+  nb help tasks
+  nb help todo
+  nb help undo
+
+Examples:
+  nb do 123
+  nb do example:sample/321
+  nb do 543 7
 ```
 
 #### `edit`
@@ -6428,7 +6834,7 @@ Examples:
 Usage:
   nb move ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note |
-          --to-title) [-f | --force]
+          --to-title | --to-todo) [-f | --force]
 
 Options:
   -f, --force     Skip the confirmation prompt.
@@ -6440,13 +6846,15 @@ Options:
                   to a Markdown note.
   --to-title      Set the filename to the note title, lowercased with spaces
                   and disallowed filename characters replaced with underscores.
+  --to-todo       Preserve the existing filename and replace the extension
+                  with ".todo.md" to convert the note to a todo.
 
 Description:
   Move or rename a note. Move the note to <path> or change the file type.
   When the file extension is omitted, the existing extension is used.
   When only a file extension is specified, only the extension will be updated.
 
-  `nb move` and `nb rename` are aliases and can be used interchangably.
+  `nb move` and `nb rename` are aliases and can be used interchangeably.
 
 See Also:
   nb help delete
@@ -7358,8 +7766,11 @@ Examples:
   nb s example:12
   nb example:12 s
 
-Alias: `nb view`
-Shortcut Alias: `nb s`
+Alias:
+  nb view
+
+Shortcut Alias:
+  nb s
 ```
 
 #### `status`
@@ -7491,6 +7902,99 @@ Examples:
   nb sync --all
 ```
 
+#### `tasks`
+
+[↑](#help) · See also:
+[Tasks](#--tasks),
+[Todos](#-todos),
+[`do`](#do),
+[`todo`](#todo),
+[`undo`](#undo)
+
+```text
+Usage:
+  nb tasks ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
+           [open | closed]
+
+Description:
+  List tasks in todos, notebooks, folders, and other items.
+
+Read More:
+  https://github.com/xwmx/nb#-todos
+
+See Also:
+  nb help do
+  nb help todo
+  nb help undo
+
+Examples:
+  nb tasks 123
+  nb tasks open example:sample/321
+  nb tasks closed demo:456
+```
+
+#### `todo`
+
+[↑](#help) · See also:
+[Todos](#-todos),
+[`do`](#do),
+[`tasks`](#tasks),
+[`undo`](#undo)
+
+```text
+Usage:
+  nb todo add [<notebook>:][<folder-path>/][<filename>] <title>
+              [--description <description>] [--due <date>]
+              [-r (<url> | <selector>) | --related (<url> | <selector>)]
+              [--tags <tag1>,<tag2>...] [--task <title>]...
+  nb todo do   ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
+               [<task-number>]
+  nb todo undo ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
+               [<task-number>]
+  nb todos [<notebook>:][<folder-path>/] [open | closed]
+  nb todos tasks ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
+                 [open | closed]
+
+Options:
+  --description <description>         Description for the todo.
+  --due <date>                        Due date and / or time for the todo.
+  -r, --related (<url> | <selector>)  Related URL or selector.
+  --tags <tag1>,<tag2>...             Comma-separated list of tags.
+  --task <title>                      Task to add to the tasklist.
+
+Subcommands:
+  (default)   List todos.
+  add         Add a new todo.
+              Shortcut Aliases: `nb todo a`, `nb todo +`
+  do          Mark a todo or task as done.
+  tasks       List tasks in todos, notebooks, folders, and other item.
+  undo        Unmark a todo or task as done.
+
+Description:
+  Manage todos and tasks.
+
+Read More::
+  https://github.com/xwmx/nb#-todos
+
+See Also:
+  nb help do
+  nb help tasks
+  nb help undo
+
+Examples:
+  nb todo add "Example todo title."
+  nb todo add Example todo title.
+  nb todo add "Sample title." --tags tag1,tag2 --related demo:567
+  nb todos
+  nb todos open
+
+Alias:
+  nb todos
+
+Shortcut Alias:
+  nb t
+```
+
 #### `unarchive`
 
 [↑](#help) · See also:
@@ -7522,6 +8026,37 @@ Examples:
 
 Shortcut Alias:
   nb unar
+```
+
+#### `undo`
+
+[↑](#help) · See also:
+[Todos](#-todos),
+[Tasks](#--tasks),
+[`do`](#do),
+[`tasks`](#tasks),
+[`todo`](#todo)
+
+```text
+Usage:
+  nb undo ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+          [<task-number>]
+
+Description:
+  Mark a todo or task as not done.
+
+Read More:
+  https://github.com/xwmx/nb#-todos
+
+See Also:
+  nb help do
+  nb help tasks
+  nb help todo
+
+Examples:
+  nb undo 123
+  nb undo example:sample/321
+  nb undo 543 7
 ```
 
 #### `unpin`
@@ -7657,9 +8192,13 @@ See Also:
 
 ### Plugins
 
-[↑](#help) · See also:
-[Plugins](#-plugins),
-[`plugins`](#plugins)
+<p>
+  <sup>
+    <a href="#help">↑</a> ·
+    <a href="#-plugins">Plugins</a>,
+    <a href="#plugins"><code>nb plugins</code></a>
+  </sup>
+</p>
 
 <p align="center">
   <a href="#backlink">backlink</a>&nbsp;·
@@ -7804,13 +8343,25 @@ Description:
 
 ## Specifications
 
-<p>
-  <sup>
-    <a href="#overview">↑</a>
-  </sup>
+<p align="center">
+  <a href="#nb-markdown-bookmark-file-format">Bookmark File Format</a>&nbsp;·
+  <a href="#nb-todo-file-format">Todo File Format</a>&nbsp;·
+  <a href="#nb-notebook-specification">Notebook Specification</a>
+</p>
+
+<p align="center">
+  <a href="#help">&nbsp;↑&nbsp;</a>
 </p>
 
 ### `nb` Markdown Bookmark File Format
+
+<p>
+  <sup>
+    <a href="#specifications">↑</a> ·
+    <a href="#-bookmarks">Bookmarks</a>,
+    <a href="#bookmark"><code>nb bookmark</code></a>
+  </sup>
+</p>
 
 #### Extension
 
@@ -7865,6 +8416,7 @@ Example comment.
 
 - <https://example.net>
 - <https://example.org>
+- [[example:123]]
 
 ## Tags
 
@@ -7958,8 +8510,10 @@ A text element containing a comment written by the user.
 
 `Optional`
 
-A Markdown list of angle bracketed (`<`, `>`) URLs that are related to the
-bookmarked resource.
+A Markdown list of
+angle bracketed (`<`, `>`) URLs and
+[[[wiki-style links]]](#-linking)
+that are related to the bookmarked resource.
 
 ##### `## Tags`
 
@@ -7990,7 +8544,107 @@ from the bookmarked page.
 the source HTML page content when `pandoc` is not available to convert it to
 Markdown.
 
+### `nb` Markdown Todo File Format
+
+<p>
+  <sup>
+    <a href="#specifications">↑</a> ·
+    <a href="#-todos">Todos</a>,
+    <a href="#todo"><code>nb todo</code></a>
+  </sup>
+</p>
+
+#### Extension
+
+`.todo.md`
+
+#### Description
+
+`nb` todos are Markdown documents identified by a `.todo.md` file
+extension.
+
+#### Example
+
+```markdown
+# [x] Example todo title.
+
+## Due
+
+2100-01-01T01:01:01Z
+
+## Description
+
+Example description.
+
+## Tasks
+
+- [ ] One
+- [ ] Two
+- [x] Three
+
+## Related
+
+- [[example:123]]
+- <https://example.org>
+
+## Tags
+
+#tag1 #tag2
+```
+
+#### Elements
+
+##### Title
+
+`Required`
+
+A markdown `h1` heading containing a Markdown checkbox followed by the todo title.
+An `x` within the checkbox (`[ ]`) indicates that the todo is done.
+
+##### `## Due`
+
+`Optional`
+
+A text element containing a value referencing
+a due date and / or time for the todo.
+
+##### `## Description`
+
+`Optional`
+
+A text element containing a description for the todo.
+
+##### `## Tasks`
+
+`Optional`
+
+A markdown tasklist containing sub-tasks for the todo.
+
+##### `## Related`
+
+`Optional`
+
+A Markdown list of
+angle bracketed (`<`, `>`) URLs and
+[[[wiki-style links]]](#-linking)
+that are related to the todo.
+
+##### `## Tags`
+
+`Optional`
+
+A list of tags represented as `#hashtags` separated by individual
+spaces.
+
 ### `nb` Notebook Specification
+
+<p>
+  <sup>
+    <a href="#specifications">↑</a> ·
+    <a href="#-notebooks">Notebooks</a>,
+    <a href="#notebooks"><code>nb notebooks</code></a>
+  </sup>
+</p>
 
 An `nb` notebook is a directory that contains a valid `.git` directory,
 indicating that it has been initialized as a git repository, and a `.index`
@@ -8088,7 +8742,7 @@ at the root level of the notebook directory.
 
 ## Tests
 
-With more than 1,800 tests spanning tens of thousands of lines,
+With more than 1,900 tests spanning tens of thousands of lines,
 `nb` is really mostly a
 [test suite](https://github.com/xwmx/nb/tree/master/test).
 Tests run continuously [via GitHub Actions](https://github.com/xwmx/nb/actions)

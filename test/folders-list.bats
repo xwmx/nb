@@ -49,7 +49,7 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[   "${status}"    -eq 0                                     ]]
-  [[   "${lines[0]}"  =~  0\ audio\ files\.                     ]]
+  [[   "${lines[0]}"  =~  0\ audio\ items\.                     ]]
   [[   "${lines[2]}"  =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/ ]]
 }
 
@@ -66,7 +66,7 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[   "${status}"    -eq 0                                     ]]
-  [[   "${lines[0]}"  =~  0\ audio\ files\.                     ]]
+  [[   "${lines[0]}"  =~  0\ audio\ items\.                     ]]
   [[   "${lines[2]}"  =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/ ]]
 }
 

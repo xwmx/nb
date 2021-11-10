@@ -995,9 +995,21 @@ Help information:
 @test "'list' includes indicators." {
   {
     "${_NB}" init
-    "${_NB}" add "one.bookmark.md" --content "<https://example.com>"
-    "${_NB}" add "two.md" --content "Example Content."
-    "${_NB}" add "three.md" --title "Three" --encrypt --password=example
+
+    "${_NB}" add "one.bookmark.md"      \
+      --content "<https://example.com>"
+
+    "${_NB}" add "two.md"               \
+      --content "Example Content."
+
+    "${_NB}" add "three.md"             \
+      --title "Three" --encrypt --password=example
+
+    "${_NB}" add "four.todo.md"         \
+      --content "# [ ] Example undone todo."
+
+    "${_NB}" add "Five.todo.md"         \
+      --content "# [x] Example done todo."
   }
 
   run "${_NB}" list
@@ -1005,22 +1017,26 @@ Help information:
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0                                 ]]
+  [[ "${status}"    -eq 0                                                     ]]
 
-  [[ "${lines[0]}"  =~  \[.*3.*\].*\ 🔒\ three.md.enc     ]]
-  [[ "${lines[1]}"  =~  \[.*2.*\].*\ two.md               ]]
-  [[ "${lines[2]}"  =~  \[.*1.*\].*\ 🔖\ one.bookmark.md  ]]
+  [[ "${lines[0]}"  =~  \[.*5.*\].*\ ✅\ .*\[.*x.*\].*\ Example\ done\ todo\. ]]
+  [[ "${lines[1]}"  =~  \[.*4.*\].*\ ✔️\ \ .*\[\ \].*\ Example\ undone\ todo\.  ]]
+  [[ "${lines[2]}"  =~  \[.*3.*\].*\ 🔒\ three.md.enc                         ]]
+  [[ "${lines[3]}"  =~  \[.*2.*\].*\ two.md                                   ]]
+  [[ "${lines[4]}"  =~  \[.*1.*\].*\ 🔖\ one.bookmark.md                      ]]
 
   run "${_NB}" list --no-color
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0                                 ]]
+  [[ "${status}"    -eq 0                                           ]]
 
-  [[ "${lines[0]}"  =~  \[3\]\ 🔒\ three.md.enc           ]]
-  [[ "${lines[1]}"  =~  \[2\]\ two.md                     ]]
-  [[ "${lines[2]}"  =~  \[1\]\ 🔖\ one.bookmark.md        ]]
+  [[ "${lines[0]}"  =~  \[5\]\ ✅\ \[x\]\ Example\ done\ todo\.     ]]
+  [[ "${lines[1]}"  =~  \[4\]\ ✔️\ \ \[\ \]\ Example\ undone\ todo\.  ]]
+  [[ "${lines[2]}"  =~  \[3\]\ 🔒\ three.md.enc                     ]]
+  [[ "${lines[3]}"  =~  \[2\]\ two.md                               ]]
+  [[ "${lines[4]}"  =~  \[1\]\ 🔖\ one.bookmark.md                  ]]
 }
 
 @test "'list' indicators are configurable with environment variables." {
@@ -1179,6 +1195,38 @@ line two
 line three
 line four
 HEREDOC
+}
+
+@test "'list -e' with todos prints line matching visible listing length." {
+  {
+    "${_NB}" init
+
+    "${_NB}" todos add "Example todo one."
+    "${_NB}" todos add "Example todo two."
+
+    "${_NB}" "do" 2
+  }
+
+  run "${_NB}" list -e
+
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
+  printf "\${lines[2]}:   '%s'\\n" "${lines[2]}"
+
+  [[ "${status}"    -eq 0 ]]
+  [[ "${#lines[@]}" -eq 6 ]]
+
+  [[ "${lines[0]}"  =~  \
+.*[.*2.*].*\ ✅\ .*[.*x.*].*\ Example\ todo\ two\.  ]]
+  [[ "${lines[1]}"  =~  \
+[^-]----------------------------[^-]                ]]
+
+
+  [[ "${lines[3]}"  =~  \
+.*[.*1.*].*\ ✔️\ \ .*[\ ].*\ Example\ todo\ one\.    ]]
+  [[ "${lines[4]}"  =~  \
+[^-]----------------------------[^-]                ]]
 }
 
 @test "'list -e' exits with 0 and displays 5 line list items." {
@@ -1773,6 +1821,46 @@ HEREDOC
 
 # `list --type` ###############################################################
 
+@test "'list --type todo' without todos prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example File One.md" --content "Example content one."
+    "${_NB}" add "Example File Two.md" --content "Example content two."
+  }
+
+  run "${_NB}" list --type todo
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0               ]]
+  [[   "${lines[0]}"  =~  0\ todo\ items. ]]
+}
+
+@test "'list --type todo' with todos lists todos." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example File One.md" --content "Example content one."
+    "${_NB}" add "Example File Two.md" --content "Example content two."
+
+    "${_NB}" add "Example Todo One.todo.md" --content "# [ ] Example not done todo."
+    "${_NB}" add "Example Todo Two.todo.md" --content "# [x] Example done todo."
+  }
+
+  run "${_NB}" list --type todo
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0                                 ]]
+  [[   "${lines[0]}"  =~  \
+.*\[.*4.*\].*\ ✅\ .*\[.*x.*\].*\ Example\ done\ todo\.     ]]
+  [[   "${lines[1]}"  =~  \
+.*\[.*3.*\].*\ ✔️\ \ .*\[\ \].*\ Example\ not\ done\ todo\.  ]]
+}
+
 @test "'list --document' exits with 0 and displays a list of documents." {
   {
     "${_NB}" init
@@ -1869,7 +1957,7 @@ HEREDOC
 
   [[ "${status}"    -eq 0                     ]]
   [[ "${#lines[@]}" ==  5                     ]]
-  [[ "${lines[0]}"  =~  0\ document\ files\.  ]]
+  [[ "${lines[0]}"  =~  0\ document\ items\.  ]]
 }
 
 
@@ -1898,7 +1986,7 @@ HEREDOC
 
   [[ "${status}"    -eq 0                     ]]
   [[ "${#lines[@]}" ==  5                     ]]
-  [[ "${lines[0]}"  =~  0\ document\ files\.  ]]
+  [[ "${lines[0]}"  =~  0\ document\ items\.  ]]
 }
 
 @test "'list --js' exits with 0, displays empty list, and retains trailing 's'." {
@@ -1926,7 +2014,7 @@ HEREDOC
 
   [[ "${status}"    -eq 0               ]]
   [[ "${#lines[@]}" ==  5               ]]
-  [[ "${lines[0]}"  =~  0\ js\ files\.  ]]
+  [[ "${lines[0]}"  =~  0\ js\ items\.  ]]
 }
 
 @test "'list <selector> --type' filters by type." {
@@ -2492,7 +2580,7 @@ Help information:
   printf "\${output}:     '%s'\\n" "${output}"
   printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  _expected="0 document files.
+  _expected="0 document items.
 
 Import a file:
   $(_color_primary 'nb import (<path> | <url>) one:')

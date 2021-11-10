@@ -7,6 +7,419 @@ export NB_SERVER_PORT=6789
 # non-breaking space
 export _S=" "
 
+# --and / --or ################################################################
+
+@test "'browse --container -q \#tag2 --or \#tag3' performs OR search." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md"    \
+      --title "Title One"         \
+      --content "Content one."
+
+    "${_NB}" add "File Two.md"    \
+      --title "Title Two"         \
+      --content "Content #tag1 two."
+
+    "${_NB}" add "File Three.md"  \
+      --title "Title Three"       \
+      --content "Content #tag2 three."
+
+    "${_NB}" add "File Four.md"   \
+      --title "Title Four"        \
+      --content "Content #tag1 four."
+
+    "${_NB}" add "File Five.md"   \
+      --title "Title Five"        \
+      --content "Content #tag2 #tag3 five."
+  }
+
+  run "${_NB}" browse --container -t tag2 --or -t tag3
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq  0               ]]
+
+  [[ !  "${output}"   =~ Title${_S}One    ]]
+  [[ !  "${output}"   =~ Title${_S}Four   ]]
+
+  [[    "${output}"   =~  \
+\<a.*\ href=\"//localhost:6789/home:5\?--per-page=.*\"\ class=\"list-item\"\>             ]]
+  [[    "${output}"   =~   \
+class=\"list-item\"\>\<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>     ]]
+  [[    "${output}"   =~   \
+identifier\"\>home:5\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Five\</a\>\<br\>  ]]
+
+  [[    "${output}"   =~   \
+identifier\"\>home:3\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Three\</a\>\<br\> ]]
+}
+
+@test "'browse --container -q \#tag2 --and \#tag3' performs AND search." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md"    \
+      --title "Title One"         \
+      --content "Content one."
+
+    "${_NB}" add "File Two.md"    \
+      --title "Title Two"         \
+      --content "Content #tag1 two."
+
+    "${_NB}" add "File Three.md"  \
+      --title "Title Three"       \
+      --content "Content #tag2 three."
+
+    "${_NB}" add "File Four.md"   \
+      --title "Title Four"        \
+      --content "Content #tag1 four."
+
+    "${_NB}" add "File Five.md"   \
+      --title "Title Five"        \
+      --content "Content #tag2 #tag3 five."
+  }
+
+  run "${_NB}" browse --container -q \#tag2 --and \#tag3
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq  0               ]]
+
+  [[ !  "${output}"   =~ Title${_S}One    ]]
+  [[ !  "${output}"   =~ Title${_S}Three  ]]
+  [[ !  "${output}"   =~ Title${_S}Four   ]]
+
+  [[    "${output}"   =~  \
+\<a.*\ href=\"//localhost:6789/home:5\?--per-page=.*\"\ class=\"list-item\"\>             ]]
+  [[    "${output}"   =~   \
+class=\"list-item\"\>\<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>     ]]
+  [[    "${output}"   =~   \
+identifier\"\>home:5\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Five\</a\>\<br\>  ]]
+}
+
+# -t / --tag / --tags #########################################################
+
+@test "'browse --container -t tag2 --and -t tag3' performs AND search." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md"    \
+      --title "Title One"         \
+      --content "Content one."
+
+    "${_NB}" add "File Two.md"    \
+      --title "Title Two"         \
+      --content "Content #tag1 two."
+
+    "${_NB}" add "File Three.md"  \
+      --title "Title Three"       \
+      --content "Content #tag2 three."
+
+    "${_NB}" add "File Four.md"   \
+      --title "Title Four"        \
+      --content "Content #tag1 four."
+
+    "${_NB}" add "File Five.md"   \
+      --title "Title Five"        \
+      --content "Content #tag2 #tag3 five."
+  }
+
+  run "${_NB}" browse --container -t tag2 --and -t tag3
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq  0               ]]
+
+  [[ !  "${output}"   =~ Title${_S}One    ]]
+  [[ !  "${output}"   =~ Title${_S}Three  ]]
+  [[ !  "${output}"   =~ Title${_S}Four   ]]
+
+  [[    "${output}"   =~  \
+\<a.*\ href=\"//localhost:6789/home:5\?--per-page=.*\"\ class=\"list-item\"\>             ]]
+  [[    "${output}"   =~   \
+class=\"list-item\"\>\<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>     ]]
+  [[    "${output}"   =~   \
+identifier\"\>home:5\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Five\</a\>\<br\>  ]]
+}
+
+@test "'browse --container -t tag2,tag3' performs AND search." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md"    \
+      --title "Title One"         \
+      --content "Content one."
+
+    "${_NB}" add "File Two.md"    \
+      --title "Title Two"         \
+      --content "Content #tag1 two."
+
+    "${_NB}" add "File Three.md"  \
+      --title "Title Three"       \
+      --content "Content #tag2 three."
+
+    "${_NB}" add "File Four.md"   \
+      --title "Title Four"        \
+      --content "Content #tag1 four."
+
+    "${_NB}" add "File Five.md"   \
+      --title "Title Five"        \
+      --content "Content #tag2 #tag3 five."
+  }
+
+  run "${_NB}" browse --container -t tag2,tag3
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq  0               ]]
+
+  [[ !  "${output}"   =~ Title${_S}One    ]]
+  [[ !  "${output}"   =~ Title${_S}Three  ]]
+  [[ !  "${output}"   =~ Title${_S}Four   ]]
+
+  [[    "${output}"   =~  \
+\<a.*\ href=\"//localhost:6789/home:5\?--per-page=.*\"\ class=\"list-item\"\>             ]]
+  [[    "${output}"   =~   \
+class=\"list-item\"\>\<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>     ]]
+  [[    "${output}"   =~   \
+identifier\"\>home:5\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Five\</a\>\<br\>  ]]
+}
+
+@test "'browse --container -t tag2 --or -t tag3' performs OR search." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md"    \
+      --title "Title One"         \
+      --content "Content one."
+
+    "${_NB}" add "File Two.md"    \
+      --title "Title Two"         \
+      --content "Content #tag1 two."
+
+    "${_NB}" add "File Three.md"  \
+      --title "Title Three"       \
+      --content "Content #tag2 three."
+
+    "${_NB}" add "File Four.md"   \
+      --title "Title Four"        \
+      --content "Content #tag1 four."
+
+    "${_NB}" add "File Five.md"   \
+      --title "Title Five"        \
+      --content "Content #tag2 #tag3 five."
+  }
+
+  run "${_NB}" browse --container -t tag2 --or -t tag3
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq  0               ]]
+
+  [[ !  "${output}"   =~ Title${_S}One    ]]
+  [[ !  "${output}"   =~ Title${_S}Four   ]]
+
+  [[    "${output}"   =~  \
+\<a.*\ href=\"//localhost:6789/home:5\?--per-page=.*\"\ class=\"list-item\"\>             ]]
+  [[    "${output}"   =~   \
+class=\"list-item\"\>\<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>     ]]
+  [[    "${output}"   =~   \
+identifier\"\>home:5\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Five\</a\>\<br\>  ]]
+
+  [[    "${output}"   =~   \
+identifier\"\>home:3\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Three\</a\>\<br\> ]]
+}
+
+@test "'browse --container -t tag2 -t tag3' performs AND search." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md"    \
+      --title "Title One"         \
+      --content "Content one."
+
+    "${_NB}" add "File Two.md"    \
+      --title "Title Two"         \
+      --content "Content #tag1 two."
+
+    "${_NB}" add "File Three.md"  \
+      --title "Title Three"       \
+      --content "Content #tag2 three."
+
+    "${_NB}" add "File Four.md"   \
+      --title "Title Four"        \
+      --content "Content #tag1 four."
+
+    "${_NB}" add "File Five.md"   \
+      --title "Title Five"        \
+      --content "Content #tag2 #tag3 five."
+  }
+
+  run "${_NB}" browse --container -t tag2 -t tag3
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq  0               ]]
+
+  [[ !  "${output}"   =~ Title${_S}One    ]]
+  [[ !  "${output}"   =~ Title${_S}Three  ]]
+  [[ !  "${output}"   =~ Title${_S}Four   ]]
+
+  [[    "${output}"   =~  \
+\<a.*\ href=\"//localhost:6789/home:5\?--per-page=.*\"\ class=\"list-item\"\>             ]]
+  [[    "${output}"   =~   \
+class=\"list-item\"\>\<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>     ]]
+  [[    "${output}"   =~   \
+identifier\"\>home:5\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Five\</a\>\<br\>  ]]
+}
+
+@test "'browse --container -t tag1' performs search." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md"    \
+      --title "Title One"         \
+      --content "Content one."
+
+    "${_NB}" add "File Two.md"    \
+      --title "Title Two"         \
+      --content "Content #tag1 two."
+
+    "${_NB}" add "File Three.md"  \
+      --title "Title Three"       \
+      --content "Content #tag2 three."
+
+    "${_NB}" add "File Four.md"   \
+      --title "Title Four"        \
+      --content "Content #tag1 four."
+
+    "${_NB}" add "File Five.md"   \
+      --title "Title Five"        \
+      --content "Content #tag3 five."
+  }
+
+  run "${_NB}" browse --container -t tag1
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq  0               ]]
+
+  [[ !  "${output}"   =~ Title${_S}One    ]]
+  [[ !  "${output}"   =~ Title${_S}Three  ]]
+  [[ !  "${output}"   =~ Title${_S}Five   ]]
+
+  [[    "${output}"   =~   \
+identifier\"\>home:4\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Four\</a\>\<br\>  ]]
+
+  [[    "${output}"   =~  \
+\<a.*\ href=\"//localhost:6789/home:2\?--per-page=.*\"\ class=\"list-item\"\>             ]]
+  [[    "${output}"   =~   \
+class=\"list-item\"\>\<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>     ]]
+  [[    "${output}"   =~   \
+identifier\"\>home:2\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Two\</a\>\<br\>   ]]
+}
+
+@test "'browse --container --tag #tag1' (hash) performs search." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md"    \
+      --title "Title One"         \
+      --content "Content one."
+
+    "${_NB}" add "File Two.md"    \
+      --title "Title Two"         \
+      --content "Content #tag1 two."
+
+    "${_NB}" add "File Three.md"  \
+      --title "Title Three"       \
+      --content "Content #tag2 three."
+
+    "${_NB}" add "File Four.md"   \
+      --title "Title Four"        \
+      --content "Content #tag1 four."
+
+    "${_NB}" add "File Five.md"   \
+      --title "Title Five"        \
+      --content "Content #tag3 five."
+  }
+
+  run "${_NB}" browse --container --tag "#tag1"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq  0           ]]
+
+  [[ !  "${output}"   =~ Title${_S}One    ]]
+  [[ !  "${output}"   =~ Title${_S}Three  ]]
+  [[ !  "${output}"   =~ Title${_S}Five   ]]
+
+  [[    "${output}"   =~   \
+identifier\"\>home:4\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Four\</a\>\<br\>  ]]
+
+  [[    "${output}"   =~  \
+\<a.*\ href=\"//localhost:6789/home:2\?--per-page=.*\"\ class=\"list-item\"\>             ]]
+  [[    "${output}"   =~   \
+class=\"list-item\"\>\<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>     ]]
+  [[    "${output}"   =~   \
+identifier\"\>home:2\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Two\</a\>\<br\>   ]]
+}
+
+@test "'browse --container --tag tag1' (no hash) performs search." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md"    \
+      --title "Title One"         \
+      --content "Content one."
+
+    "${_NB}" add "File Two.md"    \
+      --title "Title Two"         \
+      --content "Content #tag1 two."
+
+    "${_NB}" add "File Three.md"  \
+      --title "Title Three"       \
+      --content "Content #tag2 three."
+
+    "${_NB}" add "File Four.md"   \
+      --title "Title Four"        \
+      --content "Content #tag1 four."
+
+    "${_NB}" add "File Five.md"   \
+      --title "Title Five"        \
+      --content "Content #tag3 five."
+  }
+
+  run "${_NB}" browse --container --tag "tag1"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq  0               ]]
+
+  [[ !  "${output}"   =~ Title${_S}One    ]]
+  [[ !  "${output}"   =~ Title${_S}Three  ]]
+  [[ !  "${output}"   =~ Title${_S}Five   ]]
+
+  [[    "${output}"   =~   \
+identifier\"\>home:4\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Four\</a\>\<br\>  ]]
+
+  [[    "${output}"   =~  \
+\<a.*\ href=\"//localhost:6789/home:2\?--per-page=.*\"\ class=\"list-item\"\>             ]]
+  [[    "${output}"   =~   \
+class=\"list-item\"\>\<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>     ]]
+  [[    "${output}"   =~   \
+identifier\"\>home:2\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Two\</a\>\<br\>   ]]
+}
+
 # notebook: selectors #########################################################
 
 @test "'browse --query <query>' includes notebook selectors for results in the current notebook." {
@@ -130,7 +543,7 @@ action=\"/local:\?--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'/'/%2F}%2FL
 
 # normalization ###############################################################
 
-@test "'browse --container --query' with spaces performs search." {
+@test "'browse --query' with spaces performs search." {
   {
     "${_NB}" init
 
@@ -252,6 +665,35 @@ identifier\"\>home:2\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Two\</
 }
 
 # query #######################################################################
+
+@test "'browse --container --query' with quotes performs search." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "File One.md"     \
+      --title     "Title One"       \
+      --content   "One's content."
+    "${_NB}" add  "File Two.md"     \
+      --title     "Title Two"       \
+      --content   "Two's \"quoted\" and unquoted content."
+  }
+
+  run "${_NB}" browse --container --query "Two's \"quoted\" and"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq  0         ]]
+
+  [[ !  "${output}"   =~ Title\ One ]]
+
+  [[    "${output}"   =~  \
+\<a.*\ href=\"//localhost:6789/home:2\?--per-page=.*\"\ class=\"list-item\"\>           ]]
+  [[    "${output}"   =~   \
+class=\"list-item\"\>\<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>   ]]
+  [[    "${output}"   =~   \
+identifier\"\>home:2\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Two\</a\>\<br\> ]]
+}
 
 @test "'browse --container --query' with tag performs search." {
   {

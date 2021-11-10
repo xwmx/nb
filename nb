@@ -74,7 +74,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="6.6.0"
+_VERSION="6.7.0"
 
 # $_ME
 #
@@ -120,7 +120,7 @@ _REPO_RAW_URL="https://raw.githubusercontent.com/${_REPO}/${_REPO_MAIN_BRANCH}"
 # Usage:
 #   _command_exists <name>
 #
-# Exit / Error Status:
+# Exit / Error / Return Status:
 #   0 (success, true) If a command <name> is defined in the current environment.
 #   1 (error,  false) If not.
 #
@@ -140,7 +140,7 @@ _command_exists() {
 # Usage:
 #   _contains <query> <list-item>...
 #
-# Exit / Error Status:
+# Exit / Error / Return Status:
 #   0 (success, true)  If the item is included in the list.
 #   1 (error,  false)  If not.
 #
@@ -400,7 +400,7 @@ _option_get_value() {
 # Usage:
 #   _option_value_is_present <value>
 #
-# Exit / Error Status:
+# Exit / Error / Return Status:
 #   0 (success, true)  The argument is present and does not match as an option
 #                      flag.
 #   1 (error,  false)  The argument is blank or matches as an option flag.
@@ -666,8 +666,12 @@ export  NB_INDICATOR_PINNED="${NB_INDICATOR_PINNED-📌}"
 export _NB_INDICATOR_PINNED="${NB_INDICATOR_PINNED:+"${NB_INDICATOR_PINNED} "}"
 
 # $NB_INDICATOR_TODO
-export  NB_INDICATOR_TODO="${NB_INDICATOR_TODO-✅}"
+export  NB_INDICATOR_TODO="${NB_INDICATOR_TODO-✔️ }"
 export _NB_INDICATOR_TODO="${NB_INDICATOR_TODO:+"${NB_INDICATOR_TODO} "}"
+
+# $NB_INDICATOR_TODO_DONE
+export  NB_INDICATOR_TODO_DONE="${NB_INDICATOR_TODO_DONE-✅}"
+export _NB_INDICATOR_TODO_DONE="${NB_INDICATOR_TODO_DONE:+"${NB_INDICATOR_TODO_DONE} "}"
 
 # $NB_INDICATOR_VIDEO
 export  NB_INDICATOR_VIDEO="${NB_INDICATOR_VIDEO-📹}"
@@ -1168,6 +1172,16 @@ trap "exit"           INT
 # Backtick with ANSI-C quoting for string building.
 _BT=$'`'
 
+# $_CHEVRON_LEFT
+#
+# A left-pointing chevron character.
+_CHEVRON_LEFT="❮"
+
+# $_CHEVRON_RIGHT
+#
+# A right-pointing chevron character.
+_CHEVRON_RIGHT="❯"
+
 # $_COLUMNS
 #
 # The terminal width in number of columns (characters).
@@ -1199,6 +1213,14 @@ _NEWLINE=$'\n'
 # string substitution.
 _SLASH=$'/'
 
+# Fallbacks for non-unicode environments.
+if [[ ! "${LANG:-x}" =~ utf-|UTF- ]]
+then
+  _CHEVRON_LEFT="<"
+  _CHEVRON_RIGHT=">"
+  _MD="-"
+fi
+
 # _alias_subcommand()
 #
 # Usage:
@@ -1225,7 +1247,7 @@ _alias_subcommand() {
 # Usage:
 #   _file_is_archive <path>
 #
-# Exit / Error Status:
+# Exit / Error / Return Status:
 #   0 (success, true)  If file is an archive.
 #   1 (error,  false)  if not.
 export _ARCHIVE_FILE_EXTENSIONS=(
@@ -1262,7 +1284,7 @@ _file_is_archive() {
 # Usage:
 #   _file_is_audio (<path> | <filename>)
 #
-# Exit / Error Status:
+# Exit / Error / Return Status:
 #   0 (success, true)  If file is an audio file.
 #   1 (error,  false)  if not.
 export _AUDIO_FILE_EXTENSIONS=(
@@ -1286,7 +1308,7 @@ _file_is_audio() {
 # Usage:
 #   _file_is_bookmark (<path> | <filename>)
 #
-# Exit / Error Status:
+# Exit / Error / Return Status:
 #   0 (success, true) If file is a bookmark.
 #   1 (error,  false) if not.
 export _BOOKMARK_FILE_EXTENSIONS=(
@@ -1303,7 +1325,7 @@ _file_is_bookmark() {
 # Usage:
 #   _file_is_document (<path> | <filename>)
 #
-# Exit / Error Status:
+# Exit / Error / Return Status:
 #   0 (success, true)  If file is a Word, Open Office, PDF, or other document.
 #   1 (error,  false)  if not.
 export _DOCUMENT_FILE_EXTENSIONS=(
@@ -1327,7 +1349,7 @@ _file_is_document() {
 # Usage:
 #   _file_is_encrypted <path>
 #
-# Exit / Error Status:
+# Exit / Error / Return Status:
 #   0 (success, true)  If file is encrypted.
 #   1 (error,  false)  if not.
 export _ENCRYPTED_FILE_EXTENSIONS=(
@@ -1367,7 +1389,7 @@ _file_is_encrypted() {
 # Usage:
 #   _file_is_image (<path> | <filename>)
 #
-# Exit / Error Status:
+# Exit / Error / Return Status:
 #   0 (success, true)  If file is an image.
 #   1 (error,  false)  if not.
 export _IMAGE_FILE_EXTENSIONS=(
@@ -1401,7 +1423,7 @@ _file_is_image() {
 # Usage:
 #   _file_is_text <path>
 #
-# Exit / Error Status:
+# Exit / Error / Return Status:
 #   0 (success, true)  If file is text.
 #   1 (error,  false)  if not.
 #
@@ -1472,12 +1494,28 @@ _file_is_text() {
     }
 }
 
+# _file_is_todo()
+#
+# Usage:
+#   _file_is_todo (<path> | <filename>)
+#
+# Exit / Error / Return Status:
+#   0 (success, true) If file is a todo.
+#   1 (error,  false) if not.
+export _TODO_FILE_EXTENSIONS=(
+  todo.md
+  todo.md.enc
+)
+_file_is_todo() {
+  [[ "${1:-}" =~ todo\.md|todo\.md\.enc   ]]
+}
+
 # _file_is_video()
 #
 # Usage:
 #   _file_is_video (<path> | <filename>)
 #
-# Exit / Error Status:
+# Exit / Error / Return Status:
 #   0 (success, true)  If file is a video file.
 #   1 (error,  false)  if not.
 export _VIDEO_FILE_EXTENSIONS=(
@@ -1766,21 +1804,22 @@ _get_id_selector() {
   local _selector="${1:-}"
   local _trailing_slash=0
 
-  [[ -z "${_selector:-}"          ]] && return 0
+  case "${2:-}" in
+    --notebook) local _always_include_notebook=1 ;;
+    *)          local _always_include_notebook=0 ;;
+  esac
 
-  local _always_include_notebook=0
-
-  if [[ "${2:-}" == "--notebook"  ]]
+  if [[ -z "${_selector:-}"     ]]
   then
-    _always_include_notebook=1
+    return 0
   fi
 
-  if [[ "${_selector:-}" =~ /$    ]]
+  if [[ "${_selector:-}" =~ /$  ]]
   then
     _trailing_slash=1
   fi
 
-  if [[ "${_selector:-}" =~ ^/    ]]
+  if [[ "${_selector:-}" =~ ^/  ]]
   then # selector is full path
     if [[ "${_selector}" =~ ^${NB_DIR}      ]]
     then
@@ -1796,8 +1835,8 @@ _get_id_selector() {
       _notebook_name="local"
 
       _notebook_path="$(
-        cd "${_selector%/*}"                &&
-          __set_notebook_paths              &&
+        cd "${_selector%/*}"    &&
+          __set_notebook_paths  &&
           _notebooks current --path --no-color
       )"
 
@@ -1809,7 +1848,7 @@ _get_id_selector() {
       fi
     fi
   else
-    if [[ "${_selector:-}" =~ :             ]]
+    if [[ "${_selector:-}" =~ :   ]]
     then
       _notebook_name="${_selector%%:*}"
       _selector_relative_path="${_selector#*:}"
@@ -1818,19 +1857,17 @@ _get_id_selector() {
     fi
   fi
 
-  if [[ -z "${_notebook_path:-}"            ]]
+  if [[ -z "${_notebook_path:-}"  ]]
   then
-    if [[  "${_notebook_name:-}" == "local" ]]
-    then
-      _notebook_path="$(_notebooks --local --path --no-color)"
-    else
-      _notebook_path="${NB_DIR}/${_notebook_name}"
-    fi
+    case "${_notebook_name:-}" in
+      local) _notebook_path="$(_notebooks --local --path --no-color)" ;;
+      *)     _notebook_path="${NB_DIR}/${_notebook_name}"             ;;
+    esac
   fi
 
   local _parent_folder_path=
 
-  if [[ -n "${_notebook_name:-}"            ]]
+  if [[ -n "${_notebook_name:-}"  ]]
   then
     _id_selector+="${_notebook_name}:"
     _parent_folder_path="${_notebook_path:-}"
@@ -1850,7 +1887,7 @@ _get_id_selector() {
 
   local _id_path=
 
-  if [[ -n "${_selector_relative_path:-}"   ]]
+  if [[ -n "${_selector_relative_path:-}" ]]
   then
     local _selector_segments=()
 
@@ -1881,8 +1918,8 @@ _get_id_selector() {
 
       local _segment_basename=
 
-      if [[ -z "${_segment_id:-}"                           ]] &&
-         [[ "${_selector_segments[i]:-}"  =~ ^[0-9]+$       ]]
+      if [[ -z "${_segment_id:-}"                     ]] &&
+         [[ "${_selector_segments[i]:-}"  =~ ^[0-9]+$ ]]
       then
         _segment_basename="$(
           _index get_basename             \
@@ -1988,10 +2025,10 @@ _highlight_syntax_if_available() {
   local _extension=
   local _path=
 
-  if [[ "${1:-}" =~ /       ]]
+  if [[ "${1:-}" =~ / ]]
   then
     _path="${1}"
-  elif [[ -n "${1:-}"       ]]
+  elif [[ -n "${1:-}" ]]
   then
     _extension="${1}"
   else
@@ -2122,7 +2159,7 @@ _less_prompt() {
 # Usage:
 #   _piped_input
 #
-# Exit / Error Status:
+# Exit / Error / Return Status:
 #   0 (success, true)  If piped input is present.
 #   1 (error,  false)  If the current input is interactive (eg, a shell).
 _piped_input() {
@@ -2304,6 +2341,14 @@ _list_files() {
 
           grep --color=never "${_grep_patterns[@]}"
           ;;
+        todo|todos)
+          for __extension in "${_TODO_FILE_EXTENSIONS[@]}"
+          do
+            _grep_patterns+=("-e" "\.${__extension}$")
+          done
+
+          grep --color=never "${_grep_patterns[@]}"
+          ;;
         video|videos)
           for __extension in "${_VIDEO_FILE_EXTENSIONS[@]}"
           do
@@ -2410,7 +2455,7 @@ _print_padding() {
 # Description:
 #   Print the welcome message.
 _print_welcome() {
-  local _padding
+  local _padding=
   _padding="$(_print_padding " / / | | | | |_) |" "${_COLUMNS}")"
 
   _print_line "$(printf "%-${_COLUMNS}s" '.')"
@@ -2773,7 +2818,7 @@ _spinner() {
 # Usage:
 #   _string_is_email <string>
 #
-# Exit / Error Status:
+# Exit / Error / Return Status:
 #   0 (success, true)  If the string is recognized as an email address.
 #   1 (error,  false)  if not.
 _string_is_email() {
@@ -2785,7 +2830,7 @@ _string_is_email() {
 # Usage:
 #   _string_is_url <string>
 #
-# Exit / Error Status:
+# Exit / Error / Return Status:
 #   0 (success, true)  If the string is a recognized URL.
 #   1 (error,  false)  if not.
 _string_is_url() {
@@ -2974,7 +3019,7 @@ _git() {
   # Usage:
   #   _git_autosyncable [<notebook-path>]
   #
-  # Exit / Error Status:
+  # Exit / Error / Return Status:
   #   0 (success, true)  If autosync should trigger.
   #   1 (error,  false)  If autosync should not trigger.
   _git_autosyncable() {
@@ -3039,8 +3084,8 @@ _git() {
 
     # Usage: _git_checkpoint_commit <notebook-path> <message>
     _git_checkpoint_commit() {
-     local _notebook_path="${1:-}"
      local _message="${2:-}"
+     local _notebook_path="${1:-}"
 
       if [[ -z "${_notebook_path:-}" ]] || [[ -z "${_message:-}" ]]
       then
@@ -3053,8 +3098,8 @@ _git() {
     }
 
     local _message=
-    local _show_spinner=0
     local _notebook_path=
+    local _show_spinner=0
 
     local __arg=
     for   __arg in "${@:-}"
@@ -3119,7 +3164,7 @@ _git() {
   # Usage:
   #   _git_dirty [<notebook-path>]
   #
-  # Exit / Error Status:
+  # Exit / Error / Return Status:
   #   0 (success, true)  If there are uncommitted changes in <notebook-path>
   #                      or the current notebook.
   #   1 (error,  false)  If <notebook-path> or the current notebook is clean.
@@ -3141,7 +3186,7 @@ _git() {
   # Usage:
   #   _git_out_of_sync [<notebook-path>]
   #
-  # Exit / Error Status:
+  # Exit / Error / Return Status:
   #   0 (success, true)  If <notebook-path> or the current notebook is out of
   #                      sync with the remote.
   #   1 (error,  false)  If <notebook-path> or the current notebook is synced
@@ -3323,7 +3368,7 @@ HEREDOC
     then
       local _merge_error=1
 
-      local _conflicted_files
+      local _conflicted_files=
       _conflicted_files=($(
         GIT_PAGER='' git -C "${_notebook_path}" diff --name-only --diff-filter=U
       ))
@@ -3461,7 +3506,7 @@ HEREDOC
       _git_sync "${2:-}" "${3:-}"
       ;;
     *)
-      local _notebook_path
+      local _notebook_path=
       _notebook_path="$(_notebooks current --path)"
 
       if [[ -n "${1:-}" ]]
@@ -3662,29 +3707,31 @@ $(_color_primary "Help"):
 
 $(_color_primary "Usage"):
   ${_ME}
-  ${_ME} [<ls options>...] [<id> | <filename> | <path> | <title> | <notebook>]
+  ${_ME} [<ls-options>...] [<id> | <filename> | <path> | <title> | <notebook>]
   ${_ME} [<url>] [<bookmark options>...]
   ${_ME} add [<notebook>:][<folder-path>/][<filename>] [<content>]
          [-b | --browse] [-c <content> | --content <content>] [--edit]
          [-e | --encrypt] [-f <filename> | --filename <filename>]
          [--folder <folder-path>] [--tags <tag1>,<tag2>...]
          [-t <title> | --title <title>] [--type <type>]
+  ${_ME} add bookmark [<bookmark-options>...]
   ${_ME} add folder [<name>]
+  ${_ME} add todo [<todo-options>...]
   ${_ME} archive [<notebook>]
-  ${_ME} bookmark [<ls options>...]
+  ${_ME} bookmark [<ls-options>...]
   ${_ME} bookmark [<notebook>:][<folder-path>/] <url>
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
               [-f <filename> | --filename <filename>] [--no-request]
-              [-q <quote> | --quote <quote>] [-r <url> | --related <url>]...
-              [--save-source] [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...]
-              [--title <title>]
+              [-q <quote> | --quote <quote>] [--save-source]
+              [-r (<url> | <selector>) | --related (<url> | <selector>)]...
+              [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...] [--title <title>]
   ${_ME} bookmark [list [<list-options>...]]
   ${_ME} bookmark (edit | delete | open | peek | url)
               ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
   ${_ME} bookmark search <query>
   ${_ME} browse [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
-            [-g | --gui] [-n | --notebooks] [--print] [-q | --query <query>]
-            [-s | --serve]
+            [-g | --gui] [-n | --notebooks] [-p | --print] [-q | --query <query>]
+            [-s | --serve] [-t <tag> | --tag <tag> | --tags <tag1>,<tag2>...]
   ${_ME} browse add [<notebook>:][<folder-path>/][<filename>]
             [-c <content> | --content <content>] [--tags <tag1>,<tag2>...]
             [-t <title> | --title <title>]
@@ -3694,6 +3741,8 @@ $(_color_primary "Usage"):
   ${_ME} count [<notebook>:][<folder-path>/]
   ${_ME} delete ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])...
             [-f | --force]
+  ${_ME} do ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+        [<task-number>]
   ${_ME} edit ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           [-c <content> | --content <content>] [--edit]
           [-e <editor> | --editor <editor>] [--overwrite] [--prepend]
@@ -3726,7 +3775,7 @@ $(_color_primary "Usage"):
         [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
   ${_ME} move ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note |
-          --to-title) [-f | --force]
+          --to-title | --to-todo) [-f | --force]
   ${_ME} notebooks [<name> | <query>] [--ar | --archived] [--global] [--local]
                [--names] [--paths] [--unar | --unarchived]
   ${_ME} notebooks add <name> [<remote-url> [<branch>]] [--author]
@@ -3772,7 +3821,22 @@ $(_color_primary "Usage"):
   ${_ME} subcommands [add <name>...] [alias <name> <alias>]
                  [describe <name> <usage>]
   ${_ME} sync [-a | --all]
+  ${_ME} tasks ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
+           [open | closed]
+  ${_ME} todo add [<notebook>:][<folder-path>/][<filename>] <title>
+              [--description <description>] [--due <date>]
+              [-r (<url> | <selector>) | --related (<url> | <selector>)]
+              [--tags <tag1>,<tag2>...] [--task <title>]...
+  ${_ME} todo do   ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
+               [<task-number>]
+  ${_ME} todo undo ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
+               [<task-number>]
+  ${_ME} todos [<notebook>:][<folder-path>/] [open | closed]
+  ${_ME} todos tasks ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
+                 [open | closed]
   ${_ME} unarchive [<notebook>]
+  ${_ME} undo ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+          [<task-number>]
   ${_ME} unpin ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
   ${_ME} unset (<name> | <number>)
   ${_ME} update
@@ -3797,6 +3861,7 @@ $(_color_primary "Subcommands"):
   completions  Install and uninstall completion scripts.
   count        Print the number of items in a notebook or folder.
   delete       Delete a note.
+  do           Mark a todo or task as done.
   edit         Edit a note.
   export       Export a note to a variety of different formats.
   git          Run \`git\` commands within the current notebook.
@@ -3821,7 +3886,10 @@ $(_color_primary "Subcommands"):
   status       Print notebook status information.
   subcommands  List, add, alias, and describe subcommands.
   sync         Sync local notebook with the remote repository.
+  tasks        List tasks in todos, notebooks, folders, and other items.
+  todo         Manage todos and tasks.
   unarchive    Unarchive the current or specified notebook.
+  undo         Mark a todo or task as not done.
   unset        Return a setting to its default value.
   unpin        Unpin a pinned item.
   update       Update \`${_ME}\` to the latest version.
@@ -4055,7 +4123,7 @@ _index() {
         _exit_1 _help index
       fi
 
-      local _basename
+      local _basename=
       _basename="$(_index_get_basename "${_id_number}" "${_index_path}")"
 
       if [[ -z "${_basename}"   ]]
@@ -4093,7 +4161,7 @@ _index() {
         return 1
       fi
 
-      local _id
+      local _id=
       _id="$(_index_get_id "${_basename}" "${_index_path}")"
 
       if [[ -z "${_id}" ]]
@@ -4179,7 +4247,7 @@ _index() {
         local _reconcile_index_path="${1:-}"
         [[ -z "${_reconcile_index_path:-}" ]] && return 1
 
-        local _temp_file
+        local _temp_file=
         _temp_file="$(_temp file)"
 
         exec 3> "${_temp_file}"
@@ -4323,7 +4391,7 @@ _index() {
       local __item=
       for   __item in $(printf "%s\\n" "${_index_list[@]:-}" | uniq -c)
       do
-        local _count
+        local _count=
         _count="$(printf "%s\\n" "${__item}" | awk '{print $1}')"
 
         if [[ "${_count}" -gt 1 ]]
@@ -4733,7 +4801,7 @@ _list() {
     shift
   done
 
-  local _notebook_path
+  local _notebook_path=
   _notebook_path="$(_notebooks current --path)"
 
   local _filter_patterns=()
@@ -4763,7 +4831,7 @@ _list() {
         _filter_patterns+=("${__argument}")
       fi
     else
-      local _selector_relative_path
+      local _selector_relative_path=
       _selector_relative_path="$(
         # resolve selector relative path without a trailing /
         _selector_resolve_path "${__argument%\/}" --relative
@@ -5104,6 +5172,7 @@ _list() {
       local _first_line=
       local _maybe_title=
       local _title_basename_or_path="${__basename}"
+      local _title_basename_or_path_color="${__basename}"
 
       if [[ -z "${_filter_pattern:-}"                       ]] &&
          [[ -n "${_selector_basename:-}"                    ]] &&
@@ -5206,6 +5275,7 @@ _list() {
       if ((_list_paths))
       then
         _title_basename_or_path="${_list_path}/${__basename}"
+        _title_basename_or_path_color="${_list_path}/${__basename}"
       elif ! ((_list_filenames))
       then
         if [[ -z "${_maybe_title}" ]]
@@ -5221,6 +5291,7 @@ _list() {
             _maybe_title=
           else
             _title_basename_or_path="${_maybe_title}"
+            _title_basename_or_path_color="${_maybe_title}"
           fi
         fi
       fi
@@ -5267,14 +5338,34 @@ _list() {
           _indicators+="${_NB_INDICATOR_ENCRYPTED:-}"
         fi
 
-        if [[ "${_title_basename_or_path}" =~ todo|Todo|TODO ]]
+        if _file_is_todo "${_list_path}/${__basename}"
         then
-          _indicators+="${_NB_INDICATOR_TODO:-}"
-          _extra_length=1
+          # _indicators+="${_NB_INDICATOR_TODO:-}"
+          # _extra_length=1
+
+          # TODO: review
+          if [[ "${_title_basename_or_path}" =~ \[x\]\  ]]
+          then
+            _indicators+="${_NB_INDICATOR_TODO_DONE% } "
+            _extra_length="1"
+          else
+            _indicators+="${_NB_INDICATOR_TODO% } "
+            _extra_length="-2"
+          fi
+          # _title_basename_or_path="${_title_basename_or_path#\[[\ |x]\]\ }"
+
+          if ((_COLOR_ENABLED))
+          then
+            _title_basename_or_path_color="\
+${_title_basename_or_path_color/\[x\]/${_TPUT_SETAF_8}[${_TPUT_COLOR_PRIMARY}x${_TPUT_SETAF_8}]${_TPUT_SGR0}}"
+            _title_basename_or_path_color="\
+${_title_basename_or_path_color/\[$' '\]/${_TPUT_SETAF_8}[ ]${_TPUT_SGR0}}"
+          fi
         fi
       fi
 
       local _item_info="${_indicators}${_title_basename_or_path}"
+      local _item_info_color="${_indicators}${_title_basename_or_path_color}"
 
       if ! ((_list_filenames))  &&
          ! ((_list_paths))      &&
@@ -5293,7 +5384,7 @@ _list() {
       if ((_no_id))
       then
         _info_line="${_item_info}"
-        _info_line_color="${_item_info}"
+        _info_line_color="${_item_info_color}"
       else
         local _item_id=
         # use `sed` directly instead of `_index get_id` for performance
@@ -5329,7 +5420,7 @@ ${_TPUT_SGR0}"
         printf -v _spaces '%*s' "${_spaces_length}" ""
 
         _info_line="${_brackets_identifier}${_spaces}${_item_info}"
-        _info_line_color="${_brackets_identifier_color}${_spaces}${_item_info}"
+        _info_line_color="${_brackets_identifier_color}${_spaces}${_item_info_color}"
       fi
 
       if ! ((_line_wrap))
@@ -5386,7 +5477,7 @@ ${_TPUT_SGR0}"
            [[ "${_printed_count}" -ge "${_limit}" ]]
         then
           local _label="matches"
-          local _omitted_count
+          local _omitted_count=
           _omitted_count=$((_matches-_printed_count))
 
           [[ "${_omitted_count}" -eq 1 ]] && _label="match"
@@ -5483,7 +5574,7 @@ HEREDOC
             then
               local _empty_type_label="folders"
             else
-              local _empty_type_label="${_type} files"
+              local _empty_type_label="${_type} items"
             fi
 
             cat <<HEREDOC
@@ -5680,7 +5771,7 @@ _ls() {
     set -f
 
     local _commands_raw=(
-      "❯ ${_ME}${_maybe_selector_scope_padded_left}"
+      "${_CHEVRON_RIGHT} ${_ME}${_maybe_selector_scope_padded_left}"
       "${_ME} add${_maybe_selector_scope_padded_left}"
       "${_ME} ${_maybe_selector_scope_padded_right}<url>"
       "${_ME} edit ${_maybe_selector_scope}<id>"
@@ -5695,7 +5786,7 @@ _ls() {
     )
 
     local _commands_hi=(
-      "$(_color_dim '❯') $(_color_secondary "${_ME}${_maybe_selector_scope_padded_left}")"
+      "$(_color_dim "${_CHEVRON_RIGHT}") $(_color_secondary "${_ME}${_maybe_selector_scope_padded_left}")"
       "$(_color_secondary "${_commands_raw[1]}")"
       "$(_color_secondary "${_commands_raw[2]}")"
       "$(_color_secondary "${_commands_raw[3]}")"
@@ -6222,7 +6313,7 @@ _ls() {
           _count_arguments+=("--${_maybe_type}")
         fi
 
-        local _local_count
+        local _local_count=
         _local_count="$(
           _count "${_count_arguments[@]:-}" --skip-unmatched-selector || :
         )"
@@ -8022,9 +8113,8 @@ _normalize_options() {
     case "${1}" in
       # if option is of type -ab
       -[!-]?*)
-        local i
-
         # loop over each character starting with the second
+        local i=
         for ((i=1; i < ${#1}; i++))
         do
           # extract 1 character from position 'i'
@@ -8088,6 +8178,7 @@ _SUBCOMMANDS=(
   browse
   browser
   bs
+  close
   commands
   completions
   config
@@ -8095,6 +8186,8 @@ _SUBCOMMANDS=(
   create
   d
   delete
+  "do"
+  "done"
   e
   edit
   export
@@ -8145,9 +8238,17 @@ _SUBCOMMANDS=(
   status
   subcommands
   sync
+  t
+  task
+  tasks
+  to
+  todo
+  todos
   u
   unar
   unarchive
+  undo
+  undone
   unpin
   unset
   update
@@ -8179,6 +8280,7 @@ _DOCUMENTED_SUBCOMMANDS=(
   count
   d
   delete
+  "do"
   e
   edit
   export
@@ -8217,9 +8319,12 @@ _DOCUMENTED_SUBCOMMANDS=(
   status
   subcommands
   sync
+  tasks
+  todo
   u
   unar
   unarchive
+  undo
   unpin
   unset
   update
@@ -8245,10 +8350,13 @@ _GIT_SUBCOMMANDS=(
   browse
   browser
   bs
+  close
   count
   create
   d
   delete
+  "do"
+  "done"
   e
   edit
   export
@@ -8277,9 +8385,17 @@ _GIT_SUBCOMMANDS=(
   s
   show
   search
+  t
+  task
+  tasks
+  to
+  todo
+  todos
   u
   unar
   unarchive
+  undo
+  undone
   unpin
   use
   view
@@ -8301,7 +8417,7 @@ _GIT_SUBCOMMANDS_PATTERN="^$(_join '$|^' "${_GIT_SUBCOMMANDS[@]}")$|^\+$|^\-$"
 # Usage:
 #   _is_valid_subcommand <name>
 #
-# Exit / Error Status:
+# Exit / Error / Return Status:
 #   0 (success, true)  If the given <name> is a valid subcommand name.
 #   1 (error,  false)  If not.
 _is_valid_subcommand() {
@@ -8553,10 +8669,10 @@ _call_deferred_command() {
 
   local _group="${2:-}"
   local _group_3_names=(
-    "_ar" "_archive" "_b" "_br" "_browse" "_browser" "_config" "_h" "_help" \
-    "_helpers" "_set" "_plugin" "_plugins" "_remote" "_reset" "_settings"   \
-    "_shell" "_st" "_stat" "_status" "_sync" "_todo" "_todos" "_unar"       \
-    "_unarchive" "_unset" "_update" "_upgrade"
+    _ar _archive _b _bookmark _br _browse _browser _close _config _do _done   \
+    _h _help _helpers _set _plugin _plugins _remote _reset _settings _shell   \
+    _st _stat _status _sync _t _task _tasks _to _todo _todos _unar _unarchive \
+    _undo _undone _unset _update _upgrade
   )
 
   if {
@@ -8669,10 +8785,10 @@ _decrypt_file() {
 
   local _notebook_and_relative_path="${_encrypted_path#${NB_DIR}/}"
 
-  local _unencrypted_path
+  local _unencrypted_path=
   _unencrypted_path="$(_temp file "${_notebook_and_relative_path%.enc}")"
 
-  local _file_command_response
+  local _file_command_response=
   _file_command_response="$(file "${_encrypted_path}" 2>/dev/null || :)"
 
   if [[   "${_file_command_response}" =~ GPG|PGP ]]
@@ -8826,7 +8942,7 @@ _edit_file() {
     return 1
   fi
 
-  local _current_notebook_path
+  local _current_notebook_path=
   _current_notebook_path="$(_notebooks current --path)"
 
   cd "${_current_notebook_path}"  ||  return 1
@@ -8864,14 +8980,16 @@ _edit_file() {
   # turn on case-insensitive matching
   shopt -s nocasematch
 
-  if ((_wait)) &&
-     [[   "${EDITOR}" =~ gvim|mvim      ]]
+  if ((_wait))
   then
-    _editor_command="${_editor_command} -f"
-  elif ((_wait)) &&
-       [[ "${EDITOR}" =~ code|mate|subl ]]
-  then
-    _editor_command="${_editor_command} --wait"
+    case "${EDITOR}" in
+      *gvim*|*mvim*)
+        _editor_command="${_editor_command} -f"
+        ;;
+      *code*|*mate*|*subl*)
+        _editor_command="${_editor_command} --wait"
+        ;;
+    esac
   fi
 
   if [[ -d "${_file_path}" ]] &&
@@ -8912,9 +9030,9 @@ _edit_file() {
 # Usage:
 #   _encrypt_file <unencrypted-path> <encrypted-path> <password>
 _encrypt_file() {
-  local _unencrypted_path="${1:-}"
   local _encrypted_path="${2:-}"
   local _password="${3:-}"
+  local _unencrypted_path="${1:-}"
 
   if [[ -z "${_password}"         ]]
   then
@@ -9269,7 +9387,7 @@ _render() {
 
   # Usage: _render_print_head [--title <title>]
   _render_print_head() {
-    local _html_title="nb"
+    local _html_title="${_ME}"
 
     if [[ "${1:-}" == "--title" ]] && [[ -n "${2:-}" ]]
     then
@@ -9332,8 +9450,8 @@ _render() {
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>${_html_title}</title>
 <style>
 html {
@@ -9510,7 +9628,7 @@ td {
 }
 
 td > table {
-  margin: 0;
+  margin:             0;
 }
 
 table caption {
@@ -10590,7 +10708,7 @@ _resolve_links() {
 #   terminal web browser is available. With <url> or standard input, view in
 #   the preferred or available browser.
 #
-# Exit / Error Status:
+# Exit / Error / Return Status:
 #   0 (success, true)  If a terminal browser is available.
 #   1 (error,  false)  if not.
 _web_browser() {
@@ -10751,7 +10869,9 @@ $(_color_primary "Usage"):
          [-e | --encrypt] [-f <filename> | --filename <filename>]
          [--folder <folder-path>] [--tags <tag1>,<tag2>...]
          [-t <title> | --title <title>] [--type <type>]
+  ${_ME} add bookmark [<bookmark-options>...]
   ${_ME} add folder [<name>]
+  ${_ME} add todo [<todo-options>...]
 
 $(_color_primary "Options"):
   -b, --browse                Add using a terminal or GUI web browser.
@@ -10796,6 +10916,7 @@ $(_color_primary "See Also"):
   ${_ME} help edit
   ${_ME} help import
   ${_ME} help show
+  ${_ME} help todo
 
 $(_color_primary "Examples"):
   ${_ME} add
@@ -10823,9 +10944,10 @@ $(_color_primary "Shortcut Aliases"):
 HEREDOC
 }
 _add() {
+  local _add_type=
   local _arguments=()
   local _browse=0
-  local _browse_arguments=()
+  local _defer_arguments=()
   local _edit_before_commit=0
   local _encrypt=0
   local _file_type="${NB_DEFAULT_EXTENSION}"
@@ -10847,7 +10969,7 @@ _add() {
       -c|--content)
         [[ -n "${_option_content:-}" ]] && _option_content+="${_NEWLINE}${_NEWLINE}"
         _option_content+="$(_option_get_value "${1}" "${2:-}")"
-        _browse_arguments+=("${1}" "${2:-}")
+        _defer_arguments+=("${1}" "${2:-}")
         shift
         ;;
       --edit)
@@ -10866,14 +10988,14 @@ _add() {
         ;;
       -f|--file*|--*path|--target*)
         _option_relative_path="$(_option_get_value "${1}" "${2:-}")"
-        _browse_arguments+=("${1}" "${2:-}")
+        _defer_arguments+=("${1}" "${2:-}")
         shift
         ;;
       --folder)
         _option_folder_relative_path="$(
           _option_get_value "${1}" "${2:-}" | sed -e 's/\/$//'
         )"
-        _browse_arguments+=("${1}" "${_option_folder_relative_path:-}")
+        _defer_arguments+=("${1}" "${_option_folder_relative_path:-}")
         shift
         ;;
       --no*color)
@@ -10886,23 +11008,29 @@ _add() {
       --tag*)
         [[ -n "${_tag_list:-}" ]] && _tag_list+=" "
         _tag_list+="$(_option_get_tags "${1}" "${2:-}")"
-        _browse_arguments+=("${1}" "${2:-}")
+        _defer_arguments+=("${1}" "${2:-}")
         shift
         ;;
       -t|--title|--name)
         # TODO: Detect tag list for dynamic -t for --titles and --tags?
         _title="$(_option_get_value "${1}" "${2:-}")"
-        _browse_arguments+=("${1}" "${2:-}")
+        _defer_arguments+=("${1}" "${2:-}")
         shift
         ;;
       --type)
         _file_type="$(_option_get_value "${1}" "${2:-}")"
-        _browse_arguments+=("${1}" "${2:-}")
+        _defer_arguments+=("${1}" "${2:-}")
         shift
+        ;;
+      bookmark)
+        _add_type="bookmark"
         ;;
       folder|directory)
         _file_type="folder"
-        _browse_arguments+=("${1}")
+        _defer_arguments+=("${1}")
+        ;;
+      todo)
+        _add_type="todo"
         ;;
       *)
         _arguments+=("${1:-}")
@@ -10912,10 +11040,20 @@ _add() {
     shift
   done
 
+  case "${_add_type:-}" in
+    bookmark)
+      _defer "_bookmark" "${_arguments[@]:-}" "${_defer_arguments[@]:-}"
+      return 0
+      ;;
+    todo)
+      _defer "_todo" "add" "${_arguments[@]:-}" "${_defer_arguments[@]:-}"
+      return 0
+      ;;
+  esac
+
   if ((_browse))
   then
-    _defer "_browse" "add" "${_arguments[@]:-}" "${_browse_arguments[@]:-}"
-
+    _defer "_browse" "add" "${_arguments[@]:-}" "${_defer_arguments[@]:-}"
     return 0
   fi
 
@@ -10987,11 +11125,11 @@ _add() {
               _selector_folder_relative_path="${_selector_relative_path%\/*}"
             fi
 
-            if [[ -z "${_option_relative_path}"                     ]]  &&
-               [[ -z "${_selector_filename}"                        ]]  &&
+            if [[ -z "${_option_relative_path}"                 ]]  &&
+               [[ -z "${_selector_filename}"                    ]]  &&
                {
-                 _contains "${_file_type:-}" "folder" "directory"       ||
-                 [[ "${_arguments[i]:-}" =~ \.[A-Za-z0-9]+$|/|:     ]]
+                 _contains "${_file_type:-}" "folder" "directory"   ||
+                 [[ "${_arguments[i]:-}" =~ \.[A-Za-z0-9]+$|/|: ]]
                }
             then
               _selector_filename="${_selector_relative_path##*\/}"
@@ -11112,7 +11250,7 @@ _add() {
     )"
   fi
 
-  local _target_basename
+  local _target_basename=
   _target_basename="$(basename "${_target_unique_relative_path}")"
 
   local _target_path="${_notebook_path}/${_target_unique_relative_path}"
@@ -11300,7 +11438,7 @@ _add() {
       "${_notebook_path}"                 \
       "[nb] Add: ${_target_unique_relative_path}"
 
-    local _info
+    local _info=
     _info="$(
       _show "${_notebook_path:?}/${_target_unique_relative_path:?}" --info-line
     )"
@@ -11318,13 +11456,13 @@ _alias_subcommand "add" "new"
 _describe_bookmark() {
   cat <<HEREDOC
 $(_color_primary "Usage"):
-  ${_ME} bookmark [<ls options>...]
+  ${_ME} bookmark [<ls-options>...]
   ${_ME} bookmark [<notebook>:][<folder-path>/] <url>
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
               [-f <filename> | --filename <filename>] [--no-request]
-              [-q <quote> | --quote <quote>] [-r <url> | --related <url>]...
-              [--save-source] [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...]
-              [--title <title>]
+              [-q <quote> | --quote <quote>] [--save-source]
+              [-r (<url> | <selector>) | --related (<url> | <selector>)]...
+              [-t <tag1>,<tag2>... | --tags <tag1>,<tag2>...] [--title <title>]
   ${_ME} bookmark list [<list-options>...]
   ${_ME} bookmark (edit | delete | open | peek | url)
               ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
@@ -11340,9 +11478,12 @@ $(_color_primary "Options"):
   --no-request                 Don't request or download the target page.
   -q, --quote <quote>          A quote or excerpt from the saved page.
                                Alias: \`--excerpt\`
+  -r, --related <selector>     A selector for an item related to the
+                               bookmarked page.
   -r, --related <url>          A URL for a page related to the bookmarked page.
                                Multiple \`--related\` flags can be used in a
-                               command to save multiple related URLs.
+                               command to save multiple related URLs and
+                               selectors.
   --save-source                Save the page source as HTML.
   -t, --tags <tag1>,<tag2>...  A comma-separated list of tags.
   --title <title>              The bookmark title. When not specified,
@@ -11417,15 +11558,17 @@ HEREDOC
 _bookmark() {
     # Usage: _bookmark_cleanup_tag_content <string>
   _bookmark_cleanup_tag_content() {
+    local _character_removal_pattern=
+    _character_removal_pattern="$(
+      printf "\xE2\x80\xAA|\xE2\x80\xAB|\xE2\x80\xAC"
+    )"
+
     # `awk` condenses and trims whitespace
     # `sed` removes select unicode characters
     # `w3m` converts HTML entities
-    printf "%s\\n" "${1:-}"   \
-      | awk '$1=$1'           \
-      | sed -E                \
-            -e "s/‪//g"  \
-            -e "s/‫//g"  \
-            -e "s/‬//g"  \
+    printf "%s\\n" "${1:-}"                             \
+      | awk '$1=$1'                                     \
+      | sed -E -e "s/${_character_removal_pattern}//g"  \
       | if _command_exists "w3m"
         then
            w3m -dump -T text/html -cols 99999
@@ -11466,7 +11609,7 @@ _bookmark() {
   local _encrypt=0
   local _password=
   local _quote=
-  local _related_urls=()
+  local _related_identifiers=()
   local _request_page=1
   local _save_source=0
   local _selector=
@@ -11509,7 +11652,7 @@ _bookmark() {
         shift
         ;;
       -r|--via|--also|--related)
-        _related_urls+=("$(_option_get_value "${1}" "${2:-}")")
+        _related_identifiers+=("$(_option_get_value "${1}" "${2:-}")")
         shift
         ;;
       --save*source|--source|--save*html|--html|--raw*content|--raw*html)
@@ -11587,9 +11730,9 @@ _bookmark() {
   # `bookmark list`
 
   {
-    if [[ "${_subcommand}" == "list" ]]
+    if [[ "${_subcommand}" == "list"  ]]
     then
-      if [[ -n "${_arguments[*]:-}" ]]
+      if [[ -n "${_arguments[*]:-}"   ]]
       then
         _list --bookmarks "${_arguments[@]}"
         return 0
@@ -11615,15 +11758,15 @@ _bookmark() {
   {
     if [[ "${_subcommand}" =~ ^open$|^peek$|^url$ ]]
     then
-      local _relative_path
+      local _relative_path=
       _relative_path="$(_show "${_selector}" --relative-path)"
 
       local _notebook_path
       _notebook_path="$(_notebooks current --path)"
 
-      if [[ -z "${_relative_path}" ]]
+      if [[ -z "${_relative_path}"                ]]
       then
-        if [[ "${_subcommand}" =~ ^open$|^peek$ ]]
+        if [[ "${_subcommand}" =~ ^open$|^peek$   ]]
         then
           local _maybe_notebook="${_selector:-}"
           _maybe_notebook="$(printf "%s\\n" "${_maybe_notebook}" | sed 's/\:$//')"
@@ -11753,7 +11896,7 @@ _bookmark() {
 
         if ((_check_wayback))
         then
-          local _wayback_response
+          local _wayback_response=
           _wayback_response="$(
             _download_from                                                \
               "https://archive.org/wayback/available?url=${_target_url}"  \
@@ -11817,7 +11960,7 @@ _bookmark() {
             _notebooks show "$(_notebooks current)" --no-color --escaped
           ): "
 
-          local _padded_header_selector_length
+          local _padded_header_selector_length=
           _padded_header_selector_length="$(
             _get_visible_length "${_maybe_header_selector}"
           )"
@@ -11967,14 +12110,19 @@ _bookmark() {
     _bookmark_content+="${_NEWLINE}${_comment}${_NEWLINE}"
   fi
 
-  if [[ -n "${_related_urls[*]:-}"  ]]
+  if [[ -n "${_related_identifiers[*]:-}" ]]
   then
     _bookmark_content+="${_NEWLINE}## Related${_NEWLINE}${_NEWLINE}"
 
-    local __related_url=
-    for   __related_url in "${_related_urls[@]:-}"
+    local __identifier=
+    for   __identifier in "${_related_identifiers[@]:-}"
     do
-      _bookmark_content+="- <${__related_url}>${_NEWLINE}"
+      if _string_is_url "${__identifier:-}"
+      then
+        _bookmark_content+="- <${__identifier:-}>${_NEWLINE}"
+      else
+        _bookmark_content+="- [[${__identifier:-}]]${_NEWLINE}"
+      fi
     done
   fi
 
@@ -11988,7 +12136,7 @@ _bookmark() {
   then
     if ! ((_skip_content))
     then
-      local _processed_content
+      local _processed_content=
 
       if _command_exists "pandoc"   || _command_exists "readable"
       then
@@ -12136,9 +12284,9 @@ _completions() {
 
     local _zsh_completion_path="/usr/local/share/zsh/site-functions"
 
-    if [[ -d "${_zsh_completion_path}" ]]
+    if [[ -d "${_zsh_completion_path}"    ]]
     then
-      if [[ -w "${_zsh_completion_path}" ]]
+      if [[ -w "${_zsh_completion_path}"  ]]
       then
         if [[ -e "${_zsh_completion_path}/${_ZSH_COMP_NAME}" ]]
         then
@@ -12160,14 +12308,14 @@ _completions() {
   _get_bash_completion_path() {
     local _bash_completion_path=
 
-    if [[ -n "${BASH_COMPLETION_COMPAT_DIR:-}" ]]
+    if [[ -n "${BASH_COMPLETION_COMPAT_DIR:-}"  ]]
     then
       _bash_completion_path="${BASH_COMPLETION_COMPAT_DIR}"
     fi
 
-    if [[ -z "${_bash_completion_path:-}" ]]
+    if [[ -z "${_bash_completion_path:-}"       ]]
     then
-      local _maybe_path
+      local _maybe_path=
       _maybe_path="$(
         pkg-config \
           --variable=completionsdir bash-completion 2>/dev/null || true
@@ -12635,18 +12783,15 @@ _edit() {
     shift
   done
 
-  if [[ -z "${_selector:-}"       ]]
-  then
-    _exit_1 _help "edit"
-  fi
+  [[ -z "${_selector:-}" ]] && _exit_1 _help "edit"
 
-  local _relative_path
+  local _relative_path=
   _relative_path="$(_show "${_selector:-}" --relative-path)"
 
   local _basename="${_relative_path##*\/}"
   local _folder_path="${_relative_path%\/*}"
 
-  local _notebook_path
+  local _notebook_path=
   _notebook_path="$(_notebooks current --path)"
 
   if [[ -z "${_relative_path:-}"  ]]
@@ -12668,7 +12813,7 @@ _edit() {
     then
       _encrypted_path="${_target_file}"
 
-      if [[ -z "${_password}" ]]
+      if [[ -z "${_password}"   ]]
       then
         # request password without displaying it
         printf "%s: " "$(_color_primary "Password")"
@@ -12685,10 +12830,10 @@ _edit() {
       _before="$(_get_hash "${_decrypted_path}")"
     fi
 
-    if [[ -n "${_content:-}" ]] || _piped_input
+    if [[ -n "${_content:-}"    ]] || _piped_input
     then
       {
-        if [[ -n "${_content}" ]]
+        if [[ -n "${_content}"  ]]
         then
           printf "%s\\n" "${_content}"
         fi
@@ -12703,7 +12848,7 @@ _edit() {
           cat > "${_target_file}"
         elif [[ "${_edit_type:-}" == "prepend"    ]]
         then
-          local _prepend_temp
+          local _prepend_temp=
           _prepend_temp="$(_temp file)"
 
           cat                       >   "${_prepend_temp:?}"
@@ -12765,7 +12910,7 @@ _edit() {
 
     if [[ "${_before}" != "${_after}"   ]]
     then
-      local _info
+      local _info=
       _info="$(_show "${_relative_path}" --info-line)"
 
       printf "Updated: %s\\n" "${_info}"
@@ -12809,7 +12954,7 @@ _env() {
     local _version="${2:?}"
     local _x86_64_bit=1
 
-    local _arch
+    local _arch=
     _arch="$(uname -m)"
 
     case "${_arch:-}" in
@@ -12864,10 +13009,10 @@ _env() {
 
   case "${_subcommand}" in
     install)
-      if [[ ! "${2:-}" == "--ace" ]]
+      if [[ ! "${2:-}" == "--ace"     ]]
       then # skip to next section if `_env install --ace`
         # packages: curl pandoc pygments w3m ripgrep tig
-        if [[ -x "$(command -v apk)" ]]
+        if [[ -x "$(command -v apk)"  ]]
         then
           _completions install --download
 
@@ -13113,7 +13258,7 @@ _export() {
     return 0
   fi
 
-  local _relative_path
+  local _relative_path=
   _relative_path="$(_show "${_selector}" --relative-path)"
 
   local _basename="${_relative_path##*\/}"
@@ -13126,7 +13271,7 @@ _export() {
 
   if ((_pandoc_only))
   then
-    if _command_exists 'pandoc'
+    if _command_exists "pandoc"
     then
       if [[ -n "${_args[*]:-}"    ]]
       then
@@ -13143,7 +13288,7 @@ _export() {
       _exit_1 _help "export"
     fi
 
-    if [[ -d "${_target_path}"    ]]
+    if [[ -d "${_target_path:-}"  ]]
     then
       _target_path="${_target_path%/}/${_basename}"
     fi
@@ -13176,8 +13321,8 @@ _export() {
     _source_file_type="${_basename##*.}"
     _target_file_type="${_target_path##*.}"
 
-    if _command_exists 'pandoc' &&
-       [[ "${_source_file_type}" != "${_target_file_type}" ]]
+    if _command_exists "pandoc"   &&
+       [[ "${_source_file_type}"  != "${_target_file_type}" ]]
     then
       if [[ -n "${_args[*]:-}"    ]]
       then
@@ -13258,7 +13403,7 @@ _history() {
 
   if [[ -n "${_selector:-}"       ]]
   then
-    if [[ "${_selector}" =~ :$    ]] ||
+    if [[  "${_selector}" =~ :$   ]] ||
        ! _relative_path="$(_show "${_selector}" --relative-path 2>/dev/null)"
     then
       if ! _notebook_path="$(_notebooks show "${_selector}" --path 2>/dev/null)"
@@ -13635,7 +13780,7 @@ _describe_move() {
 $(_color_primary "Usage"):
   ${_ME} move ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note |
-          --to-title) [-f | --force]
+          --to-title | --to-todo) [-f | --force]
 
 $(_color_primary "Options"):
   -f, --force     Skip the confirmation prompt.
@@ -13647,13 +13792,15 @@ $(_color_primary "Options"):
                   to a Markdown note.
   --to-title      Set the filename to the note title, lowercased with spaces
                   and disallowed filename characters replaced with underscores.
+  --to-todo       Preserve the existing filename and replace the extension
+                  with ".todo.md" to convert the note to a todo.
 
 $(_color_primary "Description"):
   Move or rename a note. Move the note to <path> or change the file type.
   When the file extension is omitted, the existing extension is used.
   When only a file extension is specified, only the extension will be updated.
 
-  \`move\` and \`rename\` are aliases and can be used interchangably.
+  \`move\` and \`rename\` are aliases and can be used interchangeably.
 
 $(_color_primary "See Also"):
   ${_ME} help delete
@@ -13713,11 +13860,14 @@ _move() {
       --to*title)
         _to_target_type="title"
         ;;
+      --to*todo)
+        _to_target_type="todo"
+        ;;
       *)
-        if [[ -z "${_source_selector}"    ]]
+        if [[ -z "${_source_selector:-}"    ]]
         then
           _source_selector="${1}"
-        elif [[ -z "${_target_selector}"  ]]
+        elif [[ -z "${_target_selector:-}"  ]]
         then
           _target_selector="${1}"
         fi
@@ -13727,7 +13877,7 @@ _move() {
     shift
   done
 
-  if [[ -z "${_source_selector}"          ]]
+  if [[ -z "${_source_selector:-}"      ]]
   then
     _exit_1 _help "move"
   fi
@@ -13735,20 +13885,20 @@ _move() {
   local _source_relative_path=
   _source_relative_path="$(_show "${_source_selector}" --relative-path)"
 
-  if [[ -z "${_source_relative_path}"     ]]
+  if [[ -z "${_source_relative_path:-}" ]]
   then
     _exit_1 _help "move"
   fi
 
   local _source_notebook_path=
-  if [[ "${_source_selector:-}" =~ :      ]]
+  if [[ "${_source_selector:-}" =~ :    ]]
   then
     _source_notebook_path="$(
       _notebooks show "${_source_selector}" --path 2>/dev/null || :
     )"
   fi
 
-  if [[ -z "${_source_notebook_path:-}"   ]]
+  if [[ -z "${_source_notebook_path:-}" ]]
   then
     _source_notebook_path="$(_notebooks current --path)"
   fi
@@ -13831,18 +13981,13 @@ _move() {
       fi
     fi
 
-    if [[ -n  "${_to_target_type:-}"              ]]
-    then
-      if [[   "${_to_target_type}" == "bookmark"  ]]
-      then
-        _target_file_type="bookmark.md"
-      elif [[ "${_to_target_type}" == "note"      ]]
-      then
-        _target_file_type="${NB_DEFAULT_EXTENSION:-md}"
-      else
-        _exit_1 _help "move"
-      fi
-    fi
+    case "${_to_target_type:-}" in
+      '')       :                                               ;;
+      bookmark) _target_file_type="bookmark.md"                 ;;
+      note)     _target_file_type="${NB_DEFAULT_EXTENSION:-md}" ;;
+      todo)     _target_file_type="todo.md"                     ;;
+      *)        _exit_1 _help "move"                            ;;
+    esac
 
     if [[ -z "${_target_file_name:-}" ]]
     then
@@ -14023,7 +14168,15 @@ _open() {
     _exit_1 _help "open"
   fi
 
-  _bookmark open "${@}"
+  local _selector_path=
+  _selector_path="$(_show "${1:-}" --path)"
+
+  if [[ "${_selector_path:-}" =~ todo\.md$  ]]
+  then
+    _defer "_todo" "undo" "${@:-}"
+  else
+    _bookmark open "${@:-}"
+  fi
 }
 _alias_subcommand "open" "o"
 
@@ -14135,7 +14288,7 @@ _pin() {
   local _folder_path="${_item_path%\/*}"
   local _pindex_path="${_folder_path}/.pindex"
 
-  local _notebook_path
+  local _notebook_path=
   _notebook_path="$(
     _notebooks show "${_selector}" --path 2>/dev/null ||
       _notebooks current --path
@@ -14222,11 +14375,16 @@ $(_color_primary "Examples"):
 HEREDOC
 }
 _run() {
-  local _notebook_path
+  local _notebook_path=
   _notebook_path="$(_notebooks current --path)"
 
   cd "${_notebook_path}"  || _exit_1 printf "_run() \`cd\` failed.\\n"
   [[ -n "${*}" ]]         || _exit_1 printf "Command required.\\n"
+
+  if ! _command_exists "${1:-}"
+  then
+    _exit_1 printf "Command not found: %s\\n" "$(_color_primary "${1:-}")"
+  fi
 
   ("${@}")
 }
@@ -14354,12 +14512,12 @@ _search() {
       --and|--or)
         local _option_and=1
 
-        if [[ "${1:-}" == "--or" ]]
+        if [[ "${1:-}" == "--or"  ]]
         then
           _option_and=0
         fi
 
-        if [[ "${2:-}" == "-e" ]]
+        if [[ "${2:-}" == "-e"    ]]
         then
           shift
         fi
@@ -14714,7 +14872,7 @@ _search() {
         local _target_folder_path="${__target_path%\/*}"
       fi
 
-      local _max_id
+      local _max_id=
       _max_id="$(_index get_max_id "${_target_folder_path}")"
 
       {
@@ -14894,10 +15052,10 @@ _search() {
           }
           set -f
         else
-          local _notebook_path
+          local _notebook_path=
           _notebook_path="$(_notebooks show "${__target_path:-}" --path)"
 
-          local _escaped_notebook_path
+          local _escaped_notebook_path=
           _escaped_notebook_path="$(
             printf "%s\\n" "${_notebook_path:-}" | sed 's/\//\\\//g'
           )"
@@ -15090,7 +15248,7 @@ _search() {
           then
             if [[ -n "${_type:-}"             ]]
             then
-              if [[ "${_path}"  =~ ${_type}$  ]]
+              if [[  "${_path}" =~ ${_type}$  ]]
               then
                 _skip=0
               elif {
@@ -15314,7 +15472,7 @@ _search() {
             then # match is in a different file than the last match
               ((_COLOR_ENABLED)) && _wrap off
 
-              local _visible_line_length
+              local _visible_line_length=
               _visible_line_length="$(
                 _get_visible_length "${_info_line:-}"
               )"
@@ -15351,7 +15509,7 @@ _search() {
             _line_length="$(
               printf "%s\\n" "${_content_line_with_hit}" | awk '{print length}'
             )"
-            local _line_length_diff
+            local _line_length_diff=
             _line_length_diff=$((_line_length-_max_columns-100))
 
             if [[ "${_line_length_diff}" -gt 0 ]]
@@ -15548,15 +15706,20 @@ _show() {
   # _show_indicators()
   #
   # Usage:
-  #   _show_indicators <path>
+  #   _show_indicators <path> [--done]
   #
   # Description:
   #   Print a list of indicators based on the file type.
   #
   # NOTE: Indicator logic is also specified in `list` for performance.
   _show_indicators() {
+    local _done=0
     local _indicators=
     local _path="${1:-}"
+
+    case "${2:-}" in
+      --done) _done=1 ;;
+    esac
 
     if _file_is_bookmark "${_path}"
     then
@@ -15584,6 +15747,17 @@ _show() {
     if _file_is_encrypted "${_path}"
     then
       _indicators+="${_NB_INDICATOR_ENCRYPTED:-}"
+    fi
+
+    if _file_is_todo "${_path}"
+    then
+      if ((_done))
+      then
+        _indicators+="${_NB_INDICATOR_TODO_DONE% } "
+        _extra_length=1
+      else
+        _indicators+="${_NB_INDICATOR_TODO% } "
+      fi
     fi
 
     printf "%s\\n" "${_indicators:-}"
@@ -15882,7 +16056,23 @@ _show() {
 
   if ((_print_indicators))
   then
-    _show_indicators "${_notebook_path}/${_relative_path}"
+    local _indicator_arguments=("${_notebook_path}/${_relative_path}")
+
+    if [[ "${_relative_path:-}" =~ todo\.md ]]
+    then
+      local _todo_title=
+      _todo_title="$(
+        _get_content "${_notebook_path}/${_relative_path}" --title
+      )"
+
+      if [[ "${_todo_title}" =~ ^\[x\]      ]]
+      then
+        _indicator_arguments+=(--done)
+      fi
+    fi
+
+    _show_indicators "${_indicator_arguments[@]:-}"
+
     return 0
   fi
 
@@ -15921,13 +16111,13 @@ _show() {
 
     local _maybe_scoped_relative_path="${_relative_path}"
 
-    local _maybe_scoped_id
+    local _maybe_scoped_id=
     _maybe_scoped_id="${_relative_folder_path:+"${_relative_folder_path}/"}${_id}"
 
     if _notebooks current --selected ||
        [[ "${_notebook_path}" != "$(_notebooks current --path)" ]]
     then
-      local _notebook_name
+      local _notebook_name=
       _notebook_name="$(
         _notebooks show "${_notebook_path}" --name --no-color
       )"
@@ -15935,14 +16125,11 @@ _show() {
       _maybe_scoped_id="${_notebook_name}:${_maybe_scoped_id}"
       _maybe_scoped_relative_path="${_notebook_name}:${_maybe_scoped_relative_path}"
     fi
-  fi
 
-  if ((_print_info))
-  then
-    local _info_line
+    local _info_line=
     _info_line+="$(_color_brackets "${_maybe_scoped_id}") "
 
-    local _indicators
+    local _indicators=
     _indicators="$(_show "${_notebook_path}/${_relative_path}" --indicators)"
 
     if [[ -n "${_indicators:-}" ]]
@@ -15952,11 +16139,19 @@ _show() {
 
     _info_line+="$(_color_primary "${_maybe_scoped_relative_path}") "
 
-    local _title
+    local _title=
     _title="$(_get_content "${_notebook_path}/${_relative_path}" --title)"
 
     if [[ -n "${_title:-}"      ]]
     then
+      if [[ "${_relative_path}"  =~ todo\.md$ ]] && ((_COLOR_ENABLED))
+      then
+        _title="\
+${_title/\[x\]/${_TPUT_SETAF_8}[${_TPUT_COLOR_PRIMARY}x${_TPUT_SETAF_8}]${_TPUT_SGR0}}"
+        _title="\
+${_title/\[$' '\]/${_TPUT_SETAF_8}[ ]${_TPUT_SGR0}}"
+      fi
+
       _info_line+="\"${_title}\""
     fi
 
@@ -15964,6 +16159,7 @@ _show() {
     IFS=' ' read -r _info_line <<<"${_info_line:-}"
 
     printf "%s\\n" "${_info_line:-}"
+
     return 0
   fi
 
@@ -15995,7 +16191,7 @@ _show() {
 
   if _file_is_encrypted "${_target_path}"
   then
-    local _encrypted_path
+    local _encrypted_path=
     _encrypted_path="${_target_path}"
 
     if [[ -z "${_password}" ]]
@@ -16013,7 +16209,7 @@ _show() {
       _exit_1 printf "Password required.\\n"
     fi
 
-    local _decrypted_path
+    local _decrypted_path=
     _decrypted_path="$(_decrypt_file "${_target_path}" "${_password}")"
 
     _target_path="${_decrypted_path}"
@@ -16283,9 +16479,8 @@ Can't show archives. Export archive and expand to edit.\\n"
           cat "${_target_path}"
         fi
       else # `show`
-        local _target_filename="${_target_path##*/}"
-
         local _target_extension=
+        local _target_filename="${_target_path##*/}"
 
         if [[ "${_target_filename:-}" =~ \. ]]
         then
@@ -16450,7 +16645,7 @@ _describe_browse() {
 $(_color_primary "Usage"):
   ${_ME} browse [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
             [-g | --gui] [-n | --notebooks] [-p | --print] [-q | --query <query>]
-            [-s | --serve]
+            [-s | --serve] [-t <tag> | --tag <tag> | --tags <tag1>,<tag2>...]
   ${_ME} browse add [<notebook>:][<folder-path>/][<filename>]
             [-c <content> | --content <content>] [--tags <tag1>,<tag2>...]
             [-t <title> | --title <title>]
@@ -16473,7 +16668,8 @@ $(_color_primary "Options"):
   -p, --print                  Print to standard output.
   -q, --query <query>          Open to the search results for <query>.
   -s, --serve                  Start the web application server.
-  -t, --tags <tag1>,<tag2>...  A comma-separated list of tags.
+  -t, --tag <tag>              Search for a tag.
+  --tags <tag1>,<tag2>...      A comma-separated list of tags.
   -t, --title <title>          Add a title to the new note.
 
 $(_color_primary "Description"):
@@ -16998,7 +17194,15 @@ HEREDOC
           shift
           ;;
         --query)
-          _query="$(_option_get_value "${1:-}" "${2:-}")"
+          if [[ -n "${2:-}" ]]
+          then
+            _query="${2:-}"
+          else
+            _exit_1 printf                        \
+              "%s requires a valid argument.\\n"  \
+              "$(_color_primary "${1:-}")"
+          fi
+
           shift
           ;;
         --terminal)
@@ -17023,10 +17227,9 @@ HEREDOC
 
     if [[ -n "${_query:-}" ]]
     then
-      local _query_arguments=()
       _query_arguments=($(
-        printf "%s" "${_query}" | xargs -n 1 printf "%s\\n"
-      ))
+        printf "%s\\n" "${_query}" | xargs -n 1 printf "%s\\n" 2>/dev/null
+      )) || IFS=' ' read -ra _query_arguments <<< "${_query}"
 
       _encoded_query="$(
         sed                     \
@@ -17266,24 +17469,25 @@ HEREDOC
 
         local _prev_url_params="${_url_params#$'?'}"
 
-        if [[ "${_prev_page_number:-0}" -gt 1   ]]
+        if [[ "${_prev_page_number:-0}" -gt 1     ]]
         then
           _prev_url_params+="&--page=${_prev_page_number:-}"
         fi
 
         _prev_url_params="${_prev_url_params#$'&'}"
 
-        if [[ -n "${_prev_url_params:-}"        ]]
+        if [[ -n "${_prev_url_params:-}"          ]]
         then
           _prev_url_params="?${_prev_url_params:-}"
         fi
 
-        printf                                  \
-          "<a href=\"//%s:%s/%s%s\">❮ prev</a>" \
-          "${NB_SERVER_HOST}"                   \
-          "${NB_SERVER_PORT}"                   \
-          "${_url_encoded_selector}"            \
-          "${_prev_url_params:-}"
+        printf                                    \
+          "<a href=\"//%s:%s/%s%s\">%s prev</a>"  \
+          "${NB_SERVER_HOST}"                     \
+          "${NB_SERVER_PORT}"                     \
+          "${_url_encoded_selector}"              \
+          "${_prev_url_params:-}"                 \
+          "${_CHEVRON_LEFT}"
       fi
 
       if ((_print_prev)) && ((_print_next))
@@ -17297,11 +17501,12 @@ HEREDOC
         _next_url_params="${_url_params#$'?'}&--page=$((_current_page + 1))"
 
         printf                                    \
-          "<a href=\"//%s:%s/%s?%s\">next ❯</a>"  \
+          "<a href=\"//%s:%s/%s?%s\">next %s</a>" \
           "${NB_SERVER_HOST}"                     \
           "${NB_SERVER_PORT}"                     \
           "${_url_encoded_selector}"              \
-          "${_next_url_params#$'&'}"
+          "${_next_url_params#$'&'}"              \
+          "${_CHEVRON_RIGHT}"
       fi
 
       if ((_print_prev)) || ((_print_next))
@@ -17652,7 +17857,8 @@ HEREDOC
     fi
 
     local _header_content="\
-<a href=\"//${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_url_param_string:-}\"><span class=\"dim\">❯</span>nb</a>"
+<a href=\"//${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_url_param_string:-}\">"
+    _header_content+="<span class=\"dim\">${_CHEVRON_RIGHT}</span>nb</a>"
     _header_content+=" <span class=\"dim\">${_MD}</span>"
 
     if [[ -z "${_selector:-}"       ]]
@@ -17716,9 +17922,7 @@ HEREDOC
          [[ -d "${_notebook_path}/${_relative_folder_path}"  ]]
       then
         local _selector_folders=()
-        IFS='/' read -ra _selector_folders < <(
-          printf "%s\\n" "${_relative_folder_path}"
-        )
+        IFS='/' read -ra _selector_folders <<< "${_relative_folder_path}"
 
         local _folder_id_path=
         _folder_id_path="$(
@@ -17728,9 +17932,7 @@ HEREDOC
         )"
 
         local _selector_folder_ids=()
-        IFS='/' read -ra _selector_folder_ids < <(
-          printf "%s\\n" "${_folder_id_path}"
-        )
+        IFS='/' read -ra _selector_folder_ids <<< "${_folder_id_path}"
 
         local _url_path="${_notebook_name}:"
 
@@ -17767,7 +17969,7 @@ HEREDOC
       fi
 
       # NOTE: backup _raw_url calculation. TODO: remove
-      if [[ -z "${_raw_url:-}" ]]
+      if [[ -z "${_raw_url:-}"  ]]
       then
         local _raw_url="//${NB_SERVER_HOST}:${NB_SERVER_PORT}/--original/"
 
@@ -17783,7 +17985,7 @@ HEREDOC
         fi
       fi
 
-      if [[ -n "${_raw_url:-}" ]]
+      if [[ -n "${_raw_url:-}"  ]]
       then
         _header_content+=" <span class=\"dim\">${_MD}</span>"
         _header_content+=" <a href=\"${_raw_url}\">↓</a>"
@@ -17864,7 +18066,7 @@ HEREDOC
           shift
           ;;
         --page)
-          _option_value_is_present "${2:-}"     && shift
+          _option_value_is_present "${2:-}" && shift
           ;;
         --per-page)
           _pagination_options+=("${1:?}" "${2:?}")
@@ -17899,11 +18101,11 @@ HEREDOC
 
     local _render_type=
 
-    if _file_is_text "${_source_path:-}"        ||
+    if _file_is_text "${_source_path:-}"  ||
        [[   "${_source_path:-}" =~ \.docx$|\.epub$|\.odt$ ]]
     then
       _render_type="pandoc"
-    elif _contains "${_source_path##*.}"        \
+    elif _contains "${_source_path##*.}"  \
            apng avif gif jfif jpeg jpg pjpeg pjp png svg webp
     then
       _render_type="image"
@@ -17913,14 +18115,14 @@ HEREDOC
     elif _file_is_video "${_source_path:-}"
     then
       _render_type="video"
-    elif [[ "${_source_path}" =~ \.pdf          ]]
+    elif [[ "${_source_path}" =~ \.pdf    ]]
     then
       _render_type="pdf"
     else
       {
         printf "%s\\n" "$(
-          _browse_render_header                 \
-            "${_source_path}"                   \
+          _browse_render_header           \
+            "${_source_path}"             \
             "${_header_options[@]:-}"
         )"
 
@@ -18364,7 +18566,7 @@ HEREDOC
 
     local _message_body=
 
-    if [[ "${_request_method}"  == "POST"               ]]    &&
+    if [[ "${_request_method}"  == "POST"     ]]  &&
        ((${_content_length:-0}))
     then
       read -r -n "${_content_length}" _message_body
@@ -18372,7 +18574,7 @@ HEREDOC
 
     # serve ace editor files
 
-    if [[ "${_request_uri}"     =~ /--ace/.*            ]]
+    if [[ "${_request_uri}"     =~ /--ace/.*  ]]
     then
       local _target_relative_path="${_request_uri#/--ace/}"
 
@@ -18447,7 +18649,7 @@ HEREDOC
             if [[ "${__parameter:-}" =~ \=    ]]
             then
               _render_function_options+=("$(
-                _get_uri --encode "${__parameter#*=}"
+                _get_uri --decode "${__parameter#*=}"
               )")
             fi
             ;;
@@ -18497,7 +18699,7 @@ HEREDOC
       _response_url_params+="&--per-page=${_per_page}"
     fi
 
-    if [[ -n "${_encoded_local_notebook_path:-}"    ]]
+    if [[ -n "${_encoded_local_notebook_path:-}"  ]]
     then
       _render_function_options+=("--local" "${_encoded_local_notebook_path:-}")
       _response_url_params+="&--local=${_encoded_local_notebook_path:-}"
@@ -18513,146 +18715,158 @@ HEREDOC
 
     # respond
 
-    if [[ -z "${_target_selector:-}"                ]]
+    if [[ -z "${_target_selector:-}"  ]]
     then
-      _browse_render_notebooks "${_render_function_options[@]:-}" \
+      _browse_render_notebooks              \
+        "${_render_function_options[@]:-}"  \
+        | _browse_respond_with 200          \
+          "${_respond_with_200_arguments[@]:-}"
+
+      return 0
+    fi
+
+    if [[ "${_action:-}" == "add"     ]]
+    then
+      _render_function_options+=("${_target_selector:-}")
+
+      case "${_request_method:-}" in
+        GET)
+            _browse_render_add                    \
+              "${_render_function_options[@]:-}"  \
+              | _browse_respond_with 200          \
+                "${_respond_with_200_arguments[@]:-}"
+          ;;
+        POST)
+          local _new_selector=
+          _new_selector="$(
+            _browse_item_create                   \
+              "${_render_function_options[@]:-}"  \
+              --message-body "${_message_body:-}"
+          )"
+
+          _browse_respond_with 302                \
+"//${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_new_selector}${_response_url_params:-}"
+          ;;
+      esac
+
+      return 0
+    fi
+
+    local _selector_path=
+
+    if [[ "${_target_selector}" =~ ^local:  ]]
+    then
+      if [[ -z "${_local_notebook_path:-}"  ]]
+      then
+        _browse_respond_with 400
+
+        return 1
+      fi
+
+      _selector_path="$(
+        cd "${_local_notebook_path:-}"      &&
+          __set_notebook_paths              &&
+          _show "${_target_selector%%\?*}" --path --no-color 2>&1 || :
+      )"
+    else
+      _selector_path="$(
+        _show "${_target_selector%%\?*}" --path 2>/dev/null || :
+      )"
+    fi
+
+    if [[ -n "${_selector_path:-}"    ]]
+    then
+      _render_function_options+=("${_selector_path}")
+    else
+      _browse_respond_with 404
+
+      return 1
+    fi
+
+    if [[ -d "${_selector_path:-}"    ]]
+    then
+      if [[ -n "${_page_number:-}"    ]]
+      then
+        _render_function_options+=("--page" "${_page_number}")
+      fi
+
+      if [[ -n "${_query:-}"          ]]
+      then
+        _render_function_options+=("--query" "${_query}")
+      fi
+
+      _browse_render_container "${_render_function_options[@]:-}"   \
         | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
 
       return 0
+    fi
+
+    local _raw_url="//${NB_SERVER_HOST}:${NB_SERVER_PORT}/--original/"
+
+    if [[ !   "${_selector_path:-}" =~ ^${NB_DIR} ]] &&
+       [[ -n  "${_encoded_local_notebook_path:-}" ]] &&
+       [[ -n  "${_local_notebook_path:-}"         ]]
+    then
+      _raw_url+="local/${_selector_path#${_local_notebook_path}/}?--local=${_encoded_local_notebook_path}"
     else
-      local _selector_path=
+      _raw_url+="${_selector_path#${NB_DIR}/}"
+    fi
 
-      if [[ "${_target_selector}" =~ ^local:        ]]
-      then
-        [[ -z "${_local_notebook_path:-}"   ]]  &&  _browse_respond_with 400
+    _render_function_options+=("--raw-url" "${_raw_url}")
 
-        _selector_path="$(
-          cd "${_local_notebook_path:-}"        &&
-            __set_notebook_paths                &&
-            _show "${_target_selector%%\?*}" --path --no-color 2>&1 || :
-        )"
-      else
-        _selector_path="$(
-          _show "${_target_selector%%\?*}" --path 2>/dev/null || :
-        )"
-      fi
-
-      if [[ "${_action:-}" == "add"         ]]
-      then
-        _render_function_options+=("${_target_selector:-}")
-
-        case "${_request_method:-}" in
-          GET)
-            _browse_render_add                      \
-              "${_render_function_options[@]:-}"    \
-              | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
-            ;;
-          POST)
-            local _new_selector=
-            _new_selector="$(
-              _browse_item_create                   \
-                "${_render_function_options[@]:-}"  \
-                --message-body "${_message_body:-}"
-            )"
-
-            _browse_respond_with 302                \
-"//${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_new_selector}${_response_url_params:-}"
-
-            return 0
-            ;;
-        esac
-
-        return 0
-      elif [[   -z "${_selector_path:-}"    ]]
-      then
-        _browse_respond_with 404
-
-        return 0
-      else
-        _render_function_options+=("${_selector_path}")
-
-        if [[ -d "${_selector_path:-}"      ]]
-        then
-          if [[ -n "${_page_number:-}"      ]]
-          then
-            _render_function_options+=("--page" "${_page_number}")
-          fi
-
-          if [[ -n "${_query:-}"            ]]
-          then
-            _render_function_options+=("--query" "${_query}")
-          fi
-
-          _browse_render_container "${_render_function_options[@]:-}" \
-            | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
-
-          return 0
-        else
-          local _raw_url="//${NB_SERVER_HOST}:${NB_SERVER_PORT}/--original/"
-
-          if [[ !   "${_selector_path:-}" =~ ^${NB_DIR} ]] &&
-             [[ -n  "${_encoded_local_notebook_path:-}" ]] &&
-             [[ -n  "${_local_notebook_path:-}"         ]]
-          then
-            _raw_url+="local/${_selector_path#${_local_notebook_path}/}?--local=${_encoded_local_notebook_path}"
-          else
-            _raw_url+="${_selector_path#${NB_DIR}/}"
-          fi
-
-          _render_function_options+=("--raw-url" "${_raw_url}")
-
-          if [[ "${_action:-}" == "delete"  ]]
-          then
-            case "${_request_method:-}" in
-              GET)
-                _browse_render_delete                 \
-                  "${_render_function_options[@]:-}"  \
-                  | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
-                ;;
-              POST)
-                local _container_id_selector=
-                _container_id_selector="$(
-                  _get_id_selector "${_selector_path%/*}" --notebook
-                )"
-
-                _browse_item_delete                   \
-                  "${_render_function_options[@]:-}"  &>/dev/null
-
-                _browse_respond_with 302              \
-"//${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_container_id_selector}${_response_url_params:-}"
-                ;;
-            esac
-
-            return 0
-          elif [[ "${_action:-}" == "edit"  ]]        &&
-               _file_is_text "${_selector_path:-}"
-          then
-            if [[ "${_request_method}"  == "POST"     ]]
-            then
-              _browse_item_update                     \
-                "${_render_function_options[@]:-}"    \
-                --message-body "${_message_body:-}"
-            fi
-
-            _browse_render_edit                       \
-              "${_render_function_options[@]:-}"      \
-              | _browse_respond_with 200 "${_respond_with_200_arguments[@]:-}"
-
-            return 0
-          else
-            _browse_render_item                       \
-              "${_render_function_options[@]:-}"      \
+    if [[ "${_action:-}" == "delete"  ]]
+    then
+      case "${_request_method:-}" in
+        GET)
+          _browse_render_delete                 \
+            "${_render_function_options[@]:-}"  \
+            | _browse_respond_with 200          \
               "${_respond_with_200_arguments[@]:-}"
+          ;;
+        POST)
+          local _container_id_selector=
+          _container_id_selector="$(
+            _get_id_selector "${_selector_path%/*}" --notebook
+          )"
 
-            return 0
-          fi
-        fi
+          _browse_item_delete         \
+            "${_render_function_options[@]:-}" &>/dev/null
+
+          _browse_respond_with 302    \
+"//${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_container_id_selector}${_response_url_params:-}"
+          ;;
+      esac
+
+      return 0
+    elif [[ "${_action:-}" == "edit"  ]]        &&
+         _file_is_text "${_selector_path:-}"
+    then
+      if [[ "${_request_method}"  == "POST"     ]]
+      then
+        _browse_item_update                     \
+          "${_render_function_options[@]:-}"    \
+          --message-body "${_message_body:-}"
       fi
+
+      _browse_render_edit                       \
+        "${_render_function_options[@]:-}"      \
+        | _browse_respond_with 200              \
+          "${_respond_with_200_arguments[@]:-}"
+
+      return 0
+    else
+      _browse_render_item                       \
+        "${_render_function_options[@]:-}"      \
+        "${_respond_with_200_arguments[@]:-}"
+
+      return 0
     fi
 
     # fall back to 500 response
 
     _browse_respond_with 500
+
+    return 1
   }
 
   # _browse_respond_with()
@@ -18666,7 +18880,11 @@ HEREDOC
   #
   # Description:
   #   Send a response with <status-code> as status and an optional <file>
-  #   or <string>, then exit with 0 for status 200 and 1 for all others.
+  #   or <string>.
+  #
+  # Exit / Error / Return Status:
+  #   0 (success, true)  HTTP status 200 or 302.
+  #   1 (error,  false)  All others.
   _browse_respond_with() {
     local _only_headers=0
     local _path=
@@ -18681,7 +18899,7 @@ HEREDOC
     local _response_headers=(
          "Date: ${_date}"
       "Expires: ${_date}"
-       "Server: nb"
+       "Server: ${_ME}"
     )
 
     local __arg=
@@ -18777,9 +18995,9 @@ HEREDOC
 
     if _contains "${1:-}" "200" "302"
     then
-      exit 0
+      return 0
     else
-      exit 1
+      return 1
     fi
   }
 
@@ -18826,6 +19044,22 @@ HEREDOC
       a|add|-a|--add|--create|--new|+)
         _action="add"
         ;;
+      --and)
+        [[ -n "${_search_query:-}" ]] && _search_query="${_search_query:-} "
+
+        case "${2:-}" in
+          -t|--tag*)
+            _search_query+="--and $(_option_get_tags "${2:-}" "${3:-}")"
+
+            shift
+            ;;
+          *)
+            _search_query+="--and ${2:-}"
+            ;;
+        esac
+
+        shift
+        ;;
       --col*)
         _browse_columns="$(_option_get_value "${1:-}" "${2:-}")"
         shift
@@ -18857,6 +19091,22 @@ HEREDOC
       -n|--notebook*|--nb*)
         _browse_notebooks=1
         ;;
+      --or)
+        [[ -n "${_search_query:-}" ]] && _search_query="${_search_query:-} "
+
+        case "${2:-}" in
+          -t|--tag*)
+            _search_query+="--or $(_option_get_tags "${2:-}" "${3:-}")"
+
+            shift
+            ;;
+          *)
+            _search_query+="--or ${2:-}"
+            ;;
+        esac
+
+        shift
+        ;;
       --page)
         _target_page="$(_option_get_value "${1:-}" "${2:-}")"
         shift
@@ -18887,12 +19137,27 @@ HEREDOC
         _browse_respond
         exit 0
         ;;
-      q|-q|--query|--search|search)
-        _search_query="$(_option_get_value "${1:-}" "${2:-}")"
+      --search|search|q|-q|--query)
+        if [[ -n "${2:-}" ]]
+        then
+          _search_query="${2:-}"
+        else
+          _exit_1 printf                        \
+            "%s requires a valid argument.\\n"  \
+            "$(_color_primary "${1:-}")"
+        fi
+
         shift
         ;;
       s|serve|-s|--serve*)
         _only_serve=1
+        ;;
+      -t|--tag*)
+        [[ -n "${_search_query:-}" ]] && _search_query="${_search_query:-} "
+
+        _search_query+="$(_option_get_tags "${1:-}" "${2:-}")"
+
+        shift
         ;;
       --terminal)
         _force_terminal_request=1
@@ -18968,7 +19233,7 @@ HEREDOC
     _url_params+=("--query=${_encoded_query}")
   fi
 
-  if [[ -n "${_action:-}" ]]
+  if [[ -n "${_action:-}"       ]]
   then
     _arguments+=("--${_action}")
     _url_params+=("--${_action}")
@@ -19164,6 +19429,37 @@ HEREDOC
 _alias_subcommand "browse" "b"
 _alias_subcommand "browse" "br"
 _alias_subcommand "browse" "browser"
+
+# do ####################################################################### do
+
+_describe_do() {
+  cat <<HEREDOC
+$(_color_primary "Usage"):
+  ${_ME} do ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+        [<task-number>]
+
+$(_color_primary "Description"):
+  Mark a todo or task as done.
+
+$(_color_primary "Read More"):
+  ${_README_URL}#-todos
+
+$(_color_primary "See Also"):
+  ${_ME} help tasks
+  ${_ME} help todo
+  ${_ME} help undo
+
+$(_color_primary "Examples"):
+  ${_ME} do 123
+  ${_ME} do example:sample/321
+  ${_ME} do 543 7
+HEREDOC
+}
+_do() {
+  _todo "do" "${@:-}"
+}
+_alias_subcommand "do" "done"
+_alias_subcommand "do" "close"
 
 # helpers ############################################################# helpers
 
@@ -19441,7 +19737,7 @@ _plugins() {
       fi
       ;;
     uninstall)
-      local _plugin_path
+      local _plugin_path=
 
       if ! _plugin_path="$(_plugins "${_name}" --paths 2>/dev/null)"  ||
            [[ -z "${_plugin_path:-}"  ]]                              ||
@@ -20616,7 +20912,7 @@ _settings() {
   _settings_prompt() {
     local _setting_name="${1:-}"
 
-    local _padding
+    local _padding=
     _padding="$(_print_padding "-----------" "${_COLUMNS}")"
 
     printf "%s%s Settings\\n" "${_padding}" "$(_color_primary "${_ME}")"
@@ -20900,7 +21196,7 @@ HEREDOC
       then
         printf "bat required: https://github.com/sharkdp/bat\\n"
       else
-        local _theme_list
+        local _theme_list=
         _theme_list=($(bat --list-themes --color never))
 
         if _contains "${2:-}" "${_theme_list[@]}"
@@ -21234,7 +21530,7 @@ _shell() {
 
   local _initial_command=
   local _prompt=
-  _prompt="$(_color_primary "${_ME}")$(_color_secondary "❯") "
+  _prompt="$(_color_primary "${_ME}")$(_color_secondary "${_CHEVRON_RIGHT}") "
 
   local __arg=
   for   __arg in "${@:-}"
@@ -21485,7 +21781,7 @@ _sync() {
   then
     _sync_all=1
 
-    local _notebook_names
+    local _notebook_names=()
     _notebooks=($(_notebooks --names --no-color --unarchived))
   else
     _notebooks=($(_notebooks current))
@@ -21604,49 +21900,676 @@ HEREDOC
   fi
 }
 
-# todos ################################################################# todos
+# tasks ################################################################# tasks
 
-_describe_todos() {
+_describe_tasks() {
   cat <<HEREDOC
 $(_color_primary "Usage"):
-  ${_ME} todos [open | closed] [-a | --all]
-
-$(_color_primary "Options"):
-  -a, --all  Search all unarchived notebooks.
+  ${_ME} tasks ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
+           [open | closed]
 
 $(_color_primary "Description"):
-  List todos.
+  List tasks in todos, notebooks, folders, and other items.
+
+$(_color_primary "Read More"):
+  ${_README_URL}#-todos
+
+$(_color_primary "See Also"):
+  ${_ME} help do
+  ${_ME} help todo
+  ${_ME} help undo
+
+$(_color_primary "Examples"):
+  ${_ME} tasks 123
+  ${_ME} tasks open example:sample/321
+  ${_ME} tasks closed demo:456
 HEREDOC
 }
-_todos() {
-  local _pattern='\- \[ \]|\- \[x\]'
-  local _search_all=0
+_tasks() {
+  _todo "tasks" "${@:-}"
+}
+_alias_subcommand "tasks" "task"
+
+# todo ################################################################### todo
+
+_describe_todo() {
+  cat <<HEREDOC
+$(_color_primary "Usage"):
+  ${_ME} todo add [<notebook>:][<folder-path>/][<filename>] <title>
+              [--description <description>] [--due <date>]
+              [-r (<url> | <selector>) | --related (<url> | <selector>)]
+              [--tags <tag1>,<tag2>...] [--task <title>]...
+  ${_ME} todo do   ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
+               [<task-number>]
+  ${_ME} todo undo ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
+               [<task-number>]
+  ${_ME} todos [<notebook>:][<folder-path>/] [open | closed]
+  ${_ME} todos tasks ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
+                 [open | closed]
+
+$(_color_primary "Options"):
+  --description <description>         Description for the todo.
+  --due <date>                        Due date and / or time for the todo.
+  -r, --related (<url> | <selector>)  Related URL or selector.
+  --tags <tag1>,<tag2>...             Comma-separated list of tags.
+  --task <title>                      Task to add to the tasklist.
+
+$(_color_primary "Subcommands"):
+  (default)   List todos.
+  add         Add a new todo.
+              Shortcut Aliases: \`nb todo a\`, \`nb todo +\`
+  do          Mark a todo or task as done.
+  tasks       List tasks in todos, notebooks, folders, and other item.
+  undo        Unmark a todo or task as done.
+
+$(_color_primary "Description"):
+  Manage todos and tasks.
+
+$(_color_primary "Read More:"):
+  ${_README_URL}#-todos
+
+$(_color_primary "See Also"):
+  ${_ME} help do
+  ${_ME} help tasks
+  ${_ME} help undo
+
+$(_color_primary "Examples"):
+  ${_ME} todo add "Example todo title."
+  ${_ME} todo add Example todo title.
+  ${_ME} todo add "Sample title." --tags tag1,tag2 --related demo:567
+  ${_ME} todos
+  ${_ME} todos open
+
+$(_color_primary "Alias"):
+  ${_ME} todos
+
+$(_color_primary "Shortcut Alias"):
+  ${_ME} t
+HEREDOC
+}
+_todo() {
+  # Usage: _todo_get_task <path> <task-number>
+  _todo_get_task() {
+    local _counter=0
+    local _item_path="${1:?}"
+    local _task_number="${2:?}"
+
+    {
+      cat "${_item_path:-}"
+    } | {
+      local         __line=
+      while read -r __line
+      do
+        if [[ "${__line}" =~ \-\ \[\]|\-\ \[\ \]|\-\ \[\x\] ]]
+        then
+          _counter="$((_counter+1))"
+
+          if [[ "${_counter:-}" == "${_task_number:-}" ]]
+          then
+            printf "%s\\n" "${__line}"
+
+            return 0
+          fi
+        fi
+      done
+
+      return 1
+    }
+  }
+
+  # Usage: _todo_update_task <path> <number> <action>
+  _todo_update_task() {
+    local _action="${3:?}"
+    local _counter=0
+    local _item_path="${1:?}"
+    local _task_number="${2:?}"
+
+    local _temp_file_path=
+    _temp_file_path="$(_temp file)"
+
+    case "${_action:-}" in
+      do)   local _replacement_box="- [x]" ;;
+      undo) local _replacement_box="- [ ]" ;;
+    esac
+
+    {
+      cat "${_item_path:-}"
+    } | {
+      local         __line=
+      while read -r __line
+      do
+        if [[ "${__line}" =~ \-\ \[\]|\-\ \[\ \]|\-\ \[\x\] ]]
+        then
+          _counter="$((_counter+1))"
+
+          if [[ "${_counter:-}" == "${_task_number:-}"      ]]
+          then
+            printf "%s\\n" "${__line}"                      \
+              | sed -e "s/- \[\]/${_replacement_box}/"      \
+                    -e "s/- \[ \]/${_replacement_box}/"     \
+                    -e "s/- \[x\]/${_replacement_box}/"
+          else
+            printf "%s\\n" "${__line}"
+          fi
+        else
+          printf "%s\\n" "${__line}"
+        fi
+      done
+    } | {
+      cat > "${_temp_file_path}"
+    }
+
+    cat "${_temp_file_path}"  > "${_selector_path}"
+
+    [[ -f "${_temp_file_path:?}" ]] && rm -rf "${_temp_file_path:?}"
+  }
+
+  local _action="list"
+  local _arguments=()
+  local _description=
+  local _due_datetime=
+  local _filter=
+  local _related_identifiers=()
+  local _tag_list=
+  local _tasks=()
+  local _title=
 
   while ((${#}))
   do
     case "${1:-}" in
-      -a|--all)
-        _search_all=1
+      --description)
+        _description="$(_option_get_value "${1:-}" "${2:-}")"
+        shift
         ;;
-      closed)
-        _pattern='\- \[x\]'
+      --due)
+        _due_datetime="$(_option_get_value "${1:-}" "${2:-}")"
+        shift
         ;;
-      open)
-        _pattern='\- \[ \]'
+      -r|--via|--also|--related)
+        _related_identifiers+=("$(_option_get_value "${1:-}" "${2:-}")")
+        shift
+        ;;
+      --tag*)
+        [[ -n "${_tag_list:-}"  ]] && _tag_list+=" "
+        _tag_list+="$(_option_get_tags "${1}" "${2:-}")"
+        shift
+        ;;
+      --task)
+        _tasks+=("$(_option_get_value "${1:-}" "${2:-}")")
+        shift
+        ;;
+      --title)
+        local _option_title=
+        _option_title="$(_option_get_value "${1:-}" "${2:-}")"
+
+        if [[ -n "${_title:-}"  ]]
+        then
+          _title="${_option_title} ${_MD} ${_title}"
+        else
+          _title="${_option_title}"
+        fi
+
+        shift
+        ;;
+      +|a|add)
+        _action="add"
+
+        local _maybe_selector=
+        _maybe_selector="$(_option_get_value "${1:-}" "${2:-}")"
+
+        if [[ "${_maybe_selector:-}" =~ :$|/$     ]]
+        then
+          _arguments+=("${_maybe_selector}")
+        else
+          _title+="${_maybe_selector}"
+        fi
+
+        shift
+
+        while [[ -n "${2:-}"  ]] && [[ ! "${2:-}" =~ ^- ]]
+        do
+          [[ -n "${_title:-}" ]] && _title+=" "
+
+          _title+="${2:-}"
+
+          shift
+        done
+        ;;
+      c|closed)
+        _filter="closed"
+        ;;
+      d|do|close|complete*|finish*|check*)
+        _action="do"
+        ;;
+      done)
+        local _selector_path=
+
+        if [[ -n "${2:-}"     ]]
+        then
+          _selector_path="$(_show "${2:-}" --path)"
+        fi
+
+        if [[ "${_selector_path:-}" =~ todo\.md$  ]]
+        then
+          _action="do"
+        else
+          _filter="closed"
+        fi
+        ;;
+      l|list)
+        _action="list"
+        ;;
+      o|open)
+        if [[ -n "${2:-}"                 ]] &&
+           {
+             [[ "${_action:-}" != "tasks" ]] ||
+             [[ -n "${3:-}"               ]]
+           }
+        then
+          _action="undo"
+        else
+          _filter="open"
+        fi
+        ;;
+      tasks)
+        _action="tasks"
+        ;;
+      u|undo|*ncomplete*|undone|unfinish*|uncheck*)
+        _action="undo"
+        ;;
+      *)
+        _arguments+=("${1:-}")
         ;;
     esac
 
     shift
   done
 
-  if ((_search_all))
-  then
-    _search "${_pattern}" --all
-  else
-    _search "${_pattern}"
-  fi | sed -e '/^$/d'
+  case "${_action:-}" in
+    add)
+      local _todo_content="# [ ] ${_title:-}${_NEWLINE}"
+
+      if [[ -n "${_due_datetime:-}" ]]
+      then
+        _todo_content+="${_NEWLINE}## Due${_NEWLINE}"
+        _todo_content+="${_NEWLINE}${_due_datetime:-}${_NEWLINE}"
+      fi
+
+      if [[ -n "${_description:-}"  ]]
+      then
+        _todo_content+="${_NEWLINE}## Description${_NEWLINE}"
+        _todo_content+="${_NEWLINE}${_description}${_NEWLINE}"
+      fi
+
+      if ((${#_tasks[@]}))
+      then
+        _todo_content+="${_NEWLINE}## Tasks${_NEWLINE}${_NEWLINE}"
+
+        local __task=
+        for   __task in "${_tasks[@]:-}"
+        do
+          _todo_content+="- [ ] ${__task}${_NEWLINE}"
+        done
+      fi
+
+      if ((${#_related_identifiers[@]}))
+      then
+        _todo_content+="${_NEWLINE}## Related${_NEWLINE}${_NEWLINE}"
+
+        local __identifier=
+        for   __identifier in "${_related_identifiers[@]:-}"
+        do
+          if _string_is_url "${__identifier:-}"
+          then
+            _todo_content+="- <${__identifier:-}>${_NEWLINE}"
+          else
+            _todo_content+="- [[${__identifier:-}]]${_NEWLINE}"
+          fi
+        done
+      fi
+
+      if [[ -n "${_tag_list:-}"         ]]
+      then
+        _todo_content+="${_NEWLINE}## Tags${_NEWLINE}"
+        _todo_content+="${_NEWLINE}${_tag_list}${_NEWLINE}"
+      fi
+
+      _add                              \
+        --content "${_todo_content:-}"  \
+        --type    "todo.md"             \
+        "${_arguments[@]:-}"
+      ;;
+    do|undo)
+      local _selector="${_arguments[0]:-}"
+      local _task_number="${_arguments[1]:-}"
+
+      if [[ -z "${_selector:-}"         ]]
+      then
+        _exit_1 _help "todo"
+      fi
+
+      local _selector_path=
+      _selector_path="$(_show "${_selector:-}" --path 2>/dev/null || :)"
+
+      local _notebook_path=
+      _notebook_path="$(
+        _notebooks show "${_selector:-}" --path 2>/dev/null ||
+          _notebooks current --path 2>/dev/null
+      )"
+
+      if [[ !  "${_selector_path}" =~ todo\.md$       ]] &&
+         [[ -z "${_task_number:-}"                    ]]
+      then
+        _exit_1 printf "Item must be a todo: %s\\n"   \
+          "$(_color_primary "${_selector:-}")"
+      fi
+
+      case "${_action:-}" in
+        do)
+          if [[ -n "${_task_number:-}"  ]]
+          then
+            _todo_update_task "${_selector_path:-}" "${_task_number:-}" "do"
+
+            local _updated_task=
+            _updated_task="$(
+              _todo_get_task "${_selector_path:-}" "${_task_number:-}"
+            )"
+
+            if [[ ! "${_updated_task:-}" =~ ^-\ \[x\] ]]
+            then
+              _warn cat "${_selector_path}"
+              _exit_1 printf                      \
+                "Unable to mark done: %s\\n"      \
+                "$(_todos tasks "${_selector:-}" "${_task_number}")"
+            else
+              _todos tasks "${_selector:-}" "${_task_number}" \
+                | sed "3s/^/Done: /"
+
+              _git checkpoint "${_notebook_path}" \
+                "[nb] Task Done: $(_show "${_selector:-}" --relative-path) ${_task_number}"
+            fi
+          else
+            _sed_i -e "s/# \[ \]/# \[x\]/" "${_selector_path}"
+
+            if ! grep -q "# \[x\]" "${_selector_path}"
+            then
+              _exit_1 printf                      \
+                "Unable to mark done: %s\\n"      \
+                "$(_color_primary "${_selector:-}")"
+            else
+              printf "Done: %s\\n" "$(_list "${_selector}")"
+
+              _git checkpoint "${_notebook_path}" \
+                "[nb] Done: $(_show "${_selector:-}" --relative-path)"
+            fi
+          fi
+          ;;
+        undo)
+          if [[ -n "${_task_number:-}"            ]]
+          then
+            _todo_update_task "${_selector_path}" "${_task_number:-}" "undo"
+
+            local _updated_task=
+            _updated_task="$(
+              _todo_get_task "${_selector_path:-}" "${_task_number:-}"
+            )"
+
+            if [[ ! "${_updated_task:-}" =~ ^-\ \[\ \] ]]
+            then
+              _exit_1 printf                      \
+                "Unable to undo: %s\\n"           \
+                "$(_todos tasks "${_selector:-}" "${_task_number}")"
+            else
+              _todos tasks "${_selector:-}" "${_task_number}" \
+                | sed "3s/^/Undone: /"
+
+              _git checkpoint "${_notebook_path}" \
+                "[nb] Task Undone: $(_show "${_selector:-}" --relative-path) ${_task_number}"
+            fi
+          else
+            _sed_i -e "s/# \[x\]/# \[ \]/" "${_selector_path}"
+
+            if ! grep -q "# \[ \]" "${_selector_path}"
+            then
+              _exit_1 printf                      \
+                "Unable to undo: %s\\n"           \
+                "$(_color_primary "${_selector:-}")"
+            else
+              printf "Undone: %s\\n" "$(_list "${_selector}")"
+
+              _git checkpoint "${_notebook_path}" \
+                "[nb] Undone: $(_show "${_selector:-}" --relative-path)"
+            fi
+          fi
+          ;;
+      esac
+      ;;
+    list)
+      {
+        _list "${_arguments[@]:-}" --type todo
+      } | {
+        case "${_filter:-}" in
+          closed)
+            sed -E -e "/${NB_INDICATOR_TODO:-} .*\[\ \].*/d"
+            ;;
+          open)
+            sed -E -e "/${NB_INDICATOR_TODO:-} .*\[.*x.*\].*/d"
+            ;;
+          *)
+            cat
+            ;;
+        esac
+      } | {
+        local _counter=0
+
+        local         __line=
+        while read -r __line
+        do
+          _counter+=1
+
+          printf "%s\\n" "${__line:-}"
+        done
+
+        if ! ((_counter))
+        then
+          if [[ -n "${_filter:-}"     ]]
+          then
+            _exit_1 printf "No %s todos found.\\n" "${_filter:-}"
+          else
+            _exit_1 printf "No todos found.\\n"
+          fi
+        fi
+      }
+      ;;
+    tasks)
+      local _selector="${_arguments[0]:-}"
+      local _task_number="${_arguments[1]:-}"
+
+      local _maybe_padded_empty_qualifier=
+
+      if [[ -n "${_filter:-}"         ]]
+      then
+        _maybe_padded_empty_qualifier="${_filter:-} "
+      elif [[ -n "${_task_number:-}"  ]]
+      then
+        _maybe_padded_empty_qualifier="matching "
+      fi
+
+      local _notebook_path=
+      local _selector_path=
+
+      if [[ -n "${_selector:-}"       ]]
+      then
+        _notebook_path="$(
+          _notebooks _show "${_selector:-}" --path 2>/dev/null ||
+            _notebooks current --path
+        )"
+
+        _selector_path="$(
+          _show "${_selector:-}" --path 2>/dev/null || :
+        )"
+      fi
+
+      if [[ -z "${_selector_path:-}"  ]]
+      then
+        _selector_path="$(_notebooks current --path)"
+      fi
+
+      if [[ -d "${_selector_path:-}"  ]]
+      then
+        _selector_path="${_selector_path:-}/"
+      fi
+
+      {
+        _list "${_selector_path:-}"   \
+          --error-on-empty            \
+          --no-indicator              \
+          --no-id                     \
+          --path                      \
+          --type md                   \
+          2>/dev/null || printf ""
+      } | {
+        local         __item_path=
+        while read -r __item_path
+        do
+          [[ -z "${__item_path:-}"  ]] && continue
+          [[ -d "${__item_path:-}"  ]] && continue
+
+          grep -q         \
+            -e "# \[ \]"  \
+            -e "# \[x\]"  \
+            -e "- \[ \]"  \
+            -e "- \[\]"   \
+            -e "- \[x\]"  \
+            "${__item_path}" || continue
+
+          local _item_selector=
+          _item_selector="$(
+            _list "${__item_path:-}" --filename --no-color --no-indicator
+          )"
+
+          _item_selector="${_item_selector#[}"
+          _item_selector="${_item_selector%]*}"
+
+          _list "${__item_path:-}"
+
+          grep -q         \
+            -e "- \[ \]"  \
+            -e "- \[\]"   \
+            -e "- \[x\]"  \
+            "${__item_path}" || continue
+
+          local _info_line_no_color=
+          _info_line_no_color="$(
+            _list "${__item_path:-}" --no-color
+          ) "
+
+          local _extra_length=0
+
+          case "${_info_line_no_color:-}" in
+            *${_NB_INDICATOR_TODO_DONE}*) _extra_length="0"   ;;
+            *${_NB_INDICATOR_TODO}*)      _extra_length="-3"  ;;
+            *)                            _extra_length="-1"  ;;
+          esac
+
+          local _visible_info_line_length=
+          _visible_info_line_length="$(
+            _get_visible_length "${_info_line_no_color:-}" "${_extra_length:-0}"
+          )"
+
+          if [[ -z "${_visible_info_line_length:-}"               ]] ||
+             [[ "${_visible_info_line_length}" -gt "${_COLUMNS}"  ]]
+          then
+            _print_line "$(printf "%-${_COLUMNS}s" '.')" | tr -d '\n'
+          else
+            _print_line "$(printf "%-${_visible_info_line_length}s" '.')"
+          fi
+
+          {
+            grep --color=never          \
+              -e "\- \[[[:space:]]*\] " \
+              -e "\- \[x\] "            \
+              "${__item_path:-}" || :
+          } | {
+            local _counter=0
+            local _printed_task_counter=0
+
+            local         __task=
+            while read -r __task
+            do
+              _counter="$((_counter+1))"
+
+              local _print_task=0
+
+              case "${_filter:-}" in
+                closed)
+                  if [[ "${__task}" =~ \-\ \[x\]            ]]
+                  then
+                    _print_task=1
+                  fi
+                  ;;
+                open)
+                  if [[ "${__task}" =~ \-\ \[\ \]|\-\ \[\]  ]]
+                  then
+                    _print_task=1
+                  fi
+                  ;;
+                *)
+                  _print_task=1
+                  ;;
+              esac
+
+              if [[ "${_task_number:-${_counter:-}}" != "${_counter:-}" ]]
+              then
+                _print_task=0
+              fi
+
+              if ((_print_task))
+              then
+                local _formatted_task="${__task#- }"
+                _formatted_task="${_formatted_task//\[x\]/$(_color_brackets "$(_color_primary "x")")}"
+                _formatted_task="${_formatted_task//\[\]/$(_color_brackets " ")}"
+                _formatted_task="${_formatted_task//\[ \]/$(_color_brackets " ")}"
+
+                printf "%s %s\\n"                                       \
+                  "$(_color_brackets "${_item_selector} ${_counter}")"  \
+                  "${_formatted_task}"
+
+                _printed_task_counter="$((_printed_task_counter+1))"
+              fi
+            done
+
+            if ((_printed_task_counter))
+            then
+              printf "\\n"
+            else
+              printf "0 %stasks.\\n" "${_maybe_padded_empty_qualifier:-}"
+            fi
+          }
+        done
+      } | {
+        local _printed_line_counter=0
+
+        local         __task_line=
+        while read -r __task_line
+        do
+          printf "%s\\n" "${__task_line:-}"
+          _printed_line_counter="$((_printed_line_counter+1))"
+        done
+
+        if ! ((_printed_line_counter))
+        then
+          _warn printf "0 %stasks.\\n" "${_maybe_padded_empty_qualifier:-}"
+
+          return 1
+        fi
+      }
+      ;;
+  esac
 }
-_alias_subcommand "todos" "todo"
+_alias_subcommand "todo" "t"
+_alias_subcommand "todo" "to"
+_alias_subcommand "todo" "todos"
 
 # unarchive ######################################################### unarchive
 
@@ -21680,6 +22603,36 @@ _unarchive() {
   _notebooks unarchive "${@:-}"
 }
 _alias_subcommand "unarchive" "unar"
+
+# undo ################################################################### undo
+
+_describe_undo() {
+  cat <<HEREDOC
+$(_color_primary "Usage"):
+  ${_ME} undo ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+          [<task-number>]
+
+$(_color_primary "Description"):
+  Mark a todo or task as not done.
+
+$(_color_primary "Read More"):
+  ${_README_URL}#-todos
+
+$(_color_primary "See Also"):
+  ${_ME} help do
+  ${_ME} help tasks
+  ${_ME} help todo
+
+$(_color_primary "Examples"):
+  ${_ME} undo 123
+  ${_ME} undo example:sample/321
+  ${_ME} undo 543 7
+HEREDOC
+}
+_undo() {
+  _todo "undo" "${@:-}"
+}
+_alias_subcommand "undo" "undone"
 
 # unset ################################################################# unset
 
@@ -21740,7 +22693,7 @@ $(_color_primary "See Also"):
 HEREDOC
 }
 _update() {
-  local _current_path
+  local _current_path=
   _current_path="${BASH_SOURCE[0]}"
 
   if [[ -n "${_current_path}" ]]  &&
@@ -21775,7 +22728,7 @@ HEREDOC
   else
     local _nb_url="${_REPO_RAW_URL}/nb"
 
-    local _temp_file
+    local _temp_file=
     _temp_file="$(_temp file)"
 
     if ! _download_from "${_nb_url}" "${_temp_file}"

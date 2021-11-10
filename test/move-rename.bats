@@ -218,6 +218,98 @@ Moved\ to:\ .*[.*1.*].*\ .*example_title__a_string•with_a_bunch_of_invalid_fil
   [[ "${lines[0]}" =~ Must\ be\ a\ text\ file\. ]]
 }
 
+# --to-todo ###################################################################
+
+@test "'move --to-todo' with note renames without errors." {
+  {
+    "${_NB}" init
+    "${_NB}" add "Example File.md"
+
+    [[ -e "${NB_DIR}/home/Example File.md"  ]]
+  }
+
+  run "${_NB}" move "Example File.md" --to-todo --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Moves file:
+
+  [[ !  -e "${NB_DIR}/home/Example File.md"       ]]
+  [[    -e "${NB_DIR}/home/Example File.todo.md"  ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)"   ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Move'
+
+  # Updates index:
+
+  cat "${NB_DIR}/home/.index"
+
+  "${_NB}" index get_id "Example File.todo.md"
+
+  [[ "$("${_NB}" index get_id "Example File.todo.md")" == '1' ]]
+
+  # Prints output:
+
+  [[ "${output}" =~ Moved\ to             ]]
+  [[ "${output}" =~ Example\ File.todo.md ]]
+}
+
+@test "'move --to-todo' with bookmark renames without errors." {
+  {
+    "${_NB}" init
+    "${_NB}" add "Example File.bookmark.md" --content "<https://example.com>"
+
+    [[ -e "${NB_DIR}/home/Example File.bookmark.md"   ]]
+  }
+
+  run "${_NB}" move "Example File.bookmark.md" --to-todo --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Moves file:
+
+  [[ !  -e "${NB_DIR}/home/Example File.bookmark.md"  ]]
+  [[    -e "${NB_DIR}/home/Example File.todo.md"      ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)"   ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Move'
+
+  # Updates index:
+
+  cat "${NB_DIR}/home/.index"
+
+  "${_NB}" index get_id "Example File.todo.md"
+
+  [[ "$("${_NB}" index get_id "Example File.todo.md")" == '1' ]]
+
+  # Prints output:
+
+  [[ "${output}" =~ Moved\ to             ]]
+  [[ "${output}" =~ Example\ File.todo.md ]]
+}
+
 # <filename> --to-bookmark ####################################################
 
 @test "'move --to-bookmark' with note renames without errors." {
