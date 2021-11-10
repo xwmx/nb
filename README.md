@@ -8188,9 +8188,13 @@ See Also:
 
 ### Plugins
 
-[↑](#help) · See also:
-[Plugins](#-plugins),
-[`plugins`](#plugins)
+<p>
+  <sup>
+    <a href="#help">↑</a> ·
+    <a href="#-plugins">Plugins</a>,
+    <a href="#plugins"><code>nb plugins</code></a>
+  </sup>
+</p>
 
 <p align="center">
   <a href="#backlink">backlink</a>&nbsp;·
