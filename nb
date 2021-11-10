@@ -3775,7 +3775,7 @@ $(_color_primary "Usage"):
         [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
   ${_ME} move ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note |
-          --to-title) [-f | --force]
+          --to-title | --to-todo) [-f | --force]
   ${_ME} notebooks [<name> | <query>] [--ar | --archived] [--global] [--local]
                [--names] [--paths] [--unar | --unarchived]
   ${_ME} notebooks add <name> [<remote-url> [<branch>]] [--author]
@@ -13780,7 +13780,7 @@ _describe_move() {
 $(_color_primary "Usage"):
   ${_ME} move ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note |
-          --to-title) [-f | --force]
+          --to-title | --to-todo) [-f | --force]
 
 $(_color_primary "Options"):
   -f, --force     Skip the confirmation prompt.
@@ -13792,13 +13792,15 @@ $(_color_primary "Options"):
                   to a Markdown note.
   --to-title      Set the filename to the note title, lowercased with spaces
                   and disallowed filename characters replaced with underscores.
+  --to-todo       Preserve the existing filename and replace the extension
+                  with ".todo.md" to convert the note to a todo.
 
 $(_color_primary "Description"):
   Move or rename a note. Move the note to <path> or change the file type.
   When the file extension is omitted, the existing extension is used.
   When only a file extension is specified, only the extension will be updated.
 
-  \`move\` and \`rename\` are aliases and can be used interchangably.
+  \`move\` and \`rename\` are aliases and can be used interchangeably.
 
 $(_color_primary "See Also"):
   ${_ME} help delete
@@ -13857,6 +13859,9 @@ _move() {
         ;;
       --to*title)
         _to_target_type="title"
+        ;;
+      --to*todo)
+        _to_target_type="todo"
         ;;
       *)
         if [[ -z "${_source_selector:-}"    ]]
@@ -13976,18 +13981,13 @@ _move() {
       fi
     fi
 
-    if [[ -n  "${_to_target_type:-}"              ]]
-    then
-      if [[   "${_to_target_type}" == "bookmark"  ]]
-      then
-        _target_file_type="bookmark.md"
-      elif [[ "${_to_target_type}" == "note"      ]]
-      then
-        _target_file_type="${NB_DEFAULT_EXTENSION:-md}"
-      else
-        _exit_1 _help "move"
-      fi
-    fi
+    case "${_to_target_type:-}" in
+      '')       :                                               ;;
+      bookmark) _target_file_type="bookmark.md"                 ;;
+      note)     _target_file_type="${NB_DEFAULT_EXTENSION:-md}" ;;
+      todo)     _target_file_type="todo.md"                     ;;
+      *)        _exit_1 _help "move"                            ;;
+    esac
 
     if [[ -z "${_target_file_name:-}" ]]
     then

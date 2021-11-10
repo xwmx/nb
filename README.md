@@ -3680,8 +3680,10 @@ nb rename 5 .org
 ```
 
 Use [`nb rename --to-bookmark`](#move) to change the extension of a note
-to `.bookmark.md` and [`nb rename --to-note`](#move) to change the extension
-of a bookmark to either `.md` or the extension set with
+to `.bookmark.md`,
+[`nb rename --to-todo`](#move) to change the extension to `.todo.md`,
+and [`nb rename --to-note`](#move) to change the extension
+of a bookmark or todo to either `.md` or the extension set with
 [`nb set default_extension`](#default_extension):
 
 ```bash
@@ -4651,7 +4653,7 @@ vim
 ```
 
 `nb set` and `nb settings` are aliases that refer to the same subcommand,
-so the two subcommand names can be used interchangably.
+so the two subcommand names can be used interchangeably.
 
 For more information about `set` and `settings`, see
 [`nb help settings`](#settings) and
@@ -4919,7 +4921,7 @@ nb plugins install plugins/example.nb-plugin
 
 The `<url>` should be the full URL to the plugin file.
 `nb` also recognizes regular GitHub URLs,
-which can be used interchangably with raw GitHub URLs.
+which can be used interchangeably with raw GitHub URLs.
 
 Installed plugins can be listed with [`nb plugins`](#plugins),
 which optionally takes a name and prints full paths:
@@ -5547,7 +5549,7 @@ Usage:
         [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
   nb move ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note |
-          --to-title) [-f | --force]
+          --to-title | --to-todo) [-f | --force]
   nb notebooks [<name> | <query>] [--ar | --archived] [--global] [--local]
                [--names] [--paths] [--unar | --unarchived]
   nb notebooks add <name> [<remote-url> [<branch>]] [--author]
@@ -6828,7 +6830,7 @@ Examples:
 Usage:
   nb move ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note |
-          --to-title) [-f | --force]
+          --to-title | --to-todo) [-f | --force]
 
 Options:
   -f, --force     Skip the confirmation prompt.
@@ -6840,13 +6842,15 @@ Options:
                   to a Markdown note.
   --to-title      Set the filename to the note title, lowercased with spaces
                   and disallowed filename characters replaced with underscores.
+  --to-todo       Preserve the existing filename and replace the extension
+                  with ".todo.md" to convert the note to a todo.
 
 Description:
   Move or rename a note. Move the note to <path> or change the file type.
   When the file extension is omitted, the existing extension is used.
   When only a file extension is specified, only the extension will be updated.
 
-  `nb move` and `nb rename` are aliases and can be used interchangably.
+  `nb move` and `nb rename` are aliases and can be used interchangeably.
 
 See Also:
   nb help delete
