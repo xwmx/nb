@@ -2259,7 +2259,7 @@ List tasks in a todo with [`nb tasks`](#tasks-1):
 [7 3] [ ] Task three.
 ```
 
-Todos are identified by the item [selector](#-selectors), followed by
+Tasks are identified by the item [selector](#-selectors), followed by
 a space, then followed by the sequential number of the task in the file.
 
 Use [`nb do`](#do) to mark tasks as complete:
@@ -8467,8 +8467,6 @@ Markdown.
     <a href="#todo"><code>nb todo</code></a>
   </sup>
 </p>
-
-*(draft)*
 
 #### Extension
 
