@@ -8353,7 +8353,7 @@ Description:
 
 <p align="center">
   <a href="#nb-markdown-bookmark-file-format">Bookmark File Format</a>&nbsp;·
-  <a href="#nb-todo-file-format">Todo File Format</a>&nbsp;·
+  <a href="#nb-markdown-todo-file-format">Todo File Format</a>&nbsp;·
   <a href="#nb-notebook-specification">Notebook Specification</a>
 </p>
 
