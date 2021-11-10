@@ -4840,7 +4840,7 @@ export NB_INDICATOR_PINNED="✨"
 To turn off an indicator, assign the variable to an empty string:
 
 ```bash
-export NB_INDICATOR_TODO=""
+export NB_INDICATOR_PINNED=""
 ```
 
 Available indicator variables with default values:
@@ -4855,7 +4855,7 @@ export  NB_INDICATOR_FOLDER="📂"
 export  NB_INDICATOR_IMAGE="🌄"
 export  NB_INDICATOR_PINNED="📌"
 export  NB_INDICATOR_TODO="✔️ "
-export  NB_INDICATOR_TODO="✅"
+export  NB_INDICATOR_TODO_DONE="✅"
 export  NB_INDICATOR_VIDEO="📹"
 ```
 
