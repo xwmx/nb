@@ -1187,6 +1187,11 @@ _FILE_TYPES=(archive audio bookmark document folder image text video)
 # Middle dot character.
 _MD="·"
 
+if [[ ! "${LANG:-x}" =~ utf-8|UTF-8 ]]
+then
+  _MD="-"
+fi
+
 # $_NBSP
 #
 # No-break space character.
