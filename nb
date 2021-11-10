@@ -21969,10 +21969,10 @@ _todo() {
   _todo_get_task() {
     local _counter=0
     local _task_number="${2:?}"
-    local _todo_path="${1:?}"
+    local _item_path="${1:?}"
 
     {
-      cat "${_todo_path:-}"
+      cat "${_item_path:-}"
     } | {
       local         __line=
       while read -r __line
@@ -21999,7 +21999,7 @@ _todo() {
     local _action="${3:?}"
     local _counter=0
     local _task_number="${2:?}"
-    local _todo_path="${1:?}"
+    local _item_path="${1:?}"
 
     local _temp_file_path=
     _temp_file_path="$(_temp file)"
@@ -22010,7 +22010,7 @@ _todo() {
     esac
 
     {
-      cat "${_todo_path:-}"
+      cat "${_item_path:-}"
     } | {
       local         __line=
       while read -r __line
@@ -22400,13 +22400,13 @@ _todo() {
       } | {
         local _first=1
 
-        local         __todo_path=
-        while read -r __todo_path
+        local         __item_path=
+        while read -r __item_path
         do
-          [[ -z "${__todo_path:-}"  ]] && continue
-          [[ -d "${__todo_path:-}"  ]] && continue
+          [[ -z "${__item_path:-}"  ]] && continue
+          [[ -d "${__item_path:-}"  ]] && continue
 
-          if ! _file_is_todo "${__todo_path:-}"
+          if ! _file_is_todo "${__item_path:-}"
           then
             _exit_1 printf          \
               "Not a todo: %s\\n"   \
@@ -22422,17 +22422,17 @@ _todo() {
 
           local _item_selector=
           _item_selector="$(
-            _list "${__todo_path:-}" --filename --no-color --no-indicator
+            _list "${__item_path:-}" --filename --no-color --no-indicator
           )"
 
           _item_selector="${_item_selector#[}"
           _item_selector="${_item_selector%]*}"
 
-          _list "${__todo_path:-}"
+          _list "${__item_path:-}"
 
           local _info_line_no_color=
           _info_line_no_color="$(
-            _list "${__todo_path:-}" --no-color
+            _list "${__item_path:-}" --no-color
           ) "
 
           local _visible_info_line_length=
@@ -22452,7 +22452,7 @@ _todo() {
             grep --color=never          \
               -e "\- \[[[:space:]]*\] " \
               -e "\- \[x\] "            \
-              "${__todo_path:-}" || :
+              "${__item_path:-}" || :
           } | {
             local _counter=0
             local _printed_task_counter=0
