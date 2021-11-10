@@ -2137,7 +2137,7 @@ See [`bookmark help`](#bookmark-help) for more information.
 </p>
 
 Use [`nb todo`](#todo) (shortcut: `nb t`) to create, list, and check off todos.
-`nb` todos are [formatted Markdown documents](#nb-markdown-todo-file-format)
+`nb` todos are [structured Markdown documents](#nb-markdown-todo-file-format)
 referencing a single primary todo,
 with optional [tasks](#tasks).
 
