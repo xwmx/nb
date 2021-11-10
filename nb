@@ -22372,10 +22372,16 @@ _todo() {
         _maybe_padded_empty_qualifier="matching "
       fi
 
+      local _notebook_path=
       local _selector_path=
 
       if [[ -n "${_selector:-}"       ]]
       then
+        _notebook_path="$(
+          _notebooks _show "${_selector:-}" --path 2>/dev/null ||
+            _notebooks current --path
+        )"
+
         _selector_path="$(
           _show "${_selector:-}" --path 2>/dev/null || :
         )"
@@ -22397,22 +22403,22 @@ _todo() {
           --no-indicator              \
           --no-id                     \
           --path                      \
-          --type todo 2>/dev/null || printf ""
+          --type md                   \
+          2>/dev/null || printf ""
       } | {
-        local _first=1
-
         local         __item_path=
         while read -r __item_path
         do
           [[ -z "${__item_path:-}"  ]] && continue
           [[ -d "${__item_path:-}"  ]] && continue
 
-          if ((_first))
-          then
-            _first=0
-          else
-            printf "\\n"
-          fi
+          grep -q         \
+            -e "# \[ \]"  \
+            -e "# \[x\]"  \
+            -e "- \[ \]"  \
+            -e "- \[\]"   \
+            -e "- \[x\]"  \
+            "${__item_path}" || continue
 
           local _item_selector=
           _item_selector="$(
@@ -22424,14 +22430,28 @@ _todo() {
 
           _list "${__item_path:-}"
 
+          grep -q         \
+            -e "- \[ \]"  \
+            -e "- \[\]"   \
+            -e "- \[x\]"  \
+            "${__item_path}" || continue
+
           local _info_line_no_color=
           _info_line_no_color="$(
             _list "${__item_path:-}" --no-color
           ) "
 
+          local _extra_length=0
+
+          case "${_info_line_no_color:-}" in
+            *${_NB_INDICATOR_TODO_DONE}*) _extra_length="0"   ;;
+            *${_NB_INDICATOR_TODO}*)      _extra_length="-3"  ;;
+            *)                            _extra_length="-1"  ;;
+          esac
+
           local _visible_info_line_length=
           _visible_info_line_length="$(
-            _get_visible_length "${_info_line_no_color:-}"
+            _get_visible_length "${_info_line_no_color:-}" "${_extra_length:-0}"
           )"
 
           if [[ -z "${_visible_info_line_length:-}"               ]] ||
@@ -22484,9 +22504,9 @@ _todo() {
               if ((_print_task))
               then
                 local _formatted_task="${__task#- }"
-                _formatted_task="${_formatted_task//\[x\]/"$(_color_brackets "$(_color_primary "x")")"}"
-                _formatted_task="${_formatted_task//\[\]/"$(_color_brackets " ")"}"
-                _formatted_task="${_formatted_task//\[ \]/"$(_color_brackets " ")"}"
+                _formatted_task="${_formatted_task//\[x\]/$(_color_brackets "$(_color_primary "x")")}"
+                _formatted_task="${_formatted_task//\[\]/$(_color_brackets " ")}"
+                _formatted_task="${_formatted_task//\[ \]/$(_color_brackets " ")}"
 
                 printf "%s %s\\n"                                       \
                   "$(_color_brackets "${_item_selector} ${_counter}")"  \
@@ -22496,8 +22516,10 @@ _todo() {
               fi
             done
 
-            if ! ((_printed_task_counter))
+            if ((_printed_task_counter))
             then
+              printf "\\n"
+            else
               printf "0 %stasks.\\n" "${_maybe_padded_empty_qualifier:-}"
             fi
           }
