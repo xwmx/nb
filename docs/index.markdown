@@ -739,8 +739,8 @@ The notebook header and command footer can be configured or hidden with
 home
 ----
 [3] example.md · "Example content."
-[2] todos.md · "Todos:"
-[1] ideas.md · "- Example idea one."
+[2] sample.md · "Sample content."
+[1] demo.md · "- Demo list item one."
 ```
 
 Notes from the current notebook are listed in the order they were last modified.
@@ -758,13 +758,13 @@ or [YAML front matter](#front-matter):
 ```
 
 ```markdown
-Todos
-=====
+Sample Title
+============
 ```
 
 ```markdown
 ---
-title: Ideas
+title: Demo Title
 ---
 ```
 
@@ -787,15 +787,15 @@ in the output of `nb ls`:
 home
 ----
 [3] Example Title
-[2] Todos
-[1] Ideas
+[2] Sample Title
+[1] Demo Title
 ```
 
 Pass an id, filename, or title to view the listing for that note:
 
 ```bash
-❯ nb ls Todos
-[2] Todos
+❯ nb ls Sample\ Title
+[2] Sample Title
 ```
 
 ```bash
@@ -807,25 +807,26 @@ If there is no exact match, `nb` will list items with
 titles and filenames that fuzzy match the query:
 
 ```bash
-❯ nb ls "idea"
-[1] Ideas
+❯ nb ls ex
+[3] Example Title
 ```
 
 A case-insensitive regular expression can also be used to
 filter filenames and titles:
 
 ```bash
-❯ nb ls "^example.*"
+❯ nb ls ".*ample.*"
 [3] Example Title
+[3] Sample Title
 ```
 
 Multiple words act like an `OR` filter, listing any
 titles or filenames that match any of the words:
 
 ```bash
-❯ nb ls example ideas
+❯ nb ls example demo
 [3] Example Title
-[1] Ideas
+[1] Demo Title
 ```
 
 When multiple words are quoted, filter titles and filenames for that phrase:
@@ -912,19 +913,19 @@ which can be combined with `-r` / `--reverse`:
 ❯ nb ls
 home
 ----
-[2] Todos
+[2] Sample Title
 [3] Example Title
-[1] Ideas
+[1] Demo Title
 
 ❯ nb ls --sort
-[1] Ideas
-[2] Todos
+[1] Demo Title
+[2] Sample Title
 [3] Example Title
 
 ❯ nb ls --sort --reverse
 [3] Example Title
-[2] Todos
-[1] Ideas
+[2] Sample Title
+[1] Demo Title
 ```
 
 `nb` with no subcommand behaves like an alias for `nb ls`,
@@ -934,11 +935,11 @@ so the examples above can be run without the `ls`:
 ❯ nb
 home
 ----
-[2] Todos
+[2] Sample Title
 [3] Example Title
-[1] Ideas
+[1] Demo Title
 
-❯ nb "^example.*"
+❯ nb example
 [3] Example Title
 
 ❯ nb 3 --excerpt
@@ -961,14 +962,14 @@ More example content:
 - three
 
 ❯ nb --sort
-[1] Ideas
-[2] Todos
+[1] Demo Title
+[2] Sample Title
 [3] Example Title
 
 ❯ nb --sort --reverse
 [3] Example Title
-[2] Todos
-[1] Ideas
+[2] Sample Title
+[1] Demo Title
 ```
 
 Short options can be combined for brevity:
@@ -980,14 +981,14 @@ Short options can be combined for brevity:
 -----------------
 # Example Title
 
-[2] Todos
----------
-Todos
-=====
-[1] Ideas
----------
+[2] Sample Title
+----------------
+Sample Title
+============
+[1] Demo Title
+--------------
 ---
-title: Ideas
+title: Demo Title
 ```
 
 `nb` and `nb ls` display the 15 most recently modified items.
