@@ -144,6 +144,13 @@ HEREDOC
   #   ubuntu1804.vm.provision :shell, inline: $ubuntu_setup, privileged: false
   # end
 
+  # Ubuntu Desktop
+  # config.vm.define "ubuntu_desktop" do |ubuntu_desktop|
+  #   # https://app.vagrantup.com/gusztavvargadr/boxes/ubuntu-desktop
+  #   ubuntu_desktop.vm.box = "gusztavvargadr/ubuntu-desktop"
+  #   ubuntu_desktop.vm.provision :shell, inline: $ubuntu_setup, privileged: false
+  # end
+
   #############################################################################
   # Configuration
   # -------------
