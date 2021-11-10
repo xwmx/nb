@@ -1197,6 +1197,38 @@ line four
 HEREDOC
 }
 
+@test "'list -e' with todos prints line matching visible listing length." {
+  {
+    "${_NB}" init
+
+    "${_NB}" todos add "Example todo one."
+    "${_NB}" todos add "Example todo two."
+
+    "${_NB}" "do" 2
+  }
+
+  run "${_NB}" list -e
+
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
+  printf "\${lines[2]}:   '%s'\\n" "${lines[2]}"
+
+  [[ "${status}"    -eq 0 ]]
+  [[ "${#lines[@]}" -eq 6 ]]
+
+  [[ "${lines[0]}"  =~  \
+.*[.*2.*].*\ ✅\ .*[.*x.*].*\ Example\ todo\ two\.  ]]
+  [[ "${lines[1]}"  =~  \
+[^-]----------------------------[^-]                ]]
+
+
+  [[ "${lines[3]}"  =~  \
+.*[.*1.*].*\ ✔️\ \ .*[\ ].*\ Example\ todo\ one\.    ]]
+  [[ "${lines[4]}"  =~  \
+[^-]----------------------------[^-]                ]]
+}
+
 @test "'list -e' exits with 0 and displays 5 line list items." {
   {
     _setup_list_excerpt

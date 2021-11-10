@@ -1507,7 +1507,7 @@ export _TODO_FILE_EXTENSIONS=(
   todo.md.enc
 )
 _file_is_todo() {
-  [[ "${1:-}" =~ \.todo\.md|todo\.md\.enc ]]
+  [[ "${1:-}" =~ todo\.md|todo\.md\.enc   ]]
 }
 
 # _file_is_video()
@@ -5170,6 +5170,7 @@ _list() {
       local _first_line=
       local _maybe_title=
       local _title_basename_or_path="${__basename}"
+      local _title_basename_or_path_color="${__basename}"
 
       if [[ -z "${_filter_pattern:-}"                       ]] &&
          [[ -n "${_selector_basename:-}"                    ]] &&
@@ -5272,6 +5273,7 @@ _list() {
       if ((_list_paths))
       then
         _title_basename_or_path="${_list_path}/${__basename}"
+        _title_basename_or_path_color="${_list_path}/${__basename}"
       elif ! ((_list_filenames))
       then
         if [[ -z "${_maybe_title}" ]]
@@ -5287,6 +5289,7 @@ _list() {
             _maybe_title=
           else
             _title_basename_or_path="${_maybe_title}"
+            _title_basename_or_path_color="${_maybe_title}"
           fi
         fi
       fi
@@ -5342,24 +5345,25 @@ _list() {
           if [[ "${_title_basename_or_path}" =~ \[x\]\  ]]
           then
             _indicators+="${_NB_INDICATOR_TODO_DONE% } "
-            _extra_length=1
+            _extra_length="1"
           else
             _indicators+="${_NB_INDICATOR_TODO% } "
-            _extra_length=1
+            _extra_length="-2"
           fi
           # _title_basename_or_path="${_title_basename_or_path#\[[\ |x]\]\ }"
 
           if ((_COLOR_ENABLED))
           then
-            _title_basename_or_path="\
-${_title_basename_or_path/\[x\]/${_TPUT_SETAF_8}[${_TPUT_COLOR_PRIMARY}x${_TPUT_SETAF_8}]${_TPUT_SGR0}}"
-            _title_basename_or_path="\
-${_title_basename_or_path/\[$' '\]/${_TPUT_SETAF_8}[ ]${_TPUT_SGR0}}"
+            _title_basename_or_path_color="\
+${_title_basename_or_path_color/\[x\]/${_TPUT_SETAF_8}[${_TPUT_COLOR_PRIMARY}x${_TPUT_SETAF_8}]${_TPUT_SGR0}}"
+            _title_basename_or_path_color="\
+${_title_basename_or_path_color/\[$' '\]/${_TPUT_SETAF_8}[ ]${_TPUT_SGR0}}"
           fi
         fi
       fi
 
       local _item_info="${_indicators}${_title_basename_or_path}"
+      local _item_info_color="${_indicators}${_title_basename_or_path_color}"
 
       if ! ((_list_filenames))  &&
          ! ((_list_paths))      &&
@@ -5378,7 +5382,7 @@ ${_title_basename_or_path/\[$' '\]/${_TPUT_SETAF_8}[ ]${_TPUT_SGR0}}"
       if ((_no_id))
       then
         _info_line="${_item_info}"
-        _info_line_color="${_item_info}"
+        _info_line_color="${_item_info_color}"
       else
         local _item_id=
         # use `sed` directly instead of `_index get_id` for performance
@@ -5414,7 +5418,7 @@ ${_TPUT_SGR0}"
         printf -v _spaces '%*s' "${_spaces_length}" ""
 
         _info_line="${_brackets_identifier}${_spaces}${_item_info}"
-        _info_line_color="${_brackets_identifier_color}${_spaces}${_item_info}"
+        _info_line_color="${_brackets_identifier_color}${_spaces}${_item_info_color}"
       fi
 
       if ! ((_line_wrap))
@@ -14145,7 +14149,7 @@ _open() {
   local _selector_path=
   _selector_path="$(_show "${1:-}" --path)"
 
-  if [[ "${_selector_path:-}" =~ \.todo\.md$ ]]
+  if [[ "${_selector_path:-}" =~ todo\.md$  ]]
   then
     _defer "_todo" "undo" "${@:-}"
   else
@@ -16032,14 +16036,14 @@ _show() {
   then
     local _indicator_arguments=("${_notebook_path}/${_relative_path}")
 
-    if [[ "${_relative_path:-}" =~ \.todo\.md ]]
+    if [[ "${_relative_path:-}" =~ todo\.md ]]
     then
       local _todo_title=
       _todo_title="$(
         _get_content "${_notebook_path}/${_relative_path}" --title
       )"
 
-      if [[ "${_todo_title}" =~ ^\[x\] ]]
+      if [[ "${_todo_title}" =~ ^\[x\]      ]]
       then
         _indicator_arguments+=(--done)
       fi
@@ -16118,7 +16122,7 @@ _show() {
 
     if [[ -n "${_title:-}"      ]]
     then
-      if [[ "${_relative_path}"  =~ \.todo\.md$ ]] && ((_COLOR_ENABLED))
+      if [[ "${_relative_path}"  =~ todo\.md$ ]] && ((_COLOR_ENABLED))
       then
         _title="\
 ${_title/\[x\]/${_TPUT_SETAF_8}[${_TPUT_COLOR_PRIMARY}x${_TPUT_SETAF_8}]${_TPUT_SGR0}}"
@@ -22090,7 +22094,7 @@ _todo() {
         local _maybe_selector=
         _maybe_selector="$(_option_get_value "${1:-}" "${2:-}")"
 
-        if [[ "${_maybe_selector:-}" =~ :$|/$ ]]
+        if [[ "${_maybe_selector:-}" =~ :$|/$     ]]
         then
           _arguments+=("${_maybe_selector}")
         else
@@ -22122,7 +22126,7 @@ _todo() {
           _selector_path="$(_show "${2:-}" --path)"
         fi
 
-        if [[ "${_selector_path:-}" =~ \.todo\.md$ ]]
+        if [[ "${_selector_path:-}" =~ todo\.md$  ]]
         then
           _action="do"
         else
@@ -22230,7 +22234,7 @@ _todo() {
           _notebooks current --path 2>/dev/null
       )"
 
-      if [[ ! "${_selector_path}" =~ \.todo\.md$    ]]
+      if [[ ! "${_selector_path}" =~ todo\.md$        ]]
       then
         _exit_1 printf "Item must be a todo: %s\\n" \
           "$(_color_primary "${_selector:-}")"
