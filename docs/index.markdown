@@ -33,7 +33,7 @@ with:
 - <a href="#-linking">[[wiki-style linking]]</a>,
 - terminal and GUI web [browsing](#-browsing),
 - inline [images](#-images),
-- [todos](#-todos) with [tasks](#--tasks),
+- [todos](#-todos) with [tasks](#-tasks),
 - global and local [notebooks](#-notebooks),
 - organization with [folders](#-folders),
 - customizable [color themes](#-color-themes),
@@ -336,7 +336,7 @@ the [`nb update`](#update) subcommand.
   <a href="#deleting">Deleting</a>&nbsp;·
   <a href="#-bookmarks">🔖&nbsp;Bookmarks</a>&nbsp;·
   <a href="#-todos">✅&nbsp;Todos</a>&nbsp;·
-  <a href="#--tasks">Tasks</a>&nbsp;·
+  <a href="#-tasks">✔️&nbsp;Tasks</a>&nbsp;·
   <a href="#-tagging">🏷&nbsp;Tagging</a>&nbsp;·
   <a href="#-linking">🔗&nbsp;Linking</a>&nbsp;·
   <a href="#-browsing">🌍&nbsp;Browsing</a>&nbsp;·
@@ -2142,7 +2142,7 @@ See [`bookmark help`](#bookmark-help) for more information.
 Use [`nb todo`](#todo) (shortcut: `nb t`) to create, list, and check off todos.
 `nb` todos are [structured Markdown documents](#nb-markdown-todo-file-format)
 referencing a single primary todo,
-with optional [tasks](#--tasks).
+with optional [tasks](#-tasks).
 
 Use `nb todo add` to create a new todo:
 
@@ -2185,7 +2185,7 @@ Added: [3] ✔️ [ ] Example todo three.
 Example description.
 ```
 
-Todos can have [tasks](#--tasks). Tasks are represented as a markdown task list
+Todos can have [tasks](#-tasks). Tasks are represented as a markdown task list
 and are placed in a `## Tasks` section:
 
 ```bash
@@ -2265,7 +2265,7 @@ and
 [`nb help undo`](#undo),
 for more information.
 
-#### `-[]` Tasks
+#### ✔️ Tasks
 
 <p>
   <sup>
@@ -6284,7 +6284,7 @@ Shortcut Aliases:
 
 [↑](#help) · See also:
 [Todos](#-todos),
-[Tasks](#--tasks),
+[Tasks](#-tasks),
 [`tasks`](#tasks),
 [`todo`](#todo),
 [`undo`](#undo)
@@ -7911,7 +7911,7 @@ Examples:
 #### `tasks`
 
 [↑](#help) · See also:
-[Tasks](#--tasks),
+[Tasks](#-tasks),
 [Todos](#-todos),
 [`do`](#do),
 [`todo`](#todo),
@@ -7926,6 +7926,7 @@ Description:
   List tasks in todos, notebooks, folders, and other items.
 
 Read More:
+  https://github.com/xwmx/nb#-tasks
   https://github.com/xwmx/nb#-todos
 
 See Also:
@@ -8038,7 +8039,7 @@ Shortcut Alias:
 
 [↑](#help) · See also:
 [Todos](#-todos),
-[Tasks](#--tasks),
+[Tasks](#-tasks),
 [`do`](#do),
 [`tasks`](#tasks),
 [`todo`](#todo)
