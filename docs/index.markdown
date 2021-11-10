@@ -2262,7 +2262,7 @@ and
 [`nb help undo`](#undo),
 for more information.
 
-#### `[x]` Tasks
+#### `x` Tasks
 
 <p>
   <sup>
