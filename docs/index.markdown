@@ -334,6 +334,7 @@ the [`nb update`](#update) subcommand.
   <a href="#deleting">Deleting</a>&nbsp;·
   <a href="#-bookmarks">🔖&nbsp;Bookmarks</a>&nbsp;·
   <a href="#-todos">✅&nbsp;Todos</a>&nbsp;·
+  <a href="#--tasks">Tasks</a>&nbsp;·
   <a href="#-tagging">🏷&nbsp;Tagging</a>&nbsp;·
   <a href="#-linking">🔗&nbsp;Linking</a>&nbsp;·
   <a href="#-browsing">🌍&nbsp;Browsing</a>&nbsp;·
