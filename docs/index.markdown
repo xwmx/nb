@@ -2237,6 +2237,16 @@ Undone: [6] ✔️ [ ] Example todo two.
 
 #### Tasks
 
+<p>
+  <sup>
+    <a href="#-todos">↑</a> ·
+    <a href="#do"><code>nb do</code></a>,
+    <a href="#tasks-1"><code>nb tasks</code></a>,
+    <a href="#todo"><code>nb todo</code></a>,
+    <a href="#undo"><code>nb undo</code></a>
+  </sup>
+</p>
+
 Todos can have tasks. Tasks are represented as a markdown task list and
 are placed in a `## Tasks` section:
 
@@ -6217,6 +6227,7 @@ Shortcut Aliases:
 
 [↑](#help) · See also:
 [Todos](#-todos),
+[Tasks](#tasks),
 [`tasks`](#tasks-1),
 [`todo`](#todo),
 [`undo`](#undo)
@@ -7841,6 +7852,7 @@ Examples:
 #### `tasks`
 
 [↑](#help) · See also:
+[Tasks](#tasks),
 [Todos](#-todos),
 [`do`](#do),
 [`todo`](#todo),
@@ -7966,6 +7978,7 @@ Shortcut Alias:
 
 [↑](#help) · See also:
 [Todos](#-todos),
+[Tasks](#tasks),
 [`do`](#do),
 [`tasks`](#tasks-1),
 [`todo`](#todo)
