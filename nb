@@ -3717,6 +3717,8 @@ $(_color_primary "Usage"):
   ${_ME} count [<notebook>:][<folder-path>/]
   ${_ME} delete ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])...
             [-f | --force]
+  ${_ME} do ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+        [<task-number>]
   ${_ME} edit ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           [-c <content> | --content <content>] [--edit]
           [-e <editor> | --editor <editor>] [--overwrite] [--prepend]
@@ -3795,7 +3797,22 @@ $(_color_primary "Usage"):
   ${_ME} subcommands [add <name>...] [alias <name> <alias>]
                  [describe <name> <usage>]
   ${_ME} sync [-a | --all]
+  ${_ME} tasks ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
+           [open | closed]
+  ${_ME} todo add [<notebook>:][<folder-path>/][<filename>] <title>
+              [--description <description>] [--due <date>]
+              [-r (<url> | <selector>) | --related (<url> | <selector>)]
+              [--tags <tag1>,<tag2>...] [--task <title>]...
+  ${_ME} todo do   ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
+               [<task-number>]
+  ${_ME} todo undo ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
+               [<task-number>]
+  ${_ME} todos [<notebook>:][<folder-path>/] [open | closed]
+  ${_ME} todos tasks ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
+                 [open | closed]
   ${_ME} unarchive [<notebook>]
+  ${_ME} undo ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+          [<task-number>]
   ${_ME} unpin ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
   ${_ME} unset (<name> | <number>)
   ${_ME} update
@@ -3820,6 +3837,7 @@ $(_color_primary "Subcommands"):
   completions  Install and uninstall completion scripts.
   count        Print the number of items in a notebook or folder.
   delete       Delete a note.
+  do           Mark a todo or task as done.
   edit         Edit a note.
   export       Export a note to a variety of different formats.
   git          Run \`git\` commands within the current notebook.
@@ -3844,7 +3862,10 @@ $(_color_primary "Subcommands"):
   status       Print notebook status information.
   subcommands  List, add, alias, and describe subcommands.
   sync         Sync local notebook with the remote repository.
+  tasks        List tasks in a todo.
+  todo         Manage todos and tasks.
   unarchive    Unarchive the current or specified notebook.
+  undo         Mark a todo or task as not done.
   unset        Return a setting to its default value.
   unpin        Unpin a pinned item.
   update       Update \`${_ME}\` to the latest version.
@@ -8230,6 +8251,7 @@ _DOCUMENTED_SUBCOMMANDS=(
   count
   d
   delete
+  "do"
   e
   edit
   export
@@ -8268,9 +8290,12 @@ _DOCUMENTED_SUBCOMMANDS=(
   status
   subcommands
   sync
+  tasks
+  todo
   u
   unar
   unarchive
+  undo
   unpin
   unset
   update
@@ -19333,20 +19358,23 @@ _describe_do() {
   cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} do ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+        [<task-number>]
 
 $(_color_primary "Description"):
-  Mark a todo done.
+  Mark a todo or task as done.
 
 $(_color_primary "Read More"):
   ${_README_URL}#-todos
 
 $(_color_primary "See Also"):
+  ${_ME} help tasks
   ${_ME} help todo
   ${_ME} help undo
 
 $(_color_primary "Examples"):
   ${_ME} do 123
   ${_ME} do example:sample/321
+  ${_ME} do 543 7
 HEREDOC
 }
 _do() {
@@ -21849,14 +21877,22 @@ $(_color_primary "Options"):
   --task <title>                      Task to add to the tasklist.
 
 $(_color_primary "Subcommands"):
-  (default)       List todos.
-  add             Add a new todo.
-  do              Mark a todo as done.
-  tasks           List tasks in a todo.
-  undo            Unmark a todo as done.
+  (default)   List todos.
+  add         Add a new todo.
+  do          Mark a todo as done.
+  tasks       List tasks in a todo.
+  undo        Unmark a todo as done.
 
 $(_color_primary "Description"):
-  Manage todos.
+  Manage todos and tasks.
+
+$(_color_primary "Read More:"):
+  ${_README_URL}#-todos
+
+$(_color_primary "See Also"):
+  ${_ME} help do
+  ${_ME} help tasks
+  ${_ME} help undo
 
 $(_color_primary "Aliases"):
   ${_ME} todo
@@ -22474,20 +22510,23 @@ _describe_undo() {
   cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} undo ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+          [<task-number>]
 
 $(_color_primary "Description"):
-  Mark a todo as not done.
+  Mark a todo or task as not done.
 
 $(_color_primary "Read More"):
   ${_README_URL}#-todos
 
 $(_color_primary "See Also"):
   ${_ME} help do
+  ${_ME} help tasks
   ${_ME} help todo
 
 $(_color_primary "Examples"):
   ${_ME} undo 123
   ${_ME} undo example:sample/321
+  ${_ME} undo 543 7
 HEREDOC
 }
 _undo() {

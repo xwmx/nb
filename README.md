@@ -327,6 +327,7 @@ the [`nb update`](#update) subcommand.
   <a href="#viewing">Viewing</a>&nbsp;·
   <a href="#deleting">Deleting</a>&nbsp;·
   <a href="#-bookmarks">🔖&nbsp;Bookmarks</a>&nbsp;·
+  <a href="#-todos">✅&nbsp;Todos</a>&nbsp;·
   <a href="#-tagging">🏷&nbsp;Tagging</a>&nbsp;·
   <a href="#-linking">🔗&nbsp;Linking</a>&nbsp;·
   <a href="#-browsing">🌍&nbsp;Browsing</a>&nbsp;·
@@ -2083,6 +2084,119 @@ Perform a full text search of bookmarks and archived page content:
 ```
 
 See [`bookmark help`](#bookmark-help) for more information.
+
+### ✅ Todos
+
+Use `nb todo` to create and manage todo-formatted notes.
+`nb` todos are [structured Markdown documents](#nb-markdown-todo-file-format)
+referencing a single primary todo,
+with optional tasks.
+
+Use `nb todo add` to create a new todo:
+
+```bash
+# create a new todo titled "Example todo one."
+❯ nb todo add "Example todo one."
+Added: [1] ✅ [ ] Example todo one.
+
+❯ nb show 1 --print
+# [ ] Example todo one.
+```
+
+Use the `--due <date>` option to add an optional due date.
+in a free-form text field:
+
+```bash
+# create a new todo titled "Example todo two." with a due date of "2100-01-01"
+❯ nb todo add "Example todo two." --due "2100-01-01"
+Added: [2] ✅ [ ] Example todo two.
+
+❯ nb show 2 --print
+# [ ] Example todo two.
+
+## Due
+
+2100-01-01
+```
+
+Mark a todo as done or closed with [`nb do`](#do):
+
+```bash
+❯ nb do 2
+Done: [2] ✅ [x] Example todo two.
+```
+
+Re-open a closed todo with [`nb undo`](#undo):
+
+```bash
+❯ nb undo 2
+Undone: [2] ✅ [ ] Example todo two.
+```
+
+#### Tasks
+
+Todos can have tasks. Tasks are represented as a markdown task list and
+are placed in a `## Tasks` section:
+
+```bash
+❯ nb todo add "Example todo three." --task "Task one." --task "Task two." --task "Task three."
+Added: [3] ✅ [ ] Example todo three.
+
+❯ nb show 3 --print
+# [ ] Example todo three.
+
+- [ ] Task one.
+- [ ] Task two.
+- [ ] Task three.
+```
+
+List tasks in a todo with [`nb tasks`](#tasks):
+
+```
+❯ nb tasks 3
+[3] ✅ [ ] Example todo three.
+------------------------------
+[3 1] [ ] Task one.
+[3 2] [ ] Task two.
+[3 3] [ ] Task three.
+```
+
+Todos are identified by the item [selector](#-selectors), followed by
+a space, then followed by the sequential number of the task in the file.
+
+Use [`nb do`](#do) to mark tasks as complete:
+
+```bash
+❯ nb do 3 2
+[3] ✅ [ ] Example todo three.
+------------------------------
+Done: [3 2] [x] Task two.
+
+❯ nb tasks 3
+[3] ✅ [ ] Example todo three.
+------------------------------
+[3 1] [ ] Task one.
+[3 2] [x] Task two.
+[3 3] [ ] Task three.
+```
+
+Undo a completed task with [`nb undo`](#undo):
+
+```bash
+❯ nb undo 3 2
+[3] ✅ [ ] Example todo three.
+------------------------------
+Undone: [3 2] [ ] Task two.
+
+❯ nb tasks 3
+[3] ✅ [ ] Example todo three.
+------------------------------
+[3 1] [ ] Task one.
+[3 2] [ ] Task two.
+[3 3] [ ] Task three.
+```
+
+See [`todo help`](#todo-help) for more information.
 
 ### 🏷 #tagging
 
@@ -5219,6 +5333,8 @@ Usage:
   nb count [<notebook>:][<folder-path>/]
   nb delete ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])...
             [-f | --force]
+  nb do ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+        [<task-number>]
   nb edit ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           [-c <content> | --content <content>] [--edit]
           [-e <editor> | --editor <editor>] [--overwrite] [--prepend]
@@ -5297,7 +5413,22 @@ Usage:
   nb subcommands [add <name>...] [alias <name> <alias>]
                  [describe <name> <usage>]
   nb sync [-a | --all]
+  nb tasks ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
+           [open | closed]
+  nb todo add [<notebook>:][<folder-path>/][<filename>] <title>
+              [--description <description>] [--due <date>]
+              [-r (<url> | <selector>) | --related (<url> | <selector>)]
+              [--tags <tag1>,<tag2>...] [--task <title>]...
+  nb todo do   ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
+               [<task-number>]
+  nb todo undo ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
+               [<task-number>]
+  nb todos [<notebook>:][<folder-path>/] [open | closed]
+  nb todos tasks ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
+                 [open | closed]
   nb unarchive [<notebook>]
+  nb undo ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+          [<task-number>]
   nb unpin ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
   nb unset (<name> | <number>)
   nb update
@@ -5317,6 +5448,7 @@ Subcommands:
   completions  Install and uninstall completion scripts.
   count        Print the number of items in a notebook or folder.
   delete       Delete a note.
+  do           Mark a todo or task as done.
   edit         Edit a note.
   export       Export a note to a variety of different formats.
   git          Run `git` commands within the current notebook.
@@ -5342,7 +5474,10 @@ Subcommands:
   subcommands  List, add, alias, and describe subcommands.
   status       Print notebook status information.
   sync         Sync local notebook with the remote repository.
+  tasks        List tasks in a todo.
+  todo         Manage todos and tasks.
   unarchive    Unarchive the current or specified notebook.
+  undo         Mark a todo or task as not done.
   unpin        Unpin a pinned item.
   unset        Return a setting to its default value.
   update       Update `nb` to the latest version.
@@ -5488,6 +5623,7 @@ For more information, see: `nb help`.
   <a href="#completions">completions</a>&nbsp;·
   <a href="#count">count</a>&nbsp;·
   <a href="#delete">delete</a>&nbsp;·
+  <a href="#do">do</a>&nbsp;·
   <a href="#edit">edit</a>&nbsp;·
   <a href="#env">env</a>&nbsp;·
   <a href="#export">export</a>&nbsp;·
@@ -5513,7 +5649,10 @@ For more information, see: `nb help`.
   <a href="#status">status</a>&nbsp;·
   <a href="#subcommands-1">subcommands</a>&nbsp;·
   <a href="#sync">sync</a>&nbsp;·
+  <a href="#tasks">tasks</a>&nbsp;·
+  <a href="#todos">todos</a>&nbsp;·
   <a href="#unarchive">unarchive</a>&nbsp;·
+  <a href="#undo">undo</a>&nbsp;·
   <a href="#unpin">unpin</a>&nbsp;·
   <a href="#unset">unset</a>&nbsp;·
   <a href="#update">update</a>&nbsp;·
@@ -5943,6 +6082,36 @@ Examples:
 Shortcut Aliases:
   nb d
   nb -
+```
+
+#### `do`
+
+[↑](#help) · See also:
+[Todos](#-todos),
+[`tasks`](#tasks),
+[`todo`](#todo),
+[`undo`](#undo)
+
+```text
+Usage:
+  nb do ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+        [<task-number>]
+
+Description:
+  Mark a todo or task as done.
+
+Read More:
+  https://github.com/xwmx/nb#-todos
+
+See Also:
+  nb help tasks
+  nb help todo
+  nb help undo
+
+Examples:
+  nb do 123
+  nb do example:sample/321
+  nb do 543 7
 ```
 
 #### `edit`
@@ -7537,6 +7706,92 @@ Examples:
   nb sync --all
 ```
 
+#### `tasks`
+
+[↑](#help) · See also:
+[Todos](#-todos),
+[`do`](#do),
+[`todo`](#todo),
+[`undo`](#undo)
+
+```text
+Usage:
+  nb tasks ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
+           [open | closed]
+
+Description:
+  List tasks in a todo.
+
+Read More:
+  https://github.com/xwmx/nb#-todos
+
+See Also:
+  nb help do
+  nb help todo
+  nb help undo
+
+Examples:
+  nb tasks 123
+  nb tasks open example:sample/321
+  nb tasks closed demo:456
+```
+
+#### `todo`
+
+[↑](#help) · See also:
+[Todos](#-todos),
+[`do`](#do),
+[`tasks`](#tasks),
+[`undo`](#undo)
+
+```text
+Usage:
+  nb todo add [<notebook>:][<folder-path>/][<filename>] <title>
+              [--description <description>] [--due <date>]
+              [-r (<url> | <selector>) | --related (<url> | <selector>)]
+              [--tags <tag1>,<tag2>...] [--task <title>]...
+  nb todo do   ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
+               [<task-number>]
+  nb todo undo ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
+               [<task-number>]
+  nb todos [<notebook>:][<folder-path>/] [open | closed]
+  nb todos tasks ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
+                 [open | closed]
+
+Options:
+  --description <description>         Description for the todo
+  --due <date>                        Due date and / or time for the todo.
+  -r, --related (<url> | <selector>)  Related URL or selector.
+  --tags <tag1>,<tag2>...             Comma-separated list of tags.
+  --task <title>                      Task to add to the tasklist.
+
+Subcommands:
+  (default)   List todos.
+  add         Add a new todo.
+  do          Mark a todo as done.
+  tasks       List tasks in a todo.
+  undo        Unmark a todo as done.
+
+Description:
+  Manage todos and tasks.
+
+Read More::
+  https://github.com/xwmx/nb#-todos
+
+See Also:
+  nb help do
+  nb help tasks
+  nb help undo
+
+Aliases:
+  nb todo
+  nb todos
+  nb to
+
+Shortcut Alias:
+  nb t
+```
+
 #### `unarchive`
 
 [↑](#help) · See also:
@@ -7568,6 +7823,36 @@ Examples:
 
 Shortcut Alias:
   nb unar
+```
+
+#### `undo`
+
+[↑](#help) · See also:
+[Todos](#-todos),
+[`do`](#do),
+[`tasks`](#tasks),
+[`todo`](#todo)
+
+```text
+Usage:
+  nb undo ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+          [<task-number>]
+
+Description:
+  Mark a todo or task as not done.
+
+Read More:
+  https://github.com/xwmx/nb#-todos
+
+See Also:
+  nb help do
+  nb help tasks
+  nb help todo
+
+Examples:
+  nb undo 123
+  nb undo example:sample/321
+  nb undo 543 7
 ```
 
 #### `unpin`
@@ -8035,6 +8320,94 @@ from the bookmarked page.
 `nb` does not save the page source by default. `nb` uses this section to save
 the source HTML page content when `pandoc` is not available to convert it to
 Markdown.
+
+### `nb` Markdown Todo File Format
+
+*draft*
+
+#### Extension
+
+`.todo.md`
+
+#### Description
+
+`nb` todos are Markdown documents identified by a `.todo.md` file
+extension.
+
+#### Example
+
+```markdown
+# [x] 2100-01-01 11:11:11 Example todo title.
+
+## Due
+
+2100-01-01T01:01:01Z
+
+## Description
+
+Example description.
+
+## Tasks
+
+- [ ] One
+- [ ] Two
+- [x] Three
+
+## Related
+
+- [[example:123]]
+- <https://example.org>
+
+## Tags
+
+#tag1 #tag2
+```
+
+#### Elements
+
+##### Title
+
+`Preferred`
+
+A markdown `h1` heading starting with Markdown checkbox followed by
+the
+todo title. An `x` within the checkbox (`[ ]`) indicates that the todo
+is done.
+
+##### `## Due`
+
+`Optional`
+
+A text element containing a value referencing
+a due date and / or time for the todo.
+
+##### `## Description`
+
+`Optional`
+
+A text element containing a description for the todo.
+
+##### `## Tasks`
+
+`Optional`
+
+A markdown tasklist containing sub-tasks for the todo.
+
+##### `## Related`
+
+`Optional`
+
+A Markdown list of
+angle bracketed (`<`, `>`) URLs and
+[[[wiki-style links]]](#-linking)
+that are related to the todo.
+
+##### `## Tags`
+
+`Optional`
+
+A list of tags represented as `#hashtags` separated by individual
+spaces.
 
 ### `nb` Notebook Specification
 
