@@ -7685,8 +7685,11 @@ Examples:
   nb s example:12
   nb example:12 s
 
-Alias: `nb view`
-Shortcut Alias: `nb s`
+Alias:
+  nb view
+
+Shortcut Alias:
+  nb s
 ```
 
 #### `status`
@@ -7895,10 +7898,15 @@ See Also:
   nb help tasks
   nb help undo
 
-Aliases:
-  nb todo
+Examples:
+  nb todo add "Example todo title."
+  nb todo add Example todo title.
+  nb todo add "Sample title." --tags tag1,tag2 --related demo:567
   nb todos
-  nb to
+  nb todos open
+
+Alias:
+  nb todos
 
 Shortcut Alias:
   nb t

@@ -21925,10 +21925,15 @@ $(_color_primary "See Also"):
   ${_ME} help tasks
   ${_ME} help undo
 
-$(_color_primary "Aliases"):
-  ${_ME} todo
+$(_color_primary "Examples"):
+  ${_ME} todo add "Example todo title."
+  ${_ME} todo add Example todo title.
+  ${_ME} todo add "Sample title." --tags tag1,tag2 --related demo:567
   ${_ME} todos
-  ${_ME} to
+  ${_ME} todos open
+
+$(_color_primary "Alias"):
+  ${_ME} todos
 
 $(_color_primary "Shortcut Alias"):
   ${_ME} t
