@@ -4113,6 +4113,15 @@ home
 
 #### Archiving Notebooks
 
+<p>
+  <sup>
+    <a href="#-notebooks">↑</a> ·
+    <a href="#archive"><code>nb&nbsp;archive</code></a>,
+    <a href="#status"><code>nb&nbsp;status</code></a>,
+    <a href="#unarchive"><code>nb&nbsp;unarchive</code></a>
+  </sup>
+</p>
+
 Notebooks can be archived using [`nb archive`](#archive) (shortcut: `nb ar`):
 
 ```bash
