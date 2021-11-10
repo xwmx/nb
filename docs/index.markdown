@@ -2182,6 +2182,23 @@ Added: [3] ✔️ [ ] Example todo three.
 Example description.
 ```
 
+Todos can have [tasks](#tasks). Tasks are represented as a markdown task list
+and are placed in a `## Tasks` section:
+
+```bash
+❯ nb todo add "Example todo seven." --task "Task one." --task "Task two." --task "Task three."
+Added: [7] ✔️ [ ] Example todo seven.
+
+❯ nb show 7 --print
+# [ ] Example todo seven.
+
+## Tasks
+
+- [ ] Task one.
+- [ ] Task two.
+- [ ] Task three.
+```
+
 Related URLs and selectors can be added to a `## Related` field
 using the `-r (<url> | <selector>)` / `--related (<url> | <selector>)`
 option:
@@ -2257,8 +2274,9 @@ for more information.
   </sup>
 </p>
 
-Todos can have tasks. Tasks are represented as a markdown task list and
-are placed in a `## Tasks` section:
+`nb` can list and update the state of tasks in any Markdown document.
+[`nb todo add`](#todo) accepts any number of `--task <title>` flags.
+Tasks are turned into a Markdown task list and added to a `## Tasks` section:
 
 ```bash
 ❯ nb todo add "Example todo seven." --task "Task one." --task "Task two." --task "Task three."
@@ -2274,7 +2292,8 @@ Added: [7] ✔️ [ ] Example todo seven.
 - [ ] Task three.
 ```
 
-List tasks in a todo with [`nb tasks`](#tasks-1):
+List tasks in notebooks, folders, and items with [`nb tasks`](#tasks-1),
+which lists both tasks and todos:
 
 ```
 ❯ nb tasks 7
@@ -2283,6 +2302,21 @@ List tasks in a todo with [`nb tasks`](#tasks-1):
 [7 1] [ ] Task one.
 [7 2] [ ] Task two.
 [7 3] [ ] Task three.
+
+❯ nb tasks example:
+[example:9] ✔️ [ ] Example todo none.
+[example:8] ✅[x] Example todo eight.
+------------------------------
+[example:8 1] [x] Task one.
+[example:8 2] [ ] Task two.
+
+[example:6] ✔️ [ ] Example todo six.
+[example:4] Example Note Title
+------------------------------
+[example:4 1] [ ] Task one.
+[example:4 2] [x] Task two.
+
+[example:3] ✔️ [ ] Example todo three.
 ```
 
 Tasks are identified by the item [selector](#-selectors), followed by
