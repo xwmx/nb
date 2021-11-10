@@ -2130,7 +2130,7 @@ See [`bookmark help`](#bookmark-help) for more information.
   <sup>
     <a href="#overview">↑</a> ·
     <a href="#do"><code>nb do</code></a>,
-    <a href="#tasks-1"><code>nb tasks</code></a>,
+    <a href="#tasks"><code>nb tasks</code></a>,
     <a href="#todo"><code>nb todo</code></a>,
     <a href="#undo"><code>nb undo</code></a>
   </sup>
@@ -2139,7 +2139,7 @@ See [`bookmark help`](#bookmark-help) for more information.
 Use [`nb todo`](#todo) (shortcut: `nb t`) to create, list, and check off todos.
 `nb` todos are [structured Markdown documents](#nb-markdown-todo-file-format)
 referencing a single primary todo,
-with optional [tasks](#tasks).
+with optional [tasks](#--tasks).
 
 Use `nb todo add` to create a new todo:
 
@@ -2182,7 +2182,7 @@ Added: [3] ✔️ [ ] Example todo three.
 Example description.
 ```
 
-Todos can have [tasks](#tasks). Tasks are represented as a markdown task list
+Todos can have [tasks](#--tasks). Tasks are represented as a markdown task list
 and are placed in a `## Tasks` section:
 
 ```bash
@@ -2268,7 +2268,7 @@ for more information.
   <sup>
     <a href="#-todos">↑</a> ·
     <a href="#do"><code>nb do</code></a>,
-    <a href="#tasks-1"><code>nb tasks</code></a>,
+    <a href="#tasks"><code>nb tasks</code></a>,
     <a href="#todo"><code>nb todo</code></a>,
     <a href="#undo"><code>nb undo</code></a>
   </sup>
@@ -2284,7 +2284,7 @@ Tasks are defined as one or more Markdown list items starting with
 - [x] Example completed task.
 ```
 
-List tasks in notebooks, folders, and items with [`nb tasks`](#tasks-1),
+List tasks in notebooks, folders, and items with [`nb tasks`](#tasks),
 which lists both tasks and todos:
 
 ```
@@ -2347,7 +2347,7 @@ Undone: [7 2] [ ] Task two.
 ```
 
 See
-[`nb help tasks`](#tasks-1)
+[`nb help tasks`](#tasks)
 for more information.
 
 ### 🏷 #tagging
@@ -5820,7 +5820,7 @@ For more information, see: `nb help`.
   <a href="#status">status</a>&nbsp;·
   <a href="#subcommands-1">subcommands</a>&nbsp;·
   <a href="#sync">sync</a>&nbsp;·
-  <a href="#tasks-1">tasks</a>&nbsp;·
+  <a href="#tasks">tasks</a>&nbsp;·
   <a href="#todo">todo</a>&nbsp;·
   <a href="#unarchive">unarchive</a>&nbsp;·
   <a href="#undo">undo</a>&nbsp;·
@@ -6259,8 +6259,8 @@ Shortcut Aliases:
 
 [↑](#help) · See also:
 [Todos](#-todos),
-[Tasks](#tasks),
-[`tasks`](#tasks-1),
+[Tasks](#--tasks),
+[`tasks`](#tasks),
 [`todo`](#todo),
 [`undo`](#undo)
 
@@ -7884,7 +7884,7 @@ Examples:
 #### `tasks`
 
 [↑](#help) · See also:
-[Tasks](#tasks),
+[Tasks](#--tasks),
 [Todos](#-todos),
 [`do`](#do),
 [`todo`](#todo),
@@ -7917,7 +7917,7 @@ Examples:
 [↑](#help) · See also:
 [Todos](#-todos),
 [`do`](#do),
-[`tasks`](#tasks-1),
+[`tasks`](#tasks),
 [`undo`](#undo)
 
 ```text
@@ -8010,9 +8010,9 @@ Shortcut Alias:
 
 [↑](#help) · See also:
 [Todos](#-todos),
-[Tasks](#tasks),
+[Tasks](#--tasks),
 [`do`](#do),
-[`tasks`](#tasks-1),
+[`tasks`](#tasks),
 [`todo`](#todo)
 
 ```text
