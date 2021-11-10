@@ -21969,8 +21969,8 @@ _todo() {
   # Usage: _todo_get_task <path> <task-number>
   _todo_get_task() {
     local _counter=0
-    local _task_number="${2:?}"
     local _item_path="${1:?}"
+    local _task_number="${2:?}"
 
     {
       cat "${_item_path:-}"
@@ -21999,8 +21999,8 @@ _todo() {
   _todo_update_task() {
     local _action="${3:?}"
     local _counter=0
-    local _task_number="${2:?}"
     local _item_path="${1:?}"
+    local _task_number="${2:?}"
 
     local _temp_file_path=
     _temp_file_path="$(_temp file)"
