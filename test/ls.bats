@@ -534,6 +534,9 @@ HEREDOC
 @test "'ls --document' exits with 0 and displays empty list." {
   {
     "${_NB}" init
+
+    "${_NB}" set footer 0
+
     cat <<HEREDOC | "${_NB}" add "first.md"
 line one
 line two
@@ -556,13 +559,16 @@ HEREDOC
 
   [[ "${status}"    -eq 0                     ]]
 
-  [[ "${#lines[@]}" ==  10                    ]]
+  [[ "${#lines[@]}" ==  7                     ]]
   [[ "${lines[2]}"  =~  0\ document\ items\.  ]]
 }
 
 @test "'ls --documents' exits with 0 and displays empty list." {
   {
     "${_NB}" init
+
+    "${_NB}" set footer 0
+
     cat <<HEREDOC | "${_NB}" add "first.md"
 line one
 line two
@@ -585,13 +591,16 @@ HEREDOC
 
   [[ "${status}"    -eq 0                     ]]
 
-  [[ "${#lines[@]}" ==  10                    ]]
+  [[ "${#lines[@]}" ==  7                     ]]
   [[ "${lines[2]}"  =~  0\ document\ items\.  ]]
 }
 
 @test "'ls --js' exits with 0, displays empty list, and retains trailing 's'." {
   {
     "${_NB}" init
+
+    "${_NB}" set footer 0
+
     cat <<HEREDOC | "${_NB}" add "first.md"
 line one
 line two
@@ -614,7 +623,7 @@ HEREDOC
 
   [[ "${status}"    -eq 0               ]]
 
-  [[ "${#lines[@]}" ==  10              ]]
+  [[ "${#lines[@]}" ==  7               ]]
   [[ "${lines[2]}"  =~  0\ js\ items\.  ]]
 }
 
@@ -1650,6 +1659,8 @@ Help information:
 @test "'ls -n 0' exits with 0 and lists 0 files." {
   {
     _setup_ls
+
+    "${_NB}" set footer 0
   }
 
   run "${_NB}" ls -n 0
@@ -1660,13 +1671,15 @@ Help information:
 
   [[ "${status}"    -eq 0                         ]]
 
-  [[ "${#lines[@]}" -eq 6                         ]]
+  [[ "${#lines[@]}" -eq 3                         ]]
   [[ "${lines[2]}"  =~  3\ omitted\.\ 3\ total\.  ]]
 }
 
 @test "'ls -n 1' exits with 0 and lists 1 file." {
   {
     _setup_ls
+
+    "${_NB}" set footer 0
   }
 
   run "${_NB}" ls -n 1
@@ -1677,7 +1690,7 @@ Help information:
 
   [[ "${status}"    -eq 0                         ]]
 
-  [[ "${#lines[@]}" -eq 7                         ]]
+  [[ "${#lines[@]}" -eq 4                         ]]
   [[ "${lines[2]}"  =~  three                     ]]
   [[ "${lines[3]}"  =~  2\ omitted\.\ 3\ total\.  ]]
 }
@@ -1685,6 +1698,8 @@ Help information:
 @test "'ls -n 2' exits with 0 and lists 2 files." {
   {
     _setup_ls
+
+    "${_NB}" set footer 0
   }
 
   run "${_NB}" ls -n 2
@@ -1695,7 +1710,7 @@ Help information:
 
   [[ "${status}"    -eq 0                         ]]
 
-  [[ "${#lines[@]}" -eq 8                         ]]
+  [[ "${#lines[@]}" -eq 5                         ]]
   [[ "${lines[2]}"  =~  three                     ]]
   [[ "${lines[3]}"  =~  two                       ]]
   [[ "${lines[4]}"  =~  1\ omitted\.\ 3\ total\.  ]]
