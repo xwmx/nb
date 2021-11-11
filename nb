@@ -22501,10 +22501,19 @@ _todo() {
         _selector_path="$(_notebooks current --path)"
       fi
 
+      local _selector_is_item=1
+
       if [[ -d "${_selector_path:-}"  ]]
       then
+        _selector_is_item=0
         _selector_path="${_selector_path:-}/"
       fi
+
+      local _task_closed_patterns=(-e "- \[x\]")
+      local _task_open_patterns=(-e "- \[ \]" -e "- \[\]")
+
+      local _todo_closed_patterns=(-e "# \[x\]")
+      local _todo_open_patterns=(-e "# \[ \]" -e "# \[\]")
 
       {
         _list "${_selector_path:-}"   \
@@ -22521,29 +22530,87 @@ _todo() {
           [[ -z "${__item_path:-}"  ]] && continue
           [[ -d "${__item_path:-}"  ]] && continue
 
-          grep -q         \
-            -e "# \[ \]"  \
-            -e "# \[x\]"  \
-            -e "- \[ \]"  \
-            -e "- \[\]"   \
-            -e "- \[x\]"  \
+          grep -q                           \
+            "${_task_closed_patterns[@]:-}" \
+            "${_task_open_patterns[@]:-}"   \
+            "${_todo_closed_patterns[@]:-}" \
+            "${_todo_open_patterns[@]:-}"   \
             "${__item_path}" || continue
 
-          local _item_selector=
-          _item_selector="$(
-            _list "${__item_path:-}" --filename --no-color --no-indicator
+          local _item_listing_no_color=
+          _item_listing_no_color="$(
+            _list "${__item_path:-}" --no-color --no-indicator
           )"
 
-          _item_selector="${_item_selector#[}"
-          _item_selector="${_item_selector%]*}"
+          local _item_selector="${_item_listing_no_color#[}"
+          _item_selector="${_item_selector%%]*}"
+
+          local _is_todo=0
+          local _todo_done=0
+
+          if _file_is_todo "${__item_path:-}"
+          then
+            _is_todo=1
+
+            if [[ "${_item_listing_no_color:-}" =~ \[x\]  ]]
+            then
+              _todo_done=1
+            fi
+          fi
+
+          local _filtered_task_patterns=()
+
+          case "${_filter:-}" in
+            closed) _filtered_task_patterns=("${_task_closed_patterns[@]:-}") ;;
+            open)   _filtered_task_patterns=("${_task_open_patterns[@]:-}") ;;
+            *)
+              _filtered_task_patterns=(
+                "${_task_closed_patterns[@]:-}"
+                "${_task_open_patterns[@]:-}"
+              )
+              ;;
+          esac
+
+          local _contains_filtered_tasks=0
+
+          if grep -q                          \
+            "${_filtered_task_patterns[@]:-}" \
+            "${__item_path}"
+          then
+            _contains_filtered_tasks=1
+          fi
+
+          local _print_listing=1
+
+          if ! ((_contains_filtered_tasks))
+          then
+            if ! ((_is_todo))
+            then
+              _print_listing=0
+            fi
+
+            case "${_filter:-}" in
+              closed) ((_todo_done)) || _print_listing=0 ;;
+              open)   ((_todo_done)) && _print_listing=0 ;;
+            esac
+
+            if ((_selector_is_item))
+            then
+              _print_listing=1
+            fi
+          fi
+
+          if ! ((_print_listing))
+          then
+            continue
+          fi
 
           _list "${__item_path:-}"
 
-          grep -q         \
-            -e "- \[ \]"  \
-            -e "- \[\]"   \
-            -e "- \[x\]"  \
-            "${__item_path}" || continue
+          if ! ((_contains_filtered_tasks)) && ! ((_selector_is_item))
+          then
+            continue
+          fi
 
           local _info_line_no_color=
           _info_line_no_color="$(
