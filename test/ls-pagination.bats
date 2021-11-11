@@ -13,6 +13,8 @@ load test_helper
     do
       "${_NB}" add "File ${__number}.md" --title "Title ${__number}"
     done
+
+    "${_NB}" set footer 0
   }
 
   # --3, first page
@@ -23,14 +25,14 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}"    -eq 0                         ]]
-  [[ "${#lines[@]}" -ge 8                         ]]
-  [[ "${#lines[@]}" -le 9                         ]]
+  [[ "${#lines[@]}" -eq 6                         ]]
 
   [[ "${lines[0]}"  =~  home                      ]]
   [[ "${lines[1]}"  =~  -----------------         ]]
   [[ "${lines[2]}"  =~  .*[.*10.*].*\ Title\ Ten  ]]
   [[ "${lines[3]}"  =~  .*[.*9.*].*\ Title\ Nine  ]]
   [[ "${lines[4]}"  =~  .*[.*8.*].*\ Title\ Eight ]]
+  [[ "${lines[5]}"  =~  7\ omitted\.\ 10\ total\. ]]
 
   run "${_NB}" --limit 3 --page 1
 
@@ -100,8 +102,7 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}"    -eq 0                         ]]
-  [[ "${#lines[@]}" -ge 11                        ]]
-  [[ "${#lines[@]}" -le 12                        ]]
+  [[ "${#lines[@]}" -eq 8                         ]]
 
   [[ "${lines[0]}"  =~  home                      ]]
   [[ "${lines[1]}"  =~  -----------------         ]]
@@ -110,6 +111,7 @@ load test_helper
   [[ "${lines[4]}"  =~  .*[.*8.*].*\ Title\ Eight ]]
   [[ "${lines[5]}"  =~  .*[.*7.*].*\ Title\ Seven ]]
   [[ "${lines[6]}"  =~  .*[.*6.*].*\ Title\ Six   ]]
+  [[ "${lines[7]}"  =~  5\ omitted\.\ 10\ total\. ]]
 
   run "${_NB}" --limit 5 --page 2
 
@@ -143,6 +145,8 @@ load test_helper
     do
       "${_NB}" add "File ${__number}.md" --title "Title ${__number}"
     done
+
+    "${_NB}" set footer 0
   }
 
   # --3, first page
@@ -153,14 +157,14 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}"    -eq 0                         ]]
-  [[ "${#lines[@]}" -ge 8                         ]]
-  [[ "${#lines[@]}" -le 9                         ]]
+  [[ "${#lines[@]}" -eq 6                         ]]
 
   [[ "${lines[0]}"  =~  home                      ]]
   [[ "${lines[1]}"  =~  -----------------         ]]
   [[ "${lines[2]}"  =~  .*[.*10.*].*\ Title\ Ten  ]]
   [[ "${lines[3]}"  =~  .*[.*9.*].*\ Title\ Nine  ]]
   [[ "${lines[4]}"  =~  .*[.*8.*].*\ Title\ Eight ]]
+  [[ "${lines[5]}"  =~  7\ omitted\.\ 10\ total\. ]]
 
   run "${_NB}" --3 --page 1
 
@@ -230,8 +234,7 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}"    -eq 0                         ]]
-  [[ "${#lines[@]}" -ge 11                        ]]
-  [[ "${#lines[@]}" -le 12                        ]]
+  [[ "${#lines[@]}" -eq 8                         ]]
 
   [[ "${lines[0]}"  =~  home                      ]]
   [[ "${lines[1]}"  =~  -----------------         ]]
@@ -240,6 +243,7 @@ load test_helper
   [[ "${lines[4]}"  =~  .*[.*8.*].*\ Title\ Eight ]]
   [[ "${lines[5]}"  =~  .*[.*7.*].*\ Title\ Seven ]]
   [[ "${lines[6]}"  =~  .*[.*6.*].*\ Title\ Six   ]]
+  [[ "${lines[7]}"  =~  5\ omitted\.\ 10\ total\. ]]
 
   run "${_NB}" --5 --page 2
 
@@ -543,6 +547,8 @@ load test_helper
     do
       "${_NB}" add "File ${__number}.md" --title "Title ${__number}"
     done
+
+    "${_NB}" set footer 0
   }
 
   # --per-page 3, first page
@@ -553,14 +559,14 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}"    -eq 0                         ]]
-  [[ "${#lines[@]}" -ge 8                         ]]
-  [[ "${#lines[@]}" -le 9                         ]]
+  [[ "${#lines[@]}" -eq 6                         ]]
 
   [[ "${lines[0]}"  =~  home                      ]]
   [[ "${lines[1]}"  =~  ------------------------  ]]
   [[ "${lines[2]}"  =~  .*[.*10.*].*\ Title\ Ten  ]]
   [[ "${lines[3]}"  =~  .*[.*9.*].*\ Title\ Nine  ]]
   [[ "${lines[4]}"  =~  .*[.*8.*].*\ Title\ Eight ]]
+  [[ "${lines[5]}"  =~  7\ omitted\.\ 10\ total\. ]]
 
   run "${_NB}" ls --per-page 3 --page 1
 
@@ -630,8 +636,7 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}"    -eq 0                         ]]
-  [[ "${#lines[@]}" -ge 11                        ]]
-  [[ "${#lines[@]}" -le 12                        ]]
+  [[ "${#lines[@]}" -eq 8                         ]]
 
   [[ "${lines[0]}"  =~  home                      ]]
   [[ "${lines[1]}"  =~  ------------------------  ]]
@@ -640,6 +645,7 @@ load test_helper
   [[ "${lines[4]}"  =~  .*[.*8.*].*\ Title\ Eight ]]
   [[ "${lines[5]}"  =~  .*[.*7.*].*\ Title\ Seven ]]
   [[ "${lines[6]}"  =~  .*[.*6.*].*\ Title\ Six   ]]
+  [[ "${lines[7]}"  =~  5\ omitted\.\ 10\ total\. ]]
 
   run "${_NB}" ls --per-page 5 --page 2
 
@@ -943,6 +949,8 @@ load test_helper
     do
       "${_NB}" add "File ${__number}.md" --title "Title ${__number}"
     done
+
+    "${_NB}" set footer 0
   }
 
   # --per-page 3, first page
@@ -953,14 +961,14 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}"    -eq 0                         ]]
-  [[ "${#lines[@]}" -ge 8                         ]]
-  [[ "${#lines[@]}" -le 9                         ]]
+  [[ "${#lines[@]}" -eq 6                         ]]
 
   [[ "${lines[0]}"  =~  home                      ]]
   [[ "${lines[1]}"  =~  ------------------------  ]]
   [[ "${lines[2]}"  =~  .*[.*10.*].*\ Title\ Ten  ]]
   [[ "${lines[3]}"  =~  .*[.*9.*].*\ Title\ Nine  ]]
   [[ "${lines[4]}"  =~  .*[.*8.*].*\ Title\ Eight ]]
+  [[ "${lines[5]}"  =~  7\ omitted\.\ 10\ total\. ]]
 
   run "${_NB}" --per-page 3 --page 1
 
@@ -1030,8 +1038,7 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}"    -eq 0                         ]]
-  [[ "${#lines[@]}" -ge 11                        ]]
-  [[ "${#lines[@]}" -le 12                        ]]
+  [[ "${#lines[@]}" -le 8                         ]]
 
   [[ "${lines[0]}"  =~  home                      ]]
   [[ "${lines[1]}"  =~  ------------------------  ]]
@@ -1040,6 +1047,7 @@ load test_helper
   [[ "${lines[4]}"  =~  .*[.*8.*].*\ Title\ Eight ]]
   [[ "${lines[5]}"  =~  .*[.*7.*].*\ Title\ Seven ]]
   [[ "${lines[6]}"  =~  .*[.*6.*].*\ Title\ Six   ]]
+  [[ "${lines[7]}"  =~  5\ omitted\.\ 10\ total\. ]]
 
   run "${_NB}" --per-page 5 --page 2
 
