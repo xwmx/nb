@@ -10753,6 +10753,15 @@ _resolve_links() {
 
       sed "${_sed_arguments[@]:-}"
     fi
+  } | {
+    # mark up checkboxes
+    local _checkbox_pattern_open="<span class=\"dim\">[<\/span><span class=\"identifier\">"
+    local _checkbox_pattern_close="<\/span><span class=\"dim\">\]<\/span>"
+
+    sed -E                                                                        \
+      -e "s/\[x\]/${_checkbox_pattern_open}x${_checkbox_pattern_close}/g"         \
+      -e "s/\[ \]/${_checkbox_pattern_open}${_NBSP}${_checkbox_pattern_close}/g"  \
+      -e "s/\[\]/${_checkbox_pattern_open}${_NBSP}${_checkbox_pattern_close}/g"
   }
 }
 

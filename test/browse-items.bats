@@ -3,6 +3,7 @@
 load test_helper
 
 export _IMOGI="🌄"
+export _S=" "
 export NB_SERVER_PORT=6789
 
 # response handling ###########################################################
@@ -36,6 +37,86 @@ export NB_SERVER_PORT=6789
 
   printf "%s\\n" "${output}" | grep -q \
 "<h1 id=\"example-title\">Example Title</h1>"
+}
+
+# todos #######################################################################
+
+@test "'browse <id>' with todo item displays marked-up done / closed checkbox." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example One.todo.md" --content "# [x] Example todo one."
+
+    declare _raw_url_pattern="//localhost:6789/--original/home/Example One.todo.md"
+  }
+
+  run "${_NB}" browse 1 --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                                        ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                                      ]]
+
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                   ]]
+  [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
+
+  [[    "${output}"    =~  \
+\<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>x\</span\>           ]]
+  [[    "${output}"    =~  \
+\<span\ class=\"identifier\"\>x\<\/span\>\<span\ class=\"dim\"\>\]\<\/span\>        ]]
+}
+
+@test "'browse <id>' with todo item displays marked-up undone / open checkbox (space)." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example One.todo.md" --content "# [ ] Example todo one."
+
+    declare _raw_url_pattern="//localhost:6789/--original/home/Example One.todo.md"
+  }
+
+  run "${_NB}" browse 1 --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                                        ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                                      ]]
+
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                   ]]
+  [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
+
+  [[    "${output}"    =~  \
+\<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>${_S}\</span\>       ]]
+  [[    "${output}"    =~  \
+\<span\ class=\"identifier\"\>${_S}\<\/span\>\<span\ class=\"dim\"\>\]\<\/span\>    ]]
+}
+
+@test "'browse <id>' with todo item displays marked-up undone / open checkbox (no space)." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example One.todo.md" --content "# [ ] Example todo one."
+
+    declare _raw_url_pattern="//localhost:6789/--original/home/Example One.todo.md"
+  }
+
+  run "${_NB}" browse 1 --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                                                        ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                                      ]]
+
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                   ]]
+  [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
+
+  [[    "${output}"    =~  \
+\<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>${_S}\</span\>       ]]
+  [[    "${output}"    =~  \
+\<span\ class=\"identifier\"\>${_S}\<\/span\>\<span\ class=\"dim\"\>\]\<\/span\>    ]]
 }
 
 # pdf items ###################################################################

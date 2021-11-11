@@ -46,19 +46,6 @@ dim\"\>\[\</span\>\<span\ class=\"identifier\"\>home:1\</span\>\<span\ class=\"d
 \</span\>\ \✅\ \<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>x\</span\>\<span\   ]]
   [[    "${output}"   =~  \
 \</span\>\<span\ class=\"dim\"\>\]\</span\>\ Example\ todo\ one\.\</a\>\<br\>                       ]]
-
-
-
-#   [[    "${output}"   =~   \
-#    <a rel="noopener noreferrer" href="//localhost:6789/home:1?--per-page=59&--columns=105" class="list-it
-# em"><span class="dim">[</span><span class="identifier">home:1</span><span class="dim">]</span> ✅ <span c
-# lass="dim">[</span><span class="identifier">x</span><span class="dim">]</span> Example todo one.</a><br>     ]]
-
-
-
-
-#   [[    "${output}"   =~   \
-# identifier\"\>home:5\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Five\</a\>\<br\>  ]]
 }
 
 # notebook: selectors #########################################################
