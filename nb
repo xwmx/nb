@@ -17434,8 +17434,8 @@ HEREDOC
         _display_item="${_display_item//' '/${_NBSP}}"
 
         # shellcheck disable=SC2140
-        _display_item="${_display_item/\[/<span class=\"dim\">[</span><span class=\"identifier\">}"
-        _display_item="${_display_item/\]/</span><span class=\"dim\">]</span>}"
+        _display_item="${_display_item//\[/<span class=\"dim\">[</span><span class=\"identifier\">}"
+        _display_item="${_display_item//\]/</span><span class=\"dim\">]</span>}"
 
         local _link_selector=
         _link_selector="$(_get_id_selector "${_item_selector}" --notebook)"

@@ -7,6 +7,60 @@ export NB_SERVER_PORT=6789
 # non-breaking space
 export _S=" "
 
+# todos #######################################################################
+
+@test "'browse --container' displays marked-up checkboxes in todo titles." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example One.todo.md" --content   "# [x] Example todo one."
+    "${_NB}" add  "Example Two.todo.md" --content   "# [ ] Example todo two."
+  }
+
+  run "${_NB}" browse --container
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq  0               ]]
+
+  [[    "${output}"   =~  \
+\<a\ rel=\"noopener\ noreferrer\"\ href=\"//localhost:6789/home:2\?--per-page=.*--columns=.*\"      ]]
+  [[    "${output}"   =~  \
+--per-page=.*--columns=.*\"\ class=\"list-item\"\>\<span\ class=\"dim\"\>\[\</span\>\<span\         ]]
+  [[    "${output}"   =~  \
+dim\"\>\[\</span\>\<span\ class=\"identifier\"\>home:2\</span\>\<span\ class=\"dim\"\>]\</span\>    ]]
+  [[    "${output}"   =~  \
+\</span\>\ \✔️\ \ \<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>\ \</span\>\<span  ]]
+  [[    "${output}"   =~  \
+\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Example\ todo\ two\.\</a\>\<br\>                       ]]
+
+
+  [[    "${output}"   =~  \
+\<a\ rel=\"noopener\ noreferrer\"\ href=\"//localhost:6789/home:2\?--per-page=.*--columns=.*\"      ]]
+  [[    "${output}"   =~  \
+--per-page=.*--columns=.*\"\ class=\"list-item\"\>\<span\ class=\"dim\"\>\[\</span\>\<span\         ]]
+  [[    "${output}"   =~  \
+dim\"\>\[\</span\>\<span\ class=\"identifier\"\>home:1\</span\>\<span\ class=\"dim\"\>]\</span\>    ]]
+  [[    "${output}"   =~  \
+\</span\>\ \✅\ \<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>x\</span\>\<span\   ]]
+  [[    "${output}"   =~  \
+\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Example\ todo\ one\.\</a\>\<br\>                       ]]
+
+
+
+#   [[    "${output}"   =~   \
+#    <a rel="noopener noreferrer" href="//localhost:6789/home:1?--per-page=59&--columns=105" class="list-it
+# em"><span class="dim">[</span><span class="identifier">home:1</span><span class="dim">]</span> ✅ <span c
+# lass="dim">[</span><span class="identifier">x</span><span class="dim">]</span> Example todo one.</a><br>     ]]
+
+
+
+
+#   [[    "${output}"   =~   \
+# identifier\"\>home:5\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Five\</a\>\<br\>  ]]
+}
+
 # notebook: selectors #########################################################
 
 @test "'browse' includes notebook selectors for items in the current notebook." {
