@@ -6770,8 +6770,8 @@ Options:
                                   with `browse` in a GUI web browser.
   -n, --limit <limit>, --<limit>  The maximum number of listed items.
                                   [default: 15]
-  --no-header                     Print without header.
   --no-footer                     Print without footer.
+  --no-header                     Print without header.
   --no-id                         Don't include the id in list items.
   --no-indicator                  Don't include the indicator in list items.
   -p, --page <number>             The page to view in the list paginated by
