@@ -22118,10 +22118,11 @@ _todo() {
   local _description=
   local _due_datetime=
   local _filter=
+  local _maybe_title_arguments=()
+  local _option_title=
   local _related_identifiers=()
   local _tag_list=
   local _tasks=()
-  local _title=
 
   while ((${#}))
   do
@@ -22148,86 +22149,81 @@ _todo() {
         shift
         ;;
       --title)
-        local _option_title=
         _option_title="$(_option_get_value "${1:-}" "${2:-}")"
 
-        if [[ -n "${_title:-}"  ]]
-        then
-          _title="${_option_title} ${_MD} ${_title}"
-        else
-          _title="${_option_title}"
-        fi
-
         shift
-        ;;
-      +|a|add)
-        _action="add"
-
-        local _maybe_selector=
-        _maybe_selector="$(_option_get_value "${1:-}" "${2:-}")"
-
-        if [[ "${_maybe_selector:-}" =~ :$|/$     ]]
-        then
-          _arguments+=("${_maybe_selector}")
-        else
-          _title+="${_maybe_selector}"
-        fi
-
-        shift
-
-        while [[ -n "${2:-}"  ]] && [[ ! "${2:-}" =~ ^- ]]
-        do
-          [[ -n "${_title:-}" ]] && _title+=" "
-
-          _title+="${2:-}"
-
-          shift
-        done
-        ;;
-      c|closed)
-        _filter="closed"
-        ;;
-      d|do|close|complete*|finish*|check*)
-        _action="do"
-        ;;
-      done)
-        local _selector_path=
-
-        if [[ -n "${2:-}"     ]]
-        then
-          _selector_path="$(_show "${2:-}" --path)"
-        fi
-
-        if [[ "${_selector_path:-}" =~ todo\.md$  ]]
-        then
-          _action="do"
-        else
-          _filter="closed"
-        fi
-        ;;
-      l|list)
-        _action="list"
-        ;;
-      o|open)
-        if [[ -n "${2:-}"                 ]] &&
-           {
-             [[ "${_action:-}" != "tasks" ]] ||
-             [[ -n "${3:-}"               ]]
-           }
-        then
-          _action="undo"
-        else
-          _filter="open"
-        fi
-        ;;
-      tasks)
-        _action="tasks"
-        ;;
-      u|undo|*ncomplete*|undone|unfinish*|uncheck*)
-        _action="undo"
         ;;
       *)
-        _arguments+=("${1:-}")
+        if [[ "${_action:-}" == "add" ]]
+        then
+          case "${1:-}" in
+            --edit) _arguments+=("${1:-}") ;;
+            -*)
+              _arguments+=("${1:-}")
+
+              if _option_value_is_present "${2:-}"
+              then
+                _arguments+=("${2:-}")
+
+                shift
+              fi
+              ;;
+            *)
+              _maybe_title_arguments+=("${1:-}")
+              ;;
+          esac
+        fi
+
+        case "${1:-}" in
+          +|a|add)
+            _action="add"
+            ;;
+          c|closed)
+            _filter="closed"
+            ;;
+          d|do|close|complete*|finish*|check*)
+            _action="do"
+            ;;
+          done)
+            local _selector_path=
+
+            if [[ -n "${2:-}"     ]]
+            then
+              _selector_path="$(_show "${2:-}" --path)"
+            fi
+
+            if [[ "${_selector_path:-}" =~ todo\.md$  ]]
+            then
+              _action="do"
+            else
+              _filter="closed"
+            fi
+            ;;
+          l|list)
+            _action="list"
+            ;;
+          o|open)
+            if [[ -n "${2:-}"                 ]] &&
+               {
+                 [[ "${_action:-}" != "tasks" ]] ||
+                 [[ -n "${3:-}"               ]]
+               }
+            then
+              _action="undo"
+            else
+              _filter="open"
+            fi
+            ;;
+          tasks)
+            _action="tasks"
+            ;;
+          u|undo|*ncomplete*|undone|unfinish*|uncheck*)
+            _action="undo"
+            ;;
+          *)
+            [[ "${_action:-}" != "add" ]] && _arguments+=("${1:-}")
+            ;;
+        esac
         ;;
     esac
 
@@ -22236,6 +22232,44 @@ _todo() {
 
   case "${_action:-}" in
     add)
+      local _first=1
+      local _title=
+
+      local __argument=
+      for   __argument in "${_maybe_title_arguments[@]:-}"
+      do
+        if ((_first))
+        then
+          if [[ "${__argument:-}" =~ :$|/$ ]]
+          then
+            _arguments+=("${__argument}")
+          else
+            _title+="${__argument}"
+          fi
+
+          _first=0
+        else
+          [[ -n "${_title:-}"       ]] && _title+=" "
+
+          _title+="${__argument}"
+        fi
+      done
+
+      if [[ -n "${_option_title:-}" ]]
+      then
+        if [[ -n "${_title:-}"      ]]
+        then
+          _title="${_option_title} ${_MD} ${_title}"
+        else
+          _title="${_option_title}"
+        fi
+      fi
+
+      if [[ -z "${_title:-}" ]]
+      then
+        _exit_1 _help "todo"
+      fi
+
       local _todo_content="# [ ] ${_title:-}${_NEWLINE}"
 
       if [[ -n "${_due_datetime:-}" ]]

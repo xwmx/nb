@@ -462,9 +462,9 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"  -eq 1                       ]]
-  [[ "${output}"  =~  \
-\!.*\ .*add.*\ requires\ a\ valid\ argument\. ]]
+  [[ "${status}"    -eq 1                     ]]
+  [[ "${lines[0]}"  =~  Usage                 ]]
+  [[ "${lines[1]}"  =~  todo\ add             ]]
 
   _files=($(ls "${NB_DIR}/home/"))
 
