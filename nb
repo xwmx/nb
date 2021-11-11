@@ -5601,6 +5601,16 @@ Add a bookmark:
 Help information:
   $(_color_primary "${_ME} help bookmark")
 HEREDOC
+        elif [[ "${_type}" =~ ^todo$|^todos$ ]]
+        then
+          cat <<HEREDOC
+0 todos.
+
+Add a todo:
+  $(_color_primary "${_ME} todo add${_maybe_id_path_context_padded_left:-} <title>")
+Help information:
+  $(_color_primary "${_ME} help todo")
+HEREDOC
         elif [[ -n "${_type:-}" ]] || ((_only_pinned))
         then
           if _contains "${_type}" "bookmarks" "documents" "images" "videos" "folders"
@@ -5643,6 +5653,8 @@ Add a note:
   $(_color_primary "${_ME} add${_maybe_id_path_context_padded_left:-}")
 Add a bookmark:
   $(_color_primary "${_ME} ${_maybe_id_path_context_padded_right:-}<url>")
+Add a todo:
+  $(_color_primary "${_ME} todo add${_maybe_id_path_context_padded_left:-} <title>")
 Import a file:
   $(_color_primary "${_ME} import (<path> | <url>)${_maybe_id_path_context_padded_left:-}")
 Help information:

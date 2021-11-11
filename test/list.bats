@@ -961,6 +961,8 @@ Add a note:
   $(_color_primary 'nb add')
 Add a bookmark:
   $(_color_primary "nb <url>")
+Add a todo:
+  $(_color_primary "nb todo add <title>")
 Import a file:
   $(_color_primary "nb import (<path> | <url>)")
 Help information:
@@ -1846,8 +1848,40 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 0               ]]
-  [[   "${lines[0]}"  =~  0\ todo\ items. ]]
+  _expected="0 todos.
+
+Add a todo:
+  $(_color_primary 'nb todo add <title>')
+Help information:
+  $(_color_primary 'nb help todo')"
+
+  [[ "${status}"    -eq 0           ]]
+  [[ "${_expected}" ==  "${output}" ]]
+}
+
+@test "'list --type todo' with container without todos prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" add folder "Example Notebook:Example Folder"
+  }
+
+  run "${_NB}" list Example\ Notebook:Example\ Folder/ --type todo
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  _expected="0 todos.
+
+Add a todo:
+  $(_color_primary 'nb todo add Example\ Notebook:1/ <title>')
+Help information:
+  $(_color_primary 'nb help todo')"
+
+  [[ "${status}"    -eq 0           ]]
+  [[ "${_expected}" ==  "${output}" ]]
 }
 
 @test "'list --type todo' with todos lists todos." {
@@ -2521,6 +2555,8 @@ Add a note:
   $(_color_primary 'nb add one:')
 Add a bookmark:
   $(_color_primary 'nb one: <url>')
+Add a todo:
+  $(_color_primary 'nb todo add one: <title>')
 Import a file:
   $(_color_primary 'nb import (<path> | <url>) one:')
 Help information:
@@ -2548,6 +2584,8 @@ Add a note:
   $(_color_primary 'nb add multi\ word:')
 Add a bookmark:
   $(_color_primary 'nb multi\ word: <url>')
+Add a todo:
+  $(_color_primary 'nb todo add multi\ word: <title>')
 Import a file:
   $(_color_primary 'nb import (<path> | <url>) multi\ word:')
 Help information:

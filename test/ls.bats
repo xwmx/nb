@@ -1474,6 +1474,8 @@ Add a note:
   $(_color_primary 'nb add one:')
 Add a bookmark:
   $(_color_primary 'nb one: <url>')
+Add a todo:
+  $(_color_primary 'nb todo add one: <title>')
 Import a file:
   $(_color_primary 'nb import (<path> | <url>) one:')
 Help information:
@@ -1502,6 +1504,8 @@ Add a note:
   $(_color_primary 'nb add multi\ word:')
 Add a bookmark:
   $(_color_primary 'nb multi\ word: <url>')
+Add a todo:
+  $(_color_primary 'nb todo add multi\ word: <title>')
 Import a file:
   $(_color_primary 'nb import (<path> | <url>) multi\ word:')
 Help information:
