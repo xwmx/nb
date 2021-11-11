@@ -18,7 +18,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"      -eq 0                 ]]
+  [[ "${status}"      -eq 0                   ]]
   [[ "${output}"      =~  \
 Added:\ .*\[.*1.*\].*\ ✔️\ \ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ todo\ title\.\"  ]]
 
@@ -26,13 +26,13 @@ Added:\ .*\[.*1.*\].*\ ✔️\ \ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ to
 
   printf "\${_files[*]}: '%s'\\n" "${_files[*]:-}"
 
-  [[ "${#_files[@]}" -eq 1                  ]]
-  [[ "${_files[0]}"   =~ ^[0-9]+\.todo\.md$ ]]
+  [[ "${#_files[@]}"  -eq 1                   ]]
+  [[ "${_files[0]}"   =~  ^[0-9]+\.todo\.md$  ]]
 
   cat "${NB_DIR}/home/${_files[0]}"
 
-  diff                                      \
-    <(cat "${NB_DIR}/home/${_files[0]}")    \
+  diff                                        \
+    <(cat "${NB_DIR}/home/${_files[0]}")      \
     <(cat <<HEREDOC
 # [ ] Example todo title.
 
@@ -66,20 +66,20 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}" -eq 0                      ]]
+  [[ "${status}"      -eq 0                   ]]
 
 
   _files=($(ls "${NB_DIR}/home/"))
 
   printf "\${_files[*]}: '%s'\\n" "${_files[*]:-}"
 
-  [[ "${#_files[@]}" -eq 1                  ]]
-  [[ "${_files[0]}"   =~ ^[0-9]+\.todo\.md$ ]]
+  [[ "${#_files[@]}"  -eq 1                   ]]
+  [[ "${_files[0]}"   =~  ^[0-9]+\.todo\.md$  ]]
 
   cat "${NB_DIR}/home/${_files[0]}"
 
-  diff                                      \
-    <(cat "${NB_DIR}/home/${_files[0]}")    \
+  diff                                        \
+    <(cat "${NB_DIR}/home/${_files[0]}")      \
     <(printf "# [ ] Example multi-word description.\\n")
 
   while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
@@ -88,7 +88,7 @@ HEREDOC
   done
   git -C "${NB_DIR}/home" log | grep -q '\[nb\] Add'
 
-  [[ "${output}"  =~  \
+  [[ "${output}"      =~  \
 Added:\ .*\[.*1.*\].*\ ✔️\ \ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ multi-word\ description\.\"  ]]
 }
 
@@ -102,20 +102,20 @@ Added:\ .*\[.*1.*\].*\ ✔️\ \ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ mu
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}" -eq 0                      ]]
+  [[ "${status}"      -eq 0                   ]]
 
 
   _files=($(ls "${NB_DIR}/home/"))
 
   printf "\${_files[*]}: '%s'\\n" "${_files[*]:-}"
 
-  [[ "${#_files[@]}" -eq 1                  ]]
-  [[ "${_files[0]}"   =~ ^[0-9]+\.todo\.md$ ]]
+  [[ "${#_files[@]}"  -eq 1                   ]]
+  [[ "${_files[0]}"   =~  ^[0-9]+\.todo\.md$  ]]
 
   cat "${NB_DIR}/home/${_files[0]}"
 
-  diff                                      \
-    <(cat "${NB_DIR}/home/${_files[0]}")    \
+  diff                                        \
+    <(cat "${NB_DIR}/home/${_files[0]}")      \
     <(printf "# [ ] Example multi-word description.\\n")
 
   while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
@@ -124,7 +124,7 @@ Added:\ .*\[.*1.*\].*\ ✔️\ \ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ mu
   done
   git -C "${NB_DIR}/home" log | grep -q '\[nb\] Add'
 
-  [[ "${output}"  =~  \
+  [[ "${output}"      =~  \
 Added:\ .*\[.*1.*\].*\ ✔️\ \ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ multi-word\ description\.\"  ]]
 }
 
@@ -142,7 +142,7 @@ Added:\ .*\[.*1.*\].*\ ✔️\ \ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ mu
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}" -eq 0                      ]]
+  [[ "${status}"      -eq 0                 ]]
 
   _home_files=($(ls "${NB_DIR}/home/"))
 
@@ -152,7 +152,7 @@ Added:\ .*\[.*1.*\].*\ ✔️\ \ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ mu
 
   printf "\${_files[*]}: '%s'\\n" "${_files[*]:-}"
 
-  [[ "${#_files[@]}" -eq 1                  ]]
+  [[ "${#_files[@]}"  -eq 1                 ]]
   [[ "${_files[0]}"   =~ ^[0-9]+\.todo\.md$ ]]
 
   cat "${NB_DIR}/Example Notebook/${_files[0]}"
@@ -185,14 +185,14 @@ Example\ Notebook:[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ multi-word\ descrip
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}" -eq 0                      ]]
+  [[ "${status}"      -eq 0                   ]]
 
   _files=($(ls "${NB_DIR}/home/Example Folder/"))
 
   printf "\${_files[*]}: '%s'\\n" "${_files[*]:-}"
 
-  [[ "${#_files[@]}" -eq 1                  ]]
-  [[ "${_files[0]}"   =~ ^[0-9]+\.todo\.md$ ]]
+  [[ "${#_files[@]}"  -eq 1                   ]]
+  [[ "${_files[0]}"   =~  ^[0-9]+\.todo\.md$  ]]
 
   cat "${NB_DIR}/home/Example Folder/${_files[0]}"
 
@@ -206,9 +206,9 @@ Example\ Notebook:[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ multi-word\ descrip
   done
   git -C "${NB_DIR}/home" log | grep -q '\[nb\] Add'
 
-  [[ "${lines[0]}"  =~  \
+  [[ "${lines[0]}"    =~  \
 Added:\ .*\[.*Example\ Folder/1.*\].*\ ✔️\ \ .*Example\ Folder/[0-9]+\.todo\.md          ]]
-  [[ "${lines[0]}"  =~  \
+  [[ "${lines[0]}"    =~  \
 Example\ Folder/[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ multi-word\ description\.\"  ]]
 }
 
@@ -226,21 +226,21 @@ Example\ Folder/[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ multi-word\ descripti
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}" -eq  0                     ]]
-  [[ "${output}"  =~  \
+  [[ "${status}"      -eq 0                   ]]
+  [[ "${output}"      =~  \
 Added:\ .*\[.*1.*\].*\ ✔️\ \ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ todo\ title\.\"  ]]
 
   _files=($(ls "${NB_DIR}/home/"))
 
   printf "\${_files[*]}: '%s'\\n" "${_files[*]:-}"
 
-  [[ "${#_files[@]}" -eq 1                  ]]
-  [[ "${_files[0]}"   =~ ^[0-9]+\.todo\.md$ ]]
+  [[ "${#_files[@]}"  -eq 1                   ]]
+  [[ "${_files[0]}"   =~  ^[0-9]+\.todo\.md$  ]]
 
   cat "${NB_DIR}/home/${_files[0]}"
 
-  diff                                      \
-    <(cat "${NB_DIR}/home/${_files[0]}")    \
+  diff                                        \
+    <(cat "${NB_DIR}/home/${_files[0]}")      \
     <(cat <<HEREDOC
 # [ ] Example todo title.
 
@@ -272,21 +272,21 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}" -eq  0                     ]]
-  [[ "${output}"  =~  \
+  [[ "${status}"      -eq 0                   ]]
+  [[ "${output}"      =~  \
 Added:\ .*\[.*1.*\].*\ ✔️\ \ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ todo\ title\.\"  ]]
 
   _files=($(ls "${NB_DIR}/home/"))
 
   printf "\${_files[*]}: '%s'\\n" "${_files[*]:-}"
 
-  [[ "${#_files[@]}" -eq 1                  ]]
-  [[ "${_files[0]}"   =~ ^[0-9]+\.todo\.md$ ]]
+  [[ "${#_files[@]}"  -eq 1                   ]]
+  [[ "${_files[0]}"   =~  ^[0-9]+\.todo\.md$  ]]
 
   cat "${NB_DIR}/home/${_files[0]}"
 
-  diff                                      \
-    <(cat "${NB_DIR}/home/${_files[0]}")    \
+  diff                                        \
+    <(cat "${NB_DIR}/home/${_files[0]}")      \
     <(cat <<HEREDOC
 # [ ] Example todo title.
 
@@ -317,21 +317,21 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}" -eq  0                     ]]
-  [[ "${output}"  =~  \
+  [[ "${status}"      -eq  0                  ]]
+  [[ "${output}"      =~  \
 Added:\ .*\[.*1.*\].*\ ✔️\ \ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ todo\ title\.\"  ]]
 
   _files=($(ls "${NB_DIR}/home/"))
 
   printf "\${_files[*]}: '%s'\\n" "${_files[*]:-}"
 
-  [[ "${#_files[@]}" -eq 1                  ]]
-  [[ "${_files[0]}"   =~ ^[0-9]+\.todo\.md$ ]]
+  [[ "${#_files[@]}"  -eq 1                   ]]
+  [[ "${_files[0]}"   =~  ^[0-9]+\.todo\.md$  ]]
 
   cat "${NB_DIR}/home/${_files[0]}"
 
-  diff                                      \
-    <(cat "${NB_DIR}/home/${_files[0]}")    \
+  diff                                        \
+    <(cat "${NB_DIR}/home/${_files[0]}")      \
     <(cat <<HEREDOC
 # [ ] Example todo title.
 
@@ -361,13 +361,13 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"  -eq 1     ]]
-  [[ "${output}"  =~  \
+  [[ "${status}"      -eq 1                                   ]]
+  [[ "${output}"      =~  \
 \!.*\ .*--description.*\ requires\ a\ valid\ argument\.       ]]
 
   _files=($(ls "${NB_DIR}/home/"))
 
-  [[ "${#_files[@]}" -eq 0  ]]
+  [[ "${#_files[@]}"  -eq 0                                   ]]
 
   while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
   do
@@ -388,13 +388,13 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"  -eq 1                         ]]
-  [[ "${output}"  =~  \
+  [[ "${status}"      -eq 1                     ]]
+  [[ "${output}"      =~  \
 \!.*\ .*--due.*\ requires\ a\ valid\ argument\. ]]
 
   _files=($(ls "${NB_DIR}/home/"))
 
-  [[ "${#_files[@]}" -eq 0                      ]]
+  [[ "${#_files[@]}"  -eq 0                     ]]
 
   while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
   do
@@ -415,21 +415,21 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}" -eq  0                     ]]
-  [[ "${output}"  =~  \
+  [[ "${status}"      -eq 0                   ]]
+  [[ "${output}"      =~  \
 Added:\ .*\[.*1.*\].*\ ✔️\ \ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ todo\ title\.\"  ]]
 
   _files=($(ls "${NB_DIR}/home/"))
 
   printf "\${_files[*]}: '%s'\\n" "${_files[*]:-}"
 
-  [[ "${#_files[@]}" -eq 1                  ]]
-  [[ "${_files[0]}"   =~ ^[0-9]+\.todo\.md$ ]]
+  [[ "${#_files[@]}"  -eq 1                   ]]
+  [[ "${_files[0]}"   =~  ^[0-9]+\.todo\.md$  ]]
 
   cat "${NB_DIR}/home/${_files[0]}"
 
-  diff                                      \
-    <(cat "${NB_DIR}/home/${_files[0]}")    \
+  diff                                        \
+    <(cat "${NB_DIR}/home/${_files[0]}")      \
     <(cat <<HEREDOC
 # [ ] Example todo title.
 
@@ -462,13 +462,13 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 1                     ]]
-  [[ "${lines[0]}"  =~  Usage                 ]]
-  [[ "${lines[1]}"  =~  todo\ add             ]]
+  [[ "${status}"      -eq 1                 ]]
+  [[ "${lines[0]}"    =~  Usage             ]]
+  [[ "${lines[1]}"    =~  todo\ add         ]]
 
   _files=($(ls "${NB_DIR}/home/"))
 
-  [[ "${#_files[@]}" -eq 0                    ]]
+  [[ "${#_files[@]}"  -eq 0                 ]]
 
   while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
   do
@@ -487,21 +487,21 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}" -eq  0                     ]]
-  [[ "${output}"  =~  \
+  [[ "${status}"      -eq 0                   ]]
+  [[ "${output}"      =~  \
 Added:\ .*\[.*1.*\].*\ ✔️\ \ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ todo\ title\.\"  ]]
 
   _files=($(ls "${NB_DIR}/home/"))
 
   printf "\${_files[*]}: '%s'\\n" "${_files[*]:-}"
 
-  [[ "${#_files[@]}" -eq 1                  ]]
-  [[ "${_files[0]}"   =~ ^[0-9]+\.todo\.md$ ]]
+  [[ "${#_files[@]}"  -eq 1                   ]]
+  [[ "${_files[0]}"   =~  ^[0-9]+\.todo\.md$  ]]
 
   cat "${NB_DIR}/home/${_files[0]}"
 
-  diff                                      \
-    <(cat "${NB_DIR}/home/${_files[0]}")    \
+  diff                                        \
+    <(cat "${NB_DIR}/home/${_files[0]}")      \
     <(printf "# [ ] Example todo title.\\n")
 
   while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
@@ -521,21 +521,21 @@ Added:\ .*\[.*1.*\].*\ ✔️\ \ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ to
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}" -eq  0                     ]]
-  [[ "${output}"  =~  \
+  [[ "${status}"      -eq 0                   ]]
+  [[ "${output}"      =~  \
 Added:\ .*\[.*1.*\].*\ ✔️\ \ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ todo\ title\.\"  ]]
 
   _files=($(ls "${NB_DIR}/home/"))
 
   printf "\${_files[*]}: '%s'\\n" "${_files[*]:-}"
 
-  [[ "${#_files[@]}" -eq 1                  ]]
-  [[ "${_files[0]}"   =~ ^[0-9]+\.todo\.md$ ]]
+  [[ "${#_files[@]}"  -eq 1                   ]]
+  [[ "${_files[0]}"   =~  ^[0-9]+\.todo\.md$  ]]
 
   cat "${NB_DIR}/home/${_files[0]}"
 
-  diff                                      \
-    <(cat "${NB_DIR}/home/${_files[0]}")    \
+  diff                                        \
+    <(cat "${NB_DIR}/home/${_files[0]}")      \
     <(printf "\
 # [ ] Example todo title.
 # mock_editor %s/home/%s\\n" "${NB_DIR}" "${_files[0]%.md}")
@@ -557,21 +557,21 @@ Added:\ .*\[.*1.*\].*\ ✔️\ \ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ to
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}" -eq  0                     ]]
-  [[ "${output}"  =~  \
+  [[ "${status}"      -eq 0                   ]]
+  [[ "${output}"      =~  \
 Added:\ .*\[.*1.*\].*\ ✔️\ \ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ todo\ title\.\"  ]]
 
   _files=($(ls "${NB_DIR}/home/"))
 
   printf "\${_files[*]}: '%s'\\n" "${_files[*]:-}"
 
-  [[ "${#_files[@]}" -eq 1                  ]]
-  [[ "${_files[0]}"   =~ ^[0-9]+\.todo\.md$ ]]
+  [[ "${#_files[@]}"  -eq 1                   ]]
+  [[ "${_files[0]}"   =~  ^[0-9]+\.todo\.md$  ]]
 
   cat "${NB_DIR}/home/${_files[0]}"
 
-  diff                                      \
-    <(cat "${NB_DIR}/home/${_files[0]}")    \
+  diff                                        \
+    <(cat "${NB_DIR}/home/${_files[0]}")      \
     <(printf "\
 # [ ] Example todo title.
 
@@ -599,21 +599,21 @@ Example description.\\n")
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}" -eq 0                      ]]
-  [[ "${output}"  =~  \
+  [[ "${status}"      -eq 0                   ]]
+  [[ "${output}"      =~  \
 Added:\ .*\[.*1.*\].*\ ✔️\ \ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ Title\ ·\ Example\ todo\ description\.\"  ]]
 
   _files=($(ls "${NB_DIR}/home/"))
 
   printf "\${_files[*]}: '%s'\\n" "${_files[*]:-}"
 
-  [[ "${#_files[@]}" -eq 1                  ]]
-  [[ "${_files[0]}"   =~ ^[0-9]+\.todo\.md$ ]]
+  [[ "${#_files[@]}"  -eq 1                  ]]
+  [[ "${_files[0]}"   =~  ^[0-9]+\.todo\.md$ ]]
 
   cat "${NB_DIR}/home/${_files[0]}"
 
-  diff                                      \
-    <(cat "${NB_DIR}/home/${_files[0]}")    \
+  diff                                        \
+    <(cat "${NB_DIR}/home/${_files[0]}")      \
     <(printf "\
 # [ ] Example Title · Example todo description.
 
@@ -636,20 +636,20 @@ Example content.\\n")
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}" -eq 0                      ]]
+  [[ "${status}"      -eq 0                   ]]
 
 
   _files=($(ls "${NB_DIR}/home/"))
 
   printf "\${_files[*]}: '%s'\\n" "${_files[*]:-}"
 
-  [[ "${#_files[@]}" -eq 1                  ]]
-  [[ "${_files[0]}"   =~ ^[0-9]+\.todo\.md$ ]]
+  [[ "${#_files[@]}"  -eq 1                   ]]
+  [[ "${_files[0]}"   =~  ^[0-9]+\.todo\.md$  ]]
 
   cat "${NB_DIR}/home/${_files[0]}"
 
-  diff                                      \
-    <(cat "${NB_DIR}/home/${_files[0]}")    \
+  diff                                        \
+    <(cat "${NB_DIR}/home/${_files[0]}")      \
     <(printf "# [ ] Example multi-word description.\\n")
 
   while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
@@ -658,6 +658,6 @@ Example content.\\n")
   done
   git -C "${NB_DIR}/home" log | grep -q '\[nb\] Add'
 
-  [[ "${output}"  =~  \
+  [[ "${output}"      =~  \
 Added:\ .*\[.*1.*\].*\ ✔️\ \ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ multi-word\ description\.\"  ]]
 }

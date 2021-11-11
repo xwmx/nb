@@ -43,9 +43,9 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0     ]]
+  [[    "${status}"   -eq 0     ]]
 
-  [[ !  "${output}" =~  Four  ]]
+  [[ !  "${output}"   =~  Four  ]]
 
   [[    "${lines[0]}" =~  \
 .*\[.*Example\ Notebook:Example\ Folder/3.*\].*\ ✅\ .*\[.*x.*\].*\ Example\ todo\ description\ three\. ]]
@@ -95,11 +95,11 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0     ]]
+  [[    "${status}"   -eq 0     ]]
 
-  [[ !  "${output}" =~  One   ]]
-  [[ !  "${output}" =~  Two   ]]
-  [[ !  "${output}" =~  Four  ]]
+  [[ !  "${output}"   =~  One   ]]
+  [[ !  "${output}"   =~  Two   ]]
+  [[ !  "${output}"   =~  Four  ]]
 
   [[    "${lines[0]}" =~  \
 .*\[.*Example\ Notebook:Example\ Folder/3.*\].*\ ✅\ .*\[.*x.*\].*\ Example\ todo\ description\ three\. ]]
@@ -143,11 +143,11 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0     ]]
+  [[    "${status}"   -eq 0     ]]
 
-  [[ !  "${output}" =~  One   ]]
-  [[ !  "${output}" =~  Two   ]]
-  [[ !  "${output}" =~  Four  ]]
+  [[ !  "${output}"   =~  One   ]]
+  [[ !  "${output}"   =~  Two   ]]
+  [[ !  "${output}"   =~  Four  ]]
 
   [[    "${lines[0]}" =~  \
 .*\[.*Example\ Notebook:Example\ Folder/3.*\].*\ ✅\ .*\[.*x.*\].*\ Example\ todo\ description\ three\. ]]
@@ -187,10 +187,10 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 1 ]]
-  [[ "${#lines[@]}" -eq 1 ]]
+  [[    "${status}"    -eq  1 ]]
+  [[    "${#lines[@]}" -eq  1 ]]
 
-  [[    "${lines[0]}" =~  .*!.*\ No\ open\ todos\ found\. ]]
+  [[    "${lines[0]}"   =~  .*!.*\ No\ open\ todos\ found\. ]]
 }
 
 @test "'todos open <notebook>:<folder>/' exits with 0 and lists open todos." {
@@ -231,7 +231,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0     ]]
+  [[    "${status}" -eq 0     ]]
 
   [[ !  "${output}" =~  Three ]]
   [[ !  "${output}" =~  Four  ]]
@@ -280,10 +280,10 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0     ]]
+  [[    "${status}"   -eq 0     ]]
 
-  [[ !  "${output}" =~  Three ]]
-  [[ !  "${output}" =~  Four  ]]
+  [[ !  "${output}"   =~  Three ]]
+  [[ !  "${output}"   =~  Four  ]]
 
   [[    "${lines[0]}" =~  \
 .*[.*Example\ Folder/2.*].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ two\.  ]]
@@ -448,11 +448,11 @@ Done:\ .*\[.*2.*\].*\ ✅\ .*\[.*x.*\].*\ Example\ todo\ description\ two\.  ]]
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0     ]]
+  [[    "${status}"    -eq 0    ]]
 
-  [[ !  "${output}" =~  One   ]]
-  [[ !  "${output}" =~  Three ]]
-  [[ !  "${output}" =~  Four  ]]
+  [[ !  "${output}"   =~  One   ]]
+  [[ !  "${output}"   =~  Three ]]
+  [[ !  "${output}"   =~  Four  ]]
 
   [[    "${lines[0]}" =~  \
 Done:\ .*[.*Example\ Folder/2.*].*\ ✅\ .*\[.*x.*\].*\ Example\ todo\ description\ two\.  ]]
@@ -490,10 +490,10 @@ Done:\ .*[.*Example\ Folder/2.*].*\ ✅\ .*\[.*x.*\].*\ Example\ todo\ descripti
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 1 ]]
-  [[ "${#lines[@]}" -eq 1 ]]
+  [[    "${status}"    -eq 1 ]]
+  [[    "${#lines[@]}" -eq 1 ]]
 
-  [[    "${lines[0]}" =~  .*!.*\ No\ closed\ todos\ found\. ]]
+  [[    "${lines[0]}"   =~  .*!.*\ No\ closed\ todos\ found\. ]]
 }
 
 # todo undo #####################################################################
@@ -571,7 +571,7 @@ Undone:\ .*\[.*Example\ Notebook:Example\ Folder/3.*\].*\ ✔️\ \ .*\[\ \].*\ 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0       ]]
+  [[ "${status}"    -eq 0                 ]]
   [[ "${output}"    =~  \
 Undone:\ .*\[.*3.*\].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ three\.  ]]
 
@@ -604,13 +604,13 @@ Undone:\ .*\[.*3.*\].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ three\
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 1                     ]]
-  [[ "${lines[0]}"  =~  Usage.*:              ]]
-  [[ "${lines[1]}"  =~  ${_ME}\ todo          ]]
+  [[ "${status}"      -eq 1               ]]
+  [[ "${lines[0]}"    =~  Usage.*:        ]]
+  [[ "${lines[1]}"    =~  ${_ME}\ todo    ]]
 
   _files=($(ls "${NB_DIR}/home/"))
 
-  [[ "${#_files[@]}" -eq 0                    ]]
+  [[ "${#_files[@]}"  -eq 0               ]]
 
   while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
   do
