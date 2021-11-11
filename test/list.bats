@@ -1270,8 +1270,14 @@ HEREDOC
   printf "\${output}:     '%s'\\n" "${output}"
   printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ "${status}"    -eq 0 ]]
-  [[ "${#lines[@]}" -eq 3 ]]
+  [[ "${status}"    -eq 0                   ]]
+  [[ "${#lines[@]}" -eq 6                   ]]
+  [[ "${lines[0]}"  =~  .*[.*3.*].*\ three  ]]
+  [[ "${lines[1]}"  =~   [^-]---------[^-]  ]]
+  [[ "${lines[2]}"  =~  .*[.*2.*].*\ two    ]]
+  [[ "${lines[3]}"  =~   [^-]-------[^-]    ]]
+  [[ "${lines[4]}"  =~  .*[.*1.*].*\ one    ]]
+  [[ "${lines[5]}"  =~   [^-]-------[^-]    ]]
 }
 
 @test "'list --excerpt' exits with 0 and displays 5 line list items." {
@@ -1304,7 +1310,7 @@ HEREDOC
   [[ "${#lines[@]}" -eq 12  ]]
 }
 
-@test "'list --excerpt 0' exits with 0 and displays 1 line list items." {
+@test "'list --excerpt 0' exits with 0 and displays list item with line." {
   {
     _setup_list_excerpt
   }
@@ -1315,8 +1321,14 @@ HEREDOC
   printf "\${output}:     '%s'\\n" "${output}"
   printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ "${status}"    -eq 0 ]]
-  [[ "${#lines[@]}" -eq 3 ]]
+  [[ "${status}"    -eq 0                   ]]
+  [[ "${#lines[@]}" -eq 6                   ]]
+  [[ "${lines[0]}"  =~  .*[.*3.*].*\ three  ]]
+  [[ "${lines[1]}"  =~   [^-]---------[^-]  ]]
+  [[ "${lines[2]}"  =~  .*[.*2.*].*\ two    ]]
+  [[ "${lines[3]}"  =~   [^-]-------[^-]    ]]
+  [[ "${lines[4]}"  =~  .*[.*1.*].*\ one    ]]
+  [[ "${lines[5]}"  =~   [^-]-------[^-]    ]]
 }
 
 # `list -n <limit>` ###########################################################

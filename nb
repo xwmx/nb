@@ -5497,17 +5497,20 @@ ${_TPUT_SGR0}"
       printf "\\n"
 
       if ((_print_excerpt))                   &&
-         [[ "${_excerpt_length}" =~ ^[1-9] ]] &&
+         [[ "${_excerpt_length}" =~ ^[0-9] ]] &&
          _file_is_text "${_list_path}/${__basename}"
       then # excerpt is specified with a non-zero digit, required by `head`
         _print_line "${_info_line:-}"   \
           --no-wrap                     \
           --visible-length "${_extra_length:-0}"
 
-        head -n "${_excerpt_length}" "${_list_path}/${__basename}" \
-          | _highlight_syntax_if_available "${__basename##*.}"
+        if ((${_excerpt_length:-0}))
+        then
+          head -n "${_excerpt_length}" "${_list_path}/${__basename}" \
+            | _highlight_syntax_if_available "${__basename##*.}"
 
-        printf "\\n"
+          printf "\\n"
+        fi
       fi
 
       _printed_count=$((_printed_count+1))
