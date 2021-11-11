@@ -2233,9 +2233,11 @@ for more information.
 Mark a todo as done or closed with [`nb do`](#do):
 
 ```bash
+# add a new todo titled "Example todo six."
 ❯ nb todo add "Example todo six."
 Added: [6] ✔️ [ ] Example todo six.
 
+# mark todo 6 as done / closed
 ❯ nb do 6
 Done: [6] ✅ [x] Example todo two.
 ```
@@ -2243,6 +2245,7 @@ Done: [6] ✅ [x] Example todo two.
 Re-open a closed todo with [`nb undo`](#undo):
 
 ```bash
+# mark todo 6 as undone / open
 ❯ nb undo 6
 Undone: [6] ✔️ [ ] Example todo two.
 ```
@@ -2271,14 +2274,15 @@ Tasks are defined as one or more Markdown list items starting with
 `- [ ]` to indicate an open task or `- [x]` to indicate a closed task:
 
 ```markdown
-- [ ] Example incomplete task.
-- [x] Example completed task.
+- [ ] Example open task.
+- [x] Example closed task.
 ```
 
-List tasks in notebooks, folders, and items with [`nb tasks`](#tasks),
+List tasks in items, folders, and notebooks with [`nb tasks`](#tasks),
 which lists both tasks and todos:
 
-```
+```bash
+# list tasks in item with id "7"
 ❯ nb tasks 7
 [7] ✔️ [ ] Example todo seven.
 ------------------------------
@@ -2286,6 +2290,7 @@ which lists both tasks and todos:
 [7 2] [x] Task two.
 [7 3] [ ] Task three.
 
+# list tasks and todos in the notebooks named "example"
 ❯ nb tasks example:
 [example:9] ✔️ [ ] Example todo nine.
 [example:8] ✅ [x] Example todo eight.
@@ -2309,33 +2314,45 @@ a space, then followed by the sequential number of the task in the file.
 Use [`nb do`](#do) to mark tasks as complete:
 
 ```bash
-❯ nb do 7 2
-[7] ✔️ [ ] Example todo seven.
-------------------------------
-Done: [7 2] [x] Task two.
+# list tasks in item 9
+❯ nb tasks 9
+[9] ✔️ [ ] Eample todo nine.
+----------------------------
+[9 1] [ ] Task one.
+[9 2] [ ] Task two.
+[9 3] [ ] Task three.
 
-❯ nb tasks 7
-[7] ✔️ [ ] Example todo seven.
-------------------------------
-[7 1] [ ] Task one.
-[7 2] [x] Task two.
-[7 3] [ ] Task three.
+# mark task 2 in item 9 as done / closed
+❯ nb do 9 2
+[9] ✔️ [ ] Eample todo nine.
+----------------------------
+Done: [9 2] [x] Task two.
+
+# list tasks in item 9
+❯ nb tasks 9
+[9] ✔️ [ ] Eample todo nine.
+----------------------------
+[9 1] [ ] Task one.
+[9 2] [x] Task two.
+[9 3] [ ] Task three.
 ```
 
 Undo a completed task with [`nb undo`](#undo):
 
 ```bash
-❯ nb undo 7 2
-[7] ✔️ [ ] Example todo seven.
-------------------------------
+# mark task 2 in item 9 as undone / open
+❯ nb undo 9 2
+[9] ✔️ [ ] Example todo nine.
+-----------------------------
 Undone: [7 2] [ ] Task two.
 
-❯ nb tasks 7
-[7] ✔️ [ ] Example todo seven.
-------------------------------
-[7 1] [ ] Task one.
-[7 2] [ ] Task two.
-[7 3] [ ] Task three.
+# list tasks in item 9
+❯ nb tasks 9
+[9] ✔️ [ ] Example todo nine.
+-----------------------------
+[9 1] [ ] Task one.
+[9 2] [ ] Task two.
+[9 3] [ ] Task three.
 ```
 
 See
