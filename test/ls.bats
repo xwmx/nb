@@ -1383,7 +1383,8 @@ HEREDOC
 
   [[ "${lines[6]}"  =~  ❯                               ]]
   [[ "${lines[6]}"  =~  nb\ add\ multi\\\ word:         ]]
-  [[ "${lines[6]}"  =~  nb\ multi\\\ word:\ \<url\>     ]]
+  [[ "${lines[6]}"  =~  nb\ multi\\\ word:\ \<url\>     ]] ||
+    [[ "${lines[7]}"  =~  nb\ multi\\\ word:\ \<url\>     ]]
   [[ "${lines[6]}"  =~  nb\ edit\ multi\\\ word:\<id\>  ]] ||
     [[ "${lines[7]}"  =~  nb\ edit\ multi\\\ word:\<id\>  ]]
 }
@@ -1719,6 +1720,8 @@ Help information:
 @test "'ls -n 3' exits with 0 and lists 3 files." {
   {
     _setup_ls
+
+    "${_NB}" set footer 0
   }
 
   run "${_NB}" ls -n 3
@@ -1729,7 +1732,7 @@ Help information:
 
   [[ "${status}"    -eq 0     ]]
 
-  [[ "${#lines[@]}" -eq 8     ]]
+  [[ "${#lines[@]}" -eq 5     ]]
   [[ "${lines[2]}"  =~  three ]]
   [[ "${lines[3]}"  =~  two   ]]
   [[ "${lines[4]}"  =~  one   ]]
@@ -1738,6 +1741,8 @@ Help information:
 @test "'ls --limit 3' exits with 0 and lists 3 files." {
   {
     _setup_ls
+
+    "${_NB}" set footer 0
   }
 
   run "${_NB}" ls -n 3
@@ -1748,7 +1753,7 @@ Help information:
 
   [[ "${status}"    -eq 0     ]]
 
-  [[ "${#lines[@]}" -eq 8     ]]
+  [[ "${#lines[@]}" -eq 5     ]]
   [[ "${lines[2]}"  =~  three ]]
   [[ "${lines[3]}"  =~  two   ]]
   [[ "${lines[4]}"  =~  one   ]]
@@ -1757,6 +1762,8 @@ Help information:
 @test "'ls --3' exits with 0 and lists 3 files." {
   {
     _setup_ls
+
+    "${_NB}" set footer 0
   }
 
   run "${_NB}" ls --3
@@ -1766,7 +1773,7 @@ Help information:
   printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
   [[ "${status}"    -eq 0     ]]
-  [[ "${#lines[@]}" -eq 8     ]]
+  [[ "${#lines[@]}" -eq 5     ]]
   [[ "${lines[2]}"  =~  three ]]
   [[ "${lines[3]}"  =~  two   ]]
   [[ "${lines[4]}"  =~  one   ]]
@@ -1914,6 +1921,8 @@ HEREDOC
 @test "'ls --2' exits with 0 and lists 2 items." {
   {
     _setup_ls_all
+
+    "${_NB}" set footer 0
   }
 
   run "${_NB}" ls --2
@@ -1924,7 +1933,7 @@ HEREDOC
 
   [[ "${status}"    -eq 0     ]]
 
-  [[ "${#lines[@]}" -eq 8     ]]
+  [[ "${#lines[@]}" -eq 5     ]]
   [[ "${lines[2]}"  =~  '30'  ]]
   [[ "${lines[3]}"  =~  '29'  ]]
 }
@@ -1932,6 +1941,8 @@ HEREDOC
 @test "'ls' exits with 0 and lists 15 items." {
   {
     _setup_ls_all
+
+    "${_NB}" set footer 0
   }
 
   run "${_NB}" ls
@@ -1942,7 +1953,7 @@ HEREDOC
 
   [[ "${status}"    -eq 0         ]]
 
-  [[ "${#lines[@]}" -eq 21        ]]
+  [[ "${#lines[@]}" -eq 18        ]]
   [[ "${lines[2]}"  =~  '30'      ]]
   [[ "${lines[3]}"  =~  '29'      ]]
   [[ "${lines[16]}" =~  '16'      ]]
@@ -1952,6 +1963,8 @@ HEREDOC
 @test "'ls -a' exits with 0 and lists all items." {
   {
     _setup_ls_all
+
+    "${_NB}" set footer 0
   }
 
   run "${_NB}" ls -a
@@ -1962,17 +1975,18 @@ HEREDOC
 
   [[ "${status}"    -eq 0     ]]
 
-  [[ "${#lines[@]}" -eq 35    ]]
+  [[ "${#lines[@]}" -eq 32    ]]
   [[ "${lines[2]}"  =~  '30'  ]]
   [[ "${lines[3]}"  =~  '29'  ]]
   [[ "${lines[21]}" =~  '11'  ]]
   [[ "${lines[22]}" =~  '10'  ]]
-  [[ "${lines[32]}" =~  \-\-  ]]
 }
 
 @test "'ls --all' exits with 0 and lists all items." {
   {
     _setup_ls_all
+
+    "${_NB}" set footer 0
   }
 
   run "${_NB}" ls --all
@@ -1983,12 +1997,11 @@ HEREDOC
 
   [[ "${status}"    -eq 0     ]]
 
-  [[ "${#lines[@]}" -eq 35    ]]
+  [[ "${#lines[@]}" -eq 32    ]]
   [[ "${lines[2]}"  =~  '30'  ]]
   [[ "${lines[3]}"  =~  '29'  ]]
   [[ "${lines[21]}" =~  '11'  ]]
   [[ "${lines[22]}" =~  '10'  ]]
-  [[ "${lines[32]}" =~  \-\-  ]]
 }
 
 # `ls <selector>` #############################################################
