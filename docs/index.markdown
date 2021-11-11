@@ -2288,7 +2288,7 @@ List tasks in items, folders, and notebooks with [`nb tasks`](#tasks),
 which lists both tasks and todos:
 
 ```bash
-# list tasks in item with id "7"
+# list tasks in item 7
 ❯ nb tasks 7
 [7] ✔️ [ ] Example todo seven.
 ------------------------------
@@ -2296,7 +2296,7 @@ which lists both tasks and todos:
 [7 2] [x] Task two.
 [7 3] [ ] Task three.
 
-# list tasks and todos in the notebooks named "example"
+# list tasks and todos in the notebook named "example"
 ❯ nb tasks example:
 [example:9] ✔️ [ ] Example todo nine.
 [example:8] ✅ [x] Example todo eight.
