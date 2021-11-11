@@ -153,7 +153,7 @@ load test_helper
 .*\[.*Example\ Notebook:Example\ Folder/3.*\].*\ ✅\ .*\[.*x.*\].*\ Example\ todo\ description\ three\. ]]
 }
 
-# todos open ################################################################
+# todos open ##################################################################
 
 @test "'todos open <id>' exits with 0 and undos todo." {
   {
@@ -187,14 +187,108 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
+  [[ "${status}"    -eq 1 ]]
+  [[ "${#lines[@]}" -eq 1 ]]
+
+  [[    "${lines[0]}" =~  .*!.*\ No\ open\ todos\ found\. ]]
+}
+
+@test "'todos open <notebook>:<folder>/' exits with 0 and lists open todos." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" use "Example Notebook"
+
+    "${_NB}" add                                        \
+      --content "# [ ] Example todo description one."   \
+      --filename "Example Folder/One.todo.md"
+
+    sleep 1
+
+    "${_NB}" add                                        \
+      --content "# [ ] Example todo description two."   \
+      --filename "Example Folder/Two.todo.md"
+
+    sleep 1
+
+    "${_NB}" add                                        \
+      --content "# [x] Example todo description three." \
+      --filename "Example Folder/Three.todo.md"
+
+    sleep 1
+
+    "${_NB}" add                                        \
+      --content "# Example description four."           \
+      --filename "Example Folder/Four.md"
+
+    "${_NB}" use "home"
+  }
+
+  run "${_NB}" todos open Example\ Notebook:Example\ Folder/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
   [[ "${status}"    -eq 0     ]]
 
-  [[ !  "${output}" =~  One   ]]
-  [[ !  "${output}" =~  Two   ]]
+  [[ !  "${output}" =~  Three ]]
   [[ !  "${output}" =~  Four  ]]
 
   [[    "${lines[0]}" =~  \
-Undone:\ .*[.*Example\ Folder/3.*].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ three\.  ]]
+.*[.*Example\ Folder/2.*].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ two\.  ]]
+  [[    "${lines[1]}" =~  \
+.*[.*Example\ Folder/1.*].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ one\.  ]]
+}
+
+@test "'todos undone <notebook>:<folder>/' exits with 0 and lists open todos." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" use "Example Notebook"
+
+    "${_NB}" add                                        \
+      --content "# [ ] Example todo description one."   \
+      --filename "Example Folder/One.todo.md"
+
+    sleep 1
+
+    "${_NB}" add                                        \
+      --content "# [ ] Example todo description two."   \
+      --filename "Example Folder/Two.todo.md"
+
+    sleep 1
+
+    "${_NB}" add                                        \
+      --content "# [x] Example todo description three." \
+      --filename "Example Folder/Three.todo.md"
+
+    sleep 1
+
+    "${_NB}" add                                        \
+      --content "# Example description four."           \
+      --filename "Example Folder/Four.md"
+
+    "${_NB}" use "home"
+  }
+
+  run "${_NB}" todos "undone" Example\ Notebook:Example\ Folder/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0     ]]
+
+  [[ !  "${output}" =~  Three ]]
+  [[ !  "${output}" =~  Four  ]]
+
+  [[    "${lines[0]}" =~  \
+.*[.*Example\ Folder/2.*].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ two\.  ]]
+  [[    "${lines[1]}" =~  \
+.*[.*Example\ Folder/1.*].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ one\.  ]]
 }
 
 # todo do #####################################################################
@@ -396,14 +490,10 @@ Done:\ .*[.*Example\ Folder/2.*].*\ ✅\ .*\[.*x.*\].*\ Example\ todo\ descripti
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0     ]]
+  [[ "${status}"    -eq 1 ]]
+  [[ "${#lines[@]}" -eq 1 ]]
 
-  [[ !  "${output}" =~  One   ]]
-  [[ !  "${output}" =~  Three ]]
-  [[ !  "${output}" =~  Four  ]]
-
-  [[    "${lines[0]}" =~  \
-Done:\ .*[.*Example\ Folder/2.*].*\ ✅\ .*\[.*x.*\].*\ Example\ todo\ description\ two\.  ]]
+  [[    "${lines[0]}" =~  .*!.*\ No\ closed\ todos\ found\. ]]
 }
 
 # todo undo #####################################################################
