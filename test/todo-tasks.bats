@@ -959,7 +959,7 @@ HEREDOC
   [[    "${lines[2]}"   =~  0\ closed\ tasks\.  ]]
 }
 
-@test "'todos tasks <folder>/<id>' with no tasks exits with 1 and prints message." {
+@test "'todos tasks <folder>/<id>' with no tasks prints todo." {
   {
     "${_NB}" init
 
@@ -989,4 +989,23 @@ HEREDOC
 
   [[    "${lines[0]}"   =~  \
 .*\[.*Example\ Folder/1.*].*\ ✔️\ [\ ].*\ Example\ todo\ description\ one\.  ]]
+}
+
+@test "'todos tasks <folder>' with no todos or tasks exits with 1 and prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/File One.md" --content "Example content one."
+    "${_NB}" add "Example Folder/File Two.md" --content "Example content two."
+  }
+
+  run "${_NB}" todos tasks Example\ Folder/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 1                   ]]
+  [[    "${#lines[@]}"  -eq 1                   ]]
+
+  [[    "${lines[0]}"   =~  .*!.*\ 0\ tasks\.   ]]
 }
