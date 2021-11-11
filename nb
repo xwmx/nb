@@ -22794,8 +22794,8 @@ HEREDOC
 }
 _unset() {
   case "${1:-}" in
-    '')     _exit_1 _help "unset";    return 1 ;;
-    remote) _remote unset;            return 0 ;;
+    '')     _exit_1 _help "unset"   ; return 1 ;;
+    remote) _remote unset           ; return 0 ;;
     *)      _settings unset "${@:-}"; return 0 ;;
   esac
 }
