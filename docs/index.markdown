@@ -2277,7 +2277,7 @@ for more information.
 `nb` can list and update tasks in [todos](#-todos) and other Markdown documents.
 
 Tasks are defined as one or more Markdown list items starting with
-`- [ ]` to indicate an open task or `- [x]` to indicate a closed task:
+`- [ ]` to indicate an open task or `- [x]` to indicate a done / closed task:
 
 ```markdown
 - [ ] Example open task.
@@ -2314,10 +2314,53 @@ which lists both tasks and todos:
 [example:3] ✔️ [ ] Example todo three.
 ```
 
+Open / undone tasks can be listed with `nb tasks open`:
+
+```bash
+# list open tasks in item 7
+❯ nb tasks open 7
+[7] ✔️ [ ] Example todo seven.
+------------------------------
+[7 3] [ ] Task three.
+
+# list open tasks and todos in the notebook named "example"
+❯ nb tasks open example:
+[example:9] ✔️ [ ] Example todo nine.
+[example:6] ✔️ [ ] Example todo six.
+[example:4] Example Note Title
+------------------------------
+[example:4 1] [ ] Task one.
+[example:4 3] [ ] Task three.
+
+[example:3] ✔️ [ ] Example todo three.
+```
+
+Closed / done tasks can be listed with `nb tasks closed`:
+
+```bash
+# list closed tasks in item 7
+❯ nb closed tasks 7
+[7] ✔️ [ ] Example todo seven.
+------------------------------
+[7 1] [x] Task one.
+[7 2] [x] Task two.
+
+# list closed tasks and todos in the notebook named "example"
+❯ nb tasks closed example:
+[example:8] ✅ [x] Example todo eight.
+--------------------------------------
+[example:8 1] [x] Task one.
+[example:8 2] [x] Task two.
+
+[example:4] Example Note Title
+------------------------------
+[example:4 2] [x] Task two.
+```
+
 Tasks are identified by the item [selector](#-selectors), followed by
 a space, then followed by the sequential number of the task in the file.
 
-Use [`nb do`](#do) to mark tasks as complete:
+Use [`nb do`](#do) to mark tasks as done / closed:
 
 ```bash
 # list tasks in item 9
@@ -2343,7 +2386,7 @@ Done: [9 2] [x] Task two.
 [9 3] [ ] Task three.
 ```
 
-Undo a completed task with [`nb undo`](#undo):
+Undo a done / closed task with [`nb undo`](#undo):
 
 ```bash
 # mark task 2 in item 9 as undone / open
