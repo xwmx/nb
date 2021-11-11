@@ -3,88 +3,6 @@
 
 load test_helper
 
-# undo task ###################################################################
-
-@test "'tasks undo <folder>/<id> <task-number>' with non-todo and closed task exits with 0 and marks task done." {
-  {
-    "${_NB}" init
-
-    "${_NB}" add                              \
-      --filename "Example Folder/File One.md" \
-      --content "$(cat <<HEREDOC
-# Example Title One
-
-- [ ] Task one.
-- [ ] Task two.
-- [x] Task three.
-- [ ] Task four.
-
-## Tags
-
-#tag1 #tag2
-HEREDOC
-)"
-  }
-
-  run "${_NB}" tasks "undo" Example\ Folder/1 3
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  cat "${NB_DIR}/home/Example Folder/File One.md"
-
-  [[    "${status}"     -eq 0                                     ]]
-  [[    "${#lines[@]}"  -eq 3                                     ]]
-
-  [[    "${lines[0]}"   =~  .*\[.*Example\ Folder/1.*].*\ Example\ Title\ One ]]
-  [[    "${lines[1]}"   =~  [^-]------------------------------------[^-]      ]]
-  [[    "${lines[2]}"   =~  \
-Undone:\ .*\[.*Example\ Folder/1\ 3.*\].*\ .*[\ ].*\ Task\ three\.            ]]
-}
-
-@test "'tasks undo <folder>/<id> <task-number>' with closed task exits with 0 and marks task open." {
-  {
-    "${_NB}" init
-
-    "${_NB}" add                                    \
-      --filename "Example Folder/Todo One.todo.md"  \
-      --content "$(cat <<HEREDOC
-# [ ] Example todo description one.
-
-## Due
-
-2200-02-02
-
-## Tasks
-
-- [ ] Task one.
-- [ ] Task two.
-- [x] Task three.
-- [ ] Task four.
-
-## Tags
-
-#tag1 #tag2
-HEREDOC
-)"
-  }
-
-  run "${_NB}" tasks "undo" Example\ Folder/1 3
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  cat "${NB_DIR}/home/Example Folder/Todo One.todo.md"
-
-  [[    "${status}"     -eq 0                                       ]]
-  [[    "${#lines[@]}"  -eq 3                                       ]]
-
-  [[    "${lines[0]}"   =~  \
-.*\[.*Example\ Folder/1.*].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ one\.  ]]
-  [[    "${lines[1]}"   =~  .*------------------------------------.*              ]]
-
-  [[    "${lines[2]}"   =~  \
-Undone:\ .*\[.*Example\ Folder/1\ 3.*\].*\ .*[\ ].*\ Task\ three\.  ]]
-}
-
 # do task #####################################################################
 
 @test "'tasks do <folder>/<id> <task-number>' with non-todo and open task with no space in brackets exits with 0 and marks task done." {
@@ -247,9 +165,91 @@ HEREDOC
 Done:\ .*\[.*Example\ Folder/1\ 2.*\].*\ .*[.*x.*].*\ Task\ two\. ]]
 }
 
+# undo task ###################################################################
+
+@test "'tasks undo <folder>/<id> <task-number>' with non-todo and closed task exits with 0 and marks task done." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add                              \
+      --filename "Example Folder/File One.md" \
+      --content "$(cat <<HEREDOC
+# Example Title One
+
+- [ ] Task one.
+- [ ] Task two.
+- [x] Task three.
+- [ ] Task four.
+
+## Tags
+
+#tag1 #tag2
+HEREDOC
+)"
+  }
+
+  run "${_NB}" tasks "undo" Example\ Folder/1 3
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  cat "${NB_DIR}/home/Example Folder/File One.md"
+
+  [[    "${status}"     -eq 0                                     ]]
+  [[    "${#lines[@]}"  -eq 3                                     ]]
+
+  [[    "${lines[0]}"   =~  .*\[.*Example\ Folder/1.*].*\ Example\ Title\ One ]]
+  [[    "${lines[1]}"   =~  [^-]------------------------------------[^-]      ]]
+  [[    "${lines[2]}"   =~  \
+Undone:\ .*\[.*Example\ Folder/1\ 3.*\].*\ .*[\ ].*\ Task\ three\.            ]]
+}
+
+@test "'tasks undo <folder>/<id> <task-number>' with closed task exits with 0 and marks task open." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add                                    \
+      --filename "Example Folder/Todo One.todo.md"  \
+      --content "$(cat <<HEREDOC
+# [ ] Example todo description one.
+
+## Due
+
+2200-02-02
+
+## Tasks
+
+- [ ] Task one.
+- [ ] Task two.
+- [x] Task three.
+- [ ] Task four.
+
+## Tags
+
+#tag1 #tag2
+HEREDOC
+)"
+  }
+
+  run "${_NB}" tasks "undo" Example\ Folder/1 3
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  cat "${NB_DIR}/home/Example Folder/Todo One.todo.md"
+
+  [[    "${status}"     -eq 0                                       ]]
+  [[    "${#lines[@]}"  -eq 3                                       ]]
+
+  [[    "${lines[0]}"   =~  \
+.*\[.*Example\ Folder/1.*].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ one\.  ]]
+  [[    "${lines[1]}"   =~  .*------------------------------------.*              ]]
+
+  [[    "${lines[2]}"   =~  \
+Undone:\ .*\[.*Example\ Folder/1\ 3.*\].*\ .*[\ ].*\ Task\ three\.  ]]
+}
+
 # tasks subcommand ############################################################
 
-@test "'tasks open <folder>/<id>' exits with 0 and lists open tasks." {
+@test "'tasks open <folder>/<id>' exits with 0 and lists open tasks in the item." {
   {
     "${_NB}" init
 
@@ -296,13 +296,13 @@ HEREDOC
 .*[.*Example\ Folder/1\ 4.*].*\ .*[\ ].*\ Task\ four\.  ]]
 }
 
-@test "'tasks closed <folder>/<id>' exits with 0 and lists closed tasks." {
+@test "'tasks closed <folder>/<id>' exits with 0 and lists closed tasks in the item." {
   {
     "${_NB}" init
 
-    "${_NB}" add                                    \
-      --filename "Example Folder/Todo One.todo.md"  \
-      --content "$(cat <<HEREDOC
+    "${_NB}" add                                      \
+      --filename  "Example Folder/Todo One.todo.md"   \
+      --content   "$(cat <<HEREDOC
 # [ ] Example todo description one.
 
 ## Due
@@ -343,8 +343,8 @@ HEREDOC
   {
     "${_NB}" init
 
-    "${_NB}" add                                    \
-      --filename "Example Folder/Todo One.todo.md"  \
+    "${_NB}" add                                      \
+      --filename "Example Folder/Todo One.todo.md"    \
       --content "$(cat <<HEREDOC
 # [ ] Example todo description one.
 

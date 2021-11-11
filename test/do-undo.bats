@@ -61,101 +61,7 @@ load test_helper
   git -C "${NB_DIR}/home" log | grep -v -q '\[nb\] Done'
 }
 
-# close alias #################################################################
-
-@test "'close <id>' exits with 0, updates todo, and commits." {
-  {
-    "${_NB}" init
-
-    "${_NB}" add                                        \
-      --content "# [ ] Example todo description one."   \
-      --filename "One.todo.md"
-
-    "${_NB}" add                                        \
-      --content "# [ ] Example todo description two."   \
-      --filename "Two.todo.md"
-
-    "${_NB}" add                                        \
-      --content "# [x] Example todo description three." \
-      --filename "Three.todo.md"
-  }
-
-  run "${_NB}" "close" 2
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[ "${status}"    -eq 0       ]]
-  [[ "${output}"    =~  \
-Done:\ .*\[.*2.*\].*\ ✅\ .*\[.*x.*\].*\ Example\ todo\ description\ two\.  ]]
-
-  diff                                    \
-    <(cat "${NB_DIR}/home/One.todo.md")   \
-    <(printf "# [ ] Example todo description one.\\n")
-
-  diff                                    \
-    <(cat "${NB_DIR}/home/Two.todo.md")   \
-    <(printf "# [x] Example todo description two.\\n")
-
-  diff                                    \
-    <(cat "${NB_DIR}/home/Three.todo.md") \
-    <(printf "# [x] Example todo description three.\\n")
-
-  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
-  do
-    sleep 1
-  done
-  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Done: Two.todo.md'
-}
-
-# done alias ##################################################################
-
-@test "'done <id>' exits with 0, updates todo, and commits." {
-  {
-    "${_NB}" init
-
-    "${_NB}" add                                        \
-      --content "# [ ] Example todo description one."   \
-      --filename "One.todo.md"
-
-    "${_NB}" add                                        \
-      --content "# [ ] Example todo description two."   \
-      --filename "Two.todo.md"
-
-    "${_NB}" add                                        \
-      --content "# [x] Example todo description three." \
-      --filename "Three.todo.md"
-  }
-
-  run "${_NB}" "done" 2
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[ "${status}"    -eq 0       ]]
-  [[ "${output}"    =~  \
-Done:\ .*\[.*2.*\].*\ ✅\ .*\[.*x.*\].*\ Example\ todo\ description\ two\.  ]]
-
-  diff                                    \
-    <(cat "${NB_DIR}/home/One.todo.md")   \
-    <(printf "# [ ] Example todo description one.\\n")
-
-  diff                                    \
-    <(cat "${NB_DIR}/home/Two.todo.md")   \
-    <(printf "# [x] Example todo description two.\\n")
-
-  diff                                    \
-    <(cat "${NB_DIR}/home/Three.todo.md") \
-    <(printf "# [x] Example todo description three.\\n")
-
-  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
-  do
-    sleep 1
-  done
-  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Done: Two.todo.md'
-}
-
-# do ##########################################################################
+# do todo #####################################################################
 
 @test "'do <notebook>:<folder>/<id>' exits with 0, updates todo, and commits." {
   {
@@ -278,101 +184,169 @@ Done:\ .*\[.*2.*\].*\ ✅\ .*\[.*x.*\].*\ Example\ todo\ description\ two\.  ]]
   git -C "${NB_DIR}/home" log | grep -v -q '\[nb\] Done'
 }
 
-# open alias ##################################################################
+# do task #####################################################################
 
-@test "'open <id>' exits with 0, updates todo, and commits." {
+@test "'tasks do <folder>/<id> <task-number>' with non-todo and open task with no space in brackets exits with 0 and marks task done." {
   {
     "${_NB}" init
 
-    "${_NB}" add                                        \
-      --content "# [ ] Example todo description one."   \
-      --filename "One.todo.md"
+    "${_NB}" add                              \
+      --filename "Example Folder/File One.md" \
+      --content "$(cat <<HEREDOC
+# Example Title One
 
-    "${_NB}" add                                        \
-      --content "# [ ] Example todo description two."   \
-      --filename "Two.todo.md"
+- [ ] Task one.
+- [] Task two.
+- [x] Task three.
+- [ ] Task four.
 
-    "${_NB}" add                                        \
-      --content "# [x] Example todo description three." \
-      --filename "Three.todo.md"
+## Tags
+
+#tag1 #tag2
+HEREDOC
+)"
   }
 
-  run "${_NB}" "open" 3
+  run "${_NB}" "do" Example\ Folder/1 2
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+  cat "${NB_DIR}/home/Example Folder/File One.md"
 
-  [[ "${status}"    -eq 0       ]]
-  [[ "${output}"    =~  \
-Undone:\ .*\[.*3.*\].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ three\. ]]
+  [[    "${status}"     -eq 0                                     ]]
+  [[    "${#lines[@]}"  -eq 3                                     ]]
 
-  diff                                    \
-    <(cat "${NB_DIR}/home/One.todo.md")   \
-    <(printf "# [ ] Example todo description one.\\n")
-
-  diff                                    \
-    <(cat "${NB_DIR}/home/Two.todo.md")   \
-    <(printf "# [ ] Example todo description two.\\n")
-
-  diff                                    \
-    <(cat "${NB_DIR}/home/Three.todo.md") \
-    <(printf "# [ ] Example todo description three.\\n")
-
-  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
-  do
-    sleep 1
-  done
-  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Undone: Three.todo.md'
+  [[    "${lines[0]}"   =~  .*\[.*Example\ Folder/1.*].*\ Example\ Title\ One ]]
+  [[    "${lines[1]}"   =~  [^-]------------------------------------[^-]      ]]
+  [[    "${lines[2]}"   =~  \
+Done:\ .*\[.*Example\ Folder/1\ 2.*\].*\ .*[.*x.*].*\ Task\ two\.             ]]
 }
 
-# undone alias ################################################################
-
-@test "'undone <id>' exits with 0, updates todo, and commits." {
+@test "'tasks do <folder>/<id> <task-number>' with non-todo and open task with space in brackets exits with 0 and marks task done." {
   {
     "${_NB}" init
 
-    "${_NB}" add                                        \
-      --content "# [ ] Example todo description one."   \
-      --filename "One.todo.md"
+    "${_NB}" add                              \
+      --filename "Example Folder/File One.md" \
+      --content "$(cat <<HEREDOC
+# Example Title One
 
-    "${_NB}" add                                        \
-      --content "# [ ] Example todo description two."   \
-      --filename "Two.todo.md"
+- [ ] Task one.
+- [ ] Task two.
+- [x] Task three.
+- [ ] Task four.
 
-    "${_NB}" add                                        \
-      --content "# [x] Example todo description three." \
-      --filename "Three.todo.md"
+## Tags
+
+#tag1 #tag2
+HEREDOC
+)"
   }
 
-  run "${_NB}" "undone" 3
+  run "${_NB}" "do" Example\ Folder/1 2
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+  cat "${NB_DIR}/home/Example Folder/File One.md"
 
-  [[ "${status}"    -eq 0       ]]
-  [[ "${output}"    =~  \
-Undone:\ .*\[.*3.*\].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ three\. ]]
+  [[    "${status}"     -eq 0                                     ]]
+  [[    "${#lines[@]}"  -eq 3                                     ]]
 
-  diff                                    \
-    <(cat "${NB_DIR}/home/One.todo.md")   \
-    <(printf "# [ ] Example todo description one.\\n")
-
-  diff                                    \
-    <(cat "${NB_DIR}/home/Two.todo.md")   \
-    <(printf "# [ ] Example todo description two.\\n")
-
-  diff                                    \
-    <(cat "${NB_DIR}/home/Three.todo.md") \
-    <(printf "# [ ] Example todo description three.\\n")
-
-  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
-  do
-    sleep 1
-  done
-  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Undone: Three.todo.md'
+  [[    "${lines[0]}"   =~  .*\[.*Example\ Folder/1.*].*\ Example\ Title\ One ]]
+  [[    "${lines[1]}"   =~  [^-]------------------------------------[^-]      ]]
+  [[    "${lines[2]}"   =~  \
+Done:\ .*\[.*Example\ Folder/1\ 2.*\].*\ .*[.*x.*].*\ Task\ two\.             ]]
 }
 
-# undo ########################################################################
+@test "'tasks do <folder>/<id> <task-number>' with open task with no space in brackets exits with 0 and marks task done." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add                                    \
+      --filename "Example Folder/Todo One.todo.md"  \
+      --content "$(cat <<HEREDOC
+# [ ] Example todo description one.
+
+## Due
+
+2200-02-02
+
+## Tasks
+
+- [ ] Task one.
+- [] Task two.
+- [x] Task three.
+- [ ] Task four.
+
+## Tags
+
+#tag1 #tag2
+HEREDOC
+)"
+  }
+
+  run "${_NB}" "do" Example\ Folder/1 2
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  cat "${NB_DIR}/home/Example Folder/Todo One.todo.md"
+
+  [[    "${status}"     -eq 0                                     ]]
+  [[    "${#lines[@]}"  -eq 3                                     ]]
+
+  [[    "${lines[0]}"   =~  \
+.*\[.*Example\ Folder/1.*].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ one\.  ]]
+  [[    "${lines[1]}"   =~  .*------------------------------------.*              ]]
+
+  [[    "${lines[2]}"   =~  \
+Done:\ .*\[.*Example\ Folder/1\ 2.*\].*\ .*[.*x.*].*\ Task\ two\. ]]
+}
+
+@test "'tasks do <folder>/<id> <task-number>' with open task with space in brackets exits with 0 and marks task done." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add                                    \
+      --filename "Example Folder/Todo One.todo.md"  \
+      --content "$(cat <<HEREDOC
+# [ ] Example todo description one.
+
+## Due
+
+2200-02-02
+
+## Tasks
+
+- [ ] Task one.
+- [ ] Task two.
+- [x] Task three.
+- [ ] Task four.
+
+## Tags
+
+#tag1 #tag2
+HEREDOC
+)"
+  }
+
+  run "${_NB}" tasks "do" Example\ Folder/1 2
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  cat "${NB_DIR}/home/Example Folder/Todo One.todo.md"
+
+  [[    "${status}"     -eq 0                                     ]]
+  [[    "${#lines[@]}"  -eq 3                                     ]]
+
+  [[    "${lines[0]}"   =~  \
+.*\[.*Example\ Folder/1.*].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ one\.  ]]
+  [[    "${lines[1]}"   =~  .*------------------------------------.*              ]]
+
+  [[    "${lines[2]}"   =~  \
+Done:\ .*\[.*Example\ Folder/1\ 2.*\].*\ .*[.*x.*].*\ Task\ two\. ]]
+}
+
+# undo todo ###################################################################
 
 @test "'undo <notebook>:<folder>/<id>' exits with 0, updates todo, and commits." {
   {
@@ -493,4 +467,274 @@ Undone:\ .*\[.*3.*\].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ three\
     sleep 1
   done
   git -C "${NB_DIR}/home" log | grep -v -q '\[nb\] Undone'
+}
+
+# undo task ###################################################################
+
+@test "'undo <folder>/<id> <task-number>' with non-todo and closed task exits with 0 and marks task done." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add                              \
+      --filename "Example Folder/File One.md" \
+      --content "$(cat <<HEREDOC
+# Example Title One
+
+- [ ] Task one.
+- [ ] Task two.
+- [x] Task three.
+- [ ] Task four.
+
+## Tags
+
+#tag1 #tag2
+HEREDOC
+)"
+  }
+
+  run "${_NB}" "undo" Example\ Folder/1 3
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  cat "${NB_DIR}/home/Example Folder/File One.md"
+
+  [[    "${status}"     -eq 0                                     ]]
+  [[    "${#lines[@]}"  -eq 3                                     ]]
+
+  [[    "${lines[0]}"   =~  .*\[.*Example\ Folder/1.*].*\ Example\ Title\ One ]]
+  [[    "${lines[1]}"   =~  [^-]------------------------------------[^-]      ]]
+  [[    "${lines[2]}"   =~  \
+Undone:\ .*\[.*Example\ Folder/1\ 3.*\].*\ .*[\ ].*\ Task\ three\.            ]]
+}
+
+@test "'undo <folder>/<id> <task-number>' with closed task exits with 0 and marks task open." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add                                    \
+      --filename "Example Folder/Todo One.todo.md"  \
+      --content "$(cat <<HEREDOC
+# [ ] Example todo description one.
+
+## Due
+
+2200-02-02
+
+## Tasks
+
+- [ ] Task one.
+- [ ] Task two.
+- [x] Task three.
+- [ ] Task four.
+
+## Tags
+
+#tag1 #tag2
+HEREDOC
+)"
+  }
+
+  run "${_NB}" "undo" Example\ Folder/1 3
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  cat "${NB_DIR}/home/Example Folder/Todo One.todo.md"
+
+  [[    "${status}"     -eq 0                                       ]]
+  [[    "${#lines[@]}"  -eq 3                                       ]]
+
+  [[    "${lines[0]}"   =~  \
+.*\[.*Example\ Folder/1.*].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ one\.  ]]
+  [[    "${lines[1]}"   =~  .*------------------------------------.*              ]]
+
+  [[    "${lines[2]}"   =~  \
+Undone:\ .*\[.*Example\ Folder/1\ 3.*\].*\ .*[\ ].*\ Task\ three\.  ]]
+}
+
+# close alias #################################################################
+
+@test "'close <id>' exits with 0, updates todo, and commits." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add                                        \
+      --content "# [ ] Example todo description one."   \
+      --filename "One.todo.md"
+
+    "${_NB}" add                                        \
+      --content "# [ ] Example todo description two."   \
+      --filename "Two.todo.md"
+
+    "${_NB}" add                                        \
+      --content "# [x] Example todo description three." \
+      --filename "Three.todo.md"
+  }
+
+  run "${_NB}" "close" 2
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0       ]]
+  [[ "${output}"    =~  \
+Done:\ .*\[.*2.*\].*\ ✅\ .*\[.*x.*\].*\ Example\ todo\ description\ two\.  ]]
+
+  diff                                    \
+    <(cat "${NB_DIR}/home/One.todo.md")   \
+    <(printf "# [ ] Example todo description one.\\n")
+
+  diff                                    \
+    <(cat "${NB_DIR}/home/Two.todo.md")   \
+    <(printf "# [x] Example todo description two.\\n")
+
+  diff                                    \
+    <(cat "${NB_DIR}/home/Three.todo.md") \
+    <(printf "# [x] Example todo description three.\\n")
+
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Done: Two.todo.md'
+}
+
+# done alias ##################################################################
+
+@test "'done <id>' exits with 0, updates todo, and commits." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add                                        \
+      --content "# [ ] Example todo description one."   \
+      --filename "One.todo.md"
+
+    "${_NB}" add                                        \
+      --content "# [ ] Example todo description two."   \
+      --filename "Two.todo.md"
+
+    "${_NB}" add                                        \
+      --content "# [x] Example todo description three." \
+      --filename "Three.todo.md"
+  }
+
+  run "${_NB}" "done" 2
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0       ]]
+  [[ "${output}"    =~  \
+Done:\ .*\[.*2.*\].*\ ✅\ .*\[.*x.*\].*\ Example\ todo\ description\ two\.  ]]
+
+  diff                                    \
+    <(cat "${NB_DIR}/home/One.todo.md")   \
+    <(printf "# [ ] Example todo description one.\\n")
+
+  diff                                    \
+    <(cat "${NB_DIR}/home/Two.todo.md")   \
+    <(printf "# [x] Example todo description two.\\n")
+
+  diff                                    \
+    <(cat "${NB_DIR}/home/Three.todo.md") \
+    <(printf "# [x] Example todo description three.\\n")
+
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Done: Two.todo.md'
+}
+
+# open alias ##################################################################
+
+@test "'open <id>' exits with 0, updates todo, and commits." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add                                        \
+      --content "# [ ] Example todo description one."   \
+      --filename "One.todo.md"
+
+    "${_NB}" add                                        \
+      --content "# [ ] Example todo description two."   \
+      --filename "Two.todo.md"
+
+    "${_NB}" add                                        \
+      --content "# [x] Example todo description three." \
+      --filename "Three.todo.md"
+  }
+
+  run "${_NB}" "open" 3
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0       ]]
+  [[ "${output}"    =~  \
+Undone:\ .*\[.*3.*\].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ three\. ]]
+
+  diff                                    \
+    <(cat "${NB_DIR}/home/One.todo.md")   \
+    <(printf "# [ ] Example todo description one.\\n")
+
+  diff                                    \
+    <(cat "${NB_DIR}/home/Two.todo.md")   \
+    <(printf "# [ ] Example todo description two.\\n")
+
+  diff                                    \
+    <(cat "${NB_DIR}/home/Three.todo.md") \
+    <(printf "# [ ] Example todo description three.\\n")
+
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Undone: Three.todo.md'
+}
+
+# undone alias ################################################################
+
+@test "'undone <id>' exits with 0, updates todo, and commits." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add                                        \
+      --content "# [ ] Example todo description one."   \
+      --filename "One.todo.md"
+
+    "${_NB}" add                                        \
+      --content "# [ ] Example todo description two."   \
+      --filename "Two.todo.md"
+
+    "${_NB}" add                                        \
+      --content "# [x] Example todo description three." \
+      --filename "Three.todo.md"
+  }
+
+  run "${_NB}" "undone" 3
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0       ]]
+  [[ "${output}"    =~  \
+Undone:\ .*\[.*3.*\].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ three\. ]]
+
+  diff                                    \
+    <(cat "${NB_DIR}/home/One.todo.md")   \
+    <(printf "# [ ] Example todo description one.\\n")
+
+  diff                                    \
+    <(cat "${NB_DIR}/home/Two.todo.md")   \
+    <(printf "# [ ] Example todo description two.\\n")
+
+  diff                                    \
+    <(cat "${NB_DIR}/home/Three.todo.md") \
+    <(printf "# [ ] Example todo description three.\\n")
+
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Undone: Three.todo.md'
 }
