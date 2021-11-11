@@ -22154,10 +22154,10 @@ _todo() {
         shift
         ;;
       *)
-        if [[ "${_action:-}" == "add" ]]
+        if [[ "${_action:-}" == "add"       ]]
         then
           case "${1:-}" in
-            --edit) _arguments+=("${1:-}") ;;
+            --edit) _arguments+=("${1:-}")  ;;
             -*)
               _arguments+=("${1:-}")
 
@@ -22187,7 +22187,7 @@ _todo() {
           done)
             local _selector_path=
 
-            if [[ -n "${2:-}"     ]]
+            if [[ -n "${2:-}"                         ]]
             then
               _selector_path="$(_show "${2:-}" --path)"
             fi
@@ -22265,7 +22265,7 @@ _todo() {
         fi
       fi
 
-      if [[ -z "${_title:-}" ]]
+      if [[ -z "${_title:-}"        ]]
       then
         _exit_1 _help "todo"
       fi
@@ -22833,7 +22833,7 @@ HEREDOC
 
       if [[ -w "${_current_path}" ]]
       then
-        cat  "${_temp_file}" > "${_current_path}"
+        cat "${_temp_file}" > "${_current_path}"
       else
         cat "${_temp_file}" | sudo tee "${_current_path}" > /dev/null
       fi
