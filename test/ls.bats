@@ -1280,8 +1280,8 @@ HEREDOC
   [[ "${lines[6]}"  =~  nb\ \<url\>           ]]
   [[ "${lines[6]}"  =~  nb\ edit\ \<id\>      ]]
 
-  [[ "${output}"    =~  nb\ list\ \·          ]] ||
-    [[ "${output}"  =~  nb\ list${_NEWLINE}   ]]
+  [[ "${output}"    =~  nb\ browse\ \·        ]] ||
+    [[ "${output}"  =~  nb\ browse${_NEWLINE} ]]
 
   [[ "${output}"    =~  nb\ search\ \<query\> ]]
 
@@ -1298,8 +1298,8 @@ HEREDOC
   [[ "${output}"    =~  nb\ Example\\\ Notebook:1/\ \<url\>           ]]
   [[ "${output}"    =~  nb\ edit\ Example\\\ Notebook:1/\<id\>        ]]
 
-  [[ "${output}"    =~  nb\ list\ Example\\\ Notebook:1/\ \·          ]] ||
-    [[ "${output}"  =~  nb\ list\ Example\\\ Notebook:1/${_NEWLINE}   ]]
+  [[ "${output}"    =~  nb\ browse\ Example\\\ Notebook:1/\ \·        ]] ||
+    [[ "${output}"  =~  nb\ browse\ Example\\\ Notebook:1/${_NEWLINE} ]]
 
   [[ "${output}"    =~  nb\ search\ Example\\\ Notebook:1/\ \<query\> ]]
 }

@@ -5777,9 +5777,10 @@ _ls() {
       "${_ME} edit ${_maybe_selector_scope}<id>"
       "${_ME} show ${_maybe_selector_scope}<id>"
       "${_ME} open ${_maybe_selector_scope}<id>"
-      "${_ME} list${_maybe_selector_scope_padded_left}"
-      "${_ME} search ${_maybe_selector_scope_padded_right}<query>"
       "${_ME} browse${_maybe_selector_scope_padded_left}"
+      "${_ME} todo${_maybe_selector_scope_padded_left}"
+      "${_ME} tasks${_maybe_selector_scope_padded_left}"
+      "${_ME} search ${_maybe_selector_scope_padded_right}<query>"
       "${_notebook_command}"
       "${_ME} settings"
       "${_ME} help"
@@ -5798,6 +5799,7 @@ _ls() {
       "$(_color_secondary "${_commands_raw[9]}")"
       "$(_color_secondary "${_commands_raw[10]}")"
       "$(_color_secondary "${_commands_raw[11]}")"
+      "$(_color_secondary "${_commands_raw[12]}")"
     )
 
     _wrap off
