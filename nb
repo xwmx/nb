@@ -2403,7 +2403,7 @@ _pager() {
 # _print_line()
 #
 # Usage:
-#   _print_line <text> [--dim]
+#   _print_line <text> [--dim] [--no-wrap] [--visible-length [<extra-length>]
 #
 # Description:
 #   Print a line of dashes the length of <text>.
@@ -2411,17 +2411,70 @@ _pager() {
 # More Information:
 #   https://wiki.bash-hackers.org/commands/builtin/printf
 _print_line() {
-  local _text="${1:-}"
-  local _text_length="${#_text}"
-  local _line=
-  printf -v _line "%*s" "${_text_length}" ""
+  local _dim=0
+  local _extra_length=0
+  local _text=
+  local _visible_length=0
+  local _wrap_line=1
 
-  if [[ "${2:-}" == "--dim" ]]
+  while ((${#}))
+  do
+    case "${1:-}" in
+      --dim*)   _dim=1                ;;
+      --no*w*)  _wrap_line=0          ;;
+      --vis*)   _visible_length=1     ;;
+      *)
+        case "${_text:-}" in
+          '') _text="${1:-}"          ;;
+          *)  _extra_length="${1:-}"  ;;
+        esac
+        ;;
+    esac
+
+    shift
+  done
+
+  local _text_length=
+
+  if ((_visible_length))
+  then
+    _text_length="$(
+      _get_visible_length "${_text:-}" "${_extra_length:-0}"
+    )"
+  else
+    _text_length="${#_text}"
+  fi
+
+  local _full_width_line=0
+
+  if ! ((_wrap_line)) && {
+       [[ -z "${_text_length:-}"                    ]] ||
+       [[    "${_text_length:-}" -gt "${_COLUMNS}"  ]]
+     }
+  then
+    _full_width_line=1
+  fi
+
+  local _line=
+
+  if ((_full_width_line))
+  then
+    printf -v _line "%*s" "${_COLUMNS}" ""
+  else
+    printf -v _line "%*s" "${_text_length}" ""
+  fi
+
+  if ((_dim))
   then
     _color_dim "${_line// /-}"
   else
     _color_secondary "${_line// /-}"
-  fi
+    fi |  if ((_full_width_line))
+          then
+            tr -d '\n'
+          else
+            cat
+          fi
 }
 
 # _print_padding()
@@ -5447,20 +5500,13 @@ ${_TPUT_SGR0}"
          [[ "${_excerpt_length}" =~ ^[1-9] ]] &&
          _file_is_text "${_list_path}/${__basename}"
       then # excerpt is specified with a non-zero digit, required by `head`
-        local _visible_info_line_length=
-        _visible_info_line_length="$(
-          _get_visible_length "${_info_line:-}" "${_extra_length:-0}"
-        )"
+        _print_line "${_info_line:-}"   \
+          --no-wrap                     \
+          --visible-length "${_extra_length:-0}"
 
-        if [[ -z "${_visible_info_line_length:-}"               ]] ||
-           [[ "${_visible_info_line_length}" -gt "${_COLUMNS}"  ]]
-        then
-          _print_line "$(printf "%-${_COLUMNS}s" '.')" | tr -d '\n'
-        else
-          _print_line "$(printf "%-${_visible_info_line_length}s" '.')"
-        fi
         head -n "${_excerpt_length}" "${_list_path}/${__basename}" \
           | _highlight_syntax_if_available "${__basename##*.}"
+
         printf "\\n"
       fi
 
@@ -22475,18 +22521,9 @@ _todo() {
             *)                            _extra_length="-1"  ;;
           esac
 
-          local _visible_info_line_length=
-          _visible_info_line_length="$(
-            _get_visible_length "${_info_line_no_color:-}" "${_extra_length:-0}"
-          )"
-
-          if [[ -z "${_visible_info_line_length:-}"               ]] ||
-             [[ "${_visible_info_line_length}" -gt "${_COLUMNS}"  ]]
-          then
-            _print_line "$(printf "%-${_COLUMNS}s" '.')" | tr -d '\n'
-          else
-            _print_line "$(printf "%-${_visible_info_line_length}s" '.')"
-          fi
+          _print_line "${_info_line_no_color:-}"  \
+            --no-wrap                             \
+            --visible-length "${_extra_length:-0}"
 
           {
             grep --color=never          \
