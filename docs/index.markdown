@@ -8042,8 +8042,12 @@ See Also:
   nb help undo
 
 Examples:
+  nb tasks
+  nb tasks open
+  nb tasks closed
   nb tasks 123
-  nb tasks open example:sample/321
+  nb example:tasks open
+  nb tasks closed sample/
   nb tasks closed demo:456
 ```
 
@@ -8101,6 +8105,9 @@ Examples:
   nb todo add "Sample title." --tags tag1,tag2 --related demo:567
   nb todos
   nb todos open
+  nb todos closed
+  nb example:todos open
+  nb todos closed sample/
 
 Alias:
   nb todos

@@ -22012,8 +22012,12 @@ $(_color_primary "See Also"):
   ${_ME} help undo
 
 $(_color_primary "Examples"):
+  ${_ME} tasks
+  ${_ME} tasks open
+  ${_ME} tasks closed
   ${_ME} tasks 123
-  ${_ME} tasks open example:sample/321
+  ${_ME} example:tasks open
+  ${_ME} tasks closed sample/
   ${_ME} tasks closed demo:456
 HEREDOC
 }
@@ -22071,6 +22075,9 @@ $(_color_primary "Examples"):
   ${_ME} todo add "Sample title." --tags tag1,tag2 --related demo:567
   ${_ME} todos
   ${_ME} todos open
+  ${_ME} todos closed
+  ${_ME} example:todos open
+  ${_ME} todos closed sample/
 
 $(_color_primary "Alias"):
   ${_ME} todos
