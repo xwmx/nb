@@ -2509,7 +2509,7 @@ Example note content.
 
 Tags added to [bookmarks](#bookmarks) with
 `nb <url> --tags` and `nb bookmark <url> --tags`
-are placed in a _Tags_ section:
+are placed in a `## Tags` section:
 
 ```bash
 ❯ nb https://example.com --tags tag1,tag2
@@ -2542,7 +2542,7 @@ permission.
 
 Tags added to [todos](#-todos) with
 `nb todo add --tags`
-are placed in a _Tags_ section:
+are placed in a `## Tags` section:
 
 ```bash
 ❯ nb todo add --tags tag1,tag2 "Example todo."
