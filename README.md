@@ -2226,7 +2226,7 @@ in terminal and GUI web browers with [`nb browse`](#browse).
 
 #### Listing Todos
 
-List todos in with [`nb todos`](#tasks):
+List todos in with [`nb todos`](#todo):
 
 ```bash
 # list todos in the current notebook
