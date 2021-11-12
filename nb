@@ -12411,7 +12411,7 @@ _completions() {
           --variable=completionsdir bash-completion 2>/dev/null || true
       )"
 
-      if [[ -n "${_maybe_path:-}"         ]]
+      if [[ -n "${_maybe_path:-}"               ]]
       then
         _bash_completion_path="${_maybe_path}"
       fi
@@ -12423,8 +12423,8 @@ _completions() {
       _bash_completion_path="/usr/local/etc/bash_completion.d"
     fi
 
-    if [[ -z "${_bash_completion_path:-}" ]] &&
-       [[ -d "/etc/bash_completion.d"     ]]
+    if [[ -z "${_bash_completion_path:-}"       ]] &&
+       [[ -d "/etc/bash_completion.d"           ]]
     then
       _bash_completion_path="/etc/bash_completion.d"
     fi
@@ -12435,14 +12435,14 @@ _completions() {
   # Usage: _completions_install [--download]
   _completions_install() {
     local _download=0
-    if [[ "${1:-}" == "--download"        ]]
+    if [[ "${1:-}" == "--download"  ]]
     then
       _download=1
     fi
 
     local _my_path="${0}"
 
-    if [[ -L "${_my_path}"  ]]
+    if [[ -L "${_my_path}"          ]]
     then
       _my_path="$(_resolve_symlink "${_my_path}")"
     fi
@@ -12505,17 +12505,19 @@ HEREDOC
             ;;
         esac
 
-        if [[ -n "${_completion_path:-}"  ]] &&
-           [[ -d "${_completion_path}"    ]]
+        if [[ -n "${_completion_path:-}"        ]] &&
+           [[ -d "${_completion_path}"          ]]
         then
-          if [[ -w "${_completion_path}"  ]]
+          if [[ -w "${_completion_path}"        ]]
           then
-            if [[ ! -e "${_completion_target}" ]]
+            if [[ ! -e "${_completion_target}"  ]]
             then
-              cp                          \
-                "${_completion_source}"   \
+              cp                                \
+                "${_completion_source}"         \
                 "${_completion_target}"
+
               chmod +r "${_completion_target}"
+
               printf "Completion script installed: %s\\n" \
                 "${_completion_target}"
             else
@@ -12651,7 +12653,7 @@ _delete() {
         _print_prompt_list=1
         ;;
       *)
-        [[ -n "${__arg:-}"  ]] && _selectors+=("${__arg:-}")
+        [[ -n "${__arg:-}"  ]]  && _selectors+=("${__arg:-}")
         ;;
     esac
   done
@@ -12666,7 +12668,7 @@ _delete() {
   local __selector=
   for   __selector in "${_selectors[@]:-}"
   do
-    [[ -z "${__selector:-}" ]] && continue
+    [[ -z "${__selector:-}" ]]  && continue
 
     local _selector_path=
     _selector_path="$(_show "${__selector:-}" --path)"
@@ -12679,9 +12681,9 @@ _delete() {
     fi
   done
 
-  if ((_print_prompt_list)) || ! ((_force))
+  if ((_print_prompt_list))     || ! ((_force))
   then
-    if [[ "${#_selectors[@]}" == 1    ]]
+    if [[ "${#_selectors[@]}"   == 1  ]]
     then
       printf "Deleting: %s\\n" "$(_show "${_selectors[0]:-}" --info-line)"
     else
