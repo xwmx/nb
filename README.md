@@ -1707,7 +1707,8 @@ permission.
 
 Add related URLs and [linked](#-linking) [selectors](#-selectors)
 to a `## Related` section using the
-[`-r (<url> | <selector>)` / `--related (<url> | <selector>)`](#bookmark)
+[`-r (<url> | <selector>)`](#bookmark) /
+[`--related (<url> | <selector>)`](#bookmark)
 option:
 
 ```bash
@@ -1740,7 +1741,8 @@ permission.
 ```
 
 Bookmarks can be tagged using the
-[`-t <tag1>,<tag2>...` / `--tags <tag1>,<tag2>...`](#bookmark) option.
+[`-t <tag1>,<tag2>...`](#bookmark) /
+[`--tags <tag1>,<tag2>...`](#bookmark) option.
 Tags are converted into [#hashtags](#-tagging):
 
 ```bash
@@ -1771,7 +1773,8 @@ permission.
 [More information\...](https://www.iana.org/domains/example)
 ```
 
-[Search](#-search) for tagged bookmarks with [`nb search` / `nb q`](#search):
+[Search](#-search) for tagged bookmarks with
+[`nb search`](#search) / [`nb q`](#search):
 
 ```bash
 nb search --tag tag1
@@ -1844,8 +1847,8 @@ home
 [1] 🔖 Bookmark One (example.com)
 ```
 
-Use the [`--type <type>` / `--<type>`](#ls) option as a filter to display
-only bookmarks:
+Use the [`--type <type>`](#ls) / [`--<type>`](#ls)
+option as a filter to display only bookmarks:
 
 ```bash
 ❯ nb --type bookmark
@@ -2026,8 +2029,8 @@ an individual command:
 `nb show` and `nb edit` can also be used to view and edit bookmark files,
 which include the cached page converted to Markdown.
 
-`nb show <id> --render` / `nb show <id> -r` displays the bookmark file
-converted to HTML in the terminal web browser,
+[`nb show <id> --render`](#show) / [`nb show <id> -r`](#show)
+displays the bookmark file converted to HTML in the terminal web browser,
 including all bookmark fields and the cached page content,
 providing a cleaned-up, distraction-free, locally-served view of
 the page content along with all of your notes.
@@ -2201,7 +2204,7 @@ Added: [7] ✔️ [ ] Example todo seven.
 
 Related URLs and [linked](#-linking) [selectors](#-selectors)
 can be added to a `## Related` field using the
-[`-r (<url> | <selector>)` / `--related (<url> | <selector>)`](#todo)
+[`-r (<url> | <selector>)`](#todo) / [`--related (<url> | <selector>)`](#todo)
 option:
 
 ```bash
@@ -2217,7 +2220,8 @@ Added: [4] ✔️ [ ] Example todo four.
 - <https://example.com>
 ```
 
-[Tags](#-tagging) can be added to todos with the [`--tags <tag1>,<tag2>...`](#todo) option:
+[Tags](#-tagging) can be added to todos with the
+[`--tags <tag1>,<tag2>...`](#todo) option:
 
 ```bash
 ❯ nb todo add "Example todo five." --tags tag1,tag2
@@ -2576,7 +2580,8 @@ nb example/ --tags
 nb sample:123 --tags
 ```
 
-Tagged items can be [searched](#-search) with [`nb search` / `nb q`](#search):
+Tagged items can be [searched](#-search) with
+[`nb search`](#search) / [`nb q`](#search):
 
 ```bash
 # search for items tagged with "#tag1"
