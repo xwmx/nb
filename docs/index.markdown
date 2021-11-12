@@ -391,7 +391,8 @@ regardless of the current working directory.
   </sup>
 </p>
 
-Use [`nb add`](#add) (shortcuts: `nb a`, `nb +`) to create new notes:
+Use [`nb add`](#add) (shortcuts: [`nb a`](#add), [`nb +`](#add))
+to create new notes:
 
 ```bash
 # create a new note in your text editor
@@ -416,7 +417,7 @@ nb example:add "This is a note."
 nb add sample/
 ```
 
-`nb add` with no arguments or input will open the new, blank note
+[`nb add`](#add) with no arguments or input will open the new, blank note
 in your environment's preferred text editor.
 You can change your editor using
 the `$EDITOR` environment variable
@@ -427,7 +428,7 @@ files by default. The default file type can be changed to
 whatever you like
 using [`nb set default_extension`](#default_extension).
 
-`nb add` has intelligent argument parsing
+[`nb add`](#add) has intelligent argument parsing
 and behaves differently depending on the types of arguments it receives.
 When a filename with extension is specified,
 a new note with that filename is opened in the editor:
@@ -447,11 +448,11 @@ Added: [1] 20200101000000.md
 [`nb add <string>`](#add) is useful for quickly jotting down notes directly
 via the command line. Quoting content is optional, but recommended.
 
-When no filename is specified, `nb add` uses the current datetime as
+When no filename is specified, [`nb add`](#add) uses the current datetime as
 the filename.
 
-`nb add` can also receive piped content, which behaves the same as
-`nb add <string>`:
+[`nb add`](#add) can also receive piped content, which behaves the same as
+[`nb add <string>`](#add):
 
 ```bash
 # create a new note containing "Note content."
@@ -598,13 +599,13 @@ Option content.
 Clipboard content.
 ```
 
-For a full list of options available for `nb add`, run
+For a full list of options available for [`nb add`](#add), run
 [`nb help add`](#add).
 
 ##### Password-Protected Encrypted Notes and Bookmarks
 
 Password-protected notes and [bookmarks](#-bookmarks) are
-created with the `-e` / `--encrypt` flag and
+created with the [`-e`](#add) / [`--encrypt`](#add) flag and
 encrypted with AES-256 using OpenSSL by default.
 GPG is also supported and can be configured with
 [`nb set encryption_tool`](#encryption_tool).
@@ -623,7 +624,7 @@ you aren't dependent on `nb` to decrypt your files.
 ##### Shortcut Aliases: `nb a`, `nb +`
 
 `nb` includes shortcuts for many commands, including
-`nb a` and `nb +` for `nb add`:
+[`nb a`](#add) and [`nb +`](#add) for [`nb add`](#add):
 
 ```bash
 # create a new note in your text editor
@@ -644,7 +645,8 @@ nb example:a
 
 ##### Other Aliases: `nb create`, `nb new`
 
-`nb add` can also be invoked with `nb create` and `nb new` for convenience:
+[`nb add`](#add) can also be invoked with
+[`nb create`](#add) and [`nb new`](#add) for convenience:
 
 ```bash
 # create a new note containing "Example note content."
@@ -685,7 +687,7 @@ create a new note at that location:
 nb browse add "example/file.md"
 ```
 
-`nb browse add` includes options for quickly
+[`nb browse add`](#browse) includes options for quickly
 pre-populating new notes with content:
 
 ```bash
@@ -706,7 +708,7 @@ pre-populating new notes with content:
 [add]
 ```
 
-`nb browse add` can also be opened with
+[`nb browse add`](#browse) can also be opened with
 [`nb add --browse`](#add) / [`nb a -b`](#add).
 
 For more information, see [Browsing](#-browsing).
@@ -733,7 +735,7 @@ To list notes and notebooks, run [`nb ls`](#ls) (shortcut alias: `nb`):
 Notebooks are listed above the line,
 with the current notebook highlighted and/or underlined,
 depending on terminal capabilities.
-`nb ls` also includes a footer with example commands for easy reference.
+[`nb ls`](#ls) also includes a footer with example commands for easy reference.
 The notebook header and command footer can be configured or hidden with
 [`nb set header`](#header) and
 [`nb set footer`](#footer).
@@ -988,7 +990,7 @@ Sample Title
 title: Demo Title
 ```
 
-`nb` and `nb ls` display the 15 most recently modified items.
+`nb` and [`nb ls`](#ls) display the 15 most recently modified items.
 The default limit can be changed with [`nb set limit <number>`](#limit).
 To list a different number of items on a per-command basis, use the
 [`-n <limit>`](#ls),
@@ -1034,9 +1036,9 @@ Lists can be paginated with
 [`-p <number>`](#ls) / [`--page <number>`](#ls),
 which paginates by the value of [`nb set limit`](#limit) by
 default, or the value of
-`-n <limit>`,
-`--limit <limit>`,
-or `--<limit>`
+[`-n <limit>`](#ls),
+[`--limit <limit>`](#ls),
+or [`--<limit>`](#ls)
 when present:
 
 ```bash
@@ -1072,9 +1074,9 @@ NB_LIMIT set to 3
 [1] Example One
 ```
 
-`nb ls` is a combination of
+[`nb ls`](#ls) is a combination of
 [`nb notebooks`](#notebooks) and [`nb list`](#list)
-in one view and accepts the same arguments as `nb list`,
+in one view and accepts the same arguments as [`nb list`](#list),
 which lists only notes without the notebook list and with no limit by default:
 
 ```bash
@@ -1125,7 +1127,7 @@ For more information, see [Browsing](#-browsing).
 </p>
 
 You can edit an item in your editor with
-[`nb edit`](#edit) (shortcut: `nb e`):
+[`nb edit`](#edit) (shortcut: [`nb e`](#edit)):
 
 ```bash
 # edit note by id
@@ -1147,8 +1149,8 @@ nb example:12 edit
 nb example:edit 12
 ```
 
-`edit` and other subcommands that take an identifier can be called with
-the identifier and subcommand name reversed:
+[`edit`](#edit) and other subcommands that take an identifier
+can be called with the identifier and subcommand name reversed:
 
 ```bash
 # edit note by id
@@ -1172,7 +1174,7 @@ nb edit 1 --content "Content to append."
 Use the [`--overwrite`](#edit) option to overwrite existing file content
 and the [`--prepend`](#edit) option to prepend the new content before existing content.
 
-When content is piped or specified with `--content <content>`,
+When content is piped or specified with [`--content <content>`](#edit),
 use the [`--edit`](#edit) flag to open the file in the editor
 before the change is committed.
 
@@ -1184,7 +1186,7 @@ and then automatically reencrypt the note when you are done editing.
 
 ##### Shortcut Alias: `nb e`
 
-`nb edit` can be called by the shortcut alias, `nb e`:
+[`nb edit`](#edit) can be called by the shortcut alias, [`nb e`](#edit):
 
 ```bash
 # edit note by id
@@ -1209,7 +1211,7 @@ nb example:12 e
 nb example:e 12
 ```
 
-For `nb edit` help information, run [`nb help edit`](#edit).
+For [`nb edit`](#edit) help information, run [`nb help edit`](#edit).
 
 ##### Editing with `browse`
 
@@ -1256,7 +1258,8 @@ For more information, see
   </sup>
 </p>
 
-Notes and other items can be viewed using [`nb show`](#show) (shortcut: `nb s`):
+Notes and other items can be viewed using
+[`nb show`](#show) (shortcut: [`nb s`](#show)):
 
 ```bash
 # show note by id
@@ -1281,7 +1284,7 @@ nb example:12 show
 nb example:show 12
 ```
 
-By default, `nb show` will open the note in
+By default, [`nb show`](#show) will opens note in
 [`less`](https://linux.die.net/man/1/less),
 with syntax highlighting if
 [`bat`](https://github.com/sharkdp/bat),
@@ -1338,7 +1341,7 @@ nb show example.md --render
 # opens example.md as an HTML page in w3m, links, or lynx
 ```
 
-`nb show` also supports previewing other file types in the terminal,
+[`nb show`](#show) also supports previewing other file types in the terminal,
 depending on the tools available in the environment.
 Supported file types and tools include:
 
@@ -1369,12 +1372,13 @@ Supported file types and tools include:
     [`links`](https://en.wikipedia.org/wiki/Links_(web_browser)), or
     [`lynx`](https://en.wikipedia.org/wiki/Lynx_(web_browser))
 
-When using `nb show` with other file types or
+When using [`nb show`](#show) with other file types or
 if the above tools are not available,
-`nb show` will open files in your system's preferred application for each type.
+[`nb show`](#show) opens files in
+your system's preferred application for each type.
 
-`nb show` also provides [options](#show) for querying information about an
-item. For example, use the
+[`nb show`](#show) also provides [options](#show) for
+querying information about an item. For example, use the
 [`--added`](#show) / [`-a`](#show) and [`--updated`](#show) / [`-u`](#show)
 flags to print the date and time that an item was added or updated:
 
@@ -1386,17 +1390,17 @@ flags to print the date and time that an item was added or updated:
 2020-02-02 02:02:00 -0700
 ```
 
-`nb show` is primarily intended for viewing items within the terminal.
+[`nb show`](#show) is primarily intended for viewing items within the terminal.
 To view a file in the system's preferred GUI application, use
 [`nb open`](#open).
 To [browse](#-browsing) rendered items in terminal and GUI web browsers, use
 [`nb browse`](#browse).
 
-For full `nb show` usage information, run [`nb help show`](#show).
+For full [`nb show`](#show) usage information, run [`nb help show`](#show).
 
 ##### Shortcut Alias: `nb s`
 
-`nb show` can be called using the shortcut alias `nb s`:
+[`nb show`](#show) can be called using the shortcut alias [`nb s`](#show):
 
 ```bash
 # show note by id
@@ -1423,7 +1427,7 @@ nb example:s 12
 
 ##### Alias: `nb view`
 
-`nb show` can also be invoked with `nb view` for convenience:
+[`nb show`](#show) can also be invoked with [`nb view`](#show) for convenience:
 
 ```bash
 # show note by id
@@ -1526,7 +1530,7 @@ nb delete example/345
 nb delete 89 56 21
 ```
 
-By default, `nb delete` will display a confirmation prompt.
+By default, [`nb delete`](#delete) will display a confirmation prompt.
 To skip, use the [`--force`](#delete) / [`-f`](#delete) option:
 
 ```bash
@@ -1535,7 +1539,7 @@ nb delete 3 --force
 
 ##### Shortcut Aliases: `nb d`, `nb -`
 
-`delete` has the aliases `nb d` and `nb -`:
+[`nb delete`](#delete) has the aliases [`nb d`](#delete) and [`nb -`](#delete):
 
 ```bash
 # delete note by id
@@ -1560,7 +1564,7 @@ nb example:12 d
 nb example:d 12
 ```
 
-For `nb delete` help information, run [`nb help delete`](#delete).
+For [`nb delete`](#delete) help information, run [`nb help delete`](#delete).
 
 ##### Deleting with `nb browse`
 
@@ -1793,7 +1797,8 @@ nb q -t tag1
 nb q \#tag1
 ```
 
-`nb search` / `nb q` automatically searches archived page content:
+[`nb search`](#search) / [`nb q`](#search)
+automatically searches archived page content:
 
 ```bash
 ❯ nb q "example query"
@@ -1826,7 +1831,7 @@ Bookmarks are included in
 [`nb list`](#list),
 and [`nb browse`](#browse)
 along with items of other types.
-[`nb bookmark`](#bookmark) and `nb bookmark list` can be used to
+[`nb bookmark`](#bookmark) and [`nb bookmark list`](#bookmark) can be used to
 list and filter only bookmarks:
 
 ```bash
@@ -1841,7 +1846,7 @@ Add: nb <url> Help: nb help bookmark
 [2] 🔖 Bookmark Two (example.com)
 ```
 
-Bookmarks are also included in `nb`, `nb ls`, and `nb list`:
+Bookmarks are also included in `nb`, [`nb ls`](#ls), and [`nb list`](#list):
 
 ```bash
 ❯ nb
@@ -1889,7 +1894,7 @@ and [`nb help bookmark`](#bookmark).
 
 ##### Shortcut Alias: `nb bk`
 
-`nb bookmark` can also be used with the alias `nb bk`:
+[`nb bookmark`](#bookmark) can also be used with the alias [`nb bk`](#bookmark):
 
 ```bash
 ❯ nb bk
@@ -1963,7 +1968,7 @@ convert it to structurally valid XHTML (or HTML).
 
 For more information, see [Browsing](#-browsing).
 
-[`nb open`](#open) (shortcut: `nb o`) opens the bookmarked URL in
+[`nb open`](#open) (shortcut: [`nb o`](#open)) opens the bookmarked URL in
 your system's primary web browser:
 
 ```bash
@@ -1980,7 +1985,7 @@ nb example:12 open
 nb example:open 12
 ```
 
-[`nb peek`](#peek) (shortcut: `nb p`, alias: `nb preview`)
+[`nb peek`](#peek) (shortcut: [`nb p`](#peek), alias: [`nb preview`](#peek))
 opens the bookmarked URL in your terminal web browser,
 such as
 [w3m](https://en.wikipedia.org/wiki/W3m),
@@ -2005,7 +2010,8 @@ nb example:peek 12
 work seamlessly with encrypted bookmarks.
 `nb` simply prompts you for the bookmark's password.
 
-`nb open` and `nb peek` automatically check whether the URL is still valid.
+[`nb open`](#open) and [`nb peek`](#peek)
+automatically check whether the URL is still valid.
 If the page has been removed, `nb` can check
 the [Internet Archive Wayback Machine](https://archive.org/web/)
 for an archived copy.
@@ -2035,7 +2041,8 @@ an individual command:
 # opens the URL from bookmark 12 in w3m
 ```
 
-`nb show` and `nb edit` can also be used to view and edit bookmark files,
+[`nb show`](#show) and [`nb edit`](#edit)
+can also be used to view and edit bookmark files,
 which include the cached page converted to Markdown.
 
 [`nb show <id> --render`](#show) / [`nb show <id> -r`](#show)
@@ -2046,8 +2053,9 @@ the page content along with all of your notes.
 
 ##### Shortcut Aliases: `nb o` and `nb p`
 
-`nb open` and `nb peek` can also be used with the shortcut aliases
-`nb o` and `nb p`:
+[`nb open`](#open) and [`nb peek`](#peek)
+can also be used with the shortcut aliases
+[`nb o`](#open) and [`nb p`](#peek):
 
 ```bash
 # open bookmark by id
@@ -2087,7 +2095,8 @@ For a full overview, see
 `nb` includes [`bookmark`](#bookmark-help), a full-featured
 command line interface for creating, viewing, searching, and editing bookmarks.
 
-`bookmark` is a shortcut for the `nb bookmark` subcommand,
+[`bookmark`](#bookmark-help) is a shortcut for the
+[`nb bookmark`](#bookmark) subcommand,
 accepting all of the same subcommands and options with identical behavior.
 
 Bookmark a page:
@@ -2096,7 +2105,8 @@ Bookmark a page:
 ❯ bookmark https://example.com --tags tag1,tag2
 Added: [3] 🔖 20200101000000.bookmark.md "Example Title (example.com)"
 ```
-List and filter bookmarks with `bookmark` and `bookmark list`:
+List and filter bookmarks with
+[`bookmark`](#bookmark) and [`bookmark list`](#bookmark):
 
 ```bash
 ❯ bookmark
@@ -2145,7 +2155,8 @@ See [`bookmark help`](#bookmark-help) for more information.
   </sup>
 </p>
 
-Use [`nb todo`](#todo) (shortcut: `nb t`) to create, list, and check off todos.
+Use [`nb todo`](#todo) (shortcut: [`nb t`](#todo))
+to create, list, and check off todos.
 `nb` todos are [structured Markdown documents](#nb-markdown-todo-file-format)
 referencing a single primary todo,
 with optional [tasks](#%EF%B8%8F-tasks).
@@ -2356,7 +2367,7 @@ Tasks are defined as one or more Markdown list items starting with
 ```
 
 List tasks in items, folders, and notebooks with
-[`nb tasks`](#tasks) (shortcut: `nb t`),
+[`nb tasks`](#tasks) (shortcut: [`nb t`](#tasks)),
 which lists both tasks and todos:
 
 ```bash
@@ -2662,7 +2673,8 @@ More example content:
 - three
 ```
 
-Use the `-q` / `--query` option to open `nb browse` to the list of
+Use the [`-q`](#browse) / [`--query`](#browse) option
+to open [`nb browse`](#browse) to the list of
 all items in the current notebook or a specified notebook or folder that
 share a tag:
 
@@ -2810,7 +2822,7 @@ search: [                    ]
 [home:1]  📂 Example Folder
 ```
 
-Lists are displayed using the same format as `nb` and `nb ls`,
+Lists are displayed using the same format as `nb` and [`nb ls`](#ls),
 including [pinned](#-pinning) items, with each list item linked.
 Lists are automatically paginated to fit the height of the terminal window.
 
@@ -2829,15 +2841,15 @@ search: [                    ]
 next ❯
 ```
 
-`nb browse` is designed to make it easy to navigate within
+[`nb browse`](#browse) is designed to make it easy to navigate within
 terminal web browsers using only keyboard commands,
 while also supporting mouse interactions.
-The `nb browse` interface includes links
+The [`nb browse`](#browse) interface includes links
 to quickly jump to parent folders,
 the current notebook,
 and other notebooks.
 
-`nb browse` opens in [w3m](https://en.wikipedia.org/wiki/W3m)
+[`nb browse`](#browse) opens in [w3m](https://en.wikipedia.org/wiki/W3m)
 (currently the primary terminal reference browser for `nb`),
 [Links](https://en.wikipedia.org/wiki/Links_\(web_browser\)),
 [Lynx](https://en.wikipedia.org/wiki/Lynx_\(web_browser\)),
@@ -2845,8 +2857,9 @@ or in the browser set in the `$BROWSER` environment variable.
 Use [`nb browse --gui`](#browse) / [`nb br -g`](#browse) to
 open in the system's primary [GUI web browser](#browse---gui).
 
-To open a specific item in `nb browse`, pass the [selector](#-selectors)
-for the item, folder, or notebook to `nb browse`:
+To open a specific item in [`nb browse`](#browse),
+pass the [selector](#-selectors) for the item, folder, or notebook
+to [`nb browse`](#browse):
 
 ```bash
 # open the item with id 42 in the folder named "sample" in the "example" notebook
@@ -2870,7 +2883,7 @@ Items can also be browsed with
 [`nb show --browse`](#show) / [`nb s -b`](#show),
 which behaves identically.
 
-`nb browse` is particularly useful for [bookmarks](#-bookmarks).
+[`nb browse`](#browse) is particularly useful for [bookmarks](#-bookmarks).
 Cached content is rendered in the web browser along with comments and notes.
 Internal and external links are easily accessible directly in the terminal,
 providing a convenient, distraction-free approach for browsing collections
@@ -2959,7 +2972,7 @@ which automatically resizes the form to fit the current terminal window:
 
 Syntax highlighting, block selection, and other
 [advanced editor features](#browse---gui-editing)
-are available with `nb browse --gui`.
+are available with [`nb browse --gui`](#browse).
 
 #### `browse add`
 
@@ -2986,8 +2999,8 @@ in that location:
 [add]
 ```
 
-`nb browse add` includes options for quickly pre-populating new notes
-with content:
+[`nb browse add`](#browse) includes options for quickly pre-populating
+new notes with content:
 
 ```bash
 ❯ nb browse add --title "Example Title" --content "Example content." --tags tag1,tag2
@@ -3009,7 +3022,7 @@ with content:
 
 #### `browse delete`
 
-Use the `-` link on the `nb browse edit` page or
+Use the `-` link on the [`nb browse edit`](#browse) page or
 [`nb browse delete`](#browse) / [`nb br d`](#browse)
 to delete an item:
 
@@ -3027,11 +3040,15 @@ to delete an item:
 
 #### `browse` Search
 
-`nb browse` includes a search field powered by [`nb search`](#search)
+[`nb browse`](#browse) includes a search field powered by
+[`nb search`](#search)
 that can be used to search the current notebook or folder.
-Search queries are treated as command line arguments for `nb search`,
+Search queries are treated as command line arguments for
+[`nb search`](#search),
 providing the ability to perform `AND` and `OR` queries.
-Use the `-q` / `--query` option to open `nb browse` to
+Use the
+[`-q <query>`](#browse) / [`--query <query>`](#browse)
+option to open [`nb browse`](#browse) to
 the results page for a search:
 
 ```bash
@@ -3056,7 +3073,8 @@ search: [example             ]
 [home:789] Demo Title
 ```
 
-Search for [#tags](#-tagging) with the `-t` / `--tag` / `--tags` options:
+Search for [#tags](#-tagging) with the
+[`-t`](#browse) / [`--tag`](#browse) / [`--tags`](#browse) options:
 
 ```bash
 # open to a list of items tagged with "#tag2" in the current notebook
@@ -3083,7 +3101,8 @@ For more information about search options, see [Search](#-search) and
 
 #### `browse --gui`
 
-To open any `nb browse` view in the system's primary GUI web browser,
+To open any [`nb browse`](#browse) view in
+the system's primary GUI web browser,
 add the [`nb browse --gui`](#browse) / [`nb br -g`](#browse) option:
 
 ```bash
@@ -3102,29 +3121,31 @@ nb br -g
 ##### `browse --gui` Editing
 
 By default,
-`nb browse --gui` uses the browser's default `<textarea>` for editing items.
+[`nb browse --gui`](#browse)
+uses the browser's default `<textarea>` for editing items.
 
 [Ace](https://ace.c9.io/) is a text editor for GUI web browsers
 that provides advanced text editing functionality,
 including block selection and
 [syntax highlighting](#gui-web-syntax-highlighting).
 
-To use Ace as the editor for `nb browse --gui`,
+To use Ace as the editor for [`nb browse --gui`](#browse),
 add the following line to your `~/.nbrc` file:
 
 ```bash
 export NB_ACE_ENABLED=1
 ```
 
-The next time a form is loaded in `nb browse`,
+The next time a form is loaded in [`nb browse`](#browse),
 `nb` will automatically download
 (from [GitHub](https://github.com/ajaxorg/ace-builds/)),
 install,
-and enable the Ace editor in `nb browse edit --gui` and `nb browse add --gui`.
+and enable the Ace editor in
+[`nb browse edit --gui`](#browse) and [`nb browse add --gui`](#browse).
 
 #### `browse` Portability
 
-`nb browse` depends on
+[`nb browse`](#browse) depends on
 [`ncat`](https://nmap.org/ncat/), which is available as part of
 the `ncat` or `nmap` package in most package managers, and
 [`pandoc`](https://pandoc.org/).
@@ -3134,11 +3155,11 @@ go to unrendered, original files.
 If only `ncat` is available,
 files in plain text formats are rendered with the original markup unconverted.
 If neither `ncat` nor `pandoc` is available,
-`nb browse` falls back to the default behavior of [`nb show`](#show).
+[`nb browse`](#browse) falls back to the default behavior of [`nb show`](#show).
 
 #### `browse` Privacy
 
-`nb browse` is completely local and self-contained within `nb`,
+[`nb browse`](#browse) is completely local and self-contained within `nb`,
 from the CSS and JavaScript
 all the way down through the HTTP request parsing and response building,
 with no imports, libraries, frameworks, or third-party code
@@ -3148,7 +3169,7 @@ and the optional [Ace editor](#ace-editor).
 
 Terminal web browsers don't use JavaScript, so visits from them are not
 visible to some web analytics tools.
-`nb browse` includes a number of additional features
+[`nb browse`](#browse) includes a number of additional features
 to enhance privacy and avoid leaking information:
 
 - Page content is cached locally within each bookmark file,
@@ -3165,7 +3186,7 @@ to enhance privacy and avoid leaking information:
 
 #### Shortcut Alias: `nb br`
 
-`nb browse` can also be used with the alias `nb br`:
+[`nb browse`](#browse) can also be used with the alias [`nb br`](#browse):
 
 ```bash
 # open the current notebook in the terminal web browser
@@ -3243,8 +3264,9 @@ providing a convenient mechanism for
 
 [`nb browse`](#browse) renders image items within in an `<img>` tag
 on the item page. Open the item page for an image item by passing a
-[selector](#-selectors) to `nb browse`, optionally including the
-`-g` / `--gui` option to open the page in the system GUI web browser:
+[selector](#-selectors) to [`nb browse`](#browse), optionally including the
+[`-g`](#browse) / [`--gui`](#browse) option
+to open the page in the system GUI web browser:
 
 ```bash
 # open item with id "123" in the terminal web browser
@@ -3349,7 +3371,7 @@ For more information about Zettelkasten, see
 
 Items can be organized in folders.
 To add a note to a folder,
-call `nb add` with the folder's relative path within the notebook
+call [`nb add`](#add) with the folder's relative path within the notebook
 followed by a slash:
 
 ```bash
@@ -3528,7 +3550,7 @@ the desired [#tag](#-tagging) or pattern.
 
 For example, to treat all items tagged with `#pinned` as pinned items,
 add the following line to your `~/.nbrc` file,
-which can be opened in your editor with `nb settings edit`:
+which can be opened in your editor with [`nb settings edit`](#settings):
 
 ```bash
 export NB_PINNED_PATTERN="#pinned"
@@ -3562,7 +3584,7 @@ home
   </sup>
 </p>
 
-Use [`nb search`](#search) (shortcut: `nb q`) to
+Use [`nb search`](#search) (shortcut: [`nb q`](#search)) to
 perform full text searches, with support for regular expressions,
 [#tags](#-tagging), and both `AND` and `OR` queries:
 
@@ -3613,7 +3635,8 @@ nb q example: "example query"
 nb q -la "example query"
 ```
 
-`nb search` prints the id number, filename, and title of each matched file,
+[`nb search`](#search) prints the id number, filename,
+and title of each matched file,
 followed by each search query match and its line number,
 with color highlighting:
 
@@ -3670,7 +3693,7 @@ nb q "example|sample"
 nb q "example" --or "sample"
 ```
 
-`--or` and `--and` queries can be used together:
+[`--or`](#search) and [`--and`](#search) queries can be used together:
 
 ```bash
 nb q "example" --or "sample" --and "demo"
@@ -3721,7 +3744,7 @@ nb q -t tag1 --or --tags tag2,tag3
 nb q \#tag1 --or -t tag2 --or "#tag3"
 ```
 
-`nb search` leverages Git's powerful built-in
+[`nb search`](#search) leverages Git's powerful built-in
 [`git grep`](https://git-scm.com/docs/git-grep).
 `nb` also supports performing searches with alternative search tools
 using the [`--utility <name>`](#search) option.
@@ -3735,7 +3758,8 @@ Supported alternative search tools:
 
 ##### Shortcut Alias: `nb q`
 
-`nb search` can also be used with the alias `nb q` (for "query"):
+[`nb search`](#search) can also be used with the alias
+[`nb q`](#search) (for "query"):
 
 ```bash
 # search for "example" and print matching excerpts
@@ -3781,7 +3805,7 @@ For more information, see [Browsing](#-browsing).
   </sup>
 </p>
 
-Use [`nb move`](#move) (alias: `nb rename`, shortcut: `nb mv`)
+Use [`nb move`](#move) (alias: [`nb rename`](#move), shortcut: [`nb mv`](#move))
 to move and rename items:
 
 ```bash
@@ -3885,7 +3909,7 @@ nb history example:
 nb history example:12
 ```
 
-`nb history` uses `git log` by default and prefers
+[`nb history`](#history) uses `git log` by default and prefers
 [`tig`](https://github.com/jonas/tig) when available.
 
 #### Authorship
@@ -4031,7 +4055,7 @@ nb example:todos.md d
 ```
 
 When a notebook name with colon is called without a subcommand,
-`nb` runs `nb ls` in the specified notebook:
+`nb` runs [`nb ls`](#ls) in the specified notebook:
 
 ```bash
 ❯ nb example:
@@ -4122,7 +4146,7 @@ Scoped notebook commands are also available in tab completion:
 
 #### Notebooks, Tags, and Taxonomy
 
-`nb` is optimized to work well with a bunch of notebooks, so
+`nb` is optimized to work well with a collection of notebooks, so
 notebooks are a good way to organize notes and bookmarks by top-level topic.
 
 [#tags](#-tagging) are searchable across notebooks and can be created ad hoc,
@@ -4232,8 +4256,9 @@ nb notebooks import ../path/to/notebook
 nb import ../path/to/notebook
 ```
 
-`nb notebooks init` and `nb notebooks import` can be used together to
-easily turn any directory of existing files into a global `nb` notebook:
+[`nb notebooks init`](#notebooks) and [`nb notebooks import`](#notebooks)
+can be used together to easily turn any directory of existing files
+into a global `nb` notebook:
 
 ```bash
 ❯ ls
@@ -4261,7 +4286,8 @@ home
   </sup>
 </p>
 
-Notebooks can be archived using [`nb archive`](#archive) (shortcut: `nb ar`):
+Notebooks can be archived using
+[`nb archive`](#archive) (shortcut: [`nb ar`](#archive)):
 
 ```bash
 # archive the current notebook
@@ -4329,7 +4355,8 @@ nb notebooks status
 nb notebooks status example
 ```
 
-Use [`nb unarchive`](#unarchive) (shortcut: `nb unar`) to unarchive a notebook:
+Use [`nb unarchive`](#unarchive) (shortcut: [`nb unar`](#unarchive))
+to unarchive a notebook:
 
 ```bash
 # unarchive the current notebook
@@ -4442,7 +4469,8 @@ To sync a notebook with a new orphan branch,
 add the remote using [`nb remote set`](#remote)
 and select the option to create a new orphan branch.
 The name of orphan branch is derived from notebook name
-and can alternatively be specified as an argument to `nb remote set`:
+and can alternatively be specified as an argument to
+[`nb remote set`](#remote):
 
 ```bash
 # set the remote for the current notebook to a remote URL and branch
@@ -4531,7 +4559,7 @@ while the remote change is between the
 lines.
 
 To resolve this conflict by keeping both items, simply
-edit the file with `nb edit` and
+edit the file with [`nb edit`](#edit) and
 remove the lines starting with `<<<<<<<`, `=======`, and `>>>>>>>`:
 
 ```
@@ -4573,7 +4601,7 @@ that could inform a strategy for handling any such cases automatically.
 </p>
 
 Files of any type can be imported into a notebook using
-[`nb import`](#import) (shortcut: `nb i`).
+[`nb import`](#import) (shortcut: [`nb i`](#import)).
 [`nb edit`](#edit) and [`nb open`](#open) open files in
 your system's default application for that file type.
 
@@ -4604,7 +4632,7 @@ nb import ./*.md
 nb import example.md sample.md
 ```
 
-`nb import` can also download and import files directly from the web:
+[`nb import`](#import) can also download and import files directly from the web:
 
 ```bash
 # import a PDF file from the web
@@ -4671,7 +4699,7 @@ and the subcommands can be used interchangeably.
 For more information about imported and exported notebooks, see
 [Global and Local Notebooks](#global-and-local-notebooks).
 
-For `nb import` and `nb export` help information, see
+For [`nb import`](#import) and [`nb export`](#export) help information, see
 [`nb help import`](#import) and [`nb help export`](#export).
 
 #### Exporting with `browse`
@@ -4746,7 +4774,7 @@ Value:
 ```
 
 A setting can also be updated without the prompt by
-passing both the name and value to `nb set`:
+passing both the name and value to [`nb set`](#settings):
 
 ```bash
 # set editor with setting name
@@ -4789,10 +4817,11 @@ EDITOR restored to the default: vim
 vim
 ```
 
-`nb set` and `nb settings` are aliases that refer to the same subcommand,
+[`nb set`](#settings) and [`nb settings`](#settings)
+are aliases that refer to the same subcommand,
 so the two subcommand names can be used interchangeably.
 
-For more information about `set` and `settings`, see
+For more information about [`set`](#settings) and [`settings`](#settings), see
 [`nb help settings`](#settings) and
 [`nb settings list --long`](#settings-list---long).
 
@@ -5142,8 +5171,10 @@ adds copy / duplicate functionality to `nb` and demonstrates how to create a
 plugin using `nb` subcommands and simple shell scripting.
 
 You can install any plugin you create locally with
-`nb plugins install <path>`, and you can publish it on GitHub, GitLab, or
-anywhere else online and install it with `nb plugins install <url>`.
+[`nb plugins install <path>`](#plugins),
+and you can publish it on GitHub, GitLab,
+or anywhere else online and install it with
+[`nb plugins install <url>`](#plugins).
 
 #### API
 
@@ -5176,7 +5207,7 @@ Identifier selectors are passed to subcommands as arguments along with
 any subcommand options. Use [`show <selector>`](#show) to query
 information about the file specified in the selector. For example, to
 obtain the filename of a selector-specified file, use
-`show <selector> --filename`:
+[`show <selector> --filename`](#show):
 
 ```bash
 _example() {
@@ -5427,7 +5458,7 @@ capabilities.
 </p>
 
 `nb` has an interactive shell that can be started with
-[`nb shell`](#shell), `nb -i`, or `nb --interactive`:
+[`nb shell`](#shell), [`nb -i`](#nb-help), or [`nb --interactive`](#nb-help):
 
 ```bash
 $ nb shell
@@ -5530,7 +5561,9 @@ nb h add
 nb u example-notebook
 ```
 
-For more commands and options, run `nb help` or `nb help <subcommand>`
+For more commands and options, run
+[`nb help`](#nb-help) or
+[`nb help <subcommand>`](#subcommands)
 
 <p align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/gui-browse-themes.png"
@@ -8524,7 +8557,7 @@ clearly organized for greatest accessibility.
 
 Bookmarks are identified by a `.bookmark.md` file extension. The
 bookmark URL is the first URL in the file within `<` and `>` characters.
-To create a minimally valid bookmark file with `nb add`:
+To create a minimally valid bookmark file with [`nb add`](#add):
 
 ```bash
 nb add example.bookmark.md --content "<https://example.com>"
@@ -8883,7 +8916,7 @@ Description:
 Any folder may contain an optional plain text file named `.pindex`
 containing a list of basenames from that folder, one per line, that should
 be treated as [pinned](#-pinning), meaning they appear first in some
-list operations, including `nb` and `nb ls`. Entries are added to a
+list operations, including `nb` and [`nb ls`](#ls). Entries are added to a
 `.pindex` file with [`nb pin`](#pin) and removed with [`nb unpin`](#unpin).
 
 #### Archived Notebooks
