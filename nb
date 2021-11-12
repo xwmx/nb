@@ -2654,8 +2654,6 @@ _selector_resolve_folders() {
       fi
     fi
 
-    # _warn printf "Not a folder: %s\\n" \
-    #   "$(_color_primary "${_parent_folder_path:?}/${_folder_name:-}")"
     return 1
   done
 
