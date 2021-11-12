@@ -8502,7 +8502,7 @@ do
 
   case "${__opt}" in
     -)
-      if [[ -z "${_SUBCOMMAND:-}" ]]
+      if [[ -z "${_SUBCOMMAND:-}"     ]]
       then
         _SUBCOMMAND="delete"
       else
@@ -8510,7 +8510,7 @@ do
       fi
       ;;
     +)
-      if [[ -z "${_SUBCOMMAND:-}" ]]
+      if [[ -z "${_SUBCOMMAND:-}"     ]]
       then
         _SUBCOMMAND="add"
       else
@@ -8542,7 +8542,7 @@ do
       _GIT_ENABLED=0
       ;;
     --version)
-      if [[ -n "${_SUBCOMMAND:-}" ]]
+      if [[ -n "${_SUBCOMMAND:-}"     ]]
       then
         _ARGUMENTS+=("${__opt}")
       else
@@ -8563,7 +8563,7 @@ do
       _print_welcome
       ;;
     *:*)
-      if [[ -z "${_SUBCOMMAND:-}"   ]] &&
+      if [[ -z "${_SUBCOMMAND:-}"     ]] &&
           _string_is_url "${__opt}"
       then
         _SUBCOMMAND="bookmark"
@@ -8626,7 +8626,7 @@ do
       then
         _SUBCOMMAND="${__opt}"
       else
-        if [[ "${__opt}" =~ ^- ]]
+        if [[ "${__opt}" =~ ^-    ]]
         then
           __PREVIOUS_OPTION_WAS_FLAG=1
         elif ((__PREVIOUS_OPTION_WAS_FLAG))
@@ -9417,7 +9417,7 @@ _render() {
     )
 
     _code_extensions+=($(
-      pandoc --list-highlight-languages \
+      pandoc --list-highlight-languages   \
         | sed -e "/html/d" -e "/latex/d" -e "/markdown/d"
     ))
 
@@ -9437,7 +9437,7 @@ _render() {
         local _code_block_temp_path=
         _code_block_temp_path="$(_temp file ".html" --touch)"
 
-        printf "<code>\\n%s\\n</code>\\n"   \
+        printf "<code>\\n%s\\n</code>\\n" \
           "$(cat "${_input_file_path:-}")" >> "${_code_block_temp_path:-}"
       fi
 
@@ -10177,7 +10177,7 @@ HEREDOC
     _use_pandoc=0
   fi
 
-  if [[ -n "${_input_file_path:-}" ]]
+  if [[ -n "${_input_file_path:-}"        ]]
   then
     _prepared_file_path="$(
       _render_prepare_file "${_input_file_path:-}" "${_use_pandoc:-0}"
@@ -11066,7 +11066,7 @@ _add() {
         _edit_before_commit=1
         ;;
       -e|--encrypt*)
-        if [[ -z "${NB_ENCRYPTION_TOOL:-}" ]] ||
+        if [[ -z "${NB_ENCRYPTION_TOOL:-}" ]]   ||
            ! _command_exists "${NB_ENCRYPTION_TOOL:-}"
         then
           _exit_1 printf                        \
@@ -11132,18 +11132,18 @@ _add() {
 
   case "${_add_type:-}" in
     bookmark)
-      _defer "_bookmark" "${_arguments[@]:-}" "${_defer_arguments[@]:-}"
+      _defer "_bookmark"    "${_arguments[@]:-}" "${_defer_arguments[@]:-}"
       return 0
       ;;
     todo)
-      _defer "_todo" "add" "${_arguments[@]:-}" "${_defer_arguments[@]:-}"
+      _defer "_todo" "add"  "${_arguments[@]:-}" "${_defer_arguments[@]:-}"
       return 0
       ;;
   esac
 
   if ((_browse))
   then
-    _defer "_browse" "add" "${_arguments[@]:-}" "${_defer_arguments[@]:-}"
+    _defer "_browse" "add"  "${_arguments[@]:-}" "${_defer_arguments[@]:-}"
     return 0
   fi
 
@@ -11349,7 +11349,7 @@ _add() {
   then
     if ! mkdir -p "${_target_path:?}" 2>/dev/null
     then
-      _exit_1 printf "Unable to create folder: %s\\n" \
+      _exit_1 printf "Unable to create folder: %s\\n"       \
         "$(_color_primary "${_target_unique_relative_path}")"
     fi
 
@@ -11415,7 +11415,7 @@ _add() {
       else
         if ! mkdir -p "${_notebook_path:?}/${_target_folder_relative_path}" 2>/dev/null
         then
-          _exit_1 printf "Unable to create folder: %s\\n" \
+          _exit_1 printf "Unable to create folder: %s\\n"   \
             "$(_color_primary "${_target_folder_relative_path}")"
         fi
       fi
@@ -12005,12 +12005,12 @@ _bookmark() {
       fi
 
       # `bookmark peek`
-      if [[   "${_subcommand}" == "peek"  ]]
+      if [[   "${_subcommand}" == "peek"    ]]
       then
         _bookmark_view_in_terminal_browser "${_target_url}"
         return 0
       # `bookmark open`
-      elif [[ "${_subcommand}" == "open"  ]]
+      elif [[ "${_subcommand}" == "open"    ]]
       then
         if _command_exists "xdg-open"
         then
@@ -12026,7 +12026,7 @@ _bookmark() {
             "$(_color_primary "${_ME}")"
         fi
       # `bookmark url`
-      elif [[ "${_subcommand}" == "url"   ]]
+      elif [[ "${_subcommand}" == "url"     ]]
       then
         printf "%s\\n" "${_target_url}"
         return 0
@@ -12357,10 +12357,10 @@ _completions() {
 
     local _exists=0
 
-    if [[ -n "${_bash_completion_path:-}"   ]] &&
-       [[ -d "${_bash_completion_path}"     ]]
+    if [[ -n "${_bash_completion_path:-}" ]] &&
+       [[ -d "${_bash_completion_path}"   ]]
     then
-      if [[ -w "${_bash_completion_path}"   ]]
+      if [[ -w "${_bash_completion_path}" ]]
       then
         if [[ -e "${_bash_completion_path}/${_BASH_COMP_NAME}" ]]
         then
@@ -12411,7 +12411,7 @@ _completions() {
           --variable=completionsdir bash-completion 2>/dev/null || true
       )"
 
-      if [[ -n "${_maybe_path:-}" ]]
+      if [[ -n "${_maybe_path:-}"         ]]
       then
         _bash_completion_path="${_maybe_path}"
       fi
@@ -12435,26 +12435,26 @@ _completions() {
   # Usage: _completions_install [--download]
   _completions_install() {
     local _download=0
-    if [[ "${1:-}" == "--download" ]]
+    if [[ "${1:-}" == "--download"        ]]
     then
       _download=1
     fi
 
     local _my_path="${0}"
 
-    if [[ -L "${_my_path}" ]]
+    if [[ -L "${_my_path}"  ]]
     then
       _my_path="$(_resolve_symlink "${_my_path}")"
     fi
 
     local _my_dir=
     _my_dir="$(cd "$(dirname "${_my_path}")"; pwd)"
-    if [[ -z "${_my_dir}" ]] || [[ ! -d "${_my_dir}"        ]]
+    if [[ -z "${_my_dir}"   ]]  ||  [[ ! -d "${_my_dir}"        ]]
     then
       exit 1
     fi
 
-    if [[ -z "${_REPO:-}" ]] || [[ -z "${_REPO_RAW_URL:-}"  ]]
+    if [[ -z "${_REPO:-}"   ]]  ||  [[ -z "${_REPO_RAW_URL:-}"  ]]
     then
       _exit_1 printf "Source Git repository not configured.\\n"
     fi
@@ -12466,7 +12466,7 @@ _completions() {
 
       if ((_download))
       then
-        if [[ ! -f "${_completion_source}" ]]
+        if [[ ! -f "${_completion_source}"  ]]
         then
           _completion_source="$(_temp file)"
           local _completion_url="${_REPO_RAW_URL}/etc/${_ME}-completion.${__shell}"
@@ -12479,7 +12479,7 @@ _completions() {
         fi
       fi
 
-      if [[ ! -f "${_completion_source}" ]]
+      if [[ ! -f "${_completion_source}"    ]]
       then
         cat <<HEREDOC
 Unable to find source ${__shell} completion script. You can try downloading
@@ -12548,13 +12548,13 @@ HEREDOC
           ;;
       esac
 
-      if [[ -n "${_completion_path:-}" ]] &&
-         [[ -d "${_completion_path}"   ]]
+      if [[ -n "${_completion_path:-}"  ]] &&
+         [[ -d "${_completion_path}"    ]]
       then
-        if [[ -w "${_completion_path}"   ]] &&
-           [[ -w "${_completion_target}" ]]
+        if [[ -w "${_completion_path}"    ]] &&
+           [[ -w "${_completion_target}"  ]]
         then
-          if [[ -f "${_completion_target}" ]]
+          if [[ -f "${_completion_target}"  ]]
           then
             rm "${_completion_target:?}"
 
@@ -12575,7 +12575,7 @@ HEREDOC
       _completions_check
       ;;
     install)
-      if [[ "${2:-}" =~ ^-d|--download$ ]]
+      if [[ "${2:-}" =~ ^-d|--download$     ]]
       then
         _completions_install --download
       else
@@ -12651,7 +12651,7 @@ _delete() {
         _print_prompt_list=1
         ;;
       *)
-        [[ -n "${__arg:-}" ]] && _selectors+=("${__arg:-}")
+        [[ -n "${__arg:-}"  ]] && _selectors+=("${__arg:-}")
         ;;
     esac
   done
@@ -12671,7 +12671,7 @@ _delete() {
     local _selector_path=
     _selector_path="$(_show "${__selector:-}" --path)"
 
-    if [[ -n "${_selector_path:-}" ]]
+    if [[ -n "${_selector_path:-}"    ]]
     then
       _target_paths+=("${_selector_path:-}")
     else
@@ -12681,7 +12681,7 @@ _delete() {
 
   if ((_print_prompt_list)) || ! ((_force))
   then
-    if [[ "${#_selectors[@]}" == 1 ]]
+    if [[ "${#_selectors[@]}" == 1    ]]
     then
       printf "Deleting: %s\\n" "$(_show "${_selectors[0]:-}" --info-line)"
     else
@@ -12903,7 +12903,7 @@ _edit() {
     then
       _encrypted_path="${_target_file}"
 
-      if [[ -z "${_password}"   ]]
+      if [[ -z "${_password}"     ]]
       then
         # request password without displaying it
         printf "%s: " "$(_color_primary "Password")"
@@ -12920,10 +12920,10 @@ _edit() {
       _before="$(_get_hash "${_decrypted_path}")"
     fi
 
-    if [[ -n "${_content:-}"    ]] || _piped_input
+    if [[ -n "${_content:-}"      ]] || _piped_input
     then
       {
-        if [[ -n "${_content}"  ]]
+        if [[ -n "${_content}"    ]]
         then
           printf "%s\\n" "${_content}"
         fi
@@ -12959,7 +12959,7 @@ _edit() {
     fi
 
     if ((_edit_before_commit)) || {
-       ! _piped_input && [[ -z "${_content:-}" ]]
+       ! _piped_input && [[ -z "${_content:-}"    ]]
     }
     then
       if [[ -n "${_local_editor}"   ]]
@@ -13077,8 +13077,8 @@ _env() {
     # handle bat version prefix in URL
     [[ "${_name}" == "bat"  ]] && _version="v${_version}"
 
-    wget                \
-      -O "${_deb_path}" \
+    wget                    \
+      -O "${_deb_path}"     \
       "https://github.com/${_repo}/releases/download/${_version}/${_deb_filename}"
 
     if [[ -e "${_deb_path}" ]]
@@ -13595,7 +13595,7 @@ _import() {
     local _target_folder_relative_path=
     local _target_relative_path=
 
-    if [[ -n "${_selector_path:-}" ]]
+    if [[ -n "${_selector_path:-}"          ]]
     then
       if [[ "${_selector_path}" =~ /$                 ]] ||
          [[ -d "${_notebook_path}/${_selector_path}"  ]]
@@ -13712,7 +13712,7 @@ _import() {
   local _notebook_path=
   local _selector_path=
 
-  if [[ "${_selector:-}" =~ : ]]
+  if [[ "${_selector:-}" =~ :     ]]
   then
     _notebook_path="$(
       _notebooks show "${_selector%%:*}" --path 2>/dev/null \
@@ -13752,7 +13752,7 @@ _import() {
 
         _target_basename="${_target_relative_path##*\/}"
 
-        if [[ -d "${__path}" ]]
+        if [[ -d "${__path}"      ]]
         then
           cp -R "${__path}" "${_notebook_path}/${_target_relative_path}"
         else
@@ -13828,9 +13828,9 @@ ${_url}
         _source_basename="$(basename -- "${__path}")"
 
         _target_relative_path="$(
-          _import_init_target_relative_path \
-            "${_notebook_path}"             \
-            "${_source_basename}"           \
+          _import_init_target_relative_path   \
+            "${_notebook_path}"               \
+            "${_source_basename}"             \
             "${_selector_path}"
         )"
 
@@ -22839,8 +22839,8 @@ HEREDOC
 }
 _unset() {
   case "${1:-}" in
-    '')     _exit_1 _help "unset"   ; return 1 ;;
-    remote) _remote unset           ; return 0 ;;
+    '')     _exit_1   _help "unset" ; return 1 ;;
+    remote) _remote   unset         ; return 0 ;;
     *)      _settings unset "${@:-}"; return 0 ;;
   esac
 }
