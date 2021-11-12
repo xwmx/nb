@@ -2,6 +2,142 @@
 
 load test_helper
 
+export _S=" "
+
+# checkboxes ##################################################################
+
+@test "'_render' with todo item displays marked-up done / closed checkbox." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example One.todo.md" --content "# [x] Example todo one."
+  }
+
+  run "${_NB}" helpers render  "${NB_DIR}/home/Example One.todo.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                    ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>  ]]
+
+  [[    "${output}"    =~  \
+\#\ \<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>x\</span\>      ]]
+  [[    "${output}"    =~  \
+\<span\ class=\"identifier\"\>x\<\/span\>\<span\ class=\"dim\"\>\]\<\/span\>        ]]
+}
+
+@test "'_render' with todo item displays marked-up undone / open checkbox (space)." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example One.todo.md" --content "# [ ] Example todo one."
+  }
+
+  run "${_NB}" helpers render  "${NB_DIR}/home/Example One.todo.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                    ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>  ]]
+
+  [[    "${output}"    =~  \
+\#\ \<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>${_S}\</span\>  ]]
+  [[    "${output}"    =~  \
+\<span\ class=\"identifier\"\>${_S}\<\/span\>\<span\ class=\"dim\"\>\]\<\/span\>    ]]
+}
+
+@test "'_render' with todo item displays marked-up undone / open checkbox (no space)." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example One.todo.md" --content "# [] Example todo one."
+  }
+
+  run "${_NB}" helpers render  "${NB_DIR}/home/Example One.todo.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                    ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>  ]]
+
+  [[    "${output}"    =~  \
+\#\ \<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>${_S}\</span\>  ]]
+  [[    "${output}"    =~  \
+\<span\ class=\"identifier\"\>${_S}\<\/span\>\<span\ class=\"dim\"\>\]\<\/span\>    ]]
+}
+
+@test "'_render --pandoc' with todo item displays marked-up done / closed checkbox." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example One.todo.md" --content "# [x] Example todo one."
+  }
+
+  run "${_NB}" helpers render  "${NB_DIR}/home/Example One.todo.md" --pandoc
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                    ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>  ]]
+
+  [[    "${output}"    =~  \
+\<h1\ id=\"x-example-todo-one.\"\>\<span\ class=\"dim\"\>\[\</span\>              ]]
+  [[    "${output}"    =~  \
+\[\</span\>\<span\ class=\"identifier\"\>x\</span\>                               ]]
+  [[    "${output}"    =~  \
+\<span\ class=\"identifier\"\>x\<\/span\>\<span\ class=\"dim\"\>\]\<\/span\>      ]]
+}
+
+@test "'_render --pandoc' with todo item displays marked-up undone / open checkbox (space)." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example One.todo.md" --content "# [ ] Example todo one."
+  }
+
+  run "${_NB}" helpers render  "${NB_DIR}/home/Example One.todo.md" --pandoc
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                    ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>  ]]
+
+  [[    "${output}"    =~  \
+\<h1\ id=\"example-todo-one.\"\>\<span\ class=\"dim\"\>\[\</span\>                ]]
+  [[    "${output}"    =~  \
+\[\</span\>\<span\ class=\"identifier\"\>${_S}\</span\>                           ]]
+  [[    "${output}"    =~  \
+\<span\ class=\"identifier\"\>${_S}\<\/span\>\<span\ class=\"dim\"\>\]\<\/span\>  ]]
+}
+
+@test "'_render --pandoc' with todo item displays marked-up undone / open checkbox (no space)." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example One.todo.md" --content "# [] Example todo one."
+  }
+
+  run "${_NB}" helpers render  "${NB_DIR}/home/Example One.todo.md" --pandoc
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"    ==  0                    ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>  ]]
+
+  [[    "${output}"    =~  \
+\<h1\ id=\"example-todo-one.\"\>\<span\ class=\"dim\"\>\[\</span\>                ]]
+  [[    "${output}"    =~  \
+\[\</span\>\<span\ class=\"identifier\"\>${_S}\</span\>                           ]]
+  [[    "${output}"    =~  \
+\<span\ class=\"identifier\"\>${_S}\<\/span\>\<span\ class=\"dim\"\>\]\<\/span\>  ]]
+}
+
 # <title> #####################################################################
 
 @test "'_render --title <title>' sets HTML '<title></title>' to <title>." {
