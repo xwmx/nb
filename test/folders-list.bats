@@ -87,7 +87,8 @@ load test_helper
   [[   "${lines[2]}"  =~  add\ 1/                               ]]
   [[   "${lines[3]}"  =~  bookmark                              ]]
   [[   "${lines[4]}"  =~  1/\ \<url\>                           ]]
-  [[   "${lines[6]}"  =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/ ]]
+  [[   "${lines[6]}"  =~  todo\ add\ 1/\ \<title\>              ]]
+  [[   "${lines[8]}"  =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/ ]]
 }
 
 @test "'list <id>/' with empty folder displays message." {
@@ -107,7 +108,8 @@ load test_helper
   [[   "${lines[2]}"  =~  add\ 1/                               ]]
   [[   "${lines[3]}"  =~  bookmark                              ]]
   [[   "${lines[4]}"  =~  1/\ \<url\>                           ]]
-  [[   "${lines[6]}"  =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/ ]]
+  [[   "${lines[6]}"  =~  todo\ add\ 1/\ \<title\>              ]]
+  [[   "${lines[8]}"  =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/ ]]
 }
 
 @test "'list <folder>/<folder>/' with empty folder displays message." {
@@ -127,7 +129,8 @@ load test_helper
   [[   "${lines[2]}"  =~  add\ 1/1/                               ]]
   [[   "${lines[3]}"  =~  bookmark                                ]]
   [[   "${lines[4]}"  =~  1/1/\ \<url\>                           ]]
-  [[   "${lines[6]}"  =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/1/ ]]
+  [[   "${lines[6]}"  =~  todo\ add\ 1/1/\ \<title\>              ]]
+  [[   "${lines[8]}"  =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/1/ ]]
 }
 
 @test "'list <id>/<id>/' with empty folder displays message." {
@@ -147,7 +150,8 @@ load test_helper
   [[   "${lines[2]}"  =~  add\ 1/1/                               ]]
   [[   "${lines[3]}"  =~  bookmark                                ]]
   [[   "${lines[4]}"  =~  1/1/\ \<url\>                           ]]
-  [[   "${lines[6]}"  =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/1/ ]]
+  [[   "${lines[6]}"  =~  todo\ add\ 1/1/\ \<title\>              ]]
+  [[   "${lines[8]}"  =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/1/ ]]
 }
 
 @test "'list <notebook>:<id>/' with empty folder displays message." {
@@ -172,7 +176,8 @@ load test_helper
   [[   "${lines[2]}"  =~  add\ home:1/                                ]]
   [[   "${lines[3]}"  =~  bookmark                                    ]]
   [[   "${lines[4]}"  =~  home:1/\ \<url\>                            ]]
-  [[   "${lines[6]}"  =~  import\ \(\<path\>\ \|\ \<url\>\)\ home:1/  ]]
+  [[   "${lines[6]}"  =~  todo\ add\ home:1/\ \<title\>               ]]
+  [[   "${lines[8]}"  =~  import\ \(\<path\>\ \|\ \<url\>\)\ home:1/  ]]
 }
 
 # full path ###################################################################
