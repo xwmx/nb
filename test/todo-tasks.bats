@@ -28,8 +28,9 @@ HEREDOC
 
   run "${_NB}" tasks "do" Example\ Folder/1 2
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
   cat "${NB_DIR}/home/Example Folder/File One.md"
 
   [[    "${status}"     -eq 0                                     ]]
