@@ -1653,7 +1653,7 @@ _get_content() {
           break
         elif ! ((_in_front_matter)) && ! ((_in_code_block))
         then
-          if [[ -z "${_maybe_title:-}" ]] && [[ -n "${__line:-}"    ]]
+          if [[ -z "${_maybe_title:-}"  ]]  &&  [[ -n "${__line:-}" ]]
           then  # potential setext-style H1
             _maybe_title="${__line}"
           elif [[ -n "${_maybe_title:-}"            ]] &&
@@ -1693,7 +1693,7 @@ _get_content() {
     elif [[ "${_path}"    =~ \.latex$|\.tex$    ]]
     then
       local               __line=
-      while IFS= read -r  __line || [[ -n "${__line:-}" ]]
+      while IFS= read -r  __line  ||  [[ -n "${__line:-}" ]]
       do
         _counter="$((_counter+1))"
 
@@ -1722,7 +1722,7 @@ _get_content() {
     elif [[   "${_path}" =~ \.org$    ]]
     then
       local               __line=
-      while IFS= read -r  __line ||   [[ -n "${__line}" ]]
+      while IFS= read -r  __line  ||  [[ -n "${__line}"   ]]
       do
         _counter="$((_counter+1))"
 
@@ -1752,11 +1752,11 @@ _get_content() {
           continue
         fi
       done < "${_path}"
-    elif ! ((_only_title)) &&
+    elif ! ((_only_title))        &&
          LC_ALL=C _contains "${_path##*.}" "${_TEXT_FILE_EXTENSIONS[@]}"
     then
       local               __line=
-      while IFS= read -r  __line ||   [[ -n "${__line:-}" ]]
+      while IFS= read -r  __line  ||  [[ -n "${__line:-}" ]]
       do
         if [[ -n "${__line:-}"        ]]
         then
@@ -1774,7 +1774,7 @@ _get_content() {
     if [[ -n "${_title:-}"    ]]
     then
       printf "%s\\n" "${_title/%$'\r'}"
-    elif ! ((_only_title)) && [[ -n "${_first_line:-}" ]]
+    elif ! ((_only_title)) && [[ -n "${_first_line:-}"    ]]
     then
       printf "%s\\n" "__first_line:${_first_line/%$'\r'}"
     fi
