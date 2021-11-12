@@ -22650,21 +22650,23 @@ _todo() {
             continue
           fi
 
-          if   ((_contains_filtered_tasks))   &&
-             ! ((_in_task_list_item))
+          if ((_contains_filtered_tasks))
           then
             _in_task_list_item=1
 
             ((_first)) || printf "\\n"
-          else
+          elif ((_in_task_list_item))
+          then
             _in_task_list_item=0
+
+            ((_first)) || printf "\\n"
           fi
 
           _list "${__item_path:-}"
 
           _first=0
 
-          if ! ((_contains_filtered_tasks))   && ! ((_selector_is_item))
+          if ! ((_contains_filtered_tasks)) && ! ((_selector_is_item))
           then
             continue
           fi
@@ -22752,10 +22754,10 @@ _todo() {
               fi
             done
 
-            if ((_printed_task_counter))
+            if ! ((_printed_task_counter))
             then
-              printf "\\n"
-            else
+            #   printf "\\n"
+            # else
               printf "0 %stasks.\\n" "${_maybe_padded_empty_qualifier:-}"
             fi
           }
