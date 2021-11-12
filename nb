@@ -22369,8 +22369,7 @@ _todo() {
       if [[ !  "${_selector_path}" =~ todo\.md$       ]] &&
          [[ -z "${_task_number:-}"                    ]]
       then
-        _exit_1 printf "Item must be a todo: %s\\n"   \
-          "$(_color_primary "${_selector:-}")"
+        _exit_1 printf "Not a todo.\\n"
       fi
 
       case "${_action:-}" in

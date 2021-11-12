@@ -19,8 +19,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 1                                   ]]
-  [[ "${output}"    =~  \!.*\ Item\ must\ be\ a\ todo:\ .*1 ]]
+  [[ "${status}"    -eq 1                     ]]
+  [[ "${output}"    =~  \!.*\ Not\ a\ todo\.  ]]
 
   diff                                    \
     <(cat "${NB_DIR}/home/File One.md")   \
@@ -47,8 +47,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 1                                   ]]
-  [[ "${output}"    =~  \!.*\ Item\ must\ be\ a\ todo:\ .*1 ]]
+  [[ "${status}"    -eq 1                     ]]
+  [[ "${output}"    =~  \!.*\ Not\ a\ todo\.  ]]
 
   diff                                    \
     <(cat "${NB_DIR}/home/File One.md")   \
