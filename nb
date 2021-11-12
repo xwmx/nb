@@ -22708,11 +22708,21 @@ _todo() {
                 _formatted_task="${_formatted_task//\[\]/$(_color_brackets " ")}"
                 _formatted_task="${_formatted_task//\[ \]/$(_color_brackets " ")}"
 
-                _wrap off
+                if [[ -z "${_task_number:-}" ]]
+                then
+                  _wrap off
+                fi
 
-                printf "%s %s\033[?7l\\n"                               \
+                printf "%s %s"                                          \
                   "$(_color_brackets "${_item_selector} ${_counter}")"  \
                   "${_formatted_task}"
+
+                if [[ -z "${_task_number:-}" ]]
+                then
+                  printf '\033[?7h'
+                fi
+
+                printf "\\n"
 
                 _printed_task_counter="$((_printed_task_counter+1))"
               fi
