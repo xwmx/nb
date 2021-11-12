@@ -22178,6 +22178,7 @@ _todo() {
   local _due_datetime=
   local _filter=
   local _maybe_title_arguments=()
+  local _only_todos=0
   local _option_title=
   local _related_identifiers=()
   local _tag_list=
@@ -22252,6 +22253,9 @@ _todo() {
           tasks)
             _action="tasks"
             ;;
+          todos)
+            _only_todos=1
+            ;;
           u|undo|*ncomplete|unfinish|uncheck)
             _action="undo"
             ;;
@@ -22266,7 +22270,8 @@ _todo() {
   done
 
   if [[ "${_SUBCOMMAND:-}"  == "t"      ]] &&
-     [[ "${_action:-}"      == "list"   ]]
+     [[ "${_action:-}"      == "list"   ]] &&
+     ! ((_only_todos))
   then
     _action="tasks"
   fi

@@ -3,6 +3,76 @@
 
 load test_helper
 
+# t todos alias ###############################################################
+
+@test "'todos <notebook>:<folder>/' exits with 0 and lists todos." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" use "Example Notebook"
+
+    "${_NB}" add                                        \
+      --content "# [ ] Example todo description one."   \
+      --filename "Example Folder/One.todo.md"
+
+    sleep 1
+
+    "${_NB}" add                                        \
+      --filename "Example Folder/Two.todo.md"           \
+      --content "$(cat <<HEREDOC
+# [ ] Example todo description two.
+
+## Due
+
+2200-02-02
+
+## Tasks
+
+- [ ] Task one.
+- [] Task two.
+- [x] Task three.
+- [ ] Task four.
+
+## Tags
+
+#tag1 #tag2
+HEREDOC
+)"
+
+    sleep 1
+
+    "${_NB}" add                                        \
+      --content "# [x] Example todo description three." \
+      --filename "Example Folder/Three.todo.md"
+
+    sleep 1
+
+    "${_NB}" add                                        \
+      --content "# Example description four."           \
+      --filename "Example Folder/Four.md"
+
+    "${_NB}" use "home"
+  }
+
+  run "${_NB}" t todos Example\ Notebook:Example\ Folder/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 0     ]]
+
+  [[ !  "${output}"   =~  Four  ]]
+
+  [[    "${lines[0]}" =~  \
+.*\[.*Example\ Notebook:Example\ Folder/3.*\].*\ ✅\ .*\[.*x.*\].*\ Example\ todo\ description\ three\. ]]
+  [[    "${lines[1]}" =~  \
+.*\[.*Example\ Notebook:Example\ Folder/2.*\].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ two\.     ]]
+  [[    "${lines[2]}" =~  \
+.*\[.*Example\ Notebook:Example\ Folder/1.*\].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ one\.     ]]
+}
+
 # t alias <folder> ############################################################
 
 @test "'t open <folder>' exits with 0 and lists open todos and tasks in folder." {
