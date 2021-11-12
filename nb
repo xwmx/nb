@@ -9939,6 +9939,25 @@ ul.task-list {
   list-style:         none;
 }
 
+ul.task-list input[type="checkbox"] {
+  -webkit-appearance: none;
+  -moz-appearance:    none;
+  background-color:   #2d2d2d;
+  border-radius:      3px;
+  font-size:          1.2rem;
+  padding:            0 0.3rem;
+}
+
+ul.task-list input[type="checkbox"]:before {
+  content:            "\0000A0";
+  color:              transparent;
+}
+
+ul.task-list input[type="checkbox"]:checked:before {
+  content:            "x";
+  color:              ${_color_primary_hex};
+}
+
 /*
  * #93a5cc #ffcfaf #7f9f7f #dca3a3 #f0dfaf #dfdfbf #dcdccc #c3bf9f #c0bed1
  * #efef8f #b7bcd8 #cccc96 #7290b1
