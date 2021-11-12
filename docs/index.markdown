@@ -1989,8 +1989,10 @@ nb example:12 peek
 # peek bookmark 12 in the notebook named "example", alternative
 nb example:peek 12
 ```
-`nb open` and `nb peek` subcommands also work seamlessly with encrypted bookmarks.
-`nb` will simply prompt you for the bookmark's password.
+
+[`nb open`](#open) and [`nb peek`](#peek)
+work seamlessly with encrypted bookmarks.
+`nb` simply prompts you for the bookmark's password.
 
 `nb open` and `nb peek` automatically check whether the URL is still valid.
 If the page has been removed, `nb` can check
@@ -2060,7 +2062,7 @@ nb example:12 p
 
 Bookmarks are identified by a `.bookmark.md` file extension.
 The bookmark URL is the first URL in the file within `<` and `>` characters.
-To create a minimally valid bookmark file with `nb add`:
+To create a minimally valid bookmark file with [`nb add`](#add):
 
 ```bash
 nb add example.bookmark.md --content "<https://example.com>"
