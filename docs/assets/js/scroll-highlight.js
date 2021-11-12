@@ -9,6 +9,14 @@ $(function() {
           id = '%EF%B8%8F-tasks';
         }
 
+        if (
+            id.indexOf("nb-markdown-bookmark-file-format")  !== -1 ||
+            id.indexOf("nb-markdown-todo-file-format")      !== -1 ||
+            id.indexOf("nb-notebook-specification")         !== -1
+        ) {
+          id = 'specifications';
+        }
+
         $('.nav-list a').removeClass('active');
         $('.nav-list a[href="#' + id + '"]').addClass('active');
       } else if($(window).scrollTop() + $(window).height() == $(document).height()) {
@@ -18,3 +26,4 @@ $(function() {
     });
   });
 });
+

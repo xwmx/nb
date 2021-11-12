@@ -1639,7 +1639,8 @@ When [readability-cli](https://gitlab.com/gardenappl/readability-cli)
 is installed, markup is cleaned up to focus on content.
 
 In addition to caching the page content, you can also include a quote from
-the page using the `-q` / `--quote` option:
+the page using the
+[`-q <quote>` / `--quote <quote>`](#bookmark) option:
 
 ```bash
 nb https://example.com --quote "Example quote line one.
@@ -1673,7 +1674,8 @@ permission.
 [More information\...](https://www.iana.org/domains/example)
 ```
 
-Add a comment to a bookmark using the `-c` / `--comment` option:
+Add a comment to a bookmark using the
+[`-c <comment>` / `--comment <comment>`](#bookmark) option:
 
 ```bash
 nb https://example.com --comment "Example comment."
@@ -1703,8 +1705,9 @@ permission.
 [More information\...](https://www.iana.org/domains/example)
 ```
 
-Add related URLs and selectors to a `## Related` section
-using the `-r (<url> | <selector>)` / `--related (<url> | <selector>)`
+Add related URLs and [linked](#-linking) [selectors](#-selectors)
+to a `## Related` section using the
+[`-r (<url> | <selector>)` / `--related (<url> | <selector>)`](#bookmark)
 option:
 
 ```bash
@@ -1735,8 +1738,10 @@ permission.
 
 [More information\...](https://www.iana.org/domains/example)
 ```
-Bookmarks can be tagged using the `-t` / `--tags` option. Tags are converted
-into [#hashtags](#-tagging):
+
+Bookmarks can be tagged using the
+[`-t <tag1>,<tag2>...` / `--tags <tag1>,<tag2>...`](#bookmark) option.
+Tags are converted into [#hashtags](#-tagging):
 
 ```bash
 nb https://example.com --tags tag1,tag2
@@ -1983,8 +1988,10 @@ nb example:12 peek
 # peek bookmark 12 in the notebook named "example", alternative
 nb example:peek 12
 ```
-`nb open` and `nb peek` subcommands also work seamlessly with encrypted bookmarks.
-`nb` will simply prompt you for the bookmark's password.
+
+[`nb open`](#open) and [`nb peek`](#peek)
+work seamlessly with encrypted bookmarks.
+`nb` simply prompts you for the bookmark's password.
 
 `nb open` and `nb peek` automatically check whether the URL is still valid.
 If the page has been removed, `nb` can check
@@ -2054,7 +2061,7 @@ nb example:12 p
 
 Bookmarks are identified by a `.bookmark.md` file extension.
 The bookmark URL is the first URL in the file within `<` and `>` characters.
-To create a minimally valid bookmark file with `nb add`:
+To create a minimally valid bookmark file with [`nb add`](#add):
 
 ```bash
 nb add example.bookmark.md --content "<https://example.com>"
@@ -2131,7 +2138,7 @@ Use [`nb todo`](#todo) (shortcut: `nb t`) to create, list, and check off todos.
 referencing a single primary todo,
 with optional [tasks](#%EF%B8%8F-tasks).
 
-Use `nb todo add` to create a new todo:
+Use [`nb todo add`](#todo) to create a new todo:
 
 ```bash
 # create a new todo titled "Example todo one."
@@ -2142,7 +2149,7 @@ Added: [1] ✔️ [ ] Example todo one.
 # [ ] Example todo one.
 ```
 
-Use the `--due <date>` option to add an optional due date in a
+Use the [`--due <date>`](#todo) option to add an optional due date in a
 `## Due` section:
 
 ```bash
@@ -2158,7 +2165,9 @@ Added: [2] ✔️ [ ] Example todo two.
 2100-01-01
 ```
 
-Add an optional description with the `--description <description>` option:
+Add an optional description with the
+[`--description <description>`](#todo)
+option:
 
 ```bash
 ❯ nb todo add "Example todo three." --description "Example description."
@@ -2190,8 +2199,9 @@ Added: [7] ✔️ [ ] Example todo seven.
 - [ ] Task three.
 ```
 
-Related URLs and selectors can be added to a `## Related` field
-using the `-r (<url> | <selector>)` / `--related (<url> | <selector>)`
+Related URLs and [linked](#-linking) [selectors](#-selectors)
+can be added to a `## Related` field using the
+[`-r (<url> | <selector>)` / `--related (<url> | <selector>)`](#todo)
 option:
 
 ```bash
@@ -2207,7 +2217,7 @@ Added: [4] ✔️ [ ] Example todo four.
 - <https://example.com>
 ```
 
-Tags can be added to todos with the `--tags <tag1>,<tag2>...` option:
+[Tags](#-tagging) can be added to todos with the [`--tags <tag1>,<tag2>...`](#todo) option:
 
 ```bash
 ❯ nb todo add "Example todo five." --tags tag1,tag2
@@ -2221,7 +2231,8 @@ Added: [5] ✔️ [ ] Example todo five.
 #tag1 #tag2
 ```
 
-Linked tags, selectors, and URLs can be [browsed](#-browsing)
+[Tags](#-tagging), [links](#-linking), and URLs can be
+[browsed](#-browsing)
 in terminal and GUI web browers with [`nb browse`](#browse).
 
 #### Listing Todos
@@ -2247,7 +2258,7 @@ List todos in with [`nb todos`](#todo):
 
 ```
 
-Open / undone todos can be listed with `nb todos open`:
+Open / undone todos can be listed with [`nb todos open`](#todo):
 
 ```bash
 # list open todos in the current notebook
@@ -2262,7 +2273,7 @@ Open / undone todos can be listed with `nb todos open`:
 [sample:2] ✔️ [ ] Sample todo two.
 ```
 
-Closed / done todos can be listed with `nb todos closed`:
+Closed / done todos can be listed with [`nb todos closed`](#todo):
 
 ```bash
 # list closed todos in the current notebook
@@ -2331,7 +2342,8 @@ Tasks are defined as one or more Markdown list items starting with
 - [x] Example closed task.
 ```
 
-List tasks in items, folders, and notebooks with [`nb tasks`](#tasks),
+List tasks in items, folders, and notebooks with
+[`nb tasks`](#tasks) (shortcut: `nb t`),
 which lists both tasks and todos:
 
 ```bash
@@ -2361,7 +2373,7 @@ which lists both tasks and todos:
 [example:3] ✔️ [ ] Example todo three.
 ```
 
-Open / undone tasks can be listed with `nb tasks open`:
+Open / undone tasks can be listed with [`nb tasks open`](#tasks):
 
 ```bash
 # list open tasks in item 7
@@ -2382,11 +2394,11 @@ Open / undone tasks can be listed with `nb tasks open`:
 [example:3] ✔️ [ ] Example todo three.
 ```
 
-Closed / done tasks can be listed with `nb tasks closed`:
+Closed / done tasks can be listed with [`nb tasks closed`](#tasks):
 
 ```bash
 # list closed tasks in item 7
-❯ nb closed tasks 7
+❯ nb tasks closed 7
 [7] ✔️ [ ] Example todo seven.
 ------------------------------
 [7 1] [x] Task one.
@@ -2486,7 +2498,7 @@ and
 [#hashtags](#-tagging),
 and adds them to the document.
 
-Tags added to notes with `nb add --tags` are placed between the title
+Tags added to notes with [`nb add --tags`](#add) are placed between the title
 and body text:
 
 ```bash
@@ -2502,8 +2514,8 @@ Example note content.
 ```
 
 Tags added to [bookmarks](#bookmarks) with
-`nb <url> --tags` and `nb bookmark <url> --tags`
-are placed in a _Tags_ section:
+`nb <url> --tags` and [`nb bookmark <url> --tags`](#bookmark)
+are placed in a `## Tags` section:
 
 ```bash
 ❯ nb https://example.com --tags tag1,tag2
@@ -2535,8 +2547,8 @@ permission.
 ```
 
 Tags added to [todos](#-todos) with
-`nb todo add --tags`
-are placed in a _Tags_ section:
+[`nb todo add --tags`](#todo)
+are placed in a `## Tags` section:
 
 ```bash
 ❯ nb todo add --tags tag1,tag2 "Example todo."
@@ -3336,7 +3348,7 @@ nb add example/demo/
 
 `nb` automatically creates any intermediate folders as needed.
 
-Folders can be created directly using `nb add --type folder`:
+Folders can be created directly using [`nb add --type folder`](#add):
 
 ```bash
 # create a new folder named "sample"
@@ -8043,6 +8055,9 @@ Examples:
   nb example:tasks open
   nb tasks closed sample/
   nb tasks closed demo:456
+
+Shortcut Alias:
+  nb t
 ```
 
 #### `todo`

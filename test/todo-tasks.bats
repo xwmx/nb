@@ -1,7 +1,143 @@
 #!/usr/bin/env bats
-# shellcheck disable=SC2030,SC2031,SC2063
+# shellcheck disable=SC2030,SC2031,SC2063,SC2076
 
 load test_helper
+
+# line wrapping ###############################################################
+
+@test "'tasks <folder>/<id> <task-number>' exits with 0 and lists individual tasks with wrapping." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add                                    \
+      --filename "Example Folder/Todo One.todo.md"  \
+      --content "$(cat <<HEREDOC
+# [ ] Example todo description one.
+
+## Due
+
+2200-02-02
+
+## Tasks
+
+- [ ] Task one with example sample demo test long title to test task list line-wrapping behavior one.
+- [] Task two with example sample demo test long title to test task list line-wrapping behavior two.
+- [x] Task three with example sample demo test long title to test task list line-wrapping behavior three.
+- [ ] Task four with example sample demo test long title to test task list line-wrapping behavior four.
+
+## Tags
+
+#tag1 #tag2
+HEREDOC
+)"
+  }
+
+  run "${_NB}" tasks Example\ Folder/1 2
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 0 ]]
+  [[    "${#lines[@]}"  -eq 3 ]]
+
+  [[    "${lines[0]}"   =~  \
+.*\[.*Example\ Folder/1.*].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ one\.  ]]
+
+  [[    "${lines[0]}"   =~ "$(printf '\033[?7l')" ]]
+  [[    "${lines[0]}"   =~ "$(printf '\033[?7h')" ]]
+
+  [[    "${lines[1]}"   =~  .*------------------------------------.*              ]]
+
+  [[ !  "${lines[1]}"   =~ "$(printf '\033[?7l')" ]]
+  [[ !  "${lines[1]}"   =~ "$(printf '\033[?7h')" ]]
+
+  [[    "${lines[2]}"   =~  \
+.*[.*Example\ Folder/1\ 2.*].*\ .*[\ ].*\ Task\ two\ with\ example\ sample                        ]]
+  [[    "${lines[2]}"   =~  \
+example\ sample\ demo\ test\ long\ title\ to\ test\ task\ list\ line\-wrapping\ behavior\ two\.   ]]
+
+  [[ !  "${lines[2]}"   =~ "$(printf '\033[?7l')" ]]
+  [[ !  "${lines[2]}"   =~ "$(printf '\033[?7h')" ]]
+}
+
+@test "'tasks <folder>/<id>' exits with 0 and lists multiple tasks without wrapping." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add                                    \
+      --filename "Example Folder/Todo One.todo.md"  \
+      --content "$(cat <<HEREDOC
+# [ ] Example todo description one.
+
+## Due
+
+2200-02-02
+
+## Tasks
+
+- [ ] Task one with example sample demo test long title to test task list line-wrapping behavior one.
+- [] Task two with example sample demo test long title to test task list line-wrapping behavior two.
+- [x] Task three with example sample demo test long title to test task list line-wrapping behavior three.
+- [ ] Task four with example sample demo test long title to test task list line-wrapping behavior four.
+
+## Tags
+
+#tag1 #tag2
+HEREDOC
+)"
+  }
+
+  run "${_NB}" tasks Example\ Folder/1
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 0 ]]
+  [[    "${#lines[@]}"  -eq 6 ]]
+
+  [[    "${lines[0]}"   =~  \
+.*\[.*Example\ Folder/1.*].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ one\.  ]]
+
+  [[    "${lines[0]}"   =~ "$(printf '\033[?7l')" ]]
+  [[    "${lines[0]}"   =~ "$(printf '\033[?7h')" ]]
+
+  [[    "${lines[1]}"   =~  .*------------------------------------.*              ]]
+
+  [[ !  "${lines[1]}"   =~ "$(printf '\033[?7l')" ]]
+  [[ !  "${lines[1]}"   =~ "$(printf '\033[?7h')" ]]
+
+  [[    "${lines[2]}"   =~  \
+.*[.*Example\ Folder/1\ 1.*].*\ .*[\ ].*\ Task\ one\ with\ example\ sample                        ]]
+  [[    "${lines[2]}"   =~  \
+example\ sample\ demo\ test\ long\ title\ to\ test\ task\ list\ line\-wrapping\ behavior\ one\.   ]]
+
+  [[    "${lines[2]}"   =~ "$(printf '\033[?7l')" ]]
+  [[    "${lines[2]}"   =~ "$(printf '\033[?7h')" ]]
+
+  [[    "${lines[3]}"   =~  \
+.*[.*Example\ Folder/1\ 2.*].*\ .*[\ ].*\ Task\ two\ with\ example\ sample                        ]]
+  [[    "${lines[3]}"   =~  \
+example\ sample\ demo\ test\ long\ title\ to\ test\ task\ list\ line\-wrapping\ behavior\ two\.   ]]
+
+  [[    "${lines[3]}"   =~ "$(printf '\033[?7l')" ]]
+  [[    "${lines[3]}"   =~ "$(printf '\033[?7h')" ]]
+
+  [[    "${lines[4]}"   =~  \
+.*[.*Example\ Folder/1\ 3.*].*\ .*[.*x.*].*\ Task\ three\ with\ example\ sample                   ]]
+  [[    "${lines[4]}"   =~  \
+example\ sample\ demo\ test\ long\ title\ to\ test\ task\ list\ line\-wrapping\ behavior\ three\. ]]
+
+  [[    "${lines[4]}"   =~ "$(printf '\033[?7l')" ]]
+  [[    "${lines[4]}"   =~ "$(printf '\033[?7h')" ]]
+
+  [[    "${lines[5]}"   =~  \
+.*[.*Example\ Folder/1\ 4.*].*\ .*[\ ].*\ Task\ four\ with\ example\ sample                        ]]
+  [[    "${lines[5]}"   =~  \
+example\ sample\ demo\ test\ long\ title\ to\ test\ task\ list\ line\-wrapping\ behavior\ four\.   ]]
+
+  [[    "${lines[5]}"   =~ "$(printf '\033[?7l')" ]]
+  [[    "${lines[5]}"   =~ "$(printf '\033[?7h')" ]]
+}
 
 # do task #####################################################################
 
