@@ -22566,6 +22566,9 @@ _todo() {
           --type md                   \
           2>/dev/null || printf ""
       } | {
+        local _first=1
+        local _in_task_list_item=0
+
         local         __item_path=
         while read -r __item_path
         do
@@ -22647,9 +22650,21 @@ _todo() {
             continue
           fi
 
+          if   ((_contains_filtered_tasks))   &&
+             ! ((_in_task_list_item))
+          then
+            _in_task_list_item=1
+
+            ((_first)) || printf "\\n"
+          else
+            _in_task_list_item=0
+          fi
+
           _list "${__item_path:-}"
 
-          if ! ((_contains_filtered_tasks)) && ! ((_selector_is_item))
+          _first=0
+
+          if ! ((_contains_filtered_tasks))   && ! ((_selector_is_item))
           then
             continue
           fi
