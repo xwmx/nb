@@ -7830,7 +7830,7 @@ HEREDOC
         _maybe_notebook_path="${_maybe_notebook_path%/*}"
       done
 
-      if [[ -n "${_maybe_notebook_path:-}"  ]]
+      if [[ -n "${_maybe_notebook_path:-}"    ]]
       then
         if [[ -n "${_local_notebook_path:-}"                          ]] &&
            [[ "${_maybe_notebook_path}" == "${_local_notebook_path}"  ]]
@@ -7840,11 +7840,11 @@ HEREDOC
           _notebook_path="${_maybe_notebook_path%/}"
         fi
       fi
-    elif [[ -n "${_selector:-}" ]]
+    elif [[ -n "${_selector:-}"               ]]
     then
       local _selector_notebook="${_selector%%:*}"
 
-      if [[ -n "${_selector_notebook:-}"    ]]
+      if [[ -n "${_selector_notebook:-}"      ]]
       then
         if [[ "${_selector_notebook:-}" == "local"  ]] &&
            [[ -n "${_local_notebook_path:-}"        ]]
@@ -7858,7 +7858,7 @@ HEREDOC
       fi
     fi
 
-    if [[ -z "${_notebook_path:-}" ]]
+    if [[ -z "${_notebook_path:-}"            ]]
     then
       _warn \
         printf "Notebook not found: %s\\n" "$(_color_primary "${_selector}")"
@@ -7873,7 +7873,7 @@ HEREDOC
 
     if ((_test_archived))
     then
-      if [[ -d "${_notebook_path}/.archived" ]]
+      if [[ -d "${_notebook_path}/.archived"  ]]
       then
         return 0
       else
@@ -7905,7 +7905,7 @@ HEREDOC
 
     local _escaped_name="${_notebook_name}"
 
-    if [[ "${_escaped_name}" =~ \  ]]
+    if [[ "${_escaped_name}" =~ \         ]]
     then
       _escaped_name="$(
         printf "%s\\n" "${_escaped_name}" | sed -e "s/ /\\\ /g"
@@ -7918,15 +7918,15 @@ HEREDOC
       return 0
     fi
 
-    if ((_notebook_color_enabled)) &&
-       [[ "${_notebook_path}" == "${NB_NOTEBOOK_PATH}" ]]
+    if ((_notebook_color_enabled))        &&
+       [[ "${_notebook_path}" == "${NB_NOTEBOOK_PATH}"  ]]
     then
       _escaped_name="$(_color_primary "${_escaped_name}")"
     fi
 
     local _notebook_line="${_escaped_name}"
 
-    if [[ -e "${_notebook_path}/.archived" ]]
+    if [[ -e "${_notebook_path}/.archived"              ]]
     then
       _notebook_line="${_notebook_line} (archived)"
     fi
@@ -7936,7 +7936,7 @@ HEREDOC
       git -C "${_notebook_path}" config --get remote.origin.url || echo ''
     )"
 
-    if [[ -n "${_remote_url:-}" ]]
+    if [[ -n "${_remote_url:-}"           ]]
     then
       _notebook_line="${_notebook_line} (${_remote_url})"
     fi
@@ -7951,14 +7951,14 @@ HEREDOC
   _notebooks_use() {
     local _name="${1%:}"
 
-    if [[ -z "${_name}" ]]
+    if [[ -z "${_name}"                   ]]
     then
       _exit_1 _help notebooks
     fi
 
     _notebooks_validate_name "${_name}"
 
-    if [[ -n "${_LOCAL_NOTEBOOK_PATH}" ]]
+    if [[ -n "${_LOCAL_NOTEBOOK_PATH}"    ]]
     then
       _exit_1 cat <<HEREDOC
 Currently in a local notebook. To run a command in a global notebook,
@@ -7972,7 +7972,7 @@ $(_color_primary "Examples"):
 HEREDOC
     fi
 
-    if [[ -e "${NB_DIR}/${_name}/.index" ]]
+    if [[ -e "${NB_DIR}/${_name}/.index"  ]]
     then
       printf "%s\\n" "${_name}" > "${NB_DIR}/.current"
 
