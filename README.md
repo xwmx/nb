@@ -2386,7 +2386,7 @@ Closed / done tasks can be listed with `nb tasks closed`:
 
 ```bash
 # list closed tasks in item 7
-❯ nb closed tasks 7
+❯ nb tasks closed 7
 [7] ✔️ [ ] Example todo seven.
 ------------------------------
 [7 1] [x] Task one.
