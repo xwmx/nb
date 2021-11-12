@@ -97,10 +97,12 @@ load test_helper
   [[ "${lines[12]}" == "  $(_color_primary 'nb add')"                     ]]
   [[ "${lines[13]}" == "Add a bookmark:"                                  ]]
   [[ "${lines[14]}" == "  $(_color_primary "nb <url>")"                   ]]
-  [[ "${lines[15]}" == "Import a file:"                                   ]]
-  [[ "${lines[16]}" == "  $(_color_primary "nb import (<path> | <url>)")" ]]
-  [[ "${lines[17]}" == "Help information:"                                ]]
-  [[ "${lines[18]}" == "  $(_color_primary 'nb help')"                    ]]
+  [[ "${lines[15]}" == "Add a todo:"                                      ]]
+  [[ "${lines[16]}" == "  $(_color_primary "nb todo add <title>")"        ]]
+  [[ "${lines[17]}" == "Import a file:"                                   ]]
+  [[ "${lines[18]}" == "  $(_color_primary "nb import (<path> | <url>)")" ]]
+  [[ "${lines[19]}" == "Help information:"                                ]]
+  [[ "${lines[20]}" == "  $(_color_primary 'nb help')"                    ]]
 }
 
 # `nb` (empty repo) ###########################################################
@@ -123,10 +125,12 @@ load test_helper
   [[ "${lines[4]}"  == "  $(_color_primary 'nb add')"                     ]]
   [[ "${lines[5]}"  == "Add a bookmark:"                                  ]]
   [[ "${lines[6]}"  == "  $(_color_primary "nb <url>")"                   ]]
-  [[ "${lines[7]}"  == "Import a file:"                                   ]]
-  [[ "${lines[8]}"  == "  $(_color_primary "nb import (<path> | <url>)")" ]]
-  [[ "${lines[9]}"  == "Help information:"                                ]]
-  [[ "${lines[10]}" == "  $(_color_primary 'nb help')"                    ]]
+  [[ "${lines[7]}"  == "Add a todo:"                                      ]]
+  [[ "${lines[8]}"  == "  $(_color_primary "nb todo add <title>")"        ]]
+  [[ "${lines[9]}"  == "Import a file:"                                   ]]
+  [[ "${lines[10]}" == "  $(_color_primary "nb import (<path> | <url>)")" ]]
+  [[ "${lines[11]}" == "Help information:"                                ]]
+  [[ "${lines[12]}" == "  $(_color_primary 'nb help')"                    ]]
 }
 
 # `nb` (non-empty repo) #######################################################
