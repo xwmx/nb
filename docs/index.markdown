@@ -1924,8 +1924,8 @@ Add: nb <url> Help: nb help bookmark
 `nb` provides multiple ways to view bookmark files, bookmarked content,
 and bookmarked URLs.
 
-Use [`nb browse`](#browse) (shortcut: `nb br`) to [browse](#-browsing)
-bookmarks with cached content,
+Use [`nb browse`](#browse) (shortcut: [`nb br`](#browse))
+to [browse](#-browsing) bookmarks with cached content,
 <a href="#-linking">[[wiki-style links]]</a>,
 linked [#tags](#-tagging), and external links:
 
@@ -2538,7 +2538,7 @@ Example note content.
 ```
 
 Tags added to [bookmarks](#bookmarks) with
-`nb <url> --tags` and [`nb bookmark <url> --tags`](#bookmark)
+[`nb <url> --tags`](#nb-help) and [`nb bookmark <url> --tags`](#bookmark)
 are placed in a `## Tags` section:
 
 ```bash
@@ -2586,8 +2586,9 @@ are placed in a `## Tags` section:
 #tag1 #tag2
 ```
 
-Use `nb --tags`, [`nb ls --tags`](#ls), and [`nb list --tags`](#list) to
-list the tags present in a notebook, folder, or item:
+Use [`nb --tags`](#nb-help), [`nb ls --tags`](#ls),
+and [`nb list --tags`](#list)
+to list the tags present in a notebook, folder, or item:
 
 ```bash
 # list all tags found in items in the current notebook
@@ -2783,7 +2784,7 @@ For more information about identifying items, see [Selectors](#-selectors).
   </sup>
 </p>
 
-Use [`nb browse`](#browse) (shortcut: `nb br`) to
+Use [`nb browse`](#browse) (shortcut: [`nb br`](#browse)) to
 browse, view, edit, and search linked notes, bookmarks, notebooks, folders,
 and other items using terminal and GUI web browsers.
 
@@ -2793,7 +2794,7 @@ and other items using terminal and GUI web browsers.
         width="500">
 </p>
 
-`nb browse` includes an embedded, terminal-first web application
+[`nb browse`](#browse) includes an embedded, terminal-first web application
 that renders
 <a href="#-linking">[[wiki-style links]]</a>
 and
