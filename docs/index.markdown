@@ -2137,7 +2137,7 @@ Use [`nb todo`](#todo) (shortcut: `nb t`) to create, list, and check off todos.
 referencing a single primary todo,
 with optional [tasks](#%EF%B8%8F-tasks).
 
-Use `nb todo add` to create a new todo:
+Use [`nb todo add`](#todo) to create a new todo:
 
 ```bash
 # create a new todo titled "Example todo one."
@@ -2148,7 +2148,7 @@ Added: [1] ✔️ [ ] Example todo one.
 # [ ] Example todo one.
 ```
 
-Use the `--due <date>` option to add an optional due date in a
+Use the [`--due <date>`](#todo) option to add an optional due date in a
 `## Due` section:
 
 ```bash
@@ -2164,7 +2164,9 @@ Added: [2] ✔️ [ ] Example todo two.
 2100-01-01
 ```
 
-Add an optional description with the `--description <description>` option:
+Add an optional description with the
+[`--description <description>`](#todo)
+option:
 
 ```bash
 ❯ nb todo add "Example todo three." --description "Example description."
@@ -2196,8 +2198,9 @@ Added: [7] ✔️ [ ] Example todo seven.
 - [ ] Task three.
 ```
 
-Related URLs and selectors can be added to a `## Related` field
-using the `-r (<url> | <selector>)` / `--related (<url> | <selector>)`
+Related URLs and [linked](#-linking) [selectors](#-selectors)
+can be added to a `## Related` field using the
+[`-r (<url> | <selector>)` / `--related (<url> | <selector>)`](#todo)
 option:
 
 ```bash
@@ -2213,7 +2216,7 @@ Added: [4] ✔️ [ ] Example todo four.
 - <https://example.com>
 ```
 
-Tags can be added to todos with the `--tags <tag1>,<tag2>...` option:
+[Tags](#-tagging) can be added to todos with the [`--tags <tag1>,<tag2>...`](#todo) option:
 
 ```bash
 ❯ nb todo add "Example todo five." --tags tag1,tag2
@@ -2227,7 +2230,8 @@ Added: [5] ✔️ [ ] Example todo five.
 #tag1 #tag2
 ```
 
-Linked tags, selectors, and URLs can be [browsed](#-browsing)
+[Tags](#-tagging), [links](#-linking), and URLs can be
+[browsed](#-browsing)
 in terminal and GUI web browers with [`nb browse`](#browse).
 
 #### Listing Todos
@@ -2253,7 +2257,7 @@ List todos in with [`nb todos`](#todo):
 
 ```
 
-Open / undone todos can be listed with `nb todos open`:
+Open / undone todos can be listed with [`nb todos open`](#todo):
 
 ```bash
 # list open todos in the current notebook
@@ -2268,7 +2272,7 @@ Open / undone todos can be listed with `nb todos open`:
 [sample:2] ✔️ [ ] Sample todo two.
 ```
 
-Closed / done todos can be listed with `nb todos closed`:
+Closed / done todos can be listed with [`nb todos closed`](#todo):
 
 ```bash
 # list closed todos in the current notebook
@@ -2367,7 +2371,7 @@ which lists both tasks and todos:
 [example:3] ✔️ [ ] Example todo three.
 ```
 
-Open / undone tasks can be listed with `nb tasks open`:
+Open / undone tasks can be listed with [`nb tasks open`](#tasks):
 
 ```bash
 # list open tasks in item 7
@@ -2388,7 +2392,7 @@ Open / undone tasks can be listed with `nb tasks open`:
 [example:3] ✔️ [ ] Example todo three.
 ```
 
-Closed / done tasks can be listed with `nb tasks closed`:
+Closed / done tasks can be listed with [`nb tasks closed`](#tasks):
 
 ```bash
 # list closed tasks in item 7
@@ -2492,7 +2496,7 @@ and
 [#hashtags](#-tagging),
 and adds them to the document.
 
-Tags added to notes with `nb add --tags` are placed between the title
+Tags added to notes with [`nb add --tags`](#add) are placed between the title
 and body text:
 
 ```bash
@@ -2508,7 +2512,7 @@ Example note content.
 ```
 
 Tags added to [bookmarks](#bookmarks) with
-`nb <url> --tags` and `nb bookmark <url> --tags`
+`nb <url> --tags` and [`nb bookmark <url> --tags`](#bookmark)
 are placed in a `## Tags` section:
 
 ```bash
@@ -2541,7 +2545,7 @@ permission.
 ```
 
 Tags added to [todos](#-todos) with
-`nb todo add --tags`
+[`nb todo add --tags`](#todo)
 are placed in a `## Tags` section:
 
 ```bash
@@ -3342,7 +3346,7 @@ nb add example/demo/
 
 `nb` automatically creates any intermediate folders as needed.
 
-Folders can be created directly using `nb add --type folder`:
+Folders can be created directly using [`nb add --type folder`](#add):
 
 ```bash
 # create a new folder named "sample"
