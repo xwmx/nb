@@ -1645,7 +1645,8 @@ When [readability-cli](https://gitlab.com/gardenappl/readability-cli)
 is installed, markup is cleaned up to focus on content.
 
 In addition to caching the page content, you can also include a quote from
-the page using the `-q` / `--quote` option:
+the page using the
+[`-q <quote>` / `--quote <quote>`](#bookmark) option:
 
 ```bash
 nb https://example.com --quote "Example quote line one.
@@ -1679,7 +1680,8 @@ permission.
 [More information\...](https://www.iana.org/domains/example)
 ```
 
-Add a comment to a bookmark using the `-c` / `--comment` option:
+Add a comment to a bookmark using the
+[`-c <comment>` / `--comment <comment>`](#bookmark) option:
 
 ```bash
 nb https://example.com --comment "Example comment."
@@ -1709,8 +1711,9 @@ permission.
 [More information\...](https://www.iana.org/domains/example)
 ```
 
-Add related URLs and selectors to a `## Related` section
-using the `-r (<url> | <selector>)` / `--related (<url> | <selector>)`
+Add related URLs and [linked](#-linking) [selectors](#-selectors)
+to a `## Related` section using the
+[`-r (<url> | <selector>)` / `--related (<url> | <selector>)`](#bookmark)
 option:
 
 ```bash
@@ -1741,8 +1744,10 @@ permission.
 
 [More information\...](https://www.iana.org/domains/example)
 ```
-Bookmarks can be tagged using the `-t` / `--tags` option. Tags are converted
-into [#hashtags](#-tagging):
+
+Bookmarks can be tagged using the
+[`-t <tag1>,<tag2>...` / `--tags <tag1>,<tag2>...`](#bookmark) option.
+Tags are converted into [#hashtags](#-tagging):
 
 ```bash
 nb https://example.com --tags tag1,tag2
