@@ -2224,6 +2224,57 @@ Added: [5] ✔️ [ ] Example todo five.
 Linked tags, selectors, and URLs can be [browsed](#-browsing)
 in terminal and GUI web browers with [`nb browse`](#browse).
 
+List todos in with [`nb todos`](#tasks):
+
+```bash
+# list todos in the current notebook
+❯ nb todos
+[6] ✔️ [ ] Example todo six.
+[5] ✅ [x] Example todo five.
+[4] ✔️ [ ] Example todo four.
+[3] ✅ [x] Example todo three.
+[2] ✅ [x] Example todo two.
+[1] ✔️ [ ] Example todo one.
+
+# list todos in the notebook named "sample"
+❯ nb todos sample:
+[sample:4] ✅ [x] Sample todo four.
+[sample:3] ✔️ [ ] Sample todo three.
+[sample:2] ✔️ [ ] Sample todo two.
+[sample:1] ✅ [x] Sample todo one.
+
+```
+
+Open / undone todos can be listed with `nb todos open`:
+
+```bash
+# list open todos in the current notebook
+❯ nb todos open
+[6] ✔️ [ ] Example todo six.
+[4] ✔️ [ ] Example todo four.
+[1] ✔️ [ ] Example todo one.
+
+# list open todos in the notebook named "sample"
+❯ nb tasks open sample:
+[sample:3] ✔️ [ ] Sample todo three.
+[sample:2] ✔️ [ ] Sample todo two.
+```
+
+Closed / done todos can be listed with `nb todos closed`:
+
+```bash
+# list closed todos in the current notebook
+❯ nb todos closed
+[5] ✅ [x] Example todo five.
+[3] ✅ [x] Example todo three.
+[2] ✅ [x] Example todo two.
+
+# list closed todos in the notebook named "sample"
+❯ nb tasks closed sample:
+[sample:4] ✅ [x] Sample todo four.
+[sample:1] ✅ [x] Sample todo one.
+```
+
 See
 [`nb help todo`](#todo)
 for more information.
