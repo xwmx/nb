@@ -9949,13 +9949,13 @@ ul.task-list input[type="checkbox"] {
 }
 
 ul.task-list input[type="checkbox"]:before {
-  content:            "\0000A0";
   color:              transparent;
+  content:            "\0000A0";
 }
 
 ul.task-list input[type="checkbox"]:checked:before {
-  content:            "x";
   color:              ${_color_primary_hex};
+  content:            "x";
 }
 
 /*
