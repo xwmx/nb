@@ -4987,7 +4987,7 @@ export  NB_INDICATOR_ENCRYPTED="🔒"
 export  NB_INDICATOR_FOLDER="📂"
 export  NB_INDICATOR_IMAGE="🌄"
 export  NB_INDICATOR_PINNED="📌"
-export  NB_INDICATOR_TODO="✔️ "
+export  NB_INDICATOR_TODO="✔️"
 export  NB_INDICATOR_TODO_DONE="✅"
 export  NB_INDICATOR_VIDEO="📹"
 ```
