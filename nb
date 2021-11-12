@@ -22559,8 +22559,8 @@ _todo() {
         local         __item_path=
         while read -r __item_path
         do
-          [[ -z "${__item_path:-}"  ]] && continue
-          [[ -d "${__item_path:-}"  ]] && continue
+          [[ -z "${__item_path:-}"    ]]    && continue
+          [[ -d "${__item_path:-}"    ]]    && continue
 
           grep -q                           \
             "${_task_closed_patterns[@]:-}" \
