@@ -6205,7 +6205,7 @@ _ls() {
         local _selector_id=
         _selector_id="$(_selector_get_identifier "${1}")"
 
-        if [[ -n "${_selector_id:-}" ]]
+        if [[ -n "${_selector_id:-}"  ]]
         then
           _arguments+=("${_selector_id}")
         fi
@@ -6214,7 +6214,7 @@ _ls() {
         _filter_patterns+=("${1}")
         ;;
       *)
-        if [[ -z "${_selector:-}" ]]
+        if [[ -z "${_selector:-}"     ]]
         then
           _selector="${1}"
         fi
@@ -6245,7 +6245,7 @@ _ls() {
             return 0
             ;;
           --added|--updated)
-            if [[ -n "${_selector:-}" ]]
+            if [[ -n "${_selector:-}"     ]]
             then
               _defer "_show" "${_arguments[@]:-}" "${_delegate_arguments[@]:-}"
               return 0
@@ -6285,7 +6285,7 @@ _ls() {
 
   local _selector_relative_path="${_selector#*:}"
 
-  if [[ -n "${_limit:-}" ]]
+  if [[ -n "${_limit:-}"      ]]
   then
     _list_options+=("--limit" "${_limit}")
   elif ! ((_all))                                       &&
@@ -6418,7 +6418,7 @@ _ls() {
             _ls_print_footer "${_selector_folder_path:-}"
           fi
         else
-          if [[ -n "${_list_error:-}" ]]
+          if [[ -n "${_list_error:-}"             ]]
           then
             printf "%s\\n" "${_list_error}"
             return 1
@@ -6594,7 +6594,6 @@ _RESERVED_NOTEBOOK_NAMES=(
   "readme.md"
 )
 _notebooks() {
-
   # _notebooks_add()
   #
   # Usage:
