@@ -33,7 +33,7 @@ with:
 - <a href="#-linking">[[wiki-style linking]]</a>,
 - terminal and GUI web [browsing](#-browsing),
 - inline [images](#-images),
-- [todos](#-todos) with [tasks](#--tasks),
+- [todos](#-todos) with [tasks](#%EF%B8%8F-tasks),
 - global and local [notebooks](#-notebooks),
 - organization with [folders](#-folders),
 - customizable [color themes](#-color-themes),
@@ -336,7 +336,7 @@ the [`nb update`](#update) subcommand.
   <a href="#deleting">Deleting</a>&nbsp;·
   <a href="#-bookmarks">🔖&nbsp;Bookmarks</a>&nbsp;·
   <a href="#-todos">✅&nbsp;Todos</a>&nbsp;·
-  <a href="#--tasks">Tasks</a>&nbsp;·
+  <a href="#%EF%B8%8F-tasks">✔️&nbsp;Tasks</a>&nbsp;·
   <a href="#-tagging">🏷&nbsp;Tagging</a>&nbsp;·
   <a href="#-linking">🔗&nbsp;Linking</a>&nbsp;·
   <a href="#-browsing">🌍&nbsp;Browsing</a>&nbsp;·
@@ -799,9 +799,7 @@ Pass an id, filename, or title to view the listing for that note:
 ```bash
 ❯ nb ls Sample\ Title
 [2] Sample Title
-```
 
-```bash
 ❯ nb ls 3
 [3] Example Title
 ```
@@ -810,17 +808,12 @@ If there is no exact match, `nb` will list items with
 titles and filenames that fuzzy match the query:
 
 ```bash
-❯ nb ls ex
+❯ nb ls exa
 [3] Example Title
-```
 
-A case-insensitive regular expression can also be used to
-filter filenames and titles:
-
-```bash
-❯ nb ls ".*ample.*"
+❯ nb ls ample
 [3] Example Title
-[3] Sample Title
+[2] Sample Title
 ```
 
 Multiple words act like an `OR` filter, listing any
@@ -2142,7 +2135,7 @@ See [`bookmark help`](#bookmark-help) for more information.
 Use [`nb todo`](#todo) (shortcut: `nb t`) to create, list, and check off todos.
 `nb` todos are [structured Markdown documents](#nb-markdown-todo-file-format)
 referencing a single primary todo,
-with optional [tasks](#--tasks).
+with optional [tasks](#%EF%B8%8F-tasks).
 
 Use `nb todo add` to create a new todo:
 
@@ -2185,8 +2178,9 @@ Added: [3] ✔️ [ ] Example todo three.
 Example description.
 ```
 
-Todos can have [tasks](#--tasks). Tasks are represented as a markdown task list
-and are placed in a `## Tasks` section:
+Todos can have [tasks](#%EF%B8%8F-tasks).
+Tasks added with one or more [`nb todo add --task <task>`](#todo) options
+are represented as a markdown task list and placed in a `## Tasks` section:
 
 ```bash
 ❯ nb todo add "Example todo seven." --task "Task one." --task "Task two." --task "Task three."
@@ -2236,6 +2230,59 @@ Added: [5] ✔️ [ ] Example todo five.
 Linked tags, selectors, and URLs can be [browsed](#-browsing)
 in terminal and GUI web browers with [`nb browse`](#browse).
 
+#### Listing Todos
+
+List todos in with [`nb todos`](#todo):
+
+```bash
+# list todos in the current notebook
+❯ nb todos
+[6] ✔️ [ ] Example todo six.
+[5] ✅ [x] Example todo five.
+[4] ✔️ [ ] Example todo four.
+[3] ✅ [x] Example todo three.
+[2] ✅ [x] Example todo two.
+[1] ✔️ [ ] Example todo one.
+
+# list todos in the notebook named "sample"
+❯ nb todos sample:
+[sample:4] ✅ [x] Sample todo four.
+[sample:3] ✔️ [ ] Sample todo three.
+[sample:2] ✔️ [ ] Sample todo two.
+[sample:1] ✅ [x] Sample todo one.
+
+```
+
+Open / undone todos can be listed with `nb todos open`:
+
+```bash
+# list open todos in the current notebook
+❯ nb todos open
+[6] ✔️ [ ] Example todo six.
+[4] ✔️ [ ] Example todo four.
+[1] ✔️ [ ] Example todo one.
+
+# list open todos in the notebook named "sample"
+❯ nb tasks open sample:
+[sample:3] ✔️ [ ] Sample todo three.
+[sample:2] ✔️ [ ] Sample todo two.
+```
+
+Closed / done todos can be listed with `nb todos closed`:
+
+```bash
+# list closed todos in the current notebook
+❯ nb todos closed
+[5] ✅ [x] Example todo five.
+[3] ✅ [x] Example todo three.
+[2] ✅ [x] Example todo two.
+
+# list closed todos in the notebook named "sample"
+❯ nb tasks closed sample:
+[sample:4] ✅ [x] Sample todo four.
+[sample:1] ✅ [x] Sample todo one.
+```
+
 See
 [`nb help todo`](#todo)
 for more information.
@@ -2245,9 +2292,11 @@ for more information.
 Mark a todo as done or closed with [`nb do`](#do):
 
 ```bash
+# add a new todo titled "Example todo six."
 ❯ nb todo add "Example todo six."
 Added: [6] ✔️ [ ] Example todo six.
 
+# mark todo 6 as done / closed
 ❯ nb do 6
 Done: [6] ✅ [x] Example todo two.
 ```
@@ -2255,6 +2304,7 @@ Done: [6] ✅ [x] Example todo two.
 Re-open a closed todo with [`nb undo`](#undo):
 
 ```bash
+# mark todo 6 as undone / open
 ❯ nb undo 6
 Undone: [6] ✔️ [ ] Example todo two.
 ```
@@ -2265,11 +2315,11 @@ and
 [`nb help undo`](#undo),
 for more information.
 
-#### `-[]` Tasks
+### ✔️ Tasks
 
 <p>
   <sup>
-    <a href="#-todos">↑</a> ·
+    <a href="#overview">↑</a> ·
     <a href="#do"><code>nb do</code></a>,
     <a href="#tasks"><code>nb tasks</code></a>,
     <a href="#todo"><code>nb todo</code></a>,
@@ -2280,17 +2330,18 @@ for more information.
 `nb` can list and update tasks in [todos](#-todos) and other Markdown documents.
 
 Tasks are defined as one or more Markdown list items starting with
-`- [ ]` to indicate an open task or `- [x]` to indicate a closed task:
+`- [ ]` to indicate an open task or `- [x]` to indicate a done / closed task:
 
 ```markdown
-- [ ] Example incomplete task.
-- [x] Example completed task.
+- [ ] Example open task.
+- [x] Example closed task.
 ```
 
-List tasks in notebooks, folders, and items with [`nb tasks`](#tasks),
+List tasks in items, folders, and notebooks with [`nb tasks`](#tasks),
 which lists both tasks and todos:
 
-```
+```bash
+# list tasks in item 7
 ❯ nb tasks 7
 [7] ✔️ [ ] Example todo seven.
 ------------------------------
@@ -2298,12 +2349,13 @@ which lists both tasks and todos:
 [7 2] [x] Task two.
 [7 3] [ ] Task three.
 
+# list tasks and todos in the notebook named "example"
 ❯ nb tasks example:
 [example:9] ✔️ [ ] Example todo nine.
 [example:8] ✅ [x] Example todo eight.
 --------------------------------------
 [example:8 1] [x] Task one.
-[example:8 2] [ ] Task two.
+[example:8 2] [x] Task two.
 
 [example:6] ✔️ [ ] Example todo six.
 [example:4] Example Note Title
@@ -2315,39 +2367,94 @@ which lists both tasks and todos:
 [example:3] ✔️ [ ] Example todo three.
 ```
 
+Open / undone tasks can be listed with `nb tasks open`:
+
+```bash
+# list open tasks in item 7
+❯ nb tasks open 7
+[7] ✔️ [ ] Example todo seven.
+------------------------------
+[7 3] [ ] Task three.
+
+# list open tasks and todos in the notebook named "example"
+❯ nb tasks open example:
+[example:9] ✔️ [ ] Example todo nine.
+[example:6] ✔️ [ ] Example todo six.
+[example:4] Example Note Title
+------------------------------
+[example:4 1] [ ] Task one.
+[example:4 3] [ ] Task three.
+
+[example:3] ✔️ [ ] Example todo three.
+```
+
+Closed / done tasks can be listed with `nb tasks closed`:
+
+```bash
+# list closed tasks in item 7
+❯ nb closed tasks 7
+[7] ✔️ [ ] Example todo seven.
+------------------------------
+[7 1] [x] Task one.
+[7 2] [x] Task two.
+
+# list closed tasks and todos in the notebook named "example"
+❯ nb tasks closed example:
+[example:8] ✅ [x] Example todo eight.
+--------------------------------------
+[example:8 1] [x] Task one.
+[example:8 2] [x] Task two.
+
+[example:4] Example Note Title
+------------------------------
+[example:4 2] [x] Task two.
+```
+
 Tasks are identified by the item [selector](#-selectors), followed by
 a space, then followed by the sequential number of the task in the file.
 
-Use [`nb do`](#do) to mark tasks as complete:
+Use [`nb do`](#do) to mark tasks as done / closed:
 
 ```bash
-❯ nb do 7 2
-[7] ✔️ [ ] Example todo seven.
-------------------------------
-Done: [7 2] [x] Task two.
+# list tasks in item 9
+❯ nb tasks 9
+[9] ✔️ [ ] Eample todo nine.
+----------------------------
+[9 1] [ ] Task one.
+[9 2] [ ] Task two.
+[9 3] [ ] Task three.
 
-❯ nb tasks 7
-[7] ✔️ [ ] Example todo seven.
-------------------------------
-[7 1] [ ] Task one.
-[7 2] [x] Task two.
-[7 3] [ ] Task three.
+# mark task 2 in item 9 as done / closed
+❯ nb do 9 2
+[9] ✔️ [ ] Eample todo nine.
+----------------------------
+Done: [9 2] [x] Task two.
+
+# list tasks in item 9
+❯ nb tasks 9
+[9] ✔️ [ ] Eample todo nine.
+----------------------------
+[9 1] [ ] Task one.
+[9 2] [x] Task two.
+[9 3] [ ] Task three.
 ```
 
-Undo a completed task with [`nb undo`](#undo):
+Undo a done / closed task with [`nb undo`](#undo):
 
 ```bash
-❯ nb undo 7 2
-[7] ✔️ [ ] Example todo seven.
-------------------------------
+# mark task 2 in item 9 as undone / open
+❯ nb undo 9 2
+[9] ✔️ [ ] Example todo nine.
+-----------------------------
 Undone: [7 2] [ ] Task two.
 
-❯ nb tasks 7
-[7] ✔️ [ ] Example todo seven.
-------------------------------
-[7 1] [ ] Task one.
-[7 2] [ ] Task two.
-[7 3] [ ] Task three.
+# list tasks in item 9
+❯ nb tasks 9
+[9] ✔️ [ ] Example todo nine.
+-----------------------------
+[9 1] [ ] Task one.
+[9 2] [ ] Task two.
+[9 3] [ ] Task three.
 ```
 
 See
@@ -6284,7 +6391,7 @@ Shortcut Aliases:
 
 [↑](#help) · See also:
 [Todos](#-todos),
-[Tasks](#--tasks),
+[Tasks](#%EF%B8%8F-tasks),
 [`tasks`](#tasks),
 [`todo`](#todo),
 [`undo`](#undo)
@@ -6765,8 +6872,8 @@ Options:
                                   with `browse` in a GUI web browser.
   -n, --limit <limit>, --<limit>  The maximum number of listed items.
                                   [default: 15]
-  --no-header                     Print without header.
   --no-footer                     Print without footer.
+  --no-header                     Print without header.
   --no-id                         Don't include the id in list items.
   --no-indicator                  Don't include the indicator in list items.
   -p, --page <number>             The page to view in the list paginated by
@@ -7911,7 +8018,7 @@ Examples:
 #### `tasks`
 
 [↑](#help) · See also:
-[Tasks](#--tasks),
+[Tasks](#%EF%B8%8F-tasks),
 [Todos](#-todos),
 [`do`](#do),
 [`todo`](#todo),
@@ -7926,6 +8033,7 @@ Description:
   List tasks in todos, notebooks, folders, and other items.
 
 Read More:
+  https://github.com/xwmx/nb#%EF%B8%8F-tasks
   https://github.com/xwmx/nb#-todos
 
 See Also:
@@ -8038,7 +8146,7 @@ Shortcut Alias:
 
 [↑](#help) · See also:
 [Todos](#-todos),
-[Tasks](#--tasks),
+[Tasks](#%EF%B8%8F-tasks),
 [`do`](#do),
 [`tasks`](#tasks),
 [`todo`](#todo)
@@ -8351,7 +8459,7 @@ Description:
 
 <p align="center">
   <a href="#nb-markdown-bookmark-file-format">Bookmark File Format</a>&nbsp;·
-  <a href="#nb-todo-file-format">Todo File Format</a>&nbsp;·
+  <a href="#nb-markdown-todo-file-format">Todo File Format</a>&nbsp;·
   <a href="#nb-notebook-specification">Notebook Specification</a>
 </p>
 
@@ -8566,8 +8674,12 @@ Markdown.
 
 #### Description
 
-`nb` todos are Markdown documents identified by a `.todo.md` file
-extension.
+`nb` todos are Markdown documents identified by a `.todo.md` file extension.
+Todos contain a
+[Markdown atx-style `h1` heading
+](https://daringfireball.net/projects/markdown/syntax#header)
+starting with a Markdown checkbox (`[ ]` / `[x]`) indicating
+the todo completion state, followed by the todo title.
 
 #### Example
 
@@ -8585,8 +8697,8 @@ Example description.
 ## Tasks
 
 - [ ] One
-- [ ] Two
-- [x] Three
+- [x] Two
+- [ ] Three
 
 ## Related
 

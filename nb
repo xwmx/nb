@@ -74,7 +74,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="6.7.0"
+_VERSION="6.7.1"
 
 # $_ME
 #
@@ -2403,7 +2403,7 @@ _pager() {
 # _print_line()
 #
 # Usage:
-#   _print_line <text> [--dim]
+#   _print_line <text> [--dim] [--no-wrap] [--visible-length [<extra-length>]
 #
 # Description:
 #   Print a line of dashes the length of <text>.
@@ -2411,17 +2411,70 @@ _pager() {
 # More Information:
 #   https://wiki.bash-hackers.org/commands/builtin/printf
 _print_line() {
-  local _text="${1:-}"
-  local _text_length="${#_text}"
-  local _line=
-  printf -v _line "%*s" "${_text_length}" ""
+  local _dim=0
+  local _extra_length=0
+  local _text=
+  local _visible_length=0
+  local _wrap_line=1
 
-  if [[ "${2:-}" == "--dim" ]]
+  while ((${#}))
+  do
+    case "${1:-}" in
+      --dim*)   _dim=1                ;;
+      --no*w*)  _wrap_line=0          ;;
+      --vis*)   _visible_length=1     ;;
+      *)
+        case "${_text:-}" in
+          '') _text="${1:-}"          ;;
+          *)  _extra_length="${1:-}"  ;;
+        esac
+        ;;
+    esac
+
+    shift
+  done
+
+  local _text_length=
+
+  if ((_visible_length))
+  then
+    _text_length="$(
+      _get_visible_length "${_text:-}" "${_extra_length:-0}"
+    )"
+  else
+    _text_length="${#_text}"
+  fi
+
+  local _full_width_line=0
+
+  if ! ((_wrap_line)) && {
+       [[ -z "${_text_length:-}"                    ]] ||
+       [[    "${_text_length:-}" -gt "${_COLUMNS}"  ]]
+     }
+  then
+    _full_width_line=1
+  fi
+
+  local _line=
+
+  if ((_full_width_line))
+  then
+    printf -v _line "%*s" "${_COLUMNS}" ""
+  else
+    printf -v _line "%*s" "${_text_length}" ""
+  fi
+
+  if ((_dim))
   then
     _color_dim "${_line// /-}"
   else
     _color_secondary "${_line// /-}"
-  fi
+    fi |  if ((_full_width_line))
+          then
+            tr -d '\n'
+          else
+            cat
+          fi
 }
 
 # _print_padding()
@@ -5444,24 +5497,20 @@ ${_TPUT_SGR0}"
       printf "\\n"
 
       if ((_print_excerpt))                   &&
-         [[ "${_excerpt_length}" =~ ^[1-9] ]] &&
+         [[ "${_excerpt_length}" =~ ^[0-9] ]] &&
          _file_is_text "${_list_path}/${__basename}"
       then # excerpt is specified with a non-zero digit, required by `head`
-        local _visible_info_line_length=
-        _visible_info_line_length="$(
-          _get_visible_length "${_info_line:-}" "${_extra_length:-0}"
-        )"
+        _print_line "${_info_line:-}"   \
+          --no-wrap                     \
+          --visible-length "${_extra_length:-0}"
 
-        if [[ -z "${_visible_info_line_length:-}"               ]] ||
-           [[ "${_visible_info_line_length}" -gt "${_COLUMNS}"  ]]
+        if ((${_excerpt_length:-0}))
         then
-          _print_line "$(printf "%-${_COLUMNS}s" '.')" | tr -d '\n'
-        else
-          _print_line "$(printf "%-${_visible_info_line_length}s" '.')"
+          head -n "${_excerpt_length}" "${_list_path}/${__basename}" \
+            | _highlight_syntax_if_available "${__basename##*.}"
+
+          printf "\\n"
         fi
-        head -n "${_excerpt_length}" "${_list_path}/${__basename}" \
-          | _highlight_syntax_if_available "${__basename##*.}"
-        printf "\\n"
       fi
 
       _printed_count=$((_printed_count+1))
@@ -5552,6 +5601,16 @@ Add a bookmark:
 Help information:
   $(_color_primary "${_ME} help bookmark")
 HEREDOC
+        elif [[ "${_type}" =~ ^todo$|^todos$ ]]
+        then
+          cat <<HEREDOC
+0 todos.
+
+Add a todo:
+  $(_color_primary "${_ME} todo add${_maybe_id_path_context_padded_left:-} <title>")
+Help information:
+  $(_color_primary "${_ME} help todo")
+HEREDOC
         elif [[ -n "${_type:-}" ]] || ((_only_pinned))
         then
           if _contains "${_type}" "bookmarks" "documents" "images" "videos" "folders"
@@ -5594,6 +5653,8 @@ Add a note:
   $(_color_primary "${_ME} add${_maybe_id_path_context_padded_left:-}")
 Add a bookmark:
   $(_color_primary "${_ME} ${_maybe_id_path_context_padded_right:-}<url>")
+Add a todo:
+  $(_color_primary "${_ME} todo add${_maybe_id_path_context_padded_left:-} <title>")
 Import a file:
   $(_color_primary "${_ME} import (<path> | <url>)${_maybe_id_path_context_padded_left:-}")
 Help information:
@@ -5643,8 +5704,8 @@ $(_color_primary "Options"):
                                   with \`browse\` in a GUI web browser.
   -n, --limit <limit>, --<limit>  The maximum number of listed items.
                                   [default: 15]
-  --no-header                     Print without header.
   --no-footer                     Print without footer.
+  --no-header                     Print without header.
   --no-id                         Don't include the id in list items.
   --no-indicator                  Don't include the indicator in list items.
   -p, --page <number>             The page to view in the list paginated by
@@ -5777,9 +5838,10 @@ _ls() {
       "${_ME} edit ${_maybe_selector_scope}<id>"
       "${_ME} show ${_maybe_selector_scope}<id>"
       "${_ME} open ${_maybe_selector_scope}<id>"
-      "${_ME} list${_maybe_selector_scope_padded_left}"
-      "${_ME} search ${_maybe_selector_scope_padded_right}<query>"
       "${_ME} browse${_maybe_selector_scope_padded_left}"
+      "${_ME} todo${_maybe_selector_scope_padded_left}"
+      "${_ME} tasks${_maybe_selector_scope_padded_left}"
+      "${_ME} search ${_maybe_selector_scope_padded_right}<query>"
       "${_notebook_command}"
       "${_ME} settings"
       "${_ME} help"
@@ -5798,6 +5860,7 @@ _ls() {
       "$(_color_secondary "${_commands_raw[9]}")"
       "$(_color_secondary "${_commands_raw[10]}")"
       "$(_color_secondary "${_commands_raw[11]}")"
+      "$(_color_secondary "${_commands_raw[12]}")"
     )
 
     _wrap off
@@ -9876,6 +9939,25 @@ ul.task-list {
   list-style:         none;
 }
 
+ul.task-list input[type="checkbox"] {
+  -webkit-appearance: none;
+  -moz-appearance:    none;
+  background-color:   #2d2d2d;
+  border-radius:      3px;
+  font-size:          1.2rem;
+  padding:            0 0.3rem;
+}
+
+ul.task-list input[type="checkbox"]:before {
+  color:              transparent;
+  content:            "\0000A0";
+}
+
+ul.task-list input[type="checkbox"]:checked:before {
+  color:              ${_color_primary_hex};
+  content:            "x";
+}
+
 /*
  * #93a5cc #ffcfaf #7f9f7f #dca3a3 #f0dfaf #dfdfbf #dcdccc #c3bf9f #c0bed1
  * #efef8f #b7bcd8 #cccc96 #7290b1
@@ -10284,6 +10366,15 @@ HEREDOC
     fi
   } | {
     sed -e "s/<a\ /<a\ rel=\"noopener\ noreferrer\"\ /g"
+  } | {
+    # mark up checkboxes
+    local _checkbox_pattern_open="<span class=\"dim\">[<\/span><span class=\"identifier\">"
+    local _checkbox_pattern_close="<\/span><span class=\"dim\">\]<\/span>"
+
+    sed -E                                                                        \
+      -e "s/\[x\]/${_checkbox_pattern_open}x${_checkbox_pattern_close}/g"         \
+      -e "s/\[ \]/${_checkbox_pattern_open}${_NBSP}${_checkbox_pattern_close}/g"  \
+      -e "s/\[\]/${_checkbox_pattern_open}${_NBSP}${_checkbox_pattern_close}/g"
   }
 }
 
@@ -17371,8 +17462,8 @@ HEREDOC
         _display_item="${_display_item//' '/${_NBSP}}"
 
         # shellcheck disable=SC2140
-        _display_item="${_display_item/\[/<span class=\"dim\">[</span><span class=\"identifier\">}"
-        _display_item="${_display_item/\]/</span><span class=\"dim\">]</span>}"
+        _display_item="${_display_item//\[/<span class=\"dim\">[</span><span class=\"identifier\">}"
+        _display_item="${_display_item//\]/</span><span class=\"dim\">]</span>}"
 
         local _link_selector=
         _link_selector="$(_get_id_selector "${_item_selector}" --notebook)"
@@ -21912,6 +22003,7 @@ $(_color_primary "Description"):
   List tasks in todos, notebooks, folders, and other items.
 
 $(_color_primary "Read More"):
+  ${_README_URL}#%EF%B8%8F-tasks
   ${_README_URL}#-todos
 
 $(_color_primary "See Also"):
@@ -22069,10 +22161,11 @@ _todo() {
   local _description=
   local _due_datetime=
   local _filter=
+  local _maybe_title_arguments=()
+  local _option_title=
   local _related_identifiers=()
   local _tag_list=
   local _tasks=()
-  local _title=
 
   while ((${#}))
   do
@@ -22099,86 +22192,57 @@ _todo() {
         shift
         ;;
       --title)
-        local _option_title=
         _option_title="$(_option_get_value "${1:-}" "${2:-}")"
 
-        if [[ -n "${_title:-}"  ]]
-        then
-          _title="${_option_title} ${_MD} ${_title}"
-        else
-          _title="${_option_title}"
-        fi
-
         shift
-        ;;
-      +|a|add)
-        _action="add"
-
-        local _maybe_selector=
-        _maybe_selector="$(_option_get_value "${1:-}" "${2:-}")"
-
-        if [[ "${_maybe_selector:-}" =~ :$|/$     ]]
-        then
-          _arguments+=("${_maybe_selector}")
-        else
-          _title+="${_maybe_selector}"
-        fi
-
-        shift
-
-        while [[ -n "${2:-}"  ]] && [[ ! "${2:-}" =~ ^- ]]
-        do
-          [[ -n "${_title:-}" ]] && _title+=" "
-
-          _title+="${2:-}"
-
-          shift
-        done
-        ;;
-      c|closed)
-        _filter="closed"
-        ;;
-      d|do|close|complete*|finish*|check*)
-        _action="do"
-        ;;
-      done)
-        local _selector_path=
-
-        if [[ -n "${2:-}"     ]]
-        then
-          _selector_path="$(_show "${2:-}" --path)"
-        fi
-
-        if [[ "${_selector_path:-}" =~ todo\.md$  ]]
-        then
-          _action="do"
-        else
-          _filter="closed"
-        fi
-        ;;
-      l|list)
-        _action="list"
-        ;;
-      o|open)
-        if [[ -n "${2:-}"                 ]] &&
-           {
-             [[ "${_action:-}" != "tasks" ]] ||
-             [[ -n "${3:-}"               ]]
-           }
-        then
-          _action="undo"
-        else
-          _filter="open"
-        fi
-        ;;
-      tasks)
-        _action="tasks"
-        ;;
-      u|undo|*ncomplete*|undone|unfinish*|uncheck*)
-        _action="undo"
         ;;
       *)
-        _arguments+=("${1:-}")
+        if [[ "${_action:-}" == "add"       ]]
+        then
+          case "${1:-}" in
+            --edit) _arguments+=("${1:-}")  ;;
+            -*)
+              _arguments+=("${1:-}")
+
+              if _option_value_is_present "${2:-}"
+              then
+                _arguments+=("${2:-}")
+
+                shift
+              fi
+              ;;
+            *)
+              _maybe_title_arguments+=("${1:-}")
+              ;;
+          esac
+        fi
+
+        case "${1:-}" in
+          +|a|add)
+            _action="add"
+            ;;
+          c|closed|done)
+            _filter="closed"
+            ;;
+          d|do|close|complete*|finish*|check*)
+            _action="do"
+            ;;
+          l|list)
+            _action="list"
+            ;;
+          o|open|undone)
+            _filter="open"
+            ;;
+          tasks)
+            _action="tasks"
+            ;;
+          u|undo|*ncomplete|unfinish|uncheck)
+            _action="undo"
+            ;;
+          *)
+            [[ "${_action:-}" != "add" ]] && _arguments+=("${1:-}")
+            ;;
+        esac
         ;;
     esac
 
@@ -22187,6 +22251,44 @@ _todo() {
 
   case "${_action:-}" in
     add)
+      local _first=1
+      local _title=
+
+      local __argument=
+      for   __argument in "${_maybe_title_arguments[@]:-}"
+      do
+        if ((_first))
+        then
+          if [[ "${__argument:-}" =~ :$|/$ ]]
+          then
+            _arguments+=("${__argument}")
+          else
+            _title+="${__argument}"
+          fi
+
+          _first=0
+        else
+          [[ -n "${_title:-}"       ]] && _title+=" "
+
+          _title+="${__argument}"
+        fi
+      done
+
+      if [[ -n "${_option_title:-}" ]]
+      then
+        if [[ -n "${_title:-}"      ]]
+        then
+          _title="${_option_title} ${_MD} ${_title}"
+        else
+          _title="${_option_title}"
+        fi
+      fi
+
+      if [[ -z "${_title:-}"        ]]
+      then
+        _exit_1 _help "todo"
+      fi
+
       local _todo_content="# [ ] ${_title:-}${_NEWLINE}"
 
       if [[ -n "${_due_datetime:-}" ]]
@@ -22353,7 +22455,7 @@ _todo() {
             sed -E -e "/${NB_INDICATOR_TODO:-} .*\[\ \].*/d"
             ;;
           open)
-            sed -E -e "/${NB_INDICATOR_TODO:-} .*\[.*x.*\].*/d"
+            sed -E -e "/${NB_INDICATOR_TODO_DONE:-} .*\[.*x.*\].*/d"
             ;;
           *)
             cat
@@ -22415,10 +22517,19 @@ _todo() {
         _selector_path="$(_notebooks current --path)"
       fi
 
+      local _selector_is_item=1
+
       if [[ -d "${_selector_path:-}"  ]]
       then
+        _selector_is_item=0
         _selector_path="${_selector_path:-}/"
       fi
+
+      local _task_closed_patterns=(-e "- \[x\]")
+      local _task_open_patterns=(-e "- \[ \]" -e "- \[\]")
+
+      local _todo_closed_patterns=(-e "# \[x\]")
+      local _todo_open_patterns=(-e "# \[ \]" -e "# \[\]")
 
       {
         _list "${_selector_path:-}"   \
@@ -22435,29 +22546,87 @@ _todo() {
           [[ -z "${__item_path:-}"  ]] && continue
           [[ -d "${__item_path:-}"  ]] && continue
 
-          grep -q         \
-            -e "# \[ \]"  \
-            -e "# \[x\]"  \
-            -e "- \[ \]"  \
-            -e "- \[\]"   \
-            -e "- \[x\]"  \
+          grep -q                           \
+            "${_task_closed_patterns[@]:-}" \
+            "${_task_open_patterns[@]:-}"   \
+            "${_todo_closed_patterns[@]:-}" \
+            "${_todo_open_patterns[@]:-}"   \
             "${__item_path}" || continue
 
-          local _item_selector=
-          _item_selector="$(
-            _list "${__item_path:-}" --filename --no-color --no-indicator
+          local _item_listing_no_color=
+          _item_listing_no_color="$(
+            _list "${__item_path:-}" --no-color --no-indicator
           )"
 
-          _item_selector="${_item_selector#[}"
-          _item_selector="${_item_selector%]*}"
+          local _item_selector="${_item_listing_no_color#[}"
+          _item_selector="${_item_selector%%]*}"
+
+          local _is_todo=0
+          local _todo_done=0
+
+          if _file_is_todo "${__item_path:-}"
+          then
+            _is_todo=1
+
+            if [[ "${_item_listing_no_color:-}" =~ \[x\]  ]]
+            then
+              _todo_done=1
+            fi
+          fi
+
+          local _filtered_task_patterns=()
+
+          case "${_filter:-}" in
+            closed) _filtered_task_patterns=("${_task_closed_patterns[@]:-}") ;;
+            open)   _filtered_task_patterns=("${_task_open_patterns[@]:-}") ;;
+            *)
+              _filtered_task_patterns=(
+                "${_task_closed_patterns[@]:-}"
+                "${_task_open_patterns[@]:-}"
+              )
+              ;;
+          esac
+
+          local _contains_filtered_tasks=0
+
+          if grep -q                          \
+            "${_filtered_task_patterns[@]:-}" \
+            "${__item_path}"
+          then
+            _contains_filtered_tasks=1
+          fi
+
+          local _print_listing=1
+
+          if ! ((_contains_filtered_tasks))
+          then
+            if ! ((_is_todo))
+            then
+              _print_listing=0
+            fi
+
+            case "${_filter:-}" in
+              closed) ((_todo_done)) || _print_listing=0 ;;
+              open)   ((_todo_done)) && _print_listing=0 ;;
+            esac
+
+            if ((_selector_is_item))
+            then
+              _print_listing=1
+            fi
+          fi
+
+          if ! ((_print_listing))
+          then
+            continue
+          fi
 
           _list "${__item_path:-}"
 
-          grep -q         \
-            -e "- \[ \]"  \
-            -e "- \[\]"   \
-            -e "- \[x\]"  \
-            "${__item_path}" || continue
+          if ! ((_contains_filtered_tasks)) && ! ((_selector_is_item))
+          then
+            continue
+          fi
 
           local _info_line_no_color=
           _info_line_no_color="$(
@@ -22472,18 +22641,9 @@ _todo() {
             *)                            _extra_length="-1"  ;;
           esac
 
-          local _visible_info_line_length=
-          _visible_info_line_length="$(
-            _get_visible_length "${_info_line_no_color:-}" "${_extra_length:-0}"
-          )"
-
-          if [[ -z "${_visible_info_line_length:-}"               ]] ||
-             [[ "${_visible_info_line_length}" -gt "${_COLUMNS}"  ]]
-          then
-            _print_line "$(printf "%-${_COLUMNS}s" '.')" | tr -d '\n'
-          else
-            _print_line "$(printf "%-${_visible_info_line_length}s" '.')"
-          fi
+          _print_line "${_info_line_no_color:-}"  \
+            --no-wrap                             \
+            --visible-length "${_extra_length:-0}"
 
           {
             grep --color=never          \
@@ -22662,8 +22822,8 @@ HEREDOC
 }
 _unset() {
   case "${1:-}" in
-    '')     _exit_1 _help "unset";    return 1 ;;
-    remote) _remote unset;            return 0 ;;
+    '')     _exit_1 _help "unset"   ; return 1 ;;
+    remote) _remote unset           ; return 0 ;;
     *)      _settings unset "${@:-}"; return 0 ;;
   esac
 }
@@ -22759,7 +22919,7 @@ HEREDOC
 
       if [[ -w "${_current_path}" ]]
       then
-        cat  "${_temp_file}" > "${_current_path}"
+        cat "${_temp_file}" > "${_current_path}"
       else
         cat "${_temp_file}" | sudo tee "${_current_path}" > /dev/null
       fi

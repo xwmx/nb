@@ -85,11 +85,13 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
     [[   "${lines[2]}"  =~  ^Example\ Folder                      ]]
     [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder                  ]]
     [[   "${lines[4]}"  =~  0\ items\.                            ]]
-    [[   "${lines[10]}" =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/ ]]
+    [[   "${lines[10]}" =~  todo\ add\ 1/\ \<title\>              ]]
+    [[   "${lines[12]}" =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/ ]]
   else
     [[   "${status}"    -eq 0                                     ]]
     [[   "${lines[2]}"  =~  0\ items\.                            ]]
-    [[   "${lines[8]}"  =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/ ]]
+    [[   "${lines[8]}"  =~  todo\ add\ 1/\ \<title\>              ]]
+    [[   "${lines[10]}" =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/ ]]
   fi
 }
 
@@ -118,11 +120,13 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
     [[ ! "${lines[2]}"  =~  ^1                                    ]]
     [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder                  ]]
     [[   "${lines[4]}"  =~  0\ items\.                            ]]
-    [[   "${lines[10]}" =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/ ]]
+    [[   "${lines[10]}" =~  todo\ add\ 1/\ \<title\>              ]]
+    [[   "${lines[12]}" =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/ ]]
   else
     [[   "${status}"    -eq 0                                     ]]
     [[   "${lines[2]}"  =~  0\ items\.                            ]]
-    [[   "${lines[8]}"  =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/ ]]
+    [[   "${lines[8]}"  =~  todo\ add\ 1/\ \<title\>              ]]
+    [[   "${lines[10]}" =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/ ]]
   fi
 }
 
@@ -144,11 +148,13 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
     [[   "${lines[2]}"  =~  ^Example\ Folder                      ]]
     [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder                  ]]
     [[   "${lines[4]}"  =~  0\ items\.                            ]]
-    [[   "${lines[10]}" =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/ ]]
+    [[   "${lines[10]}" =~  todo\ add\ 1/\ \<title\>              ]]
+    [[   "${lines[12]}" =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/ ]]
   else
     [[   "${status}"    -eq 0                                     ]]
     [[   "${lines[2]}"  =~  0\ items\.                            ]]
-    [[   "${lines[8]}"  =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/ ]]
+    [[   "${lines[8]}"  =~  todo\ add\ 1/\ \<title\>              ]]
+    [[   "${lines[10]}" =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/ ]]
   fi
 }
 
@@ -166,16 +172,18 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
 
   if ((_FOLDER_HEADER_ENABLED)) || ((_FOLDER_HEADER_ON_EMPTY_ENABLED))
   then
-    [[   "${status}"    -eq 0                                         ]]
-    [[   "${lines[2]}"  =~  ^Example\ Folder                          ]]
-    [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder                      ]]
-    [[   "${lines[2]}"  =~  Sample\ Folder                            ]]
-    [[   "${lines[4]}"  =~  0\ items\.                                ]]
-    [[   "${lines[10]}" =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/1/   ]]
+    [[   "${status}"    -eq 0                                       ]]
+    [[   "${lines[2]}"  =~  ^Example\ Folder                        ]]
+    [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder                    ]]
+    [[   "${lines[2]}"  =~  Sample\ Folder                          ]]
+    [[   "${lines[4]}"  =~  0\ items\.                              ]]
+    [[   "${lines[10]}" =~  todo\ add\ 1/1/\ \<title\>              ]]
+    [[   "${lines[12]}" =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/1/ ]]
   else
-    [[   "${status}"    -eq 0                                         ]]
-    [[   "${lines[2]}"  =~  0\ items\.                                ]]
-    [[   "${lines[8]}"  =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/1/   ]]
+    [[   "${status}"    -eq 0                                       ]]
+    [[   "${lines[2]}"  =~  0\ items\.                              ]]
+    [[   "${lines[8]}"  =~  todo\ add\ 1/1/\ \<title\>              ]]
+    [[   "${lines[10]}" =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/1/ ]]
   fi
 }
 
@@ -193,15 +201,17 @@ _FOLDER_HEADER_ON_EMPTY_ENABLED=1
 
   if ((_FOLDER_HEADER_ENABLED)) || ((_FOLDER_HEADER_ON_EMPTY_ENABLED))
   then
-    [[   "${status}"    -eq 0                                       ]]
-    [[   "${lines[2]}"  =~  ^Example\ Folder                        ]]
-    [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder                    ]]
-    [[   "${lines[4]}"  =~  0\ items\.                              ]]
-    [[   "${lines[10]}" =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/   ]]
+    [[   "${status}"    -eq 0                                     ]]
+    [[   "${lines[2]}"  =~  ^Example\ Folder                      ]]
+    [[ ! "${lines[2]}"  =~  ^📂\ Example\ Folder                  ]]
+    [[   "${lines[4]}"  =~  0\ items\.                            ]]
+    [[   "${lines[10]}" =~  todo\ add\ 1/\ \<title\>              ]]
+    [[   "${lines[12]}" =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/ ]]
   else
-    [[   "${status}"    -eq 0                                       ]]
-    [[   "${lines[2]}"  =~  0\ items\.                              ]]
-    [[   "${lines[8]}"  =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/   ]]
+    [[   "${status}"    -eq 0                                     ]]
+    [[   "${lines[2]}"  =~  0\ items\.                            ]]
+    [[   "${lines[8]}"  =~  todo\ add\ 1/\ \<title\>              ]]
+    [[   "${lines[10]}" =~  import\ \(\<path\>\ \|\ \<url\>\)\ 1/ ]]
   fi
 }
 
