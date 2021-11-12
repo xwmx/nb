@@ -855,10 +855,15 @@ then
 else
   _TPUT_SGR0="$(_tput sgr0)"
 fi
-export _TPUT_SMUL=          ; _TPUT_SMUL="$(_tput smul)"
-export _TPUT_SETAF_8=       ; _TPUT_SETAF_8="$(_tput setaf 8)"
+
 export _TPUT_COLOR_PRIMARY=
        _TPUT_COLOR_PRIMARY="$(_tput setaf "${NB_COLOR_PRIMARY}")"
+
+export _TPUT_COLOR_SECONDARY=
+      _TPUT_COLOR_SECONDARY="$(_tput setaf "${NB_COLOR_SECONDARY}")"
+
+export _TPUT_SETAF_8=       ; _TPUT_SETAF_8="$(_tput setaf 8)"
+export _TPUT_SMUL=          ; _TPUT_SMUL="$(_tput smul)"
 
 # _color_brackets()
 #
@@ -941,8 +946,7 @@ _color_primary() {
 #
 # Description:
 #   Highlight the given string using the accent color.
-export _TPUT_COLOR_SECONDARY=
-_TPUT_COLOR_SECONDARY="$(_tput setaf "${NB_COLOR_SECONDARY}")"
+
 _color_secondary() {
   if ! ((_COLOR_ENABLED))
   then
@@ -1795,8 +1799,8 @@ _get_content() {
 #   which are resolved first during selector resolution. This function gives
 #   precedence to folder names in input.
 _get_id_selector() {
-  local _id_selector=
   local _folder_path=
+  local _id_selector=
   local _notebook_name=
   local _notebook_path=
   local _relative_path=
@@ -1975,8 +1979,8 @@ _get_id_selector() {
 # More Information:
 #   https://stackoverflow.com/a/31009961
 _get_visible_length() {
-  local _string="${1:-}"
   local _extra_length="${2:-0}"
+  local _string="${1:-}"
 
   _LANG="${LANG:-}" _LC_ALL="${LC_ALL:-}"
 
@@ -2487,10 +2491,11 @@ _print_line() {
 #   center-align <line>. <aligned> is an optional boolean that can
 #   be used to print no padding, returning an empty string.
 _print_padding() {
-  local _padding_line="${1:-}"
-  local _padding_line_length="${#_padding_line}"
-  local _padding_columns="${2:-}"
   local _padding_centered="${3:-1}"
+  local _padding_columns="${2:-}"
+  local _padding_line="${1:-}"
+
+  local _padding_line_length="${#_padding_line}"
 
   local _padding_amount=$(( (_padding_columns-_padding_line_length) / 2 ))
 
@@ -2557,8 +2562,8 @@ _selector_get_identifier() {
 _selector_resolve_folders() {
   local _build_path=0
   local _folder_relative_path=
-  local _selector=
   local _notebook_path=
+  local _selector=
 
   local __arg=
   for   __arg in "${@:-}"
@@ -4061,8 +4066,8 @@ HEREDOC
 }
 _index() {
   local _ancestors=0
-  local _folder_path=
   local _commit_changes=0
+  local _folder_path=
   local _subcommand="${1:-}"
 
   case "${_subcommand:-}" in
@@ -4403,8 +4408,8 @@ _index() {
       cat "${_index_path}"
       ;;
     update)
-      local _old_basename="${2:-}"
       local _new_basename="${3:-}"
+      local _old_basename="${2:-}"
 
       if [[ -z "${_old_basename}" ]] || [[ -z "${_new_basename}" ]]
       then
