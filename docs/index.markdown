@@ -2348,7 +2348,8 @@ Tasks are defined as one or more Markdown list items starting with
 - [x] Example closed task.
 ```
 
-List tasks in items, folders, and notebooks with [`nb tasks`](#tasks),
+List tasks in items, folders, and notebooks with
+[`nb tasks`](#tasks) (shortcut: `nb t`),
 which lists both tasks and todos:
 
 ```bash
@@ -8060,6 +8061,9 @@ Examples:
   nb example:tasks open
   nb tasks closed sample/
   nb tasks closed demo:456
+
+Shortcut Alias:
+  nb t
 ```
 
 #### `todo`

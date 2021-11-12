@@ -22020,6 +22020,9 @@ $(_color_primary "Examples"):
   ${_ME} example:tasks open
   ${_ME} tasks closed sample/
   ${_ME} tasks closed demo:456
+
+$(_color_primary "Shortcut Alias"):
+  ${_ME} t
 HEREDOC
 }
 _tasks() {
@@ -22253,7 +22256,7 @@ _todo() {
             _action="undo"
             ;;
           *)
-            [[ "${_action:-}" != "add" ]] && _arguments+=("${1:-}")
+            [[ "${_action:-}" != "add"  ]] && _arguments+=("${1:-}")
             ;;
         esac
         ;;
@@ -22261,6 +22264,12 @@ _todo() {
 
     shift
   done
+
+  if [[ "${_SUBCOMMAND:-}"  == "t"      ]] &&
+     [[ "${_action:-}"      == "list"   ]]
+  then
+    _action="tasks"
+  fi
 
   case "${_action:-}" in
     add)
