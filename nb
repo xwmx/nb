@@ -22691,7 +22691,9 @@ _todo() {
                 _formatted_task="${_formatted_task//\[\]/$(_color_brackets " ")}"
                 _formatted_task="${_formatted_task//\[ \]/$(_color_brackets " ")}"
 
-                printf "%s %s\\n"                                       \
+                _wrap off
+
+                printf "%s %s\033[?7l\\n"                               \
                   "$(_color_brackets "${_item_selector} ${_counter}")"  \
                   "${_formatted_task}"
 
