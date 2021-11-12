@@ -22550,8 +22550,8 @@ _todo() {
       {
         _list "${_selector_path:-}"   \
           --error-on-empty            \
-          --no-indicator              \
           --no-id                     \
+          --no-indicator              \
           --path                      \
           --type md                   \
           2>/dev/null || printf ""
