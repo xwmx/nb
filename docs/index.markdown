@@ -444,7 +444,7 @@ with that string as the content and without opening the editor:
 Added: [1] 20200101000000.md
 ```
 
-`nb add <string>` is useful for quickly jotting down notes directly
+[`nb add <string>`](#add) is useful for quickly jotting down notes directly
 via the command line. Quoting content is optional, but recommended.
 
 When no filename is specified, `nb add` uses the current datetime as
@@ -467,7 +467,7 @@ Added: [7] 20200101000200.md
 Added: [8] 20200101000300.md
 ```
 
-Content can be passed with the `--content` option,
+Content can be passed with the [`--content <content>`](#add) option,
 which also creates a new note without opening the editor:
 
 ```bash
@@ -475,9 +475,9 @@ nb add --content "Note content."
 ```
 
 When content is piped,
-specified with `--content`,
+specified with [`--content <content>`](#add),
 or passed as a string argument,
-use the `--edit` flag to open the file in the editor
+use the [`--edit`](#add) flag to open the file in the editor
 before the change is committed.
 
 The title, filename, and content can also be specified with long and
@@ -488,7 +488,7 @@ short options:
 Added: [9] example.md "Example Title"
 ```
 
-The `-t <title>` / `--title <title>` option also
+The [`-t <title>`](#add) / [`--title <title>`](#add) option also
 sets the filename to the title,
 lowercased with spaces and non-filename characters replaced with underscores:
 
@@ -497,7 +497,7 @@ lowercased with spaces and non-filename characters replaced with underscores:
 Added: [10] example_title.md "Example Title"
 ```
 
-Tags can be added with the `--tags <tag1>,<tag2>...` option, which
+Tags can be added with the [`--tags <tag1>,<tag2>...`](#add) option, which
 takes a comma separated list of tags,
 converts them to [#hashtags](#-tagging),
 and inserts them between the title and content:
@@ -514,7 +514,8 @@ Added: [11] tagged_example.md "Tagged Example"
 Example content.
 ```
 
-[Search](#-search) for tagged items with [`nb search` / `nb q`](#search):
+[Search](#-search) for tagged items with
+[`nb search`](#search) / [`nb q`](#search):
 
 ```bash
 # search for items tagged with "#tag1"
@@ -530,7 +531,7 @@ nb q \#tag1 --or \#tag2
 Files can be created with any file type by specifying the extension either
 in the filename (`example.md`),
 the extension by itself (`.md`),
-or via the `--type <type>` option (`--type md`):
+or via the [`--type <type>`](#add) option (`--type md`):
 
 ```bash
 # open a new Org file in the editor
@@ -570,9 +571,9 @@ The [`clip` plugin](#clip) can also be used to
 create notes from clipboard content.
 
 Piping,
-`--title <title>`,
-`--tags <tag-list>`,
-`--content <content>`,
+[`--title <title>`](#add),
+[`--tags <tag-list>`](#add),
+[`--content <content>`](#add),
 and content passed in an argument
 can be combined as needed
 to create notes with content from multiple input methods and sources
@@ -783,7 +784,7 @@ titles are recognized in `.org` and `.latex` files:
 ```
 
 Once defined, titles are displayed in place of the filename and first line
-in the output of `nb ls`:
+in the output of [`nb ls`](#ls):
 
 ```bash
 ❯ nb ls
@@ -834,7 +835,7 @@ When multiple words are quoted, filter titles and filenames for that phrase:
 
 For full text search, see [Search](#-search).
 
-To view excerpts of notes, use the `--excerpt` or `-e` option,
+To view excerpts of notes, use the [`--excerpt`](#ls) or [`-e`](#ls) option,
 which optionally accepts a length:
 
 ```bash
@@ -886,7 +887,7 @@ File types include:
 ```
 
 By default, items are listed starting with the most recently modified.
-To reverse the order, use the `-r` or `--reverse` flag:
+To reverse the order, use the [`-r`](#ls) or [`--reverse`](#ls) flag:
 
 ```bash
 ❯ nb ls
@@ -902,8 +903,8 @@ home
 [2] Todos
 ```
 
-Notes can be sorted with the `-s` / `--sort` flag,
-which can be combined with `-r` / `--reverse`:
+Notes can be sorted with the [`-s`](#ls) / [`--sort`](#ls) flag,
+which can be combined with [`-r`](#ls) / [`--reverse`](#ls):
 
 ```bash
 ❯ nb ls
@@ -924,7 +925,7 @@ home
 [1] Demo Title
 ```
 
-`nb` with no subcommand behaves like an alias for `nb ls`,
+`nb` with no subcommand behaves like an alias for [`nb ls`](#ls),
 so the examples above can be run without the `ls`:
 
 ```bash
@@ -990,11 +991,11 @@ title: Demo Title
 `nb` and `nb ls` display the 15 most recently modified items.
 The default limit can be changed with [`nb set limit <number>`](#limit).
 To list a different number of items on a per-command basis, use the
-`-n <limit>`,
-`--limit <limit>`,
-`--<limit>`,
-`-a`,
-and `--all`
+[`-n <limit>`](#ls),
+[`--limit <limit>`](#ls),
+[`--<limit>`](#ls),
+[`-a`](#ls),
+and [`--all`](#ls)
 flags:
 
 ```bash
@@ -1029,7 +1030,8 @@ home
 [1] Example One
 ```
 
-Lists can be paginated with `-p <number>` / `--page <number>`,
+Lists can be paginated with
+[`-p <number>`](#ls) / [`--page <number>`](#ls),
 which paginates by the value of [`nb set limit`](#limit) by
 default, or the value of
 `-n <limit>`,
@@ -1160,18 +1162,18 @@ appends to the specified note without opening the editor:
 echo "Content to append." | nb edit 1
 ```
 
-Content can be passed with the `--content` option, which also
-appends the content without opening the editor:
+Content can be passed with the [`--content <content>`](#edit) option,
+which also appends the content without opening the editor:
 
 ```bash
 nb edit 1 --content "Content to append."
 ```
 
-Use the `--overwrite` option to overwrite existing file content
-and the `--prepend` option to prepend the new content before existing content.
+Use the [`--overwrite`](#edit) option to overwrite existing file content
+and the [`--prepend`](#edit) option to prepend the new content before existing content.
 
-When content is piped or specified with `--content`,
-use the `--edit` flag to open the file in the editor
+When content is piped or specified with `--content <content>`,
+use the [`--edit`](#edit) flag to open the file in the editor
 before the change is committed.
 
 ##### Editing Encrypted Notes
@@ -1311,8 +1313,8 @@ go to*
 *and change it to* "Yes".
 *[More info](https://stackoverflow.com/a/37610820)*
 
-Use the `-p` / `--print` option to print to standard output with syntax
-highlighting:
+Use the [`-p`](#show) / [`--print`](#show) option
+to print to standard output with syntax highlighting:
 
 ```bash
 ❯ nb show 123 --print
@@ -1325,10 +1327,10 @@ Example content:
 - three
 ```
 
-Use `nb show --print --no-color` to print without syntax highlighting.
+Use [`nb show --print --no-color`](#show) to print without syntax highlighting.
 
 When [Pandoc](https://pandoc.org/) is available,
-use the `-r` / `--render` option to
+use the [`-r`](#show) / [`--render`](#show) option to
 render the note to HTML and open it in your terminal browser:
 
 ```bash
@@ -1372,8 +1374,9 @@ if the above tools are not available,
 `nb show` will open files in your system's preferred application for each type.
 
 `nb show` also provides [options](#show) for querying information about an
-item. For example, use the `--added` / `-a` and `--updated` / `-u` flags to
-print the date and time that an item was added or updated:
+item. For example, use the
+[`--added`](#show) / [`-a`](#show) and [`--updated`](#show) / [`-u`](#show)
+flags to print the date and time that an item was added or updated:
 
 ```bash
 ❯ nb show 2 --added
@@ -1524,7 +1527,7 @@ nb delete 89 56 21
 ```
 
 By default, `nb delete` will display a confirmation prompt.
-To skip, use the `--force` / `-f` option:
+To skip, use the [`--force`](#delete) / [`-f`](#delete) option:
 
 ```bash
 nb delete 3 --force
@@ -3628,7 +3631,7 @@ with color highlighting:
 ```
 
 To just print the note information line without the content matches,
-use the `-l` or `--list` option:
+use the [`-l`](#search) or [`--list`](#search) option:
 
 ```bash
 ❯ nb search "example" --list
@@ -3638,7 +3641,8 @@ use the `-l` or `--list` option:
 
 Multiple query arguments are treated as `AND` queries,
 returning items that match all queries.
-`AND` queries can also be specified with the `--and <query>` option:
+`AND` queries can also be specified with the
+[`--and <query>`](#search) option:
 
 ```bash
 # search for items tagged with "#example" AND "#demo" AND "#sample" using
@@ -3656,7 +3660,7 @@ which typically only match terms appearing on the same line.
 
 `OR` queries return items that match at least one of the queries
 and can be created by separating terms in a single argument
-with a pipe character `|` or with the `--or <query>` option:
+with a pipe character `|` or with the [`--or <query>`](#search) option:
 
 ```bash
 # search for "example" OR "sample" with argument
@@ -3674,7 +3678,7 @@ nb q "example" --or "sample" --and "demo"
 ```
 
 Search for [#tags](#-tagging) with flexible
-[`nb search --tags [<tags>]` / `nb q -t [<tags>]`](#search) options:
+[`nb search --tags [<tags>]`](#search) / [`nb q -t [<tags>]`](#search) options:
 
 ```bash
 # search for tags in the current notebook
@@ -3720,7 +3724,7 @@ nb q \#tag1 --or -t tag2 --or "#tag3"
 `nb search` leverages Git's powerful built-in
 [`git grep`](https://git-scm.com/docs/git-grep).
 `nb` also supports performing searches with alternative search tools
-using the `--utility <name>` option.
+using the [`--utility <name>`](#search) option.
 
 Supported alternative search tools:
 - [`rga`](https://github.com/phiresky/ripgrep-all)
@@ -3752,7 +3756,7 @@ For more information about search, see [`nb help search`](#search).
 ##### Searching with `browse`
 
 Searches can be performed within terminal and GUI web browsers using
-`nb browse --query` / `nb br -q`:
+[`nb browse --query`](#browse) / [`nb br -q`](#browse):
 
 ```bash
 ❯ nb browse --query "#example"
@@ -3822,9 +3826,12 @@ nb rename 3 --to-bookmark
 
 # rename bookmark 6 ("sample.bookmark.md") to a note named "sample.md"
 nb rename 6 --to-note
+
+# rename note 7 ("demo.md") to a todo named "demo.todo.md"
+nb rename 7 --to-todo
 ```
 
-Use `nb rename --to-title` to set the filename to the note title,
+Use [`nb rename --to-title`](#move) to set the filename to the note title,
 lowercased with spaces and disallowed filename characters replaced
 with underscores:
 
@@ -3837,7 +3844,7 @@ Proceed?  [y/N]
 
 For details, see [`nb help move`](#move).
 
-To copy items, install the [`copy` / `duplicate` plugin](#copy).
+To copy items, install the [`copy`](#copy) / [`duplicate` plugin](#copy).
 
 ### 🗒 Revision History
 
