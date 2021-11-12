@@ -1646,7 +1646,7 @@ is installed, markup is cleaned up to focus on content.
 
 In addition to caching the page content, you can also include a quote from
 the page using the
-[`-q <quote>` / `--quote <quote>`](#bookmark) option:
+[`-q <quote>`](#bookmark) / [`--quote <quote>`](#bookmark) option:
 
 ```bash
 nb https://example.com --quote "Example quote line one.
@@ -1681,7 +1681,7 @@ permission.
 ```
 
 Add a comment to a bookmark using the
-[`-c <comment>` / `--comment <comment>`](#bookmark) option:
+[`-c <comment>`](#bookmark) / [`--comment <comment>`](#bookmark) option:
 
 ```bash
 nb https://example.com --comment "Example comment."
