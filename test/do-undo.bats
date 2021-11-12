@@ -5,6 +5,138 @@ load test_helper
 
 # error handling ##############################################################
 
+@test "'do <id> <task-number>' with non-existent todo <id> exits with 1 and prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add                              \
+      --filename "Example Folder/File One.md" \
+      --content "$(cat <<HEREDOC
+# Example Title One
+
+- [ ] Task one.
+- [ ] Task two.
+- [x] Task three.
+- [ ] Task four.
+
+## Tags
+
+#tag1 #tag2
+HEREDOC
+)"
+  }
+
+  run "${_NB}" "do" 654 123
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  cat "${NB_DIR}/home/Example Folder/File One.md"
+
+  [[    "${status}"     -eq 1                         ]]
+  [[    "${#lines[@]}"  -eq 1                         ]]
+
+  [[    "${lines[0]}"   =~  .*!.*\ Todo\ not\ found\. ]]
+}
+
+@test "'undo <id> <task-number>' with non-existent todo <id> exits with 1 and prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add                              \
+      --filename "Example Folder/File One.md" \
+      --content "$(cat <<HEREDOC
+# Example Title One
+
+- [ ] Task one.
+- [ ] Task two.
+- [x] Task three.
+- [ ] Task four.
+
+## Tags
+
+#tag1 #tag2
+HEREDOC
+)"
+  }
+
+  run "${_NB}" "undo" 654 123
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  cat "${NB_DIR}/home/Example Folder/File One.md"
+
+  [[    "${status}"     -eq 1                         ]]
+  [[    "${#lines[@]}"  -eq 1                         ]]
+
+  [[    "${lines[0]}"   =~  .*!.*\ Todo\ not\ found\. ]]
+}
+
+@test "'do <id> <task-number>' with non-existent task exits with 1 and prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add                              \
+      --filename "Example Folder/File One.md" \
+      --content "$(cat <<HEREDOC
+# Example Title One
+
+- [ ] Task one.
+- [ ] Task two.
+- [x] Task three.
+- [ ] Task four.
+
+## Tags
+
+#tag1 #tag2
+HEREDOC
+)"
+  }
+
+  run "${_NB}" "do" Example\ Folder/1 123
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  cat "${NB_DIR}/home/Example Folder/File One.md"
+
+  [[    "${status}"     -eq 1                         ]]
+  [[    "${#lines[@]}"  -eq 1                         ]]
+
+  [[    "${lines[0]}"   =~  .*!.*\ Task\ not\ found\. ]]
+}
+
+@test "'undo <id> <task-number>' with non-existent task exits with 1 and prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add                              \
+      --filename "Example Folder/File One.md" \
+      --content "$(cat <<HEREDOC
+# Example Title One
+
+- [ ] Task one.
+- [ ] Task two.
+- [x] Task three.
+- [ ] Task four.
+
+## Tags
+
+#tag1 #tag2
+HEREDOC
+)"
+  }
+
+  run "${_NB}" "undo" Example\ Folder/1 123
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  cat "${NB_DIR}/home/Example Folder/File One.md"
+
+  [[    "${status}"     -eq 1                         ]]
+  [[    "${#lines[@]}"  -eq 1                         ]]
+
+  [[    "${lines[0]}"   =~  .*!.*\ Task\ not\ found\. ]]
+}
+
 @test "'do' with non-todo exits with 1 and prints message." {
   {
     "${_NB}" init

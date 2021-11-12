@@ -22141,7 +22141,7 @@ _todo() {
         then
           _counter="$((_counter+1))"
 
-          if [[ "${_counter:-}" == "${_task_number:-}"      ]]
+          if [[ "${_counter:-}" ==  "${_task_number:-}"     ]]
           then
             printf "%s\\n" "${__line}"                      \
               | sed -e "s/- \[\]/${_replacement_box}/"      \
@@ -22154,6 +22154,11 @@ _todo() {
           printf "%s\\n" "${__line}"
         fi
       done
+
+      if [[ "${_task_number:-}" -gt "${_counter:-}"         ]]
+      then
+        _exit_1 printf "Task not found.\\n"
+      fi
     } | {
       cat > "${_temp_file_path}"
     }
@@ -22359,6 +22364,11 @@ _todo() {
 
       local _selector_path=
       _selector_path="$(_show "${_selector:-}" --path 2>/dev/null || :)"
+
+      if [[ -z "${_selector_path:-}"    ]]
+      then
+        _exit_1 printf "Todo not found.\\n"
+      fi
 
       local _notebook_path=
       _notebook_path="$(
