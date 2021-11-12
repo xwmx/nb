@@ -2230,6 +2230,8 @@ Added: [5] ✔️ [ ] Example todo five.
 Linked tags, selectors, and URLs can be [browsed](#-browsing)
 in terminal and GUI web browers with [`nb browse`](#browse).
 
+#### Listing Todos
+
 List todos in with [`nb todos`](#tasks):
 
 ```bash
@@ -2313,11 +2315,11 @@ and
 [`nb help undo`](#undo),
 for more information.
 
-#### ✔️ Tasks
+### ✔️ Tasks
 
 <p>
   <sup>
-    <a href="#-todos">↑</a> ·
+    <a href="#overview">↑</a> ·
     <a href="#do"><code>nb do</code></a>,
     <a href="#tasks"><code>nb tasks</code></a>,
     <a href="#todo"><code>nb todo</code></a>,
