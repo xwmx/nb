@@ -16383,7 +16383,7 @@ Can't show archives. Export archive and expand to edit.\\n"
          } && {
            [[ "${_tool:-magick}"  == "magick"     ]]
          }
-      then
+    then
       magick "${_target_path}" sixel:-  | {
         if _command_exists "less" &&    ! ((_print_output))
         then
