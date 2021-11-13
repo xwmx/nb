@@ -8650,6 +8650,12 @@ permission.
 
 ##### Title
 
+<p>
+  <sup>
+    <a href="#nb-markdown-bookmark-file-format">↑</a>
+  </sup>
+</p>
+
 `Optional`
 
 A markdown `h1` heading containing the content of the bookmarked page's
@@ -8667,6 +8673,12 @@ the domain within parentheses.
 
 ##### URL
 
+<p>
+  <sup>
+    <a href="#nb-markdown-bookmark-file-format">↑</a>
+  </sup>
+</p>
+
 `Required`
 
 The URL of the bookmarked resource, with surrounding angle brackets
@@ -8676,12 +8688,24 @@ This is the only required element.
 
 ##### `## Description`
 
+<p>
+  <sup>
+    <a href="#nb-markdown-bookmark-file-format">↑</a>
+  </sup>
+</p>
+
 `Optional`
 
 A text element containing the content of the bookmarked page's meta description
 or [`og:description`](https://ogp.me/) tag, if present.
 
 ##### `## Quote`
+
+<p>
+  <sup>
+    <a href="#nb-markdown-bookmark-file-format">↑</a>
+  </sup>
+</p>
 
 `Optional`
 
@@ -8690,11 +8714,23 @@ resource.
 
 ##### `## Comment`
 
+<p>
+  <sup>
+    <a href="#nb-markdown-bookmark-file-format">↑</a>
+  </sup>
+</p>
+
 `Optional`
 
 A text element containing a comment written by the user.
 
 ##### `## Related`
+
+<p>
+  <sup>
+    <a href="#nb-markdown-bookmark-file-format">↑</a>
+  </sup>
+</p>
 
 `Optional`
 
@@ -8704,6 +8740,12 @@ angle bracketed (`<`, `>`) URLs and
 that are related to the bookmarked resource.
 
 ##### `## Tags`
+
+<p>
+  <sup>
+    <a href="#nb-markdown-bookmark-file-format">↑</a>
+  </sup>
+</p>
 
 `Optional`
 
@@ -8724,6 +8766,12 @@ and make page conent easily viewable in the terminal as markdown and
 streamlined HTML in terminal web browsers.
 
 ##### `## Source`
+
+<p>
+  <sup>
+    <a href="#nb-markdown-bookmark-file-format">↑</a>
+  </sup>
+</p>
 
 `Optional`
 
@@ -8790,12 +8838,24 @@ Example description.
 
 ##### Title
 
+<p>
+  <sup>
+    <a href="#nb-markdown-todo-file-format">↑</a>
+  </sup>
+</p>
+
 `Required`
 
 A markdown `h1` heading containing a Markdown checkbox followed by the todo title.
 An `x` within the checkbox (`[ ]`) indicates that the todo is done.
 
 ##### `## Due`
+
+<p>
+  <sup>
+    <a href="#nb-markdown-todo-file-format">↑</a>
+  </sup>
+</p>
 
 `Optional`
 
@@ -8804,17 +8864,35 @@ a due date and / or time for the todo.
 
 ##### `## Description`
 
+<p>
+  <sup>
+    <a href="#nb-markdown-todo-file-format">↑</a>
+  </sup>
+</p>
+
 `Optional`
 
 A text element containing a description for the todo.
 
 ##### `## Tasks`
 
+<p>
+  <sup>
+    <a href="#nb-markdown-todo-file-format">↑</a>
+  </sup>
+</p>
+
 `Optional`
 
 A markdown tasklist containing sub-tasks for the todo.
 
 ##### `## Related`
+
+<p>
+  <sup>
+    <a href="#nb-markdown-todo-file-format">↑</a>
+  </sup>
+</p>
 
 `Optional`
 
@@ -8824,6 +8902,12 @@ angle bracketed (`<`, `>`) URLs and
 that are related to the todo.
 
 ##### `## Tags`
+
+<p>
+  <sup>
+    <a href="#nb-markdown-todo-file-format">↑</a>
+  </sup>
+</p>
 
 `Optional`
 
