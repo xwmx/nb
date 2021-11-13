@@ -16367,7 +16367,7 @@ Can't show archives. Export archive and expand to edit.\\n"
           cat
         fi
       }
-    elif _command_exists "catimg"
+    elif _command_exists "catimg" && _file_is_image "${_target_path}"
     then
       catimg "${_target_path}"
     elif _command_exists "magick"                     &&
