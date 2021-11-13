@@ -3970,7 +3970,7 @@ Create a new notebook with [`nb notebooks add`](#notebooks):
 nb notebooks add example
 ```
 
-`nb` and `nb ls` list the available notebooks above the list of notes:
+`nb` and [`nb ls`](#ls) list the available notebooks above the list of notes:
 
 ```bash
 ❯ nb
