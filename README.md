@@ -2504,7 +2504,7 @@ for more information.
   </sup>
 </p>
 
-`nb` recognizes [#hashtags](#-tagging) defined anywhere within a document.
+`nb` recognizes `#hashtags` defined anywhere within a document.
 A hashtag is defined in `nb` as a `#` character followed by any number of
 letters, numbers, underscores, and dashes.
 
@@ -2518,7 +2518,7 @@ which is available with
 and
 [`nb todo`](#todo).
 `--tags` takes a comma-separated list of tags, converts them to
-[#hashtags](#-tagging),
+`#hashtags`,
 and adds them to the document.
 
 Tags added to notes with [`nb add --tags`](#add) are placed between the title
