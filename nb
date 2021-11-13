@@ -6636,14 +6636,14 @@ _notebooks() {
       shift
     done
 
-    if [[ -z "${_name}" ]]
+    if [[ -z "${_name:-}"             ]]
     then
       _exit_1 _help notebooks
     fi
 
     _notebooks_validate_name "${_name}"
 
-    if [[ -e "${NB_DIR}/${_name}" ]]
+    if [[ -e "${NB_DIR}/${_name}"     ]]
     then
       _exit_1 printf "Already exists: %s\\n" "$(_color_primary "${_name}")"
     fi
@@ -6753,7 +6753,7 @@ _notebooks() {
           _unset=1
           ;;
         *)
-          if [[ -z "${_selector:-}" ]]
+          if [[ -z "${_selector:-}"     ]]
           then
             _selector="${1:-}"
           fi
@@ -6941,14 +6941,14 @@ HEREDOC
       then
         if _contains "${_new_local_name:-}" "global" "--unset" "unset"
         then
-          git -C "${_notebook_path:-}" config --unset user.name  || :
+          git -C "${_notebook_path:-}" config --unset user.name   || :
         else
           git -C "${_notebook_path}" config --local \
             user.name "${_new_local_name:-}"
         fi
       fi
 
-      if [[ -n "${_new_local_email:-"${_new_local_name:-}"}" ]] || ! ((_skip_prompt))
+      if [[ -n "${_new_local_email:-"${_new_local_name:-}"}" ]]   || ! ((_skip_prompt))
       then
         printf "\\nUpdated author for: %s\\n" "$(
           _color_primary "${_notebook_name}"
@@ -7143,7 +7143,7 @@ HEREDOC
         local __notebook=
         for   __notebook in "${_notebook_names[@]:-}"
         do
-          if [[ "${__notebook}"   != "$(_notebooks current)"    ]]
+          if [[ "${__notebook}"   !=    "$(_notebooks current)"   ]]
           then
             _notebooks use "${__notebook}"
             break
@@ -7152,7 +7152,7 @@ HEREDOC
       fi
     fi
 
-    if _command_exists "trash"    && [[ "${OSTYPE}" =~ ^darwin  ]]
+    if _command_exists "trash"    &&    [[ "${OSTYPE}" =~ ^darwin ]]
     then
       trash "${NB_DIR:?}/${_name:?}"
     else
@@ -7172,7 +7172,7 @@ HEREDOC
   _notebooks_export() {
     local _name="${1:-}"
 
-    if [[ -z "${_name:-}" ]]
+    if [[ -z "${_name:-}"           ]]
     then
       _exit_1 _help "notebooks"
     fi
@@ -7198,7 +7198,7 @@ HEREDOC
       _target_path="${_target_path}/${_name}"
     fi
 
-    if [[ -z "${_target_path}" ]]
+    if [[ -z "${_target_path}"      ]]
     then
       _target_path="${_CURRENT_WORKING_DIR}/${_name}"
     fi
