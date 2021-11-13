@@ -8655,12 +8655,6 @@ permission.
 
 ##### Title
 
-<p>
-  <sup>
-    <a href="#nb-markdown-bookmark-file-format">↑</a>
-  </sup>
-</p>
-
 `Optional`
 
 A markdown `h1` heading containing the content of the bookmarked page's
@@ -8676,13 +8670,13 @@ the domain within parentheses.
 # (example.com)
 ```
 
-##### URL
-
 <p>
   <sup>
     <a href="#nb-markdown-bookmark-file-format">↑</a>
   </sup>
 </p>
+
+##### URL
 
 `Required`
 
@@ -8691,51 +8685,51 @@ The URL of the bookmarked resource, with surrounding angle brackets
 
 This is the only required element.
 
-##### `## Description`
-
 <p>
   <sup>
     <a href="#nb-markdown-bookmark-file-format">↑</a>
   </sup>
 </p>
+
+##### `## Description`
 
 `Optional`
 
 A text element containing the content of the bookmarked page's meta description
 or [`og:description`](https://ogp.me/) tag, if present.
 
-##### `## Quote`
-
 <p>
   <sup>
     <a href="#nb-markdown-bookmark-file-format">↑</a>
   </sup>
 </p>
+
+##### `## Quote`
 
 `Optional`
 
 A markdown quote block containing a user-specified excerpt from the bookmarked
 resource.
 
-##### `## Comment`
-
 <p>
   <sup>
     <a href="#nb-markdown-bookmark-file-format">↑</a>
   </sup>
 </p>
+
+##### `## Comment`
 
 `Optional`
 
 A text element containing a comment written by the user.
 
-##### `## Related`
-
 <p>
   <sup>
     <a href="#nb-markdown-bookmark-file-format">↑</a>
   </sup>
 </p>
+
+##### `## Related`
 
 `Optional`
 
@@ -8744,19 +8738,25 @@ angle bracketed (`<`, `>`) URLs and
 [[[wiki-style links]]](#-linking)
 that are related to the bookmarked resource.
 
-##### `## Tags`
-
 <p>
   <sup>
     <a href="#nb-markdown-bookmark-file-format">↑</a>
   </sup>
 </p>
 
+##### `## Tags`
+
 `Optional`
 
 A list of [#tags](#-tagging)
 represented as `#hashtags`
 separated by individual spaces.
+
+<p>
+  <sup>
+    <a href="#nb-markdown-bookmark-file-format">↑</a>
+  </sup>
+</p>
 
 ##### `## Content`
 
@@ -8770,13 +8770,13 @@ to inline Markdown to reduce the amount of markup, make it more readable,
 and make page conent easily viewable in the terminal as markdown and
 streamlined HTML in terminal web browsers.
 
-##### `## Source`
-
 <p>
   <sup>
     <a href="#nb-markdown-bookmark-file-format">↑</a>
   </sup>
 </p>
+
+##### `## Source`
 
 `Optional`
 
@@ -8786,6 +8786,12 @@ from the bookmarked page.
 `nb` does not save the page source by default. `nb` uses this section to save
 the source HTML page content when `pandoc` is not available to convert it to
 Markdown.
+
+<p>
+  <sup>
+    <a href="#nb-markdown-bookmark-file-format">↑</a>
+  </sup>
+</p>
 
 ### `nb` Markdown Todo File Format
 
@@ -8843,61 +8849,55 @@ Example description.
 
 ##### Title
 
-<p>
-  <sup>
-    <a href="#nb-markdown-todo-file-format">↑</a>
-  </sup>
-</p>
-
 `Required`
 
 A markdown `h1` heading containing a Markdown checkbox followed by the todo title.
 An `x` within the checkbox (`[ ]`) indicates that the todo is done.
 
-##### `## Due`
-
 <p>
   <sup>
     <a href="#nb-markdown-todo-file-format">↑</a>
   </sup>
 </p>
+
+##### `## Due`
 
 `Optional`
 
 A text element containing a value referencing
 a due date and / or time for the todo.
 
-##### `## Description`
-
 <p>
   <sup>
     <a href="#nb-markdown-todo-file-format">↑</a>
   </sup>
 </p>
+
+##### `## Description`
 
 `Optional`
 
 A text element containing a description for the todo.
 
-##### `## Tasks`
-
 <p>
   <sup>
     <a href="#nb-markdown-todo-file-format">↑</a>
   </sup>
 </p>
+
+##### `## Tasks`
 
 `Optional`
 
 A markdown tasklist containing sub-tasks for the todo.
 
-##### `## Related`
-
 <p>
   <sup>
     <a href="#nb-markdown-todo-file-format">↑</a>
   </sup>
 </p>
+
+##### `## Related`
 
 `Optional`
 
@@ -8906,19 +8906,25 @@ angle bracketed (`<`, `>`) URLs and
 [[[wiki-style links]]](#-linking)
 that are related to the todo.
 
-##### `## Tags`
-
 <p>
   <sup>
     <a href="#nb-markdown-todo-file-format">↑</a>
   </sup>
 </p>
 
+##### `## Tags`
+
 `Optional`
 
 A list of [#tags](#-tagging)
 represented as `#hashtags`
 separated by individual spaces.
+
+<p>
+  <sup>
+    <a href="#nb-markdown-todo-file-format">↑</a>
+  </sup>
+</p>
 
 ### `nb` Notebook Specification
 
