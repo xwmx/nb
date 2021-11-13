@@ -1157,7 +1157,7 @@ can be called with the identifier and subcommand name reversed:
 nb 3 edit
 ```
 
-`nb edit` can also receive piped content, which it
+[`nb edit`](#edit) can also receive piped content, which it
 appends to the specified note without opening the editor:
 
 ```bash
