@@ -1652,8 +1652,10 @@ the HTML page content is converted to Markdown.
 When [readability-cli](https://gitlab.com/gardenappl/readability-cli)
 is installed, markup is cleaned up to focus on content.
 
-In addition to caching the page content, you can also include a quote from
-the page using the
+In addition to caching the page content,
+you can also include a quote from the page in a
+[`## Quote`](#-quote) section
+using the
 [`-q <quote>`](#bookmark) / [`--quote <quote>`](#bookmark) option:
 
 ```bash
@@ -1688,7 +1690,7 @@ permission.
 [More information\...](https://www.iana.org/domains/example)
 ```
 
-Add a comment to a bookmark using the
+Add a comment in a [`## Comment`](#-comment) section using the
 [`-c <comment>`](#bookmark) / [`--comment <comment>`](#bookmark) option:
 
 ```bash
@@ -1720,7 +1722,7 @@ permission.
 ```
 
 Add related URLs and [linked](#-linking) [selectors](#-selectors)
-to a `## Related` section using the
+to a [`## Related`](#-related) section using the
 [`-r (<url> | <selector>)`](#bookmark) /
 [`--related (<url> | <selector>)`](#bookmark)
 option:
@@ -1757,7 +1759,8 @@ permission.
 Bookmarks can be tagged using the
 [`-t <tag1>,<tag2>...`](#bookmark) /
 [`--tags <tag1>,<tag2>...`](#bookmark) option.
-Tags are converted into [#hashtags](#-tagging):
+Tags are converted into [#hashtags](#-tagging) and
+added to a [`## Tags`](#-tags) section:
 
 ```bash
 nb https://example.com --tags tag1,tag2
@@ -2174,7 +2177,7 @@ Added: [1] ✔️ [ ] Example todo one.
 ```
 
 Use the [`--due <date>`](#todo) option to add an optional due date in a
-`## Due` section:
+[`## Due`](#-due) section:
 
 ```bash
 # create a new todo titled "Example todo two." with a due date of "2100-01-01"
@@ -2189,7 +2192,7 @@ Added: [2] ✔️ [ ] Example todo two.
 2100-01-01
 ```
 
-Add an optional description with the
+Add an optional [description](#-description-1) with the
 [`--description <description>`](#todo)
 option:
 
@@ -2207,7 +2210,8 @@ Example description.
 
 Todos can have [tasks](#%EF%B8%8F-tasks).
 Tasks added with one or more [`nb todo add --task <task>`](#todo) options
-are represented as a markdown task list and placed in a `## Tasks` section:
+are represented as a markdown task list and placed in a
+[`## Tasks`](#-tasks) section:
 
 ```bash
 ❯ nb todo add "Example todo seven." --task "Task one." --task "Task two." --task "Task three."
@@ -2224,7 +2228,7 @@ Added: [7] ✔️ [ ] Example todo seven.
 ```
 
 Related URLs and [linked](#-linking) [selectors](#-selectors)
-can be added to a `## Related` field using the
+can be added to a [`## Related`](#-related-1) field using the
 [`-r (<url> | <selector>)`](#todo) / [`--related (<url> | <selector>)`](#todo)
 option:
 
@@ -2540,7 +2544,7 @@ Example note content.
 
 Tags added to [bookmarks](#bookmarks) with
 [`nb <url> --tags`](#nb-help) and [`nb bookmark <url> --tags`](#bookmark)
-are placed in a `## Tags` section:
+are placed in a [`## Tags`](#-tags) section:
 
 ```bash
 ❯ nb https://example.com --tags tag1,tag2
@@ -2573,7 +2577,7 @@ permission.
 
 Tags added to [todos](#-todos) with
 [`nb todo add --tags`](#todo)
-are placed in a `## Tags` section:
+are placed in a [`## Tags`](#-tags-1) section:
 
 ```bash
 ❯ nb todo add --tags tag1,tag2 "Example todo."
@@ -3327,7 +3331,8 @@ Image references in content are rendered inline within web browsers with
 [`nb browse`](#browse) and [`nb show --render`](#show).
 
 `<img>` tags are stripped from bookmarked content when rendering to HTML.
-Inline images can still be used in other bookmark sections like `## Comment`.
+Inline images can still be used in other bookmark sections like
+[`## Comment`](#-comment).
 
 ### 🗂 Zettelkasten
 
