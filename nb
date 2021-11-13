@@ -16820,7 +16820,7 @@ $(_color_primary "Examples"):
   ${_ME} br
 
 $(_color_primary "Shortcut Alias"):
-  ${_ME} br
+  ${_ME} b
 HEREDOC
 }
 _browse() {

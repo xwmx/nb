@@ -653,7 +653,7 @@ nb create --title "Example Note Title"
 ##### Adding with `nb browse`
 
 Items can also be added within terminal and GUI web browsers using
-[`nb browse add`](#browse) / [`nb br a`](#browse):
+[`nb browse add`](#browse) / [`nb b a`](#browse):
 
 ```bash
 ❯ nb browse add
@@ -1091,7 +1091,7 @@ and
 ##### Listing with `browse`
 
 Items can be listed within terminal and GUI web browsers using
-[`nb browse`](#browse) / [`nb br`](#browse):
+[`nb browse`](#browse) / [`nb b`](#browse):
 
 ```bash
 ❯ nb browse example:sample/demo/
@@ -1211,7 +1211,7 @@ For [`nb edit`](#edit) help information, run [`nb help edit`](#edit).
 ##### Editing with `browse`
 
 Items can be edited within terminal and GUI web browsers using
-[`nb browse edit`](#browse) / [`nb br e`](#browse):
+[`nb browse edit`](#browse) / [`nb b e`](#browse):
 
 ```bash
 ❯ nb browse edit text:formats/markdown/123
@@ -1441,7 +1441,7 @@ nb 3 view
 ##### Viewing with `browse`
 
 Items can be viewed within terminal and GUI web browsers using
-[`nb browse`](#browse) / [`nb br`](#browse):
+[`nb browse`](#browse) / [`nb b`](#browse):
 
 ```bash
 ❯ nb browse text:formats/markdown/123
@@ -1564,7 +1564,7 @@ For [`nb delete`](#delete) help information, run [`nb help delete`](#delete).
 ##### Deleting with `nb browse`
 
 Items can be deleted within terminal and GUI web browsers using
-[`nb browse delete`](#browse) / [`nb br d`](#browse):
+[`nb browse delete`](#browse) / [`nb b d`](#browse):
 
 ```bash
 ❯ nb browse delete example:4
@@ -1919,7 +1919,7 @@ Add: nb <url> Help: nb help bookmark
 `nb` provides multiple ways to view bookmark files, bookmarked content,
 and bookmarked URLs.
 
-Use [`nb browse`](#browse) (shortcut: [`nb br`](#browse))
+Use [`nb browse`](#browse) (shortcut: [`nb b`](#browse))
 to [browse](#-browsing) bookmarks with cached content,
 <a href="#-linking">[[wiki-style links]]</a>,
 linked [#tags](#-tagging), and external links:
@@ -2686,7 +2686,7 @@ search: [#tag2               ]
 [example:789] Demo Title
 
 # shortcut alias and short option
-❯ nb br example: -q "#tag2"
+❯ nb b example: -q "#tag2"
 ❯nb · example
 
 search: [#tag2               ]
@@ -2779,7 +2779,7 @@ For more information about identifying items, see [Selectors](#-selectors).
   </sup>
 </p>
 
-Use [`nb browse`](#browse) (shortcut: [`nb br`](#browse)) to
+Use [`nb browse`](#browse) (shortcut: [`nb b`](#browse)) to
 browse, view, edit, and search linked notes, bookmarks, notebooks, folders,
 and other items using terminal and GUI web browsers.
 
@@ -2850,7 +2850,7 @@ and other notebooks.
 [Links](https://en.wikipedia.org/wiki/Links_\(web_browser\)),
 [Lynx](https://en.wikipedia.org/wiki/Lynx_\(web_browser\)),
 or in the browser set in the `$BROWSER` environment variable.
-Use [`nb browse --gui`](#browse) / [`nb br -g`](#browse) to
+Use [`nb browse --gui`](#browse) / [`nb b -g`](#browse) to
 open in the system's primary [GUI web browser](#browse---gui).
 
 To open a specific item in [`nb browse`](#browse),
@@ -2938,7 +2938,7 @@ arrow (`↓`) link to view or download the original file.
 
 Items in text formats can be edited within terminal and GUI web browsers using
 the `edit` link on the item page or by opening the item with
-[`nb browse edit`](#browse) / [`nb br e`](#browse),
+[`nb browse edit`](#browse) / [`nb b e`](#browse),
 which automatically resizes the form to fit the current terminal window:
 
 ```bash
@@ -2973,7 +2973,7 @@ are available with [`nb browse --gui`](#browse).
 #### `browse add`
 
 Add an item within the browser using the `+` link or
-[`nb browse add`](#browse) / [`nb br a`](#browse).
+[`nb browse add`](#browse) / [`nb b a`](#browse).
 Pass a notebook, folder, and / or filename selector to create a new note
 in that location:
 
@@ -3019,7 +3019,7 @@ new notes with content:
 #### `browse delete`
 
 Use the `-` link on the [`nb browse edit`](#browse) page or
-[`nb browse delete`](#browse) / [`nb br d`](#browse)
+[`nb browse delete`](#browse) / [`nb b d`](#browse)
 to delete an item:
 
 ```bash
@@ -3059,7 +3059,7 @@ search: [example             ]
 [home:789] Demo Title
 
 # using shortcut alias and short option
-❯ nb br -q "example"
+❯ nb b -q "example"
 ❯nb · home
 
 search: [example             ]
@@ -3083,7 +3083,7 @@ search: [#tag2               ]
 [home:789] Demo Title
 
 # using shortcut alias and short option
-❯ nb br -t tag2
+❯ nb b -t tag2
 ❯nb · home
 
 search: [#tag2               ]
@@ -3099,7 +3099,7 @@ For more information about search options, see [Search](#-search) and
 
 To open any [`nb browse`](#browse) view in
 the system's primary GUI web browser,
-add the [`nb browse --gui`](#browse) / [`nb br -g`](#browse) option:
+add the [`nb browse --gui`](#browse) / [`nb b -g`](#browse) option:
 
 ```bash
 # open the item with id 123 in the "sample" notebook in the system's primary GUI browser
@@ -3111,7 +3111,7 @@ nb browse example/ -g
 
 # open the current notebook in the system's primary GUI browser,
 # shortcut alias and short option
-nb br -g
+nb b -g
 ```
 
 ##### `browse --gui` Editing
@@ -3180,19 +3180,19 @@ to enhance privacy and avoid leaking information:
 - Links include a `rel="noopener noreferrer"` attribute.
 - `lynx` is opened with the `-noreferer` option.
 
-#### Shortcut Alias: `nb br`
+#### Shortcut Alias: `nb b`
 
-[`nb browse`](#browse) can also be used with the alias [`nb br`](#browse):
+[`nb browse`](#browse) can also be used with the alias [`nb b`](#browse):
 
 ```bash
 # open the current notebook in the terminal web browser
-nb br
+nb b
 
 # open the item with id 123 in the "example" notebook using the terminal web browser
-nb br example:123
+nb b example:123
 
 # open the notebook named "sample" in the GUI web browser
-nb br sample: -g
+nb b sample: -g
 ```
 
 For more information, see [`nb browse`](#browse).
@@ -3272,7 +3272,7 @@ nb browse 123
 nb browse example:456 --gui
 
 # open item "example:456" in the GUI web browser, alternative
-nb example:456 br -g
+nb example:456 b -g
 ```
 
 The original file can be viewed or downloaded from the item page
@@ -3776,7 +3776,7 @@ For more information about search, see [`nb help search`](#search).
 ##### Searching with `browse`
 
 Searches can be performed within terminal and GUI web browsers using
-[`nb browse --query`](#browse) / [`nb br -q`](#browse):
+[`nb browse --query`](#browse) / [`nb b -q`](#browse):
 
 ```bash
 ❯ nb browse --query "#example"
@@ -5526,8 +5526,8 @@ nb a example.md
 # `+` (add): add a new note titled "Example Title"
 nb + --title "Example Title"
 
-# `br` (browse): open the folder named "sample" in the web browser
-nb br sample/
+# `b` (browse): open the folder named "sample" in the web browser
+nb b sample/
 
 # `o` (open): open the URL from bookmark 12 in your web browser
 nb o 12
@@ -6352,7 +6352,7 @@ Examples:
   nb br
 
 Shortcut Alias:
-  nb br
+  nb b
 ```
 
 #### `completions`
