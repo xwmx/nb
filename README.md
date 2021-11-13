@@ -2203,7 +2203,7 @@ Example description.
 ```
 
 Todos can have [tasks](#%EF%B8%8F-tasks).
-Tasks added with one or more [`nb todo add --task <task>`](#todo) options
+Tasks added with one or more [`--task <task>`](#todo) options
 are represented as a markdown task list and placed in a
 [`## Tasks`](#-tasks) section:
 
