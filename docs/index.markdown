@@ -2332,7 +2332,7 @@ Added: [6] ✔️ [ ] Example todo six.
 
 # mark todo 6 as done / closed
 ❯ nb do 6
-Done: [6] ✅ [x] Example todo two.
+Done: [6] ✅ [x] Example todo six.
 ```
 
 Re-open a closed todo with [`nb undo`](#undo):
@@ -2340,13 +2340,13 @@ Re-open a closed todo with [`nb undo`](#undo):
 ```bash
 # mark todo 6 as undone / open
 ❯ nb undo 6
-Undone: [6] ✔️ [ ] Example todo two.
+Undone: [6] ✔️ [ ] Example todo six.
 ```
 
 See
 [`nb help do`](#do)
 and
-[`nb help undo`](#undo),
+[`nb help undo`](#undo)
 for more information.
 
 ### ✔️ Tasks
