@@ -5396,9 +5396,6 @@ _list() {
 
         if _file_is_todo "${_list_path}/${__basename}"
         then
-          # _indicators+="${_NB_INDICATOR_TODO:-}"
-          # _extra_length=1
-
           # TODO: review
           if [[ "${_title_basename_or_path}" =~ \[x\]\  ]]
           then
@@ -5408,7 +5405,6 @@ _list() {
             _indicators+="${_NB_INDICATOR_TODO% } "
             _extra_length="-2"
           fi
-          # _title_basename_or_path="${_title_basename_or_path#\[[\ |x]\]\ }"
 
           if ((_COLOR_ENABLED))
           then
