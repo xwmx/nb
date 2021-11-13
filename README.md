@@ -8748,7 +8748,7 @@ that are related to the bookmarked resource.
 
 `Optional`
 
-A list of [tags](#-tagging)
+A list of [#tags](#-tagging)
 represented as `#hashtags`
 separated by individual spaces.
 
@@ -8910,7 +8910,7 @@ that are related to the todo.
 
 `Optional`
 
-A list of [tags](#-tagging)
+A list of [#tags](#-tagging)
 represented as `#hashtags`
 separated by individual spaces.
 
