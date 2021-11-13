@@ -4332,7 +4332,7 @@ nb example:list
 ```
 
 Check a notebook's archival status with
-[`nb status`](#status) (shortcut: `nb st`) and
+[`nb status`](#status) (shortcut: [`nb st`](#status)) and
 [`nb notebooks status`](#notebooks):
 
 ```bash
