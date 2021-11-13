@@ -1285,7 +1285,7 @@ nb example:12 show
 nb example:show 12
 ```
 
-By default, [`nb show`](#show) will opens note in
+By default, [`nb show`](#show) opens notes in
 [`less`](https://linux.die.net/man/1/less),
 with syntax highlighting if
 [`bat`](https://github.com/sharkdp/bat),
@@ -2679,14 +2679,14 @@ More example content:
 - three
 ```
 
-Use the [`-q`](#browse) / [`--query`](#browse) option
+Use the [`-t <tag>`](#browse) / [`--tag <tag>`](#browse) option
 to open [`nb browse`](#browse) to the list of
 all items in the current notebook or a specified notebook or folder that
 share a tag:
 
 ```bash
 # open to a list of items tagged with "#tag2" in the "example" notebook
-❯ nb browse example: --query "#tag2"
+❯ nb browse example: --tag tag2
 ❯nb · example
 
 search: [#tag2               ]
@@ -2696,7 +2696,7 @@ search: [#tag2               ]
 [example:789] Demo Title
 
 # shortcut alias and short option
-❯ nb b example: -q "#tag2"
+❯ nb b example: -t tag2
 ❯nb · example
 
 search: [#tag2               ]
@@ -3372,7 +3372,11 @@ For more information about Zettelkasten, see
 
 <p>
   <sup>
-    <a href="#overview">↑</a>
+    <a href="#overview">↑</a> ·
+    <a href="#add"><code>nb add</code></a>,
+    <a href="#browse"><code>nb browse</code></a>,
+    <a href="#list"><code>nb list</code></a>,
+    <a href="#ls"><code>nb ls</code></a>
   </sup>
 </p>
 
