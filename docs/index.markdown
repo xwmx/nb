@@ -1315,7 +1315,7 @@ go to*
 -> "Advanced"
 -> "Scroll wheel sends arrow keys when in alternate screen mode"
 *and change it to* "Yes".
-*[More info](https://stackoverflow.com/a/37610820)*
+*[More Info](https://stackoverflow.com/a/37610820)*
 
 Use the [`-p`](#show) / [`--print`](#show) option
 to print to standard output with syntax highlighting:
@@ -8707,7 +8707,9 @@ that are related to the bookmarked resource.
 
 `Optional`
 
-A list of tags represented as `#hashtags` separated by individual spaces.
+A list of [tags](#-tagging)
+represented as `#hashtags`
+separated by individual spaces.
 
 ##### `## Content`
 
@@ -8825,8 +8827,9 @@ that are related to the todo.
 
 `Optional`
 
-A list of tags represented as `#hashtags` separated by individual
-spaces.
+A list of [tags](#-tagging)
+represented as `#hashtags`
+separated by individual spaces.
 
 ### `nb` Notebook Specification
 
