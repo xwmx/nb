@@ -3984,7 +3984,7 @@ example · home
 Commands in `nb` run within the current notebook, and identifiers
 such as ids, filenames, and titles refer to notes within the current notebook.
 `nb edit 3`, for example, tells `nb` to
-`edit` note with id `3` within the current notebook.
+[`edit`](#edit) note with id `3` within the current notebook.
 
 To switch to a different notebook, use [`nb use`](#use):
 
