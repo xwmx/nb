@@ -1174,9 +1174,10 @@ before the change is committed.
 
 ##### Editing Encrypted Notes
 
-When a note is encrypted, `nb edit` will prompt you for the note password,
-open the unencrypted content in your editor,
-and then automatically reencrypt the note when you are done editing.
+When a note is encrypted,
+[`nb edit`](#edit) prompts you for the note password,
+opens the unencrypted content in your editor,
+and then automatically reencrypts the note when you are done editing.
 
 ##### Shortcut Alias: `nb e`
 
@@ -1493,7 +1494,7 @@ For more information, see [Browsing](#-browsing).
 
 To delete one or more notes, pass any number of
 ids, filenames, titles, and other [selectors](#-selectors)
-to [`nb delete`](#delete) (shortcuts: `nb d`, `nb -`):
+to [`nb delete`](#delete) (shortcuts: [`nb d`](#delete), [`nb -`](#delete)):
 
 ```bash
 # delete item by id
