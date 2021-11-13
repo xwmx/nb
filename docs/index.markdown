@@ -3358,12 +3358,12 @@ organized in normal system directories in normal git repositories,
 |    Zettelkasten   |                       `nb`                    |
 |:-----------------:|:---------------------------------------------:|
 | index cards       | [notes](#-notes) & [bookmarks](#-bookmarks)   |
-| numbering         | ids & [selectors](#-selectors)                 |
+| numbering         | ids & [selectors](#-selectors)                |
 | slip boxes        | [notebooks](#-notebooks)                      |
 | tags              | [#tags](#-tagging)                            |
 | metadata          | [front matter](#front-matter)                 |
 | cross-references  |  <a href="#-linking">[[wiki-style links]]</a> |
-| fast note-taking  | [`nb add` / `nb a`](#adding)                  |
+| fast note-taking  | [`nb add`](#adding) / [`nb a`](#adding)       |
 
 For more information about Zettelkasten, see
 [Wikipedia](https://en.wikipedia.org/wiki/Zettelkasten).
@@ -3887,7 +3887,7 @@ To copy items, install the [`copy`](#copy) / [`duplicate` plugin](#copy).
   <sup>
     <a href="#overview">↑</a> ·
     <a href="#history"><code>nb history</code></a>,
-    <a href="#notebooks"><code>nb notebooks author</code></a>
+    <a href="#notebooks"><code>nb notebooks</code></a>
   </sup>
 </p>
 
@@ -5404,7 +5404,8 @@ notebook:q
 
 <p>
   <sup>
-    <a href="#overview">↑</a>
+    <a href="#overview">↑</a> ·
+    <a href="#show"><code>nb show</code></a>
   </sup>
 </p>
 
