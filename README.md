@@ -2475,7 +2475,7 @@ Undo a done / closed task with [`nb undo`](#undo):
 ❯ nb undo 9 2
 [9] ✔️ [ ] Example todo nine.
 -----------------------------
-Undone: [7 2] [ ] Task two.
+Undone: [9 2] [ ] Task two.
 
 # list tasks in item 9
 ❯ nb tasks 9
