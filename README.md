@@ -8651,7 +8651,9 @@ permission.
 
 `Optional`
 
-A markdown `h1` heading containing the content of the bookmarked page's
+A [Markdown atx-style `h1` heading
+](https://daringfireball.net/projects/markdown/syntax#header)
+containing the content of the bookmarked page's
 HTML `<title>` or [`og:title`](https://ogp.me/) tag, if present, followed by
 the domain within parentheses.
 
