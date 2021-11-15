@@ -58,6 +58,29 @@ HEREDOC
     --content   "Sample Content One #other-tag1 Sample Phrase."
 }
 
+# #############################################################################
+
+# https://github.com/xwmx/nb/issues/154
+@test "'--tags' lists tags in item." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add --tags foo,bar --title baz "foo bar baz" foo.md
+  }
+
+  run "${_NB}" 1 --tags
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  cat "${NB_DIR}/home/foo.md"
+
+  [[ "${status}"    -eq 0             ]]
+  [[ "${#lines[@]}" -eq 2             ]]
+
+  [[ "${lines[0]}"  =~  \#foo         ]]
+  [[ "${lines[1]}"  =~  \#bar         ]]
+}
+
 # `nb` (`ls`) #################################################################
 
 @test "'<item> --tags' lists all unique, readable tags in <item>." {
