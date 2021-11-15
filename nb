@@ -14820,7 +14820,8 @@ _search() {
       "-I"
       "--ignore-case"
       "--only-matching"
-      -e '#[A-Za-z0-9_-]+'
+      -e '\s#[A-Za-z0-9_-]+'
+      -e '^#[A-Za-z0-9_-]+'
     )
 
     {

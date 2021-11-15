@@ -58,7 +58,37 @@ HEREDOC
     --content   "Sample Content One #other-tag1 Sample Phrase."
 }
 
-# #############################################################################
+# edge cases ##################################################################
+
+@test "'--tags' skips URI fragments" {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example File.md" \
+      --content "$(
+        cat <<HEREDOC
+#tag1
+
+https://example.com/example#fragment
+
+#tag2 #tag3
+HEREDOC
+      )"
+  }
+
+  run "${_NB}" --tags
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0             ]]
+  [[ "${#lines[@]}" -eq 3             ]]
+
+  [[ "${lines[0]}"  =~  \#tag1        ]]
+  [[ "${lines[1]}"  =~  \#tag2        ]]
+  [[ "${lines[2]}"  =~  \#tag3        ]]
+
+}
 
 # https://github.com/xwmx/nb/issues/154
 @test "'<item> --tags' and '--tags' with note lists tags in <item>." {
