@@ -61,7 +61,7 @@ HEREDOC
 # #############################################################################
 
 # https://github.com/xwmx/nb/issues/154
-@test "'--tags' lists tags in item." {
+@test "'<item> --tags' with note lists tags in <item>." {
   {
     "${_NB}" init
 
