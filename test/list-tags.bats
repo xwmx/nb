@@ -60,7 +60,7 @@ HEREDOC
 
 # edge cases ##################################################################
 
-@test "'--tags' skips URI fragments" {
+@test "'--tags' skips URI fragments." {
   {
     "${_NB}" init
 
