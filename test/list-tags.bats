@@ -61,12 +61,60 @@ HEREDOC
 # #############################################################################
 
 # https://github.com/xwmx/nb/issues/154
-@test "'<item> --tags' with note lists tags in <item>." {
+@test "'<item> --tags' and '--tags' with note lists tags in <item>." {
   {
     "${_NB}" init
 
     "${_NB}" add --tags foo,bar --title baz "foo bar baz" foo.md
   }
+
+  run "${_NB}" --tags
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  cat "${NB_DIR}/home/foo.md"
+
+  [[ "${status}"    -eq 0             ]]
+  [[ "${#lines[@]}" -eq 2             ]]
+
+  [[ "${lines[0]}"  =~  \#foo         ]]
+  [[ "${lines[1]}"  =~  \#bar         ]]
+
+  run "${_NB}" ls --tags
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  cat "${NB_DIR}/home/foo.md"
+
+  [[ "${status}"    -eq 0             ]]
+  [[ "${#lines[@]}" -eq 2             ]]
+
+  [[ "${lines[0]}"  =~  \#foo         ]]
+  [[ "${lines[1]}"  =~  \#bar         ]]
+
+  run "${_NB}" list --tags
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  cat "${NB_DIR}/home/foo.md"
+
+  [[ "${status}"    -eq 0             ]]
+  [[ "${#lines[@]}" -eq 2             ]]
+
+  [[ "${lines[0]}"  =~  \#foo         ]]
+  [[ "${lines[1]}"  =~  \#bar         ]]
+
+  run "${_NB}" search --tags
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  cat "${NB_DIR}/home/foo.md"
+
+  [[ "${status}"    -eq 0             ]]
+  [[ "${#lines[@]}" -eq 2             ]]
+
+  [[ "${lines[0]}"  =~  \#foo         ]]
+  [[ "${lines[1]}"  =~  \#bar         ]]
 
   run "${_NB}" 1 --tags
 
