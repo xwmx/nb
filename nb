@@ -14816,7 +14816,6 @@ _search() {
   if ((_search_tags))
   then
     local _git_grep_arguments=(
-      "grep"
       "--color=never"
       "--extended-regexp"
       "-I"
@@ -14842,6 +14841,7 @@ _search() {
         {
           GIT_PAGER=''                        \
             git -C "${_target_folder_path}"   \
+            grep                              \
             "${_git_grep_arguments[@]:-}"     \
             --files-with-matches              \
             --null                            \
@@ -14850,6 +14850,7 @@ _search() {
         } | {
           GIT_PAGER='' xargs "${_xargs[@]}"   \
             git -C "${_target_folder_path}"   \
+            grep                              \
             "${_git_grep_arguments[@]:-}"     \
             -e "## Comment"                   \
             -e "## Tags"                      \
