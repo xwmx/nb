@@ -12,7 +12,7 @@ _setup_tagged_items() {
   "${_NB}" add  "File Two.bookmark.md"              \
     --title     "Title Two"                         \
     --content   "$(cat <<HEREDOC
-Example Title with #title-tag and #123
+Example Title with #title-tag and #123 Hello
 
 ## Comment
 
@@ -56,6 +56,29 @@ HEREDOC
   "${_NB}" add  "Example Notebook:File One.md"      \
     --title     "Title One"                         \
     --content   "Sample Content One #other-tag1 Sample Phrase."
+}
+
+# _GIT_ENABLED=0 ##############################################################
+
+@test "'--tags' with _GIT_ENABLED=0 lists all unique, readable tags in <item>." {
+  {
+    _setup_tagged_items
+  }
+
+  _GIT_ENABLED=0 run "${_NB}" --tags
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0             ]]
+  [[ "${#lines[@]}" -eq 6             ]]
+
+  [[ "${output}"    =~  \#nested-tag1 ]]
+  [[ "${output}"    =~  \#nested-tag2 ]]
+  [[ "${output}"    =~  \#tag1        ]]
+  [[ "${output}"    =~  \#tag2        ]]
+  [[ "${output}"    =~  \#tag3        ]]
+  [[ "${output}"    =~  \#low-tag     ]]
 }
 
 # edge cases ##################################################################

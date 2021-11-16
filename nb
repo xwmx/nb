@@ -14815,7 +14815,7 @@ _search() {
 
   if ((_search_tags))
   then
-    local _git_grep_arguments=(
+    local _grep_arguments=(
       "--color=never"
       "--extended-regexp"
       "-I"
@@ -14839,55 +14839,91 @@ _search() {
         fi
 
         {
-          GIT_PAGER=''                        \
-            git -C "${_target_folder_path}"   \
-            grep                              \
-            "${_git_grep_arguments[@]:-}"     \
-            --files-with-matches              \
-            --null                            \
-            "${__target_path}"                \
-            2>/dev/null || true
+          if ((_GIT_ENABLED))
+          then
+            GIT_PAGER=''                      \
+              git -C "${_target_folder_path}" \
+              grep                            \
+              "${_grep_arguments[@]:-}"       \
+              --files-with-matches            \
+              --null                          \
+              "${__target_path}"              \
+              2>/dev/null || true
+          else
+            {
+              find "${__target_path}"         \
+                ! -path '*/.git*'             \
+                -path '*/[^.]*'               \
+                -type f                       \
+                -print0
+
+            } | {
+              xargs "${_xargs[@]}"            \
+                grep                          \
+                "${_grep_arguments[@]:-}"     \
+                --files-with-matches          \
+                --null
+            }
+          fi
         } | {
-          GIT_PAGER='' xargs "${_xargs[@]}"   \
-            git -C "${_target_folder_path}"   \
-            grep                              \
-            "${_git_grep_arguments[@]:-}"     \
-            -e "## Comment"                   \
-            -e "## Tags"                      \
-            -e "## Content"                   \
-            -e "## Page Content"              \
-            -e "## Source"                    \
-            2>/dev/null || true
+          if ((_GIT_ENABLED))
+          then
+            GIT_PAGER=''                      \
+              xargs "${_xargs[@]}"            \
+              git -C "${_target_folder_path}" \
+              grep                            \
+              "${_grep_arguments[@]:-}"       \
+              -e "## Comment"                 \
+              -e "## Tags"                    \
+              -e "## Content"                 \
+              -e "## Page Content"            \
+              -e "## Source"                  \
+              2>/dev/null || true
+          else
+            xargs "${_xargs[@]}"              \
+              grep                            \
+              "${_grep_arguments[@]:-}"       \
+              -e "## Comment"                 \
+              -e "## Tags"                    \
+              -e "## Content"                 \
+              -e "## Page Content"            \
+              -e "## Source"                  \
+              2>/dev/null || true
+          fi
         }
       done
     } | {
-      local _last_relative_path=
+      local _last_match_path=
+      local _match_path=
       local _seen_matches=()
       local _skip=1
 
       local         __match=
       while read -r __match
       do
-        local _relative_path="${__match%:*}"
+        if [[ "${__match:-}" =~ : ]]
+        then
+          _match_path="${__match%:*}"
+        fi
 
         local _normalized_match="${__match##*:}"
         _normalized_match="${_normalized_match#"${_normalized_match%%[![:space:]]*}"}"
         _normalized_match="${_normalized_match%"${_normalized_match##*[![:space:]]}"}"
 
-        if [[ "${_relative_path:-}"           =~ \.bookmark\.md$        ]]
+        if [[ "${_match_path:-}"              =~ \.bookmark\.md$    ]]
         then
-          if [[ "${_last_relative_path:-}"    != "${_relative_path:-}"  ]]
+          if [[ "${_last_match_path:-}"       != "${_match_path:-}" ]]
           then
             _skip=1
-            _last_relative_path="${_relative_path}"
+            _last_match_path="${_match_path}"
           fi
 
-          if [[ "${_normalized_match:-}"      =~ ^##                    ]]
+          if [[ "${_normalized_match:-}"      =~ ^##                ]]
           then
-            if [[ "${_normalized_match:-}"    =~ Comment|Tags           ]]
+            if [[ "${_normalized_match:-}"    =~ Comment|Tags       ]]
             then
               _skip=0
-            elif [[ "${_normalized_match:-}"  =~ Content|Source         ]]
+            elif [[ "${_normalized_match:-}"  =~ Content|Source     ]]
             then
               _skip=1
             fi
@@ -14899,7 +14935,7 @@ _search() {
           then
             continue
           fi
-        elif [[ "${_normalized_match:-}"      =~ ^##                    ]]
+        elif [[ "${_normalized_match:-}"      =~ ^##                ]]
         then
           continue
         fi
