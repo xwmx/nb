@@ -7448,6 +7448,8 @@ HEREDOC
       local __name=
       for   __name in "${_query_names[@]}"
       do
+        __name="${__name%:}"
+
         _notebook_names+=("${__name}")
 
         if [[ "${__name}" == "local"        ]]
