@@ -5078,7 +5078,7 @@ _list() {
 
         _list "${__folder_path}/"         \
           "${_recursive_arguments[@]:-}"  \
-          --error-on-empty 2>/dev/null  || :
+          --error-on-empty 2>/dev/null    || :
       done
     }
   fi
@@ -5186,7 +5186,7 @@ _list() {
           done
         } | {
           _list_files "${_list_path}" "${_list_files_options[@]:-}" \
-            --standard-input || :
+            --standard-input  || :
         }
       fi
 
@@ -14146,7 +14146,7 @@ _move() {
 
   if [[ -e  "${_target_notebook_path}/${_target_relative_path}" ]]
   then
-    _exit_1 printf "File already exists: %s\\n" \
+    _exit_1 printf "File already exists: %s\\n"       \
       "$(_color_primary "${_target_info}")"
   fi
 
@@ -14158,7 +14158,7 @@ _move() {
     while true
     do
       local __yn=
-      IFS='' read -r -e -d $'\n' -p \
+      IFS='' read -r -e -d $'\n' -p   \
 "$(_color_primary "Proceed?")  $(_color_brackets "y/N") " __yn
 
       case ${__yn} in
@@ -15236,7 +15236,7 @@ _search() {
                   _last_pipe="${_this_pipe:-}"
                 done
 
-                if [[ -p "${_last_pipe:-}" ]]
+                if [[ -p "${_last_pipe:-}"    ]]
                 then
                   <"${_last_pipe:-}" cat
                 else
@@ -15248,7 +15248,7 @@ _search() {
                   local i=
                   for ((i=0; i < "${#_queries[@]}"; i++))
                   do
-                    [[ -n "${_queries[i]:-}" ]] || continue
+                    [[ -n "${_queries[i]:-}"  ]] || continue
 
                     if ! ((i))
                     then
@@ -15604,9 +15604,9 @@ _search() {
             local _line_length_diff=
             _line_length_diff=$((_line_length-_max_columns-100))
 
-            if [[ "${_line_length_diff}" -gt 0 ]]
+            if [[ "${_line_length_diff}" -gt 0      ]]
             then
-              _content_line_with_hit="$(\
+              _content_line_with_hit="$(
                 printf "%s\\n" "${_content_line_with_hit}" \
                   | awk '{ print substr($0, 1, 2000) }'
               )"
@@ -15633,12 +15633,12 @@ _search() {
     else
       if ((_all))
       then
-        printf "Not found in any notebook: %s\\n" \
+        printf "Not found in any notebook: %s\\n"   \
           "$(_color_primary "${_query:-}")"
       else
         local _search_selector=
 
-        if [[ -n "${_selectors[0]:-}" ]]
+        if [[ -n "${_selectors[0]:-}"               ]]
         then
           _search_selector="${_selectors[0]}"
 
