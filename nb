@@ -11116,7 +11116,7 @@ _add() {
       bookmark)
         _add_type="bookmark"
         ;;
-      folder|directory)
+      folder|folders|directory)
         _file_type="folder"
         _defer_arguments+=("${1}")
         ;;

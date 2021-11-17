@@ -2,6 +2,86 @@
 
 load test_helper
 
+# aliases #####################################################################
+
+@test "'add folders' adds folder." {
+  {
+    "${_NB}" init
+
+  }
+
+  run "${_NB}" add folders Example\ Folder
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0 ]]
+
+  [[    -d "${NB_DIR}/home/Example Folder"        ]]
+  [[    -f "${NB_DIR}/home/Example Folder/.index" ]]
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)"                       ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  [[ "${output}" =~ Added:\ .*[.*1.*].*\ 📂\ .*Example\ Folder  ]]
+}
+
+@test "'folders add' adds folder." {
+  {
+    "${_NB}" init
+
+  }
+
+  run "${_NB}" folders add Example\ Folder
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0 ]]
+
+  [[    -d "${NB_DIR}/home/Example Folder"        ]]
+  [[    -f "${NB_DIR}/home/Example Folder/.index" ]]
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)"                       ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  [[ "${output}" =~ Added:\ .*[.*1.*].*\ 📂\ .*Example\ Folder  ]]
+}
+
+@test "'folder add' adds folder." {
+  {
+    "${_NB}" init
+
+  }
+
+  run "${_NB}" folder add Example\ Folder
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0 ]]
+
+  [[    -d "${NB_DIR}/home/Example Folder"        ]]
+  [[    -f "${NB_DIR}/home/Example Folder/.index" ]]
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)"                       ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  [[ "${output}" =~ Added:\ .*[.*1.*].*\ 📂\ .*Example\ Folder  ]]
+}
+
 # local #######################################################################
 
 @test "'add <selector-with-folder-and-filename>' adds to local notebook." {
