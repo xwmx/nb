@@ -7,7 +7,6 @@ load test_helper
 @test "'add folders' adds folder." {
   {
     "${_NB}" init
-
   }
 
   run "${_NB}" add folders Example\ Folder
@@ -33,7 +32,6 @@ load test_helper
 @test "'folders add' adds folder." {
   {
     "${_NB}" init
-
   }
 
   run "${_NB}" folders add Example\ Folder
@@ -59,7 +57,6 @@ load test_helper
 @test "'folder add' adds folder." {
   {
     "${_NB}" init
-
   }
 
   run "${_NB}" folder add Example\ Folder
