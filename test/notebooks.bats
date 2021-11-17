@@ -336,6 +336,41 @@ _setup_notebooks() {
   [[ "${output}"    =~  \!.*\ Notebook\ not\ found:\ .*no-match ]]
 }
 
+@test "'notebooks <name>:' with colon exits with 0 and prints matching notebook names." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" notebooks add "Sample Notebook"
+    "${_NB}" notebooks add "Demo Notebook"
+
+  }
+
+  run "${_NB}" notebooks Sample\ Notebook:
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 0                 ]]
+  [[    "${#lines[@]}"  -eq 1                 ]]
+
+  [[    "${lines[0]}"   =~  Sample\ Notebook  ]]
+  [[ !  "${output}"     =~  Example\ Notebook ]]
+  [[ !  "${output}"     =~  Demo\ Notebook    ]]
+
+  run "${_NB}" notebooks Sample\ Notebook
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 0                 ]]
+  [[    "${#lines[@]}"  -eq 1                 ]]
+
+  [[    "${lines[0]}"   =~  Sample\ Notebook  ]]
+  [[ !  "${output}"     =~  Example\ Notebook ]]
+  [[ !  "${output}"     =~  Demo\ Notebook    ]]
+}
+
 # `notebooks` #################################################################
 
 @test "'notebooks' exits with 0 and prints all notebook names." {

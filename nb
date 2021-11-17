@@ -74,7 +74,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="6.7.4"
+_VERSION="6.7.5"
 
 # $_ME
 #
@@ -5078,7 +5078,7 @@ _list() {
 
         _list "${__folder_path}/"         \
           "${_recursive_arguments[@]:-}"  \
-          --error-on-empty 2>/dev/null  || :
+          --error-on-empty 2>/dev/null    || :
       done
     }
   fi
@@ -5186,7 +5186,7 @@ _list() {
           done
         } | {
           _list_files "${_list_path}" "${_list_files_options[@]:-}" \
-            --standard-input || :
+            --standard-input  || :
         }
       fi
 
@@ -5396,9 +5396,6 @@ _list() {
 
         if _file_is_todo "${_list_path}/${__basename}"
         then
-          # _indicators+="${_NB_INDICATOR_TODO:-}"
-          # _extra_length=1
-
           # TODO: review
           if [[ "${_title_basename_or_path}" =~ \[x\]\  ]]
           then
@@ -5408,7 +5405,6 @@ _list() {
             _indicators+="${_NB_INDICATOR_TODO% } "
             _extra_length="-2"
           fi
-          # _title_basename_or_path="${_title_basename_or_path#\[[\ |x]\]\ }"
 
           if ((_COLOR_ENABLED))
           then
@@ -6640,14 +6636,14 @@ _notebooks() {
       shift
     done
 
-    if [[ -z "${_name}" ]]
+    if [[ -z "${_name:-}"             ]]
     then
       _exit_1 _help notebooks
     fi
 
     _notebooks_validate_name "${_name}"
 
-    if [[ -e "${NB_DIR}/${_name}" ]]
+    if [[ -e "${NB_DIR}/${_name}"     ]]
     then
       _exit_1 printf "Already exists: %s\\n" "$(_color_primary "${_name}")"
     fi
@@ -6757,7 +6753,7 @@ _notebooks() {
           _unset=1
           ;;
         *)
-          if [[ -z "${_selector:-}" ]]
+          if [[ -z "${_selector:-}"     ]]
           then
             _selector="${1:-}"
           fi
@@ -6945,14 +6941,14 @@ HEREDOC
       then
         if _contains "${_new_local_name:-}" "global" "--unset" "unset"
         then
-          git -C "${_notebook_path:-}" config --unset user.name  || :
+          git -C "${_notebook_path:-}" config --unset user.name   || :
         else
           git -C "${_notebook_path}" config --local \
             user.name "${_new_local_name:-}"
         fi
       fi
 
-      if [[ -n "${_new_local_email:-"${_new_local_name:-}"}" ]] || ! ((_skip_prompt))
+      if [[ -n "${_new_local_email:-"${_new_local_name:-}"}" ]]   || ! ((_skip_prompt))
       then
         printf "\\nUpdated author for: %s\\n" "$(
           _color_primary "${_notebook_name}"
@@ -7147,7 +7143,7 @@ HEREDOC
         local __notebook=
         for   __notebook in "${_notebook_names[@]:-}"
         do
-          if [[ "${__notebook}"   != "$(_notebooks current)"    ]]
+          if [[ "${__notebook}"   !=    "$(_notebooks current)"   ]]
           then
             _notebooks use "${__notebook}"
             break
@@ -7156,7 +7152,7 @@ HEREDOC
       fi
     fi
 
-    if _command_exists "trash"    && [[ "${OSTYPE}" =~ ^darwin  ]]
+    if _command_exists "trash"    &&    [[ "${OSTYPE}" =~ ^darwin ]]
     then
       trash "${NB_DIR:?}/${_name:?}"
     else
@@ -7176,7 +7172,7 @@ HEREDOC
   _notebooks_export() {
     local _name="${1:-}"
 
-    if [[ -z "${_name:-}" ]]
+    if [[ -z "${_name:-}"           ]]
     then
       _exit_1 _help "notebooks"
     fi
@@ -7202,7 +7198,7 @@ HEREDOC
       _target_path="${_target_path}/${_name}"
     fi
 
-    if [[ -z "${_target_path}" ]]
+    if [[ -z "${_target_path}"      ]]
     then
       _target_path="${_CURRENT_WORKING_DIR}/${_name}"
     fi
@@ -7452,6 +7448,8 @@ HEREDOC
       local __name=
       for   __name in "${_query_names[@]}"
       do
+        __name="${__name%:}"
+
         _notebook_names+=("${__name}")
 
         if [[ "${__name}" == "local"        ]]
@@ -11118,7 +11116,7 @@ _add() {
       bookmark)
         _add_type="bookmark"
         ;;
-      folder|directory)
+      folder|folders|directory)
         _file_type="folder"
         _defer_arguments+=("${1}")
         ;;
@@ -14148,7 +14146,7 @@ _move() {
 
   if [[ -e  "${_target_notebook_path}/${_target_relative_path}" ]]
   then
-    _exit_1 printf "File already exists: %s\\n" \
+    _exit_1 printf "File already exists: %s\\n"       \
       "$(_color_primary "${_target_info}")"
   fi
 
@@ -14160,7 +14158,7 @@ _move() {
     while true
     do
       local __yn=
-      IFS='' read -r -e -d $'\n' -p \
+      IFS='' read -r -e -d $'\n' -p   \
 "$(_color_primary "Proceed?")  $(_color_brackets "y/N") " __yn
 
       case ${__yn} in
@@ -14817,17 +14815,14 @@ _search() {
 
   if ((_search_tags))
   then
-    local _git_grep_arguments=(
-      "grep"
+    local _grep_arguments=(
       "--color=never"
       "--extended-regexp"
       "-I"
       "--ignore-case"
       "--only-matching"
-      -e '^#[A-Za-z0-9_-]+\s'
-      -e '\s#[A-Za-z0-9_-]+\s'
-      -e '\s#[A-Za-z0-9_-]+$'
-      -e '^#[A-Za-z0-9_-]+$'
+      -e '\s#[A-Za-z0-9_-]+'
+      -e '^#[A-Za-z0-9_-]+'
     )
 
     {
@@ -14844,53 +14839,91 @@ _search() {
         fi
 
         {
-          GIT_PAGER=''                        \
-            git -C "${_target_folder_path}"   \
-            "${_git_grep_arguments[@]:-}"     \
-            --files-with-matches              \
-            --null                            \
-            "${__target_path}"                \
-            2>/dev/null || true
+          if ((_GIT_ENABLED))
+          then
+            GIT_PAGER=''                      \
+              git -C "${_target_folder_path}" \
+              grep                            \
+              "${_grep_arguments[@]:-}"       \
+              --files-with-matches            \
+              --null                          \
+              "${__target_path}"              \
+              2>/dev/null || true
+          else
+            {
+              find "${__target_path}"         \
+                ! -path '*/.git*'             \
+                -path '*/[^.]*'               \
+                -type f                       \
+                -print0
+
+            } | {
+              xargs "${_xargs[@]}"            \
+                grep                          \
+                "${_grep_arguments[@]:-}"     \
+                --files-with-matches          \
+                --null
+            }
+          fi
         } | {
-          GIT_PAGER='' xargs "${_xargs[@]}"   \
-            git -C "${_target_folder_path}"   \
-            "${_git_grep_arguments[@]:-}"     \
-            -e "## Comment"                   \
-            -e "## Tags"                      \
-            -e "## Content"                   \
-            -e "## Page Content"              \
-            -e "## Source"                    \
-            2>/dev/null || true
+          if ((_GIT_ENABLED))
+          then
+            GIT_PAGER=''                      \
+              xargs "${_xargs[@]}"            \
+              git -C "${_target_folder_path}" \
+              grep                            \
+              "${_grep_arguments[@]:-}"       \
+              -e "## Comment"                 \
+              -e "## Tags"                    \
+              -e "## Content"                 \
+              -e "## Page Content"            \
+              -e "## Source"                  \
+              2>/dev/null || true
+          else
+            xargs "${_xargs[@]}"              \
+              grep                            \
+              "${_grep_arguments[@]:-}"       \
+              -e "## Comment"                 \
+              -e "## Tags"                    \
+              -e "## Content"                 \
+              -e "## Page Content"            \
+              -e "## Source"                  \
+              2>/dev/null || true
+          fi
         }
       done
     } | {
-      local _last_relative_path=
+      local _last_match_path=
+      local _match_path=
       local _seen_matches=()
       local _skip=1
 
       local         __match=
       while read -r __match
       do
-        local _relative_path="${__match%:*}"
+        if [[ "${__match:-}" =~ : ]]
+        then
+          _match_path="${__match%:*}"
+        fi
 
         local _normalized_match="${__match##*:}"
         _normalized_match="${_normalized_match#"${_normalized_match%%[![:space:]]*}"}"
         _normalized_match="${_normalized_match%"${_normalized_match##*[![:space:]]}"}"
 
-        if [[ "${_relative_path:-}"           =~ \.bookmark\.md$        ]]
+        if [[ "${_match_path:-}"              =~ \.bookmark\.md$    ]]
         then
-          if [[ "${_last_relative_path:-}"    != "${_relative_path:-}"  ]]
+          if [[ "${_last_match_path:-}"       != "${_match_path:-}" ]]
           then
             _skip=1
-            _last_relative_path="${_relative_path}"
+            _last_match_path="${_match_path}"
           fi
 
-          if [[ "${_normalized_match:-}"      =~ ^##                    ]]
+          if [[ "${_normalized_match:-}"      =~ ^##                ]]
           then
-            if [[ "${_normalized_match:-}"    =~ Comment|Tags           ]]
+            if [[ "${_normalized_match:-}"    =~ Comment|Tags       ]]
             then
               _skip=0
-            elif [[ "${_normalized_match:-}"  =~ Content|Source         ]]
+            elif [[ "${_normalized_match:-}"  =~ Content|Source     ]]
             then
               _skip=1
             fi
@@ -14902,7 +14935,7 @@ _search() {
           then
             continue
           fi
-        elif [[ "${_normalized_match:-}"      =~ ^##                    ]]
+        elif [[ "${_normalized_match:-}"      =~ ^##                ]]
         then
           continue
         fi
@@ -15239,7 +15272,7 @@ _search() {
                   _last_pipe="${_this_pipe:-}"
                 done
 
-                if [[ -p "${_last_pipe:-}" ]]
+                if [[ -p "${_last_pipe:-}"    ]]
                 then
                   <"${_last_pipe:-}" cat
                 else
@@ -15251,7 +15284,7 @@ _search() {
                   local i=
                   for ((i=0; i < "${#_queries[@]}"; i++))
                   do
-                    [[ -n "${_queries[i]:-}" ]] || continue
+                    [[ -n "${_queries[i]:-}"  ]] || continue
 
                     if ! ((i))
                     then
@@ -15607,9 +15640,9 @@ _search() {
             local _line_length_diff=
             _line_length_diff=$((_line_length-_max_columns-100))
 
-            if [[ "${_line_length_diff}" -gt 0 ]]
+            if [[ "${_line_length_diff}" -gt 0      ]]
             then
-              _content_line_with_hit="$(\
+              _content_line_with_hit="$(
                 printf "%s\\n" "${_content_line_with_hit}" \
                   | awk '{ print substr($0, 1, 2000) }'
               )"
@@ -15636,12 +15669,12 @@ _search() {
     else
       if ((_all))
       then
-        printf "Not found in any notebook: %s\\n" \
+        printf "Not found in any notebook: %s\\n"   \
           "$(_color_primary "${_query:-}")"
       else
         local _search_selector=
 
-        if [[ -n "${_selectors[0]:-}" ]]
+        if [[ -n "${_selectors[0]:-}"               ]]
         then
           _search_selector="${_selectors[0]}"
 
@@ -16371,7 +16404,7 @@ Can't show archives. Export archive and expand to edit.\\n"
           cat
         fi
       }
-    elif _command_exists "catimg"
+    elif _command_exists "catimg" && _file_is_image "${_target_path}"
     then
       catimg "${_target_path}"
     elif _command_exists "magick"                     &&
@@ -16387,7 +16420,7 @@ Can't show archives. Export archive and expand to edit.\\n"
          } && {
            [[ "${_tool:-magick}"  == "magick"     ]]
          }
-      then
+    then
       magick "${_target_path}" sixel:-  | {
         if _command_exists "less" &&    ! ((_print_output))
         then

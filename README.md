@@ -2203,7 +2203,7 @@ Example description.
 ```
 
 Todos can have [tasks](#%EF%B8%8F-tasks).
-Tasks added with one or more [`nb todo add --task <task>`](#todo) options
+Tasks added with one or more [`--task <task>`](#todo) options
 are represented as a markdown task list and placed in a
 [`## Tasks`](#-tasks) section:
 
@@ -2326,7 +2326,7 @@ Added: [6] ✔️ [ ] Example todo six.
 
 # mark todo 6 as done / closed
 ❯ nb do 6
-Done: [6] ✅ [x] Example todo two.
+Done: [6] ✅ [x] Example todo six.
 ```
 
 Re-open a closed todo with [`nb undo`](#undo):
@@ -2334,13 +2334,13 @@ Re-open a closed todo with [`nb undo`](#undo):
 ```bash
 # mark todo 6 as undone / open
 ❯ nb undo 6
-Undone: [6] ✔️ [ ] Example todo two.
+Undone: [6] ✔️ [ ] Example todo six.
 ```
 
 See
 [`nb help do`](#do)
 and
-[`nb help undo`](#undo),
+[`nb help undo`](#undo)
 for more information.
 
 ### ✔️ Tasks
@@ -2475,7 +2475,7 @@ Undo a done / closed task with [`nb undo`](#undo):
 ❯ nb undo 9 2
 [9] ✔️ [ ] Example todo nine.
 -----------------------------
-Undone: [7 2] [ ] Task two.
+Undone: [9 2] [ ] Task two.
 
 # list tasks in item 9
 ❯ nb tasks 9
@@ -8649,15 +8649,11 @@ permission.
 
 ##### Title
 
-<p>
-  <sup>
-    <a href="#nb-markdown-bookmark-file-format">↑</a>
-  </sup>
-</p>
-
 `Optional`
 
-A markdown `h1` heading containing the content of the bookmarked page's
+A [Markdown atx-style `h1` heading
+](https://daringfireball.net/projects/markdown/syntax#header)
+containing the content of the bookmarked page's
 HTML `<title>` or [`og:title`](https://ogp.me/) tag, if present, followed by
 the domain within parentheses.
 
@@ -8670,13 +8666,13 @@ the domain within parentheses.
 # (example.com)
 ```
 
-##### URL
-
 <p>
   <sup>
     <a href="#nb-markdown-bookmark-file-format">↑</a>
   </sup>
 </p>
+
+##### URL
 
 `Required`
 
@@ -8685,51 +8681,51 @@ The URL of the bookmarked resource, with surrounding angle brackets
 
 This is the only required element.
 
-##### `## Description`
-
 <p>
   <sup>
     <a href="#nb-markdown-bookmark-file-format">↑</a>
   </sup>
 </p>
+
+##### `## Description`
 
 `Optional`
 
 A text element containing the content of the bookmarked page's meta description
 or [`og:description`](https://ogp.me/) tag, if present.
 
-##### `## Quote`
-
 <p>
   <sup>
     <a href="#nb-markdown-bookmark-file-format">↑</a>
   </sup>
 </p>
+
+##### `## Quote`
 
 `Optional`
 
 A markdown quote block containing a user-specified excerpt from the bookmarked
 resource.
 
-##### `## Comment`
-
 <p>
   <sup>
     <a href="#nb-markdown-bookmark-file-format">↑</a>
   </sup>
 </p>
+
+##### `## Comment`
 
 `Optional`
 
 A text element containing a comment written by the user.
 
-##### `## Related`
-
 <p>
   <sup>
     <a href="#nb-markdown-bookmark-file-format">↑</a>
   </sup>
 </p>
+
+##### `## Related`
 
 `Optional`
 
@@ -8738,19 +8734,25 @@ angle bracketed (`<`, `>`) URLs and
 [[[wiki-style links]]](#-linking)
 that are related to the bookmarked resource.
 
-##### `## Tags`
-
 <p>
   <sup>
     <a href="#nb-markdown-bookmark-file-format">↑</a>
   </sup>
 </p>
 
+##### `## Tags`
+
 `Optional`
 
 A list of [#tags](#-tagging)
 represented as `#hashtags`
 separated by individual spaces.
+
+<p>
+  <sup>
+    <a href="#nb-markdown-bookmark-file-format">↑</a>
+  </sup>
+</p>
 
 ##### `## Content`
 
@@ -8764,13 +8766,13 @@ to inline Markdown to reduce the amount of markup, make it more readable,
 and make page conent easily viewable in the terminal as markdown and
 streamlined HTML in terminal web browsers.
 
-##### `## Source`
-
 <p>
   <sup>
     <a href="#nb-markdown-bookmark-file-format">↑</a>
   </sup>
 </p>
+
+##### `## Source`
 
 `Optional`
 
@@ -8780,6 +8782,12 @@ from the bookmarked page.
 `nb` does not save the page source by default. `nb` uses this section to save
 the source HTML page content when `pandoc` is not available to convert it to
 Markdown.
+
+<p>
+  <sup>
+    <a href="#nb-markdown-bookmark-file-format">↑</a>
+  </sup>
+</p>
 
 ### `nb` Markdown Todo File Format
 
@@ -8798,9 +8806,7 @@ Markdown.
 #### Description
 
 `nb` todos are Markdown documents identified by a `.todo.md` file extension.
-Todos contain a
-[Markdown atx-style `h1` heading
-](https://daringfireball.net/projects/markdown/syntax#header)
+Todos contain a Markdown `h1` heading
 starting with a Markdown checkbox (`[ ]` / `[x]`) indicating
 the todo completion state, followed by the todo title.
 
@@ -8837,61 +8843,57 @@ Example description.
 
 ##### Title
 
-<p>
-  <sup>
-    <a href="#nb-markdown-todo-file-format">↑</a>
-  </sup>
-</p>
-
 `Required`
 
-A markdown `h1` heading containing a Markdown checkbox followed by the todo title.
+A [Markdown atx-style `h1` heading
+](https://daringfireball.net/projects/markdown/syntax#header)
+containing a Markdown checkbox followed by the todo title.
 An `x` within the checkbox (`[ ]`) indicates that the todo is done.
-
-##### `## Due`
 
 <p>
   <sup>
     <a href="#nb-markdown-todo-file-format">↑</a>
   </sup>
 </p>
+
+##### `## Due`
 
 `Optional`
 
 A text element containing a value referencing
 a due date and / or time for the todo.
 
-##### `## Description`
-
 <p>
   <sup>
     <a href="#nb-markdown-todo-file-format">↑</a>
   </sup>
 </p>
+
+##### `## Description`
 
 `Optional`
 
 A text element containing a description for the todo.
 
-##### `## Tasks`
-
 <p>
   <sup>
     <a href="#nb-markdown-todo-file-format">↑</a>
   </sup>
 </p>
+
+##### `## Tasks`
 
 `Optional`
 
 A markdown tasklist containing sub-tasks for the todo.
 
-##### `## Related`
-
 <p>
   <sup>
     <a href="#nb-markdown-todo-file-format">↑</a>
   </sup>
 </p>
+
+##### `## Related`
 
 `Optional`
 
@@ -8900,19 +8902,25 @@ angle bracketed (`<`, `>`) URLs and
 [[[wiki-style links]]](#-linking)
 that are related to the todo.
 
-##### `## Tags`
-
 <p>
   <sup>
     <a href="#nb-markdown-todo-file-format">↑</a>
   </sup>
 </p>
 
+##### `## Tags`
+
 `Optional`
 
 A list of [#tags](#-tagging)
 represented as `#hashtags`
 separated by individual spaces.
+
+<p>
+  <sup>
+    <a href="#nb-markdown-todo-file-format">↑</a>
+  </sup>
+</p>
 
 ### `nb` Notebook Specification
 
