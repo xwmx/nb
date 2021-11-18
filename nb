@@ -2758,7 +2758,7 @@ _selector_resolve_path() {
         _selector_resolve_folders "${_selector}" "${_notebook_path}"
       )" || return 0
 
-      if [[ -n "${_folder_relative_path:-}" ]]
+      if [[ -n "${_folder_relative_path:-}"     ]]
       then
         _folder_path="${_notebook_path}/${_folder_relative_path}"
       fi
@@ -5308,9 +5308,10 @@ _list() {
         fi
       fi
 
-      if [[ -n "${_limit:-}" ]] && [[ "${_printed_count}" -ge "${_limit}" ]]
+      if [[   -n "${_limit:-}"                        ]] &&
+         [[      "${_printed_count}" -ge "${_limit}"  ]]
       then # the limit has been reached
-        if [[ -n "${_filter_pattern:-}" ]]
+        if [[ -n "${_filter_pattern:-}"               ]]
         then
           # keep looking for matches to count total
           continue
@@ -5499,8 +5500,8 @@ ${_TPUT_SGR0}"
          [[ "${_excerpt_length}" =~ ^[0-9] ]] &&
          _file_is_text "${_list_path}/${__basename}"
       then # excerpt is specified with a non-zero digit, required by `head`
-        _print_line "${_info_line:-}"   \
-          --no-wrap                     \
+        _print_line "${_info_line:-}"         \
+          --no-wrap                           \
           --visible-length "${_extra_length:-0}"
 
         if ((${_excerpt_length:-0}))
@@ -5546,7 +5547,7 @@ ${_TPUT_SGR0}"
       fi
     fi
 
-    if ! ((_printed_count)) && [[ -n "${_filter_pattern:-}" ]]
+    if ! ((_printed_count)) && [[ -n "${_filter_pattern:-}"   ]]
     then
       local _filter_message=
 
@@ -5555,19 +5556,19 @@ ${_TPUT_SGR0}"
         _filter_message="$(_color_primary "$(_notebooks current):")"
       fi
 
-      if [[ -n "${_folder_relative_path:-}" ]]
+      if [[ -n "${_folder_relative_path:-}"     ]]
       then
         _filter_message="${_filter_message}$(_color_primary "${_folder_relative_path}/")"
       fi
 
-      if [[ -n "${_filter_message:-}" ]]
+      if [[ -n "${_filter_message:-}"           ]]
       then
         _filter_message="${_filter_message} "
       fi
 
       _filter_message="${_filter_message}$(_color_primary "${_filter_pattern:-}")"
 
-      if [[ -n "${_type:-}" ]]
+      if [[ -n "${_type:-}"                     ]]
       then
          _filter_message="${_filter_message} Type: $(_color_primary "${_type}")"
       fi
@@ -5583,14 +5584,14 @@ ${_TPUT_SGR0}"
         local _maybe_id_path_context_padded_left=
         local _maybe_id_path_context_padded_right=
 
-        if [[ -n "${_maybe_id_path_context:-}" ]]
+        if [[ -n "${_maybe_id_path_context:-}"  ]]
         then
           _maybe_id_path_context="${_maybe_id_path_context//' '/\\ }"
           _maybe_id_path_context_padded_left=" ${_maybe_id_path_context:-}"
           _maybe_id_path_context_padded_right="${_maybe_id_path_context:-} "
         fi
 
-        if [[ "${_type}" =~ ^bookmark$|^bookmarks$ ]]
+        if [[ "${_type}" =~ ^bookmark$|^bookmarks$    ]]
         then
           cat <<HEREDOC
 0 bookmarks.
@@ -5600,7 +5601,7 @@ Add a bookmark:
 Help information:
   $(_color_primary "${_ME} help bookmark")
 HEREDOC
-        elif [[ "${_type}" =~ ^todo$|^todos$ ]]
+        elif [[ "${_type}" =~ ^todo$|^todos$          ]]
         then
           cat <<HEREDOC
 0 todos.
@@ -5628,7 +5629,7 @@ Help information:
   $(_color_primary "${_ME} help")
 HEREDOC
           else
-            if [[ "${_type:-}" =~ ^folder$|^folders$ ]]
+            if [[ "${_type:-}" =~ ^folder$|^folders$  ]]
             then
               local _empty_type_label="folders"
             else
@@ -5796,7 +5797,8 @@ _ls() {
     local _folder_id_path=
     _folder_id_path="$(_get_id_selector "${_selector_path:-}")"
 
-    if [[ -n "${_maybe_notebook:-}" ]] || [[ -n "${_folder_id_path:-}" ]]
+    if [[ -n "${_maybe_notebook:-}" ]] ||
+       [[ -n "${_folder_id_path:-}" ]]
     then
       _maybe_selector_scope="${_maybe_notebook}${_folder_id_path}"
       _maybe_selector_scope_padded_left=" ${_maybe_selector_scope}"
@@ -5811,14 +5813,14 @@ _ls() {
     local __path=
     for   __path in "${NB_DIR}"/*
     do
-      if [[ ! -f "${__path:?}/.archived" ]]
+      if [[ ! -f "${__path:?}/.archived"          ]]
       then
         _unarchived_notebook_count=$((_unarchived_notebook_count + 1))
       fi
 
       if [[ "${_unarchived_notebook_count}" -gt 1 ]]
       then
-        if [[ -n "${_maybe_notebook:-}" ]]
+        if [[ -n "${_maybe_notebook:-}"           ]]
         then
           _notebook_command="${_ME} use ${_maybe_notebook%%:*}"
         else
@@ -5863,15 +5865,19 @@ _ls() {
     )
 
     _wrap off
+
     _print_line "$(printf "%-${_COLUMNS}s" '.')" | tr -d '\n'
+
     printf "%s" "${_TPUT_SGR0}"
+
     _wrap on
+
     printf "\\n"
 
     local i=
     for ((i=0; i < "${#_commands_raw[@]}"; i++))
     do
-      if [[ -z "${_footer_test_line}" ]]
+      if [[ -z "${_footer_test_line}"                 ]]
       then # first item in line
         _footer_test_line="${_commands_raw[i]}"
       else
@@ -5897,7 +5903,7 @@ _ls() {
         fi
       fi
 
-      if [[ "${#_commands_raw[@]}" == $((i+1)) ]]
+      if [[ "${#_commands_raw[@]}" == $((i+1))        ]]
       then # end of list
         printf "%s\\n" "${_footer_line_hi}"
       fi
@@ -6029,14 +6035,14 @@ _ls() {
           _maybe_highlighted_notebook_name="${__header_name:-}"
         fi
 
-        if [[ -z "${_test_line}" ]]
+        if [[ -z "${_test_line}"                  ]]
         then # first item in line
           _test_line="${__header_name}"
         else
           _test_line="${_test_line}${_separator} ${__header_name}"
         fi
 
-        if [[ "${#_test_line}" -gt "${_COLUMNS}" ]]
+        if [[ "${#_test_line}" -gt "${_COLUMNS}"  ]]
         then # wrap to next line
           # Use the existing value of $_line_[highlighted|raw] without the
           # current name.
@@ -6057,7 +6063,7 @@ _ls() {
           _line_hi="${_maybe_highlighted_notebook_name:-}"
           _line_raw="${__header_name}"
         else # add to line
-          if [[ -z "${_line_hi}" ]]
+          if [[ -z "${_line_hi}"                  ]]
           then # first item in highlighted line
             _line_hi="${_maybe_highlighted_notebook_name:-}"
             _line_raw="${__header_name}"
@@ -6094,7 +6100,9 @@ _ls() {
       fi
 
       printf "%s" "${_TPUT_SGR0}"
+
       _wrap on
+
       printf "\\n"
     }
   }
@@ -6178,7 +6186,7 @@ _ls() {
         shift
         ;;
       --[0-9]*)
-        if [[ "${1:-}" =~ ^--[0-9]+$ ]]
+        if [[ "${1:-}" =~ ^--[0-9]+$  ]]
         then
           _limit="${1#\-\-}"
         else
@@ -6233,6 +6241,7 @@ _ls() {
     if ((_delegate_to_browse))
     then
       _defer "_browse" "${_arguments[@]:-}" "${_delegate_arguments[@]:-}"
+
       return 0
     else
       local i=
@@ -6241,12 +6250,14 @@ _ls() {
         case "${_delegate_arguments[i]:-}" in
           --ar*|--unar*)
             _defer "_notebooks" list "${_delegate_arguments[@]:-}"
+
             return 0
             ;;
           --added|--updated)
             if [[ -n "${_selector:-}"     ]]
             then
               _defer "_show" "${_arguments[@]:-}" "${_delegate_arguments[@]:-}"
+
               return 0
             fi
             ;;
@@ -6254,12 +6265,14 @@ _ls() {
             if _option_value_is_present "${_delegate_arguments[$((i+1))]:-}"
             then
               _defer "_add" "${_arguments[@]:-}" "${_delegate_arguments[@]:-}"
+
               return 0
             fi
             ;;
           --tag*)
             ((_all)) && _delegate_arguments+=("--all")
             _defer "_search"  "${_arguments[@]:-}" "${_delegate_arguments[@]:-}"
+
             return 0
             ;;
           *)
@@ -6284,7 +6297,7 @@ _ls() {
 
   local _selector_relative_path="${_selector#*:}"
 
-  if [[ -n "${_limit:-}"      ]]
+  if [[ -n "${_limit:-}"                            ]]
   then
     _list_options+=("--limit" "${_limit}")
   elif ! ((_all))                                       &&
@@ -6303,7 +6316,7 @@ _ls() {
   # Resolve selector folders before printing header to minimize pause
   # before printing list.
 
-  if [[ "${_selector:-}" =~ / ]]
+  if [[ "${_selector:-}" =~ /             ]]
   then
     _selector_folder_path="$(_selector_resolve_folders "${_selector}" || :)"
 
@@ -6340,7 +6353,8 @@ _ls() {
         _list --error-on-empty "${_list_options[@]:-}" 2>&1 >&3 3>&-
       )"
     } 3>&1 || {
-      if [[ -n "${_arguments[*]:-}" ]] && [[ ! "${_arguments[0]:-}" =~ ^-- ]]
+      if [[ -n  "${_arguments[0]:-}"        ]] &&
+         [[ !   "${_arguments[0]:-}" =~ ^-- ]]
       then
         local _maybe_notebook_name="${_arguments[0]:-}"
 
@@ -6361,6 +6375,7 @@ _ls() {
       then
         NB_NOTEBOOK_PATH="${NB_DIR}/${_notebook_name}"  \
           _ls "${_arguments[@]:1}"
+
         return 0
       else
         local _count_arguments=()
@@ -6420,6 +6435,7 @@ _ls() {
           if [[ -n "${_list_error:-}"             ]]
           then
             printf "%s\\n" "${_list_error}"
+
             return 1
           fi
         fi
