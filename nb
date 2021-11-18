@@ -18549,6 +18549,15 @@ HEREDOC
       _url_param_string+="&--per-page=${_per_page}&--columns=${_columns}"
     fi
 
+    case "${BROWSER:-}" in
+      elinks)
+        _columns="$((_columns - 20))"
+        ;;
+      links)
+        _columns="$((_columns - 1))"
+        ;;
+    esac
+
     {
       printf "<p>"
 
