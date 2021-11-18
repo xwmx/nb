@@ -4248,7 +4248,7 @@ _index() {
       # _index_get_id "${_basename:-}" "${_index_path:-}" | {
       #   read -r _id
 
-      #   if [[ -n "${_id:-}" ]]
+      #   if [[ -n "${_id:-}"   ]]
       #   then
       #     printf "%s\\n" "${_id:-}"
       #   else
