@@ -11058,8 +11058,6 @@ _add() {
   local _edit_before_commit=0
   local _encrypt=0
   local _file_type="${NB_DEFAULT_EXTENSION}"
-  local _notebook_path=
-  _notebook_path="$(_notebooks current --path)"
   local _option_content=
   local _option_folder_relative_path=
   local _option_relative_path=
@@ -11170,6 +11168,9 @@ _add() {
     mil net new nl no online nyc page rocks ru se shop site solutions space
     store tech top tk tv uk us vip wang website work xyz
   )
+
+  local _notebook_path=
+  _notebook_path="$(_notebooks current --path)"
 
   local _selector_content=
   local _selector_filename=
