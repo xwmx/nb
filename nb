@@ -14607,7 +14607,7 @@ _search() {
   local _print_paths=0
   local _query=
   local _search_args=()
-  local _search_tags=0
+  local _search_for_tags=0
   local _search_utility=
   local _selectors=()
   local _sort=0
@@ -14705,7 +14705,7 @@ _search() {
 
           shift
         else
-          _search_tags=1
+          _search_for_tags=1
         fi
         ;;
       --*tool|--*utility)
@@ -14810,7 +14810,7 @@ _search() {
        {
          _notebooks current --selected   ||
          [[ "${#_arguments[@]}" -gt 1 ]] ||
-         ((_search_tags))
+         ((_search_for_tags))
        }
     then
       _target_paths+=("${_maybe_path}")
@@ -14830,7 +14830,7 @@ _search() {
     _xargs+=("--no-run-if-empty")
   fi
 
-  if ((_search_tags))
+  if ((_search_for_tags))
   then
     local _git_major_version=
     _git_major_version="$(git --version | cut -d " "  -f 3 | cut -d "." -f 1)"
