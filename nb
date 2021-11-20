@@ -14587,8 +14587,8 @@ $(_color_primary "Shortcut Alias"):
 HEREDOC
 }
 _search() {
-  # Usage: _should_search_with <command-name> <search-utility>
-  _should_search_with() {
+  # Usage: _search_with <command-name> <search-utility>
+  _search_with() {
     _command_exists "${1:?}" && [[ "${2:-}" == "${1:?}" ]]
   }
 
@@ -15038,7 +15038,7 @@ _search() {
       _max_id="$(_index get_max_id "${_target_folder_path}")"
 
       {
-        if _should_search_with "rg" "${_search_utility:-}"
+        if _search_with "rg" "${_search_utility:-}"
         then
           local _rg_command="rg"
 
@@ -15085,7 +15085,7 @@ _search() {
             "${_query}"                     \
             "${_search_paths[@]:-}"         \
               || return 0 # Don't fail out within a single scope.
-        elif _should_search_with "ag" "${_search_utility:-}"
+        elif _search_with "ag" "${_search_utility:-}"
         then
           if ((_max_depth))
           then
@@ -15125,7 +15125,7 @@ _search() {
             "${_query}"           \
             "${_search_paths[@]}" \
               || return 0 # Don't fail out within a single scope.
-        elif _should_search_with "ack" "${_search_utility:-}"
+        elif _search_with "ack" "${_search_utility:-}"
         then # ack is available.
           if ((_max_depth))
           then
@@ -15162,7 +15162,7 @@ _search() {
             "${_query}"           \
             "${_search_paths[@]}" \
               || return 0 # Don't fail out within a single scope.
-        elif _should_search_with "grep" "${_search_utility:-}"
+        elif _search_with "grep" "${_search_utility:-}"
         then
           if ((_COLOR_ENABLED))
           then
