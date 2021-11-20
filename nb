@@ -16941,7 +16941,7 @@ _browse() {
           :
           ;;
         *)
-          if [[ -z "${_selector:-}" ]]
+          if [[ -z "${_selector:-}"   ]]
           then
             _selector="${1:-}"
           else
