@@ -14279,15 +14279,7 @@ _open() {
     _exit_1 _help "open"
   fi
 
-  local _selector_path=
-  _selector_path="$(_show "${1:-}" --path)"
-
-  if [[ "${_selector_path:-}" =~ todo\.md$  ]]
-  then
-    _defer "_todo" "undo" "${@:-}"
-  else
-    _bookmark open "${@:-}"
-  fi
+  _bookmark open "${@:-}"
 }
 _alias_subcommand "open" "o"
 
