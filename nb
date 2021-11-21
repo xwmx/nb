@@ -13429,8 +13429,8 @@ _export() {
       fi
     fi
 
-    _source_file_type="${_basename##*.}"
-    _target_file_type="${_target_path##*.}"
+    local _source_file_type="${_basename##*.}"
+    local _target_file_type="${_target_path##*.}"
 
     if _command_exists "pandoc"   &&
        [[ "${_source_file_type}"  != "${_target_file_type}" ]]
