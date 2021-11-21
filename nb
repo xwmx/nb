@@ -13332,14 +13332,14 @@ _export() {
   for   __arg in "${@:-}"
   do
     case "${__arg}" in
+      -f|--force)
+        _force=1
+        ;;
       notebook*)
         _notebook_export=1
         ;;
       pandoc)
         _pandoc_only=1
-        ;;
-      -f|--force)
-        _force=1
         ;;
       *)
         if [[ -z "${_selector:-}"   ]]
