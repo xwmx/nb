@@ -14018,7 +14018,7 @@ _move() {
   local _source_folder_path="${_source_notebook_path}"
   local _source_path="${_source_notebook_path}/${_source_relative_path}"
 
-  if [[ "${_source_relative_path:-}" =~ / ]]
+  if [[ "${_source_relative_path:-}" =~ /   ]]
   then
     _source_folder_path="${_source_notebook_path}/${_source_relative_path%\/*}"
   fi
