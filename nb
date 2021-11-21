@@ -16241,7 +16241,7 @@ _show() {
 
   if ((_check_type))
   then
-    if [[ -z "${_type}" ]]
+    if [[ -z "${_type}"       ]]
     then
       if [[ -d "${_notebook_path}/${_relative_path}"  ]]
       then
@@ -16942,7 +16942,7 @@ _browse() {
           :
           ;;
         *)
-          if [[ -z "${_selector:-}"   ]]
+          if [[ -z "${_selector:-}" ]]
           then
             _selector="${1:-}"
           else
@@ -16954,7 +16954,7 @@ _browse() {
       shift
     done
 
-    if [[ -z "${_selector:-}" ]]
+    if [[ -z "${_selector:-}"       ]]
     then
       _browse_respond_with 404
     fi
@@ -17243,7 +17243,7 @@ _browse() {
       _target_type="${NB_DEFAULT_EXTENSION:-}"
     fi
 
-    if [[ -n "${_encoded_local_notebook_path:-}" ]]
+    if [[ -n "${_encoded_local_notebook_path:-}"    ]]
     then
       _url_params+="&--local=${_encoded_local_notebook_path}"
     fi
