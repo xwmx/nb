@@ -15955,10 +15955,6 @@ _show() {
   while ((${#}))
   do
     case "${1:-}" in
-      --path)
-        _print_path=1
-        _skip_notebook_fallback=1
-        ;;
       -a|--added*)
         _print_added=1
         _skip_notebook_fallback=1
@@ -15999,12 +15995,16 @@ _show() {
         ((_list_page)) || _list_page=1
         shift
         ;;
-      --per*)
-        _per_page="$(_option_get_value "${1}" "${2:-}")"
-        shift
-        ;;
       --password)
         _password="$(_option_get_value "${1}" "${2:-}")"
+        shift
+        ;;
+      --path)
+        _print_path=1
+        _skip_notebook_fallback=1
+        ;;
+      --per*)
+        _per_page="$(_option_get_value "${1}" "${2:-}")"
         shift
         ;;
       -p|--print|--dump|--skip*pager|--no*pager)
