@@ -13324,8 +13324,6 @@ _export() {
   local _args=()
   local _force=0
   local _notebook_export=0
-  local _notebook_path
-  _notebook_path="$(_notebooks current --path)"
   local _pandoc_only=0
   local _selector=
   local _target_path=
@@ -13367,6 +13365,9 @@ _export() {
     _notebooks export "${_selector:-}" "${_target_path:-}"
     return 0
   fi
+
+  local _notebook_path=
+  _notebook_path="$(_notebooks current --path)"
 
   local _relative_path=
   _relative_path="$(_show "${_selector}" --relative-path)"
