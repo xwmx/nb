@@ -17448,11 +17448,11 @@ HEREDOC
       then
         _search "${_target_path}"         \
           "${_query_arguments[@]:-}"      \
+          --list                          \
           --no-color                      \
           --notebook-selectors            \
           --page      "${_current_page}"  \
-          --per-page  "${_per_page}"      \
-          --list || :
+          --per-page  "${_per_page}"  || :
       else
         _list "${_target_path}"           \
           --no-color                      \
