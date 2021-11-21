@@ -11753,6 +11753,7 @@ _bookmark() {
         ;;
       --password)
         _password="$(_option_get_value "${1}" "${2:-}")"
+        _arguments+=("${1:-}" "${2:-}")
         shift
         ;;
       -q|--quote|--excerpt)
@@ -11837,29 +11838,28 @@ _bookmark() {
 
   # `bookmark list`
 
-  {
-    if [[ "${_subcommand}" == "list"  ]]
+  if [[ "${_subcommand}" == "list"  ]]
+  then
+    if [[ -n "${_arguments[*]:-}"   ]]
     then
-      if [[ -n "${_arguments[*]:-}"   ]]
-      then
-        _list --bookmarks "${_arguments[@]}"
-        return 0
-      else
-        _list --bookmarks
-        return 0
-      fi
+      _list --bookmarks "${_arguments[@]}"
+
+      return 0
+    else
+      _list --bookmarks
+
+      return 0
     fi
-  }
+  fi
 
   # `bookmark search`
 
-  {
-    if [[ "${_subcommand}" == "search" ]]
-    then
-      _search --bookmarks "${_arguments[@]}"
-      return 0
-    fi
-  }
+  if [[ "${_subcommand}" == "search" ]]
+  then
+    _search --bookmarks "${_arguments[@]}"
+
+    return 0
+  fi
 
   # `bookmark open`, `bookmark peek`, `bookmark url`
 
@@ -11941,35 +11941,8 @@ _bookmark() {
         fi
       fi
 
-      if _file_is_encrypted "${_target_path}"
-      then
-        local _encrypted_path=
-        _encrypted_path="${_target_path}"
-
-        if [[ -z "${_password}" ]]
-        then
-          # request password without displaying it
-          printf "%s: " "$(_color_primary "Password")"
-
-          local _password=
-          IFS='' read -r -e -d $'\n' -s _password </dev/tty
-          printf "\\n" # print newline to stop `read`
-        fi
-
-        if [[ -z "${_password}" ]]
-        then
-          _exit_1 printf "Password required.\\n"
-        fi
-
-        _target_path="$(_decrypt_file "${_target_path}" "${_password}")"
-      fi
-
       local _target_url=
-      _target_url="$(
-        awk 'match($0, /<((ftp|http|file|mailto|news|telnet|gopher).*)>/) {
-          print substr($0, RSTART+1, RLENGTH-2); exit
-        }' "${_target_path}"
-      )"
+      _target_url="$(_show "${_target_path}" --url "${_arguments[@]:-}")"
 
       if [[ "${_subcommand}" =~ ^open$|^peek$ ]]
       then
@@ -12054,40 +12027,39 @@ _bookmark() {
 
   # `bookmark`
 
-  {
-    if [[   -z "${_url:-}"          ]]
+  if [[   -z "${_url:-}"          ]]
+  then
+    if [[ -z "${_arguments[*]:-}" ]]
     then
-      if [[ -z "${_arguments[*]:-}" ]]
+      local _line_length=36
+      local _maybe_header_selector=
+
+      if _notebooks current --selected
       then
-        local _line_length=36
-        local _maybe_header_selector=
+        _maybe_header_selector="$(
+          _notebooks show "$(_notebooks current)" --no-color --escaped
+        ): "
 
-        if _notebooks current --selected
-        then
-          _maybe_header_selector="$(
-            _notebooks show "$(_notebooks current)" --no-color --escaped
-          ): "
+        local _padded_header_selector_length=
+        _padded_header_selector_length="$(
+          _get_visible_length "${_maybe_header_selector}"
+        )"
 
-          local _padded_header_selector_length=
-          _padded_header_selector_length="$(
-            _get_visible_length "${_maybe_header_selector}"
-          )"
-
-          _line_length="$((_line_length + _padded_header_selector_length))"
-        fi
-
-        local _header=
-        _header="Add: $(_color_primary "${_ME} ${_maybe_header_selector}<url>")"
-        _header="${_header} Help: $(_color_primary "${_ME} help bookmark")"
-
-        printf "%s\\n" "${_header}"
-        _print_line "$(printf "%-${_line_length}s" '.')"
+        _line_length="$((_line_length + _padded_header_selector_length))"
       fi
 
-      _bookmark list "${_arguments[@]:-}"
-      return 0
+      local _header=
+      _header="Add: $(_color_primary "${_ME} ${_maybe_header_selector}<url>")"
+      _header="${_header} Help: $(_color_primary "${_ME} help bookmark")"
+
+      printf "%s\\n" "${_header}"
+      _print_line "$(printf "%-${_line_length}s" '.')"
     fi
-  }
+
+    _bookmark list "${_arguments[@]:-}"
+
+    return 0
+  fi
 
   # `bookmark <url>`
 
@@ -16056,12 +16028,6 @@ _show() {
     _exit_1 _help "show"
   fi
 
-  if ((_print_bookmark_url))
-  then
-    _bookmark url "${_selector}"
-    return 0
-  fi
-
   if ((_print_selector_id))
   then
     _selector_get_identifier "${_selector:-}"
@@ -16368,6 +16334,32 @@ ${_title/\[$' '\]/${_TPUT_SETAF_8}[ ]${_TPUT_SGR0}}"
     _decrypted_path="$(_decrypt_file "${_target_path}" "${_password}")"
 
     _target_path="${_decrypted_path}"
+  fi
+
+  if ((_print_bookmark_url))
+  then
+    if ! _file_is_bookmark "${_target_path:-}"
+    then
+      _warn printf "%s\\n" "Not a bookmark.\\n"
+    fi
+
+    local _target_url=
+    _target_url="$(
+      awk 'match($0, /<((ftp|http|file|mailto|news|telnet|gopher).*)>/) {
+        print substr($0, RSTART+1, RLENGTH-2); exit
+      }' "${_target_path}"
+    )"
+
+    if [[ -z "${_target_url:-}"       ]]
+    then
+      _warn printf "No URL found.\\n"
+
+      return 1
+    fi
+
+    printf "%s\\n" "${_target_url:-}"
+
+    return 0
   fi
 
   if _file_is_archive "${_target_path}"     &&
