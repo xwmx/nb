@@ -11944,6 +11944,13 @@ _bookmark() {
       local _target_url=
       _target_url="$(_show "${_target_path}" --url "${_arguments[@]:-}")"
 
+      if [[ "${_subcommand}" == "url"         ]]
+      then
+        printf "%s\\n" "${_target_url}"
+
+        return 0
+      fi
+
       if [[ "${_subcommand}" =~ ^open$|^peek$ ]]
       then
         local _check_wayback=0
@@ -12016,11 +12023,6 @@ _bookmark() {
             "%s doesn't know how to open URLs on this system.\\n" \
             "$(_color_primary "${_ME}")"
         fi
-      # `bookmark url`
-      elif [[ "${_subcommand}" == "url"     ]]
-      then
-        printf "%s\\n" "${_target_url}"
-        return 0
       fi
     fi
   }
