@@ -88,7 +88,7 @@ load test_helper
 
 # --url #######################################################################
 
-@test "'show --url' with invalid note prints error." {
+@test "'show --url' with invalid <id> prints error." {
   {
     "${_NB}" init
     "${_NB}" bookmark "${_BOOKMARK_URL}"
@@ -99,13 +99,38 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # returns status 1
-
   [[ "${status}" -eq 1          ]]
-
-  # prints output
-
   [[ "${output}" =~ Not\ found  ]]
+}
+
+@test "'show --url' with note exits with 1 and prints error." {
+  {
+    "${_NB}" init
+    "${_NB}" add "Example File.md" --content "Example content."
+  }
+
+  run "${_NB}" show 1 --url
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 1                ]]
+  [[ "${output}" =~ Not\ a\ bookmark. ]]
+}
+
+@test "'show --url' with URL-less bookmark exits with 1 and prints error." {
+  {
+    "${_NB}" init
+    "${_NB}" add "Example File.md" --content "Example content."
+  }
+
+  run "${_NB}" show 1 --url
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 1                ]]
+  [[ "${output}" =~ No\ URL\ found.   ]]
 }
 
 @test "'show --url' prints bookmark url." {
@@ -119,12 +144,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # returns status 0
-
   [[ "${status}" -eq  0                   ]]
-
-  # prints output
-
   [[ "${output}" ==   "${_BOOKMARK_URL}"  ]]
 }
 
@@ -143,12 +163,22 @@ https://example.com
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # returns status 0
+  [[ "${status}" -eq  0                   ]]
+  [[ "${output}" ==   "${_BOOKMARK_URL}"  ]]
+}
+
+@test "'show --url' with encrypted bookmark prints bookmark URL." {
+  {
+    "${_NB}" init
+    "${_NB}" bookmark "${_BOOKMARK_URL}" --encrypt --password=example
+  }
+
+  run "${_NB}" show 1 --url --password=example
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" -eq  0                   ]]
-
-  # prints output
-
   [[ "${output}" ==   "${_BOOKMARK_URL}"  ]]
 }
 

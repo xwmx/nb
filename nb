@@ -74,7 +74,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="6.7.5"
+_VERSION="6.7.6"
 
 # $_ME
 #
@@ -2758,7 +2758,7 @@ _selector_resolve_path() {
         _selector_resolve_folders "${_selector}" "${_notebook_path}"
       )" || return 0
 
-      if [[ -n "${_folder_relative_path:-}" ]]
+      if [[ -n "${_folder_relative_path:-}"     ]]
       then
         _folder_path="${_notebook_path}/${_folder_relative_path}"
       fi
@@ -4248,7 +4248,7 @@ _index() {
       # _index_get_id "${_basename:-}" "${_index_path:-}" | {
       #   read -r _id
 
-      #   if [[ -n "${_id:-}" ]]
+      #   if [[ -n "${_id:-}"   ]]
       #   then
       #     printf "%s\\n" "${_id:-}"
       #   else
@@ -5308,9 +5308,10 @@ _list() {
         fi
       fi
 
-      if [[ -n "${_limit:-}" ]] && [[ "${_printed_count}" -ge "${_limit}" ]]
+      if [[   -n "${_limit:-}"                        ]] &&
+         [[      "${_printed_count}" -ge "${_limit}"  ]]
       then # the limit has been reached
-        if [[ -n "${_filter_pattern:-}" ]]
+        if [[ -n "${_filter_pattern:-}"               ]]
         then
           # keep looking for matches to count total
           continue
@@ -5417,7 +5418,6 @@ ${_title_basename_or_path_color/\[$' '\]/${_TPUT_SETAF_8}[ ]${_TPUT_SGR0}}"
       fi
 
       local _item_info="${_indicators}${_title_basename_or_path}"
-      local _item_info_color="${_indicators}${_title_basename_or_path_color}"
 
       if ! ((_list_filenames))  &&
          ! ((_list_paths))      &&
@@ -5436,7 +5436,7 @@ ${_title_basename_or_path_color/\[$' '\]/${_TPUT_SETAF_8}[ ]${_TPUT_SGR0}}"
       if ((_no_id))
       then
         _info_line="${_item_info}"
-        _info_line_color="${_item_info_color}"
+        _info_line_color="${_item_info}"
       else
         local _item_id=
         # use `sed` directly instead of `_index get_id` for performance
@@ -5472,7 +5472,7 @@ ${_TPUT_SGR0}"
         printf -v _spaces '%*s' "${_spaces_length}" ""
 
         _info_line="${_brackets_identifier}${_spaces}${_item_info}"
-        _info_line_color="${_brackets_identifier_color}${_spaces}${_item_info_color}"
+        _info_line_color="${_brackets_identifier_color}${_spaces}${_item_info}"
       fi
 
       if ! ((_line_wrap))
@@ -5499,8 +5499,8 @@ ${_TPUT_SGR0}"
          [[ "${_excerpt_length}" =~ ^[0-9] ]] &&
          _file_is_text "${_list_path}/${__basename}"
       then # excerpt is specified with a non-zero digit, required by `head`
-        _print_line "${_info_line:-}"   \
-          --no-wrap                     \
+        _print_line "${_info_line:-}"         \
+          --no-wrap                           \
           --visible-length "${_extra_length:-0}"
 
         if ((${_excerpt_length:-0}))
@@ -5546,7 +5546,7 @@ ${_TPUT_SGR0}"
       fi
     fi
 
-    if ! ((_printed_count)) && [[ -n "${_filter_pattern:-}" ]]
+    if ! ((_printed_count)) && [[ -n "${_filter_pattern:-}"   ]]
     then
       local _filter_message=
 
@@ -5555,19 +5555,19 @@ ${_TPUT_SGR0}"
         _filter_message="$(_color_primary "$(_notebooks current):")"
       fi
 
-      if [[ -n "${_folder_relative_path:-}" ]]
+      if [[ -n "${_folder_relative_path:-}"     ]]
       then
         _filter_message="${_filter_message}$(_color_primary "${_folder_relative_path}/")"
       fi
 
-      if [[ -n "${_filter_message:-}" ]]
+      if [[ -n "${_filter_message:-}"           ]]
       then
         _filter_message="${_filter_message} "
       fi
 
       _filter_message="${_filter_message}$(_color_primary "${_filter_pattern:-}")"
 
-      if [[ -n "${_type:-}" ]]
+      if [[ -n "${_type:-}"                     ]]
       then
          _filter_message="${_filter_message} Type: $(_color_primary "${_type}")"
       fi
@@ -5583,14 +5583,14 @@ ${_TPUT_SGR0}"
         local _maybe_id_path_context_padded_left=
         local _maybe_id_path_context_padded_right=
 
-        if [[ -n "${_maybe_id_path_context:-}" ]]
+        if [[ -n "${_maybe_id_path_context:-}"  ]]
         then
           _maybe_id_path_context="${_maybe_id_path_context//' '/\\ }"
           _maybe_id_path_context_padded_left=" ${_maybe_id_path_context:-}"
           _maybe_id_path_context_padded_right="${_maybe_id_path_context:-} "
         fi
 
-        if [[ "${_type}" =~ ^bookmark$|^bookmarks$ ]]
+        if [[ "${_type}" =~ ^bookmark$|^bookmarks$    ]]
         then
           cat <<HEREDOC
 0 bookmarks.
@@ -5600,7 +5600,7 @@ Add a bookmark:
 Help information:
   $(_color_primary "${_ME} help bookmark")
 HEREDOC
-        elif [[ "${_type}" =~ ^todo$|^todos$ ]]
+        elif [[ "${_type}" =~ ^todo$|^todos$          ]]
         then
           cat <<HEREDOC
 0 todos.
@@ -5628,7 +5628,7 @@ Help information:
   $(_color_primary "${_ME} help")
 HEREDOC
           else
-            if [[ "${_type:-}" =~ ^folder$|^folders$ ]]
+            if [[ "${_type:-}" =~ ^folder$|^folders$  ]]
             then
               local _empty_type_label="folders"
             else
@@ -5796,7 +5796,8 @@ _ls() {
     local _folder_id_path=
     _folder_id_path="$(_get_id_selector "${_selector_path:-}")"
 
-    if [[ -n "${_maybe_notebook:-}" ]] || [[ -n "${_folder_id_path:-}" ]]
+    if [[ -n "${_maybe_notebook:-}" ]] ||
+       [[ -n "${_folder_id_path:-}" ]]
     then
       _maybe_selector_scope="${_maybe_notebook}${_folder_id_path}"
       _maybe_selector_scope_padded_left=" ${_maybe_selector_scope}"
@@ -5811,14 +5812,14 @@ _ls() {
     local __path=
     for   __path in "${NB_DIR}"/*
     do
-      if [[ ! -f "${__path:?}/.archived" ]]
+      if [[ ! -f "${__path:?}/.archived"          ]]
       then
         _unarchived_notebook_count=$((_unarchived_notebook_count + 1))
       fi
 
       if [[ "${_unarchived_notebook_count}" -gt 1 ]]
       then
-        if [[ -n "${_maybe_notebook:-}" ]]
+        if [[ -n "${_maybe_notebook:-}"           ]]
         then
           _notebook_command="${_ME} use ${_maybe_notebook%%:*}"
         else
@@ -5863,15 +5864,19 @@ _ls() {
     )
 
     _wrap off
+
     _print_line "$(printf "%-${_COLUMNS}s" '.')" | tr -d '\n'
+
     printf "%s" "${_TPUT_SGR0}"
+
     _wrap on
+
     printf "\\n"
 
     local i=
     for ((i=0; i < "${#_commands_raw[@]}"; i++))
     do
-      if [[ -z "${_footer_test_line}" ]]
+      if [[ -z "${_footer_test_line}"                 ]]
       then # first item in line
         _footer_test_line="${_commands_raw[i]}"
       else
@@ -5897,7 +5902,7 @@ _ls() {
         fi
       fi
 
-      if [[ "${#_commands_raw[@]}" == $((i+1)) ]]
+      if [[ "${#_commands_raw[@]}" == $((i+1))        ]]
       then # end of list
         printf "%s\\n" "${_footer_line_hi}"
       fi
@@ -6029,14 +6034,14 @@ _ls() {
           _maybe_highlighted_notebook_name="${__header_name:-}"
         fi
 
-        if [[ -z "${_test_line}" ]]
+        if [[ -z "${_test_line}"                  ]]
         then # first item in line
           _test_line="${__header_name}"
         else
           _test_line="${_test_line}${_separator} ${__header_name}"
         fi
 
-        if [[ "${#_test_line}" -gt "${_COLUMNS}" ]]
+        if [[ "${#_test_line}" -gt "${_COLUMNS}"  ]]
         then # wrap to next line
           # Use the existing value of $_line_[highlighted|raw] without the
           # current name.
@@ -6057,7 +6062,7 @@ _ls() {
           _line_hi="${_maybe_highlighted_notebook_name:-}"
           _line_raw="${__header_name}"
         else # add to line
-          if [[ -z "${_line_hi}" ]]
+          if [[ -z "${_line_hi}"                  ]]
           then # first item in highlighted line
             _line_hi="${_maybe_highlighted_notebook_name:-}"
             _line_raw="${__header_name}"
@@ -6094,7 +6099,9 @@ _ls() {
       fi
 
       printf "%s" "${_TPUT_SGR0}"
+
       _wrap on
+
       printf "\\n"
     }
   }
@@ -6178,7 +6185,7 @@ _ls() {
         shift
         ;;
       --[0-9]*)
-        if [[ "${1:-}" =~ ^--[0-9]+$ ]]
+        if [[ "${1:-}" =~ ^--[0-9]+$  ]]
         then
           _limit="${1#\-\-}"
         else
@@ -6233,6 +6240,7 @@ _ls() {
     if ((_delegate_to_browse))
     then
       _defer "_browse" "${_arguments[@]:-}" "${_delegate_arguments[@]:-}"
+
       return 0
     else
       local i=
@@ -6241,12 +6249,14 @@ _ls() {
         case "${_delegate_arguments[i]:-}" in
           --ar*|--unar*)
             _defer "_notebooks" list "${_delegate_arguments[@]:-}"
+
             return 0
             ;;
           --added|--updated)
             if [[ -n "${_selector:-}"     ]]
             then
               _defer "_show" "${_arguments[@]:-}" "${_delegate_arguments[@]:-}"
+
               return 0
             fi
             ;;
@@ -6254,12 +6264,14 @@ _ls() {
             if _option_value_is_present "${_delegate_arguments[$((i+1))]:-}"
             then
               _defer "_add" "${_arguments[@]:-}" "${_delegate_arguments[@]:-}"
+
               return 0
             fi
             ;;
           --tag*)
             ((_all)) && _delegate_arguments+=("--all")
             _defer "_search"  "${_arguments[@]:-}" "${_delegate_arguments[@]:-}"
+
             return 0
             ;;
           *)
@@ -6284,7 +6296,7 @@ _ls() {
 
   local _selector_relative_path="${_selector#*:}"
 
-  if [[ -n "${_limit:-}"      ]]
+  if [[ -n "${_limit:-}"                            ]]
   then
     _list_options+=("--limit" "${_limit}")
   elif ! ((_all))                                       &&
@@ -6303,7 +6315,7 @@ _ls() {
   # Resolve selector folders before printing header to minimize pause
   # before printing list.
 
-  if [[ "${_selector:-}" =~ / ]]
+  if [[ "${_selector:-}" =~ /             ]]
   then
     _selector_folder_path="$(_selector_resolve_folders "${_selector}" || :)"
 
@@ -6340,7 +6352,8 @@ _ls() {
         _list --error-on-empty "${_list_options[@]:-}" 2>&1 >&3 3>&-
       )"
     } 3>&1 || {
-      if [[ -n "${_arguments[*]:-}" ]] && [[ ! "${_arguments[0]:-}" =~ ^-- ]]
+      if [[ -n  "${_arguments[0]:-}"        ]] &&
+         [[ !   "${_arguments[0]:-}" =~ ^-- ]]
       then
         local _maybe_notebook_name="${_arguments[0]:-}"
 
@@ -6361,6 +6374,7 @@ _ls() {
       then
         NB_NOTEBOOK_PATH="${NB_DIR}/${_notebook_name}"  \
           _ls "${_arguments[@]:1}"
+
         return 0
       else
         local _count_arguments=()
@@ -6420,6 +6434,7 @@ _ls() {
           if [[ -n "${_list_error:-}"             ]]
           then
             printf "%s\\n" "${_list_error}"
+
             return 1
           fi
         fi
@@ -11042,8 +11057,6 @@ _add() {
   local _edit_before_commit=0
   local _encrypt=0
   local _file_type="${NB_DEFAULT_EXTENSION}"
-  local _notebook_path=
-  _notebook_path="$(_notebooks current --path)"
   local _option_content=
   local _option_folder_relative_path=
   local _option_relative_path=
@@ -11154,6 +11167,9 @@ _add() {
     mil net new nl no online nyc page rocks ru se shop site solutions space
     store tech top tk tv uk us vip wang website work xyz
   )
+
+  local _notebook_path=
+  _notebook_path="$(_notebooks current --path)"
 
   local _selector_content=
   local _selector_filename=
@@ -11736,6 +11752,7 @@ _bookmark() {
         ;;
       --password)
         _password="$(_option_get_value "${1}" "${2:-}")"
+        _arguments+=("${1:-}" "${2:-}")
         shift
         ;;
       -q|--quote|--excerpt)
@@ -11820,29 +11837,28 @@ _bookmark() {
 
   # `bookmark list`
 
-  {
-    if [[ "${_subcommand}" == "list"  ]]
+  if [[ "${_subcommand}" == "list"  ]]
+  then
+    if [[ -n "${_arguments[*]:-}"   ]]
     then
-      if [[ -n "${_arguments[*]:-}"   ]]
-      then
-        _list --bookmarks "${_arguments[@]}"
-        return 0
-      else
-        _list --bookmarks
-        return 0
-      fi
+      _list --bookmarks "${_arguments[@]}"
+
+      return 0
+    else
+      _list --bookmarks
+
+      return 0
     fi
-  }
+  fi
 
   # `bookmark search`
 
-  {
-    if [[ "${_subcommand}" == "search" ]]
-    then
-      _search --bookmarks "${_arguments[@]}"
-      return 0
-    fi
-  }
+  if [[ "${_subcommand}" == "search" ]]
+  then
+    _search --bookmarks "${_arguments[@]}"
+
+    return 0
+  fi
 
   # `bookmark open`, `bookmark peek`, `bookmark url`
 
@@ -11924,35 +11940,15 @@ _bookmark() {
         fi
       fi
 
-      if _file_is_encrypted "${_target_path}"
-      then
-        local _encrypted_path=
-        _encrypted_path="${_target_path}"
-
-        if [[ -z "${_password}" ]]
-        then
-          # request password without displaying it
-          printf "%s: " "$(_color_primary "Password")"
-
-          local _password=
-          IFS='' read -r -e -d $'\n' -s _password </dev/tty
-          printf "\\n" # print newline to stop `read`
-        fi
-
-        if [[ -z "${_password}" ]]
-        then
-          _exit_1 printf "Password required.\\n"
-        fi
-
-        _target_path="$(_decrypt_file "${_target_path}" "${_password}")"
-      fi
-
       local _target_url=
-      _target_url="$(
-        awk 'match($0, /<((ftp|http|file|mailto|news|telnet|gopher).*)>/) {
-          print substr($0, RSTART+1, RLENGTH-2); exit
-        }' "${_target_path}"
-      )"
+      _target_url="$(_show "${_target_path}" --url "${_arguments[@]:-}")"
+
+      if [[ "${_subcommand}" == "url"         ]]
+      then
+        printf "%s\\n" "${_target_url}"
+
+        return 0
+      fi
 
       if [[ "${_subcommand}" =~ ^open$|^peek$ ]]
       then
@@ -12026,51 +12022,45 @@ _bookmark() {
             "%s doesn't know how to open URLs on this system.\\n" \
             "$(_color_primary "${_ME}")"
         fi
-      # `bookmark url`
-      elif [[ "${_subcommand}" == "url"     ]]
-      then
-        printf "%s\\n" "${_target_url}"
-        return 0
       fi
     fi
   }
 
   # `bookmark`
 
-  {
-    if [[   -z "${_url:-}"          ]]
+  if [[   -z "${_url:-}"          ]]
+  then
+    if [[ -z "${_arguments[*]:-}" ]]
     then
-      if [[ -z "${_arguments[*]:-}" ]]
+      local _line_length=36
+      local _maybe_header_selector=
+
+      if _notebooks current --selected
       then
-        local _line_length=36
-        local _maybe_header_selector=
+        _maybe_header_selector="$(
+          _notebooks show "$(_notebooks current)" --no-color --escaped
+        ): "
 
-        if _notebooks current --selected
-        then
-          _maybe_header_selector="$(
-            _notebooks show "$(_notebooks current)" --no-color --escaped
-          ): "
+        local _padded_header_selector_length=
+        _padded_header_selector_length="$(
+          _get_visible_length "${_maybe_header_selector}"
+        )"
 
-          local _padded_header_selector_length=
-          _padded_header_selector_length="$(
-            _get_visible_length "${_maybe_header_selector}"
-          )"
-
-          _line_length="$((_line_length + _padded_header_selector_length))"
-        fi
-
-        local _header=
-        _header="Add: $(_color_primary "${_ME} ${_maybe_header_selector}<url>")"
-        _header="${_header} Help: $(_color_primary "${_ME} help bookmark")"
-
-        printf "%s\\n" "${_header}"
-        _print_line "$(printf "%-${_line_length}s" '.')"
+        _line_length="$((_line_length + _padded_header_selector_length))"
       fi
 
-      _bookmark list "${_arguments[@]:-}"
-      return 0
+      local _header=
+      _header="Add: $(_color_primary "${_ME} ${_maybe_header_selector}<url>")"
+      _header="${_header} Help: $(_color_primary "${_ME} help bookmark")"
+
+      printf "%s\\n" "${_header}"
+      _print_line "$(printf "%-${_line_length}s" '.')"
     fi
-  }
+
+    _bookmark list "${_arguments[@]:-}"
+
+    return 0
+  fi
 
   # `bookmark <url>`
 
@@ -13307,8 +13297,6 @@ _export() {
   local _args=()
   local _force=0
   local _notebook_export=0
-  local _notebook_path
-  _notebook_path="$(_notebooks current --path)"
   local _pandoc_only=0
   local _selector=
   local _target_path=
@@ -13317,14 +13305,14 @@ _export() {
   for   __arg in "${@:-}"
   do
     case "${__arg}" in
+      -f|--force)
+        _force=1
+        ;;
       notebook*)
         _notebook_export=1
         ;;
       pandoc)
         _pandoc_only=1
-        ;;
-      -f|--force)
-        _force=1
         ;;
       *)
         if [[ -z "${_selector:-}"   ]]
@@ -13350,6 +13338,9 @@ _export() {
     _notebooks export "${_selector:-}" "${_target_path:-}"
     return 0
   fi
+
+  local _notebook_path=
+  _notebook_path="$(_notebooks current --path)"
 
   local _relative_path=
   _relative_path="$(_show "${_selector}" --relative-path)"
@@ -13411,8 +13402,8 @@ _export() {
       fi
     fi
 
-    _source_file_type="${_basename##*.}"
-    _target_file_type="${_target_path##*.}"
+    local _source_file_type="${_basename##*.}"
+    local _target_file_type="${_target_path##*.}"
 
     if _command_exists "pandoc"   &&
        [[ "${_source_file_type}"  != "${_target_file_type}" ]]
@@ -14000,7 +13991,7 @@ _move() {
   local _source_folder_path="${_source_notebook_path}"
   local _source_path="${_source_notebook_path}/${_source_relative_path}"
 
-  if [[ "${_source_relative_path:-}" =~ / ]]
+  if [[ "${_source_relative_path:-}" =~ /   ]]
   then
     _source_folder_path="${_source_notebook_path}/${_source_relative_path%\/*}"
   fi
@@ -14261,15 +14252,7 @@ _open() {
     _exit_1 _help "open"
   fi
 
-  local _selector_path=
-  _selector_path="$(_show "${1:-}" --path)"
-
-  if [[ "${_selector_path:-}" =~ todo\.md$  ]]
-  then
-    _defer "_todo" "undo" "${@:-}"
-  else
-    _bookmark open "${@:-}"
-  fi
+  _bookmark open "${@:-}"
 }
 _alias_subcommand "open" "o"
 
@@ -14570,8 +14553,8 @@ $(_color_primary "Shortcut Alias"):
 HEREDOC
 }
 _search() {
-  # Usage: _should_search_with <command-name> <search-utility>
-  _should_search_with() {
+  # Usage: _search_with <command-name> <search-utility>
+  _search_with() {
     _command_exists "${1:?}" && [[ "${2:-}" == "${1:?}" ]]
   }
 
@@ -14590,7 +14573,7 @@ _search() {
   local _print_paths=0
   local _query=
   local _search_args=()
-  local _search_tags=0
+  local _search_for_tags=0
   local _search_utility=
   local _selectors=()
   local _sort=0
@@ -14688,7 +14671,7 @@ _search() {
 
           shift
         else
-          _search_tags=1
+          _search_for_tags=1
         fi
         ;;
       --*tool|--*utility)
@@ -14793,7 +14776,7 @@ _search() {
        {
          _notebooks current --selected   ||
          [[ "${#_arguments[@]}" -gt 1 ]] ||
-         ((_search_tags))
+         ((_search_for_tags))
        }
     then
       _target_paths+=("${_maybe_path}")
@@ -14813,8 +14796,25 @@ _search() {
     _xargs+=("--no-run-if-empty")
   fi
 
-  if ((_search_tags))
+  if ((_search_for_tags))
   then
+    local _git_major_version=
+    _git_major_version="$(git --version | cut -d " "  -f 3 | cut -d "." -f 1)"
+
+    local _git_minor_version=
+    _git_minor_version="$(git --version | cut -d " "  -f 3 | cut -d "." -f 2)"
+
+    local _use_git_grep=0
+
+    if ((_GIT_ENABLED))                           &&
+       [[ "${_git_major_version:-}"   -gt 2   ]]  ||  {
+         [[ "${_git_major_version:-}" ==  2   ]]  &&
+         [[ "${_git_minor_version:-}" -ge 19  ]]
+    }
+    then # git 2.19+ has --only-matching option
+      _use_git_grep=1
+    fi
+
     local _grep_arguments=(
       "--color=never"
       "--extended-regexp"
@@ -14839,7 +14839,7 @@ _search() {
         fi
 
         {
-          if ((_GIT_ENABLED))
+          if ((_use_git_grep))
           then
             GIT_PAGER=''                      \
               git -C "${_target_folder_path}" \
@@ -14866,7 +14866,7 @@ _search() {
             }
           fi
         } | {
-          if ((_GIT_ENABLED))
+          if ((_use_git_grep))
           then
             GIT_PAGER=''                      \
               xargs "${_xargs[@]}"            \
@@ -15004,7 +15004,7 @@ _search() {
       _max_id="$(_index get_max_id "${_target_folder_path}")"
 
       {
-        if _should_search_with "rg" "${_search_utility:-}"
+        if _search_with "rg" "${_search_utility:-}"
         then
           local _rg_command="rg"
 
@@ -15051,7 +15051,7 @@ _search() {
             "${_query}"                     \
             "${_search_paths[@]:-}"         \
               || return 0 # Don't fail out within a single scope.
-        elif _should_search_with "ag" "${_search_utility:-}"
+        elif _search_with "ag" "${_search_utility:-}"
         then
           if ((_max_depth))
           then
@@ -15091,7 +15091,7 @@ _search() {
             "${_query}"           \
             "${_search_paths[@]}" \
               || return 0 # Don't fail out within a single scope.
-        elif _should_search_with "ack" "${_search_utility:-}"
+        elif _search_with "ack" "${_search_utility:-}"
         then # ack is available.
           if ((_max_depth))
           then
@@ -15128,7 +15128,7 @@ _search() {
             "${_query}"           \
             "${_search_paths[@]}" \
               || return 0 # Don't fail out within a single scope.
-        elif _should_search_with "grep" "${_search_utility:-}"
+        elif _search_with "grep" "${_search_utility:-}"
         then
           if ((_COLOR_ENABLED))
           then
@@ -15920,10 +15920,6 @@ _show() {
   while ((${#}))
   do
     case "${1:-}" in
-      --path)
-        _print_path=1
-        _skip_notebook_fallback=1
-        ;;
       -a|--added*)
         _print_added=1
         _skip_notebook_fallback=1
@@ -15964,12 +15960,16 @@ _show() {
         ((_list_page)) || _list_page=1
         shift
         ;;
-      --per*)
-        _per_page="$(_option_get_value "${1}" "${2:-}")"
-        shift
-        ;;
       --password)
         _password="$(_option_get_value "${1}" "${2:-}")"
+        shift
+        ;;
+      --path)
+        _print_path=1
+        _skip_notebook_fallback=1
+        ;;
+      --per*)
+        _per_page="$(_option_get_value "${1}" "${2:-}")"
         shift
         ;;
       -p|--print|--dump|--skip*pager|--no*pager)
@@ -16027,12 +16027,6 @@ _show() {
   if [[ -z "${_selector:-}" ]]
   then
     _exit_1 _help "show"
-  fi
-
-  if ((_print_bookmark_url))
-  then
-    _bookmark url "${_selector}"
-    return 0
   fi
 
   if ((_print_selector_id))
@@ -16206,7 +16200,7 @@ _show() {
 
   if ((_check_type))
   then
-    if [[ -z "${_type}" ]]
+    if [[ -z "${_type}"       ]]
     then
       if [[ -d "${_notebook_path}/${_relative_path}"  ]]
       then
@@ -16341,6 +16335,32 @@ ${_title/\[$' '\]/${_TPUT_SETAF_8}[ ]${_TPUT_SGR0}}"
     _decrypted_path="$(_decrypt_file "${_target_path}" "${_password}")"
 
     _target_path="${_decrypted_path}"
+  fi
+
+  if ((_print_bookmark_url))
+  then
+    if ! _file_is_bookmark "${_target_path:-}"
+    then
+      _warn printf "%s\\n" "Not a bookmark.\\n"
+    fi
+
+    local _target_url=
+    _target_url="$(
+      awk 'match($0, /<((ftp|http|file|mailto|news|telnet|gopher).*)>/) {
+        print substr($0, RSTART+1, RLENGTH-2); exit
+      }' "${_target_path}"
+    )"
+
+    if [[ -z "${_target_url:-}"       ]]
+    then
+      _warn printf "No URL found.\\n"
+
+      return 1
+    fi
+
+    printf "%s\\n" "${_target_url:-}"
+
+    return 0
   fi
 
   if _file_is_archive "${_target_path}"     &&
@@ -16919,7 +16939,7 @@ _browse() {
       shift
     done
 
-    if [[ -z "${_selector:-}" ]]
+    if [[ -z "${_selector:-}"       ]]
     then
       _browse_respond_with 404
     fi
@@ -17208,7 +17228,7 @@ _browse() {
       _target_type="${NB_DEFAULT_EXTENSION:-}"
     fi
 
-    if [[ -n "${_encoded_local_notebook_path:-}" ]]
+    if [[ -n "${_encoded_local_notebook_path:-}"    ]]
     then
       _url_params+="&--local=${_encoded_local_notebook_path}"
     fi
@@ -17413,11 +17433,11 @@ HEREDOC
       then
         _search "${_target_path}"         \
           "${_query_arguments[@]:-}"      \
+          --list                          \
           --no-color                      \
           --notebook-selectors            \
           --page      "${_current_page}"  \
-          --per-page  "${_per_page}"      \
-          --list || :
+          --per-page  "${_per_page}"  || :
       else
         _list "${_target_path}"           \
           --no-color                      \
@@ -18531,6 +18551,15 @@ HEREDOC
     then
       _url_param_string+="&--per-page=${_per_page}&--columns=${_columns}"
     fi
+
+    case "${BROWSER:-}" in
+      elinks)
+        _columns="$((_columns - 20))"
+        ;;
+      links)
+        _columns="$((_columns - 1))"
+        ;;
+    esac
 
     {
       printf "<p>"

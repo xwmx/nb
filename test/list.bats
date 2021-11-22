@@ -2,6 +2,55 @@
 
 load test_helper
 
+_BT=$'`'
+
+# list content (title, filename, first line) ##################################
+
+@test "'list' includes titles when present, otherwise filenames with first lines." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md"    --content "$(cat <<HEREDOC
+# Example Title One
+
+Example first line one.
+
+Example second line one.
+HEREDOC
+)"
+    "${_NB}" add "File Two.md"    --content "$(cat <<HEREDOC
+Example first line two.
+
+Example second line two.
+HEREDOC
+)"
+    "${_NB}" add "File Three.md"  --content "$(cat <<HEREDOC
+${_BT}${_BT}${_BT}html
+# Example Code Block Title Three
+${_BT}${_BT}${_BT}
+
+Example first line three.
+
+Example second line three.
+HEREDOC
+)"
+  }
+
+  run "${_NB}" list
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0 ]]
+
+  [[ "${lines[0]}"  =~  \
+.*\[.*3.*\].*\ File\ Three\.md\ ·\ \"Example\ first\ line\ three\.\"  ]]
+  [[ "${lines[1]}"  =~  \
+.*\[.*2.*\].*\ File\ Two\.md\ ·\ \"Example\ first\ line\ two\.\"      ]]
+  [[ "${lines[2]}"  =~  \
+.*\[.*1.*\].*\ Example\ \Title\ One                                   ]]
+}
+
 # notebook: selectors #########################################################
 
 @test "'list --notebook-selectors' includes notebook selectors when listing the root level of the current notebook." {

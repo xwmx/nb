@@ -1339,7 +1339,7 @@ $(cat "${NB_TEST_BASE_PATH}/fixtures/example.com.md")"
   # Returns status 0
   [[ ${status} -eq 0 ]]
 
-  # Updates note file
+  # Updates file
   diff                                    \
     <(cat "${NB_DIR}/home/${_filename}")  \
     <(printf "%s\\n" "${_original}")      &&
@@ -1362,7 +1362,7 @@ $(cat "${NB_TEST_BASE_PATH}/fixtures/example.com.md")"
 
 # `bookmark url` ##############################################################
 
-@test "'bookmark url' with invalid note prints error." {
+@test "'bookmark url' with invalid <id> prints error." {
   {
     "${_NB}" init
     "${_NB}" bookmark "${_BOOKMARK_URL}"
@@ -1373,14 +1373,11 @@ $(cat "${NB_TEST_BASE_PATH}/fixtures/example.com.md")"
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # Returns status 0
-  [[ ${status} -eq 1 ]]
-
-  # Prints output
-  [[ "${output}" =~ Not\ found ]]
+  [[ "${status}" -eq  1           ]]
+  [[ "${output}" =~   Not\ found  ]]
 }
 
-@test "'bookmark url' prints note url." {
+@test "'bookmark url' prints bookmark url." {
   {
     "${_NB}" init
     "${_NB}" bookmark "${_BOOKMARK_URL}"
@@ -1391,11 +1388,8 @@ $(cat "${NB_TEST_BASE_PATH}/fixtures/example.com.md")"
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # Returns status 0
-  [[ ${status} -eq 0 ]]
-
-  # Prints output
-  [[ "${output}" == "${_BOOKMARK_URL}" ]]
+  [[ "${status}" -eq  0                   ]]
+  [[ "${output}" ==   "${_BOOKMARK_URL}"  ]]
 }
 
 @test "'bookmark url' with multiple URLs prints first url in <>." {
@@ -1413,16 +1407,13 @@ https://example.com
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # Returns status 0
-  [[ ${status} -eq 0 ]]
-
-  # Prints output
-  [[ "${output}" == "${_BOOKMARK_URL}" ]]
+  [[ "${status}" -eq  0                   ]]
+  [[ "${output}" ==   "${_BOOKMARK_URL}"  ]]
 }
 
 # encrypted ###################################################################
 
-@test "'bookmark url' with encrypted bookmark should print without errors." {
+@test "'bookmark url' with encrypted bookmark prints bookmark URL." {
   {
     "${_NB}" init
     "${_NB}" bookmark "${_BOOKMARK_URL}" --encrypt --password=example
@@ -1434,11 +1425,8 @@ https://example.com
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  # Returns status 0
-  [[ ${status} -eq 0 ]]
-
-  # Prints output
-  [[ "${output}" == "${_BOOKMARK_URL}" ]]
+  [[ "${status}" -eq  0                   ]]
+  [[ "${output}" ==   "${_BOOKMARK_URL}"  ]]
 }
 
 # `bookmark list` #############################################################
