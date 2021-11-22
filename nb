@@ -5418,7 +5418,6 @@ ${_title_basename_or_path_color/\[$' '\]/${_TPUT_SETAF_8}[ ]${_TPUT_SGR0}}"
       fi
 
       local _item_info="${_indicators}${_title_basename_or_path}"
-      local _item_info_color="${_indicators}${_title_basename_or_path_color}"
 
       if ! ((_list_filenames))  &&
          ! ((_list_paths))      &&
@@ -5437,7 +5436,7 @@ ${_title_basename_or_path_color/\[$' '\]/${_TPUT_SETAF_8}[ ]${_TPUT_SGR0}}"
       if ((_no_id))
       then
         _info_line="${_item_info}"
-        _info_line_color="${_item_info_color}"
+        _info_line_color="${_item_info}"
       else
         local _item_id=
         # use `sed` directly instead of `_index get_id` for performance
@@ -5473,7 +5472,7 @@ ${_TPUT_SGR0}"
         printf -v _spaces '%*s' "${_spaces_length}" ""
 
         _info_line="${_brackets_identifier}${_spaces}${_item_info}"
-        _info_line_color="${_brackets_identifier_color}${_spaces}${_item_info_color}"
+        _info_line_color="${_brackets_identifier_color}${_spaces}${_item_info}"
       fi
 
       if ! ((_line_wrap))
