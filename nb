@@ -1804,8 +1804,8 @@ _get_id_selector() {
   local _notebook_name=
   local _notebook_path=
   local _relative_path=
-  local _selector_relative_path=
   local _selector="${1:-}"
+  local _selector_relative_path=
   local _trailing_slash=0
 
   case "${2:-}" in
