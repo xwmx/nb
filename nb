@@ -2473,12 +2473,12 @@ _print_line() {
     _color_dim "${_line// /-}"
   else
     _color_secondary "${_line// /-}"
-    fi |  if ((_full_width_line))
-          then
-            tr -d '\n'
-          else
-            cat
-          fi
+  fi |  if ((_full_width_line))
+        then
+          tr -d '\n'
+        else
+          cat
+        fi
 }
 
 # _print_padding()
@@ -7584,8 +7584,8 @@ HEREDOC
             grep -i "${_query_pattern:-}"       2>/dev/null
           }
         } || {
-          _warn printf                      \
-            "Notebook not found: %s\\n"     \
+          _warn printf                  \
+            "Notebook not found: %s\\n" \
             "$(_color_primary "${_query_names[*]}" | tr '\r\n' ' ')" &&
               return 1
         }
