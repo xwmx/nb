@@ -1955,10 +1955,8 @@ Help information:
   [[   "${lines[1]}"  =~  \
 .*\[.*3.*\].*\ ✔️\ \ .*\[\ \].*\ Example\ not\ done\ todo\.  ]]
 
-  [[ ! "${lines[0]}"  =~  \
-.*\[.*4.*\].*\ ✅\ \[x\]\ Example\ done\ todo\.             ]]
-  [[ ! "${lines[1]}"  =~  \
-.*\[.*4.*\].*\ ✅\ \[\ \]\ Example\ done\ todo\.            ]]
+  [[ ! "${lines[0]}"  =~  \ \[x\]\                          ]]
+  [[ ! "${lines[1]}"  =~  \ \[\ \]\                         ]]
 }
 
 @test "'list --document' exits with 0 and displays a list of documents." {
