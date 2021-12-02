@@ -1618,11 +1618,11 @@ _get_content() {
         if [[ "${__line}" =~ ^([[:space:]]*#[[:space:]]+)   ]] &&
            ! ((_in_code_block))
         then # line starts with an atx-style H1
-          _title="${__line#${BASH_REMATCH[1]}}"
+          _title="${__line#"${BASH_REMATCH[1]}"}"
 
           if [[ "${_title}" =~ ([[:space:]]+#[[:space:]]*)$ ]]
           then
-            _title="${_title%${BASH_REMATCH[1]}}"
+            _title="${_title%"${BASH_REMATCH[1]}"}"
           fi
 
           # `sed` alternative
@@ -1827,7 +1827,7 @@ _get_id_selector() {
   then # selector is full path
     if [[ "${_selector}" =~ ^${NB_DIR}      ]]
     then
-      local _path_with_notebook="${_selector#${NB_DIR}/}"
+      local _path_with_notebook="${_selector#"${NB_DIR}"/}"
       _notebook_name="${_path_with_notebook%%/*}"
       _notebook_path="${NB_DIR}/${_notebook_name}"
 
@@ -1848,7 +1848,7 @@ _get_id_selector() {
       then
         _selector_relative_path=
       else
-        _selector_relative_path="${_selector#${_notebook_path}/}"
+        _selector_relative_path="${_selector#"${_notebook_path}"/}"
       fi
     fi
   else
@@ -2605,7 +2605,7 @@ _selector_resolve_folders() {
 
   if [[ "${_selector_path}" =~ ^/   ]]
   then
-    _selector="${_selector_path#${_notebook_path}/}"
+    _selector="${_selector_path#"${_notebook_path}"/}"
   fi
 
   [[ ! "${_selector_path}"  =~ /    ]] && return 0
@@ -2862,7 +2862,7 @@ _spinner() {
   do
     local _temp="${_spin_string#?}"
     printf " [%c]  " "${_spin_string}"
-    _spin_string="${_temp}${_spin_string%${_temp}}"
+    _spin_string="${_temp}${_spin_string%"${_temp}"}"
     sleep ${_delay}
     printf "\b\b\b\b\b\b"
   done
@@ -4109,7 +4109,7 @@ _index() {
 
   if [[ ! "${_folder_path:-}" =~ ^${NB_NOTEBOOK_PATH} ]]
   then
-    local _notebook_and_relative_path="${_folder_path#${NB_DIR}/}"
+    local _notebook_and_relative_path="${_folder_path#"${NB_DIR}"/}"
     _notebook_path="${NB_DIR}/${_notebook_and_relative_path%%/*}"
   fi
 
@@ -8861,7 +8861,7 @@ _decrypt_file() {
     return 1
   fi
 
-  local _notebook_and_relative_path="${_encrypted_path#${NB_DIR}/}"
+  local _notebook_and_relative_path="${_encrypted_path#"${NB_DIR}"/}"
 
   local _unencrypted_path=
   _unencrypted_path="$(_temp file "${_notebook_and_relative_path%.enc}")"
@@ -9283,7 +9283,7 @@ _get_unique_relative_path() {
     fi
   )"
 
-  printf "%s" "${_unique_path#${_notebook_path}/}"
+  printf "%s" "${_unique_path#"${_notebook_path}"/}"
 }
 
 # _get_uri()
@@ -11350,7 +11350,7 @@ _add() {
       _get_unique_path "${_notebook_path}/${_target_relative_path}"
     )"
 
-    _target_unique_relative_path="${_target_unique_path#${_notebook_path}/}"
+    _target_unique_relative_path="${_target_unique_path#"${_notebook_path}"/}"
   else
     _target_unique_relative_path="$(
       _notebooks current --filename "${_target_relative_path}"
@@ -15463,12 +15463,12 @@ _search() {
             then
               local _notebook_path="${_local_notebook_path}"
             else
-              local _notebook_and_folder_path="${_folder_path#${NB_DIR}/}"
+              local _notebook_and_folder_path="${_folder_path#"${NB_DIR}"/}"
               local _notebook_path="${NB_DIR}/${_notebook_and_folder_path%%/*}"
             fi
 
-            local _relative_folder_path="${_folder_path#${_notebook_path}/}"
-            _relative_folder_path="${_relative_folder_path#${_notebook_path}}"
+            local _relative_folder_path="${_folder_path#"${_notebook_path}"/}"
+            _relative_folder_path="${_relative_folder_path#"${_notebook_path}"}"
 
             _filename="$(basename "${_path}")"
             _filename_color="${_filename}"
@@ -16048,7 +16048,7 @@ _show() {
     fi
   elif [[ "${_selector:-}" =~ ^${NB_DIR}  ]]
   then
-    local _selector_relative_path="${_selector#${NB_DIR}/}"
+    local _selector_relative_path="${_selector#"${NB_DIR}"/}"
 
     _notebook_path="$(_notebooks show "${_selector_relative_path%%/*}" --path)"
   elif [[ "${_selector:-}" =~ ^/          ]]
@@ -17098,7 +17098,7 @@ _browse() {
         > "${_source_path}"
 
       _git checkpoint "${_notebook_path}"             \
-        "[nb] Edit: ${_source_path#${_notebook_path}/}"
+        "[nb] Edit: ${_source_path#"${_notebook_path}"/}"
     fi
   }
 
@@ -18039,7 +18039,7 @@ HEREDOC
 
       if [[ "${_selector}" =~ ^/    ]]
       then
-        local _relative_path="${_selector#${_notebook_path}/}"
+        local _relative_path="${_selector#"${_notebook_path}"/}"
 
         if [[ "${_relative_path:-}" == "${_notebook_path:-}" ]]
         then
@@ -18127,9 +18127,9 @@ HEREDOC
           local _local_notebook_path=
           _local_notebook_path="$(_get_uri --decode "${_encoded_local_notebook_path}")"
 
-          _raw_url+="local/${_item_path#${_local_notebook_path}/}?--local=${_encoded_local_notebook_path}"
+          _raw_url+="local/${_item_path#"${_local_notebook_path}"/}?--local=${_encoded_local_notebook_path}"
         else
-          _raw_url+="${_item_path#${NB_DIR}/}"
+          _raw_url+="${_item_path#"${NB_DIR}"/}"
         fi
       fi
 
@@ -18457,7 +18457,7 @@ HEREDOC
     fi | {
       # rewrite relative image paths to use --original URLs
 
-      local _encoded_notebook_name="${_raw_url#//${NB_SERVER_HOST}:${NB_SERVER_PORT}/--original/}"
+      local _encoded_notebook_name="${_raw_url#//"${NB_SERVER_HOST}":"${NB_SERVER_PORT}"/--original/}"
       _encoded_notebook_name="${_encoded_notebook_name%%/*}"
 
       local _raw_url_base_pattern="\/\/${NB_SERVER_HOST}:${NB_SERVER_PORT}\/--original\/${_encoded_notebook_name}\/"
@@ -18964,9 +18964,9 @@ HEREDOC
        [[ -n  "${_encoded_local_notebook_path:-}" ]] &&
        [[ -n  "${_local_notebook_path:-}"         ]]
     then
-      _raw_url+="local/${_selector_path#${_local_notebook_path}/}?--local=${_encoded_local_notebook_path}"
+      _raw_url+="local/${_selector_path#"${_local_notebook_path}"/}?--local=${_encoded_local_notebook_path}"
     else
-      _raw_url+="${_selector_path#${NB_DIR}/}"
+      _raw_url+="${_selector_path#"${NB_DIR}"/}"
     fi
 
     _render_function_options+=("--raw-url" "${_raw_url}")
@@ -19532,7 +19532,7 @@ HEREDOC
        _notebooks current --selected  ||
        [[ "${_selector}" != "$(_notebooks current --name):" ]]
     then
-      _display_params="${_request_url#${_request_url_base}}"
+      _display_params="${_request_url#"${_request_url_base}"}"
     fi
 
     printf "Listening: %s%s\\n"                   \
