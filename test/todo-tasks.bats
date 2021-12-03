@@ -23,7 +23,7 @@ load test_helper
 - [ ] Task one with example sample demo test long title to test task list line-wrapping behavior one.
 - [] Task two with example sample demo test long title to test task list line-wrapping behavior two.
 - [x] Task three with example sample demo test long title to test task list line-wrapping behavior three.
-- [ ] Task four with example sample demo test long title to test task list line-wrapping behavior four.
+  - [ ] Task four with example sample demo test long title to test task list line-wrapping behavior four.
 
 ## Tags
 
@@ -78,7 +78,7 @@ example\ sample\ demo\ test\ long\ title\ to\ test\ task\ list\ line\-wrapping\ 
 - [ ] Task one with example sample demo test long title to test task list line-wrapping behavior one.
 - [] Task two with example sample demo test long title to test task list line-wrapping behavior two.
 - [x] Task three with example sample demo test long title to test task list line-wrapping behavior three.
-- [ ] Task four with example sample demo test long title to test task list line-wrapping behavior four.
+  - [ ] Task four with example sample demo test long title to test task list line-wrapping behavior four.
 
 ## Tags
 
@@ -153,7 +153,7 @@ example\ sample\ demo\ test\ long\ title\ to\ test\ task\ list\ line\-wrapping\ 
 - [ ] Task one.
 - [] Task two.
 - [x] Task three.
-- [ ] Task four.
+  - [ ] Task four.
 
 ## Tags
 
@@ -190,7 +190,7 @@ Done:\ .*\[.*Example\ Folder/1\ 2.*\].*\ .*[.*x.*].*\ Task\ two\.             ]]
 - [ ] Task one.
 - [ ] Task two.
 - [x] Task three.
-- [ ] Task four.
+  - [ ] Task four.
 
 ## Tags
 
@@ -232,7 +232,7 @@ Done:\ .*\[.*Example\ Folder/1\ 2.*\].*\ .*[.*x.*].*\ Task\ two\.             ]]
 - [ ] Task one.
 - [] Task two.
 - [x] Task three.
-- [ ] Task four.
+  - [ ] Task four.
 
 ## Tags
 
@@ -276,7 +276,7 @@ Done:\ .*\[.*Example\ Folder/1\ 2.*\].*\ .*[.*x.*].*\ Task\ two\. ]]
 - [ ] Task one.
 - [ ] Task two.
 - [x] Task three.
-- [ ] Task four.
+  - [ ] Task four.
 
 ## Tags
 
@@ -302,6 +302,50 @@ HEREDOC
 Done:\ .*\[.*Example\ Folder/1\ 2.*\].*\ .*[.*x.*].*\ Task\ two\. ]]
 }
 
+@test "'tasks do <folder>/<id> <task-number>' with indented open task with space in brackets exits with 0 and marks task done." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add                                    \
+      --filename "Example Folder/Todo One.todo.md"  \
+      --content "$(cat <<HEREDOC
+# [ ] Example todo description one.
+
+## Due
+
+2200-02-02
+
+## Tasks
+
+- [ ] Task one.
+- [ ] Task two.
+- [x] Task three.
+  - [ ] Task four.
+
+## Tags
+
+#tag1 #tag2
+HEREDOC
+)"
+  }
+
+  run "${_NB}" tasks "do" Example\ Folder/1 4
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  cat "${NB_DIR}/home/Example Folder/Todo One.todo.md"
+
+  [[    "${status}"     -eq 0                                       ]]
+  [[    "${#lines[@]}"  -eq 3                                       ]]
+
+  [[    "${lines[0]}"   =~  \
+.*\[.*Example\ Folder/1.*].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ one\.  ]]
+  [[    "${lines[1]}"   =~  .*------------------------------------.*              ]]
+
+  [[    "${lines[2]}"   =~  \
+Done:\ .*\[.*Example\ Folder/1\ 4.*\].*\ .*[.*x.*].*\ Task\ four\.  ]]
+}
+
 # undo task ###################################################################
 
 @test "'tasks undo <folder>/<id> <task-number>' with non-todo and closed task exits with 0 and marks task done." {
@@ -316,7 +360,7 @@ Done:\ .*\[.*Example\ Folder/1\ 2.*\].*\ .*[.*x.*].*\ Task\ two\. ]]
 - [ ] Task one.
 - [ ] Task two.
 - [x] Task three.
-- [ ] Task four.
+  - [ ] Task four.
 
 ## Tags
 
@@ -358,7 +402,7 @@ Undone:\ .*\[.*Example\ Folder/1\ 3.*\].*\ .*[\ ].*\ Task\ three\.            ]]
 - [ ] Task one.
 - [ ] Task two.
 - [x] Task three.
-- [ ] Task four.
+  - [ ] Task four.
 
 ## Tags
 
@@ -404,7 +448,7 @@ Undone:\ .*\[.*Example\ Folder/1\ 3.*\].*\ .*[\ ].*\ Task\ three\.  ]]
 - [ ] Task one.
 - [] Task two.
 - [x] Task three.
-- [ ] Task four.
+  - [ ] Task four.
 
 ## Tags
 
@@ -451,7 +495,7 @@ HEREDOC
 - [ ] Task one.
 - [] Task two.
 - [x] Task three.
-- [ ] Task four.
+  - [ ] Task four.
 
 ## Tags
 
@@ -545,7 +589,7 @@ HEREDOC
 - [ ] Task one.
 - [] Task two.
 - [x] Task three.
-- [ ] Task four.
+  - [ ] Task four.
 
 ## Tags
 
@@ -587,7 +631,7 @@ HEREDOC
 - [ ] Task one.
 - [] Task two.
 - [x] Task three.
-- [ ] Task four.
+  - [ ] Task four.
 
 ## Tags
 
@@ -629,7 +673,7 @@ HEREDOC
 - [ ] Task one.
 - [] Task two.
 - [x] Task three.
-- [ ] Task four.
+  - [ ] Task four.
 
 ## Tags
 
@@ -673,7 +717,7 @@ HEREDOC
 - [ ] Task one.
 - [] Task two.
 - [x] Task three.
-- [ ] Task four.
+  - [ ] Task four.
 
 ## Tags
 
@@ -720,7 +764,7 @@ HEREDOC
 - [ ] Task one.
 - [] Task two.
 - [x] Task three.
-- [ ] Task four.
+  - [ ] Task four.
 
 ## Tags
 
@@ -763,7 +807,7 @@ HEREDOC
 - [ ] Task one.
 - [] Task two.
 - [x] Task three.
-- [ ] Task four.
+  - [ ] Task four.
 
 ## Tags
 
@@ -814,7 +858,7 @@ HEREDOC
 - [ ] Task one.
 - [] Task two.
 - [x] Task three.
-- [ ] Task four.
+  - [ ] Task four.
 
 ## Tags
 

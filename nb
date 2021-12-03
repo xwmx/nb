@@ -22480,7 +22480,7 @@ _todo() {
               _todo_get_task "${_selector_path:-}" "${_task_number:-}"
             )"
 
-            if [[ ! "${_updated_task:-}" =~ ^-\ \[x\] ]]
+            if [[ ! "${_updated_task:-}" =~ ^[[:space:]]*-\ \[x\] ]]
             then
               _warn cat "${_selector_path}"
               _exit_1 printf                      \
@@ -22519,7 +22519,7 @@ _todo() {
               _todo_get_task "${_selector_path:-}" "${_task_number:-}"
             )"
 
-            if [[ ! "${_updated_task:-}" =~ ^-\ \[\ \] ]]
+            if [[ ! "${_updated_task:-}" =~ ^[[:space:]]*-\ \[\ \] ]]
             then
               _exit_1 printf                      \
                 "Unable to undo: %s\\n"           \
@@ -22629,7 +22629,9 @@ _todo() {
       fi
 
       local _task_closed_patterns=(-e "- \[x\]")
-      local _task_open_patterns=(-e "- \[ \]" -e "- \[\]")
+      local _task_open_patterns=(
+        -e "- \[ \]" -e "^- \[\]" -e "[[:space:]]- \[\]"
+      )
 
       local _todo_closed_patterns=(-e "# \[x\]")
       local _todo_open_patterns=(-e "# \[ \]" -e "# \[\]")
