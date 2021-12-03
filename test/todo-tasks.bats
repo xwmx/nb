@@ -348,7 +348,43 @@ Done:\ .*\[.*Example\ Folder/1\ 4.*\].*\ .*[.*x.*].*\ Task\ four\.  ]]
 
 # undo task ###################################################################
 
-@test "'tasks undo <folder>/<id> <task-number>' with non-todo and closed task exits with 0 and marks task done." {
+@test "'tasks undo <folder>/<id> <task-number>' with non-todo and indented closed task exits with 0 and marks task undone." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add                              \
+      --filename "Example Folder/File One.md" \
+      --content "$(cat <<HEREDOC
+# Example Title One
+
+- [ ] Task one.
+- [ ] Task two.
+- [x] Task three.
+  - [ ] Task four.
+
+## Tags
+
+#tag1 #tag2
+HEREDOC
+)"
+  }
+
+  run "${_NB}" tasks "undo" Example\ Folder/1 4
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  cat "${NB_DIR}/home/Example Folder/File One.md"
+
+  [[    "${status}"     -eq 0                                     ]]
+  [[    "${#lines[@]}"  -eq 3                                     ]]
+
+  [[    "${lines[0]}"   =~  .*\[.*Example\ Folder/1.*].*\ Example\ Title\ One ]]
+  [[    "${lines[1]}"   =~  [^-]------------------------------------[^-]      ]]
+  [[    "${lines[2]}"   =~  \
+Undone:\ .*\[.*Example\ Folder/1\ 4.*\].*\ .*[\ ].*\ Task\ four\.             ]]
+}
+
+@test "'tasks undo <folder>/<id> <task-number>' with non-todo and closed task exits with 0 and marks task undone." {
   {
     "${_NB}" init
 
@@ -384,7 +420,7 @@ HEREDOC
 Undone:\ .*\[.*Example\ Folder/1\ 3.*\].*\ .*[\ ].*\ Task\ three\.            ]]
 }
 
-@test "'tasks undo <folder>/<id> <task-number>' with closed task exits with 0 and marks task open." {
+@test "'tasks undo <folder>/<id> <task-number>' with closed task exits with 0 and marks task undone." {
   {
     "${_NB}" init
 
