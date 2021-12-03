@@ -5841,7 +5841,7 @@ _ls() {
       "${_ME} show ${_maybe_selector_scope}<id>"
       "${_ME} open ${_maybe_selector_scope}<id>"
       "${_ME} browse${_maybe_selector_scope_padded_left}"
-      "${_ME} todo${_maybe_selector_scope_padded_left}"
+      "${_ME} todos${_maybe_selector_scope_padded_left}"
       "${_ME} tasks${_maybe_selector_scope_padded_left}"
       "${_ME} search ${_maybe_selector_scope_padded_right}<query>"
       "${_notebook_command}"
