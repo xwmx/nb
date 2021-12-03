@@ -51,6 +51,47 @@ Moved\ to:\ .*[.*1.*].*\ .*Example\ File\.js.*  ]]
 
 # --to <type> #################################################################
 
+@test "'move --to' with no <type> exits with 1 and prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example File.todo.md" --content  "# [ ] Example todo title."
+
+    [[    -f "${NB_DIR}/home/Example File.todo.md"    ]]
+    [[ !  -e "${NB_DIR}/home/Example File.js"         ]]
+  }
+
+  run "${_NB}" move 1 --to <<< "y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 1:
+
+  [[ "${status}" -eq 1                                ]]
+
+  # Does not move file:
+
+  [[    -f "${NB_DIR}/home/Example File.todo.md"      ]]
+  [[ !  -e "${NB_DIR}/home/Example File.js"           ]]
+
+  # Does not create git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)"             ]]
+  do
+    sleep 1
+  done
+  git log | grep -v -q '\[nb\] Move'
+
+  # Prints output:
+
+  [[ "${#lines[@]}" -eq 1                             ]]
+
+  [[ "${lines[0]}"  =~  \
+!.*\ .*\-\-to.*\ requires\ a\ valid\ argument\.       ]]
+}
+
 @test "'move --to <extension>' (no period) with root-level todo changes the file extension while retaining the name." {
   {
     "${_NB}" init
