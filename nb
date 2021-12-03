@@ -13949,6 +13949,11 @@ _move() {
       --to*todo)
         _to_target_type="todo"
         ;;
+      --to)
+        _to_target_type="$(_option_get_value "${1:-}" "${2:-}")"
+
+        shift
+        ;;
       *)
         if [[ -z "${_source_selector:-}"    ]]
         then
@@ -14072,7 +14077,7 @@ _move() {
       bookmark) _target_file_type="bookmark.md"                 ;;
       note)     _target_file_type="${NB_DEFAULT_EXTENSION:-md}" ;;
       todo)     _target_file_type="todo.md"                     ;;
-      *)        _exit_1 _help "move"                            ;;
+      *)        _target_file_type="${_to_target_type#.}"        ;;
     esac
 
     if [[ -z "${_target_file_name:-}" ]]
