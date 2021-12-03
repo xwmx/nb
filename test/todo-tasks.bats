@@ -360,7 +360,7 @@ Done:\ .*\[.*Example\ Folder/1\ 4.*\].*\ .*[.*x.*].*\ Task\ four\.  ]]
 - [ ] Task one.
 - [ ] Task two.
 - [x] Task three.
-  - [ ] Task four.
+  - [x] Task four.
 
 ## Tags
 
