@@ -22551,7 +22551,7 @@ _todo() {
       ;;
     list)
       {
-        _list "${_arguments[@]:-}" --type todo
+        _list "${_arguments[@]:-}" --type todo 2>/dev/null
       } | {
         case "${_filter:-}" in
           closed)
@@ -22577,12 +22577,14 @@ _todo() {
 
         if ! ((_counter))
         then
+          local _empty_message="No"
+
           if [[ -n "${_filter:-}"     ]]
           then
-            _exit_1 printf "No %s todos found.\\n" "${_filter:-}"
-          else
-            _exit_1 printf "No todos found.\\n"
+            _empty_message+=" ${_filter:-}"
           fi
+
+          _exit_1 printf "%s todos found.\\n" "${_empty_message}"
         fi
       }
       ;;
