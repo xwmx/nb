@@ -8856,6 +8856,15 @@ A [Markdown atx-style `h1` heading
 containing a Markdown checkbox followed by the todo title.
 An `x` within the checkbox (`[ ]`) indicates that the todo is done.
 
+###### Examples
+
+```markdown
+# [ ] Example undone / open todo.
+```
+```markdown
+# [x] Example done / closed todo.
+```
+
 <p>
   <sup>
     <a href="#nb-markdown-todo-file-format">↑</a>
