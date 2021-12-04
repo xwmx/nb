@@ -8859,10 +8859,10 @@ An `x` within the checkbox (`[ ]`) indicates that the todo is done.
 ###### Examples
 
 ```markdown
-# [ ] Example undone / open todo.
+# [ ] Example undone / open todo title.
 ```
 ```markdown
-# [x] Example done / closed todo.
+# [x] Example done / closed todo title.
 ```
 
 <p>
