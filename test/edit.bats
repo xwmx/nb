@@ -3,6 +3,147 @@
 
 load test_helper
 
+# encrypted ###################################################################
+
+@test "'edit' with gpg-encrypted file and openssl NB_ENCRYPTION_TOOL edits properly without errors." {
+  {
+    "${_NB}" init
+
+    diff                                                                      \
+      <("${_NB}" env | grep NB_ENCRYPTION_TOOL --color=never | cut -d= -f 2)  \
+      <(printf "openssl\\n")
+
+    NB_ENCRYPTION_TOOL=gpg "${_NB}" add "# Content" --encrypt --password=example
+
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
+    _original_hash="$(_get_hash "${NB_DIR}/home/${_filename}")"
+  }
+
+  run "${_NB}" edit 1 --password=example
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Exits with status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Updates file:
+
+  [[ "$(_get_hash "${NB_DIR}/home/${_filename}")" != "${_original_hash}" ]]
+
+  [[ "$("${_NB}" show 1 --no-color --password=example)"  =~ \
+\#\ Content${_NEWLINE}\#\ mock_editor\  ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Edit'
+
+  # Prints output:
+
+  [[ "${output}" =~ Updated:        ]]
+  [[ "${output}" =~ [0-9]+          ]]
+  [[ "${output}" =~ [A-Za-z0-9]+.md ]]
+}
+
+@test "'edit' with encrypted file edits properly without errors." {
+  {
+    "${_NB}" init
+    "${_NB}" add "# Content" --encrypt --password=example
+
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
+    _original_hash="$(_get_hash "${NB_DIR}/home/${_filename}")"
+  }
+
+  run "${_NB}" edit 1 --password=example
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Exits with status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Updates file:
+
+  [[ "$(_get_hash "${NB_DIR}/home/${_filename}")" != "${_original_hash}" ]]
+
+  [[ "$("${_NB}" show 1 --no-color --password=example)"  =~ \
+\#\ Content${_NEWLINE}\#\ mock_editor\  ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Edit'
+
+  # Prints output:
+
+  [[ "${output}" =~ Updated:        ]]
+  [[ "${output}" =~ [0-9]+          ]]
+  [[ "${output}" =~ [A-Za-z0-9]+.md ]]
+}
+
+@test "'edit' with piped content and encrypted file edits properly without errors." {
+  {
+    "${_NB}" init
+    "${_NB}" add "# Example" --encrypt --password=example
+
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
+    _original_hash="$(_get_hash "${NB_DIR}/home/${_filename}")"
+  }
+
+  run bash -c "echo '## Piped' | ${_NB} edit 1 --password=example"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Updates file:
+
+  "${_NB}" show 1 --no-color --password=example
+
+  [[ "$(_get_hash "${NB_DIR}/home/${_filename}")" != "${_original_hash}" ]]
+
+  [[ "$("${_NB}" show 1 --no-color --password=example)"  =~ \
+\#\ Example${_NEWLINE}${_NEWLINE}\#\#\ Piped  ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Edit'
+
+  # Prints output:
+
+  [[ "${output}" =~ Updated:        ]]
+  [[ "${output}" =~ [0-9]+          ]]
+  [[ "${output}" =~ [A-Za-z0-9]+.md ]]
+}
+
 # no argument #################################################################
 
 @test "'edit' with no argument exits and prints help." {
@@ -821,90 +962,6 @@ HEREDOC
   [[ "$(cat "${NB_DIR}/home/${_filename}")" != "${_original}"   ]]
   grep -q '# Example' "${NB_DIR}/home"/*
   grep -q '## Piped' "${NB_DIR}/home"/*
-
-  # Creates git commit:
-
-  cd "${NB_DIR}/home" || return 1
-
-  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
-
-  while [[ -n "$(git status --porcelain)" ]]
-  do
-    sleep 1
-  done
-  git log | grep -q '\[nb\] Edit'
-
-  # Prints output:
-
-  [[ "${output}" =~ Updated:        ]]
-  [[ "${output}" =~ [0-9]+          ]]
-  [[ "${output}" =~ [A-Za-z0-9]+.md ]]
-}
-
-# encrypted ###################################################################
-
-@test "'edit' with encrypted file edits properly without errors." {
-  {
-    "${_NB}" init
-    "${_NB}" add "# Content" --encrypt --password=example
-
-    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
-    _original_hash="$(_get_hash "${NB_DIR}/home/${_filename}")"
-  }
-
-  run "${_NB}" edit 1 --password=example
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  # Exits with status 0:
-
-  [[ ${status} -eq 0 ]]
-
-  # Updates file:
-
-  [[ "$(_get_hash "${NB_DIR}/home/${_filename}")" != "${_original_hash}" ]]
-
-  # Creates git commit:
-
-  cd "${NB_DIR}/home" || return 1
-
-  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
-
-  while [[ -n "$(git status --porcelain)" ]]
-  do
-    sleep 1
-  done
-  git log | grep -q '\[nb\] Edit'
-
-  # Prints output:
-
-  [[ "${output}" =~ Updated:        ]]
-  [[ "${output}" =~ [0-9]+          ]]
-  [[ "${output}" =~ [A-Za-z0-9]+.md ]]
-}
-
-@test "'edit' with piped content and encrypted file edits properly without errors." {
-  {
-    "${_NB}" init
-    "${_NB}" add "# Example" --encrypt --password=example
-
-    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
-    _original_hash="$(_get_hash "${NB_DIR}/home/${_filename}")"
-  }
-
-  run bash -c "echo '## Piped' | ${_NB} edit 1 --password=example"
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  # Returns status 0:
-
-  [[ ${status} -eq 0 ]]
-
-  # Updates file:
-
-  [[ "$(_get_hash "${NB_DIR}/home/${_filename}")" != "${_original_hash}" ]]
 
   # Creates git commit:
 
