@@ -9114,31 +9114,56 @@ _edit_file() {
 # _encrypt_file()
 #
 # Usage:
-#   _encrypt_file <unencrypted-path> <encrypted-path> <password>
+#   _encrypt_file <unencrypted-path> <encrypted-path>
+#                 [--password <password>] [--tool <tool>]
 _encrypt_file() {
   local _encrypted_path="${2:-}"
-  local _password="${3:-}"
+  local _password=
+  local _tool="${NB_ENCRYPTION_TOOL}"
   local _unencrypted_path="${1:-}"
 
-  if [[ -z "${_password}"         ]]
+  while ((${#}))
+  do
+    case "${1:-}" in
+      --password)
+        if _option_value_is_present "${2:-}"
+        then
+          _password="${2:-}"
+          shift
+        fi
+        ;;
+      --tool)
+        if _option_value_is_present "${2:-}"
+        then
+          _tool="${2:-}"
+          shift
+        fi
+        ;;
+    esac
+
+    shift
+  done
+
+  if [[ -z "${_password:-}"       ]]  &&
+     [[    "${_tool}" != "age"    ]]
   then
     _exit_1 printf "Password required.\\n"
   fi
 
-  if [[ -z "${_unencrypted_path}" ]] ||
+  if [[ -z "${_unencrypted_path}" ]]  ||
      [[ -z "${_encrypted_path}"   ]]
   then
     _exit_1 printf "Encrypted and unencrypted paths required.\\n"
   fi
 
-  if [[   "${NB_ENCRYPTION_TOOL}" == "age"      ]]
+  if [[   "${_tool}" == "age"         ]]
   then
     age                               \
       --encrypt                       \
       --output "${_encrypted_path}"   \
       --passphrase                    \
       "${_unencrypted_path}"
-  elif [[ "${NB_ENCRYPTION_TOOL}" == "gpg"      ]]
+  elif [[ "${_tool}" == "gpg"         ]]
   then
     printf "%s\\n" "${_password}"     \
       | gpg                           \
@@ -9149,7 +9174,7 @@ _encrypt_file() {
         --cipher-algo AES256          \
         --output "${_encrypted_path}" \
         "${_unencrypted_path}"
-  elif [[ "${NB_ENCRYPTION_TOOL}" == "openssl"  ]]
+  elif [[ "${_tool}" == "openssl"     ]]
   then
     openssl enc                       \
       -aes-256-cbc                    \
@@ -11431,7 +11456,8 @@ _add() {
   else
     if ((_encrypt))
     then
-      if [[ -z "${_password}"     ]]
+      if [[ -z "${_password}"                   ]] &&
+         [[ "${NB_ENCRYPTION_TOOL:-}" != "age"  ]]
       then
         # request password without displaying it
         printf "%s: " "$(_color_primary "Password")"
@@ -11440,7 +11466,7 @@ _add() {
         IFS='' read -r -e -d $'\n' -s _password </dev/tty
         printf "\\n" # print newline to stop `read`
 
-        if [[ -z "${_password:-}" ]]
+        if [[ -z "${_password:-}"               ]]
         then
           _exit_1 printf "Password required.\\n"
         fi
@@ -11460,7 +11486,7 @@ _add() {
         fi
       fi
 
-      if [[ -n "${_target_folder_relative_path:-}" ]]
+      if [[ -n "${_target_folder_relative_path:-}"  ]]
       then
         if ! mkdir -p "$(_temp directory)/${_target_folder_relative_path}" 2>/dev/null
         then
@@ -11572,7 +11598,10 @@ _add() {
       local _decrypted_path="${_target_path}"
       local _encrypted_path="${_notebook_path}/${_target_unique_relative_path}.enc"
 
-      _encrypt_file "${_decrypted_path}" "${_encrypted_path}" "${_password}"
+      _encrypt_file           \
+        "${_decrypted_path}"  \
+        "${_encrypted_path}"  \
+        --password "${_password}"
 
       if [[ -n "${_decrypted_path}" ]] && [[ -e "${_decrypted_path}" ]]
       then
@@ -12940,16 +12969,15 @@ _edit() {
 
     local _decrypted_path=
     local _encrypted_path=
+    local _encryption_tool=
     local _target_file="${_notebook_path}/${_relative_path}"
 
     if _file_is_encrypted "${_target_file}"
     then
       _encrypted_path="${_target_file}"
+      _encryption_tool="$(_get_decryption_tool "${_encrypted_path:-}")"
 
-      local _decryption_tool=
-      _decryption_tool="$(_get_decryption_tool "${_encrypted_path:-}")"
-
-      if [[    "${_decryption_tool:-}" != "age"   ]] &&
+      if [[    "${_encryption_tool:-}" != "age"   ]] &&
          [[ -z "${_password}"                     ]]
       then
         # request password without displaying it
@@ -13035,13 +13063,20 @@ _edit() {
 
         mv "${_encrypted_path}" "${_temp_encrypted_path}"
 
-        _encrypt_file "${_decrypted_path}" "${_encrypted_path}" "${_password}"
+        _encrypt_file                   \
+          "${_decrypted_path}"          \
+          "${_encrypted_path}"          \
+          --password "${_password:-}"   \
+          --tool "${_encryption_tool:-}"
 
-        if [[ -e "${_encrypted_path}"   ]]
+        if [[ -e "${_temp_encrypted_path:-}"  ]]
         then
-          rm "${_temp_encrypted_path:?}"
-        else
-          mv "${_temp_encrypted_path}" "${_encrypted_path}"
+          if [[ -e "${_encrypted_path:?}"     ]]
+          then
+            rm "${_temp_encrypted_path:?}"
+          else
+            mv "${_temp_encrypted_path}" "${_encrypted_path}"
+          fi
         fi
       fi
 
@@ -19706,11 +19741,11 @@ _helpers() {
     *browser*)
       _web_browser                    "${_options[@]:-}"
       ;;
-    decrypt*)
-      _decrypt_file                   "${_options[@]:-}"
-      ;;
     *decryption*)
       _get_decryption_tool            "${_options[@]:-}"
+      ;;
+    decrypt*)
+      _decrypt_file                   "${_options[@]:-}"
       ;;
     download*)
       _download_from                  "${_options[@]:-}"
