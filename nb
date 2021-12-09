@@ -8871,36 +8871,63 @@ _decrypt_file() {
   local _file_command_response=
   _file_command_response="$(file "${_encrypted_path}" 2>/dev/null || :)"
 
-  if [[   "${_file_command_response}" =~ GPG|PGP ]]
+  local _decryption_tool=
+
+  if [[   "${_file_command_response}" =~ data     ]]
   then
-    if _command_exists "gpg"
+    local         __first_line=
+    IFS=  read -r __first_line < "${_encrypted_path}"
+
+    if [[ "${__first_line:-}" =~ age-encryption   ]]
     then
-      printf "%s\\n" "${_password}"       \
-        | gpg                             \
-          --quiet                         \
-          --batch                         \
-          --passphrase-fd 0               \
-          --output "${_unencrypted_path}" \
-          --decrypt "${_encrypted_path}"
-    else
-      _exit_1 printf                      \
-"This item was encrypted with GPG, but the GPG command was not found.\\n"
+      _decryption_tool="age"
     fi
-  elif [[ "${_file_command_response}" =~ openssl ]]
+  elif [[ "${_file_command_response}" =~ GPG|PGP  ]]
   then
-    openssl enc                           \
-      -d                                  \
-      -aes-256-cbc                        \
-      -in "${_encrypted_path}"            \
-      -out "${_unencrypted_path}"         \
-      -pass file:<(printf "%s\\n" "${_password}") 2> /dev/null ||
-        if [[ -f "${_unencrypted_path:?}" ]]
-        then
-          rm "${_unencrypted_path:?}"
-        fi
-  else
-    _exit_1 printf "Unable to decrypt file.\\n"
+    _decryption_tool="gpg"
+  elif [[ "${_file_command_response}" =~ openssl  ]]
+  then
+    _decryption_tool="openssl"
   fi
+
+  case "${_decryption_tool:-}" in
+    age)
+      age                                   \
+        --decrypt                           \
+        --output "${_unencrypted_path}"     \
+        "${_encrypted_path}"
+      ;;
+    gpg)
+      if _command_exists "gpg"
+      then
+        printf "%s\\n" "${_password}"       \
+          | gpg                             \
+            --quiet                         \
+            --batch                         \
+            --passphrase-fd 0               \
+            --output "${_unencrypted_path}" \
+            --decrypt "${_encrypted_path}"
+      else
+        _exit_1 printf                      \
+"This item was encrypted with GPG, but the GPG command was not found.\\n"
+      fi
+      ;;
+    openssl)
+      openssl enc                           \
+        -d                                  \
+        -aes-256-cbc                        \
+        -in "${_encrypted_path}"            \
+        -out "${_unencrypted_path}"         \
+        -pass file:<(printf "%s\\n" "${_password}") 2> /dev/null ||
+          if [[ -f "${_unencrypted_path:?}" ]]
+          then
+            rm "${_unencrypted_path:?}"
+          fi
+      ;;
+    *)
+      _exit_1 printf "Unable to decrypt file.\\n"
+      ;;
+  esac
 
   if [[ ! -e "${_unencrypted_path}" ]]
   then
@@ -9125,7 +9152,14 @@ _encrypt_file() {
     _exit_1 printf "Encrypted and unencrypted paths required.\\n"
   fi
 
-  if [[   "${NB_ENCRYPTION_TOOL}" == "gpg"      ]]
+  if [[   "${NB_ENCRYPTION_TOOL}" == "age"      ]]
+  then
+    age                               \
+      --encrypt                       \
+      --output "${_encrypted_path}"   \
+      --passphrase                    \
+      "${_unencrypted_path}"
+  elif [[ "${NB_ENCRYPTION_TOOL}" == "gpg"      ]]
   then
     printf "%s\\n" "${_password}"     \
       | gpg                           \
