@@ -74,7 +74,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="6.7.7"
+_VERSION="6.7.8"
 
 # $_ME
 #
@@ -3140,8 +3140,8 @@ _git() {
 
     # Usage: _git_checkpoint_commit <notebook-path> <message>
     _git_checkpoint_commit() {
-     local _message="${2:-}"
-     local _notebook_path="${1:-}"
+      local _message="${2:-}"
+      local _notebook_path="${1:-}"
 
       if [[ -z "${_notebook_path:-}" ]] || [[ -z "${_message:-}" ]]
       then
@@ -5841,7 +5841,7 @@ _ls() {
       "${_ME} show ${_maybe_selector_scope}<id>"
       "${_ME} open ${_maybe_selector_scope}<id>"
       "${_ME} browse${_maybe_selector_scope_padded_left}"
-      "${_ME} todo${_maybe_selector_scope_padded_left}"
+      "${_ME} todos${_maybe_selector_scope_padded_left}"
       "${_ME} tasks${_maybe_selector_scope_padded_left}"
       "${_ME} search ${_maybe_selector_scope_padded_right}<query>"
       "${_notebook_command}"
@@ -8853,11 +8853,6 @@ _decrypt_file() {
   local _encrypted_path="${1:-}"
   local _password="${2:-}"
 
-  if [[ -z "${_password}"       ]]
-  then
-    _exit_1 printf "Password required.\\n"
-  fi
-
   if [[ -z "${_encrypted_path}" ]]
   then
     return 1
@@ -8871,36 +8866,53 @@ _decrypt_file() {
   local _file_command_response=
   _file_command_response="$(file "${_encrypted_path}" 2>/dev/null || :)"
 
-  if [[   "${_file_command_response}" =~ GPG|PGP ]]
-  then
-    if _command_exists "gpg"
-    then
-      printf "%s\\n" "${_password}"       \
-        | gpg                             \
-          --quiet                         \
-          --batch                         \
-          --passphrase-fd 0               \
-          --output "${_unencrypted_path}" \
-          --decrypt "${_encrypted_path}"
-    else
-      _exit_1 printf                      \
+  local _decryption_tool=
+  _decryption_tool="$(_get_decryption_tool "${_encrypted_path:-}")"
+
+  case "${_decryption_tool:-}" in
+    age)
+      if _command_exists "age"
+      then
+        age                                   \
+          --decrypt                           \
+          --output "${_unencrypted_path}"     \
+          "${_encrypted_path}"
+      else
+        _exit_1 printf                      \
+"This item was encrypted with \`age\`, but the \`age\` command was not found.\\n"
+      fi
+      ;;
+    gpg)
+      if _command_exists "gpg"
+      then
+        printf "%s\\n" "${_password}"       \
+          | gpg                             \
+            --quiet                         \
+            --batch                         \
+            --passphrase-fd 0               \
+            --output "${_unencrypted_path}" \
+            --decrypt "${_encrypted_path}"
+      else
+        _exit_1 printf                      \
 "This item was encrypted with GPG, but the GPG command was not found.\\n"
-    fi
-  elif [[ "${_file_command_response}" =~ openssl ]]
-  then
-    openssl enc                           \
-      -d                                  \
-      -aes-256-cbc                        \
-      -in "${_encrypted_path}"            \
-      -out "${_unencrypted_path}"         \
-      -pass file:<(printf "%s\\n" "${_password}") 2> /dev/null ||
-        if [[ -f "${_unencrypted_path:?}" ]]
-        then
-          rm "${_unencrypted_path:?}"
-        fi
-  else
-    _exit_1 printf "Unable to decrypt file.\\n"
-  fi
+      fi
+      ;;
+    openssl)
+      openssl enc                           \
+        -d                                  \
+        -aes-256-cbc                        \
+        -in "${_encrypted_path}"            \
+        -out "${_unencrypted_path}"         \
+        -pass file:<(printf "%s\\n" "${_password}") 2> /dev/null ||
+          if [[ -f "${_unencrypted_path:?}" ]]
+          then
+            rm "${_unencrypted_path:?}"
+          fi
+      ;;
+    *)
+      _exit_1 printf "Unable to decrypt file.\\n"
+      ;;
+  esac
 
   if [[ ! -e "${_unencrypted_path}" ]]
   then
@@ -9108,24 +9120,56 @@ _edit_file() {
 # _encrypt_file()
 #
 # Usage:
-#   _encrypt_file <unencrypted-path> <encrypted-path> <password>
+#   _encrypt_file <unencrypted-path> <encrypted-path>
+#                 [--password <password>] [--tool <tool>]
 _encrypt_file() {
   local _encrypted_path="${2:-}"
-  local _password="${3:-}"
+  local _password=
+  local _tool="${NB_ENCRYPTION_TOOL}"
   local _unencrypted_path="${1:-}"
 
-  if [[ -z "${_password}"         ]]
+  while ((${#}))
+  do
+    case "${1:-}" in
+      --password)
+        if _option_value_is_present "${2:-}"
+        then
+          _password="${2:-}"
+          shift
+        fi
+        ;;
+      --tool)
+        if _option_value_is_present "${2:-}"
+        then
+          _tool="${2:-}"
+          shift
+        fi
+        ;;
+    esac
+
+    shift
+  done
+
+  if [[ -z "${_password:-}"       ]]  &&
+     [[    "${_tool}" != "age"    ]]
   then
     _exit_1 printf "Password required.\\n"
   fi
 
-  if [[ -z "${_unencrypted_path}" ]] ||
+  if [[ -z "${_unencrypted_path}" ]]  ||
      [[ -z "${_encrypted_path}"   ]]
   then
     _exit_1 printf "Encrypted and unencrypted paths required.\\n"
   fi
 
-  if [[   "${NB_ENCRYPTION_TOOL}" == "gpg"      ]]
+  if [[   "${_tool}" == "age"         ]]
+  then
+    age                               \
+      --encrypt                       \
+      --output "${_encrypted_path}"   \
+      --passphrase                    \
+      "${_unencrypted_path}"
+  elif [[ "${_tool}" == "gpg"         ]]
   then
     printf "%s\\n" "${_password}"     \
       | gpg                           \
@@ -9136,7 +9180,7 @@ _encrypt_file() {
         --cipher-algo AES256          \
         --output "${_encrypted_path}" \
         "${_unencrypted_path}"
-  elif [[ "${NB_ENCRYPTION_TOOL}" == "openssl"  ]]
+  elif [[ "${_tool}" == "openssl"     ]]
   then
     openssl enc                       \
       -aes-256-cbc                    \
@@ -9152,6 +9196,41 @@ _encrypt_file() {
   then
     _exit_1 printf "Encryption error.\\n"
   fi
+}
+
+# _get_decryption_tool()
+#
+# Usage:
+#   _get_decryption_tool <path>
+#
+# Description:
+#   Print the name of the tool to use to decrypt the file at <path>.
+_get_decryption_tool() {
+  local _encrypted_path="${1:-}"
+
+  local _file_command_response=
+  _file_command_response="$(file "${_encrypted_path}" 2>/dev/null || :)"
+
+  local _decryption_tool=
+
+  if [[   "${_file_command_response}" =~ GPG|PGP  ]]
+  then
+    _decryption_tool="gpg"
+  elif [[ "${_file_command_response}" =~ openssl  ]]
+  then
+    _decryption_tool="openssl"
+  elif [[ "${_file_command_response}" =~ data     ]]
+  then
+    local         __first_line=
+    IFS=  read -r __first_line < "${_encrypted_path}"
+
+    if [[ "${__first_line:-}" =~ age-encryption   ]]
+    then
+      _decryption_tool="age"
+    fi
+  fi
+
+  printf "%s\\n" "${_decryption_tool:-}"
 }
 
 # _get_hash()
@@ -11383,7 +11462,8 @@ _add() {
   else
     if ((_encrypt))
     then
-      if [[ -z "${_password}"     ]]
+      if [[ -z "${_password}"                   ]] &&
+         [[ "${NB_ENCRYPTION_TOOL:-}" != "age"  ]]
       then
         # request password without displaying it
         printf "%s: " "$(_color_primary "Password")"
@@ -11392,7 +11472,7 @@ _add() {
         IFS='' read -r -e -d $'\n' -s _password </dev/tty
         printf "\\n" # print newline to stop `read`
 
-        if [[ -z "${_password:-}" ]]
+        if [[ -z "${_password:-}"               ]]
         then
           _exit_1 printf "Password required.\\n"
         fi
@@ -11412,7 +11492,7 @@ _add() {
         fi
       fi
 
-      if [[ -n "${_target_folder_relative_path:-}" ]]
+      if [[ -n "${_target_folder_relative_path:-}"  ]]
       then
         if ! mkdir -p "$(_temp directory)/${_target_folder_relative_path}" 2>/dev/null
         then
@@ -11524,7 +11604,10 @@ _add() {
       local _decrypted_path="${_target_path}"
       local _encrypted_path="${_notebook_path}/${_target_unique_relative_path}.enc"
 
-      _encrypt_file "${_decrypted_path}" "${_encrypted_path}" "${_password}"
+      _encrypt_file           \
+        "${_decrypted_path}"  \
+        "${_encrypted_path}"  \
+        --password "${_password}"
 
       if [[ -n "${_decrypted_path}" ]] && [[ -e "${_decrypted_path}" ]]
       then
@@ -12892,23 +12975,31 @@ _edit() {
 
     local _decrypted_path=
     local _encrypted_path=
+    local _encryption_tool=
     local _target_file="${_notebook_path}/${_relative_path}"
 
     if _file_is_encrypted "${_target_file}"
     then
       _encrypted_path="${_target_file}"
+      _encryption_tool="$(_get_decryption_tool "${_encrypted_path:-}")"
 
-      if [[ -z "${_password}"     ]]
+      if [[    "${_encryption_tool:-}" != "age"   ]] &&
+         [[ -z "${_password}"                     ]]
       then
         # request password without displaying it
         printf "%s: " "$(_color_primary "Password")"
 
-        local _password=
         IFS='' read -r -e -d $'\n' -s _password </dev/tty
+
         printf "\\n" # print newline to stop `read`
+
+        if [[ -z "${_password}"                   ]]
+        then
+          _exit_1 printf "Password required.\\n"
+        fi
       fi
 
-      _decrypted_path="$(_decrypt_file "${_target_file}" "${_password}")"
+      _decrypted_path="$(_decrypt_file "${_target_file}" "${_password:-}")"
 
       _target_file="${_decrypted_path}"
 
@@ -12978,13 +13069,20 @@ _edit() {
 
         mv "${_encrypted_path}" "${_temp_encrypted_path}"
 
-        _encrypt_file "${_decrypted_path}" "${_encrypted_path}" "${_password}"
+        _encrypt_file                   \
+          "${_decrypted_path}"          \
+          "${_encrypted_path}"          \
+          --password "${_password:-}"   \
+          --tool "${_encryption_tool:-}"
 
-        if [[ -e "${_encrypted_path}"   ]]
+        if [[ -e "${_temp_encrypted_path:-}"  ]]
         then
-          rm "${_temp_encrypted_path:?}"
-        else
-          mv "${_temp_encrypted_path}" "${_encrypted_path}"
+          if [[ -e "${_encrypted_path:?}"     ]]
+          then
+            rm "${_temp_encrypted_path:?}"
+          else
+            mv "${_temp_encrypted_path}" "${_encrypted_path}"
+          fi
         fi
       fi
 
@@ -13949,6 +14047,11 @@ _move() {
       --to*todo)
         _to_target_type="todo"
         ;;
+      --to)
+        _to_target_type="$(_option_get_value "${1:-}" "${2:-}")"
+
+        shift
+        ;;
       *)
         if [[ -z "${_source_selector:-}"    ]]
         then
@@ -14072,7 +14175,7 @@ _move() {
       bookmark) _target_file_type="bookmark.md"                 ;;
       note)     _target_file_type="${NB_DEFAULT_EXTENSION:-md}" ;;
       todo)     _target_file_type="todo.md"                     ;;
-      *)        _exit_1 _help "move"                            ;;
+      *)        _target_file_type="${_to_target_type#.}"        ;;
     esac
 
     if [[ -z "${_target_file_name:-}" ]]
@@ -16318,7 +16421,11 @@ ${_title/\[$' '\]/${_TPUT_SETAF_8}[ ]${_TPUT_SGR0}}"
     local _encrypted_path=
     _encrypted_path="${_target_path}"
 
-    if [[ -z "${_password}" ]]
+    local _decryption_tool=
+    _decryption_tool="$(_get_decryption_tool "${_encrypted_path:-}")"
+
+    if [[    "${_decryption_tool:-}" != "age" ]] &&
+       [[ -z "${_password}"                   ]]
     then
       # request password without displaying it
       printf "%s: " "$(_color_primary "Password")"
@@ -16326,11 +16433,11 @@ ${_title/\[$' '\]/${_TPUT_SETAF_8}[ ]${_TPUT_SGR0}}"
       local _password=
       IFS='' read -r -e -d $'\n' -s _password </dev/tty
       printf "\\n" # print newline to stop `read`
-    fi
 
-    if [[ -z "${_password}" ]]
-    then
-      _exit_1 printf "Password required.\\n"
+      if [[ -z "${_password}"                 ]]
+      then
+        _exit_1 printf "Password required.\\n"
+      fi
     fi
 
     local _decrypted_path=
@@ -19640,6 +19747,9 @@ _helpers() {
     *browser*)
       _web_browser                    "${_options[@]:-}"
       ;;
+    *decryption*)
+      _get_decryption_tool            "${_options[@]:-}"
+      ;;
     decrypt*)
       _decrypt_file                   "${_options[@]:-}"
       ;;
@@ -22475,7 +22585,7 @@ _todo() {
               _todo_get_task "${_selector_path:-}" "${_task_number:-}"
             )"
 
-            if [[ ! "${_updated_task:-}" =~ ^-\ \[x\] ]]
+            if [[ ! "${_updated_task:-}" =~ ^[[:space:]]*-\ \[x\] ]]
             then
               _warn cat "${_selector_path}"
               _exit_1 printf                      \
@@ -22514,7 +22624,7 @@ _todo() {
               _todo_get_task "${_selector_path:-}" "${_task_number:-}"
             )"
 
-            if [[ ! "${_updated_task:-}" =~ ^-\ \[\ \] ]]
+            if [[ ! "${_updated_task:-}" =~ ^[[:space:]]*-\ \[\ \] ]]
             then
               _exit_1 printf                      \
                 "Unable to undo: %s\\n"           \
@@ -22546,7 +22656,7 @@ _todo() {
       ;;
     list)
       {
-        _list "${_arguments[@]:-}" --type todo
+        _list "${_arguments[@]:-}" --type todo 2>/dev/null
       } | {
         case "${_filter:-}" in
           closed)
@@ -22572,12 +22682,14 @@ _todo() {
 
         if ! ((_counter))
         then
+          local _empty_message="No"
+
           if [[ -n "${_filter:-}"     ]]
           then
-            _exit_1 printf "No %s todos found.\\n" "${_filter:-}"
-          else
-            _exit_1 printf "No todos found.\\n"
+            _empty_message+=" ${_filter:-}"
           fi
+
+          _exit_1 printf "%s todos found.\\n" "${_empty_message}"
         fi
       }
       ;;
@@ -22624,7 +22736,9 @@ _todo() {
       fi
 
       local _task_closed_patterns=(-e "- \[x\]")
-      local _task_open_patterns=(-e "- \[ \]" -e "- \[\]")
+      local _task_open_patterns=(
+        -e "- \[ \]" -e "^- \[\]" -e "[[:space:]]- \[\]"
+      )
 
       local _todo_closed_patterns=(-e "# \[x\]")
       local _todo_open_patterns=(-e "# \[ \]" -e "# \[\]")

@@ -5,6 +5,24 @@ load test_helper
 
 # todos #######################################################################
 
+@test "'todos <notebook>:' with empty notebook exits with 1 and prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+  }
+
+  run "${_NB}" todos Example\ Notebook:
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 1                         ]]
+  [[    "${#lines[@]}"  -eq 1                         ]]
+
+  [[    "${lines[0]}"   =~  \!.*\ No\ todos\ found\.  ]]
+}
+
 @test "'todos <notebook>:<folder>/' exits with 0 and lists todos." {
   {
     "${_NB}" init

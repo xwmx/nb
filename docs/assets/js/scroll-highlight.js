@@ -4,8 +4,15 @@ $(function() {
       if ($(window).scrollTop() >= $(this).offset().top - 200) {
         var id = $(this).attr('id');
 
-        // TODO: jekyll renders the tasks id differently. review
-        if (id.indexOf("-tasks") !== -1) {
+        if (id.indexOf("-import--export") !== -1) {
+          id = '%EF%B8%8F-import--export';
+        }
+
+        if (id.indexOf("-set--settings")  !== -1) {
+          id = '%EF%B8%8F-set--settings';
+        }
+
+        if (id.indexOf("-tasks")          !== -1) {
           id = '%EF%B8%8F-tasks';
         }
 
