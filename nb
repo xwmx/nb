@@ -3140,8 +3140,8 @@ _git() {
 
     # Usage: _git_checkpoint_commit <notebook-path> <message>
     _git_checkpoint_commit() {
-     local _message="${2:-}"
-     local _notebook_path="${1:-}"
+      local _message="${2:-}"
+      local _notebook_path="${1:-}"
 
       if [[ -z "${_notebook_path:-}" ]] || [[ -z "${_message:-}" ]]
       then
