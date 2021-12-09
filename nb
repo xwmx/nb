@@ -8871,10 +8871,16 @@ _decrypt_file() {
 
   case "${_decryption_tool:-}" in
     age)
-      age                                   \
-        --decrypt                           \
-        --output "${_unencrypted_path}"     \
-        "${_encrypted_path}"
+      if _command_exists "age"
+      then
+        age                                   \
+          --decrypt                           \
+          --output "${_unencrypted_path}"     \
+          "${_encrypted_path}"
+      else
+        _exit_1 printf                      \
+"This item was encrypted with \`age\`, but the \`age\` command was not found.\\n"
+      fi
       ;;
     gpg)
       if _command_exists "gpg"
