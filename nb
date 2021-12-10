@@ -6396,44 +6396,43 @@ _ls() {
           _count "${_count_arguments[@]:-}" --skip-unmatched-selector || :
         )"
 
-        if ! ((_local_count))                         &&
+        if ! ((_local_count))                           &&
            {
-             [[ -n "${_selector_folder_path:-}"   ]]  ||
-             [[ ! "${_filter_patterns[*]:-}" =~ / ]]
+             [[ -n  "${_selector_folder_path:-}"    ]]  ||
+             [[ !   "${_filter_patterns[*]:-}" =~ / ]]
            }
         then
-          # Usage: _ls_only_container_arguments_present
-          _ls_only_container_arguments_present() {
-            [[ -z "${_selector:-}"                ]]  ||
-            {
-              [[ "${_selector:-}" =~ /$|:$        ]]  &&
-              [[ "${#_filter_patterns[@]}" -eq 1  ]]
-            }
+          {
+            _list "${_list_options[@]:-}"
+          } | {
+            if [[ -z "${_selector:-}"               ]]  ||
+               {
+                 [[ "${_selector:-}" =~ /$|:$       ]]  &&
+                 [[ "${#_filter_patterns[@]}" -eq 1 ]]
+               }
+            then # only container arguments
+              if ((NB_HEADER)) && [[ -n "${_maybe_type:-}"  ]]
+              then
+                _ls_print_header "${_header_flags[@]:-}"
+              fi
+
+              if ! ((${NB_FOLDER_HEADER:-0}))
+              then
+                _ls_print_folder_header "${_selector_folder_path:-}"
+              fi
+
+              cat
+
+              if ((NB_FOOTER)) && [[ -n "${_maybe_type:-}"  ]]
+              then
+                _ls_print_footer "${_selector_folder_path:-}"
+              fi
+            else
+              cat
+            fi
           }
-
-          if ((NB_HEADER))                            &&
-             [[ -n "${_maybe_type:-}"             ]]  &&
-             _ls_only_container_arguments_present
-          then
-            _ls_print_header "${_header_flags[@]:-}"
-          fi
-
-          if ! ((${NB_FOLDER_HEADER:-0}))             &&
-             _ls_only_container_arguments_present
-          then
-            _ls_print_folder_header "${_selector_folder_path:-}"
-          fi
-
-          _list "${_list_options[@]:-}"
-
-          if ((NB_FOOTER))                            &&
-             [[ -n "${_maybe_type:-}"             ]]  &&
-             _ls_only_container_arguments_present
-          then
-            _ls_print_footer "${_selector_folder_path:-}"
-          fi
         else
-          if [[ -n "${_list_error:-}"             ]]
+          if [[ -n "${_list_error:-}" ]]
           then
             printf "%s\\n" "${_list_error}"
 
