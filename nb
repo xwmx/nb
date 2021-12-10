@@ -10376,42 +10376,44 @@ HEREDOC
 
     var textarea = document.querySelector('textarea');
 
-    if (textarea !== null) {
-      var editDiv = document.createElement('div');
+    if (!textarea) return;
 
-      editDiv.setAttribute(
-        'style',
-        'height:' + textarea.offsetHeight + 'px;' +
-        'width:'  + textarea.offsetWidth  + 'px;'
-      )
-      editDiv.style.height      = textarea.offsetHeight + 'px';
-      editDiv.style.width       = textarea.offsetWidth  + 'px';
-      editDiv.classList.add(textarea.classList[0]);
+    var editDiv = document.createElement('div');
 
-      textarea.parentNode.insertBefore(editDiv, textarea);
+    editDiv.setAttribute(
+      'style',
+      'height:' + textarea.offsetHeight + 'px;' +
+      'width:'  + textarea.offsetWidth  + 'px;'
+    )
 
-      textarea.style.display    = 'none';
+    editDiv.style.height    = textarea.offsetHeight + 'px';
+    editDiv.style.width     = textarea.offsetWidth  + 'px';
+    editDiv.classList.add(textarea.classList[0]);
 
-      var editor = ace.edit(editDiv, {
-        autoScrollEditorIntoView: true
-      });
-      editor.setShowPrintMargin(false);
-      editor.renderer.setShowGutter(false);
-      editor.getSession().setValue(textarea.value);
+    textarea.parentNode.insertBefore(editDiv, textarea);
 
-      var mode = aceModeList.getModeForPath('example.${_source_extension:-md}').mode;
-      editor.getSession().setMode(mode);
+    textarea.style.display  = 'none';
 
-      if ('${_source_extension:-md}' === 'md') {
-        editor.getSession().setUseWrapMode(true);
-      }
+    var editor = ace.edit(editDiv, {
+      autoScrollEditorIntoView: true
+    });
 
-      editor.setTheme('ace/theme/${NB_ACE_THEME:-twilight}');
+    editor.setShowPrintMargin(false);
+    editor.renderer.setShowGutter(false);
+    editor.getSession().setValue(textarea.value);
 
-      textarea.form.addEventListener('submit', function() {
-        textarea.value = editor.getSession().getValue();
-      })
+    var mode = aceModeList.getModeForPath('example.${_source_extension:-md}').mode;
+    editor.getSession().setMode(mode);
+
+    if ('${_source_extension:-md}' === 'md') {
+      editor.getSession().setUseWrapMode(true);
     }
+
+    editor.setTheme('ace/theme/${NB_ACE_THEME:-twilight}');
+
+    textarea.form.addEventListener('submit', function() {
+      textarea.value = editor.getSession().getValue();
+    })
   }
 
   (function() {
