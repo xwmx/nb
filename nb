@@ -1653,7 +1653,7 @@ _get_content() {
           fi
         elif ((_in_front_matter))   &&  [[ "${__line}" =~ ^title\:  ]]
         then # front matter title
-          _title="$(printf "%s\\n" "${__line}" | sed 's/^title: //')"
+          _title="$(printf "%s\\n" "${__line}" | LC_ALL=C sed 's/^title: //')"
           break
         elif ! ((_in_front_matter)) && ! ((_in_code_block))
         then
@@ -1664,7 +1664,7 @@ _get_content() {
                [[ "${__line}" =~ ^[[:space:]]*\=+$  ]]
           then # underline for setext-style H1 on previous line
             _title="$(
-              printf "%s\\n" "${_maybe_title}" | sed 's/^[[:space:]]*//'
+              printf "%s\\n" "${_maybe_title}" | LC_ALL=C sed 's/^[[:space:]]*//'
             )"
             break
           elif [[ -n "${_maybe_title:-}"        ]]
@@ -1704,7 +1704,7 @@ _get_content() {
         if [[ "${__line}" =~  ^\\title\{        ]]
         then
           _title="$(
-            printf "%s\\n" "${__line}" | sed 's/\\title{\(.*\)}/\1/'
+            printf "%s\\n" "${__line}" | LC_ALL=C sed 's/\\title{\(.*\)}/\1/'
           )"
           break
         elif [[ -n "${__line:-}"      ]]
@@ -1738,7 +1738,7 @@ _get_content() {
             _title="${_title} "
           fi
 
-          _title+="$(printf "%s\\n" "${__line}" | sed 's/^#+TITLE: //')"
+          _title+="$(printf "%s\\n" "${__line}" | LC_ALL=C sed 's/^#+TITLE: //')"
         elif [[ -n "${__line:-}"      ]]
         then
 
@@ -3421,7 +3421,7 @@ HEREDOC
     local _remote_branches=
     _remote_branches=($(
       git -C "${_notebook_path}" ls-remote --heads "${_remote_url}" 2>/dev/null \
-        | sed "s/.*\///g"
+        | LC_ALL=C sed "s/.*\///g"
     )) && _branch_query_succeeded=1
 
     if ! GIT_TERMINAL_PROMPT=0 git -C "${_notebook_path}" fetch origin "${_git_branch}" &>/dev/null
@@ -4039,7 +4039,7 @@ HEREDOC
     fi | {
       if ((_shell))
       then
-        sed -e "s/^  nb /  /" -e "/^  nb$/d"
+        LC_ALL=C sed -e "s/^  nb /  /" -e "/^  nb$/d"
       else
         cat
       fi
@@ -4050,12 +4050,12 @@ HEREDOC
       else
         local _replacement_pattern="${_TPUT_SGR0}${_TPUT_SETAF_8}\1${_TPUT_SGR0}"
 
-        sed -E                                                                        \
+        LC_ALL=C sed -E                                                               \
 -e "/^\ \ |\[\[wiki\-style\ linking\]\]/s/(\[|\]|\(|\)|\|)/${_replacement_pattern}/g" \
 -e "s/#tag/${_TPUT_SGR0}${_TPUT_SETAF_8}#${_TPUT_SGR0}tag/g"
       fi
     } | {
-      sed -e "s/\`/${_TPUT_SGR0}${_TPUT_SETAF_8}\`${_TPUT_SGR0}/g"
+      LC_ALL=C sed -e "s/\`/${_TPUT_SGR0}${_TPUT_SETAF_8}\`${_TPUT_SGR0}/g"
     } | {
       if ((_use_pager))
       then
@@ -10511,21 +10511,21 @@ HEREDOC
           fi
         done
       } | {
-        sed -E -e "/^nb-img-strip-nb/ s/<img[^>]*>//g"
+        LC_ALL=C sed -E -e "/^nb-img-strip-nb/ s/<img[^>]*>//g"
       } | {
-        sed -E -e "s/^nb-img-strip-nb//g"
+        LC_ALL=C sed -E -e "s/^nb-img-strip-nb//g"
       }
     else
       cat
     fi
   } | {
-    sed -e "s/<a\ /<a\ rel=\"noopener\ noreferrer\"\ /g"
+    LC_ALL=C sed -e "s/<a\ /<a\ rel=\"noopener\ noreferrer\"\ /g"
   } | {
     # mark up checkboxes
     local _checkbox_pattern_open="<span class=\"dim\">[<\/span><span class=\"identifier\">"
     local _checkbox_pattern_close="<\/span><span class=\"dim\">\]<\/span>"
 
-    sed -E                                                                        \
+    LC_ALL=C sed -E                                                               \
       -e "s/\[x\]/${_checkbox_pattern_open}x${_checkbox_pattern_close}/g"         \
       -e "s/\[ \]/${_checkbox_pattern_open}${_NBSP}${_checkbox_pattern_close}/g"  \
       -e "s/\[\]/${_checkbox_pattern_open}${_NBSP}${_checkbox_pattern_close}/g"
@@ -10669,9 +10669,10 @@ _resolve_links() {
       if [[ "${_input_type:-}" == "html" ]] &&
          grep -q "<\/body>" "${_input_temp_file_path}"
       then
-        sed -E -e "/<body>/,/<\/body>/ s/(^|[>|\ ])\#([A-Za-z0-9_\-]+)/\1${_pattern}/g"
+        LC_ALL=C sed -E \
+          -e "/<body>/,/<\/body>/ s/(^|[>|\ ])\#([A-Za-z0-9_\-]+)/\1${_pattern}/g"
       else
-        sed -E -e "s/(^|[>|\ ])\#([A-Za-z0-9_\-]+)/\1${_pattern}/g"
+        LC_ALL=C sed -E -e "s/(^|[>|\ ])\#([A-Za-z0-9_\-]+)/\1${_pattern}/g"
       fi
     fi
   } | {
@@ -10727,7 +10728,7 @@ _resolve_links() {
 -e "/^nb-linkable-nb/ s/${_labeled_link_match_pattern}/${_labeled_replacement_pattern}/g" \
 -e "/^nb-linkable-nb/ s/${_notebookless_pattern}/${_notebookless_replacement_pattern}/g"
       } | {
-        sed -E -e "s/^nb-linkable-nb//g"
+        LC_ALL=C sed -E -e "s/^nb-linkable-nb//g"
       }
     else
       local __match=
@@ -10841,7 +10842,7 @@ _resolve_links() {
         fi
       done
 
-      sed "${_sed_arguments[@]:-}"
+      LC_ALL=C sed "${_sed_arguments[@]:-}"
     fi
   } | {
     # rewrite outbound links to use an exit page
@@ -10933,7 +10934,7 @@ _resolve_links() {
         fi
       done
 
-      sed "${_sed_arguments[@]:-}"
+      LC_ALL=C sed "${_sed_arguments[@]:-}"
     fi
   }
 }
@@ -16736,13 +16737,13 @@ Can't show archives. Export archive and expand to edit.\\n"
           _resolve_links "${_notebook_path}" --type org
         } | {
           # avoid pandoc bug with brackets in Org link descriptions
-          sed -E                                      \
+          LC_ALL=C sed -E                             \
               -e "s/\]\[\[\[/\]\[nb-placeholder-nb/g" \
               -e "s/\]\]\]\]/nb-placeholder-nb\]\]/g"
         } | {
           pandoc --from org --to html
         } | {
-          sed -E                                      \
+          LC_ALL=C sed -E                             \
               -e "s/>nb-placeholder-nb/>\[\[/g"       \
               -e "s/nb-placeholder-nb</\]\]</g"
         } | {
@@ -17552,7 +17553,7 @@ HEREDOC
       )) || IFS=' ' read -ra _query_arguments <<< "${_query}"
 
       _encoded_query="$(
-        sed                     \
+        LC_ALL=C sed            \
           -e 's/&/\&amp;/g'     \
           -e 's/</\&lt;/g'      \
           -e 's/>/\&gt;/g'      \
@@ -18489,7 +18490,7 @@ HEREDOC
           --type org
       } | {
         # avoid pandoc bug with brackets in Org link descriptions
-        sed -E                                      \
+        LC_ALL=C sed -E                             \
             -e "s/\]\[\[\[/\]\[nb-placeholder-nb/g" \
             -e "s/\]\]\]\]/nb-placeholder-nb\]\]/g"
       } | {
@@ -18500,12 +18501,12 @@ HEREDOC
           cat
         fi
       } | {
-        sed -E                                      \
+        LC_ALL=C sed -E                             \
             -e "s/>nb-placeholder-nb/>\[\[/g"       \
             -e "s/nb-placeholder-nb</\]\]</g"
       } | {
         # undo pandoc prepending "file://" to protocol-relative URLs
-        sed -E -e "s/file:\/\/\/\//\/\//g"
+        LC_ALL=C sed -E -e "s/file:\/\/\/\//\/\//g"
       } | {
         printf "%s\\n" "$(
           _browse_render_header           \
@@ -18544,7 +18545,7 @@ HEREDOC
                   printf "<br>"
                 fi
 
-                sed -E -e "s/</\&lt;/g" -e "s/\//\&#47;/g" -e "s/.*/&<br>/g"
+                LC_ALL=C sed -E -e "s/</\&lt;/g" -e "s/\//\&#47;/g" -e "s/.*/&<br>/g"
               fi
             }
             ;;
@@ -18656,7 +18657,7 @@ HEREDOC
         )
       fi
 
-      sed -E "${_sed_arguments[@]:-}"
+      LC_ALL=C sed -E "${_sed_arguments[@]:-}"
     } | {
       _browse_respond_with 200 "${_respond_with_arguments[@]:-}"
     }
@@ -20059,7 +20060,7 @@ _plugins() {
         then
           _url="$(
             printf "%s\\n" "${_url}"  \
-              | sed                   \
+              | LC_ALL=C sed          \
                 -e 's/\/blob//g'      \
                 -e 's/https:\/\/github.com/https:\/\/raw.githubusercontent.com/g'
           )"
@@ -20265,13 +20266,13 @@ _remote() {
           git -C "${_notebook_path}" ls-remote  \
             --heads "${_new_remote_url:-}"      \
             2>/dev/null                         \
-            | sed "s/.*\///g"
+            | LC_ALL=C sed "s/.*\///g"
         elif ((_remote_exists))
         then
           git -C "${_notebook_path}" ls-remote  \
             --heads                             \
             2>/dev/null                         \
-            | sed "s/.*\///g"
+            | LC_ALL=C sed "s/.*\///g"
         else
           _exit_1 printf "No remote configured.\\n"
         fi
@@ -20317,7 +20318,7 @@ _remote() {
         git -C "${_notebook_path}" ls-remote        \
           --heads "${_current_remote_url:-}"        \
            2>/dev/null                              \
-          | sed "s/.*\///g" || :
+          | LC_ALL=C sed "s/.*\///g" || :
       ))
 
       local _primary_remote_branch=
@@ -20407,7 +20408,7 @@ _remote() {
           git -C "${_notebook_path}" ls-remote        \
             --heads "${_current_remote_url:-}"        \
              2>/dev/null                              \
-            | sed "s/.*\///g" || :
+            | LC_ALL=C sed "s/.*\///g" || :
         ))
 
         local _primary_remote_branch=
@@ -20487,7 +20488,7 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
         _remote_branches=($(
           git -C "${_notebook_path}" ls-remote  \
             --heads "${_current_remote_url:-}"  \
-            | sed "s/.*\///g" || :
+            | LC_ALL=C sed "s/.*\///g" || :
         ))
 
         if [[ -z "${_remote_branches[*]:-}"     ]]
@@ -20635,7 +20636,7 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
         git -C "${_notebook_path}" ls-remote        \
           --heads "${_current_remote_url:-}"        \
            2>/dev/null                              \
-          | sed "s/.*\///g" || :
+          | LC_ALL=C sed "s/.*\///g" || :
       ))
 
       if [[ -z "${_remote_branches[*]:-}"       ]]
@@ -20751,7 +20752,7 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
       _remote_branches=($(
         git -C "${_notebook_path}" ls-remote    \
           --heads "${_new_remote_url:-}"        \
-          | sed "s/.*\///g" || :
+          | LC_ALL=C sed "s/.*\///g" || :
       ))
 
       local _selected_push_option=
@@ -21352,7 +21353,7 @@ HEREDOC
     if [[ "${_value:-}"       =~ ^~       ]]
     then
       # shellcheck disable=SC2016
-      _value="$(printf "%s\\n" "${_value}" | sed "s|~|${HOME}|g")"
+      _value="$(printf "%s\\n" "${_value}" | LC_ALL=C sed "s|~|${HOME}|g")"
     fi
 
     local _attribution=
@@ -21923,13 +21924,13 @@ HEREDOC
       # Strip leading 'n', 'nb', or 'notes'.
       local _normalized_input=
       _normalized_input="$(
-        printf "%s\\n" "${__input}" \
-          | sed -e 's/^n$//'        \
-          | sed -e 's/^n //'        \
-          | sed -e 's/^nb$//'       \
-          | sed -e 's/^nb //'       \
-          | sed -e 's/^notes$//'    \
-          | sed -e 's/^notes //'
+        printf "%s\\n" "${__input}"       \
+          | LC_ALL=C sed -e 's/^n$//'     \
+          | LC_ALL=C sed -e 's/^n //'     \
+          | LC_ALL=C sed -e 's/^nb$//'    \
+          | LC_ALL=C sed -e 's/^nb //'    \
+          | LC_ALL=C sed -e 's/^notes$//' \
+          | LC_ALL=C sed -e 's/^notes //'
       )"
 
       if [[ "${_normalized_input}" =~ ^help   ]] ||
@@ -21959,7 +21960,7 @@ HEREDOC
       then
         _normalized_input="$(
           printf "%s\\n" "${_normalized_input}" \
-            | sed -e "s/^${_command_name} //"
+            | LC_ALL=C sed -e "s/^${_command_name} //"
         )"
 
         eval "\"${_MY_PATH}\" edit --editor \"${_command_name}\" ${_normalized_input}"
@@ -22394,7 +22395,8 @@ _todo() {
           if [[ "${_counter:-}" ==  "${_task_number:-}"     ]]
           then
             printf "%s\\n" "${__line}"                      \
-              | sed -e "s/- \[\]/${_replacement_box}/"      \
+              | LC_ALL=C sed                                \
+                    -e "s/- \[\]/${_replacement_box}/"      \
                     -e "s/- \[ \]/${_replacement_box}/"     \
                     -e "s/- \[x\]/${_replacement_box}/"
           else
@@ -22662,7 +22664,7 @@ _todo() {
                 "$(_todos tasks "${_selector:-}" "${_task_number}")"
             else
               _todos tasks "${_selector:-}" "${_task_number}" \
-                | sed "3s/^/Done: /"
+                | LC_ALL=C sed "3s/^/Done: /"
 
               _git checkpoint "${_notebook_path}" \
                 "[nb] Task Done: $(_show "${_selector:-}" --relative-path) ${_task_number}"
@@ -22700,7 +22702,7 @@ _todo() {
                 "$(_todos tasks "${_selector:-}" "${_task_number}")"
             else
               _todos tasks "${_selector:-}" "${_task_number}" \
-                | sed "3s/^/Undone: /"
+                | LC_ALL=C sed "3s/^/Undone: /"
 
               _git checkpoint "${_notebook_path}" \
                 "[nb] Task Undone: $(_show "${_selector:-}" --relative-path) ${_task_number}"
@@ -22729,10 +22731,10 @@ _todo() {
       } | {
         case "${_filter:-}" in
           closed)
-            sed -E -e "/${NB_INDICATOR_TODO:-} .*\[\ \].*/d"
+            LC_ALL=C sed -E -e "/${NB_INDICATOR_TODO:-} .*\[\ \].*/d"
             ;;
           open)
-            sed -E -e "/${NB_INDICATOR_TODO_DONE:-} .*\[.*x.*\].*/d"
+            LC_ALL=C sed -E -e "/${NB_INDICATOR_TODO_DONE:-} .*\[.*x.*\].*/d"
             ;;
           *)
             cat
