@@ -2435,7 +2435,9 @@ _pandoc() {
 
   [[ -n "${1:-}" ]] && _pandoc_arguments=("${@}")
 
-  if _command_exists "iconv"
+  if _command_exists "iconv"          &&  {
+       ((_read_from_standard_input))  ||  _file_is_text "${_path:-}"
+     }
   then
     {
       if ((_read_from_standard_input))
