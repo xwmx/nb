@@ -2400,29 +2400,40 @@ _pandoc() {
 
   shift
 
-  _pandoc_arguments=("${@}")
+  [[ -n "${1:-}" ]] && _pandoc_arguments=("${@}")
 
   if _command_exists "iconv"
   then
     {
       if ((_read_from_standard_input))
       then
-        iconv -t utf-8
+        iconv -c -t utf-8
       else
-        iconv -t utf-8 "${_path}"
+        iconv -c -t utf-8 "${_path}"
       fi
     } | {
-      pandoc "${_pandoc_arguments[@]:-}"
+      if [[ -n "${_pandoc_arguments[*]:-}" ]]
+      then
+        pandoc "${_pandoc_arguments[@]:-}"
+      else
+        pandoc
+      fi
     } | {
       iconv -f utf-8
     }
   else
-    if ((_read_from_standard_input))
+    if ! ((_read_from_standard_input))
     then
-      pandoc "${_pandoc_arguments[@]:-}" 2>/dev/null
-    else
-      pandoc "${_path}" "${_pandoc_arguments[@]:-}" 2>/dev/null
+      _pandoc_arguments=("${_path}" "${_pandoc_arguments[@]:-}")
     fi
+
+    if [[ -n "${_pandoc_arguments[*]:-}" ]]
+    then
+      pandoc "${_pandoc_arguments[@]:-}"
+    else
+      pandoc
+    fi
+
   fi
 }
 
