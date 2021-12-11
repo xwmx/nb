@@ -18412,7 +18412,10 @@ HEREDOC
 
     local _header_options=("${_pagination_options[@]:-}")
 
-    _header_options+=("--raw-url" "${_raw_url}")
+    if [[ -n "${_raw_url:-}" ]]
+    then
+      _header_options+=("--raw-url" "${_raw_url}")
+    fi
 
     local _id_selector=
     _id_selector="$(_get_id_selector "${_source_path:-}" --notebook)"
