@@ -2,11 +2,6 @@
 
 load test_helper
 
-export NB_SERVER_PORT=6789
-
-# non-breaking space
-export _S=" "
-
 # todos #######################################################################
 
 @test "'browse --container' displays marked-up checkboxes in todo titles." {

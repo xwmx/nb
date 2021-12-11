@@ -8,68 +8,106 @@
 # https://github.com/sstephenson/bats
 ###############################################################################
 
-# Usage: _setup [<bats-base-path>]
+# _setup()
+#
+# Usage:
+#   _setup [<bats-base-path>]
+#
+# Description:
+#   Set up the test environment.
 _setup() {
-  export NB_TEST_BASE_PATH="${1:-"${BATS_TEST_DIRNAME}"}"
-
-# $IFS
   IFS=$'\n\t'
 
-  # Allow clobber. More info:
-  # https://stackoverflow.com/a/6762399
+  # Allow clobber. More info: https://stackoverflow.com/a/6762399
   set +o noclobber
 
   # Allow globbing.
   set +o noglob
 
+  #############################################################################
+
+  # $NB_TEST_BASE_PATH
+  #
+  # The base directory for the test suite.
+  export NB_TEST_BASE_PATH="${1:-"${BATS_TEST_DIRNAME}"}"
+
+  # $_ME
+  #
+  # The name of the program.
   export _ME="nb"
 
-  # Set terminal width.
-  #
-  # The number of lines with wrapped output depends on terminal width.
-  # export _COLUMNS_ORIGINAL
-  # _COLUMNS_ORIGINAL="$(tput cols)"
-
-  # if [[ "${_COLUMNS_ORIGINAL}" -gt 80 ]]
-  # then
-  #   stty cols 80
-  # fi
-
-  # `$_NB`
+  # $_NB
   #
   # The location of the `nb` script being tested.
   export _NB="${NB_TEST_BASE_PATH}/../nb"
 
-  # `$_BOOKMARK`
+  # $_TMP_DIR
+  #
+  # The temp directory for the test run.
+  export _TMP_DIR=
+  _TMP_DIR="$(mktemp -d /tmp/nb_test.XXXXXX)" || exit 1
+
+  #############################################################################
+
+  # $EDITOR
+  #
+  # Set to mock_editor when unassigned.
+  if [[ -z "${EDITOR:-}" ]] || [[ ! "${EDITOR:-}" =~ mock_editor ]]
+  then
+    export EDITOR="${NB_TEST_BASE_PATH}/fixtures/bin/mock_editor"
+  fi
+
+  # $NBRC_PATH
+  #
+  # The location of the .nbrc configuration file.
+  export NBRC_PATH="${_TMP_DIR}/.nbrc"
+
+  # $NB_AUTO_SYNC
+  #
+  # Turn off auto-sync.
+  export NB_AUTO_SYNC=0
+
+  # $NB_COLOR_PRIMARY
+  #
+  # Set to a value compatible with CI terminals.
+  export NB_COLOR_PRIMARY=3
+
+  # $NB_DIR
+  #
+  # The location of the directory that contains the notebooks.
+  export NB_DIR="${_TMP_DIR}/notebooks"
+
+  # $NB_PINNED_PATTERN
+  #
+  # Pattern for tag-based pinning.
+  export NB_PINNED_PATTERN="#pinned"
+
+  # $NB_SERVER_PORT
+  #
+  # The port used for the `browse` server.
+  export NB_SERVER_PORT=6789
+
+  #############################################################################
+
+  # $_BOOKMARK
   #
   # The location of the `bookmark` script being tested.
   export _BOOKMARK="${NB_TEST_BASE_PATH}/../bin/bookmark"
 
-  # `$_NOTES`
+  # $_BOOKMARK_URL
   #
-  # The location of the `notes` script being tested.
-  export _NOTES="${NB_TEST_BASE_PATH}/../bin/notes"
-
-  # `$_NB_PATH`
-  #
-  # Used by `bookmark` and `notes` for testing.
-  export _NB_PATH="${_NB}"
-
-  export _TMP_DIR
-  _TMP_DIR="$(mktemp -d /tmp/nb_test.XXXXXX)" || exit 1
-
-  export NB_DIR="${_TMP_DIR}/notebooks"
-
-  export NBRC_PATH="${_TMP_DIR}/.nbrc"
-  export NB_COLOR_PRIMARY=3
-  export NB_AUTO_SYNC=0
-
-  export _GIT_REMOTE_PATH="${_TMP_DIR}/remote"
-  export _GIT_REMOTE_URL="file://${_GIT_REMOTE_PATH}"
-
+  # A URL for an HTML file.
   export _BOOKMARK_URL="file://${NB_TEST_BASE_PATH}/fixtures/example.com.html"
-  export _OG_BOOKMARK_URL="file://${NB_TEST_BASE_PATH}/fixtures/example.com-og.html"
-  export _TITLES_BOOKMARK_URL="file://${NB_TEST_BASE_PATH}/fixtures/example.com-titles.html"
+
+  # $_BOOKMARK_OG_URL
+  #
+  # A URL for an HTML file with open graph tags.
+  export _BOOKMARK_OG_URL="file://${NB_TEST_BASE_PATH}/fixtures/example.com-og.html"
+
+  # $_BOOKMARK_TITLES_URL
+  #
+  # A URL for an HTML file with multiple title tags with unicode characters.
+  export _BOOKMARK_TITLES_URL="file://${NB_TEST_BASE_PATH}/fixtures/example.com-titles.html"
 
   # `$_ERROR_PREFIX`
   #
@@ -77,15 +115,28 @@ _setup() {
   export _ERROR_PREFIX=
   _ERROR_PREFIX="$(tput setaf 1)!$(tput sgr0)"
 
-  if [[ -z "${EDITOR:-}" ]] || [[ ! "${EDITOR:-}" =~ mock_editor ]]
-  then
-    export EDITOR="${NB_TEST_BASE_PATH}/fixtures/bin/mock_editor"
-  fi
-
-  # $_NEWLINE
+  # $_NOTES
   #
-  # Assign newline with ANSI-C quoting for string building.
-  export _NEWLINE=$'\n'
+  # The location of the `notes` script being tested.
+  export _NOTES="${NB_TEST_BASE_PATH}/../bin/notes"
+
+  # $_NB_PATH
+  #
+  # Used by `bookmark` and `notes` for testing.
+  export _NB_PATH="${_NB}"
+
+  # $_GIT_REMOTE_PATH
+  #
+  # Path to use for a git remote repository within the temp directory.
+  export _GIT_REMOTE_PATH="${_TMP_DIR}/remote"
+
+  # $_GIT_REMOTE_URL
+  #
+  # URL to use for a git remote repository within the temp directory.
+  export _GIT_REMOTE_URL="file://${_GIT_REMOTE_PATH}"
+
+  #############################################################################
+  # verify that NB_DIR and NBRC_PATH are in the temp directory
 
   if [[ ! "${NB_DIR}"         =~ ^/tmp/nb_test ]] ||
      [[ ! "${NBRC_PATH}"      =~ ^/tmp/nb_test ]]
@@ -93,6 +144,12 @@ _setup() {
     exit 1
   fi
 }
+
+###############################################################################
+# setup() and teardown()
+#
+# https://bats-core.readthedocs.io/en/stable/writing-tests.html
+###############################################################################
 
 setup() {
   _setup
@@ -109,16 +166,41 @@ teardown() {
   then
     rm -rf "${_TMP_DIR}"
   fi
-
-  # if [[ "${_COLUMNS_ORIGINAL}" -gt 80 ]]
-  # then
-  #   stty cols "${_COLUMNS_ORIGINAL}"
-  # fi
 }
 
 ###############################################################################
 # Helpers
 ###############################################################################
+
+# $_AMP
+#
+# Ampersand configurable as escaped &amp; or &
+export _AMP="&"
+
+# $_BT
+#
+# Backtick with ANSI-C quoting for string building.
+_BT=$'`'
+
+# $_IMOGI
+#
+# A character representing an image.
+export _IMOGI="🌄"
+
+# $_NBSP
+#
+# Non-breaking space. See also: $_S
+export _NBSP=" "
+
+# $_NEWLINE
+#
+# Newline with ANSI-C quoting for string building.
+export _NEWLINE=$'\n'
+
+# $_S
+#
+# Non-breaking space. See also: $_NBSP
+export _S=" "
 
 # _compare()
 #
@@ -131,6 +213,7 @@ teardown() {
 _compare() {
   local _expected="${1:-}"
   local _actual="${2:-}"
+
   printf "expected:\\n%s\\n" "${_expected}"
   printf "actual:\\n%s\\n" "${_actual}"
 }
@@ -148,6 +231,7 @@ _compare() {
 #   _contains "${_query}" "${_list[@]}"
 _contains() {
   local _query="${1:-}"
+
   shift
 
   if [[ -z "${_query}"  ]] ||

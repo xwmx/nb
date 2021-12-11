@@ -2,11 +2,6 @@
 
 load test_helper
 
-export NB_SERVER_PORT=6789
-
-# non-breaking space
-export _S=" "
-
 # terminal formatting #########################################################
 
 @test "'browse --notebooks' breaks lines and omits separator at column limit." {

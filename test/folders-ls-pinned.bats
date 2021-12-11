@@ -2,8 +2,6 @@
 
 load test_helper
 
-export NB_PINNED_PATTERN="#pinned"
-
 # search-based pinning ########################################################
 
 @test "'NB_PINNED_PATTERN ls [<folder>/]' (slash) prints items tagged with #pinned in the current folder." {

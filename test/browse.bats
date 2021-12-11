@@ -2,11 +2,6 @@
 
 load test_helper
 
-export NB_SERVER_PORT=6789
-
-# non-breaking space
-export _S=" "
-
 # configuration ###############################################################
 
 @test "'browse' sets the server hostname to localhost by default." {

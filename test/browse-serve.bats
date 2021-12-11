@@ -2,11 +2,6 @@
 
 load test_helper
 
-export NB_SERVER_PORT=6789
-
-# non-breaking space
-export _S=" "
-
 # browse --serve ##############################################################
 
 @test "'browse --serve' displays message with selector when notebook selector is specified before subcommand." {

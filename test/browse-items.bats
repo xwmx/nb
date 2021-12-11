@@ -2,10 +2,6 @@
 
 load test_helper
 
-export _IMOGI="🌄"
-export _S=" "
-export NB_SERVER_PORT=6789
-
 # response handling ###########################################################
 
 @test "'browse' responds to request with no parameters and successfully serves item." {

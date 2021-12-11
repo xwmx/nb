@@ -2,11 +2,6 @@
 
 load test_helper
 
-export NB_SERVER_PORT=6789
-
-# non-breaking space
-export _S=" "
-
 # HTML <title> ################################################################
 
 @test "'browse add <folder>/' with local notebook sets HTML <title> to CLI command." {
