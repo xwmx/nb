@@ -2371,6 +2371,61 @@ _list_files() {
   }
 }
 
+# _pandoc()
+#
+# Usage:
+#   _pandoc [--standard-input | <path>] [<pandoc-options>]
+#
+# Description:
+#   Interact with pandoc, using iconv when available.
+_pandoc() {
+  if ! _command_exists "pandoc"
+  then
+    _warn printf "%spandoc%s not found.\\n" "${_BT}" "${_BT}"
+    return 1
+  fi
+
+  local _pandoc_arguments=()
+  local _path=
+  local _read_from_standard_input=0
+
+  case "${1:-}" in
+    --standard-input)
+      _read_from_standard_input=1
+      ;;
+    *)
+      _path="${1:-}"
+      ;;
+  esac
+
+  shift
+
+  _pandoc_arguments=("${@}")
+
+  if _command_exists "iconv"
+  then
+    {
+      if ((_read_from_standard_input))
+      then
+        iconv -t utf-8
+      else
+        iconv -t utf-8 "${_path}"
+      fi
+    } | {
+      pandoc "${_pandoc_arguments[@]:-}"
+    } | {
+      iconv -f utf-8
+    }
+  else
+    if ((_read_from_standard_input))
+    then
+      pandoc "${_pandoc_arguments[@]:-}" 2>/dev/null
+    else
+      pandoc "${_path}" "${_pandoc_arguments[@]:-}" 2>/dev/null
+    fi
+  fi
+}
+
 # _pager()
 #
 # Usage:
@@ -3657,7 +3712,7 @@ _help() {
       "${_REPO_RAW_URL}/README.md"          \
         | if _command_exists "pandoc" && _web_browser --check
           then
-            pandoc --from markdown --to html | _web_browser
+            _pandoc --standard-input --from markdown --to html | _web_browser
             return 0
           else
             _highlight_syntax_if_available  \
@@ -10295,14 +10350,15 @@ HEREDOC
       {
         if _piped_input
         then
-          pandoc                              \
+          _pandoc                             \
+            --standard-input                  \
             "${_pandoc_arguments[@]:-}"       \
             2>/dev/null
         fi
 
         if [[ -n "${_prepared_file_path:-}"   ]]
         then
-          pandoc                              \
+          _pandoc                             \
             "${_prepared_file_path:-}"        \
             "${_pandoc_arguments[@]:-}"       \
             2>/dev/null
@@ -10311,7 +10367,8 @@ HEREDOC
         if [[ -n "${_input_string}"           ]]
         then
           printf "%s\\n" "${_input_string}"   \
-            | pandoc                          \
+            | _pandoc                         \
+                --standard-input              \
                 "${_pandoc_arguments[@]:-}"   \
                 2>/dev/null
         fi
@@ -11780,10 +11837,13 @@ _bookmark() {
       return 0
     elif _command_exists "curl" || _command_exists "wget"
     then
-      _download_from "${_target_url}" \
+      _download_from "${_target_url}"               \
         | if _command_exists "pandoc"
           then
-            pandoc --from html-native_divs-native_spans --to markdown \
+            _pandoc                                 \
+              --standard-input                      \
+              --from html-native_divs-native_spans  \
+              --to markdown                         \
               | _highlight_syntax_if_available "md"
           else
             cat
@@ -12320,7 +12380,8 @@ _bookmark() {
           } | {
             if _command_exists "pandoc"
             then
-              pandoc                                  \
+              _pandoc                                 \
+                --standard-input                      \
                 --from html-native_divs-native_spans  \
                 --to markdown-grid_tables --wrap=none \
                 2>/dev/null || cat
@@ -13888,7 +13949,8 @@ _import() {
       if ((_convert))
       then
         if ! _download_from "${_url}" \
-            | pandoc                  \
+            | _pandoc                 \
+              --standard-input        \
               --from html             \
               --to markdown           \
               -o "${_notebook_path}/${_target_relative_path}"
@@ -19831,6 +19893,9 @@ _helpers() {
       ;;
     *padding)
       _print_padding                  "${_options[@]:-}"
+      ;;
+    pandoc)
+      _pandoc                         "${_options[@]:-}"
       ;;
     *piped*|*input*)
       _piped_input                    "${_options[@]:-}"
