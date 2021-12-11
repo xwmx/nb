@@ -2371,6 +2371,39 @@ _list_files() {
   }
 }
 
+# _pager()
+#
+# Usage:
+#   _pager
+#
+# Description:
+#   Display standard input in the preferred pager, `less`, `bat`, or `cat`.
+_pager() {
+  local _less_options=()
+  _less_options=(-R --CLEAR-SCREEN --prompt="$(_less_prompt)")
+
+  if [[ -n  "${PAGER:-}"          ]]
+  then
+    local _pager_command=()
+    IFS=" " read -r -a _pager_command <<< "${PAGER:-}"
+
+    if [[   "${PAGER:-}" =~ less  ]]
+    then
+      "${_pager_command[@]:-less}" "${_less_options[@]:-}"
+    else
+      "${_pager_command[@]:-cat}"
+    fi
+  elif _command_exists "less"
+  then
+    less "${_less_options[@]:-}"
+  elif _command_exists "bat"
+  then
+    bat --style numbers,grid
+  else
+    cat
+  fi
+}
+
 # _pandoc()
 #
 # Usage:
@@ -2412,7 +2445,7 @@ _pandoc() {
         iconv -c -t utf-8 "${_path}"
       fi
     } | {
-      if [[ -n "${_pandoc_arguments[*]:-}" ]]
+      if [[ -n "${_pandoc_arguments[*]:-}"  ]]
       then
         pandoc "${_pandoc_arguments[@]:-}"
       else
@@ -2427,46 +2460,12 @@ _pandoc() {
       _pandoc_arguments=("${_path}" "${_pandoc_arguments[@]:-}")
     fi
 
-    if [[ -n "${_pandoc_arguments[*]:-}" ]]
+    if [[ -n "${_pandoc_arguments[*]:-}"    ]]
     then
       pandoc "${_pandoc_arguments[@]:-}"
     else
       pandoc
     fi
-
-  fi
-}
-
-# _pager()
-#
-# Usage:
-#   _pager
-#
-# Description:
-#   Display standard input in the preferred pager, `less`, `bat`, or `cat`.
-_pager() {
-  local _less_options=()
-  _less_options=(-R --CLEAR-SCREEN --prompt="$(_less_prompt)")
-
-  if [[ -n  "${PAGER:-}"          ]]
-  then
-    local _pager_command=()
-    IFS=" " read -r -a _pager_command <<< "${PAGER:-}"
-
-    if [[   "${PAGER:-}" =~ less  ]]
-    then
-      "${_pager_command[@]:-less}" "${_less_options[@]:-}"
-    else
-      "${_pager_command[@]:-cat}"
-    fi
-  elif _command_exists "less"
-  then
-    less "${_less_options[@]:-}"
-  elif _command_exists "bat"
-  then
-    bat --style numbers,grid
-  else
-    cat
   fi
 }
 
