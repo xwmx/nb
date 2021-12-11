@@ -16746,11 +16746,11 @@ Can't show archives. Export archive and expand to edit.\\n"
         fi
 
         cat "${_target_path}"                                       \
-          | sed -E                                                  \
+          | LC_ALL=C sed -E                                         \
               -e "s/^([[:space:]]*-) /\1nb-ph-nb/g"                 \
               -e "s/^([[:space:]]*\*) /\1nb-ph-nb/g"                \
-          | fold -s -w "${_COLUMNS}"                                \
-          | sed -E                                                  \
+          | LC_ALL=C fold -s -w "${_COLUMNS}"                       \
+          | LC_ALL=C sed -E                                         \
               -e "s/^([[:space:]]*-)nb-ph-nb/\1 /g"                 \
               -e "s/^([[:space:]]*\*)nb-ph-nb/\1 /g"                \
           | _highlight_syntax_if_available "${_target_extension:-}" \
