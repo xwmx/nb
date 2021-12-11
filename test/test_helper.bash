@@ -160,11 +160,11 @@ setup() {
 }
 
 teardown() {
-  if [[ -n "${_TMP_DIR:-}" ]] &&
-     [[ -e "${_TMP_DIR}"   ]] &&
-     [[ "${_TMP_DIR}" =~ ^/tmp/nb_test ]]
+  if [[ -n  "${_TMP_DIR:?}"                   ]] &&
+     [[ -e  "${_TMP_DIR:?}"                   ]] &&
+     [[     "${_TMP_DIR:?}" =~ ^/tmp/nb_test  ]]
   then
-    rm -rf "${_TMP_DIR}"
+    rm -rf  "${_TMP_DIR:?}"
   fi
 }
 
@@ -174,7 +174,7 @@ teardown() {
 
 # $_AMP
 #
-# Ampersand configurable as escaped &amp; or &
+# Ampersand configurable as escaped &amp; or &.
 export _AMP="&"
 
 # $_BT
@@ -214,8 +214,8 @@ _compare() {
   local _expected="${1:-}"
   local _actual="${2:-}"
 
-  printf "expected:\\n%s\\n" "${_expected}"
-  printf "actual:\\n%s\\n" "${_actual}"
+  printf "expected:\\n%s\\n"  "${_expected}"
+  printf "actual:\\n%s\\n"    "${_actual}"
 }
 
 # _contains()
@@ -264,9 +264,13 @@ _get_hash() {
 
     local _path="${1:-}"
 
-    [[ -n "${_command[*]:-}" ]] && [[ -n "${_path}" ]] || return 1
+    if [[ -z "${_command[*]:-}"   ]] ||
+       [[ -z "${_path}"           ]]
+    then
+      return 1
+    fi
 
-    if [[ -d "${_path}" ]]
+    if [[ -d "${_path}"           ]]
     then
       tar -P -cf - "${_path}"     \
         | "${_command[@]}"        \
@@ -299,26 +303,27 @@ _get_hash() {
 #
 # Usage:
 #   _color_primary <string> [--underline]
-export _TPUT_COLOR_PRIMARY
-_TPUT_COLOR_PRIMARY="$(tput setaf 3)"
-export _TPUT_SGR0=    && _TPUT_SGR0="$(tput sgr0)"
-export _TPUT_SMUL=    && _TPUT_SMUL="$(tput smul)"
-export _TPUT_SETAF_8= && _TPUT_SETAF_8="$(tput setaf 8)"
+export _TPUT_COLOR_PRIMARY=   && _TPUT_COLOR_PRIMARY="$(tput setaf 3)"
+export _TPUT_SETAF_8=         && _TPUT_SETAF_8="$(tput setaf 8)"
+export _TPUT_SGR0=            && _TPUT_SGR0="$(tput sgr0)"
+export _TPUT_SMUL=            && _TPUT_SMUL="$(tput smul)"
 _color_primary() {
   local _input="${1:-}"
-  if [[ -z "${_input}" ]]
+
+  if [[ -z "${_input:-}"          ]]
   then
-    _die printf "Usage: _color_primary <string>"
+    printf "Usage: _color_primary <string>" 1>&2
+    exit 1
   fi
 
   if [[ "${2:-}" == "--underline" ]]
   then
-    printf \
-      "${_TPUT_SGR0}${_TPUT_SMUL}${_TPUT_COLOR_PRIMARY}%s${_TPUT_SGR0}\\n" \
+    printf                                                                  \
+      "${_TPUT_SGR0}${_TPUT_SMUL}${_TPUT_COLOR_PRIMARY}%s${_TPUT_SGR0}\\n"  \
       "${_input}"
   else
-    printf \
-      "${_TPUT_SGR0}${_TPUT_COLOR_PRIMARY}%s${_TPUT_SGR0}\\n" \
+    printf                                                                  \
+      "${_TPUT_SGR0}${_TPUT_COLOR_PRIMARY}%s${_TPUT_SGR0}\\n"               \
       "${_input}"
   fi
 }
@@ -351,8 +356,8 @@ _setup_remote_repo() {
   local _branch_name="${1:-"master"}"
   local _pwd="${PWD}"
 
-  if [[ -n "${_GIT_REMOTE_PATH}" ]] &&
-     [[ "${_GIT_REMOTE_PATH}" =~ ^/tmp/nb_test ]]
+  if [[ -n "${_GIT_REMOTE_PATH}"                  ]] &&
+     [[    "${_GIT_REMOTE_PATH}" =~ ^/tmp/nb_test ]]
   then
     mkdir "${_GIT_REMOTE_PATH}.setup"     &&
       cd "${_GIT_REMOTE_PATH}.setup"      &&
