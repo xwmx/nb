@@ -115,16 +115,6 @@ _setup() {
   export _ERROR_PREFIX=
   _ERROR_PREFIX="$(tput setaf 1)!$(tput sgr0)"
 
-  # $_NOTES
-  #
-  # The location of the `notes` script being tested.
-  export _NOTES="${NB_TEST_BASE_PATH}/../bin/notes"
-
-  # $_NB_PATH
-  #
-  # Used by `bookmark` and `notes` for testing.
-  export _NB_PATH="${_NB}"
-
   # $_GIT_REMOTE_PATH
   #
   # Path to use for a git remote repository within the temp directory.
@@ -134,6 +124,16 @@ _setup() {
   #
   # URL to use for a git remote repository within the temp directory.
   export _GIT_REMOTE_URL="file://${_GIT_REMOTE_PATH}"
+
+  # $_NB_PATH
+  #
+  # Used by `bookmark` and `notes` for testing.
+  export _NB_PATH="${_NB}"
+
+  # $_NOTES
+  #
+  # The location of the `notes` script being tested.
+  export _NOTES="${NB_TEST_BASE_PATH}/../bin/notes"
 
   #############################################################################
   # verify that NB_DIR and NBRC_PATH are in the temp directory
