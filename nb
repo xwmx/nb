@@ -8939,9 +8939,9 @@ _decrypt_file() {
     age)
       if _command_exists "age"
       then
-        age                                   \
-          --decrypt                           \
-          --output "${_unencrypted_path}"     \
+        age                                 \
+          --decrypt                         \
+          --output "${_unencrypted_path}"   \
           "${_encrypted_path}"
       else
         _exit_1 printf                      \
@@ -9016,7 +9016,7 @@ _download_from() {
   local _url="${1:-}"
 
   if [[ -z "${_url}" ]] ||
-     [[ ! "${_url}" =~ ^https\:|^http\:|^file\:|^ftp\:|^sftp\: ]]
+     [[ !  "${_url}" =~ ^https\:|^http\:|^file\:|^ftp\:|^sftp\: ]]
   then
     return 1
   fi
@@ -9273,7 +9273,7 @@ _encrypt_file() {
       "\$NB_ENCRYPTION_TOOL must be set to 'gpg' or 'openssl'.\\n"
   fi
 
-  if [[ ! -e "${_encrypted_path}" ]]
+  if [[ ! -e "${_encrypted_path}"     ]]
   then
     _exit_1 printf "Encryption error.\\n"
   fi
