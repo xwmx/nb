@@ -10340,7 +10340,7 @@ HEREDOC
     _use_pandoc=0
   fi
 
-  if [[ -n "${_input_file_path:-}"        ]]
+  if [[ -n "${_input_file_path:-}"  ]]
   then
     _prepared_file_path="$(
       _render_prepare_file "${_input_file_path:-}" "${_use_pandoc:-0}"
