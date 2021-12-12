@@ -8953,8 +8953,8 @@ _decrypt_file() {
       then
         printf "%s\\n" "${_password}"       \
           | gpg                             \
-            --quiet                         \
             --batch                         \
+            --quiet                         \
             --passphrase-fd 0               \
             --output "${_unencrypted_path}" \
             --decrypt "${_encrypted_path}"
@@ -9253,19 +9253,19 @@ _encrypt_file() {
   then
     printf "%s\\n" "${_password}"     \
       | gpg                           \
-        --quiet                       \
         --batch                       \
+        --cipher-algo AES256          \
+        --quiet                       \
+        --output "${_encrypted_path}" \
         --passphrase-fd 0             \
         --symmetric                   \
-        --cipher-algo AES256          \
-        --output "${_encrypted_path}" \
         "${_unencrypted_path}"
   elif [[ "${_tool}" == "openssl"     ]]
   then
     openssl enc                       \
       -aes-256-cbc                    \
-      -md   sha256                    \
       -in   "${_unencrypted_path}"    \
+      -md   sha256                    \
       -out  "${_encrypted_path}"      \
       -pass file:<(printf "%s\\n" "${_password}") 2>/dev/null
   else
