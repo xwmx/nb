@@ -23040,8 +23040,6 @@ _todo() {
 
             if ! ((_printed_task_counter))
             then
-            #   printf "\\n"
-            # else
               printf "0 %stasks.\\n" "${_maybe_padded_empty_qualifier:-}"
             fi
           }
