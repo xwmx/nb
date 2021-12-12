@@ -17153,8 +17153,8 @@ _browse() {
     local _fields=()
     IFS='&' read -r -a _fields <<< "${_message_body}"
 
-    local _prepared_encoded_content=
     local _add_options=()
+    local _prepared_encoded_content=
 
     local __field=
     for   __field in "${_fields[@]:-}"
@@ -18083,8 +18083,8 @@ HEREDOC
     _last_saved_at="$(_show "${_source_path}" --updated)"
     _last_saved_at="${_last_saved_at% -[0-9][0-9][0-9][0-9]}"
 
-    local _text_area_columns="${_columns:-}"
     local _rows=30
+    local _text_area_columns="${_columns:-}"
     local _url_params=
 
     if _contains "--terminal" "${_pagination_options[@]:-}"
