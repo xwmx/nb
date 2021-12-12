@@ -74,7 +74,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="6.7.8"
+_VERSION="6.7.9"
 
 # $_ME
 #
@@ -1653,7 +1653,7 @@ _get_content() {
           fi
         elif ((_in_front_matter))   &&  [[ "${__line}" =~ ^title\:  ]]
         then # front matter title
-          _title="$(printf "%s\\n" "${__line}" | sed 's/^title: //')"
+          _title="$(printf "%s\\n" "${__line}" | LC_ALL=C sed 's/^title: //')"
           break
         elif ! ((_in_front_matter)) && ! ((_in_code_block))
         then
@@ -1664,7 +1664,7 @@ _get_content() {
                [[ "${__line}" =~ ^[[:space:]]*\=+$  ]]
           then # underline for setext-style H1 on previous line
             _title="$(
-              printf "%s\\n" "${_maybe_title}" | sed 's/^[[:space:]]*//'
+              printf "%s\\n" "${_maybe_title}" | LC_ALL=C sed 's/^[[:space:]]*//'
             )"
             break
           elif [[ -n "${_maybe_title:-}"        ]]
@@ -1704,7 +1704,7 @@ _get_content() {
         if [[ "${__line}" =~  ^\\title\{        ]]
         then
           _title="$(
-            printf "%s\\n" "${__line}" | sed 's/\\title{\(.*\)}/\1/'
+            printf "%s\\n" "${__line}" | LC_ALL=C sed 's/\\title{\(.*\)}/\1/'
           )"
           break
         elif [[ -n "${__line:-}"      ]]
@@ -1738,7 +1738,7 @@ _get_content() {
             _title="${_title} "
           fi
 
-          _title+="$(printf "%s\\n" "${__line}" | sed 's/^#+TITLE: //')"
+          _title+="$(printf "%s\\n" "${__line}" | LC_ALL=C sed 's/^#+TITLE: //')"
         elif [[ -n "${__line:-}"      ]]
         then
 
@@ -2401,6 +2401,73 @@ _pager() {
     bat --style numbers,grid
   else
     cat
+  fi
+}
+
+# _pandoc()
+#
+# Usage:
+#   _pandoc [--standard-input | <path>] [<pandoc-options>]
+#
+# Description:
+#   Interact with pandoc, using iconv when available.
+_pandoc() {
+  if ! _command_exists "pandoc"
+  then
+    _warn printf "%spandoc%s not found.\\n" "${_BT}" "${_BT}"
+    return 1
+  fi
+
+  local _pandoc_arguments=()
+  local _path=
+  local _read_from_standard_input=0
+
+  case "${1:-}" in
+    --standard-input)
+      _read_from_standard_input=1
+      ;;
+    *)
+      _path="${1:-}"
+      ;;
+  esac
+
+  shift
+
+  [[ -n "${1:-}" ]] && _pandoc_arguments=("${@}")
+
+  if _command_exists "iconv"          &&  {
+       ((_read_from_standard_input))  ||  _file_is_text "${_path:-}"
+     }
+  then
+    {
+      if ((_read_from_standard_input))
+      then
+        iconv -c -t utf-8
+      else
+        iconv -c -t utf-8 "${_path}"
+      fi
+    } | {
+      if [[ -n "${_pandoc_arguments[*]:-}"  ]]
+      then
+        pandoc "${_pandoc_arguments[@]:-}"
+      else
+        pandoc
+      fi
+    } | {
+      iconv -f utf-8
+    }
+  else
+    if ! ((_read_from_standard_input))
+    then
+      _pandoc_arguments=("${_path}" "${_pandoc_arguments[@]:-}")
+    fi
+
+    if [[ -n "${_pandoc_arguments[*]:-}"    ]]
+    then
+      pandoc "${_pandoc_arguments[@]:-}"
+    else
+      pandoc
+    fi
   fi
 }
 
@@ -3366,7 +3433,7 @@ HEREDOC
     local _remote_branches=
     _remote_branches=($(
       git -C "${_notebook_path}" ls-remote --heads "${_remote_url}" 2>/dev/null \
-        | sed "s/.*\///g"
+        | LC_ALL=C sed "s/.*\///g"
     )) && _branch_query_succeeded=1
 
     if ! GIT_TERMINAL_PROMPT=0 git -C "${_notebook_path}" fetch origin "${_git_branch}" &>/dev/null
@@ -3657,7 +3724,7 @@ _help() {
       "${_REPO_RAW_URL}/README.md"          \
         | if _command_exists "pandoc" && _web_browser --check
           then
-            pandoc --from markdown --to html | _web_browser
+            _pandoc --standard-input --from markdown --to html | _web_browser
             return 0
           else
             _highlight_syntax_if_available  \
@@ -3984,7 +4051,7 @@ HEREDOC
     fi | {
       if ((_shell))
       then
-        sed -e "s/^  nb /  /" -e "/^  nb$/d"
+        LC_ALL=C sed -e "s/^  nb /  /" -e "/^  nb$/d"
       else
         cat
       fi
@@ -3995,12 +4062,12 @@ HEREDOC
       else
         local _replacement_pattern="${_TPUT_SGR0}${_TPUT_SETAF_8}\1${_TPUT_SGR0}"
 
-        sed -E                                                                        \
+        LC_ALL=C sed -E                                                               \
 -e "/^\ \ |\[\[wiki\-style\ linking\]\]/s/(\[|\]|\(|\)|\|)/${_replacement_pattern}/g" \
 -e "s/#tag/${_TPUT_SGR0}${_TPUT_SETAF_8}#${_TPUT_SGR0}tag/g"
       fi
     } | {
-      sed -e "s/\`/${_TPUT_SGR0}${_TPUT_SETAF_8}\`${_TPUT_SGR0}/g"
+      LC_ALL=C sed -e "s/\`/${_TPUT_SGR0}${_TPUT_SETAF_8}\`${_TPUT_SGR0}/g"
     } | {
       if ((_use_pager))
       then
@@ -6396,44 +6463,43 @@ _ls() {
           _count "${_count_arguments[@]:-}" --skip-unmatched-selector || :
         )"
 
-        if ! ((_local_count))                         &&
+        if ! ((_local_count))                           &&
            {
-             [[ -n "${_selector_folder_path:-}"   ]]  ||
-             [[ ! "${_filter_patterns[*]:-}" =~ / ]]
+             [[ -n  "${_selector_folder_path:-}"    ]]  ||
+             [[ !   "${_filter_patterns[*]:-}" =~ / ]]
            }
         then
-          # Usage: _ls_only_container_arguments_present
-          _ls_only_container_arguments_present() {
-            [[ -z "${_selector:-}"                ]]  ||
-            {
-              [[ "${_selector:-}" =~ /$|:$        ]]  &&
-              [[ "${#_filter_patterns[@]}" -eq 1  ]]
-            }
+          {
+            _list "${_list_options[@]:-}"
+          } | {
+            if [[ -z "${_selector:-}"               ]]  ||
+               {
+                 [[ "${_selector:-}" =~ /$|:$       ]]  &&
+                 [[ "${#_filter_patterns[@]}" -eq 1 ]]
+               }
+            then # only container arguments
+              if ((NB_HEADER)) && [[ -n "${_maybe_type:-}"  ]]
+              then
+                _ls_print_header "${_header_flags[@]:-}"
+              fi
+
+              if ! ((${NB_FOLDER_HEADER:-0}))
+              then
+                _ls_print_folder_header "${_selector_folder_path:-}"
+              fi
+
+              cat
+
+              if ((NB_FOOTER)) && [[ -n "${_maybe_type:-}"  ]]
+              then
+                _ls_print_footer "${_selector_folder_path:-}"
+              fi
+            else
+              cat
+            fi
           }
-
-          if ((NB_HEADER))                            &&
-             [[ -n "${_maybe_type:-}"             ]]  &&
-             _ls_only_container_arguments_present
-          then
-            _ls_print_header "${_header_flags[@]:-}"
-          fi
-
-          if ! ((${NB_FOLDER_HEADER:-0}))             &&
-             _ls_only_container_arguments_present
-          then
-            _ls_print_folder_header "${_selector_folder_path:-}"
-          fi
-
-          _list "${_list_options[@]:-}"
-
-          if ((NB_FOOTER))                            &&
-             [[ -n "${_maybe_type:-}"             ]]  &&
-             _ls_only_container_arguments_present
-          then
-            _ls_print_footer "${_selector_folder_path:-}"
-          fi
         else
-          if [[ -n "${_list_error:-}"             ]]
+          if [[ -n "${_list_error:-}" ]]
           then
             printf "%s\\n" "${_list_error}"
 
@@ -8873,9 +8939,9 @@ _decrypt_file() {
     age)
       if _command_exists "age"
       then
-        age                                   \
-          --decrypt                           \
-          --output "${_unencrypted_path}"     \
+        age                                 \
+          --decrypt                         \
+          --output "${_unencrypted_path}"   \
           "${_encrypted_path}"
       else
         _exit_1 printf                      \
@@ -8887,8 +8953,8 @@ _decrypt_file() {
       then
         printf "%s\\n" "${_password}"       \
           | gpg                             \
-            --quiet                         \
             --batch                         \
+            --quiet                         \
             --passphrase-fd 0               \
             --output "${_unencrypted_path}" \
             --decrypt "${_encrypted_path}"
@@ -8901,13 +8967,27 @@ _decrypt_file() {
       openssl enc                           \
         -d                                  \
         -aes-256-cbc                        \
-        -in "${_encrypted_path}"            \
-        -out "${_unencrypted_path}"         \
-        -pass file:<(printf "%s\\n" "${_password}") 2> /dev/null ||
+        -in   "${_encrypted_path}"          \
+        -md   sha256                        \
+        -out  "${_unencrypted_path}"        \
+        -pass file:<(printf "%s\\n" "${_password}") 2> /dev/null      || {
           if [[ -f "${_unencrypted_path:?}" ]]
           then
             rm "${_unencrypted_path:?}"
           fi
+
+          openssl enc                       \
+            -d                              \
+            -aes-256-cbc                    \
+            -in   "${_encrypted_path}"      \
+            -md   md5                       \
+            -out  "${_unencrypted_path}"    \
+            -pass file:<(printf "%s\\n" "${_password}") 2> /dev/null  ||
+              if [[ -f "${_unencrypted_path:?}" ]]
+              then
+                rm "${_unencrypted_path:?}"
+              fi
+        }
       ;;
     *)
       _exit_1 printf "Unable to decrypt file.\\n"
@@ -8936,7 +9016,7 @@ _download_from() {
   local _url="${1:-}"
 
   if [[ -z "${_url}" ]] ||
-     [[ ! "${_url}" =~ ^https\:|^http\:|^file\:|^ftp\:|^sftp\: ]]
+     [[ !  "${_url}" =~ ^https\:|^http\:|^file\:|^ftp\:|^sftp\: ]]
   then
     return 1
   fi
@@ -9173,26 +9253,27 @@ _encrypt_file() {
   then
     printf "%s\\n" "${_password}"     \
       | gpg                           \
-        --quiet                       \
         --batch                       \
+        --cipher-algo AES256          \
+        --quiet                       \
+        --output "${_encrypted_path}" \
         --passphrase-fd 0             \
         --symmetric                   \
-        --cipher-algo AES256          \
-        --output "${_encrypted_path}" \
         "${_unencrypted_path}"
   elif [[ "${_tool}" == "openssl"     ]]
   then
     openssl enc                       \
       -aes-256-cbc                    \
-      -in "${_unencrypted_path}"      \
-      -out "${_encrypted_path}"       \
-      -pass file:<(printf "%s\\n" "${_password}") 2> /dev/null
+      -in   "${_unencrypted_path}"    \
+      -md   sha256                    \
+      -out  "${_encrypted_path}"      \
+      -pass file:<(printf "%s\\n" "${_password}") 2>/dev/null
   else
     _exit_1 printf                    \
       "\$NB_ENCRYPTION_TOOL must be set to 'gpg' or 'openssl'.\\n"
   fi
 
-  if [[ ! -e "${_encrypted_path}" ]]
+  if [[ ! -e "${_encrypted_path}"     ]]
   then
     _exit_1 printf "Encryption error.\\n"
   fi
@@ -9298,7 +9379,7 @@ _get_http_status() {
       -w "%{http_code}\\n"
     )
 
-    [[ -n "${NB_USER_AGENT:-}" ]]     &&
+    [[ -n "${NB_USER_AGENT:-}" ]] &&
       _curl_options+=(--user-agent "${NB_USER_AGENT}")
 
     curl "${_curl_options[@]}" "${_url}" || return 0
@@ -9308,7 +9389,7 @@ _get_http_status() {
       --server-response
     )
 
-    [[ -n "${NB_USER_AGENT:-}" ]]     &&
+    [[ -n "${NB_USER_AGENT:-}" ]] &&
       _wget_options+=(--user-agent="${NB_USER_AGENT}")
 
     wget "${_wget_options[@]}" "${_url}" 2>&1 \
@@ -9435,7 +9516,7 @@ _get_unique_path() {
   local _file_extension="${_basename#*.}"
 
   if [[ -n "${_file_extension:-}"               ]] &&
-     [[ "${_basename}" =~ \.                    ]] &&
+     [[ "${_basename}"  =~ \.                   ]] &&
      [[ "${_file_name}" != "${_file_extension}" ]]
   then
     _file_extension=".${_file_extension}"
@@ -10274,7 +10355,7 @@ HEREDOC
     _use_pandoc=0
   fi
 
-  if [[ -n "${_input_file_path:-}"        ]]
+  if [[ -n "${_input_file_path:-}"  ]]
   then
     _prepared_file_path="$(
       _render_prepare_file "${_input_file_path:-}" "${_use_pandoc:-0}"
@@ -10296,14 +10377,15 @@ HEREDOC
       {
         if _piped_input
         then
-          pandoc                              \
+          _pandoc                             \
+            --standard-input                  \
             "${_pandoc_arguments[@]:-}"       \
             2>/dev/null
         fi
 
         if [[ -n "${_prepared_file_path:-}"   ]]
         then
-          pandoc                              \
+          _pandoc                             \
             "${_prepared_file_path:-}"        \
             "${_pandoc_arguments[@]:-}"       \
             2>/dev/null
@@ -10312,7 +10394,8 @@ HEREDOC
         if [[ -n "${_input_string}"           ]]
         then
           printf "%s\\n" "${_input_string}"   \
-            | pandoc                          \
+            | _pandoc                         \
+                --standard-input              \
                 "${_pandoc_arguments[@]:-}"   \
                 2>/dev/null
         fi
@@ -10376,42 +10459,44 @@ HEREDOC
 
     var textarea = document.querySelector('textarea');
 
-    if (textarea !== null) {
-      var editDiv = document.createElement('div');
+    if (!textarea) return;
 
-      editDiv.setAttribute(
-        'style',
-        'height:' + textarea.offsetHeight + 'px;' +
-        'width:'  + textarea.offsetWidth  + 'px;'
-      )
-      editDiv.style.height      = textarea.offsetHeight + 'px';
-      editDiv.style.width       = textarea.offsetWidth  + 'px';
-      editDiv.classList.add(textarea.classList[0]);
+    var editDiv = document.createElement('div');
 
-      textarea.parentNode.insertBefore(editDiv, textarea);
+    editDiv.setAttribute(
+      'style',
+      'height:' + textarea.offsetHeight + 'px;' +
+      'width:'  + textarea.offsetWidth  + 'px;'
+    )
 
-      textarea.style.display    = 'none';
+    editDiv.style.height    = textarea.offsetHeight + 'px';
+    editDiv.style.width     = textarea.offsetWidth  + 'px';
+    editDiv.classList.add(textarea.classList[0]);
 
-      var editor = ace.edit(editDiv, {
-        autoScrollEditorIntoView: true
-      });
-      editor.setShowPrintMargin(false);
-      editor.renderer.setShowGutter(false);
-      editor.getSession().setValue(textarea.value);
+    textarea.parentNode.insertBefore(editDiv, textarea);
 
-      var mode = aceModeList.getModeForPath('example.${_source_extension:-md}').mode;
-      editor.getSession().setMode(mode);
+    textarea.style.display  = 'none';
 
-      if ('${_source_extension:-md}' === 'md') {
-        editor.getSession().setUseWrapMode(true);
-      }
+    var editor = ace.edit(editDiv, {
+      autoScrollEditorIntoView: true
+    });
 
-      editor.setTheme('ace/theme/${NB_ACE_THEME:-twilight}');
+    editor.setShowPrintMargin(false);
+    editor.renderer.setShowGutter(false);
+    editor.getSession().setValue(textarea.value);
 
-      textarea.form.addEventListener('submit', function() {
-        textarea.value = editor.getSession().getValue();
-      })
+    var mode = aceModeList.getModeForPath('example.${_source_extension:-md}').mode;
+    editor.getSession().setMode(mode);
+
+    if ('${_source_extension:-md}' === 'md') {
+      editor.getSession().setUseWrapMode(true);
     }
+
+    editor.setTheme('ace/theme/${NB_ACE_THEME:-twilight}');
+
+    textarea.form.addEventListener('submit', function() {
+      textarea.value = editor.getSession().getValue();
+    })
   }
 
   (function() {
@@ -10453,21 +10538,21 @@ HEREDOC
           fi
         done
       } | {
-        sed -E -e "/^nb-img-strip-nb/ s/<img[^>]*>//g"
+        LC_ALL=C sed -E -e "/^nb-img-strip-nb/ s/<img[^>]*>//g"
       } | {
-        sed -E -e "s/^nb-img-strip-nb//g"
+        LC_ALL=C sed -E -e "s/^nb-img-strip-nb//g"
       }
     else
       cat
     fi
   } | {
-    sed -e "s/<a\ /<a\ rel=\"noopener\ noreferrer\"\ /g"
+    LC_ALL=C sed -e "s/<a\ /<a\ rel=\"noopener\ noreferrer\"\ /g"
   } | {
     # mark up checkboxes
     local _checkbox_pattern_open="<span class=\"dim\">[<\/span><span class=\"identifier\">"
     local _checkbox_pattern_close="<\/span><span class=\"dim\">\]<\/span>"
 
-    sed -E                                                                        \
+    LC_ALL=C sed -E                                                               \
       -e "s/\[x\]/${_checkbox_pattern_open}x${_checkbox_pattern_close}/g"         \
       -e "s/\[ \]/${_checkbox_pattern_open}${_NBSP}${_checkbox_pattern_close}/g"  \
       -e "s/\[\]/${_checkbox_pattern_open}${_NBSP}${_checkbox_pattern_close}/g"
@@ -10611,9 +10696,10 @@ _resolve_links() {
       if [[ "${_input_type:-}" == "html" ]] &&
          grep -q "<\/body>" "${_input_temp_file_path}"
       then
-        sed -E -e "/<body>/,/<\/body>/ s/(^|[>|\ ])\#([A-Za-z0-9_\-]+)/\1${_pattern}/g"
+        LC_ALL=C sed -E \
+          -e "/<body>/,/<\/body>/ s/(^|[>|\ ])\#([A-Za-z0-9_\-]+)/\1${_pattern}/g"
       else
-        sed -E -e "s/(^|[>|\ ])\#([A-Za-z0-9_\-]+)/\1${_pattern}/g"
+        LC_ALL=C sed -E -e "s/(^|[>|\ ])\#([A-Za-z0-9_\-]+)/\1${_pattern}/g"
       fi
     fi
   } | {
@@ -10669,7 +10755,7 @@ _resolve_links() {
 -e "/^nb-linkable-nb/ s/${_labeled_link_match_pattern}/${_labeled_replacement_pattern}/g" \
 -e "/^nb-linkable-nb/ s/${_notebookless_pattern}/${_notebookless_replacement_pattern}/g"
       } | {
-        sed -E -e "s/^nb-linkable-nb//g"
+        LC_ALL=C sed -E -e "s/^nb-linkable-nb//g"
       }
     else
       local __match=
@@ -10783,7 +10869,7 @@ _resolve_links() {
         fi
       done
 
-      sed "${_sed_arguments[@]:-}"
+      LC_ALL=C sed "${_sed_arguments[@]:-}"
     fi
   } | {
     # rewrite outbound links to use an exit page
@@ -10875,7 +10961,7 @@ _resolve_links() {
         fi
       done
 
-      sed "${_sed_arguments[@]:-}"
+      LC_ALL=C sed "${_sed_arguments[@]:-}"
     fi
   }
 }
@@ -11779,10 +11865,13 @@ _bookmark() {
       return 0
     elif _command_exists "curl" || _command_exists "wget"
     then
-      _download_from "${_target_url}" \
+      _download_from "${_target_url}"               \
         | if _command_exists "pandoc"
           then
-            pandoc --from html-native_divs-native_spans --to markdown \
+            _pandoc                                 \
+              --standard-input                      \
+              --from html-native_divs-native_spans  \
+              --to markdown                         \
               | _highlight_syntax_if_available "md"
           else
             cat
@@ -12319,7 +12408,8 @@ _bookmark() {
           } | {
             if _command_exists "pandoc"
             then
-              pandoc                                  \
+              _pandoc                                 \
+                --standard-input                      \
                 --from html-native_divs-native_spans  \
                 --to markdown-grid_tables --wrap=none \
                 2>/dev/null || cat
@@ -13887,7 +13977,8 @@ _import() {
       if ((_convert))
       then
         if ! _download_from "${_url}" \
-            | pandoc                  \
+            | _pandoc                 \
+              --standard-input        \
               --from html             \
               --to markdown           \
               -o "${_notebook_path}/${_target_relative_path}"
@@ -16673,15 +16764,15 @@ Can't show archives. Export archive and expand to edit.\\n"
           _resolve_links "${_notebook_path}" --type org
         } | {
           # avoid pandoc bug with brackets in Org link descriptions
-          sed -E                                      \
-              -e "s/\]\[\[\[/\]\[nb-placeholder-nb/g" \
-              -e "s/\]\]\]\]/nb-placeholder-nb\]\]/g"
+          LC_ALL=C sed -E                           \
+            -e "s/\]\[\[\[/\]\[nb-placeholder-nb/g" \
+            -e "s/\]\]\]\]/nb-placeholder-nb\]\]/g"
         } | {
           pandoc --from org --to html
         } | {
-          sed -E                                      \
-              -e "s/>nb-placeholder-nb/>\[\[/g"       \
-              -e "s/nb-placeholder-nb</\]\]</g"
+          LC_ALL=C sed -E                           \
+            -e "s/>nb-placeholder-nb/>\[\[/g"       \
+            -e "s/nb-placeholder-nb</\]\]</g"
         } | {
           _render
         } | {
@@ -16745,11 +16836,11 @@ Can't show archives. Export archive and expand to edit.\\n"
         fi
 
         cat "${_target_path}"                                       \
-          | sed -E                                                  \
+          | LC_ALL=C sed -E                                         \
               -e "s/^([[:space:]]*-) /\1nb-ph-nb/g"                 \
               -e "s/^([[:space:]]*\*) /\1nb-ph-nb/g"                \
-          | fold -s -w "${_COLUMNS}"                                \
-          | sed -E                                                  \
+          | LC_ALL=C fold -s -w "${_COLUMNS}"                       \
+          | LC_ALL=C sed -E                                         \
               -e "s/^([[:space:]]*-)nb-ph-nb/\1 /g"                 \
               -e "s/^([[:space:]]*\*)nb-ph-nb/\1 /g"                \
           | _highlight_syntax_if_available "${_target_extension:-}" \
@@ -17062,8 +17153,8 @@ _browse() {
     local _fields=()
     IFS='&' read -r -a _fields <<< "${_message_body}"
 
-    local _prepared_encoded_content=
     local _add_options=()
+    local _prepared_encoded_content=
 
     local __field=
     for   __field in "${_fields[@]:-}"
@@ -17489,7 +17580,7 @@ HEREDOC
       )) || IFS=' ' read -ra _query_arguments <<< "${_query}"
 
       _encoded_query="$(
-        sed                     \
+        LC_ALL=C sed            \
           -e 's/&/\&amp;/g'     \
           -e 's/</\&lt;/g'      \
           -e 's/>/\&gt;/g'      \
@@ -17992,8 +18083,8 @@ HEREDOC
     _last_saved_at="$(_show "${_source_path}" --updated)"
     _last_saved_at="${_last_saved_at% -[0-9][0-9][0-9][0-9]}"
 
-    local _text_area_columns="${_columns:-}"
     local _rows=30
+    local _text_area_columns="${_columns:-}"
     local _url_params=
 
     if _contains "--terminal" "${_pagination_options[@]:-}"
@@ -18349,7 +18440,10 @@ HEREDOC
 
     local _header_options=("${_pagination_options[@]:-}")
 
-    _header_options+=("--raw-url" "${_raw_url}")
+    if [[ -n "${_raw_url:-}" ]]
+    then
+      _header_options+=("--raw-url" "${_raw_url}")
+    fi
 
     local _id_selector=
     _id_selector="$(_get_id_selector "${_source_path:-}" --notebook)"
@@ -18423,9 +18517,9 @@ HEREDOC
           --type org
       } | {
         # avoid pandoc bug with brackets in Org link descriptions
-        sed -E                                      \
-            -e "s/\]\[\[\[/\]\[nb-placeholder-nb/g" \
-            -e "s/\]\]\]\]/nb-placeholder-nb\]\]/g"
+        LC_ALL=C sed -E                           \
+          -e "s/\]\[\[\[/\]\[nb-placeholder-nb/g" \
+          -e "s/\]\]\]\]/nb-placeholder-nb\]\]/g"
       } | {
         if _command_exists "pandoc"
         then
@@ -18434,12 +18528,12 @@ HEREDOC
           cat
         fi
       } | {
-        sed -E                                      \
-            -e "s/>nb-placeholder-nb/>\[\[/g"       \
-            -e "s/nb-placeholder-nb</\]\]</g"
+        LC_ALL=C sed -E                           \
+          -e "s/>nb-placeholder-nb/>\[\[/g"       \
+          -e "s/nb-placeholder-nb</\]\]</g"
       } | {
         # undo pandoc prepending "file://" to protocol-relative URLs
-        sed -E -e "s/file:\/\/\/\//\/\//g"
+        LC_ALL=C sed -E -e "s/file:\/\/\/\//\/\//g"
       } | {
         printf "%s\\n" "$(
           _browse_render_header           \
@@ -18478,7 +18572,7 @@ HEREDOC
                   printf "<br>"
                 fi
 
-                sed -E -e "s/</\&lt;/g" -e "s/\//\&#47;/g" -e "s/.*/&<br>/g"
+                LC_ALL=C sed -E -e "s/</\&lt;/g" -e "s/\//\&#47;/g" -e "s/.*/&<br>/g"
               fi
             }
             ;;
@@ -18590,7 +18684,7 @@ HEREDOC
         )
       fi
 
-      sed -E "${_sed_arguments[@]:-}"
+      LC_ALL=C sed -E "${_sed_arguments[@]:-}"
     } | {
       _browse_respond_with 200 "${_respond_with_arguments[@]:-}"
     }
@@ -19831,6 +19925,9 @@ _helpers() {
     *padding)
       _print_padding                  "${_options[@]:-}"
       ;;
+    pandoc)
+      _pandoc                         "${_options[@]:-}"
+      ;;
     *piped*|*input*)
       _piped_input                    "${_options[@]:-}"
       ;;
@@ -19990,7 +20087,7 @@ _plugins() {
         then
           _url="$(
             printf "%s\\n" "${_url}"  \
-              | sed                   \
+              | LC_ALL=C sed          \
                 -e 's/\/blob//g'      \
                 -e 's/https:\/\/github.com/https:\/\/raw.githubusercontent.com/g'
           )"
@@ -20196,13 +20293,13 @@ _remote() {
           git -C "${_notebook_path}" ls-remote  \
             --heads "${_new_remote_url:-}"      \
             2>/dev/null                         \
-            | sed "s/.*\///g"
+            | LC_ALL=C sed "s/.*\///g"
         elif ((_remote_exists))
         then
           git -C "${_notebook_path}" ls-remote  \
             --heads                             \
             2>/dev/null                         \
-            | sed "s/.*\///g"
+            | LC_ALL=C sed "s/.*\///g"
         else
           _exit_1 printf "No remote configured.\\n"
         fi
@@ -20248,7 +20345,7 @@ _remote() {
         git -C "${_notebook_path}" ls-remote        \
           --heads "${_current_remote_url:-}"        \
            2>/dev/null                              \
-          | sed "s/.*\///g" || :
+          | LC_ALL=C sed "s/.*\///g" || :
       ))
 
       local _primary_remote_branch=
@@ -20338,7 +20435,7 @@ _remote() {
           git -C "${_notebook_path}" ls-remote        \
             --heads "${_current_remote_url:-}"        \
              2>/dev/null                              \
-            | sed "s/.*\///g" || :
+            | LC_ALL=C sed "s/.*\///g" || :
         ))
 
         local _primary_remote_branch=
@@ -20418,7 +20515,7 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
         _remote_branches=($(
           git -C "${_notebook_path}" ls-remote  \
             --heads "${_current_remote_url:-}"  \
-            | sed "s/.*\///g" || :
+            | LC_ALL=C sed "s/.*\///g" || :
         ))
 
         if [[ -z "${_remote_branches[*]:-}"     ]]
@@ -20566,7 +20663,7 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
         git -C "${_notebook_path}" ls-remote        \
           --heads "${_current_remote_url:-}"        \
            2>/dev/null                              \
-          | sed "s/.*\///g" || :
+          | LC_ALL=C sed "s/.*\///g" || :
       ))
 
       if [[ -z "${_remote_branches[*]:-}"       ]]
@@ -20682,7 +20779,7 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
       _remote_branches=($(
         git -C "${_notebook_path}" ls-remote    \
           --heads "${_new_remote_url:-}"        \
-          | sed "s/.*\///g" || :
+          | LC_ALL=C sed "s/.*\///g" || :
       ))
 
       local _selected_push_option=
@@ -21283,7 +21380,7 @@ HEREDOC
     if [[ "${_value:-}"       =~ ^~       ]]
     then
       # shellcheck disable=SC2016
-      _value="$(printf "%s\\n" "${_value}" | sed "s|~|${HOME}|g")"
+      _value="$(printf "%s\\n" "${_value}" | LC_ALL=C sed "s|~|${HOME}|g")"
     fi
 
     local _attribution=
@@ -21854,13 +21951,13 @@ HEREDOC
       # Strip leading 'n', 'nb', or 'notes'.
       local _normalized_input=
       _normalized_input="$(
-        printf "%s\\n" "${__input}" \
-          | sed -e 's/^n$//'        \
-          | sed -e 's/^n //'        \
-          | sed -e 's/^nb$//'       \
-          | sed -e 's/^nb //'       \
-          | sed -e 's/^notes$//'    \
-          | sed -e 's/^notes //'
+        printf "%s\\n" "${__input}"       \
+          | LC_ALL=C sed -e 's/^n$//'     \
+          | LC_ALL=C sed -e 's/^n //'     \
+          | LC_ALL=C sed -e 's/^nb$//'    \
+          | LC_ALL=C sed -e 's/^nb //'    \
+          | LC_ALL=C sed -e 's/^notes$//' \
+          | LC_ALL=C sed -e 's/^notes //'
       )"
 
       if [[ "${_normalized_input}" =~ ^help   ]] ||
@@ -21890,7 +21987,7 @@ HEREDOC
       then
         _normalized_input="$(
           printf "%s\\n" "${_normalized_input}" \
-            | sed -e "s/^${_command_name} //"
+            | LC_ALL=C sed -e "s/^${_command_name} //"
         )"
 
         eval "\"${_MY_PATH}\" edit --editor \"${_command_name}\" ${_normalized_input}"
@@ -22325,9 +22422,10 @@ _todo() {
           if [[ "${_counter:-}" ==  "${_task_number:-}"     ]]
           then
             printf "%s\\n" "${__line}"                      \
-              | sed -e "s/- \[\]/${_replacement_box}/"      \
-                    -e "s/- \[ \]/${_replacement_box}/"     \
-                    -e "s/- \[x\]/${_replacement_box}/"
+              | LC_ALL=C sed                                \
+                  -e "s/- \[\]/${_replacement_box}/"        \
+                  -e "s/- \[ \]/${_replacement_box}/"       \
+                  -e "s/- \[x\]/${_replacement_box}/"
           else
             printf "%s\\n" "${__line}"
           fi
@@ -22593,7 +22691,7 @@ _todo() {
                 "$(_todos tasks "${_selector:-}" "${_task_number}")"
             else
               _todos tasks "${_selector:-}" "${_task_number}" \
-                | sed "3s/^/Done: /"
+                | LC_ALL=C sed "3s/^/Done: /"
 
               _git checkpoint "${_notebook_path}" \
                 "[nb] Task Done: $(_show "${_selector:-}" --relative-path) ${_task_number}"
@@ -22631,7 +22729,7 @@ _todo() {
                 "$(_todos tasks "${_selector:-}" "${_task_number}")"
             else
               _todos tasks "${_selector:-}" "${_task_number}" \
-                | sed "3s/^/Undone: /"
+                | LC_ALL=C sed "3s/^/Undone: /"
 
               _git checkpoint "${_notebook_path}" \
                 "[nb] Task Undone: $(_show "${_selector:-}" --relative-path) ${_task_number}"
@@ -22660,10 +22758,10 @@ _todo() {
       } | {
         case "${_filter:-}" in
           closed)
-            sed -E -e "/${NB_INDICATOR_TODO:-} .*\[\ \].*/d"
+            LC_ALL=C sed -E -e "/${NB_INDICATOR_TODO:-} .*\[\ \].*/d"
             ;;
           open)
-            sed -E -e "/${NB_INDICATOR_TODO_DONE:-} .*\[.*x.*\].*/d"
+            LC_ALL=C sed -E -e "/${NB_INDICATOR_TODO_DONE:-} .*\[.*x.*\].*/d"
             ;;
           *)
             cat
@@ -22942,8 +23040,6 @@ _todo() {
 
             if ! ((_printed_task_counter))
             then
-            #   printf "\\n"
-            # else
               printf "0 %stasks.\\n" "${_maybe_padded_empty_qualifier:-}"
             fi
           }

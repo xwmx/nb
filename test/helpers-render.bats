@@ -2,8 +2,6 @@
 
 load test_helper
 
-export _S=" "
-
 # checkboxes ##################################################################
 
 @test "'_render' with todo item displays marked-up done / closed checkbox." {

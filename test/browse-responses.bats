@@ -2,8 +2,6 @@
 
 load test_helper
 
-export NB_SERVER_PORT=6789
-
 # --local #####################################################################
 
 @test "'browse local:' with missing --local param responds with 400 Bad Request." {

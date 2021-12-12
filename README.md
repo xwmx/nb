@@ -1735,8 +1735,8 @@ Example description.
 
 ## Related
 
-- [[example:123]]
-- <https://example.com>
+- [[sample:123]]
+- <https://example.net>
 
 ## Content
 

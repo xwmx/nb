@@ -5,6 +5,191 @@ load test_helper
 
 # encrypted ###################################################################
 
+@test "'edit' with openssl -md sha256 encrypted file edits properly without errors." {
+  {
+    "${_NB}" init
+
+    diff                                                                      \
+      <("${_NB}" env | grep NB_ENCRYPTION_TOOL --color=never | cut -d= -f 2)  \
+      <(printf "openssl\\n")
+
+    "${_NB}" add "Example File.md" --content "# Content"
+
+    [[    -f "${NB_DIR}/home/Example File.md"     ]]
+
+    openssl enc                                   \
+      -aes-256-cbc                                \
+      -md   sha256                                \
+      -in   "${NB_DIR}/home/Example File.md"      \
+      -out  "${NB_DIR}/home/Example File.md.enc"  \
+      -pass file:<(printf "password\\n") 2> /dev/null
+
+    [[    -f "${NB_DIR}/home/Example File.md.enc" ]]
+
+    rm "${NB_DIR}/home/Example File.md"
+
+    [[ !  -f "${NB_DIR}/home/Example File.md"     ]]
+    [[    -f "${NB_DIR}/home/Example File.md.enc" ]]
+
+    declare _original_hash=
+    _original_hash="$(_get_hash "${NB_DIR}/home/Example File.md.enc")"
+  }
+
+  run "${_NB}" edit "Example File.md.enc" --password=password
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Exits with status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Updates file:
+
+  [[ "$(_get_hash "${NB_DIR}/home/Example File.md.enc")" != "${_original_hash}" ]]
+
+  "${_NB}" show "Example File.md.enc" --no-color --password=password
+
+  [[ "$("${_NB}" show "Example File.md.enc" --no-color --password=password)"  =~ \
+\#\ Content${_NEWLINE}\#\ mock_editor\    ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Edit'
+
+  # Prints output:
+
+  [[ "${output}" =~ Updated:        ]]
+  [[ "${output}" =~ [0-9]+          ]]
+  [[ "${output}" =~ [A-Za-z0-9]+.md ]]
+}
+
+@test "'edit' with openssl -md md5 encrypted file edits properly without errors." {
+  {
+    "${_NB}" init
+
+    diff                                                                      \
+      <("${_NB}" env | grep NB_ENCRYPTION_TOOL --color=never | cut -d= -f 2)  \
+      <(printf "openssl\\n")
+
+    "${_NB}" add "Example File.md" --content "# Content"
+
+    [[    -f "${NB_DIR}/home/Example File.md"     ]]
+
+    openssl enc                                   \
+      -aes-256-cbc                                \
+      -md   md5                                   \
+      -in   "${NB_DIR}/home/Example File.md"      \
+      -out  "${NB_DIR}/home/Example File.md.enc"  \
+      -pass file:<(printf "password\\n") 2> /dev/null
+
+    [[    -f "${NB_DIR}/home/Example File.md.enc" ]]
+
+    rm "${NB_DIR}/home/Example File.md"
+
+    [[ !  -f "${NB_DIR}/home/Example File.md"     ]]
+    [[    -f "${NB_DIR}/home/Example File.md.enc" ]]
+
+    declare _original_hash=
+    _original_hash="$(_get_hash "${NB_DIR}/home/Example File.md.enc")"
+  }
+
+  run "${_NB}" edit "Example File.md.enc" --password=password
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Exits with status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Updates file:
+
+  [[ "$(_get_hash "${NB_DIR}/home/Example File.md.enc")" != "${_original_hash}" ]]
+
+  "${_NB}" show "Example File.md.enc" --no-color --password=password
+
+  [[ "$("${_NB}" show "Example File.md.enc" --no-color --password=password)"  =~ \
+\#\ Content${_NEWLINE}\#\ mock_editor\    ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Edit'
+
+  # Prints output:
+
+  [[ "${output}" =~ Updated:        ]]
+  [[ "${output}" =~ [0-9]+          ]]
+  [[ "${output}" =~ [A-Za-z0-9]+.md ]]
+}
+
+@test "'edit' with openssl-encrypted file and gpg NB_ENCRYPTION_TOOL edits properly without errors." {
+  {
+    "${_NB}" init
+
+    "${_NB}" set encryption_tool "gpg"
+
+    diff                                                                      \
+      <("${_NB}" env | grep NB_ENCRYPTION_TOOL --color=never | cut -d= -f 2)  \
+      <(printf "gpg\\n")
+
+    NB_ENCRYPTION_TOOL=openssl "${_NB}" add "# Content" --encrypt --password=example
+
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
+    _original_hash="$(_get_hash "${NB_DIR}/home/${_filename}")"
+  }
+
+  run "${_NB}" edit 1 --password=example
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Exits with status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Updates file:
+
+  [[ "$(_get_hash "${NB_DIR}/home/${_filename}")" != "${_original_hash}" ]]
+
+  [[ "$("${_NB}" show 1 --no-color --password=example)"  =~ \
+\#\ Content${_NEWLINE}\#\ mock_editor\    ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Edit'
+
+  # Prints output:
+
+  [[ "${output}" =~ Updated:        ]]
+  [[ "${output}" =~ [0-9]+          ]]
+  [[ "${output}" =~ [A-Za-z0-9]+.md ]]
+}
+
 @test "'edit' with gpg-encrypted file and openssl NB_ENCRYPTION_TOOL edits properly without errors." {
   {
     "${_NB}" init
@@ -77,7 +262,7 @@ load test_helper
   [[ "$(_get_hash "${NB_DIR}/home/${_filename}")" != "${_original_hash}" ]]
 
   [[ "$("${_NB}" show 1 --no-color --password=example)"  =~ \
-\#\ Content${_NEWLINE}\#\ mock_editor\  ]]
+\#\ Content${_NEWLINE}\#\ mock_editor\    ]]
 
   # Creates git commit:
 
@@ -131,7 +316,7 @@ load test_helper
 
   printf "git log --stat:\\n%s\\n" "$(git log --stat)"
 
-  while [[ -n "$(git status --porcelain)" ]]
+  while [[ -n "$(git status --porcelain)"     ]]
   do
     sleep 1
   done

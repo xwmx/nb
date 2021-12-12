@@ -2,12 +2,6 @@
 
 load test_helper
 
-# non-breaking space
-export _S=" "
-
-# configurable as escaped &amp; or &
-export _AMP="&"
-
 @test "'browse' includes pagination on links on listing page." {
   {
     "${_NB}" init

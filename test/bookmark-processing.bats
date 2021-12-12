@@ -7,7 +7,7 @@ load test_helper
     "${_NB}" init
   }
 
-  run "${_NB}" bookmark "${_TITLES_BOOKMARK_URL}"
+  run "${_NB}" bookmark "${_BOOKMARK_TITLES_URL}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -135,7 +135,7 @@ HEREDOC
     "${_NB}" init
   }
 
-  run "${_NB}" bookmark "${_OG_BOOKMARK_URL}"
+  run "${_NB}" bookmark "${_BOOKMARK_OG_URL}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"

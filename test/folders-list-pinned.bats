@@ -2,8 +2,6 @@
 
 load test_helper
 
-export NB_PINNED_PATTERN="#pinned"
-
 # --pinned ####################################################################
 
 @test "'NB_PINNED_PATTERN list --pinned --type' filters by type." {

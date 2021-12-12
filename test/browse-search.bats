@@ -2,11 +2,6 @@
 
 load test_helper
 
-export NB_SERVER_PORT=6789
-
-# non-breaking space
-export _S=" "
-
 # --and / --or ################################################################
 
 @test "'browse --container -q \#tag2 --or \#tag3' performs OR search." {

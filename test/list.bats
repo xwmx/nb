@@ -2,8 +2,6 @@
 
 load test_helper
 
-_BT=$'`'
-
 # list content (title, filename, first line) ##################################
 
 @test "'list' includes titles when present, otherwise filenames with first lines." {
