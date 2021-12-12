@@ -9379,7 +9379,7 @@ _get_http_status() {
       -w "%{http_code}\\n"
     )
 
-    [[ -n "${NB_USER_AGENT:-}" ]]     &&
+    [[ -n "${NB_USER_AGENT:-}" ]] &&
       _curl_options+=(--user-agent "${NB_USER_AGENT}")
 
     curl "${_curl_options[@]}" "${_url}" || return 0
@@ -9389,7 +9389,7 @@ _get_http_status() {
       --server-response
     )
 
-    [[ -n "${NB_USER_AGENT:-}" ]]     &&
+    [[ -n "${NB_USER_AGENT:-}" ]] &&
       _wget_options+=(--user-agent="${NB_USER_AGENT}")
 
     wget "${_wget_options[@]}" "${_url}" 2>&1 \
@@ -9516,7 +9516,7 @@ _get_unique_path() {
   local _file_extension="${_basename#*.}"
 
   if [[ -n "${_file_extension:-}"               ]] &&
-     [[ "${_basename}" =~ \.                    ]] &&
+     [[ "${_basename}"  =~ \.                   ]] &&
      [[ "${_file_name}" != "${_file_extension}" ]]
   then
     _file_extension=".${_file_extension}"

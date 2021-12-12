@@ -118,7 +118,7 @@ load test_helper
   "${_NB}" show "Example File.md.enc" --no-color --password=password
 
   [[ "$("${_NB}" show "Example File.md.enc" --no-color --password=password)"  =~ \
-\#\ Content${_NEWLINE}\#\ mock_editor\  ]]
+\#\ Content${_NEWLINE}\#\ mock_editor\    ]]
 
   # Creates git commit:
 
@@ -262,7 +262,7 @@ load test_helper
   [[ "$(_get_hash "${NB_DIR}/home/${_filename}")" != "${_original_hash}" ]]
 
   [[ "$("${_NB}" show 1 --no-color --password=example)"  =~ \
-\#\ Content${_NEWLINE}\#\ mock_editor\  ]]
+\#\ Content${_NEWLINE}\#\ mock_editor\    ]]
 
   # Creates git commit:
 
@@ -316,7 +316,7 @@ load test_helper
 
   printf "git log --stat:\\n%s\\n" "$(git log --stat)"
 
-  while [[ -n "$(git status --porcelain)" ]]
+  while [[ -n "$(git status --porcelain)"     ]]
   do
     sleep 1
   done
