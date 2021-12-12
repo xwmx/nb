@@ -8967,13 +8967,27 @@ _decrypt_file() {
       openssl enc                           \
         -d                                  \
         -aes-256-cbc                        \
-        -in "${_encrypted_path}"            \
-        -out "${_unencrypted_path}"         \
-        -pass file:<(printf "%s\\n" "${_password}") 2> /dev/null ||
+        -in   "${_encrypted_path}"          \
+        -md   sha256                        \
+        -out  "${_unencrypted_path}"        \
+        -pass file:<(printf "%s\\n" "${_password}") 2> /dev/null      || {
           if [[ -f "${_unencrypted_path:?}" ]]
           then
             rm "${_unencrypted_path:?}"
           fi
+
+          openssl enc                       \
+            -d                              \
+            -aes-256-cbc                    \
+            -in   "${_encrypted_path}"      \
+            -md   md5                       \
+            -out  "${_unencrypted_path}"    \
+            -pass file:<(printf "%s\\n" "${_password}") 2> /dev/null  ||
+              if [[ -f "${_unencrypted_path:?}" ]]
+              then
+                rm "${_unencrypted_path:?}"
+              fi
+        }
       ;;
     *)
       _exit_1 printf "Unable to decrypt file.\\n"
@@ -9250,9 +9264,10 @@ _encrypt_file() {
   then
     openssl enc                       \
       -aes-256-cbc                    \
-      -in "${_unencrypted_path}"      \
-      -out "${_encrypted_path}"       \
-      -pass file:<(printf "%s\\n" "${_password}") 2> /dev/null
+      -md   sha256                    \
+      -in   "${_unencrypted_path}"    \
+      -out  "${_encrypted_path}"      \
+      -pass file:<(printf "%s\\n" "${_password}") 2>/dev/null
   else
     _exit_1 printf                    \
       "\$NB_ENCRYPTION_TOOL must be set to 'gpg' or 'openssl'.\\n"
