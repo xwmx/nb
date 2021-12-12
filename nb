@@ -16764,15 +16764,15 @@ Can't show archives. Export archive and expand to edit.\\n"
           _resolve_links "${_notebook_path}" --type org
         } | {
           # avoid pandoc bug with brackets in Org link descriptions
-          LC_ALL=C sed -E                             \
-              -e "s/\]\[\[\[/\]\[nb-placeholder-nb/g" \
-              -e "s/\]\]\]\]/nb-placeholder-nb\]\]/g"
+          LC_ALL=C sed -E                           \
+            -e "s/\]\[\[\[/\]\[nb-placeholder-nb/g" \
+            -e "s/\]\]\]\]/nb-placeholder-nb\]\]/g"
         } | {
           pandoc --from org --to html
         } | {
-          LC_ALL=C sed -E                             \
-              -e "s/>nb-placeholder-nb/>\[\[/g"       \
-              -e "s/nb-placeholder-nb</\]\]</g"
+          LC_ALL=C sed -E                           \
+            -e "s/>nb-placeholder-nb/>\[\[/g"       \
+            -e "s/nb-placeholder-nb</\]\]</g"
         } | {
           _render
         } | {
@@ -18517,9 +18517,9 @@ HEREDOC
           --type org
       } | {
         # avoid pandoc bug with brackets in Org link descriptions
-        LC_ALL=C sed -E                             \
-            -e "s/\]\[\[\[/\]\[nb-placeholder-nb/g" \
-            -e "s/\]\]\]\]/nb-placeholder-nb\]\]/g"
+        LC_ALL=C sed -E                           \
+          -e "s/\]\[\[\[/\]\[nb-placeholder-nb/g" \
+          -e "s/\]\]\]\]/nb-placeholder-nb\]\]/g"
       } | {
         if _command_exists "pandoc"
         then
@@ -18528,9 +18528,9 @@ HEREDOC
           cat
         fi
       } | {
-        LC_ALL=C sed -E                             \
-            -e "s/>nb-placeholder-nb/>\[\[/g"       \
-            -e "s/nb-placeholder-nb</\]\]</g"
+        LC_ALL=C sed -E                           \
+          -e "s/>nb-placeholder-nb/>\[\[/g"       \
+          -e "s/nb-placeholder-nb</\]\]</g"
       } | {
         # undo pandoc prepending "file://" to protocol-relative URLs
         LC_ALL=C sed -E -e "s/file:\/\/\/\//\/\//g"
@@ -22423,9 +22423,9 @@ _todo() {
           then
             printf "%s\\n" "${__line}"                      \
               | LC_ALL=C sed                                \
-                    -e "s/- \[\]/${_replacement_box}/"      \
-                    -e "s/- \[ \]/${_replacement_box}/"     \
-                    -e "s/- \[x\]/${_replacement_box}/"
+                  -e "s/- \[\]/${_replacement_box}/"        \
+                  -e "s/- \[ \]/${_replacement_box}/"       \
+                  -e "s/- \[x\]/${_replacement_box}/"
           else
             printf "%s\\n" "${__line}"
           fi
