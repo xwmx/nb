@@ -9669,6 +9669,7 @@ _render() {
       'a8a8a8' 'b2b2b2' 'bcbcbc' 'c6c6c6' 'd0d0d0' 'dadada' 'e4e4e4' 'eeeeee'
     )
 
+    local _color_background_hex="#1a1a1a"
     local _color_dim_hex="#626480"
     local _color_primary_hex="#7593eb"
     # TODO
@@ -9695,7 +9696,7 @@ _render() {
 <title>${_html_title}</title>
 <style>
 html {
-  background-color:   #1a1a1a;
+  background-color:   ${_color_background_hex};
   color:              #e6e6e6;
   font-size:          16px;
   line-height:        1.5;
@@ -9891,7 +9892,7 @@ video {
 
 audio:focus,
 video:focus {
-  outline:            #1a1a1a;
+  outline:            ${_color_background_hex};
 }
 
 video {
@@ -9977,7 +9978,7 @@ label[for=search-input] {
 }
 
 #search-input {
-  background-color:   #1a1a1a;
+  background-color:   ${_color_background_hex};
   border:             none;
   border-bottom:      1px solid #4d4d4d;
   color:              #e6e6e6;
@@ -10026,7 +10027,7 @@ input[type="submit"] {
   border:             none;
   color:              ${_color_primary_hex};
   font-size:          1rem;
-  outline:            0 solid #1a1a1a;
+  outline:            0 solid ${_color_background_hex};
   padding:            1rem;
 }
 
