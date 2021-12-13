@@ -9807,7 +9807,8 @@ code {
 }
 
 pre {
-  background-color:   #1e1e25; /* #212121 */
+  background-color:   #1e1e25;            /* #212121 */
+  border:             1px solid #1c1c22   /* #1e1e25 */ /* #22222a */
   border-radius:      1px;
   margin:             1rem 0;
   overflow:           auto;
