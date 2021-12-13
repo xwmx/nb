@@ -9669,11 +9669,12 @@ _render() {
       'a8a8a8' 'b2b2b2' 'bcbcbc' 'c6c6c6' 'd0d0d0' 'dadada' 'e4e4e4' 'eeeeee'
     )
 
-    local _color_background_hex="#18181c" # #1a1a1a #1b1b20 #17171c #19191f
+    local _color_background_hex="#18181c"     # #1a1a1a #1b1b20 #17171c #19191f
+    local _color_background_alt_hex="#1b1b20" # #1e1e25 #212121
     local _color_dim_hex="#626480"
     local _color_primary_hex="#7593eb"
     # TODO: local _color_secondary_hex=
-    local _color_text_hex="#c5c4cc"       # #e6e6e6 #dedede
+    local _color_text_hex="#c5c4cc"           # #e6e6e6 #dedede
 
     if [[ "${NB_COLOR_PRIMARY}" -lt 256 ]]
     then
@@ -9794,7 +9795,7 @@ a.list-item:visited {
 
 blockquote {
   border-left:        2px solid #4d4d4d;
-  color:              #878787; /* #606060 */
+  color:              #878787;            /* #606060 */
   margin:             1em 0 1em 1.7em;
   padding-left:       1em;
 }
@@ -9807,8 +9808,8 @@ code {
 }
 
 pre {
-  background-color:   #1e1e25;            /* #212121 */
-  border:             1px solid #1c1c22   /* #1e1e25 */ /* #22222a */
+  background-color:   ${_color_background_alt_hex};
+  border:             1px solid ${_color_background_alt_hex};/
   border-radius:      1px;
   margin:             1rem 0;
   overflow:           auto;
@@ -10051,7 +10052,7 @@ input[type="submit"]:hover {
 
 textarea,
 .ace_editor {
-  background-color:   #1d1d1d;
+  background-color:   ${_color_background_alt_hex};
   border:             none;
   box-sizing:         border-box;
   color:              #dddddd;
@@ -10059,14 +10060,14 @@ textarea,
   line-height:        1.5;
   margin-bottom:      1rem;
   margin-top:         1rem;
-  outline:            1px solid #242424;
+  outline:            1px solid ${_color_background_alt_hex};
   padding:            0;
   vertical-align:     top;
   width:              100%;
 }
 
 .ace_editor {
-  border:             1rem solid #1d1d1d;
+  border:             1rem solid ${_color_background_alt_hex};
 }
 
 textarea {
