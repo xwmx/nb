@@ -5170,7 +5170,7 @@ _list() {
     # Example:
     #   # file: ~/.nbrc
     #   export NB_PINNED_PATTERN="#pinned"
-    if [[ "${NB_PINNED_PATTERN:-}"    ]]
+    if [[ -n "${NB_PINNED_PATTERN:-}" ]]
     then
       _pinned_basenames=($(
         {
