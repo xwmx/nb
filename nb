@@ -9669,16 +9669,16 @@ _render() {
       'a8a8a8' 'b2b2b2' 'bcbcbc' 'c6c6c6' 'd0d0d0' 'dadada' 'e4e4e4' 'eeeeee'
     )
 
-    local _color_background_hex="#1a1a1a"
+    local _color_background_hex="#19191f" # #1a1a1a #1b1b20 #17171c
     local _color_dim_hex="#626480"
     local _color_primary_hex="#7593eb"
-    # TODO
-    # local _color_secondary_hex=
+    # TODO: local _color_secondary_hex=
+    local _color_text_hex="#c5c4cc"       # #e6e6e6 #dedede
 
     if [[ "${NB_COLOR_PRIMARY}" -lt 256 ]]
     then
       _color_primary_hex="#${_ansi_hex_values[${NB_COLOR_PRIMARY}]}"
-      # _color_secondary_hex="#${_ansi_hex_values[${NB_COLOR_SECONDARY}]}"
+      # TODO: _color_secondary_hex="#${_ansi_hex_values[${NB_COLOR_SECONDARY}]}"
 
       # desaturate select colors
       case "${_color_primary_hex}" in
@@ -9697,7 +9697,7 @@ _render() {
 <style>
 html {
   background-color:   ${_color_background_hex};
-  color:              #e6e6e6;
+  color:              ${_color_text_hex};
   font-size:          16px;
   line-height:        1.5;
 }
@@ -9788,13 +9788,13 @@ nav a:visited,
 a.list-item,
 a.list-item:hover,
 a.list-item:visited {
-  color:              #e6e6e6;
+  color:              ${_color_text_hex};
   text-decoration:    none;
 }
 
 blockquote {
   border-left:        2px solid #4d4d4d;
-  color:              #606060;
+  color:              #878787; /* #606060 */
   margin:             1em 0 1em 1.7em;
   padding-left:       1em;
 }
@@ -9807,7 +9807,7 @@ code {
 }
 
 pre {
-  background-color:   #212121;
+  background-color:   #1e1e25; /* #212121 */
   border-radius:      1px;
   margin:             1rem 0;
   overflow:           auto;
@@ -9981,7 +9981,7 @@ label[for=search-input] {
   background-color:   ${_color_background_hex};
   border:             none;
   border-bottom:      1px solid #4d4d4d;
-  color:              #e6e6e6;
+  color:              ${_color_text_hex};
   font-size:          1rem;
   padding:            0.5rem 0;
   width:              100%;
