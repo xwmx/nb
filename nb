@@ -9669,7 +9669,7 @@ _render() {
       'a8a8a8' 'b2b2b2' 'bcbcbc' 'c6c6c6' 'd0d0d0' 'dadada' 'e4e4e4' 'eeeeee'
     )
 
-    local _color_background_hex="#19191f" # #1a1a1a #1b1b20 #17171c
+    local _color_background_hex="#18181c" # #1a1a1a #1b1b20 #17171c #19191f
     local _color_dim_hex="#626480"
     local _color_primary_hex="#7593eb"
     # TODO: local _color_secondary_hex=
