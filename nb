@@ -20633,7 +20633,7 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
                 "${_temp_repo_path}"                      &&
               git -C "${_temp_repo_path}" checkout        \
                 -b "${_target_branch_name}"               \
-              "${_remote_branch_name}"                    &&
+                "${_remote_branch_name}"                  &&
               git -C "${_temp_repo_path}" push            \
                 -u origin "${_target_branch_name}"        &&
               git -C "${_temp_repo_path}" branch          \
