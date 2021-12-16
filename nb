@@ -19745,7 +19745,7 @@ HEREDOC
     printf "Listening: %s%s\\n"                   \
       "$(_color_primary "${_request_url_base}")"  \
       "${_display_params//\ /%20}"
-
+		printf "Press<CTRL+C> to exit"
     if _web_browser --gui
     then
       _web_browser "${_request_url:-}"
@@ -19773,12 +19773,9 @@ HEREDOC
       fi
     fi
 
-    while true
+    while :
     do
-      read -n 1 -s -r -p "Press any key to quit..."
-
-      printf "\\n"
-      break
+			sleep 1
     done
   else
     _web_browser "${_request_url}"
