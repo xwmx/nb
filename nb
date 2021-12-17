@@ -1162,8 +1162,10 @@ _temp() {
   esac
 }
 
-trap "_temp cleanup"  EXIT
-trap "exit"           INT
+trap "_temp cleanup"                        EXIT
+trap "exit"                                 INT
+trap 'printf "\\n"; _temp cleanup; exit 0'  SIGINT
+trap 'printf "\\n"; _temp cleanup; exit 0'  SIGTERM
 
 ###############################################################################
 # Helpers: Group 1                                             Helpers: Group 1
@@ -19784,8 +19786,6 @@ HEREDOC
         "$(_color_dim "<")"             \
         "$(_color_primary "CTRL-C")"    \
         "$(_color_dim ">")"
-
-      trap 'printf "\\n"; exit 0' SIGINT
 
       while true
       do
