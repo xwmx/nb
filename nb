@@ -19391,6 +19391,7 @@ HEREDOC
   local _browse_columns="${_COLUMNS}"
   local _browse_notebooks=0
   local _browse_per_page=
+  local _daemon=0
   local _force_terminal_request=0
   local _only_serve=0
   local _open_gui=0
@@ -19430,6 +19431,10 @@ HEREDOC
         ;;
       --*container)
         _print_browse_render_function="container"
+        ;;
+      --daemon)
+        _daemon=1
+        _only_serve=1
         ;;
       d|delete|-d|--delete|-)
         _action="delete"
@@ -19745,7 +19750,7 @@ HEREDOC
     printf "Listening: %s%s\\n"                   \
       "$(_color_primary "${_request_url_base}")"  \
       "${_display_params//\ /%20}"
-		printf "Press<CTRL+C> to exit"
+
     if _web_browser --gui
     then
       _web_browser "${_request_url:-}"
@@ -19773,10 +19778,28 @@ HEREDOC
       fi
     fi
 
-    while :
-    do
-			sleep 1
-    done
+    if ((_daemon))
+    then
+      printf "Press %s%s%s to exit..."  \
+        "$(_color_dim "<")"             \
+        "$(_color_primary "CTRL-C")"    \
+        "$(_color_dim ">")"
+
+      trap 'printf "\\n"; exit 0' SIGINT
+
+      while true
+      do
+        sleep 1
+      done
+    else
+      while true
+      do
+        read -n 1 -s -r -p "Press any key to quit$(_color_dim "...")"
+
+        printf "\\n"
+        break
+      done
+    fi
   else
     _web_browser "${_request_url}"
   fi
