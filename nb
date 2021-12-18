@@ -6411,6 +6411,42 @@ _ls() {
     _display_header_and_footer=1
   fi
 
+  local _footer=
+  local _footer_line_count=0
+  local _header=
+  local _header_line_count=0
+
+  if ((${NB_AUTO_LIMIT:-0}))
+  then
+    local _available_lines=0
+    _available_lines="$(_tput lines)"
+
+    local _header_and_footer_line_count=0
+
+    if ((NB_HEADER)) && ((_display_header_and_footer))
+    then
+      _header="$(_ls_print_header "${_header_flags[@]:-}")"
+      _header_line_count="$(printf "%s\\n" "${_header:-}" | wc -l | xargs)"
+    fi
+
+    if ((NB_FOOTER)) && ((_display_header_and_footer))
+    then
+      _footer="$(_ls_print_footer "${_selector_folder_path:-}")"
+      _footer_line_count="$(printf "%s\\n" "${_footer:-}" | wc -l | xargs)"
+    fi
+
+    local _auto_limit_amount=1
+    _auto_limit_amount="$((
+      ${_available_lines:-1}      -
+        ${_footer_line_count:-0}  -
+        ${_header_line_count:-0}  -
+        ((${NB_AUTO_LIMIT:-0} + 1))
+    ))"
+
+    _list_options+=("--limit" "${_auto_limit_amount:-1}")
+  fi
+
+
   local _list_error=
 
   # NOTE: Pipeline structured to start List, Header, and Footer concurrently.
@@ -6517,7 +6553,12 @@ _ls() {
 
     if ((NB_HEADER)) && ((_display_header_and_footer))
     then
-      _ls_print_header "${_header_flags[@]:-}"
+      if [[ -n "${_header:-}"             ]]
+      then
+        printf "%s\\n" "${_header:-}"
+      else
+        _ls_print_header "${_header_flags[@]:-}"
+      fi
     fi
 
     if [[ -n "${_selector_folder_path:-}" ]] &&
@@ -6533,45 +6574,14 @@ _ls() {
     # Footer
     # ------
 
-    local _footer=
-
-    if ((NB_FOOTER)) && ((_display_header_and_footer))
+    if ((NB_FOOTER))                  &&
+       ((_display_header_and_footer)) &&
+       [[ -z "${_footer:-}" ]]
     then
       _footer="$(_ls_print_footer "${_selector_folder_path:-}")"
     fi
 
-    if ((${NB_AUTO_LIMIT:-0}))  &&
-       ! ((_all))               &&
-       ! _contains "--limit" "${_list_options[@]:-}"
-    then
-      local _counter="$((${NB_AUTO_LIMIT:-0} - 1))"
-
-      local _available_lines=
-      _available_lines="$(_tput lines)"
-
-      local _footer_line_count=
-      _footer_line_count="$(printf "%s\\n" "${_footer:-}" | wc -l)"
-
-      if ((${_footer_line_count:-0})) && [[ -n "${_footer:-}" ]]
-      then
-        _counter="$((_counter + _footer_line_count))"
-      fi
-
-      local         __line=
-      while read -r __line
-      do
-        _counter="$((_counter+1))"
-
-        if [[ "${_counter:-99999}" -lt "${_available_lines:-0}" ]]
-        then
-          printf "%s\\n" "${__line:-}"
-        else
-          break
-        fi
-      done
-    else
-      cat
-    fi
+    cat
 
     if [[ -n "${_footer:-}" ]]
     then # print preloaded footer
