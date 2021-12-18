@@ -6416,7 +6416,9 @@ _ls() {
   local _header=
   local _header_line_count=0
 
-  if ((${NB_AUTO_LIMIT:-0}))
+  if ((${NB_AUTO_LIMIT:-0}))  &&
+     ! ((_all))               &&
+     ! _contains "--limit" "${_list_options[@]:-}"
   then
     local _available_lines=0
     _available_lines="$(_tput lines)"
