@@ -6411,6 +6411,8 @@ _ls() {
     _display_header_and_footer=1
   fi
 
+  # Pre-load auto --limit header and footer.
+
   local _footer=
   local _footer_line_count=0
   local _header=
@@ -6437,17 +6439,21 @@ _ls() {
       _footer_line_count="$(printf "%s\\n" "${_footer:-}" | wc -l | xargs)"
     fi
 
+    local _auto_limit_adjustment="$((NB_AUTO_LIMIT + 1))"
+
     local _auto_limit_amount=1
+
     _auto_limit_amount="$((
       ${_available_lines:-1}      -
         ${_footer_line_count:-0}  -
         ${_header_line_count:-0}  -
-        ((${NB_AUTO_LIMIT:-0} + 1))
+        ${_auto_limit_adjustment:-0}
     ))"
+
+    [[ "${_auto_limit_amount}" -gt 0 ]] || _auto_limit_amount=1
 
     _list_options+=("--limit" "${_auto_limit_amount:-1}")
   fi
-
 
   local _list_error=
 
