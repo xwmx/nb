@@ -6124,7 +6124,7 @@ _ls() {
             )"
           fi
 
-          printf "%s%s\\n" "${_padding:-}" "${_line_hi:-}"
+          printf "%s%s%s\\n" "${_TPUT_SGR0}" "${_padding:-}" "${_line_hi:-}"
           _output_line_raw="${_padding}${_line_raw}\\n"
           _line_number=$((_line_number + 1))
 
