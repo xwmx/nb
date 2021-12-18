@@ -6371,6 +6371,7 @@ _ls() {
   then
     _list_options+=("--limit" "${_limit}")
   elif ! ((_all))                                       &&
+       ! ((${NB_AUTO_LIMIT:-0}))                        &&
        {
          [[ -z "${_selector_relative_path:-}"       ]]  ||
          {
@@ -6539,18 +6540,52 @@ _ls() {
       _footer="$(_ls_print_footer "${_selector_folder_path:-}")"
     fi
 
-    cat
+    if ((${NB_AUTO_LIMIT:-0}))  &&
+       ! ((_all))               &&
+       ! _contains "--limit" "${_list_options[@]:-}"
+    then
+      local _counter="$((${NB_AUTO_LIMIT:-0} - 1))"
+
+      local _available_lines=
+      _available_lines="$(_tput lines)"
+
+      local _footer_line_count=
+      _footer_line_count="$(printf "%s\\n" "${_footer:-}" | wc -l)"
+
+      if ((${_footer_line_count:-0})) && [[ -n "${_footer:-}" ]]
+      then
+        _counter="$((_counter + _footer_line_count))"
+      fi
+
+      local         __line=
+      while read -r __line
+      do
+        _counter="$((_counter+1))"
+
+        if [[ "${_counter:-99999}" -lt "${_available_lines:-0}" ]]
+        then
+          printf "%s\\n" "${__line:-}"
+        else
+          break
+        fi
+      done
+    else
+      cat
+    fi
 
     if [[ -n "${_footer:-}" ]]
     then # print preloaded footer
       printf "%s\\n" "${_footer}"
     fi
-  } | if ((_use_pager))
-      then
-        _pager
-      else
-        cat
-      fi
+  } | {
+    if ((_use_pager))
+    then
+      _pager
+    else
+      cat
+    fi
+  }
+
   if ((_fast_exit))
   then
     exit 0
