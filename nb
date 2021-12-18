@@ -6440,7 +6440,6 @@ _ls() {
     fi
 
     local _auto_limit_adjustment="$((NB_AUTO_LIMIT + 1))"
-
     local _auto_limit_amount=1
 
     _auto_limit_amount="$((
