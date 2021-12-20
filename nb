@@ -7046,7 +7046,7 @@ _notebooks() {
           IFS='' read -r -e -d $'\n' -p   \
 "${_NEWLINE}$(_color_primary "Update?")  $(_color_brackets "y/N") " __yn
 
-          case ${__yn} in
+          case "${__yn}" in
             [Yy]*)
               break
               ;;
@@ -12215,7 +12215,7 @@ _bookmark() {
             IFS='' read -r -e -d $'\n' -p \
 "Check the Wayback Machine for an archived version instead? $(_color_brackets "y/N") " __yn
 
-            case ${__yn} in
+            case "${__yn}" in
               [Yy]*)
                 _check_wayback=1
                 break
@@ -12944,7 +12944,7 @@ _delete() {
       IFS='' read -r -e -d $'\n' -p \
 "$(_color_primary "Proceed?")  $(_color_brackets "y/N") " __yn
 
-      case ${__yn} in
+      case "${__yn}" in
         [Yy]*)
           break
           ;;
@@ -13651,7 +13651,7 @@ _export() {
           IFS='' read -r -e -d $'\n' -p \
 "$(_color_primary "Overwrite existing file?") $(_color_brackets "y/N") " __yn
 
-          case ${__yn} in
+          case "${__yn}" in
             [Yy]*)
               break
               ;;
@@ -14420,7 +14420,7 @@ _move() {
       IFS='' read -r -e -d $'\n' -p   \
 "$(_color_primary "Proceed?")  $(_color_brackets "y/N") " __yn
 
-      case ${__yn} in
+      case "${__yn}" in
         [Yy]*)
           break
           ;;
@@ -20150,7 +20150,7 @@ _plugins() {
               IFS='' read -r -e -d $'\n' -p \
 "$(_color_primary "Reinstall?") $(_color_brackets "y/N") " __yn
 
-              case ${__yn} in
+              case "${__yn}" in
                 [Yy]*)
                   break
                   ;;
@@ -20214,7 +20214,7 @@ HEREDOC
           IFS='' read -r -e -d $'\n' -p \
 "$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
 
-          case ${__yn} in
+          case "${__yn}" in
             [Yy]*)
               break
               ;;
@@ -20474,7 +20474,7 @@ _remote() {
         IFS='' read -r -e -d $'\n' -p           \
 "$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
 
-        case ${__yn} in
+        case "${__yn}" in
           [Yy]*)
             break
             ;;
@@ -20507,7 +20507,7 @@ _remote() {
             IFS='' read -r -e -d $'\n' -p       \
 "$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
 
-            case ${__yn} in
+            case "${__yn}" in
               [Yy]*)
                 break
                 ;;
@@ -20562,7 +20562,7 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
               IFS='' read -r -e -d $'\n' -p             \
                 "${_branch_delete_prompt} $(_color_brackets "y/N") " __yn
 
-              case ${__yn} in
+              case "${__yn}" in
                 [Yy]*)    _delete_remote_branch=1;  break   ;;
                 q*|exit)  printf "Exiting...\\n";   exit 0  ;;
                 *)                                  break   ;;
@@ -20677,7 +20677,7 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
         IFS='' read -r -e -d $'\n' -p                     \
 "$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
 
-        case ${__yn} in
+        case "${__yn}" in
           [Yy]*)
             break
             ;;
@@ -20778,7 +20778,7 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
         IFS='' read -r -e -d $'\n' -p         \
 "$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
 
-        case ${__yn} in
+        case "${__yn}" in
           [Yy]*)
             break
             ;;
@@ -23333,7 +23333,7 @@ HEREDOC
         IFS='' read -r -e -d $'\n' -p \
 "$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
 
-        case ${__yn} in
+        case "${__yn}" in
           [Yy]*)
             break
             ;;
