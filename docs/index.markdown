@@ -8823,7 +8823,7 @@ the todo completion state, followed by the todo title.
 
 ## Due
 
-2100-01-01T01:01:01Z
+2100-01-01
 
 ## Description
 
