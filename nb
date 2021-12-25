@@ -869,10 +869,13 @@ export _TPUT_COLOR_PRIMARY=
        _TPUT_COLOR_PRIMARY="$(_tput setaf "${NB_COLOR_PRIMARY}")"
 
 export _TPUT_COLOR_SECONDARY=
-      _TPUT_COLOR_SECONDARY="$(_tput setaf "${NB_COLOR_SECONDARY}")"
+       _TPUT_COLOR_SECONDARY="$(_tput setaf "${NB_COLOR_SECONDARY}")"
 
-export _TPUT_SETAF_8=       ; _TPUT_SETAF_8="$(_tput setaf 8)"
-export _TPUT_SMUL=          ; _TPUT_SMUL="$(_tput smul)"
+export _TPUT_SETAF_8=
+       _TPUT_SETAF_8="$(_tput setaf 8)"
+
+export _TPUT_SMUL=
+       _TPUT_SMUL="$(_tput smul)"
 
 # _color_brackets()
 #
