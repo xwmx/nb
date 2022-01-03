@@ -344,7 +344,7 @@ the [`nb update`](#update) subcommand.
   <a href="#-notebooks"><code>📚</code>&nbsp;Notebooks</a>&nbsp;·
   <a href="#-git-sync"><code>🔄</code>&nbsp;Git&nbsp;Sync</a>&nbsp;·
   <a href="#%EF%B8%8F-import--export"><code>↕️</code>&nbsp;Import&nbsp;/&nbsp;Export</a>&nbsp;·
-  <a href="#%EF%B8%8F-set--settings"><code>⚙️</code><code>set</code>&nbsp;&&nbsp;<code>settings</code></a>&nbsp;·
+  <a href="#%EF%B8%8F-set--settings"><code>⚙️</code><code>set</code>&<code>settings</code></a>&nbsp;·
   <a href="#-color-themes"><code>🎨</code>&nbsp;Color&nbsp;Themes</a>&nbsp;·
   <a href="#-plugins"><code>🔌</code>&nbsp;Plugins</a>&nbsp;·
   <a href="#-selectors"><code>:/</code>&nbsp;Selectors</a>&nbsp;·
