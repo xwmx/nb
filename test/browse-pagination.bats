@@ -72,6 +72,60 @@ load test_helper
 "//localhost:6789/Demo%20Notebook:?--per-page=2&--columns=.*&--page=2\">next ❯"
 }
 
+
+@test "'browse' encodes #hashtag queries in pagination links." {
+  {
+    "${_NB}" init
+
+    declare __number=
+    for     __number in One Two Three Four Five Six Seven Eight Nine Ten
+    do
+      declare _content="Example content. #example"
+
+      case "${__number}" in
+        One)
+          _content+=" [[Title Two]] • #example"
+          ;;
+        Two|Three|Six|Seven|Nine)
+          _content+=" #example"
+          ;;
+      esac
+
+      "${_NB}" add  "File ${__number}.md" \
+        --title     "Title ${__number}"   \
+        --content   "${_content}"
+    done
+
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" notebooks add "Sample Notebook"
+    "${_NB}" notebooks add "Test Notebook"
+
+    "${_NB}" notebooks rename "home" "Demo Notebook"
+
+    [[    -d "${NB_DIR}/Demo Notebook"  ]]
+    [[ !  -e "${NB_DIR}/home"           ]]
+
+    sleep 1
+  }
+
+  run "${_NB}" browse --print --page 2 --per-page 2 --terminal --query "#example"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  == 0                    ]]
+  [[ "${output}"  =~ \<\!DOCTYPE\ html\>  ]]
+
+  [[ "${output}"  =~ \
+\<title\>nb\ browse\ Demo\\\ Notebook:\ --query\ \"\&#35\;example\"\ --page\ 2\</title\>  ]]
+
+  printf "%s\\n" "${output}" | grep       -q  \
+"//localhost:6789/Demo%20Notebook:?--per-page=2&--columns=.*&--query=%23example\">❮ prev"
+
+  printf "%s\\n" "${output}" | grep       -q  \
+"//localhost:6789/Demo%20Notebook:?--per-page=2&--columns=.*&--query=%23example&--page=3\">next ❯"
+}
+
 @test "'browse' includes pagination on links on item page." {
   {
     "${_NB}" init

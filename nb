@@ -17876,7 +17876,10 @@ HEREDOC
 
       if [[ -n "${_query:-}" ]]
       then
-        _url_params+="&--query=${_query}"
+        local _url_encoded_query=
+        _url_encoded_query="$(_get_uri --encode "${_query:-}")"
+
+        _url_params+="&--query=${_url_encoded_query}"
       fi
 
       if ! ((_terminal_browser)) &&
