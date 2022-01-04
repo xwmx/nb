@@ -16153,7 +16153,6 @@ _show() {
       if ((_done))
       then
         _indicators+="${_NB_INDICATOR_TODO_DONE% } "
-        _extra_length=1
       else
         _indicators+="${_NB_INDICATOR_TODO% } "
       fi
