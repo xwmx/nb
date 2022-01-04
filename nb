@@ -20665,7 +20665,7 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
          [[    "${_remote_branch_name:-}" != "${_current_branch:-}"   ]]
       then
         printf      "Renaming remote branch\\n"
-        _print_line "-----------------------"
+        _print_line "----------------------"
       else
         printf      "Renaming current branch\\n"
         _print_line "-----------------------"
@@ -20674,7 +20674,7 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
       printf        "From: %s\\n" "${_remote_branch_name:-"${_current_branch:-}"}"
       printf        "To:   %s\\n" "$(_color_primary "${_target_branch_name:-}")"
 
-      _print_line   "--------------"
+      _print_line   "-----------"
 
       while true
       do
