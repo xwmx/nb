@@ -9037,7 +9037,7 @@ at the root level of the notebook directory.
 
 ## Tests
 
-With more than 1,900 tests spanning tens of thousands of lines,
+With more than 2,000 tests spanning tens of thousands of lines,
 `nb` is really mostly a
 [test suite](https://github.com/xwmx/nb/tree/master/test).
 Tests run continuously [via GitHub Actions](https://github.com/xwmx/nb/actions)
