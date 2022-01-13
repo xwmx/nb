@@ -111,7 +111,7 @@ _setup() {
 
   # $_BOOKMARK_TITLES_NEWLINES_URL
   #
-  # A URL for an HTML file with <title> tags separated from content by newlines..
+  # A URL for an HTML file with <title> tags separated from content by newlines.
   export _BOOKMARK_TITLES_NEWLINES_URL="file://${NB_TEST_BASE_PATH}/fixtures/example.com-titles-newlines.html"
 
   # $_ERROR_PREFIX
