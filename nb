@@ -12338,19 +12338,17 @@ _bookmark() {
     if [[ -z "${_title}"    ]]
     then
       _title="$(
-        cat "${_temp_file}"             \
-          | grep                        \
-            --only-matching             \
-            --extended-regexp           \
-            --ignore-case               \
-            '<title[^>]*>[^<]*</title>' \
-          | head -n 1                   \
-          | sed                         \
-            -e 's/.*<title[^>]*>//'     \
-            -e 's/.*<TITLE[^>]*>//'     \
-            -e 's/<\/title>.*//'        \
-            -e 's/<\/TITLE>.*//'
-      )" || : # TODO: pipeline returns error status but still returns title
+        cat "${_temp_file}"                   \
+          | awk '/<title[^>]*>/,/<\/title>/'  \
+          | sed -e '/<\/title>/ q'            \
+          | sed -e 's/<\/title>.*//'          \
+          | sed                               \
+            -e 's/.*<title[^>]*>//'           \
+            -e 's/.*<TITLE[^>]*>//'           \
+            -e 's/<\/title>.*//'              \
+            -e 's/<\/TITLE>.*//'              \
+          | awk '$1=$1'
+      )"
     fi
 
     if [[ -z "${_title:-}"  ]]
