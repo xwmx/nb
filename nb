@@ -15125,7 +15125,6 @@ _search() {
                 -path '*/[^.]*'               \
                 -type f                       \
                 -print0
-
             } | {
               xargs "${_xargs[@]}"            \
                 grep                          \
