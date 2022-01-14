@@ -262,7 +262,7 @@ _tput() {
       cols|lines)
         {
           stty size 2>/dev/null || printf "20 80\\n"
-        } | if [[ "${1:-}" == "cols"    ]]
+        } | if [[ "${1:-}" == "cols" ]]
             then
               cut -d " " -f 2
             else
