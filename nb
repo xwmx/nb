@@ -9219,7 +9219,7 @@ _edit_file() {
       then
         open "${_file_path}"
         return 0
-      if _command_exists "wslview"
+      elif _command_exists "wslview"
       then
         wslview "${_file_path}"
         return 0
@@ -12186,7 +12186,7 @@ _bookmark() {
             then
               open "${_target_path}"
               return 0
-            if [[ -d "${_target_path}"        ]] &&
+            elif [[ -d "${_target_path}"      ]] &&
                _command_exists "wslview"
             then
               wslview "${_target_path}"
