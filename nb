@@ -2172,6 +2172,33 @@ _less_prompt() {
   printf "%s\\n" "${_prompt}"
 }
 
+# _open_in_gui_app()
+#
+# Usage:
+#   _open_in_gui_app <url> | <path>
+#
+# Description:
+#   Open <url> or <path> in the system GUI web browser or application for the
+#   given file type.
+_open_in_gui_app() {
+  local _target="${1:-}"
+
+  [[ -n "${_target:-}" ]] || return 1
+
+  if _command_exists "xdg-open"
+  then
+    xdg-open "${_target}"
+  elif _command_exists "open"
+  then
+    open "${_target}"
+  elif _command_exists "wslview"
+  then
+    wslview "${_target}"
+  else
+    return 1
+  fi
+}
+
 # _piped_input()
 #
 # Usage:
@@ -7771,15 +7798,9 @@ HEREDOC
 
     if [[ "${_subcommand:-}"    =~ ^open$|^o$ ]]
     then
-      if _command_exists "xdg-open"
+      if _open_in_gui_app "${_notebook_path:-}"
       then
-        xdg-open "${_notebook_path}"
-      elif _command_exists "open"
-      then
-        open "${_notebook_path}"
-      elif _command_exists "wslview"
-      then
-        wslview "${_notebook_path}"
+        return 0
       else
         _exit_1 printf                                                  \
           "%s doesn't know how to open directories on this system.\\n"  \
@@ -9211,18 +9232,13 @@ _edit_file() {
     if ! _file_is_text "${_file_path}"    &&
        [[ ! -d "${_file_path}"        ]]
     then
-      if _command_exists "xdg-open"
+      if _open_in_gui_app "${_file_path:-}"
       then
-        xdg-open "${_file_path}"
         return 0
-      elif [[ "${OSTYPE}" =~ ^darwin  ]]
-      then
-        open "${_file_path}"
-        return 0
-      elif _command_exists "wslview"
-      then
-        wslview "${_file_path}"
-        return 0
+      else
+        _exit_1 printf                                \
+          "%s doesn't know how to edit this file.\\n" \
+          "$(_color_primary "${_ME}")"
       fi
     fi
   fi
@@ -12153,19 +12169,7 @@ _bookmark() {
         then
           if [[ "${_subcommand}" == "open"  ]]
           then
-            if _command_exists "xdg-open"
-            then
-              xdg-open "${_target_path}"
-              return 0
-            elif [[ "${OSTYPE}" =~ ^darwin    ]]
-            then
-              open "${_target_path}"
-              return 0
-            elif _command_exists "wslview"
-            then
-              wslview "${_target_path}"
-              return 0
-            fi
+            _open_in_gui_app "${_target_path:-}" && return 0
           elif [[ "${_subcommand}" == "peek"  ]]
           then
             _bookmark_view_in_terminal_browser "file://${_target_path}"
@@ -12176,20 +12180,9 @@ _bookmark() {
         then
           if [[ "${_subcommand}" == "open"    ]]
           then
-            if [[ -d "${_target_path}"        ]] &&
-               _command_exists "xdg-open"
+            if [[ -d "${_target_path:-}"      ]] &&
+               _open_in_gui_app "${_target_path:-}"
             then
-              xdg-open "${_target_path}"
-              return 0
-            elif [[ -d "${_target_path}"      ]] &&
-                 [[ "${OSTYPE}" =~ ^darwin    ]]
-            then
-              open "${_target_path}"
-              return 0
-            elif [[ -d "${_target_path}"      ]] &&
-               _command_exists "wslview"
-            then
-              wslview "${_target_path}"
               return 0
             elif [[ -n "${_password}"         ]]
             then
@@ -12280,17 +12273,8 @@ _bookmark() {
       # `bookmark open`
       elif [[ "${_subcommand}" == "open"    ]]
       then
-        if _command_exists "xdg-open"
+        if _open_in_gui_app "${_target_url:-}"
         then
-          xdg-open "${_target_url}"
-          return 0
-        elif _command_exists "open"
-        then
-          open "${_target_url}"
-          return 0
-        elif _command_exists "wslview"
-        then
-          wslview "${_target_url}"
           return 0
         else
           _exit_1 printf                                          \
@@ -16826,15 +16810,13 @@ Can't show archives. Export archive and expand to edit.\\n"
         --from epub \
         --to html   \
         "${_target_path}" | _web_browser
-    elif _command_exists "xdg-open"
+    elif _open_in_gui_app "${_target_path:-}"
     then
-      xdg-open "${_target_path}"
-    elif [[ "${OSTYPE}" =~ ^darwin  ]]
-    then
-      open "${_target_path}"
-    elif _command_exists "wslview"
-    then
-      wslview "${_target_path}"
+      return 0
+    else
+      _exit_1 printf                                \
+        "%s doesn't know how to show this item.\\n" \
+        "$(_color_primary "${_ME}")"
     fi
   else # file is text
     if ((_browse))                  &&
@@ -19867,16 +19849,7 @@ HEREDOC
       then
         "${_gui_browser_command[@]:-}" "${_request_url:-}" 2>/dev/null &
       else
-        if _command_exists "xdg-open"
-        then
-          xdg-open "${_request_url:-}"
-        elif [[ "${OSTYPE}" =~ ^darwin        ]]
-        then
-          open "${_request_url:-}"
-        elif _command_exists "wslview"
-        then
-          wslview "${_request_url:-}"
-        fi
+        _open_in_gui_app "${_request_url:-}"
       fi
     fi
 
