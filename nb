@@ -7777,6 +7777,9 @@ HEREDOC
       elif _command_exists "open"
       then
         open "${_notebook_path}"
+      elif _command_exists "wslview"
+      then
+        wslview "${_notebook_path}"
       else
         _exit_1 printf                                                  \
           "%s doesn't know how to open directories on this system.\\n"  \
@@ -9210,10 +9213,16 @@ _edit_file() {
     then
       if _command_exists "xdg-open"
       then
-        xdg-open "${_file_path}" && return 0
+        xdg-open "${_file_path}"
+        return 0
       elif [[ "${OSTYPE}" =~ ^darwin  ]]
       then
-        open "${_file_path}" && return 0
+        open "${_file_path}"
+        return 0
+      if _command_exists "wslview"
+      then
+        wslview "${_file_path}"
+        return 0
       fi
     fi
   fi
@@ -12146,10 +12155,16 @@ _bookmark() {
           then
             if _command_exists "xdg-open"
             then
-              xdg-open "${_target_path}" && return 0
+              xdg-open "${_target_path}"
+              return 0
             elif [[ "${OSTYPE}" =~ ^darwin    ]]
             then
-              open "${_target_path}" && return 0
+              open "${_target_path}"
+              return 0
+            elif _command_exists "wslview"
+            then
+              wslview "${_target_path}"
+              return 0
             fi
           elif [[ "${_subcommand}" == "peek"  ]]
           then
@@ -12164,11 +12179,18 @@ _bookmark() {
             if [[ -d "${_target_path}"        ]] &&
                _command_exists "xdg-open"
             then
-              xdg-open "${_target_path}" && return 0
+              xdg-open "${_target_path}"
+              return 0
             elif [[ -d "${_target_path}"      ]] &&
                  [[ "${OSTYPE}" =~ ^darwin    ]]
             then
-              open "${_target_path}" && return 0
+              open "${_target_path}"
+              return 0
+            if [[ -d "${_target_path}"        ]] &&
+               _command_exists "wslview"
+            then
+              wslview "${_target_path}"
+              return 0
             elif [[ -n "${_password}"         ]]
             then
               _edit "${_selector}" --password "${_password}"
@@ -12265,6 +12287,10 @@ _bookmark() {
         elif _command_exists "open"
         then
           open "${_target_url}"
+          return 0
+        elif _command_exists "wslview"
+        then
+          wslview "${_target_url}"
           return 0
         else
           _exit_1 printf                                          \
@@ -16806,6 +16832,9 @@ Can't show archives. Export archive and expand to edit.\\n"
     elif [[ "${OSTYPE}" =~ ^darwin  ]]
     then
       open "${_target_path}"
+    elif _command_exists "wslview"
+    then
+      wslview "${_target_path}"
     fi
   else # file is text
     if ((_browse))                  &&
@@ -19844,6 +19873,9 @@ HEREDOC
         elif [[ "${OSTYPE}" =~ ^darwin        ]]
         then
           open "${_request_url:-}"
+        elif _command_exists "wslview"
+        then
+          wslview "${_request_url:-}"
         fi
       fi
     fi
