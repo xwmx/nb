@@ -1983,6 +1983,10 @@ nb example:12 open
 nb example:open 12
 ```
 
+*N.B. To use [`nb open`](#open) with
+[WSL](https://docs.microsoft.com/en-us/windows/wsl/install),
+install [wslu](https://github.com/wslutilities/wslu).*
+
 [`nb peek`](#peek) (shortcut: [`nb p`](#peek), alias: [`nb preview`](#peek))
 opens the bookmarked URL in your terminal web browser,
 such as
