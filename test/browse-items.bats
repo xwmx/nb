@@ -823,10 +823,10 @@ HEREDOC
 "<a.* href=\"//localhost:6789/home:1?--per-page=.*&--columns=.*\">\[\[home:1\]\]</a>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<a.* href=\"//localhost:6789/home:1?--per-page=.*&--columns=.*&--query=%23tag1\">\#tag1</a>"
+"<a.* href=\"//localhost:6789/home:?--per-page=.*&--columns=.*&--query=%23tag1\">\#tag1</a>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<a.* href=\"//localhost:6789/home:1?--per-page=.*&--columns=.*&--query=%23tag2\">\#tag2</a>"
+"<a.* href=\"//localhost:6789/home:?--per-page=.*&--columns=.*&--query=%23tag2\">\#tag2</a>"
 }
 
 # nb --browse / nb -b #########################################################
