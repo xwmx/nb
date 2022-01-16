@@ -57,7 +57,6 @@ jobs:
         run: |
           brew update
           brew install bat
-          brew unlink  bats
           brew install bats-core
           brew install expect
           brew install gpg
