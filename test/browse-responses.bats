@@ -96,6 +96,27 @@ load test_helper
   [[    "${output}"  =~  \404\ Not\ Found       ]]
 }
 
+@test "'browse' renders 404 when notebook is not found and id matches item in current notebook." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example File.md" --content "Example content."
+
+    sleep 1
+  }
+
+  run "${_NB}" browse example:1 --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq 0                      ]]
+
+  [[    "${output}"  =~  html                   ]]
+  [[    "${output}"  =~  \<title\>nb\</title\>  ]]
+  [[    "${output}"  =~  \404\ Not\ Found       ]]
+}
+
 # 415 #########################################################################
 
 @test "'browse <file>' renders 415 with message when file is encrypted." {

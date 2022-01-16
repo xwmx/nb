@@ -16316,7 +16316,7 @@ _show() {
 
   if [[ "${_selector:-}" =~ : ]] && [[ ! "${_selector:-}" =~ /.*: ]]
   then
-    _notebook_path="$(_notebooks show "${_selector}" --path)"
+    _notebook_path="$(_notebooks show "${_selector%%:*}" --path)" || return 1
 
     if ((_print_path)) && [[ "${_selector:-}" =~ :$ ]]
     then

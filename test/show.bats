@@ -1209,6 +1209,23 @@ https://example.com
   [[ "${output}" ==   "example.md"  ]]
 }
 
+@test "'show <scope>:<id> --path' with invalid notebook and matching id in current notebook returns 1 and prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example File.md" --content "Example content."
+  }
+
+  run "${_NB}" show example:1 --path
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 1                                       ]]
+  [[ "${output}"    =~  \!.*\ Notebook\ not\ found:\ .*example  ]]
+  [[ "${#lines[@]}" -eq 1                                       ]]
+}
+
 # `show <selector>` (notebook name) ###########################################
 
 @test "'show <selector> --filename' with <selector> matching notebook name and note prints filename." {
