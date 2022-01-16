@@ -161,6 +161,7 @@ load test_helper
       --from=markdown                   \
       --to=html                         \
       --output="${_html_file_path}"     \
+      --wrap=preserve                   \
       "${_TMP_DIR}/Local Notebook/Sample Folder/Sample Nested File One.md"
 
     [[ "$(cat "${_html_file_path}")" =~ \<h1\ id=\"sample-nested-title-one ]]
@@ -285,6 +286,7 @@ HEREDOC
       --from=markdown                   \
       --to=html                         \
       --output="${_html_file_path}"     \
+      --wrap=preserve                   \
       "${NB_DIR}/home/Sample Folder/Sample Nested File One.md"
 
     [[ "$(cat "${_html_file_path}")" =~ \<h1\ id=\"sample-nested-title-one ]]
@@ -313,7 +315,13 @@ HEREDOC
 "<p><a href=\"//localhost:6789/home:3?--per-page=2&--columns=70\">\[\[3\]\]</a></p>"
 
   printf "%s\\n" "${output}" | grep -q  \
-"<p><code> \[\[4\]\] </code></p>"
+"<p><code>"
+
+  printf "%s\\n" "${output}" | grep -q  \
+"\[\[4\]\]"
+
+  printf "%s\\n" "${output}" | grep -q  \
+"</code></p>"
 
   printf "%s\\n" "${output}" | grep -q  \
 "<p><a href=\"//localhost:6789/home:5?--per-page=2&--columns=70\">\[\[5\]\]</a></p>"
@@ -360,6 +368,7 @@ HEREDOC
       --from=markdown                   \
       --to=html                         \
       --output="${_html_file_path}"     \
+      --wrap=preserve                   \
       "${NB_DIR}/home/Sample Folder/Sample Nested File One.md"
 
     [[ "$(cat "${_html_file_path}")" =~ \<h1\ id=\"sample-nested-title-one ]]
@@ -465,6 +474,7 @@ HEREDOC
       --from=markdown                   \
       --to=html                         \
       --output="${_html_file_path}"     \
+      --wrap=preserve                   \
       "${NB_DIR}/home/Sample Folder/Sample Nested File One.md"
 
     [[ "$(cat "${_html_file_path}")" =~ \<h1\ id=\"sample-nested-title-one ]]
@@ -562,6 +572,7 @@ HEREDOC
       --to=html                         \
       --output="${_html_file_path}"     \
       --standalone                      \
+      --wrap=preserve                   \
       "${NB_DIR}/home/Sample Folder/Sample Nested File One.md"
 
     [[ "$(cat "${_html_file_path}")" =~ \<h1\ id=\"sample-nested-title-one ]]
@@ -661,6 +672,7 @@ HEREDOC
       --from=markdown                   \
       --to=html                         \
       --output="${_html_file_path}"     \
+      --wrap=preserve                   \
       "${NB_DIR}/home/Sample Folder/Sample Nested File One.md"
 
     [[ "$(cat "${_html_file_path}")" =~ \<h1\ id=\"sample-nested-title-one ]]
@@ -747,6 +759,7 @@ HEREDOC
       --to=html                         \
       --output="${_html_file_path}"     \
       --standalone                      \
+      --wrap=preserve                   \
       "${NB_DIR}/home/Sample Folder/Sample Nested File One.md"
 
     [[ "$(cat "${_html_file_path}")" =~ \<h1\ id=\"sample-nested-title-one ]]
