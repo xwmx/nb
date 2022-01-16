@@ -2454,9 +2454,9 @@ _pandoc() {
     } | {
       if [[ -n "${_pandoc_arguments[*]:-}"  ]]
       then
-        pandoc "${_pandoc_arguments[@]:-}" --wrap=none
+        pandoc "${_pandoc_arguments[@]:-}" --wrap=preserve
       else
-        pandoc --wrap=none
+        pandoc --wrap=preserve
       fi
     } | {
       iconv -f utf-8
