@@ -115,8 +115,8 @@ jobs:
           sudo apt-get install ncat -y
           sudo apt-get install python-pygments -y
           sudo apt-get install w3m  -y
-          curl -LO https://github.com/jgm/pandoc/releases/download/2.11.2/pandoc-2.11.2-1-amd64.deb
-          sudo dpkg -i pandoc-2.11.2-1-amd64.deb
+          curl -LO https://github.com/jgm/pandoc/releases/download/2.17.0.1/pandoc-2.17.0.1-1-amd64.deb
+          sudo dpkg -i pandoc-2.17.0.1-1-amd64.deb
           curl -LO https://github.com/sharkdp/bat/releases/download/v0.16.0/bat_0.16.0_amd64.deb
           sudo dpkg -i bat_0.16.0_amd64.deb
           git config --global user.name   "Example Name"
