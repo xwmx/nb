@@ -2172,69 +2172,6 @@ _less_prompt() {
   printf "%s\\n" "${_prompt}"
 }
 
-# _open_in_gui_app()
-#
-# Usage:
-#   _open_in_gui_app <url> | <path>
-#
-# Description:
-#   Open <url> or <path> in the system GUI web browser or application for the
-#   given file type.
-_open_in_gui_app() {
-  local _target="${1:-}"
-
-  [[ -n "${_target:-}" ]] || return 1
-
-  if _command_exists "xdg-open"
-  then
-    xdg-open "${_target}"
-  elif _command_exists "open"
-  then
-    open "${_target}"
-  elif _command_exists "wslview"
-  then
-    wslview "${_target}"
-  else
-    return 1
-  fi
-}
-
-# _piped_input()
-#
-# Usage:
-#   _piped_input
-#
-# Exit / Error / Return Status:
-#   0 (success, true)  If piped input is present.
-#   1 (error,  false)  If the current input is interactive (eg, a shell).
-_piped_input() {
-  [[ ! -t 0 ]]
-}
-
-# _wrap()
-#
-# Usage:
-#   _wrap [on | off]
-#
-# Description:
-#   Turn on line wrapping / automatic margins.
-_wrap() {
-  if [[ "${1:-}" == "off"  ]]
-  then
-    # NOTE: `tput` vs escape sequence:
-    # https://unix.stackexchange.com/a/558771
-    # https://unix.stackexchange.com/a/515938
-    # https://superuser.com/a/189068
-
-    # tput rmam
-    printf '\033[?7l'
-  elif [[ "${1:-}" == "on" ]]
-  then
-    # tput smam
-    printf '\033[?7h'
-  fi
-}
-
 # _list_files()
 #
 # Usage:
@@ -2412,6 +2349,33 @@ _list_files() {
   }
 }
 
+# _open_in_gui_app()
+#
+# Usage:
+#   _open_in_gui_app <url> | <path>
+#
+# Description:
+#   Open <url> or <path> in the system GUI web browser or application for the
+#   given file type.
+_open_in_gui_app() {
+  local _target="${1:-}"
+
+  [[ -n "${_target:-}" ]] || return 1
+
+  if _command_exists "xdg-open"
+  then
+    xdg-open "${_target}"
+  elif _command_exists "open"
+  then
+    open "${_target}"
+  elif _command_exists "wslview"
+  then
+    wslview "${_target}"
+  else
+    return 1
+  fi
+}
+
 # _pager()
 #
 # Usage:
@@ -2510,6 +2474,18 @@ _pandoc() {
       pandoc
     fi
   fi
+}
+
+# _piped_input()
+#
+# Usage:
+#   _piped_input
+#
+# Exit / Error / Return Status:
+#   0 (success, true)  If piped input is present.
+#   1 (error,  false)  If the current input is interactive (eg, a shell).
+_piped_input() {
+  [[ ! -t 0 ]]
 }
 
 # _print_line()
@@ -2999,6 +2975,30 @@ _string_is_email() {
 #   1 (error,  false)  if not.
 _string_is_url() {
   [[ "${1:-}" =~ ^https\:\/\/|^http\:\/\/|^file\:\/\/|^ftp\:\/\/|^sftp\:\/\/ ]]
+}
+
+# _wrap()
+#
+# Usage:
+#   _wrap [on | off]
+#
+# Description:
+#   Turn on line wrapping / automatic margins.
+_wrap() {
+  if [[ "${1:-}" == "off"  ]]
+  then
+    # NOTE: `tput` vs escape sequence:
+    # https://unix.stackexchange.com/a/558771
+    # https://unix.stackexchange.com/a/515938
+    # https://superuser.com/a/189068
+
+    # tput rmam
+    printf '\033[?7l'
+  elif [[ "${1:-}" == "on" ]]
+  then
+    # tput smam
+    printf '\033[?7h'
+  fi
 }
 
 ###############################################################################
