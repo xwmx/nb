@@ -2454,9 +2454,9 @@ _pandoc() {
     } | {
       if [[ -n "${_pandoc_arguments[*]:-}"  ]]
       then
-        pandoc "${_pandoc_arguments[@]:-}"
+        pandoc "${_pandoc_arguments[@]:-}" --wrap=none
       else
-        pandoc
+        pandoc --wrap=none
       fi
     } | {
       iconv -f utf-8
@@ -16850,7 +16850,7 @@ Can't show archives. Export archive and expand to edit.\\n"
             -e "s/\]\[\[\[/\]\[nb-placeholder-nb/g" \
             -e "s/\]\]\]\]/nb-placeholder-nb\]\]/g"
         } | {
-          pandoc --from org --to html
+          _pandoc --standard-input --from org --to html
         } | {
           LC_ALL=C sed -E                           \
             -e "s/>nb-placeholder-nb/>\[\[/g"       \
@@ -18608,7 +18608,7 @@ HEREDOC
       } | {
         if _command_exists "pandoc"
         then
-          pandoc --from org --to html
+          _pandoc --standard-input --from org --to html
         else
           cat
         fi
