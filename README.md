@@ -5224,7 +5224,7 @@ _example() {
   [[ -z "${_selector:-}" ]] && printf "Usage: example <selector>\\n" && exit 1
 
   # Get the filename using the selector.
-  local _filename
+  local _filename=
   _filename="$(_show "${_selector}" --filename)"
 
   # Rest of subcommand function...
@@ -5238,7 +5238,7 @@ notebook:
 # _example() continued:
 
 # get the notebook path
-local _notebook_path
+local _notebook_path=
 _notebook_path="$(_notebooks current --path)"
 
 # print the file at "${_notebook_path}/${_filename}" to standard output

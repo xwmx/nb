@@ -807,7 +807,7 @@ __load_themes() {
     do
       if [[ -e "${__file}"        ]]
       then
-        local _basename
+        local _basename=
         _basename="$(basename "${__file}")"
         local _name="${_basename%%.*}"
 
@@ -16338,7 +16338,7 @@ _show() {
     _notebook_path="$(_notebooks current --path)"
   fi
 
-  local _relative_path
+  local _relative_path=
   _relative_path="$(
     _selector_resolve_path "${_selector}" "${_notebook_path}" --relative
   )"
@@ -16352,7 +16352,7 @@ _show() {
     _relative_folder_path="${_relative_path%\/*}"
   fi
 
-  local _basename
+  local _basename=
   _basename="$(basename "${_relative_path}")"
 
   local _target_path="${_notebook_path}/${_relative_path}"
