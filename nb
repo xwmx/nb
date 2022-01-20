@@ -22030,7 +22030,7 @@ $(_color_primary "${_ME} shell") started. Enter $(_color_primary "ls") to list n
 Enter $(_color_primary "help") for usage information. Enter $(_color_primary "exit") to exit.
 HEREDOC
 
-  if [[ -n "${_initial_command:-}" ]]
+  if [[ -n "${_initial_command:-}"            ]]
   then
     eval "\"${_MY_PATH}\" ${_initial_command}"
   fi
@@ -22040,24 +22040,26 @@ HEREDOC
   do
     history -s "${__input}"
 
-    if [[ "${__input}" =~ ^exit$|^quit$|^q$ ]]
+    if [[ "${__input}" =~ ^exit$|^quit$|^q$   ]]
     then
       return 0
-    elif [[ "${__input}" =~ ^clear$ ]]
+    elif [[ "${__input}" =~ ^clear$           ]]
     then
       clear
     else
       # Strip leading 'n', 'nb', or 'notes'.
       local _normalized_input=
       _normalized_input="$(
-        printf "%s\\n" "${__input}"       \
-          | LC_ALL=C sed -e 's/^n$//'     \
-          | LC_ALL=C sed -e 's/^n //'     \
-          | LC_ALL=C sed -e 's/^nb$//'    \
-          | LC_ALL=C sed -e 's/^nb //'    \
-          | LC_ALL=C sed -e 's/^notes$//' \
+        printf "%s\\n" "${__input}"           \
+          | LC_ALL=C sed -e 's/^n$//'         \
+          | LC_ALL=C sed -e 's/^n //'         \
+          | LC_ALL=C sed -e 's/^nb$//'        \
+          | LC_ALL=C sed -e 's/^nb //'        \
+          | LC_ALL=C sed -e 's/^notes$//'     \
           | LC_ALL=C sed -e 's/^notes //'
       )"
+
+      local _command_name=
 
       if [[ "${_normalized_input}" =~ ^help   ]] ||
          [[ "${_normalized_input}" =~ ^help\  ]] ||
@@ -22065,27 +22067,29 @@ HEREDOC
          [[ "${_normalized_input}" =~ ^h\     ]]
       then
         eval "\"${_MY_PATH}\" ${_normalized_input}" --shell || :
-      elif [[ "${_normalized_input}" =~ ^echo\ .*   ]] ||
+      elif [[ "${_normalized_input}" =~ ^echo\ .*   ]]      ||
            [[ "${_normalized_input}" =~ ^printf\ .* ]]
       then
         eval "${_normalized_input}"
       elif _command_name="$(
-        printf "%s\\n" "${_normalized_input}"   \
-          | grep --only-matching --color=never  \
-              -e '^code'    \
-              -e '^emacs'   \
-              -e '^gvim'    \
-              -e '^macdown' \
-              -e '^mate'    \
-              -e '^mvim'    \
-              -e '^nano'    \
-              -e '^nvim'    \
-              -e '^subl'    \
+        printf "%s\\n" "${_normalized_input}" \
+          | grep                              \
+              --color=never                   \
+              --only-matching                 \
+              -e '^code'                      \
+              -e '^emacs'                     \
+              -e '^gvim'                      \
+              -e '^macdown'                   \
+              -e '^mate'                      \
+              -e '^mvim'                      \
+              -e '^nano'                      \
+              -e '^nvim'                      \
+              -e '^subl'                      \
               -e '^vim'
       )"
       then
         _normalized_input="$(
-          printf "%s\\n" "${_normalized_input}" \
+          printf "%s\\n" "${_normalized_input}"     \
             | LC_ALL=C sed -e "s/^${_command_name} //"
         )"
 
