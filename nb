@@ -20757,24 +20757,24 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
 
       local _remote_branches=()
       _remote_branches=($(
-        git -C "${_notebook_path}" ls-remote        \
-          --heads "${_current_remote_url:-}"        \
-           2>/dev/null                              \
+        git -C "${_notebook_path}" ls-remote  \
+          --heads "${_current_remote_url:-}"  \
+           2>/dev/null                        \
           | LC_ALL=C sed "s/.*\///g" || :
       ))
 
-      if [[ -z "${_remote_branches[*]:-}"       ]]
+      if [[ -z "${_remote_branches[*]:-}"     ]]
       then
         _exit_1 printf "Unable to contact remote.\\n"
       fi
 
       if ! _contains "${_remote_branch_name:-}" "${_remote_branches[@]:-}"
       then
-        _exit_1 printf "Remote branch not found: %s\\n"   \
+        _exit_1 printf "Remote branch not found: %s\\n" \
           "${_remote_branch_name:-}"
       fi
 
-      printf "Resetting remote branch: %s\\n"             \
+      printf "Resetting remote branch: %s\\n"           \
         "$(_color_primary "${_remote_branch_name:-}")"
 
       _print_line "------------------------"
@@ -20802,15 +20802,15 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
       cd "${_blank_repo_path}" || return 1
 
       {
-        git -C "${_blank_repo_path}" init                     \
-            --initial-branch "${_remote_branch_name}"         &&
-          touch "${_blank_repo_path}/.index"                  &&
-          git -C "${_blank_repo_path}" add --all              &&
-          git -C "${_blank_repo_path}" commit                 \
-            -a -m "[nb] Initialize"                           &&
-          git -C "${_blank_repo_path}" remote add             \
-            origin "${_current_remote_url:-}"                 &&
-          git -C "${_blank_repo_path}" push origin            \
+        git -C "${_blank_repo_path}" init             \
+            --initial-branch "${_remote_branch_name}" &&
+          touch "${_blank_repo_path}/.index"          &&
+          git -C "${_blank_repo_path}" add --all      &&
+          git -C "${_blank_repo_path}" commit         \
+            -a -m "[nb] Initialize"                   &&
+          git -C "${_blank_repo_path}" remote add     \
+            origin "${_current_remote_url:-}"         &&
+          git -C "${_blank_repo_path}" push origin    \
             "${_remote_branch_name}" --force
       } &>/dev/null ||
         _exit_1 printf "Unable to reset remote branch: %s\\n" \
@@ -20819,12 +20819,12 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
       printf "Remote branch reset.\\n"
       ;;
     set|add)
-      if [[ -z "${_new_remote_url:-}"         ]]
+      if [[ -z "${_new_remote_url:-}" ]]
       then
         _exit_1 _help "remote"
       fi
 
-      if [[ -z "${_new_branch:-}"             ]]
+      if [[ -z "${_new_branch:-}"     ]]
       then
         _new_branch="${_current_branch}"
       fi
