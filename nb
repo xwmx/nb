@@ -19454,11 +19454,11 @@ HEREDOC
   # Description:
   #   Start the HTTP server in the background.
   _browse_serve() {
-    (ncat                                   \
-      --exec "${_MY_PATH} browse --respond" \
-      --keep-open                           \
-      --listen                              \
-      --source-port "${NB_SERVER_PORT}"     \
+    (ncat                                     \
+      --exec "${_MY_PATH} browse --respond"   \
+      --keep-open                             \
+      --listen                                \
+      "${NB_SERVER_HOST}" "${NB_SERVER_PORT}" \
       2>/dev/null) &
 
     local _pid="${!}"
