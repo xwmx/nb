@@ -48,44 +48,15 @@ on:
   #   branches: [ master ]
 
 jobs:
-  # NOTE: Turned off 2021-01-04 due to frequent errors.
-  # TODO: Review
-  # test-macos-11:
-  #   name: "Test: macOS Big Sur 11.0"
-  #   runs-on: macos-11.0
-  #   steps:
-  #     - uses: actions/checkout@v1
-  #     - name: "Setup"
-  #       run: |
-  #         brew update
-  #         brew install bat
-  #         brew install bats-core
-  #         brew install expect
-  #         brew install nmap
-  #         brew install pandoc
-  #         brew install w3m
-  #         git config --global user.name   "Example Name"
-  #         git config --global user.email  "example@example.com"
-  #     - name: "Set $TERM=xterm"
-  #       run:  printf "TERM=xterm\\n" >> $GITHUB_ENV
-  #     - name: "Run bats tests"
-  #       run:  unbuffer bats test
-  #     # - name: "Install Go"
-  #     #   uses: actions/setup-go@v2
-  #     # - name: "Run go test"
-  #     #   run: cd nb.go && go test
-  #     # - name: "Run nb.go bats test"
-  #     #   run: unbuffer bats test
-  test-macos-10-15:
-    name: "Test: macOS Catalina 10.15"
-    runs-on: macos-10.15
+  test-macos-11:
+    name: "Test: macOS Big Sur 11.0"
+    runs-on: macos-11.0
     steps:
       - uses: actions/checkout@v1
       - name: "Setup"
         run: |
           brew update
           brew install bat
-          brew unlink  bats
           brew install bats-core
           brew install expect
           brew install gpg
@@ -104,6 +75,34 @@ jobs:
       #   run: cd nb.go && go test
       # - name: "Run nb.go bats test"
       #   run: unbuffer bats test
+  # test-macos-10-15:
+  #   name: "Test: macOS Catalina 10.15"
+  #   runs-on: macos-10.15
+  #   steps:
+  #     - uses: actions/checkout@v1
+  #     - name: "Setup"
+  #       run: |
+  #         brew update
+  #         brew install bat
+  #         brew unlink  bats
+  #         brew install bats-core
+  #         brew install expect
+  #         brew install gpg
+  #         brew install nmap
+  #         brew install pandoc
+  #         brew install w3m
+  #         git config --global user.name   "Example Name"
+  #         git config --global user.email  "example@example.com"
+  #     - name: "Set $TERM=xterm"
+  #       run:  printf "TERM=xterm\\n" >> $GITHUB_ENV
+  #     - name: "Run bats tests"
+  #       run:  unbuffer bats test
+  #     # - name: "Install Go"
+  #     #   uses: actions/setup-go@v2
+  #     # - name: "Run go test"
+  #     #   run: cd nb.go && go test
+  #     # - name: "Run nb.go bats test"
+  #     #   run: unbuffer bats test
   test-ubuntu-latest:
     name: "Test: Ubuntu 20.04"
     runs-on: ubuntu-20.04
@@ -116,8 +115,8 @@ jobs:
           sudo apt-get install ncat -y
           sudo apt-get install python-pygments -y
           sudo apt-get install w3m  -y
-          curl -LO https://github.com/jgm/pandoc/releases/download/2.11.2/pandoc-2.11.2-1-amd64.deb
-          sudo dpkg -i pandoc-2.11.2-1-amd64.deb
+          curl -LO https://github.com/jgm/pandoc/releases/download/2.17.0.1/pandoc-2.17.0.1-1-amd64.deb
+          sudo dpkg -i pandoc-2.17.0.1-1-amd64.deb
           curl -LO https://github.com/sharkdp/bat/releases/download/v0.16.0/bat_0.16.0_amd64.deb
           sudo dpkg -i bat_0.16.0_amd64.deb
           git config --global user.name   "Example Name"

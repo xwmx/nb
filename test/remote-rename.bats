@@ -86,15 +86,15 @@ load test_helper
   run "${_NB}" remote rename sample-notebook "updated-branch-name" <<< "y${_NEWLINE}"
 
   printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${output}: '\\n%s\\n'\\n" "${output}"
 
   [[ "${status}"    -eq 0                                           ]]
 
   [[ "${lines[0]}"  =~  Renaming\ remote\ branch                    ]]
-  [[ "${lines[1]}"  =~  [^-]-----------------------[^-]             ]]
+  [[ "${lines[1]}"  =~  [^-]----------------------[^-]              ]]
   [[ "${lines[2]}"  =~  From:\ sample-notebook                      ]]
   [[ "${lines[3]}"  =~  To:\ \ \ .*updated-branch-name.*$           ]]
-  [[ "${lines[4]}"  =~  [^-]--------------[^-]                      ]]
+  [[ "${lines[4]}"  =~  [^-]-----------[^-]                         ]]
 
   printf "local example branches:\\n%s\\n" "$(
     git -C "${NB_DIR}/Example Notebook" branch --all
@@ -753,7 +753,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*updated-branch-name.*\)  ]]
   [[ "${lines[1]}"  =~  [^-]-----------------------[^-]             ]]
   [[ "${lines[2]}"  =~  From:\ master                               ]]
   [[ "${lines[3]}"  =~  To:\ \ \ .*updated-branch-name.*$           ]]
-  [[ "${lines[4]}"  =~  [^-]--------------[^-]                      ]]
+  [[ "${lines[4]}"  =~  [^-]-----------[^-]                         ]]
   [[ "${lines[5]}"  =~  Renamed\ to:\ .*updated-branch-name.*$      ]]
 
     diff                                                            \

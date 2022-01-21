@@ -109,6 +109,11 @@ _setup() {
   # A URL for an HTML file with multiple title tags with unicode characters.
   export _BOOKMARK_TITLES_URL="file://${NB_TEST_BASE_PATH}/fixtures/example.com-titles.html"
 
+  # $_BOOKMARK_TITLES_NEWLINES_URL
+  #
+  # A URL for an HTML file with <title> tags separated from content by newlines.
+  export _BOOKMARK_TITLES_NEWLINES_URL="file://${NB_TEST_BASE_PATH}/fixtures/example.com-titles-newlines.html"
+
   # $_ERROR_PREFIX
   #
   # The color string added to error messages by `_exit_1` and `_return_1`.

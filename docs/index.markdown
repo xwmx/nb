@@ -328,31 +328,31 @@ the [`nb update`](#update) subcommand.
 ## Overview
 
 <p align="center">
-  <a href="#-notes">📝&nbsp;Notes</a>&nbsp;·
+  <a href="#-notes"><code>📝</code>&nbsp;Notes</a>&nbsp;·
   <a href="#adding">Adding</a>&nbsp;·
   <a href="#listing--filtering">Listing</a>&nbsp;·
   <a href="#editing">Editing</a>&nbsp;·
   <a href="#viewing">Viewing</a>&nbsp;·
   <a href="#deleting">Deleting</a>&nbsp;·
-  <a href="#-bookmarks">🔖&nbsp;Bookmarks</a>&nbsp;·
-  <a href="#-todos">✅&nbsp;Todos</a>&nbsp;·
-  <a href="#%EF%B8%8F-tasks">✔️&nbsp;Tasks</a>&nbsp;·
-  <a href="#-tagging">🏷&nbsp;Tagging</a>&nbsp;·
-  <a href="#-linking">🔗&nbsp;Linking</a>&nbsp;·
-  <a href="#-browsing">🌍&nbsp;Browsing</a>&nbsp;·
-  <a href="#-images">🌄&nbsp;Images</a>&nbsp;·
-  <a href="#-zettelkasten">🗂&nbsp;Zettelkasten</a>&nbsp;·
-  <a href="#-folders">📂&nbsp;Folders</a>&nbsp;·
-  <a href="#-pinning">📌&nbsp;Pinning</a>&nbsp;·
-  <a href="#-search">🔍&nbsp;Search</a>&nbsp;·
-  <a href="#-moving--renaming">↔&nbsp;Moving&nbsp;&&nbsp;Renaming</a>&nbsp;·
-  <a href="#-revision-history">🗒&nbsp;History</a>&nbsp;·
-  <a href="#-notebooks">📚&nbsp;Notebooks</a>&nbsp;·
-  <a href="#-git-sync">🔄&nbsp;Git&nbsp;Sync</a>&nbsp;·
-  <a href="#%EF%B8%8F-import--export">↕️&nbsp;Import&nbsp;/&nbsp;Export</a>&nbsp;·
-  <a href="#%EF%B8%8F-set--settings">⚙️&nbsp;<code>set</code>&nbsp;&&nbsp;<code>settings</code></a>&nbsp;·
-  <a href="#-color-themes">🎨&nbsp;Color&nbsp;Themes</a>&nbsp;·
-  <a href="#-plugins">🔌&nbsp;Plugins</a>&nbsp;·
+  <a href="#-bookmarks"><code>🔖</code>&nbsp;Bookmarks</a>&nbsp;·
+  <a href="#-todos"><code>✅</code>&nbsp;Todos</a>&nbsp;·
+  <a href="#%EF%B8%8F-tasks"><code>✔️</code>&nbsp;Tasks</a>&nbsp;·
+  <a href="#-tagging"><code>🏷</code>&nbsp;Tagging</a>&nbsp;·
+  <a href="#-linking"><code>🔗</code>&nbsp;Linking</a>&nbsp;·
+  <a href="#-browsing"><code>🌍</code>&nbsp;Browsing</a>&nbsp;·
+  <a href="#-images"><code>🌄</code>&nbsp;Images</a>&nbsp;·
+  <a href="#-zettelkasten"><code>🗂</code>&nbsp;Zettelkasten</a>&nbsp;·
+  <a href="#-folders"><code>📂</code>&nbsp;Folders</a>&nbsp;·
+  <a href="#-pinning"><code>📌</code>&nbsp;Pinning</a>&nbsp;·
+  <a href="#-search"><code>🔍</code>&nbsp;Search</a>&nbsp;·
+  <a href="#-moving--renaming"><code>↔</code>&nbsp;Moving&nbsp;&&nbsp;Renaming</a>&nbsp;·
+  <a href="#-revision-history"><code>🗒</code>&nbsp;History</a>&nbsp;·
+  <a href="#-notebooks"><code>📚</code>&nbsp;Notebooks</a>&nbsp;·
+  <a href="#-git-sync"><code>🔄</code>&nbsp;Git&nbsp;Sync</a>&nbsp;·
+  <a href="#%EF%B8%8F-import--export"><code>↕️</code>&nbsp;Import&nbsp;/&nbsp;Export</a>&nbsp;·
+  <a href="#%EF%B8%8F-set--settings"><code>⚙️</code><code>set</code>&<code>settings</code></a>&nbsp;·
+  <a href="#-color-themes"><code>🎨</code>&nbsp;Color&nbsp;Themes</a>&nbsp;·
+  <a href="#-plugins"><code>🔌</code>&nbsp;Plugins</a>&nbsp;·
   <a href="#-selectors"><code>:/</code>&nbsp;Selectors</a>&nbsp;·
   <a href="#01-metadata"><code>01</code>&nbsp;Metadata</a>&nbsp;·
   <a href="#-interactive-shell"><code>❯</code>&nbsp;Shell</a>&nbsp;·
@@ -372,7 +372,7 @@ To get started, simply run:
 nb
 ```
 
-`nb` sets up your initial "home" notebook the first time it runs.
+`nb` sets up your initial `home` notebook the first time it runs.
 
 By default, notebooks and notes are global (at `~/.nb`),
 so they are always available to `nb`
@@ -1988,6 +1988,10 @@ nb example:12 open
 # open bookmark 12 in the notebook named "example", alternative
 nb example:open 12
 ```
+
+*N.B. To use [`nb open`](#open) with
+[WSL](https://docs.microsoft.com/en-us/windows/wsl/install),
+install [wslu](https://github.com/wslutilities/wslu).*
 
 [`nb peek`](#peek) (shortcut: [`nb p`](#peek), alias: [`nb preview`](#peek))
 opens the bookmarked URL in your terminal web browser,
@@ -5226,7 +5230,7 @@ _example() {
   [[ -z "${_selector:-}" ]] && printf "Usage: example <selector>\\n" && exit 1
 
   # Get the filename using the selector.
-  local _filename
+  local _filename=
   _filename="$(_show "${_selector}" --filename)"
 
   # Rest of subcommand function...
@@ -5240,7 +5244,7 @@ notebook:
 # _example() continued:
 
 # get the notebook path
-local _notebook_path
+local _notebook_path=
 _notebook_path="$(_notebooks current --path)"
 
 # print the file at "${_notebook_path}/${_filename}" to standard output
@@ -8769,7 +8773,7 @@ The full content of the bookmarked page, converted to Markdown.
 The `## Content` section makes the page content available locally for
 full-text search and viewing of page content. The source HTML is converted
 to inline Markdown to reduce the amount of markup, make it more readable,
-and make page conent easily viewable in the terminal as markdown and
+and make page content easily viewable in the terminal as markdown and
 streamlined HTML in terminal web browsers.
 
 <p>
@@ -8823,7 +8827,7 @@ the todo completion state, followed by the todo title.
 
 ## Due
 
-2100-01-01T01:01:01Z
+2100-01-01
 
 ## Description
 
@@ -9043,7 +9047,7 @@ at the root level of the notebook directory.
 
 ## Tests
 
-With more than 1,900 tests spanning tens of thousands of lines,
+With more than 2,000 tests spanning tens of thousands of lines,
 `nb` is really mostly a
 [test suite](https://github.com/xwmx/nb/tree/master/test).
 Tests run continuously [via GitHub Actions](https://github.com/xwmx/nb/actions)

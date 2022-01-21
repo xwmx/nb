@@ -74,7 +74,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="6.7.9"
+_VERSION="6.8.0"
 
 # $_ME
 #
@@ -262,7 +262,7 @@ _tput() {
       cols|lines)
         {
           stty size 2>/dev/null || printf "20 80\\n"
-        } | if [[ "${1:-}" == "cols"    ]]
+        } | if [[ "${1:-}" == "cols" ]]
             then
               cut -d " " -f 2
             else
@@ -467,6 +467,15 @@ NB_DIR settings prompt:
   ${_ME} settings nb_dir
 HEREDOC
 fi
+
+# $NB_AUTO_LIMIT
+#
+# Default: '0'
+#
+# Set to a positive integer to automatically limit `ls` output to the available
+# terminal height. Set to a value higher than `1` to limit by an additional
+# amount to support multi-line prompts.
+export NB_AUTO_LIMIT="${NB_AUTO_LIMIT:-0}"
 
 # $NB_AUTO_SYNC
 #
@@ -798,7 +807,7 @@ __load_themes() {
     do
       if [[ -e "${__file}"        ]]
       then
-        local _basename
+        local _basename=
         _basename="$(basename "${__file}")"
         local _name="${_basename%%.*}"
 
@@ -860,10 +869,13 @@ export _TPUT_COLOR_PRIMARY=
        _TPUT_COLOR_PRIMARY="$(_tput setaf "${NB_COLOR_PRIMARY}")"
 
 export _TPUT_COLOR_SECONDARY=
-      _TPUT_COLOR_SECONDARY="$(_tput setaf "${NB_COLOR_SECONDARY}")"
+       _TPUT_COLOR_SECONDARY="$(_tput setaf "${NB_COLOR_SECONDARY}")"
 
-export _TPUT_SETAF_8=       ; _TPUT_SETAF_8="$(_tput setaf 8)"
-export _TPUT_SMUL=          ; _TPUT_SMUL="$(_tput smul)"
+export _TPUT_SETAF_8=
+       _TPUT_SETAF_8="$(_tput setaf 8)"
+
+export _TPUT_SMUL=
+       _TPUT_SMUL="$(_tput smul)"
 
 # _color_brackets()
 #
@@ -1162,8 +1174,10 @@ _temp() {
   esac
 }
 
-trap "_temp cleanup"  EXIT
-trap "exit"           INT
+trap "_temp cleanup"                        EXIT
+trap "exit"                                 INT
+trap 'printf "\\n"; _temp cleanup; exit 0'  SIGINT
+trap 'printf "\\n"; _temp cleanup; exit 0'  SIGTERM
 
 ###############################################################################
 # Helpers: Group 1                                             Helpers: Group 1
@@ -2158,42 +2172,6 @@ _less_prompt() {
   printf "%s\\n" "${_prompt}"
 }
 
-# _piped_input()
-#
-# Usage:
-#   _piped_input
-#
-# Exit / Error / Return Status:
-#   0 (success, true)  If piped input is present.
-#   1 (error,  false)  If the current input is interactive (eg, a shell).
-_piped_input() {
-  [[ ! -t 0 ]]
-}
-
-# _wrap()
-#
-# Usage:
-#   _wrap [on | off]
-#
-# Description:
-#   Turn on line wrapping / automatic margins.
-_wrap() {
-  if [[ "${1:-}" == "off"  ]]
-  then
-    # NOTE: `tput` vs escape sequence:
-    # https://unix.stackexchange.com/a/558771
-    # https://unix.stackexchange.com/a/515938
-    # https://superuser.com/a/189068
-
-    # tput rmam
-    printf '\033[?7l'
-  elif [[ "${1:-}" == "on" ]]
-  then
-    # tput smam
-    printf '\033[?7h'
-  fi
-}
-
 # _list_files()
 #
 # Usage:
@@ -2371,6 +2349,33 @@ _list_files() {
   }
 }
 
+# _open_in_gui_app()
+#
+# Usage:
+#   _open_in_gui_app <url> | <path>
+#
+# Description:
+#   Open <url> or <path> in the system GUI web browser or application for the
+#   given file type.
+_open_in_gui_app() {
+  local _target="${1:-}"
+
+  [[ -n "${_target:-}" ]] || return 1
+
+  if _command_exists "xdg-open"
+  then
+    xdg-open "${_target}"
+  elif _command_exists "open"
+  then
+    open "${_target}"
+  elif _command_exists "wslview"
+  then
+    wslview "${_target}"
+  else
+    return 1
+  fi
+}
+
 # _pager()
 #
 # Usage:
@@ -2449,9 +2454,9 @@ _pandoc() {
     } | {
       if [[ -n "${_pandoc_arguments[*]:-}"  ]]
       then
-        pandoc "${_pandoc_arguments[@]:-}"
+        pandoc "${_pandoc_arguments[@]:-}" --wrap=preserve
       else
-        pandoc
+        pandoc --wrap=preserve
       fi
     } | {
       iconv -f utf-8
@@ -2469,6 +2474,18 @@ _pandoc() {
       pandoc
     fi
   fi
+}
+
+# _piped_input()
+#
+# Usage:
+#   _piped_input
+#
+# Exit / Error / Return Status:
+#   0 (success, true)  If piped input is present.
+#   1 (error,  false)  If the current input is interactive (eg, a shell).
+_piped_input() {
+  [[ ! -t 0 ]]
 }
 
 # _print_line()
@@ -2958,6 +2975,30 @@ _string_is_email() {
 #   1 (error,  false)  if not.
 _string_is_url() {
   [[ "${1:-}" =~ ^https\:\/\/|^http\:\/\/|^file\:\/\/|^ftp\:\/\/|^sftp\:\/\/ ]]
+}
+
+# _wrap()
+#
+# Usage:
+#   _wrap [on | off]
+#
+# Description:
+#   Turn on line wrapping / automatic margins.
+_wrap() {
+  if [[ "${1:-}" == "off"  ]]
+  then
+    # NOTE: `tput` vs escape sequence:
+    # https://unix.stackexchange.com/a/558771
+    # https://unix.stackexchange.com/a/515938
+    # https://superuser.com/a/189068
+
+    # tput rmam
+    printf '\033[?7l'
+  elif [[ "${1:-}" == "on" ]]
+  then
+    # tput smam
+    printf '\033[?7h'
+  fi
 }
 
 ###############################################################################
@@ -5170,7 +5211,7 @@ _list() {
     # Example:
     #   # file: ~/.nbrc
     #   export NB_PINNED_PATTERN="#pinned"
-    if [[ "${NB_PINNED_PATTERN:-}"    ]]
+    if [[ -n "${NB_PINNED_PATTERN:-}" ]]
     then
       _pinned_basenames=($(
         {
@@ -6122,7 +6163,7 @@ _ls() {
             )"
           fi
 
-          printf "%s%s\\n" "${_padding:-}" "${_line_hi:-}"
+          printf "%s%s%s\\n" "${_TPUT_SGR0}" "${_padding:-}" "${_line_hi:-}"
           _output_line_raw="${_padding}${_line_raw}\\n"
           _line_number=$((_line_number + 1))
 
@@ -6369,6 +6410,7 @@ _ls() {
   then
     _list_options+=("--limit" "${_limit}")
   elif ! ((_all))                                       &&
+       ! ((${NB_AUTO_LIMIT:-0}))                        &&
        {
          [[ -z "${_selector_relative_path:-}"       ]]  ||
          {
@@ -6406,6 +6448,54 @@ _ls() {
      }
   then
     _display_header_and_footer=1
+  fi
+
+  # Pre-load auto --limit header and footer.
+
+  local _footer=
+  local _header=
+
+  if ((${NB_AUTO_LIMIT:-0}))  &&
+     ! ((_all))               &&
+     ! _contains "--limit" "${_list_options[@]:-}"
+  then
+    local _available_lines=0
+    _available_lines="$(_tput lines)"
+
+    local _header_and_footer_line_count=0
+
+    if ((NB_HEADER)) && ((_display_header_and_footer))
+    then
+      _header="$(_ls_print_header "${_header_flags[@]:-}")"
+    fi
+
+    if ((NB_FOOTER)) && ((_display_header_and_footer))
+    then
+      _footer="$(_ls_print_footer "${_selector_folder_path:-}")"
+    fi
+
+    local _header_and_footer_line_count=0
+    _header_and_footer_line_count="$(
+      {
+        [[ -n "${_header:-}" ]] && printf "%s\\n" "${_header:-}"
+        [[ -n "${_footer:-}" ]] && printf "%s\\n" "${_footer:-}"
+
+        printf ""
+      } | wc -l | xargs
+    )"
+
+    local _auto_limit_adjustment="$((NB_AUTO_LIMIT + 1))"
+    local _auto_limit_amount=1
+
+    _auto_limit_amount="$((
+      ${_available_lines:-1}                -
+        ${_header_and_footer_line_count:-0} -
+        ${_auto_limit_adjustment:-0}
+    ))"
+
+    [[ "${_auto_limit_amount}" -gt 0 ]] || _auto_limit_amount=1
+
+    _list_options+=("--limit" "${_auto_limit_amount:-1}")
   fi
 
   local _list_error=
@@ -6514,7 +6604,12 @@ _ls() {
 
     if ((NB_HEADER)) && ((_display_header_and_footer))
     then
-      _ls_print_header "${_header_flags[@]:-}"
+      if [[ -n "${_header:-}"             ]]
+      then
+        printf "%s\\n" "${_header:-}"
+      else
+        _ls_print_header "${_header_flags[@]:-}"
+      fi
     fi
 
     if [[ -n "${_selector_folder_path:-}" ]] &&
@@ -6530,9 +6625,9 @@ _ls() {
     # Footer
     # ------
 
-    local _footer=
-
-    if ((NB_FOOTER)) && ((_display_header_and_footer))
+    if ((NB_FOOTER))                  &&
+       ((_display_header_and_footer)) &&
+       [[ -z "${_footer:-}" ]]
     then
       _footer="$(_ls_print_footer "${_selector_folder_path:-}")"
     fi
@@ -6543,12 +6638,15 @@ _ls() {
     then # print preloaded footer
       printf "%s\\n" "${_footer}"
     fi
-  } | if ((_use_pager))
-      then
-        _pager
-      else
-        cat
-      fi
+  } | {
+    if ((_use_pager))
+    then
+      _pager
+    else
+      cat
+    fi
+  }
+
   if ((_fast_exit))
   then
     exit 0
@@ -6978,7 +7076,7 @@ _notebooks() {
           IFS='' read -r -e -d $'\n' -p   \
 "${_NEWLINE}$(_color_primary "Update?")  $(_color_brackets "y/N") " __yn
 
-          case ${__yn} in
+          case "${__yn}" in
             [Yy]*)
               break
               ;;
@@ -7700,12 +7798,9 @@ HEREDOC
 
     if [[ "${_subcommand:-}"    =~ ^open$|^o$ ]]
     then
-      if _command_exists "xdg-open"
+      if _open_in_gui_app "${_notebook_path:-}"
       then
-        xdg-open "${_notebook_path}"
-      elif _command_exists "open"
-      then
-        open "${_notebook_path}"
+        return 0
       else
         _exit_1 printf                                                  \
           "%s doesn't know how to open directories on this system.\\n"  \
@@ -9137,12 +9232,13 @@ _edit_file() {
     if ! _file_is_text "${_file_path}"    &&
        [[ ! -d "${_file_path}"        ]]
     then
-      if _command_exists "xdg-open"
+      if _open_in_gui_app "${_file_path:-}"
       then
-        xdg-open "${_file_path}" && return 0
-      elif [[ "${OSTYPE}" =~ ^darwin  ]]
-      then
-        open "${_file_path}" && return 0
+        return 0
+      else
+        _exit_1 printf                                \
+          "%s doesn't know how to edit this file.\\n" \
+          "$(_color_primary "${_ME}")"
       fi
     fi
   fi
@@ -9669,15 +9765,18 @@ _render() {
       'a8a8a8' 'b2b2b2' 'bcbcbc' 'c6c6c6' 'd0d0d0' 'dadada' 'e4e4e4' 'eeeeee'
     )
 
+    # #1a1a1a #1b1b20 #17171c #19191f #18181c
+    local _color_background_hex="#141418"
+    local _color_background_alt_hex="#17171c" # #1b1b20 #1e1e25 #212121
     local _color_dim_hex="#626480"
     local _color_primary_hex="#7593eb"
-    # TODO
-    # local _color_secondary_hex=
+    # TODO: local _color_secondary_hex=
+    local _color_text_hex="#c5c4cc"           # #e6e6e6 #dedede
 
     if [[ "${NB_COLOR_PRIMARY}" -lt 256 ]]
     then
       _color_primary_hex="#${_ansi_hex_values[${NB_COLOR_PRIMARY}]}"
-      # _color_secondary_hex="#${_ansi_hex_values[${NB_COLOR_SECONDARY}]}"
+      # TODO: _color_secondary_hex="#${_ansi_hex_values[${NB_COLOR_SECONDARY}]}"
 
       # desaturate select colors
       case "${_color_primary_hex}" in
@@ -9695,8 +9794,8 @@ _render() {
 <title>${_html_title}</title>
 <style>
 html {
-  background-color:   #1a1a1a;
-  color:              #e6e6e6;
+  background-color:   ${_color_background_hex};
+  color:              ${_color_text_hex};
   font-size:          16px;
   line-height:        1.5;
 }
@@ -9787,13 +9886,13 @@ nav a:visited,
 a.list-item,
 a.list-item:hover,
 a.list-item:visited {
-  color:              #e6e6e6;
+  color:              ${_color_text_hex};
   text-decoration:    none;
 }
 
 blockquote {
   border-left:        2px solid #4d4d4d;
-  color:              #606060;
+  color:              #878787;            /* #606060 */
   margin:             1em 0 1em 1.7em;
   padding-left:       1em;
 }
@@ -9806,7 +9905,8 @@ code {
 }
 
 pre {
-  background-color:   #212121;
+  background-color:   ${_color_background_alt_hex};
+  border:             1px solid ${_color_background_alt_hex};
   border-radius:      1px;
   margin:             1rem 0;
   overflow:           auto;
@@ -9891,7 +9991,7 @@ video {
 
 audio:focus,
 video:focus {
-  outline:            #1a1a1a;
+  outline:            ${_color_background_hex};
 }
 
 video {
@@ -9977,10 +10077,10 @@ label[for=search-input] {
 }
 
 #search-input {
-  background-color:   #1a1a1a;
+  background-color:   ${_color_background_hex};
   border:             none;
   border-bottom:      1px solid #4d4d4d;
-  color:              #e6e6e6;
+  color:              ${_color_text_hex};
   font-size:          1rem;
   padding:            0.5rem 0;
   width:              100%;
@@ -10026,7 +10126,7 @@ input[type="submit"] {
   border:             none;
   color:              ${_color_primary_hex};
   font-size:          1rem;
-  outline:            0 solid #1a1a1a;
+  outline:            0 solid ${_color_background_hex};
   padding:            1rem;
 }
 
@@ -10049,7 +10149,7 @@ input[type="submit"]:hover {
 
 textarea,
 .ace_editor {
-  background-color:   #1d1d1d;
+  background-color:   ${_color_background_alt_hex};
   border:             none;
   box-sizing:         border-box;
   color:              #dddddd;
@@ -10057,14 +10157,14 @@ textarea,
   line-height:        1.5;
   margin-bottom:      1rem;
   margin-top:         1rem;
-  outline:            1px solid #242424;
+  outline:            1px solid ${_color_background_alt_hex};
   padding:            0;
   vertical-align:     top;
   width:              100%;
 }
 
 .ace_editor {
-  border:             1rem solid #1d1d1d;
+  border:             1rem solid ${_color_background_alt_hex};
 }
 
 textarea {
@@ -12042,7 +12142,7 @@ _bookmark() {
       local _relative_path=
       _relative_path="$(_show "${_selector}" --relative-path)"
 
-      local _notebook_path
+      local _notebook_path=
       _notebook_path="$(_notebooks current --path)"
 
       if [[ -z "${_relative_path}"                ]]
@@ -12069,13 +12169,7 @@ _bookmark() {
         then
           if [[ "${_subcommand}" == "open"  ]]
           then
-            if _command_exists "xdg-open"
-            then
-              xdg-open "${_target_path}" && return 0
-            elif [[ "${OSTYPE}" =~ ^darwin    ]]
-            then
-              open "${_target_path}" && return 0
-            fi
+            _open_in_gui_app "${_target_path:-}" && return 0
           elif [[ "${_subcommand}" == "peek"  ]]
           then
             _bookmark_view_in_terminal_browser "file://${_target_path}"
@@ -12086,14 +12180,10 @@ _bookmark() {
         then
           if [[ "${_subcommand}" == "open"    ]]
           then
-            if [[ -d "${_target_path}"        ]] &&
-               _command_exists "xdg-open"
+            if [[ -d "${_target_path:-}"      ]] &&
+               _open_in_gui_app "${_target_path:-}"
             then
-              xdg-open "${_target_path}" && return 0
-            elif [[ -d "${_target_path}"      ]] &&
-                 [[ "${OSTYPE}" =~ ^darwin    ]]
-            then
-              open "${_target_path}" && return 0
+              return 0
             elif [[ -n "${_password}"         ]]
             then
               _edit "${_selector}" --password "${_password}"
@@ -12143,7 +12233,7 @@ _bookmark() {
             IFS='' read -r -e -d $'\n' -p \
 "Check the Wayback Machine for an archived version instead? $(_color_brackets "y/N") " __yn
 
-            case ${__yn} in
+            case "${__yn}" in
               [Yy]*)
                 _check_wayback=1
                 break
@@ -12183,13 +12273,8 @@ _bookmark() {
       # `bookmark open`
       elif [[ "${_subcommand}" == "open"    ]]
       then
-        if _command_exists "xdg-open"
+        if _open_in_gui_app "${_target_url:-}"
         then
-          xdg-open "${_target_url}"
-          return 0
-        elif _command_exists "open"
-        then
-          open "${_target_url}"
           return 0
         else
           _exit_1 printf                                          \
@@ -12263,19 +12348,17 @@ _bookmark() {
     if [[ -z "${_title}"    ]]
     then
       _title="$(
-        cat "${_temp_file}"             \
-          | grep                        \
-            --only-matching             \
-            --extended-regexp           \
-            --ignore-case               \
-            '<title[^>]*>[^<]*</title>' \
-          | head -n 1                   \
-          | sed                         \
-            -e 's/.*<title[^>]*>//'     \
-            -e 's/.*<TITLE[^>]*>//'     \
-            -e 's/<\/title>.*//'        \
-            -e 's/<\/TITLE>.*//'
-      )" || : # TODO: pipeline returns error status but still returns title
+        cat "${_temp_file}"                   \
+          | awk '/<title[^>]*>/,/<\/title>/'  \
+          | sed -e '/<\/title>/ q'            \
+          | sed -e 's/<\/title>.*//'          \
+          | sed                               \
+            -e 's/.*<title[^>]*>//'           \
+            -e 's/.*<TITLE[^>]*>//'           \
+            -e 's/<\/title>.*//'              \
+            -e 's/<\/TITLE>.*//'              \
+          | awk '$1=$1'     || :
+      )"
     fi
 
     if [[ -z "${_title:-}"  ]]
@@ -12872,7 +12955,7 @@ _delete() {
       IFS='' read -r -e -d $'\n' -p \
 "$(_color_primary "Proceed?")  $(_color_brackets "y/N") " __yn
 
-      case ${__yn} in
+      case "${__yn}" in
         [Yy]*)
           break
           ;;
@@ -13579,7 +13662,7 @@ _export() {
           IFS='' read -r -e -d $'\n' -p \
 "$(_color_primary "Overwrite existing file?") $(_color_brackets "y/N") " __yn
 
-          case ${__yn} in
+          case "${__yn}" in
             [Yy]*)
               break
               ;;
@@ -14348,7 +14431,7 @@ _move() {
       IFS='' read -r -e -d $'\n' -p   \
 "$(_color_primary "Proceed?")  $(_color_brackets "y/N") " __yn
 
-      case ${__yn} in
+      case "${__yn}" in
         [Yy]*)
           break
           ;;
@@ -15052,7 +15135,6 @@ _search() {
                 -path '*/[^.]*'               \
                 -type f                       \
                 -print0
-
             } | {
               xargs "${_xargs[@]}"            \
                 grep                          \
@@ -16078,7 +16160,6 @@ _show() {
       if ((_done))
       then
         _indicators+="${_NB_INDICATOR_TODO_DONE% } "
-        _extra_length=1
       else
         _indicators+="${_NB_INDICATOR_TODO% } "
       fi
@@ -16235,7 +16316,7 @@ _show() {
 
   if [[ "${_selector:-}" =~ : ]] && [[ ! "${_selector:-}" =~ /.*: ]]
   then
-    _notebook_path="$(_notebooks show "${_selector}" --path)"
+    _notebook_path="$(_notebooks show "${_selector%%:*}" --path)" || return 1
 
     if ((_print_path)) && [[ "${_selector:-}" =~ :$ ]]
     then
@@ -16257,7 +16338,7 @@ _show() {
     _notebook_path="$(_notebooks current --path)"
   fi
 
-  local _relative_path
+  local _relative_path=
   _relative_path="$(
     _selector_resolve_path "${_selector}" "${_notebook_path}" --relative
   )"
@@ -16271,7 +16352,7 @@ _show() {
     _relative_folder_path="${_relative_path%\/*}"
   fi
 
-  local _basename
+  local _basename=
   _basename="$(basename "${_relative_path}")"
 
   local _target_path="${_notebook_path}/${_relative_path}"
@@ -16729,12 +16810,13 @@ Can't show archives. Export archive and expand to edit.\\n"
         --from epub \
         --to html   \
         "${_target_path}" | _web_browser
-    elif _command_exists "xdg-open"
+    elif _open_in_gui_app "${_target_path:-}"
     then
-      xdg-open "${_target_path}"
-    elif [[ "${OSTYPE}" =~ ^darwin  ]]
-    then
-      open "${_target_path}"
+      return 0
+    else
+      _exit_1 printf                                \
+        "%s doesn't know how to show this item.\\n" \
+        "$(_color_primary "${_ME}")"
     fi
   else # file is text
     if ((_browse))                  &&
@@ -16768,7 +16850,7 @@ Can't show archives. Export archive and expand to edit.\\n"
             -e "s/\]\[\[\[/\]\[nb-placeholder-nb/g" \
             -e "s/\]\]\]\]/nb-placeholder-nb\]\]/g"
         } | {
-          pandoc --from org --to html
+          _pandoc --standard-input --from org --to html
         } | {
           LC_ALL=C sed -E                           \
             -e "s/>nb-placeholder-nb/>\[\[/g"       \
@@ -17801,7 +17883,10 @@ HEREDOC
 
       if [[ -n "${_query:-}" ]]
       then
-        _url_params+="&--query=${_query}"
+        local _url_encoded_query=
+        _url_encoded_query="$(_get_uri --encode "${_query:-}")"
+
+        _url_params+="&--query=${_url_encoded_query}"
       fi
 
       if ! ((_terminal_browser)) &&
@@ -18523,7 +18608,7 @@ HEREDOC
       } | {
         if _command_exists "pandoc"
         then
-          pandoc --from org --to html
+          _pandoc --standard-input --from org --to html
         else
           cat
         fi
@@ -19369,11 +19454,11 @@ HEREDOC
   # Description:
   #   Start the HTTP server in the background.
   _browse_serve() {
-    (ncat                                   \
-      --exec "${_MY_PATH} browse --respond" \
-      --keep-open                           \
-      --listen                              \
-      --source-port "${NB_SERVER_PORT}"     \
+    (ncat                                     \
+      --exec "${_MY_PATH} browse --respond"   \
+      --keep-open                             \
+      --listen                                \
+      "${NB_SERVER_HOST}" "${NB_SERVER_PORT}" \
       2>/dev/null) &
 
     local _pid="${!}"
@@ -19387,6 +19472,7 @@ HEREDOC
   local _browse_columns="${_COLUMNS}"
   local _browse_notebooks=0
   local _browse_per_page=
+  local _daemon=0
   local _force_terminal_request=0
   local _only_serve=0
   local _open_gui=0
@@ -19426,6 +19512,10 @@ HEREDOC
         ;;
       --*container)
         _print_browse_render_function="container"
+        ;;
+      --daemon)
+        _daemon=1
+        _only_serve=1
         ;;
       d|delete|-d|--delete|-)
         _action="delete"
@@ -19759,23 +19849,30 @@ HEREDOC
       then
         "${_gui_browser_command[@]:-}" "${_request_url:-}" 2>/dev/null &
       else
-        if _command_exists "xdg-open"
-        then
-          xdg-open "${_request_url:-}"
-        elif [[ "${OSTYPE}" =~ ^darwin        ]]
-        then
-          open "${_request_url:-}"
-        fi
+        _open_in_gui_app "${_request_url:-}"
       fi
     fi
 
-    while true
-    do
-      read -n 1 -s -r -p "Press any key to quit..."
+    if ((_daemon))
+    then
+      printf "Press %s%s%s to exit..."  \
+        "$(_color_dim "<")"             \
+        "$(_color_primary "CTRL-C")"    \
+        "$(_color_dim ">")"
 
-      printf "\\n"
-      break
-    done
+      while true
+      do
+        sleep 1
+      done
+    else
+      while true
+      do
+        read -n 1 -s -r -p "Press any key to quit$(_color_dim "...")"
+
+        printf "\\n"
+        break
+      done
+    fi
   else
     _web_browser "${_request_url}"
   fi
@@ -20060,7 +20157,7 @@ _plugins() {
               IFS='' read -r -e -d $'\n' -p \
 "$(_color_primary "Reinstall?") $(_color_brackets "y/N") " __yn
 
-              case ${__yn} in
+              case "${__yn}" in
                 [Yy]*)
                   break
                   ;;
@@ -20124,7 +20221,7 @@ HEREDOC
           IFS='' read -r -e -d $'\n' -p \
 "$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
 
-          case ${__yn} in
+          case "${__yn}" in
             [Yy]*)
               break
               ;;
@@ -20155,21 +20252,31 @@ HEREDOC
       if [[ ! -e "${NB_DIR}/.plugins" ]]
       then
         (return 1)
-      elif ((_print_paths))
-      then
-        # `grep` for non-0 `find`. More info: https://serverfault.com/a/855083
-        find "${NB_DIR}"/.plugins \
-          -type f                 \
-          -name "${_query}"       \
-          | grep .                \
-          | sort
       else
-        find "${NB_DIR}"/.plugins \
-          -type f                 \
-          -name "${_query}"       \
-          -exec basename {} \;    \
-          | grep .                \
-          | sort
+        {
+          if ((_print_paths))
+          then
+            # `grep` for non-0 `find`. More info: https://serverfault.com/a/855083
+            find "${NB_DIR}"/.plugins \
+              -type f                 \
+              -name "${_query}"
+            find "${NB_DIR}"/.plugins \
+              -type l                 \
+              -name "${_query}"
+          else
+            find "${NB_DIR}"/.plugins \
+              -type f                 \
+              -name "${_query}"       \
+              -exec basename {} \;
+            find "${NB_DIR}"/.plugins \
+              -type l                 \
+              -name "${_query}"       \
+              -exec basename {} \;
+          fi
+        } | {
+          # `grep` for non-0 `find`. More info: https://serverfault.com/a/855083
+          grep . | sort
+        }
       fi || if [[ -n "${_name:-}" ]]
             then
               _exit_1 printf "No matching plugins found: %s\\n" "${_name}"
@@ -20384,7 +20491,7 @@ _remote() {
         IFS='' read -r -e -d $'\n' -p           \
 "$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
 
-        case ${__yn} in
+        case "${__yn}" in
           [Yy]*)
             break
             ;;
@@ -20417,7 +20524,7 @@ _remote() {
             IFS='' read -r -e -d $'\n' -p       \
 "$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
 
-            case ${__yn} in
+            case "${__yn}" in
               [Yy]*)
                 break
                 ;;
@@ -20472,7 +20579,7 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
               IFS='' read -r -e -d $'\n' -p             \
                 "${_branch_delete_prompt} $(_color_brackets "y/N") " __yn
 
-              case ${__yn} in
+              case "${__yn}" in
                 [Yy]*)    _delete_remote_branch=1;  break   ;;
                 q*|exit)  printf "Exiting...\\n";   exit 0  ;;
                 *)                                  break   ;;
@@ -20570,7 +20677,7 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
          [[    "${_remote_branch_name:-}" != "${_current_branch:-}"   ]]
       then
         printf      "Renaming remote branch\\n"
-        _print_line "-----------------------"
+        _print_line "----------------------"
       else
         printf      "Renaming current branch\\n"
         _print_line "-----------------------"
@@ -20579,7 +20686,7 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
       printf        "From: %s\\n" "${_remote_branch_name:-"${_current_branch:-}"}"
       printf        "To:   %s\\n" "$(_color_primary "${_target_branch_name:-}")"
 
-      _print_line   "--------------"
+      _print_line   "-----------"
 
       while true
       do
@@ -20587,7 +20694,7 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
         IFS='' read -r -e -d $'\n' -p                     \
 "$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
 
-        case ${__yn} in
+        case "${__yn}" in
           [Yy]*)
             break
             ;;
@@ -20629,7 +20736,7 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
                 "${_temp_repo_path}"                      &&
               git -C "${_temp_repo_path}" checkout        \
                 -b "${_target_branch_name}"               \
-              "${_remote_branch_name}"                    &&
+                "${_remote_branch_name}"                  &&
               git -C "${_temp_repo_path}" push            \
                 -u origin "${_target_branch_name}"        &&
               git -C "${_temp_repo_path}" branch          \
@@ -20660,24 +20767,24 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
 
       local _remote_branches=()
       _remote_branches=($(
-        git -C "${_notebook_path}" ls-remote        \
-          --heads "${_current_remote_url:-}"        \
-           2>/dev/null                              \
+        git -C "${_notebook_path}" ls-remote  \
+          --heads "${_current_remote_url:-}"  \
+           2>/dev/null                        \
           | LC_ALL=C sed "s/.*\///g" || :
       ))
 
-      if [[ -z "${_remote_branches[*]:-}"       ]]
+      if [[ -z "${_remote_branches[*]:-}"     ]]
       then
         _exit_1 printf "Unable to contact remote.\\n"
       fi
 
       if ! _contains "${_remote_branch_name:-}" "${_remote_branches[@]:-}"
       then
-        _exit_1 printf "Remote branch not found: %s\\n"   \
+        _exit_1 printf "Remote branch not found: %s\\n" \
           "${_remote_branch_name:-}"
       fi
 
-      printf "Resetting remote branch: %s\\n"             \
+      printf "Resetting remote branch: %s\\n"           \
         "$(_color_primary "${_remote_branch_name:-}")"
 
       _print_line "------------------------"
@@ -20688,7 +20795,7 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
         IFS='' read -r -e -d $'\n' -p         \
 "$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
 
-        case ${__yn} in
+        case "${__yn}" in
           [Yy]*)
             break
             ;;
@@ -20705,15 +20812,15 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
       cd "${_blank_repo_path}" || return 1
 
       {
-        git -C "${_blank_repo_path}" init                     \
-            --initial-branch "${_remote_branch_name}"         &&
-          touch "${_blank_repo_path}/.index"                  &&
-          git -C "${_blank_repo_path}" add --all              &&
-          git -C "${_blank_repo_path}" commit                 \
-            -a -m "[nb] Initialize"                           &&
-          git -C "${_blank_repo_path}" remote add             \
-            origin "${_current_remote_url:-}"                 &&
-          git -C "${_blank_repo_path}" push origin            \
+        git -C "${_blank_repo_path}" init             \
+            --initial-branch "${_remote_branch_name}" &&
+          touch "${_blank_repo_path}/.index"          &&
+          git -C "${_blank_repo_path}" add --all      &&
+          git -C "${_blank_repo_path}" commit         \
+            -a -m "[nb] Initialize"                   &&
+          git -C "${_blank_repo_path}" remote add     \
+            origin "${_current_remote_url:-}"         &&
+          git -C "${_blank_repo_path}" push origin    \
             "${_remote_branch_name}" --force
       } &>/dev/null ||
         _exit_1 printf "Unable to reset remote branch: %s\\n" \
@@ -20722,12 +20829,12 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
       printf "Remote branch reset.\\n"
       ;;
     set|add)
-      if [[ -z "${_new_remote_url:-}"         ]]
+      if [[ -z "${_new_remote_url:-}" ]]
       then
         _exit_1 _help "remote"
       fi
 
-      if [[ -z "${_new_branch:-}"             ]]
+      if [[ -z "${_new_branch:-}"     ]]
       then
         _new_branch="${_current_branch}"
       fi
@@ -21503,7 +21610,9 @@ HEREDOC
       fi
     elif [[ "${1:-}" == 'NB_LIMIT'            ]]
     then
-      if [[ "${2:-}" =~ ^[0-9]+$              ]]
+      if [[ "${2:-}" =~ ^[0-9]+$              ]] ||
+         [[ "${2:-}" =~ ^auto$                ]] ||
+         [[ "${2:-}" =~ ^auto[+|-][0-9]+$     ]]
       then
         return 0
       else
@@ -21931,7 +22040,7 @@ $(_color_primary "${_ME} shell") started. Enter $(_color_primary "ls") to list n
 Enter $(_color_primary "help") for usage information. Enter $(_color_primary "exit") to exit.
 HEREDOC
 
-  if [[ -n "${_initial_command:-}" ]]
+  if [[ -n "${_initial_command:-}"            ]]
   then
     eval "\"${_MY_PATH}\" ${_initial_command}"
   fi
@@ -21941,24 +22050,26 @@ HEREDOC
   do
     history -s "${__input}"
 
-    if [[ "${__input}" =~ ^exit$|^quit$|^q$ ]]
+    if [[ "${__input}" =~ ^exit$|^quit$|^q$   ]]
     then
       return 0
-    elif [[ "${__input}" =~ ^clear$ ]]
+    elif [[ "${__input}" =~ ^clear$           ]]
     then
       clear
     else
       # Strip leading 'n', 'nb', or 'notes'.
       local _normalized_input=
       _normalized_input="$(
-        printf "%s\\n" "${__input}"       \
-          | LC_ALL=C sed -e 's/^n$//'     \
-          | LC_ALL=C sed -e 's/^n //'     \
-          | LC_ALL=C sed -e 's/^nb$//'    \
-          | LC_ALL=C sed -e 's/^nb //'    \
-          | LC_ALL=C sed -e 's/^notes$//' \
+        printf "%s\\n" "${__input}"           \
+          | LC_ALL=C sed -e 's/^n$//'         \
+          | LC_ALL=C sed -e 's/^n //'         \
+          | LC_ALL=C sed -e 's/^nb$//'        \
+          | LC_ALL=C sed -e 's/^nb //'        \
+          | LC_ALL=C sed -e 's/^notes$//'     \
           | LC_ALL=C sed -e 's/^notes //'
       )"
+
+      local _command_name=
 
       if [[ "${_normalized_input}" =~ ^help   ]] ||
          [[ "${_normalized_input}" =~ ^help\  ]] ||
@@ -21966,27 +22077,29 @@ HEREDOC
          [[ "${_normalized_input}" =~ ^h\     ]]
       then
         eval "\"${_MY_PATH}\" ${_normalized_input}" --shell || :
-      elif [[ "${_normalized_input}" =~ ^echo\ .*   ]] ||
+      elif [[ "${_normalized_input}" =~ ^echo\ .*   ]]      ||
            [[ "${_normalized_input}" =~ ^printf\ .* ]]
       then
         eval "${_normalized_input}"
       elif _command_name="$(
-        printf "%s\\n" "${_normalized_input}"   \
-          | grep --only-matching --color=never  \
-              -e '^code'    \
-              -e '^emacs'   \
-              -e '^gvim'    \
-              -e '^macdown' \
-              -e '^mate'    \
-              -e '^mvim'    \
-              -e '^nano'    \
-              -e '^nvim'    \
-              -e '^subl'    \
+        printf "%s\\n" "${_normalized_input}" \
+          | grep                              \
+              --color=never                   \
+              --only-matching                 \
+              -e '^code'                      \
+              -e '^emacs'                     \
+              -e '^gvim'                      \
+              -e '^macdown'                   \
+              -e '^mate'                      \
+              -e '^mvim'                      \
+              -e '^nano'                      \
+              -e '^nvim'                      \
+              -e '^subl'                      \
               -e '^vim'
       )"
       then
         _normalized_input="$(
-          printf "%s\\n" "${_normalized_input}" \
+          printf "%s\\n" "${_normalized_input}"     \
             | LC_ALL=C sed -e "s/^${_command_name} //"
         )"
 
@@ -23243,7 +23356,7 @@ HEREDOC
         IFS='' read -r -e -d $'\n' -p \
 "$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
 
-        case ${__yn} in
+        case "${__yn}" in
           [Yy]*)
             break
             ;;
