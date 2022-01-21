@@ -18,11 +18,19 @@ load test_helper
 
 # `plugins` ###################################################################
 
-@test "'plugins' lists plugins." {
+@test "'plugins' lists sorted plugins installed as files and links." {
   {
     "${_NB}" init
-    "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/example.nb-plugin"
+    "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/clip.nb-plugin"
     "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/turquoise.nb-theme"
+
+    ln -s                                                         \
+      "${NB_TEST_BASE_PATH}/../plugins/example.nb-plugin"         \
+      "${NB_DIR}/.plugins/example.nb-plugin"
+
+    diff                                                          \
+      <(cat "${NB_TEST_BASE_PATH}/../plugins/example.nb-plugin")  \
+      <(cat "${NB_DIR}/.plugins/example.nb-plugin")
   }
 
   run "${_NB}" plugins
@@ -31,25 +39,54 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}"    ==  0                   ]]
-  [[ "${lines[0]}"  =~  example.nb-plugin   ]]
-  [[ "${lines[1]}"  =~  turquoise.nb-theme  ]]
+  [[ "${lines[0]}"  =~  clip.nb-plugin      ]]
+  [[ "${lines[1]}"  =~  example.nb-plugin   ]]
+  [[ "${lines[2]}"  =~  turquoise.nb-theme  ]]
 }
 
 @test "'plugins <name>' lists plugins." {
   {
     "${_NB}" init
-    "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/example.nb-plugin"
+
+    "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/clip.nb-plugin"
     "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/turquoise.nb-theme"
+
+    ln -s                                                         \
+      "${NB_TEST_BASE_PATH}/../plugins/example.nb-plugin"         \
+      "${NB_DIR}/.plugins/example.nb-plugin"
+
+    diff                                                          \
+      <(cat "${NB_TEST_BASE_PATH}/../plugins/example.nb-plugin")  \
+      <(cat "${NB_DIR}/.plugins/example.nb-plugin")
   }
+
+  run "${_NB}" plugins clip.nb-plugin
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   ==  0                   ]]
+  [[    "${lines[0]}" =~  clip.nb-plugin      ]]
+  [[ -z "${lines[1]}"                         ]]
 
   run "${_NB}" plugins example.nb-plugin
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"   ==  0                 ]]
-  [[    "${lines[0]}" =~  example.nb-plugin ]]
-  [[ -z "${lines[1]}"                       ]]
+  [[    "${status}"   ==  0                   ]]
+  [[    "${lines[0]}" =~  example.nb-plugin   ]]
+  [[ -z "${lines[1]}"                         ]]
+
+
+  run "${_NB}" plugins turquoise.nb-theme
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   ==  0                   ]]
+  [[    "${lines[0]}" =~  turquoise.nb-theme  ]]
+  [[ -z "${lines[1]}"                         ]]
 }
 
 @test "'plugins <name>' with no matching exits with error." {

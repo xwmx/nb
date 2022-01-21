@@ -20252,21 +20252,31 @@ HEREDOC
       if [[ ! -e "${NB_DIR}/.plugins" ]]
       then
         (return 1)
-      elif ((_print_paths))
-      then
-        # `grep` for non-0 `find`. More info: https://serverfault.com/a/855083
-        find "${NB_DIR}"/.plugins \
-          -type f                 \
-          -name "${_query}"       \
-          | grep .                \
-          | sort
       else
-        find "${NB_DIR}"/.plugins \
-          -type f                 \
-          -name "${_query}"       \
-          -exec basename {} \;    \
-          | grep .                \
-          | sort
+        {
+          if ((_print_paths))
+          then
+            # `grep` for non-0 `find`. More info: https://serverfault.com/a/855083
+            find "${NB_DIR}"/.plugins \
+              -type f                 \
+              -name "${_query}"
+            find "${NB_DIR}"/.plugins \
+              -type l                 \
+              -name "${_query}"
+          else
+            find "${NB_DIR}"/.plugins \
+              -type f                 \
+              -name "${_query}"       \
+              -exec basename {} \;
+            find "${NB_DIR}"/.plugins \
+              -type l                 \
+              -name "${_query}"       \
+              -exec basename {} \;
+          fi
+        } | {
+          # `grep` for non-0 `find`. More info: https://serverfault.com/a/855083
+          grep . | sort
+        }
       fi || if [[ -n "${_name:-}" ]]
             then
               _exit_1 printf "No matching plugins found: %s\\n" "${_name}"
