@@ -20257,18 +20257,11 @@ HEREDOC
           if ((_print_paths))
           then
             find "${NB_DIR}"/.plugins \
-              -type f                 \
-              -name "${_query}"
-            find "${NB_DIR}"/.plugins \
-              -type l                 \
+              ! \( -type d \)         \
               -name "${_query}"
           else
             find "${NB_DIR}"/.plugins \
-              -type f                 \
-              -name "${_query}"       \
-              -exec basename {} \;
-            find "${NB_DIR}"/.plugins \
-              -type l                 \
+              ! \( -type d \)         \
               -name "${_query}"       \
               -exec basename {} \;
           fi
