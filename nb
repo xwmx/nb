@@ -4691,10 +4691,10 @@ _init() {
 
   # Usage: _init_create_nb_dir
   _init_create_nb_dir() {
-    if [[ -d "${NB_DIR}" ]]
+    if    [[ -d "${NB_DIR}" ]]
     then
       printf "Data directory exists:      %s\\n" "$(_color_primary "${NB_DIR}")"
-    elif [[ -e "${NB_DIR}" ]]
+    elif  [[ -e "${NB_DIR}" ]]
     then
       _exit_1 cat <<HEREDOC
 Unable to set up the $(_color_primary "${_ME}") data directory. File exists at:
