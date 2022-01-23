@@ -12350,24 +12350,24 @@ _bookmark() {
       _title="$(
         cat "${_temp_file}"                   \
           | awk '/<title[^>]*>/,/<\/title>/'  \
-          | sed -e '/<\/title>/ q'            \
-          | sed -e 's/<\/title>.*//'          \
-          | sed                               \
+          | LC_ALL=C sed -e '/<\/title>/ q'   \
+          | LC_ALL=C sed -e 's/<\/title>.*//' \
+          | LC_ALL=C sed                      \
             -e 's/.*<title[^>]*>//'           \
             -e 's/.*<TITLE[^>]*>//'           \
             -e 's/<\/title>.*//'              \
             -e 's/<\/TITLE>.*//'              \
-          | awk '$1=$1'     || :
+          | awk '$1=$1'     ||  :
       )"
     fi
 
     if [[ -z "${_title:-}"  ]]
     then
       _title="$(
-        cat "${_temp_file}" \
-          | sed -E -n       \
+        cat "${_temp_file}"     \
+          | LC_ALL=C sed -E -n  \
             's/.*<meta .*property=.og:title[^>]*content="([^"]+)".*/\1/p' \
-            2>/dev/null     || :
+            2>/dev/null     ||  :
       )"
     fi
   fi
@@ -12394,19 +12394,19 @@ _bookmark() {
   then
     local _description=
     _description="$(
-      cat "${_temp_file}"   \
-        | sed -E -n         \
+      cat "${_temp_file}"       \
+        | LC_ALL=C sed -E -n    \
             's/.*<meta .*name=.description.[^>]*content="([^"]+)".*/\1/p' \
-            2>/dev/null     || :
+            2>/dev/null     ||  :
     )"
 
     if [[ -z "${_description:-}"    ]]
     then
       _description="$(
-        cat "${_temp_file}" \
-          | sed -E -n       \
+        cat "${_temp_file}"     \
+          | LC_ALL=C sed -E -n  \
               's/.*<meta .*property=.og:description[^>]*content="([^"]+)".*/\1/p' \
-              2>/dev/null   || :
+              2>/dev/null   ||  :
       )"
     fi
 
