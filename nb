@@ -4947,9 +4947,9 @@ _list() {
         _with_pinned=1
         ;;
       *)
-        if   [[   "${1:-}" =~ ^--[0-9]+$  ]]
+        if   [[   "${1:-}" =~ ^-+[0-9]+$  ]]
         then
-          _limit="${1:2}"
+          _limit="${1##*-}"
         elif [[   "${1:-}" =~ ^--         ]]
         then
           if ! _contains "${1:-}" "--ar" "--archived" "--unar" "--unarchived"
@@ -6294,27 +6294,24 @@ _ls() {
         _arguments+=("${1}" "${2:-}")
         shift
         ;;
-      --[0-9]*)
-        if [[ "${1:-}" =~ ^--[0-9]+$  ]]
-        then
-          _limit="${1#\-\-}"
-        else
-          _arguments+=("${1}")
-        fi
-        ;;
       --[A-Za-z]*)
         _maybe_type="${1:2}"
 
         _arguments+=("${1}")
         ;;
       -*)
-        _arguments+=("${1}")
-
-        if _option_value_is_present "${2:-}"
+        if [[ "${1:-}" =~ ^-+[0-9]+$  ]]
         then
-          _arguments+=("${2:-}")
+          _limit="${1##*-}"
+        else
+          _arguments+=("${1}")
 
-          shift
+          if _option_value_is_present "${2:-}"
+          then
+            _arguments+=("${2:-}")
+
+            shift
+          fi
         fi
         ;;
       *:*)

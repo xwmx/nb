@@ -1763,12 +1763,54 @@ Help information:
   [[ "${lines[4]}"  =~  one   ]]
 }
 
-@test "'ls --3' exits with 0 and lists 3 files." {
+@test "'ls -<limit>' exits with 0 and lists limited files." {
   {
     _setup_ls
 
     "${_NB}" set footer 0
   }
+
+  run "${_NB}" ls -2
+
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
+
+  [[ "${status}"    -eq 0     ]]
+  [[ "${#lines[@]}" -eq 5     ]]
+  [[ "${lines[2]}"  =~  three ]]
+  [[ "${lines[3]}"  =~  two   ]]
+
+  run "${_NB}" ls -3
+
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
+
+  [[ "${status}"    -eq 0     ]]
+  [[ "${#lines[@]}" -eq 5     ]]
+  [[ "${lines[2]}"  =~  three ]]
+  [[ "${lines[3]}"  =~  two   ]]
+  [[ "${lines[4]}"  =~  one   ]]
+}
+
+@test "'ls --<limit>' exits with 0 and lists limited files." {
+  {
+    _setup_ls
+
+    "${_NB}" set footer 0
+  }
+
+  run "${_NB}" ls --2
+
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
+
+  [[ "${status}"    -eq 0     ]]
+  [[ "${#lines[@]}" -eq 5     ]]
+  [[ "${lines[2]}"  =~  three ]]
+  [[ "${lines[3]}"  =~  two   ]]
 
   run "${_NB}" ls --3
 
