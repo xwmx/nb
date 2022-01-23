@@ -197,7 +197,7 @@ _resolve_symlink() {
 _sed_i() {
   if sed --help >/dev/null 2>&1
   then # GNU
-    sed -i "${@}"
+    sed -i    "${@}"
   else # BSD
     sed -i '' "${@}"
   fi
