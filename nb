@@ -19852,10 +19852,11 @@ HEREDOC
 
     if ((_daemon))
     then
-      printf "Press %s%s%s to exit..."  \
-        "$(_color_dim "<")"             \
-        "$(_color_primary "CTRL-C")"    \
-        "$(_color_dim ">")"
+      printf "Press %s%s%s to exit%s" \
+        "$(_color_dim "<")"           \
+        "$(_color_primary "CTRL-C")"  \
+        "$(_color_dim ">")"           \
+        "$(_color_dim "...")"
 
       while true
       do
@@ -19864,7 +19865,7 @@ HEREDOC
     else
       while true
       do
-        read -n 1 -s -r -p "Press any key to quit$(_color_dim "...")"
+        read -n 1 -s -r -p "Press any key to exit$(_color_dim "...")"
 
         printf "\\n"
         break
@@ -20159,7 +20160,7 @@ _plugins() {
                   break
                   ;;
                 *)
-                  printf "Exiting...\\n"
+                  printf "Exiting%s\\n" "$(_color_dim "...")"
                   exit 0
                   ;;
               esac
@@ -20223,7 +20224,7 @@ HEREDOC
               break
               ;;
             *)
-              printf "Exiting...\\n"
+              printf "Exiting%s\\n" "$(_color_dim "...")"
               exit 0
               ;;
           esac
@@ -20485,7 +20486,7 @@ _remote() {
             break
             ;;
           *)
-            printf "Exiting...\\n"
+            printf "Exiting%s\\n" "$(_color_dim "...")"
             exit 0
             ;;
         esac
@@ -20518,7 +20519,7 @@ _remote() {
                 break
                 ;;
               *)
-                printf "Exiting...\\n"
+                printf "Exiting%s\\n" "$(_color_dim "...")"
                 exit 0
                 ;;
             esac
@@ -20569,9 +20570,17 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
                 "${_branch_delete_prompt} $(_color_brackets "y/N") " __yn
 
               case "${__yn}" in
-                [Yy]*)    _delete_remote_branch=1;  break   ;;
-                q*|exit)  printf "Exiting...\\n";   exit 0  ;;
-                *)                                  break   ;;
+                [Yy]*)
+                  _delete_remote_branch=1
+                  break
+                  ;;
+                q*|exit)
+                  printf "Exiting%s\\n" "$(_color_dim "...")"
+                  exit 0
+                  ;;
+                *)
+                  break
+                  ;;
               esac
             done
           fi
@@ -20688,7 +20697,7 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
             break
             ;;
           *)
-            printf "Exiting...\\n"
+            printf "Exiting%s\\n" "$(_color_dim "...")"
             exit 0
             ;;
         esac
@@ -20789,7 +20798,7 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
             break
             ;;
           *)
-            printf "Exiting...\\n"
+            printf "Exiting%s\\n" "$(_color_dim "...")"
             exit 0
             ;;
         esac
@@ -20863,7 +20872,7 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
               break
               ;;
             *)
-              printf "Exiting...\\n"
+              printf "Exiting%s\\n" "$(_color_dim "...")"
 
               exit 0
               ;;
@@ -20905,9 +20914,17 @@ HEREDOC
             _selected_push_option
 
           case "${_selected_push_option:-}" in
-            1)        _show_branch_selection_prompt=1 &&  break   ;;
-            2)                                            break   ;;
-            q*|exit)  printf "Exiting...\\n"          &&  exit 0  ;;
+            1)
+              _show_branch_selection_prompt=1
+              break
+              ;;
+            2)
+              break
+              ;;
+            q*|exit)
+              printf "Exiting%s\\n" "$(_color_dim "...")"
+              exit 0
+              ;;
           esac
         done
       else
@@ -21007,7 +21024,7 @@ HEREDOC
                   break
                   ;;
                 q*|exit)
-                  printf "Exiting...\\n"
+                  printf "Exiting%s\\n" "$(_color_dim "...")"
 
                   exit 0
                   ;;
@@ -21043,7 +21060,7 @@ HEREDOC
 
           case "${_selected_branch:-}" in
             q*|exit)
-              printf "Exiting...\\n"
+              printf "Exiting%s\\n" "$(_color_dim "...")"
 
               exit 0
               ;;
@@ -21115,9 +21132,18 @@ HEREDOC
               _orphan_branch_prompt_response
 
             case "${_orphan_branch_prompt_response:-}" in
-              '')       _new_branch="${_target_orphan_branch_name}"     && break  ;;
-              q*|exit)  printf "Exiting...\\n"                          && exit 0 ;;
-              *)        _new_branch="${_orphan_branch_prompt_response}" && break  ;;
+              '')
+                _new_branch="${_target_orphan_branch_name}"
+                break
+                ;;
+              q*|exit)
+                printf "Exiting%s\\n" "$(_color_dim "...")"
+                exit 0
+                ;;
+              *)
+                _new_branch="${_orphan_branch_prompt_response}"
+                break
+                ;;
             esac
           done
         fi
@@ -21400,7 +21426,7 @@ HEREDOC
         then
           case "${__setting}" in
             q|quit|exit)
-              printf "Exiting...\\n"
+              printf "Exiting%s\\n" "$(_color_dim "...")"
               return 0
               ;;
             *)
@@ -21440,7 +21466,7 @@ HEREDOC
       then
         case "${__value}" in
           q|quit|exit)
-            printf "Exiting...\\n"
+            printf "Exiting%s\\n" "$(_color_dim "...")"
             return 0
             ;;
           unset|default|reset)
@@ -23350,7 +23376,7 @@ HEREDOC
             break
             ;;
           *)
-            printf "Exiting...\\n"
+            printf "Exiting%s\\n" "$(_color_dim "...")"
             exit 0
             ;;
         esac
