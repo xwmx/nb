@@ -2,6 +2,46 @@
 
 load test_helper
 
+# prompt ######################################################################
+
+@test "'move' with non-affirmative prompt response exits without moving note." {
+  {
+    "${_NB}" init
+    "${_NB}" add "example.md" --content "Example content."
+    "${_NB}" notebooks add "destination"
+
+    _files=($(ls "${NB_DIR}/home/")) && _filename="${_files[0]}"
+  }
+
+  run "${_NB}" move 1 destination: <<< "n${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Exits with status 0:
+
+  [[ ${status} -eq 0                          ]]
+
+  # Does not file:
+
+  [[    -e "${NB_DIR}/home/example.md"        ]]
+  [[ !  -e "${NB_DIR}/destination/example.md" ]]
+
+  # Does not create git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)"     ]]
+  do
+    sleep 1
+  done
+  git log | grep -v -q '\[nb\] Delete'
+
+  # Prints output:
+
+  [[ "${output}" =~ Moving                    ]]
+  [[ "${output}" =~ Exiting.*\.\.\.           ]]
+}
+
 # no argument #################################################################
 
 @test "'move' with no arguments exits with status 1." {

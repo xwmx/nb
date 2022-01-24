@@ -14433,7 +14433,7 @@ _move() {
           break
           ;;
         *)
-          printf "Exiting...\\n"
+          printf "Exiting%s\\n" "$(_color_dim "...")"
           exit 0
           ;;
       esac
