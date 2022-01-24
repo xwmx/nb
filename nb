@@ -4735,7 +4735,7 @@ HEREDOC
 
   # Usage: _init_print_header
   _init_print_header() {
-    printf "%s\\n" "$(_color_primary "Initializing...")"
+    printf "%s%s\\n" "$(_color_primary "Initializing")" "$(_color_dim "...")"
   }
 
   if [[ -e "${NB_DIR}" ]] && [[ ! -d "${NB_DIR}" ]]
@@ -7078,7 +7078,7 @@ _notebooks() {
               break
               ;;
             *)
-              printf "Exiting...\\n"
+              printf "Exiting%s\\n" "$(_color_dim "...")"
               exit 0
               ;;
           esac
