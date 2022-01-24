@@ -4,12 +4,38 @@ load test_helper
 
 _setup_notebooks() {
   "${_NB}" init
+
   mkdir -p "${NB_DIR}/one"
   cd "${NB_DIR}/one" || return 1
+
   git init
+
   git remote add origin "${_GIT_REMOTE_URL}"
+
   touch "${NB_DIR}/one/.index"
+
   cd "${NB_DIR}" || return 1
+}
+
+# prompt ######################################################################
+
+@test "'notebooks delete' with non-affirmative prompt response prints message and exits." {
+  {
+    _setup_notebooks
+  }
+
+  run "${_NB}" notebooks delete "one" <<< "n${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0                                                ]]
+
+  [[ "${output}" =~ Deleting\ .*one.*\:|Moving\ to\ Trash:\ .*one.* ]]
+  [[ "${output}" =~ Exiting.*\.\.\.                                 ]]
+
+
+  [[ -e "${NB_DIR}/one"                                             ]]
 }
 
 # <name> validation ###########################################################

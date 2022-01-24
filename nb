@@ -7305,7 +7305,7 @@ HEREDOC
         then
           break
         else
-          printf "Exiting...\\n"
+          printf "Exiting%s\\n" "$(_color_dim "...")"
           exit 0
         fi
       done
@@ -9276,7 +9276,7 @@ _edit_file() {
 
       while true
       do
-        read -n 1 -s -r -p "Press any key to save changes and exit..."
+        read -n 1 -s -r -p "Press any key to save changes and exit$(_color_dim "...")"
 
         printf "\\n"
         break
@@ -13664,7 +13664,7 @@ _export() {
               break
               ;;
             *)
-              printf "Exiting...\\n"
+              printf "Exiting%s\\n" "$(_color_dim "...")"
               exit 0
               ;;
           esac
