@@ -16885,7 +16885,7 @@ Can't show archives. Export archive and expand to edit.\\n"
 
         while true
         do
-          read -n 1 -s -r -p "Press any key to quit..."
+          read -n 1 -s -r -p "Press any key to quit$(_color_dim "...")"
 
           printf "\\n"
 
