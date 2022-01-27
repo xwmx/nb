@@ -18837,11 +18837,11 @@ HEREDOC
     fi
 
     case "${BROWSER:-}" in
-      elinks)
-        _columns="$((_columns - 20))"
+      *elinks*)
+        _columns="$((_columns - 30))"
         ;;
-      links)
-        _columns="$((_columns - 1))"
+      *links*)
+        _columns="$((_columns - 2))"
         ;;
     esac
 
