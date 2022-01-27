@@ -5472,12 +5472,12 @@ _list() {
         fi
 
         # TODO: `show --indicators` duplicated for performance
-        if _file_is_bookmark "${_list_path}/${__basename}"
-        then
-          _indicators+="${_NB_INDICATOR_BOOKMARK:-}"
-        elif [[ -d "${_list_path}/${__basename}" ]]
+        if [[ -d "${_list_path}/${__basename}" ]]
         then
           _indicators+="${_NB_INDICATOR_FOLDER:-}"
+        elif _file_is_bookmark "${_list_path}/${__basename}"
+        then
+          _indicators+="${_NB_INDICATOR_BOOKMARK:-}"
         elif ! LC_ALL=C _contains "${__basename##*.}" "${_TEXT_FILE_EXTENSIONS[@]}"
         then
           if _file_is_image "${_list_path}/${__basename}"
@@ -16114,10 +16114,13 @@ _show() {
     local _path="${1:-}"
 
     case "${2:-}" in
-      --done) _done=1 ;;
+      --done) _done=1   ;;
     esac
 
-    if _file_is_bookmark "${_path}"
+    if [[ -d "${_path}" ]]
+    then
+      _indicators+="${_NB_INDICATOR_FOLDER:-}"
+    elif _file_is_bookmark "${_path}"
     then
       _indicators+="${_NB_INDICATOR_BOOKMARK:-}"
     elif _file_is_image "${_path}"
@@ -16126,9 +16129,6 @@ _show() {
     elif _file_is_document "${_path}"
     then
       _indicators+="${_NB_INDICATOR_DOCUMENT:-}"
-    elif [[ -d "${_path}" ]]
-    then
-      _indicators+="${_NB_INDICATOR_FOLDER:-}"
     elif _file_is_video "${_path}"
     then
       _indicators+="${_NB_INDICATOR_VIDEO:-}"
