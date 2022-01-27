@@ -655,7 +655,7 @@ HEREDOC
   [[    "${output}"  =~  ❯.*nb.*\ .*·.*\ .*Example\ Notebook.*\ .*:.*\ .*1  ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><h1><a rel=\"noopener noreferrer\" href=\"//lo"
+"<nav class=\"header-crumbs\"><a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
 "calhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"
@@ -701,7 +701,7 @@ HEREDOC
   [[    "${output}"  =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><h1><a rel=\"noopener noreferrer\" href=\"//lo"
+"<nav class=\"header-crumbs\"><a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
 "calhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"
@@ -750,7 +750,7 @@ HEREDOC
   [[    "${output}"  =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><h1><a rel=\"noopener noreferrer\" href=\"//lo"
+"<nav class=\"header-crumbs\"><a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
 "calhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"
@@ -798,7 +798,7 @@ HEREDOC
   [[    "${output}"  =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*Example\ Folder ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><h1><a rel=\"noopener noreferrer\" href=\"//lo"
+"<nav class=\"header-crumbs\"><a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
 "calhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"
@@ -843,7 +843,7 @@ HEREDOC
   [[    "${output}"  =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><h1><a rel=\"noopener noreferrer\" href=\"//lo"
+"<nav class=\"header-crumbs\"><a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
 "calhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"
@@ -1011,7 +1011,7 @@ HEREDOC
   [[ "${lines[4]}"  =~  Content-Type:\ text/html\;\ charset=UTF-8 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><h1><a rel=\"noopener noreferrer\" href=\"//lo"
+"<nav class=\"header-crumbs\"><a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
 "calhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"
@@ -1074,7 +1074,7 @@ HEREDOC
   [[ "${lines[3]}"  =~  Server:\ nb                               ]]
   [[ "${lines[4]}"  =~  Content-Type:\ text/html\;\ charset=UTF-8 ]]
 
-  [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1      ]]
+  [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*\+     ]]
 
   printf "%s\\n" "${output}" | grep -q \
 "<form${_NEWLINE}action=\"/home:?--add"

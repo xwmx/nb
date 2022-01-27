@@ -505,11 +505,11 @@ identifier\"\>home:2\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Title\ Two\</
   # header crumbs
 
   [[ "${output}"  =~  \
-\<nav\ class=\"header-crumbs\"\>\<h1\>.*\<a.*\ href=\"//localhost:6789/\?${_expected_param_pattern}\"\> ]]
+\<nav\ class=\"header-crumbs\"\>.*\<a.*\ href=\"//localhost:6789/\?${_expected_param_pattern}\"\> ]]
   [[ "${output}"  =~  \
-href=\"//localhost:6789/\?${_expected_param_pattern}\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>       ]]
+href=\"//localhost:6789/\?${_expected_param_pattern}\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\> ]]
   [[ "${output}"  =~  \
-.*·.*\ \<a.*\ href=\"//localhost:6789/local:\?${_expected_param_pattern}\"\>local\</a\>.*\</h1\>        ]]
+.*·.*\ \<a.*\ href=\"//localhost:6789/local:\?${_expected_param_pattern}\"\>local\</a\>.*\</nav\> ]]
 
   # form
 

@@ -19,7 +19,7 @@ load test_helper
   [[ "${status}"    == 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><h1><a href=\"//localhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> "
+"<nav class=\"header-crumbs\"><a href=\"//localhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> "
 
   printf "%s\\n" "${output}" | grep -q \
 " <span class=\"dim\">·</span> <a href=\"//localhost:6789/home:?--per-page=.*&--columns=.*\">home</a> <span class=\"dim\">:</span> "
@@ -31,7 +31,7 @@ load test_helper
 " <span class=\"dim\">/</span> <a href=\"//localhost:6789/home:1/1/?--per-page=.*&--columns=.*\">Sample Folder</a> <span class=\"dim\">/</span> "
 
   printf "%s\\n" "${output}" | grep -q \
-" <span class=\"dim\">/</span> <span class=\"dim\">+</span></h1>"
+" <span class=\"dim\">/</span> <span class=\"dim\">+</span></nav>"
 
   printf "%s\\n" "${output}" | grep -q -v "↓"
 }
@@ -101,7 +101,7 @@ load test_helper
   [[ "${status}"    == 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><h1><a href=\"//localhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> "
+"<nav class=\"header-crumbs\"><a href=\"//localhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> "
 
   printf "%s\\n" "${output}" | grep -q \
 " <span class=\"dim\">·</span> <a href=\"//localhost:6789/home:?--per-page=.*&--columns=.*\">home</a> <span class=\"dim\">:</span> "
@@ -125,7 +125,7 @@ load test_helper
 "host:6789/home:1/1/1?--per-page=.*&--columns=.*&--delete\">-</a> <span class=\"dim\">\|</span> <a "
 
   printf "%s\\n" "${output}" | grep -q \
-"href=\"//localhost:6789/home:1/1/?--per-page=.*&--columns=.*&--add\">+</a></h1>"
+"href=\"//localhost:6789/home:1/1/?--per-page=.*&--columns=.*&--add\">+</a></nav>"
 }
 
 # header crumbs ###############################################################
@@ -155,7 +155,7 @@ load test_helper
   [[ "${status}"    == 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><h1><a href=\"//localhost:6789/${_expected_params}\"><span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> "
+"<nav class=\"header-crumbs\"><a href=\"//localhost:6789/${_expected_params}\"><span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> "
 
   printf "%s\\n" "${output}" | grep -q \
 " <span class=\"dim\">·</span> <a href=\"//localhost:6789/local:${_expected_params}\">local</a> <span class=\"dim\">:</span> "
@@ -179,7 +179,7 @@ load test_helper
 "<a href=\"//localhost:6789/local:1/1/1${_expected_params}&--edit\">edit</a> <span class=\"dim\">\|</span> <a "
 
   printf "%s\\n" "${output}" | grep -q \
-"href=\"//localhost:6789/local:1/1/${_expected_params}&--add\">+</a></h1>"
+"href=\"//localhost:6789/local:1/1/${_expected_params}&--add\">+</a></nav>"
 }
 
 @test "'browse <notebook>:<file-id>' displays header crumbs with id with file." {
@@ -199,7 +199,7 @@ load test_helper
   [[ "${status}"    == 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><h1><a href=\"//localhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span>"
+"<nav class=\"header-crumbs\"><a href=\"//localhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span>"
 
   printf "%s\\n" "${output}" | grep -q \
 " <span class=\"dim\">·</span> <a href=\"//localhost:6789/home:?--per-page=.*&--columns=.*\">home</a> <span class=\"dim\">:</span"
@@ -217,7 +217,7 @@ load test_helper
 " <a href=\"//localhost:6789/home:1?--per-page=.*&--columns=.*&--edit\">edit</a> <span class=\"dim\">\|</span> <a "
 
   printf "%s\\n" "${output}" | grep -q \
-"href=\"//localhost:6789/home:?--per-page=.*&--columns=.*&--add\">+</a></h1>"
+"href=\"//localhost:6789/home:?--per-page=.*&--columns=.*&--add\">+</a></nav>"
 }
 
 @test "'browse <notebook>:<folder-id>/<folder-id>/<file-id>' displays header crumbs with id with file." {
@@ -237,7 +237,7 @@ load test_helper
   [[ "${status}"    == 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><h1><a href=\"//localhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> "
+"<nav class=\"header-crumbs\"><a href=\"//localhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> "
 
   printf "%s\\n" "${output}" | grep -q \
 " <span class=\"dim\">·</span> <a href=\"//localhost:6789/home:?--per-page=.*&--columns=.*\">home</a> <span class=\"dim\">:</span> "
@@ -261,7 +261,7 @@ load test_helper
 "<a href=\"//localhost:6789/home:1/1/1?--per-page=.*&--columns=.*&--edit\">edit</a> <span class=\"dim\">\|</span> <a "
 
   printf "%s\\n" "${output}" | grep -q \
-"href=\"//localhost:6789/home:1/1/?--per-page=.*&--columns=.*&--add\">+</a></h1>"
+"href=\"//localhost:6789/home:1/1/?--per-page=.*&--columns=.*&--add\">+</a></nav>"
 }
 
 @test "'browse <notebook>:<folder-id>/<file-id>' displays header crumbs with folder." {
@@ -282,7 +282,7 @@ load test_helper
 
 
   printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><h1><a href=\"//localhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> "
+"<nav class=\"header-crumbs\"><a href=\"//localhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> "
 
   printf "%s\\n" "${output}" | grep -q \
 " <span class=\"dim\">·</span> <a href=\"//localhost:6789/home:?--per-page=.*&--columns=.*\">home</a> <span class=\"dim\">:</span> "
@@ -303,7 +303,7 @@ load test_helper
 "<a href=\"//localhost:6789/home:1/1?--per-page=.*&--columns=.*&--edit\">edit</a> <span class=\"dim\">|</span> <a "
 
   printf "%s\\n" "${output}" | grep -q \
-"href=\"//localhost:6789/home:1/?--per-page=.*&--columns=.*&--add\">+</a></h1>"
+"href=\"//localhost:6789/home:1/?--per-page=.*&--columns=.*&--add\">+</a></nav>"
 }
 
 @test "'browse <notebook>:<folder-id>/<folder-id>' displays header crumbs with folder." {
@@ -326,7 +326,7 @@ load test_helper
   [[ "${status}"    == 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><h1><a href=\"//localhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> "
+"<nav class=\"header-crumbs\"><a href=\"//localhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> "
 
   printf "%s\\n" "${output}" | grep -q \
 " <span class=\"dim\">·</span> <a href=\"//localhost:6789/home:?--per-page=.*&--columns=.*\">home</a> <span class=\"dim\">:</span> "
@@ -338,7 +338,7 @@ load test_helper
 " <span class=\"dim\">/</span> <a href=\"//localhost:6789/home:1/1/?--per-page=.*&--columns=.*\">Sample Folder</a> <span class=\"dim\">/</span> <a "
 
   printf "%s\\n" "${output}" | grep -q \
-"href=\"//localhost:6789/home:1/1/?--per-page=.*&--columns=.*&--add\">+</a></h1>"
+"href=\"//localhost:6789/home:1/1/?--per-page=.*&--columns=.*&--add\">+</a></nav>"
 
   printf "%s\\n" "${output}" | grep -q -v "↓"
 
@@ -351,7 +351,7 @@ load test_helper
   [[ "${status}"    == 0  ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><h1>"
+"<nav class=\"header-crumbs\">"
 }
 
 @test "'browse <notebook-path>/<folder>/<filename>' displays header crumbs with folder and id for file." {
@@ -371,7 +371,7 @@ load test_helper
   [[ "${status}"    == 0  ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><h1><a href=\"//localhost:6789/?--per-page.*\"><span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> "
+"<nav class=\"header-crumbs\"><a href=\"//localhost:6789/?--per-page.*\"><span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> "
 
   printf "%s\\n" "${output}" | grep -q \
 " <span class=\"dim\">·</span> <a href=\"//localhost:6789/home:?--per-page=.*&--columns=.*\">home</a> <span class=\"dim\">:</span> "
@@ -392,7 +392,7 @@ load test_helper
 "<a href=\"//localhost:6789/home:1/1?--per-page=.*&--columns=.*&--edit\">edit</a> <span class=\"dim\">\|</span> <a "
 
   printf "%s\\n" "${output}" | grep -q \
-"href=\"//localhost:6789/home:1/?--per-page=.*&--columns=.*&--add\">+</a></h1>"
+"href=\"//localhost:6789/home:1/?--per-page=.*&--columns=.*&--add\">+</a></nav>"
 }
 
 @test "'browse <notebook-path>/<folder>' displays header crumbs with folder." {
@@ -412,7 +412,7 @@ load test_helper
   [[ "${status}"    == 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><h1><a href=\"//localhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> "
+"<nav class=\"header-crumbs\"><a href=\"//localhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> "
 
   printf "%s\\n" "${output}" | grep -q \
 " <span class=\"dim\">·</span> <a href=\"//localhost:6789/home:?--per-page=.*&--columns=.*\">home</a> <span class=\"dim\">:</span> "
@@ -421,7 +421,7 @@ load test_helper
 " <span class=\"dim\">:</span> <a href=\"//localhost:6789/home:1/?--per-page=.*&--columns=.*\">Example Folder</a> <span class=\"dim\">/</span> <a "
 
   printf "%s\\n" "${output}" | grep -q \
-"href=\"//localhost:6789/home:1/?--per-page=.*&--columns=.*&--add\">+</a></h1>"
+"href=\"//localhost:6789/home:1/?--per-page=.*&--columns=.*&--add\">+</a></nav>"
 
   printf "%s\\n" "${output}" | grep -q -v "↓"
 }

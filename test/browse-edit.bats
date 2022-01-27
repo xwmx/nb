@@ -665,7 +665,7 @@ action=\"/local:1/1\?--edit\&--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'
   [[ "${lines[4]}"  =~  Content-Type:\ text/html\;\ charset=UTF-8 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><h1><a rel=\"noopener noreferrer\" href=\"//lo"
+"<nav class=\"header-crumbs\"><a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
 "calhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"
@@ -692,7 +692,7 @@ action=\"/local:1/1\?--edit\&--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'
 "href=\"//localhost:6789/home:1?--per-page=30&--columns=.*&--delete\">-</a> <span class=\"dim\">|</span> <a "
 
   printf "%s\\n" "${output}" | grep -q \
-"rel=\"noopener noreferrer\" href=\"//localhost:6789/home:?--per-page=30&--columns=.*&--add\">+</a></h1>"
+"rel=\"noopener noreferrer\" href=\"//localhost:6789/home:?--per-page=30&--columns=.*&--add\">+</a></nav>"
 
   printf "%s\\n" "${output}" | grep -q "rows=\"32\"># Example Title"
 

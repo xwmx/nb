@@ -10012,19 +10012,15 @@ header {
 .header-crumbs {
   font-size:          1rem;
   font-weight:        normal;
-  margin:             0;
-  padding:            2rem 2rem 0rem;
-  text-align:         center;
+  line-height:        2;
+  margin:             0 auto;
+  max-width:          45rem;
+  padding:            1.75rem 2rem 0rem;
+  text-align:         left;
 }
 
-.header-crumbs h1 {
-  display:            inline-block;
-  font-size:          1rem;
-  font-weight:        normal;
-  margin:             0;
-  min-width:          45rem;
-  padding:            0;
-  text-align:         left;
+.header-crumbs-spacer {
+  display:            none;
 }
 
 .main {
@@ -10037,12 +10033,9 @@ header {
   padding-top:        0.35rem;
 }
 
-.main p:first-child {
-  padding-top:        0.8rem;
-}
-
+.main p:first-child,
 .main .sourceCode:first-child {
-  padding-top:        1rem;
+  padding-top:        0.5rem;
 }
 
 .item-list {
@@ -18461,7 +18454,10 @@ HEREDOC
       fi
     fi
 
-    printf "<nav class=\"header-crumbs\"><h1>%s</h1></nav>\\n\\n" "${_header_content:-}"
+    cat <<HEREDOC
+<nav class="header-crumbs">${_header_content:-}</nav>
+<p class="header-crumbs-spacer"></p>
+HEREDOC
   }
 
   # _browse_render_item()

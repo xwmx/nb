@@ -27,16 +27,13 @@ load test_helper
   [[ "${output}"  =~  \<\!DOCTYPE\ html\> ]]
 
   printf "%s\\n" "${output}" | grep   -q \
-"<nav class=\"header-crumbs\"><h1>"
+"<nav class=\"header-crumbs\">"
 
   printf "%s\\n" "${output}" | grep   -q \
 "<a.* href=\"//localhost:6789/?--per-page=.*&--columns=.*\"><span "
 
   printf "%s\\n" "${output}" | grep   -q \
 "<span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> <span class=\"dim\">notebooks</span>"
-
-  printf "%s\\n" "${output}" | grep   -q \
-"</h1>"
 
   printf "%s\\n" "${output}" | grep   -q \
 "<p><a.* href=\"//localhost:6789/Demo%20Notebook:?--per-page=.*&--columns=.*\">Demo${_S}Notebook</a>${_S}.*·.*"
@@ -59,16 +56,13 @@ load test_helper
   [[ "${output}"  =~  \<\!DOCTYPE\ html\> ]]
 
   printf "%s\\n" "${output}" | grep   -q \
-"<nav class=\"header-crumbs\"><h1>"
+"<nav class=\"header-crumbs\">"
 
   printf "%s\\n" "${output}" | grep   -q \
 "<a.* href=\"//localhost:6789/?--per-page=.*&--columns=.*\"><span "
 
   printf "%s\\n" "${output}" | grep   -q \
 "<span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> <span class=\"dim\">notebooks</span>"
-
-  printf "%s\\n" "${output}" | grep   -q \
-"</h1>"
 
   printf "%s\\n" "${output}" | grep   -q \
 "<p><a.* href=\"//localhost:6789/Demo%20Notebook:?--per-page=.*&--columns=.*\">Demo${_S}Notebook</a><br>"
@@ -136,16 +130,13 @@ load test_helper
   [[ "${output}"  =~  \<\!DOCTYPE\ html\> ]]
 
   printf "%s\\n" "${output}" | grep     -q \
-"<nav class=\"header-crumbs\"><h1>"
+"<nav class=\"header-crumbs\">"
 
   printf "%s\\n" "${output}" | grep     -q \
 "<a.* href=\"//localhost:6789/?${_expected_param_pattern}\"><span "
 
   printf "%s\\n" "${output}" | grep     -q \
 "<span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> <span class=\"dim\">notebooks</span>"
-
-  printf "%s\\n" "${output}" | grep     -q \
-"</h1>"
 
   printf "%s\\n" "${output}" | grep -v  -q \
 "<p><a.* href=\"//localhost:6789/local:?.*<a.* href=\"//localhost:6789/local:?"
@@ -191,16 +182,13 @@ load test_helper
   [[ "${output}"  =~  \<\!DOCTYPE\ html\> ]]
 
   printf "%s\\n" "${output}" | grep   -q \
-"<nav class=\"header-crumbs\"><h1>"
+"<nav class=\"header-crumbs\">"
 
   printf "%s\\n" "${output}" | grep   -q \
 "<a.* href=\"//localhost:6789/?--per-page=.*&--columns=.*\"><span "
 
   printf "%s\\n" "${output}" | grep   -q \
 "<span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> <span class=\"dim\">notebooks</span>"
-
-  printf "%s\\n" "${output}" | grep   -q \
-"</h1>"
 
   printf "%s\\n" "${output}" | grep   -q \
 "<p><a.* href=\"//localhost:6789/Demo%20Notebook:?--per-page=.*&--columns=.*\">Demo${_S}Notebook</a>${_S}.*·.*"
@@ -240,16 +228,13 @@ load test_helper
   [[ "${output}"  =~  \<\!DOCTYPE\ html\> ]]
 
   printf "%s\\n" "${output}" | grep   -q \
-"<nav class=\"header-crumbs\"><h1>"
+"<nav class=\"header-crumbs\">"
 
   printf "%s\\n" "${output}" | grep   -q \
 "<a.* href=\"//localhost:6789/?--per-page=.*&--columns=.*\"><span "
 
   printf "%s\\n" "${output}" | grep   -q \
 "<span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> <span class=\"dim\">notebooks</span>"
-
-  printf "%s\\n" "${output}" | grep   -q \
-"</h1>"
 
   printf "%s\\n" "${output}" | grep   -q \
 "<p><a.* href=\"//localhost:6789/Demo%20Notebook:?--per-page=.*&--columns=.*\">Demo${_S}Notebook</a>${_S}.*·.*"
@@ -295,16 +280,13 @@ load test_helper
   [[ "${output}"  =~  \<\!DOCTYPE\ html\> ]]
 
   printf "%s\\n" "${output}" | grep   -q \
-"<nav class=\"header-crumbs\"><h1>"
+"<nav class=\"header-crumbs\">"
 
   printf "%s\\n" "${output}" | grep   -q \
 "<a.* href=\"//localhost:6789/\"><span "
 
   printf "%s\\n" "${output}" | grep   -q \
 "<span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> <span class=\"dim\">notebooks</span>"
-
-  printf "%s\\n" "${output}" | grep   -q \
-"</h1>"
 
   printf "%s\\n" "${output}" | grep   -q \
 "<p><a.* href=\"//localhost:6789/Demo%20Notebook:\">Demo${_S}Notebook</a>${_S}.*·.*"
