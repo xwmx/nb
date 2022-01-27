@@ -31,7 +31,7 @@ _setup_notebooks() {
 
   [[ ${status} -eq 0                                                ]]
 
-  [[ "${output}" =~ Deleting\ .*one.*\:|Moving\ to\ Trash:\ .*one.* ]]
+  [[ "${output}" =~ Deleting\ .*one.*\.|Moving\ to\ Trash:\ .*one.* ]]
   [[ "${output}" =~ Exiting.*\.\.\.                                 ]]
 
 
