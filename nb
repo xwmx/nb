@@ -5475,6 +5475,9 @@ _list() {
         if _file_is_bookmark "${_list_path}/${__basename}"
         then
           _indicators+="${_NB_INDICATOR_BOOKMARK:-}"
+        elif [[ -d "${_list_path}/${__basename}" ]]
+        then
+          _indicators+="${_NB_INDICATOR_FOLDER:-}"
         elif ! LC_ALL=C _contains "${__basename##*.}" "${_TEXT_FILE_EXTENSIONS[@]}"
         then
           if _file_is_image "${_list_path}/${__basename}"
@@ -5483,9 +5486,6 @@ _list() {
           elif _file_is_document "${_list_path}/${__basename}"
           then
             _indicators+="${_NB_INDICATOR_DOCUMENT:-}"
-          elif [[ -d "${_list_path}/${__basename}" ]]
-          then
-            _indicators+="${_NB_INDICATOR_FOLDER:-}"
           elif _file_is_video "${_list_path}/${__basename}"
           then
             _indicators+="${_NB_INDICATOR_VIDEO:-}"
