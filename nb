@@ -18665,6 +18665,9 @@ HEREDOC
                   local _mime_type=
                   _mime_type="$(file -b --mime-type "${_source_path}" 2>/dev/null || :)"
 
+                  # handle `file` 5.40 bug: https://bugs.astron.com/view.php?id=259
+                  _mime_type="${_mime_type//audio\/mpegapplication\/octet-stream/audio/mpeg}"
+
                   cat <<HEREDOC
 <audio controls>
   <source src="${_raw_url}" type="${_mime_type:-}">
