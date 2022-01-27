@@ -63,7 +63,7 @@ _clip() {
   if [[   -z  "${_source_relative_path:-}"                    ]] ||
      [[ ! -e  "${_notebook_path}/${_source_relative_path}"    ]]
   then
-    printf "Saving clipboard contents...\\n"
+    printf "Saving clipboard contents%s\\n" "$(_color_dim "...")"
 
     if ! ((_force))
     then
@@ -78,7 +78,7 @@ $(_color_primary "Proceed?")  $(_color_brackets "y/N") " __yn
             break
             ;;
           *)
-            printf "Exiting...\\n"
+            printf "Exiting%s\\n" "$(_color_dim "...")"
             exit 0
             ;;
         esac
