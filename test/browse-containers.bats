@@ -20,27 +20,27 @@ load test_helper
   [[    "${status}"  -eq  0               ]]
 
   [[    "${output}"   =~  \
-\<a\ rel=\"noopener\ noreferrer\"\ href=\"//localhost:6789/home:2\?--per-page=.*--columns=.*\"      ]]
+\<a\ rel=\"noopener\ noreferrer\"\ href=\"//localhost:6789/home:2\?--per-page=.*--columns=.*\"        ]]
   [[    "${output}"   =~  \
---per-page=.*--columns=.*\"\ class=\"list-item\"\>\<span\ class=\"dim\"\>\[\</span\>\<span\         ]]
+--per-page=.*--columns=.*\"\ class=\"list-item\"\>\<span\ class=\"muted\"\>\[\</span\>\<span\         ]]
   [[    "${output}"   =~  \
-dim\"\>\[\</span\>\<span\ class=\"identifier\"\>home:2\</span\>\<span\ class=\"dim\"\>]\</span\>    ]]
+muted\"\>\[\</span\>\<span\ class=\"identifier\"\>home:2\</span\>\<span\ class=\"muted\"\>]\</span\>  ]]
   [[    "${output}"   =~  \
-\</span\>\ \✔️\ \ \<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>\ \</span\>\<span  ]]
+\</span\>\ \✔️\ \ \<span\ class=\"muted\"\>\[\</span\>\<span\ class=\"identifier\"\>\ \</span\>\<span  ]]
   [[    "${output}"   =~  \
-\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Example\ todo\ two\.\</a\>\<br\>                       ]]
+\</span\>\<span\ class=\"muted\"\>\]\</span\>\ Example\ todo\ two\.\</a\>\<br\>                       ]]
 
 
   [[    "${output}"   =~  \
-\<a\ rel=\"noopener\ noreferrer\"\ href=\"//localhost:6789/home:2\?--per-page=.*--columns=.*\"      ]]
+\<a\ rel=\"noopener\ noreferrer\"\ href=\"//localhost:6789/home:2\?--per-page=.*--columns=.*\"        ]]
   [[    "${output}"   =~  \
---per-page=.*--columns=.*\"\ class=\"list-item\"\>\<span\ class=\"dim\"\>\[\</span\>\<span\         ]]
+--per-page=.*--columns=.*\"\ class=\"list-item\"\>\<span\ class=\"muted\"\>\[\</span\>\<span\         ]]
   [[    "${output}"   =~  \
-dim\"\>\[\</span\>\<span\ class=\"identifier\"\>home:1\</span\>\<span\ class=\"dim\"\>]\</span\>    ]]
+muted\"\>\[\</span\>\<span\ class=\"identifier\"\>home:1\</span\>\<span\ class=\"muted\"\>]\</span\>  ]]
   [[    "${output}"   =~  \
-\</span\>\ \✅\ \<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>x\</span\>\<span\   ]]
+\</span\>\ \✅\ \<span\ class=\"muted\"\>\[\</span\>\<span\ class=\"identifier\"\>x\</span\>\<span\   ]]
   [[    "${output}"   =~  \
-\</span\>\<span\ class=\"dim\"\>\]\</span\>\ Example\ todo\ one\.\</a\>\<br\>                       ]]
+\</span\>\<span\ class=\"muted\"\>\]\</span\>\ Example\ todo\ one\.\</a\>\<br\>                       ]]
 }
 
 # notebook: selectors #########################################################
@@ -64,11 +64,11 @@ dim\"\>\[\</span\>\<span\ class=\"identifier\"\>home:1\</span\>\<span\ class=\"d
   [[    "${status}"   -eq 0 ]]
 
   [[    "${output}" =~  \
-\[\</span\>\<span\ class=\"identifier\"\>home:3\</span\>\<span\ class=\"dim\"\>\] ]]
+\[\</span\>\<span\ class=\"identifier\"\>home:3\</span\>\<span\ class=\"muted\"\>\] ]]
   [[    "${output}" =~  \
-\[\</span\>\<span\ class=\"identifier\"\>home:2\</span\>\<span\ class=\"dim\"\>\] ]]
+\[\</span\>\<span\ class=\"identifier\"\>home:2\</span\>\<span\ class=\"muted\"\>\] ]]
   [[    "${output}" =~  \
-\[\</span\>\<span\ class=\"identifier\"\>home:1\</span\>\<span\ class=\"dim\"\>\] ]]
+\[\</span\>\<span\ class=\"identifier\"\>home:1\</span\>\<span\ class=\"muted\"\>\] ]]
 
   run "${_NB}" browse Sample\ Folder/ --print
 
@@ -78,9 +78,9 @@ dim\"\>\[\</span\>\<span\ class=\"identifier\"\>home:1\</span\>\<span\ class=\"d
   [[    "${status}"   -eq 0 ]]
 
   [[    "${output}" =~  \
-\[\</span\>\<span\ class=\"identifier\"\>home:Sample${_S}Folder/2\</span\>\<span\ class=\"dim\"\>\] ]]
+\[\</span\>\<span\ class=\"identifier\"\>home:Sample${_S}Folder/2\</span\>\<span\ class=\"muted\"\>\] ]]
   [[    "${output}" =~  \
-\[\</span\>\<span\ class=\"identifier\"\>home:Sample${_S}Folder/1\</span\>\<span\ class=\"dim\"\>\] ]]
+\[\</span\>\<span\ class=\"identifier\"\>home:Sample${_S}Folder/1\</span\>\<span\ class=\"muted\"\>\] ]]
 }
 
 @test "'browse' includes notebook selectors for items in a selected notebook." {
@@ -104,11 +104,11 @@ dim\"\>\[\</span\>\<span\ class=\"identifier\"\>home:1\</span\>\<span\ class=\"d
   [[    "${status}"   -eq 0 ]]
 
   [[    "${output}" =~  \
-\[\</span\>\<span\ class=\"identifier\"\>Example${_S}Notebook:3\</span\>\<span\ class=\"dim\"\>\] ]]
+\[\</span\>\<span\ class=\"identifier\"\>Example${_S}Notebook:3\</span\>\<span\ class=\"muted\"\>\] ]]
   [[    "${output}" =~  \
-\[\</span\>\<span\ class=\"identifier\"\>Example${_S}Notebook:2\</span\>\<span\ class=\"dim\"\>\] ]]
+\[\</span\>\<span\ class=\"identifier\"\>Example${_S}Notebook:2\</span\>\<span\ class=\"muted\"\>\] ]]
   [[    "${output}" =~  \
-\[\</span\>\<span\ class=\"identifier\"\>Example${_S}Notebook:1\</span\>\<span\ class=\"dim\"\>\] ]]
+\[\</span\>\<span\ class=\"identifier\"\>Example${_S}Notebook:1\</span\>\<span\ class=\"muted\"\>\] ]]
 
   run "${_NB}" browse Example\ Notebook:Sample\ Folder/ --print
 
@@ -118,9 +118,9 @@ dim\"\>\[\</span\>\<span\ class=\"identifier\"\>home:1\</span\>\<span\ class=\"d
   [[    "${status}"   -eq 0 ]]
 
   [[    "${output}" =~  \
-\[\</span\>\<span\ class=\"identifier\"\>Example${_S}Notebook:Sample${_S}Folder/2\</span\>\<span\ class=\"dim\"\>\] ]]
+\[\</span\>\<span\ class=\"identifier\"\>Example${_S}Notebook:Sample${_S}Folder/2\</span\>\<span\ class=\"muted\"\>\] ]]
   [[    "${output}" =~  \
-\[\</span\>\<span\ class=\"identifier\"\>Example${_S}Notebook:Sample${_S}Folder/1\</span\>\<span\ class=\"dim\"\>\] ]]
+\[\</span\>\<span\ class=\"identifier\"\>Example${_S}Notebook:Sample${_S}Folder/1\</span\>\<span\ class=\"muted\"\>\] ]]
 }
 
 @test "'browse --query <query>' includes notebook selectors for results in a selected notebook." {
@@ -144,9 +144,9 @@ dim\"\>\[\</span\>\<span\ class=\"identifier\"\>home:1\</span\>\<span\ class=\"d
   [[    "${status}"   -eq 0 ]]
 
   [[    "${output}" =~  \
-\[\</span\>\<span\ class=\"identifier\"\>Example${_S}Notebook:1\</span\>\<span\ class=\"dim\"\>\]                   ]]
+\[\</span\>\<span\ class=\"identifier\"\>Example${_S}Notebook:1\</span\>\<span\ class=\"muted\"\>\]                   ]]
   [[    "${output}" =~  \
-\[\</span\>\<span\ class=\"identifier\"\>Example${_S}Notebook:Sample${_S}Folder/2\</span\>\<span\ class=\"dim\"\>\] ]]
+\[\</span\>\<span\ class=\"identifier\"\>Example${_S}Notebook:Sample${_S}Folder/2\</span\>\<span\ class=\"muted\"\>\] ]]
 }
 
 # .index ######################################################################
@@ -184,7 +184,7 @@ dim\"\>\[\</span\>\<span\ class=\"identifier\"\>home:1\</span\>\<span\ class=\"d
   [[ "${status}"    -eq 0                                 ]]
 
   [[ "${output}"  =~  \
-\[\</span\>\<span\ class=\"identifier\"\>home:Example/Sample/Demo/1\</span\>\<span\ class=\"dim\"\>\] ]]
+\[\</span\>\<span\ class=\"identifier\"\>home:Example/Sample/Demo/1\</span\>\<span\ class=\"muted\"\>\] ]]
 
   diff                                                  \
     <(cat "${NB_DIR}/home/Example/.index")              \
@@ -250,7 +250,7 @@ HEREDOC
   [[ "${status}"    -eq 0                  ]]
 
   [[ "${output}"    =~  \
-\[\</span\>\<span\ class=\"identifier\"\>home:4\</span\>\<span\ class=\"dim\"\>\] ]]
+\[\</span\>\<span\ class=\"identifier\"\>home:4\</span\>\<span\ class=\"muted\"\>\] ]]
 
   diff                              \
     <(cat "${NB_DIR}/home/.index")  \
@@ -305,7 +305,7 @@ HEREDOC
 
   [[ "${output}"    =~  href=\"//localhost:6789/home:1/4  ]]
   [[ "${output}"    =~  \
-\[\</span\>\<span\ class=\"identifier\"\>home:Example${_S}Folder/4\</span\>\<span\ class=\"dim\"\>\] ]]
+\[\</span\>\<span\ class=\"identifier\"\>home:Example${_S}Folder/4\</span\>\<span\ class=\"muted\"\>\] ]]
 
   diff                                            \
     <(cat "${NB_DIR}/home/Example Folder/.index") \
@@ -495,11 +495,11 @@ HEREDOC
   # header crumbs
 
   [[ "${output}"  =~  \
-\<nav\ class=\"header-crumbs\"\>.*\<a.*\ href=\"//localhost:6789/\?${_expected_param_pattern}\"\> ]]
+\<nav\ class=\"header-crumbs\"\>.*\<a.*\ href=\"//localhost:6789/\?${_expected_param_pattern}\"\>   ]]
   [[ "${output}"  =~  \
-href=\"//localhost:6789/\?${_expected_param_pattern}\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\> ]]
+href=\"//localhost:6789/\?${_expected_param_pattern}\"\>\<span\ class=\"muted\"\>❯\</span\>nb\</a\> ]]
   [[ "${output}"  =~  \
-.*·.*\ \<a.*\ href=\"//localhost:6789/local:\?${_expected_param_pattern}\"\>local\</a\>.*\</nav\> ]]
+.*·.*\ \<a.*\ href=\"//localhost:6789/local:\?${_expected_param_pattern}\"\>local\</a\>.*\</nav\>   ]]
 
   # form
 
@@ -507,7 +507,7 @@ href=\"//localhost:6789/\?${_expected_param_pattern}\"\>\<span\ class=\"dim\"\>�
 action=\"/local:\?--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook\" ]]
 
   [[ "${output}"  =~  \
-\<input\ type=\"hidden\"\ name=\"--local\"\ \ \ \ \ value=\"${_TMP_DIR}/Local\ Notebook\"\> ]]
+\<input\ type=\"hidden\"\ name=\"--local\"\ \ \ \ \ value=\"${_TMP_DIR}/Local\ Notebook\"\>       ]]
 
   # list
 
@@ -635,7 +635,7 @@ abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
   [[ "${status}"  ==  0         ]]
 
   [[ "${output}"  =~  \
-\<nav\ class=\"header-crumbs\"\>\<a.*\ href=\"//localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\> ]]
+\<nav\ class=\"header-crumbs\"\>\<a.*\ href=\"//localhost:6789/\?--per-page=.*\"\>\<span\ class=\"muted\"\>❯\</span\>nb\</a\> ]]
   [[ "${output}"  =~  \
 .*·.*\ \<a.*\ href=\"//localhost:6789/home:\?--per-page=.*\"\>home\</a\>\ .*:.*\              ]]
   [[ "${output}"  =~  \
@@ -661,7 +661,7 @@ abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
   [[ "${status}"  ==  0         ]]
 
   [[ "${output}"  =~  \
-\<nav\ class=\"header-crumbs\"\>\<a.*\ href=\"//localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>  ]]
+\<nav\ class=\"header-crumbs\"\>\<a.*\ href=\"//localhost:6789/\?--per-page=.*\"\>\<span\ class=\"muted\"\>❯\</span\>nb\</a\>  ]]
   [[ "${output}"  =~  \
 .*·.*\ \<a.*\ href=\"//localhost:6789/Example%20Notebook:\?--per-page=.*\"\>Example\ Notebook\</a\>.*\</nav\>  ]]
 
@@ -697,11 +697,11 @@ abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
   [[ "${output}"  =~  \<\!DOCTYPE\ html\> ]]
 
   [[ "${output}"  =~  \
-\<nav\ class=\"header-crumbs\"\>.*\<a.*\ href=\"//localhost:6789/\?--per-page=.*\"\>  ]]
+\<nav\ class=\"header-crumbs\"\>.*\<a.*\ href=\"//localhost:6789/\?--per-page=.*\"\>    ]]
   [[ "${output}"  =~  \
-href=\"//localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>  ]]
+href=\"//localhost:6789/\?--per-page=.*\"\>\<span\ class=\"muted\"\>❯\</span\>nb\</a\>  ]]
   [[ "${output}"  =~  \
-.*·.*\ \<a.*\ href=\"//localhost:6789/home:\?--per-page=.*\"\>home\</a\>.*\</nav\>    ]]
+.*·.*\ \<a.*\ href=\"//localhost:6789/home:\?--per-page=.*\"\>home\</a\>.*\</nav\>      ]]
 
   [[ "${output}"  =~  \
 \<a.*\ href=\"//localhost:6789/home:3\?--per-page=.*\"\ class=\"list-item\"\>       ]]
@@ -739,7 +739,7 @@ href=\"//localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb
   [[ "${status}"  ==  0 ]]
 
   printf "%s\\n" "${output}" | grep       -q  \
-"<nav class=\"header-crumbs\">.*<a.* href=\"//localhost:6789/?--per-page=.*\"><span class=\"dim\">❯</span>nb</a>"
+"<nav class=\"header-crumbs\">.*<a.* href=\"//localhost:6789/?--per-page=.*\"><span class=\"muted\">❯</span>nb</a>"
 
   printf "%s\\n" "${output}" | grep       -q  \
 ".*·.* <a.* href=\"//localhost:6789/home:?--per-page=.*\">home</a> .*:.*"
@@ -783,7 +783,7 @@ href=\"//localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb
   [[ "${status}"  ==  0 ]]
 
   [[ "${output}"  =~  \
-\<nav\ class=\"header-crumbs\"\>\<a.*\ href=\"//localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>  ]]
+\<nav\ class=\"header-crumbs\"\>\<a.*\ href=\"//localhost:6789/\?--per-page=.*\"\>\<span\ class=\"muted\"\>❯\</span\>nb\</a\>  ]]
   [[ "${output}"  =~  \
 .*·.*\ \<a.*\ href=\"//localhost:6789/home:\?--per-page=.*\"\>home\</a\>\ .*:.*\              ]]
   [[ "${output}"  =~  \
@@ -823,13 +823,13 @@ href=\"//localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb
   [[ "${status}"  ==  0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><a.* href=\"//localhost:6789/?--per-page=.*\"><span class=\"dim\">❯</span>nb</a>"
+"<nav class=\"header-crumbs\"><a.* href=\"//localhost:6789/?--per-page=.*\"><span class=\"muted\">❯</span>nb</a>"
 
   printf "%s\\n" "${output}" | grep -q \
 ".*·.* <a.* href=\"//localhost:6789/Example%20Notebook:?--per-page=.*\">Example Notebook</a> <span "
 
   printf "%s\\n" "${output}" | grep -q \
-"class=\"dim\">:</span> <a rel=\"noopener noreferrer\" href=\"//localhost:6789/Example Notebook:?--per-page=.*&--columns=.*&--add\">+</a></nav>"
+"class=\"muted\">:</span> <a rel=\"noopener noreferrer\" href=\"//localhost:6789/Example Notebook:?--per-page=.*&--columns=.*&--add\">+</a></nav>"
 
   [[ "${output}"  =~  \
 \<a.*\ href=\"//localhost:6789/Example%20Notebook:2\?--per-page=.*\"\ class=\"list-item\"\> ]]

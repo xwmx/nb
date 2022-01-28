@@ -50,12 +50,12 @@ load test_helper
   printf "%s\\n" "${output}" | grep       -q  \
 "<nav class=\"header-crumbs\"><a.* href=\"//localhost:6789/?--per-page=2&--columns=.*\">"
   printf "%s\\n" "${output}" | grep       -q  \
-"><a.* href=\"//localhost:6789/?--per-page=2&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"
+"><a.* href=\"//localhost:6789/?--per-page=2&--columns=.*\"><span class=\"muted\">❯</span>nb</a>"
   printf "%s\\n" "${output}" | grep       -q  \
-"<span class=\"dim\">·</span> <a.* href=\"//localhost:6789/Demo%20Notebook:?--per-page=2&--columns=.*\">"
+"<span class=\"muted\">·</span> <a.* href=\"//localhost:6789/Demo%20Notebook:?--per-page=2&--columns=.*\">"
 
   printf "%s\\n" "${output}" | grep       -q  \
-"Demo Notebook</a> <span class=\"dim\">:</span> <a rel=\"noopener noreferrer\" href=\"//local"
+"Demo Notebook</a> <span class=\"muted\">:</span> <a rel=\"noopener noreferrer\" href=\"//local"
 
   printf "%s\\n" "${output}" | grep       -q  \
 "host:6789/Demo Notebook:?--per-page=2&--columns=.*&--add\">+</a></nav>"
@@ -174,11 +174,11 @@ load test_helper
   printf "%s\\n" "${output}" | grep       -q  \
 "<nav class=\"header-crumbs\">"
   printf "%s\\n" "${output}" | grep       -q  \
-"<a.* href=\"//localhost:6789/?--per-page=2&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"
+"<a.* href=\"//localhost:6789/?--per-page=2&--columns=.*\"><span class=\"muted\">❯</span>nb</a>"
   printf "%s\\n" "${output}" | grep       -q  \
-"<span class=\"dim\">·</span> <a.* href=\"//localhost:6789/Demo%20Notebook:?--per-page=2&--columns=.*\">Demo Notebook</a>"
+"<span class=\"muted\">·</span> <a.* href=\"//localhost:6789/Demo%20Notebook:?--per-page=2&--columns=.*\">Demo Notebook</a>"
   printf "%s\\n" "${output}" | grep       -q  \
-"Demo Notebook</a> <span class=\"dim\">:</span> <span class=\"dim\">1</span>"
+"Demo Notebook</a> <span class=\"muted\">:</span> <span class=\"muted\">1</span>"
 
   printf "%s\\n" "${output}" | grep       -q  \
 "<a.* href=\"//localhost:6789/Demo Notebook:Title Two?--per-page=2&--columns=.*\">\[\[Title Two\]\]</a>"
@@ -234,9 +234,9 @@ load test_helper
   printf "%s\\n" "${output}" | grep       -q  \
 "<nav class=\"header-crumbs\">"
   printf "%s\\n" "${output}" | grep       -q  \
-"<a.* href=\"//localhost:6789/?--per-page=2&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"
+"<a.* href=\"//localhost:6789/?--per-page=2&--columns=.*\"><span class=\"muted\">❯</span>nb</a>"
   printf "%s\\n" "${output}" | grep       -q  \
-"<span class=\"dim\">·</span> <span class=\"dim\">notebooks</span>"
+"<span class=\"muted\">·</span> <span class=\"muted\">notebooks</span>"
 
   printf "%s\\n" "${output}" | grep       -q  \
 "<a.*href=\"//localhost:6789/Demo%20Notebook:?--per-page=2&--columns=.*\">Demo${_S}Notebook</a>${_S}<span"
@@ -272,13 +272,13 @@ load test_helper
   [[ "${output}"  =~ \<title\>nb\ browse\ home:\</title\>   ]]
 
   printf "%s\\n" "${output}" | grep -q \
-'<nav class="header-crumbs"><a.* href="//localhost:6789/?--per-page=4&--columns=.*"><span class="dim">❯</span>nb</a>'
+'<nav class="header-crumbs"><a.* href="//localhost:6789/?--per-page=4&--columns=.*"><span class="muted">❯</span>nb</a>'
 
   printf "%s\\n" "${output}" | grep -q \
-"<span class=\"dim\">·</span> <a.* href=\"//localhost:6789/home:?--per-page=4&--columns=.*\">home</a> <span "
+"<span class=\"muted\">·</span> <a.* href=\"//localhost:6789/home:?--per-page=4&--columns=.*\">home</a> <span "
 
   printf "%s\\n" "${output}" | grep -q \
-"class=\"dim\">:</span> <a rel=\"noopener noreferrer\" href=\"//localhost:6789/home:?--per-page=4&--columns=.*&--add\">+</a></nav>"
+"class=\"muted\">:</span> <a rel=\"noopener noreferrer\" href=\"//localhost:6789/home:?--per-page=4&--columns=.*&--add\">+</a></nav>"
 
   # 10-7
 
@@ -358,7 +358,7 @@ load test_helper
   [[ "${output}"  =~ \<title\>nb\ browse\ home:\ \-\-page\ 2\</title\>  ]]
 
   [[ "${output}"  =~ \
-\<nav\ class=\"header-crumbs\"\>.*\<a.*\ href=\"//localhost:6789/\?--per-page=4${_AMP}--columns=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\> ]]
+\<nav\ class=\"header-crumbs\"\>.*\<a.*\ href=\"//localhost:6789/\?--per-page=4${_AMP}--columns=.*\"\>\<span\ class=\"muted\"\>❯\</span\>nb\</a\> ]]
   [[ "${output}"  =~ \
 .*·.*\ \<a.*\ href=\"//localhost:6789/home:\?--per-page=4${_AMP}--columns=.*\"\>home\</a\>.*\</nav\>  ]]
 
@@ -442,7 +442,7 @@ load test_helper
   [[ "${output}"  =~ \<title\>nb\ browse\ home:\ \-\-page\ 3\</title\>  ]]
 
   [[ "${output}"  =~ \
-\<nav\ class=\"header-crumbs\"\>.*\<a.*\ href=\"//localhost:6789/\?--per-page=4${_AMP}--columns=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>  ]]
+\<nav\ class=\"header-crumbs\"\>.*\<a.*\ href=\"//localhost:6789/\?--per-page=4${_AMP}--columns=.*\"\>\<span\ class=\"muted\"\>❯\</span\>nb\</a\>  ]]
   [[ "${output}"  =~ \
 .*·.*\ \<a.*\ href=\"//localhost:6789/home:\?--per-page=4${_AMP}--columns=.*\"\>home\</a\>.*\</nav\>  ]]
 
@@ -524,7 +524,7 @@ load test_helper
   [[ "${output}"  =~ \<title\>nb\ browse\ home:\</title\>   ]]
 
   [[ "${output}"  =~ \
-\<nav\ class=\"header-crumbs\"\>\<a.*\ href=\"//localhost:6789/\?--per-page=11${_AMP}--columns=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\> ]]
+\<nav\ class=\"header-crumbs\"\>\<a.*\ href=\"//localhost:6789/\?--per-page=11${_AMP}--columns=.*\"\>\<span\ class=\"muted\"\>❯\</span\>nb\</a\> ]]
   [[ "${output}"  =~ \
 .*·.*\ \<a.*\ href=\"//localhost:6789/home:\?--per-page=11${_AMP}--columns=.*\"\>home\</a\>.*\</nav\> ]]
 

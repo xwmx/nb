@@ -175,7 +175,7 @@ load test_helper
 "<form${_NEWLINE}action=\"/home:1?--edit"
 
   printf "%s\\n" "${output}" | grep -q \
-"value=\"save\"> <span class=\"dim\">·</span> <span class=\"dim last-saved\">last: .*</span>"
+"value=\"save\"> <span class=\"muted\">·</span> <span class=\"muted last-saved\">last: .*</span>"
 }
 
 # local notebook ##############################################################
@@ -243,7 +243,7 @@ load test_helper
 "<form${_NEWLINE}action=\"/local:1?--edit&--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
 
   printf "%s\\n" "${output}" | grep -q \
-"value=\"save\"> <span class=\"dim\">·</span> <span class=\"dim last-saved\">last: .*</span>"
+"value=\"save\"> <span class=\"muted\">·</span> <span class=\"muted last-saved\">last: .*</span>"
 }
 
 @test "GET to --edit URL with local notebook renders form." {
@@ -604,14 +604,14 @@ action=\"/local:1/1\?--edit\&--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'
   [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1      ]]
 
   printf "%s\\n" "${output}" | grep -q \
-    "href=\"//localhost:6789/?--per-page=30&--columns=20\"><span class=\"dim\">❯</span>nb</a> "
+    "href=\"//localhost:6789/?--per-page=30&--columns=20\"><span class=\"muted\">❯</span>nb</a> "
 
   printf "%s\\n" "${output}" | grep -q "rows=\"32\"># Example Title"
   printf "%s\\n" "${output}" | grep -q \
     "<form${_NEWLINE}action=\"/home:1?--edit&--per-page=30--columns=20"
 
   printf "%s\\n" "${output}" | grep -q \
-"value=\"save\"> <span class=\"dim\">·</span> <span class=\"dim last-saved\">last: .*</span>"
+"value=\"save\"> <span class=\"muted\">·</span> <span class=\"muted last-saved\">last: .*</span>"
 }
 
 @test "GET to --edit URL without --columns parameter uses default value for textarea and retains leading tab." {
@@ -668,28 +668,28 @@ action=\"/local:1/1\?--edit\&--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'
 "<nav class=\"header-crumbs\"><a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
-"calhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"
+"calhost:6789/?--per-page=.*&--columns=.*\"><span class=\"muted\">❯</span>nb</a>"
 
   printf "%s\\n" "${output}" | grep -q \
-" <span class=\"dim\">·</span> <a rel=\"noopener noreferrer\" href=\"//lo"
+" <span class=\"muted\">·</span> <a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
-"calhost:6789/home:?--per-page=.*&--columns=.*\">home</a> <span class=\"dim\""
+"calhost:6789/home:?--per-page=.*&--columns=.*\">home</a> <span class=\"muted\""
 
   printf "%s\\n" "${output}" | grep -q \
 ">:</span> <a rel=\"noopener noreferrer\" href=\"//localhost:6789/home:"
 
   printf "%s\\n" "${output}" | grep -q \
-"1?--per-page=.*&--columns=.*\">1</a> <span class=\"dim\">·</span> <a.* "
+"1?--per-page=.*&--columns=.*\">1</a> <span class=\"muted\">·</span> <a.* "
 
   printf "%s\\n" "${output}" | grep -q \
-"rel=\"noopener noreferrer\" href=\"//localhost:6789/--original/home/Example File.md\">↓</a> <span class=\"dim\">·</span> <span cl"
+"rel=\"noopener noreferrer\" href=\"//localhost:6789/--original/home/Example File.md\">↓</a> <span class=\"muted\">·</span> <span cl"
 
   printf "%s\\n" "${output}" | grep -q \
-"ss=\"dim\">editing</span> <span class=\"dim\">·</span> <a rel=\"noopener noreferrer\" "
+"ss=\"muted\">editing</span> <span class=\"muted\">·</span> <a rel=\"noopener noreferrer\" "
 
   printf "%s\\n" "${output}" | grep -q \
-"href=\"//localhost:6789/home:1?--per-page=30&--columns=.*&--delete\">-</a> <span class=\"dim\">|</span> <a "
+"href=\"//localhost:6789/home:1?--per-page=30&--columns=.*&--delete\">-</a> <span class=\"muted\">|</span> <a "
 
   printf "%s\\n" "${output}" | grep -q \
 "rel=\"noopener noreferrer\" href=\"//localhost:6789/home:?--per-page=30&--columns=.*&--add\">+</a></nav>"
@@ -697,7 +697,7 @@ action=\"/local:1/1\?--edit\&--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'
   printf "%s\\n" "${output}" | grep -q "rows=\"32\"># Example Title"
 
   printf "%s\\n" "${output}" | grep -q \
-"value=\"save\"> <span class=\"dim\">·</span> <span class=\"dim last-saved\">last: .*</span>"
+"value=\"save\"> <span class=\"muted\">·</span> <span class=\"muted last-saved\">last: .*</span>"
 
   [[ !  "${output}"    =~ \<input\ type=\"hidden\"\ name=\"home%3A1\"\>    ]]
 
@@ -759,7 +759,7 @@ action=\"/local:1/1\?--edit\&--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'
 "<form${_NEWLINE}action=\"/home:1?--edit"
 
   printf "%s\\n" "${output}" | grep -q \
-"value=\"save\"> <span class=\"dim\">·</span> <span class=\"dim last-saved\">last: .*</span>"
+"value=\"save\"> <span class=\"muted\">·</span> <span class=\"muted last-saved\">last: .*</span>"
 }
 
 # CLI #########################################################################
@@ -786,5 +786,5 @@ action=\"/local:1/1\?--edit\&--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'
 "<form${_NEWLINE}action=\"/home:1?--edit"
 
   printf "%s\\n" "${output}" | grep -q \
-"value=\"save\"> <span class=\"dim\">·</span> <span class=\"dim last-saved\">last: .*</span>"
+"value=\"save\"> <span class=\"muted\">·</span> <span class=\"muted last-saved\">last: .*</span>"
 }

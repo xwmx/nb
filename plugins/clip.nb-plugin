@@ -60,10 +60,15 @@ _clip() {
   local _notebook_path=
   _notebook_path="$(_notebooks current --path)"
 
+  if _command_exists "_color_dim" && ! _command_exists "_color_muted"
+  then
+    _color_muted() { _color_dim "${@:-}"; }
+  fi
+
   if [[   -z  "${_source_relative_path:-}"                    ]] ||
      [[ ! -e  "${_notebook_path}/${_source_relative_path}"    ]]
   then
-    printf "Saving clipboard contents%s\\n" "$(_color_dim "...")"
+    printf "Saving clipboard contents%s\\n" "$(_color_muted "...")"
 
     if ! ((_force))
     then
@@ -78,7 +83,7 @@ $(_color_primary "Proceed?")  $(_color_brackets "y/N") " __yn
             break
             ;;
           *)
-            printf "Exiting%s\\n" "$(_color_dim "...")"
+            printf "Exiting%s\\n" "$(_color_muted "...")"
             exit 0
             ;;
         esac

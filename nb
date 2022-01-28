@@ -900,13 +900,13 @@ _color_brackets() {
     "${_TPUT_SGR0}"
 }
 
-# _color_dim()
+# _color_muted()
 #
 # Usage:
-#   _color_dim <string>
+#   _color_muted <string>
 #
-# Print the given string with the dim color.
-_color_dim() {
+# Print the given string with the muted color.
+_color_muted() {
   if ! ((_COLOR_ENABLED))
   then
     printf "%s\\n" "${1:-}"
@@ -2491,7 +2491,7 @@ _piped_input() {
 # _print_line()
 #
 # Usage:
-#   _print_line <text> [--dim] [--no-wrap] [--visible-length [<extra-length>]
+#   _print_line <text> [--muted] [--no-wrap] [--visible-length [<extra-length>]
 #
 # Description:
 #   Print a line of dashes the length of <text>.
@@ -2499,7 +2499,7 @@ _piped_input() {
 # More Information:
 #   https://wiki.bash-hackers.org/commands/builtin/printf
 _print_line() {
-  local _dim=0
+  local _muted=0
   local _extra_length=0
   local _text=
   local _visible_length=0
@@ -2508,7 +2508,7 @@ _print_line() {
   while ((${#}))
   do
     case "${1:-}" in
-      --dim*)   _dim=1                ;;
+      --muted*)   _muted=1            ;;
       --no*w*)  _wrap_line=0          ;;
       --vis*)   _visible_length=1     ;;
       *)
@@ -2552,9 +2552,9 @@ _print_line() {
     printf -v _line "%*s" "${_text_length}" ""
   fi
 
-  if ((_dim))
+  if ((_muted))
   then
-    _color_dim "${_line// /-}"
+    _color_muted "${_line// /-}"
   else
     _color_secondary "${_line// /-}"
   fi |  if ((_full_width_line))
@@ -3816,13 +3816,13 @@ View this theme as a complete file
 
 Themes can be installed using the \`${_ME} plugins\` subcommand:
 
-    $(_color_dim ">") $(_color_primary "${_ME} plugins install https://github.com/xwmx/nb/blob/master/plugins/turquoise.nb-theme")
+    $(_color_muted ">") $(_color_primary "${_ME} plugins install https://github.com/xwmx/nb/blob/master/plugins/turquoise.nb-theme")
     $(_color_secondary "Plugin installed:")
     $(_color_secondary "/home/example/.nb/.plugins/turquoise.nb-theme")
 
 Once a theme is installed, use it with \`${_ME} set color_theme\`:
 
-    $(_color_dim ">") $(_color_primary "set color_theme turquoise")
+    $(_color_muted ">") $(_color_primary "set color_theme turquoise")
     $(_color_secondary "NB_COLOR_THEME set to turquoise")
 
 The primary and secondary colors can also be overridden individually,
@@ -4735,7 +4735,7 @@ HEREDOC
 
   # Usage: _init_print_header
   _init_print_header() {
-    printf "%s%s\\n" "$(_color_primary "Initializing")" "$(_color_dim "...")"
+    printf "%s%s\\n" "$(_color_primary "Initializing")" "$(_color_muted "...")"
   }
 
   if [[ -e "${NB_DIR}" ]] && [[ ! -d "${NB_DIR}" ]]
@@ -5958,7 +5958,7 @@ _ls() {
     )
 
     local _commands_hi=(
-      "$(_color_dim "${_CHEVRON_RIGHT}") $(_color_secondary "${_ME}${_maybe_selector_scope_padded_left}")"
+      "$(_color_muted "${_CHEVRON_RIGHT}") $(_color_secondary "${_ME}${_maybe_selector_scope_padded_left}")"
       "$(_color_secondary "${_commands_raw[1]}")"
       "$(_color_secondary "${_commands_raw[2]}")"
       "$(_color_secondary "${_commands_raw[3]}")"
@@ -6028,11 +6028,11 @@ _ls() {
     # printf "${_NB_INDICATOR_FOLDER:-}" # TODO: Review
 
     local _folder_separator=
-    _folder_separator="$(_color_dim "/")"
+    _folder_separator="$(_color_muted "/")"
 
     printf "%s\\n" "${1//\// ${_folder_separator} }"
 
-    _print_line "$(printf "%-${_COLUMNS}s" '.')" --dim
+    _print_line "$(printf "%-${_COLUMNS}s" '.')" --muted
 
     printf "\\n"
   }
@@ -6088,7 +6088,7 @@ _ls() {
     if ! ((_plain))
     then
       _separator=" ${_MD}"
-      _separator_hi="$(_color_dim "${_separator}")"
+      _separator_hi="$(_color_muted "${_separator}")"
     fi
 
     local _current_notebook_name=
@@ -7078,7 +7078,7 @@ _notebooks() {
               break
               ;;
             *)
-              printf "Exiting%s\\n" "$(_color_dim "...")"
+              printf "Exiting%s\\n" "$(_color_muted "...")"
               exit 0
               ;;
           esac
@@ -7305,7 +7305,7 @@ HEREDOC
         then
           break
         else
-          printf "Exiting%s\\n" "$(_color_dim "...")"
+          printf "Exiting%s\\n" "$(_color_muted "...")"
           exit 0
         fi
       done
@@ -8827,6 +8827,9 @@ _debug printf "\${_ARGUMENTS[*:-]}:       '%s'\\n"  "${_ARGUMENTS[*]:-}"
 # TODO: Remove
 ###############################################################################
 
+# _color_dim()
+_color_dim() { _color_muted "${@}"; }
+
 # _get_notebook_identifier()
 _get_notebook_identifier()  { _notebooks show "${@}" --escaped;   }
 
@@ -9276,7 +9279,7 @@ _edit_file() {
 
       while true
       do
-        read -n 1 -s -r -p "Press any key to save changes and exit$(_color_dim "...")"
+        read -n 1 -s -r -p "Press any key to save changes and exit$(_color_muted "...")"
 
         printf "\\n"
         break
@@ -9765,7 +9768,7 @@ _render() {
     # #1a1a1a #1b1b20 #17171c #19191f #18181c
     local _color_background_hex="#141418"
     local _color_background_alt_hex="#17171c" # #1b1b20 #1e1e25 #212121
-    local _color_dim_hex="#626480"
+    local _color_muted_hex="#626480"
     local _color_primary_hex="#7593eb"
     # TODO: local _color_secondary_hex=
     local _color_text_hex="#c5c4cc"           # #e6e6e6 #dedede
@@ -10051,8 +10054,8 @@ header {
   vertical-align:     top;
 }
 
-.dim        {         color: ${_color_dim_hex};     }
 .identifier {         color: ${_color_primary_hex}; }
+.muted      {         color: ${_color_muted_hex};     }
 
 form {
   padding-top:        1rem;
@@ -10351,9 +10354,9 @@ code span.bu {                                          } /*    BuiltIn     */
 code span.cf { color: #7290b1;                          } /*  ControlFlow   */
 code span.ch { color: #8987a0;                          } /*      Char      */
 code span.cn { color: #8987a0;      font-weight: bold;  } /*    Constant    */
-code span.co { color: ${_color_dim_hex};                } /*    Comment     */
+code span.co { color: ${_color_muted_hex};                } /*    Comment     */
 code span.cv { color: #7f9f7f;      font-weight: bold;  } /*   CommentVar   */
-code span.do { color: ${_color_dim_hex};                } /* Documentation  */
+code span.do { color: ${_color_muted_hex};                } /* Documentation  */
 code span.dt { color: #cccc96;                          } /*    DataType    */
 code span.dv { color: #cccc96;                          } /*     DecVal     */
 code span.er { color: #cccc96;                          } /*     Error      */
@@ -10639,8 +10642,8 @@ HEREDOC
     LC_ALL=C sed -e "s/<a\ /<a\ rel=\"noopener\ noreferrer\"\ /g"
   } | {
     # mark up checkboxes
-    local _checkbox_pattern_open="<span class=\"dim\">[<\/span><span class=\"identifier\">"
-    local _checkbox_pattern_close="<\/span><span class=\"dim\">\]<\/span>"
+    local _checkbox_pattern_open="<span class=\"muted\">[<\/span><span class=\"identifier\">"
+    local _checkbox_pattern_close="<\/span><span class=\"muted\">\]<\/span>"
 
     LC_ALL=C sed -E                                                               \
       -e "s/\[x\]/${_checkbox_pattern_open}x${_checkbox_pattern_close}/g"         \
@@ -13657,7 +13660,7 @@ _export() {
               break
               ;;
             *)
-              printf "Exiting%s\\n" "$(_color_dim "...")"
+              printf "Exiting%s\\n" "$(_color_muted "...")"
               exit 0
               ;;
           esac
@@ -14426,7 +14429,7 @@ _move() {
           break
           ;;
         *)
-          printf "Exiting%s\\n" "$(_color_dim "...")"
+          printf "Exiting%s\\n" "$(_color_muted "...")"
           exit 0
           ;;
       esac
@@ -16878,7 +16881,7 @@ Can't show archives. Export archive and expand to edit.\\n"
 
         while true
         do
-          read -n 1 -s -r -p "Press any key to quit$(_color_dim "...")"
+          read -n 1 -s -r -p "Press any key to quit$(_color_muted "...")"
 
           printf "\\n"
 
@@ -17791,8 +17794,8 @@ HEREDOC
         _display_item="${_display_item//' '/${_NBSP}}"
 
         # shellcheck disable=SC2140
-        _display_item="${_display_item//\[/<span class=\"dim\">[</span><span class=\"identifier\">}"
-        _display_item="${_display_item//\]/</span><span class=\"dim\">]</span>}"
+        _display_item="${_display_item//\[/<span class=\"muted\">[</span><span class=\"identifier\">}"
+        _display_item="${_display_item//\]/</span><span class=\"muted\">]</span>}"
 
         local _link_selector=
         _link_selector="$(_get_id_selector "${_item_selector}" --notebook)"
@@ -17915,7 +17918,7 @@ HEREDOC
 
       if ((_print_prev)) && ((_print_next))
       then
-        printf " <span class=\"dim\">%s</span> " "${_MD}"
+        printf " <span class=\"muted\">%s</span> " "${_MD}"
       fi
 
       if ((_print_next))
@@ -18048,7 +18051,7 @@ HEREDOC
 ${_info_line//'\ '/ }
 </a>
 </p>
-<p align="center" class="dim">
+<p align="center" class="muted">
   This item will still be available in git history.
 </p>
 <div align="center">
@@ -18192,7 +18195,7 @@ HEREDOC
 <br><br>
 <input
   type="submit"
-  value="save"> <span class="dim">${_MD}</span> <span class="dim last-saved">last: ${_last_saved_at}</span>
+  value="save"> <span class="muted">${_MD}</span> <span class="muted last-saved">last: ${_last_saved_at}</span>
 $(_browse_render_option_fields "${_subcommand_options[@]:-}")
 </form>
 HEREDOC
@@ -18281,12 +18284,12 @@ HEREDOC
 
     local _header_content="\
 <a href=\"//${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_url_param_string:-}\">"
-    _header_content+="<span class=\"dim\">${_CHEVRON_RIGHT}</span>nb</a>"
-    _header_content+=" <span class=\"dim\">${_MD}</span>"
+    _header_content+="<span class=\"muted\">${_CHEVRON_RIGHT}</span>nb</a>"
+    _header_content+=" <span class=\"muted\">${_MD}</span>"
 
     if [[ -z "${_selector:-}"       ]]
     then
-      _header_content+=" <span class=\"dim\">notebooks</span>"
+      _header_content+=" <span class=\"muted\">notebooks</span>"
     else
       local _notebook_name=
 
@@ -18307,7 +18310,7 @@ HEREDOC
 
       _header_content+="\
  <a href=\"//${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_notebook_name//' '/%20}:${_url_param_string:-}\">${_notebook_name}</a>"
-      _header_content+=" <span class=\"dim\">:</span>"
+      _header_content+=" <span class=\"muted\">:</span>"
 
       local _relative_folder_path=
       local _selector_relative_folder_path=
@@ -18366,7 +18369,7 @@ HEREDOC
 
           _header_content+="\
  <a href=\"//${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_url_path}${_url_param_string:-}\">${_selector_folders[i]}</a>"
-          _header_content+=" <span class=\"dim\">/</span>"
+          _header_content+=" <span class=\"muted\">/</span>"
         done
       fi
     fi
@@ -18388,7 +18391,7 @@ HEREDOC
  <a href=\"//${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_id_selector:-}${_url_param_string:-}\">${_selector_id:-}</a>"
       elif [[ "${_action:-}" != "add"   ]]
       then
-        _header_content+=" <span class=\"dim\">${_selector_id:-}</span>"
+        _header_content+=" <span class=\"muted\">${_selector_id:-}</span>"
       fi
 
       # NOTE: backup _raw_url calculation. TODO: remove
@@ -18410,35 +18413,35 @@ HEREDOC
 
       if [[ -n "${_raw_url:-}"  ]]
       then
-        _header_content+=" <span class=\"dim\">${_MD}</span>"
+        _header_content+=" <span class=\"muted\">${_MD}</span>"
         _header_content+=" <a href=\"${_raw_url}\">↓</a>"
       fi
 
       if [[ "${_action:-}"  == "edit"   ]]
       then
-        _header_content+=" <span class=\"dim\">${_MD}</span>"
-        _header_content+=" <span class=\"dim\">editing</span>"
+        _header_content+=" <span class=\"muted\">${_MD}</span>"
+        _header_content+=" <span class=\"muted\">editing</span>"
       elif _file_is_text "${_selector:-}"
       then
-        _header_content+=" <span class=\"dim\">${_MD}</span>"
+        _header_content+=" <span class=\"muted\">${_MD}</span>"
         _header_content+="\
  <a href=\"//${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_id_selector:-}${_url_params_ext:-}--edit\">edit</a>"
       fi
 
       case "${_action:-}" in
         delete)
-          _header_content+=" <span class=\"dim\">${_MD}</span>"
-          _header_content+=" <span class=\"dim\">-</span>"
-          _header_content+=" <span class=\"dim\">|</span>"
+          _header_content+=" <span class=\"muted\">${_MD}</span>"
+          _header_content+=" <span class=\"muted\">-</span>"
+          _header_content+=" <span class=\"muted\">|</span>"
           ;;
         edit)
-          _header_content+=" <span class=\"dim\">${_MD}</span>"
+          _header_content+=" <span class=\"muted\">${_MD}</span>"
           _header_content+="\
  <a href=\"//${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_id_selector:-}${_url_params_ext:-}--delete\">-</a>"
-          _header_content+=" <span class=\"dim\">|</span>"
+          _header_content+=" <span class=\"muted\">|</span>"
           ;;
         *)
-          _header_content+=" <span class=\"dim\">|</span>"
+          _header_content+=" <span class=\"muted\">|</span>"
           ;;
       esac
     fi
@@ -18447,7 +18450,7 @@ HEREDOC
     then
       if [[ "${_action:-}"  == "add"    ]]
       then
-        _header_content+=" <span class=\"dim\">+</span>"
+        _header_content+=" <span class=\"muted\">+</span>"
       else
         _header_content+="\
  <a href=\"//${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_notebook_name}:${_folder_id_path:-}${_url_params_ext:-}--add\">+</a>"
@@ -18866,7 +18869,7 @@ HEREDOC
             printf "<br>\\n"
             _test_line="${__name}${_NBSP}${_MD}"
           else
-            printf "%s<span class=\"dim\">%s</span> " "${_NBSP}" "${_MD}"
+            printf "%s<span class=\"muted\">%s</span> " "${_NBSP}" "${_MD}"
           fi
         fi
 
@@ -19852,10 +19855,10 @@ HEREDOC
     if ((_daemon))
     then
       printf "Press %s%s%s to exit%s" \
-        "$(_color_dim "<")"           \
+        "$(_color_muted "<")"           \
         "$(_color_primary "CTRL-C")"  \
-        "$(_color_dim ">")"           \
-        "$(_color_dim "...")"
+        "$(_color_muted ">")"           \
+        "$(_color_muted "...")"
 
       while true
       do
@@ -19864,7 +19867,7 @@ HEREDOC
     else
       while true
       do
-        read -n 1 -s -r -p "Press any key to exit$(_color_dim "...")"
+        read -n 1 -s -r -p "Press any key to exit$(_color_muted "...")"
 
         printf "\\n"
         break
@@ -20159,7 +20162,7 @@ _plugins() {
                   break
                   ;;
                 *)
-                  printf "Exiting%s\\n" "$(_color_dim "...")"
+                  printf "Exiting%s\\n" "$(_color_muted "...")"
                   exit 0
                   ;;
               esac
@@ -20223,7 +20226,7 @@ HEREDOC
               break
               ;;
             *)
-              printf "Exiting%s\\n" "$(_color_dim "...")"
+              printf "Exiting%s\\n" "$(_color_muted "...")"
               exit 0
               ;;
           esac
@@ -20485,7 +20488,7 @@ _remote() {
             break
             ;;
           *)
-            printf "Exiting%s\\n" "$(_color_dim "...")"
+            printf "Exiting%s\\n" "$(_color_muted "...")"
             exit 0
             ;;
         esac
@@ -20518,7 +20521,7 @@ _remote() {
                 break
                 ;;
               *)
-                printf "Exiting%s\\n" "$(_color_dim "...")"
+                printf "Exiting%s\\n" "$(_color_muted "...")"
                 exit 0
                 ;;
             esac
@@ -20574,7 +20577,7 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
                   break
                   ;;
                 q*|exit)
-                  printf "Exiting%s\\n" "$(_color_dim "...")"
+                  printf "Exiting%s\\n" "$(_color_muted "...")"
                   exit 0
                   ;;
                 *)
@@ -20696,7 +20699,7 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
             break
             ;;
           *)
-            printf "Exiting%s\\n" "$(_color_dim "...")"
+            printf "Exiting%s\\n" "$(_color_muted "...")"
             exit 0
             ;;
         esac
@@ -20797,7 +20800,7 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
             break
             ;;
           *)
-            printf "Exiting%s\\n" "$(_color_dim "...")"
+            printf "Exiting%s\\n" "$(_color_muted "...")"
             exit 0
             ;;
         esac
@@ -20871,7 +20874,7 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
               break
               ;;
             *)
-              printf "Exiting%s\\n" "$(_color_dim "...")"
+              printf "Exiting%s\\n" "$(_color_muted "...")"
 
               exit 0
               ;;
@@ -20921,7 +20924,7 @@ HEREDOC
               break
               ;;
             q*|exit)
-              printf "Exiting%s\\n" "$(_color_dim "...")"
+              printf "Exiting%s\\n" "$(_color_muted "...")"
               exit 0
               ;;
           esac
@@ -21023,7 +21026,7 @@ HEREDOC
                   break
                   ;;
                 q*|exit)
-                  printf "Exiting%s\\n" "$(_color_dim "...")"
+                  printf "Exiting%s\\n" "$(_color_muted "...")"
 
                   exit 0
                   ;;
@@ -21059,7 +21062,7 @@ HEREDOC
 
           case "${_selected_branch:-}" in
             q*|exit)
-              printf "Exiting%s\\n" "$(_color_dim "...")"
+              printf "Exiting%s\\n" "$(_color_muted "...")"
 
               exit 0
               ;;
@@ -21136,7 +21139,7 @@ HEREDOC
                 break
                 ;;
               q*|exit)
-                printf "Exiting%s\\n" "$(_color_dim "...")"
+                printf "Exiting%s\\n" "$(_color_muted "...")"
                 exit 0
                 ;;
               *)
@@ -21425,7 +21428,7 @@ HEREDOC
         then
           case "${__setting}" in
             q|quit|exit)
-              printf "Exiting%s\\n" "$(_color_dim "...")"
+              printf "Exiting%s\\n" "$(_color_muted "...")"
               return 0
               ;;
             *)
@@ -21465,7 +21468,7 @@ HEREDOC
       then
         case "${__value}" in
           q|quit|exit)
-            printf "Exiting%s\\n" "$(_color_dim "...")"
+            printf "Exiting%s\\n" "$(_color_muted "...")"
             return 0
             ;;
           unset|default|reset)
@@ -23375,7 +23378,7 @@ HEREDOC
             break
             ;;
           *)
-            printf "Exiting%s\\n" "$(_color_dim "...")"
+            printf "Exiting%s\\n" "$(_color_muted "...")"
             exit 0
             ;;
         esac

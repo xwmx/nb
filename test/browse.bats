@@ -107,11 +107,11 @@ load test_helper
   [[ "${status}"  ==  0 ]]
 
   [[ "${output}"  =~  \
-href=\"//localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>  ]]
+href=\"//localhost:6789/\?--per-page=.*\"\>\<span\ class=\"muted\"\>❯\</span\>nb\</a\>  ]]
   [[ "${output}"  =~  \
-\<nav\ class=\"header-crumbs\"\>.*\<a.*\ href=\"//localhost:6789/\?--per-page=.*\"\>  ]]
+\<nav\ class=\"header-crumbs\"\>.*\<a.*\ href=\"//localhost:6789/\?--per-page=.*\"\>    ]]
   [[ "${output}"  =~  \
-.*·.*\ \<a.*\ href=\"//localhost:6789/home:\?--per-page=.*\"\>home\</a\>\ .*:.*\      ]]
+.*·.*\ \<a.*\ href=\"//localhost:6789/home:\?--per-page=.*\"\>home\</a\>\ .*:.*\        ]]
   [[ "${output}"  =~  \
 \<a.*\ href=\"//localhost:6789/home:1/\?--per-page=.*\"\>Example\ Conflicting\ Name\</a\>\ .*/.*\</nav\>      ]]
 
@@ -469,13 +469,13 @@ HEREDOC
   [[ "${status}"  ==  0 ]]
 
   [[ "${output}"  =~  \
-href=\"//localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb\</a\>          ]]
+href=\"//localhost:6789/\?--per-page=.*\"\>\<span\ class=\"muted\"\>❯\</span\>nb\</a\>        ]]
   [[ "${output}"  =~  \
-\<nav\ class=\"header-crumbs\"\>.*\<a.*\ href=\"//localhost:6789/\?--per-page=.*\"\>    ]]
+\<nav\ class=\"header-crumbs\"\>.*\<a.*\ href=\"//localhost:6789/\?--per-page=.*\"\>          ]]
   [[ "${output}"  =~  \
 .*·.*\ \<a.*\ href=\"//localhost:6789/home:\?--per-page=.*\"\>home\</a\>\ .*:.*\              ]]
   [[ "${output}"  =~  \
-\<a.*\ href=\"//localhost:6789/home:1/\?--per-page=.*\"\>Example\ Folder\</a\>\ .*/.*\</nav\>  ]]
+\<a.*\ href=\"//localhost:6789/home:1/\?--per-page=.*\"\>Example\ Folder\</a\>\ .*/.*\</nav\> ]]
 
   [[ "${output}"  =~  0\ items. ]]
 
@@ -489,11 +489,11 @@ href=\"//localhost:6789/\?--per-page=.*\"\>\<span\ class=\"dim\"\>❯\</span\>nb
   [[ "${output}"  =~  \
 \<nav\ class=\"header-crumbs\"\>\<a.*\ href=\"//localhost:6789/\?--per-page=.*\"\>\<span  ]]
   [[ "${output}"  =~  \
-\<span\ class=\"dim\"\>❯\</span\>nb\</a\>                                         ]]
+\<span\ class=\"muted\"\>❯\</span\>nb\</a\>                                         ]]
   [[ "${output}"  =~  \
-.*·.*\ \<a.*\ href=\"//localhost:6789/home:\?--per-page=.*\"\>home\</a\>\ .*:.*\  ]]
+.*·.*\ \<a.*\ href=\"//localhost:6789/home:\?--per-page=.*\"\>home\</a\>\ .*:.*\    ]]
   [[ "${output}"  =~  \
-\<a.*\ href=\"//localhost:6789/home:2/\?--per-page=.*\"\>1\</a\>\ .*/.*\</nav\>    ]]
+\<a.*\ href=\"//localhost:6789/home:2/\?--per-page=.*\"\>1\</a\>\ .*/.*\</nav\>     ]]
 
   [[ "${output}"  =~  \
 \<a.*\ href=\"//localhost:6789/home:2/1\?--per-page=.*\"\ class=\"list-item\"\>.*\[.*1/1.*\].*  ]]

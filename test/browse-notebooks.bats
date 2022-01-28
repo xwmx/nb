@@ -33,7 +33,7 @@ load test_helper
 "<a.* href=\"//localhost:6789/?--per-page=.*&--columns=.*\"><span "
 
   printf "%s\\n" "${output}" | grep   -q \
-"<span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> <span class=\"dim\">notebooks</span>"
+"<span class=\"muted\">❯</span>nb</a> <span class=\"muted\">·</span> <span class=\"muted\">notebooks</span>"
 
   printf "%s\\n" "${output}" | grep   -q \
 "<p><a.* href=\"//localhost:6789/Demo%20Notebook:?--per-page=.*&--columns=.*\">Demo${_S}Notebook</a>${_S}.*·.*"
@@ -62,7 +62,7 @@ load test_helper
 "<a.* href=\"//localhost:6789/?--per-page=.*&--columns=.*\"><span "
 
   printf "%s\\n" "${output}" | grep   -q \
-"<span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> <span class=\"dim\">notebooks</span>"
+"<span class=\"muted\">❯</span>nb</a> <span class=\"muted\">·</span> <span class=\"muted\">notebooks</span>"
 
   printf "%s\\n" "${output}" | grep   -q \
 "<p><a.* href=\"//localhost:6789/Demo%20Notebook:?--per-page=.*&--columns=.*\">Demo${_S}Notebook</a><br>"
@@ -136,7 +136,7 @@ load test_helper
 "<a.* href=\"//localhost:6789/?${_expected_param_pattern}\"><span "
 
   printf "%s\\n" "${output}" | grep     -q \
-"<span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> <span class=\"dim\">notebooks</span>"
+"<span class=\"muted\">❯</span>nb</a> <span class=\"muted\">·</span> <span class=\"muted\">notebooks</span>"
 
   printf "%s\\n" "${output}" | grep -v  -q \
 "<p><a.* href=\"//localhost:6789/local:?.*<a.* href=\"//localhost:6789/local:?"
@@ -188,7 +188,7 @@ load test_helper
 "<a.* href=\"//localhost:6789/?--per-page=.*&--columns=.*\"><span "
 
   printf "%s\\n" "${output}" | grep   -q \
-"<span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> <span class=\"dim\">notebooks</span>"
+"<span class=\"muted\">❯</span>nb</a> <span class=\"muted\">·</span> <span class=\"muted\">notebooks</span>"
 
   printf "%s\\n" "${output}" | grep   -q \
 "<p><a.* href=\"//localhost:6789/Demo%20Notebook:?--per-page=.*&--columns=.*\">Demo${_S}Notebook</a>${_S}.*·.*"
@@ -234,7 +234,7 @@ load test_helper
 "<a.* href=\"//localhost:6789/?--per-page=.*&--columns=.*\"><span "
 
   printf "%s\\n" "${output}" | grep   -q \
-"<span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> <span class=\"dim\">notebooks</span>"
+"<span class=\"muted\">❯</span>nb</a> <span class=\"muted\">·</span> <span class=\"muted\">notebooks</span>"
 
   printf "%s\\n" "${output}" | grep   -q \
 "<p><a.* href=\"//localhost:6789/Demo%20Notebook:?--per-page=.*&--columns=.*\">Demo${_S}Notebook</a>${_S}.*·.*"
@@ -249,7 +249,7 @@ load test_helper
 "<a.* href=\"//localhost:6789/Test%20Notebook:?--per-page=.*&--columns=.*\">Test${_S}Notebook</a></p>"
 }
 
-@test "GET to 'browse --notebooks' URL serves the list of unarchived notebooks as a rendered HTML page with links to internal web server URLs without dimensional parameters." {
+@test "GET to 'browse --notebooks' URL serves the list of unarchived notebooks as a rendered HTML page with links to internal web server URLs without mutedensional parameters." {
   {
     "${_NB}" init
 
@@ -286,7 +286,7 @@ load test_helper
 "<a.* href=\"//localhost:6789/\"><span "
 
   printf "%s\\n" "${output}" | grep   -q \
-"<span class=\"dim\">❯</span>nb</a> <span class=\"dim\">·</span> <span class=\"dim\">notebooks</span>"
+"<span class=\"muted\">❯</span>nb</a> <span class=\"muted\">·</span> <span class=\"muted\">notebooks</span>"
 
   printf "%s\\n" "${output}" | grep   -q \
 "<p><a.* href=\"//localhost:6789/Demo%20Notebook:\">Demo${_S}Notebook</a>${_S}.*·.*"
