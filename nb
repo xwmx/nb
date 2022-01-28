@@ -18998,16 +18998,17 @@ HEREDOC
       if ((_looking_for_user_agent))  &&
          [[ "${__request_line:-}"     =~ User-Agent           ]]
       then # detect browser type
-        _request_user_agent="${__request_line:-}"
         # turn on case-insensitive matching
         shopt -s nocasematch
         if [[ ! "${__request_line}"   =~ curl|Links|Lynx|w3m  ]]
         then
-          _looking_for_user_agent=0
           _terminal_browser=0
         fi
         # turn off case-insensitive matching
         shopt -u nocasematch
+
+        _looking_for_user_agent=0
+        _request_user_agent="${__request_line:-}"
       elif ((_looking_for_content_length)) &&
            [[ "${__request_line:-}"   =~ Content-Length       ]]
       then # assign content length
