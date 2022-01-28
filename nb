@@ -18792,6 +18792,7 @@ HEREDOC
     local _encoded_local_notebook_path=
     local _pagination_options=()
     local _per_page="${NB_BROWSE_PER_PAGE:-30}"
+    local _user_agent=
 
     while ((${#}))
     do
@@ -18819,6 +18820,13 @@ HEREDOC
           _pagination_options+=("--terminal")
           _add_line_breaks=1
           ;;
+        --user-agent)
+          if [[ -n "${2:-}" ]]
+          then
+            _user_agent="$(_option_get_value "${1:-}" "${2:-}")"
+            shift
+          fi
+          ;;
       esac
 
       shift
@@ -18840,14 +18848,19 @@ HEREDOC
       _url_param_string+="&--per-page=${_per_page}&--columns=${_columns}"
     fi
 
-    case "${BROWSER:-}" in
+    # turn on case-insensitive matching
+    shopt -s nocasematch
+    case "${_user_agent:-}" in
       *elinks*)
         _columns="$((_columns - 30))"
         ;;
       *links*)
-        _columns="$((_columns - 3))"
+        _columns="$((_columns - 5))"
         ;;
     esac
+    # turn off case-insensitive matching
+    shopt -u nocasematch
+
 
     {
       printf "<p>"
@@ -18972,6 +18985,7 @@ HEREDOC
 
     local _looking_for_end_of_headers=1
     local _looking_for_user_agent=1
+    local _request_user_agent=
     local _terminal_browser=1
 
     while ((_looking_for_user_agent))     ||
@@ -18984,12 +18998,13 @@ HEREDOC
       if ((_looking_for_user_agent))  &&
          [[ "${__request_line:-}"     =~ User-Agent           ]]
       then # detect browser type
+        _request_user_agent="${__request_line:-}"
         # turn on case-insensitive matching
         shopt -s nocasematch
         if [[ ! "${__request_line}"   =~ curl|Links|Lynx|w3m  ]]
         then
-          _terminal_browser=0
           _looking_for_user_agent=0
+          _terminal_browser=0
         fi
         # turn off case-insensitive matching
         shopt -u nocasematch
@@ -19162,9 +19177,10 @@ HEREDOC
 
     if [[ -z "${_target_selector:-}"  ]]
     then
-      _browse_render_notebooks              \
-        "${_render_function_options[@]:-}"  \
-        | _browse_respond_with 200          \
+      _browse_render_notebooks                    \
+        "${_render_function_options[@]:-}"        \
+        --user-agent "${_request_user_agent:-}"   \
+        | _browse_respond_with 200                \
           "${_respond_with_200_arguments[@]:-}"
 
       return 0
