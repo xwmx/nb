@@ -2508,7 +2508,7 @@ _print_line() {
   while ((${#}))
   do
     case "${1:-}" in
-      --muted*)   _muted=1            ;;
+      --muted*) _muted=1              ;;
       --no*w*)  _wrap_line=0          ;;
       --vis*)   _visible_length=1     ;;
       *)
