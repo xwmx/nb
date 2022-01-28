@@ -10022,6 +10022,11 @@ header {
   text-align:         left;
 }
 
+/* <strong> for bold in terminal browsers only */
+.header-crumbs strong {
+  font-weight:        normal;
+}
+
 .header-crumbs-spacer {
   display:            none;
 }
@@ -18458,7 +18463,7 @@ HEREDOC
     fi
 
     cat <<HEREDOC
-<nav class="header-crumbs">${_header_content:-}</nav>
+<nav class="header-crumbs"><strong>${_header_content:-}</strong></nav>
 <p class="header-crumbs-spacer"></p>
 HEREDOC
   }

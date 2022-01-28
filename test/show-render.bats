@@ -21,7 +21,7 @@ load test_helper
   [[    "${status}"    ==  0                                            ]]
   [[    "${output}"    =~  \<\!DOCTYPE\ html\>                          ]]
 
-  [[ !  "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>       ]]
+  [[ !  "${output}"    =~  \<nav\ class=\"header-crumbs\"\>             ]]
 
   [[    "${output}"    =~  pre\ \>\ code.sourceCode                     ]]
 

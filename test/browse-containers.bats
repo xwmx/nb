@@ -495,7 +495,7 @@ HEREDOC
   # header crumbs
 
   [[ "${output}"  =~  \
-\<nav\ class=\"header-crumbs\"\>.*\<a.*\ href=\"//localhost:6789/\?${_expected_param_pattern}\"\>   ]]
+\<nav\ class=\"header-crumbs\"\>\<strong\>.*\<a.*\ href=\"//localhost:6789/\?${_expected_param_pattern}\"\>   ]]
   [[ "${output}"  =~  \
 href=\"//localhost:6789/\?${_expected_param_pattern}\"\>\<span\ class=\"muted\"\>❯\</span\>nb\</a\> ]]
   [[ "${output}"  =~  \
@@ -635,7 +635,7 @@ abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
   [[ "${status}"  ==  0         ]]
 
   [[ "${output}"  =~  \
-\<nav\ class=\"header-crumbs\"\>\<a.*\ href=\"//localhost:6789/\?--per-page=.*\"\>\<span\ class=\"muted\"\>❯\</span\>nb\</a\> ]]
+\<nav\ class=\"header-crumbs\"\>\<strong\>\<a.*\ href=\"//localhost:6789/\?--per-page=.*\"\>\<span\ class=\"muted\"\>❯\</span\>nb\</a\> ]]
   [[ "${output}"  =~  \
 .*·.*\ \<a.*\ href=\"//localhost:6789/home:\?--per-page=.*\"\>home\</a\>\ .*:.*\              ]]
   [[ "${output}"  =~  \
@@ -661,7 +661,7 @@ abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
   [[ "${status}"  ==  0         ]]
 
   [[ "${output}"  =~  \
-\<nav\ class=\"header-crumbs\"\>\<a.*\ href=\"//localhost:6789/\?--per-page=.*\"\>\<span\ class=\"muted\"\>❯\</span\>nb\</a\>  ]]
+\<nav\ class=\"header-crumbs\"\>\<strong\>\<a.*\ href=\"//localhost:6789/\?--per-page=.*\"\>\<span\ class=\"muted\"\>❯\</span\>nb\</a\>  ]]
   [[ "${output}"  =~  \
 .*·.*\ \<a.*\ href=\"//localhost:6789/Example%20Notebook:\?--per-page=.*\"\>Example\ Notebook\</a\>.*\</nav\>  ]]
 
@@ -697,7 +697,7 @@ abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
   [[ "${output}"  =~  \<\!DOCTYPE\ html\> ]]
 
   [[ "${output}"  =~  \
-\<nav\ class=\"header-crumbs\"\>.*\<a.*\ href=\"//localhost:6789/\?--per-page=.*\"\>    ]]
+\<nav\ class=\"header-crumbs\"\>\<strong\>.*\<a.*\ href=\"//localhost:6789/\?--per-page=.*\"\>    ]]
   [[ "${output}"  =~  \
 href=\"//localhost:6789/\?--per-page=.*\"\>\<span\ class=\"muted\"\>❯\</span\>nb\</a\>  ]]
   [[ "${output}"  =~  \
@@ -783,7 +783,7 @@ href=\"//localhost:6789/\?--per-page=.*\"\>\<span\ class=\"muted\"\>❯\</span\>
   [[ "${status}"  ==  0 ]]
 
   [[ "${output}"  =~  \
-\<nav\ class=\"header-crumbs\"\>\<a.*\ href=\"//localhost:6789/\?--per-page=.*\"\>\<span\ class=\"muted\"\>❯\</span\>nb\</a\>  ]]
+\<nav\ class=\"header-crumbs\"\>\<strong\>\<a.*\ href=\"//localhost:6789/\?--per-page=.*\"\>\<span\ class=\"muted\"\>❯\</span\>nb\</a\>  ]]
   [[ "${output}"  =~  \
 .*·.*\ \<a.*\ href=\"//localhost:6789/home:\?--per-page=.*\"\>home\</a\>\ .*:.*\              ]]
   [[ "${output}"  =~  \
@@ -823,13 +823,13 @@ href=\"//localhost:6789/\?--per-page=.*\"\>\<span\ class=\"muted\"\>❯\</span\>
   [[ "${status}"  ==  0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><a.* href=\"//localhost:6789/?--per-page=.*\"><span class=\"muted\">❯</span>nb</a>"
+"<nav class=\"header-crumbs\"><strong><a.* href=\"//localhost:6789/?--per-page=.*\"><span class=\"muted\">❯</span>nb</a>"
 
   printf "%s\\n" "${output}" | grep -q \
 ".*·.* <a.* href=\"//localhost:6789/Example%20Notebook:?--per-page=.*\">Example Notebook</a> <span "
 
   printf "%s\\n" "${output}" | grep -q \
-"class=\"muted\">:</span> <a rel=\"noopener noreferrer\" href=\"//localhost:6789/Example Notebook:?--per-page=.*&--columns=.*&--add\">+</a></nav>"
+"class=\"muted\">:</span> <a rel=\"noopener noreferrer\" href=\"//localhost:6789/Example Notebook:?--per-page=.*&--columns=.*&--add\">+</a></strong></nav>"
 
   [[ "${output}"  =~  \
 \<a.*\ href=\"//localhost:6789/Example%20Notebook:2\?--per-page=.*\"\ class=\"list-item\"\> ]]
