@@ -8828,7 +8828,7 @@ _debug printf "\${_ARGUMENTS[*:-]}:       '%s'\\n"  "${_ARGUMENTS[*]:-}"
 ###############################################################################
 
 # _color_dim()
-_color_dim() { _color_muted "${@}"; }
+_color_dim()                { _color_muted "${@}";                }
 
 # _get_notebook_identifier()
 _get_notebook_identifier()  { _notebooks show "${@}" --escaped;   }
@@ -8840,7 +8840,7 @@ _get_selection_basename()   { _show "${@}" --filename;            }
 _get_unique_basename()      { _get_unique_relative_path "${@:-}"; }
 
 # _set_selection_notebook() <selector>
-_set_selection_notebook() {
+_set_selection_notebook()   {
   if [[ "${1:-}" =~ : ]]
   then
     if _notebooks select "${1:-}"
