@@ -11116,9 +11116,9 @@ _web_browser() {
     if _command_exists "w3m"
     then
       _web_browser_command+=("w3m")
-    elif _command_exists "lynx"
+    elif _command_exists "links"
     then
-      _web_browser_command+=("lynx")
+      _web_browser_command+=("links")
     fi
   fi
 
