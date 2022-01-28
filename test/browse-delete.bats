@@ -289,10 +289,10 @@ Location:\ \/\/localhost:6789\/local:\?${_expected_param_pattern} ]]
   [[ "${output}"    =~  header-crumbs.*↓                          ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"href=\"//localhost:6789/?${_expected_param_pattern}\"><span class=\"dim\">❯</span>nb</a>"
+"href=\"//localhost:6789/?${_expected_param_pattern}\"><span class=\"muted\">❯</span>nb</a>"
 
   printf "%s\\n" "${output}" | grep -q \
-"❯</span>nb</a>.*<span class=\"dim\">·</span> <span class=\"dim\">-</span> <span class=\"dim\">|</span>"
+"❯</span>nb</a>.*<span class=\"muted\">·</span> <span class=\"muted\">-</span> <span class=\"muted\">|</span>"
 
   printf "%s\\n" "${output}" | grep -q \
 "<h2 align=\"center\">deleting</h2>"
@@ -361,10 +361,10 @@ Location:\ \/\/localhost:6789\/local:\?${_expected_param_pattern} ]]
   [[ "${output}"    =~  header-crumbs.*↓                          ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"href=\"//localhost:6789/?--per-page=30&--columns=20\"><span class=\"dim\">❯</span>nb</a> "
+"href=\"//localhost:6789/?--per-page=30&--columns=20\"><span class=\"muted\">❯</span>nb</a> "
 
   printf "%s\\n" "${output}" | grep -q \
-"❯</span>nb</a>.*<span class=\"dim\">·</span> <span class=\"dim\">-</span> <span class=\"dim\">|</span>"
+"❯</span>nb</a>.*<span class=\"muted\">·</span> <span class=\"muted\">-</span> <span class=\"muted\">|</span>"
 
   printf "%s\\n" "${output}" | grep -q \
 "<h2 align=\"center\">deleting</h2>"
@@ -461,7 +461,7 @@ Location:\ \/\/localhost:6789\/local:\?${_expected_param_pattern} ]]
   [[ "${output}"    =~  header-crumbs.*↓                          ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"href=\"//localhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a> "
+"href=\"//localhost:6789/?--per-page=.*&--columns=.*\"><span class=\"muted\">❯</span>nb</a> "
 
   printf "%s\\n" "${output}" | grep -q \
 "<h2 align=\"center\">deleting</h2>"

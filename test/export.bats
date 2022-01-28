@@ -2,6 +2,70 @@
 
 load test_helper
 
+# existing file ###############################################################
+
+@test "'export' with file at export path prompts user to confirm overwrite." {
+  {
+    "${_NB}" init
+    "${_NB}" add "Example File.md" --content "# Export Example"
+
+    echo "Example existing content." >> "${_TMP_DIR}/example.md"
+
+    [[ -f "${NB_DIR}/home/Example File.md"  ]]
+    [[ -f "${_TMP_DIR}/example.md"          ]]
+  }
+
+  run "${_NB}" export 1 "${_TMP_DIR}/example.md" <<< "y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  ls  "${_TMP_DIR}"
+  cat "${_TMP_DIR}/example.md"
+
+  [[ -f "${_TMP_DIR}/example.md" ]]
+
+  grep -q '# Export Example' "${_TMP_DIR}/example.md"
+
+  diff                              \
+    <(cat "${_TMP_DIR}/example.md") \
+    <(cat "${NB_DIR}/home/Example File.md")
+
+  [[ "${output}" =~ Exported    ]]
+  [[ "${output}" =~ example.md  ]]
+}
+
+@test "'export' with file at export path and non-affirmative prompt response exits without overwriting." {
+  {
+    "${_NB}" init
+    "${_NB}" add "Example File.md" --content "# Export Example"
+
+    echo "Example existing content." >> "${_TMP_DIR}/example.md"
+
+    [[ -f "${NB_DIR}/home/Example File.md"  ]]
+    [[ -f "${_TMP_DIR}/example.md"          ]]
+  }
+
+  run "${_NB}" export 1 "${_TMP_DIR}/example.md" <<< "n${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  ls  "${_TMP_DIR}"
+  cat "${_TMP_DIR}/example.md"
+
+  [[ -f "${_TMP_DIR}/example.md" ]]
+
+  grep -q -v '# Export Example' "${_TMP_DIR}/example.md"
+
+  diff                              \
+    <(cat "${_TMP_DIR}/example.md") \
+    <(printf "Example existing content.\\n")
+
+  [[ "${lines[0]}" =~ File\ exists\ at\ .*${_TMP_DIR}/example.md  ]]
+  [[ "${lines[1]}" =~ Exiting.*\.\.\.                             ]]
+}
+
 # no argument #################################################################
 
 @test "'export' with no arguments exits with status 1 and prints help." {

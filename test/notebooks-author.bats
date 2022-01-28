@@ -2,6 +2,46 @@
 
 load test_helper
 
+# prompt ######################################################################
+
+@test "'notebooks author' with non-affirmative prompt response prints message and exits." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" notebooks author --name "Example Local Name" <<< "n${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0   ]]
+  [[ "${#lines[@]}" -eq 8   ]]
+
+  [[ -z "$(git -C "${NB_DIR}/home" config --local user.email  || :)" ]]
+  [[ -z "$(git -C "${NB_DIR}/home" config --local user.name   || :)" ]]
+
+  declare _global_email=
+  _global_email="$(git -C "${NB_DIR}/home" config --global user.email)"
+
+  declare _global_name=
+  _global_name="$(git -C "${NB_DIR}/home" config --global user.name)"
+
+  [[ "${lines[0]}"  =~ Current\ author\ for:\ .*home                          ]]
+  [[ "${lines[1]}"  =~ [^-]-------------------[^-]                            ]]
+  [[ "${lines[2]}"  =~ .*email.*\ \(.*global.*\):\ ${_global_email}           ]]
+  [[ "${lines[3]}"  =~ .*name.*\ \ \(.*global.*\):\ ${_global_name//' '/\\ }  ]]
+  [[ "${lines[4]}"  =~ Update:                                                ]]
+  [[ "${lines[5]}"  =~ [^-]-------[^-]                                        ]]
+  [[ "${lines[6]}"  =~ local\ .*name.*:\ \ Example\ Local\ Name               ]]
+  [[ "${lines[7]}"  =~ Exiting.*...                                           ]]
+
+  "${_NB}" add "Example File.md" --content "Example content."
+
+  diff                                            \
+    <("${_NB}" git log -1 --stat | sed -n '2 p')  \
+    <(printf "Author: %s <%s>\\n" "${_global_name}" "${_global_email}")
+}
+
 # selectors ###################################################################
 
 @test "'notebooks author <notebook-name>: --email <email> --name <name>' updates the local email and name in <notebook-path>." {

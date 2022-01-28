@@ -20,9 +20,9 @@ load test_helper
   [[    "${output}"    =~  \<\!DOCTYPE\ html\>  ]]
 
   [[    "${output}"    =~  \
-\#\ \<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>x\</span\>      ]]
+\#\ \<span\ class=\"muted\"\>\[\</span\>\<span\ class=\"identifier\"\>x\</span\>      ]]
   [[    "${output}"    =~  \
-\<span\ class=\"identifier\"\>x\<\/span\>\<span\ class=\"dim\"\>\]\<\/span\>        ]]
+\<span\ class=\"identifier\"\>x\<\/span\>\<span\ class=\"muted\"\>\]\<\/span\>        ]]
 }
 
 @test "'_render' with todo item displays marked-up undone / open checkbox (space)." {
@@ -41,9 +41,9 @@ load test_helper
   [[    "${output}"    =~  \<\!DOCTYPE\ html\>  ]]
 
   [[    "${output}"    =~  \
-\#\ \<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>${_S}\</span\>  ]]
+\#\ \<span\ class=\"muted\"\>\[\</span\>\<span\ class=\"identifier\"\>${_S}\</span\>  ]]
   [[    "${output}"    =~  \
-\<span\ class=\"identifier\"\>${_S}\<\/span\>\<span\ class=\"dim\"\>\]\<\/span\>    ]]
+\<span\ class=\"identifier\"\>${_S}\<\/span\>\<span\ class=\"muted\"\>\]\<\/span\>    ]]
 }
 
 @test "'_render' with todo item displays marked-up undone / open checkbox (no space)." {
@@ -62,9 +62,9 @@ load test_helper
   [[    "${output}"    =~  \<\!DOCTYPE\ html\>  ]]
 
   [[    "${output}"    =~  \
-\#\ \<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>${_S}\</span\>  ]]
+\#\ \<span\ class=\"muted\"\>\[\</span\>\<span\ class=\"identifier\"\>${_S}\</span\>  ]]
   [[    "${output}"    =~  \
-\<span\ class=\"identifier\"\>${_S}\<\/span\>\<span\ class=\"dim\"\>\]\<\/span\>    ]]
+\<span\ class=\"identifier\"\>${_S}\<\/span\>\<span\ class=\"muted\"\>\]\<\/span\>    ]]
 }
 
 @test "'_render --pandoc' with todo item displays marked-up done / closed checkbox." {
@@ -83,11 +83,11 @@ load test_helper
   [[    "${output}"    =~  \<\!DOCTYPE\ html\>  ]]
 
   [[    "${output}"    =~  \
-\<h1\ id=\"x-example-todo-one.\"\>\<span\ class=\"dim\"\>\[\</span\>              ]]
+\<h1\ id=\"x-example-todo-one.\"\>\<span\ class=\"muted\"\>\[\</span\>              ]]
   [[    "${output}"    =~  \
-\[\</span\>\<span\ class=\"identifier\"\>x\</span\>                               ]]
+\[\</span\>\<span\ class=\"identifier\"\>x\</span\>                                 ]]
   [[    "${output}"    =~  \
-\<span\ class=\"identifier\"\>x\<\/span\>\<span\ class=\"dim\"\>\]\<\/span\>      ]]
+\<span\ class=\"identifier\"\>x\<\/span\>\<span\ class=\"muted\"\>\]\<\/span\>      ]]
 }
 
 @test "'_render --pandoc' with todo item displays marked-up undone / open checkbox (space)." {
@@ -106,11 +106,11 @@ load test_helper
   [[    "${output}"    =~  \<\!DOCTYPE\ html\>  ]]
 
   [[    "${output}"    =~  \
-\<h1\ id=\"example-todo-one.\"\>\<span\ class=\"dim\"\>\[\</span\>                ]]
+\<h1\ id=\"example-todo-one.\"\>\<span\ class=\"muted\"\>\[\</span\>                ]]
   [[    "${output}"    =~  \
-\[\</span\>\<span\ class=\"identifier\"\>${_S}\</span\>                           ]]
+\[\</span\>\<span\ class=\"identifier\"\>${_S}\</span\>                             ]]
   [[    "${output}"    =~  \
-\<span\ class=\"identifier\"\>${_S}\<\/span\>\<span\ class=\"dim\"\>\]\<\/span\>  ]]
+\<span\ class=\"identifier\"\>${_S}\<\/span\>\<span\ class=\"muted\"\>\]\<\/span\>  ]]
 }
 
 @test "'_render --pandoc' with todo item displays marked-up undone / open checkbox (no space)." {
@@ -129,11 +129,11 @@ load test_helper
   [[    "${output}"    =~  \<\!DOCTYPE\ html\>  ]]
 
   [[    "${output}"    =~  \
-\<h1\ id=\"example-todo-one.\"\>\<span\ class=\"dim\"\>\[\</span\>                ]]
+\<h1\ id=\"example-todo-one.\"\>\<span\ class=\"muted\"\>\[\</span\>                ]]
   [[    "${output}"    =~  \
-\[\</span\>\<span\ class=\"identifier\"\>${_S}\</span\>                           ]]
+\[\</span\>\<span\ class=\"identifier\"\>${_S}\</span\>                             ]]
   [[    "${output}"    =~  \
-\<span\ class=\"identifier\"\>${_S}\<\/span\>\<span\ class=\"dim\"\>\]\<\/span\>  ]]
+\<span\ class=\"identifier\"\>${_S}\<\/span\>\<span\ class=\"muted\"\>\]\<\/span\>  ]]
 }
 
 # <title> #####################################################################

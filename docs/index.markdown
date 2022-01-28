@@ -1366,12 +1366,13 @@ Supported file types and tools include:
   - [`ranger`](https://ranger.github.io/)
   - [Midnight Commander (`mc`)](https://en.wikipedia.org/wiki/Midnight_Commander)
 - Word Documents:
-  - [Pandoc](https://pandoc.org/)
+  - [Pandoc](https://pandoc.org/) with
+    [`w3m`](https://en.wikipedia.org/wiki/W3m) or
+    [`links`](https://en.wikipedia.org/wiki/Links_(web_browser))
 - EPUB ebooks:
   - [Pandoc](https://pandoc.org/) with
-    [`w3m`](https://en.wikipedia.org/wiki/W3m),
-    [`links`](https://en.wikipedia.org/wiki/Links_(web_browser)), or
-    [`lynx`](https://en.wikipedia.org/wiki/Lynx_(web_browser))
+    [`w3m`](https://en.wikipedia.org/wiki/W3m) or
+    [`links`](https://en.wikipedia.org/wiki/Links_(web_browser))
 
 When using [`nb show`](#show) with other file types or
 if the above tools are not available,
@@ -2859,10 +2860,9 @@ to quickly jump to parent folders,
 the current notebook,
 and other notebooks.
 
-[`nb browse`](#browse) opens in [w3m](https://en.wikipedia.org/wiki/W3m)
-(currently the primary terminal reference browser for `nb`),
+[`nb browse`](#browse) opens in
+[w3m](https://en.wikipedia.org/wiki/W3m),
 [Links](https://en.wikipedia.org/wiki/Links_\(web_browser\)),
-[Lynx](https://en.wikipedia.org/wiki/Lynx_\(web_browser\)),
 or in the browser set in the `$BROWSER` environment variable.
 Use [`nb browse --gui`](#browse) / [`nb b -g`](#browse) to
 open in the system's primary [GUI web browser](#browse---gui).
@@ -5946,9 +5946,9 @@ Description:
   When readability-cli [2] is install, markup is cleaned up to focus on
   content.
 
-  `peek` opens the page in `w3m` [3] or `lynx` [4] when available.
+  `peek` opens the page in `w3m` [3] or `links` [4] when available.
   To specify a preferred browser, set the `$BROWSER` environment variable
-  in your .bashrc, .zshrc, or equivalent, e.g., `export BROWSER="lynx"`.
+  in your .bashrc, .zshrc, or equivalent, e.g.: export BROWSER="lynx"
 
   Bookmarks are identified by the `.bookmark.md` file extension. The
   bookmark URL is the first URL in the file within "<" and ">" characters:
@@ -5958,7 +5958,7 @@ Description:
     1. https://pandoc.org/
     2. https://gitlab.com/gardenappl/readability-cli
     3. https://en.wikipedia.org/wiki/W3m
-    4. https://en.wikipedia.org/wiki/Lynx_(web_browser)
+    4. https://en.wikipedia.org/wiki/Links_(web_browser)
 
 Read More:
   https://github.com/xwmx/nb#-bookmarks
@@ -6230,9 +6230,9 @@ Description:
   When readability-cli [2] is install, markup is cleaned up to focus on
   content.
 
-  `peek` opens the page in `w3m` [3], `links` [4], or `lynx` [5] when
-  available. To specify a preferred browser, set the `$BROWSER` environment
-  variable in your .bashrc, .zshrc, or equivalent, e.g.: export BROWSER="links"
+  `peek` opens the page in `w3m` [3] or `links` [4] when available.
+  To specify a preferred browser, set the `$BROWSER` environment variable
+  in your .bashrc, .zshrc, or equivalent, e.g.: export BROWSER="lynx"
 
   Bookmarks are identified by the `.bookmark.md` file extension. The
   bookmark URL is the first URL in the file within "<" and ">" characters:
@@ -6243,7 +6243,6 @@ Description:
     2. https://gitlab.com/gardenappl/readability-cli
     3. https://en.wikipedia.org/wiki/W3m
     4. https://en.wikipedia.org/wiki/Links_(web_browser)
-    5. https://en.wikipedia.org/wiki/Lynx_(web_browser)
 
 Read More:
   https://github.com/xwmx/nb#-bookmarks
@@ -6338,12 +6337,11 @@ Description:
     # link to the item titled "Example Title" in the "demo" notebook
     [[demo:Example Title]]
 
-  `browse` supports `w3m` [1] (recommended), `links` [2], and `lynx` [3]
-  and depends on `ncat` [4] and `pandoc` [5]:
+  `browse` supports `w3m` [1] and `links` [2], and depends on
+  `ncat` [3] and `pandoc` [4]:
 
     1. https://en.wikipedia.org/wiki/W3m
     2. https://en.wikipedia.org/wiki/Links_(web_browser)
-    3. https://en.wikipedia.org/wiki/Lynx_(web_browser)
     4. https://nmap.org/ncat/
     5. https://pandoc.org/
 
@@ -7915,21 +7913,19 @@ Description:
   To skip the pager and print to standard output, use the `-p` / `--print`
   option.
 
-  `-r` / `--render` automatically uses either `w3m` [2], `links` [3],
-  or `lynx` [4]. To specify a preferred browser, set the `$BROWSER`
-  environment variable in your .bashrc, .zshrc, or equivalent, e.g.,
-  `export BROWSER="links"`.
+  `-r` / `--render` automatically uses either `w3m` [2] or `links` [3].
+  To specify a preferred browser, set the `$BROWSER` environment variable
+  in your .bashrc, .zshrc, or equivalent, e.g.: export BROWSER="links"
 
-  If `bat` [5], `highlight` [6], or Pygments [7] is installed, notes are
+  If `bat` [4], `highlight` [5], or Pygments [6] is installed, notes are
   printed with syntax highlighting.
 
     1. https://pandoc.org/
     2. https://en.wikipedia.org/wiki/W3m
     3. https://en.wikipedia.org/wiki/Links_(web_browser)
-    4. https://en.wikipedia.org/wiki/Lynx_(web_browser)
-    5. https://github.com/sharkdp/bat
-    6. http://www.andre-simon.de/doku/highlight/en/highlight.php
-    7. https://pygments.org/
+    4. https://github.com/sharkdp/bat
+    5. http://www.andre-simon.de/doku/highlight/en/highlight.php
+    6. https://pygments.org/
 
 Read More:
   https://github.com/xwmx/nb#viewing

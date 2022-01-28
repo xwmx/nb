@@ -54,13 +54,13 @@ load test_helper
   [[    "${status}"    ==  0                                                        ]]
   [[    "${output}"    =~  \<\!DOCTYPE\ html\>                                      ]]
 
-  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                   ]]
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>                         ]]
   [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
 
   [[    "${output}"    =~  \
-\<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>x\</span\>           ]]
+\<span\ class=\"muted\"\>\[\</span\>\<span\ class=\"identifier\"\>x\</span\>           ]]
   [[    "${output}"    =~  \
-\<span\ class=\"identifier\"\>x\<\/span\>\<span\ class=\"dim\"\>\]\<\/span\>        ]]
+\<span\ class=\"identifier\"\>x\<\/span\>\<span\ class=\"muted\"\>\]\<\/span\>        ]]
 }
 
 @test "'browse <id>' with todo item displays marked-up undone / open checkbox (space)." {
@@ -80,13 +80,13 @@ load test_helper
   [[    "${status}"    ==  0                                                        ]]
   [[    "${output}"    =~  \<\!DOCTYPE\ html\>                                      ]]
 
-  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                   ]]
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>                         ]]
   [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
 
   [[    "${output}"    =~  \
-\<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>${_S}\</span\>       ]]
+\<span\ class=\"muted\"\>\[\</span\>\<span\ class=\"identifier\"\>${_S}\</span\>    ]]
   [[    "${output}"    =~  \
-\<span\ class=\"identifier\"\>${_S}\<\/span\>\<span\ class=\"dim\"\>\]\<\/span\>    ]]
+\<span\ class=\"identifier\"\>${_S}\<\/span\>\<span\ class=\"muted\"\>\]\<\/span\>  ]]
 }
 
 @test "'browse <id>' with todo item displays marked-up undone / open checkbox (no space)." {
@@ -106,13 +106,13 @@ load test_helper
   [[    "${status}"    ==  0                                                        ]]
   [[    "${output}"    =~  \<\!DOCTYPE\ html\>                                      ]]
 
-  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                   ]]
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>                         ]]
   [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
 
   [[    "${output}"    =~  \
-\<span\ class=\"dim\"\>\[\</span\>\<span\ class=\"identifier\"\>${_S}\</span\>       ]]
+\<span\ class=\"muted\"\>\[\</span\>\<span\ class=\"identifier\"\>${_S}\</span\>    ]]
   [[    "${output}"    =~  \
-\<span\ class=\"identifier\"\>${_S}\<\/span\>\<span\ class=\"dim\"\>\]\<\/span\>    ]]
+\<span\ class=\"identifier\"\>${_S}\<\/span\>\<span\ class=\"muted\"\>\]\<\/span\>  ]]
 }
 
 # pdf items ###################################################################
@@ -144,7 +144,7 @@ load test_helper
   [[    "${status}"    ==  0                                                          ]]
   [[    "${output}"    =~  \<\!DOCTYPE\ html\>                                        ]]
 
-  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                     ]]
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>                           ]]
   [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>    ]]
 
   [[    "${output}"    =~  \
@@ -177,7 +177,7 @@ load test_helper
   [[    "${status}"    ==  0                                                          ]]
   [[    "${output}"    =~  \<\!DOCTYPE\ html\>                                        ]]
 
-  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                     ]]
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>                           ]]
   [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>    ]]
 
   [[    "${output}"    =~  \
@@ -218,7 +218,7 @@ load test_helper
   [[    "${status}"    ==  0                                                        ]]
   [[    "${output}"    =~  \<\!DOCTYPE\ html\>                                      ]]
 
-  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                   ]]
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>                         ]]
   [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
 
   [[    "${output}"    =~  \
@@ -257,7 +257,7 @@ type=\"audio/mpeg\"\>${_NEWLINE}.*\</audio\>${_NEWLINE}.*\</div\>               
   [[    "${status}"    ==  0                                                        ]]
   [[    "${output}"    =~  \<\!DOCTYPE\ html\>                                      ]]
 
-  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                   ]]
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>                         ]]
   [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
 
   [[    "${output}"    =~  \
@@ -304,7 +304,7 @@ type=\"audio/mpeg\"\>${_NEWLINE}.*\</audio\>${_NEWLINE}.*\</div\>               
   [[    "${status}"    ==  0                                                        ]]
   [[    "${output}"    =~  \<\!DOCTYPE\ html\>                                      ]]
 
-  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                   ]]
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>                         ]]
   [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
 
   [[    "${output}"    =~  \
@@ -343,7 +343,7 @@ type=\"video/mp4\"\>${_NEWLINE}.*\</video\>${_NEWLINE}.*\</div\>                
   [[    "${status}"    ==  0                                                        ]]
   [[    "${output}"    =~  \<\!DOCTYPE\ html\>                                      ]]
 
-  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                   ]]
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>                         ]]
   [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>  ]]
 
   [[    "${output}"    =~  \
@@ -500,7 +500,7 @@ HEREDOC
   [[    "${status}"    ==  0                                                      ]]
   [[    "${output}"    =~  \<\!DOCTYPE\ html\>                                    ]]
 
-  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                 ]]
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>                       ]]
   [[    "${output}"    =~  \
 \<p\>Example\ \<img\ src=\"${_raw_url_pattern_one}\"\ \/\>\ content\              ]]
   [[    "${output}"    =~  \
@@ -549,7 +549,7 @@ HEREDOC
   [[    "${status}"    ==  0                                                      ]]
   [[    "${output}"    =~  \<\!DOCTYPE\ html\>                                    ]]
 
-  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                 ]]
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>                       ]]
   [[    "${output}"    =~  \
 \<p\>Example\ \<img\ src=\"${_raw_url_pattern_one}\"\ \/\>\ content\              ]]
   [[    "${output}"    =~  \
@@ -587,7 +587,7 @@ HEREDOC
   [[    "${status}"    ==  0                                                          ]]
   [[    "${output}"    =~  \<\!DOCTYPE\ html\>                                        ]]
 
-  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                     ]]
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>                           ]]
   [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>    ]]
 
   [[    "${output}"    =~  \
@@ -617,7 +617,7 @@ ${_raw_url_pattern}\"\>${_NEWLINE}.*\<img\ src=\"${_raw_url_pattern}\"\         
   [[    "${status}"    ==  0                                                          ]]
   [[    "${output}"    =~  \<\!DOCTYPE\ html\>                                        ]]
 
-  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>                     ]]
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>                           ]]
   [[    "${output}"    =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\>    ]]
 
   [[    "${output}"    =~  \
@@ -661,7 +661,7 @@ HEREDOC
   [[    "${status}"    ==  0                                            ]]
   [[    "${output}"    =~  \<\!DOCTYPE\ html\>                          ]]
 
-  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>       ]]
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>             ]]
   [[    "${output}"    =~  \
 \<p\>Example\ image\ one:\ \<img\ src=\".*not-valid-1.png\"\ alt=\"Example\ Image\ One\"\ /\>\</p\> ]]
   [[    "${output}"    =~  \<p\>More\ example\ \ content\ \ here.\</p\> ]]
@@ -698,7 +698,7 @@ HEREDOC
   [[    "${status}"    ==  0                                            ]]
   [[    "${output}"    =~  \<\!DOCTYPE\ html\>                          ]]
 
-  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>       ]]
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>             ]]
   [[    "${output}"    =~  \
 \<p\>Example\ image\ one:\ \<img\ src=\".*not-valid-1.png\"\ alt=\"Example\ Image\ One\"\ /\>\</p\> ]]
   [[    "${output}"    =~  \<p\>More\ example\ \ content\ \ here.\</p\> ]]
@@ -735,7 +735,7 @@ HEREDOC
   [[    "${status}"    ==  0                                      ]]
   [[    "${output}"    =~  \<\!DOCTYPE\ html\>                    ]]
 
-  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\> ]]
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>       ]]
   [[    "${output}"    =~  \
 \<p\>Example\ image\ one:\ \<img\ src=\".*not-valid-1.png\"\ alt=\"Example\ Image\ One\"\ /\>\</p\> ]]
   [[    "${output}"    =~  \
@@ -926,7 +926,7 @@ HEREDOC
 "<h1 id=\"title-one\">Title One</h1>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<a.* href=\"//localhost:6789/?--per-page.*&--columns.*\"><span class=\"dim\">❯</span>nb</a>"
+"<a.* href=\"//localhost:6789/?--per-page.*&--columns.*\"><span class=\"muted\">❯</span>nb</a>"
 
   printf "%s\\n" "${output}" | grep -q \
 "<p>Example content. <a.* href=\"//localhost:6789/home:Example Title?--per-page=.*&--columns=.*\">"
@@ -954,7 +954,7 @@ HEREDOC
   [[    "${status}"    ==  0                                            ]]
   [[    "${output}"    =~  \<\!DOCTYPE\ html\>                          ]]
 
-  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>       ]]
+  [[    "${output}"    =~  \<nav\ class=\"header-crumbs\"\>             ]]
 
   [[    "${output}"    =~  pre\ \>\ code.sourceCode                     ]]
 
@@ -986,13 +986,13 @@ HEREDOC
   [[ "${status}"    ==  0                                       ]]
   [[ "${output}"    =~  \<\!DOCTYPE\ html\>                     ]]
 
-  [[ "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>  ]]
+  [[ "${output}"    =~  \<nav\ class=\"header-crumbs\"\>        ]]
 
   printf "%s\\n" "${output}" | grep -q \
-'<a.* href="//localhost:6789/?--per-page=.*"><span class="dim">❯</span>nb</a>'
+'<a.* href="//localhost:6789/?--per-page=.*"><span class="muted">❯</span>nb</a>'
 
   printf "%s\\n" "${output}" | grep -q \
-'<span class="dim">·</span> <a.* href="//localhost:6789/home:?--per-page=.*">home</a\>'
+'<span class="muted">·</span> <a.* href="//localhost:6789/home:?--per-page=.*">home</a\>'
 
   [[ "${output}"    =~  \<div\ class=\"sourceCode\"             ]]
   [[ "${output}"    =~  \<pre\ class=\"sourceCode\ bash\"\>     ]]
@@ -1016,14 +1016,14 @@ HEREDOC
   [[ "${status}"    ==  0                                       ]]
   [[ "${output}"    =~  \<\!DOCTYPE\ html\>                     ]]
 
-  [[ "${output}"    =~  \<nav\ class=\"header-crumbs\"\>\<h1\>  ]]
+  [[ "${output}"    =~  \<nav\ class=\"header-crumbs\"\>        ]]
   [[ "${output}"    =~  header-crumbs.*↓                        ]]
 
   printf "%s\\n" "${output}" | grep -q \
-'<a.* href="//localhost:6789/?--per-page=.*"><span class="dim">❯</span>nb</a>'
+'<a.* href="//localhost:6789/?--per-page=.*"><span class="muted">❯</span>nb</a>'
 
   printf "%s\\n" "${output}" | grep -q \
-'<span class="dim">·</span> <a.* href="//localhost:6789/home:?--per-page=.*">home</a\>'
+'<span class="muted">·</span> <a.* href="//localhost:6789/home:?--per-page=.*">home</a\>'
 
   [[ "${output}"    =~  \<div\ class=\"sourceCode\"             ]]
   [[ "${output}"    =~  \<pre\ class=\"sourceCode\ js\"\>       ]]
@@ -1148,7 +1148,7 @@ HEREDOC
   # [[ "${output}"    =~  \<h1\ id=\"title-one\"\>Title\ One\</h1\>                     ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><h1>"
+"<nav class=\"header-crumbs\">"
 
   printf "%s\\n" "${output}" | grep -q \
 "<p>Example content. <a.* href=\"//localhost:6789/home:1?--per-page=.*&amp;--columns=.*\">"

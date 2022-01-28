@@ -74,7 +74,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="6.8.0"
+_VERSION="6.8.1"
 
 # $_ME
 #
@@ -197,7 +197,7 @@ _resolve_symlink() {
 _sed_i() {
   if sed --help >/dev/null 2>&1
   then # GNU
-    sed -i "${@}"
+    sed -i    "${@}"
   else # BSD
     sed -i '' "${@}"
   fi
@@ -900,13 +900,13 @@ _color_brackets() {
     "${_TPUT_SGR0}"
 }
 
-# _color_dim()
+# _color_muted()
 #
 # Usage:
-#   _color_dim <string>
+#   _color_muted <string>
 #
-# Print the given string with the dim color.
-_color_dim() {
+# Print the given string with the muted color.
+_color_muted() {
   if ! ((_COLOR_ENABLED))
   then
     printf "%s\\n" "${1:-}"
@@ -1505,7 +1505,7 @@ _file_is_text() {
                 --exclude=compress          \
                 --exclude=elf               \
                 --exclude=tar               \
-                -b --mime-type)" =~ ^text ]]
+                -b --mime-type)" =~ ^text   ]]
       else
         return 0
       fi
@@ -1525,7 +1525,7 @@ export _TODO_FILE_EXTENSIONS=(
   todo.md.enc
 )
 _file_is_todo() {
-  [[ "${1:-}" =~ todo\.md|todo\.md\.enc   ]]
+  [[ "${1:-}" =~ todo\.md|todo\.md\.enc ]]
 }
 
 # _file_is_video()
@@ -2078,8 +2078,8 @@ _highlight_syntax_if_available() {
     fi
 
     bat "${_arguments[@]}"  \
-      --paging never        \
       --color always        \
+      --paging never        \
       --plain               \
       --theme "${NB_SYNTAX_THEME:-base16}"
   elif hash "highlight" 2>/dev/null
@@ -2491,7 +2491,7 @@ _piped_input() {
 # _print_line()
 #
 # Usage:
-#   _print_line <text> [--dim] [--no-wrap] [--visible-length [<extra-length>]
+#   _print_line <text> [--muted] [--no-wrap] [--visible-length [<extra-length>]
 #
 # Description:
 #   Print a line of dashes the length of <text>.
@@ -2499,7 +2499,7 @@ _piped_input() {
 # More Information:
 #   https://wiki.bash-hackers.org/commands/builtin/printf
 _print_line() {
-  local _dim=0
+  local _muted=0
   local _extra_length=0
   local _text=
   local _visible_length=0
@@ -2508,7 +2508,7 @@ _print_line() {
   while ((${#}))
   do
     case "${1:-}" in
-      --dim*)   _dim=1                ;;
+      --muted*) _muted=1              ;;
       --no*w*)  _wrap_line=0          ;;
       --vis*)   _visible_length=1     ;;
       *)
@@ -2552,9 +2552,9 @@ _print_line() {
     printf -v _line "%*s" "${_text_length}" ""
   fi
 
-  if ((_dim))
+  if ((_muted))
   then
-    _color_dim "${_line// /-}"
+    _color_muted "${_line// /-}"
   else
     _color_secondary "${_line// /-}"
   fi |  if ((_full_width_line))
@@ -3816,13 +3816,13 @@ View this theme as a complete file
 
 Themes can be installed using the \`${_ME} plugins\` subcommand:
 
-    $(_color_dim ">") $(_color_primary "${_ME} plugins install https://github.com/xwmx/nb/blob/master/plugins/turquoise.nb-theme")
+    $(_color_muted ">") $(_color_primary "${_ME} plugins install https://github.com/xwmx/nb/blob/master/plugins/turquoise.nb-theme")
     $(_color_secondary "Plugin installed:")
     $(_color_secondary "/home/example/.nb/.plugins/turquoise.nb-theme")
 
 Once a theme is installed, use it with \`${_ME} set color_theme\`:
 
-    $(_color_dim ">") $(_color_primary "set color_theme turquoise")
+    $(_color_muted ">") $(_color_primary "set color_theme turquoise")
     $(_color_secondary "NB_COLOR_THEME set to turquoise")
 
 The primary and secondary colors can also be overridden individually,
@@ -4691,10 +4691,10 @@ _init() {
 
   # Usage: _init_create_nb_dir
   _init_create_nb_dir() {
-    if [[ -d "${NB_DIR}" ]]
+    if    [[ -d "${NB_DIR}" ]]
     then
       printf "Data directory exists:      %s\\n" "$(_color_primary "${NB_DIR}")"
-    elif [[ -e "${NB_DIR}" ]]
+    elif  [[ -e "${NB_DIR}" ]]
     then
       _exit_1 cat <<HEREDOC
 Unable to set up the $(_color_primary "${_ME}") data directory. File exists at:
@@ -4735,7 +4735,7 @@ HEREDOC
 
   # Usage: _init_print_header
   _init_print_header() {
-    printf "%s\\n" "$(_color_primary "Initializing...")"
+    printf "%s%s\\n" "$(_color_primary "Initializing")" "$(_color_muted "...")"
   }
 
   if [[ -e "${NB_DIR}" ]] && [[ ! -d "${NB_DIR}" ]]
@@ -4947,9 +4947,9 @@ _list() {
         _with_pinned=1
         ;;
       *)
-        if   [[   "${1:-}" =~ ^--[0-9]+$  ]]
+        if   [[   "${1:-}" =~ ^-+[0-9]+$  ]]
         then
-          _limit="${1:2}"
+          _limit="${1##*-}"
         elif [[   "${1:-}" =~ ^--         ]]
         then
           if ! _contains "${1:-}" "--ar" "--archived" "--unar" "--unarchived"
@@ -5472,7 +5472,10 @@ _list() {
         fi
 
         # TODO: `show --indicators` duplicated for performance
-        if _file_is_bookmark "${_list_path}/${__basename}"
+        if [[ -d "${_list_path}/${__basename}" ]]
+        then
+          _indicators+="${_NB_INDICATOR_FOLDER:-}"
+        elif _file_is_bookmark "${_list_path}/${__basename}"
         then
           _indicators+="${_NB_INDICATOR_BOOKMARK:-}"
         elif ! LC_ALL=C _contains "${__basename##*.}" "${_TEXT_FILE_EXTENSIONS[@]}"
@@ -5483,9 +5486,6 @@ _list() {
           elif _file_is_document "${_list_path}/${__basename}"
           then
             _indicators+="${_NB_INDICATOR_DOCUMENT:-}"
-          elif [[ -d "${_list_path}/${__basename}" ]]
-          then
-            _indicators+="${_NB_INDICATOR_FOLDER:-}"
           elif _file_is_video "${_list_path}/${__basename}"
           then
             _indicators+="${_NB_INDICATOR_VIDEO:-}"
@@ -5958,7 +5958,7 @@ _ls() {
     )
 
     local _commands_hi=(
-      "$(_color_dim "${_CHEVRON_RIGHT}") $(_color_secondary "${_ME}${_maybe_selector_scope_padded_left}")"
+      "$(_color_muted "${_CHEVRON_RIGHT}") $(_color_secondary "${_ME}${_maybe_selector_scope_padded_left}")"
       "$(_color_secondary "${_commands_raw[1]}")"
       "$(_color_secondary "${_commands_raw[2]}")"
       "$(_color_secondary "${_commands_raw[3]}")"
@@ -6028,11 +6028,11 @@ _ls() {
     # printf "${_NB_INDICATOR_FOLDER:-}" # TODO: Review
 
     local _folder_separator=
-    _folder_separator="$(_color_dim "/")"
+    _folder_separator="$(_color_muted "/")"
 
     printf "%s\\n" "${1//\// ${_folder_separator} }"
 
-    _print_line "$(printf "%-${_COLUMNS}s" '.')" --dim
+    _print_line "$(printf "%-${_COLUMNS}s" '.')" --muted
 
     printf "\\n"
   }
@@ -6088,7 +6088,7 @@ _ls() {
     if ! ((_plain))
     then
       _separator=" ${_MD}"
-      _separator_hi="$(_color_dim "${_separator}")"
+      _separator_hi="$(_color_muted "${_separator}")"
     fi
 
     local _current_notebook_name=
@@ -6294,27 +6294,24 @@ _ls() {
         _arguments+=("${1}" "${2:-}")
         shift
         ;;
-      --[0-9]*)
-        if [[ "${1:-}" =~ ^--[0-9]+$  ]]
-        then
-          _limit="${1#\-\-}"
-        else
-          _arguments+=("${1}")
-        fi
-        ;;
       --[A-Za-z]*)
         _maybe_type="${1:2}"
 
         _arguments+=("${1}")
         ;;
       -*)
-        _arguments+=("${1}")
-
-        if _option_value_is_present "${2:-}"
+        if [[ "${1:-}" =~ ^-+[0-9]+$  ]]
         then
-          _arguments+=("${2:-}")
+          _limit="${1##*-}"
+        else
+          _arguments+=("${1}")
 
-          shift
+          if _option_value_is_present "${2:-}"
+          then
+            _arguments+=("${2:-}")
+
+            shift
+          fi
         fi
         ;;
       *:*)
@@ -7081,7 +7078,7 @@ _notebooks() {
               break
               ;;
             *)
-              printf "Exiting...\\n"
+              printf "Exiting%s\\n" "$(_color_muted "...")"
               exit 0
               ;;
           esac
@@ -7308,7 +7305,7 @@ HEREDOC
         then
           break
         else
-          printf "Exiting...\\n"
+          printf "Exiting%s\\n" "$(_color_muted "...")"
           exit 0
         fi
       done
@@ -8830,6 +8827,9 @@ _debug printf "\${_ARGUMENTS[*:-]}:       '%s'\\n"  "${_ARGUMENTS[*]:-}"
 # TODO: Remove
 ###############################################################################
 
+# _color_dim()
+_color_dim() { _color_muted "${@}"; }
+
 # _get_notebook_identifier()
 _get_notebook_identifier()  { _notebooks show "${@}" --escaped;   }
 
@@ -9279,7 +9279,7 @@ _edit_file() {
 
       while true
       do
-        read -n 1 -s -r -p "Press any key to save changes and exit..."
+        read -n 1 -s -r -p "Press any key to save changes and exit$(_color_muted "...")"
 
         printf "\\n"
         break
@@ -9768,7 +9768,7 @@ _render() {
     # #1a1a1a #1b1b20 #17171c #19191f #18181c
     local _color_background_hex="#141418"
     local _color_background_alt_hex="#17171c" # #1b1b20 #1e1e25 #212121
-    local _color_dim_hex="#626480"
+    local _color_muted_hex="#626480"
     local _color_primary_hex="#7593eb"
     # TODO: local _color_secondary_hex=
     local _color_text_hex="#c5c4cc"           # #e6e6e6 #dedede
@@ -10015,19 +10015,20 @@ header {
 .header-crumbs {
   font-size:          1rem;
   font-weight:        normal;
-  margin:             0;
-  padding:            2rem 2rem 0rem;
-  text-align:         center;
+  line-height:        2;
+  margin:             0 auto;
+  max-width:          45rem;
+  padding:            1.75rem 2rem 0rem;
+  text-align:         left;
 }
 
-.header-crumbs h1 {
-  display:            inline-block;
-  font-size:          1rem;
+/* <strong> for bold in terminal browsers only */
+.header-crumbs strong {
   font-weight:        normal;
-  margin:             0;
-  min-width:          45rem;
-  padding:            0;
-  text-align:         left;
+}
+
+.header-crumbs-spacer {
+  display:            none;
 }
 
 .main {
@@ -10040,12 +10041,9 @@ header {
   padding-top:        0.35rem;
 }
 
-.main p:first-child {
-  padding-top:        0.8rem;
-}
-
+.main p:first-child,
 .main .sourceCode:first-child {
-  padding-top:        1rem;
+  padding-top:        0.5rem;
 }
 
 .item-list {
@@ -10061,8 +10059,8 @@ header {
   vertical-align:     top;
 }
 
-.dim        {         color: ${_color_dim_hex};     }
 .identifier {         color: ${_color_primary_hex}; }
+.muted      {         color: ${_color_muted_hex};     }
 
 form {
   padding-top:        1rem;
@@ -10361,9 +10359,9 @@ code span.bu {                                          } /*    BuiltIn     */
 code span.cf { color: #7290b1;                          } /*  ControlFlow   */
 code span.ch { color: #8987a0;                          } /*      Char      */
 code span.cn { color: #8987a0;      font-weight: bold;  } /*    Constant    */
-code span.co { color: ${_color_dim_hex};                } /*    Comment     */
+code span.co { color: ${_color_muted_hex};                } /*    Comment     */
 code span.cv { color: #7f9f7f;      font-weight: bold;  } /*   CommentVar   */
-code span.do { color: ${_color_dim_hex};                } /* Documentation  */
+code span.do { color: ${_color_muted_hex};                } /* Documentation  */
 code span.dt { color: #cccc96;                          } /*    DataType    */
 code span.dv { color: #cccc96;                          } /*     DecVal     */
 code span.er { color: #cccc96;                          } /*     Error      */
@@ -10649,8 +10647,8 @@ HEREDOC
     LC_ALL=C sed -e "s/<a\ /<a\ rel=\"noopener\ noreferrer\"\ /g"
   } | {
     # mark up checkboxes
-    local _checkbox_pattern_open="<span class=\"dim\">[<\/span><span class=\"identifier\">"
-    local _checkbox_pattern_close="<\/span><span class=\"dim\">\]<\/span>"
+    local _checkbox_pattern_open="<span class=\"muted\">[<\/span><span class=\"identifier\">"
+    local _checkbox_pattern_close="<\/span><span class=\"muted\">\]<\/span>"
 
     LC_ALL=C sed -E                                                               \
       -e "s/\[x\]/${_checkbox_pattern_open}x${_checkbox_pattern_close}/g"         \
@@ -11892,9 +11890,9 @@ $(_color_primary "Description"):
   When readability-cli [2] is install, markup is cleaned up to focus on
   content.
 
-  \`peek\` opens the page in \`w3m\` [3], \`links\` [4], or \`lynx\` [5] when
-  available. To specify a preferred browser, set the \`\$BROWSER\` environment
-  variable in your .bashrc, .zshrc, or equivalent, e.g.: export BROWSER="links"
+  \`peek\` opens the page in \`w3m\` [3] or \`links\` [4] when available.
+  To specify a preferred browser, set the \`\$BROWSER\` environment variable
+  in your .bashrc, .zshrc, or equivalent, e.g.: export BROWSER="links"
 
   Bookmarks are identified by the \`.bookmark.md\` file extension. The
   bookmark URL is the first URL in the file within "<" and ">" characters:
@@ -11905,7 +11903,6 @@ $(_color_primary "Description"):
     2. https://gitlab.com/gardenappl/readability-cli
     3. https://en.wikipedia.org/wiki/W3m
     4. https://en.wikipedia.org/wiki/Links_(web_browser)
-    5. https://en.wikipedia.org/wiki/Lynx_(web_browser)
 
 $(_color_primary "Read More"):
   ${_README_URL}#-bookmark
@@ -12350,24 +12347,24 @@ _bookmark() {
       _title="$(
         cat "${_temp_file}"                   \
           | awk '/<title[^>]*>/,/<\/title>/'  \
-          | sed -e '/<\/title>/ q'            \
-          | sed -e 's/<\/title>.*//'          \
-          | sed                               \
+          | LC_ALL=C sed -e '/<\/title>/ q'   \
+          | LC_ALL=C sed -e 's/<\/title>.*//' \
+          | LC_ALL=C sed                      \
             -e 's/.*<title[^>]*>//'           \
             -e 's/.*<TITLE[^>]*>//'           \
             -e 's/<\/title>.*//'              \
             -e 's/<\/TITLE>.*//'              \
-          | awk '$1=$1'     || :
+          | awk '$1=$1'     ||  :
       )"
     fi
 
     if [[ -z "${_title:-}"  ]]
     then
       _title="$(
-        cat "${_temp_file}" \
-          | sed -E -n       \
+        cat "${_temp_file}"     \
+          | LC_ALL=C sed -E -n  \
             's/.*<meta .*property=.og:title[^>]*content="([^"]+)".*/\1/p' \
-            2>/dev/null     || :
+            2>/dev/null     ||  :
       )"
     fi
   fi
@@ -12394,19 +12391,19 @@ _bookmark() {
   then
     local _description=
     _description="$(
-      cat "${_temp_file}"   \
-        | sed -E -n         \
+      cat "${_temp_file}"       \
+        | LC_ALL=C sed -E -n    \
             's/.*<meta .*name=.description.[^>]*content="([^"]+)".*/\1/p' \
-            2>/dev/null     || :
+            2>/dev/null     ||  :
     )"
 
     if [[ -z "${_description:-}"    ]]
     then
       _description="$(
-        cat "${_temp_file}" \
-          | sed -E -n       \
+        cat "${_temp_file}"     \
+          | LC_ALL=C sed -E -n  \
               's/.*<meta .*property=.og:description[^>]*content="([^"]+)".*/\1/p' \
-              2>/dev/null   || :
+              2>/dev/null   ||  :
       )"
     fi
 
@@ -13667,7 +13664,7 @@ _export() {
               break
               ;;
             *)
-              printf "Exiting...\\n"
+              printf "Exiting%s\\n" "$(_color_muted "...")"
               exit 0
               ;;
           esac
@@ -14436,7 +14433,7 @@ _move() {
           break
           ;;
         *)
-          printf "Exiting...\\n"
+          printf "Exiting%s\\n" "$(_color_muted "...")"
           exit 0
           ;;
       esac
@@ -16064,10 +16061,9 @@ $(_color_primary "Description"):
   To skip the pager and print to standard output, use the \`-p\` / \`--print\`
   option.
 
-  \`-r\` / \`--render\` automatically uses either \`w3m\` [2], \`links\` [3],
-  or \`lynx\` [4]. To specify a preferred browser, set the \`\$BROWSER\`
-  environment variable in your .bashrc, .zshrc, or equivalent, e.g.,
-  \`export BROWSER="links"\`.
+  \`-r\` / \`--render\` automatically uses either \`w3m\` [2] or \`links\` [3].
+  To specify a preferred browser, set the \`\$BROWSER\` environment variable
+  in your .bashrc, .zshrc, or equivalent, e.g.: export BROWSER="links"
 
   If \`bat\` [5], \`highlight\` [6], or Pygments [7] is installed, notes are
   printed with syntax highlighting.
@@ -16075,7 +16071,6 @@ $(_color_primary "Description"):
     1. https://pandoc.org/
     2. https://en.wikipedia.org/wiki/W3m
     3. https://en.wikipedia.org/wiki/Links_(web_browser)
-    4. https://en.wikipedia.org/wiki/Lynx_(web_browser)
     5. https://github.com/sharkdp/bat
     6. http://www.andre-simon.de/doku/highlight/en/highlight.php
     7. https://pygments.org/
@@ -16124,10 +16119,13 @@ _show() {
     local _path="${1:-}"
 
     case "${2:-}" in
-      --done) _done=1 ;;
+      --done) _done=1   ;;
     esac
 
-    if _file_is_bookmark "${_path}"
+    if [[ -d "${_path}" ]]
+    then
+      _indicators+="${_NB_INDICATOR_FOLDER:-}"
+    elif _file_is_bookmark "${_path}"
     then
       _indicators+="${_NB_INDICATOR_BOOKMARK:-}"
     elif _file_is_image "${_path}"
@@ -16136,9 +16134,6 @@ _show() {
     elif _file_is_document "${_path}"
     then
       _indicators+="${_NB_INDICATOR_DOCUMENT:-}"
-    elif [[ -d "${_path}" ]]
-    then
-      _indicators+="${_NB_INDICATOR_FOLDER:-}"
     elif _file_is_video "${_path}"
     then
       _indicators+="${_NB_INDICATOR_VIDEO:-}"
@@ -16888,7 +16883,7 @@ Can't show archives. Export archive and expand to edit.\\n"
 
         while true
         do
-          read -n 1 -s -r -p "Press any key to quit..."
+          read -n 1 -s -r -p "Press any key to quit$(_color_muted "...")"
 
           printf "\\n"
 
@@ -17121,12 +17116,11 @@ $(_color_primary "Description"):
     # link to the item titled "Example Title" in the "demo" notebook
     [[demo:Example Title]]
 
-  \`browse\` supports \`w3m\` [1] (recommended), \`links\` [2], and \`lynx\` [3]
-  and depends on \`ncat\` [4] and \`pandoc\` [5]:
+  \`browse\` supports \`w3m\` [1] and \`links\` [2], and depends on
+  \`ncat\` [3] and \`pandoc\` [4]:
 
     1. https://en.wikipedia.org/wiki/W3m
     2. https://en.wikipedia.org/wiki/Links_(web_browser)
-    3. https://en.wikipedia.org/wiki/Lynx_(web_browser)
     4. https://nmap.org/ncat/
     5. https://pandoc.org/
 
@@ -17801,8 +17795,8 @@ HEREDOC
         _display_item="${_display_item//' '/${_NBSP}}"
 
         # shellcheck disable=SC2140
-        _display_item="${_display_item//\[/<span class=\"dim\">[</span><span class=\"identifier\">}"
-        _display_item="${_display_item//\]/</span><span class=\"dim\">]</span>}"
+        _display_item="${_display_item//\[/<span class=\"muted\">[</span><span class=\"identifier\">}"
+        _display_item="${_display_item//\]/</span><span class=\"muted\">]</span>}"
 
         local _link_selector=
         _link_selector="$(_get_id_selector "${_item_selector}" --notebook)"
@@ -17925,7 +17919,7 @@ HEREDOC
 
       if ((_print_prev)) && ((_print_next))
       then
-        printf " <span class=\"dim\">%s</span> " "${_MD}"
+        printf " <span class=\"muted\">%s</span> " "${_MD}"
       fi
 
       if ((_print_next))
@@ -18058,7 +18052,7 @@ HEREDOC
 ${_info_line//'\ '/ }
 </a>
 </p>
-<p align="center" class="dim">
+<p align="center" class="muted">
   This item will still be available in git history.
 </p>
 <div align="center">
@@ -18202,7 +18196,7 @@ HEREDOC
 <br><br>
 <input
   type="submit"
-  value="save"> <span class="dim">${_MD}</span> <span class="dim last-saved">last: ${_last_saved_at}</span>
+  value="save"> <span class="muted">${_MD}</span> <span class="muted last-saved">last: ${_last_saved_at}</span>
 $(_browse_render_option_fields "${_subcommand_options[@]:-}")
 </form>
 HEREDOC
@@ -18291,12 +18285,12 @@ HEREDOC
 
     local _header_content="\
 <a href=\"//${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_url_param_string:-}\">"
-    _header_content+="<span class=\"dim\">${_CHEVRON_RIGHT}</span>nb</a>"
-    _header_content+=" <span class=\"dim\">${_MD}</span>"
+    _header_content+="<span class=\"muted\">${_CHEVRON_RIGHT}</span>nb</a>"
+    _header_content+=" <span class=\"muted\">${_MD}</span>"
 
     if [[ -z "${_selector:-}"       ]]
     then
-      _header_content+=" <span class=\"dim\">notebooks</span>"
+      _header_content+=" <span class=\"muted\">notebooks</span>"
     else
       local _notebook_name=
 
@@ -18317,7 +18311,7 @@ HEREDOC
 
       _header_content+="\
  <a href=\"//${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_notebook_name//' '/%20}:${_url_param_string:-}\">${_notebook_name}</a>"
-      _header_content+=" <span class=\"dim\">:</span>"
+      _header_content+=" <span class=\"muted\">:</span>"
 
       local _relative_folder_path=
       local _selector_relative_folder_path=
@@ -18376,7 +18370,7 @@ HEREDOC
 
           _header_content+="\
  <a href=\"//${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_url_path}${_url_param_string:-}\">${_selector_folders[i]}</a>"
-          _header_content+=" <span class=\"dim\">/</span>"
+          _header_content+=" <span class=\"muted\">/</span>"
         done
       fi
     fi
@@ -18398,7 +18392,7 @@ HEREDOC
  <a href=\"//${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_id_selector:-}${_url_param_string:-}\">${_selector_id:-}</a>"
       elif [[ "${_action:-}" != "add"   ]]
       then
-        _header_content+=" <span class=\"dim\">${_selector_id:-}</span>"
+        _header_content+=" <span class=\"muted\">${_selector_id:-}</span>"
       fi
 
       # NOTE: backup _raw_url calculation. TODO: remove
@@ -18420,35 +18414,35 @@ HEREDOC
 
       if [[ -n "${_raw_url:-}"  ]]
       then
-        _header_content+=" <span class=\"dim\">${_MD}</span>"
+        _header_content+=" <span class=\"muted\">${_MD}</span>"
         _header_content+=" <a href=\"${_raw_url}\">↓</a>"
       fi
 
       if [[ "${_action:-}"  == "edit"   ]]
       then
-        _header_content+=" <span class=\"dim\">${_MD}</span>"
-        _header_content+=" <span class=\"dim\">editing</span>"
+        _header_content+=" <span class=\"muted\">${_MD}</span>"
+        _header_content+=" <span class=\"muted\">editing</span>"
       elif _file_is_text "${_selector:-}"
       then
-        _header_content+=" <span class=\"dim\">${_MD}</span>"
+        _header_content+=" <span class=\"muted\">${_MD}</span>"
         _header_content+="\
  <a href=\"//${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_id_selector:-}${_url_params_ext:-}--edit\">edit</a>"
       fi
 
       case "${_action:-}" in
         delete)
-          _header_content+=" <span class=\"dim\">${_MD}</span>"
-          _header_content+=" <span class=\"dim\">-</span>"
-          _header_content+=" <span class=\"dim\">|</span>"
+          _header_content+=" <span class=\"muted\">${_MD}</span>"
+          _header_content+=" <span class=\"muted\">-</span>"
+          _header_content+=" <span class=\"muted\">|</span>"
           ;;
         edit)
-          _header_content+=" <span class=\"dim\">${_MD}</span>"
+          _header_content+=" <span class=\"muted\">${_MD}</span>"
           _header_content+="\
  <a href=\"//${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_id_selector:-}${_url_params_ext:-}--delete\">-</a>"
-          _header_content+=" <span class=\"dim\">|</span>"
+          _header_content+=" <span class=\"muted\">|</span>"
           ;;
         *)
-          _header_content+=" <span class=\"dim\">|</span>"
+          _header_content+=" <span class=\"muted\">|</span>"
           ;;
       esac
     fi
@@ -18457,14 +18451,17 @@ HEREDOC
     then
       if [[ "${_action:-}"  == "add"    ]]
       then
-        _header_content+=" <span class=\"dim\">+</span>"
+        _header_content+=" <span class=\"muted\">+</span>"
       else
         _header_content+="\
  <a href=\"//${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_notebook_name}:${_folder_id_path:-}${_url_params_ext:-}--add\">+</a>"
       fi
     fi
 
-    printf "<nav class=\"header-crumbs\"><h1>%s</h1></nav>\\n\\n" "${_header_content:-}"
+    cat <<HEREDOC
+<nav class="header-crumbs"><strong>${_header_content:-}</strong></nav>
+<p class="header-crumbs-spacer"></p>
+HEREDOC
   }
 
   # _browse_render_item()
@@ -18668,6 +18665,9 @@ HEREDOC
                   local _mime_type=
                   _mime_type="$(file -b --mime-type "${_source_path}" 2>/dev/null || :)"
 
+                  # handle `file` 5.40 bug: https://bugs.astron.com/view.php?id=259
+                  _mime_type="${_mime_type//audio\/mpegapplication\/octet-stream/audio/mpeg}"
+
                   cat <<HEREDOC
 <audio controls>
   <source src="${_raw_url}" type="${_mime_type:-}">
@@ -18841,11 +18841,11 @@ HEREDOC
     fi
 
     case "${BROWSER:-}" in
-      elinks)
-        _columns="$((_columns - 20))"
+      *elinks*)
+        _columns="$((_columns - 30))"
         ;;
-      links)
-        _columns="$((_columns - 1))"
+      *links*)
+        _columns="$((_columns - 3))"
         ;;
     esac
 
@@ -18870,7 +18870,7 @@ HEREDOC
             printf "<br>\\n"
             _test_line="${__name}${_NBSP}${_MD}"
           else
-            printf "%s<span class=\"dim\">%s</span> " "${_NBSP}" "${_MD}"
+            printf "%s<span class=\"muted\">%s</span> " "${_NBSP}" "${_MD}"
           fi
         fi
 
@@ -19855,10 +19855,11 @@ HEREDOC
 
     if ((_daemon))
     then
-      printf "Press %s%s%s to exit..."  \
-        "$(_color_dim "<")"             \
-        "$(_color_primary "CTRL-C")"    \
-        "$(_color_dim ">")"
+      printf "Press %s%s%s to exit%s" \
+        "$(_color_muted "<")"           \
+        "$(_color_primary "CTRL-C")"  \
+        "$(_color_muted ">")"           \
+        "$(_color_muted "...")"
 
       while true
       do
@@ -19867,7 +19868,7 @@ HEREDOC
     else
       while true
       do
-        read -n 1 -s -r -p "Press any key to quit$(_color_dim "...")"
+        read -n 1 -s -r -p "Press any key to exit$(_color_muted "...")"
 
         printf "\\n"
         break
@@ -20162,7 +20163,7 @@ _plugins() {
                   break
                   ;;
                 *)
-                  printf "Exiting...\\n"
+                  printf "Exiting%s\\n" "$(_color_muted "...")"
                   exit 0
                   ;;
               esac
@@ -20226,7 +20227,7 @@ HEREDOC
               break
               ;;
             *)
-              printf "Exiting...\\n"
+              printf "Exiting%s\\n" "$(_color_muted "...")"
               exit 0
               ;;
           esac
@@ -20256,20 +20257,12 @@ HEREDOC
         {
           if ((_print_paths))
           then
-            # `grep` for non-0 `find`. More info: https://serverfault.com/a/855083
             find "${NB_DIR}"/.plugins \
-              -type f                 \
-              -name "${_query}"
-            find "${NB_DIR}"/.plugins \
-              -type l                 \
+              ! \( -type d \)         \
               -name "${_query}"
           else
             find "${NB_DIR}"/.plugins \
-              -type f                 \
-              -name "${_query}"       \
-              -exec basename {} \;
-            find "${NB_DIR}"/.plugins \
-              -type l                 \
+              ! \( -type d \)         \
               -name "${_query}"       \
               -exec basename {} \;
           fi
@@ -20496,7 +20489,7 @@ _remote() {
             break
             ;;
           *)
-            printf "Exiting...\\n"
+            printf "Exiting%s\\n" "$(_color_muted "...")"
             exit 0
             ;;
         esac
@@ -20529,7 +20522,7 @@ _remote() {
                 break
                 ;;
               *)
-                printf "Exiting...\\n"
+                printf "Exiting%s\\n" "$(_color_muted "...")"
                 exit 0
                 ;;
             esac
@@ -20580,9 +20573,17 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
                 "${_branch_delete_prompt} $(_color_brackets "y/N") " __yn
 
               case "${__yn}" in
-                [Yy]*)    _delete_remote_branch=1;  break   ;;
-                q*|exit)  printf "Exiting...\\n";   exit 0  ;;
-                *)                                  break   ;;
+                [Yy]*)
+                  _delete_remote_branch=1
+                  break
+                  ;;
+                q*|exit)
+                  printf "Exiting%s\\n" "$(_color_muted "...")"
+                  exit 0
+                  ;;
+                *)
+                  break
+                  ;;
               esac
             done
           fi
@@ -20699,7 +20700,7 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
             break
             ;;
           *)
-            printf "Exiting...\\n"
+            printf "Exiting%s\\n" "$(_color_muted "...")"
             exit 0
             ;;
         esac
@@ -20800,7 +20801,7 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
             break
             ;;
           *)
-            printf "Exiting...\\n"
+            printf "Exiting%s\\n" "$(_color_muted "...")"
             exit 0
             ;;
         esac
@@ -20874,7 +20875,7 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
               break
               ;;
             *)
-              printf "Exiting...\\n"
+              printf "Exiting%s\\n" "$(_color_muted "...")"
 
               exit 0
               ;;
@@ -20916,9 +20917,17 @@ HEREDOC
             _selected_push_option
 
           case "${_selected_push_option:-}" in
-            1)        _show_branch_selection_prompt=1 &&  break   ;;
-            2)                                            break   ;;
-            q*|exit)  printf "Exiting...\\n"          &&  exit 0  ;;
+            1)
+              _show_branch_selection_prompt=1
+              break
+              ;;
+            2)
+              break
+              ;;
+            q*|exit)
+              printf "Exiting%s\\n" "$(_color_muted "...")"
+              exit 0
+              ;;
           esac
         done
       else
@@ -21018,7 +21027,7 @@ HEREDOC
                   break
                   ;;
                 q*|exit)
-                  printf "Exiting...\\n"
+                  printf "Exiting%s\\n" "$(_color_muted "...")"
 
                   exit 0
                   ;;
@@ -21054,7 +21063,7 @@ HEREDOC
 
           case "${_selected_branch:-}" in
             q*|exit)
-              printf "Exiting...\\n"
+              printf "Exiting%s\\n" "$(_color_muted "...")"
 
               exit 0
               ;;
@@ -21126,9 +21135,18 @@ HEREDOC
               _orphan_branch_prompt_response
 
             case "${_orphan_branch_prompt_response:-}" in
-              '')       _new_branch="${_target_orphan_branch_name}"     && break  ;;
-              q*|exit)  printf "Exiting...\\n"                          && exit 0 ;;
-              *)        _new_branch="${_orphan_branch_prompt_response}" && break  ;;
+              '')
+                _new_branch="${_target_orphan_branch_name}"
+                break
+                ;;
+              q*|exit)
+                printf "Exiting%s\\n" "$(_color_muted "...")"
+                exit 0
+                ;;
+              *)
+                _new_branch="${_orphan_branch_prompt_response}"
+                break
+                ;;
             esac
           done
         fi
@@ -21411,7 +21429,7 @@ HEREDOC
         then
           case "${__setting}" in
             q|quit|exit)
-              printf "Exiting...\\n"
+              printf "Exiting%s\\n" "$(_color_muted "...")"
               return 0
               ;;
             *)
@@ -21451,7 +21469,7 @@ HEREDOC
       then
         case "${__value}" in
           q|quit|exit)
-            printf "Exiting...\\n"
+            printf "Exiting%s\\n" "$(_color_muted "...")"
             return 0
             ;;
           unset|default|reset)
@@ -23361,7 +23379,7 @@ HEREDOC
             break
             ;;
           *)
-            printf "Exiting...\\n"
+            printf "Exiting%s\\n" "$(_color_muted "...")"
             exit 0
             ;;
         esac

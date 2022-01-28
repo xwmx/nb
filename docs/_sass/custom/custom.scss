@@ -15,7 +15,7 @@
 $body-background-color:       #15181d;
 $body-color:                  #c5c7cf;
 $code-block-background-color: #1c1f25;
-$dim-color:                   #636363;
+$muted-color:                 #636363;
 $hr-color:                    lighten($body-background-color, 10%);
 $link-color:                  #5e8bd0;
 $side-bar-background-color:   #0f1217;
@@ -24,7 +24,7 @@ $side-bar-background-color:   #0f1217;
 // Styles
 
 ::placeholder {
-  color:                    $dim-color;
+  color:                    $muted-color;
 }
 
 ::selection {
@@ -435,7 +435,7 @@ th {
     }
 
     .nav-separator {
-      color:                $dim-color;
+      color:                $muted-color;
 
       @media (min-width: 50rem) {
         display:            none;

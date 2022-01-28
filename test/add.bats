@@ -285,13 +285,13 @@ HEREDOC
   [[    "${output}"  =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><h1><a rel=\"noopener noreferrer\" href=\"//lo"
+"<nav class=\"header-crumbs\"><strong><a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
-"calhost:6789/?--per-page=.*&--columns=.*\"><span class=\"dim\">❯</span>nb</a>"
+"calhost:6789/?--per-page=.*&--columns=.*\"><span class=\"muted\">❯</span>nb</a>"
 
   printf "%s\\n" "${output}" | grep -q \
-" <span class=\"dim\">·</span> <a rel=\"noopener noreferrer\" href=\"//lo"
+" <span class=\"muted\">·</span> <a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
 "calhost:6789/home:?--per-page=.*&--columns=.*\">home</a>"

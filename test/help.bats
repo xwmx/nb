@@ -52,7 +52,7 @@ nb\ -h\ \|\ \-\-help\ \|\ help\ \[\<subcommand\>\ \|\ \-\-readme\]  ]]
   [[    "${output}" =~  \[\-s\ \|\ \-\-serve\]                      ]]
 }
 
-@test "'help' and 'help <subcommand>' dim usage." {
+@test "'help' and 'help <subcommand>' color usage." {
   run "${_NB}" help
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -76,7 +76,7 @@ nb\ -h\ \|\ \-\-help\ \|\ help\ \[\<subcommand\>\ \|\ \-\-readme\]              
   [[ !  "${output}" =~  \[\-s\ \|\ \-\-serve\]          ]]
 }
 
-@test "'help' and 'help <subcomman>' dim hash in #tag* patterns." {
+@test "'help' and 'help <subcomman>' color hash in #tag* patterns." {
   run "${_NB}" help
 
   printf "\${status}: '%s'\\n" "${status}"
