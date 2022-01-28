@@ -18849,7 +18849,7 @@ HEREDOC
         _columns="$((_columns - 30))"
         ;;
       *links*)
-        _columns="$((_columns - 2))"
+        _columns="$((_columns - 3))"
         ;;
     esac
 
