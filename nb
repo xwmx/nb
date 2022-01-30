@@ -8827,9 +8827,6 @@ _debug printf "\${_ARGUMENTS[*:-]}:       '%s'\\n"  "${_ARGUMENTS[*]:-}"
 # TODO: Remove
 ###############################################################################
 
-# _color_dim()
-_color_dim()                { _color_muted "${@}";                }
-
 # _get_notebook_identifier()
 _get_notebook_identifier()  { _notebooks show "${@}" --escaped;   }
 
@@ -8874,7 +8871,8 @@ _SCOPED="$(
   fi
 )"
 
-# Color functions.
+# color functions
+_color_dim()          { _color_muted    "${@:-}"; }
 _highlight()          { _color_primary  "${@:-}"; }
 _id_brackets_color()  { _color_brackets "${@:-}"; }
 
