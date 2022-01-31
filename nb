@@ -9678,7 +9678,7 @@ _option_get_tags() {
 #                       syntax mode in Ace.
 #   --title             <title> content.
 _render() {
-  # Usage: _render_prepare_file_format <path> <pandoc-enabled>
+  # Usage: _render_prepare_file <path> <pandoc-enabled>
   _render_prepare_file() {
     local _input_file_path="${1:?}"
     local _prepared_file_path="${_input_file_path:-}"
