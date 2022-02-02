@@ -14395,13 +14395,27 @@ _move() {
     _target_info="$(_notebooks show "${_target_notebook_path}" --name --no-color):"
   fi
 
+  local _target_folder_relative_path=
+
+  if [[ -n "${_target_selector_relative_path:-}"  ]]
+  then
+    _target_folder_relative_path="$(
+      _selector_resolve_folders "${_target_selector_relative_path}" --build
+    )"
+
+    if [[ -z "${_target_folder_relative_path:-}"  ]]
+    then
+      _target_folder_relative_path="${_target_selector_relative_path%\/*}"
+    fi
+  fi
+
   local _target_folder_path=
   local _target_relative_path=
 
   if [[   "${_target_selector_relative_path:-}" =~ /            ]]
   then
-    _target_folder_path="${_target_notebook_path}/${_target_selector_relative_path%\/*}"
-    _target_relative_path="${_target_selector_relative_path%\/*}/${_target_basename}"
+    _target_folder_path="${_target_notebook_path}/${_target_folder_relative_path}"
+    _target_relative_path="${_target_folder_relative_path}/${_target_basename}"
   else
     _target_folder_path="${_target_notebook_path}"
     _target_relative_path="${_target_basename}"
@@ -14423,7 +14437,7 @@ _move() {
     while true
     do
       local __yn=
-      IFS='' read -r -e -d $'\n' -p   \
+      IFS='' read -r -e -d $'\n' -p                   \
 "$(_color_primary "Proceed?")  $(_color_brackets "y/N") " __yn
 
       case "${__yn}" in

@@ -4,6 +4,59 @@ load test_helper
 
 # edge cases ##################################################################
 
+@test "'move <notebook>:<id> <notebook>:<folder-id>/' moves file." {
+  {
+    "${_NB}" init
+
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" use "Example Notebook"
+
+    "${_NB}" add "Example File.md" --content "Example content."
+
+    "${_NB}" add folder "Sample Folder"
+
+    "${_NB}" use "home"
+  }
+
+  run "${_NB}" move       \
+    "Example Notebook:1"  \
+    "Example Notebook:2/" <<< "y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Moves file:
+
+  [[ ! -e "${NB_DIR}/Example Notebook/Example File.md"                ]]
+  [[ ! -e "${NB_DIR}/Example Notebook/2/Example File.md"              ]]
+  [[   -f "${NB_DIR}/Example Notebook/Sample Folder/Example File.md"  ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/Example Notebook" || return 1
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log
+  git log | grep -q '\[nb\] Move'
+
+  # Prints output:
+
+  [[ "${lines[0]}"  =~  Moving:\ \ \ .*\[.*1.*\].*\ .*Example\ File.md  ]]
+  [[ "${lines[1]}"  =~  \
+To:\ \ \ \ \ \ \ .*Example\ Notebook:Sample\ Folder/Example\ File.md    ]]
+  [[ "${lines[2]}"  =~  \
+Moved\ to:\ .*Example\ Notebook:Sample\ Folder/Example\ File.md         ]]
+}
+
 @test "'move <notebook-1>:<id> <notebook-2>:<folder>/' with <notebook-1> as current moves file." {
   {
     "${_NB}" init
