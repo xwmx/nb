@@ -887,7 +887,7 @@ export _TPUT_SMUL=
 _color_brackets() {
   if ! ((_COLOR_ENABLED))
   then
-    printf "[%s]\\n" "${1:-}"
+    printf "[%s]" "${1:-}"
     return 0
   fi
 
@@ -909,7 +909,7 @@ _color_brackets() {
 _color_muted() {
   if ! ((_COLOR_ENABLED))
   then
-    printf "%s\\n" "${1:-}"
+    printf "%s" "${1:-}"
     return 0
   fi
 
@@ -2945,12 +2945,24 @@ _spinner() {
   while ps a | awk '{print $1}' | grep -q "${_pid}"
   do
     local _temp="${_spin_string#?}"
-    printf " [%c]" "${_spin_string}"
-    _spin_string="${_temp}${_spin_string%"${_temp}"}"
+
+    printf " %s%s[%s%c%s]%s"    \
+      "${_TPUT_SGR0}"           \
+      "${_TPUT_SETAF_8}"        \
+      "${_TPUT_COLOR_PRIMARY}"  \
+      "${_spin_string}"         \
+      "${_TPUT_SETAF_8}"        \
+      "${_TPUT_SGR0}"
+
     sleep ${_delay}
-    printf "\b\b\b\b\b\b"
+
+    _spin_string="${_temp}${_spin_string%"${_temp}"}"
+
+    printf "\b\b\b\b\b\b\b\b"
+
   done
-  printf "    \b\b\b\b"
+
+  printf "        \b\b\b\b\b\b\b\b"
 }
 
 # _string_is_email()
