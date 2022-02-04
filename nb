@@ -2945,7 +2945,7 @@ _spinner() {
   while ps a | awk '{print $1}' | grep -q "${_pid}"
   do
     local _temp="${_spin_string#?}"
-    printf " [%c]  " "${_spin_string}"
+    printf " [%c]" "${_spin_string}"
     _spin_string="${_temp}${_spin_string%"${_temp}"}"
     sleep ${_delay}
     printf "\b\b\b\b\b\b"
