@@ -12543,7 +12543,7 @@ _bookmark() {
     local _relative_path=
 
     _relative_folder_path="$(
-      _selector_resolve_folders "${_arguments[0]}" --build || :
+      _selector_resolve_folders "${_arguments[0]:-}" --build || :
     )"
 
     if [[ -n "${_relative_folder_path:-}"   ]]
