@@ -4,7 +4,6 @@ load test_helper
 
 # --build #####################################################################
 
-# TODO
 @test "'_selector_resolve_folders <existing-folder> --build' (no slash) resolves existing folder name." {
   {
     "${_NB}" init
