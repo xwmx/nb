@@ -11607,7 +11607,7 @@ _add() {
     _resolved_selector_folder_relative_path="$(
       _selector_resolve_folders               \
         "${_selector_folder_relative_path}/"  \
-        --build
+        --build || :
     )"
 
     if [[ -n "${_resolved_selector_folder_relative_path:-}" ]]
@@ -13886,14 +13886,14 @@ _import() {
         fi
 
         _target_folder_relative_path="$(
-          _selector_resolve_folders "${_selector_path}" --build
+          _selector_resolve_folders "${_selector_path}" --build || :
         )"
 
         _target_relative_path="${_target_folder_relative_path}/${_source_basename}"
       elif [[ "${_selector_path}" =~ /      ]]
       then
         _target_folder_relative_path="$(
-          _selector_resolve_folders "${_selector_path}" --build
+          _selector_resolve_folders "${_selector_path}" --build || :
         )"
 
         _target_relative_path="${_target_folder_relative_path}/${_selector_path##*\/}"
@@ -14418,7 +14418,7 @@ _move() {
   if [[ -n "${_target_selector_relative_path:-}"  ]]
   then
     _target_folder_relative_path="$(
-      _selector_resolve_folders "${_target_selector_relative_path}" --build
+      _selector_resolve_folders "${_target_selector_relative_path}" --build || :
     )"
 
     if [[ -z "${_target_folder_relative_path:-}"  ]]
@@ -18371,7 +18371,7 @@ HEREDOC
       else
         _selector_relative_folder_path="${_selector#*:}"
         _relative_folder_path="$(
-          _selector_resolve_folders "${_selector_relative_folder_path}"
+          _selector_resolve_folders "${_selector_relative_folder_path}" || :
         )"
       fi
 
