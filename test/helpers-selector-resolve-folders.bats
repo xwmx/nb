@@ -5,37 +5,7 @@ load test_helper
 # --build #####################################################################
 
 # TODO
-# @test "'_selector_resolve_folders <existing-folder> --build' (no slash) resolves existing folder name." {
-#   {
-#     "${_NB}" init
-#     "${_NB}" add "A Folder" --type folder
-#     "${_NB}" add "Example Folder/A Nested Folder" --type folder
-
-#     "${_NB}" add "Example Folder/Example File.md"         \
-#       --content "Example content."
-
-#     [[ -f "${NB_DIR}/home/Example Folder/Example File.md" ]]
-
-#     [[ -d "${NB_DIR}/home/A Folder"                       ]]
-#     [[ -d "${NB_DIR}/home/Example Folder"                 ]]
-#     [[ -d "${NB_DIR}/home/Example Folder/A Nested Folder" ]]
-
-#     "${_NB}" notebooks add "one"
-#     "${_NB}" use "one"
-
-#     [[ "$("${_NB}" notebooks current)" == "one"           ]]
-#   }
-
-#   run "${_NB}" helpers selector_resolve_folders "Example Folder" --build
-
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
-
-#   [[ "${status}"  -eq 0                 ]]
-#   [[ "${output}"  ==  "Example Folder"  ]]
-# }
-
-@test "'_selector_resolve_folders <new-segment> --build' (no slash) prints nothing." {
+@test "'_selector_resolve_folders <existing-folder> --build' (no slash) resolves existing folder name." {
   {
     "${_NB}" init
     "${_NB}" add "A Folder" --type folder
@@ -50,10 +20,34 @@ load test_helper
     [[ -d "${NB_DIR}/home/Example Folder"                 ]]
     [[ -d "${NB_DIR}/home/Example Folder/A Nested Folder" ]]
 
-    "${_NB}" notebooks add "one"
-    "${_NB}" use "one"
+    [[ "$("${_NB}" notebooks current)" == "home"          ]]
+  }
 
-    [[ "$("${_NB}" notebooks current)" == "one"           ]]
+  run "${_NB}" helpers selector_resolve_folders "Example Folder" --build
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0                 ]]
+  [[ "${output}"  ==  "Example Folder"  ]]
+}
+
+@test "'_selector_resolve_folders <new-segment> --build' (no slash) returns 1 and prints nothing." {
+  {
+    "${_NB}" init
+    "${_NB}" add "A Folder" --type folder
+    "${_NB}" add "Example Folder/A Nested Folder" --type folder
+
+    "${_NB}" add "Example Folder/Example File.md"         \
+      --content "Example content."
+
+    [[ -f "${NB_DIR}/home/Example Folder/Example File.md" ]]
+
+    [[ -d "${NB_DIR}/home/A Folder"                       ]]
+    [[ -d "${NB_DIR}/home/Example Folder"                 ]]
+    [[ -d "${NB_DIR}/home/Example Folder/A Nested Folder" ]]
+
+    [[ "$("${_NB}" notebooks current)" == "home"          ]]
   }
 
   run "${_NB}" helpers selector_resolve_folders "Sample Folder" --build
@@ -61,7 +55,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"  -eq 0  ]]
+  [[    "${status}"  -eq 1  ]]
   [[ -z "${output}"         ]]
 }
 
@@ -80,10 +74,7 @@ load test_helper
     [[ -d "${NB_DIR}/home/Example Folder"                 ]]
     [[ -d "${NB_DIR}/home/Example Folder/A Nested Folder" ]]
 
-    "${_NB}" notebooks add "one"
-    "${_NB}" use "one"
-
-    [[ "$("${_NB}" notebooks current)" == "one"           ]]
+    [[ "$("${_NB}" notebooks current)" == "home"          ]]
   }
 
   run "${_NB}" helpers selector_resolve_folders "Sample Folder/" --build
@@ -110,10 +101,7 @@ load test_helper
     [[ -d "${NB_DIR}/home/Example Folder"                 ]]
     [[ -d "${NB_DIR}/home/Example Folder/A Nested Folder" ]]
 
-    "${_NB}" notebooks add "one"
-    "${_NB}" use "one"
-
-    [[ "$("${_NB}" notebooks current)" == "one"           ]]
+    [[ "$("${_NB}" notebooks current)" == "home"          ]]
   }
 
   run "${_NB}" helpers selector_resolve_folders "Sample Folder/Example file.md" --build

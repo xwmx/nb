@@ -2657,7 +2657,7 @@ _selector_resolve_folders() {
         _build_path=1
         ;;
       *)
-        if [[ -z "${_selector:-}" ]]
+        if [[ -z "${_selector:-}"   ]]
         then
           _selector="${__arg}"
         else
@@ -2669,14 +2669,14 @@ _selector_resolve_folders() {
 
   local _selector_path="${_selector#*:}"
 
-  if [[ "${_selector}" =~ :       ]]
+  if [[ "${_selector}" =~ :         ]]
   then
     local _selector_notebook_path=
     _selector_notebook_path="$(
       _notebooks show "${_selector%%:*}" --path 2>/dev/null || :
     )"
 
-    if [[ -n "${_selector_notebook_path:-}" ]]
+    if [[ -n "${_selector_notebook_path:-}"     ]]
     then
       _notebook_path="${_selector_notebook_path}"
     fi
@@ -2689,10 +2689,19 @@ _selector_resolve_folders() {
 
   if [[ "${_selector_path}" =~ ^/   ]]
   then
-    _selector="${_selector_path#"${_notebook_path}"/}"
+    _selector_path="${_selector_path#"${_notebook_path}"/}"
   fi
 
-  [[ ! "${_selector_path}"  =~ /    ]] && return 0
+  if [[ ! "${_selector_path}"  =~ / ]]
+  then
+    if ((_build_path))
+    then
+      _build_path=0
+      _selector_path="${_selector_path}/"
+    else
+      return 0
+    fi
+  fi
 
   while [[ "${_selector_path}" =~ / ]]
   do
