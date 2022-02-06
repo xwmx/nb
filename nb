@@ -15498,6 +15498,13 @@ _search() {
             _search_args+=("--no-recursive")
           fi
 
+          local _search_args_no_color=("--color=never")
+
+          if [[ -n "${_search_args[*]:-}" ]]
+          then
+            _search_args_no_color+=("${_search_args[@]:-}")
+          fi
+
           if ((_COLOR_ENABLED))
           then
             _search_args+=("--color=always")
@@ -15569,7 +15576,7 @@ _search() {
                       --ignore-case                   \
                       --null                          \
                       --text                          \
-                      "${_search_args[@]:-}"          \
+                      "${_search_args_no_color[@]:-}" \
                       -e "${__and_query:-}"           \
                         || return 0  # Don't fail out within a single scope.
                   } > "${_this_pipe:-}" &
