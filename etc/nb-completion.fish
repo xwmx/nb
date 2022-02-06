@@ -6,11 +6,11 @@
 #  / / | | | | |_) |
 # /_/  |_| |_|_.__/
 #
-# `nb` · `notes` && `bookmark`
-#
-# Command line note-taking, bookmarking, and archiving with encryption, search,
-# Git-backed versioning and syncing, Pandoc-backed format conversion, and more
-# in a single portable script.
+# [nb] Command line and local web note-taking, bookmarking, and archiving with
+# plain text data storage, encryption, filtering and search, pinning, #tagging,
+# Git-backed versioning and syncing, Pandoc-backed conversion, global and local
+# notebooks, customizable color themes, [[wiki-style linking]], plugins, and
+# more in a single portable, user-friendly script.
 #
 # https://github.com/xwmx/nb
 ###############################################################################
