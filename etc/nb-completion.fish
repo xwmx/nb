@@ -44,64 +44,6 @@ function _nb_subcommands
     if test "$_commands_cached" != (string join " " $_commands)
       or test "$_notebooks_cached" != (string join " " $_notebooks)
 
-      # \036 means Record Separator (RS). Each record has help for each command.
-      nb subcommands describe --all | read -azd \036 _descriptions
-
-      set __count (count $_descriptions)
-      set __i 0
-      while test $__i -lt $__count
-        set __i (math $__i + 1)
-
-        # \037 means Unit Separator (US). Each unit has command and description.
-        echo $_descriptions[$__i] | read -azd \037 __columns
-        set __command $__columns[1]
-        set __help (echo $__columns[2] | string join \t)
-
-        if eval set -q __desc_$__command
-          continue
-        end
-
-        # Read the description up to 40 chars.
-        set ___desc (echo $__help | string match -r 'Description:\t  (.*?)\.')[2]
-        if test -z $___desc
-          continue
-        end
-        set ___desc (string replace -a \t '' $___desc | string sub -l 40)
-        if test (string length $___desc) = 40
-          set ___desc (string sub -l 38 $___desc)……
-        end
-
-        eval set __desc_$__command \$___desc
-
-        # When __command is an alias for another command, also set the
-        # description for that.
-        set ___original_name (string match -r 'Usage:\s+nb\s+(\S+)' $___help)[2]
-        if test -n $___original_name
-          and test "$___original_name" != $__command
-          and not set -q __desc_$___original_name
-          eval set __desc_$___original_name \$___desc
-        end
-
-        # When __command has aliases, also set the description for them.
-        set ___aliases (string match -r 'Aliases: `([^\t]*)`' $___help)[2]
-        if test -n $___aliases
-          set ___aliases (string split '`, `' $___aliases)
-          for ___alias in $___aliases
-            if not eval set -q __desc_$___alias
-              eval set __desc_$___alias \$___desc
-            end
-          end
-        end
-      end
-
-      for __command in $_commands
-        if eval set -q __desc_$__command
-          eval set -a _completions \$__command\\t\$__desc_$__command
-        else
-          set -a _completions $_commands
-        end
-      end
-
       # Construct <nootbook>:<subcommand> completions.
       for __notebook in $_notebooks
         for __command in $_commands
