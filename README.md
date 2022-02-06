@@ -304,7 +304,7 @@ bpkg install xwmx/nb
 
 #### Tab Completion
 
-Bash and Zsh tab completion should be enabled
+Bash, Fish, and Zsh tab completion should be enabled
 when `nb` is installed using the methods above,
 assuming you have the appropriate system permissions or installed with `sudo`.
 If completion isn't working after installing `nb`, see the
