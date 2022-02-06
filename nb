@@ -8365,6 +8365,7 @@ __load_plugins() {
 export _NORMALIZED_OPTIONS=()
 _normalize_options() {
   local _character=
+  local _character_string=
   local _options=()
 
   while ((${#}))
@@ -8376,10 +8377,15 @@ _normalize_options() {
         local i=
         for ((i=1; i < ${#1}; i++))
         do
-          # extract 1 character from position 'i'
           _character="${1:i:1}"
-          # add current char to options
-          _options+=("-${_character}")
+          _character_string+="${_character}"
+
+          if [[ ! "${_character}"     =~ [0-9]  ]] ||
+             [[ ! "${1:$((i + 1)):1}" =~ [0-9]  ]]
+          then
+            _options+=("-${_character_string}")
+            _character_string=
+          fi
         done
         ;;
       # if option is of type --foo=bar, split on first '='

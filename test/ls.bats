@@ -1765,7 +1765,19 @@ Help information:
 
 @test "'ls -<limit>' exits with 0 and lists limited files." {
   {
-    _setup_ls
+    "${_NB}" init
+
+    declare _numbers=(
+      One Two Three Four Five Six Seven Eight Nine Ten
+      Eleven Twelve Thirteen Fourteen Fifteen Sixteen
+      Seventeen Eighteen Nineteen Twenty
+    )
+
+    declare __number=
+    for   __number in "${_numbers[@]}"
+    do
+      "${_NB}" add "File ${__number}.md" --title "Title ${__number}"
+    done
 
     "${_NB}" set footer 0
   }
@@ -1776,22 +1788,63 @@ Help information:
   printf "\${output}:     '%s'\\n" "${output}"
   printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ "${status}"    -eq 0     ]]
-  [[ "${#lines[@]}" -eq 5     ]]
-  [[ "${lines[2]}"  =~  three ]]
-  [[ "${lines[3]}"  =~  two   ]]
+  [[ "${status}"    -eq 0         ]]
+  [[ "${#lines[@]}" -eq 5         ]]
+  [[ "${lines[2]}"  =~  Twenty    ]]
+  [[ "${lines[3]}"  =~  Nineteen  ]]
 
-  run "${_NB}" ls -3
+  run "${_NB}" ls -13
 
   printf "\${status}:     '%s'\\n" "${status}"
   printf "\${output}:     '%s'\\n" "${output}"
   printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[ "${status}"    -eq 0     ]]
-  [[ "${#lines[@]}" -eq 5     ]]
-  [[ "${lines[2]}"  =~  three ]]
-  [[ "${lines[3]}"  =~  two   ]]
-  [[ "${lines[4]}"  =~  one   ]]
+  [[ "${status}"    -eq 0         ]]
+  [[ "${#lines[@]}" -eq 16        ]]
+  [[ "${lines[2]}"  =~  Twenty    ]]
+  [[ "${lines[3]}"  =~  Nineteen  ]]
+}
+
+@test "'-<limit>' (no ls) exits with 0 and lists limited files." {
+  {
+    "${_NB}" init
+
+    declare _numbers=(
+      One Two Three Four Five Six Seven Eight Nine Ten
+      Eleven Twelve Thirteen Fourteen Fifteen Sixteen
+      Seventeen Eighteen Nineteen Twenty
+    )
+
+    declare __number=
+    for   __number in "${_numbers[@]}"
+    do
+      "${_NB}" add "File ${__number}.md" --title "Title ${__number}"
+    done
+
+    "${_NB}" set footer 0
+  }
+
+  run "${_NB}" -2
+
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
+
+  [[ "${status}"    -eq 0         ]]
+  [[ "${#lines[@]}" -eq 5         ]]
+  [[ "${lines[2]}"  =~  Twenty    ]]
+  [[ "${lines[3]}"  =~  Nineteen  ]]
+
+  run "${_NB}" -13
+
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
+
+  [[ "${status}"    -eq 0         ]]
+  [[ "${#lines[@]}" -eq 16        ]]
+  [[ "${lines[2]}"  =~  Twenty    ]]
+  [[ "${lines[3]}"  =~  Nineteen  ]]
 }
 
 @test "'ls --<limit>' exits with 0 and lists limited files." {
