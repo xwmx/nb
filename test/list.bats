@@ -1467,6 +1467,35 @@ HEREDOC
   [[ "${lines[2]}"  =~  1\ omitted\.\ 3\ total\.  ]]
 }
 
+@test "'list -<limit>' exits with 0 and displays list with 11 items." {
+  {
+    "${_NB}" init
+
+    declare _numbers=(
+      One Two Three Four Five Six Seven Eight Nine Ten
+      Eleven Twelve Thirteen Fourteen Fifteen Sixteen
+      Seventeen Eighteen Nineteen Twenty
+    )
+
+    declare __number=
+    for   __number in "${_numbers[@]}"
+    do
+      "${_NB}" add "File ${__number}.md" --title "Title ${__number}"
+    done
+  }
+
+  run "${_NB}" list -13
+
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
+
+  [[ "${status}"    -eq 0                               ]]
+  [[ "${#lines[@]}" -eq 14                              ]]
+  [[ "${lines[12]}"  =~  .*\[.*8.*\].*\ \ Title\ Eight  ]]
+  [[ "${lines[13]}"  =~  7\ omitted\.\ 20\ total\.      ]]
+}
+
 @test "'list --<limit>' exits with 0 and displays list with 2 items." {
   {
     _setup_list_limit

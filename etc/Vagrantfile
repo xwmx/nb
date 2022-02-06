@@ -126,9 +126,13 @@ git config --global user.name   "Example Name"
 git config --global user.email  "example@example.test"
 HEREDOC
 
+  # Ubuntu Boxes:
+  #
+  # https://app.vagrantup.com/ubuntu
+
   # Ubuntu 20.10
   # config.vm.define "ubuntu2010" do |ubuntu2010|
-  #   ubuntu2010.vm.box = "ubuntu/groovy64"
+  #   ubuntu2010.vm.box = "ubuntu/impish64"
   #   ubuntu2010.vm.provision :shell, inline: $ubuntu_setup, privileged: false
   # end
 

@@ -387,7 +387,7 @@ th {
   .nav-list-item {
     @media (max-width: 50rem) {
       display:              inline-block;
-      font-size:            1rem !important;
+      font-size:            1rem    !important;
     }
 
     &:first-child .nav-list-link.active {
@@ -403,12 +403,10 @@ th {
       }
     }
 
-    &.nav-settings code {
-      padding:              0 0.4em;
-    }
-
     code,
     &.nav-settings code {
+      padding:              0.1em 0.25em 0.17em;
+
       @media (max-width: 50rem) {
         padding:            0.1rem 0.3rem;
       }
@@ -417,6 +415,7 @@ th {
     .nav-list-link {
       @media only screen and (min-width: 50rem) {
         line-height:        1rem    !important;
+        padding-left:       1.25rem !important;
       }
 
       @media (max-width: 50rem) {

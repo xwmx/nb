@@ -74,7 +74,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="6.8.2"
+_VERSION="6.9.0"
 
 # $_ME
 #
@@ -887,7 +887,7 @@ export _TPUT_SMUL=
 _color_brackets() {
   if ! ((_COLOR_ENABLED))
   then
-    printf "[%s]\\n" "${1:-}"
+    printf "[%s]" "${1:-}"
     return 0
   fi
 
@@ -909,7 +909,7 @@ _color_brackets() {
 _color_muted() {
   if ! ((_COLOR_ENABLED))
   then
-    printf "%s\\n" "${1:-}"
+    printf "%s" "${1:-}"
     return 0
   fi
 
@@ -2657,7 +2657,7 @@ _selector_resolve_folders() {
         _build_path=1
         ;;
       *)
-        if [[ -z "${_selector:-}" ]]
+        if [[ -z "${_selector:-}"   ]]
         then
           _selector="${__arg}"
         else
@@ -2669,14 +2669,14 @@ _selector_resolve_folders() {
 
   local _selector_path="${_selector#*:}"
 
-  if [[ "${_selector}" =~ :       ]]
+  if [[ "${_selector}" =~ :         ]]
   then
     local _selector_notebook_path=
     _selector_notebook_path="$(
       _notebooks show "${_selector%%:*}" --path 2>/dev/null || :
     )"
 
-    if [[ -n "${_selector_notebook_path:-}" ]]
+    if [[ -n "${_selector_notebook_path:-}"     ]]
     then
       _notebook_path="${_selector_notebook_path}"
     fi
@@ -2689,10 +2689,19 @@ _selector_resolve_folders() {
 
   if [[ "${_selector_path}" =~ ^/   ]]
   then
-    _selector="${_selector_path#"${_notebook_path}"/}"
+    _selector_path="${_selector_path#"${_notebook_path}"/}"
   fi
 
-  [[ ! "${_selector_path}"  =~ /    ]] && return 0
+  if [[ ! "${_selector_path}"  =~ / ]]
+  then
+    if ((_build_path))
+    then
+      _build_path=0
+      _selector_path="${_selector_path}/"
+    else
+      return 0
+    fi
+  fi
 
   while [[ "${_selector_path}" =~ / ]]
   do
@@ -2945,12 +2954,24 @@ _spinner() {
   while ps a | awk '{print $1}' | grep -q "${_pid}"
   do
     local _temp="${_spin_string#?}"
-    printf " [%c]  " "${_spin_string}"
-    _spin_string="${_temp}${_spin_string%"${_temp}"}"
+
+    printf " %s%s[%s%c%s]%s"    \
+      "${_TPUT_SGR0}"           \
+      "${_TPUT_SETAF_8}"        \
+      "${_TPUT_COLOR_PRIMARY}"  \
+      "${_spin_string}"         \
+      "${_TPUT_SETAF_8}"        \
+      "${_TPUT_SGR0}"
+
     sleep ${_delay}
-    printf "\b\b\b\b\b\b"
+
+    _spin_string="${_temp}${_spin_string%"${_temp}"}"
+
+    printf "\b\b\b\b\b\b\b\b"
+
   done
-  printf "    \b\b\b\b"
+
+  printf "        \b\b\b\b\b\b\b\b"
 }
 
 # _string_is_email()
@@ -8344,6 +8365,7 @@ __load_plugins() {
 export _NORMALIZED_OPTIONS=()
 _normalize_options() {
   local _character=
+  local _character_string=
   local _options=()
 
   while ((${#}))
@@ -8355,10 +8377,15 @@ _normalize_options() {
         local i=
         for ((i=1; i < ${#1}; i++))
         do
-          # extract 1 character from position 'i'
           _character="${1:i:1}"
-          # add current char to options
-          _options+=("-${_character}")
+          _character_string+="${_character}"
+
+          if [[ ! "${_character}"     =~ [0-9]  ]] ||
+             [[ ! "${1:$((i + 1)):1}" =~ [0-9]  ]]
+          then
+            _options+=("-${_character_string}")
+            _character_string=
+          fi
         done
         ;;
       # if option is of type --foo=bar, split on first '='
@@ -8827,9 +8854,6 @@ _debug printf "\${_ARGUMENTS[*:-]}:       '%s'\\n"  "${_ARGUMENTS[*]:-}"
 # TODO: Remove
 ###############################################################################
 
-# _color_dim()
-_color_dim()                { _color_muted "${@}";                }
-
 # _get_notebook_identifier()
 _get_notebook_identifier()  { _notebooks show "${@}" --escaped;   }
 
@@ -8874,7 +8898,8 @@ _SCOPED="$(
   fi
 )"
 
-# Color functions.
+# color functions
+_color_dim()          { _color_muted    "${@:-}"; }
 _highlight()          { _color_primary  "${@:-}"; }
 _id_brackets_color()  { _color_brackets "${@:-}"; }
 
@@ -9680,7 +9705,7 @@ _option_get_tags() {
 #                       syntax mode in Ace.
 #   --title             <title> content.
 _render() {
-  # Usage: _render_prepare_file_format <path> <pandoc-enabled>
+  # Usage: _render_prepare_file <path> <pandoc-enabled>
   _render_prepare_file() {
     local _input_file_path="${1:?}"
     local _prepared_file_path="${_input_file_path:-}"
@@ -11588,7 +11613,7 @@ _add() {
     _resolved_selector_folder_relative_path="$(
       _selector_resolve_folders               \
         "${_selector_folder_relative_path}/"  \
-        --build
+        --build || :
     )"
 
     if [[ -n "${_resolved_selector_folder_relative_path:-}" ]]
@@ -11926,8 +11951,9 @@ $(_color_primary "Examples"):
   ${_ME} bookmark open 5
   ${_ME} bk
 
-$(_color_primary "Shortcut Alias"):
+$(_color_primary "Shortcut Aliases"):
   ${_ME} bk
+  ${_ME} bm
 HEREDOC
 }
 _bookmark() {
@@ -12523,16 +12549,13 @@ _bookmark() {
     local _relative_folder_path=
     local _relative_path=
 
-    if [[ "${_arguments[0]:-}" =~ / ]]
-    then
-      _relative_folder_path="$(
-        _selector_resolve_folders "${_arguments[0]}" --build
-      )"
+    _relative_folder_path="$(
+      _selector_resolve_folders "${_arguments[0]:-}" --build || :
+    )"
 
-      if [[ -n "${_relative_folder_path:-}" ]]
-      then
-        _relative_folder_path="${_relative_folder_path}/"
-      fi
+    if [[ -n "${_relative_folder_path:-}"   ]]
+    then
+      _relative_folder_path="${_relative_folder_path}/"
     fi
 
     if [[ -z "${_target_filename:-}"        ]]
@@ -12557,13 +12580,13 @@ _bookmark() {
 
     local _add_options=("${_relative_path}")
 
-    ((_encrypt))              && _add_options+=("--encrypt")
-    ((_edit_before_commit))   && _add_options+=("--edit")
-    [[ -n "${_password:-}" ]] && _add_options+=("--password" "${_password}")
+    ((_encrypt))                &&  _add_options+=("--encrypt")
+    ((_edit_before_commit))     &&  _add_options+=("--edit")
+    [[ -n "${_password:-}"  ]]  &&  _add_options+=("--password" "${_password}")
 
     printf "%s" "${_bookmark_content}" | _add "${_add_options[@]}"
 
-    [[ -f "${_temp_file:-}" ]] && rm -f "${_temp_file:?}"
+    [[ -f "${_temp_file:-}" ]]  &&  rm -f "${_temp_file:?}"
 
     exit 0
   fi
@@ -12594,45 +12617,48 @@ HEREDOC
 }
 _completions() {
   local _BASH_COMP_NAME="nb"
+  local _FISH_COMP_NAME="nb.fish"
   local _ZSH_COMP_NAME="_nb"
 
   # Usage: _completions_check
   _completions_check() {
-    local _bash_completion_path=
-    _bash_completion_path="$(_get_bash_completion_path)"
-
     local _exists=0
 
-    if [[ -n "${_bash_completion_path:-}" ]] &&
-       [[ -d "${_bash_completion_path}"   ]]
-    then
-      if [[ -w "${_bash_completion_path}" ]]
-      then
-        if [[ -e "${_bash_completion_path}/${_BASH_COMP_NAME}" ]]
-        then
-          _exists=1
-          printf "Exists: %s\\n" "${_bash_completion_path}/${_BASH_COMP_NAME}"
-        fi
-      else
-        _warn printf "Permission denied: %s\\n" "${_bash_completion_path}"
-      fi
-    fi
+    local __shell=
+    for   __shell in bash fish zsh
+    do
+      local _completion_path=
+      local _completion_target=
 
-    local _zsh_completion_path="/usr/local/share/zsh/site-functions"
+      case "${__shell}" in
+        bash)
+          _completion_path="$(_get_bash_completion_path)"
+          _completion_target="${_completion_path}/${_BASH_COMP_NAME}"
+          ;;
+        fish)
+          _completion_path="$(_get_fish_completion_path)"
+          _completion_target="${_completion_path}/${_FISH_COMP_NAME}"
+          ;;
+        zsh)
+          _completion_path="/usr/local/share/zsh/site-functions"
+          _completion_target="${_completion_path}/${_ZSH_COMP_NAME}"
+          ;;
+      esac
 
-    if [[ -d "${_zsh_completion_path}"    ]]
-    then
-      if [[ -w "${_zsh_completion_path}"  ]]
+      if [[ -d "${_completion_path}"        ]]
       then
-        if [[ -e "${_zsh_completion_path}/${_ZSH_COMP_NAME}" ]]
+        if [[ -w "${_completion_path}"      ]]
         then
-          _exists=1
-          printf "Exists: %s\\n" "${_zsh_completion_path}/${_ZSH_COMP_NAME}"
+          if [[ -e "${_completion_target}"  ]]
+          then
+            _exists=1
+            printf "Exists: %s\\n" "${_completion_target}"
+          fi
+        else
+          _warn printf "Permission denied: %s\\n" "${_completion_path}"
         fi
-      else
-        _warn printf "Permission denied: %s\\n" "${_zsh_completion_path}"
       fi
-    fi
+    done
 
     if ! ((_exists))
     then
@@ -12653,8 +12679,7 @@ _completions() {
     then
       local _maybe_path=
       _maybe_path="$(
-        pkg-config \
-          --variable=completionsdir bash-completion 2>/dev/null || true
+        pkg-config --variable=completionsdir bash-completion 2>/dev/null || :
       )"
 
       if [[ -n "${_maybe_path:-}"               ]]
@@ -12676,6 +12701,38 @@ _completions() {
     fi
 
     printf "%s\\n" "${_bash_completion_path:-}"
+  }
+
+  # Usage: _get_fish_completion_path
+  _get_fish_completion_path() {
+    local _fish_completion_path=
+
+    if [[ -z "${_fish_completion_path:-}"       ]]
+    then
+      local _maybe_path=
+      _maybe_path="$(
+        pkg-config --variable=completionsdir fish 2>/dev/null || :
+      )"
+
+      if [[ -n "${_maybe_path:-}"               ]]
+      then
+        _fish_completion_path="${_maybe_path}"
+      fi
+    fi
+
+    if [[ -z "${_fish_completion_path:-}"                 ]] &&
+       [[ -d "/usr/local/share/fish/vendor_completions.d" ]]
+    then
+      _fish_completion_path="/usr/local/share/fish/vendor_completions.d"
+    fi
+
+    if [[ -z "${_fish_completion_path:-}"                 ]] &&
+       [[ -d "/usr/share/fish/vendor_completions.d"       ]]
+    then
+      _fish_completion_path="/usr/share/fish/vendor_completions.d"
+    fi
+
+    printf "%s\\n" "${_fish_completion_path:-}"
   }
 
   # Usage: _completions_install [--download]
@@ -12706,7 +12763,7 @@ _completions() {
     fi
 
     local __shell=
-    for   __shell in bash zsh
+    for   __shell in bash fish zsh
     do
       local _completion_source="${_my_dir}/etc/${_ME}-completion.${__shell}"
 
@@ -12744,6 +12801,10 @@ HEREDOC
           bash)
             _completion_path="$(_get_bash_completion_path)"
             _completion_target="${_completion_path}/${_BASH_COMP_NAME}"
+            ;;
+          fish)
+            _completion_path="$(_get_fish_completion_path)"
+            _completion_target="${_completion_path}/${_FISH_COMP_NAME}"
             ;;
           zsh)
             _completion_path="/usr/local/share/zsh/site-functions"
@@ -12783,12 +12844,16 @@ HEREDOC
     local _completion_target=
 
     local __shell=
-    for   __shell in bash zsh
+    for   __shell in bash fish zsh
     do
       case "${__shell}" in
         bash)
           _completion_path="$(_get_bash_completion_path)"
           _completion_target="${_completion_path}/${_BASH_COMP_NAME}"
+          ;;
+        fish)
+          _completion_path="$(_get_fish_completion_path)"
+          _completion_target="${_completion_path}/${_FISH_COMP_NAME}"
           ;;
         zsh)
           _completion_path="/usr/local/share/zsh/site-functions"
@@ -13870,14 +13935,14 @@ _import() {
         fi
 
         _target_folder_relative_path="$(
-          _selector_resolve_folders "${_selector_path}" --build
+          _selector_resolve_folders "${_selector_path}" --build || :
         )"
 
         _target_relative_path="${_target_folder_relative_path}/${_source_basename}"
       elif [[ "${_selector_path}" =~ /      ]]
       then
         _target_folder_relative_path="$(
-          _selector_resolve_folders "${_selector_path}" --build
+          _selector_resolve_folders "${_selector_path}" --build || :
         )"
 
         _target_relative_path="${_target_folder_relative_path}/${_selector_path##*\/}"
@@ -14397,13 +14462,27 @@ _move() {
     _target_info="$(_notebooks show "${_target_notebook_path}" --name --no-color):"
   fi
 
+  local _target_folder_relative_path=
+
+  if [[ -n "${_target_selector_relative_path:-}"  ]]
+  then
+    _target_folder_relative_path="$(
+      _selector_resolve_folders "${_target_selector_relative_path}" --build || :
+    )"
+
+    if [[ -z "${_target_folder_relative_path:-}"  ]]
+    then
+      _target_folder_relative_path="${_target_selector_relative_path%\/*}"
+    fi
+  fi
+
   local _target_folder_path=
   local _target_relative_path=
 
   if [[   "${_target_selector_relative_path:-}" =~ /            ]]
   then
-    _target_folder_path="${_target_notebook_path}/${_target_selector_relative_path%\/*}"
-    _target_relative_path="${_target_selector_relative_path%\/*}/${_target_basename}"
+    _target_folder_path="${_target_notebook_path}/${_target_folder_relative_path}"
+    _target_relative_path="${_target_folder_relative_path}/${_target_basename}"
   else
     _target_folder_path="${_target_notebook_path}"
     _target_relative_path="${_target_basename}"
@@ -14425,7 +14504,7 @@ _move() {
     while true
     do
       local __yn=
-      IFS='' read -r -e -d $'\n' -p   \
+      IFS='' read -r -e -d $'\n' -p                   \
 "$(_color_primary "Proceed?")  $(_color_brackets "y/N") " __yn
 
       case "${__yn}" in
@@ -15468,6 +15547,13 @@ _search() {
             _search_args+=("--no-recursive")
           fi
 
+          local _search_args_no_color=("--color=never")
+
+          if [[ -n "${_search_args[*]:-}" ]]
+          then
+            _search_args_no_color+=("${_search_args[@]:-}")
+          fi
+
           if ((_COLOR_ENABLED))
           then
             _search_args+=("--color=always")
@@ -15539,7 +15625,7 @@ _search() {
                       --ignore-case                   \
                       --null                          \
                       --text                          \
-                      "${_search_args[@]:-}"          \
+                      "${_search_args_no_color[@]:-}" \
                       -e "${__and_query:-}"           \
                         || return 0  # Don't fail out within a single scope.
                   } > "${_this_pipe:-}" &
@@ -18341,7 +18427,7 @@ HEREDOC
       else
         _selector_relative_folder_path="${_selector#*:}"
         _relative_folder_path="$(
-          _selector_resolve_folders "${_selector_relative_folder_path}"
+          _selector_resolve_folders "${_selector_relative_folder_path}" || :
         )"
       fi
 
