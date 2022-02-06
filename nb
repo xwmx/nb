@@ -12707,6 +12707,12 @@ _completions() {
   _get_fish_completion_path() {
     local _fish_completion_path=
 
+    if [[ -z "${_fish_completion_path:-}"                 ]] &&
+       [[ -d "/usr/local/share/fish/vendor_completions.d" ]]
+    then
+      _fish_completion_path="/usr/local/share/fish/vendor_completions.d"
+    fi
+
     if [[ -z "${_fish_completion_path:-}"       ]]
     then
       local _maybe_path=
@@ -12718,12 +12724,6 @@ _completions() {
       then
         _fish_completion_path="${_maybe_path}"
       fi
-    fi
-
-    if [[ -z "${_fish_completion_path:-}"                 ]] &&
-       [[ -d "/usr/local/share/fish/vendor_completions.d" ]]
-    then
-      _fish_completion_path="/usr/local/share/fish/vendor_completions.d"
     fi
 
     if [[ -z "${_fish_completion_path:-}"                 ]] &&
