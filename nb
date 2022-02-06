@@ -242,6 +242,9 @@ _tput() {
 
         return 0
         ;;
+      setaf|smul)
+        ((_COLOR_ENABLED)) || return 0
+        ;;
     esac
 
     tput "${@:-}" 2>/dev/null || {
