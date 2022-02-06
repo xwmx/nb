@@ -86,7 +86,7 @@ function _nb_subcommands
     return
   end
 
-  set _cache_path $_nb_dir/.cache/nb-completion-cache-fish
+  set _cache_path $_nb_dir/.cache/nb-completion-cache-v2
 
   if not test -e $_cache_path
     _cache_completions $_cache_path
