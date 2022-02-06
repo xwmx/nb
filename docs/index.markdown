@@ -1897,9 +1897,10 @@ For more listing options, see
 [`nb help list`](#list),
 and [`nb help bookmark`](#bookmark).
 
-##### Shortcut Alias: `nb bk`
+##### Shortcut Aliases: `nb bk`, `nb bm`
 
-[`nb bookmark`](#bookmark) can also be used with the alias [`nb bk`](#bookmark):
+[`nb bookmark`](#bookmark) can also be used with the aliases
+[`nb bk`](#bookmark) and [`nb bm`](#bookmark):
 
 ```bash
 ❯ nb bk
@@ -1910,7 +1911,7 @@ Add: nb <url> Help: nb help bookmark
 [3] 🔖 🔒 example-encrypted.bookmark.md.enc
 [1] 🔖 Bookmark One (example.com)
 
-❯ nb bk example.net
+❯ nb bm example.net
 [5] 🔖 Bookmark Two (example.net)
 ```
 
@@ -6266,8 +6267,9 @@ Examples:
   nb bookmark open 5
   nb bk
 
-Shortcut Alias:
+Shortcut Aliases:
   nb bk
+  nb bm
 ```
 
 #### `browse`

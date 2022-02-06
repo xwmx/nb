@@ -11945,8 +11945,9 @@ $(_color_primary "Examples"):
   ${_ME} bookmark open 5
   ${_ME} bk
 
-$(_color_primary "Shortcut Alias"):
+$(_color_primary "Shortcut Aliases"):
   ${_ME} bk
+  ${_ME} bm
 HEREDOC
 }
 _bookmark() {
