@@ -92,9 +92,6 @@ function _nb_subcommands
     _cache_completions $_cache_path
   end
 
-  # list all notes to complete
-  nb run ls | string replace -r '$' \tfile
-
   if test -e $_cache_path
     tail -n+3 $_cache_path
 
