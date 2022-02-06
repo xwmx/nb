@@ -12610,6 +12610,7 @@ HEREDOC
 }
 _completions() {
   local _BASH_COMP_NAME="nb"
+  local _FISH_COMP_NAME="nb.fish"
   local _ZSH_COMP_NAME="_nb"
 
   # Usage: _completions_check
@@ -12669,8 +12670,7 @@ _completions() {
     then
       local _maybe_path=
       _maybe_path="$(
-        pkg-config \
-          --variable=completionsdir bash-completion 2>/dev/null || true
+        pkg-config --variable=completionsdir bash-completion 2>/dev/null || :
       )"
 
       if [[ -n "${_maybe_path:-}"               ]]
@@ -12692,6 +12692,38 @@ _completions() {
     fi
 
     printf "%s\\n" "${_bash_completion_path:-}"
+  }
+
+  # Usage: _get_fish_completion_path
+  _get_fish_completion_path() {
+    local _fish_completion_path=
+
+    if [[ -z "${_fish_completion_path:-}"       ]]
+    then
+      local _maybe_path=
+      _maybe_path="$(
+        pkg-config --variable=completionsdir fish 2>/dev/null || :
+      )"
+
+      if [[ -n "${_maybe_path:-}"               ]]
+      then
+        _fish_completion_path="${_maybe_path}"
+      fi
+    fi
+
+    if [[ -z "${_fish_completion_path:-}"                 ]] &&
+       [[ -d "/usr/local/share/fish/vendor_completions.d" ]]
+    then
+      _fish_completion_path="/usr/local/share/fish/vendor_completions.d"
+    fi
+
+    if [[ -z "${_fish_completion_path:-}"                 ]] &&
+       [[ -d "/usr/share/fish/vendor_completions.d"       ]]
+    then
+      _fish_completion_path="/usr/share/fish/vendor_completions.d"
+    fi
+
+    printf "%s\\n" "${_fish_completion_path:-}"
   }
 
   # Usage: _completions_install [--download]
@@ -12722,7 +12754,7 @@ _completions() {
     fi
 
     local __shell=
-    for   __shell in bash zsh
+    for   __shell in bash fish zsh
     do
       local _completion_source="${_my_dir}/etc/${_ME}-completion.${__shell}"
 
@@ -12760,6 +12792,10 @@ HEREDOC
           bash)
             _completion_path="$(_get_bash_completion_path)"
             _completion_target="${_completion_path}/${_BASH_COMP_NAME}"
+            ;;
+          fish)
+            _completion_path="$(_get_fish_completion_path)"
+            _completion_target="${_completion_path}/${_FISH_COMP_NAME}"
             ;;
           zsh)
             _completion_path="/usr/local/share/zsh/site-functions"
@@ -12799,12 +12835,16 @@ HEREDOC
     local _completion_target=
 
     local __shell=
-    for   __shell in bash zsh
+    for   __shell in bash fish zsh
     do
       case "${__shell}" in
         bash)
           _completion_path="$(_get_bash_completion_path)"
           _completion_target="${_completion_path}/${_BASH_COMP_NAME}"
+          ;;
+        fish)
+          _completion_path="$(_get_fish_completion_path)"
+          _completion_target="${_completion_path}/${_FISH_COMP_NAME}"
           ;;
         zsh)
           _completion_path="/usr/local/share/zsh/site-functions"
