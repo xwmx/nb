@@ -12616,41 +12616,43 @@ _completions() {
 
   # Usage: _completions_check
   _completions_check() {
-    local _bash_completion_path=
-    _bash_completion_path="$(_get_bash_completion_path)"
-
     local _exists=0
 
-    if [[ -n "${_bash_completion_path:-}" ]] &&
-       [[ -d "${_bash_completion_path}"   ]]
-    then
-      if [[ -w "${_bash_completion_path}" ]]
-      then
-        if [[ -e "${_bash_completion_path}/${_BASH_COMP_NAME}" ]]
-        then
-          _exists=1
-          printf "Exists: %s\\n" "${_bash_completion_path}/${_BASH_COMP_NAME}"
-        fi
-      else
-        _warn printf "Permission denied: %s\\n" "${_bash_completion_path}"
-      fi
-    fi
+    local __shell=
+    for   __shell in bash fish zsh
+    do
+      local _completion_path=
+      local _completion_target=
 
-    local _zsh_completion_path="/usr/local/share/zsh/site-functions"
+      case "${__shell}" in
+        bash)
+          _completion_path="$(_get_bash_completion_path)"
+          _completion_target="${_completion_path}/${_BASH_COMP_NAME}"
+          ;;
+        fish)
+          _completion_path="$(_get_fish_completion_path)"
+          _completion_target="${_completion_path}/${_FISH_COMP_NAME}"
+          ;;
+        zsh)
+          _completion_path="/usr/local/share/zsh/site-functions"
+          _completion_target="${_completion_path}/${_ZSH_COMP_NAME}"
+          ;;
+      esac
 
-    if [[ -d "${_zsh_completion_path}"    ]]
-    then
-      if [[ -w "${_zsh_completion_path}"  ]]
+      if [[ -d "${_completion_path}"        ]]
       then
-        if [[ -e "${_zsh_completion_path}/${_ZSH_COMP_NAME}" ]]
+        if [[ -w "${_completion_path}"      ]]
         then
-          _exists=1
-          printf "Exists: %s\\n" "${_zsh_completion_path}/${_ZSH_COMP_NAME}"
+          if [[ -e "${_completion_target}"  ]]
+          then
+            _exists=1
+            printf "Exists: %s\\n" "${_completion_target}"
+          fi
+        else
+          _warn printf "Permission denied: %s\\n" "${_completion_path}"
         fi
-      else
-        _warn printf "Permission denied: %s\\n" "${_zsh_completion_path}"
       fi
-    fi
+    done
 
     if ! ((_exists))
     then
