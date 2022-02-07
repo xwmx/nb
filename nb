@@ -74,7 +74,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="6.9.1"
+_VERSION="6.9.2"
 
 # $_ME
 #
@@ -241,6 +241,9 @@ _tput() {
         fi
 
         return 0
+        ;;
+      setaf|smul)
+        ((${_COLOR_ENABLED:-1})) || return 0
         ;;
     esac
 
@@ -2955,23 +2958,27 @@ _spinner() {
   do
     local _temp="${_spin_string#?}"
 
-    printf " %s%s[%s%c%s]%s"    \
-      "${_TPUT_SGR0}"           \
-      "${_TPUT_SETAF_8}"        \
-      "${_TPUT_COLOR_PRIMARY}"  \
-      "${_spin_string}"         \
-      "${_TPUT_SETAF_8}"        \
-      "${_TPUT_SGR0}"
+    if ((_COLOR_ENABLED))
+    then
+      printf " %s%s[%s%c%s]%s"    \
+        "${_TPUT_SGR0}"           \
+        "${_TPUT_SETAF_8}"        \
+        "${_TPUT_COLOR_PRIMARY}"  \
+        "${_spin_string}"         \
+        "${_TPUT_SETAF_8}"        \
+        "${_TPUT_SGR0}"
+    fi
 
     sleep ${_delay}
 
     _spin_string="${_temp}${_spin_string%"${_temp}"}"
 
-    printf "\b\b\b\b\b\b\b\b"
-
+    ((_COLOR_ENABLED))  && printf         "\b\b\b\b\b\b\b\b"
   done
 
-  printf "        \b\b\b\b\b\b\b\b"
+  ((_COLOR_ENABLED))    && printf "        \b\b\b\b\b\b\b\b"
+
+  return 0
 }
 
 # _string_is_email()
