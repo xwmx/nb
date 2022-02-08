@@ -3007,7 +3007,7 @@ _string_is_email() {
 _string_is_url() {
   [[ -z "${1:-}" ]] && return 1
 
-  # # https://en.wikipedia.org/wiki/List_of_URI_schemes
+  # https://en.wikipedia.org/wiki/List_of_URI_schemes
   local _url_patterns=(
     -e "^([.a-z0-9+-]+)://[^[:space:]]+$"
     -e "^(afp|attachment|platform):/[^[:space:]]+$"
