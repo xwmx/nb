@@ -68,6 +68,7 @@ load test_helper
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+  printf "app://example\\n"
 
   [[      "${status}" -eq 0 ]]
   [[  -z  "${output}"       ]]
@@ -1470,6 +1471,14 @@ load test_helper
 ###############################################################################
 
 @test "'_string_is_url()' doesn't match URLs with other text." {
+  run "${_NB}" helpers string_is_url "http://example.com"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[      "${status}" -eq 0 ]]
+  [[  -z  "${output}"       ]]
+
   run "${_NB}" helpers string_is_url "sample http://example.com"
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -1486,7 +1495,7 @@ load test_helper
   [[      "${status}" -eq 1 ]]
   [[  -z  "${output}"       ]]
 
-  run "${_NB}" helpers string_is_url "samplehttp://example.com"
+  run "${_NB}" helpers string_is_url "sample http://example.com sample"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"

@@ -3009,19 +3009,9 @@ _string_is_url() {
 
   # # https://en.wikipedia.org/wiki/List_of_URI_schemes
   local _url_patterns=(
+    -e "^([.a-z0-9+-]+)://[^[:space:]]+$"
     -e "^(afp|attachment|platform):/[^[:space:]]+$"
-    -e "^(aaas?|acap|adiumxtra|admin|app|aw|beshare|bolo)://[^[:space:]]+$"
-    -e "^(chrome|chrome-extension|coaps?|content|crid|cvs)://[^[:space:]]+$"
-    -e "^(dict|dns|ed2k|facetime|feed|file|finger|fish|ftp)://[^[:space:]]+$"
-    -e "^(git|gizmoproject|go|gopher|h323|http|https|imap)://[^[:space:]]+$"
-    -e "^(irc|irc6|ircs|keyparc|lastfm|ldaps?|market|message)://[^[:space:]]+$"
-    -e "^(mms|ms-help|mumble|ni|nntp|notes|payto|pop|res)://[^[:space:]]+$"
-    -e "^(resource|rmi|rsync|rtmfp|rtmp|s3|secondlife|sftp)://[^[:space:]]+$"
-    -e "^(sgn|slack|smb|snmp|soldat|ssh|steam|stratum\+tcp)://[^[:space:]]+$"
-    -e "^(stratum\+udp|svn|svn\+ssh|teamspeak|telnet|udp)://[^[:space:]]+$"
-    -e "^(unreal|ut2004|ventrilo|vnc|wais|web-[a-z]+|webcal)://[^[:space:]]+$"
-    -e "^(wtai|wyciwyg|xri|z39.50r|z39.50s|zoommtg|zoomus)://[^[:space:]]+$"
-    -e "^(aim):[^[:space:]]+\?[^[:space:]]+$"
+    -e "^aim:[^[:space:]]+\?[^[:space:]]+$"
     -e "^(dab|fm):[^[:space:]]+\.[^[:space:]]+\.[^[:space:]]+$"
     -e "^(data|geo):[^[:space:]]+,[^[:space:]]+$"
     -e "^doi:10\.[^[:space:]]+$"
