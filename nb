@@ -74,7 +74,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="6.9.2"
+_VERSION="6.9.3"
 
 # $_ME
 #
@@ -2949,7 +2949,7 @@ _spinner() {
   local _pid="${1:-}"
   local _spin_string="|/-\\"
 
-  if [[ -z "${_pid}" ]]
+  if [[ -z "${_pid:-}" ]]
   then
     _exit_1 printf "Usage: _spinner <pid>\\n"
   fi
@@ -2967,16 +2967,19 @@ _spinner() {
         "${_spin_string}"         \
         "${_TPUT_SETAF_8}"        \
         "${_TPUT_SGR0}"
+
+      printf "\b\b\b\b\b\b\b\b"
     fi
 
     sleep ${_delay}
 
     _spin_string="${_temp}${_spin_string%"${_temp}"}"
-
-    ((_COLOR_ENABLED))  && printf         "\b\b\b\b\b\b\b\b"
   done
 
-  ((_COLOR_ENABLED))    && printf "        \b\b\b\b\b\b\b\b"
+  if ((_COLOR_ENABLED))
+  then
+    printf "        \b\b\b\b\b\b\b\b"
+  fi
 
   return 0
 }
@@ -3002,7 +3005,36 @@ _string_is_email() {
 #   0 (success, true)  If the string is a recognized URL.
 #   1 (error,  false)  if not.
 _string_is_url() {
-  [[ "${1:-}" =~ ^https\:\/\/|^http\:\/\/|^file\:\/\/|^ftp\:\/\/|^sftp\:\/\/ ]]
+  [[ -z "${1:-}" ]] && return 1
+
+  # https://en.wikipedia.org/wiki/List_of_URI_schemes
+  local _url_patterns=(
+    -e "^([.a-z0-9+-]+)://[^[:space:]]+$"
+    -e "^(afp|attachment|platform):/[^[:space:]]+$"
+    -e "^aim:[^[:space:]]+\?[^[:space:]]+$"
+    -e "^(dab|fm):[^[:space:]]+\.[^[:space:]]+\.[^[:space:]]+$"
+    -e "^(data|geo):[^[:space:]]+,[^[:space:]]+$"
+    -e "^doi:10\.[^[:space:]]+$"
+    -e "^(msnim|things):[^[:space:]]+\?[^[:space:]]+$"
+    -e "^(feed|mvn|paparazzi|view-source):https?://[^[:space:]]+$"
+    -e "^gtalk:chat[^[:space:]]+$"
+    -e "^(im|mailto|reload|sips?|xmpp):[^[:space:]]+\@[^[:space:]]+$"
+    -e "^jar:[^[:space:]]+\!\/[^[:space:]]+$"
+    -e "^magnet:\?xt=urn:[^[:space:]]+$"
+    -e "^maps:q=[^[:space:]]+$"
+    -e "^(sms|tel):\+[0-9]+$"
+    -e "^(jdbc|spotify|urn):[^[:space:]]+:[^[:space:]]+$"
+    -e "^tag:[^[:space:]]+,[^[:space:]]+:[^[:space:]]+$"
+    -e "^ymsgr:sendIM?[^[:space:]]+$"
+    # TODO: develop strategy to avoid matching notebook: selectors
+    # -e "^(apt|amss|barion|bitcoin|callto|cid|dns|drm|fax|gg):[^[:space:]]+$"
+    # -e "^(go|iax|javascript|message|mid|mvn|news|openpgp4fpr):[^[:space:]]+$"
+    # -e "^(palm|pres|proxy|psyc|query|session|shc|skype):[^[:space:]]+$"
+    # -e "^(stuns?|trueconf|turns?|ws|xfire):[^[:space:]]+$"
+    # -e "^itms:$"
+  )
+
+  printf "%s\\n" "${1:-}" | grep -E -q --color=never "${_url_patterns[@]:-}"
 }
 
 # _wrap()
