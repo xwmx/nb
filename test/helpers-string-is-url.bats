@@ -863,6 +863,7 @@ load test_helper
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+  printf "sftp://example.com\\n"
 
   [[      "${status}" -eq 0 ]]
   [[  -z  "${output}"       ]]
@@ -967,6 +968,7 @@ load test_helper
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+  printf "stratum+tcp://example\\n"
 
   [[      "${status}" -eq 0 ]]
   [[  -z  "${output}"       ]]
@@ -975,6 +977,7 @@ load test_helper
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+  printf "stratum+udp://example\\n"
 
   [[      "${status}" -eq 0 ]]
   [[  -z  "${output}"       ]]
@@ -999,6 +1002,7 @@ load test_helper
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+  printf "svn://example\\n"
 
   [[      "${status}" -eq 0 ]]
   [[  -z  "${output}"       ]]
@@ -1007,6 +1011,7 @@ load test_helper
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+  printf "svn+ssh://example\\n"
 
   [[      "${status}" -eq 0 ]]
   [[  -z  "${output}"       ]]
@@ -1015,6 +1020,7 @@ load test_helper
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+  printf "tag:example.com,2222:1234\\n"
 
   [[      "${status}" -eq 0 ]]
   [[  -z  "${output}"       ]]
@@ -1119,6 +1125,7 @@ load test_helper
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+  printf "view-source:https://example.com\\n"
 
   [[      "${status}" -eq 0 ]]
   [[  -z  "${output}"       ]]
@@ -1151,6 +1158,7 @@ load test_helper
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+  printf "webcal://example\\n"
 
   [[      "${status}" -eq 0 ]]
   [[  -z  "${output}"       ]]
@@ -1191,6 +1199,7 @@ load test_helper
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+  printf "xmpp://sample@example\\n"
 
   [[      "${status}" -eq 0 ]]
   [[  -z  "${output}"       ]]
@@ -1199,6 +1208,7 @@ load test_helper
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+  printf "xri://example\\n"
 
   [[      "${status}" -eq 0 ]]
   [[  -z  "${output}"       ]]
@@ -1207,6 +1217,7 @@ load test_helper
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+  printf "ymsgr:sendIM?example\\n"
 
   [[      "${status}" -eq 0 ]]
   [[  -z  "${output}"       ]]
@@ -1448,6 +1459,34 @@ load test_helper
   [[  -z  "${output}"       ]]
 
   run "${_NB}" helpers string_is_url "spotify:example"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[      "${status}" -eq 1 ]]
+  [[  -z  "${output}"       ]]
+}
+
+###############################################################################
+
+@test "'_string_is_url()' doesn't match URLs with other text." {
+  run "${_NB}" helpers string_is_url "sample http://example.com"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[      "${status}" -eq 1 ]]
+  [[  -z  "${output}"       ]]
+
+  run "${_NB}" helpers string_is_url "http://example.com sample"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[      "${status}" -eq 1 ]]
+  [[  -z  "${output}"       ]]
+
+  run "${_NB}" helpers string_is_url "samplehttp://example.com"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
