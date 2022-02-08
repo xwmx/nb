@@ -32,6 +32,11 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
+  run "${_NB}" helpers string_is_url "admin://example"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
   [[      "${status}" -eq 0 ]]
   [[  -z  "${output}"       ]]
 
@@ -52,6 +57,14 @@ load test_helper
   [[  -z  "${output}"       ]]
 
   run "${_NB}" helpers string_is_url "aim:example?parameters"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[      "${status}" -eq 0 ]]
+  [[  -z  "${output}"       ]]
+
+  run "${_NB}" helpers string_is_url "app://example"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -234,6 +247,17 @@ load test_helper
 
   # [[      "${status}" -eq 0 ]]
   # [[  -z  "${output}"       ]]
+
+  run "${_NB}" helpers string_is_url "doi:10.1000/182"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[      "${status}" -eq 0 ]]
+  [[  -z  "${output}"       ]]
+
+  [[      "${status}" -eq 0 ]]
+  [[  -z  "${output}"       ]]
 
   # run "${_NB}" helpers string_is_url "drm:example"
 
@@ -476,6 +500,22 @@ load test_helper
   # [[  -z  "${output}"       ]]
 
   run "${_NB}" helpers string_is_url "jar:example!/sample"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[      "${status}" -eq 0 ]]
+  [[  -z  "${output}"       ]]
+
+  # run "${_NB}" helpers string_is_url "javascript:example"
+
+  # printf "\${status}: '%s'\\n" "${status}"
+  # printf "\${output}: '%s'\\n" "${output}"
+
+  # [[      "${status}" -eq 0 ]]
+  # [[  -z  "${output}"       ]]
+
+  run "${_NB}" helpers string_is_url "jdbc:example:sample"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -859,6 +899,14 @@ load test_helper
   # [[      "${status}" -eq 0 ]]
   # [[  -z  "${output}"       ]]
 
+  run "${_NB}" helpers string_is_url "slack://example"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[      "${status}" -eq 0 ]]
+  [[  -z  "${output}"       ]]
+
   run "${_NB}" helpers string_is_url "smb://example"
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -908,6 +956,22 @@ load test_helper
   [[  -z  "${output}"       ]]
 
   run "${_NB}" helpers string_is_url "steam://example"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[      "${status}" -eq 0 ]]
+  [[  -z  "${output}"       ]]
+
+  run "${_NB}" helpers string_is_url "stratum+tcp://example"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[      "${status}" -eq 0 ]]
+  [[  -z  "${output}"       ]]
+
+  run "${_NB}" helpers string_is_url "stratum+udp://example"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -1075,6 +1139,14 @@ load test_helper
   [[      "${status}" -eq 0 ]]
   [[  -z  "${output}"       ]]
 
+  run "${_NB}" helpers string_is_url "web-example://sample"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[      "${status}" -eq 0 ]]
+  [[  -z  "${output}"       ]]
+
   run "${_NB}" helpers string_is_url "webcal://example"
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -1148,70 +1220,6 @@ load test_helper
   [[  -z  "${output}"       ]]
 
   run "${_NB}" helpers string_is_url "z39.50s://example"
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[      "${status}" -eq 0 ]]
-  [[  -z  "${output}"       ]]
-
-  run "${_NB}" helpers string_is_url "admin://example"
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[      "${status}" -eq 0 ]]
-  [[  -z  "${output}"       ]]
-
-  run "${_NB}" helpers string_is_url "app://example"
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[      "${status}" -eq 0 ]]
-  [[  -z  "${output}"       ]]
-
-  run "${_NB}" helpers string_is_url "doi:10.1000/182"
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[      "${status}" -eq 0 ]]
-  [[  -z  "${output}"       ]]
-
-  # run "${_NB}" helpers string_is_url "javascript:example"
-
-  # printf "\${status}: '%s'\\n" "${status}"
-  # printf "\${output}: '%s'\\n" "${output}"
-
-  # [[      "${status}" -eq 0 ]]
-  # [[  -z  "${output}"       ]]
-
-  run "${_NB}" helpers string_is_url "jdbc:example:sample"
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[      "${status}" -eq 0 ]]
-  [[  -z  "${output}"       ]]
-
-  run "${_NB}" helpers string_is_url "stratum+tcp://example"
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[      "${status}" -eq 0 ]]
-  [[  -z  "${output}"       ]]
-
-  run "${_NB}" helpers string_is_url "stratum+udp://example"
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[      "${status}" -eq 0 ]]
-  [[  -z  "${output}"       ]]
-
-  run "${_NB}" helpers string_is_url "web-example://sample"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -1391,14 +1399,6 @@ load test_helper
   [[      "${status}" -eq 1 ]]
   [[  -z  "${output}"       ]]
 
-  run "${_NB}" helpers string_is_url "notes:"
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[      "${status}" -eq 1 ]]
-  [[  -z  "${output}"       ]]
-
   run "${_NB}" helpers string_is_url "notebook:example"
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -1423,6 +1423,14 @@ load test_helper
   [[      "${status}" -eq 1 ]]
   [[  -z  "${output}"       ]]
 
+  run "${_NB}" helpers string_is_url "notes:"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[      "${status}" -eq 1 ]]
+  [[  -z  "${output}"       ]]
+
   run "${_NB}" helpers string_is_url "platform:123"
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -1440,22 +1448,6 @@ load test_helper
   [[  -z  "${output}"       ]]
 
   run "${_NB}" helpers string_is_url "spotify:example"
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[      "${status}" -eq 1 ]]
-  [[  -z  "${output}"       ]]
-
-  run "${_NB}" helpers string_is_url "urn:"
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[      "${status}" -eq 1 ]]
-  [[  -z  "${output}"       ]]
-
-  run "${_NB}" helpers string_is_url "urn:example"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
