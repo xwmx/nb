@@ -4165,7 +4165,8 @@ HEREDOC
 
         LC_ALL=C sed -E                                                               \
 -e "/^\ \ |\[\[wiki\-style\ linking\]\]/s/(\[|\]|\(|\)|\|)/${_replacement_pattern}/g" \
--e "s/#tag/${_TPUT_SGR0}${_TPUT_SETAF_8}#${_TPUT_SGR0}tag/g"
+-e "s/#tag/${_TPUT_SGR0}${_TPUT_SETAF_8}#${_TPUT_SGR0}tag/g"                          \
+-e "s/(currently\ set\ to: )(.*)/\1${_TPUT_SGR0}${_TPUT_COLOR_PRIMARY}\2${_TPUT_SGR0}/g"
       fi
     } | {
       LC_ALL=C sed -e "s/\`/${_TPUT_SGR0}${_TPUT_SETAF_8}\`${_TPUT_SGR0}/g"
@@ -11334,12 +11335,13 @@ $(_color_primary "Options"):
 $(_color_primary "Description"):
   Create a new note or folder.
 
-  If no arguments are passed, a new blank note file is opened with
-  \`\$EDITOR\`, currently set to "${EDITOR}". If a non-option argument is
-  passed, \`${_ME}\` will treat it as a <filename≥ if a file extension is found.
-  If no file extension is found, \`${_ME}\` will treat the string as
-  <content> and will create a new note without opening the editor.
-  \`${_ME} add\` can also create a new note with piped content.
+  If no arguments are passed, a new blank note file is opened with \`\$EDITOR\`,
+  currently set to: ${EDITOR}
+
+  If a non-option argument is passed, \`${_ME}\` will treat it as a <filename≥
+  if a file extension is found. If no file extension is found,  \`${_ME}\` will
+  treat the string as <content> and will create a new note without opening the
+  editor. \`${_ME} add\` can also create a new note with piped content.
 
   \`${_ME}\` creates Markdown files by default. To create a note with a
   different file type, use the extension in the filename or use the \`--type\`
@@ -13155,10 +13157,11 @@ $(_color_primary "Options"):
                            existing content.
 
 $(_color_primary "Description"):
-  Open the specified note in \`\$EDITOR\`, currently set to "${EDITOR}", or
-  <editor> if specified. Content piped to \`${_ME} edit\` or passed using the
-  \`--content\` option will is appended to the file without opening it
-  in the editor, unless the \`--edit\` flag is specified.
+  Open the specified note in \`\$EDITOR\`, currently set to: ${EDITOR}
+
+  Content piped to \`${_ME} edit\` or passed using the \`--content\` option
+  is appended to the file without opening it in the editor, unless the
+  \`--edit\` flag is specified.
 
   Non-text files are opened in your system's preferred app or program for
   that file type.

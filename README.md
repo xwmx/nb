@@ -6072,12 +6072,13 @@ Options:
 Description:
   Create a new note or folder.
 
-  If no arguments are passed, a new blank note file is opened with
-  `$EDITOR`, currently set to "example". If a non-option argument is
-  passed, `nb` will treat it as a <filename≥ if a file extension is found.
-  If no file extension is found, `nb` will treat the string as
-  <content> and will create a new note without opening the editor.
-  `nb add` can also create a new note with piped content.
+  If no arguments are passed, a new blank note file is opened with `$EDITOR`,
+  currently set to: example
+
+  If a non-option argument is passed, `nb` will treat it as a <filename≥
+  if a file extension is found. If no file extension is found,  `nb` will
+  treat the string as <content> and will create a new note without opening the
+  editor. `nb add` can also create a new note with piped content.
 
   `nb` creates Markdown files by default. To create a note with a
   different file type, use the extension in the filename or use the `--type`
