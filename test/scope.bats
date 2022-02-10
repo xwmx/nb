@@ -11,7 +11,61 @@ _setup_scope() {
   "${_NB}" notebooks add two
 }
 
-# `nb <name>:notebook` #####################################################
+# `nb <notebook>:--option` ####################################################
+
+@test "'nb one:-<limit>' (no space) detects notebook and option." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" notebooks use "Example Notebook"
+
+
+    local __number=
+    for   __number in One Two Three Four Five Six Seven Eight Nine Ten
+    do
+      "${_NB}" add "File ${__number}.md" --title "Title ${__number}"
+    done
+
+    "${_NB}" set footer 0
+
+    "${_NB}" notebooks use "home"
+  }
+
+  run "${_NB}" Example\ Notebook:-7
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[  "${status}"     -eq 0                                             ]]
+  [[  "${#lines[@]}"  -eq 10                                            ]]
+  [[  "${lines[0]}"   =~  Example\ Notebook.*home                       ]]
+  [[  "${lines[1]}"   =~  -------                                       ]]
+  [[  "${lines[2]}"   =~  .*[.*Example\ Notebook:10.*].*\ Title\ Ten    ]]
+  [[  "${lines[3]}"   =~  .*[.*Example\ Notebook:9.*].*\ \ Title\ Nine  ]]
+  [[  "${lines[4]}"   =~  .*[.*Example\ Notebook:8.*].*\ \ Title\ Eight ]]
+  [[  "${lines[5]}"   =~  .*[.*Example\ Notebook:7.*].*\ \ Title\ Seven ]]
+  [[  "${lines[6]}"   =~  .*[.*Example\ Notebook:6.*].*\ \ Title\ Six   ]]
+  [[  "${lines[7]}"   =~  .*[.*Example\ Notebook:5.*].*\ \ Title\ Five  ]]
+  [[  "${lines[8]}"   =~  .*[.*Example\ Notebook:4.*].*\ \ Title\ Four  ]]
+  [[  "${lines[9]}"   =~  3\ omitted\.\ 10\ total\.                     ]]
+
+  run "${_NB}" Example\ Notebook:-3
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[  "${status}"     -eq 0                                             ]]
+  [[  "${#lines[@]}"  -eq 6                                             ]]
+  [[  "${lines[0]}"   =~  Example\ Notebook.*home                       ]]
+  [[  "${lines[1]}"   =~  -------                                       ]]
+  [[  "${lines[2]}"   =~  .*[.*Example\ Notebook:10.*].*\ Title\ Ten    ]]
+  [[  "${lines[3]}"   =~  .*[.*Example\ Notebook:9.*].*\ \ Title\ Nine  ]]
+  [[  "${lines[4]}"   =~  .*[.*Example\ Notebook:8.*].*\ \ Title\ Eight ]]
+  [[  "${lines[5]}"   =~  7\ omitted\.\ 10\ total\.                     ]]
+}
+
+# `nb <name>:notebook` ########################################################
 
 @test "'nb one:notebook' exits with 0 and scoped 'notebook' output." {
   {

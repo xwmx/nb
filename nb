@@ -8813,19 +8813,19 @@ do
       elif _notebooks current --selected
       then
         _ARGUMENTS+=("${__opt}")
-      elif [[ "${_SUBCOMMAND:-}" == "move"    ]] &&
+      elif [[ "${_SUBCOMMAND:-}" == "move"      ]] &&
            ((${#_ARGUMENTS[@]}))
       then
         _ARGUMENTS+=("${__opt}")
-      elif [[ "${_SUBCOMMAND:-}" == "delete"  ]]
+      elif [[ "${_SUBCOMMAND:-}" == "delete"    ]]
       then
         _ARGUMENTS+=("${__opt}")
       else
-        __identifier_or_subcommand_or_url="${__opt#*:}"
+        __selector_suffix="${__opt#*:}"
 
-        if [[ -z "${__identifier_or_subcommand_or_url:-}" ]] &&
-           [[ -n "${_SUBCOMMAND:-}"                       ]] &&
-           [[ ! "${_SUBCOMMAND}" =~ ^ls$|^list$           ]]
+        if [[ -z "${__selector_suffix:-}"       ]] &&
+           [[ -n "${_SUBCOMMAND:-}"             ]] &&
+           [[ ! "${_SUBCOMMAND}" =~ ^ls$|^list$ ]]
         then
           _ARGUMENTS+=("${__opt}")
         else
@@ -8842,14 +8842,17 @@ do
             fi
           fi
 
-          if _is_valid_subcommand "${__identifier_or_subcommand_or_url}"
+          if _is_valid_subcommand "${__selector_suffix}"
           then
-            _SUBCOMMAND="${__identifier_or_subcommand_or_url}"
+            _SUBCOMMAND="${__selector_suffix}"
           else
-            if _string_is_url "${__identifier_or_subcommand_or_url}"
+            if _string_is_url "${__selector_suffix}"
             then
               _SUBCOMMAND="bookmark"
-              _ARGUMENTS+=("${__identifier_or_subcommand_or_url}")
+              _ARGUMENTS+=("${__selector_suffix}")
+            elif [[ "${__selector_suffix}" =~ ^- ]]
+            then
+              _ARGUMENTS+=("${__selector_suffix}")
             else
               _ARGUMENTS+=("${__opt}")
             fi
