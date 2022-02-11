@@ -8728,162 +8728,163 @@ _is_valid_subcommand() {
   [[ -n "${1:-}" ]] &&  [[ "${1:-}" =~ ${_SUBCOMMANDS_PATTERN} ]]
 }
 
-# $__PREVIOUS_OPTION_WAS_FLAG
+# _parse_options()
 #
-# Values: 0, 1
+# Usage:
+#   _parse_options <option>...
 #
-# Arithmethic boolean indicating if the previous option in the loop was a flag.
-__PREVIOUS_OPTION_WAS_FLAG=0
+# Description:
+#   Parse program options.
+_parse_options() {
+  local _previous_option_was_flag=0
 
-# Parse program options.
-while ((${#}))
-do
-  __opt="${1}"
-
-  shift
-
-  case "${__opt}" in
-    -)
-      if [[ -z "${_SUBCOMMAND:-}"     ]]
-      then
-        _SUBCOMMAND="delete"
-      else
-        _ARGUMENTS+=("delete")
-      fi
-      ;;
-    +)
-      if [[ -z "${_SUBCOMMAND:-}"     ]]
-      then
-        _SUBCOMMAND="add"
-      else
-        _ARGUMENTS+=("add")
-      fi
-      ;;
-    -h|--help)
-      case "${_SUBCOMMAND:-}" in
-        git|run)
-          _ARGUMENTS+=("${__opt}")
-          ;;
-        *)
-          if [[ -n "${_SUBCOMMAND:-}" ]]
-          then
-            _ARGUMENTS+=("${_SUBCOMMAND}")
-          fi
-
-          _SUBCOMMAND="help"
-          ;;
-      esac
-      ;;
-    --debug)
-      _USE_DEBUG=1
-      ;;
-    --no*color)
-      _COLOR_ENABLED=0
-      ;;
-    --no*git|--skip*git)
-      _GIT_ENABLED=0
-      ;;
-    --version)
-      if [[ -n "${_SUBCOMMAND:-}"     ]]
-      then
-        _ARGUMENTS+=("${__opt}")
-      else
-        _SUBCOMMAND="version"
-      fi
-      ;;
-    -i|--interactive)
-      case "${_SUBCOMMAND:-}" in
-        git|run)
-          _ARGUMENTS+=("${__opt}")
-          ;;
-        *)
-          _SUBCOMMAND="shell"
-          ;;
-      esac
-      ;;
-    --welcome)
-      _print_welcome
-      ;;
-    *:*)
-      if [[ -z "${_SUBCOMMAND:-}"     ]] &&
-          _string_is_url "${__opt}"
-      then
-        _SUBCOMMAND="bookmark"
-        _ARGUMENTS+=("${__opt}")
-      elif _notebooks current --selected
-      then
-        _ARGUMENTS+=("${__opt}")
-      elif [[ "${_SUBCOMMAND:-}" == "move"      ]] &&
-           ((${#_ARGUMENTS[@]}))
-      then
-        _ARGUMENTS+=("${__opt}")
-      elif [[ "${_SUBCOMMAND:-}" == "delete"    ]]
-      then
-        _ARGUMENTS+=("${__opt}")
-      else
-        __selector_suffix="${__opt#*:}"
-
-        if [[ -z "${__selector_suffix:-}"       ]] &&
-           [[ -n "${_SUBCOMMAND:-}"             ]] &&
-           [[ ! "${_SUBCOMMAND}" =~ ^ls$|^list$ ]]
+  while ((${#}))
+  do
+    case "${1}" in
+      -)
+        if [[ -z "${_SUBCOMMAND:-}"     ]]
         then
-          _ARGUMENTS+=("${__opt}")
+          _SUBCOMMAND="delete"
         else
-          if ! _notebooks select "${__opt}"
-          then
-            if [[ -n "${_SUBCOMMAND:-}" ]] || ((__PREVIOUS_OPTION_WAS_FLAG))
+          _ARGUMENTS+=("delete")
+        fi
+        ;;
+      +)
+        if [[ -z "${_SUBCOMMAND:-}"     ]]
+        then
+          _SUBCOMMAND="add"
+        else
+          _ARGUMENTS+=("add")
+        fi
+        ;;
+      -h|--help)
+        case "${_SUBCOMMAND:-}" in
+          git|run)
+            _ARGUMENTS+=("${1}")
+            ;;
+          *)
+            if [[ -n "${_SUBCOMMAND:-}" ]]
             then
-              _ARGUMENTS+=("${__opt}")
-
-              continue
-            else
-              _exit_1 printf \
-                "Notebook not found: %s\\n" "$(_color_primary "${__opt%%:*}")"
+              _ARGUMENTS+=("${_SUBCOMMAND}")
             fi
-          fi
 
-          if _is_valid_subcommand "${__selector_suffix}"
+            _SUBCOMMAND="help"
+            ;;
+        esac
+        ;;
+      --debug)
+        _USE_DEBUG=1
+        ;;
+      --no*color)
+        _COLOR_ENABLED=0
+        ;;
+      --no*git|--skip*git)
+        _GIT_ENABLED=0
+        ;;
+      --version)
+        if [[ -n "${_SUBCOMMAND:-}"     ]]
+        then
+          _ARGUMENTS+=("${1}")
+        else
+          _SUBCOMMAND="version"
+        fi
+        ;;
+      -i|--interactive)
+        case "${_SUBCOMMAND:-}" in
+          git|run)
+            _ARGUMENTS+=("${1}")
+            ;;
+          *)
+            _SUBCOMMAND="shell"
+            ;;
+        esac
+        ;;
+      --welcome)
+        _print_welcome
+        ;;
+      *:*)
+        if [[ -z "${_SUBCOMMAND:-}"     ]] &&
+            _string_is_url "${1}"
+        then
+          _SUBCOMMAND="bookmark"
+          _ARGUMENTS+=("${1}")
+        elif _notebooks current --selected
+        then
+          _ARGUMENTS+=("${1}")
+        elif [[ "${_SUBCOMMAND:-}" == "move"      ]] &&
+             ((${#_ARGUMENTS[@]}))
+        then
+          _ARGUMENTS+=("${1}")
+        elif [[ "${_SUBCOMMAND:-}" == "delete"    ]]
+        then
+          _ARGUMENTS+=("${1}")
+        else
+          local _selector_suffix="${1#*:}"
+
+          if [[ -z "${_selector_suffix:-}"        ]] &&
+             [[ -n "${_SUBCOMMAND:-}"             ]] &&
+             [[ ! "${_SUBCOMMAND}" =~ ^ls$|^list$ ]]
           then
-            _SUBCOMMAND="${__selector_suffix}"
+            _ARGUMENTS+=("${1}")
           else
-            if _string_is_url "${__selector_suffix}"
+            if ! _notebooks select "${1}"
             then
-              _SUBCOMMAND="bookmark"
-              _ARGUMENTS+=("${__selector_suffix}")
-            elif [[ "${__selector_suffix}" =~ ^- ]]
+              if [[ -n "${_SUBCOMMAND:-}" ]] || ((_previous_option_was_flag))
+              then
+                _ARGUMENTS+=("${1}")
+
+                continue
+              else
+                _exit_1 printf \
+                  "Notebook not found: %s\\n" "$(_color_primary "${1%%:*}")"
+              fi
+            fi
+
+            if _is_valid_subcommand "${_selector_suffix}"
             then
-              _ARGUMENTS+=("${__selector_suffix}")
+              _SUBCOMMAND="${_selector_suffix}"
             else
-              _ARGUMENTS+=("${__opt}")
+              if _string_is_url "${_selector_suffix}"
+              then
+                _SUBCOMMAND="bookmark"
+                _ARGUMENTS+=("${_selector_suffix}")
+              elif [[ "${_selector_suffix}" =~ ^- ]]
+              then
+                _ARGUMENTS+=("${_selector_suffix}")
+              else
+                _ARGUMENTS+=("${1}")
+              fi
             fi
           fi
         fi
-      fi
-      ;;
-    --endopts)
-      # Terminate option parsing.
-      break
-      ;;
-    *)
-      if ! ((__PREVIOUS_OPTION_WAS_FLAG)) &&
-         [[ -z "${_SUBCOMMAND:-}" ]]      &&
-         _is_valid_subcommand "${__opt}"
-      then
-        _SUBCOMMAND="${__opt}"
-      else
-        if [[ "${__opt}" =~ ^-    ]]
+        ;;
+      --endopts)
+        # Terminate option parsing.
+        break
+        ;;
+      *)
+        if ! ((_previous_option_was_flag))  &&
+           [[ -z "${_SUBCOMMAND:-}" ]]      &&
+           _is_valid_subcommand "${1}"
         then
-          __PREVIOUS_OPTION_WAS_FLAG=1
-        elif ((__PREVIOUS_OPTION_WAS_FLAG))
-        then
-          __PREVIOUS_OPTION_WAS_FLAG=0
-        fi
+          _SUBCOMMAND="${1}"
+        else
+          if [[ "${1}" =~ ^-        ]]
+          then
+            _previous_option_was_flag=1
+          elif ((_previous_option_was_flag))
+          then
+            _previous_option_was_flag=0
+          fi
 
-        _ARGUMENTS+=("${__opt}")
-      fi
-      ;;
-  esac
-done
+          _ARGUMENTS+=("${1}")
+        fi
+        ;;
+    esac
+
+    shift
+  done
+}; _parse_options "${@:-}"
 
 _debug printf "\${_SUBCOMMAND}:           '%s'\\n"  "${_SUBCOMMAND}"
 _debug printf "\${NB_NOTEBOOK_PATH}:      '%s'\\n"  "${NB_NOTEBOOK_PATH}"
