@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+###############################################################################
+# bump.nb-plugin
+#
+# An bump plugin for `nb`.
+#
+# Install with:
+#   nb plugin install https://github.com/xwmx/nb/blob/master/plugins/bump.nb-plugin
+#
+# https://github.com/xwmx/nb
+###############################################################################
+
+# Add the new subcommand name with `_subcommands add <name>`.
+_subcommands add "bump"
+_subcommands add "touch"
+
+# Define help and usage text with `_subcommands describe <subcommand> <usage>`.
+_subcommands describe "bump" <<HEREDOC
+Usage:
+  nb bump [<notebook>:][<folder-path>/][<id>][<filename>][<title>]
+
+Description:
+  Bump an item to the top of the list.
+
+  \`bump\` updates the item's modification timestamp without editing the item
+  or creating a new commit.
+
+Alias:
+  nb touch
+HEREDOC
+
+# Define the subcommand as a function, named with a leading underscore.
+_bump() {
+  local _selector="${1:-}"
+
+  local _target_path=
+  _target_path="$(_show "${_selector}" --path)"
+
+  if [[ ! -e "${_target_path:-}" ]]
+  then
+    _help "bump"
+    return 1
+  fi
+
+  touch "${_target_path}"
+
+  _wrap off
+
+  printf "%s to top: %s"          \
+    "$(_color_primary "bumped")"  \
+    "$(_show "${_selector}" --info-line)"
+
+  _wrap on
+
+  printf "\\n"
+}
+
+_alias_subcommand "bump" "touch"

@@ -8398,6 +8398,7 @@ See Also:
 
 <p align="center">
   <a href="#backlink">backlink</a>&nbsp;·
+  <a href="#bump">bump</a>&nbsp;·
   <a href="#clip">clip</a>&nbsp;·
   <a href="#copy">copy</a>&nbsp;·
   <a href="#ebook">ebook</a>&nbsp;·
@@ -8430,6 +8431,24 @@ Description:
     https://github.com/andymatuschak/note-link-janitor
 
     Requirement: every note in the notebook must have a title.
+```
+
+#### `bump`
+
+[↑&nbsp;](#plugins-1)
+
+```text
+Usage:
+  nb bump [<notebook>:][<folder-path>/][<id>][<filename>][<title>]
+
+Description:
+  Bump an item to the top of the list.
+
+  `bump` updates the item's modification timestamp without editing the item
+  or creating a new commit.
+
+Alias:
+  nb touch
 ```
 
 #### `clip`

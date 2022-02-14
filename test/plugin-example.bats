@@ -15,8 +15,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}" == 0               ]]
-  [[ "${output}" == "Hello, World!" ]]
+  [[ "${status}"    ==  0               ]]
+  [[ "${output}"    ==  "Hello, World!" ]]
 }
 
 # help ########################################################################
@@ -32,8 +32,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0                ]]
-  [[ "${lines[0]}" =~ Usage.*\:     ]]
-  [[ "${lines[1]}" =~ nb\ example   ]]
+  [[ "${status}"    -eq 0               ]]
+  [[ "${lines[0]}"  =~  Usage.*\:       ]]
+  [[ "${lines[1]}"  =~  nb\ example     ]]
 }
-
