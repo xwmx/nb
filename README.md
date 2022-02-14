@@ -2977,7 +2977,8 @@ which automatically resizes the form to fit the current terminal window:
 
 Terminal web browsers provide different editing workflows, each with advantages.
 [`w3m`](https://en.wikipedia.org/wiki/W3m) opens items in your `$EDITOR`
-to perform edits, while edits in
+to perform edits, then returns you back to the browser to save changes
+and continue browsing. Edits in
 [`links`](https://en.wikipedia.org/wiki/Links_(web_browser))
 are performed directly in the browser.
 
