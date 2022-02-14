@@ -20009,9 +20009,9 @@ HEREDOC
     if ((_daemon))
     then
       printf "Press %s%s%s to exit%s" \
-        "$(_color_muted "<")"           \
+        "$(_color_muted "<")"         \
         "$(_color_primary "CTRL-C")"  \
-        "$(_color_muted ">")"           \
+        "$(_color_muted ">")"         \
         "$(_color_muted "...")"
 
       while true
