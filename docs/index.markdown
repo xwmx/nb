@@ -2981,6 +2981,12 @@ which automatically resizes the form to fit the current terminal window:
 [save] · last: 2021-01-01 01:00:00
 ```
 
+Terminal web browsers provide different editing workflows, each with advantages.
+[`w3m`](https://en.wikipedia.org/wiki/W3m) opens items in your `$EDITOR`
+to perform edits, while edits in
+[`links`](https://en.wikipedia.org/wiki/Links_(web_browser))
+are performed directly in the browser.
+
 Syntax highlighting, block selection, and other
 [advanced editor features](#browse---gui-editing)
 are available with [`nb browse --gui`](#browse).
