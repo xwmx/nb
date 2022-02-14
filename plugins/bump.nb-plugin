@@ -36,9 +36,10 @@ _bump() {
   local _target_path=
   _target_path="$(_show "${_selector}" --path)"
 
-  if [[ ! -e "${_target_path:-}" ]]
+  if [[ ! -e "${_target_path:-}"  ]]
   then
     _help "bump"
+
     return 1
   fi
 
