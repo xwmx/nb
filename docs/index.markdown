@@ -5065,6 +5065,7 @@ export  NB_INDICATOR_VIDEO="📹"
 <p>
   <sup>
     <a href="#overview">↑</a> ·
+    <a href="#plugin-help">Plugin Help</a>
     <a href="#plugins"><code>nb plugins</code></a>
   </sup>
 </p>
@@ -5594,7 +5595,7 @@ For more commands and options, run
   <a href="#nb-help">nb</a>&nbsp;·
   <a href="#bookmark-help">bookmark</a>&nbsp;·
   <a href="#subcommands">subcommands</a>&nbsp;·
-  <a href="#plugins-1">plugins</a>
+  <a href="#plugin-help">plugins</a>
 </p>
 
 <p align="center">
@@ -7327,6 +7328,7 @@ Examples:
 
 [↑](#help) · See also:
 [Plugins](#-plugins),
+[Plugin Help](#plugin-help),
 [`subcommands`](#subcommands-1)
 
 ```text
@@ -8386,7 +8388,7 @@ See Also:
   nb help update
 ```
 
-### Plugins
+### Plugin Help
 
 <p>
   <sup>
@@ -8411,7 +8413,11 @@ See Also:
 
 #### `backlink`
 
-[↑&nbsp;](#plugins-1)
+[↑&nbsp;](#plugin-help)
+
+```bash
+nb plugins install https://github.com/xwmx/nb/blob/master/plugins/backlink.nb-plugin
+```
 
 ```text
 Usage:
@@ -8435,7 +8441,11 @@ Description:
 
 #### `bump`
 
-[↑&nbsp;](#plugins-1)
+[↑&nbsp;](#plugin-help)
+
+```bash
+nb plugins install https://github.com/xwmx/nb/blob/master/plugins/bump.nb-plugin
+```
 
 ```text
 Usage:
@@ -8453,7 +8463,11 @@ Alias:
 
 #### `clip`
 
-[↑&nbsp;](#plugins-1)
+[↑&nbsp;](#plugin-help)
+
+```bash
+nb plugins install https://github.com/xwmx/nb/blob/master/plugins/clip.nb-plugin
+```
 
 ```text
 Usage:
@@ -8479,7 +8493,11 @@ Examples:
 
 #### `copy`
 
-[↑&nbsp;](#plugins-1)
+[↑&nbsp;](#plugin-help)
+
+```bash
+nb plugins install https://github.com/xwmx/nb/blob/master/plugins/copy.nb-plugin
+```
 
 ```text
 Usage:
@@ -8493,7 +8511,11 @@ Alias: `nb duplicate`
 
 #### `ebook`
 
-[↑&nbsp;](#plugins-1)
+[↑&nbsp;](#plugin-help)
+
+```bash
+nb plugins install https://github.com/xwmx/nb/blob/master/plugins/ebook.nb-plugin
+```
 
 ```text
 Usage:
@@ -8546,7 +8568,11 @@ More info:
 
 #### `example`
 
-[↑&nbsp;](#plugins-1)
+[↑&nbsp;](#plugin-help)
+
+```bash
+nb plugins install https://github.com/xwmx/nb/blob/master/plugins/example.nb-plugin
+```
 
 ```text
 Usage:
