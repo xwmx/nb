@@ -5065,7 +5065,7 @@ export  NB_INDICATOR_VIDEO="📹"
 <p>
   <sup>
     <a href="#overview">↑</a> ·
-    <a href="#plugin-help">Plugin Help</a>
+    <a href="#plugin-help">Plugin Help</a>,
     <a href="#plugins"><code>nb plugins</code></a>
   </sup>
 </p>
