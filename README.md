@@ -2975,7 +2975,7 @@ which automatically resizes the form to fit the current terminal window:
 [save] · last: 2021-01-01 01:00:00
 ```
 
-Terminal web browsers provide different editing workflows, each with advantages.
+Terminal web browsers provide different editing workflows.
 [`w3m`](https://en.wikipedia.org/wiki/W3m) opens items in your `$EDITOR`
 to perform edits, then returns you back to the browser to save changes
 and continue browsing. Edits in
