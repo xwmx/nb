@@ -3585,6 +3585,9 @@ home
 [2] Title Two
 ```
 
+To bump an item to the top of the list without pinning, use the
+[`bump` plugin](#bump).
+
 ### 🔍 Search
 
 <p>
