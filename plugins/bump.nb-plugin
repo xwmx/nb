@@ -2,12 +2,13 @@
 ###############################################################################
 # bump.nb-plugin
 #
-# An bump plugin for `nb`.
+# Bump an item to the top of the list.
 #
 # Install with:
 #   nb plugin install https://github.com/xwmx/nb/blob/master/plugins/bump.nb-plugin
 #
-# https://github.com/xwmx/nb
+# A plugin for `nb`.
+#   https://github.com/xwmx/nb
 ###############################################################################
 
 # Add the new subcommand name with `_subcommands add <name>`.
