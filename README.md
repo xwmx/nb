@@ -8825,7 +8825,7 @@ The `## Content` section makes the page content available locally for
 full-text search and viewing of page content. The source HTML is converted
 to inline Markdown to reduce the amount of markup, make it more readable,
 and make page content easily viewable in the terminal as markdown and
-streamlined HTML in terminal web browsers.
+streamlined HTML in web browsers.
 
 <p>
   <sup>
