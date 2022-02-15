@@ -10133,7 +10133,7 @@ header {
 }
 
 .identifier {         color: ${_color_primary_hex}; }
-.muted      {         color: ${_color_muted_hex};     }
+.muted      {         color: ${_color_muted_hex};   }
 
 form {
   padding-top:        1rem;
@@ -10432,9 +10432,9 @@ code span.bu {                                          } /*    BuiltIn     */
 code span.cf { color: #7290b1;                          } /*  ControlFlow   */
 code span.ch { color: #8987a0;                          } /*      Char      */
 code span.cn { color: #8987a0;      font-weight: bold;  } /*    Constant    */
-code span.co { color: ${_color_muted_hex};                } /*    Comment     */
+code span.co { color: ${_color_muted_hex};              } /*    Comment     */
 code span.cv { color: #7f9f7f;      font-weight: bold;  } /*   CommentVar   */
-code span.do { color: ${_color_muted_hex};                } /* Documentation  */
+code span.do { color: ${_color_muted_hex};              } /* Documentation  */
 code span.dt { color: #cccc96;                          } /*    DataType    */
 code span.dv { color: #cccc96;                          } /*     DecVal     */
 code span.er { color: #cccc96;                          } /*     Error      */
