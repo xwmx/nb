@@ -44,7 +44,7 @@ load test_helper
   [[ "${status}"    ==  0                                         ]]
   [[ "${#lines[@]}" -eq 1                                         ]]
   [[ "${lines[0]}"  =~  \
-bumped.*to\ top:\ .*\[.*2.*\].*\ .*File\ Two\.md                  ]]
+Bumped.*to\ top.*:.*\ .*\[.*2.*\].*\ .*File\ Two\.md              ]]
 
   run "${_NB}"
 
@@ -71,7 +71,7 @@ bumped.*to\ top:\ .*\[.*2.*\].*\ .*File\ Two\.md                  ]]
   [[ "${status}"    ==  0                                         ]]
   [[ "${#lines[@]}" -eq 1                                         ]]
   [[ "${lines[0]}"  =~  \
-bumped.*to\ top:\ .*\[.*1.*\].*\ .*File\ One\.md                  ]]
+Bumped.*to\ top.*:.*\ .*\[.*1.*\].*\ .*File\ One\.md              ]]
 
   run "${_NB}"
 
@@ -133,7 +133,7 @@ bumped.*to\ top:\ .*\[.*1.*\].*\ .*File\ One\.md                  ]]
   [[ "${status}"    ==  0                                         ]]
   [[ "${#lines[@]}" -eq 1                                         ]]
   [[ "${lines[0]}"  =~  \
-bumped.*\ to\ top:\ .*\[.*2.*\].*\ .*File\ Two\.md                ]]
+Bumped.*\ to\ top.*:.*\ .*\[.*2.*\].*\ .*File\ Two\.md            ]]
 
   run "${_NB}"
 
@@ -160,7 +160,7 @@ bumped.*\ to\ top:\ .*\[.*2.*\].*\ .*File\ Two\.md                ]]
   [[ "${status}"    ==  0                                         ]]
   [[ "${#lines[@]}" -eq 1                                         ]]
   [[ "${lines[0]}"  =~  \
-bumped.*to\ top:\ .*\[.*1.*\].*\ .*File\ One\.md                  ]]
+Bumped.*to\ top.*:.*\ .*\[.*1.*\].*\ .*File\ One\.md              ]]
 
   run "${_NB}"
 

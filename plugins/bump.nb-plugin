@@ -47,8 +47,9 @@ _bump() {
 
   _wrap off
 
-  printf "%s to top: %s"          \
-    "$(_color_primary "bumped")"  \
+  printf "%s to top%s %s"          \
+    "$(_color_primary "Bumped")"  \
+    "$(_color_muted   ":")"  \
     "$(_show "${_selector}" --info-line)"
 
   _wrap on
