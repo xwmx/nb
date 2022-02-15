@@ -25,6 +25,10 @@ Description:
   \`bump\` updates the item's modification timestamp without editing the item
   or creating a new commit.
 
+Examples:
+  nb bump 123
+  nb bump example:sample/456
+
 Alias:
   nb touch
 HEREDOC
