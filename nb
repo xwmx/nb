@@ -14977,12 +14977,12 @@ _search() {
   local _print_notebook_selectors=0
   local _print_paths=0
   local _query=
+  local _replacement=
   local _search_args=()
   local _search_for_tags=0
   local _search_utility=
   local _selectors=()
   local _sort=0
-  local _replacement_pattern=
   local _type=
 
   while ((${#}))
@@ -15063,14 +15063,14 @@ _search() {
 
         shift
         ;;
-      -s|--sort)
-        _sort=1
-        ;;
       --replace*)
         # TODO
-        _replacement_pattern="$(_option_get_value "${1}" "${2:-}")"
+        _replacement="$(_option_get_value "${1}" "${2:-}")"
 
         shift
+        ;;
+      -s|--sort)
+        _sort=1
         ;;
       -t|--tag*|--hashtag*)
         if _option_value_is_present "${2:-}"
