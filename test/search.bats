@@ -40,6 +40,64 @@ _search_all_setup() {
   [[ -e "${NB_DIR}/two/.archived" ]]
 }
 
+# --replace ###################################################################
+
+# TODO
+# @test "'search <pattern> --replace <replacement>' exits with status 0 and replaces <pattern> with <replacement>." {
+#   {
+#     "${_NB}" init
+
+#     "${_NB}" add "File One.md"    --content "Content one. #tag3"
+#     "${_NB}" add "File Two.md"    --content "Content two. #tag1"
+#     "${_NB}" add "File Three.md"  --content "Content three. tag1 #tag2"
+#     "${_NB}" add "File Four.md"   --content "Content #tag1 four. #tag2"
+#     "${_NB}" add "File Five.md"   --content "Content tag2 five."
+#     "${_NB}" add "File Six.md"    --content "Content six. #tag2"
+#     "${_NB}" add "File Seven.md"  --content "Content #tag2 Seven. #tag3 #tag1"
+#   }
+
+#   run "${_NB}" search \#tag2 --replace \#example
+
+#   printf "\${status}:   '%s'\\n" "${status}"
+#   printf "\${output}:   '%s'\\n" "${output}"
+#   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
+
+#   [[    "${status}"     -eq 0             ]]
+
+#   # TODO
+
+
+#   # updates files
+
+#   diff                                    \
+#     <(cat "${NB_DIR}/home/File One.md")   \
+#     <(printf "Content one. #tag3")
+
+#   diff                                    \
+#     <(cat "${NB_DIR}/home/File Two.md")   \
+#     <(printf "Content two. #tag1")
+
+#   diff                                    \
+#     <(cat "${NB_DIR}/home/File Three.md") \
+#     <(printf "Content three. tag1 #example")
+
+#   diff                                    \
+#     <(cat "${NB_DIR}/home/File Four.md")  \
+#     <(printf "Content #tag1 four. #example")
+
+#   diff                                    \
+#     <(cat "${NB_DIR}/home/File Five.md")  \
+#     <(printf "Content tag2 five.")
+
+#   diff                                    \
+#     <(cat "${NB_DIR}/home/File Six.md")   \
+#     <(printf "Content six. #example")
+
+#   diff                                    \
+#     <(cat "${NB_DIR}/home/File Seven.md") \
+#     <(printf "Content #example Seven. #tag3 #tag1")
+# }
+
 # tags ########################################################################
 
 @test "'search -t tag1 --and -t tag2,'#tag3' exits with status 0 and prints matches as an AND query." {

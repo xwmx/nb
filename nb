@@ -14982,6 +14982,7 @@ _search() {
   local _search_utility=
   local _selectors=()
   local _sort=0
+  local _replacement_pattern=
   local _type=
 
   while ((${#}))
@@ -15064,6 +15065,12 @@ _search() {
         ;;
       -s|--sort)
         _sort=1
+        ;;
+      --replace*)
+        # TODO
+        _replacement_pattern="$(_option_get_value "${1}" "${2:-}")"
+
+        shift
         ;;
       -t|--tag*|--hashtag*)
         if _option_value_is_present "${2:-}"
