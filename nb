@@ -9079,6 +9079,39 @@ _main "${_ARGUMENTS[@]:-}"
 ###############################################################################
 # --------------------------------------------------------------------------- #
 
+# _build_related_list()
+#
+# Usage:
+#   _build_related_list (<url> | <selector)...
+#
+# Description:
+#   Build a Markdown-formatted list of <url>s and <selector>s for bookmarks
+#   and todos.
+_build_related_list() {
+  local _list_content=
+  local _related_identifiers=("${@:-}")
+
+  local __identifier=
+  for   __identifier in "${_related_identifiers[@]:-}"
+  do
+    if _string_is_url "${__identifier:-}"
+    then
+      _list_content+="- <${__identifier:-}>${_NEWLINE}"
+    else
+      if [[ "${__identifier:-}" =~ \[\[.*\]\] ]]
+      then
+        __identifier="$(
+          sed -E -e "s/\[\[(.*)\]\]/\1/g" <<< "${__identifier:-}"
+        )"
+      fi
+
+      _list_content+="- [[${__identifier:-}]]${_NEWLINE}"
+    fi
+  done
+
+  printf "%s\\n" "${_list_content:-}"
+}
+
 # _decrypt_file()
 #
 # Usage:
@@ -12523,22 +12556,8 @@ _bookmark() {
   if [[ -n "${_related_identifiers[*]:-}" ]]
   then
     _bookmark_content+="${_NEWLINE}## Related${_NEWLINE}${_NEWLINE}"
-
-    local __identifier=
-    for   __identifier in "${_related_identifiers[@]:-}"
-    do
-      if _string_is_url "${__identifier:-}"
-      then
-        _bookmark_content+="- <${__identifier:-}>${_NEWLINE}"
-      else
-        if [[ "${__identifier:-}" =~ \[\[.*\]\] ]]
-        then
-          __identifier="$(sed -E -e "s/\[\[(.*)\]\]/\1/g" <<< "${__identifier:-}")"
-        fi
-
-        _bookmark_content+="- [[${__identifier:-}]]${_NEWLINE}"
-      fi
-    done
+    _bookmark_content+="$(_build_related_list "${_related_identifiers[@]:-}")"
+    _bookmark_content+="${_NEWLINE}"
   fi
 
   if [[ -n "${_tag_list:-}"         ]]
@@ -20104,6 +20123,9 @@ _helpers() {
     *browser*)
       _web_browser                    "${_options[@]:-}"
       ;;
+    build*|*related*)
+      _build_related_list             "${_options[@]:-}"
+      ;;
     *decryption*)
       _get_decryption_tool            "${_options[@]:-}"
       ;;
@@ -22915,22 +22937,8 @@ _todo() {
       if ((${#_related_identifiers[@]}))
       then
         _todo_content+="${_NEWLINE}## Related${_NEWLINE}${_NEWLINE}"
-
-        local __identifier=
-        for   __identifier in "${_related_identifiers[@]:-}"
-        do
-          if _string_is_url "${__identifier:-}"
-          then
-            _todo_content+="- <${__identifier:-}>${_NEWLINE}"
-          else
-            if [[ "${__identifier:-}" =~ \[\[.*\]\] ]]
-            then
-              __identifier="$(sed -E -e "s/\[\[(.*)\]\]/\1/g" <<< "${__identifier:-}")"
-            fi
-
-            _todo_content+="- [[${__identifier:-}]]${_NEWLINE}"
-          fi
-        done
+        _todo_content+="$(_build_related_list "${_related_identifiers[@]:-}")"
+        _todo_content+="${_NEWLINE}"
       fi
 
       if [[ -n "${_tag_list:-}"         ]]
