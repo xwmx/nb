@@ -13,6 +13,7 @@ load test_helper
   run "${_NB}" add todo "Example todo title." \
     --related "http://example.com"            \
     --related "example:123"                   \
+    --related "[[sample:456]]"                \
     --tag     tag1
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -40,6 +41,7 @@ Added:\ .*\[.*1.*\].*\ ✔️\ \ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ Example\ to
 
 - <http://example.com>
 - [[example:123]]
+- [[sample:456]]
 
 ## Tags
 

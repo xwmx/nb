@@ -12531,6 +12531,11 @@ _bookmark() {
       then
         _bookmark_content+="- <${__identifier:-}>${_NEWLINE}"
       else
+        if [[ "${__identifier:-}" =~ \[\[.*\]\] ]]
+        then
+          __identifier="$(sed -E -e "s/\[\[(.*)\]\]/\1/g" <<< "${__identifier:-}")"
+        fi
+
         _bookmark_content+="- [[${__identifier:-}]]${_NEWLINE}"
       fi
     done
@@ -22918,6 +22923,11 @@ _todo() {
           then
             _todo_content+="- <${__identifier:-}>${_NEWLINE}"
           else
+            if [[ "${__identifier:-}" =~ \[\[.*\]\] ]]
+            then
+              __identifier="$(sed -E -e "s/\[\[(.*)\]\]/\1/g" <<< "${__identifier:-}")"
+            fi
+
             _todo_content+="- [[${__identifier:-}]]${_NEWLINE}"
           fi
         done
