@@ -31,7 +31,6 @@ HEREDOC
     )
 }
 
-
 @test "'_build_related_list()' prints nothing with no input." {
   {
     "${_NB}" init
