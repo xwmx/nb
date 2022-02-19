@@ -9082,7 +9082,7 @@ _main "${_ARGUMENTS[@]:-}"
 # _build_related_list()
 #
 # Usage:
-#   _build_related_list (<url> | <selector)...
+#   _build_related_list (<url> | <selector>)...
 #
 # Description:
 #   Build a Markdown-formatted list of <url>s and <selector>s for bookmarks
@@ -9091,9 +9091,12 @@ _build_related_list() {
   local _list_content=
   local _related_identifiers=("${@:-}")
 
+
   local __identifier=
   for   __identifier in "${_related_identifiers[@]:-}"
   do
+    [[ -n "${__identifier:-}" ]] || continue
+
     if _string_is_url "${__identifier:-}"
     then
       _list_content+="- <${__identifier:-}>${_NEWLINE}"

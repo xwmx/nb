@@ -15,7 +15,8 @@ load test_helper
     --filename "example"          \
     --related http://example.org  \
     --related sample:123          \
-    --related "[[demo:456]]"
+    --related "[[demo:456]]"      \
+    --related "Example Title"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -44,6 +45,7 @@ Example description.
 - <http://example.org>
 - [[sample:123]]
 - [[demo:456]]
+- [[Example Title]]
 
 ## Tags
 
