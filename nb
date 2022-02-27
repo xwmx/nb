@@ -20282,6 +20282,9 @@ $(_color_primary "Plugin Extensions"):
 
 $(_color_primary "See Also"):
   ${_ME} help subcommands
+
+$(_color_primary "Alias"):
+  ${_ME} plugin
 HEREDOC
 }
 _plugins() {

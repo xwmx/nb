@@ -7366,6 +7366,9 @@ Plugin Extensions:
 
 See Also:
   nb help subcommands
+
+Alias:
+  nb plugin
 ```
 
 #### `remote`
