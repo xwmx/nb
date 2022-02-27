@@ -2,6 +2,40 @@
 
 load test_helper
 
+# temporary files #############################################################
+
+@test "'list' ignores common temporary files." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md" --content "Example content one."
+    "${_NB}" add "File Two.md" --content "Example content two."
+
+    "${_NB}" run touch "Example Temp One.md~"
+    "${_NB}" run touch "#Example Temp Two.md#"
+    "${_NB}" run touch "Example Temp Three.md.swp"
+    "${_NB}" run touch "Example Temp Four.md.swap"
+    "${_NB}" run touch ".#Example Temp Five.md"
+
+    "${_NB}" add "File Three.md" --content "Example content three."
+  }
+
+  run "${_NB}" list
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0 ]]
+  [[ "${#lines[@]}" -eq 3 ]]
+
+  [[ "${lines[0]}"  =~  \
+.*[.*3.*].*\ File\ Three\.md\ \·\ \"Example\ content\ three\.\" ]]
+  [[ "${lines[1]}"  =~  \
+.*[.*2.*].*\ File\ Two\.md\ \·\ \"Example\ content\ two\.\"     ]]
+  [[ "${lines[2]}"  =~  \
+.*[.*1.*].*\ File\ One\.md\ \·\ \"Example\ content\ one\.\"     ]]
+}
+
 # list content (title, filename, first line) ##################################
 
 @test "'list' includes titles when present, otherwise filenames with first lines." {

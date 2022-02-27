@@ -100,6 +100,39 @@ load test_helper
   [[ -z "${lines[1]}"                                 ]]
 }
 
+@test "'index add <filename>' skips temporary files." {
+  {
+    "${_NB}" init
+
+    declare _temp_filenames=(
+      "Example Temp One.md~"
+      "#Example Temp Two.md#"
+      "Example Temp Three.md.swp"
+      "Example Temp Four.md.swap"
+      ".#Example Temp Five.md"
+    )
+
+    declare __filename=
+    for     __filename in "${_temp_filenames[@]:-}"
+    do
+      "${_NB}" run touch "${__filename:-}"
+    done
+  }
+
+  declare __filename=
+  for     __filename in "${_temp_filenames[@]:-}"
+  do
+    run "${_NB}" index add "${__filename:-}"
+
+    printf "\${status}: '%s'\\n" "${status}"
+    printf "\${output}: '%s'\\n" "${output}"
+
+    [[    "${status}" -eq 0                 ]]
+    [[ -z "${output}"                       ]]
+    [[ -z "$(cat "${NB_DIR/home/.index}")"  ]]
+  done
+}
+
 # get_basename ################################################################
 
 @test "'index get_basename' with valid index prints the filename for an id." {

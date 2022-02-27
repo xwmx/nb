@@ -1213,6 +1213,16 @@ _COLUMNS="$(_tput cols)"
 # An array of supported aggregate file types.
 _FILE_TYPES=(archive audio bookmark document folder image text video)
 
+# $_IGNORE_PATTERNS
+#
+# An array of filename patterns to ignore, formatted as `sed -e` arguments.
+_IGNORE_PATTERNS=(
+  -e "/~$/d"
+  -e "/^#.*#$/d"
+  -e "/\.swa?p$/d"
+  -e "/^\.#*/d"
+)
+
 # $_MD
 #
 # Middle dot character.
@@ -4313,7 +4323,9 @@ _index() {
 
       if ! grep -q "^${_basename}$" "${_index_path}"
       then
-        printf "%s\\n" "${_basename}" >> "${_index_path}"
+        {
+          printf "%s\\n" "${_basename}" | sed -E "${_IGNORE_PATTERNS[@]:-}"
+        } >> "${_index_path}"
       fi
       ;;
     delete)
@@ -5364,6 +5376,8 @@ _list() {
         _list_files "${_list_path}" "${_list_files_options[@]:-}" || :
       fi
     fi
+  } | {
+    sed -E "${_IGNORE_PATTERNS[@]:-}"
   } | {
     local _filenames_count=0
     local _matches=0
