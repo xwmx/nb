@@ -74,7 +74,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="6.9.3"
+_VERSION="6.9.4"
 
 # $_ME
 #
@@ -1212,6 +1212,16 @@ _COLUMNS="$(_tput cols)"
 #
 # An array of supported aggregate file types.
 _FILE_TYPES=(archive audio bookmark document folder image text video)
+
+# $_IGNORE_PATTERNS
+#
+# An array of filename patterns to ignore, formatted as `sed -e` arguments.
+_IGNORE_PATTERNS=(
+  -e "/~$/d"
+  -e "/^#.*#$/d"
+  -e "/\.swa?p$/d"
+  -e "/^\.#*/d"
+)
 
 # $_MD
 #
@@ -4165,7 +4175,8 @@ HEREDOC
 
         LC_ALL=C sed -E                                                               \
 -e "/^\ \ |\[\[wiki\-style\ linking\]\]/s/(\[|\]|\(|\)|\|)/${_replacement_pattern}/g" \
--e "s/#tag/${_TPUT_SGR0}${_TPUT_SETAF_8}#${_TPUT_SGR0}tag/g"
+-e "s/#tag/${_TPUT_SGR0}${_TPUT_SETAF_8}#${_TPUT_SGR0}tag/g"                          \
+-e "s/(currently\ set\ to: )(.*)/\1${_TPUT_SGR0}${_TPUT_COLOR_PRIMARY}\2${_TPUT_SGR0}/g"
       fi
     } | {
       LC_ALL=C sed -e "s/\`/${_TPUT_SGR0}${_TPUT_SETAF_8}\`${_TPUT_SGR0}/g"
@@ -4312,7 +4323,9 @@ _index() {
 
       if ! grep -q "^${_basename}$" "${_index_path}"
       then
-        printf "%s\\n" "${_basename}" >> "${_index_path}"
+        {
+          printf "%s\\n" "${_basename}" | sed -E "${_IGNORE_PATTERNS[@]:-}"
+        } >> "${_index_path}"
       fi
       ;;
     delete)
@@ -4457,7 +4470,11 @@ _index() {
 
       while [[ "${_current_folder_path:?}" =~ ${_top_path:?} ]]
       do
-        ls -t -r "${_current_folder_path:?}" > "${_current_folder_path:?}/.index"
+        {
+          ls -t -r "${_current_folder_path:?}"
+        } | {
+          sed -E "${_IGNORE_PATTERNS[@]:-}"
+        } > "${_current_folder_path:?}/.index"
 
         _current_folder_path="${_current_folder_path%/*}"
       done  &&
@@ -4502,14 +4519,24 @@ _index() {
       do
         if [[ ! -e "${_current_folder_path:?}/.index"       ]]
         then
-          ls -t -r "${_current_folder_path:?}" > "${_current_folder_path:?}/.index"
+          {
+            ls -t -r "${_current_folder_path:?}"
+          } | {
+            sed -E "${_IGNORE_PATTERNS[@]:-}"
+          } > "${_current_folder_path:?}/.index"
         fi
 
         local -a _index_list=()
         _index_list=($(<"${_current_folder_path:?}/.index"))
 
         local -a _file_list=()
-        _file_list=($(ls "${_current_folder_path:?}"))
+        _file_list=($(
+          {
+            ls -t -r "${_current_folder_path:?}"
+          } | {
+            sed -E "${_IGNORE_PATTERNS[@]:-}"
+          }
+        ))
 
         _index_reconcile_remove_duplicates "${_current_folder_path:?}/.index"
 
@@ -4596,7 +4623,13 @@ _index() {
       _index_list=($(<"${_index_path}"))
 
       local -a _file_list=()
-      _file_list=($(ls "${_folder_path}"))
+      _file_list=($(
+        {
+          ls -t -r "${_folder_path}"
+        } | {
+          sed -E "${_IGNORE_PATTERNS[@]:-}"
+        }
+      ))
 
       local -a _index_file_list_diff=()
       _index_file_list_diff=($(
@@ -5363,6 +5396,8 @@ _list() {
         _list_files "${_list_path}" "${_list_files_options[@]:-}" || :
       fi
     fi
+  } | {
+    sed -E "${_IGNORE_PATTERNS[@]:-}"
   } | {
     local _filenames_count=0
     local _matches=0
@@ -8728,159 +8763,167 @@ _is_valid_subcommand() {
   [[ -n "${1:-}" ]] &&  [[ "${1:-}" =~ ${_SUBCOMMANDS_PATTERN} ]]
 }
 
-# $__PREVIOUS_OPTION_WAS_FLAG
+# _parse_options()
 #
-# Values: 0, 1
+# Usage:
+#   _parse_options <option>...
 #
-# Arithmethic boolean indicating if the previous option in the loop was a flag.
-__PREVIOUS_OPTION_WAS_FLAG=0
+# Description:
+#   Parse program options.
+_parse_options() {
+  local _current_option=
+  local _previous_option_was_flag=0
 
-# Parse program options.
-while ((${#}))
-do
-  __opt="${1}"
+  while ((${#}))
+  do
+    _current_option="${1:-}"
 
-  shift
+    shift
 
-  case "${__opt}" in
-    -)
-      if [[ -z "${_SUBCOMMAND:-}"     ]]
-      then
-        _SUBCOMMAND="delete"
-      else
-        _ARGUMENTS+=("delete")
-      fi
-      ;;
-    +)
-      if [[ -z "${_SUBCOMMAND:-}"     ]]
-      then
-        _SUBCOMMAND="add"
-      else
-        _ARGUMENTS+=("add")
-      fi
-      ;;
-    -h|--help)
-      case "${_SUBCOMMAND:-}" in
-        git|run)
-          _ARGUMENTS+=("${__opt}")
-          ;;
-        *)
-          if [[ -n "${_SUBCOMMAND:-}" ]]
-          then
-            _ARGUMENTS+=("${_SUBCOMMAND}")
-          fi
-
-          _SUBCOMMAND="help"
-          ;;
-      esac
-      ;;
-    --debug)
-      _USE_DEBUG=1
-      ;;
-    --no*color)
-      _COLOR_ENABLED=0
-      ;;
-    --no*git|--skip*git)
-      _GIT_ENABLED=0
-      ;;
-    --version)
-      if [[ -n "${_SUBCOMMAND:-}"     ]]
-      then
-        _ARGUMENTS+=("${__opt}")
-      else
-        _SUBCOMMAND="version"
-      fi
-      ;;
-    -i|--interactive)
-      case "${_SUBCOMMAND:-}" in
-        git|run)
-          _ARGUMENTS+=("${__opt}")
-          ;;
-        *)
-          _SUBCOMMAND="shell"
-          ;;
-      esac
-      ;;
-    --welcome)
-      _print_welcome
-      ;;
-    *:*)
-      if [[ -z "${_SUBCOMMAND:-}"     ]] &&
-          _string_is_url "${__opt}"
-      then
-        _SUBCOMMAND="bookmark"
-        _ARGUMENTS+=("${__opt}")
-      elif _notebooks current --selected
-      then
-        _ARGUMENTS+=("${__opt}")
-      elif [[ "${_SUBCOMMAND:-}" == "move"    ]] &&
-           ((${#_ARGUMENTS[@]}))
-      then
-        _ARGUMENTS+=("${__opt}")
-      elif [[ "${_SUBCOMMAND:-}" == "delete"  ]]
-      then
-        _ARGUMENTS+=("${__opt}")
-      else
-        __identifier_or_subcommand_or_url="${__opt#*:}"
-
-        if [[ -z "${__identifier_or_subcommand_or_url:-}" ]] &&
-           [[ -n "${_SUBCOMMAND:-}"                       ]] &&
-           [[ ! "${_SUBCOMMAND}" =~ ^ls$|^list$           ]]
+    case "${_current_option}" in
+      -)
+        if [[ -z "${_SUBCOMMAND:-}"     ]]
         then
-          _ARGUMENTS+=("${__opt}")
+          _SUBCOMMAND="delete"
         else
-          if ! _notebooks select "${__opt}"
-          then
-            if [[ -n "${_SUBCOMMAND:-}" ]] || ((__PREVIOUS_OPTION_WAS_FLAG))
+          _ARGUMENTS+=("delete")
+        fi
+        ;;
+      +)
+        if [[ -z "${_SUBCOMMAND:-}"     ]]
+        then
+          _SUBCOMMAND="add"
+        else
+          _ARGUMENTS+=("add")
+        fi
+        ;;
+      -h|--help)
+        case "${_SUBCOMMAND:-}" in
+          git|run)
+            _ARGUMENTS+=("${_current_option}")
+            ;;
+          *)
+            if [[ -n "${_SUBCOMMAND:-}" ]]
             then
-              _ARGUMENTS+=("${__opt}")
-
-              continue
-            else
-              _exit_1 printf \
-                "Notebook not found: %s\\n" "$(_color_primary "${__opt%%:*}")"
+              _ARGUMENTS+=("${_SUBCOMMAND}")
             fi
-          fi
 
-          if _is_valid_subcommand "${__identifier_or_subcommand_or_url}"
+            _SUBCOMMAND="help"
+            ;;
+        esac
+        ;;
+      --debug)
+        _USE_DEBUG=1
+        ;;
+      --no*color)
+        _COLOR_ENABLED=0
+        ;;
+      --no*git|--skip*git)
+        _GIT_ENABLED=0
+        ;;
+      --version)
+        if [[ -n "${_SUBCOMMAND:-}"     ]]
+        then
+          _ARGUMENTS+=("${_current_option}")
+        else
+          _SUBCOMMAND="version"
+        fi
+        ;;
+      -i|--interactive)
+        case "${_SUBCOMMAND:-}" in
+          git|run)
+            _ARGUMENTS+=("${_current_option}")
+            ;;
+          *)
+            _SUBCOMMAND="shell"
+            ;;
+        esac
+        ;;
+      --welcome)
+        _print_welcome
+        ;;
+      *:*)
+        if [[ -z "${_SUBCOMMAND:-}"     ]] &&
+            _string_is_url "${_current_option}"
+        then
+          _SUBCOMMAND="bookmark"
+          _ARGUMENTS+=("${_current_option}")
+        elif _notebooks current --selected
+        then
+          _ARGUMENTS+=("${_current_option}")
+        elif [[ "${_SUBCOMMAND:-}" == "move"      ]] &&
+             ((${#_ARGUMENTS[@]}))
+        then
+          _ARGUMENTS+=("${_current_option}")
+        elif [[ "${_SUBCOMMAND:-}" == "delete"    ]]
+        then
+          _ARGUMENTS+=("${_current_option}")
+        else
+          local _selector_suffix="${_current_option#*:}"
+
+          if [[ -z "${_selector_suffix:-}"        ]] &&
+             [[ -n "${_SUBCOMMAND:-}"             ]] &&
+             [[ ! "${_SUBCOMMAND}" =~ ^ls$|^list$ ]]
           then
-            _SUBCOMMAND="${__identifier_or_subcommand_or_url}"
+            _ARGUMENTS+=("${_current_option}")
           else
-            if _string_is_url "${__identifier_or_subcommand_or_url}"
+            if ! _notebooks select "${_current_option}"
             then
-              _SUBCOMMAND="bookmark"
-              _ARGUMENTS+=("${__identifier_or_subcommand_or_url}")
+              if [[ -n "${_SUBCOMMAND:-}" ]] || ((_previous_option_was_flag))
+              then
+                _ARGUMENTS+=("${_current_option}")
+
+                continue
+              else
+                _exit_1 printf                \
+                  "Notebook not found: %s\\n" \
+                  "$(_color_primary "${_current_option%%:*}")"
+              fi
+            fi
+
+            if _is_valid_subcommand "${_selector_suffix}"
+            then
+              _SUBCOMMAND="${_selector_suffix}"
             else
-              _ARGUMENTS+=("${__opt}")
+              if _string_is_url "${_selector_suffix}"
+              then
+                _SUBCOMMAND="bookmark"
+                _ARGUMENTS+=("${_selector_suffix}")
+              elif [[ "${_selector_suffix}" =~ ^- ]]
+              then
+                _ARGUMENTS+=("${_selector_suffix}")
+              else
+                _ARGUMENTS+=("${_current_option}")
+              fi
             fi
           fi
         fi
-      fi
-      ;;
-    --endopts)
-      # Terminate option parsing.
-      break
-      ;;
-    *)
-      if ! ((__PREVIOUS_OPTION_WAS_FLAG)) &&
-         [[ -z "${_SUBCOMMAND:-}" ]]      &&
-         _is_valid_subcommand "${__opt}"
-      then
-        _SUBCOMMAND="${__opt}"
-      else
-        if [[ "${__opt}" =~ ^-    ]]
+        ;;
+      --endopts)
+        # Terminate option parsing.
+        break
+        ;;
+      *)
+        if ! ((_previous_option_was_flag))  &&
+           [[ -z "${_SUBCOMMAND:-}" ]]      &&
+           _is_valid_subcommand "${_current_option}"
         then
-          __PREVIOUS_OPTION_WAS_FLAG=1
-        elif ((__PREVIOUS_OPTION_WAS_FLAG))
-        then
-          __PREVIOUS_OPTION_WAS_FLAG=0
-        fi
+          _SUBCOMMAND="${_current_option}"
+        else
+          if [[ "${_current_option}" =~ ^-        ]]
+          then
+            _previous_option_was_flag=1
+          elif ((_previous_option_was_flag))
+          then
+            _previous_option_was_flag=0
+          fi
 
-        _ARGUMENTS+=("${__opt}")
-      fi
-      ;;
-  esac
-done
+          _ARGUMENTS+=("${_current_option}")
+        fi
+        ;;
+    esac
+  done
+}; _parse_options "${@:-}"
 
 _debug printf "\${_SUBCOMMAND}:           '%s'\\n"  "${_SUBCOMMAND}"
 _debug printf "\${NB_NOTEBOOK_PATH}:      '%s'\\n"  "${NB_NOTEBOOK_PATH}"
@@ -9069,6 +9112,42 @@ _main "${_ARGUMENTS[@]:-}"
 # ----------------                                             ----------------
 ###############################################################################
 # --------------------------------------------------------------------------- #
+
+# _build_related_list()
+#
+# Usage:
+#   _build_related_list (<url> | <selector>)...
+#
+# Description:
+#   Build a Markdown-formatted list of <url>s and <selector>s for bookmarks
+#   and todos.
+_build_related_list() {
+  local _list_content=
+  local _related_identifiers=("${@:-}")
+
+
+  local __identifier=
+  for   __identifier in "${_related_identifiers[@]:-}"
+  do
+    [[ -n "${__identifier:-}" ]] || continue
+
+    if _string_is_url "${__identifier:-}"
+    then
+      _list_content+="- <${__identifier:-}>${_NEWLINE}"
+    else
+      if [[ "${__identifier:-}" =~ \[\[.*\]\] ]]
+      then
+        __identifier="$(
+          sed -E -e "s/\[\[(.*)\]\]/\1/g" <<< "${__identifier:-}"
+        )"
+      fi
+
+      _list_content+="- [[${__identifier:-}]]${_NEWLINE}"
+    fi
+  done
+
+  printf "%s\\n" "${_list_content:-}"
+}
 
 # _decrypt_file()
 #
@@ -10124,7 +10203,7 @@ header {
 }
 
 .identifier {         color: ${_color_primary_hex}; }
-.muted      {         color: ${_color_muted_hex};     }
+.muted      {         color: ${_color_muted_hex};   }
 
 form {
   padding-top:        1rem;
@@ -10423,9 +10502,9 @@ code span.bu {                                          } /*    BuiltIn     */
 code span.cf { color: #7290b1;                          } /*  ControlFlow   */
 code span.ch { color: #8987a0;                          } /*      Char      */
 code span.cn { color: #8987a0;      font-weight: bold;  } /*    Constant    */
-code span.co { color: ${_color_muted_hex};                } /*    Comment     */
+code span.co { color: ${_color_muted_hex};              } /*    Comment     */
 code span.cv { color: #7f9f7f;      font-weight: bold;  } /*   CommentVar   */
-code span.do { color: ${_color_muted_hex};                } /* Documentation  */
+code span.do { color: ${_color_muted_hex};              } /* Documentation  */
 code span.dt { color: #cccc96;                          } /*    DataType    */
 code span.dv { color: #cccc96;                          } /*     DecVal     */
 code span.er { color: #cccc96;                          } /*     Error      */
@@ -11326,12 +11405,13 @@ $(_color_primary "Options"):
 $(_color_primary "Description"):
   Create a new note or folder.
 
-  If no arguments are passed, a new blank note file is opened with
-  \`\$EDITOR\`, currently set to "${EDITOR}". If a non-option argument is
-  passed, \`${_ME}\` will treat it as a <filename≥ if a file extension is found.
-  If no file extension is found, \`${_ME}\` will treat the string as
-  <content> and will create a new note without opening the editor.
-  \`${_ME} add\` can also create a new note with piped content.
+  If no arguments are passed, a new blank note file is opened with \`\$EDITOR\`,
+  currently set to: ${EDITOR}
+
+  If a non-option argument is passed, \`${_ME}\` will treat it as a <filename≥
+  if a file extension is found. If no file extension is found,  \`${_ME}\` will
+  treat the string as <content> and will create a new note without opening the
+  editor. \`${_ME} add\` can also create a new note with piped content.
 
   \`${_ME}\` creates Markdown files by default. To create a note with a
   different file type, use the extension in the filename or use the \`--type\`
@@ -12513,17 +12593,8 @@ _bookmark() {
   if [[ -n "${_related_identifiers[*]:-}" ]]
   then
     _bookmark_content+="${_NEWLINE}## Related${_NEWLINE}${_NEWLINE}"
-
-    local __identifier=
-    for   __identifier in "${_related_identifiers[@]:-}"
-    do
-      if _string_is_url "${__identifier:-}"
-      then
-        _bookmark_content+="- <${__identifier:-}>${_NEWLINE}"
-      else
-        _bookmark_content+="- [[${__identifier:-}]]${_NEWLINE}"
-      fi
-    done
+    _bookmark_content+="$(_build_related_list "${_related_identifiers[@]:-}")"
+    _bookmark_content+="${_NEWLINE}"
   fi
 
   if [[ -n "${_tag_list:-}"         ]]
@@ -13147,10 +13218,11 @@ $(_color_primary "Options"):
                            existing content.
 
 $(_color_primary "Description"):
-  Open the specified note in \`\$EDITOR\`, currently set to "${EDITOR}", or
-  <editor> if specified. Content piped to \`${_ME} edit\` or passed using the
-  \`--content\` option will is appended to the file without opening it
-  in the editor, unless the \`--edit\` flag is specified.
+  Open the specified note in \`\$EDITOR\`, currently set to: ${EDITOR}
+
+  Content piped to \`${_ME} edit\` or passed using the \`--content\` option
+  is appended to the file without opening it in the editor, unless the
+  \`--edit\` flag is specified.
 
   Non-text files are opened in your system's preferred app or program for
   that file type.
@@ -14966,6 +15038,7 @@ _search() {
   local _print_notebook_selectors=0
   local _print_paths=0
   local _query=
+  local _replacement=
   local _search_args=()
   local _search_for_tags=0
   local _search_utility=
@@ -15048,6 +15121,12 @@ _search() {
         ;;
       -q|--query|-e)
         _and_queries+=("$(_option_get_value "${1}" "${2:-}")")
+
+        shift
+        ;;
+      --replace*)
+        # TODO
+        _replacement="$(_option_get_value "${1}" "${2:-}")"
 
         shift
         ;;
@@ -15774,7 +15853,11 @@ _search() {
 
           if [[ "${_last_path}" != "${_path}" ]]
           then
-            if [[ -n "${_type:-}"             ]]
+            if   [[ ! "${_path}" =~ .index    ]] &&
+                 [[ -z "$(sed -E "${_IGNORE_PATTERNS[@]:-}" <<< "${_path##*/}")" ]]
+            then
+              _skip=1
+            elif [[ -n "${_type:-}"           ]]
             then
               if [[  "${_path}" =~ ${_type}$  ]]
               then
@@ -19998,9 +20081,9 @@ HEREDOC
     if ((_daemon))
     then
       printf "Press %s%s%s to exit%s" \
-        "$(_color_muted "<")"           \
+        "$(_color_muted "<")"         \
         "$(_color_primary "CTRL-C")"  \
-        "$(_color_muted ">")"           \
+        "$(_color_muted ">")"         \
         "$(_color_muted "...")"
 
       while true
@@ -20080,6 +20163,9 @@ _helpers() {
   case "${_name:-}" in
     *browser*)
       _web_browser                    "${_options[@]:-}"
+      ;;
+    build*|*related*)
+      _build_related_list             "${_options[@]:-}"
       ;;
     *decryption*)
       _get_decryption_tool            "${_options[@]:-}"
@@ -20234,6 +20320,9 @@ $(_color_primary "Plugin Extensions"):
 
 $(_color_primary "See Also"):
   ${_ME} help subcommands
+
+$(_color_primary "Alias"):
+  ${_ME} plugin
 HEREDOC
 }
 _plugins() {
@@ -22892,17 +22981,8 @@ _todo() {
       if ((${#_related_identifiers[@]}))
       then
         _todo_content+="${_NEWLINE}## Related${_NEWLINE}${_NEWLINE}"
-
-        local __identifier=
-        for   __identifier in "${_related_identifiers[@]:-}"
-        do
-          if _string_is_url "${__identifier:-}"
-          then
-            _todo_content+="- <${__identifier:-}>${_NEWLINE}"
-          else
-            _todo_content+="- [[${__identifier:-}]]${_NEWLINE}"
-          fi
-        done
+        _todo_content+="$(_build_related_list "${_related_identifiers[@]:-}")"
+        _todo_content+="${_NEWLINE}"
       fi
 
       if [[ -n "${_tag_list:-}"         ]]

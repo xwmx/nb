@@ -2975,6 +2975,12 @@ which automatically resizes the form to fit the current terminal window:
 [save] · last: 2021-01-01 01:00:00
 ```
 
+Terminal web browsers provide different editing workflows.
+[`w3m`](https://en.wikipedia.org/wiki/W3m) opens items in your `$EDITOR`,
+then returns you back to the browser to save changes and continue browsing.
+Edits in [`links`](https://en.wikipedia.org/wiki/Links_(web_browser))
+are performed directly in the browser.
+
 Syntax highlighting, block selection, and other
 [advanced editor features](#browse---gui-editing)
 are available with [`nb browse --gui`](#browse).
@@ -3584,6 +3590,9 @@ home
 [3] Title Three
 [2] Title Two
 ```
+
+To bump an item to the top of the list without pinning, use the
+[`bump` plugin](#bump).
 
 ### 🔍 Search
 
@@ -5059,6 +5068,7 @@ export  NB_INDICATOR_VIDEO="📹"
 <p>
   <sup>
     <a href="#overview">↑</a> ·
+    <a href="#plugin-help">Plugin Help</a>,
     <a href="#plugins"><code>nb plugins</code></a>
   </sup>
 </p>
@@ -5588,7 +5598,7 @@ For more commands and options, run
   <a href="#nb-help">nb</a>&nbsp;·
   <a href="#bookmark-help">bookmark</a>&nbsp;·
   <a href="#subcommands">subcommands</a>&nbsp;·
-  <a href="#plugins-1">plugins</a>
+  <a href="#plugin-help">plugins</a>
 </p>
 
 <p align="center">
@@ -6072,12 +6082,13 @@ Options:
 Description:
   Create a new note or folder.
 
-  If no arguments are passed, a new blank note file is opened with
-  `$EDITOR`, currently set to "example". If a non-option argument is
-  passed, `nb` will treat it as a <filename≥ if a file extension is found.
-  If no file extension is found, `nb` will treat the string as
-  <content> and will create a new note without opening the editor.
-  `nb add` can also create a new note with piped content.
+  If no arguments are passed, a new blank note file is opened with `$EDITOR`,
+  currently set to: example
+
+  If a non-option argument is passed, `nb` will treat it as a <filename≥
+  if a file extension is found. If no file extension is found,  `nb` will
+  treat the string as <content> and will create a new note without opening the
+  editor. `nb add` can also create a new note with piped content.
 
   `nb` creates Markdown files by default. To create a note with a
   different file type, use the extension in the filename or use the `--type`
@@ -7320,6 +7331,7 @@ Examples:
 
 [↑](#help) · See also:
 [Plugins](#-plugins),
+[Plugin Help](#plugin-help),
 [`subcommands`](#subcommands-1)
 
 ```text
@@ -7348,6 +7360,9 @@ Plugin Extensions:
 
 See Also:
   nb help subcommands
+
+Alias:
+  nb plugin
 ```
 
 #### `remote`
@@ -8379,7 +8394,7 @@ See Also:
   nb help update
 ```
 
-### Plugins
+### Plugin Help
 
 <p>
   <sup>
@@ -8391,6 +8406,7 @@ See Also:
 
 <p align="center">
   <a href="#backlink">backlink</a>&nbsp;·
+  <a href="#bump">bump</a>&nbsp;·
   <a href="#clip">clip</a>&nbsp;·
   <a href="#copy">copy</a>&nbsp;·
   <a href="#ebook">ebook</a>&nbsp;·
@@ -8403,7 +8419,11 @@ See Also:
 
 #### `backlink`
 
-[↑&nbsp;](#plugins-1)
+[↑&nbsp;](#plugin-help)
+
+```bash
+nb plugins install https://github.com/xwmx/nb/blob/master/plugins/backlink.nb-plugin
+```
 
 ```text
 Usage:
@@ -8425,9 +8445,39 @@ Description:
     Requirement: every note in the notebook must have a title.
 ```
 
+#### `bump`
+
+[↑&nbsp;](#plugin-help)
+
+```bash
+nb plugins install https://github.com/xwmx/nb/blob/master/plugins/bump.nb-plugin
+```
+
+```text
+Usage:
+  nb bump [<notebook>:][<folder-path>/][<id>][<filename>][<title>]
+
+Description:
+  Bump an item to the top of the list.
+
+  `bump` updates the item's modification timestamp without editing the item
+  or creating a new commit.
+
+Examples:
+  nb bump 123
+  nb bump example:sample/456
+
+Alias:
+  nb touch
+```
+
 #### `clip`
 
-[↑&nbsp;](#plugins-1)
+[↑&nbsp;](#plugin-help)
+
+```bash
+nb plugins install https://github.com/xwmx/nb/blob/master/plugins/clip.nb-plugin
+```
 
 ```text
 Usage:
@@ -8453,7 +8503,11 @@ Examples:
 
 #### `copy`
 
-[↑&nbsp;](#plugins-1)
+[↑&nbsp;](#plugin-help)
+
+```bash
+nb plugins install https://github.com/xwmx/nb/blob/master/plugins/copy.nb-plugin
+```
 
 ```text
 Usage:
@@ -8467,7 +8521,11 @@ Alias: `nb duplicate`
 
 #### `ebook`
 
-[↑&nbsp;](#plugins-1)
+[↑&nbsp;](#plugin-help)
+
+```bash
+nb plugins install https://github.com/xwmx/nb/blob/master/plugins/ebook.nb-plugin
+```
 
 ```text
 Usage:
@@ -8520,7 +8578,11 @@ More info:
 
 #### `example`
 
-[↑&nbsp;](#plugins-1)
+[↑&nbsp;](#plugin-help)
+
+```bash
+nb plugins install https://github.com/xwmx/nb/blob/master/plugins/example.nb-plugin
+```
 
 ```text
 Usage:
@@ -8766,7 +8828,7 @@ The `## Content` section makes the page content available locally for
 full-text search and viewing of page content. The source HTML is converted
 to inline Markdown to reduce the amount of markup, make it more readable,
 and make page content easily viewable in the terminal as markdown and
-streamlined HTML in terminal web browsers.
+streamlined HTML in web browsers.
 
 <p>
   <sup>
