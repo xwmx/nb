@@ -434,6 +434,44 @@ load test_helper
   [[ ${status} -eq 1 ]]
 }
 
+@test "'index verify' skips common temporary files." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md" --content "Example content one."
+    "${_NB}" add "File Two.md" --content "Example content two."
+
+    declare _temp_filenames=(
+      "Example Temp One.md~"
+      "#Example Temp Two.md#"
+      "Example Temp Three.md.swp"
+      "Example Temp Four.md.swap"
+      ".#Example Temp Five.md"
+    )
+
+    declare __filename=
+    for     __filename in "${_temp_filenames[@]:-}"
+    do
+      touch "${NB_DIR}/home/${__filename:-}"
+    done
+
+    diff                              \
+      <(cat "${NB_DIR}/home/.index")  \
+      <(cat <<HEREDOC
+File One.md
+File Two.md
+HEREDOC
+      )
+  }
+
+  run "${_NB}" index verify
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0 ]]
+}
+
 # help ########################################################################
 
 @test "'help index' exits with status 0." {

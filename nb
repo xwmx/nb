@@ -4470,7 +4470,11 @@ _index() {
 
       while [[ "${_current_folder_path:?}" =~ ${_top_path:?} ]]
       do
-        ls -t -r "${_current_folder_path:?}" > "${_current_folder_path:?}/.index"
+        {
+          ls -t -r "${_current_folder_path:?}"
+        } | {
+          sed -E "${_IGNORE_PATTERNS[@]:-}"
+        } > "${_current_folder_path:?}/.index"
 
         _current_folder_path="${_current_folder_path%/*}"
       done  &&
@@ -4515,14 +4519,24 @@ _index() {
       do
         if [[ ! -e "${_current_folder_path:?}/.index"       ]]
         then
-          ls -t -r "${_current_folder_path:?}" > "${_current_folder_path:?}/.index"
+          {
+            ls -t -r "${_current_folder_path:?}"
+          } | {
+            sed -E "${_IGNORE_PATTERNS[@]:-}"
+          } > "${_current_folder_path:?}/.index"
         fi
 
         local -a _index_list=()
         _index_list=($(<"${_current_folder_path:?}/.index"))
 
         local -a _file_list=()
-        _file_list=($(ls "${_current_folder_path:?}"))
+        _file_list=($(
+          {
+            ls -t -r "${_current_folder_path:?}"
+          } | {
+            sed -E "${_IGNORE_PATTERNS[@]:-}"
+          }
+        ))
 
         _index_reconcile_remove_duplicates "${_current_folder_path:?}/.index"
 
@@ -4609,7 +4623,13 @@ _index() {
       _index_list=($(<"${_index_path}"))
 
       local -a _file_list=()
-      _file_list=($(ls "${_folder_path}"))
+      _file_list=($(
+        {
+          ls -t -r "${_folder_path}"
+        } | {
+          sed -E "${_IGNORE_PATTERNS[@]:-}"
+        }
+      ))
 
       local -a _index_file_list_diff=()
       _index_file_list_diff=($(
@@ -15833,7 +15853,11 @@ _search() {
 
           if [[ "${_last_path}" != "${_path}" ]]
           then
-            if [[ -n "${_type:-}"             ]]
+            if   [[ ! "${_path}" =~ .index    ]] &&
+                 [[ -z "$(sed -E "${_IGNORE_PATTERNS[@]:-}" <<< "${_path##*/}")" ]]
+            then
+              _skip=1
+            elif [[ -n "${_type:-}"           ]]
             then
               if [[  "${_path}" =~ ${_type}$  ]]
               then

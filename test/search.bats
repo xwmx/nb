@@ -98,6 +98,46 @@ _search_all_setup() {
 #     <(printf "Content #example Seven. #tag3 #tag1")
 # }
 
+# temporary files #############################################################
+
+@test "'search' skips common temporary files." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md"    --content "Content one. example-query"
+    "${_NB}" add "File Two.md"    --content "Content two. sample-query"
+
+    declare _temp_filenames=(
+      "Example Temp One.md~"
+      "#Example Temp Two.md#"
+      "Example Temp Three.md.swp"
+      "Example Temp Four.md.swap"
+      ".#Example Temp Five.md"
+    )
+
+    declare __filename=
+    for     __filename in "${_temp_filenames[@]:-}"
+    do
+      printf "sample-query\\n" >> "${NB_DIR}/home/${__filename:-}"
+    done
+  }
+
+  run "${_NB}" search "sample-query"
+
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
+  printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
+
+  [[    "${status}"     -eq 0                                   ]]
+  [[    "${#lines[@]}"  -eq 3                                   ]]
+
+  [[    "${lines[0]}"   =~  \
+.*[.*2.*].*\ File\ Two.md\ \·\ \"Content\ two.\ sample-query\"  ]]
+  [[    "${lines[1]}"   =~  ^.*------------------.*$            ]]
+  [[    "${lines[2]}"   =~  \
+1.*:.*Content\ two.\ .*sample-query                             ]]
+}
+
 # tags ########################################################################
 
 @test "'search -t tag1 --and -t tag2,'#tag3' exits with status 0 and prints matches as an AND query." {

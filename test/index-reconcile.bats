@@ -4,6 +4,125 @@ load test_helper
 
 # reconcile ###################################################################
 
+@test "'index reconcile' skips common temporary files when .index is not present." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md"    --content "Example content one."
+    sleep 1
+
+    "${_NB}" add "File Two.md"    --content "Example content two."
+    sleep 1
+
+    "${_NB}" add "File Three.md"  --content "Example content three."
+    sleep 1
+
+    declare _temp_filenames=(
+      "Example Temp One.md~"
+      "#Example Temp Two.md#"
+      "Example Temp Three.md.swp"
+      "Example Temp Four.md.swap"
+      ".#Example Temp Five.md"
+    )
+
+    declare __filename=
+    for     __filename in "${_temp_filenames[@]:-}"
+    do
+      "${_NB}" run touch "${__filename:-}"
+
+      [[ -f "${NB_DIR}/home/${__filename:-}" ]]
+    done
+
+    rm "${NB_DIR}/home/.index"
+
+    [[ ! -e "${NB_DIR}/home/.index" ]]
+  }
+
+  run "${_NB}" index reconcile
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  printf "LS: \\n"
+
+  ls -t -r "${NB_DIR}/home"
+
+  printf "INDEX: \\n"
+
+  cat "${NB_DIR}/home/.index"
+
+  [[ "${status}" -eq 0 ]]
+
+  diff                              \
+    <(cat "${NB_DIR}/home/.index")  \
+    <(cat <<HEREDOC
+File One.md
+File Two.md
+File Three.md
+HEREDOC
+    )
+}
+
+@test "'index reconcile' skips common temporary files when empty .index exists." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md"    --content "Example content one."
+    sleep 1
+
+    "${_NB}" add "File Two.md"    --content "Example content two."
+    sleep 1
+
+    "${_NB}" add "File Three.md"  --content "Example content three."
+    sleep 1
+
+    declare _temp_filenames=(
+      "Example Temp One.md~"
+      "#Example Temp Two.md#"
+      "Example Temp Three.md.swp"
+      "Example Temp Four.md.swap"
+      ".#Example Temp Five.md"
+    )
+
+    declare __filename=
+    for     __filename in "${_temp_filenames[@]:-}"
+    do
+      "${_NB}" run touch "${__filename:-}"
+
+      [[ -f "${NB_DIR}/home/${__filename:-}" ]]
+    done
+
+    echo "" > "${NB_DIR}/home/.index"
+
+    [[ "$(cat "${NB_DIR}/home/.index")" == "" ]]
+  }
+
+  run "${_NB}" index reconcile
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  printf "LS: \\n"
+
+  ls -t -r "${NB_DIR}/home"
+
+  printf "INDEX: \\n"
+
+  cat "${NB_DIR}/home/.index"
+
+  [[ "${status}" -eq 0 ]]
+
+  diff                              \
+    <(cat "${NB_DIR}/home/.index")  \
+    <(cat <<HEREDOC
+
+File One.md
+File Three.md
+File Two.md
+HEREDOC
+    )
+}
+
 @test "'index reconcile' does not create a git commit." {
   {
     "${_NB}" init
