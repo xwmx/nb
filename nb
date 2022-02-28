@@ -14110,7 +14110,7 @@ _import() {
       *)
         if [[ -z "${_subcommand:-}" ]]
         then
-          if [[ "${__arg:-}" =~ ^http|^file\:   ]]
+          if _string_is_url "${__arg:-}"
           then
             _subcommand="download"
           else
