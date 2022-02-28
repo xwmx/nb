@@ -96,6 +96,57 @@ Imported\ .*[.*Example\ Folder/1.*].*\ .*Example\ Folder/example.md.*\ \"Example
 \"Example\ Title\"\ from\ .*${NB_TEST_BASE_PATH}/fixtures/example.md                      ]]
 }
 
+@test "'import <folder>/ <path>' with local notebook imports file." {
+  {
+    "${_NB}" init
+
+    mkdir -p "${_TMP_DIR}/Local Notebook"
+    cd "${_TMP_DIR}/Local Notebook"
+
+    "${_NB}" notebooks init
+
+    "${_NB}" add folder "Example Folder"
+
+    [[ -d "${_TMP_DIR}/Local Notebook/Example Folder"       ]]
+  }
+
+  run "${_NB}" import Example\ Folder/ "${NB_TEST_BASE_PATH}/fixtures/example.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  _files=($(ls "${_TMP_DIR}/Local Notebook/Example Folder/"))
+
+  [[ "${#_files[@]}" -eq 1                                  ]]
+  grep -q '# Example Title' "${_TMP_DIR}/Local Notebook/Example Folder"/*
+
+  # Adds to index:
+
+  [[ -e "${_TMP_DIR}/Local Notebook/Example Folder/.index"  ]]
+
+  diff                                                      \
+    <(ls "${_TMP_DIR}/Local Notebook/Example Folder")       \
+    <(cat "${_TMP_DIR}/Local Notebook/Example Folder/.index")
+
+  # Creates git commit:
+
+  cd "${_TMP_DIR}/Local Notebook" || return 1
+  printf "\$(git log): '%s'\n" "$(git log)"
+
+  while [[ -n "$(git status --porcelain)"                   ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Import'
+
+  # Prints output:
+
+  [[ "${lines[0]}" =~ \
+Imported\ .*[.*Example\ Folder/1.*].*\ .*Example\ Folder/example.md.*\ \"Example\ Title\" ]]
+  [[ "${lines[0]}" =~ \
+\"Example\ Title\"\ from\ .*${NB_TEST_BASE_PATH}/fixtures/example.md                      ]]
+}
+
 @test "'import <path>' with local notebook imports file." {
   {
     "${_NB}" init
@@ -218,6 +269,46 @@ Imported\ .*[.*Example\ Notebook:1.*].*\ .*example.md.*\ \"Example\ Title\" ]]
 example.md.*\ \"Example\ Title\"\ from\ .*${_TMP_DIR}/fixtures/example.md   ]]
 }
 
+@test "'import <notebook>: <path>' imports file into <notebook>:." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    cp -R "${NB_TEST_BASE_PATH}/fixtures" "${_TMP_DIR}"
+
+    [[ -e "${_TMP_DIR}/fixtures" ]]
+  }
+
+  run "${_NB}" import "Example Notebook:" "${_TMP_DIR}/fixtures/example.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Adds file:
+
+  [[ -f "${NB_DIR}/Example Notebook/example.md" ]]
+
+  diff                                          \
+    <(cat "${_TMP_DIR}/fixtures/example.md")    \
+    <(cat "${NB_DIR}/Example Notebook/example.md")
+
+  # Adds to index:
+
+  [[ -e "${NB_DIR}/Example Notebook/.index"     ]]
+
+  diff                                          \
+    <(ls "${NB_DIR}/Example Notebook/")         \
+    <(cat "${NB_DIR}/Example Notebook/.index")
+
+  # Prints output:
+
+  [[ "${output}" =~ \
+Imported\ .*[.*Example\ Notebook:1.*].*\ .*example.md.*\ \"Example\ Title\" ]]
+  [[ "${output}" =~ \
+example.md.*\ \"Example\ Title\"\ from\ .*${_TMP_DIR}/fixtures/example.md   ]]
+}
+
 @test "'import ./* <notebook>:' with valid * (glob) argument copies multiple files and directories into <notebook>:." {
   {
     "${_NB}" init
@@ -235,6 +326,81 @@ example.md.*\ \"Example\ Title\"\ from\ .*${_TMP_DIR}/fixtures/example.md   ]]
   }
 
   run "${_NB}" import ./* "Example Notebook:"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  IFS=$'\n' _files=($(ls -1 "${NB_DIR}/Example Notebook/"))
+
+  printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
+  printf "\${#_files[@]}: '%s'\\n" "${#_files[@]}"
+
+  [[ "${#_files[@]}"  -eq 15 ]]
+
+  grep -q '# Example Title' "${NB_DIR}/Example Notebook/Example Folder"/*
+
+  [[ -d "${_TMP_DIR}/fixtures/Example Folder"                         ]]
+  [[ -d "${NB_DIR}/Example Notebook/Example Folder"                   ]]
+  [[ -f "${NB_DIR}/Example Notebook/Example Folder/example.md"        ]]
+  [[ -f "${NB_DIR}/Example Notebook/Example Folder/example.com.html"  ]]
+  [[    "${output}"   =~ Example\ Notebook:Example\ Folder            ]]
+
+  [[ -d "${_TMP_DIR}/fixtures/bin"                                    ]]
+  [[ -d "${NB_DIR}/Example Notebook/bin"                              ]]
+  [[ -f "${NB_DIR}/Example Notebook/bin/bookmark"                     ]]
+  [[ -f "${NB_DIR}/Example Notebook/bin/mock_editor"                  ]]
+  [[    "${lines[1]}" =~ Imported                                     ]]
+  [[    "${output}"   =~ Example\ Notebook:bin                        ]]
+
+  [[ -e "${_TMP_DIR}/fixtures/copy-deprecated.nb-plugin"              ]]
+  [[ -f "${NB_DIR}/Example Notebook/copy-deprecated.nb-plugin"        ]]
+  [[    "${lines[2]}" =~ Imported                                     ]]
+  [[    "${output}"   =~ Example\ Notebook:copy-deprecated.nb-plugin  ]]
+
+  [[ -e "${_TMP_DIR}/fixtures/example.com-og.html"                    ]]
+  [[ -f "${NB_DIR}/Example Notebook/example.com-og.html"              ]]
+  [[    "${lines[3]}" =~ Imported                                     ]]
+  [[    "${output}"   =~ Example\ Notebook:example.com-og.html        ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/Example Notebook" || return 1
+
+  printf "\$(git log): '%s'\n" "$(git log)"
+
+  while [[ -n "$(git status --porcelain)"   ]]
+  do
+    sleep 1
+  done
+
+  git log | grep -q '\[nb\] Import'
+
+  # Adds to index:
+
+  [[ -e "${NB_DIR}/Example Notebook/.index" ]]
+
+  diff                                      \
+    <(ls "${NB_DIR}/Example Notebook/")     \
+    <(cat "${NB_DIR}/Example Notebook/.index")
+}
+
+@test "'import <notebook>: ./*' with valid * (glob) argument copies multiple files and directories into <notebook>:." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    cp -R "${NB_TEST_BASE_PATH}/fixtures" "${_TMP_DIR}"
+
+    [[ -e "${_TMP_DIR}/fixtures" ]]
+
+    cd "${_TMP_DIR}/fixtures"
+
+    [[ "$(pwd)" == "${_TMP_DIR}/fixtures" ]]
+    [[ -d "${NB_DIR}/home"                ]]
+  }
+
+  run "${_NB}" import "Example Notebook:" ./*
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -370,6 +536,83 @@ example.md.*\ \"Example\ Title\"\ from\ .*${_TMP_DIR}/fixtures/example.md   ]]
     <(cat "${NB_DIR}/Example Notebook/Example Destination/.index")
 }
 
+@test "'import <notebook>:<folder> ./*' (no slash) with valid * (glob) argument copies multiple files and directories into <notebook>:<folder>/." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" add "Example Notebook:Example Destination" --type "folder"
+
+    cp -R "${NB_TEST_BASE_PATH}/fixtures" "${_TMP_DIR}"
+
+    [[ -e "${_TMP_DIR}/fixtures" ]]
+
+    cd "${_TMP_DIR}/fixtures"
+
+    [[ "$(pwd)" == "${_TMP_DIR}/fixtures" ]]
+    [[ -d "${NB_DIR}/home"                ]]
+  }
+
+  run "${_NB}" import "Example Notebook:Example Destination" ./*
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  IFS=$'\n' _files=($(ls -1 "${NB_DIR}/Example Notebook/Example Destination/"))
+
+  printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
+  printf "\${#_files[@]}: '%s'\\n" "${#_files[@]}"
+
+  [[ "${#_files[@]}"  -eq 15 ]]
+
+  grep -q '# Example Title' "${NB_DIR}/Example Notebook/Example Destination/Example Folder"/*
+
+  [[ -d "${_TMP_DIR}/fixtures/Example Folder"                                             ]]
+  [[ -d "${NB_DIR}/Example Notebook/Example Destination/Example Folder"                   ]]
+  [[ -f "${NB_DIR}/Example Notebook/Example Destination/Example Folder/example.md"        ]]
+  [[ -f "${NB_DIR}/Example Notebook/Example Destination/Example Folder/example.com.html"  ]]
+  [[    "${output}"   =~ Example\ Notebook:Example\ Destination/Example\ Folder           ]]
+
+  [[ -d "${_TMP_DIR}/fixtures/bin"                                                        ]]
+  [[ -d "${NB_DIR}/Example Notebook/Example Destination/bin"                              ]]
+  [[ -f "${NB_DIR}/Example Notebook/Example Destination/bin/bookmark"                     ]]
+  [[ -f "${NB_DIR}/Example Notebook/Example Destination/bin/mock_editor"                  ]]
+  [[    "${lines[1]}" =~ Imported                                                         ]]
+  [[    "${output}"   =~ Example\ Notebook:Example\ Destination/bin                       ]]
+
+  [[ -e "${_TMP_DIR}/fixtures/copy-deprecated.nb-plugin"                                  ]]
+  [[ -f "${NB_DIR}/Example Notebook/Example Destination/copy-deprecated.nb-plugin"        ]]
+  [[    "${lines[2]}" =~ Imported                                                         ]]
+  [[    "${output}"   =~ Example\ Notebook:Example\ Destination/copy-deprecated.nb-plugin ]]
+
+  [[ -e "${_TMP_DIR}/fixtures/example.com-og.html"                                        ]]
+  [[ -f "${NB_DIR}/Example Notebook/Example Destination/example.com-og.html"              ]]
+  [[    "${lines[3]}" =~ Imported                                                         ]]
+  [[    "${output}"   =~ Example\ Notebook:Example\ Destination/example.com-og.html       ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/Example Notebook" || return 1
+
+  printf "\$(git log): '%s'\n" "$(git log)"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+
+  git log | grep -q '\[nb\] Import'
+
+  # Adds to index:
+
+  [[ -e "${NB_DIR}/Example Notebook/Example Destination/.index" ]]
+
+  diff                                                      \
+    <(ls "${NB_DIR}/Example Notebook/Example Destination/") \
+    <(cat "${NB_DIR}/Example Notebook/Example Destination/.index")
+}
+
 @test "'import ./* <notebook>:<folder>/' (slash) with valid * (glob) argument copies multiple files and directories into <notebook>:<folder>/." {
   {
     "${_NB}" init
@@ -445,6 +688,125 @@ example.md.*\ \"Example\ Title\"\ from\ .*${_TMP_DIR}/fixtures/example.md   ]]
   diff                                                      \
     <(ls "${NB_DIR}/Example Notebook/Example Destination/") \
     <(cat "${NB_DIR}/Example Notebook/Example Destination/.index")
+}
+
+@test "'import <notebook>:<folder>/ ./*' (slash) with valid * (glob) argument copies multiple files and directories into <notebook>:<folder>/." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" add "Example Notebook:Example Destination" --type "folder"
+
+    cp -R "${NB_TEST_BASE_PATH}/fixtures" "${_TMP_DIR}"
+
+    [[ -e "${_TMP_DIR}/fixtures" ]]
+
+    cd "${_TMP_DIR}/fixtures"
+
+    [[ "$(pwd)" == "${_TMP_DIR}/fixtures" ]]
+    [[ -d "${NB_DIR}/home"                ]]
+  }
+
+  run "${_NB}" import "Example Notebook:Example Destination/" ./*
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  IFS=$'\n' _files=($(ls -1 "${NB_DIR}/Example Notebook/Example Destination/"))
+
+  printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
+  printf "\${#_files[@]}: '%s'\\n" "${#_files[@]}"
+
+  [[ "${#_files[@]}"  -eq 15 ]]
+
+  grep -q '# Example Title' "${NB_DIR}/Example Notebook/Example Destination/Example Folder"/*
+
+  [[ -d "${_TMP_DIR}/fixtures/Example Folder"                                             ]]
+  [[ -d "${NB_DIR}/Example Notebook/Example Destination/Example Folder"                   ]]
+  [[ -f "${NB_DIR}/Example Notebook/Example Destination/Example Folder/example.md"        ]]
+  [[ -f "${NB_DIR}/Example Notebook/Example Destination/Example Folder/example.com.html"  ]]
+  [[    "${output}"   =~ Example\ Notebook:Example\ Destination/Example\ Folder           ]]
+
+  [[ -d "${_TMP_DIR}/fixtures/bin"                                                        ]]
+  [[ -d "${NB_DIR}/Example Notebook/Example Destination/bin"                              ]]
+  [[ -f "${NB_DIR}/Example Notebook/Example Destination/bin/bookmark"                     ]]
+  [[ -f "${NB_DIR}/Example Notebook/Example Destination/bin/mock_editor"                  ]]
+  [[    "${lines[1]}" =~ Imported                                                         ]]
+  [[    "${output}"   =~ Example\ Notebook:Example\ Destination/bin                       ]]
+
+  [[ -e "${_TMP_DIR}/fixtures/copy-deprecated.nb-plugin"                                  ]]
+  [[ -f "${NB_DIR}/Example Notebook/Example Destination/copy-deprecated.nb-plugin"        ]]
+  [[    "${lines[2]}" =~ Imported                                                         ]]
+  [[    "${output}"   =~ Example\ Notebook:Example\ Destination/copy-deprecated.nb-plugin ]]
+
+  [[ -e "${_TMP_DIR}/fixtures/example.com-og.html"                                        ]]
+  [[ -f "${NB_DIR}/Example Notebook/Example Destination/example.com-og.html"              ]]
+  [[    "${lines[3]}" =~ Imported                                                         ]]
+  [[    "${output}"   =~ Example\ Notebook:Example\ Destination/example.com-og.html       ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/Example Notebook" || return 1
+
+  printf "\$(git log): '%s'\n" "$(git log)"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+
+  git log | grep -q '\[nb\] Import'
+
+  # Adds to index:
+
+  [[ -e "${NB_DIR}/Example Notebook/Example Destination/.index" ]]
+
+  diff                                                      \
+    <(ls "${NB_DIR}/Example Notebook/Example Destination/") \
+    <(cat "${NB_DIR}/Example Notebook/Example Destination/.index")
+}
+
+@test "'import <notebook>:<filename> <file-path>' imports file to <notebook>:<filename>." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    cp -R "${NB_TEST_BASE_PATH}/fixtures" "${_TMP_DIR}"
+
+    [[ -e "${_TMP_DIR}/fixtures" ]]
+  }
+
+  run "${_NB}" import                         \
+    "Example Notebook:Example Destination.md" \
+    "${_TMP_DIR}/fixtures/example.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Adds file:
+
+  [[ -f "${NB_DIR}/Example Notebook/Example Destination.md" ]]
+
+  diff                                          \
+    <(cat "${_TMP_DIR}/fixtures/example.md")    \
+    <(cat "${NB_DIR}/Example Notebook/Example Destination.md")
+
+  # Adds to index:
+
+  [[ -e "${NB_DIR}/Example Notebook/.index" ]]
+
+  diff                                  \
+    <(ls "${NB_DIR}/Example Notebook/") \
+    <(cat "${NB_DIR}/Example Notebook/.index")
+
+  # Prints output:
+
+  [[ "${output}" =~ \
+Imported\ .*[.*Example\ Notebook:Example\ Folder/1.*].*\ .*Example\ Destination.md.*\ \"Example\ Title\"  ]]
+  [[ "${output}" =~ \
+Example\ Destination.md.*\ \"Example\ Title\"\ from\ .*${_TMP_DIR}/fixtures/example.md  ]]
 }
 
 @test "'import <file-path> <notebook>:<filename>' imports file to <notebook>:<filename>." {
@@ -533,7 +895,93 @@ Imported\ .*[.*Example\ Notebook:Example\ Folder/1.*].*\ .*Example\ Folder/Examp
 Folder/Example\ Destination.md.*\ \"Example\ Title\"\ from\ .*${_TMP_DIR}/fixtures/example.md           ]]
 }
 
+@test "'import <notebook>:<folder>/<filename> <file-path>' imports file to <notebook>:<folder>/<filename>." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" add "Example Notebook:Example Folder" --type "folder"
+
+    cp -R "${NB_TEST_BASE_PATH}/fixtures" "${_TMP_DIR}"
+
+    [[ -e "${_TMP_DIR}/fixtures" ]]
+  }
+
+  run "${_NB}" import                                         \
+    "Example Notebook:Example Folder/Example Destination.md"  \
+    "${_TMP_DIR}/fixtures/example.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Adds file:
+
+  [[ -f "${NB_DIR}/Example Notebook/Example Folder/Example Destination.md"  ]]
+
+  diff                                        \
+    <(cat "${_TMP_DIR}/fixtures/example.md")  \
+    <(cat "${NB_DIR}/Example Notebook/Example Folder/Example Destination.md")
+
+  # Adds to index:
+
+  [[ -e "${NB_DIR}/Example Notebook/Example Folder/.index"      ]]
+
+  diff                                                  \
+    <(ls "${NB_DIR}/Example Notebook/Example Folder/")  \
+    <(cat "${NB_DIR}/Example Notebook/Example Folder/.index")
+
+  # Prints output:
+
+  [[ "${output}" =~ \
+Imported\ .*[.*Example\ Notebook:Example\ Folder/1.*].*\ .*Example\ Folder/Example\ Destination.md.*\ \"Example\ Title\"  ]]
+  [[ "${output}" =~ \
+Folder/Example\ Destination.md.*\ \"Example\ Title\"\ from\ .*${_TMP_DIR}/fixtures/example.md           ]]
+}
+
 @test "'import <path> <notebook>:<folder>/' (slash) imports file to <notebook>:<folder>." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" add "Example Notebook:Example Folder" --type "folder"
+
+    cp -R "${NB_TEST_BASE_PATH}/fixtures" "${_TMP_DIR}"
+
+    [[ -e "${_TMP_DIR}/fixtures" ]]
+  }
+
+  run "${_NB}" import "${_TMP_DIR}/fixtures/example.md" "Example Notebook:Example Folder/"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Adds file:
+
+  [[ -f "${NB_DIR}/Example Notebook/Example Folder/example.md"  ]]
+
+  diff                                        \
+    <(cat "${_TMP_DIR}/fixtures/example.md")  \
+    <(cat "${NB_DIR}/Example Notebook/Example Folder/example.md")
+
+  # Adds to index:
+
+  [[ -e "${NB_DIR}/Example Notebook/Example Folder/.index"      ]]
+
+  diff                                                  \
+    <(ls "${NB_DIR}/Example Notebook/Example Folder/")  \
+    <(cat "${NB_DIR}/Example Notebook/Example Folder/.index")
+
+  # Prints output:
+
+  [[ "${output}" =~ \
+Imported\ .*[.*Example\ Notebook:Example\ Folder/1.*].*\ .*Example\ Folder/example.md.*\ \"Example\ Title\" ]]
+  [[ "${output}" =~ \
+Folder/example.md.*\ \"Example\ Title\"\ from\ .*${_TMP_DIR}/fixtures/example.md          ]]
+}
+
+@test "'import <notebook>:<folder>/ <path>' (slash) imports file to <notebook>:<folder>." {
   {
     "${_NB}" init
 
@@ -617,6 +1065,48 @@ Imported\ .*[.*Example\ Notebook:Example\ Folder/1.*].*\ .*Example\ Folder/examp
 Folder/example.md.*\ \"Example\ Title\"\ from\ .*${_TMP_DIR}/fixtures/example.md          ]]
 }
 
+@test "'import <notebook>:<folder> <path>' (no slash) imports file to <notebook>:<folder>." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" add "Example Notebook:Example Folder" --type "folder"
+
+    cp -R "${NB_TEST_BASE_PATH}/fixtures" "${_TMP_DIR}"
+
+    [[ -e "${_TMP_DIR}/fixtures" ]]
+  }
+
+  run "${_NB}" import "Example Notebook:Example Folder" "${_TMP_DIR}/fixtures/example.md" 
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Adds file:
+
+  [[ -f "${NB_DIR}/Example Notebook/Example Folder/example.md"  ]]
+
+  diff                                        \
+    <(cat "${_TMP_DIR}/fixtures/example.md")  \
+    <(cat "${NB_DIR}/Example Notebook/Example Folder/example.md")
+
+  # Adds to index:
+
+  [[ -e "${NB_DIR}/Example Notebook/Example Folder/.index"      ]]
+
+  diff                                                  \
+    <(ls "${NB_DIR}/Example Notebook/Example Folder/")  \
+    <(cat "${NB_DIR}/Example Notebook/Example Folder/.index")
+
+  # Prints output:
+
+  [[ "${output}" =~ \
+Imported\ .*[.*Example\ Notebook:Example\ Folder/1.*].*\ .*Example\ Folder/example.md.*\ \"Example\ Title\" ]]
+  [[ "${output}" =~ \
+Folder/example.md.*\ \"Example\ Title\"\ from\ .*${_TMP_DIR}/fixtures/example.md          ]]
+}
+
 @test "'import ./* <folder>' (no slash) with valid * (glob) argument copies multiple files and directories into <folder>/." {
   {
     "${_NB}" init
@@ -634,6 +1124,81 @@ Folder/example.md.*\ \"Example\ Title\"\ from\ .*${_TMP_DIR}/fixtures/example.md
   }
 
   run "${_NB}" import ./* "Example Destination"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  IFS=$'\n' _files=($(ls -1 "${NB_DIR}/home/Example Destination/"))
+
+  printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
+  printf "\${#_files[@]}: '%s'\\n" "${#_files[@]}"
+
+  [[ "${#_files[@]}"  -eq 15 ]]
+
+  grep -q '# Example Title' "${NB_DIR}/home/Example Destination/Example Folder"/*
+
+  [[ -d "${_TMP_DIR}/fixtures/Example Folder"                                   ]]
+  [[ -d "${NB_DIR}/home/Example Destination/Example Folder"                     ]]
+  [[ -f "${NB_DIR}/home/Example Destination/Example Folder/example.md"          ]]
+  [[ -f "${NB_DIR}/home/Example Destination/Example Folder/example.com.html"    ]]
+  [[    "${output}"   =~ Example\ Destination/Example\ Folder                   ]]
+
+  [[ -d "${_TMP_DIR}/fixtures/bin"                                              ]]
+  [[ -d "${NB_DIR}/home/Example Destination/bin"                                ]]
+  [[ -f "${NB_DIR}/home/Example Destination/bin/bookmark"                       ]]
+  [[ -f "${NB_DIR}/home/Example Destination/bin/mock_editor"                    ]]
+  [[    "${lines[1]}" =~ Imported                                               ]]
+  [[    "${output}"   =~ Example\ Destination/bin                               ]]
+
+  [[ -e "${_TMP_DIR}/fixtures/copy-deprecated.nb-plugin"                        ]]
+  [[ -f "${NB_DIR}/home/Example Destination/copy-deprecated.nb-plugin"          ]]
+  [[    "${lines[2]}" =~ Imported                                               ]]
+  [[    "${output}"   =~ Example\ Destination/copy-deprecated.nb-plugin         ]]
+
+  [[ -e "${_TMP_DIR}/fixtures/example.com-og.html"                              ]]
+  [[ -f "${NB_DIR}/home/Example Destination/example.com-og.html"                ]]
+  [[    "${lines[3]}" =~ Imported                                               ]]
+  [[    "${output}"   =~ Example\ Destination/example.com-og.html               ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+
+  printf "\$(git log): '%s'\n" "$(git log)"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+
+  git log | grep -q '\[nb\] Import'
+
+  # Adds to index:
+
+  [[ -e "${NB_DIR}/home/Example Destination/.index" ]]
+
+  diff                                          \
+    <(ls "${NB_DIR}/home/Example Destination/") \
+    <(cat "${NB_DIR}/home/Example Destination/.index")
+}
+
+@test "'import  <folder> ./*' (no slash) with valid * (glob) argument copies multiple files and directories into <folder>/." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Destination" --type "folder"
+
+    cp -R "${NB_TEST_BASE_PATH}/fixtures" "${_TMP_DIR}"
+
+    [[ -e "${_TMP_DIR}/fixtures" ]]
+
+    cd "${_TMP_DIR}/fixtures"
+
+    [[ "$(pwd)" == "${_TMP_DIR}/fixtures" ]]
+    [[ -d "${NB_DIR}/home"                ]]
+  }
+
+  run "${_NB}" import "Example Destination" ./*
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -767,6 +1332,81 @@ Folder/example.md.*\ \"Example\ Title\"\ from\ .*${_TMP_DIR}/fixtures/example.md
     <(cat "${NB_DIR}/home/Example Destination/.index")
 }
 
+@test "'import <folder>/ ./*' (slash) with valid * (glob) argument copies multiple files and directories into <folder>/." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Destination" --type "folder"
+
+    cp -R "${NB_TEST_BASE_PATH}/fixtures" "${_TMP_DIR}"
+
+    [[ -e "${_TMP_DIR}/fixtures" ]]
+
+    cd "${_TMP_DIR}/fixtures"
+
+    [[ "$(pwd)" == "${_TMP_DIR}/fixtures" ]]
+    [[ -d "${NB_DIR}/home"                ]]
+  }
+
+  run "${_NB}" import "Example Destination/" ./*
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  IFS=$'\n' _files=($(ls -1 "${NB_DIR}/home/Example Destination/"))
+
+  printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
+  printf "\${#_files[@]}: '%s'\\n" "${#_files[@]}"
+
+  [[ "${#_files[@]}"  -eq 15 ]]
+
+  grep -q '# Example Title' "${NB_DIR}/home/Example Destination/Example Folder"/*
+
+  [[ -d "${_TMP_DIR}/fixtures/Example Folder"                                   ]]
+  [[ -d "${NB_DIR}/home/Example Destination/Example Folder"                     ]]
+  [[ -f "${NB_DIR}/home/Example Destination/Example Folder/example.md"          ]]
+  [[ -f "${NB_DIR}/home/Example Destination/Example Folder/example.com.html"    ]]
+  [[    "${output}"   =~ Example\ Destination/Example\ Folder                   ]]
+
+  [[ -d "${_TMP_DIR}/fixtures/bin"                                              ]]
+  [[ -d "${NB_DIR}/home/Example Destination/bin"                                ]]
+  [[ -f "${NB_DIR}/home/Example Destination/bin/bookmark"                       ]]
+  [[ -f "${NB_DIR}/home/Example Destination/bin/mock_editor"                    ]]
+  [[    "${lines[1]}" =~ Imported                                               ]]
+  [[    "${output}"   =~ Example\ Destination/bin                               ]]
+
+  [[ -e "${_TMP_DIR}/fixtures/copy-deprecated.nb-plugin"                        ]]
+  [[ -f "${NB_DIR}/home/Example Destination/copy-deprecated.nb-plugin"          ]]
+  [[    "${lines[2]}" =~ Imported                                               ]]
+  [[    "${output}"   =~ Example\ Destination/copy-deprecated.nb-plugin         ]]
+
+  [[ -e "${_TMP_DIR}/fixtures/example.com-og.html"                              ]]
+  [[ -f "${NB_DIR}/home/Example Destination/example.com-og.html"                ]]
+  [[    "${lines[3]}" =~ Imported                                               ]]
+  [[    "${output}"   =~ Example\ Destination/example.com-og.html               ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+
+  printf "\$(git log): '%s'\n" "$(git log)"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+
+  git log | grep -q '\[nb\] Import'
+
+  # Adds to index:
+
+  [[ -e "${NB_DIR}/home/Example Destination/.index" ]]
+
+  diff                                          \
+    <(ls "${NB_DIR}/home/Example Destination/") \
+    <(cat "${NB_DIR}/home/Example Destination/.index")
+}
+
 @test "'import <file-path> <filename>' imports file to <filename>." {
   {
     "${_NB}" init
@@ -777,6 +1417,44 @@ Folder/example.md.*\ \"Example\ Title\"\ from\ .*${_TMP_DIR}/fixtures/example.md
   }
 
   run "${_NB}" import "${_TMP_DIR}/fixtures/example.md" "Example Destination.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Adds file:
+
+  [[ -f "${NB_DIR}/home/Example Destination.md" ]]
+
+  diff                                          \
+    <(cat "${_TMP_DIR}/fixtures/example.md")    \
+    <(cat "${NB_DIR}/home/Example Destination.md")
+
+  # Adds to index:
+
+  [[ -e "${NB_DIR}/home/.index" ]]
+
+  diff                          \
+    <(ls "${NB_DIR}/home/")     \
+    <(cat "${NB_DIR}/home/.index")
+
+  # Prints output:
+
+  [[ "${output}" =~ \
+Imported\ .*[.*Example\ Folder/1.*].*\ .*Example\ Destination.md.*\ \"Example\ Title\"  ]]
+  [[ "${output}" =~ \
+Example\ Destination.md.*\ \"Example\ Title\"\ from\ .*${_TMP_DIR}/fixtures/example.md  ]]
+}
+
+@test "'import <filename> <file-path>' imports file to <filename>." {
+  {
+    "${_NB}" init
+
+    cp -R "${NB_TEST_BASE_PATH}/fixtures" "${_TMP_DIR}"
+
+    [[ -e "${_TMP_DIR}/fixtures" ]]
+  }
+
+  run "${_NB}" import "Example Destination.md" "${_TMP_DIR}/fixtures/example.md" 
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -845,6 +1523,46 @@ Imported\ .*[.*Example\ Folder/1.*].*\ .*Example\ Folder/Example\ Destination.md
 Folder/Example\ Destination.md.*\ \"Example\ Title\"\ from\ .*${_TMP_DIR}/fixtures/example.md           ]]
 }
 
+@test "'import <folder>/<filename> <file-path>' imports file to <folder>/<filename>." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder" --type "folder"
+
+    cp -R "${NB_TEST_BASE_PATH}/fixtures" "${_TMP_DIR}"
+
+    [[ -e "${_TMP_DIR}/fixtures" ]]
+  }
+
+  run "${_NB}" import "Example Folder/Example Destination.md" "${_TMP_DIR}/fixtures/example.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Adds file:
+
+  [[ -f "${NB_DIR}/home/Example Folder/Example Destination.md"  ]]
+
+  diff                                        \
+    <(cat "${_TMP_DIR}/fixtures/example.md")  \
+    <(cat "${NB_DIR}/home/Example Folder/Example Destination.md")
+
+  # Adds to index:
+
+  [[ -e "${NB_DIR}/home/Example Folder/.index"      ]]
+
+  diff                                        \
+    <(ls "${NB_DIR}/home/Example Folder/")    \
+    <(cat "${NB_DIR}/home/Example Folder/.index")
+
+  # Prints output:
+
+  [[ "${output}" =~ \
+Imported\ .*[.*Example\ Folder/1.*].*\ .*Example\ Folder/Example\ Destination.md.*\ \"Example\ Title\"  ]]
+  [[ "${output}" =~ \
+Folder/Example\ Destination.md.*\ \"Example\ Title\"\ from\ .*${_TMP_DIR}/fixtures/example.md           ]]
+}
+
 @test "'import <path> <folder>/' (slash) imports file to <folder>." {
   {
     "${_NB}" init
@@ -885,6 +1603,46 @@ Imported\ .*[.*Example\ Folder/1.*].*\ .*Example\ Folder/example.md.*\ \"Example
 Folder/example.md.*\ \"Example\ Title\"\ from\ .*${_TMP_DIR}/fixtures/example.md          ]]
 }
 
+@test "'import <folder>/ <path>' (slash) imports file to <folder>." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder" --type "folder"
+
+    cp -R "${NB_TEST_BASE_PATH}/fixtures" "${_TMP_DIR}"
+
+    [[ -e "${_TMP_DIR}/fixtures" ]]
+  }
+
+  run "${_NB}" import "Example Folder/" "${_TMP_DIR}/fixtures/example.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Adds file:
+
+  [[ -f "${NB_DIR}/home/Example Folder/example.md"  ]]
+
+  diff                                        \
+    <(cat "${_TMP_DIR}/fixtures/example.md")  \
+    <(cat "${NB_DIR}/home/Example Folder/example.md")
+
+  # Adds to index:
+
+  [[ -e "${NB_DIR}/home/Example Folder/.index"      ]]
+
+  diff                                        \
+    <(ls "${NB_DIR}/home/Example Folder/")    \
+    <(cat "${NB_DIR}/home/Example Folder/.index")
+
+  # Prints output:
+
+  [[ "${output}" =~ \
+Imported\ .*[.*Example\ Folder/1.*].*\ .*Example\ Folder/example.md.*\ \"Example\ Title\" ]]
+  [[ "${output}" =~ \
+Folder/example.md.*\ \"Example\ Title\"\ from\ .*${_TMP_DIR}/fixtures/example.md          ]]
+}
+
 @test "'import <path> <folder>' (no slash) imports file to <folder>." {
   {
     "${_NB}" init
@@ -897,6 +1655,46 @@ Folder/example.md.*\ \"Example\ Title\"\ from\ .*${_TMP_DIR}/fixtures/example.md
   }
 
   run "${_NB}" import "${_TMP_DIR}/fixtures/example.md" "Example Folder"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Adds file:
+
+  [[ -f "${NB_DIR}/home/Example Folder/example.md"  ]]
+
+  diff                                        \
+    <(cat "${_TMP_DIR}/fixtures/example.md")  \
+    <(cat "${NB_DIR}/home/Example Folder/example.md")
+
+  # Adds to index:
+
+  [[ -e "${NB_DIR}/home/Example Folder/.index"      ]]
+
+  diff                                        \
+    <(ls "${NB_DIR}/home/Example Folder/")    \
+    <(cat "${NB_DIR}/home/Example Folder/.index")
+
+  # Prints output:
+
+  [[ "${output}" =~ \
+Imported\ .*[.*Example\ Folder/1.*].*\ .*Example\ Folder/example.md.*\ \"Example\ Title\" ]]
+  [[ "${output}" =~ \
+Folder/example.md.*\ \"Example\ Title\"\ from\ .*${_TMP_DIR}/fixtures/example.md          ]]
+}
+
+@test "'import <folder> <path>' (no slash) imports file to <folder>." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder" --type "folder"
+
+    cp -R "${NB_TEST_BASE_PATH}/fixtures" "${_TMP_DIR}"
+
+    [[ -e "${_TMP_DIR}/fixtures" ]]
+  }
+
+  run "${_NB}" import "Example Folder" "${_TMP_DIR}/fixtures/example.md"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -1649,6 +2447,86 @@ Imported\ .*[.*5.*].*\ .*example.com.md.*\ from\ .*example.com.md     ]]
   [[ "${output}" =~ example.com.html  ]]
 }
 
+@test "'import <url> <notebook>:' with valid <url> argument creates a new file in <notebook>." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+  }
+
+  run "${_NB}" import "file://${NB_TEST_BASE_PATH}/fixtures/example.com.html" "Example Notebook:"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  _files=($(ls "${NB_DIR}/Example Notebook/"))
+  [[ "${#_files[@]}" -eq 1 ]]
+
+  grep -q 'Example' "${NB_DIR}/Example Notebook"/*
+
+  [[ "${output}" =~ "Imported" ]]
+
+  cd "${NB_DIR}/Example Notebook" || return 1
+  printf "\$(git log): '%s'\n" "$(git log)"
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Import'
+  git log | grep -q 'Source'
+
+  # Adds to index
+  [[ -e "${NB_DIR}/Example Notebook/.index" ]]
+
+  diff                                  \
+    <(ls "${NB_DIR}/Example Notebook")  \
+    <(cat "${NB_DIR}/Example Notebook/.index")
+
+  # Prints output
+  [[ "${output}" =~ Imported            ]]
+  [[ "${output}" =~ example.com.html    ]]
+}
+
+@test "'import <notebook>: <url>' with valid <url> argument creates a new file in <notebook>." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+  }
+
+  run "${_NB}" import "Example Notebook:" "file://${NB_TEST_BASE_PATH}/fixtures/example.com.html"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  _files=($(ls "${NB_DIR}/Example Notebook/"))
+  [[ "${#_files[@]}" -eq 1 ]]
+
+  grep -q 'Example' "${NB_DIR}/Example Notebook"/*
+
+  [[ "${output}" =~ "Imported" ]]
+
+  cd "${NB_DIR}/Example Notebook" || return 1
+  printf "\$(git log): '%s'\n" "$(git log)"
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Import'
+  git log | grep -q 'Source'
+
+  # Adds to index
+  [[ -e "${NB_DIR}/Example Notebook/.index" ]]
+
+  diff                                  \
+    <(ls "${NB_DIR}/Example Notebook")  \
+    <(cat "${NB_DIR}/Example Notebook/.index")
+
+  # Prints output
+  [[ "${output}" =~ Imported            ]]
+  [[ "${output}" =~ example.com.html    ]]
+}
+
 @test "'import --convert' with valid <url> creates and converts a new note file." {
   {
     "${_NB}" init
@@ -1736,9 +2614,9 @@ Imported\ .*[.*5.*].*\ .*example.com.md.*\ from\ .*example.com.md     ]]
   printf "\${output}: '%s'\\n" "${output}"
   ls "${NB_DIR}"
 
-  [[ ${status} -eq 0                ]]
-  [[ -d "${NB_DIR}/example"         ]]
-  [[ "${lines[0]}" =~ "Imported"    ]]
+  [[    "${status}"         -eq 0       ]]
+  [[ -d "${NB_DIR}/example"             ]]
+  [[    "${lines[0]}"       =~ Imported ]]
 
   "${_NB}" notebooks | grep -q 'example'
 
