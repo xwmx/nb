@@ -4927,6 +4927,7 @@ HEREDOC
 _list() {
   local _error_on_empty=0
   local _excerpt_length=3
+  local _force_line_wrap=0
   local _limit=
   local _line_wrap=1
   local _list_filenames=0
@@ -5038,6 +5039,10 @@ _list() {
         ;;
       --with*pinned)
         _with_pinned=1
+        ;;
+      --wrap)
+        _force_line_wrap=1
+        _recursive_arguments+=("--wrap")
         ;;
       *)
         if   [[   "${1:-}" =~ ^-+[0-9]+$  ]]
@@ -5414,7 +5419,8 @@ _list() {
        ((_COLOR_ENABLED))     &&
        ! ((_list_filenames))  &&
        ! ((_list_paths))      &&
-       ! ((_no_id))
+       ! ((_no_id))           &&
+       ! ((_force_line_wrap))
     then
       _line_wrap=0
     fi
