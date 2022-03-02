@@ -4841,8 +4841,7 @@ are aliases that refer to the same subcommand,
 so the two subcommand names can be used interchangeably.
 
 For more information about [`set`](#settings) and [`settings`](#settings), see
-[`nb help settings`](#settings) and
-[`nb settings list --long`](#settings-list---long).
+[`nb help settings`](#settings).
 
 ### 🎨 Color Themes
 
