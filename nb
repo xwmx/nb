@@ -8674,8 +8674,6 @@ _DOCUMENTED_SUBCOMMANDS=(
 #
 # Subcommands that initiate background cleanup commits and sync with remotes.
 _GIT_SUBCOMMANDS=(
-  +
-  -
   a
   add
   ar
