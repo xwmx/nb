@@ -8613,42 +8613,31 @@ _SUBCOMMANDS=(
 _DOCUMENTED_SUBCOMMANDS=(
   +
   -
-  a
   add
-  ar
   archive
   b
-  bk
   bookmark
-  br
   browse
   commands
   completions
   count
-  d
   delete
   "do"
-  e
   edit
   export
   env
   folders
   git
-  h
   help
   history
-  i
   import
   init
   list
   ls
   move
   mv
-  n
   notebooks
-  o
   open
-  p
   peek
   pin
   plugins
@@ -8657,7 +8646,6 @@ _DOCUMENTED_SUBCOMMANDS=(
   remote
   rename
   run
-  s
   search
   set
   settings
@@ -8670,7 +8658,6 @@ _DOCUMENTED_SUBCOMMANDS=(
   tasks
   todo
   u
-  unar
   unarchive
   undo
   unpin
@@ -8685,6 +8672,8 @@ _DOCUMENTED_SUBCOMMANDS=(
 #
 # Subcommands that initiate background cleanup commits and sync with remotes.
 _GIT_SUBCOMMANDS=(
+  +
+  -
   a
   add
   ar
