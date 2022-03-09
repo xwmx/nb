@@ -2,9 +2,66 @@
 
 load test_helper
 
+# alias #######################################################################
+
+@test "'f add <name>' adds folder with <name>." {
+  {
+    "${_NB}" init
+
+    [[ ! -e "${NB_DIR}/home/Example Folder"     ]]
+  }
+
+  run "${_NB}" f add "Example Folder"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[      "${status}"   == 0                                      ]]
+  [[      "${output}"   =~ Added:\ .*[.*1.*].*\ .*Example\ Folder ]]
+  [[ -d   "${NB_DIR}/home/Example Folder"                         ]]
+}
+
 # add ########################################################################
 
 @test "'folders add' with no name prints help." {
+  {
+    "${_NB}" init
+
+    [[ ! -e "${NB_DIR}/home/folder"             ]]
+  }
+
+  run "${_NB}" folders add
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[      "${status}"   == 1                    ]]
+  [[      "${lines[0]}" =~ Usage                ]]
+  [[      "${lines[1]}" =~ nb\ folders\ add     ]]
+  [[      "${lines[2]}" =~ nb\ folders\ delete  ]]
+  [[ ! -e "${NB_DIR}/home/folder"               ]]
+}
+
+@test "'folders a' with no name prints help." {
+  {
+    "${_NB}" init
+
+    [[ ! -e "${NB_DIR}/home/folder"             ]]
+  }
+
+  run "${_NB}" folders add
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[      "${status}"   == 1                    ]]
+  [[      "${lines[0]}" =~ Usage                ]]
+  [[      "${lines[1]}" =~ nb\ folders\ add     ]]
+  [[      "${lines[2]}" =~ nb\ folders\ delete  ]]
+  [[ ! -e "${NB_DIR}/home/folder"               ]]
+}
+
+@test "'folders +' with no name prints help." {
   {
     "${_NB}" init
 
@@ -40,6 +97,40 @@ load test_helper
   [[ -d   "${NB_DIR}/home/Example Folder"                         ]]
 }
 
+@test "'folders a <name>' adds folder with <name>." {
+  {
+    "${_NB}" init
+
+    [[ ! -e "${NB_DIR}/home/Example Folder"     ]]
+  }
+
+  run "${_NB}" folders a "Example Folder"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[      "${status}"   == 0                                      ]]
+  [[      "${output}"   =~ Added:\ .*[.*1.*].*\ .*Example\ Folder ]]
+  [[ -d   "${NB_DIR}/home/Example Folder"                         ]]
+}
+
+@test "'folders + <name>' adds folder with <name>." {
+  {
+    "${_NB}" init
+
+    [[ ! -e "${NB_DIR}/home/Example Folder"     ]]
+  }
+
+  run "${_NB}" folders + "Example Folder"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[      "${status}"   == 0                                      ]]
+  [[      "${output}"   =~ Added:\ .*[.*1.*].*\ .*Example\ Folder ]]
+  [[ -d   "${NB_DIR}/home/Example Folder"                         ]]
+}
+
 # delete ######################################################################
 
 @test "'folders delete' with no name prints help." {
@@ -47,7 +138,55 @@ load test_helper
     "${_NB}" init
   }
 
-  run "${_NB}" folders add
+  run "${_NB}" folders delete
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[      "${status}"   == 1                    ]]
+  [[      "${lines[0]}" =~ Usage                ]]
+  [[      "${lines[1]}" =~ nb\ folders\ add     ]]
+  [[      "${lines[2]}" =~ nb\ folders\ delete  ]]
+}
+
+@test "'folders d' with no name prints help." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" folders d
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[      "${status}"   == 1                    ]]
+  [[      "${lines[0]}" =~ Usage                ]]
+  [[      "${lines[1]}" =~ nb\ folders\ add     ]]
+  [[      "${lines[2]}" =~ nb\ folders\ delete  ]]
+}
+
+@test "'folders -' with no name prints help." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" folders -
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[      "${status}"   == 1                    ]]
+  [[      "${lines[0]}" =~ Usage                ]]
+  [[      "${lines[1]}" =~ nb\ folders\ add     ]]
+  [[      "${lines[2]}" =~ nb\ folders\ delete  ]]
+}
+
+@test "'folders rm' with no name prints help." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" folders rm
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -102,7 +241,64 @@ load test_helper
     [[ -e "${NB_DIR}/home/Example Folder"       ]]
   }
 
-  run "${_NB}" folders delete "Example Folder" --force # <<< "y${_NEWLINE}"
+  run "${_NB}" folders delete "Example Folder" <<< "y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[      "${status}"   == 0                                              ]]
+  [[      "${output}"   =~ Deleted:\ \ .*[.*1.*].*\ 📂\ .*Example\ Folder ]]
+  [[ ! -d "${NB_DIR}/home/Example Folder"                                 ]]
+}
+
+@test "'folders d <name>' with existing folder deletes folder." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add folder "Example Folder"
+
+    [[ -e "${NB_DIR}/home/Example Folder"       ]]
+  }
+
+  run "${_NB}" folders d "Example Folder" <<< "y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[      "${status}"   == 0                                              ]]
+  [[      "${output}"   =~ Deleted:\ \ .*[.*1.*].*\ 📂\ .*Example\ Folder ]]
+  [[ ! -d "${NB_DIR}/home/Example Folder"                                 ]]
+}
+
+@test "'folders - <name>' with existing folder deletes folder." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add folder "Example Folder"
+
+    [[ -e "${NB_DIR}/home/Example Folder"       ]]
+  }
+
+  run "${_NB}" folders - "Example Folder" <<< "y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[      "${status}"   == 0                                              ]]
+  [[      "${output}"   =~ Deleted:\ \ .*[.*1.*].*\ 📂\ .*Example\ Folder ]]
+  [[ ! -d "${NB_DIR}/home/Example Folder"                                 ]]
+}
+
+@test "'folders rm <name>' with existing folder deletes folder." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add folder "Example Folder"
+
+    [[ -e "${NB_DIR}/home/Example Folder"       ]]
+  }
+
+  run "${_NB}" folders rm "Example Folder" <<< "y${_NEWLINE}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -157,6 +353,60 @@ load test_helper
   [[   "${lines[1]}"  =~  .*[.*2.*].*\ 📂\ Example\ Folder      ]]
 }
 
+@test "'folders ls' with folders in current notebook lists folders." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md" --content "Example content one."
+
+    "${_NB}" add folder "Example Folder"
+
+    sleep 1
+
+    "${_NB}" add "File Two.md" --content "Example content two."
+
+    sleep 1
+
+    "${_NB}" add folder "Sample Folder"
+  }
+
+  run "${_NB}" folders ls
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0                                     ]]
+  [[   "${lines[0]}"  =~  .*[.*4.*].*\ 📂\ Sample\ Folder       ]]
+  [[   "${lines[1]}"  =~  .*[.*2.*].*\ 📂\ Example\ Folder      ]]
+}
+
+@test "'folders list' with folders in current notebook lists folders." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md" --content "Example content one."
+
+    "${_NB}" add folder "Example Folder"
+
+    sleep 1
+
+    "${_NB}" add "File Two.md" --content "Example content two."
+
+    sleep 1
+
+    "${_NB}" add folder "Sample Folder"
+  }
+
+  run "${_NB}" folders list
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0                                     ]]
+  [[   "${lines[0]}"  =~  .*[.*4.*].*\ 📂\ Sample\ Folder       ]]
+  [[   "${lines[1]}"  =~  .*[.*2.*].*\ 📂\ Example\ Folder      ]]
+}
+
 @test "'folders <notebook>:' with folders in <notebook> lists folders." {
   {
     "${_NB}" init
@@ -178,6 +428,84 @@ load test_helper
   }
 
   run "${_NB}" folders home:
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0                                     ]]
+  [[   "${lines[0]}"  =~  .*[.*home:4.*].*\ 📂\ Sample\ Folder  ]]
+  [[   "${lines[1]}"  =~  .*[.*home:2.*].*\ 📂\ Example\ Folder ]]
+}
+
+@test "'folders ls <notebook>:' with folders in <notebook> lists folders." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md" --content "Example content one."
+
+    "${_NB}" add folder "Example Folder"
+
+    sleep 1
+
+    "${_NB}" add "File Two.md" --content "Example content two."
+
+    sleep 1
+
+    "${_NB}" add folder "Sample Folder"
+
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" notebooks use "Example Notebook"
+  }
+
+  run "${_NB}" folders ls home:
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0                                     ]]
+  [[   "${lines[0]}"  =~  .*[.*home:4.*].*\ 📂\ Sample\ Folder  ]]
+  [[   "${lines[1]}"  =~  .*[.*home:2.*].*\ 📂\ Example\ Folder ]]
+
+  run "${_NB}" folders home: ls
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0                                     ]]
+  [[   "${lines[0]}"  =~  .*[.*home:4.*].*\ 📂\ Sample\ Folder  ]]
+  [[   "${lines[1]}"  =~  .*[.*home:2.*].*\ 📂\ Example\ Folder ]]
+}
+
+@test "'folders list <notebook>:' with folders in <notebook> lists folders." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md" --content "Example content one."
+
+    "${_NB}" add folder "Example Folder"
+
+    sleep 1
+
+    "${_NB}" add "File Two.md" --content "Example content two."
+
+    sleep 1
+
+    "${_NB}" add folder "Sample Folder"
+
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" notebooks use "Example Notebook"
+  }
+
+  run "${_NB}" folders list home:
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[   "${status}"    -eq 0                                     ]]
+  [[   "${lines[0]}"  =~  .*[.*home:4.*].*\ 📂\ Sample\ Folder  ]]
+  [[   "${lines[1]}"  =~  .*[.*home:2.*].*\ 📂\ Example\ Folder ]]
+
+  run "${_NB}" folders home: list
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"

@@ -8537,6 +8537,7 @@ _SUBCOMMANDS=(
   edit
   export
   env
+  f
   folder
   folders
   git
@@ -8698,6 +8699,7 @@ _GIT_SUBCOMMANDS=(
   e
   edit
   export
+  f
   folder
   folders
   grep
@@ -9020,9 +9022,9 @@ _call_deferred_command() {
   local _group="${2:-}"
   local _group_3_names=(
     _ar _archive _b _bookmark _br _browse _browser _close _config _do _done   \
-    _folder _folders _h _help _helpers _set _plugin _plugins _remote _reset   \
-    _settings _shell _st _stat _status _sync _t _task _tasks _to _todo _todos \
-    _unar _unarchive _undo _undone _unset _update _upgrade
+    _f _folder _folders _h _help _helpers _set _plugin _plugins _remote       \
+    _reset _settings _shell _st _stat _status _sync _t _task _tasks _to _todo \
+    _todos _unar _unarchive _undo _undone _unset _update _upgrade
   )
 
   if {
@@ -20153,6 +20155,11 @@ $(_color_primary "Usage"):
   ${_ME} folders delete [<notebook>:][<folder-path>/]<folder-name>
   ${_ME} folders <list-options>...
 
+$(_color_primary "Subcommands"):
+  (default)  List folders.
+  add        Add a new folder.
+  delete     Delete a folder.
+
 $(_color_primary "Description"):
   Add, delete, and list folders.
 
@@ -20169,46 +20176,83 @@ $(_color_primary "Examples"):
   ${_ME} folders
   ${_ME} folders add example
   ${_ME} folders delete example:sample
+
+$(_color_primary "Alias"):
+  ${_ME} f
 HEREDOC
 }
 _folders() {
-  if [[ -z "${2:-}" ]] && _contains "${1:-}" "add" "delete"
+  local _arguments=()
+  local _selector=
+  local _subcommand=
+
+  while ((${#}))
+  do
+    case "${1:-}" in
+      add|a|+)
+        _subcommand="add"
+        ;;
+      delete|d|rm|-)
+        _subcommand="delete"
+        ;;
+      list|ls)
+        _subcommand="list"
+        ;;
+      *)
+        if [[ -z "${_selector:-}" ]]
+        then
+          _selector="${1:-}"
+        fi
+
+        _arguments+=("${1:-}")
+        ;;
+    esac
+
+    shift
+  done
+
+  if [[ -z "${_subcommand:-}"     ]]
+  then
+    _subcommand="list"
+  fi
+
+  if [[ -z "${_selector:-}"       ]] &&
+     _contains "${_subcommand:-}" "+" "-" "a" "add" "d" "delete" "rm"
   then
     _help "folders"
 
     return 1
-  elif _contains "${1:-}" "list" "ls"
-  then
-    shift
   fi
 
-  case "${1:-}" in
+  case "${_subcommand:-}" in
     add)
-      _add folder "${@:2}"
+      _add folder "${_arguments[@]:-}"
       ;;
-    delete|rm)
+    delete)
       local _target_path=
-      _target_path="$(_show "${2:-}" --path)"
+      _target_path="$(_show "${_selector:-}" --path)"
 
       if [[ ! -e "${_target_path:-}"    ]]
       then
-        _warn printf "Not found: %s\\n" "$(_color_primary "${2:-}")"
+        _warn printf "Not found: %s\\n"     \
+          "$(_color_primary "${_selector:-}")"
 
         return 1
       elif [[ ! -d "${_target_path:-}"  ]]
       then
-        _warn printf "Not a folder: %s\\n" "$(_color_primary "${2:-}")"
+        _warn printf "Not a folder: %s\\n"  \
+          "$(_color_primary "${_selector:-}")"
 
         return 1
       fi
 
-      _delete "${@:2}"
+      _delete "${_arguments[@]:-}"
       ;;
-    *)
-      if [[ -n "${1:-}"                 ]]
+    list)
+      if [[ -n "${_selector:-}"         ]]
       then
         local _selector_path=
-        _selector_path="$(_show "${1:-}" --path)"
+        _selector_path="$(_show "${_selector:-}" --path)"
 
         if [[ -n "${_selector_path:-}"  ]]
         then
@@ -20216,10 +20260,11 @@ _folders() {
         fi
       fi
 
-      _list --type folder "${@:1}"
+      _list --type folder "${_arguments[@]:-}"
       ;;
   esac
 }
+_alias_subcommand "folders" "f"
 _alias_subcommand "folders" "folder"
 
 # helpers ############################################################# helpers
