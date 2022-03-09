@@ -8537,6 +8537,8 @@ _SUBCOMMANDS=(
   edit
   export
   env
+  folder
+  folders
   git
   grep
   h
@@ -8630,6 +8632,7 @@ _DOCUMENTED_SUBCOMMANDS=(
   edit
   export
   env
+  folders
   git
   h
   help
@@ -8705,6 +8708,8 @@ _GIT_SUBCOMMANDS=(
   e
   edit
   export
+  folder
+  folders
   grep
   i
   import
@@ -9024,9 +9029,9 @@ _call_deferred_command() {
   local _group="${2:-}"
   local _group_3_names=(
     _ar _archive _b _bookmark _br _browse _browser _close _config _do _done   \
-    _h _help _helpers _set _plugin _plugins _remote _reset _settings _shell   \
-    _st _stat _status _sync _t _task _tasks _to _todo _todos _unar _unarchive \
-    _undo _undone _unset _update _upgrade
+    _folder _folders _h _help _helpers _set _plugin _plugins _remote _reset   \
+    _settings _shell _st _stat _status _sync _t _task _tasks _to _todo _todos \
+    _unar _unarchive _undo _undone _unset _update _upgrade
   )
 
   if {
@@ -20146,6 +20151,84 @@ _do() {
 }
 _alias_subcommand "do" "done"
 _alias_subcommand "do" "close"
+
+# folders ############################################################# folders
+
+_describe_folders() {
+  cat <<HEREDOC
+$(_color_primary "Usage"):
+  ${_ME} folders add [<notebook>:][<folder-path>/]<folder-name>
+  ${_ME} folders delete [<notebook>:][<folder-path>/]<folder-name>
+  ${_ME} folders <list-options>...
+
+$(_color_primary "Description"):
+  Add, delete, and list folders.
+
+$(_color_primary "Read More"):
+  ${_README_URL}#-folders
+
+$(_color_primary "See Also"):
+  ${_ME} help add
+  ${_ME} help delete
+  ${_ME} help list
+  ${_ME} help ls
+
+$(_color_primary "Examples"):
+  ${_ME} folders
+  ${_ME} folders add example
+  ${_ME} folders delete example:sample
+HEREDOC
+}
+_folders() {
+  if [[ -z "${2:-}" ]] && _contains "${1:-}" "add" "delete"
+  then
+    _help "folders"
+
+    return 1
+  elif _contains "${1:-}" "list" "ls"
+  then
+    shift
+  fi
+
+  case "${1:-}" in
+    add)
+      _add folder "${@:2}"
+      ;;
+    delete|rm)
+      local _target_path=
+      _target_path="$(_show "${2:-}" --path)"
+
+      if [[ ! -e "${_target_path:-}"    ]]
+      then
+        _warn printf "Not found: %s\\n" "$(_color_primary "${2:-}")"
+
+        return 1
+      elif [[ ! -d "${_target_path:-}"  ]]
+      then
+        _warn printf "Not a folder: %s\\n" "$(_color_primary "${2:-}")"
+
+        return 1
+      fi
+
+      _delete "${@:2}"
+      ;;
+    *)
+      if [[ -n "${1:-}"                 ]]
+      then
+        local _selector_path=
+        _selector_path="$(_show "${1:-}" --path)"
+
+        if [[ -n "${_selector_path:-}"  ]]
+        then
+          _notebooks select "${_selector_path:-}"
+        fi
+      fi
+
+      _list --type folder "${@:1}"
+      ;;
+  esac
+}
+_alias_subcommand "folders" "folder"
 
 # helpers ############################################################# helpers
 
