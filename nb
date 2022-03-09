@@ -8573,6 +8573,7 @@ _SUBCOMMANDS=(
   remote
   rename
   reset
+  rm
   run
   s
   search
@@ -8721,6 +8722,7 @@ _GIT_SUBCOMMANDS=(
   preview
   q
   rename
+  rm
   s
   show
   search
@@ -13196,6 +13198,7 @@ _delete() {
 }
 _alias_subcommand "delete" "-"
 _alias_subcommand "delete" "d"
+_alias_subcommand "delete" "rm"
 
 # edit ################################################################### edit
 
