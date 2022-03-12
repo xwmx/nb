@@ -3985,6 +3985,8 @@ $(_color_primary "Usage"):
   ${_ME} export notebook <name> [<path>]
   ${_ME} export pandoc ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             [<pandoc options>...]
+  ${_ME} folders (add | delete) [<notebook>:][<folder-path>/]<folder-name>
+  ${_ME} folders <list-options>...
   ${_ME} git [checkpoint [<message>] | dirty]
   ${_ME} git <git-options>...
   ${_ME} help [<subcommand>] [-p | --print]
@@ -20176,6 +20178,9 @@ $(_color_primary "Examples"):
   ${_ME} folders delete example:sample
 
 $(_color_primary "Alias"):
+  ${_ME} folder
+
+$(_color_primary "Shortcut Alias"):
   ${_ME} f
 HEREDOC
 }

@@ -5612,6 +5612,7 @@ For more commands and options, run
   <a href="#edit">edit</a>&nbsp;·
   <a href="#env">env</a>&nbsp;·
   <a href="#export">export</a>&nbsp;·
+  <a href="#folders">folders</a>&nbsp;·
   <a href="#git">git</a>&nbsp;·
   <a href="#help-1">help</a>&nbsp;·
   <a href="#history">history</a>&nbsp;·
@@ -5719,6 +5720,8 @@ Usage:
   nb export notebook <name> [<path>]
   nb export pandoc ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             [<pandoc options>...]
+  nb folders (add | delete) [<notebook>:][<folder-path>/]<folder-name>
+  nb folders <list-options>...
   nb git [checkpoint [<message>] | dirty]
   nb git <git-options>...
   nb help [<subcommand>] [-p | --print]
@@ -6002,6 +6005,7 @@ For more information, see: `nb help`.
   <a href="#do">do</a>&nbsp;·
   <a href="#edit">edit</a>&nbsp;·
   <a href="#env">env</a>&nbsp;·
+  <a href="#folders">folders</a>&nbsp;·
   <a href="#export">export</a>&nbsp;·
   <a href="#git">git</a>&nbsp;·
   <a href="#help-1">help</a>&nbsp;·
@@ -6644,6 +6648,50 @@ Examples:
 
   # Export note 12 in the "sample" notebook to HTML
   nb export sample:12 /path/to/example.html
+```
+
+#### `folders`
+
+[↑](#help) · See also:
+[Folders](#-folders),
+[`add`](#add),
+[`delete`](#delete),
+[`list`](#list),
+[`ls`](#ls)
+
+```text
+Usage:
+  nb folders add [<notebook>:][<folder-path>/]<folder-name>
+  nb folders delete [<notebook>:][<folder-path>/]<folder-name>
+  nb folders <list-options>...
+
+Subcommands:
+  (default)  List folders.
+  add        Add a new folder.
+  delete     Delete a folder.
+
+Description:
+  Add, delete, and list folders.
+
+Read More:
+  https://github.com/xwmx/nb#-folders
+
+See Also:
+  nb help add
+  nb help delete
+  nb help list
+  nb help ls
+
+Examples:
+  nb folders
+  nb folders add example
+  nb folders delete example:sample
+
+Alias:
+  nb folder
+
+Shortcut Alias:
+  nb f
 ```
 
 #### `git`
