@@ -3380,6 +3380,7 @@ For more information about Zettelkasten, see
     <a href="#overview">↑</a> ·
     <a href="#add"><code>nb add</code></a>,
     <a href="#browse"><code>nb browse</code></a>,
+    <a href="#folders"><code>nb folders</code></a>,
     <a href="#list"><code>nb list</code></a>,
     <a href="#ls"><code>nb ls</code></a>
   </sup>
@@ -3400,14 +3401,21 @@ nb add example/demo/
 
 `nb` automatically creates any intermediate folders as needed.
 
-Folders can be created directly using [`nb add --type folder`](#add):
+Folders can be created directly using [`nb add folder`](#add),
+[`nb folders add`](#folders), and [`nb add --type folder`](#add):
 
 ```bash
 # create a new folder named "sample"
-nb add sample --type folder
+nb add folder sample
 
-# create a folder named "example" containing a folder named "demo"
-nb add example/demo --type folder
+# create a new folder named "sample", alternative
+nb folders add sample
+
+# create a new folder named "demo"
+nb add demo --type folder
+
+# create a folder named "example" containing a folder named "test"
+nb add example/test --type folder
 ```
 
 To list the items in a folder, pass the folder relative path to
