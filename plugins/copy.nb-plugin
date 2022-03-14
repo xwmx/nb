@@ -37,75 +37,133 @@ _copy() {
   #   notebook:example.md
   #   notebook:title
   #   notebook:/path/to/example.md
-  local _selector="${1:-}"
+  local _source_selector="${1:-}"
+  local _target_selector="${2:-}"
 
   # Check for the presence of a selector, exiting and printing help if not
   # found:
-  if [[ -z "${_selector:-}" ]]
+  if [[ -z "${_source_selector:-}" ]]
   then
     _help "copy"
     exit 1
   fi
 
-  # Get the relative path using the selector:
-  local _source_relative_path=
-  _source_relative_path="$(_show "${_selector}" --relative-path)"
-
-  # Get the current notebook path:
-  local _notebook_path=
-  _notebook_path="$(_notebooks current --path)"
-
-  # Validate that the selector represents a valid file:
-  if [[   -z "${_source_relative_path:-}"                 ]] ||
-     [[ ! -e "${_notebook_path}/${_source_relative_path}" ]]
-  then
-    printf "Not found: %s\\n" "${_selector}"
-    exit 1
-  fi
-
-  # Get a unique filename based on the source filename:
-  local _target_relative_path=
-  _target_relative_path="$(
-    _notebooks current --filename "${_source_relative_path}"
+  local _source_notebook_path=
+  _source_notebook_path="$(
+    _notebooks show "${_source_selector:-}" --path 2>/dev/null  ||
+      _notebooks current --path
   )"
 
-  if [[ "${_target_relative_path:-}" =~ / ]]
+  local _source_relative_path=
+  _source_relative_path="$(
+    _show "${_source_selector}" --relative-path 2>/dev/null || :
+  )"
+
+  local _source_basename="${_source_relative_path##*/}"
+
+  if [[   -z "${_source_relative_path:-}"                         ]] ||
+     [[ ! -e "${_source_notebook_path}/${_source_relative_path}"  ]]
   then
-    local _target_folder_path="${_notebook_path}/${_target_relative_path%/*}"
+    _warn printf "Not found: %s\\n" "$(
+      _color_primary "${_source_selector:-}"
+    )"
+
+    return 1
+  fi
+
+  local _target_folder_path=
+  local _target_notebook_path=
+  local _target_relative_path=
+
+  if [[ -n "${_target_selector:-}" ]]
+  then
+    _target_notebook_path="$(
+      _notebooks show "${_target_selector:-}" --path 2>/dev/null  ||
+        _notebooks current --path
+    )"
+
+    local _target_folder_relative_path=
+    _target_folder_relative_path="$(
+      _selector_resolve_folders "${_target_selector:-}" --build   || :
+    )"
+
+    _target_folder_path="${_target_notebook_path:-}/${_target_folder_relative_path:-}"
+
+    _target_relative_path="$(
+      _selector_get_identifier "${_target_selector:-}"
+    )"
+
+    if [[ -z "${_target_relative_path:-}" ]]
+    then
+      _target_relative_path="${_source_basename:-}"
+    fi
+
+    _target_relative_path="${_target_relative_path%/}"
+
+    if [[ "${_target_selector:-}" =~ /$   ]]
+    then
+      _target_relative_path="${_target_relative_path:-}/${_source_basename:-}"
+    fi
+
+    if [[ -e "${_target_notebook_path:-}/${_target_relative_path:-}"  ]]
+    then
+      _warn printf "Already exists: %s\\n" "$(
+        _color_primary "${_target_selector:-}"
+      )"
+
+      return 1
+    fi
   else
-    local _target_folder_path="${_notebook_path}"
+    _target_notebook_path="$(
+      _notebooks show "${_source_selector}" --path 2>/dev/null    ||
+        _notebooks current --path
+    )"
+
+    # Get a unique filename based on the source filename:
+    _target_relative_path="$(
+      _notebooks current --filename "${_source_relative_path}"
+    )"
+
+    if [[ "${_target_relative_path:-}" =~ / ]]
+    then
+      _target_folder_path="${_source_notebook_path}/${_target_relative_path%/*}"
+    else
+      _target_folder_path="${_source_notebook_path}"
+    fi
   fi
 
   # Check if the file is a text file:
-  if _show "${_source_relative_path}" --type text
+  if _show "${_source_notebook_path}/${_source_relative_path}" --type text
   then # Text can use `_add`.
     # Print the source contents and pipe to `_add`:
-    _show "${_source_relative_path}" --no-color --print   \
-      | _add "${_target_relative_path}"
+    _show "${_source_notebook_path}/${_source_relative_path}"     \
+      --no-color --print                                          \
+      | _add "${_target_notebook_path}/${_target_relative_path}"
   else
     local _copy_arguments=(
-      "${_notebook_path}/${_source_relative_path}"
-      "${_notebook_path}/${_target_relative_path}"
+      "${_source_notebook_path}/${_source_relative_path}"
+      "${_target_notebook_path}/${_target_relative_path}"
     )
 
-    if [[ -d "${_notebook_path}/${_source_relative_path}" ]]
+    if [[ -d "${_source_notebook_path}/${_source_relative_path}"  ]]
     then
       _copy_arguments=("-R" "${_copy_arguments[@]:-}")
     fi
 
+    if [[ ! -e "${_target_folder_path:-}"   ]]
+    then
+      mkdir -p "${_target_folder_path:-}"
+    fi
+
     cp "${_copy_arguments[@]:-}"
 
-    # Add the new filename to the index:
     _index add "${_target_relative_path##*/}" "${_target_folder_path}"
 
-    # Record the change in git:
-    _git checkpoint "[nb] Add: ${_target_relative_path}"
+    _git checkpoint "${_target_notebook_path:-}" "[nb] Add: ${_target_relative_path}"
 
-    # Print feedback:
-    local _info=
-    _info="$(_show "${_target_relative_path}" --info-line)"
-
-    printf "Added: %s\\n" "${_info}"
+    printf "Added: %s\\n" "$(
+      _show "${_target_notebook_path}/${_target_relative_path}" --info-line
+    )"
   fi
 }
 

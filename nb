@@ -8855,19 +8855,19 @@ _parse_options() {
         elif _notebooks current --selected
         then
           _ARGUMENTS+=("${_current_option}")
-        elif [[ "${_SUBCOMMAND:-}" == "move"      ]] &&
+        elif [[ "${_SUBCOMMAND:-}" =~ ^copy$|^move$ ]] &&
              ((${#_ARGUMENTS[@]}))
         then
           _ARGUMENTS+=("${_current_option}")
-        elif [[ "${_SUBCOMMAND:-}" == "delete"    ]]
+        elif [[ "${_SUBCOMMAND:-}" == "delete"      ]]
         then
           _ARGUMENTS+=("${_current_option}")
         else
           local _selector_suffix="${_current_option#*:}"
 
-          if [[ -z "${_selector_suffix:-}"        ]] &&
-             [[ -n "${_SUBCOMMAND:-}"             ]] &&
-             [[ ! "${_SUBCOMMAND}" =~ ^ls$|^list$ ]]
+          if [[ -z "${_selector_suffix:-}"          ]] &&
+             [[ -n "${_SUBCOMMAND:-}"               ]] &&
+             [[ ! "${_SUBCOMMAND}" =~ ^ls$|^list$   ]]
           then
             _ARGUMENTS+=("${_current_option}")
           else
@@ -11616,7 +11616,7 @@ _add() {
         then # argument contains content
           _argument_content+="${_arguments[i]:-} "
         else
-          if [[ "${_arguments[i]}" =~ :                     ]]
+          if [[ "${_arguments[i]}" =~ :|^/                  ]]
           then
             if [[ -n "${_selector_filename:-}"              ]] ||
                [[ -n "${_selector_folder_relative_path:-}"  ]]
@@ -11627,10 +11627,16 @@ _add() {
                 _notebook show "${_arguments[i]%%:*}" --path 2>/dev/null || :
               )"
 
-              if [[ -n "${_selector_notebook_path}" ]]
+              if [[ -n "${_selector_notebook_path}"         ]]
               then # argument is a selector with a valid notebook
                 _notebook_path="${_selector_notebook_path}"
-                _selector_relative_path="${_arguments[i]#*:}"
+
+                if [[ "${_arguments[i]:-}" =~ ^/            ]]
+                then
+                  _selector_relative_path="${_arguments[i]#${_notebook_path}/}"
+                else
+                  _selector_relative_path="${_arguments[i]#*:}"
+                fi
               else # argument is not a selector
                 _argument_content+="${_arguments[i]:-} "
               fi
@@ -11836,17 +11842,17 @@ _add() {
       _target_path="$(_temp directory)/${_target_unique_relative_path}"
     fi
 
-    if [[ -n "${_target_folder_relative_path:-}"    ]] &&
-       [[ ! -d "${_target_folder_relative_path:-}"  ]]
+    if [[ -n "${_target_folder_relative_path:-}"                      ]] &&
+       [[ ! -d "${_notebook_path}/${_target_folder_relative_path:-}"  ]]
     then
-      if [[ -e "${_target_folder_relative_path:-}"  ]]
+      if [[ -e "${_notebook_path}/${_target_folder_relative_path:-}"  ]]
       then
-        _exit_1 printf "File exists at: %s\\n" \
+        _exit_1 printf "File exists at: %s\\n"            \
           "$(_color_primary "${_target_folder_relative_path:-}")"
       else
         if ! mkdir -p "${_notebook_path:?}/${_target_folder_relative_path}" 2>/dev/null
         then
-          _exit_1 printf "Unable to create folder: %s\\n"   \
+          _exit_1 printf "Unable to create folder: %s\\n" \
             "$(_color_primary "${_target_folder_relative_path}")"
         fi
       fi
