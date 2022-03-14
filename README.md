@@ -5838,6 +5838,7 @@ Subcommands:
   do           Mark a todo or task as done.
   edit         Edit a note.
   export       Export a note to a variety of different formats.
+  folders      Add, delete, and list folders.
   git          Run `git` commands within the current notebook.
   help         View help information for the program or a subcommand.
   history      View git history for the current notebook or a note.
@@ -6060,6 +6061,7 @@ For more information, see: `nb help`.
 [`browse`](#browse),
 [`delete`](#delete),
 [`edit`](#edit),
+[`folders`](#folders),
 [`import`](#import),
 [`show`](#show),
 [`todo`](#todo)
@@ -6117,6 +6119,7 @@ See Also:
   nb help browse
   nb help delete
   nb help edit
+  nb help folders
   nb help import
   nb help show
   nb help todo
