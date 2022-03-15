@@ -3972,6 +3972,8 @@ $(_color_primary "Usage"):
   ${_ME} browse delete ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
   ${_ME} browse edit ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
   ${_ME} completions (check | install [-d | --download] | uninstall)
+  ${_ME} copy ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+          [[<notebook>:][<folder-path>/]<filename>]
   ${_ME} count [<notebook>:][<folder-path>/]
   ${_ME} delete ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])...
             [-f | --force]
@@ -4095,6 +4097,7 @@ $(_color_primary "Subcommands"):
   bookmark     Add, open, list, and search bookmarks.
   browse       Browse and manage linked items in terminal and GUI browsers.
   completions  Install and uninstall completion scripts.
+  copy         Copy or duplicate an item.
   count        Print the number of items in a notebook or folder.
   delete       Delete a note.
   do           Mark a todo or task as done.
@@ -8420,7 +8423,8 @@ __load_plugins() {
     local __file=
     for   __file in "${NB_DIR}/.plugins"/*.nb-plugin*
     do
-      [[ -f "${__file}" ]] || continue
+      [[ -f "${__file}"                       ]] || continue
+      [[    "${__file}"  =~ /copy.nb-plugin$  ]] && continue
 
       source "${__file}"
     done
@@ -8530,12 +8534,14 @@ _SUBCOMMANDS=(
   commands
   completions
   config
+  copy
   count
   create
   d
   delete
   "do"
   "done"
+  duplicate
   e
   edit
   export
@@ -8625,6 +8631,7 @@ _DOCUMENTED_SUBCOMMANDS=(
   browse
   commands
   completions
+  copy
   count
   delete
   "do"
@@ -8691,12 +8698,14 @@ _GIT_SUBCOMMANDS=(
   browser
   bs
   close
+  copy
   count
   create
   d
   delete
   "do"
   "done"
+  duplicate
   e
   edit
   export
@@ -9022,10 +9031,11 @@ _call_deferred_command() {
 
   local _group="${2:-}"
   local _group_3_names=(
-    _ar _archive _b _bookmark _br _browse _browser _close _config _do _done   \
-    _f _folder _folders _h _help _helpers _set _plugin _plugins _remote       \
-    _reset _settings _shell _st _stat _status _sync _t _task _tasks _to _todo \
-    _todos _unar _unarchive _undo _undone _unset _update _upgrade
+    _ar _archive _b _bookmark _br _browse _browser _close _config _copy _do   \
+    _done _duplicate _f _folder _folders _h _help _helpers _set _plugin       \
+    _plugins _remote _reset _settings _shell _st _stat _status _sync _t _task \
+    _tasks _to _todo _todos _unar _unarchive _undo _undone _unset _update     \
+    _upgrade
   )
 
   if {
@@ -20122,6 +20132,157 @@ HEREDOC
 _alias_subcommand "browse" "b"
 _alias_subcommand "browse" "br"
 _alias_subcommand "browse" "browser"
+
+# copy ################################################################### copy
+
+_describe_copy() {
+  cat <<HEREDOC
+$(_color_primary "Usage"):
+  ${_ME} copy ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+          [[<notebook>:][<folder-path>/]<filename>]
+
+$(_color_primary "Description"):
+  Copy or duplicate an item.
+
+$(_color_primary "See Also"):
+  ${_ME} help move
+
+$(_color_primary "Examples"):
+  ${_ME} copy 123
+  ${_ME} copy 456 example:
+  ${_ME} copy
+
+$(_color_primary "Alias"):
+  ${_ME} duplicate
+HEREDOC
+}
+_copy() {
+  local _source_selector="${1:-}"
+  local _target_selector="${2:-}"
+
+  if [[ -z "${_source_selector:-}" ]]
+  then
+    _help "copy"
+    exit 1
+  fi
+
+  local _source_notebook_path=
+  _source_notebook_path="$(
+    _notebooks show "${_source_selector:-}" --path 2>/dev/null  ||
+      _notebooks current --path
+  )"
+
+  local _source_relative_path=
+  _source_relative_path="$(
+    _show "${_source_selector}" --relative-path 2>/dev/null || :
+  )"
+
+  local _source_basename="${_source_relative_path##*/}"
+
+  if [[   -z "${_source_relative_path:-}"                         ]] ||
+     [[ ! -e "${_source_notebook_path}/${_source_relative_path}"  ]]
+  then
+    _warn printf "Not found: %s\\n" "$(
+      _color_primary "${_source_selector:-}"
+    )"
+
+    return 1
+  fi
+
+  local _target_folder_path=
+  local _target_notebook_path=
+  local _target_relative_path=
+
+  if [[ -n "${_target_selector:-}" ]]
+  then
+    _target_notebook_path="$(
+      _notebooks show "${_target_selector:-}" --path 2>/dev/null  ||
+        _notebooks current --path
+    )"
+
+    local _target_folder_relative_path=
+    _target_folder_relative_path="$(
+      _selector_resolve_folders "${_target_selector:-}" --build   || :
+    )"
+
+    _target_folder_path="${_target_notebook_path:-}/${_target_folder_relative_path:-}"
+
+    _target_relative_path="$(
+      _selector_get_identifier "${_target_selector:-}"
+    )"
+
+    if [[ -z "${_target_relative_path:-}" ]]
+    then
+      _target_relative_path="${_source_basename:-}"
+    fi
+
+    _target_relative_path="${_target_relative_path%/}"
+
+    if [[ "${_target_selector:-}" =~ /$   ]]
+    then
+      _target_relative_path="${_target_relative_path:-}/${_source_basename:-}"
+    fi
+
+    if [[ -e "${_target_notebook_path:-}/${_target_relative_path:-}"  ]]
+    then
+      _warn printf "Already exists: %s\\n" "$(
+        _color_primary "${_target_selector:-}"
+      )"
+
+      return 1
+    fi
+  else
+    _target_notebook_path="$(
+      _notebooks show "${_source_selector}" --path 2>/dev/null    ||
+        _notebooks current --path
+    )"
+
+    _target_relative_path="$(
+      _notebooks current --filename "${_source_relative_path}"
+    )"
+
+    if [[ "${_target_relative_path:-}" =~ / ]]
+    then
+      _target_folder_path="${_source_notebook_path}/${_target_relative_path%/*}"
+    else
+      _target_folder_path="${_source_notebook_path}"
+    fi
+  fi
+
+  if _show "${_source_notebook_path}/${_source_relative_path}" --type text
+  then # Text can use `_add`.
+    # Print the source contents and pipe to `_add`:
+    _show "${_source_notebook_path}/${_source_relative_path}"     \
+      --no-color --print                                          \
+      | _add "${_target_notebook_path}/${_target_relative_path}"
+  else
+    local _copy_arguments=(
+      "${_source_notebook_path}/${_source_relative_path}"
+      "${_target_notebook_path}/${_target_relative_path}"
+    )
+
+    if [[ -d "${_source_notebook_path}/${_source_relative_path}"  ]]
+    then
+      _copy_arguments=("-R" "${_copy_arguments[@]:-}")
+    fi
+
+    if [[ ! -e "${_target_folder_path:-}"   ]]
+    then
+      mkdir -p "${_target_folder_path:-}"
+    fi
+
+    cp "${_copy_arguments[@]:-}"
+
+    _index add "${_target_relative_path##*/}" "${_target_folder_path}"
+
+    _git checkpoint "${_target_notebook_path:-}" "[nb] Add: ${_target_relative_path}"
+
+    printf "Added: %s\\n" "$(
+      _show "${_target_notebook_path}/${_target_relative_path}" --info-line
+    )"
+  fi
+}
+_alias_subcommand "copy" "duplicate"
 
 # do ####################################################################### do
 

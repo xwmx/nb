@@ -5614,6 +5614,7 @@ For more commands and options, run
   <a href="#bookmark">bookmark</a>&nbsp;·
   <a href="#browse">browse</a>&nbsp;·
   <a href="#completions">completions</a>&nbsp;·
+  <a href="#copy">copy</a>&nbsp;·
   <a href="#count">count</a>&nbsp;·
   <a href="#delete">delete</a>&nbsp;·
   <a href="#do">do</a>&nbsp;·
@@ -5715,6 +5716,8 @@ Usage:
   nb browse delete ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
   nb browse edit ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
   nb completions (check | install [-d | --download] | uninstall)
+  nb copy ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+          [[<notebook>:][<folder-path>/]<filename>]
   nb count [<notebook>:][<folder-path>/]
   nb delete ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])...
             [-f | --force]
@@ -5833,6 +5836,7 @@ Subcommands:
   bookmark     Add, open, list, and search bookmarks.
   browse       Browse and manage linked items in terminal and GUI web browsers.
   completions  Install and uninstall completion scripts.
+  copy         Copy or duplicate an item.
   count        Print the number of items in a notebook or folder.
   delete       Delete a note.
   do           Mark a todo or task as done.
@@ -6009,6 +6013,7 @@ For more information, see: `nb help`.
   <a href="#bookmark">bookmark</a>&nbsp;·
   <a href="#browse">browse</a>&nbsp;·
   <a href="#completions">completions</a>&nbsp;·
+  <a href="#copy">copy</a>&nbsp;·
   <a href="#count">count</a>&nbsp;·
   <a href="#delete">delete</a>&nbsp;·
   <a href="#do">do</a>&nbsp;·
@@ -6415,6 +6420,31 @@ Read More:
 
 See Also:
   nb help env
+```
+
+#### `copy`
+
+[↑](#help) · See also:
+[`move`](#move)
+
+```text
+Usage:
+  nb copy ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+          [[<notebook>:][<folder-path>/]<filename>]
+
+Description:
+  Copy or duplicate an item.
+
+See Also:
+  nb help move
+
+Examples:
+  nb copy 123
+  nb copy 456 example:
+  nb copy
+
+Alias:
+  nb duplicate
 ```
 
 #### `count`
@@ -8466,7 +8496,6 @@ See Also:
   <a href="#backlink">backlink</a>&nbsp;·
   <a href="#bump">bump</a>&nbsp;·
   <a href="#clip">clip</a>&nbsp;·
-  <a href="#copy">copy</a>&nbsp;·
   <a href="#ebook">ebook</a>&nbsp;·
   <a href="#example">example</a>
 </p>
@@ -8557,24 +8586,6 @@ Examples:
 
   # save the clipboard contents as a new `.cr` file in the "snippets" notebook
   nb snippets:clip .cr
-```
-
-#### `copy`
-
-[↑&nbsp;](#plugin-help)
-
-```bash
-nb plugins install https://github.com/xwmx/nb/blob/master/plugins/copy.nb-plugin
-```
-
-```text
-Usage:
-  nb copy ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
-
-Description:
-  Create a copy of the specified item in the current notebook.
-
-Alias: `nb duplicate`
 ```
 
 #### `ebook`

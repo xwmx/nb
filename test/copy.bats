@@ -12,10 +12,6 @@ load test_helper
         --content "Example content."
 
     "${_NB}" notebooks add "Example Notebook"
-
-    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
-
-    [[ "${status}" == 0 ]]
   }
 
   run "${_NB}" copy "Example Folder/Sample Folder/Example File.md" "Example Notebook:"
@@ -62,10 +58,6 @@ load test_helper
 
     "${_NB}" notebooks add "Example Notebook"
     "${_NB}" add "Example Notebook:Demo Folder" --type folder
-
-    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
-
-    [[ "${status}" == 0 ]]
   }
 
   run "${_NB}" copy                                 \
@@ -119,11 +111,6 @@ load test_helper
     "${_NB}" notebooks add "Example Notebook"
 
     [[ !  -e "${NB_DIR}/Example Notebook/Demo Folder"       ]]
-
-
-    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
-
-    [[ "${status}" == 0 ]]
   }
 
   run "${_NB}" copy                                 \
@@ -177,11 +164,6 @@ load test_helper
     "${_NB}" notebooks add "Example Notebook"
 
     [[ !  -e "${NB_DIR}/Example Notebook/Demo Identifier"   ]]
-
-
-    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
-
-    [[ "${status}" == 0 ]]
   }
 
   run "${_NB}" copy                                 \
@@ -235,10 +217,6 @@ load test_helper
 
     "${_NB}" notebooks add "Example Notebook"
     "${_NB}" add "Example Notebook:Demo Identifier" --content "Example new content."
-
-    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
-
-    [[ "${status}" == 0 ]]
   }
 
   run "${_NB}" copy                                 \
@@ -322,10 +300,6 @@ load test_helper
 
     "${_NB}" notebooks add "Example Notebook"
     "${_NB}" add "Example Notebook:Demo Folder" --type folder
-
-    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
-
-    [[ "${status}" == 0 ]]
   }
 
   run "${_NB}" copy "Example Folder/Sample Folder" "Example Notebook:Demo Folder/"
@@ -381,11 +355,6 @@ load test_helper
     "${_NB}" notebooks add "Example Notebook"
 
     [[ !  -e "${NB_DIR}/Example Notebook/Demo Folder"       ]]
-
-
-    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
-
-    [[ "${status}" == 0 ]]
   }
 
   run "${_NB}" copy "Example Folder/Sample Folder" "Example Notebook:Demo Folder/"
@@ -441,11 +410,6 @@ load test_helper
     "${_NB}" notebooks add "Example Notebook"
 
     [[ !  -e "${NB_DIR}/Example Notebook/Demo Folder"       ]]
-
-
-    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
-
-    [[ "${status}" == 0 ]]
   }
 
   run "${_NB}" copy "Example Folder/Sample Folder" "Example Notebook:Demo Folder"
@@ -497,10 +461,6 @@ load test_helper
 
     "${_NB}" notebooks add "Example Notebook"
     "${_NB}" add "Example Notebook:Demo Folder" --type folder
-
-    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
-
-    [[ "${status}" == 0 ]]
   }
 
   run "${_NB}" copy "Example Folder/Sample Folder" "Example Notebook:Demo Folder"
@@ -546,10 +506,6 @@ load test_helper
     "${_NB}" add  "Example Folder/Sample Folder/Example File.md"  \
         --title   "Example Title"                                 \
         --content "Example content."
-
-    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
-
-    [[ "${status}" == 0 ]]
   }
 
   run "${_NB}" copy "Example Folder/Sample Folder"
@@ -591,10 +547,6 @@ load test_helper
     "${_NB}" add  "Example Folder/Example File.md"  \
         --title   "Example Title"                   \
         --content "Example content."
-
-    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
-
-    [[ "${status}" == 0 ]]
   }
 
   run "${_NB}" copy "Example Folder/Example File.md"
@@ -636,10 +588,6 @@ load test_helper
   {
     "${_NB}" init
     "${_NB}" add "example.md" --title "Example" --content "Example content."
-
-    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
-
-    [[ "${status}" == 0 ]]
   }
 
   run "${_NB}" copy "example.md"
@@ -664,10 +612,6 @@ load test_helper
       --content "Example content."      \
       --encrypt                         \
       --password password
-
-    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
-
-    [[ "${status}" == 0 ]]
   }
 
   run "${_NB}" copy "example.md.enc"
@@ -696,10 +640,6 @@ load test_helper
   {
     "${_NB}" init
     "${_NB}" add "example.md" --title "Example" --content "Example content."
-
-    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
-
-    [[ "${status}" == 0 ]]
   }
 
   run "${_NB}" copy 1
@@ -723,10 +663,6 @@ load test_helper
       --content "Example content."  \
       --encrypt                     \
       --password password
-
-    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
-
-    [[ "${status}" == 0 ]]
   }
 
   run "${_NB}" copy 1
@@ -755,10 +691,6 @@ load test_helper
   {
     "${_NB}" init
     "${_NB}" add "example.md" --title "Example" --content "Example content."
-
-    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
-
-    [[ "${status}" == 0 ]]
   }
 
   run "${_NB}" copy Example
@@ -780,10 +712,6 @@ load test_helper
   {
     "${_NB}" init
     "${_NB}" add "example.md" --title "Example" --content "Example content."
-
-    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
-
-    [[ "${status}" == 0 ]]
   }
 
   run "${_NB}" copy "not-valid"
@@ -804,10 +732,6 @@ load test_helper
   {
     "${_NB}" init
     "${_NB}" add "example.md" --title "Example" --content "Example content."
-
-    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
-
-    [[ "${status}" == 0 ]]
   }
 
   run "${_NB}" copy "example.md"
@@ -873,10 +797,6 @@ load test_helper
       --content "Example content."  \
       --encrypt                     \
       --password password
-
-    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
-
-    [[ "${status}" == 0 ]]
   }
 
   run "${_NB}" copy "example.md.enc"
@@ -940,10 +860,6 @@ load test_helper
   {
     "${_NB}" init
     "${_NB}" add "example.md" --title "Example" --content "Example content."
-
-    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
-
-    [[ "${status}" == 0 ]]
   }
 
   run "${_NB}" 1 copy
@@ -992,9 +908,6 @@ load test_helper
     "${_NB}" notebooks add "one"
     "${_NB}" one:add "example.md" --title "Example" --content "Example content."
 
-    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
-
-    [[ "${status}" == 0               ]]
     [[ -e "${NB_DIR}/one/example.md"  ]]
   }
 
@@ -1020,9 +933,6 @@ load test_helper
     "${_NB}" one:add "example.md" --title "Example" --content "Example content."
 
 
-    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
-
-    [[ "${status}" == 0               ]]
     [[ -e "${NB_DIR}/one/example.md"  ]]
   }
 
@@ -1045,9 +955,6 @@ load test_helper
     "${_NB}" notebooks add "one"
     "${_NB}" one:add "example.md" --title "Example" --content "Example content."
 
-    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
-
-    [[ "${status}" == 0               ]]
     [[ -e "${NB_DIR}/one/example.md"  ]]
   }
 
@@ -1070,10 +977,6 @@ load test_helper
   {
     "${_NB}" init
     "${_NB}" add "example.md" --title "Example" --content "Example content."
-
-    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
-
-    [[ "${status}" == 0 ]]
   }
 
   run "${_NB}" duplicate 1
@@ -1095,8 +998,6 @@ load test_helper
   {
     "${_NB}" init
     "${_NB}" add "example.md" --title "Example" --content "Example content."
-
-    "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
   }
 
   run "${_NB}" copy
@@ -1114,8 +1015,6 @@ load test_helper
   {
     "${_NB}" init
     "${_NB}" add "example.md" --title "Example" --content "Example content."
-
-    "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
   }
 
   run "${_NB}" help copy
