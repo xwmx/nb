@@ -488,7 +488,7 @@ export NB_AUTO_LIMIT="${NB_AUTO_LIMIT:-0}"
 # `$_ME sync`. To disable this behavior, set the value to '0'.
 export NB_AUTO_SYNC="${NB_AUTO_SYNC:-1}"
 
-# `$NB_DEFAULT_EXTENSION`
+# $NB_DEFAULT_EXTENSION
 #
 # Default: 'md'
 #
