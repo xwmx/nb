@@ -3899,9 +3899,38 @@ To:       example_title.md
 Proceed?  [y/N]
 ```
 
-For details, see [`nb help move`](#move).
+An item can be copied in place with
+[`nb copy`](#copy) (alias: [`nb duplicate`](#copy)):
 
-To copy items, install the [`copy`](#copy) / [`duplicate` plugin](#copy).
+```bash
+# copy item 123 ("example.md") to example-1.md
+❯ nb copy 123
+Added: [124] example-1.md
+
+# copy item 123 ("example.md") to example-2.md, alias
+❯ nb duplicate 123
+Added: [125] example-2.md
+```
+
+Specify a destination filename, notebook, and folder path with the second
+argument:
+
+```bash
+# copy item 456 to "sample.md"
+nb copy 456 sample.md
+
+# copy item 678 to the "example" notebook
+nb copy 678 example:
+
+# copy item 789 to the "demo" folder
+nb copy 789 demo/
+
+# copy item 543 to test.md in the "sample" folder in the "example" notebook
+nb copy 543 example:sample/test.md
+```
+
+For more information about copying, moving, and renaming items, see
+[`nb help copy`](#copy) and [`nb help move`](#move).
 
 ### 🗒 Revision History
 
@@ -6431,6 +6460,7 @@ See Also:
 #### `copy`
 
 [↑](#help) · See also:
+[Moving & Renaming](#-moving--renaming),
 [`move`](#move)
 
 ```text
@@ -6440,6 +6470,9 @@ Usage:
 
 Description:
   Copy or duplicate an item.
+
+Read More:
+  https://github.com/xwmx/nb#-moving--renaming
 
 See Also:
   nb help move
@@ -7141,7 +7174,11 @@ Description:
 
   `nb move` and `nb rename` are aliases and can be used interchangeably.
 
+Read More:
+  https://github.com/xwmx/nb#-moving--renaming
+
 See Also:
+  nb help copy
   nb help delete
   nb help edit
 

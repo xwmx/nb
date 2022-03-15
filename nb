@@ -14353,7 +14353,11 @@ $(_color_primary "Description"):
 
   \`move\` and \`rename\` are aliases and can be used interchangeably.
 
+$(_color_primary "Read More"):
+  ${_README_URL}#-moving--renaming
+
 $(_color_primary "See Also"):
+  ${_ME} help copy
   ${_ME} help delete
   ${_ME} help edit
 
@@ -20143,6 +20147,9 @@ $(_color_primary "Usage"):
 
 $(_color_primary "Description"):
   Copy or duplicate an item.
+
+$(_color_primary "Read More"):
+  ${_README_URL}#-moving--renaming
 
 $(_color_primary "See Also"):
   ${_ME} help move
