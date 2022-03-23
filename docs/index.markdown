@@ -6478,9 +6478,9 @@ See Also:
   nb help move
 
 Examples:
-  nb copy 123
+  nb copy 321
   nb copy 456 example:
-  nb copy
+  nb copy sample/demo.md
 
 Alias:
   nb duplicate

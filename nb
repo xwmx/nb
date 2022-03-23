@@ -20155,9 +20155,9 @@ $(_color_primary "See Also"):
   ${_ME} help move
 
 $(_color_primary "Examples"):
-  ${_ME} copy 123
+  ${_ME} copy 321
   ${_ME} copy 456 example:
-  ${_ME} copy
+  ${_ME} copy 987 sample/demo.md
 
 $(_color_primary "Alias"):
   ${_ME} duplicate
