@@ -20070,9 +20070,9 @@ HEREDOC
       _printable_response="$(
         if ((_print_headers))
         then
-          curl -s -I "${_request_url//\ /\%20}"       || :
+          curl -s -I      "${_request_url//\ /\%20}"  || :
         else
-          _download_from "${_request_url//\ /\%20}"   || :
+          _download_from  "${_request_url//\ /\%20}"  || :
         fi
       )"
 
