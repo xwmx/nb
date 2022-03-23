@@ -20060,12 +20060,26 @@ HEREDOC
 
   if ((_print_output))
   then
-    if ((_print_headers))
-    then
-      curl -s -I "${_request_url//\ /\%20}"
-    else
-      _download_from "${_request_url//\ /\%20}"
-    fi
+    local _retry_counter=0
+    local _printable_response=
+
+    while [[ -z "${_printable_response:-}"  ]]
+    do
+      ((_retry_counter)) && sleep 0.5
+
+      _printable_response="$(
+        if ((_print_headers))
+        then
+          curl -s -I "${_request_url//\ /\%20}"       || :
+        else
+          _download_from "${_request_url//\ /\%20}"   || :
+        fi
+      )"
+
+      _retry_counter=$((_retry_counter+1))
+    done
+
+    printf "%s\\n" "${_printable_response:-}"
   elif ((_open_gui))  || _web_browser --gui || ((_only_serve))
   then
     local _display_params=
