@@ -250,10 +250,6 @@ load test_helper
         --content "Example content."
 
     "${_NB}" notebooks add "Example Notebook"
-
-    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
-
-    [[ "${status}" == 0 ]]
   }
 
   run "${_NB}" copy "Example Folder/Sample Folder" "Example Notebook:"
@@ -883,9 +879,6 @@ load test_helper
     "${_NB}" notebooks add "one"
     "${_NB}" one:add "example.md" --title "Example" --content "Example content."
 
-    run "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/copy.nb-plugin"
-
-    [[ "${status}" == 0               ]]
     [[ -e "${NB_DIR}/one/example.md"  ]]
   }
 
