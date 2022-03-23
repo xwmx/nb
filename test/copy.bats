@@ -702,7 +702,7 @@ load test_helper
      "$(_get_hash "${NB_DIR}/home/example-1.md")" ]]
 }
 
-# `copy <invalid>` ###############################################################
+# `copy <invalid>` ############################################################
 
 @test "'copy <invalid>' exits with error message." {
   {
@@ -873,7 +873,7 @@ load test_helper
 
 # `copy <scope:selector>` #####################################################
 
-@test "'copy <scope>:<id>' with text file copies file." {
+@test "'copy <notebook>:<id>' with text file copies file." {
   {
     "${_NB}" init
     "${_NB}" notebooks add "one"
@@ -895,7 +895,7 @@ load test_helper
      "$(_get_hash "${NB_DIR}/one/example-1.md")" ]]
 }
 
-@test "'<scope>:<id> copy' with text file copies file." {
+@test "'<notebook>:<id> copy' with text file copies file." {
   {
     "${_NB}" init
     "${_NB}" notebooks add "one"
@@ -917,9 +917,9 @@ load test_helper
      "$(_get_hash "${NB_DIR}/one/example-1.md")" ]]
 }
 
-# `<scope>:copy <selector>` ###################################################
+# `<notebook>:copy <selector>` ################################################
 
-@test "'<scope>:copy <id>' with text file copies file." {
+@test "'<notebook>:copy <id>' with text file copies file." {
   {
     "${_NB}" init
     "${_NB}" notebooks add "one"
@@ -942,7 +942,7 @@ load test_helper
      "$(_get_hash "${NB_DIR}/one/example-1.md")" ]]
 }
 
-@test "'<id> <scope>:copy' with text file copies file." {
+@test "'<id> <notebook>:copy' with text file copies file." {
   {
     "${_NB}" init
     "${_NB}" notebooks add "one"
