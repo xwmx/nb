@@ -3899,21 +3899,8 @@ To:       example_title.md
 Proceed?  [y/N]
 ```
 
-An item can be copied in place with
-[`nb copy`](#copy) (alias: [`nb duplicate`](#copy)):
-
-```bash
-# copy item 123 ("example.md") to example-1.md
-❯ nb copy 123
-Added: [124] example-1.md
-
-# copy item 123 ("example.md") to example-2.md, alias
-❯ nb duplicate 123
-Added: [125] example-2.md
-```
-
-Specify a destination filename, notebook, and folder path with the second
-argument:
+Copy an item to a destination notebook, folder path, or filename
+with [`nb copy`](#copy) (alias: [`nb duplicate`](#copy)):
 
 ```bash
 # copy item 456 to "sample.md"
@@ -3929,8 +3916,20 @@ nb copy 789 demo/
 nb copy 543 example:sample/test.md
 ```
 
-For more information about copying, moving, and renaming items, see
-[`nb help copy`](#copy) and [`nb help move`](#move).
+Omit a destination to copy the item in place:
+
+```bash
+# copy item 123 ("example.md") to example-1.md
+❯ nb copy 123
+Added: [124] example-1.md
+
+# copy item 123 ("example.md") to example-2.md, alias
+❯ nb duplicate 123
+Added: [125] example-2.md
+```
+
+For more information about moving, renaming, and copying items, see
+[`nb help move`](#move) and [`nb help copy`](#copy).
 
 ### 🗒 Revision History
 
