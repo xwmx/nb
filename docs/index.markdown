@@ -7145,6 +7145,7 @@ Examples:
 
 [↑](#help) · See also:
 [Moving & Renaming](#-moving--renaming),
+[`copy`](#copy),
 [`delete`](#delete),
 [`edit`](#edit)
 
