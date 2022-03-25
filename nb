@@ -1399,19 +1399,19 @@ _file_is_encrypted() {
         "${_DOCUMENT_FILE_EXTENSIONS[@]}"   \
         "${_AUDIO_FILE_EXTENSIONS[@]}"      \
         "${_VIDEO_FILE_EXTENSIONS[@]}"      &&
-      if _command_exists "file"
-      then
-        [[ "$(file "${_file_path:-}"        \
-              --exclude=apptype             \
-              --exclude=encoding            \
-              --exclude=tokens              \
-              --exclude=cdf                 \
-              --exclude=compress            \
-              --exclude=elf                 \
-              --exclude=tar)" =~ encrypted|openssl ]]
-      else
-        return 1
-      fi
+        if _command_exists "file"
+        then
+          [[ "$(file "${_file_path:-}"      \
+                  --exclude=apptype         \
+                  --exclude=encoding        \
+                  --exclude=tokens          \
+                  --exclude=cdf             \
+                  --exclude=compress        \
+                  --exclude=elf             \
+                  --exclude=tar)" =~ encrypted|openssl ]]
+        else
+          return 1
+        fi
     }
 }
 
@@ -1505,23 +1505,23 @@ _file_is_text() {
         "${_ENCRYPTED_FILE_EXTENSIONS[@]}"  \
         "${_AUDIO_FILE_EXTENSIONS[@]}"      \
         "${_VIDEO_FILE_EXTENSIONS[@]}"      \
-        "${_ARCHIVE_FILE_EXTENSIONS[@]}"    &&
-      [[ ! "${_file_type}" =~ \.epub$   ]]  &&
-      [[ ! -d "${_file_path:-}"         ]]  &&
-      if _command_exists "file"
-      then
-        [[ "$(file "${_file_path:-}"        \
-                --exclude=apptype           \
-                --exclude=encoding          \
-                --exclude=tokens            \
-                --exclude=cdf               \
-                --exclude=compress          \
-                --exclude=elf               \
-                --exclude=tar               \
-                -b --mime-type)" =~ ^text   ]]
-      else
-        return 0
-      fi
+        "${_ARCHIVE_FILE_EXTENSIONS[@]}"        &&
+        [[ !    "${_file_type}" =~ \.epub$  ]]  &&
+        [[ ! -d "${_file_path:-}"           ]]  &&
+        if _command_exists "file"
+        then
+          [[ "$(file "${_file_path:-}"      \
+                  --exclude=apptype         \
+                  --exclude=encoding        \
+                  --exclude=tokens          \
+                  --exclude=cdf             \
+                  --exclude=compress        \
+                  --exclude=elf             \
+                  --exclude=tar             \
+                  -b --mime-type)" =~ ^text ]]
+        else
+          return 0
+        fi
     }
 }
 
