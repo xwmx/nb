@@ -3834,7 +3834,8 @@ For more information, see [Browsing](#-browsing).
 <p>
   <sup>
     <a href="#overview">↑</a> ·
-    <a href="#move"><code>nb move</code></a>
+    <a href="#move"><code>nb move</code></a>,
+    <a href="#copy"><code>nb copy</code></a>
   </sup>
 </p>
 
