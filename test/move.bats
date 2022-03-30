@@ -2,6 +2,138 @@
 
 load test_helper
 
+# pinning #####################################################################
+
+@test "'move' with pinned item and other folder destination retains pinning in new folder." {
+  {
+    "${_NB}" init
+    "${_NB}" add "Example File One.md"    --content "Example content one."
+    "${_NB}" add "Example File Two.md"    --content "Example content two."
+    "${_NB}" add "Example File Three.md"  --content "Example content three."
+    "${_NB}" add "Example File Four.md"   --content "Example content four."
+    "${_NB}" add "Example File Five.md"   --content "Example content five."
+
+    "${_NB}" pin 2
+    "${_NB}" pin 4
+
+    [[ -e "${NB_DIR}/home/Example File Two.md"  ]]
+
+    diff                                        \
+      <(cat "${NB_DIR}/home/.pindex")           \
+      <(printf "Example File Two.md\\nExample File Four.md\\n")
+
+    "${_NB}" add folder "Sample Folder"
+
+    "${_NB}" add "Sample Folder/Sample File One.md"     --content "Sample content one."
+    "${_NB}" add "Sample Folder/Sample File Two.md"     --content "Sample content two."
+    "${_NB}" add "Sample Folder/Sample File Three.md"   --content "Sample content three."
+    "${_NB}" add "Sample Folder/Sample File Four.md"    --content "Sample content four."
+
+    "${_NB}" pin Sample\ Folder/3
+
+    diff                                            \
+      <(cat "${NB_DIR}/home/Sample Folder/.pindex") \
+      <(printf "Sample File Three.md\\n")
+  }
+
+  run "${_NB}" move "Example File Two.md" "Sample Folder/" <<< "y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Exits with status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Moves file:
+
+  [[ !  -e "${NB_DIR}/home/Example File Two.md"               ]]
+  [[    -e "${NB_DIR}/home/Sample Folder/Example File Two.md" ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Move'
+
+  # Updates .pindexes:
+
+  diff                              \
+    <(cat "${NB_DIR}/home/.pindex") \
+    <(printf "Example File Four.md\\n")
+
+  diff                                            \
+    <(cat "${NB_DIR}/home/Sample Folder/.pindex") \
+    <(printf "Sample File Three.md\\nExample File Two.md\\n")
+
+  # Prints output:
+
+  [[ "${lines[0]}" =~ \
+Moving:\ \ \ .*[.*2.*].*\ .*File\ Two\.md                                       ]]
+  [[ "${lines[1]}" =~ \
+To:\ \ \ \ \ \ \ .*Sample\ Folder/Example\ File\ Two\.md                        ]]
+  [[ "${lines[2]}" =~ \
+Moved\ to:\ .*[.*Sample\ Folder/5.*].*\ .*Sample\ Folder/Example\ File\ Two.md  ]]
+}
+
+@test "'move' with pinned item and same folder destination updates .pindex while retaining order." {
+  {
+    "${_NB}" init
+    "${_NB}" add "File One.md"    --content "Example content one."
+    "${_NB}" add "File Two.md"    --content "Example content two."
+    "${_NB}" add "File Three.md"  --content "Example content three."
+    "${_NB}" add "File Four.md"   --content "Example content four."
+    "${_NB}" add "File Five.md"   --content "Example content five."
+
+    "${_NB}" pin 2
+    "${_NB}" pin 4
+
+    [[ -e "${NB_DIR}/home/File Two.md"  ]]
+
+    diff                                \
+      <(cat "${NB_DIR}/home/.pindex")   \
+      <(printf "File Two.md\\nFile Four.md\\n")
+  }
+
+  run "${_NB}" move "File Two.md" "Example File Two.md" <<< "y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Exits with status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Moves file:
+
+  [[ !  -e "${NB_DIR}/home/File Two.md"         ]]
+  [[    -e "${NB_DIR}/home/Example File Two.md" ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Move'
+
+  # Updates .pindex:
+
+  diff                              \
+    <(cat "${NB_DIR}/home/.pindex") \
+    <(printf "Example File Two.md\\nFile Four.md\\n")
+
+  # Prints output:
+
+  [[ "${lines[0]}" =~ Moving:\ \ \ .*[.*2.*].*\ .*File\ Two\.md         ]]
+  [[ "${lines[1]}" =~ To:\ \ \ \ \ \ \ .*Example\ File\ Two\.md         ]]
+  [[ "${lines[2]}" =~ Moved\ to:\ .*[.*2.*].*\ .*Example\ File\ Two.md  ]]
+}
+
 # prompt ######################################################################
 
 @test "'move' with non-affirmative prompt response exits without moving note." {

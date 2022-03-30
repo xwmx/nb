@@ -14664,6 +14664,28 @@ _move() {
   mv "${_source_path}" "${_target_notebook_path}/${_target_relative_path}" ||
     _exit_1 printf "Move failed.\\n"
 
+  if [[ -e "${_source_folder_path:-}/.pindex"           ]]  &&
+     grep -q  "^${_source_basename}$"     "${_source_folder_path:-}/.pindex"
+  then
+    if [[ "${_source_folder_path}" == "${_target_folder_path}"    ]]
+    then
+      _sed_i -e                                         \
+        "s/^${_source_basename}$/${_target_basename}/"  \
+        "${_source_folder_path:-}/.pindex"
+    else
+      _sed_i -e                                         \
+        "/^${_source_basename}$/d"                      \
+        "${_source_folder_path:-}/.pindex"
+
+      if [[ ! -e "${_target_folder_path:-}/.pindex"     ]]
+      then
+        touch "${_target_folder_path:-}/.pindex"
+      fi
+
+      printf "%s\\n" "${_target_basename}" >> "${_target_folder_path:-}/.pindex"
+    fi
+  fi
+
   if [[ "${_source_notebook_path}" == "${_target_notebook_path}"  ]]
   then
     if [[ "${_source_folder_path}" == "${_target_folder_path}"    ]]
@@ -14673,7 +14695,7 @@ _move() {
         "${_target_basename}"     \
         "${_source_folder_path}"
     else
-      _index delete "${_source_basename}" "${_source_folder_path}" &&
+      _index delete "${_source_basename}" "${_source_folder_path}"  &&
         _index add  "${_target_basename}" "${_target_folder_path}"
     fi || _exit_1 printf "Move index update failed.\\n"
 
