@@ -4,6 +4,91 @@ load test_helper
 
 # pinning #####################################################################
 
+@test "'move' with pinned item and other notebook destination retains pinning in new notebook." {
+  {
+    "${_NB}" init
+    "${_NB}" add "Example File One.md"    --content "Example content one."
+    "${_NB}" add "Example File Two.md"    --content "Example content two."
+    "${_NB}" add "Example File Three.md"  --content "Example content three."
+    "${_NB}" add "Example File Four.md"   --content "Example content four."
+    "${_NB}" add "Example File Five.md"   --content "Example content five."
+
+    "${_NB}" pin 2
+    "${_NB}" pin 4
+
+    [[ -e "${NB_DIR}/home/Example File Two.md"    ]]
+
+    diff                                          \
+      <(cat "${NB_DIR}/home/.pindex")             \
+      <(printf "Example File Two.md\\nExample File Four.md\\n")
+
+    "${_NB}" notebooks add "Sample Notebook"
+    "${_NB}" notebooks use "Sample Notebook"
+
+    "${_NB}" add "Sample File One.md"     --content "Sample content one."
+    "${_NB}" add "Sample File Two.md"     --content "Sample content two."
+    "${_NB}" add "Sample File Three.md"   --content "Sample content three."
+    "${_NB}" add "Sample File Four.md"    --content "Sample content four."
+
+    "${_NB}" pin 3
+
+    diff                                          \
+      <(cat "${NB_DIR}/Sample Notebook/.pindex")  \
+      <(printf "Sample File Three.md\\n")
+
+    "${_NB}" notebooks use "home"
+  }
+
+  run "${_NB}" move "Example File Two.md" "Sample Notebook:" <<< "y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Exits with status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Moves file:
+
+  [[ !  -e "${NB_DIR}/home/Example File Two.md"             ]]
+  [[    -e "${NB_DIR}/Sample Notebook/Example File Two.md"  ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Delete: Example File Two.md'
+
+  cd "${NB_DIR}/Sample Notebook" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add: Example File Two.md'
+
+  # Updates .pindexes:
+
+  diff                              \
+    <(cat "${NB_DIR}/home/.pindex") \
+    <(printf "Example File Four.md\\n")
+
+  diff                                          \
+    <(cat "${NB_DIR}/Sample Notebook/.pindex")  \
+    <(printf "Sample File Three.md\\nExample File Two.md\\n")
+
+  # Prints output:
+
+  [[ "${lines[0]}" =~ \
+Moving:\ \ \ .*[.*2.*].*\ .*File\ Two\.md                           ]]
+  [[ "${lines[1]}" =~ \
+To:\ \ \ \ \ \ \ .*Sample\ Notebook:Example\ File\ Two\.md          ]]
+  [[ "${lines[2]}" =~ \
+Moved\ to:\ .*[.*Sample\ Notebook:5.*].*\ .*Example\ File\ Two.md   ]]
+}
+
 @test "'move' with pinned item and other folder destination retains pinning in new folder." {
   {
     "${_NB}" init
