@@ -14627,7 +14627,7 @@ _move() {
 
   if [[ -e  "${_target_notebook_path}/${_target_relative_path}" ]]
   then
-    _exit_1 printf "File already exists: %s\\n"       \
+    _exit_1 printf "File already exists: %s\\n"         \
       "$(_color_primary "${_target_info}")"
   fi
 
@@ -14639,7 +14639,7 @@ _move() {
     while true
     do
       local __yn=
-      IFS='' read -r -e -d $'\n' -p                   \
+      IFS='' read -r -e -d $'\n' -p                     \
 "$(_color_primary "Proceed?")  $(_color_brackets "y/N") " __yn
 
       case "${__yn}" in
