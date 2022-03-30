@@ -3460,7 +3460,7 @@ HEREDOC
     fi
 
     local _git_name=
-    _git_name="$(git config --global --includes user.name || printf '')"
+    _git_name="$(git config --global --includes user.name   || printf '')"
 
     local _git_email=
     _git_email="$(git config --global --includes user.email || printf '')"
