@@ -5129,7 +5129,7 @@ Plugins can be installed from either a URL or a path using the
 
 ```bash
 # install a plugin from a URL
-nb plugins install https://raw.githubusercontent.com/xwmx/nb/master/plugins/copy.nb-plugin
+nb plugins install https://raw.githubusercontent.com/xwmx/nb/master/plugins/clip.nb-plugin
 
 # install a plugin from a standard GitHub URL
 nb plugins install https://github.com/xwmx/nb/blob/master/plugins/example.nb-plugin
@@ -5150,15 +5150,15 @@ which optionally takes a name and prints full paths:
 
 ```bash
 ❯ nb plugins
-copy.nb-plugin
+clip.nb-plugin
 example.nb-plugin
 turquoise.nb-theme
 
-❯ nb plugins copy.nb-plugin
-copy.nb-plugin
+❯ nb plugins clip.nb-plugin
+clip.nb-plugin
 
 ❯ nb plugins --paths
-/home/example/.nb/.plugins/copy.nb-plugin
+/home/example/.nb/.plugins/clip.nb-plugin
 /home/example/.nb/.plugins/example.nb-plugin
 /home/example/.nb/.plugins/turquoise.nb-theme
 
@@ -5182,7 +5182,7 @@ and have an `.nb-plugin` extension.
 `nb` includes a few example plugins:
 
 - [`example.nb-plugin`](https://github.com/xwmx/nb/blob/master/plugins/example.nb-plugin)
-- [`copy.nb-plugin`](https://github.com/xwmx/nb/blob/master/plugins/copy.nb-plugin)
+- [`clip.nb-plugin`](https://github.com/xwmx/nb/blob/master/plugins/clip.nb-plugin)
 - [`ebook.nb-plugin`](https://github.com/xwmx/nb/blob/master/plugins/ebook.nb-plugin)
 
 Create a new subcommand in three easy steps:
@@ -5222,8 +5222,8 @@ With `example.nb-plugin` installed, `nb` includes an `nb example` subcommand
 that prints "Hello, World!"
 
 For a full example,
-[`copy.nb-plugin`](https://github.com/xwmx/nb/blob/master/plugins/copy.nb-plugin)
-adds copy / duplicate functionality to `nb` and demonstrates how to create a
+[`clip.nb-plugin`](https://github.com/xwmx/nb/blob/master/plugins/clip.nb-plugin)
+add clipboard functionality to `nb` and demonstrates how to create a
 plugin using `nb` subcommands and simple shell scripting.
 
 You can install any plugin you create locally with
@@ -5293,8 +5293,8 @@ cat "${_notebook_path}/${_filename}"
 ```
 
 See
-[`copy.nb-plugin`](https://github.com/xwmx/nb/blob/master/plugins/copy.nb-plugin)
-for a practical example using both [`show <selector> --filename`](#show) and
+[`clip.nb-plugin`](https://github.com/xwmx/nb/blob/master/plugins/clip.nb-plugin)
+for a practical example using both [`show <selector>`](#show) and
 [`notebooks current --path`](#notebooks) along with other
 subcommands called using their underscore-prefixed function names.
 
