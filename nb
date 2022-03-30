@@ -14657,7 +14657,7 @@ _move() {
   if [[ ! -e "${_target_folder_path}" ]]
   then
     mkdir -p "${_target_folder_path}" ||
-      _exit_1 printf "Unable to create folder: %s\\n" \
+      _exit_1 printf "Unable to create folder: %s\\n"   \
         "$(_color_primary "${_target_folder_path}")"
   fi
 
