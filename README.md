@@ -3380,6 +3380,7 @@ For more information about Zettelkasten, see
     <a href="#overview">↑</a> ·
     <a href="#add"><code>nb add</code></a>,
     <a href="#browse"><code>nb browse</code></a>,
+    <a href="#folders"><code>nb folders</code></a>,
     <a href="#list"><code>nb list</code></a>,
     <a href="#ls"><code>nb ls</code></a>
   </sup>
@@ -3400,14 +3401,21 @@ nb add example/demo/
 
 `nb` automatically creates any intermediate folders as needed.
 
-Folders can be created directly using [`nb add --type folder`](#add):
+Folders can be created directly using [`nb add folder`](#add),
+[`nb folders add`](#folders), and [`nb add --type folder`](#add):
 
 ```bash
 # create a new folder named "sample"
-nb add sample --type folder
+nb add folder sample
 
-# create a folder named "example" containing a folder named "demo"
-nb add example/demo --type folder
+# create a new folder named "sample", alternative
+nb folders add sample
+
+# create a new folder named "demo"
+nb add demo --type folder
+
+# create a folder named "example" containing a folder named "test"
+nb add example/test --type folder
 ```
 
 To list the items in a folder, pass the folder relative path to
@@ -3820,7 +3828,8 @@ For more information, see [Browsing](#-browsing).
 <p>
   <sup>
     <a href="#overview">↑</a> ·
-    <a href="#move"><code>nb move</code></a>
+    <a href="#move"><code>nb move</code></a>,
+    <a href="#copy"><code>nb copy</code></a>
   </sup>
 </p>
 
@@ -3885,9 +3894,37 @@ To:       example_title.md
 Proceed?  [y/N]
 ```
 
-For details, see [`nb help move`](#move).
+Copy an item to a destination notebook, folder path, or filename
+with [`nb copy`](#copy) (alias: [`nb duplicate`](#copy)):
 
-To copy items, install the [`copy`](#copy) / [`duplicate` plugin](#copy).
+```bash
+# copy item 456 to "sample.md"
+nb copy 456 sample.md
+
+# copy item 678 to the "example" notebook
+nb copy 678 example:
+
+# copy item 789 to the "demo" folder
+nb copy 789 demo/
+
+# copy item 543 to test.md in the "sample" folder in the "example" notebook
+nb copy 543 example:sample/test.md
+```
+
+Omit a destination to copy the item in place:
+
+```bash
+# copy item 123 ("example.md") to example-1.md
+❯ nb copy 123
+Added: [124] example-1.md
+
+# copy item 123 ("example.md") to example-2.md, alias
+❯ nb duplicate 123
+Added: [125] example-2.md
+```
+
+For more information about moving, renaming, and copying items, see
+[`nb help move`](#move) and [`nb help copy`](#copy).
 
 ### 🗒 Revision History
 
@@ -4841,8 +4878,7 @@ are aliases that refer to the same subcommand,
 so the two subcommand names can be used interchangeably.
 
 For more information about [`set`](#settings) and [`settings`](#settings), see
-[`nb help settings`](#settings) and
-[`nb settings list --long`](#settings-list---long).
+[`nb help settings`](#settings).
 
 ### 🎨 Color Themes
 
@@ -5093,7 +5129,7 @@ Plugins can be installed from either a URL or a path using the
 
 ```bash
 # install a plugin from a URL
-nb plugins install https://raw.githubusercontent.com/xwmx/nb/master/plugins/copy.nb-plugin
+nb plugins install https://raw.githubusercontent.com/xwmx/nb/master/plugins/clip.nb-plugin
 
 # install a plugin from a standard GitHub URL
 nb plugins install https://github.com/xwmx/nb/blob/master/plugins/example.nb-plugin
@@ -5114,15 +5150,15 @@ which optionally takes a name and prints full paths:
 
 ```bash
 ❯ nb plugins
-copy.nb-plugin
+clip.nb-plugin
 example.nb-plugin
 turquoise.nb-theme
 
-❯ nb plugins copy.nb-plugin
-copy.nb-plugin
+❯ nb plugins clip.nb-plugin
+clip.nb-plugin
 
 ❯ nb plugins --paths
-/home/example/.nb/.plugins/copy.nb-plugin
+/home/example/.nb/.plugins/clip.nb-plugin
 /home/example/.nb/.plugins/example.nb-plugin
 /home/example/.nb/.plugins/turquoise.nb-theme
 
@@ -5146,7 +5182,7 @@ and have an `.nb-plugin` extension.
 `nb` includes a few example plugins:
 
 - [`example.nb-plugin`](https://github.com/xwmx/nb/blob/master/plugins/example.nb-plugin)
-- [`copy.nb-plugin`](https://github.com/xwmx/nb/blob/master/plugins/copy.nb-plugin)
+- [`clip.nb-plugin`](https://github.com/xwmx/nb/blob/master/plugins/clip.nb-plugin)
 - [`ebook.nb-plugin`](https://github.com/xwmx/nb/blob/master/plugins/ebook.nb-plugin)
 
 Create a new subcommand in three easy steps:
@@ -5186,8 +5222,8 @@ With `example.nb-plugin` installed, `nb` includes an `nb example` subcommand
 that prints "Hello, World!"
 
 For a full example,
-[`copy.nb-plugin`](https://github.com/xwmx/nb/blob/master/plugins/copy.nb-plugin)
-adds copy / duplicate functionality to `nb` and demonstrates how to create a
+[`clip.nb-plugin`](https://github.com/xwmx/nb/blob/master/plugins/clip.nb-plugin)
+add clipboard functionality to `nb` and demonstrates how to create a
 plugin using `nb` subcommands and simple shell scripting.
 
 You can install any plugin you create locally with
@@ -5257,8 +5293,8 @@ cat "${_notebook_path}/${_filename}"
 ```
 
 See
-[`copy.nb-plugin`](https://github.com/xwmx/nb/blob/master/plugins/copy.nb-plugin)
-for a practical example using both [`show <selector> --filename`](#show) and
+[`clip.nb-plugin`](https://github.com/xwmx/nb/blob/master/plugins/clip.nb-plugin)
+for a practical example using both [`show <selector>`](#show) and
 [`notebooks current --path`](#notebooks) along with other
 subcommands called using their underscore-prefixed function names.
 
@@ -5607,12 +5643,14 @@ For more commands and options, run
   <a href="#bookmark">bookmark</a>&nbsp;·
   <a href="#browse">browse</a>&nbsp;·
   <a href="#completions">completions</a>&nbsp;·
+  <a href="#copy">copy</a>&nbsp;·
   <a href="#count">count</a>&nbsp;·
   <a href="#delete">delete</a>&nbsp;·
   <a href="#do">do</a>&nbsp;·
   <a href="#edit">edit</a>&nbsp;·
   <a href="#env">env</a>&nbsp;·
   <a href="#export">export</a>&nbsp;·
+  <a href="#folders">folders</a>&nbsp;·
   <a href="#git">git</a>&nbsp;·
   <a href="#help-1">help</a>&nbsp;·
   <a href="#history">history</a>&nbsp;·
@@ -5707,6 +5745,8 @@ Usage:
   nb browse delete ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
   nb browse edit ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
   nb completions (check | install [-d | --download] | uninstall)
+  nb copy ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+          [[<notebook>:][<folder-path>/]<filename>]
   nb count [<notebook>:][<folder-path>/]
   nb delete ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])...
             [-f | --force]
@@ -5720,6 +5760,8 @@ Usage:
   nb export notebook <name> [<path>]
   nb export pandoc ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             [<pandoc options>...]
+  nb folders (add | delete) [<notebook>:][<folder-path>/]<folder-name>
+  nb folders <list-options>...
   nb git [checkpoint [<message>] | dirty]
   nb git <git-options>...
   nb help [<subcommand>] [-p | --print]
@@ -5823,11 +5865,13 @@ Subcommands:
   bookmark     Add, open, list, and search bookmarks.
   browse       Browse and manage linked items in terminal and GUI web browsers.
   completions  Install and uninstall completion scripts.
+  copy         Copy or duplicate an item.
   count        Print the number of items in a notebook or folder.
   delete       Delete a note.
   do           Mark a todo or task as done.
   edit         Edit a note.
   export       Export a note to a variety of different formats.
+  folders      Add, delete, and list folders.
   git          Run `git` commands within the current notebook.
   help         View help information for the program or a subcommand.
   history      View git history for the current notebook or a note.
@@ -5998,11 +6042,13 @@ For more information, see: `nb help`.
   <a href="#bookmark">bookmark</a>&nbsp;·
   <a href="#browse">browse</a>&nbsp;·
   <a href="#completions">completions</a>&nbsp;·
+  <a href="#copy">copy</a>&nbsp;·
   <a href="#count">count</a>&nbsp;·
   <a href="#delete">delete</a>&nbsp;·
   <a href="#do">do</a>&nbsp;·
   <a href="#edit">edit</a>&nbsp;·
   <a href="#env">env</a>&nbsp;·
+  <a href="#folders">folders</a>&nbsp;·
   <a href="#export">export</a>&nbsp;·
   <a href="#git">git</a>&nbsp;·
   <a href="#help-1">help</a>&nbsp;·
@@ -6049,6 +6095,7 @@ For more information, see: `nb help`.
 [`browse`](#browse),
 [`delete`](#delete),
 [`edit`](#edit),
+[`folders`](#folders),
 [`import`](#import),
 [`show`](#show),
 [`todo`](#todo)
@@ -6106,6 +6153,7 @@ See Also:
   nb help browse
   nb help delete
   nb help edit
+  nb help folders
   nb help import
   nb help show
   nb help todo
@@ -6403,6 +6451,35 @@ See Also:
   nb help env
 ```
 
+#### `copy`
+
+[↑](#help) · See also:
+[Moving & Renaming](#-moving--renaming),
+[`move`](#move)
+
+```text
+Usage:
+  nb copy ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+          [[<notebook>:][<folder-path>/]<filename>]
+
+Description:
+  Copy or duplicate an item.
+
+Read More:
+  https://github.com/xwmx/nb#-moving--renaming
+
+See Also:
+  nb help move
+
+Examples:
+  nb copy 321
+  nb copy 456 example:
+  nb copy sample/demo.md
+
+Alias:
+  nb duplicate
+```
+
 #### `count`
 
 [↑&nbsp;](#help)
@@ -6645,6 +6722,50 @@ Examples:
 
   # Export note 12 in the "sample" notebook to HTML
   nb export sample:12 /path/to/example.html
+```
+
+#### `folders`
+
+[↑](#help) · See also:
+[Folders](#-folders),
+[`add`](#add),
+[`delete`](#delete),
+[`list`](#list),
+[`ls`](#ls)
+
+```text
+Usage:
+  nb folders add [<notebook>:][<folder-path>/]<folder-name>
+  nb folders delete [<notebook>:][<folder-path>/]<folder-name>
+  nb folders <list-options>...
+
+Subcommands:
+  (default)  List folders.
+  add        Add a new folder.
+  delete     Delete a folder.
+
+Description:
+  Add, delete, and list folders.
+
+Read More:
+  https://github.com/xwmx/nb#-folders
+
+See Also:
+  nb help add
+  nb help delete
+  nb help list
+  nb help ls
+
+Examples:
+  nb folders
+  nb folders add example
+  nb folders delete example:sample
+
+Alias:
+  nb folder
+
+Shortcut Alias:
+  nb f
 ```
 
 #### `git`
@@ -7018,6 +7139,7 @@ Examples:
 
 [↑](#help) · See also:
 [Moving & Renaming](#-moving--renaming),
+[`copy`](#copy),
 [`delete`](#delete),
 [`edit`](#edit)
 
@@ -7047,7 +7169,11 @@ Description:
 
   `nb move` and `nb rename` are aliases and can be used interchangeably.
 
+Read More:
+  https://github.com/xwmx/nb#-moving--renaming
+
 See Also:
+  nb help copy
   nb help delete
   nb help edit
 
@@ -8408,7 +8534,6 @@ See Also:
   <a href="#backlink">backlink</a>&nbsp;·
   <a href="#bump">bump</a>&nbsp;·
   <a href="#clip">clip</a>&nbsp;·
-  <a href="#copy">copy</a>&nbsp;·
   <a href="#ebook">ebook</a>&nbsp;·
   <a href="#example">example</a>
 </p>
@@ -8499,24 +8624,6 @@ Examples:
 
   # save the clipboard contents as a new `.cr` file in the "snippets" notebook
   nb snippets:clip .cr
-```
-
-#### `copy`
-
-[↑&nbsp;](#plugin-help)
-
-```bash
-nb plugins install https://github.com/xwmx/nb/blob/master/plugins/copy.nb-plugin
-```
-
-```text
-Usage:
-  nb copy ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
-
-Description:
-  Create a copy of the specified item in the current notebook.
-
-Alias: `nb duplicate`
 ```
 
 #### `ebook`

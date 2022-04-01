@@ -4,6 +4,101 @@ load test_helper
 
 # shortcut aliases ############################################################
 
+@test "'<notebook>:rm <id>' deletes properly without errors." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" add "Example Notebook:Example File.md"
+
+    _original_index="$(cat "${NB_DIR}/Example Notebook/.index")"
+
+    [[ -e "${NB_DIR}/Example Notebook/Example File.md"  ]]
+  }
+
+  run "${_NB}" Example\ Notebook:rm 1 --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0                                  ]]
+
+  # Deletes file:
+
+  [[ ! -e "${NB_DIR}/Example Notebook/Example File.md"  ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/Example Notebook" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Delete'
+
+  # Deletes entry from index:
+
+  [[ -e "${NB_DIR}/Example Notebook/.index"             ]]
+  [[    "$(ls "${NB_DIR}/Example Notebook")"  == \
+          "$(cat "${NB_DIR}/Example Notebook/.index")"  ]]
+  [[    "${_original_index}"                  != \
+          "$(cat "${NB_DIR}/Example Notebook/.index")"  ]]
+
+  # Prints output:
+
+  [[ "${status}" -eq  0                                                     ]]
+  [[ "${output}" =~   Deleted:                                              ]]
+  [[ "${output}" =~   Example\ Notebook:1.*Example\ File.md.*\"mock_editor  ]]
+}
+
+@test "'rm <id>' deletes properly without errors." {
+  {
+    "${_NB}" init
+    "${_NB}" add "example.md"
+
+    _original_index="$(cat "${NB_DIR}/home/.index")"
+
+    [[ -e "${NB_DIR}/home/example.md"     ]]
+  }
+
+  run "${_NB}" rm 1 --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0                    ]]
+
+  # Deletes file:
+
+  [[ ! -e "${NB_DIR}/home/example.md"     ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Delete'
+
+  # Deletes entry from index:
+
+  [[ -e "${NB_DIR}/home/.index"                                       ]]
+  [[    "$(ls "${NB_DIR}/home")"  == "$(cat "${NB_DIR}/home/.index")" ]]
+  [[    "${_original_index}"      != "$(cat "${NB_DIR}/home/.index")" ]]
+
+  # Prints output:
+
+  [[ "${status}" -eq  0                             ]]
+  [[ "${output}" =~   Deleted:                      ]]
+  [[ "${output}" =~   1.*example.md.*\"mock_editor  ]]
+}
+
 @test "'<notebook>:- <id>' deletes properly without errors." {
   {
     "${_NB}" init

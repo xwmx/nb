@@ -74,7 +74,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="6.9.5"
+_VERSION="6.10.0"
 
 # $_ME
 #
@@ -488,7 +488,7 @@ export NB_AUTO_LIMIT="${NB_AUTO_LIMIT:-0}"
 # `$_ME sync`. To disable this behavior, set the value to '0'.
 export NB_AUTO_SYNC="${NB_AUTO_SYNC:-1}"
 
-# `$NB_DEFAULT_EXTENSION`
+# $NB_DEFAULT_EXTENSION
 #
 # Default: 'md'
 #
@@ -1399,19 +1399,19 @@ _file_is_encrypted() {
         "${_DOCUMENT_FILE_EXTENSIONS[@]}"   \
         "${_AUDIO_FILE_EXTENSIONS[@]}"      \
         "${_VIDEO_FILE_EXTENSIONS[@]}"      &&
-      if _command_exists "file"
-      then
-        [[ "$(file "${_file_path:-}"        \
-              --exclude=apptype             \
-              --exclude=encoding            \
-              --exclude=tokens              \
-              --exclude=cdf                 \
-              --exclude=compress            \
-              --exclude=elf                 \
-              --exclude=tar)" =~ encrypted|openssl ]]
-      else
-        return 1
-      fi
+        if _command_exists "file"
+        then
+          [[ "$(file "${_file_path:-}"      \
+                  --exclude=apptype         \
+                  --exclude=encoding        \
+                  --exclude=tokens          \
+                  --exclude=cdf             \
+                  --exclude=compress        \
+                  --exclude=elf             \
+                  --exclude=tar)" =~ encrypted|openssl ]]
+        else
+          return 1
+        fi
     }
 }
 
@@ -1505,23 +1505,23 @@ _file_is_text() {
         "${_ENCRYPTED_FILE_EXTENSIONS[@]}"  \
         "${_AUDIO_FILE_EXTENSIONS[@]}"      \
         "${_VIDEO_FILE_EXTENSIONS[@]}"      \
-        "${_ARCHIVE_FILE_EXTENSIONS[@]}"    &&
-      [[ ! "${_file_type}" =~ \.epub$   ]]  &&
-      [[ ! -d "${_file_path:-}"         ]]  &&
-      if _command_exists "file"
-      then
-        [[ "$(file "${_file_path:-}"        \
-                --exclude=apptype           \
-                --exclude=encoding          \
-                --exclude=tokens            \
-                --exclude=cdf               \
-                --exclude=compress          \
-                --exclude=elf               \
-                --exclude=tar               \
-                -b --mime-type)" =~ ^text   ]]
-      else
-        return 0
-      fi
+        "${_ARCHIVE_FILE_EXTENSIONS[@]}"        &&
+        [[ !    "${_file_type}" =~ \.epub$  ]]  &&
+        [[ ! -d "${_file_path:-}"           ]]  &&
+        if _command_exists "file"
+        then
+          [[ "$(file "${_file_path:-}"      \
+                  --exclude=apptype         \
+                  --exclude=encoding        \
+                  --exclude=tokens          \
+                  --exclude=cdf             \
+                  --exclude=compress        \
+                  --exclude=elf             \
+                  --exclude=tar             \
+                  -b --mime-type)" =~ ^text ]]
+        else
+          return 0
+        fi
     }
 }
 
@@ -3460,7 +3460,7 @@ HEREDOC
     fi
 
     local _git_name=
-    _git_name="$(git config --global --includes user.name || printf '')"
+    _git_name="$(git config --global --includes user.name   || printf '')"
 
     local _git_email=
     _git_email="$(git config --global --includes user.email || printf '')"
@@ -3972,6 +3972,8 @@ $(_color_primary "Usage"):
   ${_ME} browse delete ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
   ${_ME} browse edit ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
   ${_ME} completions (check | install [-d | --download] | uninstall)
+  ${_ME} copy ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+          [[<notebook>:][<folder-path>/]<filename>]
   ${_ME} count [<notebook>:][<folder-path>/]
   ${_ME} delete ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])...
             [-f | --force]
@@ -3985,6 +3987,8 @@ $(_color_primary "Usage"):
   ${_ME} export notebook <name> [<path>]
   ${_ME} export pandoc ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             [<pandoc options>...]
+  ${_ME} folders (add | delete) [<notebook>:][<folder-path>/]<folder-name>
+  ${_ME} folders <list-options>...
   ${_ME} git [checkpoint [<message>] | dirty]
   ${_ME} git <git-options>...
   ${_ME} help [<subcommand>] [-p | --print]
@@ -4093,11 +4097,13 @@ $(_color_primary "Subcommands"):
   bookmark     Add, open, list, and search bookmarks.
   browse       Browse and manage linked items in terminal and GUI browsers.
   completions  Install and uninstall completion scripts.
+  copy         Copy or duplicate an item.
   count        Print the number of items in a notebook or folder.
   delete       Delete a note.
   do           Mark a todo or task as done.
   edit         Edit a note.
   export       Export a note to a variety of different formats.
+  folders      Add, delete, and list folders.
   git          Run \`git\` commands within the current notebook.
   help         View help information for the program or a subcommand.
   history      View git history for the current notebook or a note.
@@ -4927,6 +4933,7 @@ HEREDOC
 _list() {
   local _error_on_empty=0
   local _excerpt_length=3
+  local _force_line_wrap=0
   local _limit=
   local _line_wrap=1
   local _list_filenames=0
@@ -5038,6 +5045,10 @@ _list() {
         ;;
       --with*pinned)
         _with_pinned=1
+        ;;
+      --wrap)
+        _force_line_wrap=1
+        _recursive_arguments+=("--wrap")
         ;;
       *)
         if   [[   "${1:-}" =~ ^-+[0-9]+$  ]]
@@ -5414,7 +5425,8 @@ _list() {
        ((_COLOR_ENABLED))     &&
        ! ((_list_filenames))  &&
        ! ((_list_paths))      &&
-       ! ((_no_id))
+       ! ((_no_id))           &&
+       ! ((_force_line_wrap))
     then
       _line_wrap=0
     fi
@@ -8411,7 +8423,8 @@ __load_plugins() {
     local __file=
     for   __file in "${NB_DIR}/.plugins"/*.nb-plugin*
     do
-      [[ -f "${__file}" ]] || continue
+      [[ -f "${__file}"                       ]] || continue
+      [[    "${__file}"  =~ /copy.nb-plugin$  ]] && continue
 
       source "${__file}"
     done
@@ -8521,16 +8534,21 @@ _SUBCOMMANDS=(
   commands
   completions
   config
+  copy
   count
   create
   d
   delete
   "do"
   "done"
+  duplicate
   e
   edit
   export
   env
+  f
+  folder
+  folders
   git
   grep
   h
@@ -8565,6 +8583,7 @@ _SUBCOMMANDS=(
   remote
   rename
   reset
+  rm
   run
   s
   search
@@ -8605,41 +8624,32 @@ _SUBCOMMANDS=(
 _DOCUMENTED_SUBCOMMANDS=(
   +
   -
-  a
   add
-  ar
   archive
   b
-  bk
   bookmark
-  br
   browse
   commands
   completions
+  copy
   count
-  d
   delete
   "do"
-  e
   edit
   export
   env
+  folders
   git
-  h
   help
   history
-  i
   import
   init
   list
   ls
   move
   mv
-  n
   notebooks
-  o
   open
-  p
   peek
   pin
   plugins
@@ -8648,7 +8658,6 @@ _DOCUMENTED_SUBCOMMANDS=(
   remote
   rename
   run
-  s
   search
   set
   settings
@@ -8661,7 +8670,6 @@ _DOCUMENTED_SUBCOMMANDS=(
   tasks
   todo
   u
-  unar
   unarchive
   undo
   unpin
@@ -8690,15 +8698,20 @@ _GIT_SUBCOMMANDS=(
   browser
   bs
   close
+  copy
   count
   create
   d
   delete
   "do"
   "done"
+  duplicate
   e
   edit
   export
+  f
+  folder
+  folders
   grep
   i
   import
@@ -8721,6 +8734,7 @@ _GIT_SUBCOMMANDS=(
   preview
   q
   rename
+  rm
   s
   show
   search
@@ -8851,19 +8865,19 @@ _parse_options() {
         elif _notebooks current --selected
         then
           _ARGUMENTS+=("${_current_option}")
-        elif [[ "${_SUBCOMMAND:-}" == "move"      ]] &&
+        elif [[ "${_SUBCOMMAND:-}" =~ ^copy$|^move$ ]] &&
              ((${#_ARGUMENTS[@]}))
         then
           _ARGUMENTS+=("${_current_option}")
-        elif [[ "${_SUBCOMMAND:-}" == "delete"    ]]
+        elif [[ "${_SUBCOMMAND:-}" == "delete"      ]]
         then
           _ARGUMENTS+=("${_current_option}")
         else
           local _selector_suffix="${_current_option#*:}"
 
-          if [[ -z "${_selector_suffix:-}"        ]] &&
-             [[ -n "${_SUBCOMMAND:-}"             ]] &&
-             [[ ! "${_SUBCOMMAND}" =~ ^ls$|^list$ ]]
+          if [[ -z "${_selector_suffix:-}"          ]] &&
+             [[ -n "${_SUBCOMMAND:-}"               ]] &&
+             [[ ! "${_SUBCOMMAND}" =~ ^ls$|^list$   ]]
           then
             _ARGUMENTS+=("${_current_option}")
           else
@@ -9017,10 +9031,11 @@ _call_deferred_command() {
 
   local _group="${2:-}"
   local _group_3_names=(
-    _ar _archive _b _bookmark _br _browse _browser _close _config _do _done   \
-    _h _help _helpers _set _plugin _plugins _remote _reset _settings _shell   \
-    _st _stat _status _sync _t _task _tasks _to _todo _todos _unar _unarchive \
-    _undo _undone _unset _update _upgrade
+    _ar _archive _b _bookmark _br _browse _browser _close _config _copy _do   \
+    _done _duplicate _f _folder _folders _h _help _helpers _set _plugin       \
+    _plugins _remote _reset _settings _shell _st _stat _status _sync _t _task \
+    _tasks _to _todo _todos _unar _unarchive _undo _undone _unset _update     \
+    _upgrade
   )
 
   if {
@@ -11429,6 +11444,7 @@ $(_color_primary "See Also"):
   ${_ME} help browse
   ${_ME} help delete
   ${_ME} help edit
+  ${_ME} help folders
   ${_ME} help import
   ${_ME} help show
   ${_ME} help todo
@@ -11612,7 +11628,7 @@ _add() {
         then # argument contains content
           _argument_content+="${_arguments[i]:-} "
         else
-          if [[ "${_arguments[i]}" =~ :                     ]]
+          if [[ "${_arguments[i]}" =~ :|^/                  ]]
           then
             if [[ -n "${_selector_filename:-}"              ]] ||
                [[ -n "${_selector_folder_relative_path:-}"  ]]
@@ -11623,10 +11639,16 @@ _add() {
                 _notebook show "${_arguments[i]%%:*}" --path 2>/dev/null || :
               )"
 
-              if [[ -n "${_selector_notebook_path}" ]]
+              if [[ -n "${_selector_notebook_path}"         ]]
               then # argument is a selector with a valid notebook
                 _notebook_path="${_selector_notebook_path}"
-                _selector_relative_path="${_arguments[i]#*:}"
+
+                if [[ "${_arguments[i]:-}" =~ ^/            ]]
+                then
+                  _selector_relative_path="${_arguments[i]#${_notebook_path}/}"
+                else
+                  _selector_relative_path="${_arguments[i]#*:}"
+                fi
               else # argument is not a selector
                 _argument_content+="${_arguments[i]:-} "
               fi
@@ -11832,17 +11854,17 @@ _add() {
       _target_path="$(_temp directory)/${_target_unique_relative_path}"
     fi
 
-    if [[ -n "${_target_folder_relative_path:-}"    ]] &&
-       [[ ! -d "${_target_folder_relative_path:-}"  ]]
+    if [[ -n "${_target_folder_relative_path:-}"                      ]] &&
+       [[ ! -d "${_notebook_path}/${_target_folder_relative_path:-}"  ]]
     then
-      if [[ -e "${_target_folder_relative_path:-}"  ]]
+      if [[ -e "${_notebook_path}/${_target_folder_relative_path:-}"  ]]
       then
-        _exit_1 printf "File exists at: %s\\n" \
+        _exit_1 printf "File exists at: %s\\n"            \
           "$(_color_primary "${_target_folder_relative_path:-}")"
       else
         if ! mkdir -p "${_notebook_path:?}/${_target_folder_relative_path}" 2>/dev/null
         then
-          _exit_1 printf "Unable to create folder: %s\\n"   \
+          _exit_1 printf "Unable to create folder: %s\\n" \
             "$(_color_primary "${_target_folder_relative_path}")"
         fi
       fi
@@ -13196,6 +13218,7 @@ _delete() {
 }
 _alias_subcommand "delete" "-"
 _alias_subcommand "delete" "d"
+_alias_subcommand "delete" "rm"
 
 # edit ################################################################### edit
 
@@ -14330,7 +14353,11 @@ $(_color_primary "Description"):
 
   \`move\` and \`rename\` are aliases and can be used interchangeably.
 
+$(_color_primary "Read More"):
+  ${_README_URL}#-moving--renaming
+
 $(_color_primary "See Also"):
+  ${_ME} help copy
   ${_ME} help delete
   ${_ME} help edit
 
@@ -14600,7 +14627,7 @@ _move() {
 
   if [[ -e  "${_target_notebook_path}/${_target_relative_path}" ]]
   then
-    _exit_1 printf "File already exists: %s\\n"       \
+    _exit_1 printf "File already exists: %s\\n"         \
       "$(_color_primary "${_target_info}")"
   fi
 
@@ -14612,7 +14639,7 @@ _move() {
     while true
     do
       local __yn=
-      IFS='' read -r -e -d $'\n' -p                   \
+      IFS='' read -r -e -d $'\n' -p                     \
 "$(_color_primary "Proceed?")  $(_color_brackets "y/N") " __yn
 
       case "${__yn}" in
@@ -14630,12 +14657,34 @@ _move() {
   if [[ ! -e "${_target_folder_path}" ]]
   then
     mkdir -p "${_target_folder_path}" ||
-      _exit_1 printf "Unable to create folder: %s\\n" \
+      _exit_1 printf "Unable to create folder: %s\\n"   \
         "$(_color_primary "${_target_folder_path}")"
   fi
 
   mv "${_source_path}" "${_target_notebook_path}/${_target_relative_path}" ||
     _exit_1 printf "Move failed.\\n"
+
+  if [[ -e "${_source_folder_path:-}/.pindex"           ]]  &&
+     grep -q  "^${_source_basename}$"     "${_source_folder_path:-}/.pindex"
+  then
+    if [[ "${_source_folder_path}" == "${_target_folder_path}"    ]]
+    then
+      _sed_i -e                                         \
+        "s/^${_source_basename}$/${_target_basename}/"  \
+        "${_source_folder_path:-}/.pindex"
+    else
+      _sed_i -e                                         \
+        "/^${_source_basename}$/d"                      \
+        "${_source_folder_path:-}/.pindex"
+
+      if [[ ! -e "${_target_folder_path:-}/.pindex"     ]]
+      then
+        touch "${_target_folder_path:-}/.pindex"
+      fi
+
+      printf "%s\\n" "${_target_basename}" >> "${_target_folder_path:-}/.pindex"
+    fi
+  fi
 
   if [[ "${_source_notebook_path}" == "${_target_notebook_path}"  ]]
   then
@@ -14646,7 +14695,7 @@ _move() {
         "${_target_basename}"     \
         "${_source_folder_path}"
     else
-      _index delete "${_source_basename}" "${_source_folder_path}" &&
+      _index delete "${_source_basename}" "${_source_folder_path}"  &&
         _index add  "${_target_basename}" "${_target_folder_path}"
     fi || _exit_1 printf "Move index update failed.\\n"
 
@@ -20033,12 +20082,26 @@ HEREDOC
 
   if ((_print_output))
   then
-    if ((_print_headers))
-    then
-      curl -s -I "${_request_url//\ /\%20}"
-    else
-      _download_from "${_request_url//\ /\%20}"
-    fi
+    local _retry_counter=0
+    local _printable_response=
+
+    while [[ -z "${_printable_response:-}"  ]]
+    do
+      ((_retry_counter)) && sleep 0.5
+
+      _printable_response="$(
+        if ((_print_headers))
+        then
+          curl -s -I      "${_request_url//\ /\%20}"  || :
+        else
+          _download_from  "${_request_url//\ /\%20}"  || :
+        fi
+      )"
+
+      _retry_counter=$((_retry_counter+1))
+    done
+
+    printf "%s\\n" "${_printable_response:-}"
   elif ((_open_gui))  || _web_browser --gui || ((_only_serve))
   then
     local _display_params=
@@ -20110,6 +20173,160 @@ _alias_subcommand "browse" "b"
 _alias_subcommand "browse" "br"
 _alias_subcommand "browse" "browser"
 
+# copy ################################################################### copy
+
+_describe_copy() {
+  cat <<HEREDOC
+$(_color_primary "Usage"):
+  ${_ME} copy ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+          [[<notebook>:][<folder-path>/]<filename>]
+
+$(_color_primary "Description"):
+  Copy or duplicate an item.
+
+$(_color_primary "Read More"):
+  ${_README_URL}#-moving--renaming
+
+$(_color_primary "See Also"):
+  ${_ME} help move
+
+$(_color_primary "Examples"):
+  ${_ME} copy 321
+  ${_ME} copy 456 example:
+  ${_ME} copy 987 sample/demo.md
+
+$(_color_primary "Alias"):
+  ${_ME} duplicate
+HEREDOC
+}
+_copy() {
+  local _source_selector="${1:-}"
+  local _target_selector="${2:-}"
+
+  if [[ -z "${_source_selector:-}" ]]
+  then
+    _help "copy"
+    exit 1
+  fi
+
+  local _source_notebook_path=
+  _source_notebook_path="$(
+    _notebooks show "${_source_selector:-}" --path 2>/dev/null  ||
+      _notebooks current --path
+  )"
+
+  local _source_relative_path=
+  _source_relative_path="$(
+    _show "${_source_selector}" --relative-path 2>/dev/null || :
+  )"
+
+  local _source_basename="${_source_relative_path##*/}"
+
+  if [[   -z "${_source_relative_path:-}"                         ]] ||
+     [[ ! -e "${_source_notebook_path}/${_source_relative_path}"  ]]
+  then
+    _warn printf "Not found: %s\\n" "$(
+      _color_primary "${_source_selector:-}"
+    )"
+
+    return 1
+  fi
+
+  local _target_folder_path=
+  local _target_notebook_path=
+  local _target_relative_path=
+
+  if [[ -n "${_target_selector:-}" ]]
+  then
+    _target_notebook_path="$(
+      _notebooks show "${_target_selector:-}" --path 2>/dev/null  ||
+        _notebooks current --path
+    )"
+
+    local _target_folder_relative_path=
+    _target_folder_relative_path="$(
+      _selector_resolve_folders "${_target_selector:-}" --build   || :
+    )"
+
+    _target_folder_path="${_target_notebook_path:-}/${_target_folder_relative_path:-}"
+
+    _target_relative_path="$(
+      _selector_get_identifier "${_target_selector:-}"
+    )"
+
+    if [[ -z "${_target_relative_path:-}" ]]
+    then
+      _target_relative_path="${_source_basename:-}"
+    fi
+
+    _target_relative_path="${_target_relative_path%/}"
+
+    if [[ "${_target_selector:-}" =~ /$   ]]
+    then
+      _target_relative_path="${_target_relative_path:-}/${_source_basename:-}"
+    fi
+
+    if [[ -e "${_target_notebook_path:-}/${_target_relative_path:-}"  ]]
+    then
+      _warn printf "Already exists: %s\\n" "$(
+        _color_primary "${_target_selector:-}"
+      )"
+
+      return 1
+    fi
+  else
+    _target_notebook_path="$(
+      _notebooks show "${_source_selector}" --path 2>/dev/null    ||
+        _notebooks current --path
+    )"
+
+    _target_relative_path="$(
+      _notebooks current --filename "${_source_relative_path}"
+    )"
+
+    if [[ "${_target_relative_path:-}" =~ / ]]
+    then
+      _target_folder_path="${_source_notebook_path}/${_target_relative_path%/*}"
+    else
+      _target_folder_path="${_source_notebook_path}"
+    fi
+  fi
+
+  if _show "${_source_notebook_path}/${_source_relative_path}" --type text
+  then # Text can use `_add`.
+    # Print the source contents and pipe to `_add`:
+    _show "${_source_notebook_path}/${_source_relative_path}"     \
+      --no-color --print                                          \
+      | _add "${_target_notebook_path}/${_target_relative_path}"
+  else
+    local _copy_arguments=(
+      "${_source_notebook_path}/${_source_relative_path}"
+      "${_target_notebook_path}/${_target_relative_path}"
+    )
+
+    if [[ -d "${_source_notebook_path}/${_source_relative_path}"  ]]
+    then
+      _copy_arguments=("-R" "${_copy_arguments[@]:-}")
+    fi
+
+    if [[ ! -e "${_target_folder_path:-}"   ]]
+    then
+      mkdir -p "${_target_folder_path:-}"
+    fi
+
+    cp "${_copy_arguments[@]:-}"
+
+    _index add "${_target_relative_path##*/}" "${_target_folder_path}"
+
+    _git checkpoint "${_target_notebook_path:-}" "[nb] Add: ${_target_relative_path}"
+
+    printf "Added: %s\\n" "$(
+      _show "${_target_notebook_path}/${_target_relative_path}" --info-line
+    )"
+  fi
+}
+_alias_subcommand "copy" "duplicate"
+
 # do ####################################################################### do
 
 _describe_do() {
@@ -20140,6 +20357,130 @@ _do() {
 }
 _alias_subcommand "do" "done"
 _alias_subcommand "do" "close"
+
+# folders ############################################################# folders
+
+_describe_folders() {
+  cat <<HEREDOC
+$(_color_primary "Usage"):
+  ${_ME} folders add [<notebook>:][<folder-path>/]<folder-name>
+  ${_ME} folders delete [<notebook>:][<folder-path>/]<folder-name>
+  ${_ME} folders <list-options>...
+
+$(_color_primary "Subcommands"):
+  (default)  List folders.
+  add        Add a new folder.
+  delete     Delete a folder.
+
+$(_color_primary "Description"):
+  Add, delete, and list folders.
+
+$(_color_primary "Read More"):
+  ${_README_URL}#-folders
+
+$(_color_primary "See Also"):
+  ${_ME} help add
+  ${_ME} help delete
+  ${_ME} help list
+  ${_ME} help ls
+
+$(_color_primary "Examples"):
+  ${_ME} folders
+  ${_ME} folders add example
+  ${_ME} folders delete example:sample
+
+$(_color_primary "Alias"):
+  ${_ME} folder
+
+$(_color_primary "Shortcut Alias"):
+  ${_ME} f
+HEREDOC
+}
+_folders() {
+  local _arguments=()
+  local _selector=
+  local _subcommand=
+
+  while ((${#}))
+  do
+    case "${1:-}" in
+      add|a|+)
+        _subcommand="add"
+        ;;
+      delete|d|rm|-)
+        _subcommand="delete"
+        ;;
+      list|ls)
+        _subcommand="list"
+        ;;
+      *)
+        if [[ -z "${_selector:-}" ]]
+        then
+          _selector="${1:-}"
+        fi
+
+        _arguments+=("${1:-}")
+        ;;
+    esac
+
+    shift
+  done
+
+  if [[ -z "${_subcommand:-}"     ]]
+  then
+    _subcommand="list"
+  fi
+
+  if [[ -z "${_selector:-}"       ]] &&
+     _contains "${_subcommand:-}" "+" "-" "a" "add" "d" "delete" "rm"
+  then
+    _help "folders"
+
+    return 1
+  fi
+
+  case "${_subcommand:-}" in
+    add)
+      _add folder "${_arguments[@]:-}"
+      ;;
+    delete)
+      local _target_path=
+      _target_path="$(_show "${_selector:-}" --path)"
+
+      if [[ ! -e "${_target_path:-}"    ]]
+      then
+        _warn printf "Not found: %s\\n"     \
+          "$(_color_primary "${_selector:-}")"
+
+        return 1
+      elif [[ ! -d "${_target_path:-}"  ]]
+      then
+        _warn printf "Not a folder: %s\\n"  \
+          "$(_color_primary "${_selector:-}")"
+
+        return 1
+      fi
+
+      _delete "${_arguments[@]:-}"
+      ;;
+    list)
+      if [[ -n "${_selector:-}"         ]]
+      then
+        local _selector_path=
+        _selector_path="$(_show "${_selector:-}" --path)"
+
+        if [[ -n "${_selector_path:-}"  ]]
+        then
+          _notebooks select "${_selector_path:-}"
+        fi
+      fi
+
+      _list --type folder "${_arguments[@]:-}"
+      ;;
+  esac
+}
+_alias_subcommand "folders" "f"
+_alias_subcommand "folders" "folder"
 
 # helpers ############################################################# helpers
 
