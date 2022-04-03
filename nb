@@ -8819,7 +8819,6 @@ _is_valid_subcommand() {
 _parse_options() {
   local _current_option=
   local _previous_option=
-  local _previous_option_was_flag=0
 
   while ((${#}))
   do
@@ -8920,7 +8919,8 @@ _parse_options() {
           else
             if ! _notebooks select "${_current_option}"
             then
-              if [[ -n "${_SUBCOMMAND:-}" ]] || ((_previous_option_was_flag))
+              if [[ -n "${_SUBCOMMAND:-}"           ]] ||
+                 [[    "${_previous_option}" =~ ^-  ]]
               then
                 _ARGUMENTS+=("${_current_option}")
 
@@ -8940,7 +8940,7 @@ _parse_options() {
               then
                 _SUBCOMMAND="bookmark"
                 _ARGUMENTS+=("${_selector_suffix}")
-              elif [[ "${_selector_suffix}" =~ ^- ]]
+              elif [[ "${_selector_suffix}" =~ ^-   ]]
               then
                 _ARGUMENTS+=("${_selector_suffix}")
               else
@@ -8955,20 +8955,12 @@ _parse_options() {
         break
         ;;
       *)
-        if ! ((_previous_option_was_flag))  &&
-           [[ -z "${_SUBCOMMAND:-}" ]]      &&
+        if [[ !  "${_previous_option}" =~ ^-        ]] &&
+           [[ -z "${_SUBCOMMAND:-}"                 ]] &&
            _is_valid_subcommand "${_current_option}"
         then
           _SUBCOMMAND="${_current_option}"
         else
-          if [[ "${_current_option}" =~ ^-        ]]
-          then
-            _previous_option_was_flag=1
-          elif ((_previous_option_was_flag))
-          then
-            _previous_option_was_flag=0
-          fi
-
           _ARGUMENTS+=("${_current_option}")
         fi
         ;;
