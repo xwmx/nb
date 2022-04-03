@@ -709,3 +709,27 @@ Directory\ exists:\ .*${_TMP_DIR}/example ]]
   [[ "${status}"    -eq 1                                               ]]
   [[ "${lines[0]}"  =~  Git\ repository\ exists:\ .*${_TMP_DIR}/example ]]
 }
+
+@test "'notebooks init <top-level-directory>' exits with 1 and prints message." {
+  {
+    "${_NB}" init
+
+    declare _current_home="${HOME}"
+  }
+
+  while [[ "${_current_home}" =~ /  ]]
+  do
+    printf "_current_home: %s\\n" "${_current_home}"
+
+    run "${_NB}" notebooks init "${_current_home}"
+
+    printf "\${status}: '%s'\\n" "${status}"
+    printf "\${output}: '%s'\\n" "${output}"
+
+    [[ "${status}"    -eq 1         ]]
+    [[ "${lines[0]}"  =~  \
+!.*\ Unable\ to\ turn\ top\-level\ directory\ into\ local\ notebook:\ .*${_current_home} ]]
+
+    _current_home="${_current_home%/*}"
+  done
+}
