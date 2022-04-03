@@ -7599,14 +7599,6 @@ HEREDOC
       then
         _path="${_CURRENT_WORKING_DIR}/${_path}"
       fi
-
-      # if [[ ! -e "${_path}"         ]]
-      # then
-      #   mkdir -p "${_path}"
-      # elif [[ -f "${_path}"         ]]
-      # then
-      #   _exit_1 printf "File already exists: %s\\n" "$(_color_primary "${_path}")"
-      # fi
     else
       _path="${_CURRENT_WORKING_DIR}"
     fi
