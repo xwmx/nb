@@ -7031,7 +7031,7 @@ _notebooks() {
         --print|--current)
           _print_current=1
           ;;
-        --skip*)
+        --skip*|--force)
           _skip_prompt=1
           ;;
         --unset)
@@ -7551,6 +7551,7 @@ HEREDOC
     local _path=
     local _remote_branch=
     local _remote_url=
+    local _skip_prompt=0
 
     while ((${#}))
     do
@@ -7565,6 +7566,9 @@ HEREDOC
             _author_arguments+=("${2:-}")
             shift
           fi
+          ;;
+        --skip*|--force)
+          _skip_prompt=1
           ;;
         *)
           if _string_is_url "${1:-}"    && [[ -z "${_remote_url:-}" ]]
@@ -7596,19 +7600,19 @@ HEREDOC
         _path="${_CURRENT_WORKING_DIR}/${_path}"
       fi
 
-      if [[ ! -e "${_path}"         ]]
-      then
-        mkdir -p "${_path}"
-      elif [[ -f "${_path}"         ]]
-      then
-        _exit_1 printf "File already exists: %s\\n" "$(_color_primary "${_path}")"
-      fi
+      # if [[ ! -e "${_path}"         ]]
+      # then
+      #   mkdir -p "${_path}"
+      # elif [[ -f "${_path}"         ]]
+      # then
+      #   _exit_1 printf "File already exists: %s\\n" "$(_color_primary "${_path}")"
+      # fi
     else
       _path="${_CURRENT_WORKING_DIR}"
     fi
 
     if [[ -d "${_path}"             ]]  &&
-       [[ -d "${_path}/.git"        ]]
+       [[ -e "${_path}/.git"        ]]
     then
       local _error_message=
 
@@ -7620,6 +7624,42 @@ HEREDOC
       fi
 
       _exit_1 printf "%s\\n" "${_error_message}"
+    fi
+
+    if [[ ! -e "${_path}"           ]]
+    then
+      mkdir -p "${_path}"
+    elif [[ -f "${_path}"           ]]
+    then
+      _exit_1 printf "File already exists: %s\\n" "$(_color_primary "${_path}")"
+    elif [[ -d "${_path:-}"         ]]
+    then
+      printf "Directory exists: %s\\n" "$(_color_primary "${_path}")"
+
+      if [[ -n "${_remote_url:-}"   ]]
+      then
+        _exit_1 printf "Unable to clone to existing directory.\\n"
+      else
+        if ! ((_skip_prompt))
+        then
+          while true
+          do
+            local __yn=
+            IFS='' read -r -e -d $'\n' -p \
+              "Initialize directory as a local notebook? $(_color_brackets "y/N") " __yn
+
+            case "${__yn}" in
+              [Yy]*)
+                break
+                ;;
+              *)
+                printf "Exiting%s\\n" "$(_color_muted "...")"
+                exit 0
+                ;;
+            esac
+          done
+        fi
+      fi
     fi
 
     if [[ "${_path}" != "${_CURRENT_WORKING_DIR}" ]] &&
