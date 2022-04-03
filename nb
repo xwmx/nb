@@ -7631,7 +7631,7 @@ HEREDOC
       mkdir -p "${_path}"
     elif [[ -f "${_path}"           ]]
     then
-      _exit_1 printf "File already exists: %s\\n" "$(_color_primary "${_path}")"
+      _exit_1 printf "File exists: %s\\n" "$(_color_primary "${_path}")"
     elif [[ -d "${_path:-}"         ]]
     then
       printf "Directory exists: %s\\n" "$(_color_primary "${_path}")"
