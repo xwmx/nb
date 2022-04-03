@@ -8818,10 +8818,12 @@ _is_valid_subcommand() {
 #   Parse program options.
 _parse_options() {
   local _current_option=
+  local _previous_option=
   local _previous_option_was_flag=0
 
   while ((${#}))
   do
+    _previous_option="${_current_option:-}"
     _current_option="${1:-}"
 
     shift
@@ -8902,6 +8904,9 @@ _parse_options() {
         then
           _ARGUMENTS+=("${_current_option}")
         elif [[ "${_SUBCOMMAND:-}" == "delete"      ]]
+        then
+          _ARGUMENTS+=("${_current_option}")
+        elif _contains "${_previous_option:-}" "-r" "--related" "--via" "--also"
         then
           _ARGUMENTS+=("${_current_option}")
         else

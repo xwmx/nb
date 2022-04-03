@@ -7,6 +7,9 @@ load test_helper
 @test "'nb <url>' with --tags, --filename, and --related options creates new bookmark." {
   {
     "${_NB}" init
+
+    "${_NB}" notebooks add "demo"
+    "${_NB}" notebooks add "sample"
   }
 
   run "${_NB}"                    \
@@ -84,6 +87,8 @@ HEREDOC
     "${_NB}" init
 
     "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" notebooks add "demo"
+    "${_NB}" notebooks add "sample"
   }
 
   run "${_NB}"                    \
@@ -162,6 +167,9 @@ HEREDOC
 @test "'add bookmark' with --tags, --filename, and --related options creates new bookmark." {
   {
     "${_NB}" init
+
+    "${_NB}" notebooks add "demo"
+    "${_NB}" notebooks add "sample"
   }
 
   run "${_NB}" add bookmark       \
