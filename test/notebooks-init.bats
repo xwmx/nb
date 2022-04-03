@@ -16,6 +16,52 @@ _setup_notebooks() {
   cd "${NB_DIR}" || return 1
 }
 
+# nested repositories #########################################################
+
+@test "'notebooks init <relative path>' with nested git repositories and positive prompt response prints warning and succeeds." {
+  {
+    "${_NB}" init
+
+    cd "${_TMP_DIR}"
+
+    declare _paths=(
+      "${_TMP_DIR}/target-directory/repo-1"
+      "${_TMP_DIR}/target-directory/example-nested/repo-2"
+      "${_TMP_DIR}/target-directory/sample-nested/demo-nested/repo-3"
+    )
+
+    declare __path=
+    for     __path in "${_paths[@]:-}"
+    do
+      mkdir -p "${__path}"
+
+      cd "${__path}"
+
+      git init
+    done
+
+    diff                \
+      <(printf "3\\n")  \
+      <(find "${_TMP_DIR}/target-directory/" -name .git -prune | wc -l | awk '$1=$1')
+  }
+
+  run "${_NB}" notebooks init "${_TMP_DIR}/target-directory" <<< "y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 0                                   ]]
+  [[    "${lines[0]}" =~  \
+Directory\ exists:\ .*${_TMP_DIR}/target-directory            ]]
+  [[    "${lines[1]}" =~  \
+!.*\ This\ directory\ contains\ .*3.*\ git\ repositories.     ]]
+  [[    "${lines[2]}" =~  \
+Initialized\ local\ notebook:\ .*${_TMP_DIR}/target-directory ]]
+
+  [[ -d "${_TMP_DIR}/target-directory/.git"                   ]]
+  [[ -f "${_TMP_DIR}/target-directory/.index"                 ]]
+}
+
 # remote ######################################################################
 
 @test "'notebooks init <path> <remote-url> <branch>' exits with 0 and adds a notebook." {

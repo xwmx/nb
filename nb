@@ -7637,6 +7637,17 @@ HEREDOC
       then
         _exit_1 printf "Unable to clone to existing directory.\\n"
       else
+        local _git_repository_count=0
+        _git_repository_count="$(
+          find "${_path}" -name .git -prune | wc -l | awk '$1=$1'
+        )"
+
+        if ((_git_repository_count))
+        then
+          _warn printf "This directory contains %s git repositories.\\n" \
+            "$(_color_primary "${_git_repository_count}")"
+        fi
+
         if ! ((_skip_prompt))
         then
           while true
