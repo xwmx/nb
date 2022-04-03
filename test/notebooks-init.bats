@@ -611,6 +611,61 @@ Directory\ exists:\ .*${_TMP_DIR}/example ]]
   git log | grep '\[nb\] Initialize'
 }
 
+@test "'notebooks init <absolute path>' with existing directory and positive prompt response succeeds." {
+  {
+    _setup_notebooks
+
+    cd "${_TMP_DIR}"
+
+    [[ "$(pwd)" == "${_TMP_DIR}"  ]]
+
+    mkdir "${_TMP_DIR}/example"
+
+    [[ -d "${_TMP_DIR}/example"   ]]
+  }
+
+  run "${_NB}" notebooks init "${_TMP_DIR}/example" <<< "y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 0                           ]]
+  [[    "${lines[0]}" =~  \
+Directory\ exists:\ .*${_TMP_DIR}/example             ]]
+  [[    "${lines[1]}" =~  \
+Initialized\ local\ notebook:\ .*${_TMP_DIR}/example  ]]
+
+  [[ -d "${_TMP_DIR}/example/.git"                    ]]
+  [[ -f "${_TMP_DIR}/example/.index"                  ]]
+}
+
+@test "'notebooks init <absolute path>' with existing directory and negative prompt response exits without initialization." {
+  {
+    _setup_notebooks
+
+    cd "${_TMP_DIR}"
+
+    [[ "$(pwd)" == "${_TMP_DIR}"  ]]
+
+    mkdir "${_TMP_DIR}/example"
+
+    [[ -d "${_TMP_DIR}/example"   ]]
+  }
+
+  run "${_NB}" notebooks init "${_TMP_DIR}/example" <<< "n${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 0               ]]
+  [[    "${lines[0]}" =~  \
+Directory\ exists:\ .*${_TMP_DIR}/example ]]
+  [[    "${lines[1]}" =~ Exiting.*\.\.\.  ]]
+
+  [[ ! -d "${_TMP_DIR}/example/.git"      ]]
+  [[ ! -f "${_TMP_DIR}/example/.index"    ]]
+}
+
 @test "'notebooks init <absolute path>' in existing notebook exits with 1." {
   {
     _setup_notebooks
