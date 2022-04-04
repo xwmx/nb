@@ -18123,7 +18123,7 @@ HEREDOC
       local _print_next=0
 
       if ((_list_count)) &&
-         [[ "$((_current_page * _per_page))" -le "${_list_count}" ]]
+         [[ "$((_current_page * _per_page))" -lt "${_list_count}" ]]
       then
         _print_next=1
       fi
