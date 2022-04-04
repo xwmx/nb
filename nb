@@ -13384,7 +13384,7 @@ _edit() {
   if [[ -n "${_relative_path}"                    ]] &&
      [[ -e "${_notebook_path}/${_relative_path}"  ]]
   then
-    local _before
+    local _before=
     _before="$(_get_hash "${_notebook_path}/${_relative_path}")"
 
     local _decrypted_path=
@@ -13470,6 +13470,7 @@ _edit() {
       fi
     fi
 
+    local _after=
     _after="$(_get_hash "${_notebook_path}/${_relative_path}")"
 
     if [[ -n "${_encrypted_path:-}" ]]  &&  [[ -e "${_decrypted_path:-}" ]]
