@@ -35,7 +35,7 @@ load test_helper
 
     declare _encoded_tmp_dir="${_TMP_DIR//$'/'/%2F}"
 
-    "${_NB}" notebooks init
+    "${_NB}" notebooks init <<< "y${_NEWLINE}"
 
     "${_NB}" notebooks add "Example Notebook"
 
@@ -65,7 +65,7 @@ load test_helper
 
     declare _encoded_tmp_dir="${_TMP_DIR//$'/'/%2F}"
 
-    "${_NB}" notebooks init
+    "${_NB}" notebooks init <<< "y${_NEWLINE}"
 
     "${_NB}" add "Example Folder/Example File.md" --content "Example content."
 
@@ -92,7 +92,7 @@ load test_helper
 
     declare _encoded_tmp_dir="${_TMP_DIR//$'/'/%2F}"
 
-    "${_NB}" notebooks init
+    "${_NB}" notebooks init <<< "y${_NEWLINE}"
 
     "${_NB}" add "Example File.md" --content "Example content."
 

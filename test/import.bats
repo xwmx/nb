@@ -52,7 +52,7 @@ Imported\ .*\[.*1.*\].*\ .*example.md.*\ \"Example\ Title\"\ from\    ]]
     mkdir -p "${_TMP_DIR}/Local Notebook"
     cd "${_TMP_DIR}/Local Notebook"
 
-    "${_NB}" notebooks init
+    "${_NB}" notebooks init <<< "y${_NEWLINE}"
 
     "${_NB}" add folder "Example Folder"
 
@@ -103,7 +103,7 @@ Imported\ .*[.*Example\ Folder/1.*].*\ .*Example\ Folder/example.md.*\ \"Example
     mkdir -p "${_TMP_DIR}/Local Notebook"
     cd "${_TMP_DIR}/Local Notebook"
 
-    "${_NB}" notebooks init
+    "${_NB}" notebooks init <<< "y${_NEWLINE}"
 
     "${_NB}" add folder "Example Folder"
 
@@ -154,7 +154,7 @@ Imported\ .*[.*Example\ Folder/1.*].*\ .*Example\ Folder/example.md.*\ \"Example
     mkdir -p "${_TMP_DIR}/Local Notebook"
     cd "${_TMP_DIR}/Local Notebook"
 
-    "${_NB}" notebooks init
+    "${_NB}" notebooks init <<< "y${_NEWLINE}"
   }
 
   run "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/example.md"

@@ -11,7 +11,7 @@ load test_helper
     mkdir -p "${_TMP_DIR}/Local Notebook"
     cd "${_TMP_DIR}/Local Notebook"
 
-    "${_NB}" notebooks init
+    "${_NB}" notebooks init <<< "y${_NEWLINE}"
 
     "${_NB}" add "Example Folder" --type "folder"
 
@@ -121,7 +121,7 @@ load test_helper
     mkdir -p "${_TMP_DIR}/Local Notebook"
     cd "${_TMP_DIR}/Local Notebook"
 
-    "${_NB}" notebooks init
+    "${_NB}" notebooks init <<< "y${_NEWLINE}"
 
     (ncat                                   \
       --exec "${_NB} browse --respond"      \
@@ -193,7 +193,7 @@ Location:\ \/\/localhost:6789\/Example\ Folder/1\?${_expected_param_pattern}  ]]
     mkdir -p "${_TMP_DIR}/Local Notebook"
     cd "${_TMP_DIR}/Local Notebook"
 
-    "${_NB}" notebooks init
+    "${_NB}" notebooks init <<< "y${_NEWLINE}"
 
     (ncat                                   \
       --exec "${_NB} browse --respond"      \
