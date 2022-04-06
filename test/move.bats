@@ -370,9 +370,9 @@ Moved\ to:\ .*[.*Sample\ Folder/5.*].*\ .*Sample\ Folder/Example\ File\ Two.md  
   [[ ! -e "${NB_DIR}/home/example.md" ]]
 }
 
-# <scope>:<selector> ##########################################################
+# <notebook>:<selector> #######################################################
 
-@test "'move <scope>:<selector> <notebook>:' with <filename> argument moves note." {
+@test "'move <notebook>:<filename> <notebook>:' with <filename> argument moves note." {
   {
     "${_NB}" init
     "${_NB}" notebooks add "one"
@@ -392,7 +392,7 @@ Moved\ to:\ .*[.*Sample\ Folder/5.*].*\ .*Sample\ Folder/Example\ File\ Two.md  
   [[ "${output}" =~ home:example.md ]]
 }
 
-@test "'<scope>:move <selector> <notebook>:' with <filename> argument moves note." {
+@test "'<notebook>:move <filename> <notebook>:' with <filename> argument moves note." {
   {
     "${_NB}" init
     "${_NB}" notebooks add "one"
@@ -420,7 +420,7 @@ Moved\ to:\ .*[.*Sample\ Folder/5.*].*\ .*Sample\ Folder/Example\ File\ Two.md  
   [[ "${output}" =~ home:[A-Za-z0-9]+.md  ]]
 }
 
-@test "'<scope>:<selector> move <notebook>:' with <filename> argument moves note." {
+@test "'<notebook>:<filename> move <notebook>:' with <filename> argument moves note." {
   {
     "${_NB}" init
     "${_NB}" notebooks add "one"
@@ -448,7 +448,7 @@ Moved\ to:\ .*[.*Sample\ Folder/5.*].*\ .*Sample\ Folder/Example\ File\ Two.md  
   [[ "${output}" =~ home:[A-Za-z0-9]+.md  ]]
 }
 
-@test "'<selector> <scope>:move <notebook>:' with <filename> argument moves note." {
+@test "'<filename> <notebook>:move <notebook>:' with <filename> argument moves note." {
   {
     "${_NB}" init
     "${_NB}" notebooks add "one"
