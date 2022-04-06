@@ -8909,7 +8909,7 @@ _parse_options() {
         elif _notebooks current --selected
         then
           _ARGUMENTS+=("${_current_option}")
-        elif [[ "${_SUBCOMMAND:-}" =~ ^copy$|^move$ ]] &&
+        elif _contains "${_SUBCOMMAND}" "copy" "move" "mv" "rename" &&
              ((${#_ARGUMENTS[@]}))
         then
           _ARGUMENTS+=("${_current_option}")
