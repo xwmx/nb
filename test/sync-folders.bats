@@ -842,9 +842,9 @@ _setup_notebooks() {
 
   cat "${NB_DIR_1}/home/Example Folder/one.md"
 
-  [[ "${status}" -eq 0                              ]]
-  [[ "${output}" =~ Files\ containing\ conflicts\:  ]]
-  [[ "${output}" =~ home\:Example\ Folder/one\.md   ]]
+  [[ "${status}" -eq 0                                ]]
+  [[ "${output}" =~ Files\ containing\ conflicts\:    ]]
+  [[ "${output}" =~ \ \ home\:Example\ Folder/one\.md ]]
 
   grep -q '<<<<<<< HEAD'        "${NB_DIR_1}/home/Example Folder/one.md"
   grep -q '\- Line n List Item' "${NB_DIR_1}/home/Example Folder/one.md"
@@ -910,11 +910,11 @@ _setup_notebooks() {
 
   cat "${NB_DIR_1}/home/Example Folder/one.md"
 
-  [[ "${status}" -eq 0                              ]]
-  [[ "${output}" =~ Files\ containing\ conflicts\:  ]]
-  [[ "${output}" =~ home\:Example\ Folder/one\.md   ]]
-  [[ "${output}" =~ home\:Example\ Folder/two\.md   ]]
-  [[ "${output}" =~ home\:Example\ Folder/three\.md ]]
+  [[ "${status}" -eq 0                                  ]]
+  [[ "${output}" =~ Files\ containing\ conflicts\:      ]]
+  [[ "${output}" =~ \ \ home\:Example\ Folder/one\.md   ]]
+  [[ "${output}" =~ \ \ home\:Example\ Folder/two\.md   ]]
+  [[ "${output}" =~ \ \ home\:Example\ Folder/three\.md ]]
 
   grep -q '<<<<<<< HEAD'        "${NB_DIR_1}/home/Example Folder/one.md"
   grep -q '\- Line n List Item' "${NB_DIR_1}/home/Example Folder/one.md"
@@ -972,9 +972,9 @@ This content is unique to 2.
   printf "2:one.md\\n"
   cat "${NB_DIR_2}/home/Example Folder/one.md"
 
-  [[ "${status}" -eq 0                              ]]
-  [[ "${output}" =~ Files\ containing\ conflicts\:  ]]
-  [[ "${output}" =~ home\:Example\ Folder/one\.md   ]]
+  [[ "${status}" -eq 0                                ]]
+  [[ "${output}" =~ Files\ containing\ conflicts\:    ]]
+  [[ "${output}" =~ \ \ home\:Example\ Folder/one\.md ]]
 
   grep -q '<<<<<<< HEAD'                        "${NB_DIR_2}/home/Example Folder/one.md"
   grep -q 'Example content from 1.'             "${NB_DIR_2}/home/Example Folder/one.md"
@@ -1078,24 +1078,24 @@ This content is unique to 2.
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "$(_get_hash "${NB_DIR_1}/home/Example Folder/one.md.enc")" != \
-     "$(_get_hash "${NB_DIR_2}/home/Example Folder/one.md.enc")"        ]]
+     "$(_get_hash "${NB_DIR_2}/home/Example Folder/one.md.enc")"            ]]
 
-  [[ "${status}" -eq 0                                                  ]]
+  [[ "${status}" -eq 0                                                      ]]
 
-  [[ -e "${NB_DIR_1}/home/Example Folder/one.md.enc"                    ]]
-  [[ -e "${NB_DIR_1}/home/Example Folder/one--conflicted-copy.md.enc"   ]]
+  [[ -e "${NB_DIR_1}/home/Example Folder/one.md.enc"                        ]]
+  [[ -e "${NB_DIR_1}/home/Example Folder/one--conflicted-copy.md.enc"       ]]
 
-  [[ -e "${NB_DIR_2}/home/Example Folder/one.md.enc"                    ]]
-  [[ ! -e "${NB_DIR_2}/home/Example Folder/one--conflicted-copy.md.enc" ]]
+  [[ -e "${NB_DIR_2}/home/Example Folder/one.md.enc"                        ]]
+  [[ ! -e "${NB_DIR_2}/home/Example Folder/one--conflicted-copy.md.enc"     ]]
 
   [[ "$(_get_hash "${NB_DIR_1}/home/Example Folder/one.md.enc")" != \
-     "$(_get_hash "${NB_DIR_2}/home/Example Folder/one.md.enc")"        ]]
+     "$(_get_hash "${NB_DIR_2}/home/Example Folder/one.md.enc")"            ]]
 
   [[ "$(_get_hash "${NB_DIR_1}/home/Example Folder/one--conflicted-copy.md.enc")" == \
-     "$(_get_hash "${NB_DIR_2}/home/Example Folder/one.md.enc")"        ]]
+     "$(_get_hash "${NB_DIR_2}/home/Example Folder/one.md.enc")"            ]]
 
-  [[ ${output} =~ Conflicted\ copies\ of\ binary\ files\:               ]]
-  [[ ${output} =~ home\:Example\ Folder/one\-\-conflicted-copy\.md\.enc ]]
+  [[ ${output} =~ Conflicted\ copies\ of\ binary\ files\:                   ]]
+  [[ ${output} =~ \ \ home\:Example\ Folder/one\-\-conflicted-copy\.md\.enc ]]
 
   [[ "$(
         "${_NB}" show "Example Folder/one.md.enc"                   \
