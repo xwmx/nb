@@ -20521,7 +20521,7 @@ _folders() {
         fi
       fi
 
-      _list --type folder "${_arguments[@]:-}"
+      _list --type folder "${_arguments[@]:-}" --with-pinned
       ;;
   esac
 }
