@@ -59,9 +59,9 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1                              ]]
-  [[ "${lines[0]}" =~ Usage.*\:                   ]]
-  [[ "${lines[1]}" == "  nb index add <filename>" ]]
+  [[ "${status}"    -eq 1                           ]]
+  [[ "${lines[0]}"  =~  Usage.*\:                   ]]
+  [[ "${lines[1]}"  ==  "  nb index add <filename>" ]]
 }
 
 @test "'index add <filename>' with non-file returns 1 and prints message." {
@@ -79,8 +79,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1                    ]]
-  [[ "${lines[0]}" =~ File\ not\ found  ]]
+  [[ "${status}"    -eq 1                 ]]
+  [[ "${lines[0]}"  =~  File\ not\ found  ]]
 }
 
 @test "'index add <filename>' with existing entry does nothing." {
@@ -146,8 +146,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0                ]]
-  [[ "${lines[0]}" =~ 20[0-9]+\.md$ ]]
+  [[ "${status}"    -eq 0             ]]
+  [[ "${lines[0]}"  =~  20[0-9]+\.md$ ]]
 }
 
 @test "'index get_basename' with invalid index prints nothing." {
@@ -161,7 +161,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1 ]]
+  [[    "${status}" -eq 1 ]]
+  [[ -z "${output}"       ]]
 }
 
 @test "'index get_basename' with no argument returns 1 and prints help." {
@@ -175,8 +176,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1            ]]
-  [[ "${lines[0]}" =~ Usage.*\: ]]
+  [[ "${status}"    -eq 1         ]]
+  [[ "${lines[0]}"  =~  Usage.*\: ]]
 }
 
 # get_id #########################################################################
@@ -192,8 +193,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0    ]]
-  [[ "${output}" == "1" ]]
+  [[ "${status}"  -eq 0   ]]
+  [[ "${output}"  ==  "1" ]]
 }
 
 @test "'index get_id' with no argument returns 1 and prints help." {
@@ -207,8 +208,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1            ]]
-  [[ "${lines[0]}" =~ Usage.*\: ]]
+  [[ "${status}"    -eq 1         ]]
+  [[ "${lines[0]}"  =~  Usage.*\: ]]
 }
 
 @test "'index get_id <filename>' with non-entry returns 1." {
@@ -222,8 +223,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1    ]]
-  [[ "${output}" == ""  ]]
+  [[    "${status}" -eq 1 ]]
+  [[ -z "${output}"       ]]
 }
 
 # get_max_id ##################################################################
@@ -241,8 +242,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0    ]]
-  [[ "${output}" == "3" ]]
+  [[ "${status}"    -eq 0   ]]
+  [[ "${lines[0]}"  ==  "3" ]]
 }
 
 @test "'index get_max_id' with empty notebook returns 0." {
@@ -255,8 +256,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0      ]]
-  [[ "${lines[0]}" == "0" ]]
+  [[ "${status}"    -eq 0   ]]
+  [[ "${lines[0]}"  ==  "0" ]]
 }
 
 # delete ######################################################################
@@ -272,7 +273,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0                        ]]
+  [[ "${status}" -eq 0                      ]]
   [[ "$(cat "${NB_DIR}/home/.index")" == "" ]]
 }
 
@@ -287,11 +288,11 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1            ]]
-  [[ "${lines[0]}" =~ Usage.*\: ]]
+  [[ "${status}"    -eq 1         ]]
+  [[ "${lines[0]}"  =~  Usage.*\: ]]
 }
 
-@test "'index delete <filename>' with non-file returns 1 and prints message." {
+@test "'index delete <filename>' with non-file returns 1 and prints nothing." {
   {
     "${_NB}" init
     "${_NB}" add "first.md"  --title "one"
@@ -302,7 +303,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1 ]]
+  [[    "${status}" -eq 1 ]]
+  [[ -z "${output}"       ]]
 }
 
 # show ########################################################################
@@ -318,8 +320,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0                                  ]]
-  [[ "${output}" == "$(cat "${NB_DIR}/home/.index")"  ]]
+  [[ "${status}" -eq  0                                 ]]
+  [[ "${output}" ==   "$(cat "${NB_DIR}/home/.index")"  ]]
 }
 
 # update ######################################################################
@@ -338,7 +340,7 @@ load test_helper
     "$(cat \"\$\{NB_DIR\}/home/.index\"): '%s'\\n" \
     "$(cat "${NB_DIR}/home/.index")"
 
-  [[ ${status} -eq 0                                  ]]
+  [[ "${status}" -eq 0                                ]]
   [[ "$(cat "${NB_DIR}/home/.index")" == "example.md" ]]
 }
 
@@ -353,8 +355,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1            ]]
-  [[ "${lines[0]}" =~ Usage.*\: ]]
+  [[ "${status}"    -eq 1         ]]
+  [[ "${lines[0]}"  =~  Usage.*\: ]]
 }
 
 @test "'index update' with first argument returns 1 and prints help." {
@@ -368,8 +370,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1            ]]
-  [[ "${lines[0]}" =~ Usage.*\: ]]
+  [[ "${status}"    -eq 1         ]]
+  [[ "${lines[0]}"  =~  Usage.*\: ]]
 }
 
 # verify ######################################################################
@@ -393,7 +395,8 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0 ]]
+  [[    "${status}" -eq 0 ]]
+  [[ -z "${output}"       ]]
 }
 
 @test "'index verify' returns 1 with an invalid index." {
@@ -412,7 +415,9 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1 ]]
+  [[ "${status}"    -eq 1                                       ]]
+  [[ "${lines[0]}"  =~  !.*\ Index\ corrupted\.\ To\ fix,\ run: ]]
+  [[ "${lines[1]}"  =~  \ \ nb\ index\ reconcile                ]]
 }
 
 @test "'index verify' returns 1 with a duplicates." {
@@ -431,7 +436,9 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 1 ]]
+  [[ "${status}"    -eq 1                                       ]]
+  [[ "${lines[0]}"  =~  !.*\ Index\ corrupted\.\ To\ fix,\ run: ]]
+  [[ "${lines[1]}"  =~  \ \ nb\ index\ reconcile                ]]
 }
 
 @test "'index verify' skips common temporary files." {
@@ -469,7 +476,8 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ ${status} -eq 0 ]]
+  [[    "${status}" -eq 0 ]]
+  [[ -z "${output}"       ]]
 }
 
 # help ########################################################################
