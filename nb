@@ -8830,6 +8830,7 @@ _is_valid_subcommand() {
 _parse_options() {
   local _current_option=
   local _previous_option=
+  local _non_option_arguments=()
 
   while ((${#}))
   do
@@ -8901,7 +8902,13 @@ _parse_options() {
         _print_welcome
         ;;
       *:*)
-        if [[ -z "${_SUBCOMMAND:-}"     ]] &&
+        if [[ ! "${_current_option:-}"  =~ ^-       ]] &&
+           [[ ! "${_previous_option:-}" =~ ^-       ]]
+        then
+          _non_option_arguments+=("${_current_option}")
+        fi
+
+        if [[ -z "${_SUBCOMMAND:-}"                 ]] &&
             _string_is_url "${_current_option}"
         then
           _SUBCOMMAND="bookmark"
@@ -8909,8 +8916,8 @@ _parse_options() {
         elif _notebooks current --selected
         then
           _ARGUMENTS+=("${_current_option}")
-        elif _contains "${_SUBCOMMAND}" "copy" "move" "mv" "rename" &&
-             ((${#_ARGUMENTS[@]}))
+        elif _contains "${_SUBCOMMAND:-"${1:-}"}" "copy" "move" "mv" "rename" &&
+             (($((${#_non_option_arguments[@]} - 1))))
         then
           _ARGUMENTS+=("${_current_option}")
         elif [[ "${_SUBCOMMAND:-}" == "delete"      ]]
@@ -8966,11 +8973,20 @@ _parse_options() {
         break
         ;;
       *)
-        if [[ !  "${_previous_option}" =~ ^-        ]] &&
-           [[ -z "${_SUBCOMMAND:-}"                 ]] &&
-           _is_valid_subcommand "${_current_option}"
+        if [[     ! "${_previous_option}"   =~ ^-   ]]
         then
-          _SUBCOMMAND="${_current_option}"
+          if [[ -z "${_SUBCOMMAND:-}"               ]] &&
+             _is_valid_subcommand "${_current_option}"
+          then
+            _SUBCOMMAND="${_current_option}"
+          else
+            if [[ ! "${_current_option:-}"  =~ ^-   ]]
+            then
+              _non_option_arguments+=("${_current_option}")
+            fi
+
+            _ARGUMENTS+=("${_current_option}")
+          fi
         else
           _ARGUMENTS+=("${_current_option}")
         fi
