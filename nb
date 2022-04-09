@@ -4419,7 +4419,7 @@ _index() {
       # -----------
 
       # local _basename="${2:-}"
-      # local _id
+      # local _id=
 
       # if [[ -z "${_basename}" ]]
       # then
@@ -5413,7 +5413,7 @@ _list() {
     local _pinned_basenames_seen=()
     local _printed_count=0
 
-    local _max_id
+    local _max_id=
     _max_id="$(_index get_max_id "${_list_path}")"
 
     if ((_line_wrap))         &&
