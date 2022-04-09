@@ -3360,15 +3360,15 @@ Since `nb` works directly on plain text files
 organized in normal system directories in normal git repositories,
 `nb` is a very close digital analogue to physical zettelkasten note-taking.
 
-|    Zettelkasten   |                       `nb`                    |
-|:-----------------:|:---------------------------------------------:|
-| index cards       | [notes](#-notes) & [bookmarks](#-bookmarks)   |
-| numbering         | ids & [selectors](#-selectors)                |
-| slip boxes        | [notebooks](#-notebooks)                      |
-| tags              | [#tags](#-tagging)                            |
-| metadata          | [front matter](#front-matter)                 |
-| cross-references  |  <a href="#-linking">[[wiki-style links]]</a> |
-| fast note-taking  | [`nb add`](#adding) / [`nb a`](#adding)       |
+|    Zettelkasten   |                       `nb`                      |
+|:-----------------:|:-----------------------------------------------:|
+| index cards       | [notes](#-notes) & [bookmarks](#-bookmarks)     |
+| numbering         | ids & [selectors](#-selectors)                  |
+| slip boxes        | [notebooks](#-notebooks)                        |
+| tags              | [#tags](#-tagging)                              |
+| metadata          | [front matter](#front-matter)                   |
+| cross-references  |  <a href="#-linking">[[wiki-style links]]</a>   |
+| fast note-taking  | [`nb add`](#adding) / [`nb <url>`](#-bookmarks) |
 
 For more information about Zettelkasten, see
 [Wikipedia](https://en.wikipedia.org/wiki/Zettelkasten).
