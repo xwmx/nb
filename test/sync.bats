@@ -1445,7 +1445,7 @@ HEREDOC
 
   [[ ${status} -eq 0                              ]]
   [[ ${output} =~ Files\ containing\ conflicts\:  ]]
-  [[ ${output} =~ home\:one\.md                   ]]
+  [[ ${output} =~ \ \ home\:one\.md               ]]
 
   grep -q '<<<<<<< HEAD'        "${NB_DIR_1}/home/one.md"
   grep -q '\- Line n List Item' "${NB_DIR_1}/home/one.md"
@@ -1513,9 +1513,9 @@ HEREDOC
 
   [[ ${status} -eq 0                              ]]
   [[ ${output} =~ Files\ containing\ conflicts\:  ]]
-  [[ ${output} =~ home\:one\.md                   ]]
-  [[ ${output} =~ home\:two\.md                   ]]
-  [[ ${output} =~ home\:three\.md                 ]]
+  [[ ${output} =~ \ \ home\:one\.md               ]]
+  [[ ${output} =~ \ \ home\:two\.md               ]]
+  [[ ${output} =~ \ \ home\:three\.md             ]]
 
   grep -q '<<<<<<< HEAD'        "${NB_DIR_1}/home/one.md"
   grep -q '\- Line n List Item' "${NB_DIR_1}/home/one.md"
@@ -1575,7 +1575,7 @@ This content is unique to 2.
 
   [[ ${status} -eq 0                              ]]
   [[ ${output} =~ Files\ containing\ conflicts\:  ]]
-  [[ ${output} =~ home\:one\.md                   ]]
+  [[ ${output} =~ \ \ home\:one\.md               ]]
 
   grep -q '<<<<<<< HEAD'              "${NB_DIR_2}/home/one.md"
   grep -q 'Example content from 1.'   "${NB_DIR_2}/home/one.md"
@@ -1675,31 +1675,31 @@ This content is unique to 2.
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "$(_get_hash "${NB_DIR_1}/home/one.md.enc")" != \
-     "$(_get_hash "${NB_DIR_2}/home/one.md.enc")"         ]]
+     "$(_get_hash "${NB_DIR_2}/home/one.md.enc")"             ]]
 
-  [[ ${status} -eq 0                                      ]]
+  [[ ${status} -eq 0                                          ]]
 
-  [[ -e "${NB_DIR_1}/home/one.md.enc"                     ]]
-  [[ -e "${NB_DIR_1}/home/one--conflicted-copy.md.enc"    ]]
+  [[ -e "${NB_DIR_1}/home/one.md.enc"                         ]]
+  [[ -e "${NB_DIR_1}/home/one--conflicted-copy.md.enc"        ]]
 
-  [[ -e "${NB_DIR_2}/home/one.md.enc"                     ]]
-  [[ ! -e "${NB_DIR_2}/home/one--conflicted-copy.md.enc"  ]]
+  [[ -e "${NB_DIR_2}/home/one.md.enc"                         ]]
+  [[ ! -e "${NB_DIR_2}/home/one--conflicted-copy.md.enc"      ]]
 
   [[ "$(_get_hash "${NB_DIR_1}/home/one.md.enc")" != \
-     "$(_get_hash "${NB_DIR_2}/home/one.md.enc")"         ]]
+     "$(_get_hash "${NB_DIR_2}/home/one.md.enc")"             ]]
 
   [[ "$(_get_hash "${NB_DIR_1}/home/one--conflicted-copy.md.enc")" == \
-     "$(_get_hash "${NB_DIR_2}/home/one.md.enc")"         ]]
+     "$(_get_hash "${NB_DIR_2}/home/one.md.enc")"             ]]
 
-  [[ ${output} =~ Conflicted\ copies\ of\ binary\ files\: ]]
-  [[ ${output} =~ home\:one\-\-conflicted-copy\.md\.enc   ]]
+  [[ ${output} =~ Conflicted\ copies\ of\ binary\ files\:     ]]
+  [[ ${output} =~ \ \ home\:one\-\-conflicted-copy\.md\.enc   ]]
 
   [[ "$(
         "${_NB}" show one.md.enc --password password --print --no-color
-      )" =~ Edit\ content\ from\ 1\.                      ]]
+      )" =~ Edit\ content\ from\ 1\.                          ]]
   [[ "$(
         "${_NB}" show one--conflicted-copy.md.enc --password password --print --no-color
-      )" =~ Edit\ content\ from\ 2\.                      ]]
+      )" =~ Edit\ content\ from\ 2\.                          ]]
 
   export NB_DIR="${NB_DIR_2}"
 

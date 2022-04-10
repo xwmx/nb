@@ -476,7 +476,7 @@ identifier\"\>home:2\</span\>\<span\ class=\"muted\"\>\]\</span\>\ Title\ Two\
     mkdir -p "${_TMP_DIR}/Local Notebook"
     cd "${_TMP_DIR}/Local Notebook"
 
-    "${_NB}" notebooks init
+    "${_NB}" notebooks init <<< "y${_NEWLINE}"
 
     "${_NB}" add  "File One.md"       \
       --title     "Title One"         \

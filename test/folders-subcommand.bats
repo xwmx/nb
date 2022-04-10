@@ -330,6 +330,12 @@ load test_helper
   {
     "${_NB}" init
 
+    "${_NB}" add folder "Demo Folder"
+
+    "${_NB}" pin "Demo Folder"
+
+    sleep 1
+
     "${_NB}" add "File One.md" --content "Example content one."
 
     "${_NB}" add folder "Example Folder"
@@ -349,13 +355,20 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[   "${status}"    -eq 0                                     ]]
-  [[   "${lines[0]}"  =~  .*[.*4.*].*\ 📂\ Sample\ Folder       ]]
-  [[   "${lines[1]}"  =~  .*[.*2.*].*\ 📂\ Example\ Folder      ]]
+  [[   "${lines[0]}"  =~  .*[.*1.*].*\ 📌\ 📂\ Demo\ Folder     ]]
+  [[   "${lines[1]}"  =~  .*[.*5.*].*\ 📂\ Sample\ Folder       ]]
+  [[   "${lines[2]}"  =~  .*[.*3.*].*\ 📂\ Example\ Folder      ]]
 }
 
 @test "'folders ls' with folders in current notebook lists folders." {
   {
     "${_NB}" init
+
+    "${_NB}" add folder "Demo Folder"
+
+    "${_NB}" pin "Demo Folder"
+
+    sleep 1
 
     "${_NB}" add "File One.md" --content "Example content one."
 
@@ -376,13 +389,20 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[   "${status}"    -eq 0                                     ]]
-  [[   "${lines[0]}"  =~  .*[.*4.*].*\ 📂\ Sample\ Folder       ]]
-  [[   "${lines[1]}"  =~  .*[.*2.*].*\ 📂\ Example\ Folder      ]]
+  [[   "${lines[0]}"  =~  .*[.*1.*].*\ 📌\ 📂\ Demo\ Folder     ]]
+  [[   "${lines[1]}"  =~  .*[.*5.*].*\ 📂\ Sample\ Folder       ]]
+  [[   "${lines[2]}"  =~  .*[.*3.*].*\ 📂\ Example\ Folder      ]]
 }
 
 @test "'folders list' with folders in current notebook lists folders." {
   {
     "${_NB}" init
+
+    "${_NB}" add folder "Demo Folder"
+
+    "${_NB}" pin "Demo Folder"
+
+    sleep 1
 
     "${_NB}" add "File One.md" --content "Example content one."
 
@@ -403,13 +423,20 @@ load test_helper
   printf "\${output}: '%s'\\n" "${output}"
 
   [[   "${status}"    -eq 0                                     ]]
-  [[   "${lines[0]}"  =~  .*[.*4.*].*\ 📂\ Sample\ Folder       ]]
-  [[   "${lines[1]}"  =~  .*[.*2.*].*\ 📂\ Example\ Folder      ]]
+  [[   "${lines[0]}"  =~  .*[.*1.*].*\ 📌\ 📂\ Demo\ Folder     ]]
+  [[   "${lines[1]}"  =~  .*[.*5.*].*\ 📂\ Sample\ Folder       ]]
+  [[   "${lines[2]}"  =~  .*[.*3.*].*\ 📂\ Example\ Folder      ]]
 }
 
 @test "'folders <notebook>:' with folders in <notebook> lists folders." {
   {
     "${_NB}" init
+
+    "${_NB}" add folder "Demo Folder"
+
+    "${_NB}" pin "Demo Folder"
+
+    sleep 1
 
     "${_NB}" add "File One.md" --content "Example content one."
 
@@ -432,14 +459,21 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 0                                     ]]
-  [[   "${lines[0]}"  =~  .*[.*home:4.*].*\ 📂\ Sample\ Folder  ]]
-  [[   "${lines[1]}"  =~  .*[.*home:2.*].*\ 📂\ Example\ Folder ]]
+  [[   "${status}"    -eq 0                                       ]]
+  [[   "${lines[0]}"  =~  .*[.*home:1.*].*\ 📌\ 📂\ Demo\ Folder  ]]
+  [[   "${lines[1]}"  =~  .*[.*home:5.*].*\ 📂\ Sample\ Folder    ]]
+  [[   "${lines[2]}"  =~  .*[.*home:3.*].*\ 📂\ Example\ Folder   ]]
 }
 
 @test "'folders ls <notebook>:' with folders in <notebook> lists folders." {
   {
     "${_NB}" init
+
+    "${_NB}" add folder "Demo Folder"
+
+    "${_NB}" pin "Demo Folder"
+
+    sleep 1
 
     "${_NB}" add "File One.md" --content "Example content one."
 
@@ -462,23 +496,31 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 0                                     ]]
-  [[   "${lines[0]}"  =~  .*[.*home:4.*].*\ 📂\ Sample\ Folder  ]]
-  [[   "${lines[1]}"  =~  .*[.*home:2.*].*\ 📂\ Example\ Folder ]]
+  [[   "${status}"    -eq 0                                       ]]
+  [[   "${lines[0]}"  =~  .*[.*home:1.*].*\ 📌\ 📂\ Demo\ Folder  ]]
+  [[   "${lines[1]}"  =~  .*[.*home:5.*].*\ 📂\ Sample\ Folder    ]]
+  [[   "${lines[2]}"  =~  .*[.*home:3.*].*\ 📂\ Example\ Folder   ]]
 
   run "${_NB}" folders home: ls
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 0                                     ]]
-  [[   "${lines[0]}"  =~  .*[.*home:4.*].*\ 📂\ Sample\ Folder  ]]
-  [[   "${lines[1]}"  =~  .*[.*home:2.*].*\ 📂\ Example\ Folder ]]
+  [[   "${status}"    -eq 0                                       ]]
+  [[   "${lines[0]}"  =~  .*[.*home:1.*].*\ 📌\ 📂\ Demo\ Folder  ]]
+  [[   "${lines[1]}"  =~  .*[.*home:5.*].*\ 📂\ Sample\ Folder    ]]
+  [[   "${lines[2]}"  =~  .*[.*home:3.*].*\ 📂\ Example\ Folder   ]]
 }
 
 @test "'folders list <notebook>:' with folders in <notebook> lists folders." {
   {
     "${_NB}" init
+
+    "${_NB}" add folder "Demo Folder"
+
+    "${_NB}" pin "Demo Folder"
+
+    sleep 1
 
     "${_NB}" add "File One.md" --content "Example content one."
 
@@ -501,16 +543,18 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 0                                     ]]
-  [[   "${lines[0]}"  =~  .*[.*home:4.*].*\ 📂\ Sample\ Folder  ]]
-  [[   "${lines[1]}"  =~  .*[.*home:2.*].*\ 📂\ Example\ Folder ]]
+  [[   "${status}"    -eq 0                                       ]]
+  [[   "${lines[0]}"  =~  .*[.*home:1.*].*\ 📌\ 📂\ Demo\ Folder  ]]
+  [[   "${lines[1]}"  =~  .*[.*home:5.*].*\ 📂\ Sample\ Folder    ]]
+  [[   "${lines[2]}"  =~  .*[.*home:3.*].*\ 📂\ Example\ Folder   ]]
 
   run "${_NB}" folders home: list
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[   "${status}"    -eq 0                                     ]]
-  [[   "${lines[0]}"  =~  .*[.*home:4.*].*\ 📂\ Sample\ Folder  ]]
-  [[   "${lines[1]}"  =~  .*[.*home:2.*].*\ 📂\ Example\ Folder ]]
+  [[   "${status}"    -eq 0                                       ]]
+  [[   "${lines[0]}"  =~  .*[.*home:1.*].*\ 📌\ 📂\ Demo\ Folder  ]]
+  [[   "${lines[1]}"  =~  .*[.*home:5.*].*\ 📂\ Sample\ Folder    ]]
+  [[   "${lines[2]}"  =~  .*[.*home:3.*].*\ 📂\ Example\ Folder   ]]
 }

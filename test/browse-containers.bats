@@ -336,7 +336,7 @@ HEREDOC
     mkdir -p "${_TMP_DIR}/Local Notebook"
     cd "${_TMP_DIR}/Local Notebook"
 
-    "${_NB}" notebooks init
+    "${_NB}" notebooks init <<< "y${_NEWLINE}"
 
     "${_NB}" add "Example Folder/Sample Folder/Example File.md" --content "Example content."
 
@@ -466,7 +466,7 @@ HEREDOC
     mkdir -p "${_TMP_DIR}/Local Notebook"
     cd "${_TMP_DIR}/Local Notebook"
 
-    "${_NB}" notebooks init
+    "${_NB}" notebooks init <<< "y${_NEWLINE}"
 
     "${_NB}" add  "File One.md"       \
       --title     "Title One"         \

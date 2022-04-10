@@ -74,7 +74,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="6.10.0"
+_VERSION="6.10.1"
 
 # $_ME
 #
@@ -2512,8 +2512,8 @@ _piped_input() {
 # More Information:
 #   https://wiki.bash-hackers.org/commands/builtin/printf
 _print_line() {
-  local _muted=0
   local _extra_length=0
+  local _muted=0
   local _text=
   local _visible_length=0
   local _wrap_line=1
@@ -3677,17 +3677,16 @@ HEREDOC
           "${_ME}"
         return 1
       else
+        local _notebook_name=
+        _notebook_name="$(_notebooks show "${_notebook_path}" --name)"
+
         if ((${#_conflicted_text_files[@]}))
         then
           printf "\\n"
           _warn cat <<HEREDOC
 Files containing conflicts:
 
-$(local __file=
-  for   __file in "${_conflicted_text_files[@]}"
-  do
-    printf "  %s:%s\\n" "${_notebook_path}" "${__file}"
-  done)
+$(printf "  %s\\n" "${_conflicted_text_files[@]/#/${_notebook_name}:}")
 
 Resolve conflicts with \`${_ME} edit\`. More info: \`${_ME} help sync\`
 HEREDOC
@@ -3699,11 +3698,7 @@ HEREDOC
           _warn cat <<HEREDOC
 Conflicted copies of binary files:
 
-$(local __file=
-  for   __file in "${_conflicted_binary_files[@]}"
-  do
-    printf "  %s:%s\\n" "${_notebook_path}" "${__file}"
-  done)
+$(printf "  %s\\n" "${_conflicted_binary_files[@]/#/${_notebook_name}:}")
 HEREDOC
         fi
       fi
@@ -4424,7 +4419,7 @@ _index() {
       # -----------
 
       # local _basename="${2:-}"
-      # local _id
+      # local _id=
 
       # if [[ -z "${_basename}" ]]
       # then
@@ -5418,7 +5413,7 @@ _list() {
     local _pinned_basenames_seen=()
     local _printed_count=0
 
-    local _max_id
+    local _max_id=
     _max_id="$(_index get_max_id "${_list_path}")"
 
     if ((_line_wrap))         &&
@@ -7031,7 +7026,7 @@ _notebooks() {
         --print|--current)
           _print_current=1
           ;;
-        --skip*)
+        --skip*|--force)
           _skip_prompt=1
           ;;
         --unset)
@@ -7551,6 +7546,7 @@ HEREDOC
     local _path=
     local _remote_branch=
     local _remote_url=
+    local _skip_prompt=0
 
     while ((${#}))
     do
@@ -7565,6 +7561,9 @@ HEREDOC
             _author_arguments+=("${2:-}")
             shift
           fi
+          ;;
+        --skip*|--force)
+          _skip_prompt=1
           ;;
         *)
           if _string_is_url "${1:-}"    && [[ -z "${_remote_url:-}" ]]
@@ -7595,20 +7594,12 @@ HEREDOC
       then
         _path="${_CURRENT_WORKING_DIR}/${_path}"
       fi
-
-      if [[ ! -e "${_path}"         ]]
-      then
-        mkdir -p "${_path}"
-      elif [[ -f "${_path}"         ]]
-      then
-        _exit_1 printf "File already exists: %s\\n" "$(_color_primary "${_path}")"
-      fi
     else
       _path="${_CURRENT_WORKING_DIR}"
     fi
 
     if [[ -d "${_path}"             ]]  &&
-       [[ -d "${_path}/.git"        ]]
+       [[ -e "${_path}/.git"        ]]
     then
       local _error_message=
 
@@ -7620,6 +7611,58 @@ HEREDOC
       fi
 
       _exit_1 printf "%s\\n" "${_error_message}"
+    fi
+
+    if [[ ! -e "${_path}"           ]]
+    then
+      mkdir -p "${_path}"
+    elif [[ "${HOME}" =~ ^${_path}  ]]
+    then
+      _exit_1 printf                                                    \
+        "Unable to turn top-level directory into local notebook: %s\\n" \
+        "$(_color_primary "${_path}")"
+    elif [[ -f "${_path}"           ]]
+    then
+      _exit_1 printf "File exists: %s\\n" "$(_color_primary "${_path}")"
+    elif [[ -d "${_path:-}"         ]]
+    then
+      printf "Directory exists: %s\\n" "$(_color_primary "${_path}")"
+
+      if [[ -n "${_remote_url:-}"   ]]
+      then
+        _exit_1 printf "Unable to clone to existing directory.\\n"
+      else
+        local _git_repository_count=0
+        _git_repository_count="$(
+          find "${_path}" -name .git -prune | wc -l | awk '$1=$1'
+        )"
+
+        if ((_git_repository_count))
+        then
+          _warn printf "This directory contains %s git repositories.\\n" \
+            "$(_color_primary "${_git_repository_count}")"
+        fi
+
+        if ! ((_skip_prompt))
+        then
+          while true
+          do
+            local __yn=
+            IFS='' read -r -e -d $'\n' -p \
+              "Initialize directory as a local notebook? $(_color_brackets "y/N") " __yn
+
+            case "${__yn}" in
+              [Yy]*)
+                break
+                ;;
+              *)
+                printf "Exiting%s\\n" "$(_color_muted "...")"
+                exit 0
+                ;;
+            esac
+          done
+        fi
+      fi
     fi
 
     if [[ "${_path}" != "${_CURRENT_WORKING_DIR}" ]] &&
@@ -8786,10 +8829,12 @@ _is_valid_subcommand() {
 #   Parse program options.
 _parse_options() {
   local _current_option=
-  local _previous_option_was_flag=0
+  local _previous_option=
+  local _non_option_arguments=()
 
   while ((${#}))
   do
+    _previous_option="${_current_option:-}"
     _current_option="${1:-}"
 
     shift
@@ -8857,7 +8902,13 @@ _parse_options() {
         _print_welcome
         ;;
       *:*)
-        if [[ -z "${_SUBCOMMAND:-}"     ]] &&
+        if [[ ! "${_current_option:-}"  =~ ^-       ]] &&
+           [[ ! "${_previous_option:-}" =~ ^-       ]]
+        then
+          _non_option_arguments+=("${_current_option}")
+        fi
+
+        if [[ -z "${_SUBCOMMAND:-}"                 ]] &&
             _string_is_url "${_current_option}"
         then
           _SUBCOMMAND="bookmark"
@@ -8865,11 +8916,14 @@ _parse_options() {
         elif _notebooks current --selected
         then
           _ARGUMENTS+=("${_current_option}")
-        elif [[ "${_SUBCOMMAND:-}" =~ ^copy$|^move$ ]] &&
-             ((${#_ARGUMENTS[@]}))
+        elif _contains "${_SUBCOMMAND:-"${1:-}"}" "copy" "move" "mv" "rename" &&
+             (($((${#_non_option_arguments[@]} - 1))))
         then
           _ARGUMENTS+=("${_current_option}")
         elif [[ "${_SUBCOMMAND:-}" == "delete"      ]]
+        then
+          _ARGUMENTS+=("${_current_option}")
+        elif _contains "${_previous_option:-}" "-r" "--related" "--via" "--also"
         then
           _ARGUMENTS+=("${_current_option}")
         else
@@ -8883,7 +8937,8 @@ _parse_options() {
           else
             if ! _notebooks select "${_current_option}"
             then
-              if [[ -n "${_SUBCOMMAND:-}" ]] || ((_previous_option_was_flag))
+              if [[ -n "${_SUBCOMMAND:-}"           ]] ||
+                 [[    "${_previous_option}" =~ ^-  ]]
               then
                 _ARGUMENTS+=("${_current_option}")
 
@@ -8903,7 +8958,7 @@ _parse_options() {
               then
                 _SUBCOMMAND="bookmark"
                 _ARGUMENTS+=("${_selector_suffix}")
-              elif [[ "${_selector_suffix}" =~ ^- ]]
+              elif [[ "${_selector_suffix}" =~ ^-   ]]
               then
                 _ARGUMENTS+=("${_selector_suffix}")
               else
@@ -8918,20 +8973,21 @@ _parse_options() {
         break
         ;;
       *)
-        if ! ((_previous_option_was_flag))  &&
-           [[ -z "${_SUBCOMMAND:-}" ]]      &&
-           _is_valid_subcommand "${_current_option}"
+        if [[     ! "${_previous_option}"   =~ ^-   ]]
         then
-          _SUBCOMMAND="${_current_option}"
-        else
-          if [[ "${_current_option}" =~ ^-        ]]
+          if [[ -z "${_SUBCOMMAND:-}"               ]] &&
+             _is_valid_subcommand "${_current_option}"
           then
-            _previous_option_was_flag=1
-          elif ((_previous_option_was_flag))
-          then
-            _previous_option_was_flag=0
-          fi
+            _SUBCOMMAND="${_current_option}"
+          else
+            if [[ ! "${_current_option:-}"  =~ ^-   ]]
+            then
+              _non_option_arguments+=("${_current_option}")
+            fi
 
+            _ARGUMENTS+=("${_current_option}")
+          fi
+        else
           _ARGUMENTS+=("${_current_option}")
         fi
         ;;
@@ -13339,7 +13395,7 @@ _edit() {
   if [[ -n "${_relative_path}"                    ]] &&
      [[ -e "${_notebook_path}/${_relative_path}"  ]]
   then
-    local _before
+    local _before=
     _before="$(_get_hash "${_notebook_path}/${_relative_path}")"
 
     local _decrypted_path=
@@ -13425,6 +13481,7 @@ _edit() {
       fi
     fi
 
+    local _after=
     _after="$(_get_hash "${_notebook_path}/${_relative_path}")"
 
     if [[ -n "${_encrypted_path:-}" ]]  &&  [[ -e "${_decrypted_path:-}" ]]
@@ -18077,7 +18134,7 @@ HEREDOC
       local _print_next=0
 
       if ((_list_count)) &&
-         [[ "$((_current_page * _per_page))" -le "${_list_count}" ]]
+         [[ "$((_current_page * _per_page))" -lt "${_list_count}" ]]
       then
         _print_next=1
       fi
@@ -20475,7 +20532,7 @@ _folders() {
         fi
       fi
 
-      _list --type folder "${_arguments[@]:-}"
+      _list --type folder "${_arguments[@]:-}" --with-pinned
       ;;
   esac
 }

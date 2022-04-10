@@ -124,7 +124,7 @@ load test_helper
     mkdir -p "${_TMP_DIR}/Local Notebook"
     cd "${_TMP_DIR}/Local Notebook"
 
-    "${_NB}" notebooks init
+    "${_NB}" notebooks init <<< "y${_NEWLINE}"
 
     declare _filename="example.pdf"
 
@@ -198,7 +198,7 @@ load test_helper
     mkdir -p "${_TMP_DIR}/Local Notebook"
     cd "${_TMP_DIR}/Local Notebook"
 
-    "${_NB}" notebooks init
+    "${_NB}" notebooks init <<< "y${_NEWLINE}"
 
     declare _filename="nb.mp3"
 
@@ -284,7 +284,7 @@ type=\"audio/mpeg\"\>${_NEWLINE}.*\</audio\>${_NEWLINE}.*\</div\>               
     mkdir -p "${_TMP_DIR}/Local Notebook"
     cd "${_TMP_DIR}/Local Notebook"
 
-    "${_NB}" notebooks init
+    "${_NB}" notebooks init <<< "y${_NEWLINE}"
 
     declare _filename="nb.mp4"
 
@@ -370,7 +370,7 @@ type=\"video/mp4\"\>${_NEWLINE}.*\</video\>${_NEWLINE}.*\</div\>                
     mkdir -p "${_TMP_DIR}/Local Notebook"
     cd "${_TMP_DIR}/Local Notebook"
 
-    "${_NB}" notebooks init
+    "${_NB}" notebooks init <<< "y${_NEWLINE}"
 
     "${_NB}" add  "Example Folder/Sample Folder/Example File.md"          \
       --content "Example content."
@@ -461,7 +461,7 @@ type=\"video/mp4\"\>${_NEWLINE}.*\</video\>${_NEWLINE}.*\</div\>                
     mkdir -p "${_TMP_DIR}/Local Notebook"
     cd "${_TMP_DIR}/Local Notebook"
 
-    "${_NB}" notebooks init
+    "${_NB}" notebooks init <<< "y${_NEWLINE}"
 
     "${_NB}" add                    \
       --filename  "Example File.md" \
@@ -569,7 +569,7 @@ HEREDOC
     mkdir -p "${_TMP_DIR}/Local Notebook"
     cd "${_TMP_DIR}/Local Notebook"
 
-    "${_NB}" notebooks init
+    "${_NB}" notebooks init <<< "y${_NEWLINE}"
 
     "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/nb.png"
 
@@ -754,7 +754,7 @@ HEREDOC
     mkdir -p "${_TMP_DIR}/Local Notebook"
     cd "${_TMP_DIR}/Local Notebook"
 
-    "${_NB}" notebooks init
+    "${_NB}" notebooks init <<< "y${_NEWLINE}"
 
     "${_NB}" add  "Example File.md"             \
       --title     "Example Title"               \

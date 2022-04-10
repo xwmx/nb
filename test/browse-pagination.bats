@@ -2,6 +2,91 @@
 
 load test_helper
 
+@test "'browse' only includes next page link when there are remaining items." {
+  {
+    "${_NB}" init
+
+    declare i=
+    for   ((i=1; i < 11; i++))
+    do
+      declare _content="Example content ${i}."
+
+      "${_NB}" add  "File ${i}.md"  \
+        --title     "Title ${i}"    \
+        --content   "${_content}"
+    done
+
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" notebooks add "Sample Notebook"
+    "${_NB}" notebooks add "Test Notebook"
+
+    "${_NB}" notebooks rename "home" "Demo Notebook"
+
+    [[    -d "${NB_DIR}/Demo Notebook"  ]]
+    [[ !  -e "${NB_DIR}/home"           ]]
+
+    sleep 1
+  }
+
+  run "${_NB}" browse --print --per-page 10 --terminal
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  == 0                                                  ]]
+  [[ "${output}"  =~ \<\!DOCTYPE\ html\>                                ]]
+
+  [[ "${output}"  =~ \<title\>nb\ browse\ Demo\\\ Notebook:\</title\>   ]]
+
+  printf "%s\\n" "${output}" | grep    -v -q  \
+"//localhost:6789/Demo%20Notebook:?--per-page=.*&--columns=.*&--page=2\">next ❯"
+
+  run "${_NB}" browse --print --per-page 5 --page 2 --terminal
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  == 0                                                            ]]
+  [[ "${output}"  =~ \<\!DOCTYPE\ html\>                                          ]]
+
+  [[ "${output}"  =~ \<title\>nb\ browse\ Demo\\\ Notebook:\ --page\ 2\</title\>  ]]
+
+  printf "%s\\n" "${output}" | grep    -v -q  \
+"//localhost:6789/Demo%20Notebook:?--per-page=.*&--columns=.*&--page=2\">next ❯"
+
+  run "${_NB}" browse --print --per-page 9 --terminal
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  == 0                                                  ]]
+  [[ "${output}"  =~ \<\!DOCTYPE\ html\>                                ]]
+
+  [[ "${output}"  =~ \<title\>nb\ browse\ Demo\\\ Notebook:\</title\>   ]]
+
+  printf "%s\\n" "${output}" | grep    -v -q  \
+"//localhost:6789/Demo%20Notebook:?--per-page=.*&--columns=.*&--page=2\">next ❯"
+
+  {
+    "${_NB}" add  "File 11.md"  \
+      --title     "Title 11"    \
+      --content   "Example content 11."
+  }
+
+  run "${_NB}" browse --print --per-page 5 --page 2  --terminal
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  == 0                                                            ]]
+  [[ "${output}"  =~ \<\!DOCTYPE\ html\>                                          ]]
+
+  [[ "${output}"  =~ \<title\>nb\ browse\ Demo\\\ Notebook:\ --page\ 2\</title\>  ]]
+
+  printf "%s\\n" "${output}" | grep    -v -q  \
+"//localhost:6789/Demo%20Notebook:?--per-page=.*&--columns=.*&--page=3\">next ❯"
+}
+
 @test "'browse' includes pagination on links on listing page." {
   {
     "${_NB}" init

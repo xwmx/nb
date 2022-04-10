@@ -2,6 +2,176 @@
 
 load test_helper
 
+# argument ordering ###########################################################
+
+@test "'move <folder>/<id> <notebook>:<folder>/' moves file." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/Example File.md" --content "Example content."
+
+    "${_NB}" notebooks add "Sample Notebook"
+
+    "${_NB}" add folder "Sample Notebook:Sample Folder"
+
+    [[   -f "${NB_DIR}/home/Example Folder/Example File.md"           ]]
+    [[   -d "${NB_DIR}/Sample Notebook/Sample Folder"                 ]]
+    [[ ! -e "${NB_DIR}/Sample Notebook/Sample Folder/Example File.md" ]]
+  }
+
+  run "${_NB}" move "Example Folder/1" "Sample Notebook:Sample Folder/" <<< "y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Moves file:
+
+  [[ ! -e "${NB_DIR}/home/Example Folder/Example File.md"             ]]
+  [[   -f "${NB_DIR}/Sample Notebook/Sample Folder/Example File.md"   ]]
+
+  # Creates git commits:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log
+  git log | grep -q '\[nb\] Delete'
+
+  cd "${NB_DIR}/Sample Notebook" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  # Prints output:
+
+  [[ "${lines[0]}"  =~  \
+Moving:\ \ \ .*\[.*Example\ Folder/1.*\].*\ .*Example\ File.md      ]]
+  [[ "${lines[1]}"  =~  \
+To:\ \ \ \ \ \ \ .*Sample\ Notebook:Sample\ Folder/Example\ File.md ]]
+  [[ "${lines[2]}"  =~  \
+Moved\ to:\ .*Sample\ Notebook:Sample\ Folder/Example\ File.md      ]]
+}
+
+@test "'<folder>/<id> move <notebook>:<folder>/' moves file." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/Example File.md" --content "Example content."
+
+    "${_NB}" notebooks add "Sample Notebook"
+
+    "${_NB}" add folder "Sample Notebook:Sample Folder"
+
+    [[   -f "${NB_DIR}/home/Example Folder/Example File.md"           ]]
+    [[   -d "${NB_DIR}/Sample Notebook/Sample Folder"                 ]]
+    [[ ! -e "${NB_DIR}/Sample Notebook/Sample Folder/Example File.md" ]]
+  }
+
+  run "${_NB}" "Example Folder/1" move "Sample Notebook:Sample Folder/" <<< "y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Moves file:
+
+  [[ ! -e "${NB_DIR}/home/Example Folder/Example File.md"             ]]
+  [[   -f "${NB_DIR}/Sample Notebook/Sample Folder/Example File.md"   ]]
+
+  # Creates git commits:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log
+  git log | grep -q '\[nb\] Delete'
+
+  cd "${NB_DIR}/Sample Notebook" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  # Prints output:
+
+  [[ "${lines[0]}"  =~  \
+Moving:\ \ \ .*\[.*Example\ Folder/1.*\].*\ .*Example\ File.md      ]]
+  [[ "${lines[1]}"  =~  \
+To:\ \ \ \ \ \ \ .*Sample\ Notebook:Sample\ Folder/Example\ File.md ]]
+  [[ "${lines[2]}"  =~  \
+Moved\ to:\ .*Sample\ Notebook:Sample\ Folder/Example\ File.md      ]]
+}
+
+@test "'<folder>/<id> <notebook>:<folder>/ move' moves file." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example Folder/Example File.md" --content "Example content."
+
+    "${_NB}" notebooks add "Sample Notebook"
+
+    "${_NB}" add folder "Sample Notebook:Sample Folder"
+
+    [[   -f "${NB_DIR}/home/Example Folder/Example File.md"           ]]
+    [[   -d "${NB_DIR}/Sample Notebook/Sample Folder"                 ]]
+    [[ ! -e "${NB_DIR}/Sample Notebook/Sample Folder/Example File.md" ]]
+  }
+
+  run "${_NB}" "Example Folder/1" "Sample Notebook:Sample Folder/" move <<< "y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Moves file:
+
+  [[ ! -e "${NB_DIR}/home/Example Folder/Example File.md"             ]]
+  [[   -f "${NB_DIR}/Sample Notebook/Sample Folder/Example File.md"   ]]
+
+  # Creates git commits:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log
+  git log | grep -q '\[nb\] Delete'
+
+  cd "${NB_DIR}/Sample Notebook" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  # Prints output:
+
+  [[ "${lines[0]}"  =~  \
+Moving:\ \ \ .*\[.*Example\ Folder/1.*\].*\ .*Example\ File.md      ]]
+  [[ "${lines[1]}"  =~  \
+To:\ \ \ \ \ \ \ .*Sample\ Notebook:Sample\ Folder/Example\ File.md ]]
+  [[ "${lines[2]}"  =~  \
+Moved\ to:\ .*Sample\ Notebook:Sample\ Folder/Example\ File.md      ]]
+}
+
 # pinning #####################################################################
 
 @test "'move' with pinned item and other notebook destination retains pinning in new notebook." {
@@ -370,9 +540,9 @@ Moved\ to:\ .*[.*Sample\ Folder/5.*].*\ .*Sample\ Folder/Example\ File\ Two.md  
   [[ ! -e "${NB_DIR}/home/example.md" ]]
 }
 
-# <scope>:<selector> ##########################################################
+# <notebook>:<selector> #######################################################
 
-@test "'move <scope>:<selector> <notebook>:' with <filename> argument moves note." {
+@test "'move <notebook>:<filename> <notebook>:' with <filename> argument moves note." {
   {
     "${_NB}" init
     "${_NB}" notebooks add "one"
@@ -392,7 +562,7 @@ Moved\ to:\ .*[.*Sample\ Folder/5.*].*\ .*Sample\ Folder/Example\ File\ Two.md  
   [[ "${output}" =~ home:example.md ]]
 }
 
-@test "'<scope>:move <selector> <notebook>:' with <filename> argument moves note." {
+@test "'<notebook>:move <filename> <notebook>:' with <filename> argument moves note." {
   {
     "${_NB}" init
     "${_NB}" notebooks add "one"
@@ -420,7 +590,7 @@ Moved\ to:\ .*[.*Sample\ Folder/5.*].*\ .*Sample\ Folder/Example\ File\ Two.md  
   [[ "${output}" =~ home:[A-Za-z0-9]+.md  ]]
 }
 
-@test "'<scope>:<selector> move <notebook>:' with <filename> argument moves note." {
+@test "'<notebook>:<filename> move <notebook>:' with <filename> argument moves note." {
   {
     "${_NB}" init
     "${_NB}" notebooks add "one"
@@ -448,7 +618,7 @@ Moved\ to:\ .*[.*Sample\ Folder/5.*].*\ .*Sample\ Folder/Example\ File\ Two.md  
   [[ "${output}" =~ home:[A-Za-z0-9]+.md  ]]
 }
 
-@test "'<selector> <scope>:move <notebook>:' with <filename> argument moves note." {
+@test "'<filename> <notebook>:move <notebook>:' with <filename> argument moves note." {
   {
     "${_NB}" init
     "${_NB}" notebooks add "one"

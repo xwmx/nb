@@ -27,7 +27,7 @@ load test_helper
     mkdir -p "${_TMP_DIR}/Local Notebook"
     cd "${_TMP_DIR}/Local Notebook"
 
-    "${_NB}" notebooks init
+    "${_NB}" notebooks init <<< "y${_NEWLINE}"
 
     declare _content=
     _content+="Selector link one: [[local:2/1]] • "
@@ -124,7 +124,7 @@ load test_helper
     mkdir -p "${_TMP_DIR}/Local Notebook"
     cd "${_TMP_DIR}/Local Notebook"
 
-    "${_NB}" notebooks init
+    "${_NB}" notebooks init <<< "y${_NEWLINE}"
 
     declare _content=
     _content+="Selector link one: [[local:2/1]] • "
