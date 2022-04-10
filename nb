@@ -2512,8 +2512,8 @@ _piped_input() {
 # More Information:
 #   https://wiki.bash-hackers.org/commands/builtin/printf
 _print_line() {
-  local _muted=0
   local _extra_length=0
+  local _muted=0
   local _text=
   local _visible_length=0
   local _wrap_line=1
