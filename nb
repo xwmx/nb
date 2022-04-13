@@ -2089,9 +2089,9 @@ _highlight_syntax_if_available() {
     then
       _arguments+=("--language" "${_extension}")
 
-      if ! printf "" | bat  --language "${_extension}"  \
-                            --color   always            \
-                            --paging  never             \
+      if ! printf "" | bat  --language  "${_extension}" \
+                            --color     always          \
+                            --paging    never           \
                             --plain                     \
                             2>/dev/null
       then
