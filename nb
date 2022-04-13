@@ -2088,11 +2088,22 @@ _highlight_syntax_if_available() {
     elif _highlight_syntax_with_extension "${_extension}"
     then
       _arguments+=("--language" "${_extension}")
+
+      if ! printf "" | bat  --language "${_extension}"  \
+                            --color   always            \
+                            --paging  never             \
+                            --plain                     \
+                            2>/dev/null
+      then
+        cat
+
+        return 0
+      fi
     fi
 
     bat "${_arguments[@]}"  \
-      --color always        \
-      --paging never        \
+      --color   always      \
+      --paging  never       \
       --plain               \
       --theme "${NB_SYNTAX_THEME:-base16}"
   elif hash "highlight" 2>/dev/null
