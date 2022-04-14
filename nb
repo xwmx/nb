@@ -9718,6 +9718,50 @@ _get_http_status() {
   fi
 }
 
+# _get_unique_path()
+#
+# Usage:
+#   _get_unique_path <path>
+#
+# Description:
+#   Get a unique full path that doesn't conflict with any existing file.
+_get_unique_path() {
+  local _path="${1:-}"
+
+  local _dir_path=
+  _dir_path="$(dirname "${_path}")"
+
+  local _basename=
+  _basename="$(basename "${_path}")"
+
+  local _file_name="${_basename%%.*}"
+  local _file_extension="${_basename#*.}"
+
+  if [[ -n "${_file_extension:-}"               ]] &&
+     [[ "${_basename}"  =~ \.                   ]] &&
+     [[ "${_file_name}" != "${_file_extension}" ]]
+  then
+    _file_extension=".${_file_extension}"
+  else
+    _file_extension=
+  fi
+
+  local _unique_file_name="${_file_name}"
+  local _uniqueness_counter=0
+
+  while [[ -e "${_dir_path}/${_unique_file_name}${_file_extension}"     ]] ||
+        [[ -e "${_dir_path}/${_unique_file_name}${_file_extension}.enc" ]]
+  do
+    _uniqueness_counter="$((_uniqueness_counter+1))"
+
+    printf -v _unique_file_name -- "%s-%01d"  \
+      "${_file_name}"                         \
+      "${_uniqueness_counter}"
+  done
+
+  printf "%s\\n" "${_dir_path}/${_unique_file_name}${_file_extension}"
+}
+
 # _get_unique_relative_path()
 #
 # Usage:
@@ -9815,50 +9859,6 @@ _get_uri() {
     http%3A%2F*|https%3A%2F*) _get_uri_decode "${1:-}"  ;;
     http://*|https://*)       _get_uri_encode "${1:-}"  ;;
   esac
-}
-
-# _get_unique_path()
-#
-# Usage:
-#   _get_unique_path <path>
-#
-# Description:
-#   Get a unique full path that doesn't conflict with any existing file.
-_get_unique_path() {
-  local _path="${1:-}"
-
-  local _dir_path=
-  _dir_path="$(dirname "${_path}")"
-
-  local _basename=
-  _basename="$(basename "${_path}")"
-
-  local _file_name="${_basename%%.*}"
-  local _file_extension="${_basename#*.}"
-
-  if [[ -n "${_file_extension:-}"               ]] &&
-     [[ "${_basename}"  =~ \.                   ]] &&
-     [[ "${_file_name}" != "${_file_extension}" ]]
-  then
-    _file_extension=".${_file_extension}"
-  else
-    _file_extension=
-  fi
-
-  local _unique_file_name="${_file_name}"
-  local _uniqueness_counter=0
-
-  while [[ -e "${_dir_path}/${_unique_file_name}${_file_extension}"     ]] ||
-        [[ -e "${_dir_path}/${_unique_file_name}${_file_extension}.enc" ]]
-  do
-    _uniqueness_counter="$((_uniqueness_counter+1))"
-
-    printf -v _unique_file_name -- "%s-%01d"  \
-      "${_file_name}"                         \
-      "${_uniqueness_counter}"
-  done
-
-  printf "%s\\n" "${_dir_path}/${_unique_file_name}${_file_extension}"
 }
 
 # _option_get_tags()
