@@ -1264,7 +1264,7 @@ _alias_subcommand() {
   local _alias="${2:-}"
   local _subcommand="${1:-}"
 
-  if [[ -z "${_alias:-}" ]] || [[ -z "${_subcommand:-}" ]]
+  if [[ -z "${_alias:-}" ]]
   then
     return 1
   fi
