@@ -961,7 +961,6 @@ _color_primary() {
 #
 # Description:
 #   Highlight the given string using the accent color.
-
 _color_secondary() {
   if ! ((_COLOR_ENABLED))
   then
