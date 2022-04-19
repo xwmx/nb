@@ -74,7 +74,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="6.10.1"
+_VERSION="6.10.2"
 
 # $_ME
 #
@@ -961,7 +961,6 @@ _color_primary() {
 #
 # Description:
 #   Highlight the given string using the accent color.
-
 _color_secondary() {
   if ! ((_COLOR_ENABLED))
   then
@@ -1264,7 +1263,7 @@ _alias_subcommand() {
   local _alias="${2:-}"
   local _subcommand="${1:-}"
 
-  if [[ -z "${_subcommand:-}" ]] || [[ -z "${_alias:-}" ]]
+  if [[ -z "${_alias:-}" ]]
   then
     return 1
   fi
@@ -2088,11 +2087,22 @@ _highlight_syntax_if_available() {
     elif _highlight_syntax_with_extension "${_extension}"
     then
       _arguments+=("--language" "${_extension}")
+
+      if ! printf "" | bat  --language  "${_extension}" \
+                            --color     always          \
+                            --paging    never           \
+                            --plain                     \
+                            2>/dev/null
+      then
+        cat
+
+        return 0
+      fi
     fi
 
     bat "${_arguments[@]}"  \
-      --color always        \
-      --paging never        \
+      --color   always      \
+      --paging  never       \
       --plain               \
       --theme "${NB_SYNTAX_THEME:-base16}"
   elif hash "highlight" 2>/dev/null
@@ -9707,6 +9717,50 @@ _get_http_status() {
   fi
 }
 
+# _get_unique_path()
+#
+# Usage:
+#   _get_unique_path <path>
+#
+# Description:
+#   Get a unique full path that doesn't conflict with any existing file.
+_get_unique_path() {
+  local _path="${1:-}"
+
+  local _dir_path=
+  _dir_path="$(dirname "${_path}")"
+
+  local _basename=
+  _basename="$(basename "${_path}")"
+
+  local _file_name="${_basename%%.*}"
+  local _file_extension="${_basename#*.}"
+
+  if [[ -n "${_file_extension:-}"               ]] &&
+     [[ "${_basename}"  =~ \.                   ]] &&
+     [[ "${_file_name}" != "${_file_extension}" ]]
+  then
+    _file_extension=".${_file_extension}"
+  else
+    _file_extension=
+  fi
+
+  local _unique_file_name="${_file_name}"
+  local _uniqueness_counter=0
+
+  while [[ -e "${_dir_path}/${_unique_file_name}${_file_extension}"     ]] ||
+        [[ -e "${_dir_path}/${_unique_file_name}${_file_extension}.enc" ]]
+  do
+    _uniqueness_counter="$((_uniqueness_counter+1))"
+
+    printf -v _unique_file_name -- "%s-%01d"  \
+      "${_file_name}"                         \
+      "${_uniqueness_counter}"
+  done
+
+  printf "%s\\n" "${_dir_path}/${_unique_file_name}${_file_extension}"
+}
+
 # _get_unique_relative_path()
 #
 # Usage:
@@ -9804,50 +9858,6 @@ _get_uri() {
     http%3A%2F*|https%3A%2F*) _get_uri_decode "${1:-}"  ;;
     http://*|https://*)       _get_uri_encode "${1:-}"  ;;
   esac
-}
-
-# _get_unique_path()
-#
-# Usage:
-#   _get_unique_path <path>
-#
-# Description:
-#   Get a unique full path that doesn't conflict with any existing file.
-_get_unique_path() {
-  local _path="${1:-}"
-
-  local _dir_path=
-  _dir_path="$(dirname "${_path}")"
-
-  local _basename=
-  _basename="$(basename "${_path}")"
-
-  local _file_name="${_basename%%.*}"
-  local _file_extension="${_basename#*.}"
-
-  if [[ -n "${_file_extension:-}"               ]] &&
-     [[ "${_basename}"  =~ \.                   ]] &&
-     [[ "${_file_name}" != "${_file_extension}" ]]
-  then
-    _file_extension=".${_file_extension}"
-  else
-    _file_extension=
-  fi
-
-  local _unique_file_name="${_file_name}"
-  local _uniqueness_counter=0
-
-  while [[ -e "${_dir_path}/${_unique_file_name}${_file_extension}"     ]] ||
-        [[ -e "${_dir_path}/${_unique_file_name}${_file_extension}.enc" ]]
-  do
-    _uniqueness_counter="$((_uniqueness_counter+1))"
-
-    printf -v _unique_file_name -- "%s-%01d"  \
-      "${_file_name}"                         \
-      "${_uniqueness_counter}"
-  done
-
-  printf "%s\\n" "${_dir_path}/${_unique_file_name}${_file_extension}"
 }
 
 # _option_get_tags()
@@ -23414,8 +23424,8 @@ _todo() {
           _notebooks current --path 2>/dev/null
       )"
 
-      if [[ !  "${_selector_path}" =~ todo\.md$       ]]    &&
-         [[ -z "${_task_number:-}"                    ]]
+      if [[ !  "${_selector_path}" =~ todo\.md$   ]]        &&
+         [[ -z "${_task_number:-}"                ]]
       then
         _exit_1 printf "Not a todo.\\n"
       fi
@@ -23438,7 +23448,7 @@ _todo() {
                 "Unable to mark done: %s\\n"      \
                 "$(_todos tasks "${_selector:-}" "${_task_number}")"
             else
-              _todos tasks "${_selector:-}" "${_task_number}" \
+              _todos tasks "${_selector:-}" "${_task_number}"     \
                 | LC_ALL=C sed "3s/^/Done: /"
 
               _git checkpoint "${_notebook_path}" \
@@ -23470,13 +23480,13 @@ _todo() {
               _todo_get_task "${_selector_path:-}" "${_task_number:-}"
             )"
 
-            if [[ ! "${_updated_task:-}" =~ ^[[:space:]]*-\ \[\ \] ]]
+            if [[ ! "${_updated_task:-}" =~ ^[[:space:]]*-\ \[\ \]  ]]
             then
               _exit_1 printf                      \
                 "Unable to undo: %s\\n"           \
                 "$(_todos tasks "${_selector:-}" "${_task_number}")"
             else
-              _todos tasks "${_selector:-}" "${_task_number}" \
+              _todos tasks "${_selector:-}" "${_task_number}"       \
                 | LC_ALL=C sed "3s/^/Undone: /"
 
               _git checkpoint "${_notebook_path}" \
