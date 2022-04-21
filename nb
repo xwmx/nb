@@ -17501,7 +17501,7 @@ _browse() {
   # _browse_item_create()
   #
   # Usage:
-  #   _browse_item_add <container-path> --message-body <message-body>
+  #   _browse_item_create <container-path> --message-body <message-body>
   #
   # Description:
   #   Add a new item in the folder or notebook at <container-path>.
