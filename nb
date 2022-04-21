@@ -3897,7 +3897,7 @@ Themes can be installed using the \`${_ME} plugins\` subcommand:
 
 Once a theme is installed, use it with \`${_ME} set color_theme\`:
 
-    $(_color_muted ">") $(_color_primary "set color_theme turquoise")
+    $(_color_muted ">") $(_color_primary "${_ME} set color_theme turquoise")
     $(_color_secondary "NB_COLOR_THEME set to turquoise")
 
 The primary and secondary colors can also be overridden individually,
