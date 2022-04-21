@@ -17963,27 +17963,27 @@ HEREDOC
       shift
     done
 
-    if [[ -z "${_target_path:-}" ]]
+    if [[ -z "${_target_path:-}"  ]]
     then
       _target_path="$(_notebooks current --path)"
     fi
 
     local _encoded_query=
 
-    if [[ -n "${_query:-}" ]]
+    if [[ -n "${_query:-}"        ]]
     then
       _query_arguments=($(
         printf "%s\\n" "${_query}" | xargs -n 1 printf "%s\\n" 2>/dev/null
       )) || IFS=' ' read -ra _query_arguments <<< "${_query}"
 
       _encoded_query="$(
-        LC_ALL=C sed            \
-          -e 's/&/\&amp;/g'     \
-          -e 's/</\&lt;/g'      \
-          -e 's/>/\&gt;/g'      \
-          -e 's/"/\&quot;/g'    \
-          -e 's/#/\&#35;/g'     \
-          -e 's/'"'"'/\&#39;/g' <<<"${_query}"
+        LC_ALL=C sed              \
+          -e 's/&/\&amp;/g'       \
+          -e 's/</\&lt;/g'        \
+          -e 's/>/\&gt;/g'        \
+          -e 's/"/\&quot;/g'      \
+          -e 's/#/\&#35;/g'       \
+          -e 's/'"'"'/\&#39;/g'   <<< "${_query}"
       )"
     fi
 
@@ -18034,7 +18034,7 @@ HEREDOC
           --no-color                      \
           --notebook-selectors            \
           --page      "${_current_page}"  \
-          --per-page  "${_per_page}"  || :
+          --per-page  "${_per_page}"      || :
       else
         _list "${_target_path}"           \
           --no-color                      \
@@ -22614,7 +22614,7 @@ $(
 _alias_subcommand "settings" "config"
 _alias_subcommand "settings" "set"
 
-# shell  ################################################################ shell
+# shell ################################################################# shell
 
 _describe_shell() {
   cat <<HEREDOC
