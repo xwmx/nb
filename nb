@@ -3269,7 +3269,6 @@ _git() {
   _git_autosyncable() {
     ((_GIT_ENABLED)) || return 1
 
-    local _current_timestamp=
     local _last_fetch_timestamp=
     local _maybe_fetch_timestamp=
     local _notebook_path="${1:-}"
@@ -3309,8 +3308,11 @@ _git() {
         stat -f '%m' "${_notebook_path}/.git/FETCH_HEAD"
       )"
     fi
+
+    local _current_timestamp=
     _current_timestamp="$(date +%s)"
 
+    local _diff=
     _diff=$((_current_timestamp-_last_fetch_timestamp))
 
     [[ "${_diff}" -gt 60 ]]
