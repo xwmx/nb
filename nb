@@ -23209,7 +23209,7 @@ _todo() {
       cat > "${_temp_file_path}"
     }
 
-    cat "${_temp_file_path}"  > "${_selector_path}"
+    cat "${_temp_file_path}"  > "${_item_path}"
 
     [[ -f "${_temp_file_path:?}" ]] && rm -rf "${_temp_file_path:?}"
   }
