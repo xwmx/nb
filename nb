@@ -3477,7 +3477,7 @@ HEREDOC
     local _git_email=
     _git_email="$(git config --global --includes user.email || printf '')"
 
-    if [[ -z "${_git_name:-}"   ]] ||
+    if [[ -z "${_git_name:-}"   ]]  ||
        [[ -z "${_git_email:-}"  ]]
     then
       cat <<HEREDOC
@@ -3487,14 +3487,14 @@ Git requires some additional setup before using $(_color_primary "${_ME}").
 Enter the name and email address you'd like to use with Git.
 Edits you make are attributed to this name and email address.
 HEREDOC
-      if [[ -z "${_git_name}" ]]
+      if [[ -z "${_git_name:-}"   ]]
       then
         while true
         do
           local __name=
           IFS='' read -r -e -d $'\n' -p "$(_color_primary "Name"): " __name
 
-          if [[ -n "${__name}" ]]
+          if [[ -n "${__name:-}"  ]]
           then
             git config --global user.name "${__name}"
             break
@@ -3502,14 +3502,14 @@ HEREDOC
         done
       fi
 
-      if [[ -z "${_git_email}" ]]
+      if [[ -z "${_git_email:-}"  ]]
       then
         while true
         do
           local __email=
           IFS='' read -r -e -d $'\n' -p "$(_color_primary "Email"): " __email
 
-          if [[ -n "${__email}" ]]
+          if [[ -n "${__email:-}" ]]
           then
             git config --global user.email "${__email}"
             break
