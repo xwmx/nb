@@ -19268,7 +19268,7 @@ HEREDOC
   # Description:
   #   Build a response using standard input and print to standard output.
   _browse_respond() {
-    # ---
+    # ---------------
     # Request parsing
 
     # Request-Line HTTP RFC 2616 §5
@@ -20791,7 +20791,7 @@ _plugins() {
             while true
             do
               local __yn=
-              IFS='' read -r -e -d $'\n' -p \
+              IFS='' read -r -e -d $'\n' -p   \
 "$(_color_primary "Reinstall?") $(_color_brackets "y/N") " __yn
 
               case "${__yn}" in
@@ -20809,7 +20809,7 @@ _plugins() {
 
         if cp "${_path}" "${NB_DIR}/.plugins/${_basename}"
         then
-          printf "Plugin installed:\\n%s\\n" \
+          printf "Plugin installed:\\n%s\\n"  \
             "$(_color_primary "${NB_DIR}/.plugins/${_basename}")"
         else
           _exit_1 printf "Unable to install plugin: %s\\n" "${_path}"
@@ -20829,7 +20829,7 @@ _plugins() {
 
         if _download_from "${_url}" "${NB_DIR}/.plugins/${_basename}"
         then
-          printf "Plugin installed:\\n%s\\n" \
+          printf "Plugin installed:\\n%s\\n"  \
             "$(_color_primary "${NB_DIR}/.plugins/${_basename}")"
         else
           _exit_1 printf "Unable to download and install: %s\\n"  "${_url}"
