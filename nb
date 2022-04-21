@@ -9008,7 +9008,7 @@ _parse_options() {
 _debug printf "\${_SUBCOMMAND}:           '%s'\\n"  "${_SUBCOMMAND}"
 _debug printf "\${NB_NOTEBOOK_PATH}:      '%s'\\n"  "${NB_NOTEBOOK_PATH}"
 _debug printf "\${_LOCAL_NOTEBOOK_PATH}:  '%s'\\n"  "${_LOCAL_NOTEBOOK_PATH}"
-_debug printf "\${_ARGUMENTS[*:-]}:       '%s'\\n"  "${_ARGUMENTS[*]:-}"
+_debug printf "\${_ARGUMENTS[*]:-}:       '%s'\\n"  "${_ARGUMENTS[*]:-}"
 
 ###############################################################################
 # Deprecated Functions and Variables
