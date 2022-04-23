@@ -18609,7 +18609,7 @@ HEREDOC
 
     local _header_content="\
 <a href=\"//${NB_SERVER_HOST}:${NB_SERVER_PORT}/${_url_param_string:-}\">"
-    _header_content+="<span class=\"muted\">${_CHEVRON_RIGHT}</span>nb</a>"
+    _header_content+="<span class=\"muted\">${_CHEVRON_RIGHT}</span>${_ME}</a>"
     _header_content+=" <span class=\"muted\">${_MD}</span>"
 
     if [[ -z "${_selector:-}"       ]]
