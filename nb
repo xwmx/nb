@@ -16604,7 +16604,7 @@ _show() {
   local _check_type=0
   local _list_page=1
   local _password=
-  local _limit="${NB_BROWSE_PER_PAGE:-20}"
+  local _limit="${NB_BROWSE_LIMIT:-20}"
   local _print_added=0
   local _print_authors=0
   local _print_bookmark_url=0
@@ -17847,7 +17847,7 @@ _browse() {
     local _content=
     local _encoded_local_notebook_path=
     local _pagination_options=()
-    local _limit="${NB_BROWSE_PER_PAGE:-30}"
+    local _limit="${NB_BROWSE_LIMIT:-30}"
     local _selector=
     local _subcommand_options=()
     local _tag_list=
@@ -18052,7 +18052,7 @@ HEREDOC
     local _current_page=1
     local _encoded_local_notebook_path=
     local _pagination_options=()
-    local _limit="${NB_BROWSE_PER_PAGE:-30}"
+    local _limit="${NB_BROWSE_LIMIT:-30}"
     local _query=
     local _target_path=
     local _terminal_browser=0
@@ -18448,7 +18448,7 @@ HEREDOC
     local _columns="${NB_BROWSE_COLUMNS:-70}"
     local _encoded_local_notebook_path=
     local _pagination_options=()
-    local _limit="${NB_BROWSE_PER_PAGE:-30}"
+    local _limit="${NB_BROWSE_LIMIT:-30}"
     local _raw_url=
     local _source_path=
 
@@ -18569,7 +18569,7 @@ HEREDOC
     local _columns="${NB_BROWSE_COLUMNS:-70}"
     local _encoded_local_notebook_path=
     local _pagination_options=()
-    local _limit="${NB_BROWSE_PER_PAGE:-30}"
+    local _limit="${NB_BROWSE_LIMIT:-30}"
     local _raw_url=
     local _source_path=
     local _subcommand_options=()
@@ -18707,7 +18707,7 @@ HEREDOC
     local _action=
     local _columns="${NB_BROWSE_COLUMNS:-70}"
     local _encoded_local_notebook_path=
-    local _limit="${NB_BROWSE_PER_PAGE:-30}"
+    local _limit="${NB_BROWSE_LIMIT:-30}"
     local _raw_url=
     local _selector=
     local _terminal_browser=0
@@ -19277,7 +19277,7 @@ HEREDOC
     local _columns="${NB_BROWSE_COLUMNS:-70}"
     local _encoded_local_notebook_path=
     local _pagination_options=()
-    local _limit="${NB_BROWSE_PER_PAGE:-30}"
+    local _limit="${NB_BROWSE_LIMIT:-30}"
     local _user_agent=
 
     while ((${#}))
@@ -19550,7 +19550,7 @@ HEREDOC
     local _encoded_local_notebook_path=
     local _local_notebook_path=
     local _page_number=1
-    local _limit="${NB_BROWSE_PER_PAGE:-30}"
+    local _limit="${NB_BROWSE_LIMIT:-30}"
     local _query=
     local _render_function_options=()
     local _request_parameters=()
