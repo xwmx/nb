@@ -207,13 +207,18 @@ load test_helper
     declare _raw_url_pattern="//localhost:6789/--original/local/${_filename}"
     _raw_url_pattern+="\?--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
 
+    declare _reported_file_type=
+    _reported_file_type="$(file -b --mime-type "${_TMP_DIR}/Local Notebook/nb.mp3")"
+
     sleep 1
   }
 
   run "${_NB}" browse 1 --print
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}:               '%s'\\n" "${status}"
+  printf "\${output}:               '%s'\\n" "${output}"
+  printf "\$(ls):                   '%s'\\n" "$(ls "${_TMP_DIR}/Local Notebook/")"
+  printf "\${_reported_file_type}:  '%s'\\n" "${_reported_file_type}"
 
   [[    "${status}"    ==  0                                                        ]]
   [[    "${output}"    =~  \<\!DOCTYPE\ html\>                                      ]]

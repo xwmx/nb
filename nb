@@ -19139,6 +19139,7 @@ HEREDOC
 
                   # handle `file` 5.40 bug: https://bugs.astron.com/view.php?id=259
                   _mime_type="${_mime_type//audio\/mpegapplication\/octet-stream/audio/mpeg}"
+                  _mime_type="${_mime_type//audio\/mpegaudio\/mpeg/audio/mpeg}"
 
                   cat <<HEREDOC
 <audio controls>
