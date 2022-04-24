@@ -19576,7 +19576,7 @@ HEREDOC
           --gui)
             _terminal_browser=0
             ;;
-          --limit=*|--per*page=*)
+          --limit=*|-n=*|-num=*|--number=*|--per*page=*)
             _limit="${__parameter#*=}"
             _render_function_options+=("--limit" "${_limit}")
             ;;
