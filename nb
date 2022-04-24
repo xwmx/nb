@@ -148,6 +148,7 @@ _command_exists() {
 #   _contains "${_query}" "${_list[@]}"
 _contains() {
   local _query="${1:-}"
+
   shift
 
   if [[ -z "${_query}"  ]] ||
