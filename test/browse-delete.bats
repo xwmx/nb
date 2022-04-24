@@ -166,7 +166,7 @@ load test_helper
 
   # Prints output:
 
-  declare _expected_param_pattern="--per-page=30\&--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
+  declare _expected_param_pattern="--limit=30\&--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
 
   [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Found                      ]]
   [[ "${lines[1]}"  =~  Date:\ .*                                 ]]
@@ -218,11 +218,11 @@ Location:\ \/\/localhost:6789\/local:\?${_expected_param_pattern} ]]
 
   # Prints output:
 
-  [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Found                                ]]
-  [[ "${lines[1]}"  =~  Date:\ .*                                           ]]
-  [[ "${lines[2]}"  =~  Expires:\ .*                                        ]]
-  [[ "${lines[3]}"  =~  Server:\ nb                                         ]]
-  [[ "${lines[4]}"  =~  Location:\ \/\/localhost:6789\/home:\?--per-page=.* ]]
+  [[ "${lines[0]}"  =~  HTTP/1.0\ 302\ Found                             ]]
+  [[ "${lines[1]}"  =~  Date:\ .*                                        ]]
+  [[ "${lines[2]}"  =~  Expires:\ .*                                     ]]
+  [[ "${lines[3]}"  =~  Server:\ nb                                      ]]
+  [[ "${lines[4]}"  =~  Location:\ \/\/localhost:6789\/home:\?--limit=.* ]]
 }
 
 # GET #########################################################################
@@ -247,7 +247,7 @@ Location:\ \/\/localhost:6789\/local:\?${_expected_param_pattern} ]]
     sleep 1
 
     declare _local_notebook_param="--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
-    declare _expected_param_pattern="${_local_notebook_param}&--per-page=30&--columns=.*"
+    declare _expected_param_pattern="${_local_notebook_param}&--limit=30&--columns=.*"
   }
 
   run curl -sS -D - "http://localhost:6789/local:1?--delete&${_local_notebook_param}"
@@ -361,7 +361,7 @@ Location:\ \/\/localhost:6789\/local:\?${_expected_param_pattern} ]]
   [[ "${output}"    =~  header-crumbs.*↓                          ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"href=\"//localhost:6789/?--per-page=30&--columns=20\"><span class=\"muted\">❯</span>nb</a> "
+"href=\"//localhost:6789/?--limit=30&--columns=20\"><span class=\"muted\">❯</span>nb</a> "
 
   printf "%s\\n" "${output}" | grep -q \
 "❯</span>nb</a>.*<span class=\"muted\">·</span> <span class=\"muted\">-</span> <span class=\"muted\">|</span>"
@@ -370,10 +370,10 @@ Location:\ \/\/localhost:6789\/local:\?${_expected_param_pattern} ]]
 "<h2 align=\"center\">deleting</h2>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<p align=\"center\">${_NEWLINE}  <a rel=\"noopener noreferrer\" href=\"//localhost:6789/home:1?--per-page=.*&--columns=.*\">\[1\] Example\ File.md \"Example Title\"</a>${_NEWLINE}</p>"
+"<p align=\"center\">${_NEWLINE}  <a rel=\"noopener noreferrer\" href=\"//localhost:6789/home:1?--limit=.*&--columns=.*\">\[1\] Example\ File.md \"Example Title\"</a>${_NEWLINE}</p>"
 
   printf "%s\\n" "${output}" | grep -q \
-"action=\"/home:1?--delete&--per-page=.*&--columns=.*\""
+"action=\"/home:1?--delete&--limit=.*&--columns=.*\""
 
   printf "%s\\n" "${output}" | grep -q \
 "value=\"delete\">"
@@ -461,16 +461,16 @@ Location:\ \/\/localhost:6789\/local:\?${_expected_param_pattern} ]]
   [[ "${output}"    =~  header-crumbs.*↓                          ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"href=\"//localhost:6789/?--per-page=.*&--columns=.*\"><span class=\"muted\">❯</span>nb</a> "
+"href=\"//localhost:6789/?--limit=.*&--columns=.*\"><span class=\"muted\">❯</span>nb</a> "
 
   printf "%s\\n" "${output}" | grep -q \
 "<h2 align=\"center\">deleting</h2>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<p align=\"center\">${_NEWLINE}<a rel=\"noopener noreferrer\" href=\"//localhost:6789/home:1?--per-page=.*&--columns=.*\">\[1\] Example\ File.md \"Example Title\"</a>${_NEWLINE}</p>"
+"<p align=\"center\">${_NEWLINE}<a rel=\"noopener noreferrer\" href=\"//localhost:6789/home:1?--limit=.*&--columns=.*\">\[1\] Example\ File.md \"Example Title\"</a>${_NEWLINE}</p>"
 
   printf "%s\\n" "${output}" | grep -q \
-"action=\"/home:1?--delete&--per-page=.*&--columns=.*\""
+"action=\"/home:1?--delete&--limit=.*&--columns=.*\""
 
   printf "%s\\n" "${output}" | grep -q \
 "value=\"delete\">"

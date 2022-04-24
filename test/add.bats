@@ -288,18 +288,18 @@ HEREDOC
 "<nav class=\"header-crumbs\"><strong><a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
-"calhost:6789/?--per-page=.*&--columns=.*\"><span class=\"muted\">❯</span>nb</a>"
+"calhost:6789/?--limit=.*&--columns=.*\"><span class=\"muted\">❯</span>nb</a>"
 
   printf "%s\\n" "${output}" | grep -q \
 " <span class=\"muted\">·</span> <a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
-"calhost:6789/home:?--per-page=.*&--columns=.*\">home</a>"
+"calhost:6789/home:?--limit=.*&--columns=.*\">home</a>"
 
   printf "%s\\n" "${output}" | grep -q "rows=\".*\">"
 
   printf "%s\\n" "${output}" | grep -q \
-"action=\"/home:Example%20Folder/Example%20File.md?--add&--per-page=.*&--columns=.*\""
+"action=\"/home:Example%20Folder/Example%20File.md?--add&--limit=.*&--columns=.*\""
 
   printf "%s\\n" "${output}" | grep -q \
 "value=\"add\">"

@@ -286,7 +286,7 @@ load test_helper
   [[    "${lines[4]}"  =~  Content-Type:\ text/html\;\ charset=UTF-8      ]]
 
   [[    "${output}"    =~ \
-action=\"/local:1/1\?--edit\&--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook ]]
+action=\"/local:1/1\?--edit\&--limit=.*\&--columns=.*\&--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook ]]
 
   [[    "${output}"    =~ \<input\ type=\"hidden\"\ name=\"--example\"\>  ]]
   [[    "${output}"    =~ \<input\ type=\"hidden\"\ name=\"-x\"\>         ]]
@@ -548,7 +548,7 @@ action=\"/local:1/1\?--edit\&--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'
     "<p>Example content. <a"
 
   printf "%s\\n" "${output}"  | grep -v -q \
-    "<form${_NEWLINE}action=\"/home:1?--edit&--per-page=30--columns=20"
+    "<form${_NEWLINE}action=\"/home:1?--edit&--limit=30--columns=20"
 }
 
 @test "GET to --edit URL with --columns parameter uses value for textarea, form URL parameters, and header links and retains leading tab." {
@@ -604,11 +604,11 @@ action=\"/local:1/1\?--edit\&--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'
   [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1      ]]
 
   printf "%s\\n" "${output}" | grep -q \
-    "href=\"//localhost:6789/?--per-page=30&--columns=20\"><span class=\"muted\">❯</span>nb</a> "
+    "href=\"//localhost:6789/?--limit=30&--columns=20\"><span class=\"muted\">❯</span>nb</a> "
 
   printf "%s\\n" "${output}" | grep -q "rows=\"32\"># Example Title"
   printf "%s\\n" "${output}" | grep -q \
-    "<form${_NEWLINE}action=\"/home:1?--edit&--per-page=30--columns=20"
+    "<form${_NEWLINE}action=\"/home:1?--edit&--limit=30--columns=20"
 
   printf "%s\\n" "${output}" | grep -q \
 "value=\"save\"> <span class=\"muted\">·</span> <span class=\"muted last-saved\">last: .*</span>"
@@ -668,19 +668,19 @@ action=\"/local:1/1\?--edit\&--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'
 "<nav class=\"header-crumbs\"><strong><a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
-"calhost:6789/?--per-page=.*&--columns=.*\"><span class=\"muted\">❯</span>nb</a>"
+"calhost:6789/?--limit=.*&--columns=.*\"><span class=\"muted\">❯</span>nb</a>"
 
   printf "%s\\n" "${output}" | grep -q \
 " <span class=\"muted\">·</span> <a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
-"calhost:6789/home:?--per-page=.*&--columns=.*\">home</a> <span class=\"muted\""
+"calhost:6789/home:?--limit=.*&--columns=.*\">home</a> <span class=\"muted\""
 
   printf "%s\\n" "${output}" | grep -q \
 ">:</span> <a rel=\"noopener noreferrer\" href=\"//localhost:6789/home:"
 
   printf "%s\\n" "${output}" | grep -q \
-"1?--per-page=.*&--columns=.*\">1</a> <span class=\"muted\">·</span> <a.* "
+"1?--limit=.*&--columns=.*\">1</a> <span class=\"muted\">·</span> <a.* "
 
   printf "%s\\n" "${output}" | grep -q \
 "rel=\"noopener noreferrer\" href=\"//localhost:6789/--original/home/Example File.md\">↓</a> <span class=\"muted\">·</span> <span cl"
@@ -689,10 +689,10 @@ action=\"/local:1/1\?--edit\&--per-page=.*\&--columns=.*\&--local=${_TMP_DIR//$'
 "ss=\"muted\">editing</span> <span class=\"muted\">·</span> <a rel=\"noopener noreferrer\" "
 
   printf "%s\\n" "${output}" | grep -q \
-"href=\"//localhost:6789/home:1?--per-page=30&--columns=.*&--delete\">-</a> <span class=\"muted\">|</span> <a "
+"href=\"//localhost:6789/home:1?--limit=30&--columns=.*&--delete\">-</a> <span class=\"muted\">|</span> <a "
 
   printf "%s\\n" "${output}" | grep -q \
-"rel=\"noopener noreferrer\" href=\"//localhost:6789/home:?--per-page=30&--columns=.*&--add\">+</a></strong></nav>"
+"rel=\"noopener noreferrer\" href=\"//localhost:6789/home:?--limit=30&--columns=.*&--add\">+</a></strong></nav>"
 
   printf "%s\\n" "${output}" | grep -q "rows=\"32\"># Example Title"
 
