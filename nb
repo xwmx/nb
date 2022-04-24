@@ -20051,7 +20051,17 @@ HEREDOC
       ls|list|--ls|--list)
         : # skip, since this is the default
         ;;
-      -n|--notebook*|--nb*)
+      -n)
+        if _option_value_is_present "${2:-}"
+        then
+          _browse_limit="${2:-}"
+
+          shift
+        else
+          _browse_notebooks=1
+        fi
+        ;;
+      --notebook*|--nb*)
         _browse_notebooks=1
         ;;
       --or)
