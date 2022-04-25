@@ -15255,13 +15255,13 @@ _search() {
   local _and_queries=()
   local _arguments=()
   local _last_path=
+  local _limit=0
   local _max_columns="2000"
   local _max_depth=0
   local _only_list=0
   local _option_tags=()
   local _or_queries=()
   local _page=1
-  local _limit=0
   local _print_notebook_selectors=0
   local _print_paths=0
   local _query=
@@ -16602,9 +16602,9 @@ _show() {
 
   local _browse=0
   local _check_type=0
+  local _limit="${NB_BROWSE_LIMIT:-20}"
   local _list_page=1
   local _password=
-  local _limit="${NB_BROWSE_LIMIT:-20}"
   local _print_added=0
   local _print_authors=0
   local _print_bookmark_url=0
@@ -17836,7 +17836,7 @@ _browse() {
   #
   # Usage:
   #   _browse_render_add [--columns <columns>] [--content <content>]
-  #                      [--local <url-encoded-path>] [--limit <limit>]
+  #                      [--limit <limit>] [--local <url-encoded-path>]
   #                      [--tags <tag-list>] [--terminal] [--title <title>]
   #                      [--type <type>] [<add-option>...]
   #
@@ -17846,8 +17846,8 @@ _browse() {
     local _columns="${NB_BROWSE_COLUMNS:-70}"
     local _content=
     local _encoded_local_notebook_path=
-    local _pagination_options=()
     local _limit="${NB_BROWSE_LIMIT:-30}"
+    local _pagination_options=()
     local _selector=
     local _subcommand_options=()
     local _tag_list=
@@ -17868,6 +17868,12 @@ _browse() {
 
           shift
           ;;
+        --limit|-n|--num|--number|--per*)
+          _limit="${2:?}"
+          _pagination_options+=("${1:?}" "${2:?}")
+
+          shift
+          ;;
         --local)
           _encoded_local_notebook_path="$(_option_get_value "${1:-}" "${2:-}")"
           _pagination_options+=("${1:?}" "${2:?}")
@@ -17876,12 +17882,6 @@ _browse() {
           ;;
         --page)
           _option_value_is_present "${2:-}" && shift
-          ;;
-        --limit)
-          _limit="${2:?}"
-          _pagination_options+=("${1:?}" "${2:?}")
-
-          shift
           ;;
         --tags)
           _tag_list="$(_option_get_tags "${1:-}" "${2:-}")"
@@ -18051,8 +18051,8 @@ HEREDOC
     local _columns="${NB_BROWSE_COLUMNS:-70}"
     local _current_page=1
     local _encoded_local_notebook_path=
-    local _pagination_options=()
     local _limit="${NB_BROWSE_LIMIT:-30}"
+    local _pagination_options=()
     local _query=
     local _target_path=
     local _terminal_browser=0
@@ -18439,7 +18439,7 @@ HEREDOC
   #
   # Usage:
   #   _browse_render_delete <path> [--columns <columns>]
-  #                         [--local <url-encoded-path>] [--limit <limit>]
+  #                         [--limit <limit>] [--local <url-encoded-path>]
   #                         [--terminal]
   #
   # Description:
@@ -18447,8 +18447,8 @@ HEREDOC
   _browse_render_delete() {
     local _columns="${NB_BROWSE_COLUMNS:-70}"
     local _encoded_local_notebook_path=
-    local _pagination_options=()
     local _limit="${NB_BROWSE_LIMIT:-30}"
+    local _pagination_options=()
     local _raw_url=
     local _source_path=
 
@@ -18461,6 +18461,12 @@ HEREDOC
 
           shift
           ;;
+        --limit|-n|--num|--number|--per*)
+          _limit="${2:?}"
+          _pagination_options+=("${1:?}" "${2:?}")
+
+          shift
+          ;;
         --local)
           _encoded_local_notebook_path="$(_option_get_value "${1:-}" "${2:-}")"
           _pagination_options+=("${1:?}" "${2:?}")
@@ -18469,12 +18475,6 @@ HEREDOC
           ;;
         --page)
           _option_value_is_present "${2:-}" && shift
-          ;;
-        --limit)
-          _limit="${2:?}"
-          _pagination_options+=("${1:?}" "${2:?}")
-
-          shift
           ;;
         --raw-url)
           _raw_url="${2:?}"
@@ -18560,7 +18560,7 @@ HEREDOC
   #
   # Usage:
   #   _browse_render_edit <path> [--columns <columns>]
-  #                       [--local <url-encoded-path>] [--limit <limit>]
+  #                       [--limit <limit>] [--local <url-encoded-path>]
   #                       [--terminal] [<edit-option>...]
   #
   # Description:
@@ -18568,8 +18568,8 @@ HEREDOC
   _browse_render_edit() {
     local _columns="${NB_BROWSE_COLUMNS:-70}"
     local _encoded_local_notebook_path=
-    local _pagination_options=()
     local _limit="${NB_BROWSE_LIMIT:-30}"
+    local _pagination_options=()
     local _raw_url=
     local _source_path=
     local _subcommand_options=()
@@ -18583,6 +18583,12 @@ HEREDOC
 
           shift
           ;;
+        --limit|-n|--num|--number|--per*)
+          _limit="${2:?}"
+          _pagination_options+=("${1:?}" "${2:?}")
+
+          shift
+          ;;
         --local)
           _encoded_local_notebook_path="$(_option_get_value "${1:-}" "${2:-}")"
           _pagination_options+=("${1:?}" "${2:?}")
@@ -18591,12 +18597,6 @@ HEREDOC
           ;;
         --page)
           _option_value_is_present "${2:-}" && shift
-          ;;
-        --limit)
-          _limit="${2:?}"
-          _pagination_options+=("${1:?}" "${2:?}")
-
-          shift
           ;;
         --raw-url)
           _raw_url="${2:?}"
@@ -18949,7 +18949,7 @@ HEREDOC
   #
   # Usage:
   #   _browse_render_item <path> [--columns <columns>]
-  #                       [--local <url-encoded-path>] [--limit <limit>]
+  #                       [--limit <limit>] [--local <url-encoded-path>]
   #                       [--raw-url <url>] [--terminal]
   #
   # Description:
@@ -18973,6 +18973,11 @@ HEREDOC
         --headers)
           _respond_with_arguments+=("${1:-}")
           ;;
+        --limit|-n|--num|--number|--per*)
+          _pagination_options+=("${1:?}" "${2:?}")
+
+          shift
+          ;;
         --local)
           _pagination_options+=("${1:-}" "${2:?}")
 
@@ -18980,11 +18985,6 @@ HEREDOC
           ;;
         --page)
           _option_value_is_present "${2:-}" && shift
-          ;;
-        --limit)
-          _pagination_options+=("${1:?}" "${2:?}")
-
-          shift
           ;;
         --raw-url)
           _raw_url="${2:?}"
@@ -19267,7 +19267,7 @@ HEREDOC
   #
   # Usage:
   #   _browse_render_notebooks [--columns <columns>]
-  #                            [--local <url-encoded-path>] [--limit <limit>]
+  #                            [--limit <limit>] [--local <url-encoded-path>]
   #                            [--terminal]
   #
   # Description:
@@ -19276,8 +19276,8 @@ HEREDOC
     local _add_line_breaks=0
     local _columns="${NB_BROWSE_COLUMNS:-70}"
     local _encoded_local_notebook_path=
-    local _pagination_options=()
     local _limit="${NB_BROWSE_LIMIT:-30}"
+    local _pagination_options=()
     local _user_agent=
 
     while ((${#}))
@@ -19548,9 +19548,9 @@ HEREDOC
     local _action=
     local _columns=1
     local _encoded_local_notebook_path=
+    local _limit="${NB_BROWSE_LIMIT:-30}"
     local _local_notebook_path=
     local _page_number=1
-    local _limit="${NB_BROWSE_LIMIT:-30}"
     local _query=
     local _render_function_options=()
     local _request_parameters=()
