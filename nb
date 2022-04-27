@@ -895,6 +895,7 @@ _color_brackets() {
   if ! ((_COLOR_ENABLED))
   then
     printf "[%s]" "${1:-}"
+
     return 0
   fi
 
@@ -1013,6 +1014,7 @@ __set_notebook_paths() {
     if [[ "${PWD}" == "/" ]]
     then
       cd "${_CURRENT_WORKING_DIR}"
+
       return 0
     elif [[ -d "${PWD}/.git"    ]] &&
          [[ -f "${PWD}/.index"  ]]
@@ -1689,6 +1691,7 @@ _get_content() {
         elif ((_in_front_matter))   &&  [[ "${__line}" =~ ^title\:  ]]
         then # front matter title
           _title="$(printf "%s\\n" "${__line}" | LC_ALL=C sed 's/^title: //')"
+
           break
         elif ! ((_in_front_matter)) && ! ((_in_code_block))
         then
@@ -1701,6 +1704,7 @@ _get_content() {
             _title="$(
               printf "%s\\n" "${_maybe_title}" | LC_ALL=C sed 's/^[[:space:]]*//'
             )"
+
             break
           elif [[ -n "${_maybe_title:-}"        ]]
           then # in normal content, title not found
@@ -1741,6 +1745,7 @@ _get_content() {
           _title="$(
             printf "%s\\n" "${__line}" | LC_ALL=C sed 's/\\title{\(.*\)}/\1/'
           )"
+
           break
         elif [[ -n "${__line:-}"      ]]
         then
@@ -1805,6 +1810,7 @@ _get_content() {
           else
             _first_line="${__line}"
           fi
+
           break
         fi
       done < "${_path}"
@@ -1817,7 +1823,6 @@ _get_content() {
     then
       printf "%s\\n" "__first_line:${_first_line/%$'\r'}"
     fi
-
   fi
 }
 
@@ -2453,6 +2458,7 @@ _pandoc() {
   if ! _command_exists "pandoc"
   then
     _warn printf "%spandoc%s not found.\\n" "${_BT}" "${_BT}"
+
     return 1
   fi
 
@@ -5793,6 +5799,7 @@ ${_TPUT_SGR0}"
             "${_omitted_count}"                   \
             "${_label}"                           \
             "${_matches}"
+
           return 0
         fi
       elif [[ "${_filenames_count}" -gt "${_limit}" ]] &&
@@ -5801,6 +5808,7 @@ ${_TPUT_SGR0}"
         printf "%s omitted. %s total.\\n"         \
           "$((_filenames_count-_printed_count))"  \
           "${_filenames_count}"
+
         return 0
       fi
     fi
@@ -5923,9 +5931,11 @@ HEREDOC
         if ((_error_on_empty))
         then
           cat 1>&2
+
           return 1
         else
           cat
+
           return 0
         fi
       }
@@ -7463,6 +7473,7 @@ HEREDOC
           break
         else
           printf "Exiting%s\\n" "$(_color_muted "...")"
+
           exit 0
         fi
       done
@@ -7481,6 +7492,7 @@ HEREDOC
           if [[ "${__notebook}"   !=    "$(_notebooks current)"   ]]
           then
             _notebooks use "${__notebook}"
+
             break
           fi
         done
@@ -16295,8 +16307,11 @@ _search() {
             if [[ "${_last_path}" != "${_path}" ]] || ((_filename_hit))
             then # match is in a different file than the last match
               ((_COLOR_ENABLED)) && _wrap off
+
               printf "%s" "${_info_line_color}"
+
               ((_COLOR_ENABLED)) && _wrap on
+
               printf "\\n"
 
               _binary_match_message_printed=0
@@ -16305,6 +16320,7 @@ _search() {
             if ((_only_list)) || ((_binary_match_message_printed))
             then
               [[ -n "${_path}" ]] && _last_path="${_path}"
+
               continue
             fi
 
@@ -16349,6 +16365,7 @@ _search() {
             _line_length="$(
               printf "%s\\n" "${_content_line_with_hit}" | awk '{print length}'
             )"
+
             local _line_length_diff=
             _line_length_diff=$((_line_length-_max_columns-100))
 
@@ -16358,6 +16375,7 @@ _search() {
                 printf "%s\\n" "${_content_line_with_hit}" \
                   | awk '{ print substr($0, 1, 2000) }'
               )"
+
               _content_line_with_hit+="$(
                 _color_primary "... [${_line_length_diff} characters omitted]"
               )"
@@ -16376,7 +16394,9 @@ _search() {
     then # output is present
       # Print the test line then `cat` the rest.
       printf "%s\\n" "${__search_output_line:-}"
+
       cat
+
       return 0
     else
       if ((_all))
@@ -16746,6 +16766,7 @@ _show() {
   if ((_print_selector_id))
   then
     _selector_get_identifier "${_selector:-}"
+
     return 0
   fi
 
@@ -16833,6 +16854,7 @@ _show() {
      }
   then
     _warn printf "Not found: %s\\n" "$(_color_primary "${_selector:-}")"
+
     return 1
   fi
 
@@ -17119,6 +17141,7 @@ Can't show archives. Export archive and expand to edit.\\n"
         cd "${_CURRENT_WORKING_DIR}"
 
         _defer "_browse" "${_target_path}/"
+
         return 0
       elif _command_exists "ranger" && [[ "${_tool:-ranger}"  == "ranger" ]]
       then
@@ -17277,6 +17300,7 @@ Can't show archives. Export archive and expand to edit.\\n"
       ((_print_output)) && _browse_arguments+=("--print")
 
       _defer "_browse" "${_browse_arguments[@]:-}"
+
       return 0
     elif ((_render))                &&
          _command_exists "pandoc"   &&
@@ -18227,10 +18251,12 @@ HEREDOC
         if [[   "${__list_item:-}" =~ ^0\ items.  ]]
         then
           printf "%s\\n<br>\\n" "${__list_item}"
+
           break
         elif [[ "${__list_item:-}" =~ Not\ found  ]]
         then
           printf "%s\\n<br>\\n" "${__list_item//\ in*:/:}"
+
           break
         fi
 
@@ -20181,6 +20207,7 @@ HEREDOC
 Install \`ncat\` for full browsing and linking:
 $(_color_primary "https://nmap.org/ncat/")
 HEREDOC
+
     exit 0
   fi
 
@@ -21752,6 +21779,7 @@ HEREDOC
           case "${_selected_push_option:-}" in
             1)
               _show_branch_selection_prompt=1
+
               break
               ;;
             2)
