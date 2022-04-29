@@ -680,6 +680,76 @@ localhost:6789/\?--limit=11${_AMP}--columns=.*\"\>\<span\ class=\"muted\"\>❯\<
   [[ !  "${output}"  =~ next\ ❯                     ]]
 }
 
+@test "'browse -<limit>' paginates list." {
+  {
+    "${_NB}" init
+
+    declare __number=
+    for     __number in One Two Three Four Five Six Seven Eight Nine Ten
+    do
+      declare _content="Example content."
+
+      case "${__number}" in
+        One)
+          _content+=" [[Title Two]] • #example"
+          ;;
+        Two|Three|Six|Seven|Nine)
+          _content+=" #example"
+          ;;
+      esac
+
+      "${_NB}" add  "File ${__number}.md" \
+        --title     "Title ${__number}"   \
+        --content   "${_content}"
+    done
+
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" notebooks add "Sample Notebook"
+    "${_NB}" notebooks add "Test Notebook"
+
+    "${_NB}" notebooks rename "home" "Demo Notebook"
+
+    [[    -d "${NB_DIR}/Demo Notebook"  ]]
+    [[ !  -e "${NB_DIR}/home"           ]]
+
+    sleep 1
+  }
+
+  run "${_NB}" browse --print -2
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  == 0                                                  ]]
+  [[ "${output}"  =~ \<\!DOCTYPE\ html\>                                ]]
+
+  [[ "${output}"  =~ \<title\>nb\ browse\ Demo\\\ Notebook:\</title\>   ]]
+
+  printf "%s\\n" "${output}" | grep       -q  \
+"<nav class=\"header-crumbs\"><strong><a.* href=\"//localhost:6789/?--limit=2&--columns=.*\">"
+  printf "%s\\n" "${output}" | grep       -q  \
+"><a.* href=\"//localhost:6789/?--limit=2&--columns=.*\"><span class=\"muted\">❯</span>nb</a>"
+  printf "%s\\n" "${output}" | grep       -q  \
+"<span class=\"muted\">·</span> <a.* href=\"//localhost:6789/Demo%20Notebook:?--limit=2&--columns=.*\">"
+
+  printf "%s\\n" "${output}" | grep       -q  \
+"Demo Notebook</a> <span class=\"muted\">:</span> <a rel=\"noopener noreferrer\" href=\"//local"
+
+  printf "%s\\n" "${output}" | grep       -q  \
+"host:6789/Demo Notebook:?--limit=2&--columns=.*&--add\">+</a></strong></nav>"
+
+  printf "%s\\n" "${output}" | grep       -q  \
+"//localhost:6789/Demo%20Notebook:10?--limit=2&--columns=.*\" class=\"list-item\">"
+  printf "%s\\n" "${output}" | grep       -q  \
+"//localhost:6789/Demo%20Notebook:9?--limit=2&--columns=.*\" class=\"list-item\">"
+
+  printf "%s\\n" "${output}" | grep   -v  -q  \
+"//localhost:6789/Demo%20Notebook:8?--limit=2&--columns=.*\" class=\"list-item\">"
+
+  printf "%s\\n" "${output}" | grep       -q  \
+"//localhost:6789/Demo%20Notebook:?--limit=2&--columns=.*&--page=2\">next ❯"
+}
+
 @test "'browse' paginates lists with -n <limit>." {
   {
     "${_NB}" init

@@ -20161,17 +20161,24 @@ HEREDOC
         _force_terminal_request=1
         ;;
       -*)
-        _subcommand_options+=("${1:-}")
-
-        if [[ "${1:-}" =~ ^-- ]] && _option_value_is_present "${2:-}"
+        if [[ "${1:-}" =~ ^-+[0-9]+$  ]]
         then
-          _subcommand_options+=("${2:-}")
+          _browse_limit="${1##*-}"
 
-          shift
+          _subcommand_options+=(--limit "${_browse_limit:-}")
+        else
+          _subcommand_options+=("${1:-}")
+
+          if [[ "${1:-}" =~ ^-- ]] && _option_value_is_present "${2:-}"
+          then
+            _subcommand_options+=("${2:-}")
+
+            shift
+          fi
         fi
         ;;
       *)
-        if [[ -z "${_selector:-}" ]]
+        if [[ -z "${_selector:-}"     ]]
         then
           _selector="${1:-}"
         fi
