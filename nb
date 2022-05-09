@@ -6961,12 +6961,13 @@ _notebooks() {
           fi
           ;;
         *)
-          if   [[ -z "${_name:-}"           ]]
-          then
-            _name="${1:-}"
-          elif [[ -z "${_remote_url:-}"     ]]
+          if _string_is_url "${1:-}"
           then
             _remote_url="${1:-}"
+          elif [[ -z "${_name:-}"           ]] &&
+               [[ -z "${_remote_url:-}"     ]]
+          then
+            _name="${1:-}"
           elif [[ -z "${_remote_branch:-}"  ]]
           then
             _remote_branch="${1:-}"
@@ -6977,30 +6978,53 @@ _notebooks() {
       shift
     done
 
-    if [[ -z "${_name:-}"             ]]
+    if [[ -z "${_name:-}"             ]] &&
+       [[ -z "${_remote_url:-}"       ]]
     then
       _exit_1 _help notebooks
     fi
 
-    _notebooks_validate_name "${_name}"
-
-    if [[ -e "${NB_DIR}/${_name}"     ]]
-    then
-      _exit_1 printf "Already exists: %s\\n" "$(_color_primary "${_name}")"
-    fi
-
     if   [[ -n "${_remote_url:-}"     ]]
     then
+      local _git_options=(
+        --no-local
+        --single-branch
+      )
+
       if [[ -n "${_remote_branch:-}"  ]]
       then
-        git clone --no-local --single-branch --branch "${_remote_branch:-}" \
-          "${_remote_url}"                                                  \
+        if [[ -z "${_name:-}"         ]]
+        then
+          _name="${_remote_branch:-}"
+        fi
+
+        _git_options+=(--branch "${_remote_branch:-}")
+      fi
+    fi
+
+    if [[ -n "${_name:-}"             ]]
+    then
+      _notebooks_validate_name "${_name}"
+
+      if [[ -e "${NB_DIR}/${_name}"   ]]
+      then
+        _exit_1 printf "Already exists: %s\\n" "$(_color_primary "${_name}")"
+      fi
+    fi
+
+    if [[ -n "${_remote_url:-}"       ]]
+    then
+      if [[ -n "${_name:-}"           ]]
+      then
+        git clone "${_git_options[@]:-}"  \
+          "${_remote_url}"                \
           "${NB_DIR}/${_name}"
       else
-        git clone --no-local --single-branch "${_remote_url}" "${NB_DIR}/${_name}"
+        # TODO: prompt
+        _exit_1 _help notebooks
       fi
     else
-      mkdir -p "${NB_DIR}/${_name}"
+      mkdir -p "${NB_DIR}/${_name}"                   &&
         git -C "${NB_DIR}/${_name}" init &>/dev/null  &&
         {
           if ((_author))
@@ -7008,7 +7032,7 @@ _notebooks() {
             _author_arguments+=("${NB_DIR}/${_name}")
             _notebooks author "${_author_arguments[@]:-}"
           fi
-        } &&
+        }                                             &&
         touch "${NB_DIR}/${_name}/.index"             &&
         _temp cache clear                             &&
         _git checkpoint "${NB_DIR}/${_name}" "[nb] Initialize"
