@@ -7032,14 +7032,14 @@ _notebooks() {
       if [[   -d "${NB_DIR}/${__notebook_name}"         ]]  &&
          [[ ! -e "${NB_DIR}/${__notebook_name}/.index"  ]]
       then
-          {
-            if ((_GIT_ENABLED))
-            then
-              git -C "${NB_DIR}/${__notebook_name}" init &>/dev/null
-            fi
-          } && touch "${NB_DIR}/${__notebook_name}/.index"  &&
-          _temp cache clear                                 &&
-          _git checkpoint "${NB_DIR}/${__notebook_name}" "[nb] Initialize"
+        {
+          if ((_GIT_ENABLED))
+          then
+            git -C "${NB_DIR}/${__notebook_name}" init &>/dev/null
+          fi
+        } && touch "${NB_DIR}/${__notebook_name}/.index"    &&
+        _temp cache clear                                   &&
+        _git checkpoint "${NB_DIR}/${__notebook_name}" "[nb] Initialize"
       fi
     done
   }
