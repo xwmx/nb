@@ -16485,7 +16485,7 @@ _search() {
 _alias_subcommand "search" "q"
 _alias_subcommand "search" "grep"
 
-# show · ############################################################### · show
+# show ################################################################### show
 
 _describe_show() {
   cat <<HEREDOC
