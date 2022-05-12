@@ -25,7 +25,7 @@ load test_helper
       <(cat <<HEREDOC
 # Example Domain
 
-<file:///Users/dcal/.dotfiles/vendor/com/github/alphabetum/nb/test/fixtures/example.com.html>
+<${_BOOKMARK_URL:-}>
 
 ## Description
 
@@ -87,7 +87,7 @@ Added:\ .*[.*Example\ Folder/1.*].*\ 🔖\ .*Example\ Folder/two.bookmark.md.*\ 
       <(cat <<HEREDOC
 # Example Domain
 
-<file:///Users/dcal/.dotfiles/vendor/com/github/alphabetum/nb/test/fixtures/example.com.html>
+<${_BOOKMARK_URL:-}>
 
 ## Description
 
@@ -109,7 +109,7 @@ HEREDOC
       <(cat <<HEREDOC
 # Example Domain
 
-<file:///Users/dcal/.dotfiles/vendor/com/github/alphabetum/nb/test/fixtures/example.com.html>
+<${_BOOKMARK_URL:-}>
 
 ## Description
 
@@ -180,7 +180,7 @@ Added:\ .*[.*3.*].*\ 🔖\ .*three.bookmark.md.*\ \"Example\ Domain\" ]]
       <(cat <<HEREDOC
 # Example Domain
 
-<file:///Users/dcal/.dotfiles/vendor/com/github/alphabetum/nb/test/fixtures/example.com.html>
+<${_BOOKMARK_URL:-}>
 
 ## Description
 
