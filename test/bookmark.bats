@@ -10,7 +10,7 @@ load test_helper
 
     "${_NB}" bookmark "${_BOOKMARK_URL}" --filename one
 
-    declare _before_files=
+    declare _before_files=()
     _before_files=($(ls "${NB_DIR}/home/"))
 
     printf "\${_BOOKMARK_URL}:      '%s'\\n"  "${_BOOKMARK_URL:-}"
@@ -54,7 +54,7 @@ HEREDOC
   [[ "${lines[0]}"  =~   \
 Added:\ .*[.*Example\ Folder/1.*].*\ 🔖\ .*Example\ Folder/two.bookmark.md.*\ \"Example\ Domain\" ]]
 
-  declare _after_files=
+  declare _after_files=()
   _after_files=($(ls "${NB_DIR}/home/"))
 
   printf "\${_after_files[*]}: '%s'\\n"  "${_after_files[*]:-}"
@@ -71,7 +71,7 @@ Added:\ .*[.*Example\ Folder/1.*].*\ 🔖\ .*Example\ Folder/two.bookmark.md.*\ 
     "${_NB}" bookmark "${_BOOKMARK_URL}" --filename one
     "${_NB}" bookmark "${_BOOKMARK_URL}" --filename two <<< "y${_NEWLINE}"
 
-    declare _before_files=
+    declare _before_files=()
     _before_files=($(ls "${NB_DIR}/home/"))
 
     printf "\${_BOOKMARK_URL}:      '%s'\\n"  "${_BOOKMARK_URL:-}"
@@ -148,7 +148,7 @@ HEREDOC
   [[ "${lines[5]}"  =~   \
 Added:\ .*[.*3.*].*\ 🔖\ .*three.bookmark.md.*\ \"Example\ Domain\" ]]
 
-  declare _after_files=
+  declare _after_files=()
   _after_files=($(ls "${NB_DIR}/home/"))
 
   printf "\${_after_files[*]}: '%s'\\n"  "${_after_files[*]:-}"
@@ -165,7 +165,7 @@ Added:\ .*[.*3.*].*\ 🔖\ .*three.bookmark.md.*\ \"Example\ Domain\" ]]
 
     "${_NB}" bookmark "${_BOOKMARK_URL}" --filename one
 
-    declare _before_files=
+    declare _before_files=()
     _before_files=($(ls "${NB_DIR}/home/"))
 
     printf "\${_BOOKMARK_URL}:      '%s'\\n"  "${_BOOKMARK_URL:-}"
@@ -218,7 +218,7 @@ HEREDOC
   [[ "${lines[4]}"  =~   \
 Added:\ .*[.*2.*].*\ 🔖\ .*two.bookmark.md.*\ \"Example\ Domain\" ]]
 
-  declare _after_files=
+  declare _after_files=()
   _after_files=($(ls "${NB_DIR}/home/"))
 
   printf "\${_after_files[*]}: '%s'\\n"  "${_after_files[*]:-}"
