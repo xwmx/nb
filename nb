@@ -12774,8 +12774,6 @@ _bookmark() {
       set -o noglob
     ))
 
-    set -o noglob
-
     if ((${#_dupe_matches[@]}))
     then
       if [[ "${#_dupe_matches[@]}" == "1" ]]
