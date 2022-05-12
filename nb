@@ -12693,7 +12693,7 @@ _bookmark() {
 
   local _download_url="${_url}"
   _download_url="$(
-    printf "%s\\n" "${_download_url}"         \
+    printf "%s\\n" "${_download_url}"       \
       | sed 's/https:\/\/twitter.com/https:\/\/mobile.twitter.com/g'
   )"
 
@@ -12734,12 +12734,12 @@ _bookmark() {
 
   local _dupe_search_path="${_notebook_path}"
 
-  if [[ -n "${_relative_folder_path:-}"   ]]
+  if [[ -n "${_relative_folder_path:-}"     ]]
   then
     _dupe_search_path="${_notebook_path}/${_relative_folder_path}"
   fi
 
-  if [[ -d "${_dupe_search_path:-}"       ]]
+  if [[ -d "${_dupe_search_path:-}"         ]]
   then
     local _grep_command=(
       grep -s -e "^<${_download_url}>"
