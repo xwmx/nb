@@ -12697,6 +12697,128 @@ _bookmark() {
       | sed 's/https:\/\/twitter.com/https:\/\/mobile.twitter.com/g'
   )"
 
+  local _relative_folder_path=
+  local _relative_path=
+
+  _relative_folder_path="$(
+    _selector_resolve_folders "${_arguments[0]:-}" --build || :
+  )"
+
+  if [[ -n "${_relative_folder_path:-}"     ]]
+  then
+    _relative_folder_path="${_relative_folder_path}/"
+  fi
+
+  if [[ -z "${_target_filename:-}"          ]]
+  then
+    _relative_path="$(
+      _notebooks current --filename         \
+        "${_relative_folder_path}$(date '+%Y%m%d%H%M%S').bookmark.md"
+    )"
+  else
+    if [[ "${_target_filename}" =~ \.       ]]
+    then
+      _relative_path="$(
+        _notebooks current --filename       \
+          "${_relative_folder_path}${_target_filename}")"
+    else
+      _relative_path="$(
+        _notebooks current --filename       \
+          "${_relative_folder_path}${_target_filename}.bookmark.md"
+      )"
+    fi
+  fi
+
+  local _notebook_path=
+  _notebook_path="$(_notebooks current --path)"
+
+  local _dupe_search_path="${_notebook_path}"
+
+  if [[ -n "${_relative_folder_path:-}"   ]]
+  then
+    _dupe_search_path="${_notebook_path}/${_relative_folder_path}"
+  fi
+
+  if [[ -d "${_dupe_search_path:-}"       ]]
+  then
+    local _grep_command=(
+      grep -s -e "^<${_download_url}>"
+    )
+
+    if ((_GIT_ENABLED))
+    then
+      _grep_command=(
+        git -C "${_notebook_path:-}"  \
+          grep                        \
+          -e "^<${_download_url}>"    \
+          --no-heading                \
+          --color=never
+      )
+    elif _command_exists "rg"
+    then
+      _grep_command=(
+        rg                \
+          --color never   \
+          --no-heading    \
+          --with-filename \
+          -e "^<${_download_url}>"
+      )
+    fi
+
+    local _dupe_matches=()
+    _dupe_matches=($(
+      set +o noglob
+
+      "${_grep_command[@]:-}"  "${_dupe_search_path}/"* 2>/dev/null || :
+
+      set -o noglob
+    ))
+
+    set -o noglob
+
+    if ((${#_dupe_matches[@]}))
+    then
+      if [[ "${#_dupe_matches[@]}" == "1" ]]
+      then
+        printf      \
+  "1 bookmark for this URL exists in this folder:\\n"
+        _print_line \
+  "----------------------------------------------"
+      else
+        printf      \
+"%s bookmarks for this URL exist in this folder:\\n" "${#_dupe_matches[@]}"
+        _print_line \
+"${#_dupe_matches[@]}----------------------------------------------"
+      fi
+
+      local __dupe_match=
+      for   __dupe_match in "${_dupe_matches[@]:-}"
+      do
+        _show --info-line "${__dupe_match%%:*}"
+      done
+
+      _print_line "------------------------------"
+
+      while true
+      do
+        local __yn=
+        IFS='' read -r -e -d $'\n' -p \
+"$(_color_primary "Create another bookmark?") $(_color_brackets "y/N") " __yn
+
+        case "${__yn}" in
+          [Yy]*)
+            break
+            ;;
+          *)
+            printf "Exiting%s\\n" "$(_color_muted "...")"
+
+            exit 0
+            ;;
+        esac
+      done
+    fi
+  fi 1>&2
+
   if ((_request_page))
   then
     if ! _download_from "${_download_url}" "${_temp_file}" ||
@@ -12880,37 +13002,6 @@ _bookmark() {
 
   if [[ -n "${_bookmark_content}"   ]]
   then
-    local _relative_folder_path=
-    local _relative_path=
-
-    _relative_folder_path="$(
-      _selector_resolve_folders "${_arguments[0]:-}" --build || :
-    )"
-
-    if [[ -n "${_relative_folder_path:-}"   ]]
-    then
-      _relative_folder_path="${_relative_folder_path}/"
-    fi
-
-    if [[ -z "${_target_filename:-}"        ]]
-    then
-      _relative_path="$(
-        _notebooks current --filename       \
-          "${_relative_folder_path}$(date '+%Y%m%d%H%M%S').bookmark.md"
-      )"
-    else
-      if [[ "${_target_filename}" =~ \.     ]]
-      then
-        _relative_path="$(
-          _notebooks current --filename     \
-            "${_relative_folder_path}${_target_filename}")"
-      else
-        _relative_path="$(
-          _notebooks current --filename     \
-            "${_relative_folder_path}${_target_filename}.bookmark.md"
-        )"
-      fi
-    fi
 
     local _add_options=("${_relative_path}")
 
