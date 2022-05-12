@@ -12779,9 +12779,9 @@ _bookmark() {
       if [[ "${#_dupe_matches[@]}" == "1" ]]
       then
         printf      \
-  "1 bookmark for this URL exists in this folder:\\n"
-        _print_line \
-  "----------------------------------------------"
+"1 bookmark for this URL exists in this folder:\\n"
+      _print_line   \
+"----------------------------------------------"
       else
         printf      \
 "%s bookmarks for this URL exist in this folder:\\n" "${#_dupe_matches[@]}"
