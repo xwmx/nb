@@ -12770,44 +12770,42 @@ _bookmark() {
     fi
 
     local _dupe_matches=()
-    _dupe_matches=(
-      $(
-        {
-          set +o noglob
+    _dupe_matches=($(
+      {
+        set +o noglob
 
-          "${_grep_command[@]:-}"                 \
-            "${_dupe_search_path}/"*.bookmark.md  \
-            2>/dev/null || :
+        "${_grep_command[@]:-}"                 \
+          "${_dupe_search_path}/"*.bookmark.md  \
+          2>/dev/null || :
 
-          set -o noglob
-        } | {
-          local _current_filename=
-          local _print_match=1
+        set -o noglob
+      } | {
+        local _current_filename=
+        local _print_match=1
 
-          local         __candidate_match=
-          while read -r __candidate_match
-          do
-            if [[ "${_current_filename:-}" != "${__candidate_match%%:*}"  ]]
-            then
-              _current_filename="${__candidate_match%%:*}"
-              _print_match=1
-            fi
+        local         __candidate_match=
+        while read -r __candidate_match
+        do
+          if [[ "${_current_filename:-}" != "${__candidate_match%%:*}"  ]]
+          then
+            _current_filename="${__candidate_match%%:*}"
+            _print_match=1
+          fi
 
-            if [[ "${__candidate_match#*:}" =~ ^##                        ]]
-            then
-              _print_match=0
-            fi
+          if [[ "${__candidate_match#*:}" =~ ^##                        ]]
+          then
+            _print_match=0
+          fi
 
-            if ((_print_match))
-            then
-              printf "%s\\n" "${_current_filename:-}"
+          if ((_print_match))
+          then
+            printf "%s\\n" "${_current_filename:-}"
 
-              _print_match=0
-            fi
-          done
-        }
-      )
-    )
+            _print_match=0
+          fi
+        done
+      }
+    ))
 
     if ((${#_dupe_matches[@]}))
     then
