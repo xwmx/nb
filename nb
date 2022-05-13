@@ -12783,7 +12783,7 @@ _bookmark() {
     local _duplicate_matches=()
     _duplicate_matches=($(
       local _current_filename=
-      local _print_match=1
+      local _include_match=1
 
       local __candidate_match=
       for   __candidate_match in "${_candidate_matches[@]:-}"
@@ -12791,19 +12791,19 @@ _bookmark() {
         if [[ "${_current_filename:-}" != "${__candidate_match%%:*}"  ]]
         then
           _current_filename="${__candidate_match%%:*}"
-          _print_match=1
+          _include_match=1
         fi
 
         if [[ "${__candidate_match#*:}" =~ ^##                        ]]
         then
-          _print_match=0
+          _include_match=0
         fi
 
-        if ((_print_match))
+        if ((_include_match))
         then
           printf "%s\\n" "${_current_filename:-}"
 
-          _print_match=0
+          _include_match=0
         fi
       done
     ))
@@ -12823,10 +12823,10 @@ _bookmark() {
 "${#_duplicate_matches[@]}----------------------------------------------"
       fi
 
-      local __dupe_match=
-      for   __dupe_match in "${_duplicate_matches[@]:-}"
+      local __duplicate_match=
+      for   __duplicate_match in "${_duplicate_matches[@]:-}"
       do
-        _show --info-line "${__dupe_match%%:*}"
+        _show --info-line "${__duplicate_match%%:*}"
       done
 
       _print_line "------------------------------"
