@@ -12781,7 +12781,9 @@ _bookmark() {
     ))
 
     local _duplicate_matches=()
-    _duplicate_matches=($(
+
+    if ((${#_candidate_matches[@]}))
+    then
       local _current_filename=
       local _include_match=1
 
@@ -12801,12 +12803,12 @@ _bookmark() {
 
         if ((_include_match))
         then
-          printf "%s\\n" "${_current_filename:-}"
+          _duplicate_matches+=("${_current_filename:-}")
 
           _include_match=0
         fi
       done
-    ))
+    fi
 
     if ((${#_duplicate_matches[@]}))
     then
