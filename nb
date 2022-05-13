@@ -12742,7 +12742,9 @@ _bookmark() {
   if [[ -d "${_dupe_search_path:-}"         ]]
   then
     local _grep_command=(
-      grep -s -e "^<${_download_url}>"
+      grep -s                         \
+        -e "^<${_download_url}>"      \
+        -e "^##"
     )
 
     if ((_GIT_ENABLED))
@@ -12751,27 +12753,58 @@ _bookmark() {
         git -C "${_notebook_path:-}"  \
           grep                        \
           -e "^<${_download_url}>"    \
+          -e "^##"                    \
           --no-heading                \
           --color=never
       )
     elif _command_exists "rg"
     then
       _grep_command=(
-        rg                \
-          --color never   \
-          --no-heading    \
-          --with-filename \
+        rg                            \
+          --color never               \
+          --no-heading                \
+          --with-filename             \
+          -e "^##"                    \
           -e "^<${_download_url}>"
       )
     fi
 
     local _dupe_matches=()
     _dupe_matches=($(
-      set +o noglob
+      {
+        set +o noglob
 
-      "${_grep_command[@]:-}"  "${_dupe_search_path}/"* 2>/dev/null || :
+        "${_grep_command[@]:-}"                 \
+          "${_dupe_search_path}/"*.bookmark.md  \
+          2>/dev/null || :
 
-      set -o noglob
+        set -o noglob
+      } | {
+        local _current_filename=
+        local _print_match=1
+
+        local         __candidate_match=
+        while read -r __candidate_match
+        do
+          if [[ "${_current_filename:-}" != "${__candidate_match%%:*}"  ]]
+          then
+            _current_filename="${__candidate_match%%:*}"
+            _print_match=1
+          fi
+
+          if [[ "${__candidate_match#*:}" =~ ^##                        ]]
+          then
+            _print_match=0
+          fi
+
+          if ((_print_match))
+          then
+            printf "%s\\n" "${_current_filename:-}"
+
+            _print_match=0
+          fi
+        done
+      }
     ))
 
     if ((${#_dupe_matches[@]}))

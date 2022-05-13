@@ -69,7 +69,37 @@ Added:\ .*[.*Example\ Folder/1.*].*\ 🔖\ .*Example\ Folder/two.bookmark.md.*\ 
     "${_NB}" init
 
     "${_NB}" bookmark "${_BOOKMARK_URL}" --filename one
+
+    "${_NB}" copy "one.bookmark.md" "example.md"
+
     "${_NB}" bookmark "${_BOOKMARK_URL}" --filename two <<< "y${_NEWLINE}"
+
+    cat <<HEREDOC | "${_NB}" add --filename "three.bookmark.md"
+# Example Domain
+
+<https://example.com>
+
+## Description
+
+Example description.
+
+## Comment
+
+<${_BOOKMARK_URL:-}>
+
+## Related
+
+- <${_BOOKMARK_URL:-}>
+
+## Content
+
+# Example Domain
+
+This domain is for use in illustrative examples in documents. You may use this
+domain in literature without prior coordination or asking for permission.
+
+[More information\...](https://www.iana.org/domains/example)
+HEREDOC
 
     declare _before_files=()
     _before_files=($(ls "${NB_DIR}/home/"))
@@ -77,13 +107,37 @@ Added:\ .*[.*Example\ Folder/1.*].*\ 🔖\ .*Example\ Folder/two.bookmark.md.*\ 
     printf "\${_BOOKMARK_URL}:      '%s'\\n"  "${_BOOKMARK_URL:-}"
     printf "\${_before_files[*]}: '%s'\\n"  "${_before_files[*]:-}"
 
-    [[        "${#_before_files[@]}" -eq 2        ]]
+    [[        "${#_before_files[@]}" -eq 4        ]]
+    [[    -f  "${NB_DIR}/home/example.md"         ]]
     [[    -f  "${NB_DIR}/home/one.bookmark.md"    ]]
     [[    -f  "${NB_DIR}/home/two.bookmark.md"    ]]
-    [[ !  -f  "${NB_DIR}/home/three.bookmark.md"  ]]
+    [[    -f  "${NB_DIR}/home/three.bookmark.md"  ]]
+    [[ !  -f  "${NB_DIR}/home/four.bookmark.md"   ]]
 
     diff                                        \
       <(cat "${NB_DIR}/home/one.bookmark.md")   \
+      <(cat <<HEREDOC
+# Example Domain
+
+<${_BOOKMARK_URL:-}>
+
+## Description
+
+Example description.
+
+## Content
+
+# Example Domain
+
+This domain is for use in illustrative examples in documents. You may use this
+domain in literature without prior coordination or asking for permission.
+
+[More information\...](https://www.iana.org/domains/example)
+HEREDOC
+      )
+
+    diff                                        \
+      <(cat "${NB_DIR}/home/example.md")        \
       <(cat <<HEREDOC
 # Example Domain
 
@@ -125,9 +179,39 @@ domain in literature without prior coordination or asking for permission.
 [More information\...](https://www.iana.org/domains/example)
 HEREDOC
       )
+
+    diff                                        \
+      <(cat "${NB_DIR}/home/three.bookmark.md") \
+      <(cat <<HEREDOC
+# Example Domain
+
+<https://example.com>
+
+## Description
+
+Example description.
+
+## Comment
+
+<${_BOOKMARK_URL:-}>
+
+## Related
+
+- <${_BOOKMARK_URL:-}>
+
+## Content
+
+# Example Domain
+
+This domain is for use in illustrative examples in documents. You may use this
+domain in literature without prior coordination or asking for permission.
+
+[More information\...](https://www.iana.org/domains/example)
+HEREDOC
+      )
   }
 
-  run "${_NB}" bookmark "${_BOOKMARK_URL}" --filename three <<< "y${_NEWLINE}"
+  run "${_NB}" bookmark "${_BOOKMARK_URL}" --filename four <<< "y${_NEWLINE}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -142,21 +226,23 @@ HEREDOC
   [[ "${lines[2]}"  =~   \
 .*[.*1.*].*\ 🔖\ .*one.bookmark.md.*\ \"Example\ Domain\"           ]]
   [[ "${lines[3]}"  =~   \
-.*[.*2.*].*\ 🔖\ .*two.bookmark.md.*\ \"Example\ Domain\"           ]]
+.*[.*3.*].*\ 🔖\ .*two.bookmark.md.*\ \"Example\ Domain\"           ]]
   [[ "${lines[4]}"  =~   \
 [^-]------------------------------[^-]                              ]]
   [[ "${lines[5]}"  =~   \
-Added:\ .*[.*3.*].*\ 🔖\ .*three.bookmark.md.*\ \"Example\ Domain\" ]]
+Added:\ .*[.*5.*].*\ 🔖\ .*four.bookmark.md.*\ \"Example\ Domain\"  ]]
 
   declare _after_files=()
   _after_files=($(ls "${NB_DIR}/home/"))
 
   printf "\${_after_files[*]}: '%s'\\n"  "${_after_files[*]:-}"
 
-  [[        "${#_after_files[@]}" -eq 3         ]]
+  [[        "${#_after_files[@]}" -eq 5         ]]
+  [[    -f  "${NB_DIR}/home/example.md"         ]]
   [[    -f  "${NB_DIR}/home/one.bookmark.md"    ]]
   [[    -f  "${NB_DIR}/home/two.bookmark.md"    ]]
   [[    -f  "${NB_DIR}/home/three.bookmark.md"  ]]
+  [[    -f  "${NB_DIR}/home/four.bookmark.md"   ]]
 }
 
 @test "'bookmark <url>' with 1 existing bookmark at notebook root displays prompt." {
