@@ -11046,16 +11046,16 @@ _resolve_links() {
   while ((${#}))
   do
     case "${1:-}" in
-      --col*)         _columns="${2:?}"                 && shift  ;;
-      --browse)       _for_browsing=1                             ;;
+      --col*)     _columns="${2:?}"                 && shift  ;;
+      --browse)   _for_browsing=1                             ;;
       --limit|-n|--num|--number|--per*)
         _limit="${2:?}"
 
         shift
         ;;
-      --page)         _option_value_is_present "${2:-}" && shift  ;;
-      --terminal)     _terminal=1                                 ;;
-      --type)         _input_type="${2:?}"              && shift  ;;
+      --page)     _option_value_is_present "${2:-}" && shift  ;;
+      --terminal) _terminal=1                                 ;;
+      --type)     _input_type="${2:?}"              && shift  ;;
       *)
         if [[ -z "${_notebook_path:-}"  ]]
         then
