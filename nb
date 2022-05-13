@@ -12732,14 +12732,14 @@ _bookmark() {
   local _notebook_path=
   _notebook_path="$(_notebooks current --path)"
 
-  local _dupe_search_path="${_notebook_path}"
+  local _duplicate_search_path="${_notebook_path}"
 
   if [[ -n "${_relative_folder_path:-}"     ]]
   then
-    _dupe_search_path="${_notebook_path}/${_relative_folder_path}"
+    _duplicate_search_path="${_notebook_path}/${_relative_folder_path}"
   fi
 
-  if [[ -d "${_dupe_search_path:-}"         ]]
+  if [[ -d "${_duplicate_search_path:-}"    ]]
   then
     local _grep_command=(
       grep -s                         \
@@ -12769,47 +12769,48 @@ _bookmark() {
       )
     fi
 
-    local _dupe_matches=()
-    _dupe_matches=($(
-      {
-        set +o noglob
+    local _candidate_matches=()
+    _candidate_matches=($(
+      set +o noglob
 
-        "${_grep_command[@]:-}"                 \
-          "${_dupe_search_path}/"*.bookmark.md  \
-          2>/dev/null || :
+      "${_grep_command[@]:-}"                     \
+        "${_duplicate_search_path}/"*.bookmark.md \
+        2>/dev/null || :
 
-        set -o noglob
-      } | {
-        local _current_filename=
-        local _print_match=1
-
-        local         __candidate_match=
-        while read -r __candidate_match
-        do
-          if [[ "${_current_filename:-}" != "${__candidate_match%%:*}"  ]]
-          then
-            _current_filename="${__candidate_match%%:*}"
-            _print_match=1
-          fi
-
-          if [[ "${__candidate_match#*:}" =~ ^##                        ]]
-          then
-            _print_match=0
-          fi
-
-          if ((_print_match))
-          then
-            printf "%s\\n" "${_current_filename:-}"
-
-            _print_match=0
-          fi
-        done
-      }
+      set -o noglob
     ))
 
-    if ((${#_dupe_matches[@]}))
+    local _duplicate_matches=()
+    _duplicate_matches=($(
+      local _current_filename=
+      local _print_match=1
+
+      local __candidate_match=
+      for   __candidate_match in "${_candidate_matches[@]:-}"
+      do
+        if [[ "${_current_filename:-}" != "${__candidate_match%%:*}"  ]]
+        then
+          _current_filename="${__candidate_match%%:*}"
+          _print_match=1
+        fi
+
+        if [[ "${__candidate_match#*:}" =~ ^##                        ]]
+        then
+          _print_match=0
+        fi
+
+        if ((_print_match))
+        then
+          printf "%s\\n" "${_current_filename:-}"
+
+          _print_match=0
+        fi
+      done
+    ))
+
+    if ((${#_duplicate_matches[@]}))
     then
-      if [[ "${#_dupe_matches[@]}" == "1" ]]
+      if [[ "${#_duplicate_matches[@]}" == "1" ]]
       then
         printf      \
 "1 bookmark for this URL exists in this folder:\\n"
@@ -12817,13 +12818,13 @@ _bookmark() {
 "----------------------------------------------"
       else
         printf      \
-"%s bookmarks for this URL exist in this folder:\\n" "${#_dupe_matches[@]}"
+"%s bookmarks for this URL exist in this folder:\\n" "${#_duplicate_matches[@]}"
         _print_line \
-"${#_dupe_matches[@]}----------------------------------------------"
+"${#_duplicate_matches[@]}----------------------------------------------"
       fi
 
       local __dupe_match=
-      for   __dupe_match in "${_dupe_matches[@]:-}"
+      for   __dupe_match in "${_duplicate_matches[@]:-}"
       do
         _show --info-line "${__dupe_match%%:*}"
       done
