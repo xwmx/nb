@@ -7020,8 +7020,141 @@ _notebooks() {
           "${_remote_url}"                \
           "${NB_DIR}/${_name}"
       else
-        # TODO: prompt
-        _exit_1 _help notebooks
+        local _current_notebook_path=
+        _current_notebook_path="$(_notebooks current --path)"
+
+        local _remote_branches=()
+        _remote_branches=($(
+          git -C "${_current_notebook_path}" ls-remote  \
+            --heads "${_remote_url:-}"                  \
+            2>/dev/null                                 \
+            | LC_ALL=C sed "s/.*\///g"
+        ))
+
+        if ! ((${#_remote_branches[@]}))
+        then
+          _warn printf "No remote branches found.\\n"
+
+          return 1
+        elif [[ "${#_remote_branches[@]}" -eq 1 ]]
+        then
+          local _candidate_name=
+
+          if _contains "${_remote_branches[0]:-}" "main" "master"
+          then
+            _candiate_name="${_remote_url##*/}"
+          else
+            _candiate_name="${_remote_branches[0]:-}"
+          fi
+
+          local _unique_notebook_path=
+          _unique_notebook_path="$(
+            _get_unique_path "${NB_DIR}/${_candiate_name:-}"
+          )"
+
+          _name="${_unique_notebook_path##*/}"
+
+          git clone "${_git_options[@]:-}"  \
+            "${_remote_url}"                \
+            "${NB_DIR}/${_name}"
+        else
+          # TODO
+          printf      "Choose a remote branch:\\n"
+
+          _print_line "-----------------------"
+
+          local i=
+          for ((i=0; i < "${#_remote_branches[@]}"; i++))
+          do
+            printf "%s %s\\n"                   \
+              "$(_color_brackets "$((i+1))")"   \
+              "${_remote_branches[${i}]:-}"
+          done
+
+          local _selected_branch=
+
+          while true
+          do
+            IFS='' read -r -e -d $'\n' -p                                               \
+              "$(_color_primary "Choose a branch") or $(_color_primary "q") to quit: "  \
+              _selected_branch
+
+            case "${_selected_branch:-}" in
+              q*|exit)
+                printf "Exiting%s\\n" "$(_color_muted "...")"
+
+                exit 0
+                ;;
+              [0-9]*)
+                if [[ -n "${_remote_branches[$((_selected_branch - 1))]:-}" ]]
+                then
+                  _selected_branch="${_remote_branches[$((_selected_branch - 1))]:-}"
+
+                  break
+                fi
+                ;;
+              *)
+                if _contains "${_selected_branch}" "${_remote_branches[@]}"
+                then
+                  break
+                fi
+            esac
+          done
+
+          local _target_notebook_name="$(
+            _get_unique_path "${NB_DIR}/${_selected_branch}"
+          )"
+
+          _print_line "------------------------------------"
+
+          local _bk_name=  && _bk_name="$(_color_brackets "${_target_notebook_name}")"
+          local _hi_enter= && _hi_enter="$(_color_primary 'enter')"
+          local _hi_q=     && _hi_q="$(_color_primary 'q')"
+          local _hi_type=  && _hi_type="$(_color_primary 'type')"
+
+          cat <<HEREDOC
+Press ${_hi_enter} to use the selected name, ${_hi_type} a new name, or press ${_hi_q} to quit.
+
+HEREDOC
+
+          while true
+          do
+            local _target_notebook_prompt_response=
+
+            IFS='' read -r -e -d $'\n' -p                     \
+              "Name ${_bk_name}: "                            \
+              _target_notebook_prompt_response
+
+            case "${_target_notebook_prompt_response:-}" in
+              '')
+                break
+                ;;
+              q*|exit)
+                printf "Exiting%s\\n" "$(_color_muted "...")"
+
+                exit 0
+                ;;
+              *)
+                _target_notebook_name="${_target_notebook_prompt_response}"
+
+                break
+                ;;
+            esac
+          done
+
+          local _unique_notebook_path=
+          _unique_notebook_path="$(
+            _get_unique_path "${NB_DIR}/${_target_notebook_name:-}"
+          )"
+
+          _name="${_unique_notebook_path##*/}"
+
+          git clone "${_git_options[@]:-}"    \
+            "${_remote_url}"                  \
+            --branch "${_selected_branch:-}"  \
+            "${NB_DIR}/${_name}"
+
+        fi
       fi
     else
       mkdir -p "${NB_DIR}/${_name}"                   &&
