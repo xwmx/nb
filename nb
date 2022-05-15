@@ -6936,7 +6936,7 @@ _notebooks() {
   # _notebooks_add()
   #
   # Usage:
-  #   _notebooks_add <name> [<remote_url> [<branch>]] [--author]
+  #   _notebooks_add ([<name>] [<remote_url> [<branch>]]) [--author]
   #                  [--email <email>] [--name <name>]
   _notebooks_add() {
     local _author=0
