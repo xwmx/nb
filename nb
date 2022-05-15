@@ -8589,7 +8589,9 @@ HEREDOC
       "$(printf "%s\\n" "${1:-}" | tr '[:upper:]' '[:lower:]')" \
       "${_RESERVED_NOTEBOOK_NAMES[@]}"
     then
-      _exit_1 printf "Name reserved: %s\\n" "$(_color_primary "${1:-}")"
+      _warn printf "Name reserved: %s\\n" "$(_color_primary "${1:-}")"
+
+      return 1
     else
       return 0
     fi
