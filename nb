@@ -6942,6 +6942,7 @@ _notebooks() {
     local _author=0
     local _author_arguments=()
     local _name=
+    local _print_default_feedback=1
     local _remote_branch=
     local _remote_url=
 
@@ -7058,7 +7059,8 @@ _notebooks() {
             "${_remote_url}"                \
             "${NB_DIR}/${_name}"
         else
-          # TODO
+          _print_default_feedback=0
+
           printf      "Choose a remote branch:\\n"
 
           _print_line "-----------------------"
@@ -7071,90 +7073,123 @@ _notebooks() {
               "${_remote_branches[${i}]:-}"
           done
 
-          local _selected_branch=
+          printf "%s All Branches\\n"           \
+            "$(_color_brackets "$((i+1))")"
+
+          local _branch_prompt_response=
+          local _clone_all=0
 
           while true
           do
             IFS='' read -r -e -d $'\n' -p                                               \
               "$(_color_primary "Choose a branch") or $(_color_primary "q") to quit: "  \
-              _selected_branch
+              _branch_prompt_response
 
-            case "${_selected_branch:-}" in
+            case "${_branch_prompt_response:-}" in
               q*|exit)
                 printf "Exiting%s\\n" "$(_color_muted "...")"
 
                 exit 0
                 ;;
               [0-9]*)
-                if [[ -n "${_remote_branches[$((_selected_branch - 1))]:-}" ]]
+                if [[ -n "${_remote_branches[$((_branch_prompt_response - 1))]:-}" ]]
                 then
-                  _selected_branch="${_remote_branches[$((_selected_branch - 1))]:-}"
+                  _branch_prompt_response="${_remote_branches[$((_branch_prompt_response - 1))]:-}"
+
+                  break
+                elif [[ "${_branch_prompt_response}" -eq "$((${#_remote_branches[@]} + 1))" ]]
+                then
+                  _clone_all=1
 
                   break
                 fi
                 ;;
               *)
-                if _contains "${_selected_branch}" "${_remote_branches[@]}"
+                if _contains "${_branch_prompt_response}" "${_remote_branches[@]}"
                 then
                   break
                 fi
             esac
           done
 
-          local _target_notebook_name=
-          _target_notebook_name="$(
-            _get_unique_path "${NB_DIR}/${_selected_branch}"
-          )"
+          local _selected_branches=()
 
-          _print_line "------------------------------------"
+          if ((_clone_all))
+          then
+            _selected_branches=("${_remote_branches[@]}")
+          else
+            _selected_branches=("${_branch_prompt_response}")
+          fi
 
-          local _bk_name=  && _bk_name="$(_color_brackets "${_target_notebook_name}")"
-          local _hi_enter= && _hi_enter="$(_color_primary 'enter')"
-          local _hi_q=     && _hi_q="$(_color_primary 'q')"
-          local _hi_type=  && _hi_type="$(_color_primary 'type')"
+          local __selected_branch=
+          for   __selected_branch in "${_selected_branches[@]:-}"
+          do
+            local _target_notebook_name=
 
-          cat <<HEREDOC
+            if _contains "${__selected_branch:-}" "main" "master"
+            then
+              _target_notebook_name="${_remote_url##*/}"
+            else
+              _target_notebook_name="${__selected_branch:-}"
+            fi
+
+            local _target_notebook_path=
+            _target_notebook_path="$(
+              _get_unique_path "${NB_DIR}/${_target_notebook_name}"
+            )"
+
+            _target_notebook_name="${_target_notebook_path##*/}"
+
+            _print_line "------------------------------------"
+
+            local _bk_name=  && _bk_name="$(_color_brackets "${_target_notebook_name}")"
+            local _hi_enter= && _hi_enter="$(_color_primary 'enter')"
+            local _hi_q=     && _hi_q="$(_color_primary 'q')"
+            local _hi_type=  && _hi_type="$(_color_primary 'type')"
+
+            cat <<HEREDOC
 Press ${_hi_enter} to use the selected name, ${_hi_type} a new name, or press ${_hi_q} to quit.
 
 HEREDOC
 
-          while true
-          do
-            local _target_notebook_prompt_response=
+            while true
+            do
+              local _target_notebook_prompt_response=
 
-            IFS='' read -r -e -d $'\n' -p                     \
-              "Name ${_bk_name}: "                            \
-              _target_notebook_prompt_response
+              IFS='' read -r -e -d $'\n' -p                     \
+                "Name ${_bk_name}: "                            \
+                _target_notebook_prompt_response
 
-            case "${_target_notebook_prompt_response:-}" in
-              '')
-                break
-                ;;
-              q*|exit)
-                printf "Exiting%s\\n" "$(_color_muted "...")"
+              case "${_target_notebook_prompt_response:-}" in
+                '')
+                  break
+                  ;;
+                q*|exit)
+                  printf "Exiting%s\\n" "$(_color_muted "...")"
 
-                exit 0
-                ;;
-              *)
-                _target_notebook_name="${_target_notebook_prompt_response}"
+                  exit 0
+                  ;;
+                *)
+                  _target_notebook_name="${_target_notebook_prompt_response}"
 
-                break
-                ;;
-            esac
-          done
+                  break
+                  ;;
+              esac
+            done
 
-          local _unique_notebook_path=
-          _unique_notebook_path="$(
-            _get_unique_path "${NB_DIR}/${_target_notebook_name:-}"
-          )"
+            local _unique_notebook_path=
+            _unique_notebook_path="$(
+              _get_unique_path "${NB_DIR}/${_target_notebook_name:-}"
+            )"
 
-          _name="${_unique_notebook_path##*/}"
+            _name="${_unique_notebook_path##*/}"
 
-          git clone "${_git_options[@]:-}"    \
-            "${_remote_url}"                  \
-            --branch "${_selected_branch:-}"  \
-            "${NB_DIR}/${_name}"
-
+            git clone "${_git_options[@]:-}"    \
+              "${_remote_url}"                  \
+              --branch "${__selected_branch:-}" \
+              "${NB_DIR}/${_name}"              &&
+              printf "Added notebook: %s\\n" "$(_color_primary "${_name}")"
+          done && return 0
         fi
       fi
     else
@@ -7170,7 +7205,9 @@ HEREDOC
         touch "${NB_DIR}/${_name}/.index"             &&
         _temp cache clear                             &&
         _git checkpoint "${NB_DIR}/${_name}" "[nb] Initialize"
-    fi && printf "Added notebook: %s\\n" "$(_color_primary "${_name}")"
+      fi                            &&
+        ((_print_default_feedback)) &&
+        printf "Added notebook: %s\\n" "$(_color_primary "${_name}")"
   }
 
   # Usage: _notebooks_add_new [<notebook>...]
