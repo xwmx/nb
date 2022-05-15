@@ -7101,7 +7101,8 @@ _notebooks() {
             esac
           done
 
-          local _target_notebook_name="$(
+          local _target_notebook_name=
+          _target_notebook_name="$(
             _get_unique_path "${NB_DIR}/${_selected_branch}"
           )"
 
