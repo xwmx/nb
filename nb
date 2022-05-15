@@ -6943,7 +6943,7 @@ _notebooks() {
     local _author_arguments=()
     local _name=
     local _print_default_feedback=1
-    local _remote_branch=
+    local _selected_remote_branches=()
     local _remote_url=
 
     while ((${#}))
@@ -6965,13 +6965,12 @@ _notebooks() {
           if _string_is_url "${1:-}"
           then
             _remote_url="${1:-}"
-          elif [[ -z "${_name:-}"           ]] &&
-               [[ -z "${_remote_url:-}"     ]]
+          elif [[ -z "${_name:-}"         ]] &&
+               [[ -z "${_remote_url:-}"   ]]
           then
             _name="${1:-}"
-          elif [[ -z "${_remote_branch:-}"  ]]
-          then
-            _remote_branch="${1:-}"
+          else
+            _selected_remote_branches+=("${1:-}")
           fi
           ;;
       esac
@@ -6979,147 +6978,149 @@ _notebooks() {
       shift
     done
 
-    if [[ -z "${_name:-}"             ]] &&
-       [[ -z "${_remote_url:-}"       ]]
+    if [[ -z "${_name:-}"                 ]] &&
+       [[ -z "${_remote_url:-}"           ]]
     then
       _exit_1 _help notebooks
     fi
 
-    if   [[ -n "${_remote_url:-}"     ]]
+    if   [[ -n "${_remote_url:-}"         ]]
     then
       local _git_options=(
         --no-local
         --single-branch
       )
-
-      if [[ -n "${_remote_branch:-}"  ]]
-      then
-        if [[ -z "${_name:-}"         ]]
-        then
-          _name="${_remote_branch:-}"
-        fi
-
-        _git_options+=(--branch "${_remote_branch:-}")
-      fi
     fi
 
-    if [[ -n "${_name:-}"             ]]
+    if [[ -n "${_name:-}"                 ]]
     then
       _notebooks_validate_name "${_name}"
 
-      if [[ -e "${NB_DIR}/${_name}"   ]]
+      if [[ -e "${NB_DIR}/${_name}"       ]]
       then
         _exit_1 printf "Already exists: %s\\n" "$(_color_primary "${_name}")"
       fi
     fi
 
-    if [[ -n "${_remote_url:-}"       ]]
+    if [[ -n "${_remote_url:-}"           ]]
     then
-      if [[ -n "${_name:-}"           ]]
+      if [[ -n "${_name:-}"               ]] &&
+         ! ((${#_selected_remote_branches[@]}))
       then
-        git clone "${_git_options[@]:-}"  \
-          "${_remote_url}"                \
+        git clone "${_git_options[@]:-}"                  \
+          "${_remote_url}"                                \
+          "${NB_DIR}/${_name}"
+      elif [[ -n "${_name:-}"                             ]] &&
+           [[ "${#_selected_remote_branches[@]}" -eq 1    ]]
+      then
+        git clone "${_git_options[@]:-}"                  \
+          --branch "${_selected_remote_branches[0]:-}"    \
+          "${_remote_url}"                                \
           "${NB_DIR}/${_name}"
       else
         local _current_notebook_path=
         _current_notebook_path="$(_notebooks current --path)"
 
         local _remote_branches=()
-        _remote_branches=($(
-          git -C "${_current_notebook_path}" ls-remote  \
-            --heads "${_remote_url:-}"                  \
-            2>/dev/null                                 \
-            | LC_ALL=C sed "s/.*\///g"
-        ))
+
+        if [[ -n "${_selected_remote_branches[*]:-}" ]]
+        then
+          _remote_branches=("${_selected_remote_branches[@]}")
+        else
+          _remote_branches=($(
+            git -C "${_current_notebook_path}" ls-remote  \
+              --heads "${_remote_url:-}"                  \
+              2>/dev/null                                 \
+              | LC_ALL=C sed "s/.*\///g"
+          ))
+        fi
 
         if ! ((${#_remote_branches[@]}))
         then
           _warn printf "No remote branches found.\\n"
 
           return 1
-        elif [[ "${#_remote_branches[@]}" -eq 1 ]]
-        then
-          local _candidate_name=
-
-          if _contains "${_remote_branches[0]:-}" "main" "master"
-          then
-            _candiate_name="${_remote_url##*/}"
-          else
-            _candiate_name="${_remote_branches[0]:-}"
-          fi
-
-          local _unique_notebook_path=
-          _unique_notebook_path="$(
-            _get_unique_path "${NB_DIR}/${_candiate_name:-}"
-          )"
-
-          _name="${_unique_notebook_path##*/}"
-
-          git clone "${_git_options[@]:-}"    \
-            "${_remote_url}"                  \
-            "${NB_DIR}/${_name}"
         else
-          _print_default_feedback=0
-
-          printf      "Choose a remote branch:\\n"
-
-          _print_line "-----------------------"
-
-          local i=
-          for ((i=0; i < "${#_remote_branches[@]}"; i++))
-          do
-            printf "%s %s\\n"                 \
-              "$(_color_brackets "$((i+1))")" \
-              "${_remote_branches[${i}]:-}"
-          done
-
-          printf "%s All Branches\\n"         \
-            "$(_color_brackets "$((i+1))")"
-
-          local _branch_prompt_response=
-          local _clone_all=0
-
-          while true
-          do
-            IFS='' read -r -e -d $'\n' -p                                               \
-              "$(_color_primary "Choose a branch") or $(_color_primary "q") to quit: "  \
-              _branch_prompt_response
-
-            case "${_branch_prompt_response:-}" in
-              q*|exit)
-                printf "Exiting%s\\n" "$(_color_muted "...")"
-
-                exit 0
-                ;;
-              [0-9]*)
-                if [[ -n "${_remote_branches[$((_branch_prompt_response - 1))]:-}" ]]
-                then
-                  _branch_prompt_response="${_remote_branches[$((_branch_prompt_response - 1))]:-}"
-
-                  break
-                elif [[ "${_branch_prompt_response}" -eq "$((${#_remote_branches[@]} + 1))" ]]
-                then
-                  _clone_all=1
-
-                  break
-                fi
-                ;;
-              *)
-                if _contains "${_branch_prompt_response}" "${_remote_branches[@]}"
-                then
-                  break
-                fi
-            esac
-          done
-
           local _selected_branches=()
 
-          if ((_clone_all))
+          _print_default_feedback=0
+
+
+          if ! ((${#_selected_remote_branches[@]})) &&
+             [[ "${#_remote_branches[@]}" -eq 1 ]]
           then
-            _selected_branches=("${_remote_branches[@]}")
-          else
-            _selected_branches=("${_branch_prompt_response}")
+            _selected_remote_branches=("${_remote_branches[0]:-}")
           fi
+
+          if ! ((${#_selected_remote_branches[@]}))
+          then
+            printf      "Choose a remote branch:\\n"
+
+            _print_line "-----------------------"
+
+            local i=
+            for ((i=0; i < "${#_remote_branches[@]}"; i++))
+            do
+              printf "%s %s\\n"                 \
+                "$(_color_brackets "$((i+1))")" \
+                "${_remote_branches[${i}]:-}"
+            done
+
+            printf "%s All Branches\\n"         \
+              "$(_color_brackets "$((i+1))")"
+
+            local _branch_prompt_response=
+            local _clone_all=0
+
+            while true
+            do
+              IFS='' read -r -e -d $'\n' -p                                               \
+                "$(_color_primary "Choose a branch") or $(_color_primary "q") to quit: "  \
+                _branch_prompt_response
+
+              case "${_branch_prompt_response:-}" in
+                q*|exit)
+                  printf "Exiting%s\\n" "$(_color_muted "...")"
+
+                  exit 0
+                  ;;
+                [0-9]*)
+                  if [[ -n "${_remote_branches[$((_branch_prompt_response - 1))]:-}" ]]
+                  then
+                    _branch_prompt_response="${_remote_branches[$((_branch_prompt_response - 1))]:-}"
+
+                    break
+                  elif [[ "${_branch_prompt_response}" -eq "$((${#_remote_branches[@]} + 1))" ]]
+                  then
+                    _clone_all=1
+
+                    break
+                  fi
+                  ;;
+                *)
+                  if _contains "${_branch_prompt_response}" "${_remote_branches[@]}"
+                  then
+                    break
+                  fi
+              esac
+            done
+
+            if ((_clone_all))
+            then
+              _selected_branches=("${_remote_branches[@]:-}")
+            else
+              _selected_branches=("${_branch_prompt_response:-}")
+            fi
+
+            _print_line "------------------------------------"
+          fi
+
+          if ! ((${#_selected_branches[@]}))
+          then
+            _selected_branches=("${_remote_branches[@]:-}")
+          fi
+
+          local _first=1
 
           local __selected_branch=
           for   __selected_branch in "${_selected_branches[@]:-}"
@@ -7140,7 +7141,12 @@ _notebooks() {
 
             _target_notebook_name="${_target_notebook_path##*/}"
 
-            _print_line "------------------------------------"
+            if ((_first))
+            then
+              _first=0
+            else
+              _print_line "------------------------------------"
+            fi
 
             local _bk_name=  && _bk_name="$(_color_brackets "${_target_notebook_name}")"
             local _hi_enter= && _hi_enter="$(_color_primary 'enter')"
