@@ -5789,7 +5789,7 @@ Usage:
           --to-title | --to-todo) [-f | --force]
   nb notebooks [<name> | <query>] [--ar | --archived] [--global] [--local]
                [--names] [--paths] [--unar | --unarchived]
-  nb notebooks add <name> [<remote-url> [<branch>]] [--author]
+  nb notebooks add ([<name>] [<remote-url> [<branch>]]) [--author]
                    [--email <email>] [--name <name>]
   nb notebooks (archive | open | peek | status | unarchive) [<name>]
   nb notebooks author [<name> | <path>] [--email <email>] [--name <name>]
@@ -7223,7 +7223,7 @@ Shortcut Alias:
 Usage:
   nb notebooks [<name> | <query>] [--ar | --archived] [--global] [--local]
                [--names] [--paths] [--unar | --unarchived]
-  nb notebooks add <name> [<remote-url> [<branch>]] [--author]
+  nb notebooks add ([<name>] [<remote-url> [<branch>]]) [--author]
                    [--email <email>] [--name <name>]
   nb notebooks (archive | open | peek | status | unarchive) [<name>]
   nb notebooks author [<name> | <path>] [--email <email>] [--name <name>]
