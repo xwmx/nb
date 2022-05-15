@@ -7055,8 +7055,8 @@ _notebooks() {
 
           _name="${_unique_notebook_path##*/}"
 
-          git clone "${_git_options[@]:-}"  \
-            "${_remote_url}"                \
+          git clone "${_git_options[@]:-}"    \
+            "${_remote_url}"                  \
             "${NB_DIR}/${_name}"
         else
           _print_default_feedback=0
@@ -7068,12 +7068,12 @@ _notebooks() {
           local i=
           for ((i=0; i < "${#_remote_branches[@]}"; i++))
           do
-            printf "%s %s\\n"                   \
-              "$(_color_brackets "$((i+1))")"   \
+            printf "%s %s\\n"                 \
+              "$(_color_brackets "$((i+1))")" \
               "${_remote_branches[${i}]:-}"
           done
 
-          printf "%s All Branches\\n"           \
+          printf "%s All Branches\\n"         \
             "$(_color_brackets "$((i+1))")"
 
           local _branch_prompt_response=
@@ -7156,8 +7156,8 @@ HEREDOC
             do
               local _target_notebook_prompt_response=
 
-              IFS='' read -r -e -d $'\n' -p                     \
-                "Name ${_bk_name}: "                            \
+              IFS='' read -r -e -d $'\n' -p \
+                "Name ${_bk_name}: "        \
                 _target_notebook_prompt_response
 
               case "${_target_notebook_prompt_response:-}" in
