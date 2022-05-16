@@ -8535,7 +8535,8 @@ See Also:
   <a href="#bump">bump</a>&nbsp;·
   <a href="#clip">clip</a>&nbsp;·
   <a href="#ebook">ebook</a>&nbsp;·
-  <a href="#example">example</a>
+  <a href="#example">example</a>&nbsp;·
+  <a href="#weather">weather</a>
 </p>
 
 <p align="center">
@@ -8697,6 +8698,31 @@ Usage:
 
 Description:
   Print "Hello, World!"
+```
+
+#### `weather`
+
+[↑&nbsp;](#plugin-help)
+
+```bash
+nb plugins install https://github.com/xwmx/nb/blob/master/plugins/weather.nb-plugin
+```
+
+```text
+Usage:
+  nb weather [<option>...]
+
+Description:
+  Display weather information from wttr.in.
+
+More Info:
+  https://github.com/chubin/wttr.in
+  https://wttr.in
+
+Examples:
+  nb weather
+  nb weather Tokyo
+  nb weather lax
 ```
 
 ## Specifications
