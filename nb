@@ -3170,7 +3170,6 @@ HEREDOC
 
       read -r -d '' "${_describe_var}"
 
-
       eval "_describe_${1}() { printf \"%s\\n\" \"${!_describe_var:-}\"; }"
     fi
   fi
