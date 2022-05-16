@@ -3163,8 +3163,15 @@ describe() {
       read -r -d '' "____DESCRIBE_${1}" <<HEREDOC
 ${2}
 HEREDOC
+
+      eval "_describe_${1}() { printf \"%s\\n\" \"${2:-}\"; }"
     else # no argument is present, so assume piped input
-      read -r -d '' "____DESCRIBE_${1}"
+      local _describe_var="____DESCRIBE_${1}"
+
+      read -r -d '' "${_describe_var}"
+
+
+      eval "_describe_${1}() { printf \"%s\\n\" \"${!_describe_var:-}\"; }"
     fi
   fi
   set -e
