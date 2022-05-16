@@ -7051,7 +7051,6 @@ _notebooks() {
 
           _print_default_feedback=0
 
-
           if ! ((${#_selected_remote_branches[@]})) &&
              [[ "${#_remote_branches[@]}" -eq 1 ]]
           then
@@ -9486,7 +9485,6 @@ _main "${_ARGUMENTS[@]:-}"
 _build_related_list() {
   local _list_content=
   local _related_identifiers=("${@:-}")
-
 
   local __identifier=
   for   __identifier in "${_related_identifiers[@]:-}"
@@ -19710,7 +19708,6 @@ HEREDOC
     esac
     # turn off case-insensitive matching
     shopt -u nocasematch
-
 
     {
       printf "<p>"
