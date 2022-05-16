@@ -8553,9 +8553,13 @@ See Also:
 
 [↑&nbsp;](#plugin-help)
 
+##### Install
+
 ```bash
 nb plugins install https://github.com/xwmx/nb/blob/master/plugins/backlink.nb-plugin
 ```
+
+##### Help
 
 ```text
 Usage:
@@ -8581,9 +8585,13 @@ Description:
 
 [↑&nbsp;](#plugin-help)
 
+##### Install
+
 ```bash
 nb plugins install https://github.com/xwmx/nb/blob/master/plugins/bump.nb-plugin
 ```
+
+##### Help
 
 ```text
 Usage:
@@ -8607,9 +8615,13 @@ Alias:
 
 [↑&nbsp;](#plugin-help)
 
+##### Install
+
 ```bash
 nb plugins install https://github.com/xwmx/nb/blob/master/plugins/clip.nb-plugin
 ```
+
+##### Help
 
 ```text
 Usage:
@@ -8637,9 +8649,13 @@ Examples:
 
 [↑&nbsp;](#plugin-help)
 
+##### Install
+
 ```bash
 nb plugins install https://github.com/xwmx/nb/blob/master/plugins/ebook.nb-plugin
 ```
+
+##### Help
 
 ```text
 Usage:
@@ -8694,9 +8710,13 @@ More info:
 
 [↑&nbsp;](#plugin-help)
 
+##### Install
+
 ```bash
 nb plugins install https://github.com/xwmx/nb/blob/master/plugins/example.nb-plugin
 ```
+
+##### Help
 
 ```text
 Usage:
@@ -8710,9 +8730,13 @@ Description:
 
 [↑&nbsp;](#plugin-help)
 
+##### Install
+
 ```bash
 nb plugins install https://github.com/xwmx/nb/blob/master/plugins/weather.nb-plugin
 ```
+
+##### Help
 
 ```text
 Usage:
