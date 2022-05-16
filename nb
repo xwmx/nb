@@ -18872,7 +18872,6 @@ HEREDOC
     fi
 
     {
-      # TODO: https://stackoverflow.com/a/15844977
       cat <<HEREDOC
 <h2 align="center">deleting</h2>
 
