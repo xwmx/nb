@@ -7195,6 +7195,8 @@ HEREDOC
 
             _name="${_unique_notebook_path##*/}"
 
+            _notebooks_validate_name "${_name}" || return 1
+
             git clone "${_git_options[@]:-}"    \
               "${_remote_url}"                  \
               --branch "${__selected_branch:-}" \

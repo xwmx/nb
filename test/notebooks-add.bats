@@ -251,6 +251,40 @@ Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\ new\ name,\ or\ pr
   [[ !  "$("${_NB}" git branch --all)"  =~  master|main                   ]]
 }
 
+@test "'notebooks add <remote-url> <branch>' with reserved notebook name as branch name exits with a and prints message." {
+  {
+    _setup_notebooks
+    _setup_remote_repo
+
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" notebooks use "Example Notebook"
+    "${_NB}" git branch -m "readme"
+
+    "${_NB}" add "Example File One.md" --content "Example content one."
+
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+
+    diff                                              \
+      <(git -C "${NB_DIR}/Example Notebook" ls-remote \
+          --heads "${_GIT_REMOTE_URL}"                \
+          | sed "s/.*\///g" || :)                     \
+      <(printf "master\\nreadme\\n")
+  }
+
+  run "${_NB}" notebooks add "${_GIT_REMOTE_URL}" "readme" <<< "${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 1                                     ]]
+
+  [[    "${lines[0]}"   =~  \
+Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\ new\ name,\ or\ press\ .*q.*\ to\ quit\. ]]
+  [[    "${lines[1]}"   =~  !.*\ Name\ reserved:\ .*readme.*    ]]
+
+  [[ ! -e "${NB_DIR}/readme"                                    ]]
+}
+
 @test "'notebooks add <remote-url> <branch>' with no existing notebook with that name exits with 0 and adds a notebook named <branch>." {
   {
     _setup_notebooks
