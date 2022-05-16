@@ -8729,6 +8729,9 @@ Examples:
   nb weather
   nb weather Tokyo
   nb weather lax
+
+Shortcut Alias:
+  nb w
 ```
 
 ## Specifications
