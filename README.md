@@ -352,6 +352,7 @@ the [`nb update`](#update) subcommand.
   <a href="#-interactive-shell"><code>❯</code>&nbsp;Shell</a>&nbsp;·
   <a href="#shortcut-aliases">Shortcuts</a>&nbsp;·
   <a href="#help">Help</a>&nbsp;·
+  <a href="#configuration-variables">Variables</a>&nbsp;·
   <a href="#specifications">Specifications</a>&nbsp;·
   <a href="#tests">Tests</a>
 </p>
@@ -8751,6 +8752,152 @@ Examples:
 Shortcut Alias:
   nb w
 ```
+
+## Configuration Variables
+
+### `$EDITOR`
+
+The terminal editor command for editing items.
+
+### `$NB_AUTO_LIMIT`
+
+Default: '0'
+
+Set to a positive integer to automatically limit `ls` output to the available
+terminal height. Set to a value higher than `1` to limit by an additional
+amount to support multi-line prompts.
+
+### `$NB_AUTO_SYNC`
+
+Default: '1'
+
+When set to '1', each `_git checkpoint()` call will automativally run
+`$_ME sync`. To disable this behavior, set the value to '0'.
+
+### `$NB_COLOR_PRIMARY`
+
+The primary color ANSI color number.
+
+### `$NB_COLOR_SECONDARY`
+
+The secondary color ANSI color number.
+
+### `$NB_COLOR_THEME`
+
+Default: 'nb'
+
+The color theme.
+
+### `$NB_DEFAULT_EXTENSION`
+
+Default: 'md'
+
+Example Values: 'md' 'org'
+
+### `$NB_DIR`
+
+Default: `$HOME/.nb`
+
+The location of the directory that contains the notebooks.
+
+### `$NB_ENCRYPTION_TOOL`
+
+Default: 'openssl'
+
+Supported Values: 'gpg' 'openssl'
+
+### `$NB_FOOTER`
+
+Default: '1'
+
+Supported Values: '0' '1'
+
+### `$NB_GUI_BROWSER`
+
+Default: ''
+
+Example Value: 'firefox'
+
+### `$NB_HEADER`
+
+Default: '2'
+
+Supported Values: '0' '1' '2' '3'
+
+### `$NB_INDICATOR_AUDIO`
+
+Default: '🔉'
+
+### `$NB_INDICATOR_BOOKMARK`
+
+Default: '🔖'
+
+### `$NB_INDICATOR_DOCUMENT`
+
+Default: '📄'
+
+### `$NB_INDICATOR_EBOOK`
+
+Default: '📖'
+
+### `$NB_INDICATOR_ENCRYPTED`
+
+Default: '🔒'
+
+### `$NB_INDICATOR_FOLDER`
+
+Default: '📂'
+
+### `$NB_INDICATOR_IMAGE`
+
+Default: '🌄'
+
+### `$NB_INDICATOR_PINNED`
+
+Default: '📌'
+
+### `$NB_INDICATOR_TODO`
+
+Default: '✔️ '
+
+### `$NB_INDICATOR_TODO_DONE`
+
+Default: '✅'
+
+### `$NB_INDICATOR_VIDEO`
+
+Default: '📹'
+
+### `$NB_LIMIT`
+
+Default: '15'
+
+Supported Values: any positive number
+
+### `$NB_SERVER_HOST`
+
+Default: 'localhost'
+
+### `$NB_SERVER_PORT`
+
+Default: '6789'
+
+### `$NB_SYNTAX_THEME`
+
+Default: 'base16'
+
+Supported Values: Theme names listed with `bat --list-themes`
+
+### `NB_USER_AGENT`
+
+The user agent string used for `curl` or `wget` requests with
+[`bookmark`](#bookmark) and other commands.
+
+### `$NBRC_PATH`
+
+Default: `$HOME/.nbrc`
+
+The location of the .nbrc configuration file.
 
 ## Specifications
 

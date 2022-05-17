@@ -557,8 +557,11 @@ export _GIT_ENABLED="${_GIT_ENABLED:-1}"
 
 # $EDITOR ############################################################# $EDITOR
 
-# Set default $EDITOR if one has not been set.
+# $EDITOR
+#
+# The terminal editor command for editing items.
 export EDITOR="${EDITOR:-}"
+
 __set_editor() {
   local _editors=(
     code
