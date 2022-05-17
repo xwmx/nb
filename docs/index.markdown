@@ -7269,9 +7269,9 @@ Options:
 
 Subcommands:
   (default)  List notebooks.
-  add        Create a new global notebook. When an existing notebook's
-             <remote-url> is specified, create the new global notebook as a
-             clone of <remote-url>.
+  add        Create a new global notebook. When <remote-url> is specified,
+             create the new global notebook as a clone of a selected or
+             specified <branch> from <remote-url>.
              Aliases: `nb notebooks create`, `nb notebooks new`
   archive    Set the current notebook or notebook <name> to "archived" status.
   author     Configure the commit author email and name for the notebook.
