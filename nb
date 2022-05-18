@@ -22875,7 +22875,9 @@ HEREDOC
       then
         return 0
       else
-        _warn printf "%s must be a number.\\n" "${1}"
+        _warn printf                                                \
+          "%s must be a number, \"auto,\" or \"auto+<number>\".\\n" \
+          "${1}"
 
         return 1
       fi
