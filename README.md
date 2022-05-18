@@ -6397,8 +6397,8 @@ Description:
 
     1. https://en.wikipedia.org/wiki/W3m
     2. https://en.wikipedia.org/wiki/Links_(web_browser)
-    4. https://nmap.org/ncat/
-    5. https://pandoc.org/
+    3. https://nmap.org/ncat/
+    4. https://pandoc.org/
 
 Read More:
   https://github.com/xwmx/nb#-browsing
