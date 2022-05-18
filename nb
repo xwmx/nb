@@ -472,15 +472,6 @@ NB_DIR settings prompt:
 HEREDOC
 fi
 
-# $NB_AUTO_LIMIT
-#
-# Default: '0'
-#
-# Set to a positive integer to automatically limit `ls` output to the available
-# terminal height. Set to a value higher than `1` to limit by an additional
-# amount to support multi-line prompts.
-export NB_AUTO_LIMIT="${NB_AUTO_LIMIT:-0}"
-
 # $NB_AUTO_SYNC
 #
 # Default: '1'
@@ -524,13 +515,6 @@ export NB_GUI_BROWSER="${NB_GUI_BROWSER:-}"
 # Supported Values: '0' '1' '2' '3'
 export NB_HEADER="${NB_HEADER:-2}"
 
-# $NB_LIMIT
-#
-# Default: '15'
-#
-# Supported Values: any positive number
-export NB_LIMIT="${NB_LIMIT:-15}"
-
 # $NB_SERVER_HOST
 #
 # Default: 'localhost'
@@ -554,6 +538,38 @@ export NB_SYNTAX_THEME="${NB_SYNTAX_THEME:-base16}"
 #
 # Supported Values: '0' '1'
 export _GIT_ENABLED="${_GIT_ENABLED:-1}"
+
+# limit ################################################################# limit
+
+# $NB_LIMIT
+#
+# Default: '15'
+#
+# Set to a positive number to limit the output of `nb` and `nls` to that value.
+# Set to "auto" to automatically limit output to the current terminal height.
+# Add an auto limit offset for multiline prompts with `auto+<number>`.
+#
+# Supported Values:
+#   - <number>
+#   - auto+<number>
+#   - auto-<number>
+#
+# Example Values:
+#   - 15
+#   - auto
+#   - auto+2
+case "${NB_LIMIT:-}" in
+  auto*)
+    export NB_AUTO_LIMIT="${NB_LIMIT#auto}"
+    NB_AUTO_LIMIT="${NB_AUTO_LIMIT:-1}"
+
+    export NB_LIMIT="${NB_LIMIT}"
+    ;;
+  *)
+    export NB_AUTO_LIMIT=
+    export NB_LIMIT="${NB_LIMIT:-15}"
+  ;;
+esac
 
 # $EDITOR ############################################################# $EDITOR
 
@@ -6578,7 +6594,7 @@ _ls() {
   then
     _list_options+=("--limit" "${_limit}")
   elif ! ((_all))                                       &&
-       ! ((${NB_AUTO_LIMIT:-0}))                        &&
+       [[ -z "${NB_AUTO_LIMIT:-}"                   ]]  &&
        {
          [[ -z "${_selector_relative_path:-}"       ]]  ||
          {
@@ -6623,8 +6639,8 @@ _ls() {
   local _footer=
   local _header=
 
-  if ((${NB_AUTO_LIMIT:-0}))  &&
-     ! ((_all))               &&
+  if [[ -n "${NB_AUTO_LIMIT:-}" ]]  &&
+     ! ((_all))                     &&
      ! _contains "--limit" "${_list_options[@]:-}"
   then
     local _available_lines=0
@@ -23053,8 +23069,16 @@ $(
   _settings_help_items+=("\
     $(_color_secondary " -----")
      The maximum number of notes included in the \`${_ME}\` and \`${_ME} ls\` lists.
+     Set to \`auto\` to automatically limit output to the current terminal height.
+     Add an auto limit offset for multiline prompts with \`auto+<number>\`.
 
-     • Default Value: $(_color_primary "15")")
+     • Default Value: $(_color_primary "15")
+
+     • Example Values:
+
+       15
+       auto
+       auto+2")
 
   _settings_list_items+=("$(_color_brackets '11') nb_dir")
   _settings_help_items+=("\

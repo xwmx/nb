@@ -7892,8 +7892,16 @@ Alias:
 [10] limit
      -----
      The maximum number of notes included in the `nb` and `nb ls` lists.
+     Set to `auto` to automatically limit output to the current terminal height.
+     Add an auto limit offset for multiline prompts with `auto+<number>`.
 
      • Default Value: 15
+
+     • Example Values:
+
+       15
+       auto
+       auto+2
 ```
 
 ##### `nb_dir`
