@@ -23072,13 +23072,13 @@ $(
      Set to \`auto\` to automatically limit output to the current terminal height.
      Add an auto limit offset for multiline prompts with \`auto+<number>\`.
 
-     • Default Value: $(_color_primary "15")
-
      • Example Values:
 
        15
        auto
-       auto+2")
+       auto+2
+
+     • Default Value: $(_color_primary "15")")
 
   _settings_list_items+=("$(_color_brackets '11') nb_dir")
   _settings_help_items+=("\

@@ -7895,13 +7895,13 @@ Alias:
      Set to `auto` to automatically limit output to the current terminal height.
      Add an auto limit offset for multiline prompts with `auto+<number>`.
 
-     • Default Value: 15
-
      • Example Values:
 
        15
        auto
        auto+2
+
+     • Default Value: 15
 ```
 
 ##### `nb_dir`
