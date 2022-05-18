@@ -22835,25 +22835,29 @@ HEREDOC
 
   # Usage: _settings_validate_value (<number> | <name>) <value>
   _settings_validate_value() {
-    if [[ "${1:-}" == 'EDITOR'                ]] ||
+    if [[ "${1:-}" == 'EDITOR'                ]]  ||
        [[ "${1:-}" == 'NB_DEFAULT_EXTENSION'  ]]
     then
       if [[ -n "${2:-}"                       ]]
       then
         return 0
       else
-        _warn printf "%s requires a value.\\n" "${1:-}"
+        _warn printf                \
+          "%s requires a value.\\n" \
+          "${1:-}"
 
         return 1
       fi
-    elif [[ "${1:-}" == 'NB_AUTO_SYNC'        ]] ||
+    elif [[ "${1:-}" == 'NB_AUTO_SYNC'        ]]  ||
          [[ "${1:-}" == 'NB_FOOTER'           ]]
     then
       if [[ "${2:-}" =~ ^0$|^1$               ]]
       then
         return 0
       else
-        _warn printf "%s must be either \"0\" or \"1\".\\n" "${1}"
+        _warn printf                              \
+          "%s must be either \"0\" or \"1\".\\n"  \
+          "${1}"
 
         return 1
       fi
@@ -22863,14 +22867,16 @@ HEREDOC
       then
         return 0
       else
-        _warn printf "%s must be \"0\", \"1\", \"2\", or \"3\".\\n" "${1}"
+        _warn printf                                      \
+          "%s must be \"0\", \"1\", \"2\", or \"3\".\\n"  \
+          "${1}"
 
         return 1
       fi
     elif [[ "${1:-}" == 'NB_LIMIT'            ]]
     then
-      if [[ "${2:-}" =~ ^[0-9]+$              ]] ||
-         [[ "${2:-}" =~ ^auto$                ]] ||
+      if [[ "${2:-}" =~ ^[0-9]+$              ]]  ||
+         [[ "${2:-}" =~ ^auto$                ]]  ||
          [[ "${2:-}" =~ ^auto[+|-][0-9]+$     ]]
       then
         return 0
@@ -22883,14 +22889,16 @@ HEREDOC
       fi
     elif [[ "${1:-}" == 'NB_DIR'              ]]
     then
-      if [[ -z  "${2:-}"                      ]] ||
-         [[ "${2}"   == "/"                   ]] ||
+      if [[ -z  "${2:-}"                      ]]  ||
+         [[ "${2}"   == "/"                   ]]  ||
          {
-           [[   -e "${2}"                     ]] &&
+           [[   -e "${2}"                     ]]  &&
            [[ ! -w "${2}"                     ]]
          }
       then
-        _warn printf "\"%s\" is not a valid location for NB_DIR.\\n" "${2:-}"
+        _warn printf                                      \
+          "\"%s\" is not a valid location for NB_DIR.\\n" \
+          "${2:-}"
 
         return 1
       fi
@@ -22900,19 +22908,21 @@ HEREDOC
       then
         return 0
       else
-        _warn \
-          printf "NB_ENCRYPTION_TOOL must be either \"openssl\" or \"gpg\".\\n"
+        _warn printf \
+          "NB_ENCRYPTION_TOOL must be either \"openssl\" or \"gpg\".\\n"
 
           return 1
       fi
-    elif [[ "${1:-}" == 'NB_COLOR_PRIMARY'    ]] ||
+    elif [[ "${1:-}" == 'NB_COLOR_PRIMARY'    ]]  ||
          [[ "${1:-}" == 'NB_COLOR_SECONDARY'  ]]
     then
       if [[ "${2:-}" =~ ^[0-9]                ]]
       then
         return 0
       else
-        _warn printf "%s must be a number.\\n" "${1}"
+        _warn printf                \
+          "%s must be a number.\\n" \
+          "${1}"
 
         return 1
       fi
@@ -22922,7 +22932,9 @@ HEREDOC
       then
         return 0
       else
-        _warn printf "%s must be one of the available themes.\\n" "${1}"
+        _warn printf                                    \
+          "%s must be one of the available themes.\\n"  \
+          "${1}"
 
         return 1
       fi
@@ -22939,7 +22951,9 @@ HEREDOC
         then
           return 0
         else
-          _warn printf "%s must be one of the available themes.\\n" "${1}"
+          _warn printf                                    \
+            "%s must be one of the available themes.\\n"  \
+            "${1}"
 
           return 1
         fi
