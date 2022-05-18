@@ -560,13 +560,13 @@ export _GIT_ENABLED="${_GIT_ENABLED:-1}"
 #   - auto+2
 case "${NB_LIMIT:-}" in
   auto*)
-    export NB_AUTO_LIMIT="${NB_LIMIT#auto}"
-    NB_AUTO_LIMIT="${NB_AUTO_LIMIT:-1}"
+    export _AUTO_LIMIT="${NB_LIMIT#auto}"
+    _AUTO_LIMIT="${_AUTO_LIMIT:-1}"
 
     export NB_LIMIT="${NB_LIMIT}"
     ;;
   *)
-    export NB_AUTO_LIMIT=
+    export _AUTO_LIMIT=
     export NB_LIMIT="${NB_LIMIT:-15}"
   ;;
 esac
@@ -6594,7 +6594,7 @@ _ls() {
   then
     _list_options+=("--limit" "${_limit}")
   elif ! ((_all))                                       &&
-       [[ -z "${NB_AUTO_LIMIT:-}"                   ]]  &&
+       [[ -z "${_AUTO_LIMIT:-}"                     ]]  &&
        {
          [[ -z "${_selector_relative_path:-}"       ]]  ||
          {
@@ -6624,10 +6624,10 @@ _ls() {
 
   local _display_header_and_footer=0
 
-  if [[ -z "${_arguments[*]:-}"           ]] ||
+  if [[ -z "${_arguments[*]:-}"           ]]  ||
      {
-       [[ "${_selector:-}" =~ /$|:$       ]] &&
-       [[ -n "${_selector_folder_path:-}" ]] &&
+       [[ "${_selector:-}" =~ /$|:$       ]]  &&
+       [[ -n "${_selector_folder_path:-}" ]]  &&
        [[ "${#_arguments[@]}" -le 1       ]]
      }
   then
@@ -6639,8 +6639,8 @@ _ls() {
   local _footer=
   local _header=
 
-  if [[ -n "${NB_AUTO_LIMIT:-}" ]]  &&
-     ! ((_all))                     &&
+  if [[ -n "${_AUTO_LIMIT:-}"             ]]  &&
+     ! ((_all))                               &&
      ! _contains "--limit" "${_list_options[@]:-}"
   then
     local _available_lines=0
@@ -6668,7 +6668,7 @@ _ls() {
       } | wc -l | xargs
     )"
 
-    local _auto_limit_adjustment="$((NB_AUTO_LIMIT + 1))"
+    local _auto_limit_adjustment="$((_AUTO_LIMIT + 1))"
     local _auto_limit_amount=1
 
     _auto_limit_amount="$((
@@ -6695,7 +6695,7 @@ _ls() {
         _list --error-on-empty "${_list_options[@]:-}" 2>&1 >&3 3>&-
       )"
     } 3>&1 || {
-      if [[ -n  "${_arguments[0]:-}"        ]] &&
+      if [[ -n  "${_arguments[0]:-}"        ]]  &&
          [[ !   "${_arguments[0]:-}" =~ ^-- ]]
       then
         local _maybe_notebook_name="${_arguments[0]:-}"
