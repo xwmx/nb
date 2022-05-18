@@ -7891,7 +7891,7 @@ Alias:
 ```text
 [10] limit
      -----
-     The maximum number of notes included in the `nb` and `nb ls` lists.
+     The maximum number of items included in the `nb` and `nb ls` lists.
      Set to `auto` to automatically limit output to the current terminal height.
      Add an auto limit offset for multiline prompts with `auto+<number>`.
 

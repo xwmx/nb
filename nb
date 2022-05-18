@@ -23068,7 +23068,7 @@ $(
   _settings_list_items+=("$(_color_brackets '10') limit")
   _settings_help_items+=("\
     $(_color_secondary " -----")
-     The maximum number of notes included in the \`${_ME}\` and \`${_ME} ls\` lists.
+     The maximum number of items included in the \`${_ME}\` and \`${_ME} ls\` lists.
      Set to \`auto\` to automatically limit output to the current terminal height.
      Add an auto limit offset for multiline prompts with \`auto+<number>\`.
 
