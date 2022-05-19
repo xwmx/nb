@@ -7893,13 +7893,13 @@ Alias:
      -----
      The maximum number of items included in the `nb` and `nb ls` lists.
      Set to `auto` to automatically limit output to the current terminal height.
-     Add an auto limit offset for multiline prompts with `auto+<number>`.
+     Add an auto limit offset for multiline prompts with `auto-<number>`.
 
      • Example Values:
 
        15
        auto
-       auto+2
+       auto-2
 
      • Default Value: 15
 ```
