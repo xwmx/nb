@@ -547,21 +547,21 @@ export _GIT_ENABLED="${_GIT_ENABLED:-1}"
 #
 # Set to a positive number to limit the output of `nb` and `nls` to that value.
 # Set to "auto" to automatically limit output to the current terminal height.
-# Add an auto limit offset for multiline prompts with `auto+<number>`.
+# Add an auto limit offset for multiline prompts with `auto-<number>`.
 #
 # Supported Values:
 #   - <number>
-#   - auto+<number>
+#   - auto-<number>
 #   - auto-<number>
 #
 # Example Values:
 #   - 15
 #   - auto
-#   - auto+2
+#   - auto-2
 case "${NB_LIMIT:-}" in
   auto*)
     export _AUTO_LIMIT="${NB_LIMIT#auto}"
-    _AUTO_LIMIT="${_AUTO_LIMIT:-1}"
+    _AUTO_LIMIT="${_AUTO_LIMIT:-0}"
 
     export NB_LIMIT="${NB_LIMIT}"
     ;;
@@ -6668,12 +6668,12 @@ _ls() {
       } | wc -l | xargs
     )"
 
-    local _auto_limit_adjustment="$((_AUTO_LIMIT + 1))"
+    local _auto_limit_adjustment="$((_AUTO_LIMIT - 2))"
     local _auto_limit_amount=1
 
     _auto_limit_amount="$((
       ${_available_lines:-1}                -
-        ${_header_and_footer_line_count:-0} -
+        ${_header_and_footer_line_count:-0} +
         ${_auto_limit_adjustment:-0}
     ))"
 
@@ -22882,7 +22882,7 @@ HEREDOC
         return 0
       else
         _warn printf                                                \
-          "%s must be a number, \"auto,\" or \"auto+<number>\".\\n" \
+          "%s must be a number, \"auto,\" or \"auto-<number>\".\\n" \
           "${1}"
 
         return 1
@@ -23086,13 +23086,13 @@ $(
     $(_color_secondary " -----")
      The maximum number of items included in the \`${_ME}\` and \`${_ME} ls\` lists.
      Set to \`auto\` to automatically limit output to the current terminal height.
-     Add an auto limit offset for multiline prompts with \`auto+<number>\`.
+     Add an auto limit offset for multiline prompts with \`auto-<number>\`.
 
      • Example Values:
 
        15
        auto
-       auto+2
+       auto-2
 
      • Default Value: $(_color_primary "15")")
 
