@@ -2,7 +2,7 @@
 
 load test_helper
 
-@test "'list --per-page <limit> [--page <number>]' paginates list." {
+@test "'list --limit <limit> [--page <number>]' paginates list." {
   {
     "${_NB}" init
 
@@ -13,21 +13,9 @@ load test_helper
     done
   }
 
-  # --per-page 3, first page
+  # --limit 3, first page
 
-  run "${_NB}" search "title" --list --per-page 3
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-
-  [[ "${status}"    -eq 0                         ]]
-  [[ "${#lines[@]}" -eq 3                         ]]
-
-  [[ "${lines[0]}"  =~  .*[.*8.*].*\ Title\ Eight ]]
-  [[ "${lines[1]}"  =~  .*[.*5.*].*\ Title\ Five  ]]
-  [[ "${lines[2]}"  =~  .*[.*4.*].*\ Title\ Four  ]]
-
-  run "${_NB}" search "title" --list --per-page 3 --page 1
+  run "${_NB}" search "title" --list --limit 3
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -39,7 +27,7 @@ load test_helper
   [[ "${lines[1]}"  =~  .*[.*5.*].*\ Title\ Five  ]]
   [[ "${lines[2]}"  =~  .*[.*4.*].*\ Title\ Four  ]]
 
-  run "${_NB}" search "title" --list --per-page 3 --page 0
+  run "${_NB}" search "title" --list --limit 3 --page 1
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -51,9 +39,21 @@ load test_helper
   [[ "${lines[1]}"  =~  .*[.*5.*].*\ Title\ Five  ]]
   [[ "${lines[2]}"  =~  .*[.*4.*].*\ Title\ Four  ]]
 
-  # --per-page 3 --page 2+
+  run "${_NB}" search "title" --list --limit 3 --page 0
 
-  run "${_NB}" search "title" --list --per-page 3 --page 2
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                         ]]
+  [[ "${#lines[@]}" -eq 3                         ]]
+
+  [[ "${lines[0]}"  =~  .*[.*8.*].*\ Title\ Eight ]]
+  [[ "${lines[1]}"  =~  .*[.*5.*].*\ Title\ Five  ]]
+  [[ "${lines[2]}"  =~  .*[.*4.*].*\ Title\ Four  ]]
+
+  # --limit 3 --page 2+
+
+  run "${_NB}" search "title" --list --limit 3 --page 2
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -65,7 +65,7 @@ load test_helper
   [[ "${lines[1]}"  =~  .*[.*1.*].*\ Title\ One     ]]
   [[ "${lines[2]}"  =~  .*[.*7.*].*\ Title\ Seven   ]]
 
-  run "${_NB}" search "title" --list --per-page 3 --page 3
+  run "${_NB}" search "title" --list --limit 3 --page 3
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -77,7 +77,7 @@ load test_helper
   [[ "${lines[1]}"  =~  .*[.*10.*].*\ Title\ Ten  ]]
   [[ "${lines[2]}"  =~  .*[.*3.*].*\ Title\ Three ]]
 
-  run "${_NB}" search "title" --list --per-page 3 --page 4
+  run "${_NB}" search "title" --list --limit 3 --page 4
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -87,9 +87,9 @@ load test_helper
 
   [[ "${lines[0]}"  =~  .*[.*2.*].*\ Title\ Two   ]]
 
-  # --per-page 5
+  # --limit 5
 
-  run "${_NB}" search "title" --list --per-page 5
+  run "${_NB}" search "title" --list --limit 5
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -103,7 +103,7 @@ load test_helper
   [[ "${lines[3]}"  =~  .*[.*9.*].*\ Title\ Nine  ]]
   [[ "${lines[4]}"  =~  .*[.*1.*].*\ Title\ One   ]]
 
-  run "${_NB}" search "title" --list --per-page 5 --page 2
+  run "${_NB}" search "title" --list --limit 5 --page 2
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -117,7 +117,7 @@ load test_helper
   [[ "${lines[3]}"  =~  .*[.*3.*].*\ Title\ Three ]]
   [[ "${lines[4]}"  =~  .*[.*2.*].*\ Title\ Two   ]]
 
-  run "${_NB}" search "title" --list --per-page 5 --page 3
+  run "${_NB}" search "title" --list --limit 5 --page 3
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"

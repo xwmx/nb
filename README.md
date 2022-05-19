@@ -5789,7 +5789,7 @@ Usage:
           --to-title | --to-todo) [-f | --force]
   nb notebooks [<name> | <query>] [--ar | --archived] [--global] [--local]
                [--names] [--paths] [--unar | --unarchived]
-  nb notebooks add <name> [<remote-url> [<branch>]] [--author]
+  nb notebooks add ([<name>] [<remote-url> [<branch>]]) [--author]
                    [--email <email>] [--name <name>]
   nb notebooks (archive | open | peek | status | unarchive) [<name>]
   nb notebooks author [<name> | <path>] [--email <email>] [--name <name>]
@@ -6397,8 +6397,8 @@ Description:
 
     1. https://en.wikipedia.org/wiki/W3m
     2. https://en.wikipedia.org/wiki/Links_(web_browser)
-    4. https://nmap.org/ncat/
-    5. https://pandoc.org/
+    3. https://nmap.org/ncat/
+    4. https://pandoc.org/
 
 Read More:
   https://github.com/xwmx/nb#-browsing
@@ -7223,7 +7223,7 @@ Shortcut Alias:
 Usage:
   nb notebooks [<name> | <query>] [--ar | --archived] [--global] [--local]
                [--names] [--paths] [--unar | --unarchived]
-  nb notebooks add <name> [<remote-url> [<branch>]] [--author]
+  nb notebooks add ([<name>] [<remote-url> [<branch>]]) [--author]
                    [--email <email>] [--name <name>]
   nb notebooks (archive | open | peek | status | unarchive) [<name>]
   nb notebooks author [<name> | <path>] [--email <email>] [--name <name>]
@@ -7263,9 +7263,9 @@ Options:
 
 Subcommands:
   (default)  List notebooks.
-  add        Create a new global notebook. When an existing notebook's
-             <remote-url> is specified, create the new global notebook as a
-             clone of <remote-url>.
+  add        Create a new global notebook. When <remote-url> is specified,
+             create the new global notebook as a clone of a selected or
+             specified <branch> from <remote-url>.
              Aliases: `nb notebooks create`, `nb notebooks new`
   archive    Set the current notebook or notebook <name> to "archived" status.
   author     Configure the commit author email and name for the notebook.
@@ -7885,7 +7885,15 @@ Alias:
 ```text
 [10] limit
      -----
-     The maximum number of notes included in the `nb` and `nb ls` lists.
+     The maximum number of items included in the `nb` and `nb ls` lists.
+     Set to `auto` to automatically limit output to the current terminal height.
+     Add an auto limit offset for multiline prompts with `auto-<number>`.
+
+     • Example Values:
+
+       15
+       auto
+       auto-2
 
      • Default Value: 15
 ```
@@ -8535,7 +8543,8 @@ See Also:
   <a href="#bump">bump</a>&nbsp;·
   <a href="#clip">clip</a>&nbsp;·
   <a href="#ebook">ebook</a>&nbsp;·
-  <a href="#example">example</a>
+  <a href="#example">example</a>&nbsp;·
+  <a href="#weather">weather</a>
 </p>
 
 <p align="center">
@@ -8546,9 +8555,13 @@ See Also:
 
 [↑&nbsp;](#plugin-help)
 
+##### Install
+
 ```bash
 nb plugins install https://github.com/xwmx/nb/blob/master/plugins/backlink.nb-plugin
 ```
+
+##### Help
 
 ```text
 Usage:
@@ -8574,9 +8587,13 @@ Description:
 
 [↑&nbsp;](#plugin-help)
 
+##### Install
+
 ```bash
 nb plugins install https://github.com/xwmx/nb/blob/master/plugins/bump.nb-plugin
 ```
+
+##### Help
 
 ```text
 Usage:
@@ -8600,9 +8617,13 @@ Alias:
 
 [↑&nbsp;](#plugin-help)
 
+##### Install
+
 ```bash
 nb plugins install https://github.com/xwmx/nb/blob/master/plugins/clip.nb-plugin
 ```
+
+##### Help
 
 ```text
 Usage:
@@ -8630,9 +8651,13 @@ Examples:
 
 [↑&nbsp;](#plugin-help)
 
+##### Install
+
 ```bash
 nb plugins install https://github.com/xwmx/nb/blob/master/plugins/ebook.nb-plugin
 ```
+
+##### Help
 
 ```text
 Usage:
@@ -8687,9 +8712,13 @@ More info:
 
 [↑&nbsp;](#plugin-help)
 
+##### Install
+
 ```bash
 nb plugins install https://github.com/xwmx/nb/blob/master/plugins/example.nb-plugin
 ```
+
+##### Help
 
 ```text
 Usage:
@@ -8697,6 +8726,38 @@ Usage:
 
 Description:
   Print "Hello, World!"
+```
+
+#### `weather`
+
+[↑&nbsp;](#plugin-help)
+
+##### Install
+
+```bash
+nb plugins install https://github.com/xwmx/nb/blob/master/plugins/weather.nb-plugin
+```
+
+##### Help
+
+```text
+Usage:
+  nb weather [<option>...]
+
+Description:
+  Display weather information from wttr.in.
+
+More Info:
+  https://github.com/chubin/wttr.in
+  https://wttr.in
+
+Examples:
+  nb weather
+  nb weather Tokyo
+  nb weather lax
+
+Shortcut Alias:
+  nb w
 ```
 
 ## Specifications

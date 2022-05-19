@@ -2,9 +2,9 @@
 
 load test_helper
 
-# --<limit> ###################################################################
+# --per-page ##################################################################
 
-@test "'nb --limit <limit> [--page <number>]' paginates list." {
+@test "'nb --per-page <limit> [--page <number>]' paginates list." {
   {
     "${_NB}" init
 
@@ -17,9 +17,9 @@ load test_helper
     "${_NB}" set footer 0
   }
 
-  # --3, first page
+  # --per-page 3, first page
 
-  run "${_NB}" --limit 3
+  run "${_NB}" --per-page 3
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -34,7 +34,7 @@ load test_helper
   [[ "${lines[4]}"  =~  .*[.*8.*].*\ Title\ Eight ]]
   [[ "${lines[5]}"  =~  7\ omitted\.\ 10\ total\. ]]
 
-  run "${_NB}" --limit 3 --page 1
+  run "${_NB}" --per-page 3 --page 1
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -46,7 +46,7 @@ load test_helper
   [[ "${lines[1]}"  =~  .*[.*9.*].*\ Title\ Nine  ]]
   [[ "${lines[2]}"  =~  .*[.*8.*].*\ Title\ Eight ]]
 
-  run "${_NB}" --limit 3 --page 0
+  run "${_NB}" --per-page 3 --page 0
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -58,9 +58,9 @@ load test_helper
   [[ "${lines[1]}"  =~  .*[.*9.*].*\ Title\ Nine  ]]
   [[ "${lines[2]}"  =~  .*[.*8.*].*\ Title\ Eight ]]
 
-  # --3 --page 2+
+  # --per-page 3 --page 2+
 
-  run "${_NB}" --limit 3 --page 2
+  run "${_NB}" --per-page 3 --page 2
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -72,7 +72,7 @@ load test_helper
   [[ "${lines[1]}"  =~  .*[.*6.*].*\ Title\ Six   ]]
   [[ "${lines[2]}"  =~  .*[.*5.*].*\ Title\ Five  ]]
 
-  run "${_NB}" --limit 3 --page 3
+  run "${_NB}" --per-page 3 --page 3
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -84,7 +84,7 @@ load test_helper
   [[ "${lines[1]}"  =~  .*[.*3.*].*\ Title\ Three ]]
   [[ "${lines[2]}"  =~  .*[.*2.*].*\ Title\ Two   ]]
 
-  run "${_NB}" --limit 3 --page 4
+  run "${_NB}" --per-page 3 --page 4
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -94,9 +94,9 @@ load test_helper
 
   [[ "${lines[0]}"  =~  .*[.*1.*].*\ Title\ One   ]]
 
-  # --5
+  # --per-page 5
 
-  run "${_NB}" --limit 5
+  run "${_NB}" --per-page 5
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -113,7 +113,7 @@ load test_helper
   [[ "${lines[6]}"  =~  .*[.*6.*].*\ Title\ Six   ]]
   [[ "${lines[7]}"  =~  5\ omitted\.\ 10\ total\. ]]
 
-  run "${_NB}" --limit 5 --page 2
+  run "${_NB}" --per-page 5 --page 2
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -127,7 +127,7 @@ load test_helper
   [[ "${lines[3]}"  =~  .*[.*2.*].*\ Title\ Two   ]]
   [[ "${lines[4]}"  =~  .*[.*1.*].*\ Title\ One   ]]
 
-  run "${_NB}" --limit 5 --page 3
+  run "${_NB}" --per-page 5 --page 3
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -135,6 +135,8 @@ load test_helper
   [[ "${status}"    -eq 0                         ]]
   [[ "${#lines[@]}" -eq 0                         ]]
 }
+
+# --<limit> ###################################################################
 
 @test "'nb --<limit> [--page <number>]' paginates list." {
   {
@@ -538,7 +540,7 @@ load test_helper
   [[ "${#lines[@]}" -eq 0                         ]]
 }
 
-@test "'ls --per-page <limit> [--page <number>]' paginates list." {
+@test "'ls --limit <limit> [--page <number>]' paginates list." {
   {
     "${_NB}" init
 
@@ -551,9 +553,9 @@ load test_helper
     "${_NB}" set footer 0
   }
 
-  # --per-page 3, first page
+  # --limit 3, first page
 
-  run "${_NB}" ls --per-page 3
+  run "${_NB}" ls --limit 3
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -568,7 +570,7 @@ load test_helper
   [[ "${lines[4]}"  =~  .*[.*8.*].*\ Title\ Eight ]]
   [[ "${lines[5]}"  =~  7\ omitted\.\ 10\ total\. ]]
 
-  run "${_NB}" ls --per-page 3 --page 1
+  run "${_NB}" ls --limit 3 --page 1
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -580,7 +582,7 @@ load test_helper
   [[ "${lines[1]}"  =~  .*[.*9.*].*\ Title\ Nine  ]]
   [[ "${lines[2]}"  =~  .*[.*8.*].*\ Title\ Eight ]]
 
-  run "${_NB}" ls --per-page 3 --page 0
+  run "${_NB}" ls --limit 3 --page 0
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -592,9 +594,9 @@ load test_helper
   [[ "${lines[1]}"  =~  .*[.*9.*].*\ Title\ Nine  ]]
   [[ "${lines[2]}"  =~  .*[.*8.*].*\ Title\ Eight ]]
 
-  # --per-page 3 --page 2+
+  # --limit 3 --page 2+
 
-  run "${_NB}" ls --per-page 3 --page 2
+  run "${_NB}" ls --limit 3 --page 2
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -606,7 +608,7 @@ load test_helper
   [[ "${lines[1]}"  =~  .*[.*6.*].*\ Title\ Six   ]]
   [[ "${lines[2]}"  =~  .*[.*5.*].*\ Title\ Five  ]]
 
-  run "${_NB}" ls --per-page 3 --page 3
+  run "${_NB}" ls --limit 3 --page 3
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -618,7 +620,7 @@ load test_helper
   [[ "${lines[1]}"  =~  .*[.*3.*].*\ Title\ Three ]]
   [[ "${lines[2]}"  =~  .*[.*2.*].*\ Title\ Two   ]]
 
-  run "${_NB}" ls --per-page 3 --page 4
+  run "${_NB}" ls --limit 3 --page 4
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -628,9 +630,9 @@ load test_helper
 
   [[ "${lines[0]}"  =~  .*[.*1.*].*\ Title\ One   ]]
 
-  # --per-page 5
+  # --limit 5
 
-  run "${_NB}" ls --per-page 5
+  run "${_NB}" ls --limit 5
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -647,7 +649,7 @@ load test_helper
   [[ "${lines[6]}"  =~  .*[.*6.*].*\ Title\ Six   ]]
   [[ "${lines[7]}"  =~  5\ omitted\.\ 10\ total\. ]]
 
-  run "${_NB}" ls --per-page 5 --page 2
+  run "${_NB}" ls --limit 5 --page 2
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -661,7 +663,7 @@ load test_helper
   [[ "${lines[3]}"  =~  .*[.*2.*].*\ Title\ Two   ]]
   [[ "${lines[4]}"  =~  .*[.*1.*].*\ Title\ One   ]]
 
-  run "${_NB}" ls --per-page 5 --page 3
+  run "${_NB}" ls --limit 5 --page 3
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -940,7 +942,7 @@ load test_helper
   [[ "${#lines[@]}" -eq 0                         ]]
 }
 
-@test "'nb --per-page <limit> [--page <number>]' paginates list." {
+@test "'nb --limit <limit> [--page <number>]' paginates list." {
   {
     "${_NB}" init
 
@@ -953,9 +955,9 @@ load test_helper
     "${_NB}" set footer 0
   }
 
-  # --per-page 3, first page
+  # --limit 3, first page
 
-  run "${_NB}" --per-page 3
+  run "${_NB}" --limit 3
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -970,7 +972,7 @@ load test_helper
   [[ "${lines[4]}"  =~  .*[.*8.*].*\ Title\ Eight ]]
   [[ "${lines[5]}"  =~  7\ omitted\.\ 10\ total\. ]]
 
-  run "${_NB}" --per-page 3 --page 1
+  run "${_NB}" --limit 3 --page 1
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -982,7 +984,7 @@ load test_helper
   [[ "${lines[1]}"  =~  .*[.*9.*].*\ Title\ Nine  ]]
   [[ "${lines[2]}"  =~  .*[.*8.*].*\ Title\ Eight ]]
 
-  run "${_NB}" --per-page 3 --page 0
+  run "${_NB}" --limit 3 --page 0
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -994,9 +996,9 @@ load test_helper
   [[ "${lines[1]}"  =~  .*[.*9.*].*\ Title\ Nine  ]]
   [[ "${lines[2]}"  =~  .*[.*8.*].*\ Title\ Eight ]]
 
-  # --per-page 3 --page 2+
+  # --limit 3 --page 2+
 
-  run "${_NB}" --per-page 3 --page 2
+  run "${_NB}" --limit 3 --page 2
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -1008,7 +1010,7 @@ load test_helper
   [[ "${lines[1]}"  =~  .*[.*6.*].*\ Title\ Six   ]]
   [[ "${lines[2]}"  =~  .*[.*5.*].*\ Title\ Five  ]]
 
-  run "${_NB}" --per-page 3 --page 3
+  run "${_NB}" --limit 3 --page 3
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -1020,7 +1022,7 @@ load test_helper
   [[ "${lines[1]}"  =~  .*[.*3.*].*\ Title\ Three ]]
   [[ "${lines[2]}"  =~  .*[.*2.*].*\ Title\ Two   ]]
 
-  run "${_NB}" --per-page 3 --page 4
+  run "${_NB}" --limit 3 --page 4
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -1030,9 +1032,9 @@ load test_helper
 
   [[ "${lines[0]}"  =~  .*[.*1.*].*\ Title\ One   ]]
 
-  # --per-page 5
+  # --limit 5
 
-  run "${_NB}" --per-page 5
+  run "${_NB}" --limit 5
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -1049,7 +1051,7 @@ load test_helper
   [[ "${lines[6]}"  =~  .*[.*6.*].*\ Title\ Six   ]]
   [[ "${lines[7]}"  =~  5\ omitted\.\ 10\ total\. ]]
 
-  run "${_NB}" --per-page 5 --page 2
+  run "${_NB}" --limit 5 --page 2
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -1063,7 +1065,7 @@ load test_helper
   [[ "${lines[3]}"  =~  .*[.*2.*].*\ Title\ Two   ]]
   [[ "${lines[4]}"  =~  .*[.*1.*].*\ Title\ One   ]]
 
-  run "${_NB}" --per-page 5 --page 3
+  run "${_NB}" --limit 5 --page 3
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"

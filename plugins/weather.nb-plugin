@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+###############################################################################
+# weather.nb-plugin
+#
+# Display weather information from wttr.in.
+#
+# Install with:
+#   nb plugin install https://github.com/xwmx/nb/blob/master/plugins/weather.nb-plugin
+#
+# https://github.com/xwmx/nb
+###############################################################################
+
+_subcommands add "weather"
+_subcommands add "w"
+_subcommands add "wttr"
+
+_subcommands describe "weather" <<HEREDOC
+Usage:
+  nb weather [<option>...]
+
+Description:
+  Display weather information from wttr.in.
+
+More Info:
+  https://github.com/chubin/wttr.in
+  https://wttr.in
+
+Examples:
+  nb weather
+  nb weather Tokyo
+  nb weather lax
+
+Shortcut Alias:
+  nb w
+HEREDOC
+
+_weather() {
+  curl "https://wttr.in/$(_join "+" "${@:-}")"
+}
+
+_alias_subcommand "weather" "w"
+_alias_subcommand "weather" "wttr"

@@ -371,7 +371,9 @@ _setup_remote_repo() {
       touch '.index'                      &&
       git add --all                       &&
       git commit -a -m "Initial commit."  &&
-      git clone --bare "${_GIT_REMOTE_PATH}.setup" "${_GIT_REMOTE_PATH}"
+      git clone --bare "${_GIT_REMOTE_PATH}.setup" "${_GIT_REMOTE_PATH}" &&
+      cd "${_GIT_REMOTE_PATH}"            &&
+      git remote rm "origin"
 
       cd "${_pwd}" || exit
   fi

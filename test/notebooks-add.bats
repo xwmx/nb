@@ -16,7 +16,325 @@ _setup_notebooks() {
   cd "${NB_DIR}" || return 1
 }
 
+# errors ######################################################################
+
+@test "'notebooks add' with no <name>, <remote-url>, or <branch> exits with 1 and prints help." {
+  {
+    _setup_notebooks
+    _setup_remote_repo
+  }
+
+  run "${_NB}" notebooks add
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "File Count: '%s'\\n" \
+    "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)"
+  printf "%s\\n" "$(cd "${NB_DIR}" && find . -maxdepth 1)"
+
+  [[ "${status}"    -eq 1                                     ]]
+  [[ "${lines[0]}"  =~  Usage.*:                              ]]
+  [[ "${lines[1]}"  =~  \ \ nb\ notebooks\                    ]]
+  [[ "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)" -eq 6  ]]
+}
+
 # remote ######################################################################
+
+@test "'notebooks add <remote-url> <branch-1> <nonexistent-branch-2>' with existing <branch-1> notebook exits with 0 and adds notebook named <branch-1>." {
+  {
+    _setup_notebooks
+    _setup_remote_repo
+
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" notebooks use "Example Notebook"
+    "${_NB}" git branch -m "example-branch"
+
+    "${_NB}" add "Example File One.md" --content "Example content one."
+
+    printf "Example File One.md created.\\n"
+
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+
+    diff                                              \
+      <(git -C "${NB_DIR}/Example Notebook" ls-remote \
+          --heads "${_GIT_REMOTE_URL}"                \
+          | sed "s/.*\///g" || :)                     \
+      <(printf "example-branch\\nmaster\\n")
+
+    "${_NB}" notebooks add "Sample Notebook"
+    "${_NB}" notebooks use "Sample Notebook"
+    "${_NB}" git branch -m "sample-branch"
+
+    "${_NB}" add "Sample File One.md" --content "Sample content one."
+
+    printf "Sample File One.md created.\\n"
+
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+
+    diff                                              \
+      <(git -C "${NB_DIR}/Sample Notebook" ls-remote  \
+          --heads "${_GIT_REMOTE_URL}"                \
+          | sed "s/.*\///g" || :)                     \
+      <(printf "example-branch\\nmaster\\nsample-branch\\n")
+
+    "${_NB}" notebooks add "Demo Notebook"
+    "${_NB}" notebooks use "Demo Notebook"
+    "${_NB}" git branch -m "demo-branch"
+
+    "${_NB}" add "Demo File One.md" --content "Demo content one."
+
+    printf "Demo File One.md created.\\n"
+
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+
+    diff                                              \
+      <(git -C "${NB_DIR}/Demo Notebook" ls-remote    \
+          --heads "${_GIT_REMOTE_URL}"                \
+          | sed "s/.*\///g" || :)                     \
+      <(printf "demo-branch\\nexample-branch\\nmaster\\nsample-branch\\n")
+
+    "${_NB}" notebooks add "example-branch"
+  }
+
+  run "${_NB}" notebooks add "${_GIT_REMOTE_URL}" \
+     "nonexistent-branch" "example-branch" <<< "${_NEWLINE}${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 0 ]]
+
+  [[    "${lines[0]}"   =~  \
+Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\ new\ name,\ or\ press\ .*q.*\ to\ quit\. ]]
+  [[    "${lines[1]}"   =~  \
+Cloning\ into\ \'${NB_DIR}/nonexistent-branch\'                               ]]
+  [[    "${lines[2]}"   =~  \
+warning:\ Could\ not\ find\ remote\ branch\ nonexistent\-branch\ to\ clone\.  ]]
+  [[    "${lines[3]}"   =~  \
+fatal:\ Remote\ branch\ nonexistent\-branch\ not\ found\ in\ upstream\ origin ]]
+  [[    "${lines[4]}"   =~  [^-]------------------------------------[^-]      ]]
+  [[    "${lines[5]}"   =~  \
+Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\ new\ name,\ or\ press\ .*q.*\ to\ quit\. ]]
+  [[    "${lines[6]}"   =~  Cloning\ into\ \'${NB_DIR}/example-branch-1\'     ]]
+  [[    "${lines[7]}"   =~  Added\ notebook\:\ .*example-branch-1.*           ]]
+
+  cd "${NB_DIR}" && find . -maxdepth 1 | wc -l
+  cd "${NB_DIR}" && find . -maxdepth 1
+
+  [[    "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)" -eq 11      ]]
+  [[ -d "${NB_DIR}/example-branch-1/.git"                             ]]
+  [[ -f "${NB_DIR}/example-branch-1/Example File One.md"              ]]
+
+  diff                                                                        \
+    <(cd "${NB_DIR}/example-branch-1" && git config --get remote.origin.url)  \
+    <(printf "%s\\n" "${_GIT_REMOTE_URL}")
+
+  diff                                                                        \
+    <(cd "${NB_DIR}/example-branch-1" && git rev-parse --abbrev-ref HEAD)     \
+    <(printf "example-branch\\n")
+
+  cd "${NB_DIR}/example-branch-1"
+
+  "${_NB}" git branch --all
+
+  [[    "$("${_NB}" git branch --all)"  =~  \*\ example-branch            ]]
+  [[    "$("${_NB}" git branch --all)"  =~  remotes/origin/example-branch ]]
+  [[ !  "$("${_NB}" git branch --all)"  =~  master|main                   ]]
+
+  [[ ! -e "${NB_DIR}/sample-branch"       ]]
+  [[ ! -e "${NB_DIR}/nonexistent-branch"  ]]
+}
+
+@test "'notebooks add <remote-url> <branch-1> <branch-2>' with no existing notebooks with those names exits with 0 and adds notebook named <branch-1> and <branch-2>." {
+  {
+    _setup_notebooks
+    _setup_remote_repo
+
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" notebooks use "Example Notebook"
+    "${_NB}" git branch -m "example-branch"
+
+    "${_NB}" add "Example File One.md" --content "Example content one."
+
+    printf "Example File One.md created.\\n"
+
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+
+    diff                                              \
+      <(git -C "${NB_DIR}/Example Notebook" ls-remote \
+          --heads "${_GIT_REMOTE_URL}"                \
+          | sed "s/.*\///g" || :)                     \
+      <(printf "example-branch\\nmaster\\n")
+
+    "${_NB}" notebooks add "Sample Notebook"
+    "${_NB}" notebooks use "Sample Notebook"
+    "${_NB}" git branch -m "sample-branch"
+
+    "${_NB}" add "Sample File One.md" --content "Sample content one."
+
+    printf "Sample File One.md created.\\n"
+
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+
+    diff                                              \
+      <(git -C "${NB_DIR}/Sample Notebook" ls-remote  \
+          --heads "${_GIT_REMOTE_URL}"                \
+          | sed "s/.*\///g" || :)                     \
+      <(printf "example-branch\\nmaster\\nsample-branch\\n")
+
+    "${_NB}" notebooks add "Demo Notebook"
+    "${_NB}" notebooks use "Demo Notebook"
+    "${_NB}" git branch -m "demo-branch"
+
+    "${_NB}" add "Demo File One.md" --content "Demo content one."
+
+    printf "Demo File One.md created.\\n"
+
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+
+    diff                                              \
+      <(git -C "${NB_DIR}/Demo Notebook" ls-remote    \
+          --heads "${_GIT_REMOTE_URL}"                \
+          | sed "s/.*\///g" || :)                     \
+      <(printf "demo-branch\\nexample-branch\\nmaster\\nsample-branch\\n")
+  }
+
+  run "${_NB}" notebooks add "${_GIT_REMOTE_URL}" \
+    "example-branch" "demo-branch" <<< "${_NEWLINE}${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 0                                           ]]
+
+  [[    "${lines[0]}"   =~  \
+Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\ new\ name,\ or\ press\ .*q.*\ to\ quit\. ]]
+  [[    "${lines[1]}"   =~  Cloning\ into\ \'${NB_DIR}/example-branch\'     ]]
+  [[    "${lines[2]}"   =~  Added\ notebook\:\ .*example-branch.*           ]]
+  [[    "${lines[3]}"   =~  [^-]------------------------------------[^-]    ]]
+  [[    "${lines[4]}"   =~  \
+Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\ new\ name,\ or\ press\ .*q.*\ to\ quit\. ]]
+  [[    "${lines[5]}"   =~  Cloning\ into\ \'${NB_DIR}/demo-branch\'        ]]
+  [[    "${lines[6]}"   =~  Added\ notebook\:\ .*demo-branch.*              ]]
+
+  cd "${NB_DIR}" && find . -maxdepth 1 | wc -l
+  cd "${NB_DIR}" && find . -maxdepth 1
+
+  [[    "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)" -eq 11      ]]
+  [[ -d "${NB_DIR}/example-branch/.git"                               ]]
+  [[ -f "${NB_DIR}/example-branch/Example File One.md"                ]]
+
+  diff                                                                      \
+    <(cd "${NB_DIR}/example-branch" && git config --get remote.origin.url)  \
+    <(printf "%s\\n" "${_GIT_REMOTE_URL}")
+
+  diff                                                                      \
+    <(cd "${NB_DIR}/example-branch" && git rev-parse --abbrev-ref HEAD)     \
+    <(printf "example-branch\\n")
+
+  cd "${NB_DIR}/example-branch"
+
+  "${_NB}" git branch --all
+
+  [[    "$("${_NB}" git branch --all)"  =~  \*\ example-branch            ]]
+  [[    "$("${_NB}" git branch --all)"  =~  remotes/origin/example-branch ]]
+  [[ !  "$("${_NB}" git branch --all)"  =~  master|main                   ]]
+
+  [[ ! -e "${NB_DIR}/sample-branch" ]]
+
+  cd "${NB_DIR}/demo-branch"
+
+  "${_NB}" git branch --all
+
+  [[    "$("${_NB}" git branch --all)"  =~  \*\ demo-branch               ]]
+  [[    "$("${_NB}" git branch --all)"  =~  remotes/origin/demo-branch    ]]
+  [[ !  "$("${_NB}" git branch --all)"  =~  master|main                   ]]
+}
+
+@test "'notebooks add <remote-url> <branch>' with reserved notebook name as branch name exits with a and prints message." {
+  {
+    _setup_notebooks
+    _setup_remote_repo
+
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" notebooks use "Example Notebook"
+    "${_NB}" git branch -m "readme"
+
+    "${_NB}" add "Example File One.md" --content "Example content one."
+
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+
+    diff                                              \
+      <(git -C "${NB_DIR}/Example Notebook" ls-remote \
+          --heads "${_GIT_REMOTE_URL}"                \
+          | sed "s/.*\///g" || :)                     \
+      <(printf "master\\nreadme\\n")
+  }
+
+  run "${_NB}" notebooks add "${_GIT_REMOTE_URL}" "readme" <<< "${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 1                                     ]]
+
+  [[    "${lines[0]}"   =~  \
+Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\ new\ name,\ or\ press\ .*q.*\ to\ quit\. ]]
+  [[    "${lines[1]}"   =~  !.*\ Name\ reserved:\ .*readme.*    ]]
+
+  [[ ! -e "${NB_DIR}/readme"                                    ]]
+}
+
+@test "'notebooks add <remote-url> <branch>' with no existing notebook with that name exits with 0 and adds a notebook named <branch>." {
+  {
+    _setup_notebooks
+    _setup_remote_repo
+
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" notebooks use "Example Notebook"
+    "${_NB}" git branch -m "example-branch"
+
+    "${_NB}" add "Example File One.md" --content "Example content one."
+
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+
+    diff                                              \
+      <(git -C "${NB_DIR}/Example Notebook" ls-remote \
+          --heads "${_GIT_REMOTE_URL}"                \
+          | sed "s/.*\///g" || :)                     \
+      <(printf "example-branch\\nmaster\\n")
+  }
+
+  run "${_NB}" notebooks add "${_GIT_REMOTE_URL}" "example-branch" <<< "${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 0                                     ]]
+
+  [[    "${lines[0]}"   =~  \
+Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\ new\ name,\ or\ press\ .*q.*\ to\ quit\. ]]
+  [[    "${lines[1]}"   =~  Cloning\ into\ \'${NB_DIR}/example-branch\'     ]]
+  [[    "${lines[2]}"   =~  Added\ notebook\:\ .*example-branch.*           ]]
+
+  [[    "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)" -eq 8 ]]
+  [[ -d "${NB_DIR}/example-branch/.git"                         ]]
+  [[ -f "${NB_DIR}/example-branch/Example File One.md"          ]]
+
+  diff                                                                      \
+    <(cd "${NB_DIR}/example-branch" && git config --get remote.origin.url)  \
+    <(printf "%s\\n" "${_GIT_REMOTE_URL}")
+
+  diff                                                                      \
+    <(cd "${NB_DIR}/example-branch" && git rev-parse --abbrev-ref HEAD)     \
+    <(printf "example-branch\\n")
+
+  "${_NB}" git branch --all
+
+  [[    "$("${_NB}" git branch --all)"  =~  \*\ example-branch            ]]
+  [[    "$("${_NB}" git branch --all)"  =~  remotes/origin/example-branch ]]
+  [[ !  "$("${_NB}" git branch --all)"  =~  master|main                   ]]
+}
 
 @test "'notebooks add <name> <remote-url> <branch>' exits with 0 and adds a notebook." {
   {
@@ -113,7 +431,480 @@ _setup_notebooks() {
   remotes/origin/HEAD -> origin/master
   remotes/origin/master
 HEREDOC
-)
+    )
+}
+
+@test "'notebooks add <remote-url>' with multiple remote branches prompts for branch with 'All' response and notebook names with default response, and creates notebooks from branches." {
+  {
+    _setup_notebooks
+    _setup_remote_repo
+
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" notebooks use "Example Notebook"
+    "${_NB}" git branch -m "example-branch"
+
+    diff                          \
+      <("${_NB}" git branch -a)   \
+      <(printf "* example-branch\\n")
+
+    "${_NB}" add "Example File One.md" --content "Example content one."
+
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+
+    "${_NB}" git status
+    "${_NB}" run ls -la
+
+    diff                                              \
+      <(git -C "${NB_DIR}/Example Notebook" ls-remote \
+          --heads "${_GIT_REMOTE_URL}"                \
+          | sed "s/.*\///g" || :)                     \
+      <(printf "example-branch\\nmaster\\n")
+  }
+
+  run "${_NB}" notebooks add "${_GIT_REMOTE_URL}"     \
+    <<< "3${_NEWLINE}${_NEWLINE}${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 0 ]]
+
+  [[    "${lines[0]}"   =~  Choose\ a\ remote\ branch\:                     ]]
+  [[    "${lines[1]}"   =~  [^-]-----------------------[^-]                 ]]
+  [[    "${lines[2]}"   =~  .*[.*1.*].*\ example-branch                     ]]
+  [[    "${lines[3]}"   =~  .*[.*2.*].*\ master                             ]]
+  [[    "${lines[4]}"   =~  .*[.*3.*].*\ All\ Branches                      ]]
+  [[    "${lines[5]}"   =~  [^-]------------------------------------[^-]    ]]
+  [[    "${lines[6]}"   =~  \
+Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\ new\ name,\ or\ press\ .*q.*\ to\ quit\. ]]
+  [[    "${lines[7]}"   =~  Cloning\ into\ \'${NB_DIR}/example-branch\'     ]]
+  [[    "${lines[8]}"   =~  Added\ notebook\:\ .*example-branch.*           ]]
+  [[    "${lines[9]}"   =~  [^-]------------------------------------[^-]    ]]
+  [[    "${lines[10]}"   =~  \
+Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\ new\ name,\ or\ press\ .*q.*\ to\ quit\. ]]
+  [[    "${lines[11]}"  =~  Cloning\ into\ \'${NB_DIR}/remote\'             ]]
+  [[    "${lines[12]}"  =~  Added\ notebook\:\ .*remote.*                   ]]
+
+  [[    "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)" -eq 9             ]]
+  [[ -d "${NB_DIR}/example-branch/.git"                                     ]]
+  [[ -d "${NB_DIR}/remote/.git"                                             ]]
+
+  ls -la "${NB_DIR}/example-branch"
+
+  [[ -f "${NB_DIR}/example-branch/Example File One.md"                      ]]
+
+  diff                                                                      \
+    <(cd "${NB_DIR}/example-branch" && git config --get remote.origin.url)  \
+    <(printf "%s\\n" "${_GIT_REMOTE_URL}")
+
+  diff                                                                      \
+    <(cd "${NB_DIR}/example-branch" && git rev-parse --abbrev-ref HEAD)     \
+    <(printf "example-branch\\n")
+
+  diff                                                                      \
+    <(cd "${NB_DIR}/remote" && git config --get remote.origin.url)          \
+    <(printf "%s\\n" "${_GIT_REMOTE_URL}")
+
+  diff                                                                      \
+    <(cd "${NB_DIR}/remote" && git rev-parse --abbrev-ref HEAD)             \
+    <(printf "master\\n")
+
+  "${_NB}" git branch --all
+
+  [[    "$("${_NB}" git branch --all)"  =~  \*\ example-branch              ]]
+  [[    "$("${_NB}" git branch --all)"  =~  remotes/origin/example-branch   ]]
+  [[ !  "$("${_NB}" git branch --all)"  =~  master|main                     ]]
+
+  "${_NB}" use remote
+
+  [[    "$("${_NB}" git branch --all)"  =~  \*\ master                      ]]
+  [[    "$("${_NB}" git branch --all)"  =~  remotes/origin/master           ]]
+}
+
+@test "'notebooks add <remote-url>' with multiple remote branches prompts for branch with 'All' response and notebook names with alpha response, and creates notebooks from branches." {
+  {
+    _setup_notebooks
+    _setup_remote_repo
+
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" notebooks use "Example Notebook"
+    "${_NB}" git branch -m "example-branch"
+
+    diff                          \
+      <("${_NB}" git branch -a)   \
+      <(printf "* example-branch\\n")
+
+    "${_NB}" add "Example File One.md" --content "Example content one."
+
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+
+    "${_NB}" git status
+    "${_NB}" run ls -la
+
+    diff                                              \
+      <(git -C "${NB_DIR}/Example Notebook" ls-remote \
+          --heads "${_GIT_REMOTE_URL}"                \
+          | sed "s/.*\///g" || :)                     \
+      <(printf "example-branch\\nmaster\\n")
+  }
+
+  run "${_NB}" notebooks add "${_GIT_REMOTE_URL}"     \
+    <<< "3${_NEWLINE}sample-notebook${_NEWLINE}demo-notebook${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 0 ]]
+
+  [[    "${lines[0]}"   =~  Choose\ a\ remote\ branch\:                     ]]
+  [[    "${lines[1]}"   =~  [^-]-----------------------[^-]                 ]]
+  [[    "${lines[2]}"   =~  .*[.*1.*].*\ example-branch                     ]]
+  [[    "${lines[3]}"   =~  .*[.*2.*].*\ master                             ]]
+  [[    "${lines[4]}"   =~  .*[.*3.*].*\ All\ Branches                      ]]
+  [[    "${lines[5]}"   =~  [^-]------------------------------------[^-]    ]]
+  [[    "${lines[6]}"   =~  \
+Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\ new\ name,\ or\ press\ .*q.*\ to\ quit\. ]]
+  [[    "${lines[7]}"   =~  Cloning\ into\ \'${NB_DIR}/sample-notebook\'    ]]
+  [[    "${lines[8]}"   =~  Added\ notebook\:\ .*sample-notebook.*          ]]
+  [[    "${lines[9]}"   =~  [^-]------------------------------------[^-]    ]]
+  [[    "${lines[10]}"   =~  \
+Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\ new\ name,\ or\ press\ .*q.*\ to\ quit\. ]]
+  [[    "${lines[11]}"  =~  Cloning\ into\ \'${NB_DIR}/demo-notebook\'      ]]
+  [[    "${lines[12]}"  =~  Added\ notebook\:\ .*demo-notebook.*            ]]
+
+  [[    "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)" -eq 9             ]]
+  [[ -d "${NB_DIR}/sample-notebook/.git"                                    ]]
+  [[ -d "${NB_DIR}/demo-notebook/.git"                                      ]]
+
+  ls -la "${NB_DIR}/sample-notebook"
+
+  [[ -f "${NB_DIR}/sample-notebook/Example File One.md"                     ]]
+
+  diff                                                                      \
+    <(cd "${NB_DIR}/sample-notebook" && git config --get remote.origin.url) \
+    <(printf "%s\\n" "${_GIT_REMOTE_URL}")
+
+  diff                                                                      \
+    <(cd "${NB_DIR}/sample-notebook" && git rev-parse --abbrev-ref HEAD)    \
+    <(printf "example-branch\\n")
+
+  diff                                                                      \
+    <(cd "${NB_DIR}/demo-notebook" && git config --get remote.origin.url)   \
+    <(printf "%s\\n" "${_GIT_REMOTE_URL}")
+
+  diff                                                                      \
+    <(cd "${NB_DIR}/demo-notebook" && git rev-parse --abbrev-ref HEAD)      \
+    <(printf "master\\n")
+
+  "${_NB}" git branch --all
+
+  [[    "$("${_NB}" git branch --all)"  =~  \*\ example-branch              ]]
+  [[    "$("${_NB}" git branch --all)"  =~  remotes/origin/example-branch   ]]
+  [[ !  "$("${_NB}" git branch --all)"  =~  master|main                     ]]
+
+  "${_NB}" use demo-notebook
+
+  [[    "$("${_NB}" git branch --all)"  =~  \*\ master                      ]]
+  [[    "$("${_NB}" git branch --all)"  =~  remotes/origin/master           ]]
+}
+
+@test "'notebooks add <remote-url>' with multiple remote branches prompts for branch with numerical response and notebook name with alpha response, and creates notebook from branch." {
+  {
+    _setup_notebooks
+    _setup_remote_repo
+
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" notebooks use "Example Notebook"
+    "${_NB}" git branch -m "example-branch"
+
+    diff                          \
+      <("${_NB}" git branch -a)   \
+      <(printf "* example-branch\\n")
+
+    "${_NB}" add "Example File One.md" --content "Example content one."
+
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+
+    "${_NB}" git status
+    "${_NB}" run ls -la
+
+    diff                                              \
+      <(git -C "${NB_DIR}/Example Notebook" ls-remote \
+          --heads "${_GIT_REMOTE_URL}"                \
+          | sed "s/.*\///g" || :)                     \
+      <(printf "example-branch\\nmaster\\n")
+  }
+
+  run "${_NB}" notebooks add "${_GIT_REMOTE_URL}" <<< "1${_NEWLINE}sample-notebook${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 0 ]]
+
+  [[    "${lines[0]}" =~  Choose\ a\ remote\ branch\:                   ]]
+  [[    "${lines[1]}" =~  [^-]-----------------------[^-]               ]]
+  [[    "${lines[2]}" =~  .*[.*1.*].*\ example-branch                   ]]
+  [[    "${lines[3]}" =~  .*[.*2.*].*\ master                           ]]
+  [[    "${lines[4]}" =~  .*[.*3.*].*\ All\ Branches                    ]]
+  [[    "${lines[5]}" =~  [^-]------------------------------------[^-]  ]]
+  [[    "${lines[6]}" =~  \
+Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\ new\ name,\ or\ press\ .*q.*\ to\ quit\. ]]
+  [[    "${lines[7]}" =~  Cloning\ into\ \'${NB_DIR}/sample-notebook\'  ]]
+  [[    "${lines[8]}" =~  Added\ notebook\:\ .*sample-notebook.*        ]]
+
+  [[    "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)" -eq 8         ]]
+  [[ -d "${NB_DIR}/sample-notebook/.git"                                ]]
+
+  ls -la "${NB_DIR}/sample-notebook"
+
+  [[ -f "${NB_DIR}/sample-notebook/Example File One.md"                 ]]
+
+  diff                                                                      \
+    <(cd "${NB_DIR}/sample-notebook" && git config --get remote.origin.url) \
+    <(printf "%s\\n" "${_GIT_REMOTE_URL}")
+
+  diff                                                                      \
+    <(cd "${NB_DIR}/sample-notebook" && git rev-parse --abbrev-ref HEAD)    \
+    <(printf "example-branch\\n")
+
+  "${_NB}" git branch --all
+
+  [[    "$("${_NB}" git branch --all)"  =~  \*\ example-branch            ]]
+  [[    "$("${_NB}" git branch --all)"  =~  remotes/origin/example-branch ]]
+  [[ !  "$("${_NB}" git branch --all)"  =~  master|main                   ]]
+}
+
+@test "'notebooks add <remote-url>' with multiple remote branches prompts for branch with alpha / branch name response and notebook name with <enter> response, and creates notebook from branch." {
+  {
+    _setup_notebooks
+    _setup_remote_repo
+
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" notebooks use "Example Notebook"
+    "${_NB}" git branch -m "example-branch"
+
+    diff                          \
+      <("${_NB}" git branch -a)   \
+      <(printf "* example-branch\\n")
+
+    "${_NB}" add "Example File One.md" --content "Example content one."
+
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+
+    "${_NB}" git status
+    "${_NB}" run ls -la
+
+    diff                                              \
+      <(git -C "${NB_DIR}/Example Notebook" ls-remote \
+          --heads "${_GIT_REMOTE_URL}"                \
+          | sed "s/.*\///g" || :)                     \
+      <(printf "example-branch\\nmaster\\n")
+  }
+
+  run "${_NB}" notebooks add "${_GIT_REMOTE_URL}" <<< "example-branch${_NEWLINE}${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 0 ]]
+
+  [[    "${lines[0]}" =~  Choose\ a\ remote\ branch\:                   ]]
+  [[    "${lines[1]}" =~  [^-]-----------------------[^-]               ]]
+  [[    "${lines[2]}" =~  .*[.*1.*].*\ example-branch                   ]]
+  [[    "${lines[3]}" =~  .*[.*2.*].*\ master                           ]]
+  [[    "${lines[4]}" =~  .*[.*3.*].*\ All\ Branches                    ]]
+  [[    "${lines[5]}" =~  [^-]------------------------------------[^-]  ]]
+  [[    "${lines[6]}" =~  \
+Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\ new\ name,\ or\ press\ .*q.*\ to\ quit\. ]]
+  [[    "${lines[7]}" =~  Cloning\ into\ \'${NB_DIR}/example-branch\'   ]]
+  [[    "${lines[8]}" =~  Added\ notebook\:\ .*example-branch.*         ]]
+
+  [[    "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)" -eq 8         ]]
+  [[ -d "${NB_DIR}/example-branch/.git"                                 ]]
+
+  ls -la "${NB_DIR}/example-branch"
+
+  [[ -f "${NB_DIR}/example-branch/Example File One.md"                  ]]
+
+  diff                                                                      \
+    <(cd "${NB_DIR}/example-branch" && git config --get remote.origin.url)  \
+    <(printf "%s\\n" "${_GIT_REMOTE_URL}")
+
+  diff                                                                      \
+    <(cd "${NB_DIR}/example-branch" && git rev-parse --abbrev-ref HEAD)     \
+    <(printf "example-branch\\n")
+
+  "${_NB}" git branch --all
+
+  [[    "$("${_NB}" git branch --all)"  =~  \*\ example-branch            ]]
+  [[    "$("${_NB}" git branch --all)"  =~  remotes/origin/example-branch ]]
+  [[ !  "$("${_NB}" git branch --all)"  =~  master|main                   ]]
+}
+
+@test "'notebooks add <remote-url>' with multiple remote branches prompts for branch with numeric response and notebook name with <enter> response, and creates notebook from branch." {
+  {
+    _setup_notebooks
+    _setup_remote_repo
+
+    "${_NB}" notebooks add "Example Notebook"
+    "${_NB}" notebooks use "Example Notebook"
+    "${_NB}" git branch -m "example-branch"
+
+    diff                          \
+      <("${_NB}" git branch -a)   \
+      <(printf "* example-branch\\n")
+
+    "${_NB}" add "Example File One.md" --content "Example content one."
+
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+
+    "${_NB}" git status
+    "${_NB}" run ls -la
+
+    diff                                              \
+      <(git -C "${NB_DIR}/Example Notebook" ls-remote \
+          --heads "${_GIT_REMOTE_URL}"                \
+          | sed "s/.*\///g" || :)                     \
+      <(printf "example-branch\\nmaster\\n")
+  }
+
+  run "${_NB}" notebooks add "${_GIT_REMOTE_URL}" <<< "1${_NEWLINE}${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 0 ]]
+
+  [[    "${lines[0]}" =~  Choose\ a\ remote\ branch\:                   ]]
+  [[    "${lines[1]}" =~  [^-]-----------------------[^-]               ]]
+  [[    "${lines[2]}" =~  .*[.*1.*].*\ example-branch                   ]]
+  [[    "${lines[3]}" =~  .*[.*2.*].*\ master                           ]]
+  [[    "${lines[4]}" =~  .*[.*3.*].*\ All\ Branches                    ]]
+  [[    "${lines[5]}" =~  [^-]------------------------------------[^-]  ]]
+  [[    "${lines[6]}" =~  \
+Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\ new\ name,\ or\ press\ .*q.*\ to\ quit\. ]]
+  [[    "${lines[7]}" =~  Cloning\ into\ \'${NB_DIR}/example-branch\'   ]]
+  [[    "${lines[8]}" =~  Added\ notebook\:\ .*example-branch.*         ]]
+
+  [[    "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)" -eq 8         ]]
+  [[ -d "${NB_DIR}/example-branch/.git"                                 ]]
+
+  ls -la "${NB_DIR}/example-branch"
+
+  [[ -f "${NB_DIR}/example-branch/Example File One.md"                  ]]
+
+  diff                                                                      \
+    <(cd "${NB_DIR}/example-branch" && git config --get remote.origin.url)  \
+    <(printf "%s\\n" "${_GIT_REMOTE_URL}")
+
+  diff                                                                      \
+    <(cd "${NB_DIR}/example-branch" && git rev-parse --abbrev-ref HEAD)     \
+    <(printf "example-branch\\n")
+
+  "${_NB}" git branch --all
+
+  [[    "$("${_NB}" git branch --all)"  =~  \*\ example-branch            ]]
+  [[    "$("${_NB}" git branch --all)"  =~  remotes/origin/example-branch ]]
+  [[ !  "$("${_NB}" git branch --all)"  =~  master|main                   ]]
+}
+
+@test "'notebooks add <remote-url>' with one remote branch with uncommon default branch name uses repository name as notebook name." {
+  {
+    _setup_notebooks
+    _setup_remote_repo
+
+    "${_NB}" git branch -m  "example-branch"
+
+    "${_NB}" add "Example File One.md" --content "Example content one."
+
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+
+    _sed_i "s/master/example-branch/" "${_GIT_REMOTE_PATH}/HEAD"
+
+    "${_NB}" git push origin :master
+
+    diff                                  \
+      <(git -C "${NB_DIR}/home" ls-remote \
+          --heads "${_GIT_REMOTE_URL}"    \
+          | sed "s/.*\///g" || :)         \
+      <(printf "example-branch\\n")
+  }
+
+  run "${_NB}" notebooks add "${_GIT_REMOTE_URL}" <<< "${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 0                                               ]]
+
+  [[    "${lines[0]}"   =~  \
+Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\ new\ name,\ or\ press\ .*q.*\ to\ quit\. ]]
+  [[    "${lines[1]}"   =~  Cloning\ into\ \'${NB_DIR}/example-branch\'   ]]
+  [[    "${lines[2]}"   =~  Added\ notebook\:\ .*example-branch.*         ]]
+
+  [[    "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)" -eq 7           ]]
+  [[ -d "${NB_DIR}/example-branch/.git"                                   ]]
+  [[ -f "${NB_DIR}/example-branch/Example File One.md"                    ]]
+
+  diff                                                                      \
+    <(cd "${NB_DIR}/example-branch" && git config --get remote.origin.url)  \
+    <(printf "%s\\n" "${_GIT_REMOTE_URL}")
+
+  diff                                                                      \
+    <(cd "${NB_DIR}/example-branch" && git rev-parse --abbrev-ref HEAD)     \
+    <(printf "example-branch\\n")
+
+  "${_NB}" git branch --all
+
+  [[    "$("${_NB}" git branch --all)"  =~  \*\ example-branch            ]]
+  [[    "$("${_NB}" git branch --all)"  =~  remotes/origin/example-branch ]]
+}
+
+@test "'notebooks add <remote-url>' with one remote branch with common default branch name uses repository name as notebook name." {
+  {
+    _setup_notebooks
+    _setup_remote_repo
+
+    "${_NB}" add "Example File One.md" --content "Example content one."
+
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+
+    diff                                  \
+      <(git -C "${NB_DIR}/home" ls-remote \
+          --heads "${_GIT_REMOTE_URL}"    \
+          | sed "s/.*\///g" || :)         \
+      <(printf "master\\n")
+  }
+
+  run "${_NB}" notebooks add "${_GIT_REMOTE_URL}" <<< "${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 0                                       ]]
+
+  [[    "${lines[0]}"   =~  \
+Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\ new\ name,\ or\ press\ .*q.*\ to\ quit\. ]]
+  [[    "${lines[1]}"   =~  Cloning\ into\ \'${NB_DIR}/remote\'   ]]
+  [[    "${lines[2]}"   =~  Added\ notebook\:\ .*remote.*         ]]
+
+  [[    "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)" -eq 7   ]]
+  [[ -d "${NB_DIR}/remote/.git"                                   ]]
+  [[ -f "${NB_DIR}/remote/Example File One.md"                    ]]
+
+  diff                                                              \
+    <(cd "${NB_DIR}/remote" && git config --get remote.origin.url)  \
+    <(printf "%s\\n" "${_GIT_REMOTE_URL}")
+
+  diff                                                              \
+    <(cd "${NB_DIR}/remote" && git rev-parse --abbrev-ref HEAD)     \
+    <(printf "master\\n")
+
+  "${_NB}" git branch --all
+
+  [[    "$("${_NB}" git branch --all)"  =~  \*\ master            ]]
+  [[    "$("${_NB}" git branch --all)"  =~  remotes/origin/master ]]
 }
 
 # config ######################################################################
@@ -365,24 +1156,6 @@ Enter\ a\ new\ value,\ .*unset.*\ to\ use\ the\ global\ value,                ]]
 }
 
 # `notebooks add <name>` ######################################################
-
-@test "'notebooks add' exits with 1 and prints error message." {
-  {
-    _setup_notebooks
-  }
-
-  run "${_NB}" notebooks add
-
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf "File Count: '%s'\\n" \
-    "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)"
-  printf "%s\\n" "$(cd "${NB_DIR}" && find . -maxdepth 1)"
-
-  [[ "${status}"    -eq 1                                     ]]
-  [[ "${lines[1]}"  =~  \ \ nb\ notebooks\                    ]]
-  [[ "$(cd "${NB_DIR}" && find . -maxdepth 1 | wc -l)" -eq 6  ]]
-}
 
 @test "'notebooks add <existing>' exits with 1 and prints error message." {
   {
