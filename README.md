@@ -5789,7 +5789,7 @@ Usage:
           --to-title | --to-todo) [-f | --force]
   nb notebooks [<name> | <query>] [--ar | --archived] [--global] [--local]
                [--names] [--paths] [--unar | --unarchived]
-  nb notebooks add ([<name>] [<remote-url> [<branch>]]) [--author]
+  nb notebooks add ([<name>] [<remote-url> [<branch>... | --all]]) [--author]
                    [--email <email>] [--name <name>]
   nb notebooks (archive | open | peek | status | unarchive) [<name>]
   nb notebooks author [<name> | <path>] [--email <email>] [--name <name>]
@@ -7223,7 +7223,7 @@ Shortcut Alias:
 Usage:
   nb notebooks [<name> | <query>] [--ar | --archived] [--global] [--local]
                [--names] [--paths] [--unar | --unarchived]
-  nb notebooks add ([<name>] [<remote-url> [<branch>]]) [--author]
+  nb notebooks add ([<name>] [<remote-url> [<branch>... | --all]]) [--author]
                    [--email <email>] [--name <name>]
   nb notebooks (archive | open | peek | status | unarchive) [<name>]
   nb notebooks author [<name> | <path>] [--email <email>] [--name <name>]
@@ -7240,6 +7240,7 @@ Usage:
   nb notebooks use <name>
 
 Options:
+  --all                    Add notebooks from all remote branches.
   --ar, --archived         List archived notebooks, or return archival status
                            with `show`.
   --author                 Set the notebook's commit author email and name.
@@ -7264,8 +7265,8 @@ Options:
 Subcommands:
   (default)  List notebooks.
   add        Create a new global notebook. When <remote-url> is specified,
-             create the new global notebook as a clone of a selected or
-             specified <branch> from <remote-url>.
+             create one ore more new global notebook by cloning selected
+             or specified <branch>es from <remote-url>.
              Aliases: `nb notebooks create`, `nb notebooks new`
   archive    Set the current notebook or notebook <name> to "archived" status.
   author     Configure the commit author email and name for the notebook.
