@@ -4076,7 +4076,7 @@ $(_color_primary "Usage"):
           --to-title | --to-todo) [-f | --force]
   ${_ME} notebooks [<name> | <query>] [--ar | --archived] [--global] [--local]
                [--names] [--paths] [--unar | --unarchived]
-  ${_ME} notebooks add ([<name>] [<remote-url> [<branch>]]) [--author]
+  ${_ME} notebooks add ([<name>] [<remote-url> [<branch>... | --all]]) [--author]
                    [--email <email>] [--name <name>]
   ${_ME} notebooks (archive | open | peek | status | unarchive) [<name>]
   ${_ME} notebooks author [<name> | <path>] [--email <email>] [--name <name>]
@@ -6846,7 +6846,7 @@ _describe_notebooks() {
 $(_color_primary "Usage"):
   ${_ME} notebooks [<name> | <query>] [--ar | --archived] [--global] [--local]
                [--names] [--paths] [--unar | --unarchived]
-  ${_ME} notebooks add ([<name>] [<remote-url> [<branch>]]) [--author]
+  ${_ME} notebooks add ([<name>] [<remote-url> [<branch>... | --all]]) [--author]
                    [--email <email>] [--name <name>]
   ${_ME} notebooks (archive | open | peek | status | unarchive) [<name>]
   ${_ME} notebooks author [<name> | <path>] [--email <email>] [--name <name>]
@@ -6863,6 +6863,7 @@ $(_color_primary "Usage"):
   ${_ME} notebooks use <name>
 
 $(_color_primary "Options"):
+  --all                    Add notebooks from all remote branches.
   --ar, --archived         List archived notebooks, or return archival status
                            with \`show\`.
   --author                 Set the notebook's commit author email and name.
@@ -6887,8 +6888,8 @@ $(_color_primary "Options"):
 $(_color_primary "Subcommands"):
   (default)  List notebooks.
   add        Create a new global notebook. When <remote-url> is specified,
-             create the new global notebook as a clone of a selected or
-             specified <branch> from <remote-url>.
+             create one ore more new global notebook by cloning selected
+             or specified <branch>es from <remote-url>.
              Aliases: \`${_ME} notebooks create\`, \`${_ME} notebooks new\`
   archive    Set the current notebook or notebook <name> to "archived" status.
   author     Configure the commit author email and name for the notebook.
@@ -6961,7 +6962,7 @@ _notebooks() {
   # _notebooks_add()
   #
   # Usage:
-  #   _notebooks_add ([<name>] [<remote_url> [<branch>]]) [--author]
+  #   _notebooks_add ([<name>] [<remote_url> [<branch>... | --all]]) [--author]
   #                  [--email <email>] [--name <name>]
   _notebooks_add() {
     local _author=0
