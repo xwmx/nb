@@ -6966,15 +6966,17 @@ _notebooks() {
   _notebooks_add() {
     local _author=0
     local _author_arguments=()
+    local _clone_all_branches=0
     local _name=
     local _print_default_feedback=1
-    local _selected_remote_branches=()
+    local _option_selected_remote_branches=()
     local _remote_url=
 
     while ((${#}))
     do
       case "${1:-}" in
-        --author) _author=1 ;;
+        --all)    _clone_all_branches=1 ;;
+        --author) _author=1             ;;
         --email|--name)
           _author=1
           _author_arguments+=("${1:-}")
@@ -6995,7 +6997,7 @@ _notebooks() {
           then
             _name="${1:-}"
           else
-            _selected_remote_branches+=("${1:-}")
+            _option_selected_remote_branches+=("${1:-}")
           fi
           ;;
       esac
@@ -7030,16 +7032,16 @@ _notebooks() {
     if [[ -n "${_remote_url:-}"           ]]
     then
       if [[ -n "${_name:-}"               ]] &&
-         ! ((${#_selected_remote_branches[@]}))
+         ! ((${#_option_selected_remote_branches[@]}))
       then
         git clone "${_git_options[@]:-}"                  \
           "${_remote_url}"                                \
           "${NB_DIR}/${_name}"
       elif [[ -n "${_name:-}"                             ]] &&
-           [[ "${#_selected_remote_branches[@]}" -eq 1    ]]
+           [[ "${#_option_selected_remote_branches[@]}" -eq 1    ]]
       then
         git clone "${_git_options[@]:-}"                  \
-          --branch "${_selected_remote_branches[0]:-}"    \
+          --branch "${_option_selected_remote_branches[0]:-}"    \
           "${_remote_url}"                                \
           "${NB_DIR}/${_name}"
       else
@@ -7048,9 +7050,9 @@ _notebooks() {
 
         local _remote_branches=()
 
-        if [[ -n "${_selected_remote_branches[*]:-}" ]]
+        if [[ -n "${_option_selected_remote_branches[*]:-}" ]]
         then
-          _remote_branches=("${_selected_remote_branches[@]}")
+          _remote_branches=("${_option_selected_remote_branches[@]}")
         else
           _remote_branches=($(
             git -C "${_current_notebook_path}" ls-remote  \
@@ -7070,13 +7072,18 @@ _notebooks() {
 
           _print_default_feedback=0
 
-          if ! ((${#_selected_remote_branches[@]})) &&
-             [[ "${#_remote_branches[@]}" -eq 1 ]]
+          if ((${#_option_selected_remote_branches[@]}))
           then
-            _selected_remote_branches=("${_remote_branches[0]:-}")
+            _selected_branches=("${_option_selected_remote_branches[@]:-}")
+          elif [[ "${#_remote_branches[@]}" -eq 1 ]]
+          then
+            _selected_branches=("${_remote_branches[0]:-}")
+          elif ((_clone_all_branches))
+          then
+            _selected_branches=("${_remote_branches[@]:-}")
           fi
 
-          if ! ((${#_selected_remote_branches[@]}))
+          if ! ((${#_selected_branches[@]}))
           then
             printf      "Choose a remote branch:\\n"
 
@@ -7094,7 +7101,6 @@ _notebooks() {
               "$(_color_brackets "$((i+1))")"
 
             local _branch_prompt_response=
-            local _clone_all=0
 
             while true
             do
@@ -7116,7 +7122,7 @@ _notebooks() {
                     break
                   elif [[ "${_branch_prompt_response}" -eq "$((${#_remote_branches[@]} + 1))" ]]
                   then
-                    _clone_all=1
+                    _clone_all_branches=1
 
                     break
                   fi
@@ -7129,7 +7135,7 @@ _notebooks() {
               esac
             done
 
-            if ((_clone_all))
+            if ((_clone_all_branches))
             then
               _selected_branches=("${_remote_branches[@]:-}")
             else
