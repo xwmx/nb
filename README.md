@@ -7133,6 +7133,9 @@ Examples:
   nb example:
   nb example: -ae
   nb example:ls
+
+Shortcut Alias:
+  nb
 ```
 
 #### `move`

@@ -6059,6 +6059,9 @@ $(_color_primary "Examples"):
   ${_ME} example:
   ${_ME} example: -ae
   ${_ME} example:ls
+
+$(_color_primary "Shortcut Alias"):
+  ${_ME}
 HEREDOC
 }
 _ls() {
