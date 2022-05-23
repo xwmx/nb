@@ -221,7 +221,7 @@ Location:\ \/\/localhost:6789\/Example\ Folder/1\?${_expected_param_pattern}  ]]
   [[    "${lines[4]}"  =~ Content-Type:\ text/html                        ]]
 
   [[    "${output}"    =~ \
-action=\"/local:\?--add\&--limit=.*\&--columns=.*\&--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook ]]
+action=\"/local:\?--add\&--columns=.*\&--limit=.*\&--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook ]]
 
   [[    "${output}"    =~ \<input\ type=\"hidden\"\ name=\"--example\"\>  ]]
   [[    "${output}"    =~ \<input\ type=\"hidden\"\ name=\"-x\"\>         ]]
@@ -658,18 +658,18 @@ HEREDOC
 "<nav class=\"header-crumbs\"><strong><a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
-"calhost:6789/?--limit=.*&--columns=.*\"><span class=\"muted\">❯</span>nb</a>"
+"calhost:6789/?--columns=.*&--limit=.*\"><span class=\"muted\">❯</span>nb</a>"
 
   printf "%s\\n" "${output}" | grep -q \
 " <span class=\"muted\">·</span> <a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
-"calhost:6789/Example%20Notebook:?--limit=.*&--columns=.*\">Example Notebook</a>"
+"calhost:6789/Example%20Notebook:?--columns=.*&--limit=.*\">Example Notebook</a>"
 
   printf "%s\\n" "${output}" | grep -q "rows=\".*\">"
 
   printf "%s\\n" "${output}" | grep -q \
-"action=\"/Example%20Notebook:Example%20Folder/Example%20File.md?--add&--limit=.*&--columns=.*\""
+"action=\"/Example%20Notebook:Example%20Folder/Example%20File.md?--add&--columns=.*&--limit=.*\""
 
   printf "%s\\n" "${output}" | grep -q \
 "value=\"add\">"
@@ -704,18 +704,18 @@ HEREDOC
 "<nav class=\"header-crumbs\"><strong><a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
-"calhost:6789/?--limit=.*&--columns=.*\"><span class=\"muted\">❯</span>nb</a>"
+"calhost:6789/?--columns=.*&--limit=.*\"><span class=\"muted\">❯</span>nb</a>"
 
   printf "%s\\n" "${output}" | grep -q \
 " <span class=\"muted\">·</span> <a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
-"calhost:6789/home:?--limit=.*&--columns=.*\">home</a>"
+"calhost:6789/home:?--columns=.*&--limit=.*\">home</a>"
 
   printf "%s\\n" "${output}" | grep -q "rows=\".*\">"
 
   printf "%s\\n" "${output}" | grep -q \
-"action=\"/home:Example%20Folder/Example%20File.md?--add&--limit=.*&--columns=.*\""
+"action=\"/home:Example%20Folder/Example%20File.md?--add&--columns=.*&--limit=.*\""
 
   printf "%s\\n" "${output}" | grep -q \
 "value=\"add\">"
@@ -753,18 +753,18 @@ HEREDOC
 "<nav class=\"header-crumbs\"><strong><a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
-"calhost:6789/?--limit=.*&--columns=.*\"><span class=\"muted\">❯</span>nb</a>"
+"calhost:6789/?--columns=.*&--limit=.*\"><span class=\"muted\">❯</span>nb</a>"
 
   printf "%s\\n" "${output}" | grep -q \
 " <span class=\"muted\">·</span> <a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
-"calhost:6789/home:?--limit=.*&--columns=.*\">home</a>"
+"calhost:6789/home:?--columns=.*&--limit=.*\">home</a>"
 
   printf "%s\\n" "${output}" | grep -q "rows=\".*\">"
 
   printf "%s\\n" "${output}" | grep -q \
-"action=\"/home:Example%20Folder/Example%20File.md?--add&--limit=.*&--columns=.*\""
+"action=\"/home:Example%20Folder/Example%20File.md?--add&--columns=.*&--limit=.*\""
 
   printf "%s\\n" "${output}" | grep -q \
 "value=\"add\">"
@@ -801,18 +801,18 @@ HEREDOC
 "<nav class=\"header-crumbs\"><strong><a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
-"calhost:6789/?--limit=.*&--columns=.*\"><span class=\"muted\">❯</span>nb</a>"
+"calhost:6789/?--columns=.*&--limit=.*\"><span class=\"muted\">❯</span>nb</a>"
 
   printf "%s\\n" "${output}" | grep -q \
 " <span class=\"muted\">·</span> <a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
-"calhost:6789/home:?--limit=.*&--columns=.*\">home</a>"
+"calhost:6789/home:?--columns=.*&--limit=.*\">home</a>"
 
   printf "%s\\n" "${output}" | grep -q "rows=\".*\">"
 
   printf "%s\\n" "${output}" | grep -q \
-"action=\"/home:Example%20Folder/Example%20File.md?--add&--limit=.*&--columns=.*\""
+"action=\"/home:Example%20Folder/Example%20File.md?--add&--columns=.*&--limit=.*\""
 
   printf "%s\\n" "${output}" | grep -q \
 "value=\"add\">"
@@ -846,18 +846,18 @@ HEREDOC
 "<nav class=\"header-crumbs\"><strong><a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
-"calhost:6789/?--limit=.*&--columns=.*\"><span class=\"muted\">❯</span>nb</a>"
+"calhost:6789/?--columns=.*&--limit=.*\"><span class=\"muted\">❯</span>nb</a>"
 
   printf "%s\\n" "${output}" | grep -q \
 " <span class=\"muted\">·</span> <a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
-"calhost:6789/home:?--limit=.*&--columns=.*\">home</a>"
+"calhost:6789/home:?--columns=.*&--limit=.*\">home</a>"
 
   printf "%s\\n" "${output}" | grep -q "rows=\".*\">"
 
   printf "%s\\n" "${output}" | grep -q \
-"action=\"/home:Example%20Folder/?--add&--limit=.*&--columns=.*\""
+"action=\"/home:Example%20Folder/?--add&--columns=.*&--limit=.*\""
 
   printf "%s\\n" "${output}" | grep -q \
 "value=\"add\">"
@@ -954,11 +954,11 @@ HEREDOC
   [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1      ]]
 
   printf "%s\\n" "${output}" | grep -q \
-    "href=\"//localhost:6789/?--limit=30&--columns=20\"><span class=\"muted\">❯</span>nb</a> "
+    "href=\"//localhost:6789/?--columns=20&--limit=30\"><span class=\"muted\">❯</span>nb</a> "
 
   printf "%s\\n" "${output}" | grep -q "rows=\"32\">"
   printf "%s\\n" "${output}" | grep -q \
-    "<form${_NEWLINE}action=\"/home:?--add&--limit=30--columns=20"
+    "<form${_NEWLINE}action=\"/home:?--add&--columns=20&--limit=30"
 
   printf "%s\\n" "${output}" | grep -q \
 "value=\"add\">"
@@ -1014,13 +1014,13 @@ HEREDOC
 "<nav class=\"header-crumbs\"><strong><a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
-"calhost:6789/?--limit=.*&--columns=.*\"><span class=\"muted\">❯</span>nb</a>"
+"calhost:6789/?--columns=.*&--limit=.*\"><span class=\"muted\">❯</span>nb</a>"
 
   printf "%s\\n" "${output}" | grep -q \
 " <span class=\"muted\">·</span> <a rel=\"noopener noreferrer\" href=\"//lo"
 
   printf "%s\\n" "${output}" | grep -q \
-"calhost:6789/home:?--limit=.*&--columns=.*\">home</a>"
+"calhost:6789/home:?--columns=.*&--limit=.*\">home</a>"
 
   printf "%s\\n" "${output}" | grep -q "rows=\"32\">"
 

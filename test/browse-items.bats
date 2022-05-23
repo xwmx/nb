@@ -771,7 +771,7 @@ HEREDOC
 
     sleep 1
 
-    declare _expected_params="?--limit=.*&--columns=.*&--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
+    declare _expected_params="?--columns=.*&--limit=.*&--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
   }
 
   run "${_NB}" browse 2/1 --print
@@ -825,13 +825,13 @@ HEREDOC
 "<p>Example PDF File"
 
   printf "%s\\n" "${output}" | grep -q \
-"<a.* href=\"//localhost:6789/home:1?--limit=.*&--columns=.*\">\[\[home:1\]\]</a>"
+"<a.* href=\"//localhost:6789/home:1?--columns=.*&--limit=.*\">\[\[home:1\]\]</a>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<a.* href=\"//localhost:6789/home:?--limit=.*&--columns=.*&--query=%23tag1\">\#tag1</a>"
+"<a.* href=\"//localhost:6789/home:?--columns=.*&--limit=.*&--query=%23tag1\">\#tag1</a>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<a.* href=\"//localhost:6789/home:?--limit=.*&--columns=.*&--query=%23tag2\">\#tag2</a>"
+"<a.* href=\"//localhost:6789/home:?--columns=.*&--limit=.*&--query=%23tag2\">\#tag2</a>"
 }
 
 # nb --browse / nb -b #########################################################
@@ -863,7 +863,7 @@ HEREDOC
 "<h1 id=\"title-one\">Title One</h1>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<p>Example content. <a.* href=\"//localhost:6789/home:Example Title?--limit=.*&--columns=.*\">"
+"<p>Example content. <a.* href=\"//localhost:6789/home:Example Title?--columns=.*&--limit=.*\">"
 
   printf "%s\\n" "${output}" | grep -q \
 "\[\[Example Title\]\]</a></p>"
@@ -896,7 +896,7 @@ HEREDOC
 "<h1 id=\"title-one\">Title One</h1>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<p>Example content. <a.* href=\"//localhost:6789/home:Example Title?--limit=.*&--columns=.*\">"
+"<p>Example content. <a.* href=\"//localhost:6789/home:Example Title?--columns=.*&--limit=.*\">"
 
   printf "%s\\n" "${output}" | grep -q \
 "\[\[Example Title\]\]</a></p>"
@@ -931,10 +931,10 @@ HEREDOC
 "<h1 id=\"title-one\">Title One</h1>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<a.* href=\"//localhost:6789/?--limit.*&--columns.*\"><span class=\"muted\">❯</span>nb</a>"
+"<a.* href=\"//localhost:6789/?--columns.*&--limit.*\"><span class=\"muted\">❯</span>nb</a>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<p>Example content. <a.* href=\"//localhost:6789/home:Example Title?--limit=.*&--columns=.*\">"
+"<p>Example content. <a.* href=\"//localhost:6789/home:Example Title?--columns=.*&--limit=.*\">"
 
   printf "%s\\n" "${output}" | grep -q \
 "\[\[Example Title\]\]</a></p>"
@@ -994,10 +994,10 @@ HEREDOC
   [[ "${output}"    =~  \<nav\ class=\"header-crumbs\"\>        ]]
 
   printf "%s\\n" "${output}" | grep -q \
-'<a.* href="//localhost:6789/?--limit=.*"><span class="muted">❯</span>nb</a>'
+'<a.* href="//localhost:6789/?--columns=.*&--limit=.*"><span class="muted">❯</span>nb</a>'
 
   printf "%s\\n" "${output}" | grep -q \
-'<span class="muted">·</span> <a.* href="//localhost:6789/home:?--limit=.*">home</a\>'
+'<span class="muted">·</span> <a.* href="//localhost:6789/home:?--columns=.*&--limit=.*">home</a\>'
 
   [[ "${output}"    =~  \<div\ class=\"sourceCode\"             ]]
   [[ "${output}"    =~  \<pre\ class=\"sourceCode\ bash\"\>     ]]
@@ -1025,10 +1025,10 @@ HEREDOC
   [[ "${output}"    =~  header-crumbs.*↓                        ]]
 
   printf "%s\\n" "${output}" | grep -q \
-'<a.* href="//localhost:6789/?--limit=.*"><span class="muted">❯</span>nb</a>'
+'<a.* href="//localhost:6789/?--columns=.*&--limit=.*"><span class="muted">❯</span>nb</a>'
 
   printf "%s\\n" "${output}" | grep -q \
-'<span class="muted">·</span> <a.* href="//localhost:6789/home:?--limit=.*">home</a\>'
+'<span class="muted">·</span> <a.* href="//localhost:6789/home:?--columns=.*&--limit=.*">home</a\>'
 
   [[ "${output}"    =~  \<div\ class=\"sourceCode\"             ]]
   [[ "${output}"    =~  \<pre\ class=\"sourceCode\ js\"\>       ]]
@@ -1073,7 +1073,7 @@ HEREDOC
 "<h1 id=\"title-one\"><span id=\"anchor\"></span>Title One</h1>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<p>Example content. <a.* href=\"//localhost:6789/home:Example Title?--limit=.*&--columns=.*\">"
+"<p>Example content. <a.* href=\"//localhost:6789/home:Example Title?--columns=.*&--limit=.*\">"
 
   printf "%s\\n" "${output}" | grep -q \
 "\[\[Example Title\]\]</a></p>"
@@ -1116,7 +1116,7 @@ HEREDOC
 "<h1 id=\"title-one\">Title One</h1>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<p>Example content. <a.* href=\"//localhost:6789/home:Example Title?--limit=.*&--columns=.*\">"
+"<p>Example content. <a.* href=\"//localhost:6789/home:Example Title?--columns=.*&--limit=.*\">"
 
   printf "%s\\n" "${output}" | grep -q \
 "\[\[Example Title\]\]</a></p>"
@@ -1156,7 +1156,7 @@ HEREDOC
 "<nav class=\"header-crumbs\">"
 
   printf "%s\\n" "${output}" | grep -q \
-"<p>Example content. <a.* href=\"//localhost:6789/home:1?--limit=.*&amp;--columns=.*\">"
+"<p>Example content. <a.* href=\"//localhost:6789/home:1?--columns=.*&amp;--limit=.*\">"
 
   printf "%s\\n" "${output}" | grep -q \
 "\[\[Example Title\]\]</a></p>"
@@ -1193,7 +1193,7 @@ HEREDOC
 "<h1 id=\"title-one\">Title One</h1>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<p>Example content. <a.* href=\"//localhost:6789/home:Example Title?--limit=.*&--columns=.*\">"
+"<p>Example content. <a.* href=\"//localhost:6789/home:Example Title?--columns=.*&--limit=.*\">"
 
   printf "%s\\n" "${output}" | grep -q \
 "\[\[Example Title\]\]</a></p>"
@@ -1226,7 +1226,7 @@ HEREDOC
 "<h1 id=\"title-one\">Title One</h1>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<p>Example content. <a.* href=\"//localhost:6789/home:Example Title?--limit=.*&--columns=.*\">"
+"<p>Example content. <a.* href=\"//localhost:6789/home:Example Title?--columns=.*&--limit=.*\">"
 
   printf "%s\\n" "${output}" | grep -q \
 "\[\[Example Title\]\]</a></p>"
@@ -1273,13 +1273,13 @@ HEREDOC
   [[ "${status}" -eq 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-'one: <a.* href="//localhost:6789/home:Root Title Two?--limit.*&--columns=.*">\[\[Root Title Two\]\]</a>'
+'one: <a.* href="//localhost:6789/home:Root Title Two?--columns=.*&--limit.*">\[\[Root Title Two\]\]</a>'
 
   printf "%s\\n" "${output}" | grep -q \
-'example <a.* href="//localhost:6789/Example Notebook:Example Folder/1?--limit.*&--columns=.*">\[\[Example Notebook:Example Folder/1\]\]</a> content'
+'example <a.* href="//localhost:6789/Example Notebook:Example Folder/1?--columns=.*&--limit.*">\[\[Example Notebook:Example Folder/1\]\]</a> content'
 
   printf "%s\\n" "${output}" | grep -q \
-'content <a.* href="//localhost:6789/home:3/1?--limit.*&--columns=.*">\[\[3/1\]\]</a> here'
+'content <a.* href="//localhost:6789/home:3/1?--columns=.*&--limit.*">\[\[3/1\]\]</a> here'
 }
 
 @test "'browse <item-selector>' properly resolves titled [[wiki-style links]] and skips links with non-resolving selectors." {
@@ -1323,13 +1323,13 @@ HEREDOC
   [[ "${status}" -eq 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-'one: <a.* href="//localhost:6789/home:Root Title Two?--limit.*&--columns=.*">\[\[Root Title Two\]\]</a>'
+'one: <a.* href="//localhost:6789/home:Root Title Two?--columns=.*&--limit.*">\[\[Root Title Two\]\]</a>'
 
   printf "%s\\n" "${output}" | grep -q \
-'example <a.* href="//localhost:6789/Example Notebook:Example Folder/1?--limit.*&--columns=.*">\[\[Example Notebook:Example Folder/1\]\]</a> content'
+'example <a.* href="//localhost:6789/Example Notebook:Example Folder/1?--columns=.*&--limit.*">\[\[Example Notebook:Example Folder/1\]\]</a> content'
 
   printf "%s\\n" "${output}" | grep -q \
-'content <a.* href="//localhost:6789/home:2/1?--limit.*&--columns=.*">\[\[2/1\]\]</a> here'
+'content <a.* href="//localhost:6789/home:2/1?--columns=.*&--limit.*">\[\[2/1\]\]</a> here'
 }
 
 @test "'browse <selector>' properly resolves duplicated [[wiki-style links]] in HTML." {
@@ -1362,11 +1362,11 @@ HEREDOC
   [[ "${status}" -eq 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-'link one: <a.* href="//localhost:6789/Example Notebook:Example Folder/1?--limit.*&--columns=.*">\[\[Example Notebook:Example Folder/1\]\]</a>'
+'link one: <a.* href="//localhost:6789/Example Notebook:Example Folder/1?--columns=.*&--limit.*">\[\[Example Notebook:Example Folder/1\]\]</a>'
 
 
   printf "%s\\n" "${output}" | grep -q -v\
-'example <a.* href="//localhost:6789/Example Notebook:Example Folder/1?--limit.*&--columns=.*">\[\[Example Notebook:Example Folder/1\]\]</a>'
+'example <a.* href="//localhost:6789/Example Notebook:Example Folder/1?--columns=.*&--limit.*">\[\[Example Notebook:Example Folder/1\]\]</a>'
 }
 
 @test "'browse <selector>' resolves [[wiki-style links]] in a different arrangement in HTML." {
@@ -1423,11 +1423,11 @@ HEREDOC
   [[ "${status}" -eq 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-'<a.* href="//localhost:6789/home:Sample Folder/Nested Title One?--limit.*&--columns=.*">\[\[Sample Folder/Nested Title One\]\]</a>'
+'<a.* href="//localhost:6789/home:Sample Folder/Nested Title One?--columns=.*&--limit.*">\[\[Sample Folder/Nested Title One\]\]</a>'
 
   printf "%s\\n" "${output}" | grep -q \
-'<a.* href="//localhost:6789/Example Notebook:File Two.md?--limit.*&--columns=.*">\[\[Example Notebook:File Two.md\]\]</a>'
+'<a.* href="//localhost:6789/Example Notebook:File Two.md?--columns=.*&--limit.*">\[\[Example Notebook:File Two.md\]\]</a>'
 
   printf "%s\\n" "${output}" | grep -q \
-'<a.* href="//localhost:6789/Example Notebook:Example Folder/1?--limit.*&--columns=.*">\[\[Example Notebook:Example Folder/1\]\]</a>'
+'<a.* href="//localhost:6789/Example Notebook:Example Folder/1?--columns=.*&--limit.*">\[\[Example Notebook:Example Folder/1\]\]</a>'
 }

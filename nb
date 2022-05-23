@@ -11287,7 +11287,7 @@ _resolve_links() {
 
   if ((_terminal))
   then
-    _url_params_pattern="?--limit=${_limit:-}\&--columns=${_columns:-}"
+    _url_params_pattern="?--columns=${_columns:-}\&--limit=${_limit:-}"
   fi
 
   local _notebook_name="${_notebook_path##*/}"
@@ -18341,11 +18341,11 @@ _browse() {
 
     if _contains "--terminal" "${_pagination_options[@]:-}"
     then
-      _url_params+="&--limit=${_limit}"
-      _rows="$((_limit + 2))"
-
       _url_params+="&--columns=${_columns}"
       _text_area_columns="$((_text_area_columns - 3))"
+
+      _url_params+="&--limit=${_limit}"
+      _rows="$((_limit + 2))"
     fi
 
     if [[ "${_target_type:-not-folder}" != "folder" ]]
@@ -18524,7 +18524,7 @@ HEREDOC
 
     if ((_terminal_browser))
     then
-      _url_params+="?--limit=${_limit}&--columns=${_columns}"
+      _url_params+="?--columns=${_columns}&--limit=${_limit}"
     fi
 
     if [[   -n "${_encoded_local_notebook_path:-}"  ]]
@@ -18561,17 +18561,17 @@ HEREDOC
       then
         _search "${_target_path}"         \
           "${_query_arguments[@]:-}"      \
+          --limit "${_limit}"             \
           --list                          \
           --no-color                      \
           --notebook-selectors            \
-          --page      "${_current_page}"  \
-          --limit  "${_limit}"      || :
+          --page  "${_current_page}"      || :
       else
         _list "${_target_path}"           \
+          --limit "${_limit}"             \
           --no-color                      \
           --notebook-selectors            \
-          --page      "${_current_page}"  \
-          --limit  "${_limit}"      \
+          --page  "${_current_page}"      \
           --with-pinned
       fi
     } | {
@@ -18698,8 +18698,8 @@ HEREDOC
   type="text"
   value="${_encoded_query}">
 <i></i>
-<input type="hidden" name="--page"      value="${_current_page}">
-<input type="hidden" name="--limit"  value="${_limit}">
+<input type="hidden" name="--limit" value="${_limit}">
+<input type="hidden" name="--page"  value="${_current_page}">
 ${_maybe_local_input:-}</form>
 <br>
 HEREDOC
@@ -18896,8 +18896,8 @@ HEREDOC
 
     if _contains "--terminal" "${_pagination_options[@]:-}"
     then
-      _url_params+="&--limit=${_limit}"
       _url_params+="&--columns=${_columns}"
+      _url_params+="&--limit=${_limit}"
     fi
 
     {
@@ -19029,11 +19029,11 @@ HEREDOC
 
     if _contains "--terminal" "${_pagination_options[@]:-}"
     then
-      _url_params+="&--limit=${_limit}"
-      _rows="$((_limit + 2))"
-
       _url_params+="&--columns=${_columns}"
       _text_area_columns="$((_text_area_columns - 3))"
+
+      _url_params+="&--limit=${_limit}"
+      _rows="$((_limit + 2))"
     fi
 
     if [[ -n "${_encoded_local_notebook_path:-}" ]]
@@ -19138,7 +19138,10 @@ HEREDOC
 
     if ((_terminal_browser))
     then
-      _url_params+=("--limit=${_limit}" "--columns=${_columns}")
+      _url_params+=(
+        "--columns=${_columns}"
+        "--limit=${_limit}"
+      )
     fi
 
     local _url_param_string=
@@ -19723,7 +19726,7 @@ HEREDOC
 
     if _contains "--terminal" "${_pagination_options[@]:-}"
     then
-      _url_param_string+="&--limit=${_limit}&--columns=${_columns}"
+      _url_param_string+="&--columns=${_columns}&--limit=${_limit}"
     fi
 
     # turn on case-insensitive matching
