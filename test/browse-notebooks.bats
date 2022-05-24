@@ -197,7 +197,7 @@ load test_helper
 "<a.* href=\"//localhost:6789/Example%20Notebook:?--columns=.*&--limit=.*\">Example${_S}Notebook</a>${_S}.*·.*"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<a.* href=\"//localhost:6789/Sample%20Notebook:?--columns=.&--limit=.**\">Sample${_S}Notebook</a>${_S}.*·.*"
+"<a.* href=\"//localhost:6789/Sample%20Notebook:?--columns=.*&--limit=.*\">Sample${_S}Notebook</a>${_S}.*·.*"
 
   printf "%s\\n" "${output}" | grep   -q \
 "<a.* href=\"//localhost:6789/Test%20Notebook:?--columns=.*&--limit=.*\">Test${_S}Notebook</a></p>"
@@ -240,13 +240,13 @@ load test_helper
 "<p><a.* href=\"//localhost:6789/Demo%20Notebook:?--columns=.*&--limit=.*\">Demo${_S}Notebook</a>${_S}.*·.*"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<a.* href=\"//localhost:6789/Example%20Notebook:?--limit=.*&--columns=.*\">Example${_S}Notebook</a>${_S}.*·.*"
+"<a.* href=\"//localhost:6789/Example%20Notebook:?--columns=.*&--limit=.*\">Example${_S}Notebook</a>${_S}.*·.*"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<a.* href=\"//localhost:6789/Sample%20Notebook:?--limit=.*&--columns=.*\">Sample${_S}Notebook</a>${_S}.*·.*"
+"<a.* href=\"//localhost:6789/Sample%20Notebook:?--columns=.*&--limit=.*\">Sample${_S}Notebook</a>${_S}.*·.*"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<a.* href=\"//localhost:6789/Test%20Notebook:?--limit=.*&--columns=.*\">Test${_S}Notebook</a></p>"
+"<a.* href=\"//localhost:6789/Test%20Notebook:?--columns=.*&--limit=.*\">Test${_S}Notebook</a></p>"
 }
 
 @test "GET to 'browse --notebooks' URL serves the list of unarchived notebooks as a rendered HTML page with links to internal web server URLs without mutedensional parameters." {
