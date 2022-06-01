@@ -11260,8 +11260,8 @@ _resolve_links() {
   while ((${#}))
   do
     case "${1:-}" in
-      --col*)     _columns="${2:?}"                 && shift  ;;
       --browse)   _for_browsing=1                             ;;
+      --col*)     _columns="${2:?}"                 && shift  ;;
       --limit|-n|--num|--number|--per*)
         _limit="${2:?}"
 
