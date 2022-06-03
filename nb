@@ -14944,7 +14944,7 @@ HEREDOC
 _move() {
   local _force=0
   local _reset=0
-  local _source_selector=
+  local _source_selectors=()
   local _target_selector=
   local _to_target_type=
 
@@ -14975,11 +14975,10 @@ _move() {
         shift
         ;;
       *)
-        if [[ -z "${_source_selector:-}"    ]]
+        if [[ -n "${2:-}"  ]] && [[ ! "${2:-}" =~ ^- ]]
         then
-          _source_selector="${1}"
-        elif [[ -z "${_target_selector:-}"  ]]
-        then
+          _source_selectors+=("${1}")
+        else
           _target_selector="${1}"
         fi
         ;;
@@ -14988,28 +14987,28 @@ _move() {
     shift
   done
 
-  if [[ -z "${_source_selector:-}"      ]]
+  if ! ((${#_source_selectors[@]}))
   then
     _exit_1 _help "move"
   fi
 
   local _source_relative_path=
-  _source_relative_path="$(_show "${_source_selector}" --relative-path)"
+  _source_relative_path="$(_show "${_source_selectors[0]}" --relative-path)"
 
-  if [[ -z "${_source_relative_path:-}" ]]
+  if [[ -z "${_source_relative_path:-}"     ]]
   then
     _exit_1 _help "move"
   fi
 
   local _source_notebook_path=
-  if [[ "${_source_selector:-}" =~ :    ]]
+  if [[ "${_source_selectors[0]:-}" =~ :    ]]
   then
     _source_notebook_path="$(
-      _notebooks show "${_source_selector}" --path 2>/dev/null || :
+      _notebooks show "${_source_selectors[0]}" --path 2>/dev/null || :
     )"
   fi
 
-  if [[ -z "${_source_notebook_path:-}" ]]
+  if [[ -z "${_source_notebook_path:-}"     ]]
   then
     _source_notebook_path="$(_notebooks current --path)"
   fi
