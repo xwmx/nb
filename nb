@@ -11093,7 +11093,7 @@ HEREDOC
 <script src="/--ace/ace.js"></script>
 <script src="/--ace/ext-modelist.js"></script>
 <script>
-  var editorInit = function initializeAceEditor() {
+  function initializeAceEditor() {
     var aceModeList = ace.require("ace/ext/modelist");
 
     var textarea = document.querySelector('textarea');
@@ -11140,9 +11140,9 @@ HEREDOC
 
   (function() {
     if (document.readyState !== 'loading') {
-      setTimeout(editorInit, 0);
+      setTimeout(initializeAceEditor, 0);
     } else {
-      document.addEventListener('DOMContentLoaded', editorInit);
+      document.addEventListener('DOMContentLoaded', initializeAceEditor);
     }
   }());
 </script>
