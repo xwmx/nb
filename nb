@@ -8650,10 +8650,12 @@ HEREDOC
   case "${_subcommand}" in
     a|add|create|new)
       shift
+
       _notebooks_add      "${@:-}"
       ;;
     author|config*)
       shift
+
       _notebooks_author   "${@:-}"
       ;;
     export)
@@ -8664,10 +8666,12 @@ HEREDOC
       ;;
     init)
       shift
+
       _notebooks_init     "${@:-}"
       ;;
     current)
       shift
+
       _notebooks_current  "${@:-}"
       ;;
     d|delete)
@@ -8675,6 +8679,7 @@ HEREDOC
       ;;
     list)
       shift
+
       _notebooks_list     "${@:-}"
       ;;
     rename|mv|move)
@@ -8685,6 +8690,7 @@ HEREDOC
       ;;
     s|show)
       shift
+
       _notebooks_show     "${@:-}"
       ;;
     u|use)
@@ -23881,23 +23887,28 @@ _todo() {
     case "${1:-}" in
       --description)
         _description="$(_option_get_value "${1:-}" "${2:-}")"
+
         shift
         ;;
       --due)
         _due_datetime="$(_option_get_value "${1:-}" "${2:-}")"
+
         shift
         ;;
       -r|--via|--also|--related)
         _related_identifiers+=("$(_option_get_value "${1:-}" "${2:-}")")
+
         shift
         ;;
       --tag*)
         [[ -n "${_tag_list:-}"  ]] && _tag_list+=" "
         _tag_list+="$(_option_get_tags "${1}" "${2:-}")"
+
         shift
         ;;
       --task)
         _tasks+=("$(_option_get_value "${1:-}" "${2:-}")")
+
         shift
         ;;
       --title)
