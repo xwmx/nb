@@ -3226,14 +3226,14 @@ _count() {
   while ((${#}))
   do
     case "${1:-}" in
+      --skip-unmatched-selector)
+        _skip_unmatched_selector=1
+        ;;
       --type)
         _list_files_options+=("${1}")
         _list_files_options+=(_option_get_value "${1}" "${2:-}")
 
         shift
-        ;;
-      --skip-unmatched-selector)
-        _skip_unmatched_selector=1
         ;;
       -*|/*)
         _list_files_options+=("${1}")
