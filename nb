@@ -3666,8 +3666,8 @@ HEREDOC
         GIT_PAGER='' git -C "${_notebook_path}" diff --name-only --diff-filter=U
       ))
 
-      local _conflicted_text_files=()
       local _conflicted_binary_files=()
+      local _conflicted_text_files=()
 
       if [[ -n "${_conflicted_files[*]:-}" ]]
       then
