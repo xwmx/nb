@@ -547,7 +547,7 @@ export _GIT_ENABLED="${_GIT_ENABLED:-1}"
 #
 # Set to a positive number to limit the output of `nb` and `nls` to that value.
 # Set to "auto" to automatically limit output to the current terminal height.
-# Add an auto limit offset for multiline prompts with `auto-<number>`.
+# Subtract an auto limit offset for multiline prompts with `auto-<number>`.
 #
 # Supported Values:
 #   - <number>
@@ -23104,7 +23104,7 @@ $(
     $(_color_secondary " -----")
      The maximum number of items included in the \`${_ME}\` and \`${_ME} ls\` lists.
      Set to \`auto\` to automatically limit output to the current terminal height.
-     Add an auto limit offset for multiline prompts with \`auto-<number>\`.
+     Subtract an auto limit offset for multiline prompts with \`auto-<number>\`.
 
      • Example Values:
 
