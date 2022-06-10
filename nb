@@ -10234,7 +10234,11 @@ _render() {
     local _use_pandoc="${2:-0}"
 
     local _code_extensions=(
-      bib hs haml js jsx py rb rs sass scss sh vim yml
+      asm aspx awd awk bash bat bats bib c c++ cc cgi class cls cmake cpp cs
+      cson cxx d diff "do" el f fs gcl go h hs haml hbs hx j jade java jl js
+      json jsp jsx kts ksh "less" lsp lua m matlab ml mk mm perl php pl pm prl
+      pug py rb r rh rs sass scala scpt scss sh sql styl swift tcl toml tpl vb
+      vba vbscript vim xml xsl xslt yaml yml zsh
     )
 
     _code_extensions+=($(
