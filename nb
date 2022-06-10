@@ -14999,7 +14999,11 @@ _move() {
 
   if ((${#_selectors[@]}))
   then
-    _source_selectors+=("${_selectors[@]:0:${#_selectors[@]}-1}")
+    local i=
+    for ((i=0; i < ${#_selectors[@]}; i++))
+    do
+      _source_selectors+=("${_selectors[i]}")
+    done
 
     if ((${#_selectors[@]} - 1))
     then
