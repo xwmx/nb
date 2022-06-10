@@ -14954,8 +14954,7 @@ HEREDOC
 _move() {
   local _force=0
   local _reset=0
-  local _source_selectors=()
-  local _target_selector=
+  local _selectors=()
   local _to_target_type=
 
   while ((${#}))
@@ -14984,18 +14983,29 @@ _move() {
 
         shift
         ;;
+      -*)
+        :
+        ;;
       *)
-        if [[ -n "${2:-}"  ]] && [[ ! "${2:-}" =~ ^- ]]
-        then
-          _source_selectors+=("${1}")
-        else
-          _target_selector="${1}"
-        fi
+        _selectors+=("${1:-}")
         ;;
     esac
 
     shift
   done
+
+  local _source_selectors=("${_selectors[@]::${#_selectors[@]}}")
+  local _target_selector=
+
+  if ((${#_selectors[@]}))
+  then
+    _source_selectors=("${_selectors[@]::${#_selectors[@]}}")
+
+    if ((${#_selectors[@]} - 1))
+    then
+      _target_selector="${_selectors[${#_selectors[@]}-1]}"
+    fi
+  fi
 
   if ! ((${#_source_selectors[@]}))
   then
