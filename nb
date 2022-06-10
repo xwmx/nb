@@ -14994,12 +14994,12 @@ _move() {
     shift
   done
 
-  local _source_selectors=("${_selectors[@]::${#_selectors[@]}}")
+  local _source_selectors=()
   local _target_selector=
 
   if ((${#_selectors[@]}))
   then
-    _source_selectors=("${_selectors[@]::${#_selectors[@]}}")
+    _source_selectors+=("${_selectors[@]:0:${#_selectors[@]}-1}")
 
     if ((${#_selectors[@]} - 1))
     then
