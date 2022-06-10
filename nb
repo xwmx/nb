@@ -5039,13 +5039,13 @@ _list() {
           shift
         fi
         ;;
-      --filename*)
-        _list_filenames=1
-        _recursive_arguments+=("--filenames")
-        ;;
       --*empty)
         _error_on_empty=1
         _recursive_arguments+=("--error-on-empty")
+        ;;
+      --filename*)
+        _list_filenames=1
+        _recursive_arguments+=("--filenames")
         ;;
       --limit|-n|--num|--number|--per*)
         if _option_value_is_present "${2:-}"
@@ -5096,11 +5096,11 @@ _list() {
       --recursive|--tree)
         _recursive=1
         ;;
-      -s|--sort)
-        _sort=1
-        ;;
       -r|--reverse)
         _reverse=1
+        ;;
+      -s|--sort)
+        _sort=1
         ;;
       --tags|--hashtags)
         _search "${_selector_arguments[@]:-}" "${@:-}"
