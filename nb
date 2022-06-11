@@ -13240,7 +13240,7 @@ _bookmark() {
                   2>/dev/null || cat
               } | {
                 # strip empty list items
-                LC_ALL=C sed -E -e "s/^-  //g"
+                LC_ALL=C sed -E -e "s/^-[[:space:]]*$//g"
               }
             else
               cat
