@@ -12564,6 +12564,7 @@ _bookmark() {
   local _encrypt=0
   local _password=
   local _quote=
+  local _readability_enabled=1
   local _related_identifiers=()
   local _request_page=1
   local _save_source=0
@@ -12599,6 +12600,9 @@ _bookmark() {
         ;;
       --no*download|--no*fetch|--no*request|--offline)
         _request_page=0
+        ;;
+      --no*readab*|--skip*readab*)
+        _readability_enabled=0
         ;;
       --password)
         _password="$(_option_get_value "${1}" "${2:-}")"
@@ -13219,7 +13223,7 @@ _bookmark() {
           {
             cat "${_temp_file}"
           } | {
-            if _command_exists "readable"
+            if _command_exists "readable" && ((_readability_enabled))
             then
               readable --base "${_url}" 2>/dev/null || cat
             else
