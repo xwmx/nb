@@ -13232,11 +13232,16 @@ _bookmark() {
           } | {
             if _command_exists "pandoc"
             then
-              _pandoc                                 \
-                --standard-input                      \
-                --from html-native_divs-native_spans  \
-                --to markdown-grid_tables --wrap=none \
-                2>/dev/null || cat
+              {
+                _pandoc                                 \
+                  --standard-input                      \
+                  --from html-native_divs-native_spans  \
+                  --to markdown-grid_tables --wrap=none \
+                  2>/dev/null || cat
+              } | {
+                # strip empty list items
+                LC_ALL=C sed -E -e "s/^-  //g"
+              }
             else
               cat
             fi
