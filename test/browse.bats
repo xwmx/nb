@@ -107,16 +107,16 @@ load test_helper
   [[ "${status}"  ==  0 ]]
 
   [[ "${output}"  =~  \
-href=\"//localhost:6789/\?--limit=.*\"\>\<span\ class=\"muted\"\>❯\</span\>nb\</a\>  ]]
+href=\"//localhost:6789/\?--columns=.*\&--limit=.*\"\>\<span\ class=\"muted\"\>❯\</span\>nb\</a\>  ]]
   [[ "${output}"  =~  \
-\<nav\ class=\"header-crumbs\"\>.*\<a.*\ href=\"//localhost:6789/\?--limit=.*\"\>    ]]
+\<nav\ class=\"header-crumbs\"\>.*\<a.*\ href=\"//localhost:6789/\?--columns=.*\&--limit=.*\"\>    ]]
   [[ "${output}"  =~  \
-.*·.*\ \<a.*\ href=\"//localhost:6789/home:\?--limit=.*\"\>home\</a\>\ .*:.*\        ]]
+.*·.*\ \<a.*\ href=\"//localhost:6789/home:\?--columns=.*\&--limit=.*\"\>home\</a\>\ .*:.*\        ]]
   [[ "${output}"  =~  \
-\<a.*\ href=\"//localhost:6789/home:1/\?--limit=.*\"\>Example\ Conflicting\ Name\</a\>\ .*/.*\</strong\>\</nav\>           ]]
+\<a.*\ href=\"//localhost:6789/home:1/\?--columns=.*\&--limit=.*\"\>Example\ Conflicting\ Name\</a\>\ .*/.*\</strong\>\</nav\>           ]]
 
   [[ "${output}"  =~  \
-\<a.*\ href=\"//localhost:6789/home:1/1\?--limit=.*\"\ class=\"list-item\"\>.*\[.*Example${_S}Conflicting${_S}Name/1.*\].* ]]
+\<a.*\ href=\"//localhost:6789/home:1/1\?--columns=.*\&--limit=.*\"\ class=\"list-item\"\>.*\[.*Example${_S}Conflicting${_S}Name/1.*\].* ]]
   [[ "${output}"  =~  \
 class=\"list-item\"\>.*\[.*Example${_S}Conflicting${_S}Name/1.*\].*${_S}Example${_S}Folder${_S}File.md${_S}·  ]]
   [[ "${output}"  =~  \
@@ -469,13 +469,13 @@ HEREDOC
   [[ "${status}"  ==  0 ]]
 
   [[ "${output}"  =~  \
-href=\"//localhost:6789/\?--limit=.*\"\>\<span\ class=\"muted\"\>❯\</span\>nb\</a\>                    ]]
+href=\"//localhost:6789/\?--columns=.*\&--limit=.*\"\>\<span\ class=\"muted\"\>❯\</span\>nb\</a\>                    ]]
   [[ "${output}"  =~  \
-\<nav\ class=\"header-crumbs\"\>.*\<a.*\ href=\"//localhost:6789/\?--limit=.*\"\>                      ]]
+\<nav\ class=\"header-crumbs\"\>.*\<a.*\ href=\"//localhost:6789/\?--columns=.*\&--limit=.*\"\>                      ]]
   [[ "${output}"  =~  \
-.*·.*\ \<a.*\ href=\"//localhost:6789/home:\?--limit=.*\"\>home\</a\>\ .*:.*\                          ]]
+.*·.*\ \<a.*\ href=\"//localhost:6789/home:\?--columns=.*\&--limit=.*\"\>home\</a\>\ .*:.*\                          ]]
   [[ "${output}"  =~  \
-\<a.*\ href=\"//localhost:6789/home:1/\?--limit=.*\"\>Example\ Folder\</a\>\ .*/.*\</strong\>\</nav\>  ]]
+\<a.*\ href=\"//localhost:6789/home:1/\?--columns=.*\&--limit=.*\"\>Example\ Folder\</a\>\ .*/.*\</strong\>\</nav\>  ]]
 
   [[ "${output}"  =~  0\ items. ]]
 
@@ -487,18 +487,18 @@ href=\"//localhost:6789/\?--limit=.*\"\>\<span\ class=\"muted\"\>❯\</span\>nb\
   [[ "${status}"  ==  0 ]]
 
   [[ "${output}"  =~  \
-\<nav\ class=\"header-crumbs\"\>\<strong\>\<a.*\ href=\"//localhost:6789/\?--limit=.*\"\>\<span ]]
+\<nav\ class=\"header-crumbs\"\>\<strong\>\<a.*\ href=\"//localhost:6789/\?--columns=.*\&--limit=.*\"\>\<span ]]
   [[ "${output}"  =~  \
-\<span\ class=\"muted\"\>❯\</span\>nb\</a\>                                                     ]]
+\<span\ class=\"muted\"\>❯\</span\>nb\</a\>                                                                   ]]
   [[ "${output}"  =~  \
-.*·.*\ \<a.*\ href=\"//localhost:6789/home:\?--limit=.*\"\>home\</a\>\ .*:.*\                   ]]
+.*·.*\ \<a.*\ href=\"//localhost:6789/home:\?--columns=.*\&--limit=.*\"\>home\</a\>\ .*:.*\                   ]]
   [[ "${output}"  =~  \
-\<a.*\ href=\"//localhost:6789/home:2/\?--limit=.*\"\>1\</a\>\ .*/.*\</strong\>\</nav\>         ]]
+\<a.*\ href=\"//localhost:6789/home:2/\?--columns=.*\&--limit=.*\"\>1\</a\>\ .*/.*\</strong\>\</nav\>         ]]
 
   [[ "${output}"  =~  \
-\<a.*\ href=\"//localhost:6789/home:2/1\?--limit=.*\"\ class=\"list-item\"\>.*\[.*1/1.*\].*     ]]
+\<a.*\ href=\"//localhost:6789/home:2/1\?--columns=.*\&--limit=.*\"\ class=\"list-item\"\>.*\[.*1/1.*\].*     ]]
   [[ "${output}"  =~  \
-class=\"list-item\"\>.*\[.*1/1.*\].*${_S}File${_S}One.md${_S}·${_S}\"Example${_S}content\.\"\</a\>\<br\>  ]]
+class=\"list-item\"\>.*\[.*1/1.*\].*${_S}File${_S}One.md${_S}·${_S}\"Example${_S}content\.\"\</a\>\<br\>      ]]
 }
 
 # headers #######################################################################

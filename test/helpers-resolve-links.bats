@@ -56,7 +56,7 @@ load test_helper
       --title     "Root Title One"                            \
       --content   "Root content one."
 
-    declare _expected_params="?--limit=2&--columns=70&--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
+    declare _expected_params="?--columns=70&--limit=2&--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
   }
 
   run "${_NB}" helpers resolve_links    \
@@ -168,7 +168,7 @@ load test_helper
 
     printf "\\n#tag8 #tag9\\n" >> "${_html_file_path}"
 
-    declare _expected_params="?--limit=2&--columns=70&--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
+    declare _expected_params="?--columns=70&--limit=2&--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
   }
 
   run "${_NB}" helpers resolve_links    \
@@ -306,13 +306,13 @@ HEREDOC
 "<h1 id=\"sample-nested-title-one\">Sample Nested Title One</h1>"
 
   printf "%s\\n" "${output}" | grep -q  \
-"<p><a href=\"//localhost:6789/home:1?--limit=2&--columns=70\">\[\[1\]\]</a></p>"
+"<p><a href=\"//localhost:6789/home:1?--columns=70&--limit=2\">\[\[1\]\]</a></p>"
 
   printf "%s\\n" "${output}" | grep -q  \
 "<nav>${_NEWLINE}\[\[2\]\]${_NEWLINE}</nav>"
 
   printf "%s\\n" "${output}" | grep -q  \
-"<p><a href=\"//localhost:6789/home:3?--limit=2&--columns=70\">\[\[3\]\]</a></p>"
+"<p><a href=\"//localhost:6789/home:3?--columns=70&--limit=2\">\[\[3\]\]</a></p>"
 
   printf "%s\\n" "${output}" | grep -q  \
 "<p><code>"
@@ -324,7 +324,7 @@ HEREDOC
 "</code></p>"
 
   printf "%s\\n" "${output}" | grep -q  \
-"<p><a href=\"//localhost:6789/home:5?--limit=2&--columns=70\">\[\[5\]\]</a></p>"
+"<p><a href=\"//localhost:6789/home:5?--columns=70&--limit=2\">\[\[5\]\]</a></p>"
 }
 
 # .html #######################################################################
@@ -387,40 +387,40 @@ HEREDOC
   [[ "${status}"  -eq 0                 ]]
 
   printf "%s\\n" "${output}" | grep -q  \
-"Selector link one: <a.* href=\"//localhost:6789/home:2/1?--limit=2&--columns=70\">\[\[home:2/1\]\]</a> •"
+"Selector link one: <a.* href=\"//localhost:6789/home:2/1?--columns=70&--limit=2\">\[\[home:2/1\]\]</a> •"
 
   printf "%s\\n" "${output}" | grep -q  \
-"Selector link two: <a.* href=\"//localhost:6789/home:Root Title One?--limit=2&--columns=70\">\[\[Root Title One\]\]</a> •"
+"Selector link two: <a.* href=\"//localhost:6789/home:Root Title One?--columns=70&--limit=2\">\[\[Root Title One\]\]</a> •"
 
   printf "%s\\n" "${output}" | grep -q  \
-"Labeled link one: <a.* href=\"//localhost:6789/home:2/1?--limit=2&--columns=70\">\[\[Example label.\]\]</a> •"
+"Labeled link one: <a.* href=\"//localhost:6789/home:2/1?--columns=70&--limit=2\">\[\[Example label.\]\]</a> •"
 
   printf "%s\\n" "${output}" | grep -q  \
-"Labeled link two: <a.* href=\"//localhost:6789/home:Root Title One?--limit=2&--columns=70\">\[\[Sample label.\]\]</a> •"
+"Labeled link two: <a.* href=\"//localhost:6789/home:Root Title One?--columns=70&--limit=2\">\[\[Sample label.\]\]</a> •"
 
   printf "%s\\n" "${output}" | grep -q  \
-"Tag one: <a.* href=\"//localhost:6789/home:?--limit=2&--columns=70&--query=%23tag_1\">#tag_1</a> •"
+"Tag one: <a.* href=\"//localhost:6789/home:?--columns=70&--limit=2&--query=%23tag_1\">#tag_1</a> •"
 
   printf "%s\\n" "${output}" | grep -q  \
-"Tag two: <a.* href=\"//localhost:6789/home:?--limit=2&--columns=70&--query=%23tag-2\">#tag-2</a> •"
+"Tag two: <a.* href=\"//localhost:6789/home:?--columns=70&--limit=2&--query=%23tag-2\">#tag-2</a> •"
 
   printf "%s\\n" "${output}" | grep -q  \
 "Tag not valid: 123#not-valid-tag •"
 
   printf "%s\\n" "${output}" | grep -q  \
-"<p><a.* href=\"//localhost:6789/home:?--limit=2&--columns=70&--query=%23tag3\">#tag3</a></p>"
+"<p><a.* href=\"//localhost:6789/home:?--columns=70&--limit=2&--query=%23tag3\">#tag3</a></p>"
 
   printf "%s\\n" "${output}" | grep -q  \
-"<p><a.* href=\"//localhost:6789/home:?--limit=2&--columns=70&--query=%23tag4\">#tag4</a> "
+"<p><a.* href=\"//localhost:6789/home:?--columns=70&--limit=2&--query=%23tag4\">#tag4</a> "
 
   printf "%s\\n" "${output}" | grep -q  \
-" <a.* href=\"//localhost:6789/home:?--limit=2&--columns=70&--query=%23tag5\">#tag5</a> "
+" <a.* href=\"//localhost:6789/home:?--columns=70&--limit=2&--query=%23tag5\">#tag5</a> "
 
   printf "%s\\n" "${output}" | grep -q  \
-" <a.* href=\"//localhost:6789/home:?--limit=2&--columns=70&--query=%23tag6\">#tag6</a> "
+" <a.* href=\"//localhost:6789/home:?--columns=70&--limit=2&--query=%23tag6\">#tag6</a> "
 
   printf "%s\\n" "${output}" | grep -q  \
-" <a.* href=\"//localhost:6789/home:?--limit=2&--columns=70&--query=%23tag7\">#tag7</a></p>"
+" <a.* href=\"//localhost:6789/home:?--columns=70&--limit=2&--query=%23tag7\">#tag7</a></p>"
 
   printf "%s\\n" "${output}" | grep -q  \
 "<p><a.* href=\"//localhost:6789?url=http%3A%2F%2Fexample.com\">Example Outbound Link One</a> •"
@@ -429,10 +429,10 @@ HEREDOC
 "<a.* href=\"//localhost:6789?url=https%3A%2F%2Ftest.test\">Example Outbound Link Two</a> •</p>"
 
   printf "%s\\n" "${output}" | grep -q  \
-"<a href=\"//localhost:6789/home:?--limit=2&--columns=70&--query=%23tag8\">#tag8</a>"
+"<a href=\"//localhost:6789/home:?--columns=70&--limit=2&--query=%23tag8\">#tag8</a>"
 
   printf "%s\\n" "${output}" | grep -q  \
-"<a href=\"//localhost:6789/home:?--limit=2&--columns=70&--query=%23tag9\">#tag9</a>"
+"<a href=\"//localhost:6789/home:?--columns=70&--limit=2&--query=%23tag9\">#tag9</a>"
 }
 
 @test "'_resolve_links --browse' resolves [[wiki-style links]], tags, and outbound links in partial .html files to .html links to local web server URLs." {
@@ -856,22 +856,22 @@ HEREDOC
   [[ "${status}"  -eq 0                 ]]
 
   printf "%s\\n" "${output}" | grep -q  \
-"Selector link one: \[\[//localhost:6789/home:2/1?--limit=2&--columns=70\]\[\[\[home:2/1\]\]\]\] •"
+"Selector link one: \[\[//localhost:6789/home:2/1?--columns=70&--limit=2\]\[\[\[home:2/1\]\]\]\] •"
 
   printf "%s\\n" "${output}" | grep -q  \
-"Selector link two: \[\[//localhost:6789/home:3?--limit=2&--columns=70\]\[\[\[Root Title One\]\]\]\] •"
+"Selector link two: \[\[//localhost:6789/home:3?--columns=70&--limit=2\]\[\[\[Root Title One\]\]\]\] •"
 
   printf "%s\\n" "${output}" | grep -q  \
-"Labeled link one: \[\[//localhost:6789/home:2/1?--limit=2&--columns=70\]\[\[\[Example label.\]\]\]\] •"
+"Labeled link one: \[\[//localhost:6789/home:2/1?--columns=70&--limit=2\]\[\[\[Example label.\]\]\]\] •"
 
   printf "%s\\n" "${output}" | grep -q  \
-"Labeled link two: \[\[//localhost:6789/home:3?--limit=2&--columns=70\]\[\[\[Sample label.\]\]\]\] •"
+"Labeled link two: \[\[//localhost:6789/home:3?--columns=70&--limit=2\]\[\[\[Sample label.\]\]\]\] •"
 
   printf "%s\\n" "${output}" | grep -q  \
-"Tag one: \[\[//localhost:6789/home:?--limit=2&--columns=70&--query=%23tag_1\]\[#tag_1\]\] •"
+"Tag one: \[\[//localhost:6789/home:?--columns=70&--limit=2&--query=%23tag_1\]\[#tag_1\]\] •"
 
   printf "%s\\n" "${output}" | grep -q  \
-"Tag two: \[\[//localhost:6789/home:?--limit=2&--columns=70&--query=%23tag-2\]\[#tag-2\]\] •"
+"Tag two: \[\[//localhost:6789/home:?--columns=70&--limit=2&--query=%23tag-2\]\[#tag-2\]\] •"
 
   printf "%s\\n" "${output}" | grep -q  \
 "Tag not valid: 123#not-valid-tag •"
@@ -886,19 +886,19 @@ HEREDOC
 "Internal Org mode link: \[\[#sample\]\] •"
 
   printf "%s\\n" "${output}" | grep -q  \
-"^\[\[//localhost:6789/home:?--limit=2&--columns=70&--query=%23tag3\]\[#tag3\]\]$"
+"^\[\[//localhost:6789/home:?--columns=70&--limit=2&--query=%23tag3\]\[#tag3\]\]$"
 
   printf "%s\\n" "${output}" | grep -q  \
-"^\[\[//localhost:6789/home:?--limit=2&--columns=70&--query=%23tag4\]\[#tag4\]\] "
+"^\[\[//localhost:6789/home:?--columns=70&--limit=2&--query=%23tag4\]\[#tag4\]\] "
 
   printf "%s\\n" "${output}" | grep -q  \
-" \[\[//localhost:6789/home:?--limit=2&--columns=70&--query=%23tag5\]\[#tag5\]\] "
+" \[\[//localhost:6789/home:?--columns=70&--limit=2&--query=%23tag5\]\[#tag5\]\] "
 
   printf "%s\\n" "${output}" | grep -q  \
-" \[\[//localhost:6789/home:?--limit=2&--columns=70&--query=%23tag6\]\[#tag6\]\] "
+" \[\[//localhost:6789/home:?--columns=70&--limit=2&--query=%23tag6\]\[#tag6\]\] "
 
   printf "%s\\n" "${output}" | grep -q  \
-" \[\[//localhost:6789/home:?--limit=2&--columns=70&--query=%23tag7\]\[#tag7\]\]$"
+" \[\[//localhost:6789/home:?--columns=70&--limit=2&--query=%23tag7\]\[#tag7\]\]$"
 }
 
 @test "'_resolve_links --browse' resolves [[wiki-style links]] and #tags in .org files to .org links to local web server URLs." {

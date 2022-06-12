@@ -40,7 +40,7 @@ load test_helper
   [[ !  "${output}"   =~ Title${_S}Four   ]]
 
   [[    "${output}"   =~  \
-\<a.*\ href=\"//localhost:6789/home:5\?--limit=.*\"\ class=\"list-item\"\>                  ]]
+\<a.*\ href=\"//localhost:6789/home:5\?--columns=.*\&--limit=.*\"\ class=\"list-item\"\>    ]]
   [[    "${output}"   =~   \
 class=\"list-item\"\>\<span\ class=\"muted\"\>\[\</span\>\<span\ class=\"identifier\"\>     ]]
   [[    "${output}"   =~   \
@@ -87,7 +87,7 @@ identifier\"\>home:3\</span\>\<span\ class=\"muted\"\>\]\</span\>\ Title\ Thre
   [[ !  "${output}"   =~ Title${_S}Four   ]]
 
   [[    "${output}"   =~  \
-\<a.*\ href=\"//localhost:6789/home:5\?--limit=.*\"\ class=\"list-item\"\>                  ]]
+\<a.*\ href=\"//localhost:6789/home:5\?--columns=.*\&--limit=.*\"\ class=\"list-item\"\>    ]]
   [[    "${output}"   =~   \
 class=\"list-item\"\>\<span\ class=\"muted\"\>\[\</span\>\<span\ class=\"identifier\"\>     ]]
   [[    "${output}"   =~   \
@@ -133,7 +133,7 @@ identifier\"\>home:5\</span\>\<span\ class=\"muted\"\>\]\</span\>\ Title\ Five
   [[ !  "${output}"   =~ Title${_S}Four   ]]
 
   [[    "${output}"   =~  \
-\<a.*\ href=\"//localhost:6789/home:5\?--limit=.*\"\ class=\"list-item\"\>                  ]]
+\<a.*\ href=\"//localhost:6789/home:5\?--columns=.*\&--limit=.*\"\ class=\"list-item\"\>    ]]
   [[    "${output}"   =~   \
 class=\"list-item\"\>\<span\ class=\"muted\"\>\[\</span\>\<span\ class=\"identifier\"\>     ]]
   [[    "${output}"   =~   \
@@ -177,7 +177,7 @@ identifier\"\>home:5\</span\>\<span\ class=\"muted\"\>\]\</span\>\ Title\ Five
   [[ !  "${output}"   =~ Title${_S}Four   ]]
 
   [[    "${output}"   =~  \
-\<a.*\ href=\"//localhost:6789/home:5\?--limit=.*\"\ class=\"list-item\"\>                  ]]
+\<a.*\ href=\"//localhost:6789/home:5\?--columns=.*\&--limit=.*\"\ class=\"list-item\"\>    ]]
   [[    "${output}"   =~   \
 class=\"list-item\"\>\<span\ class=\"muted\"\>\[\</span\>\<span\ class=\"identifier\"\>     ]]
   [[    "${output}"   =~   \
@@ -220,7 +220,7 @@ identifier\"\>home:5\</span\>\<span\ class=\"muted\"\>\]\</span\>\ Title\ Five
   [[ !  "${output}"   =~ Title${_S}Four   ]]
 
   [[    "${output}"   =~  \
-\<a.*\ href=\"//localhost:6789/home:5\?--limit=.*\"\ class=\"list-item\"\>                  ]]
+\<a.*\ href=\"//localhost:6789/home:5\?--columns=.*\&--limit=.*\"\ class=\"list-item\"\>    ]]
   [[    "${output}"   =~   \
 class=\"list-item\"\>\<span\ class=\"muted\"\>\[\</span\>\<span\ class=\"identifier\"\>     ]]
   [[    "${output}"   =~   \
@@ -267,7 +267,7 @@ identifier\"\>home:3\</span\>\<span\ class=\"muted\"\>\]\</span\>\ Title\ Thre
   [[ !  "${output}"   =~ Title${_S}Four   ]]
 
   [[    "${output}"   =~  \
-\<a.*\ href=\"//localhost:6789/home:5\?--limit=.*\"\ class=\"list-item\"\>                  ]]
+\<a.*\ href=\"//localhost:6789/home:5\?--columns=.*\&--limit=.*\"\ class=\"list-item\"\>    ]]
   [[    "${output}"   =~   \
 class=\"list-item\"\>\<span\ class=\"muted\"\>\[\</span\>\<span\ class=\"identifier\"\>     ]]
   [[    "${output}"   =~   \
@@ -314,7 +314,7 @@ identifier\"\>home:5\</span\>\<span\ class=\"muted\"\>\]\</span\>\ Title\ Five
 identifier\"\>home:4\</span\>\<span\ class=\"muted\"\>\]\</span\>\ Title\ Four\</a\>\<br\>  ]]
 
   [[    "${output}"   =~  \
-\<a.*\ href=\"//localhost:6789/home:2\?--limit=.*\"\ class=\"list-item\"\>                  ]]
+\<a.*\ href=\"//localhost:6789/home:2\?--columns=.*\&--limit=.*\"\ class=\"list-item\"\>    ]]
   [[    "${output}"   =~   \
 class=\"list-item\"\>\<span\ class=\"muted\"\>\[\</span\>\<span\ class=\"identifier\"\>     ]]
   [[    "${output}"   =~   \
@@ -361,7 +361,7 @@ identifier\"\>home:2\</span\>\<span\ class=\"muted\"\>\]\</span\>\ Title\ Two\
 identifier\"\>home:4\</span\>\<span\ class=\"muted\"\>\]\</span\>\ Title\ Four\</a\>\<br\>  ]]
 
   [[    "${output}"   =~  \
-\<a.*\ href=\"//localhost:6789/home:2\?--limit=.*\"\ class=\"list-item\"\>                  ]]
+\<a.*\ href=\"//localhost:6789/home:2\?--columns=.*\&--limit=.*\"\ class=\"list-item\"\>    ]]
   [[    "${output}"   =~   \
 class=\"list-item\"\>\<span\ class=\"muted\"\>\[\</span\>\<span\ class=\"identifier\"\>     ]]
   [[    "${output}"   =~   \
@@ -408,7 +408,7 @@ identifier\"\>home:2\</span\>\<span\ class=\"muted\"\>\]\</span\>\ Title\ Two\
 identifier\"\>home:4\</span\>\<span\ class=\"muted\"\>\]\</span\>\ Title\ Four\</a\>\<br\>  ]]
 
   [[    "${output}"   =~  \
-\<a.*\ href=\"//localhost:6789/home:2\?--limit=.*\"\ class=\"list-item\"\>                  ]]
+\<a.*\ href=\"//localhost:6789/home:2\?--columns=.*\&--limit=.*\"\ class=\"list-item\"\>    ]]
   [[    "${output}"   =~   \
 class=\"list-item\"\>\<span\ class=\"muted\"\>\[\</span\>\<span\ class=\"identifier\"\>     ]]
   [[    "${output}"   =~   \
@@ -489,7 +489,7 @@ identifier\"\>home:2\</span\>\<span\ class=\"muted\"\>\]\</span\>\ Title\ Two\
     "${_NB}" add  "Example Folder"    \
       --type      "folder"
 
-    declare _expected_param_pattern="--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook\&--limit=.*"
+    declare _expected_param_pattern="--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook\&--columns=.*\&--limit=.*"
 
     sleep 1
   }
@@ -514,26 +514,26 @@ href=\"//localhost:6789/\?${_expected_param_pattern}\"\>\<span\ class=\"muted\"\
   # form
 
   [[ "${output}"  =~  \
-action=\"/local:\?--limit=.*\&--columns=.*\&--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook\"  ]]
+action=\"/local:\?--columns=.*\&--limit=.*\&--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook\"      ]]
 
-  [[ "${output}"  =~  value=\"abcd\ efgh\"\>                                                    ]]
+  [[ "${output}"  =~  value=\"abcd\ efgh\"\>                                                ]]
 
   [[ "${output}"  =~  \
-\<input\ type=\"hidden\"\ name=\"--local\"\ \ \ \ \ value=\"${_TMP_DIR}/Local\ Notebook\"\>     ]]
+\<input\ type=\"hidden\"\ name=\"--local\"\ \ \ \ \ value=\"${_TMP_DIR}/Local\ Notebook\"\> ]]
 
   # list
 
   [[ !  "${output}" =~  \
-\<a.*\ href=\"//localhost:6789/local:3\?--limit=.*\&--local=.*\"\ class=\"list-item\"\> ]]
-  [[ !  "${output}" =~  .*\[.*local:3.*\].*${_S}📂${_S}Example${_S}Folder\</a\>\<br\>   ]]
+\<a.*\ href=\"//localhost:6789/local:3\?--columns=.*\&--limit=.*\&--local=.*\"\ class=\"list-item\"\> ]]
+  [[ !  "${output}" =~  .*\[.*local:3.*\].*${_S}📂${_S}Example${_S}Folder\</a\>\<br\>                 ]]
 
   [[    "${output}" =~  \
-\<a.*\ href=\"//localhost:6789/local:2\?--limit=.*\"\ class=\"list-item\"\> ]]
-  [[    "${output}" =~  .*\[.*local:2.*\].*${_S}Title${_S}Two\</a\>\<br\>   ]]
+\<a.*\ href=\"//localhost:6789/local:2\?--columns=.*\&--limit=.*\"\ class=\"list-item\"\>   ]]
+  [[    "${output}" =~  .*\[.*local:2.*\].*${_S}Title${_S}Two\</a\>\<br\>                   ]]
 
   [[ !  "${output}" =~  \
-\<a.*\ href=\"//localhost:6789/local:1\?--limit=.*\"\ class=\"list-item\"\> ]]
-  [[ !  "${output}" =~  .*\[.*local:1.*\].*${_S}Title${_S}One\</a\>\<br\>   ]]
+\<a.*\ href=\"//localhost:6789/local:1\?--columns=.*\&--limit=.*\"\ class=\"list-item\"\>   ]]
+  [[ !  "${output}" =~  .*\[.*local:1.*\].*${_S}Title${_S}One\</a\>\<br\>                   ]]
 }
 
 # normalization ###############################################################
@@ -564,7 +564,7 @@ action=\"/local:\?--limit=.*\&--columns=.*\&--local=${_TMP_DIR//$'/'/%2F}%2FLoca
   [[ !  "${output}"   =~ Title\ One ]]
 
   [[    "${output}"   =~  \
-\<a.*\ href=\"//localhost:6789/home:2\?--limit=.*\"\ class=\"list-item\"\>                ]]
+\<a.*\ href=\"//localhost:6789/home:2\?--columns=.*\&--limit=.*\"\ class=\"list-item\"\>  ]]
   [[    "${output}"   =~   \
 class=\"list-item\"\>\<span\ class=\"muted\"\>\[\</span\>\<span\ class=\"identifier\"\>   ]]
   [[    "${output}"   =~   \
@@ -590,7 +590,7 @@ identifier\"\>home:2\</span\>\<span\ class=\"muted\"\>\]\</span\>\ Title\ Two\
   [[ !  "${output}"   =~ Title\ One ]]
 
   [[    "${output}"   =~  \
-\<a.*\ href=\"//localhost:6789/home:2\?--limit=.*\"\ class=\"list-item\"\>                ]]
+\<a.*\ href=\"//localhost:6789/home:2\?--columns=.*\&--limit=.*\"\ class=\"list-item\"\>  ]]
   [[    "${output}"   =~   \
 class=\"list-item\"\>\<span\ class=\"muted\"\>\[\</span\>\<span\ class=\"identifier\"\>   ]]
   [[    "${output}"   =~   \
@@ -683,7 +683,7 @@ identifier\"\>home:2\</span\>\<span\ class=\"muted\"\>\]\</span\>\ Title\ Two\
   [[ !  "${output}"   =~ Title\ One ]]
 
   [[    "${output}"   =~  \
-\<a.*\ href=\"//localhost:6789/home:2\?--limit=.*\"\ class=\"list-item\"\>                ]]
+\<a.*\ href=\"//localhost:6789/home:2\?--columns=.*\&--limit=.*\"\ class=\"list-item\"\>  ]]
   [[    "${output}"   =~   \
 class=\"list-item\"\>\<span\ class=\"muted\"\>\[\</span\>\<span\ class=\"identifier\"\>   ]]
   [[    "${output}"   =~   \
@@ -708,7 +708,7 @@ identifier\"\>home:2\</span\>\<span\ class=\"muted\"\>\]\</span\>\ Title\ Two\
   [[ !  "${output}"   =~ Title\ One ]]
 
   [[    "${output}"   =~  \
-\<a.*\ href=\"//localhost:6789/home:2\?--limit=.*\"\ class=\"list-item\"\>                ]]
+\<a.*\ href=\"//localhost:6789/home:2\?--columns=.*\&--limit=.*\"\ class=\"list-item\"\>  ]]
   [[    "${output}"   =~   \
 class=\"list-item\"\>\<span\ class=\"muted\"\>\[\</span\>\<span\ class=\"identifier\"\>   ]]
   [[    "${output}"   =~   \
@@ -733,7 +733,7 @@ identifier\"\>home:2\</span\>\<span\ class=\"muted\"\>\]\</span\>\ Title\ Two\
   [[ !  "${output}"   =~ Title\ One ]]
 
   [[    "${output}"   =~  \
-\<a.*\ href=\"//localhost:6789/home:2\?--limit=.*\"\ class=\"list-item\"\>                ]]
+\<a.*\ href=\"//localhost:6789/home:2\?--columns=.*\&--limit=.*\"\ class=\"list-item\"\>  ]]
   [[    "${output}"   =~   \
 class=\"list-item\"\>\<span\ class=\"muted\"\>\[\</span\>\<span\ class=\"identifier\"\>   ]]
   [[    "${output}"   =~   \
@@ -762,7 +762,7 @@ identifier\"\>home:2\</span\>\<span\ class=\"muted\"\>\]\</span\>\ Title\ Two\
     "placeholder=\"search\"${_NEWLINE}type=\"text\"${_NEWLINE}value=\"abcde\">"
 
   printf "%s\\n" "${output}" | grep     -q \
-    "<a.* href=\"//localhost:6789/home:2?--limit=.*\" class=\"list-item\">"
+    "<a.* href=\"//localhost:6789/home:2?--columns=.*&--limit=.*\" class=\"list-item\">"
 
   printf "%s\\n" "${output}" | grep     -q \
     "class=\"list-item\"><span class=\"muted\">\[</span><span class=\"identifier\">"
@@ -793,19 +793,19 @@ identifier\"\>home:2\</span\>\<span\ class=\"muted\"\>\]\</span\>\ Title\ Two\
   [[    "${output}" =~ value=\"\&#35\;xyz\|\&#35\;abcde\" ]]
 
   [[    "${output}" =~ \
-\<a.*\ href=\"//localhost:6789/home:5\?--limit=.*\&--columns=.*\"\ class=\"list-item\"\>\<span\  ]]
+\<a.*\ href=\"//localhost:6789/home:5\?--columns=.*\&--limit=.*\"\ class=\"list-item\"\>\<span\  ]]
 
   [[    "${output}" =~ \
-\<a.*\ href=\"//localhost:6789/home:4\?--limit=.*\&--columns=.*\"\ class=\"list-item\"\>\<span\  ]]
+\<a.*\ href=\"//localhost:6789/home:4\?--columns=.*\&--limit=.*\"\ class=\"list-item\"\>\<span\  ]]
 
   [[    "${output}" =~ \
-\<a.*\ href=\"//localhost:6789/home:3\?--limit=.*\&--columns=.*\"\ class=\"list-item\"\>\<span\  ]]
+\<a.*\ href=\"//localhost:6789/home:3\?--columns=.*\&--limit=.*\"\ class=\"list-item\"\>\<span\  ]]
 
   [[    "${output}" =~ \
-\<a.*\ href=\"//localhost:6789/home:2\?--limit=.*\&--columns=.*\"\ class=\"list-item\"\>\<span\  ]]
+\<a.*\ href=\"//localhost:6789/home:2\?--columns=.*\&--limit=.*\"\ class=\"list-item\"\>\<span\  ]]
 
   [[ !  "${output}" =~ \
-\<a.*\ href=\"//localhost:6789/home:1\?--limit=.*\&--columns=.*\"\ class=\"list-item\"\>\<span\  ]]
+\<a.*\ href=\"//localhost:6789/home:1\?--columns=.*\&--limit=.*\"\ class=\"list-item\"\>\<span\  ]]
 
 }
 
@@ -830,19 +830,19 @@ identifier\"\>home:2\</span\>\<span\ class=\"muted\"\>\]\</span\>\ Title\ Two\
   [[    "${output}" =~ value=\"\&#35\;xyz\ \&#35\;abcde\" ]]
 
   [[    "${output}" =~ \
-\<a.*\ href=\"//localhost:6789/home:5\?--limit=.*\&--columns=.*\"\ class=\"list-item\"\>\<span\  ]]
+\<a.*\ href=\"//localhost:6789/home:5\?--columns=.*\&--limit=.*\"\ class=\"list-item\"\>\<span\  ]]
 
   [[ !  "${output}" =~ \
-\<a.*\ href=\"//localhost:6789/home:4\?--limit=.*\&--columns=.*\"\ class=\"list-item\"\>\<span\  ]]
+\<a.*\ href=\"//localhost:6789/home:4\?--columns=.*\&--limit=.*\"\ class=\"list-item\"\>\<span\  ]]
 
   [[    "${output}" =~ \
-\<a.*\ href=\"//localhost:6789/home:3\?--limit=.*\&--columns=.*\"\ class=\"list-item\"\>\<span\  ]]
+\<a.*\ href=\"//localhost:6789/home:3\?--columns=.*\&--limit=.*\"\ class=\"list-item\"\>\<span\  ]]
 
   [[ !  "${output}" =~ \
-\<a.*\ href=\"//localhost:6789/home:2\?--limit=.*\&--columns=.*\"\ class=\"list-item\"\>\<span\  ]]
+\<a.*\ href=\"//localhost:6789/home:2\?--columns=.*\&--limit=.*\"\ class=\"list-item\"\>\<span\  ]]
 
   [[ !  "${output}" =~ \
-\<a.*\ href=\"//localhost:6789/home:1\?--limit=.*\&--columns=.*\"\ class=\"list-item\"\>\<span\  ]]
+\<a.*\ href=\"//localhost:6789/home:1\?--columns=.*\&--limit=.*\"\ class=\"list-item\"\>\<span\  ]]
 }
 
 @test "'browse --query <#hashtag>' performs search." {
@@ -867,7 +867,7 @@ identifier\"\>home:2\</span\>\<span\ class=\"muted\"\>\]\</span\>\ Title\ Two\
     "placeholder=\"search\"${_NEWLINE}type=\"text\"${_NEWLINE}value=\"#abcde\">"
 
   printf "%s\\n" "${output}" | grep     -q \
-    "<a.* href=\"//localhost:6789/home:2?--limit=.*\" class=\"list-item\">"
+    "<a.* href=\"//localhost:6789/home:2?--columns=.*&--limit=.*\" class=\"list-item\">"
 
   printf "%s\\n" "${output}" | grep     -q \
     "class=\"list-item\"><span class=\"muted\">\[</span><span class=\"identifier\">"

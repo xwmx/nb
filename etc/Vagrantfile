@@ -45,6 +45,36 @@ HEREDOC
   #   centos7.vm.provision :shell, inline: $centos_setup, privileged: false
   # end
 
+  $fedora_setup = <<-HEREDOC
+# install dependencies
+sudo dnf -y update
+sudo dnf -y install bats
+sudo dnf -y install elinks
+sudo dnf -y install git
+sudo dnf -y install lynx
+sudo dnf -y install nmap-ncat
+sudo dnf -y install pandoc
+sudo dnf -y install python3-pygments
+sudo dnf -y install w3m
+
+# install nvm (https://github.com/nvm-sh/nvm)
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.36.0/install.sh | bash
+
+# add project root to $PATH
+if [[ -f "${HOME}/.bashrc" ]] && grep -q -v vagrant "${HOME}/.bashrc"
+then
+  touch "${HOME}/.bashrc"
+  printf "\\nexport PATH=\"/vagrant:\${PATH}\"\\n" >> "${HOME}/.bashrc"
+fi
+HEREDOC
+
+  # Fedora 36
+  # config.vm.define "fedora36" do |fedora36|
+  #   fedora36.vm.box         = "fedora/36-cloud-base"
+  #   fedora36.vm.box_version = "36-20220504.1"
+  #   fedora36.vm.provision :shell, inline: $fedora_setup, privileged: false
+  # end
+
   $freebsd_setup = <<-HEREDOC
 # TODO
 HEREDOC

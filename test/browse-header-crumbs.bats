@@ -19,16 +19,16 @@ load test_helper
   [[ "${status}"    == 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><strong><a href=\"//localhost:6789/?--limit=.*&--columns=.*\"><span class=\"muted\">❯</span>nb</a> <span class=\"muted\">·</span> "
+"<nav class=\"header-crumbs\"><strong><a href=\"//localhost:6789/?--columns=.*&--limit=.*\"><span class=\"muted\">❯</span>nb</a> <span class=\"muted\">·</span> "
 
   printf "%s\\n" "${output}" | grep -q \
-" <span class=\"muted\">·</span> <a href=\"//localhost:6789/home:?--limit=.*&--columns=.*\">home</a> <span class=\"muted\">:</span> "
+" <span class=\"muted\">·</span> <a href=\"//localhost:6789/home:?--columns=.*&--limit=.*\">home</a> <span class=\"muted\">:</span> "
 
   printf "%s\\n" "${output}" | grep -q \
-" <span class=\"muted\">:</span> <a href=\"//localhost:6789/home:1/?--limit=.*&--columns=.*\">Example Folder</a> <span class=\"muted\">/</span> "
+" <span class=\"muted\">:</span> <a href=\"//localhost:6789/home:1/?--columns=.*&--limit=.*\">Example Folder</a> <span class=\"muted\">/</span> "
 
   printf "%s\\n" "${output}" | grep -q \
-" <span class=\"muted\">/</span> <a href=\"//localhost:6789/home:1/1/?--limit=.*&--columns=.*\">Sample Folder</a> <span class=\"muted\">/</span> "
+" <span class=\"muted\">/</span> <a href=\"//localhost:6789/home:1/1/?--columns=.*&--limit=.*\">Sample Folder</a> <span class=\"muted\">/</span> "
 
   printf "%s\\n" "${output}" | grep -q \
 " <span class=\"muted\">/</span> <span class=\"muted\">+</span></strong></nav>"
@@ -67,13 +67,13 @@ load test_helper
   [[ "${status}"    ==  0               ]]
 
   printf "%s\\n" "${output}" | grep     -q \
-"<a.* href=\"//localhost:6789/?--limit=.*&--columns=.*\"><span class=\"muted\">❯</span>nb</a> <span class=\"muted\">·</span> "
+"<a.* href=\"//localhost:6789/?--columns=.*&--limit=.*\"><span class=\"muted\">❯</span>nb</a> <span class=\"muted\">·</span> "
 
   printf "%s\\n" "${output}" | grep     -q \
-" <span class=\"muted\">·</span> <a.* href=\"//localhost:6789/home:?--limit=.*&--columns=.*\">home</a> <span class=\"muted\">:</span> "
+" <span class=\"muted\">·</span> <a.* href=\"//localhost:6789/home:?--columns=.*&--limit=.*\">home</a> <span class=\"muted\">:</span> "
 
   printf "%s\\n" "${output}" | grep     -q \
-" <span class=\"muted\">:</span> <a.* href=\"//localhost:6789/home:2/?--limit=.*&--columns=.*\">Example Folder</a> <span class=\"muted\">/</span> "
+" <span class=\"muted\">:</span> <a.* href=\"//localhost:6789/home:2/?--columns=.*&--limit=.*\">Example Folder</a> <span class=\"muted\">/</span> "
 
   printf "%s\\n" "${output}" | grep     -q \
 "</span> <a.* href=\"//localhost:6789/--original/home/Example Folder/File One.odt\">↓</a>"
@@ -101,19 +101,19 @@ load test_helper
   [[ "${status}"    == 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><strong><a href=\"//localhost:6789/?--limit=.*&--columns=.*\"><span class=\"muted\">❯</span>nb</a> <span class=\"muted\">·</span> "
+"<nav class=\"header-crumbs\"><strong><a href=\"//localhost:6789/?--columns=.*&--limit=.*\"><span class=\"muted\">❯</span>nb</a> <span class=\"muted\">·</span> "
 
   printf "%s\\n" "${output}" | grep -q \
-" <span class=\"muted\">·</span> <a href=\"//localhost:6789/home:?--limit=.*&--columns=.*\">home</a> <span class=\"muted\">:</span> "
+" <span class=\"muted\">·</span> <a href=\"//localhost:6789/home:?--columns=.*&--limit=.*\">home</a> <span class=\"muted\">:</span> "
 
   printf "%s\\n" "${output}" | grep -q \
-" <span class=\"muted\">:</span> <a href=\"//localhost:6789/home:1/?--limit=.*&--columns=.*\">Example Folder</a> <span class=\"muted\">/</span> "
+" <span class=\"muted\">:</span> <a href=\"//localhost:6789/home:1/?--columns=.*&--limit=.*\">Example Folder</a> <span class=\"muted\">/</span> "
 
   printf "%s\\n" "${output}" | grep -q \
-" <span class=\"muted\">/</span> <a href=\"//localhost:6789/home:1/1/?--limit=.*&--columns=.*\">Sample Folder</a> <span class=\"muted\">/</span> "
+" <span class=\"muted\">/</span> <a href=\"//localhost:6789/home:1/1/?--columns=.*&--limit=.*\">Sample Folder</a> <span class=\"muted\">/</span> "
 
   printf "%s\\n" "${output}" | grep -q \
-"</span> <a href=\"//localhost:6789/home:1/1/1?--limit=.*&--columns=.*\">1</a> <span class=\"muted\">·</span> "
+"</span> <a href=\"//localhost:6789/home:1/1/1?--columns=.*&--limit=.*\">1</a> <span class=\"muted\">·</span> "
 
   printf "%s\\n" "${output}" | grep -q \
 "</span> <a.* href=\"//localhost:6789/--original/home/Example Folder/Sample Folder/File One.md\">↓</a>"
@@ -122,10 +122,10 @@ load test_helper
 "<span class=\"muted\">·</span> <span class=\"muted\">editing</span> <span class=\"muted\">·</span> <a href=\"//local"
 
   printf "%s\\n" "${output}" | grep -q \
-"host:6789/home:1/1/1?--limit=.*&--columns=.*&--delete\">-</a> <span class=\"muted\">\|</span> <a "
+"host:6789/home:1/1/1?--columns=.*&--limit=.*&--delete\">-</a> <span class=\"muted\">\|</span> <a "
 
   printf "%s\\n" "${output}" | grep -q \
-"href=\"//localhost:6789/home:1/1/?--limit=.*&--columns=.*&--add\">+</a></strong></nav>"
+"href=\"//localhost:6789/home:1/1/?--columns=.*&--limit=.*&--add\">+</a></strong></nav>"
 }
 
 # header crumbs ###############################################################
@@ -144,7 +144,7 @@ load test_helper
       --content   "Example content."
 
     declare _local_notebook_param="--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
-    declare _expected_params="?${_local_notebook_param}&--limit=.*&--columns=.*"
+    declare _expected_params="?${_local_notebook_param}&--columns=.*&--limit=.*"
   }
 
   run "${_NB}" browse local:1/1/1 --header
@@ -199,10 +199,10 @@ load test_helper
   [[ "${status}"    == 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><strong><a href=\"//localhost:6789/?--limit=.*&--columns=.*\"><span class=\"muted\">❯</span>nb</a> <span class=\"muted\">·</span>"
+"<nav class=\"header-crumbs\"><strong><a href=\"//localhost:6789/?--columns=.*&--limit=.*\"><span class=\"muted\">❯</span>nb</a> <span class=\"muted\">·</span>"
 
   printf "%s\\n" "${output}" | grep -q \
-" <span class=\"muted\">·</span> <a href=\"//localhost:6789/home:?--limit=.*&--columns=.*\">home</a> <span class=\"muted\">:</span"
+" <span class=\"muted\">·</span> <a href=\"//localhost:6789/home:?--columns=.*&--limit=.*\">home</a> <span class=\"muted\">:</span"
 
   printf "%s\\n" "${output}" | grep -q \
 " <span class=\"muted\">:</span> <span class=\"muted\">1</span> "
@@ -214,10 +214,10 @@ load test_helper
 "</span> <a.* href=\"//localhost:6789/--original/home/File One.md\">↓</a>"
 
   printf "%s\\n" "${output}" | grep -q \
-" <a href=\"//localhost:6789/home:1?--limit=.*&--columns=.*&--edit\">edit</a> <span class=\"muted\">\|</span> <a "
+" <a href=\"//localhost:6789/home:1?--columns=.*&--limit=.*&--edit\">edit</a> <span class=\"muted\">\|</span> <a "
 
   printf "%s\\n" "${output}" | grep -q \
-"href=\"//localhost:6789/home:?--limit=.*&--columns=.*&--add\">+</a></strong></nav>"
+"href=\"//localhost:6789/home:?--columns=.*&--limit=.*&--add\">+</a></strong></nav>"
 }
 
 @test "'browse <notebook>:<folder-id>/<folder-id>/<file-id>' displays header crumbs with id with file." {
@@ -237,16 +237,16 @@ load test_helper
   [[ "${status}"    == 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><strong><a href=\"//localhost:6789/?--limit=.*&--columns=.*\"><span class=\"muted\">❯</span>nb</a> <span class=\"muted\">·</span> "
+"<nav class=\"header-crumbs\"><strong><a href=\"//localhost:6789/?--columns=.*&--limit=.*\"><span class=\"muted\">❯</span>nb</a> <span class=\"muted\">·</span> "
 
   printf "%s\\n" "${output}" | grep -q \
-" <span class=\"muted\">·</span> <a href=\"//localhost:6789/home:?--limit=.*&--columns=.*\">home</a> <span class=\"muted\">:</span> "
+" <span class=\"muted\">·</span> <a href=\"//localhost:6789/home:?--columns=.*&--limit=.*\">home</a> <span class=\"muted\">:</span> "
 
   printf "%s\\n" "${output}" | grep -q \
-" <span class=\"muted\">:</span> <a href=\"//localhost:6789/home:1/?--limit=.*&--columns=.*\">Example Folder</a> <span class=\"muted\">/</span> "
+" <span class=\"muted\">:</span> <a href=\"//localhost:6789/home:1/?--columns=.*&--limit=.*\">Example Folder</a> <span class=\"muted\">/</span> "
 
   printf "%s\\n" "${output}" | grep -q \
-" <span class=\"muted\">/</span> <a href=\"//localhost:6789/home:1/1/?--limit=.*&--columns=.*\">Sample Folder</a> <span class=\"muted\">/</span> "
+" <span class=\"muted\">/</span> <a href=\"//localhost:6789/home:1/1/?--columns=.*&--limit=.*\">Sample Folder</a> <span class=\"muted\">/</span> "
 
   printf "%s\\n" "${output}" | grep -q \
 " <span class=\"muted\">/</span> <span class=\"muted\">1</span> "
@@ -258,10 +258,10 @@ load test_helper
 "</span> <a.* href=\"//localhost:6789/--original/home/Example Folder/Sample Folder/File One.md\">↓</a>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<a href=\"//localhost:6789/home:1/1/1?--limit=.*&--columns=.*&--edit\">edit</a> <span class=\"muted\">\|</span> <a "
+"<a href=\"//localhost:6789/home:1/1/1?--columns=.*&--limit=.*&--edit\">edit</a> <span class=\"muted\">\|</span> <a "
 
   printf "%s\\n" "${output}" | grep -q \
-"href=\"//localhost:6789/home:1/1/?--limit=.*&--columns=.*&--add\">+</a></strong></nav>"
+"href=\"//localhost:6789/home:1/1/?--columns=.*&--limit=.*&--add\">+</a></strong></nav>"
 }
 
 @test "'browse <notebook>:<folder-id>/<file-id>' displays header crumbs with folder." {
@@ -282,13 +282,13 @@ load test_helper
 
 
   printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><strong><a href=\"//localhost:6789/?--limit=.*&--columns=.*\"><span class=\"muted\">❯</span>nb</a> <span class=\"muted\">·</span> "
+"<nav class=\"header-crumbs\"><strong><a href=\"//localhost:6789/?--columns=.*&--limit=.*\"><span class=\"muted\">❯</span>nb</a> <span class=\"muted\">·</span> "
 
   printf "%s\\n" "${output}" | grep -q \
-" <span class=\"muted\">·</span> <a href=\"//localhost:6789/home:?--limit=.*&--columns=.*\">home</a> <span class=\"muted\">:</span> "
+" <span class=\"muted\">·</span> <a href=\"//localhost:6789/home:?--columns=.*&--limit=.*\">home</a> <span class=\"muted\">:</span> "
 
   printf "%s\\n" "${output}" | grep -q \
-" <span class=\"muted\">:</span> <a href=\"//localhost:6789/home:1/?--limit=.*&--columns=.*\">Example Folder</a> <span class=\"muted\">/</span> "
+" <span class=\"muted\">:</span> <a href=\"//localhost:6789/home:1/?--columns=.*&--limit=.*\">Example Folder</a> <span class=\"muted\">/</span> "
 
   printf "%s\\n" "${output}" | grep -q \
 " <span class=\"muted\">/</span> <span class=\"muted\">1</span> "
@@ -300,10 +300,10 @@ load test_helper
 "</span> <a.* href=\"//localhost:6789/--original/home/Example Folder/File One.md\">↓</a>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<a href=\"//localhost:6789/home:1/1?--limit=.*&--columns=.*&--edit\">edit</a> <span class=\"muted\">|</span> <a "
+"<a href=\"//localhost:6789/home:1/1?--columns=.*&--limit=.*&--edit\">edit</a> <span class=\"muted\">|</span> <a "
 
   printf "%s\\n" "${output}" | grep -q \
-"href=\"//localhost:6789/home:1/?--limit=.*&--columns=.*&--add\">+</a></strong></nav>"
+"href=\"//localhost:6789/home:1/?--columns=.*&--limit=.*&--add\">+</a></strong></nav>"
 }
 
 @test "'browse <notebook>:<folder-id>/<folder-id>' displays header crumbs with folder." {
@@ -326,19 +326,19 @@ load test_helper
   [[ "${status}"    == 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><strong><a href=\"//localhost:6789/?--limit=.*&--columns=.*\"><span class=\"muted\">❯</span>nb</a> <span class=\"muted\">·</span> "
+"<nav class=\"header-crumbs\"><strong><a href=\"//localhost:6789/?--columns=.*&--limit=.*\"><span class=\"muted\">❯</span>nb</a> <span class=\"muted\">·</span> "
 
   printf "%s\\n" "${output}" | grep -q \
-" <span class=\"muted\">·</span> <a href=\"//localhost:6789/home:?--limit=.*&--columns=.*\">home</a> <span class=\"muted\">:</span> "
+" <span class=\"muted\">·</span> <a href=\"//localhost:6789/home:?--columns=.*&--limit=.*\">home</a> <span class=\"muted\">:</span> "
 
   printf "%s\\n" "${output}" | grep -q \
-" <span class=\"muted\">:</span> <a href=\"//localhost:6789/home:1/?--limit=.*&--columns=.*\">Example Folder</a> <span class=\"muted\">/</span> "
+" <span class=\"muted\">:</span> <a href=\"//localhost:6789/home:1/?--columns=.*&--limit=.*\">Example Folder</a> <span class=\"muted\">/</span> "
 
   printf "%s\\n" "${output}" | grep -q \
-" <span class=\"muted\">/</span> <a href=\"//localhost:6789/home:1/1/?--limit=.*&--columns=.*\">Sample Folder</a> <span class=\"muted\">/</span> <a "
+" <span class=\"muted\">/</span> <a href=\"//localhost:6789/home:1/1/?--columns=.*&--limit=.*\">Sample Folder</a> <span class=\"muted\">/</span> <a "
 
   printf "%s\\n" "${output}" | grep -q \
-"href=\"//localhost:6789/home:1/1/?--limit=.*&--columns=.*&--add\">+</a></strong></nav>"
+"href=\"//localhost:6789/home:1/1/?--columns=.*&--limit=.*&--add\">+</a></strong></nav>"
 
   printf "%s\\n" "${output}" | grep -q -v "↓"
 
@@ -371,13 +371,13 @@ load test_helper
   [[ "${status}"    == 0  ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><strong><a href=\"//localhost:6789/?--limit.*\"><span class=\"muted\">❯</span>nb</a> <span class=\"muted\">·</span> "
+"<nav class=\"header-crumbs\"><strong><a href=\"//localhost:6789/?--columns=.*&--limit.*\"><span class=\"muted\">❯</span>nb</a> <span class=\"muted\">·</span> "
 
   printf "%s\\n" "${output}" | grep -q \
-" <span class=\"muted\">·</span> <a href=\"//localhost:6789/home:?--limit=.*&--columns=.*\">home</a> <span class=\"muted\">:</span> "
+" <span class=\"muted\">·</span> <a href=\"//localhost:6789/home:?--columns=.*&--limit=.*\">home</a> <span class=\"muted\">:</span> "
 
   printf "%s\\n" "${output}" | grep -q \
-" <span class=\"muted\">:</span> <a href=\"//localhost:6789/home:1/?--limit=.*&--columns=.*\">Example Folder</a> <span class=\"muted\">/</span> "
+" <span class=\"muted\">:</span> <a href=\"//localhost:6789/home:1/?--columns=.*&--limit=.*\">Example Folder</a> <span class=\"muted\">/</span> "
 
   printf "%s\\n" "${output}" | grep -q \
 " <span class=\"muted\">/</span> <span class=\"muted\">1</span> "
@@ -389,10 +389,10 @@ load test_helper
 "</span> <a.* href=\"//localhost:6789/--original/home/Example Folder/File One.md\">↓</a>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<a href=\"//localhost:6789/home:1/1?--limit=.*&--columns=.*&--edit\">edit</a> <span class=\"muted\">\|</span> <a "
+"<a href=\"//localhost:6789/home:1/1?--columns=.*&--limit=.*&--edit\">edit</a> <span class=\"muted\">\|</span> <a "
 
   printf "%s\\n" "${output}" | grep -q \
-"href=\"//localhost:6789/home:1/?--limit=.*&--columns=.*&--add\">+</a></strong></nav>"
+"href=\"//localhost:6789/home:1/?--columns=.*&--limit=.*&--add\">+</a></strong></nav>"
 }
 
 @test "'browse <notebook-path>/<folder>' displays header crumbs with folder." {
@@ -412,16 +412,16 @@ load test_helper
   [[ "${status}"    == 0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><strong><a href=\"//localhost:6789/?--limit=.*&--columns=.*\"><span class=\"muted\">❯</span>nb</a> <span class=\"muted\">·</span> "
+"<nav class=\"header-crumbs\"><strong><a href=\"//localhost:6789/?--columns=.*&--limit=.*\"><span class=\"muted\">❯</span>nb</a> <span class=\"muted\">·</span> "
 
   printf "%s\\n" "${output}" | grep -q \
-" <span class=\"muted\">·</span> <a href=\"//localhost:6789/home:?--limit=.*&--columns=.*\">home</a> <span class=\"muted\">:</span> "
+" <span class=\"muted\">·</span> <a href=\"//localhost:6789/home:?--columns=.*&--limit=.*\">home</a> <span class=\"muted\">:</span> "
 
   printf "%s\\n" "${output}" | grep -q \
-" <span class=\"muted\">:</span> <a href=\"//localhost:6789/home:1/?--limit=.*&--columns=.*\">Example Folder</a> <span class=\"muted\">/</span> <a "
+" <span class=\"muted\">:</span> <a href=\"//localhost:6789/home:1/?--columns=.*&--limit=.*\">Example Folder</a> <span class=\"muted\">/</span> <a "
 
   printf "%s\\n" "${output}" | grep -q \
-"href=\"//localhost:6789/home:1/?--limit=.*&--columns=.*&--add\">+</a></strong></nav>"
+"href=\"//localhost:6789/home:1/?--columns=.*&--limit=.*&--add\">+</a></strong></nav>"
 
   printf "%s\\n" "${output}" | grep -q -v "↓"
 }

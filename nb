@@ -74,7 +74,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="6.11.1"
+_VERSION="6.11.2"
 
 # $_ME
 #
@@ -423,7 +423,7 @@ _option_value_is_present() {
 # Default: `$HOME/.nbrc`
 #
 # The location of the .nbrc configuration file.
-export NBRC_PATH="${NBRC_PATH:-"${HOME}/.nbrc"}"
+export NBRC_PATH="${NBRC_PATH:-"${HOME}/.${_ME}rc"}"
 
 # Handle symlinked NBRC_PATH.
 if [[ -L "${NBRC_PATH}" ]]
@@ -444,7 +444,7 @@ fi
 # Default: `$HOME/.nb`
 #
 # The location of the directory that contains the notebooks.
-export NB_DIR="${NB_DIR:-"${HOME}/.nb"}"
+export NB_DIR="${NB_DIR:-"${HOME}/.${_ME}"}"
 
 # Handle symlinked NB_DIR.
 if [[ -L "${NB_DIR:-}"      ]]
@@ -464,7 +464,7 @@ then
 NB_DIR is not valid:
   ${NB_DIR}
 
-Remove any NB_DIR settings in .nbrc to reset to default:
+Remove any NB_DIR settings in .${_ME}rc to reset to default:
   ${NBRC_PATH}
 
 NB_DIR settings prompt:
@@ -547,7 +547,7 @@ export _GIT_ENABLED="${_GIT_ENABLED:-1}"
 #
 # Set to a positive number to limit the output of `nb` and `nls` to that value.
 # Set to "auto" to automatically limit output to the current terminal height.
-# Add an auto limit offset for multiline prompts with `auto-<number>`.
+# Subtract an auto limit offset for multiline prompts with `auto-<number>`.
 #
 # Supported Values:
 #   - <number>
@@ -827,7 +827,7 @@ __load_themes() {
   then
     set +f
     local __file=
-    for   __file in "${NB_DIR}/.plugins"/*.nb-theme*
+    for   __file in "${NB_DIR}/.plugins"/*."${_ME}"-theme*
     do
       if [[ -e "${__file}"        ]]
       then
@@ -3226,14 +3226,14 @@ _count() {
   while ((${#}))
   do
     case "${1:-}" in
+      --skip-unmatched-selector)
+        _skip_unmatched_selector=1
+        ;;
       --type)
         _list_files_options+=("${1}")
         _list_files_options+=(_option_get_value "${1}" "${2:-}")
 
         shift
-        ;;
-      --skip-unmatched-selector)
-        _skip_unmatched_selector=1
         ;;
       -*|/*)
         _list_files_options+=("${1}")
@@ -3420,7 +3420,7 @@ _git() {
 
     if [[ -z "${_message}" ]]
     then
-      _message="[nb] Commit"
+      _message="[${_ME}] Commit"
     fi
 
     if ((NB_AUTO_SYNC))
@@ -3666,8 +3666,8 @@ HEREDOC
         GIT_PAGER='' git -C "${_notebook_path}" diff --name-only --diff-filter=U
       ))
 
-      local _conflicted_text_files=()
       local _conflicted_binary_files=()
+      local _conflicted_text_files=()
 
       if [[ -n "${_conflicted_files[*]:-}" ]]
       then
@@ -3929,11 +3929,11 @@ themes. The current color theme can be set using \`${_ME} set color_theme\`:
 
     $(_color_primary "${_ME} set color_theme")
 
-Custom color themes are \`nb\` plugins with a \`.nb-theme\` file extension.
+Custom color themes are \`${_ME}\` plugins with a \`.${_ME}-theme\` file extension.
 A theme is defined with a single \`if\` statement indicating the name and
 assigning the color environment variables to \`tput\` ANSI color numbers:
 
-    $(_color_secondary "# turquoise.nb-theme")
+    $(_color_secondary "# turquoise.${_ME}-theme")
     $(_color_primary "if [[ \"\${NB_COLOR_THEME}\" == ${_TPUT_SGR0}\"turquoise\"${_TPUT_COLOR_PRIMARY} ]]")
     $(_color_primary "then")
     $(_color_primary "  export NB_COLOR_PRIMARY=${_TPUT_SGR0}43${_TPUT_COLOR_PRIMARY}")
@@ -3942,13 +3942,13 @@ assigning the color environment variables to \`tput\` ANSI color numbers:
 
 View this theme as a complete file
 
-    $(_color_primary "https://github.com/xwmx/nb/blob/master/plugins/turquoise.nb-theme")
+    $(_color_primary "https://github.com/xwmx/nb/blob/master/plugins/turquoise.${_ME}-theme")
 
 Themes can be installed using the \`${_ME} plugins\` subcommand:
 
-    $(_color_muted ">") $(_color_primary "${_ME} plugins install https://github.com/xwmx/nb/blob/master/plugins/turquoise.nb-theme")
+    $(_color_muted ">") $(_color_primary "${_ME} plugins install https://github.com/xwmx/nb/blob/master/plugins/turquoise.${_ME}-theme")
     $(_color_secondary "Plugin installed:")
-    $(_color_secondary "/home/example/.nb/.plugins/turquoise.nb-theme")
+    $(_color_secondary "/home/example/.${_ME}/.plugins/turquoise.${_ME}-theme")
 
 Once a theme is installed, use it with \`${_ME} set color_theme\`:
 
@@ -3987,7 +3987,7 @@ HEREDOC
 
       cat <<HEREDOC
 
-$(_color_brackets "nb") Command line and local web note-taking, bookmarking, and archiving with
+$(_color_brackets "${_ME}") Command line and local web note-taking, bookmarking, and archiving with
 plain text data storage, encryption, filtering and search, pinning, #tagging,
 Git-backed versioning and syncing, Pandoc-backed conversion, global and local
 notebooks, customizable color themes, [[wiki-style linking]], plugins, and more
@@ -4228,7 +4228,7 @@ HEREDOC
     fi | {
       if ((_shell))
       then
-        LC_ALL=C sed -e "s/^  nb /  /" -e "/^  nb$/d"
+        LC_ALL=C sed -e "s/^  ${_ME} /  /" -e "/^  ${_ME}$/d"
       else
         cat
       fi
@@ -4549,7 +4549,7 @@ _index() {
 
         _current_folder_path="${_current_folder_path%/*}"
       done  &&
-        _git checkpoint "${_notebook_path}" "[nb] ${_rebuild_type:-Rebuild} Index"
+        _git checkpoint "${_notebook_path}" "[${_ME}] ${_rebuild_type:-Rebuild} Index"
 
       return 0
       ;;
@@ -4665,7 +4665,7 @@ _index() {
 
       if ((_commit_changes))
       then
-        _git checkpoint "${_notebook_path}" "[nb] Reconcile Index"
+        _git checkpoint "${_notebook_path}" "[${_ME}] Reconcile Index"
       fi
       ;;
     show)
@@ -4846,7 +4846,7 @@ _init() {
       } && {
         touch  "${NB_DIR}/home/.index"
       } && {
-        _git checkpoint "${NB_DIR}/home" "[nb] Initialize"
+        _git checkpoint "${NB_DIR}/home" "[${_ME}] Initialize"
       }
     fi
 
@@ -4882,7 +4882,7 @@ HEREDOC
       cat <<HEREDOC > "${NBRC_PATH}"
 #!/usr/bin/env bash
 ###############################################################################
-# .nbrc
+# .${_ME}rc
 #
 # Configuration file for \`${_ME}\`, a command line note-taking, bookmarking,
 # and knowledge base application with encryption, search, Git-backed syncing,
@@ -4947,7 +4947,7 @@ $(_color_primary "Options"):
   --no-id                         Don't include the id in list items.
   --no-indicator                  Don't include the indicator in list items.
   -p, --page <number>             The page to view in the list paginated by
-                                  a <limit> option or \`nb set limit\`.
+                                  a <limit> option or \`${_ME} set limit\`.
   --pager                         Display output in the pager.
   --paths                         Print the full path to each item.
   -s, --sort                      Order notes by id.
@@ -5039,13 +5039,13 @@ _list() {
           shift
         fi
         ;;
-      --filename*)
-        _list_filenames=1
-        _recursive_arguments+=("--filenames")
-        ;;
       --*empty)
         _error_on_empty=1
         _recursive_arguments+=("--error-on-empty")
+        ;;
+      --filename*)
+        _list_filenames=1
+        _recursive_arguments+=("--filenames")
         ;;
       --limit|-n|--num|--number|--per*)
         if _option_value_is_present "${2:-}"
@@ -5096,11 +5096,11 @@ _list() {
       --recursive|--tree)
         _recursive=1
         ;;
-      -s|--sort)
-        _sort=1
-        ;;
       -r|--reverse)
         _reverse=1
+        ;;
+      -s|--sort)
+        _sort=1
         ;;
       --tags|--hashtags)
         _search "${_selector_arguments[@]:-}" "${@:-}"
@@ -5466,7 +5466,7 @@ _list() {
               fi
 
               _git checkpoint "${_notebook_path}"                   \
-                "[nb] Unpinned: ${_deleted_pin_relative_path}"
+                "[${_ME}] Unpinned: ${_deleted_pin_relative_path}"
             fi
           done
         } | {
@@ -6002,7 +6002,7 @@ $(_color_primary "Options"):
   --no-id                         Don't include the id in list items.
   --no-indicator                  Don't include the indicator in list items.
   -p, --page <number>             The page to view in the list paginated by
-                                  a <limit> option or \`nb set limit\`.
+                                  a <limit> option or \`${_ME} set limit\`.
   --pager                         Display output in the pager.
   --paths                         Print the full path to each item.
   -s, --sort                      Order notes by id.
@@ -6059,6 +6059,9 @@ $(_color_primary "Examples"):
   ${_ME} example:
   ${_ME} example: -ae
   ${_ME} example:ls
+
+$(_color_primary "Shortcut Alias"):
+  ${_ME}
 HEREDOC
 }
 _ls() {
@@ -7243,7 +7246,7 @@ HEREDOC
         }                                             &&
         touch "${NB_DIR}/${_name}/.index"             &&
         _temp cache clear                             &&
-        _git checkpoint "${NB_DIR}/${_name}" "[nb] Initialize"
+        _git checkpoint "${NB_DIR}/${_name}" "[${_ME}] Initialize"
       fi                            &&
         ((_print_default_feedback)) &&
         printf "Added notebook: %s\\n" "$(_color_primary "${_name}")"
@@ -7273,7 +7276,7 @@ HEREDOC
           fi
         } && touch "${NB_DIR}/${__notebook_name}/.index"    &&
         _temp cache clear                                   &&
-        _git checkpoint "${NB_DIR}/${__notebook_name}" "[nb] Initialize"
+        _git checkpoint "${NB_DIR}/${__notebook_name}" "[${_ME}] Initialize"
       fi
     done
   }
@@ -7989,7 +7992,7 @@ HEREDOC
           fi
         } &&
         touch "${_path}/.index"           &&
-        _git checkpoint "${_path}" "[nb] Initialize"
+        _git checkpoint "${_path}" "[${_ME}] Initialize"
     fi
 
     printf "Initialized local notebook: %s\\n" "$(_color_primary "${_path}")"
@@ -8284,7 +8287,7 @@ HEREDOC
         if [[ ! -e "${_dotfile_path}"         ]]
         then
           touch "${_dotfile_path}" &&
-            _git checkpoint "${_notebook_path}" "[nb] Archived"
+            _git checkpoint "${_notebook_path}" "[${_ME}] Archived"
         fi
 
         printf "%s archived.\\n" "$(_color_primary "${_notebook_name}")"
@@ -8301,7 +8304,7 @@ HEREDOC
         if [[   -e "${_dotfile_path}"         ]]
         then
           rm "${_dotfile_path:?}" &&
-            _git checkpoint "${_notebook_path}" "[nb] Unarchived"
+            _git checkpoint "${_notebook_path}" "[${_ME}] Unarchived"
         fi
 
         printf "%s unarchived.\\n" "$(_color_primary "${_notebook_name}")"
@@ -8647,10 +8650,12 @@ HEREDOC
   case "${_subcommand}" in
     a|add|create|new)
       shift
+
       _notebooks_add      "${@:-}"
       ;;
     author|config*)
       shift
+
       _notebooks_author   "${@:-}"
       ;;
     export)
@@ -8661,10 +8666,12 @@ HEREDOC
       ;;
     init)
       shift
+
       _notebooks_init     "${@:-}"
       ;;
     current)
       shift
+
       _notebooks_current  "${@:-}"
       ;;
     d|delete)
@@ -8672,6 +8679,7 @@ HEREDOC
       ;;
     list)
       shift
+
       _notebooks_list     "${@:-}"
       ;;
     rename|mv|move)
@@ -8682,6 +8690,7 @@ HEREDOC
       ;;
     s|show)
       shift
+
       _notebooks_show     "${@:-}"
       ;;
     u|use)
@@ -8777,10 +8786,10 @@ __load_plugins() {
   then
     set +f
     local __file=
-    for   __file in "${NB_DIR}/.plugins"/*.nb-plugin*
+    for   __file in "${NB_DIR}/.plugins"/*."${_ME}"-plugin*
     do
-      [[ -f "${__file}"                       ]] || continue
-      [[    "${__file}"  =~ /copy.nb-plugin$  ]] && continue
+      [[ -f "${__file}"                           ]] || continue
+      [[    "${__file}"  =~ /copy.${_ME}-plugin$  ]] && continue
 
       source "${__file}"
     done
@@ -10225,7 +10234,11 @@ _render() {
     local _use_pandoc="${2:-0}"
 
     local _code_extensions=(
-      bib hs haml js jsx py rb rs sass scss sh vim yml
+      asm aspx awd awk bash bat bats bib c c++ cc cgi class cls cmake cpp cs
+      cson cxx d diff "do" el f fs gcl go h hs haml hbs hx j jade java jl js
+      json jsp jsx kts ksh "less" lsp lua m matlab ml mk mm perl php pl pm prl
+      pug py rb r rh rs sass scala scpt scss sh sql styl swift tcl toml tpl vb
+      vba vbscript vim xml xsl xslt yaml yml zsh
     )
 
     _code_extensions+=($(
@@ -11090,7 +11103,7 @@ HEREDOC
 <script src="/--ace/ace.js"></script>
 <script src="/--ace/ext-modelist.js"></script>
 <script>
-  var editorInit = function initializeAceEditor() {
+  function initializeAceEditor() {
     var aceModeList = ace.require("ace/ext/modelist");
 
     var textarea = document.querySelector('textarea');
@@ -11137,9 +11150,9 @@ HEREDOC
 
   (function() {
     if (document.readyState !== 'loading') {
-      setTimeout(editorInit, 0);
+      setTimeout(initializeAceEditor, 0);
     } else {
-      document.addEventListener('DOMContentLoaded', editorInit);
+      document.addEventListener('DOMContentLoaded', initializeAceEditor);
     }
   }());
 </script>
@@ -11168,15 +11181,15 @@ HEREDOC
 
           if ((_strip_images))
           then
-            printf "nb-img-strip-nb%s\\n" "${__line:-}"
+            printf "%s-img-strip-%s%s\\n" "${_ME}" "${_ME}" "${__line:-}"
           else
             printf "%s\\n" "${__line:-}"
           fi
         done
       } | {
-        LC_ALL=C sed -E -e "/^nb-img-strip-nb/ s/<img[^>]*>//g"
+        LC_ALL=C sed -E -e "/^${_ME}-img-strip-${_ME}/ s/<img[^>]*>//g"
       } | {
-        LC_ALL=C sed -E -e "s/^nb-img-strip-nb//g"
+        LC_ALL=C sed -E -e "s/^${_ME}-img-strip-${_ME}//g"
       }
     else
       cat
@@ -11257,8 +11270,8 @@ _resolve_links() {
   while ((${#}))
   do
     case "${1:-}" in
-      --col*)     _columns="${2:?}"                 && shift  ;;
       --browse)   _for_browsing=1                             ;;
+      --col*)     _columns="${2:?}"                 && shift  ;;
       --limit|-n|--num|--number|--per*)
         _limit="${2:?}"
 
@@ -11284,7 +11297,7 @@ _resolve_links() {
 
   if ((_terminal))
   then
-    _url_params_pattern="?--limit=${_limit:-}\&--columns=${_columns:-}"
+    _url_params_pattern="?--columns=${_columns:-}\&--limit=${_limit:-}"
   fi
 
   local _notebook_name="${_notebook_path##*/}"
@@ -11378,7 +11391,7 @@ _resolve_links() {
 
           if ((_linkable))
           then
-            printf "nb-linkable-nb%s\\n" "${__line:-}"
+            printf "%s-linkable-%s%s\\n" "${_ME}" "${_ME}" "${__line:-}"
           else
             printf "%s\\n" "${__line:-}"
           fi
@@ -11390,12 +11403,12 @@ _resolve_links() {
         done
       } | {
         # wrap [[wiki-style links]] in HTML links and add missing notebooks
-        sed -E                                                                            \
--e "/^nb-linkable-nb/ s/${_link_match_pattern}/${_replacement_pattern}/g"                 \
--e "/^nb-linkable-nb/ s/${_labeled_link_match_pattern}/${_labeled_replacement_pattern}/g" \
--e "/^nb-linkable-nb/ s/${_notebookless_pattern}/${_notebookless_replacement_pattern}/g"
+        sed -E                                                                                    \
+-e "/^${_ME}-linkable-${_ME}/ s/${_link_match_pattern}/${_replacement_pattern}/g"                 \
+-e "/^${_ME}-linkable-${_ME}/ s/${_labeled_link_match_pattern}/${_labeled_replacement_pattern}/g" \
+-e "/^${_ME}-linkable-${_ME}/ s/${_notebookless_pattern}/${_notebookless_replacement_pattern}/g"
       } | {
-        LC_ALL=C sed -E -e "s/^nb-linkable-nb//g"
+        LC_ALL=C sed -E -e "s/^${_ME}-linkable-${_ME}//g"
       }
     else
       local __match=
@@ -12374,7 +12387,7 @@ _add() {
         "${_notebook_path:?}/${_target_folder_relative_path:-}"
     fi && _git checkpoint                 \
       "${_notebook_path}"                 \
-      "[nb] Add: ${_target_unique_relative_path}"
+      "[${_ME}] Add: ${_target_unique_relative_path}"
 
     local _info=
     _info="$(
@@ -12551,6 +12564,7 @@ _bookmark() {
   local _encrypt=0
   local _password=
   local _quote=
+  local _readability_enabled=1
   local _related_identifiers=()
   local _request_page=1
   local _save_source=0
@@ -12586,6 +12600,9 @@ _bookmark() {
         ;;
       --no*download|--no*fetch|--no*request|--offline)
         _request_page=0
+        ;;
+      --no*readab*|--skip*readab*)
+        _readability_enabled=0
         ;;
       --password)
         _password="$(_option_get_value "${1}" "${2:-}")"
@@ -13206,7 +13223,7 @@ _bookmark() {
           {
             cat "${_temp_file}"
           } | {
-            if _command_exists "readable"
+            if _command_exists "readable" && ((_readability_enabled))
             then
               readable --base "${_url}" 2>/dev/null || cat
             else
@@ -13215,11 +13232,16 @@ _bookmark() {
           } | {
             if _command_exists "pandoc"
             then
-              _pandoc                                 \
-                --standard-input                      \
-                --from html-native_divs-native_spans  \
-                --to markdown-grid_tables --wrap=none \
-                2>/dev/null || cat
+              {
+                _pandoc                                 \
+                  --standard-input                      \
+                  --from html-native_divs-native_spans  \
+                  --to markdown-grid_tables --wrap=none \
+                  2>/dev/null || cat
+              } | {
+                # strip empty list items
+                LC_ALL=C sed -E -e "s/^-[[:space:]]*$//g"
+              }
             else
               cat
             fi
@@ -13286,9 +13308,9 @@ $(_color_primary "See Also"):
 HEREDOC
 }
 _completions() {
-  local _BASH_COMP_NAME="nb"
-  local _FISH_COMP_NAME="nb.fish"
-  local _ZSH_COMP_NAME="_nb"
+  local _BASH_COMP_NAME="${_ME}"
+  local _FISH_COMP_NAME="${_ME}.fish"
+  local _ZSH_COMP_NAME="_${_ME}"
 
   # Usage: _completions_check
   _completions_check() {
@@ -13748,7 +13770,7 @@ _delete() {
       then
         _index delete "${_basename}" "${_folder_path}"
 
-        _git checkpoint "${_notebook_path}" "[nb] Delete: ${_relative_path}"
+        _git checkpoint "${_notebook_path}" "[${_ME}] Delete: ${_relative_path}"
 
         printf "Deleted:  %s\\n" "${_info_line}"
       fi
@@ -14003,7 +14025,7 @@ _edit() {
       rm "${_decrypted_path:?}"
     fi
 
-    _git checkpoint "${_notebook_path}" "[nb] Edit: ${_relative_path}"
+    _git checkpoint "${_notebook_path}" "[${_ME}] Edit: ${_relative_path}"
 
     if [[ "${_before}" != "${_after}"   ]]
     then
@@ -14768,7 +14790,7 @@ _import() {
           _index add              \
             "${_target_basename}" \
             "${_notebook_path}/${_target_folder_relative_path}" &&
-              _git checkpoint "${_notebook_path}" "[nb] Import: ${_target_relative_path}"
+              _git checkpoint "${_notebook_path}" "[${_ME}] Import: ${_target_relative_path}"
 
         printf "Imported %s from %s\\n"                                       \
           "$(_show "${_notebook_path}/${_target_relative_path}" --info-line)" \
@@ -14818,7 +14840,7 @@ _import() {
           "${_target_basename}" \
           "${_notebook_path}/${_target_folder_relative_path:-}" &&
             _git checkpoint "${_notebook_path}" "\
-[nb] Import: ${_target_relative_path}
+[${_ME}] Import: ${_target_relative_path}
 
 Source:
 ${_url}
@@ -14853,7 +14875,7 @@ ${_url}
           _index add              \
             "${_target_basename}" \
             "${_notebook_path}/${_target_folder_relative_path:-}"   &&
-              _git checkpoint "${_notebook_path}" "[nb] Import: ${_target_relative_path}"
+              _git checkpoint "${_notebook_path}" "[${_ME}] Import: ${_target_relative_path}"
 
         printf "Imported %s from %s\\n"                     \
           "$(_show "${_target_relative_path}" --info-line)" \
@@ -14941,8 +14963,7 @@ HEREDOC
 _move() {
   local _force=0
   local _reset=0
-  local _source_selector=
-  local _target_selector=
+  local _selectors=()
   local _to_target_type=
 
   while ((${#}))
@@ -14971,42 +14992,56 @@ _move() {
 
         shift
         ;;
+      -*)
+        :
+        ;;
       *)
-        if [[ -z "${_source_selector:-}"    ]]
-        then
-          _source_selector="${1}"
-        elif [[ -z "${_target_selector:-}"  ]]
-        then
-          _target_selector="${1}"
-        fi
+        _selectors+=("${1:-}")
         ;;
     esac
 
     shift
   done
 
-  if [[ -z "${_source_selector:-}"      ]]
+  local _source_selectors=()
+  local _target_selector=
+
+  if ((${#_selectors[@]}))
+  then
+    local i=
+    for ((i=0; i < ${#_selectors[@]}; i++))
+    do
+      _source_selectors+=("${_selectors[i]}")
+    done
+
+    if ((${#_selectors[@]} - 1))
+    then
+      _target_selector="${_selectors[${#_selectors[@]}-1]}"
+    fi
+  fi
+
+  if ! ((${#_source_selectors[@]}))
   then
     _exit_1 _help "move"
   fi
 
   local _source_relative_path=
-  _source_relative_path="$(_show "${_source_selector}" --relative-path)"
+  _source_relative_path="$(_show "${_source_selectors[0]}" --relative-path)"
 
-  if [[ -z "${_source_relative_path:-}" ]]
+  if [[ -z "${_source_relative_path:-}"     ]]
   then
     _exit_1 _help "move"
   fi
 
   local _source_notebook_path=
-  if [[ "${_source_selector:-}" =~ :    ]]
+  if [[ "${_source_selectors[0]:-}" =~ :    ]]
   then
     _source_notebook_path="$(
-      _notebooks show "${_source_selector}" --path 2>/dev/null || :
+      _notebooks show "${_source_selectors[0]}" --path 2>/dev/null || :
     )"
   fi
 
-  if [[ -z "${_source_notebook_path:-}" ]]
+  if [[ -z "${_source_notebook_path:-}"     ]]
   then
     _source_notebook_path="$(_notebooks current --path)"
   fi
@@ -15249,17 +15284,17 @@ _move() {
     fi || _exit_1 printf "Move index update failed.\\n"
 
     _git checkpoint "${_target_notebook_path}"  \
-      "[nb] Move: ${_source_relative_path} to ${_target_relative_path}"
+      "[${_ME}] Move: ${_source_relative_path} to ${_target_relative_path}"
   else
     _index delete "${_source_basename}" "${_source_folder_path}"
 
     _git checkpoint "${_source_notebook_path}"  \
-      "[nb] Delete: ${_source_relative_path}"
+      "[${_ME}] Delete: ${_source_relative_path}"
 
     _index add "${_target_basename}" "${_target_folder_path}"
 
     _git checkpoint "${_target_notebook_path}"  \
-      "[nb] Add: ${_target_relative_path}"
+      "[${_ME}] Add: ${_target_relative_path}"
   fi
 
   printf "Moved to: %s\\n" "$(
@@ -15466,7 +15501,7 @@ _pin() {
         rm -f "${_pindex_path:?}"
       fi
 
-      _git checkpoint "${_notebook_path}" "[nb] Unpinned: ${_relative_path}"
+      _git checkpoint "${_notebook_path}" "[${_ME}] Unpinned: ${_relative_path}"
 
       printf "Unpinned: %s\\n" "$(_show "${_selector}" --info-line)"
       ;;
@@ -15487,7 +15522,7 @@ _pin() {
         printf "%s\\n" "${_basename}" >> "${_pindex_path}"
         _sed_i -e '/^[[:space:]]*$/d'    "${_pindex_path}" # remove blank lines
 
-        _git checkpoint "${_notebook_path}" "[nb] Pinned: ${_relative_path}"
+        _git checkpoint "${_notebook_path}" "[${_ME}] Pinned: ${_relative_path}"
 
         printf "Pinned: %s\\n" "$(_show "${_selector}" --info-line)"
       fi
@@ -16835,7 +16870,7 @@ $(_color_primary "Usage"):
 $(_color_primary "Options"):
   -a, --added      Print the date and time when the item was added.
   --authors        List the git commit authors of an item.
-  -b, --browse     Open the item with \`nb browse\`.
+  -b, --browse     Open the item with \`${_ME} browse\`.
   --filename       Print the filename of the item.
   --id             Print the id number of the item.
   --info-line      Print the id, filename, and title of the item.
@@ -17677,15 +17712,15 @@ Can't show archives. Export archive and expand to edit.\\n"
           _resolve_links "${_notebook_path}" --type org
         } | {
           # avoid pandoc bug with brackets in Org link descriptions
-          LC_ALL=C sed -E                           \
-            -e "s/\]\[\[\[/\]\[nb-placeholder-nb/g" \
-            -e "s/\]\]\]\]/nb-placeholder-nb\]\]/g"
+          LC_ALL=C sed -E                                   \
+            -e "s/\]\[\[\[/\]\[${_ME}-placeholder-${_ME}/g" \
+            -e "s/\]\]\]\]/${_ME}-placeholder-${_ME}\]\]/g"
         } | {
           _pandoc --standard-input --from org --to html
         } | {
-          LC_ALL=C sed -E                           \
-            -e "s/>nb-placeholder-nb/>\[\[/g"       \
-            -e "s/nb-placeholder-nb</\]\]</g"
+          LC_ALL=C sed -E                                   \
+            -e "s/>${_ME}-placeholder-${_ME}/>\[\[/g"       \
+            -e "s/${_ME}-placeholder-${_ME}</\]\]</g"
         } | {
           _render
         } | {
@@ -17750,12 +17785,12 @@ Can't show archives. Export archive and expand to edit.\\n"
 
         cat "${_target_path}"                                       \
           | LC_ALL=C sed -E                                         \
-              -e "s/^([[:space:]]*-) /\1nb-ph-nb/g"                 \
-              -e "s/^([[:space:]]*\*) /\1nb-ph-nb/g"                \
+              -e "s/^([[:space:]]*-) /\1${_ME}-ph-${_ME}/g"         \
+              -e "s/^([[:space:]]*\*) /\1${_ME}-ph-${_ME}/g"        \
           | LC_ALL=C fold -s -w "${_COLUMNS}"                       \
           | LC_ALL=C sed -E                                         \
-              -e "s/^([[:space:]]*-)nb-ph-nb/\1 /g"                 \
-              -e "s/^([[:space:]]*\*)nb-ph-nb/\1 /g"                \
+              -e "s/^([[:space:]]*-)${_ME}-ph-${_ME}/\1 /g"         \
+              -e "s/^([[:space:]]*\*)${_ME}-ph-${_ME}/\1 /g"        \
           | _highlight_syntax_if_available "${_target_extension:-}" \
           | _pager
       fi
@@ -18212,7 +18247,7 @@ _browse() {
         > "${_source_path}"
 
       _git checkpoint "${_notebook_path}"             \
-        "[nb] Edit: ${_source_path#"${_notebook_path}"/}"
+        "[${_ME}] Edit: ${_source_path#"${_notebook_path}"/}"
     fi
   }
 
@@ -18338,11 +18373,11 @@ _browse() {
 
     if _contains "--terminal" "${_pagination_options[@]:-}"
     then
-      _url_params+="&--limit=${_limit}"
-      _rows="$((_limit + 2))"
-
       _url_params+="&--columns=${_columns}"
       _text_area_columns="$((_text_area_columns - 3))"
+
+      _url_params+="&--limit=${_limit}"
+      _rows="$((_limit + 2))"
     fi
 
     if [[ "${_target_type:-not-folder}" != "folder" ]]
@@ -18521,7 +18556,7 @@ HEREDOC
 
     if ((_terminal_browser))
     then
-      _url_params+="?--limit=${_limit}&--columns=${_columns}"
+      _url_params+="?--columns=${_columns}&--limit=${_limit}"
     fi
 
     if [[   -n "${_encoded_local_notebook_path:-}"  ]]
@@ -18558,17 +18593,17 @@ HEREDOC
       then
         _search "${_target_path}"         \
           "${_query_arguments[@]:-}"      \
+          --limit "${_limit}"             \
           --list                          \
           --no-color                      \
           --notebook-selectors            \
-          --page      "${_current_page}"  \
-          --limit  "${_limit}"      || :
+          --page  "${_current_page}"      || :
       else
         _list "${_target_path}"           \
+          --limit "${_limit}"             \
           --no-color                      \
           --notebook-selectors            \
-          --page      "${_current_page}"  \
-          --limit  "${_limit}"      \
+          --page  "${_current_page}"      \
           --with-pinned
       fi
     } | {
@@ -18695,8 +18730,8 @@ HEREDOC
   type="text"
   value="${_encoded_query}">
 <i></i>
-<input type="hidden" name="--page"      value="${_current_page}">
-<input type="hidden" name="--limit"  value="${_limit}">
+<input type="hidden" name="--limit" value="${_limit}">
+<input type="hidden" name="--page"  value="${_current_page}">
 ${_maybe_local_input:-}</form>
 <br>
 HEREDOC
@@ -18893,8 +18928,8 @@ HEREDOC
 
     if _contains "--terminal" "${_pagination_options[@]:-}"
     then
-      _url_params+="&--limit=${_limit}"
       _url_params+="&--columns=${_columns}"
+      _url_params+="&--limit=${_limit}"
     fi
 
     {
@@ -19026,11 +19061,11 @@ HEREDOC
 
     if _contains "--terminal" "${_pagination_options[@]:-}"
     then
-      _url_params+="&--limit=${_limit}"
-      _rows="$((_limit + 2))"
-
       _url_params+="&--columns=${_columns}"
       _text_area_columns="$((_text_area_columns - 3))"
+
+      _url_params+="&--limit=${_limit}"
+      _rows="$((_limit + 2))"
     fi
 
     if [[ -n "${_encoded_local_notebook_path:-}" ]]
@@ -19135,7 +19170,10 @@ HEREDOC
 
     if ((_terminal_browser))
     then
-      _url_params+=("--limit=${_limit}" "--columns=${_columns}")
+      _url_params+=(
+        "--columns=${_columns}"
+        "--limit=${_limit}"
+      )
     fi
 
     local _url_param_string=
@@ -19469,9 +19507,9 @@ HEREDOC
           --type org
       } | {
         # avoid pandoc bug with brackets in Org link descriptions
-        LC_ALL=C sed -E                           \
-          -e "s/\]\[\[\[/\]\[nb-placeholder-nb/g" \
-          -e "s/\]\]\]\]/nb-placeholder-nb\]\]/g"
+        LC_ALL=C sed -E                                   \
+          -e "s/\]\[\[\[/\]\[${_ME}-placeholder-${_ME}/g" \
+          -e "s/\]\]\]\]/${_ME}-placeholder-${_ME}\]\]/g"
       } | {
         if _command_exists "pandoc"
         then
@@ -19480,9 +19518,9 @@ HEREDOC
           cat
         fi
       } | {
-        LC_ALL=C sed -E                           \
-          -e "s/>nb-placeholder-nb/>\[\[/g"       \
-          -e "s/nb-placeholder-nb</\]\]</g"
+        LC_ALL=C sed -E                                   \
+          -e "s/>${_ME}-placeholder-${_ME}/>\[\[/g"       \
+          -e "s/${_ME}-placeholder-${_ME}</\]\]</g"
       } | {
         # undo pandoc prepending "file://" to protocol-relative URLs
         LC_ALL=C sed -E -e "s/file:\/\/\/\//\/\//g"
@@ -19720,7 +19758,7 @@ HEREDOC
 
     if _contains "--terminal" "${_pagination_options[@]:-}"
     then
-      _url_param_string+="&--limit=${_limit}&--columns=${_columns}"
+      _url_param_string+="&--columns=${_columns}&--limit=${_limit}"
     fi
 
     # turn on case-insensitive matching
@@ -20964,7 +21002,7 @@ _copy() {
 
     _index add "${_target_relative_path##*/}" "${_target_folder_path}"
 
-    _git checkpoint "${_target_notebook_path:-}" "[nb] Add: ${_target_relative_path}"
+    _git checkpoint "${_target_notebook_path:-}" "[${_ME}] Add: ${_target_relative_path}"
 
     printf "Added: %s\\n" "$(
       _show "${_target_notebook_path}/${_target_relative_path}" --info-line
@@ -21301,8 +21339,8 @@ $(_color_primary "Read More"):
   ${_README_URL}#-plugins
 
 $(_color_primary "Plugin Extensions"):
-  .nb-theme   Plugins defining color themes.
-  .nb-plugin  Plugins defining new subcommands and functionality.
+  .${_ME}-theme   Plugins defining color themes.
+  .${_ME}-plugin  Plugins defining new subcommands and functionality.
 
 $(_color_primary "See Also"):
   ${_ME} help subcommands
@@ -21351,19 +21389,19 @@ _plugins() {
 
   case "${_subcommand}" in
     install)
-      [[ ! -e "${NB_DIR}/.plugins"  ]] && mkdir "${NB_DIR}/.plugins"
+      [[ ! -e "${NB_DIR}/.plugins"      ]] && mkdir "${NB_DIR}/.plugins"
 
-      if [[ -n "${_path:-}"         ]]
+      if [[ -n "${_path:-}"             ]]
       then
-        if ! [[ -f "${_path:-}"     ]] ||
-           ! [[ "${_path}" =~ nb\-  ]]
+        if ! [[ -f "${_path:-}"         ]] ||
+           ! [[ "${_path}" =~ ${_ME}\-  ]]
         then
-          _exit_1 printf "Not a valid \`nb\` plugin: %s\\n" "${_path}"
+          _exit_1 printf "Not a valid \`%s\` plugin: %s\\n" "${_ME}" "${_path}"
         fi
 
         _basename="$(basename -- "${_path}")"
 
-        if [[ -f "${NB_DIR}/.plugins/${_basename}" ]]
+        if [[ -f "${NB_DIR}/.plugins/${_basename}"  ]]
         then
           _warn printf "Plugin already installed: %s\\n" "${_basename}"
 
@@ -21372,7 +21410,7 @@ _plugins() {
             while true
             do
               local __yn=
-              IFS='' read -r -e -d $'\n' -p   \
+              IFS='' read -r -e -d $'\n' -p         \
 "$(_color_primary "Reinstall?") $(_color_brackets "y/N") " __yn
 
               case "${__yn}" in
@@ -21391,7 +21429,7 @@ _plugins() {
 
         if cp "${_path}" "${NB_DIR}/.plugins/${_basename}"
         then
-          printf "Plugin installed:\\n%s\\n"  \
+          printf "Plugin installed:\\n%s\\n"        \
             "$(_color_primary "${NB_DIR}/.plugins/${_basename}")"
         else
           _exit_1 printf "Unable to install plugin: %s\\n" "${_path}"
@@ -21462,7 +21500,7 @@ HEREDOC
       fi
       ;;
     *)
-      local _query="*nb-*"
+      local _query="*${_ME}-*"
 
       if [[ -n "${_name}" ]]
       then
@@ -22043,7 +22081,7 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
           touch "${_blank_repo_path}/.index"          &&
           git -C "${_blank_repo_path}" add --all      &&
           git -C "${_blank_repo_path}" commit         \
-            -a -m "[nb] Initialize"                   &&
+            -a -m "[${_ME}] Initialize"               &&
           git -C "${_blank_repo_path}" remote add     \
             origin "${_current_remote_url:-}"         &&
           git -C "${_blank_repo_path}" push origin    \
@@ -22824,7 +22862,7 @@ HEREDOC
     elif [[ "${_setting_name}" == "NB_COLOR_THEME"      ]]
     then
       _new_hi_color="$(
-        NB_COLOR_THEME="nb" NB_COLOR_PRIMARY=''         \
+        NB_COLOR_THEME="${_ME}" NB_COLOR_PRIMARY=''     \
           "${_MY_PATH}" settings get NB_COLOR_PRIMARY
       )"
 
@@ -23026,7 +23064,7 @@ $(
   done
 )
 
-     • Default Value: $(_color_primary "nb")")
+     • Default Value: $(_color_primary "${_ME}")")
 
   _settings_list_items+=("$(_color_brackets '5')  default_extension")
   _settings_help_items+=("\
@@ -23066,7 +23104,7 @@ $(
   _settings_list_items+=("$(_color_brackets '8')  footer")
   _settings_help_items+=("\
     $(_color_secondary " ------")
-     By default, \`nb\` and \`${_ME} ls\` include a footer with example commands.
+     By default, \`${_ME}\` and \`${_ME} ls\` include a footer with example commands.
      To hide this footer, set this to \"0\".
 
      • Default Value: $(_color_primary "1")")
@@ -23074,7 +23112,7 @@ $(
   _settings_list_items+=("$(_color_brackets '9')  header")
   _settings_help_items+=("\
     $(_color_secondary " ------")
-     By default, \`nb\` and \`${_ME} ls\` include a header listing available notebooks.
+     By default, \`${_ME}\` and \`${_ME} ls\` include a header listing available notebooks.
      Set the alignment, or hide the header with \"0\".
 
      • Supported Values:
@@ -23093,7 +23131,7 @@ $(
     $(_color_secondary " -----")
      The maximum number of items included in the \`${_ME}\` and \`${_ME} ls\` lists.
      Set to \`auto\` to automatically limit output to the current terminal height.
-     Add an auto limit offset for multiline prompts with \`auto-<number>\`.
+     Subtract an auto limit offset for multiline prompts with \`auto-<number>\`.
 
      • Example Values:
 
@@ -23111,7 +23149,7 @@ $(
      For example, to sync all notebooks with Dropbox, create a folder at
      \`~/Dropbox/Notes\` and run: \`${_ME} settings set nb_dir ~/Dropbox/Notes\`
 
-     • Default Value: $(_color_primary '~/.nb')")
+     • Default Value: $(_color_primary "~/.${_ME}")")
 
   _settings_list_items+=("$(_color_brackets '12') syntax_theme")
   _settings_help_items+=("\
@@ -23615,10 +23653,10 @@ HEREDOC
     if ((_sync_all))
     then # sync without prompt in background
       GIT_TERMINAL_PROMPT=0 NB_AUTO_SYNC=1 \
-        _git checkpoint "${NB_NOTEBOOK_PATH}" "[nb] Sync" --spinner
+        _git checkpoint "${NB_NOTEBOOK_PATH}" "[${_ME}] Sync" --spinner
     else # sync with prompt in foreground
       GIT_TERMINAL_PROMPT=1 NB_AUTO_SYNC=0 \
-        _git checkpoint "${NB_NOTEBOOK_PATH}" "[nb] Sync" --spinner
+        _git checkpoint "${NB_NOTEBOOK_PATH}" "[${_ME}] Sync" --spinner
 
       _git sync "${NB_NOTEBOOK_PATH}"
 
@@ -23743,7 +23781,7 @@ $(_color_primary "Options"):
 $(_color_primary "Subcommands"):
   (default)   List todos.
   add         Add a new todo.
-              Shortcut Aliases: \`nb todo a\`, \`nb todo +\`
+              Shortcut Aliases: \`${_ME} todo a\`, \`${_ME} todo +\`
   do          Mark a todo or task as done.
   tasks       List tasks in todos, notebooks, folders, and other item.
   undo        Unmark a todo or task as done.
@@ -23876,23 +23914,28 @@ _todo() {
     case "${1:-}" in
       --description)
         _description="$(_option_get_value "${1:-}" "${2:-}")"
+
         shift
         ;;
       --due)
         _due_datetime="$(_option_get_value "${1:-}" "${2:-}")"
+
         shift
         ;;
       -r|--via|--also|--related)
         _related_identifiers+=("$(_option_get_value "${1:-}" "${2:-}")")
+
         shift
         ;;
       --tag*)
         [[ -n "${_tag_list:-}"  ]] && _tag_list+=" "
         _tag_list+="$(_option_get_tags "${1}" "${2:-}")"
+
         shift
         ;;
       --task)
         _tasks+=("$(_option_get_value "${1:-}" "${2:-}")")
+
         shift
         ;;
       --title)
@@ -24097,7 +24140,7 @@ _todo() {
                 | LC_ALL=C sed "3s/^/Done: /"
 
               _git checkpoint "${_notebook_path}" \
-                "[nb] Task Done: $(_show "${_selector:-}" --relative-path) ${_task_number}"
+                "[${_ME}] Task Done: $(_show "${_selector:-}" --relative-path) ${_task_number}"
             fi
           else
             _sed_i -e "s/# \[ \]/# \[x\]/" "${_selector_path}"
@@ -24111,7 +24154,7 @@ _todo() {
               printf "Done: %s\\n" "$(_list "${_selector}")"
 
               _git checkpoint "${_notebook_path}" \
-                "[nb] Done: $(_show "${_selector:-}" --relative-path)"
+                "[${_ME}] Done: $(_show "${_selector:-}" --relative-path)"
             fi
           fi
           ;;
@@ -24135,7 +24178,7 @@ _todo() {
                 | LC_ALL=C sed "3s/^/Undone: /"
 
               _git checkpoint "${_notebook_path}" \
-                "[nb] Task Undone: $(_show "${_selector:-}" --relative-path) ${_task_number}"
+                "[${_ME}] Task Undone: $(_show "${_selector:-}" --relative-path) ${_task_number}"
             fi
           else
             _sed_i -e "s/# \[x\]/# \[ \]/" "${_selector_path}"
@@ -24149,7 +24192,7 @@ _todo() {
               printf "Undone: %s\\n" "$(_list "${_selector}")"
 
               _git checkpoint "${_notebook_path}" \
-                "[nb] Undone: $(_show "${_selector:-}" --relative-path)"
+                "[${_ME}] Undone: $(_show "${_selector:-}" --relative-path)"
             fi
           fi
           ;;

@@ -20,9 +20,9 @@ load test_helper
   [[    "${status}"  -eq  0               ]]
 
   [[    "${output}"   =~  \
-\<a\ rel=\"noopener\ noreferrer\"\ href=\"//localhost:6789/home:2\?--limit=.*--columns=.*\"           ]]
+\<a\ rel=\"noopener\ noreferrer\"\ href=\"//localhost:6789/home:2\?--columns=.*\&--limit=.*\"         ]]
   [[    "${output}"   =~  \
---limit=.*--columns=.*\"\ class=\"list-item\"\>\<span\ class=\"muted\"\>\[\</span\>\<span\            ]]
+--columns=.*\&--limit=.*\"\ class=\"list-item\"\>\<span\ class=\"muted\"\>\[\</span\>\<span\          ]]
   [[    "${output}"   =~  \
 muted\"\>\[\</span\>\<span\ class=\"identifier\"\>home:2\</span\>\<span\ class=\"muted\"\>]\</span\>  ]]
   [[    "${output}"   =~  \
@@ -32,9 +32,9 @@ muted\"\>\[\</span\>\<span\ class=\"identifier\"\>home:2\</span\>\<span\ class=\
 
 
   [[    "${output}"   =~  \
-\<a\ rel=\"noopener\ noreferrer\"\ href=\"//localhost:6789/home:2\?--limit=.*--columns=.*\"           ]]
+\<a\ rel=\"noopener\ noreferrer\"\ href=\"//localhost:6789/home:2\?--columns=.*\&--limit=.*\"         ]]
   [[    "${output}"   =~  \
---limit=.*--columns=.*\"\ class=\"list-item\"\>\<span\ class=\"muted\"\>\[\</span\>\<span\            ]]
+--columns=.*\&--limit=.*\"\ class=\"list-item\"\>\<span\ class=\"muted\"\>\[\</span\>\<span\          ]]
   [[    "${output}"   =~  \
 muted\"\>\[\</span\>\<span\ class=\"identifier\"\>home:1\</span\>\<span\ class=\"muted\"\>]\</span\>  ]]
   [[    "${output}"   =~  \
@@ -479,7 +479,7 @@ HEREDOC
     "${_NB}" add  "Example Folder"    \
       --type      "folder"
 
-    declare _expected_param_pattern="--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook\&--limit=.*"
+    declare _expected_param_pattern="--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook\&--columns=.*\&--limit=.*"
 
     sleep 1
   }
@@ -504,7 +504,7 @@ href=\"//localhost:6789/\?${_expected_param_pattern}\"\>\<span\ class=\"muted\"\
   # form
 
   [[ "${output}"  =~  \
-action=\"/local:\?--limit=.*\&--columns=.*\&--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook\"  ]]
+action=\"/local:\?--columns=.*\&--limit=.*\&--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook\"  ]]
 
   [[ "${output}"  =~  \
 \<input\ type=\"hidden\"\ name=\"--local\"\ \ \ \ \ value=\"${_TMP_DIR}/Local\ Notebook\"\>     ]]
@@ -512,16 +512,16 @@ action=\"/local:\?--limit=.*\&--columns=.*\&--local=${_TMP_DIR//$'/'/%2F}%2FLoca
   # list
 
   [[ "${output}"  =~  \
-\<a.*\ href=\"//localhost:6789/local:3\?--limit=.*\&--local=.*\"\ class=\"list-item\"\> ]]
-  [[ "${output}"  =~  .*\[.*local:3.*\].*${_S}📂${_S}Example${_S}Folder\</a\>\<br\>     ]]
+\<a.*\ href=\"//localhost:6789/local:3\?--columns.*\&--limit=.*\&--local=.*\"\ class=\"list-item\"\>  ]]
+  [[ "${output}"  =~  .*\[.*local:3.*\].*${_S}📂${_S}Example${_S}Folder\</a\>\<br\>                   ]]
 
   [[ "${output}"  =~  \
-\<a.*\ href=\"//localhost:6789/local:2\?--limit=.*\"\ class=\"list-item\"\>             ]]
-  [[ "${output}"  =~  .*\[.*local:2.*\].*${_S}Title${_S}Two\</a\>\<br\>                 ]]
+\<a.*\ href=\"//localhost:6789/local:2\?--columns.*\&--limit=.*\"\ class=\"list-item\"\>  ]]
+  [[ "${output}"  =~  .*\[.*local:2.*\].*${_S}Title${_S}Two\</a\>\<br\>                   ]]
 
   [[ "${output}"  =~  \
-\<a.*\ href=\"//localhost:6789/local:1\?--limit=.*\"\ class=\"list-item\"\>             ]]
-  [[ "${output}"  =~  .*\[.*local:1.*\].*${_S}Title${_S}One\</a\>\<br\>                 ]]
+\<a.*\ href=\"//localhost:6789/local:1\?--columns.*\&--limit=.*\"\ class=\"list-item\"\>  ]]
+  [[ "${output}"  =~  .*\[.*local:1.*\].*${_S}Title${_S}One\</a\>\<br\>                   ]]
 }
 
 # columns #####################################################################
@@ -613,7 +613,7 @@ abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
   [[ "${output}"    =~  abcdefghi…                                ]]
 
   printf "%s\\n" "${output}" \
-    | grep -q "href=\"//localhost:6789/home:1?--limit=.*&--columns=20\" class=\"list-item\""
+    | grep -q "href=\"//localhost:6789/home:1?--columns=20&--limit=.*\" class=\"list-item\""
 }
 
 # empty #######################################################################
@@ -635,11 +635,11 @@ abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
   [[ "${status}"  ==  0         ]]
 
   [[ "${output}"  =~  \
-\<nav\ class=\"header-crumbs\"\>\<strong\>\<a.*\ href=\"//localhost:6789/\?--limit=.*\"\>\<span\ class=\"muted\"\>❯\</span\>nb\</a\> ]]
+\<nav\ class=\"header-crumbs\"\>\<strong\>\<a.*\ href=\"//localhost:6789/\?--columns=.*\&--limit=.*\"\>\<span\ class=\"muted\"\>❯\</span\>nb\</a\>  ]]
   [[ "${output}"  =~  \
-.*·.*\ \<a.*\ href=\"//localhost:6789/home:\?--limit=.*\"\>home\</a\>\ .*:.*\              ]]
+.*·.*\ \<a.*\ href=\"//localhost:6789/home:\?--columns.*\&--limit=.*\"\>home\</a\>\ .*:.*\              ]]
   [[ "${output}"  =~  \
-\<a.*\ href=\"//localhost:6789/home:1/\?--limit=.*\"\>Example\ Folder\</a\>\ .*/.*\</nav\> ]]
+\<a.*\ href=\"//localhost:6789/home:1/\?--columns.*\&--limit=.*\"\>Example\ Folder\</a\>\ .*/.*\</nav\> ]]
 
   [[ "${output}"  =~  0\ items. ]]
 }
@@ -661,9 +661,9 @@ abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
   [[ "${status}"  ==  0         ]]
 
   [[ "${output}"  =~  \
-\<nav\ class=\"header-crumbs\"\>\<strong\>\<a.*\ href=\"//localhost:6789/\?--limit=.*\"\>\<span\ class=\"muted\"\>❯\</span\>nb\</a\>  ]]
+\<nav\ class=\"header-crumbs\"\>\<strong\>\<a.*\ href=\"//localhost:6789/\?--columns.*\&--limit=.*\"\>\<span\ class=\"muted\"\>❯\</span\>nb\</a\> ]]
   [[ "${output}"  =~  \
-.*·.*\ \<a.*\ href=\"//localhost:6789/Example%20Notebook:\?--limit=.*\"\>Example\ Notebook\</a\>.*\</nav\>  ]]
+.*·.*\ \<a.*\ href=\"//localhost:6789/Example%20Notebook:\?--columns=.*\&--limit=.*\"\>Example\ Notebook\</a\>.*\</nav\>  ]]
 
   [[ "${output}"  =~  0\ items. ]]
 }
@@ -697,23 +697,23 @@ abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
   [[ "${output}"  =~  \<\!DOCTYPE\ html\> ]]
 
   [[ "${output}"  =~  \
-\<nav\ class=\"header-crumbs\"\>\<strong\>.*\<a.*\ href=\"//localhost:6789/\?--limit=.*\"\>    ]]
+\<nav\ class=\"header-crumbs\"\>\<strong\>.*\<a.*\ href=\"//localhost:6789/\?--columns=.*\&--limit=.*\"\> ]]
   [[ "${output}"  =~  \
-href=\"//localhost:6789/\?--limit=.*\"\>\<span\ class=\"muted\"\>❯\</span\>nb\</a\>  ]]
+href=\"//localhost:6789/\?--columns=.*\&--limit=.*\"\>\<span\ class=\"muted\"\>❯\</span\>nb\</a\> ]]
   [[ "${output}"  =~  \
-.*·.*\ \<a.*\ href=\"//localhost:6789/home:\?--limit=.*\"\>home\</a\>.*\</nav\>      ]]
+.*·.*\ \<a.*\ href=\"//localhost:6789/home:\?--columns=.*\&--limit=.*\"\>home\</a\>.*\</nav\>     ]]
 
   [[ "${output}"  =~  \
-\<a.*\ href=\"//localhost:6789/home:3\?--limit=.*\"\ class=\"list-item\"\>          ]]
-  [[ "${output}"  =~  .*\[.*home:3.*\].*${_S}📂${_S}Example${_S}Folder\</a\>\<br\>  ]]
+\<a.*\ href=\"//localhost:6789/home:3\?--columns=.*\&--limit=.*\"\ class=\"list-item\"\>  ]]
+  [[ "${output}"  =~  .*\[.*home:3.*\].*${_S}📂${_S}Example${_S}Folder\</a\>\<br\>        ]]
 
   [[ "${output}"  =~  \
-\<a.*\ href=\"//localhost:6789/home:2\?--limit=.*\"\ class=\"list-item\"\>          ]]
-  [[ "${output}"  =~  .*\[.*home:2.*\].*${_S}Title${_S}Two\</a\>\<br\>              ]]
+\<a.*\ href=\"//localhost:6789/home:2\?--columns=.*\&--limit=.*\"\ class=\"list-item\"\>  ]]
+  [[ "${output}"  =~  .*\[.*home:2.*\].*${_S}Title${_S}Two\</a\>\<br\>                    ]]
 
   [[ "${output}"  =~  \
-\<a.*\ href=\"//localhost:6789/home:1\?--limit=.*\"\ class=\"list-item\"\>          ]]
-  [[ "${output}"  =~  .*\[.*home:1.*\].*${_S}Title${_S}One\</a\>\<br\>              ]]
+\<a.*\ href=\"//localhost:6789/home:1\?--columns=.*\&--limit=.*\"\ class=\"list-item\"\>  ]]
+  [[ "${output}"  =~  .*\[.*home:1.*\].*${_S}Title${_S}One\</a\>\<br\>                    ]]
 }
 
 @test "'browse <folder-selector>/' (slash) serves the list as rendered HTML with links to internal web server URLs." {
@@ -739,22 +739,22 @@ href=\"//localhost:6789/\?--limit=.*\"\>\<span\ class=\"muted\"\>❯\</span\>nb\
   [[ "${status}"  ==  0 ]]
 
   printf "%s\\n" "${output}" | grep       -q  \
-"<nav class=\"header-crumbs\">.*<a.* href=\"//localhost:6789/?--limit=.*\"><span class=\"muted\">❯</span>nb</a>"
+"<nav class=\"header-crumbs\">.*<a.* href=\"//localhost:6789/?--columns=.*&--limit=.*\"><span class=\"muted\">❯</span>nb</a>"
 
   printf "%s\\n" "${output}" | grep       -q  \
-".*·.* <a.* href=\"//localhost:6789/home:?--limit=.*\">home</a> .*:.*"
+".*·.* <a.* href=\"//localhost:6789/home:?--columns=.*&--limit=.*\">home</a> .*:.*"
 
   printf "%s\\n" "${output}" | grep       -q  \
-"<a.* href=\"//localhost:6789/home:1/?--limit=.*\">Example Folder</a> .*/.*</nav>"
+"<a.* href=\"//localhost:6789/home:1/?--columns=.*&--limit=.*\">Example Folder</a> .*/.*</nav>"
 
   printf "%s\\n" "${output}" | grep       -q  \
-"<a.* href=\"//localhost:6789/home:1/2?--limit=.*\" class=\"list-item\">"
+"<a.* href=\"//localhost:6789/home:1/2?--columns=.*&--limit=.*\" class=\"list-item\">"
 
   printf "%s\\n" "${output}" | grep       -q  \
 ".*\[.*Example${_S}Folder/2.*\].*${_S}Title${_S}Two</a><br>"
 
   printf "%s\\n" "${output}" | grep       -q  \
-"<a.* href=\"//localhost:6789/home:1/1?--limit=.*\" class=\"list-item\">"
+"<a.* href=\"//localhost:6789/home:1/1?--columns=.*&--limit=.*\" class=\"list-item\">"
 
   printf "%s\\n" "${output}" | grep       -q  \
 ".*\[.*Example${_S}Folder/1.*\].*${_S}Title${_S}One</a><br>"
@@ -783,19 +783,19 @@ href=\"//localhost:6789/\?--limit=.*\"\>\<span\ class=\"muted\"\>❯\</span\>nb\
   [[ "${status}"  ==  0 ]]
 
   [[ "${output}"  =~  \
-\<nav\ class=\"header-crumbs\"\>\<strong\>\<a.*\ href=\"//localhost:6789/\?--limit=.*\"\>\<span\ class=\"muted\"\>❯\</span\>nb\</a\>  ]]
+\<nav\ class=\"header-crumbs\"\>\<strong\>\<a.*\ href=\"//localhost:6789/\?--columns=.*\&--limit=.*\"\>\<span\ class=\"muted\"\>❯\</span\>nb\</a\>  ]]
   [[ "${output}"  =~  \
-.*·.*\ \<a.*\ href=\"//localhost:6789/home:\?--limit=.*\"\>home\</a\>\ .*:.*\               ]]
+.*·.*\ \<a.*\ href=\"//localhost:6789/home:\?--columns=.*\&--limit=.*\"\>home\</a\>\ .*:.*\               ]]
   [[ "${output}"  =~  \
-\<a.*\ href=\"//localhost:6789/home:1/\?--limit=.*\"\>Example\ Folder\</a\>\ .*/.*\</nav\>  ]]
+\<a.*\ href=\"//localhost:6789/home:1/\?--columns=.*\&--limit=.*\"\>Example\ Folder\</a\>\ .*/.*\</nav\>  ]]
 
   [[ "${output}"  =~  \
-\<a.*\ href=\"//localhost:6789/home:1/2\?--limit=.*\"\ class=\"list-item\"\>                ]]
-  [[ "${output}"  =~  .*\[.*Example${_S}Folder/2.*\].*${_S}Title${_S}Two\</a\>\<br\>        ]]
+\<a.*\ href=\"//localhost:6789/home:1/2\?--columns=.*\&--limit=.*\"\ class=\"list-item\"\>                ]]
+  [[ "${output}"  =~  .*\[.*Example${_S}Folder/2.*\].*${_S}Title${_S}Two\</a\>\<br\>                      ]]
 
   [[ "${output}"  =~  \
-\<a.*\ href=\"//localhost:6789/home:1/1\?--limit=.*\"\ class=\"list-item\"\>                ]]
-  [[ "${output}"  =~  .*\[.*Example${_S}Folder/1.*\].*${_S}Title${_S}One\</a\>\<br\>        ]]
+\<a.*\ href=\"//localhost:6789/home:1/1\?--columns=.*\&--limit=.*\"\ class=\"list-item\"\>                ]]
+  [[ "${output}"  =~  .*\[.*Example${_S}Folder/1.*\].*${_S}Title${_S}One\</a\>\<br\>                      ]]
 }
 
 @test "'browse <notebook>:' serves the notebook contents as rendered HTML with links to internal web server URLs." {
@@ -823,19 +823,19 @@ href=\"//localhost:6789/\?--limit=.*\"\>\<span\ class=\"muted\"\>❯\</span\>nb\
   [[ "${status}"  ==  0 ]]
 
   printf "%s\\n" "${output}" | grep -q \
-"<nav class=\"header-crumbs\"><strong><a.* href=\"//localhost:6789/?--limit=.*\"><span class=\"muted\">❯</span>nb</a>"
+"<nav class=\"header-crumbs\"><strong><a.* href=\"//localhost:6789/?--columns=.*&--limit=.*\"><span class=\"muted\">❯</span>nb</a>"
 
   printf "%s\\n" "${output}" | grep -q \
-".*·.* <a.* href=\"//localhost:6789/Example%20Notebook:?--limit=.*\">Example Notebook</a> <span "
+".*·.* <a.* href=\"//localhost:6789/Example%20Notebook:?--columns=.*\&--limit=.*\">Example Notebook</a> <span "
 
   printf "%s\\n" "${output}" | grep -q \
-"class=\"muted\">:</span> <a rel=\"noopener noreferrer\" href=\"//localhost:6789/Example Notebook:?--limit=.*&--columns=.*&--add\">+</a></strong></nav>"
+"class=\"muted\">:</span> <a rel=\"noopener noreferrer\" href=\"//localhost:6789/Example Notebook:?--columns=.*&--limit=.*&--add\">+</a></strong></nav>"
 
   [[ "${output}"  =~  \
-\<a.*\ href=\"//localhost:6789/Example%20Notebook:2\?--limit=.*\"\ class=\"list-item\"\>  ]]
-  [[ "${output}"  =~  .*\[.*Example${_S}Notebook:2.*\].*${_S}Title${_S}Two\</a\>\<br\>    ]]
+\<a.*\ href=\"//localhost:6789/Example%20Notebook:2\?--columns=.*\&--limit=.*\"\ class=\"list-item\"\>  ]]
+  [[ "${output}"  =~  .*\[.*Example${_S}Notebook:2.*\].*${_S}Title${_S}Two\</a\>\<br\>                  ]]
 
   [[ "${output}"  =~  \
-\<a.*\ href=\"//localhost:6789/Example%20Notebook:1\?--limit=.*\"\ class=\"list-item\"\>  ]]
-  [[ "${output}"  =~  .*\[.*Example${_S}Notebook:1.*\].*${_S}Title${_S}One\</a\>\<br\>    ]]
+\<a.*\ href=\"//localhost:6789/Example%20Notebook:1\?--columns=.*\&--limit=.*\"\ class=\"list-item\"\>  ]]
+  [[ "${output}"  =~  .*\[.*Example${_S}Notebook:1.*\].*${_S}Title${_S}One\</a\>\<br\>                  ]]
 }

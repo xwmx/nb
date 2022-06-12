@@ -30,22 +30,22 @@ load test_helper
 "<nav class=\"header-crumbs\">"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<a.* href=\"//localhost:6789/?--limit=.*&--columns=.*\"><span "
+"<a.* href=\"//localhost:6789/?--columns=.*&--limit=.*\"><span "
 
   printf "%s\\n" "${output}" | grep   -q \
 "<span class=\"muted\">❯</span>nb</a> <span class=\"muted\">·</span> <span class=\"muted\">notebooks</span>"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<p><a.* href=\"//localhost:6789/Demo%20Notebook:?--limit=.*&--columns=.*\">Demo${_S}Notebook</a>${_S}.*·.*"
+"<p><a.* href=\"//localhost:6789/Demo%20Notebook:?--columns=.*&--limit=.*\">Demo${_S}Notebook</a>${_S}.*·.*"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<a.* href=\"//localhost:6789/Example%20Notebook:?--limit=.*&--columns=.*\">Example${_S}Notebook</a><br>"
+"<a.* href=\"//localhost:6789/Example%20Notebook:?--columns=.*&--limit=.*\">Example${_S}Notebook</a><br>"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<a.* href=\"//localhost:6789/Sample%20Notebook:?--limit=.*&--columns=.*\">Sample${_S}Notebook</a>${_S}.*·.*"
+"<a.* href=\"//localhost:6789/Sample%20Notebook:?--columns=.*&--limit=.*\">Sample${_S}Notebook</a>${_S}.*·.*"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<a.* href=\"//localhost:6789/Test%20Notebook:?--limit=.*&--columns=.*\">Test${_S}Notebook</a></p>"
+"<a.* href=\"//localhost:6789/Test%20Notebook:?--columns=.*&--limit=.*\">Test${_S}Notebook</a></p>"
 
   run "${_NB}" browse --notebooks --columns 10 --print
 
@@ -59,22 +59,22 @@ load test_helper
 "<nav class=\"header-crumbs\">"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<a.* href=\"//localhost:6789/?--limit=.*&--columns=.*\"><span "
+"<a.* href=\"//localhost:6789/?--columns=.*&--limit=.*\"><span "
 
   printf "%s\\n" "${output}" | grep   -q \
 "<span class=\"muted\">❯</span>nb</a> <span class=\"muted\">·</span> <span class=\"muted\">notebooks</span>"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<p><a.* href=\"//localhost:6789/Demo%20Notebook:?--limit=.*&--columns=.*\">Demo${_S}Notebook</a><br>"
+"<p><a.* href=\"//localhost:6789/Demo%20Notebook:?--columns=.*&--limit=.*\">Demo${_S}Notebook</a><br>"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<a.* href=\"//localhost:6789/Example%20Notebook:?--limit=.*&--columns=.*\">Example${_S}Notebook</a><br>"
+"<a.* href=\"//localhost:6789/Example%20Notebook:?--columns=.*&--limit=.*\">Example${_S}Notebook</a><br>"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<a.* href=\"//localhost:6789/Sample%20Notebook:?--limit=.*&--columns=.*\">Sample${_S}Notebook</a><br>"
+"<a.* href=\"//localhost:6789/Sample%20Notebook:?--columns=.*&--limit=.*\">Sample${_S}Notebook</a><br>"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<a.* href=\"//localhost:6789/Test%20Notebook:?--limit=.*&--columns=.*\">Test${_S}Notebook</a></p>"
+"<a.* href=\"//localhost:6789/Test%20Notebook:?--columns=.*&--limit=.*\">Test${_S}Notebook</a></p>"
 }
 
 # HTML <title> ################################################################
@@ -118,7 +118,7 @@ load test_helper
     [[ !  -e "${NB_DIR}/home"           ]]
 
     declare _local_notebook_param="--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
-    declare _expected_param_pattern="${_local_notebook_param}&--limit=.*&--columns=.*"
+    declare _expected_param_pattern="${_local_notebook_param}&--columns=.*&--limit=.*"
   }
 
   run "${_NB}" browse --notebooks --print
@@ -185,22 +185,22 @@ load test_helper
 "<nav class=\"header-crumbs\">"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<a.* href=\"//localhost:6789/?--limit=.*&--columns=.*\"><span "
+"<a.* href=\"//localhost:6789/?--columns=.*&--limit=.*\"><span "
 
   printf "%s\\n" "${output}" | grep   -q \
 "<span class=\"muted\">❯</span>nb</a> <span class=\"muted\">·</span> <span class=\"muted\">notebooks</span>"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<p><a.* href=\"//localhost:6789/Demo%20Notebook:?--limit=.*&--columns=.*\">Demo${_S}Notebook</a>${_S}.*·.*"
+"<p><a.* href=\"//localhost:6789/Demo%20Notebook:?--columns=.*&--limit=.*\">Demo${_S}Notebook</a>${_S}.*·.*"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<a.* href=\"//localhost:6789/Example%20Notebook:?--limit=.*&--columns=.*\">Example${_S}Notebook</a>${_S}.*·.*"
+"<a.* href=\"//localhost:6789/Example%20Notebook:?--columns=.*&--limit=.*\">Example${_S}Notebook</a>${_S}.*·.*"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<a.* href=\"//localhost:6789/Sample%20Notebook:?--limit=.*&--columns=.*\">Sample${_S}Notebook</a>${_S}.*·.*"
+"<a.* href=\"//localhost:6789/Sample%20Notebook:?--columns=.*&--limit=.*\">Sample${_S}Notebook</a>${_S}.*·.*"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<a.* href=\"//localhost:6789/Test%20Notebook:?--limit=.*&--columns=.*\">Test${_S}Notebook</a></p>"
+"<a.* href=\"//localhost:6789/Test%20Notebook:?--columns=.*&--limit=.*\">Test${_S}Notebook</a></p>"
 }
 
 # browse --notebooks ##########################################################
@@ -231,22 +231,22 @@ load test_helper
 "<nav class=\"header-crumbs\">"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<a.* href=\"//localhost:6789/?--limit=.*&--columns=.*\"><span "
+"<a.* href=\"//localhost:6789/?--columns=.*&--limit=.*\"><span "
 
   printf "%s\\n" "${output}" | grep   -q \
 "<span class=\"muted\">❯</span>nb</a> <span class=\"muted\">·</span> <span class=\"muted\">notebooks</span>"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<p><a.* href=\"//localhost:6789/Demo%20Notebook:?--limit=.*&--columns=.*\">Demo${_S}Notebook</a>${_S}.*·.*"
+"<p><a.* href=\"//localhost:6789/Demo%20Notebook:?--columns=.*&--limit=.*\">Demo${_S}Notebook</a>${_S}.*·.*"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<a.* href=\"//localhost:6789/Example%20Notebook:?--limit=.*&--columns=.*\">Example${_S}Notebook</a>${_S}.*·.*"
+"<a.* href=\"//localhost:6789/Example%20Notebook:?--columns=.*&--limit=.*\">Example${_S}Notebook</a>${_S}.*·.*"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<a.* href=\"//localhost:6789/Sample%20Notebook:?--limit=.*&--columns=.*\">Sample${_S}Notebook</a>${_S}.*·.*"
+"<a.* href=\"//localhost:6789/Sample%20Notebook:?--columns=.*&--limit=.*\">Sample${_S}Notebook</a>${_S}.*·.*"
 
   printf "%s\\n" "${output}" | grep   -q \
-"<a.* href=\"//localhost:6789/Test%20Notebook:?--limit=.*&--columns=.*\">Test${_S}Notebook</a></p>"
+"<a.* href=\"//localhost:6789/Test%20Notebook:?--columns=.*&--limit=.*\">Test${_S}Notebook</a></p>"
 }
 
 @test "GET to 'browse --notebooks' URL serves the list of unarchived notebooks as a rendered HTML page with links to internal web server URLs without mutedensional parameters." {
