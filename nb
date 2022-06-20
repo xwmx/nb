@@ -24666,7 +24666,7 @@ HEREDOC
   then
     cat <<HEREDOC
 Installed with Homebrew. To update, run:
-  brew upgrade xwmx/taps/nb
+  brew upgrade nb
 HEREDOC
   else
     local _nb_url="${_REPO_RAW_URL}/nb"

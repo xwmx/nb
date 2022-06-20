@@ -209,13 +209,12 @@ Also supported for various enhancements:
 #### macOS / Homebrew
 
 ```bash
-brew tap xwmx/taps
 brew install nb
 ```
 
 Installing `nb` with Homebrew also installs
 the recommended dependencies above
-and completion scripts for Bash and Zsh.
+and completion scripts for Bash, Zsh, and Fish.
 
 #### Ubuntu, Windows WSL, and others
 
