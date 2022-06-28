@@ -17570,9 +17570,19 @@ Can't show archives. Export archive and expand to edit.\\n"
           cat
         fi
       }
-    elif _command_exists "catimg" && _file_is_image "${_target_path}"
+    elif _command_exists "catimg"     && _file_is_image "${_target_path}"
     then
       catimg "${_target_path}"
+    elif _command_exists "term-image" && _file_is_image "${_target_path}"
+    then
+      term-image "${_target_path}" --cli --quiet | {
+        if _command_exists "less"     &&  ! ((_print_output))
+        then
+          less -r --prompt="$(_less_prompt)"
+        else
+          cat
+        fi
+      }
     elif _command_exists "magick"                     &&
          _file_is_image "${_target_path}"             &&
          [[ ! "${_target_path}"   =~ afphoto$     ]]  &&

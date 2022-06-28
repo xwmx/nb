@@ -209,6 +209,7 @@ Also supported for various enhancements:
 [Ranger](https://ranger.github.io/),
 [readability-cli](https://gitlab.com/gardenappl/readability-cli),
 [`rga` / ripgrep-all](https://github.com/phiresky/ripgrep-all),
+[`term-image`](https://github.com/AnonymouX47/term-image),
 [`termpdf.py`](https://github.com/dsanson/termpdf.py),
 [vifm](https://vifm.info/)
 
@@ -1361,6 +1362,7 @@ Supported file types and tools include:
     [iTerm2](https://www.iterm2.com/)
   - [kitty's `icat` kitten](https://sw.kovidgoyal.net/kitty/kittens/icat.html)
   - [`catimg`](https://github.com/posva/catimg)
+  - [`term-image`](https://github.com/AnonymouX47/term-image)
 - Folders / Directories:
   - [`ranger`](https://ranger.github.io/)
   - [Midnight Commander (`mc`)](https://en.wikipedia.org/wiki/Midnight_Commander)
@@ -3311,6 +3313,7 @@ supported tools and configurations, including:
   [iTerm2](https://www.iterm2.com/)
 - [kitty's `icat` kitten](https://sw.kovidgoyal.net/kitty/kittens/icat.html)
 - [`catimg`](https://github.com/posva/catimg)
+- [`term-image`](https://github.com/AnonymouX47/term-image)
 
 #### Inline Images
 
