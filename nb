@@ -17555,6 +17555,33 @@ Can't show archives. Export archive and expand to edit.\\n"
         ls -lah --color=always "${_target_path}" 2>/dev/null  ||
           ls -lah -G "${_target_path}"
       fi
+    elif _command_exists "term-image" && _file_is_image "${_target_path}"
+    then
+      local _render_style="auto"
+
+      if    [[ -n "${VIMRUNTIME:-}"                   ]]
+      then
+        _render_style="block"
+      elif  [[    "${TERM_PROGRAM:-}" == "iTerm.app"  ]]
+      then
+        _render_style="iterm2"
+      elif  [[ -n "${KITTY_WINDOW_ID:-}"              ]]
+      then
+        _render_style="kitty"
+      fi
+
+      term-image "${_target_path}"  \
+        --cli                       \
+        --force-style               \
+        --quiet                     \
+        --style "${_render_style}"  |   {
+        if _command_exists "less"   &&  ! ((_print_output))
+        then
+          less -r --prompt="$(_less_prompt)"
+        else
+          cat
+        fi
+      }
     elif _command_exists "imgcat"                     &&
          _file_is_image "${_target_path}"             &&
          [[ ! "${_target_path}"   =~ \.afphoto$   ]]  &&
@@ -17573,16 +17600,6 @@ Can't show archives. Export archive and expand to edit.\\n"
     elif _command_exists "catimg"     && _file_is_image "${_target_path}"
     then
       catimg "${_target_path}"
-    elif _command_exists "term-image" && _file_is_image "${_target_path}"
-    then
-      term-image "${_target_path}" --cli --quiet | {
-        if _command_exists "less"     &&  ! ((_print_output))
-        then
-          less -r --prompt="$(_less_prompt)"
-        else
-          cat
-        fi
-      }
     elif _command_exists "magick"                     &&
          _file_is_image "${_target_path}"             &&
          [[ ! "${_target_path}"   =~ afphoto$     ]]  &&
