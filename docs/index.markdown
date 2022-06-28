@@ -1356,12 +1356,12 @@ Supported file types and tools include:
   - [`mpg123`](https://en.wikipedia.org/wiki/Mpg123)
   - [`ffplay`](https://ffmpeg.org/ffplay.html)
 - [Images](#-images):
+  - [`catimg`](https://github.com/posva/catimg)
   - [ImageMagick](https://imagemagick.org/) with a terminal that
     supports [sixels](https://en.wikipedia.org/wiki/Sixel)
   - [`imgcat`](https://www.iterm2.com/documentation-images.html) with
     [iTerm2](https://www.iterm2.com/)
   - [kitty's `icat` kitten](https://sw.kovidgoyal.net/kitty/kittens/icat.html)
-  - [`catimg`](https://github.com/posva/catimg)
   - [`term-image`](https://github.com/AnonymouX47/term-image)
 - Folders / Directories:
   - [`ranger`](https://ranger.github.io/)
@@ -3307,12 +3307,12 @@ can be configured to display images.
 [`nb show`](#show) can display images directly in the terminal with
 supported tools and configurations, including:
 
+- [`catimg`](https://github.com/posva/catimg)
 - [ImageMagick](https://imagemagick.org/) with a terminal that
   supports [sixels](https://en.wikipedia.org/wiki/Sixel)
 - [`imgcat`](https://www.iterm2.com/documentation-images.html) with
   [iTerm2](https://www.iterm2.com/)
 - [kitty's `icat` kitten](https://sw.kovidgoyal.net/kitty/kittens/icat.html)
-- [`catimg`](https://github.com/posva/catimg)
 - [`term-image`](https://github.com/AnonymouX47/term-image)
 
 #### Inline Images
