@@ -209,6 +209,7 @@ Also supported for various enhancements:
 [Ranger](https://ranger.github.io/),
 [readability-cli](https://gitlab.com/gardenappl/readability-cli),
 [`rga` / ripgrep-all](https://github.com/phiresky/ripgrep-all),
+[`sc-im`](https://github.com/andmarti1424/sc-im),
 [`term-image`](https://github.com/AnonymouX47/term-image),
 [`termpdf.py`](https://github.com/dsanson/termpdf.py),
 [vifm](https://vifm.info/)
@@ -1370,6 +1371,8 @@ Supported file types and tools include:
   - [Pandoc](https://pandoc.org/) with
     [`w3m`](https://en.wikipedia.org/wiki/W3m) or
     [`links`](https://en.wikipedia.org/wiki/Links_(web_browser))
+- Excel, CSV, and TSV files:
+  - [`sc-im`](https://github.com/andmarti1424/sc-im)
 - EPUB ebooks:
   - [Pandoc](https://pandoc.org/) with
     [`w3m`](https://en.wikipedia.org/wiki/W3m) or

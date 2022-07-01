@@ -17579,7 +17579,11 @@ Can't show archives. Export archive and expand to edit.\\n"
   # turn on case-insensitive matching
   shopt -s nocasematch
 
-  if ! _file_is_text "${_target_path}"      &&
+  if _contains "${_target_path##*.}" "csv" "sc" "tab" "tsv" "xlsx"        &&
+     _command_exists "sc-im"
+  then
+    sc-im "${_target_path}"
+  elif ! _file_is_text "${_target_path}"    &&
      ! {
        ((_render))                          &&
        [[       "${_target_path:-}" =~ \.docx$|\.epub$|\.odt$ ]]
