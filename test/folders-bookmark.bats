@@ -122,7 +122,7 @@ https://example.com
 
 # <url> #######################################################################
 
-@test "'bookmark <folder>/<folder> <url>' (no slash) with valid <url> argument creates new bookmark and folder without errors." {
+@test "'bookmark <folder>/<folder> <url>' (no slash) with valid <url> argument and affirmative prompt response creates new bookmark and folder without errors." {
   {
     "${_NB}" init
 
@@ -132,7 +132,7 @@ https://example.com
     [[ ! -f "${NB_DIR}/home/Example Folder/Sample Folder/.index"  ]]
   }
 
-  run "${_NB}" bookmark Example\ Folder/Sample\ Folder "${_BOOKMARK_URL}"
+  run "${_NB}" bookmark Example\ Folder/Sample\ Folder "${_BOOKMARK_URL}" <<< "y${_NEWLINE}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -204,6 +204,51 @@ $(cat "${NB_TEST_BASE_PATH}/fixtures/example.com.md")"
   [[ "${output}" =~ Added:                                    ]]
   [[ "${output}" =~ [0-9]+                                    ]]
   [[ "${output}" =~ Example\ Folder/[A-Za-z0-9]+.bookmark.md  ]]
+}
+
+@test "'bookmark <folder>/<folder> <url>' (no slash) with valid <url> argument and negative prompt response does not create new bookmark and folder." {
+  {
+    "${_NB}" init
+
+    [[ ! -d "${NB_DIR}/home/Example Folder"                       ]]
+    [[ ! -f "${NB_DIR}/home/Example Folder/.index"                ]]
+    [[ ! -d "${NB_DIR}/home/Example Folder/Sample Folder"         ]]
+    [[ ! -f "${NB_DIR}/home/Example Folder/Sample Folder/.index"  ]]
+  }
+
+  run "${_NB}" bookmark Example\ Folder/Sample\ Folder "${_BOOKMARK_URL}" <<< "n${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0        ]]
+
+  # Does not create folder:
+
+  [[ ! -d "${NB_DIR}/home/Example Folder"                       ]]
+  [[ ! -f "${NB_DIR}/home/Example Folder/.index"                ]]
+  [[ ! -d "${NB_DIR}/home/Example Folder/Sample Folder"         ]]
+  [[ ! -f "${NB_DIR}/home/Example Folder/Sample Folder/.index"  ]]
+
+  # Does not create git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q -v '\[nb\] Add'
+
+  # Does not add to index:
+
+  [[ ! -e "${NB_DIR}/home/Example Folder/.index"    ]]
+
+  # Prints output:
+
+  [[ "${lines[0]}" =~ Creating\ new\ folder:\ .*Example\ Folder ]]
+  [[ "${lines[1]}" =~ Exiting...                                ]]
 }
 
 @test "'bookmark <folder> <url>' (no slash) with valid <url> argument and matching folder name creates new bookmark in folder without errors." {
@@ -361,7 +406,7 @@ $(cat "${NB_TEST_BASE_PATH}/fixtures/example.com.md")"
   [[ "${output}" =~ [A-Za-z0-9]+.bookmark.md  ]]
 }
 
-@test "'bookmark <folder>/ <url>' with valid <url> argument creates new bookmark and folder without errors." {
+@test "'bookmark <folder>/ <url>' with valid <url> argument and affirmative prompt response creates new bookmark and folder without errors." {
   {
     "${_NB}" init
 
@@ -369,7 +414,7 @@ $(cat "${NB_TEST_BASE_PATH}/fixtures/example.com.md")"
     [[ ! -f "${NB_DIR}/home/Example Folder/.index" ]]
   }
 
-  run "${_NB}" bookmark Example\ Folder/ "${_BOOKMARK_URL}"
+  run "${_NB}" bookmark Example\ Folder/ "${_BOOKMARK_URL}" <<< "y${_NEWLINE}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -441,7 +486,44 @@ $(cat "${NB_TEST_BASE_PATH}/fixtures/example.com.md")"
   [[ "${output}" =~ Example\ Folder/[A-Za-z0-9]+.bookmark.md  ]]
 }
 
-@test "'bookmark <folder>/<folder>/ <url>' with valid <url> argument creates new bookmark and folder without errors." {
+@test "'bookmark <folder>/ <url>' with valid <url> argument and negative prompt response does not create new bookmark and folder." {
+  {
+    "${_NB}" init
+
+    [[ ! -d "${NB_DIR}/home/Example Folder"        ]]
+    [[ ! -f "${NB_DIR}/home/Example Folder/.index" ]]
+  }
+
+  run "${_NB}" bookmark Example\ Folder/ "${_BOOKMARK_URL}" <<< "n${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0        ]]
+
+  # Does not create folder:
+
+  [[ ! -d "${NB_DIR}/home/Example Folder"        ]]
+  [[ ! -f "${NB_DIR}/home/Example Folder/.index" ]]
+
+  # Does not create git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q -v '\[nb\] Add'
+
+  # Prints output:
+
+  [[ "${lines[0]}" =~ Creating\ new\ folder:\ .*Example\ Folder ]]
+  [[ "${lines[1]}" =~ Exiting...                                ]]
+}
+
+@test "'bookmark <folder>/<folder>/ <url>' with valid <url> argument and affirmative prompt response creates new bookmark and folder without errors." {
   {
     "${_NB}" init
 
@@ -451,7 +533,7 @@ $(cat "${NB_TEST_BASE_PATH}/fixtures/example.com.md")"
     [[ ! -f "${NB_DIR}/home/Example Folder/Sample Folder/.index"  ]]
   }
 
-  run "${_NB}" bookmark Example\ Folder/Sample\ Folder/ "${_BOOKMARK_URL}"
+  run "${_NB}" bookmark Example\ Folder/Sample\ Folder/ "${_BOOKMARK_URL}" <<< "y${_NEWLINE}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -462,10 +544,10 @@ $(cat "${NB_TEST_BASE_PATH}/fixtures/example.com.md")"
 
   # Creates folders:
 
-    [[   -d "${NB_DIR}/home/Example Folder"                       ]]
-    [[   -f "${NB_DIR}/home/Example Folder/.index"                ]]
-    [[   -d "${NB_DIR}/home/Example Folder/Sample Folder"         ]]
-    [[   -f "${NB_DIR}/home/Example Folder/Sample Folder/.index"  ]]
+  [[   -d "${NB_DIR}/home/Example Folder"                         ]]
+  [[   -f "${NB_DIR}/home/Example Folder/.index"                  ]]
+  [[   -d "${NB_DIR}/home/Example Folder/Sample Folder"           ]]
+  [[   -f "${NB_DIR}/home/Example Folder/Sample Folder/.index"    ]]
 
   # Creates new file with bookmark filename:
 
@@ -525,6 +607,47 @@ $(cat "${NB_TEST_BASE_PATH}/fixtures/example.com.md")"
   [[ "${output}" =~ Added:                                                  ]]
   [[ "${output}" =~ [0-9]+                                                  ]]
   [[ "${output}" =~ Example\ Folder/Sample\ Folder/[A-Za-z0-9]+.bookmark.md ]]
+}
+
+@test "'bookmark <folder>/<folder>/ <url>' with valid <url> argument and negative prompt response does not create new bookmark and folder." {
+  {
+    "${_NB}" init
+
+    [[ ! -d "${NB_DIR}/home/Example Folder"                       ]]
+    [[ ! -f "${NB_DIR}/home/Example Folder/.index"                ]]
+    [[ ! -d "${NB_DIR}/home/Example Folder/Sample Folder"         ]]
+    [[ ! -f "${NB_DIR}/home/Example Folder/Sample Folder/.index"  ]]
+  }
+
+  run "${_NB}" bookmark Example\ Folder/Sample\ Folder/ "${_BOOKMARK_URL}" <<< "n${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0        ]]
+
+  # Does not create folders:
+
+  [[ ! -d "${NB_DIR}/home/Example Folder"                         ]]
+  [[ ! -f "${NB_DIR}/home/Example Folder/.index"                  ]]
+  [[ ! -d "${NB_DIR}/home/Example Folder/Sample Folder"           ]]
+  [[ ! -f "${NB_DIR}/home/Example Folder/Sample Folder/.index"    ]]
+
+  # Does not create git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q -v '\[nb\] Add'
+
+  # Prints output:
+
+  [[ "${lines[0]}" =~ Creating\ new\ folder:\ .*Example\ Folder/Sample\ Folder  ]]
+  [[ "${lines[1]}" =~ Exiting...                                                ]]
 }
 
 # <list option...> arguments ##################################################

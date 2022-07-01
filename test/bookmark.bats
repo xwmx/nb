@@ -43,15 +43,17 @@ HEREDOC
       )
   }
 
-  run "${_NB}" bookmark "Example Folder/" "${_BOOKMARK_URL}" --filename two
+  run "${_NB}" bookmark "Example Folder/" "${_BOOKMARK_URL}" --filename two <<< "y${_NEWLINE}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}"    -eq  0  ]]
-  [[ "${#lines[@]}" -eq  1  ]]
+  [[ "${#lines[@]}" -eq  2  ]]
 
   [[ "${lines[0]}"  =~   \
+Creating\ new\ folder:\ .*Example\ Folder                                                         ]]
+  [[ "${lines[1]}"  =~   \
 Added:\ .*[.*Example\ Folder/1.*].*\ 🔖\ .*Example\ Folder/two.bookmark.md.*\ \"Example\ Domain\" ]]
 
   declare _after_files=()
@@ -104,7 +106,7 @@ HEREDOC
     declare _before_files=()
     _before_files=($(ls "${NB_DIR}/home/"))
 
-    printf "\${_BOOKMARK_URL}:      '%s'\\n"  "${_BOOKMARK_URL:-}"
+    printf "\${_BOOKMARK_URL}:    '%s'\\n"  "${_BOOKMARK_URL:-}"
     printf "\${_before_files[*]}: '%s'\\n"  "${_before_files[*]:-}"
 
     [[        "${#_before_files[@]}" -eq 4        ]]
