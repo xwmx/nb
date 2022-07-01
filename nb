@@ -17580,7 +17580,8 @@ Can't show archives. Export archive and expand to edit.\\n"
   shopt -s nocasematch
 
   if _contains "${_target_path##*.}" "csv" "sc" "tab" "tsv" "xlsx"        &&
-     _command_exists "sc-im"
+     _command_exists "sc-im"                                              &&
+     [[ "${_tool:-sc-im}"  == "sc-im" ]]
   then
     sc-im "${_target_path}"
   elif ! _file_is_text "${_target_path}"    &&
@@ -17730,11 +17731,13 @@ Can't show archives. Export archive and expand to edit.\\n"
       ffplay -loglevel quiet "${_target_path}"
     elif _command_exists "termpdf.py"                 &&
          [[     "${_target_path}" =~ pdf$         ]]  &&
-         [[ -n  "${KITTY_WINDOW_ID:-}"            ]]
+         [[ -n  "${KITTY_WINDOW_ID:-}"            ]]  &&
+         _contains "${_tool:-termpdf.py}" "termpdf.py" "termpdf"
     then
       termpdf.py "${_target_path}"
     elif _command_exists "pdftotext"                  &&
-         [[     "${_target_path}" =~ pdf$         ]]
+         [[     "${_target_path}" =~ pdf$         ]]  &&
+         [[ "${_tool:-pdftotext}" == "pdftotext"  ]]
     then
       pdftotext "${_target_path}" - | tr -d '\014'  | {
         if ! ((_print_output))
