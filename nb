@@ -11882,6 +11882,7 @@ _add() {
   local _edit_before_commit=0
   local _encrypt=0
   local _file_type="${NB_DEFAULT_EXTENSION}"
+  local _folder_prompt=0
   local _option_content=
   local _option_folder_relative_path=
   local _option_relative_path=
@@ -11929,6 +11930,9 @@ _add() {
         _defer_arguments+=("${1}" "${_option_folder_relative_path:-}")
 
         shift
+        ;;
+      --folder*prompt)
+        _folder_prompt=1
         ;;
       --no*color)
         _COLOR_ENABLED=0
@@ -12269,9 +12273,40 @@ _add() {
     then
       if [[ -e "${_notebook_path}/${_target_folder_relative_path:-}"  ]]
       then
-        _exit_1 printf "File exists at: %s\\n"            \
+        _exit_1 printf "File exists at: %s\\n"  \
           "$(_color_primary "${_target_folder_relative_path:-}")"
       else
+        if ((_folder_prompt))
+        then
+          local _target_folder_selector="${_target_folder_relative_path:-}"
+
+          if _notebooks current --selected
+          then
+            _target_folder_selector="$(_notebooks current --name)"
+          fi
+
+          printf "Creating new folder: %s\\n"   \
+            "$(_color_primary "${_target_folder_selector}")"
+
+          while true
+          do
+            local __yn=
+            IFS='' read -r -e -d $'\n' -p       \
+"$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
+
+            case "${__yn}" in
+              [Yy]*)
+                break
+                ;;
+              *)
+                printf "Exiting...\\n"
+
+                exit 0
+                ;;
+            esac
+          done
+        fi
+
         if ! mkdir -p "${_notebook_path:?}/${_target_folder_relative_path}" 2>/dev/null
         then
           _exit_1 printf "Unable to create folder: %s\\n" \
