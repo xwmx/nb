@@ -8967,6 +8967,7 @@ _SUBCOMMANDS=(
   t
   task
   tasks
+  trash
   to
   todo
   todos
@@ -13636,6 +13637,10 @@ $(_color_primary "Examples"):
   ${_ME} d example:12
   ${_ME} example:12 d
 
+$(_color_primary "Aliases"):
+  ${_ME} rm
+  ${_ME} trash
+
 $(_color_primary "Shortcut Aliases"):
   ${_ME} d
   ${_ME} -
@@ -13782,6 +13787,7 @@ _delete() {
 _alias_subcommand "delete" "-"
 _alias_subcommand "delete" "d"
 _alias_subcommand "delete" "rm"
+_alias_subcommand "delete" "trash"
 
 # edit ################################################################### edit
 
@@ -21143,7 +21149,7 @@ _folders() {
   fi
 
   if [[ -z "${_selector:-}"       ]] &&
-     _contains "${_subcommand:-}" "+" "-" "a" "add" "d" "delete" "rm"
+     _contains "${_subcommand:-}" "+" "-" "a" "add" "d" "delete" "rm" "trash"
   then
     _help "folders"
 

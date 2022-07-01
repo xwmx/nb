@@ -6539,6 +6539,10 @@ Examples:
   nb d example:12
   nb example:12 d
 
+Aliases:
+  nb rm
+  nb trash
+
 Shortcut Aliases:
   nb d
   nb -

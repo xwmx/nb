@@ -2,7 +2,57 @@
 
 load test_helper
 
-# shortcut aliases ############################################################
+# aliases #####################################################################
+
+@test "'<notebook>:trash <id>' deletes properly without errors." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" add "Example Notebook:Example File.md"
+
+    _original_index="$(cat "${NB_DIR}/Example Notebook/.index")"
+
+    [[ -e "${NB_DIR}/Example Notebook/Example File.md"  ]]
+  }
+
+  run "${_NB}" Example\ Notebook:trash 1 --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0                                  ]]
+
+  # Deletes file:
+
+  [[ ! -e "${NB_DIR}/Example Notebook/Example File.md"  ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/Example Notebook" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Delete'
+
+  # Deletes entry from index:
+
+  [[ -e "${NB_DIR}/Example Notebook/.index"             ]]
+  [[    "$(ls "${NB_DIR}/Example Notebook")"  == \
+          "$(cat "${NB_DIR}/Example Notebook/.index")"  ]]
+  [[    "${_original_index}"                  != \
+          "$(cat "${NB_DIR}/Example Notebook/.index")"  ]]
+
+  # Prints output:
+
+  [[ "${status}" -eq  0                                                     ]]
+  [[ "${output}" =~   Deleted:                                              ]]
+  [[ "${output}" =~   Example\ Notebook:1.*Example\ File.md.*\"mock_editor  ]]
+}
 
 @test "'<notebook>:rm <id>' deletes properly without errors." {
   {
