@@ -1372,7 +1372,7 @@ Supported file types and tools include:
   - [Pandoc](https://pandoc.org/) with
     [`w3m`](https://en.wikipedia.org/wiki/W3m) or
     [`links`](https://en.wikipedia.org/wiki/Links_(web_browser))
-- Excel, CSV, and TSV files:
+- Excel, CSV, TSV, and data files:
   - [VisiData](https://www.visidata.org/)
   - [`sc-im`](https://github.com/andmarti1424/sc-im)
 - EPUB ebooks:
