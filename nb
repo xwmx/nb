@@ -17579,9 +17579,16 @@ Can't show archives. Export archive and expand to edit.\\n"
   # turn on case-insensitive matching
   shopt -s nocasematch
 
-  if _contains "${_target_path##*.}" "csv" "sc" "tab" "tsv" "xlsx"        &&
-     _command_exists "sc-im"                                              &&
-     [[ "${_tool:-sc-im}"  == "sc-im" ]]
+  if _contains "${_target_path##*.}"        \
+       "csv" "json" "mysql" "postgres"      \
+       "sqlite" "tab" "tar" "tsv" "usv" "vds" "xml" "xlsx" "zip"      &&
+     _command_exists "vd"                                             &&
+     _contains "${_tool:-vd}" "vd" "visidata"
+  then
+    vd "${_target_path}"
+  elif _contains "${_target_path##*.}" "csv" "sc" "tab" "tsv" "xlsx"  &&
+       _command_exists "sc-im"                                        &&
+       [[ "${_tool:-sc-im}"   == "sc-im"    ]]
   then
     sc-im "${_target_path}"
   elif ! _file_is_text "${_target_path}"    &&

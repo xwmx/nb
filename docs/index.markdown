@@ -212,7 +212,8 @@ Also supported for various enhancements:
 [`sc-im`](https://github.com/andmarti1424/sc-im),
 [`term-image`](https://github.com/AnonymouX47/term-image),
 [`termpdf.py`](https://github.com/dsanson/termpdf.py),
-[vifm](https://vifm.info/)
+[vifm](https://vifm.info/),
+[VisiData](https://www.visidata.org/)
 
 #### macOS / Homebrew
 
@@ -1372,6 +1373,7 @@ Supported file types and tools include:
     [`w3m`](https://en.wikipedia.org/wiki/W3m) or
     [`links`](https://en.wikipedia.org/wiki/Links_(web_browser))
 - Excel, CSV, and TSV files:
+  - [VisiData](https://www.visidata.org/)
   - [`sc-im`](https://github.com/andmarti1424/sc-im)
 - EPUB ebooks:
   - [Pandoc](https://pandoc.org/) with
