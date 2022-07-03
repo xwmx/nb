@@ -12282,11 +12282,11 @@ _add() {
       else
         if ((_folder_prompt))
         then
-          local _target_folder_selector="${_target_folder_relative_path:-}"
+          local _target_folder_selector="${_target_folder_relative_path:-}/"
 
           if _notebooks current --selected
           then
-            _target_folder_selector="$(_notebooks current --name)"
+            _target_folder_selector="$(_notebooks current --name):${_target_folder_selector}"
           fi
 
           printf "Creating new folder: %s\\n"   \
