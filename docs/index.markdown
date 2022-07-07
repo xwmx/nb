@@ -125,6 +125,7 @@ or dozens of notebooks containing thousands of notes, bookmarks, and other items
 <div align="center">&nbsp;</div><!-- spacer -->
 
 <div align="center">
+  <sub>
   📝
   🔖
   🌍
@@ -138,6 +139,7 @@ or dozens of notebooks containing thousands of notes, bookmarks, and other items
   📖
   📂
   🌄
+  </sub>
 </div>
 
 <p align="center">&nbsp;</p><!-- spacer -->
