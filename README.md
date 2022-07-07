@@ -131,13 +131,13 @@ or dozens of notebooks containing thousands of notes, bookmarks, and other items
   <a href="#overview">Overview</a>&nbsp;&nbsp;
 </div>
 
-<div align="center">&nbsp;</div><!-- spacer -->
+<p align="center"></p><!-- spacer -->
 
 <div align="center">
   <a href="#help">Help</a>
 </div>
 
-<div align="center">&nbsp;</div><!-- spacer -->
+<p align="center"></p><!-- spacer -->
 
 <div align="center">
   <a href="#top">&nbsp;↑&nbsp;</a>
