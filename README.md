@@ -116,6 +116,8 @@ or dozens of notebooks containing thousands of notes, bookmarks, and other items
 `nb` can be used a little, a lot, once in a while, or for just a subset of features.
 `nb` is flexible.
 
+<p align="center"></p><!-- spacer -->
+
 <div align="center">
   📝
   🔖
@@ -123,6 +125,8 @@ or dozens of notebooks containing thousands of notes, bookmarks, and other items
   🔍
   📔
 </div>
+
+<p align="center"></p><!-- spacer -->
 
 <br/>
 
@@ -333,7 +337,7 @@ the [`nb update`](#update) subcommand.
 
 ## Overview
 
-<p align="center">
+<div align="center">
   <a href="#-notes"><code>📝</code>&nbsp;Notes</a>&nbsp;·
   <a href="#adding">Adding</a>&nbsp;·
   <a href="#listing--filtering">Listing</a>&nbsp;·
@@ -366,11 +370,13 @@ the [`nb update`](#update) subcommand.
   <a href="#help">Help</a>&nbsp;·
   <a href="#specifications">Specifications</a>&nbsp;·
   <a href="#tests">Tests</a>
-</p>
+</div>
 
-<p align="center">
+<p align="center"></p><!-- spacer -->
+
+<div align="center">
   <a href="#nb">&nbsp;↑&nbsp;</a>
-</p>
+</div>
 
 To get started, simply run:
 
@@ -732,11 +738,11 @@ For more information, see [Browsing](#-browsing).
 
 To list notes and notebooks, run [`nb ls`](#ls) (shortcut alias: `nb`):
 
-<p align="center">
+<div align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/nb-theme-utility-home.png"
         alt="nb ls"
         width="450">
-</p>
+</div>
 
 Notebooks are listed above the line,
 with the current notebook highlighted and/or underlined,
@@ -1615,11 +1621,11 @@ For more information, see [Browsing](#-browsing).
 create, annotate, view, search, [browse](#-browsing), and manage
 collections of bookmarks.
 
-<p align="center">
+<div align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/nb-bookmarks-gui-gui-terminal.png"
         alt="nb bookmarks"
         width="450">
-</p>
+</div>
 
 Bookmarks in `nb` are stored as
 [simple structured Markdown files](#nb-markdown-bookmark-file-format)
@@ -1834,11 +1840,11 @@ opened.
 
 #### Listing and Filtering Bookmarks
 
-<p align="center">
+<div align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/nb-bookmarks-gui-terminal-terminal.png"
         alt="nb bookmark lists"
         width="500">
-</p>
+</div>
 
 Bookmarks are included in
 `nb`,
@@ -2809,11 +2815,11 @@ Use [`nb browse`](#browse) (shortcut: [`nb b`](#browse)) to
 browse, view, edit, and search linked notes, bookmarks, notebooks, folders,
 and other items using terminal and GUI web browsers.
 
-<p align="center">
+<div align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/gui-gui-terminal-browse.png"
         alt="nb browse"
         width="500">
-</p>
+</div>
 
 [`nb browse`](#browse) includes an embedded, terminal-first web application
 that renders
@@ -2955,11 +2961,11 @@ arrow (`↓`) link to view or download the original file.
 
 #### `browse edit`
 
-<p align="center">
+<div align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/gui-terminal-browse-edit.png"
         alt="nb browse edit"
         width="500">
-</p>
+</div>
 
 Items in text formats can be edited within terminal and GUI web browsers using
 the `edit` link on the item page or by opening the item with
@@ -5068,11 +5074,11 @@ viewing and editing items in text formats with
 [`nb browse --gui`](#browse---gui),
 which incorporates the color theme's primary color into the syntax theme:
 
-<p align="center">
+<div align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/nb-web-pandoc-ruby-utility.png"
         alt="nb syntax highlighting"
         width="500">
-</p>
+</div>
 
 #### Indicators
 
@@ -5639,22 +5645,24 @@ For more commands and options, run
 [`nb help`](#nb-help) or
 [`nb help <subcommand>`](#subcommands)
 
-<p align="center">
+<div align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/gui-browse-themes.png"
         alt="nb browse themes"
         width="700">
-</p>
+</div>
 
 ### Help
 
-<p align="center">
+<div align="center">
   <a href="#nb-help">nb</a>&nbsp;·
   <a href="#bookmark-help">bookmark</a>&nbsp;·
   <a href="#subcommands">subcommands</a>&nbsp;·
   <a href="#plugin-help">plugins</a>
-</p>
+</div>
 
-<p align="center">
+<p align="center"></p><!-- spacer -->
+
+<div align="center">
   <a href="#add">add</a>&nbsp;·
   <a href="#archive">archive</a>&nbsp;·
   <a href="#bookmark">bookmark</a>&nbsp;·
@@ -5699,11 +5707,13 @@ For more commands and options, run
   <a href="#update">update</a>&nbsp;·
   <a href="#use">use</a>&nbsp;·
   <a href="#version">version</a>
-</p>
+</div>
 
-<p align="center">
+<p align="center"></p><!-- spacer -->
+
+<div align="center">
   <a href="#overview">&nbsp;↑&nbsp;</a>
-</p>
+</div>
 
 #### `nb help`
 
@@ -6053,7 +6063,7 @@ For more information, see: `nb help`.
 
 ### Subcommands
 
-<p align="center">
+<div align="center">
   <a href="#add">add</a>&nbsp;·
   <a href="#archive">archive</a>&nbsp;·
   <a href="#bookmark">bookmark</a>&nbsp;·
@@ -6098,11 +6108,13 @@ For more information, see: `nb help`.
   <a href="#update">update</a>&nbsp;·
   <a href="#use">use</a>&nbsp;·
   <a href="#version">version</a>
-</p>
+</div>
 
-<p align="center">
+<p align="center"></p><!-- spacer -->
+
+<div align="center">
   <a href="#overview">&nbsp;↑&nbsp;</a>
-</p>
+</div>
 
 #### `add`
 
@@ -8563,18 +8575,20 @@ See Also:
   </sup>
 </p>
 
-<p align="center">
+<div align="center">
   <a href="#backlink">backlink</a>&nbsp;·
   <a href="#bump">bump</a>&nbsp;·
   <a href="#clip">clip</a>&nbsp;·
   <a href="#ebook">ebook</a>&nbsp;·
   <a href="#example">example</a>&nbsp;·
   <a href="#weather">weather</a>
-</p>
+</div>
 
-<p align="center">
+<p align="center"></p><!-- spacer -->
+
+<div align="center">
   <a href="#help">&nbsp;↑&nbsp;</a>
-</p>
+</div>
 
 #### `backlink`
 
@@ -8787,15 +8801,17 @@ Shortcut Alias:
 
 ## Specifications
 
-<p align="center">
+<div align="center">
   <a href="#nb-markdown-bookmark-file-format">Bookmark File Format</a>&nbsp;·
   <a href="#nb-markdown-todo-file-format">Todo File Format</a>&nbsp;·
   <a href="#nb-notebook-specification">Notebook Specification</a>
-</p>
+</div>
 
-<p align="center">
+<p align="center"></p><!-- spacer -->
+
+<div align="center">
   <a href="#help">&nbsp;↑&nbsp;</a>
-</p>
+</div>
 
 ### `nb` Markdown Bookmark File Format
 
@@ -9306,27 +9322,33 @@ and the [recommended dependencies](#optional),
 then run `bats test` within the project root directory. Run groups of
 tests with globbing, e.g., `bats test/browse*` and `bats test/folders*`.
 
-<p align="center">
+<div align="center">
   <a href="#overview">&nbsp;↑&nbsp;</a>
-</p>
+</div>
 
 ---
 
-<p align="center">
+<div align="center">
   Copyright (c) 2015-present ·
   <a href="https://www.williammelody.com/">William Melody</a> ·
   <a href="https://github.com/xwmx/nb/blob/master/LICENSE">AGPLv3</a>
-</p>
+</div>
 
-<p align="center">
+<div align="center">&nbsp;</div><!-- spacer -->
+
+<div align="center">
   <a href="https://xwmx.github.io/nb">xwmx.github.io/nb</a>&nbsp;·
   <a href="https://github.com/xwmx/nb">github.com/xwmx/nb</a>
-</p>
+</div>
 
-<p align="center">
+<div align="center">&nbsp;</div><!-- spacer -->
+
+<div align="center">
   📝🔖🔒🔍📔
-</p>
+</div>
 
-<p align="center">
+<div align="center">&nbsp;</div><!-- spacer -->
+
+<div align="center">
   <a href="#top">&nbsp;↑&nbsp;</a>
-</p>
+</div>
