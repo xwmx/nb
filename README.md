@@ -116,7 +116,7 @@ or dozens of notebooks containing thousands of notes, bookmarks, and other items
 `nb` can be used a little, a lot, once in a while, or for just a subset of features.
 `nb` is flexible.
 
-<p align="center">&nbsp;</p><!-- spacer -->
+<div align="center">&nbsp;</div><!-- spacer -->
 
 <div align="center">
   📝
@@ -135,7 +135,6 @@ or dozens of notebooks containing thousands of notes, bookmarks, and other items
 </div>
 
 <p align="center">&nbsp;</p><!-- spacer -->
-
 
 <div align="center">
   <h1 align="center" id="nb"><code>nb</code></h1>
