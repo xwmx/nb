@@ -4,11 +4,15 @@ title: nb · command line and local web plain text note-taking, bookmarking, arc
 permalink: /
 ---
 
+<p align="center"></p><!-- spacer -->
+
 <div align="center">
   <img  src="https://raw.githubusercontent.com/xwmx/nb/master/docs/assets/images/nb.png"
         alt="nb"
         width="200">
 </div>
+
+<p align="center"></p><!-- spacer -->
 
 <div align="center">
   <a href="https://github.com/xwmx/nb/actions" rel="nofollow">
