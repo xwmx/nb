@@ -121,14 +121,20 @@ or dozens of notebooks containing thousands of notes, bookmarks, and other items
 <div align="center">
   📝
   🔖
+  🌍
   🔒
+  🎨
+  🔄
+  ✅
   🔍
-  📔
+  📌
+  📚
+  📖
+  📂
+  🌄
 </div>
 
 <p align="center"></p><!-- spacer -->
-
-<br/>
 
 <div align="center">
   <h1 align="center" id="nb"><code>nb</code></h1>
