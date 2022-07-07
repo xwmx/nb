@@ -1,16 +1,16 @@
-<p align="center">
+<div align="center">
   <img  src="https://raw.githubusercontent.com/xwmx/nb/master/docs/assets/images/nb.png"
         alt="nb"
         width="200">
-</p>
+</div>
 
-<p align="center">
+<div align="center">
   <a href="https://github.com/xwmx/nb/actions" rel="nofollow">
     <img  src="https://img.shields.io/github/workflow/status/xwmx/nb/nb%20%C2%B7%20Test%20Suite"
           alt="Build Status"
           style="max-width:100%;">
   </a>
-</p>
+</div>
 
 <br>
 
@@ -54,11 +54,11 @@ including macOS and Windows via WSL.
 [Optional dependencies](#optional) can be installed to enhance functionality,
 but `nb` works great without them.
 
-<p align="center">
+<div align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/nb-theme-nb-home.png"
         alt="home"
         width="450">
-</p>
+</div>
 
 `nb` is also a powerful [bookmarking](#-bookmarks) system featuring:
 
@@ -78,11 +78,11 @@ and saved
 into normal Markdown documents made for humans,
 so bookmarks are easy to view and edit just like any other note.
 
-<p align="center">
+<div align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/gui-terminal-browse.png"
         alt="nb browse"
         width="500">
-</p>
+</div>
 
 `nb` uses [Git](https://git-scm.com/) in the background to
 automatically record changes and sync notebooks with remote repositories.
@@ -90,11 +90,11 @@ automatically record changes and sync notebooks with remote repositories.
 sync notebooks using a general purpose syncing utility like Dropbox
 so notes can be edited in other apps on any device.
 
-<p align="center">
+<div align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/terminal-empty.png"
         alt="nb list empty"
         width="450">
-</p>
+</div>
 
 `nb` is designed to be portable, future-focused, and vendor independent,
 providing a full-featured and intuitive experience within
@@ -112,28 +112,30 @@ or dozens of notebooks containing thousands of notes, bookmarks, and other items
 `nb` can be used a little, a lot, once in a while, or for just a subset of features.
 `nb` is flexible.
 
-<p align="center">
+<div align="center">
   📝
   🔖
   🔒
   🔍
   📔
-</p>
+</div>
 
 <br/>
 
-<h1 align="center" id="nb"><code>nb</code></h1>
+<div align="center">
+  <h1 align="center" id="nb"><code>nb</code></h1>
+</div>
 
-<p align="center">
+<div align="center">
   <a href="#installation">Installation</a>&nbsp;·
   <a href="#overview">Overview</a>&nbsp;&nbsp;
 </p>
 
-<p align="center">
+<div align="center">
   <a href="#help">Help</a>
 </p>
 
-<p align="center">
+<div align="center">
   <a href="#top">&nbsp;↑&nbsp;</a>
 </p>
 
