@@ -3375,7 +3375,7 @@ organized in normal system directories in normal git repositories,
 | tags              | [#tags](#-tagging)                              |
 | metadata          | [front matter](#front-matter)                   |
 | cross-references  |  <a href="#-linking">[[wiki-style links]]</a>   |
-| fast note-taking  | [`nb add`](#adding) / [`nb <url>`](#-bookmarks) |
+| fast note-taking  | [`nb add`](#adding)/[`nb <url>`](#-bookmarks)   |
 
 For more information about Zettelkasten, see
 [Wikipedia](https://en.wikipedia.org/wiki/Zettelkasten).
