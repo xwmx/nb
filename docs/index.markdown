@@ -135,15 +135,15 @@ or dozens of notebooks containing thousands of notes, bookmarks, and other items
 <div align="center">
   <a href="#installation">Installation</a>&nbsp;·
   <a href="#overview">Overview</a>&nbsp;&nbsp;
-</p>
+</div>
 
 <div align="center">
   <a href="#help">Help</a>
-</p>
+</div>
 
 <div align="center">
   <a href="#top">&nbsp;↑&nbsp;</a>
-</p>
+</div>
 
 ### Installation
 
