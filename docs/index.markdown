@@ -9329,32 +9329,47 @@ then run `bats test` within the project root directory. Run groups of
 tests with globbing, e.g., `bats test/browse*` and `bats test/folders*`.
 
 <div align="center">
+  <span>
   <a href="#overview">&nbsp;↑&nbsp;</a>
+  </span>
+
+  <br/>
 </div>
 
 ---
 
 <div align="center">
+  <span>
   Copyright (c) 2015-present ·
   <a href="https://www.williammelody.com/">William Melody</a> ·
   <a href="https://github.com/xwmx/nb/blob/master/LICENSE">AGPLv3</a>
+  </span>
+
+  <br/>
+  <br/>
 </div>
 
-<div align="center">&nbsp;</div><!-- spacer -->
-
 <div align="center">
+  <span>
   <a href="https://xwmx.github.io/nb">xwmx.github.io/nb</a>&nbsp;·
   <a href="https://github.com/xwmx/nb">github.com/xwmx/nb</a>
+  </span>
+
+  <br/>
+  <br/>
 </div>
 
-<div align="center">&nbsp;</div><!-- spacer -->
-
 <div align="center">
+  <span>
   📝🔖🔒🔍📔
+  </span>
+
+  <br/>
+  <br/>
 </div>
 
-<div align="center">&nbsp;</div><!-- spacer -->
-
 <div align="center">
+  <span>
   <a href="#top">&nbsp;↑&nbsp;</a>
+  </span>
 </div>
