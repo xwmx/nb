@@ -333,6 +333,14 @@ To install with [bpkg](https://github.com/bpkg/bpkg):
 bpkg install xwmx/nb
 ```
 
+##### basher
+
+To install with [basher](https://github.com/basherpm/basher):
+
+```bash
+basher install xwmx/nb
+```
+
 #### Tab Completion
 
 Bash, Fish, and Zsh tab completion should be enabled
