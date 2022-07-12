@@ -133,8 +133,8 @@ or dozens of notebooks containing thousands of notes, bookmarks, and other items
   🌍
   🔒
   ✅
-  🎨
   🔄
+  🎨
   📚
   📌
   📂
