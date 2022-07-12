@@ -161,10 +161,10 @@ HEREDOC
   # https://app.vagrantup.com/ubuntu
 
   # Ubuntu 20.10
-  config.vm.define "ubuntu2010" do |ubuntu2010|
-    ubuntu2010.vm.box = "ubuntu/impish64"
-    ubuntu2010.vm.provision :shell, inline: $ubuntu_setup, privileged: false
-  end
+  # config.vm.define "ubuntu2010" do |ubuntu2010|
+  #   ubuntu2010.vm.box = "ubuntu/impish64"
+  #   ubuntu2010.vm.provision :shell, inline: $ubuntu_setup, privileged: false
+  # end
 
   # Ubuntu 20.04 LTS
   # config.vm.define "ubuntu2004" do |ubuntu2004|
