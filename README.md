@@ -329,7 +329,7 @@ bpkg install xwmx/nb
 
 ##### basher
 
-To install with [basher](https://github.com/basherpm/basher):
+To install with [basher](https://www.basher.it/):
 
 ```bash
 basher install xwmx/nb
