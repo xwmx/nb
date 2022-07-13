@@ -356,6 +356,14 @@ load test_helper
   [[      "${status}" -eq 0 ]]
   [[  -z  "${output}"       ]]
 
+  run "${_NB}" helpers string_is_url "gemini://example.com/"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[      "${status}" -eq 0 ]]
+  [[  -z  "${output}"       ]]
+
   run "${_NB}" helpers string_is_url "geo:123.456,987.654"
 
   printf "\${status}: '%s'\\n" "${status}"
