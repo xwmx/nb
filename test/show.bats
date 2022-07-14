@@ -191,16 +191,43 @@ https://example.com
 @test "'show --url' with gemini:// protocol bookmark prints bookmark URL." {
   {
     "${_NB}" init
-    "${_NB}" bookmark "gemini://example.com/" --encrypt --password=example
+    "${_NB}" bookmark "gemini://example.com/"
   }
 
-  run "${_NB}" show 1 --url --password=example
+  run "${_NB}" show 1 --url
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" -eq  0                         ]]
   [[ "${output}" ==   "gemini://example.com/"   ]]
+}
+
+@test "'show --url' with whitespace around URL prints bookmark URL." {
+  {
+    "${_NB}" init
+    "${_NB}" add                                \
+      --filename  "example.bookmark.md"         \
+      --content   "$(cat <<HEREDOC
+# Example Bookmark Title (example.com)
+
+    <https://example.com>   
+
+## Content
+
+Example content.
+HEREDOC
+
+      )"
+  }
+
+  run "${_NB}" show 1 --url
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq  0                         ]]
+  [[ "${output}" ==   "https://example.com"     ]]
 }
 
 # `show <notebook>` ###########################################################

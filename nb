@@ -17576,7 +17576,8 @@ ${_title/\[$' '\]/${_TPUT_SETAF_8}[ ]${_TPUT_SGR0}}"
         "${_url_match_patterns[@]:-}" \
         "${_target_path}"             \
         | head -n 1                   \
-        | sed "s/<//g" | sed "s/>//g" || :
+        | sed "s/^[[:space:]]*<//g"   \
+        | sed "s/>[[:space:]]*$//g"   || :
     )"
 
     if [[ -z "${_target_url:-}"       ]]
