@@ -9,10 +9,16 @@ load test_helper
     "${_NB}" init
 
     declare _global_email=
-    _global_email="$(git -C "${NB_DIR}/home" config --global user.email)"
+    _global_email="$(
+      git -C "${NB_DIR}/home" config --global user.email  ||
+      git -C "${NB_DIR}/home" config user.email           || :
+    )"
 
     declare _global_name=
-    _global_name="$(git -C "${NB_DIR}/home" config --global user.name)"
+    _global_name="$(
+      git -C "${NB_DIR}/home" config --global user.name   ||
+      git -C "${NB_DIR}/home" config user.name            || :
+    )"
 
     "${_NB}" add "Example File.md" --content "Example content."
   }
