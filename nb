@@ -3100,10 +3100,10 @@ _string_is_url() {
 
   local _url_match_patterns=()
 
-  local _url_match_pattern=
-  for   _url_match_pattern in "${_URL_PATTERNS[@]}"
+  local __url_match_pattern=
+  for   __url_match_pattern in "${_URL_PATTERNS[@]}"
   do
-    _url_match_patterns+=(-e "^${_url_match_pattern}$")
+    _url_match_patterns+=(-e "^${__url_match_pattern}$")
   done
 
   printf "%s\\n" "${1:-}" | grep -E -q --color=never "${_url_match_patterns[@]:-}"
@@ -17564,10 +17564,10 @@ ${_title/\[$' '\]/${_TPUT_SETAF_8}[ ]${_TPUT_SGR0}}"
 
     local _url_match_patterns=()
 
-    local _url_match_pattern=
-    for   _url_match_pattern in "${_URL_PATTERNS[@]}"
+    local __url_match_pattern=
+    for   __url_match_pattern in "${_URL_PATTERNS[@]}"
     do
-      _url_match_patterns+=(-e "<${_url_match_pattern}>")
+      _url_match_patterns+=(-e "<${__url_match_pattern}>")
     done
 
     local _target_url=
