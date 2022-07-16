@@ -9170,12 +9170,13 @@ _is_valid_subcommand() {
 #   Parse program options.
 _parse_options() {
   local _current_option=
-  local _previous_option=
   local _non_option_arguments=()
+  local _previous_option=
 
   while ((${#}))
   do
     _previous_option="${_current_option:-}"
+
     _current_option="${1:-}"
 
     shift
