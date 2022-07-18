@@ -266,11 +266,11 @@ HEREDOC
   [[    "${output}"   =~  \
 .*\<h2\ id=\"description\"\>Description\</h2\>${_NEWLINE}\
 .*\<p\>Description\ paragraph\ one.\<\/p\>${_NEWLINE}\
-.*\<p\> \</p\>${_NEWLINE}\
+.*\<p\>\ \</p\>${_NEWLINE}\
 .*\<p\>Description\ paragraph\ three\.\</p\>${_NEWLINE}\
 .*\<h2\ id=\"content\"\>Content\</h2\>${_NEWLINE}\
 .*\<p\>Content\ paragraph\ one\.\</p\>${_NEWLINE}\
-.*\<p\> \</p\>${_NEWLINE}\
+.*\<p\>\ \</p\>${_NEWLINE}\
 .*\<p\>Content\ paragraph\ three\.\</p\>                    ]]
 }
 
@@ -320,7 +320,7 @@ HEREDOC
 
   [[ !  "${output}"   =~ \
 .*\<p\>Content\ paragraph\ one\.\</p\>${_NEWLINE}\
-.*\<p\> \</p\>${_NEWLINE}\
+.*\<p\>\ \</p\>${_NEWLINE}\
 .*\<p\>Content\ paragraph\ three\.\</p\>                    ]]
 
 }
@@ -371,7 +371,7 @@ HEREDOC
 
   [[ !  "${output}"   =~ \
 .*\<p\>Content\ paragraph\ one\.\</p\>${_NEWLINE}\
-.*\<p\> \</p\>${_NEWLINE}\
+.*\<p\>\ \</p\>${_NEWLINE}\
 .*\<p\>Content\ paragraph\ three\.\</p\>                    ]]
 }
 
@@ -413,7 +413,7 @@ HEREDOC
 
   [[ !  "${output}"   =~ \
 .*\<p\>Content\ paragraph\ one\.\</p\>${_NEWLINE}\
-.*\<p\> \</p\>${_NEWLINE}\
+.*\<p\>\ \</p\>${_NEWLINE}\
 .*\<p\>Content\ paragraph\ three\.\</p\>                    ]]
 }
 
@@ -455,7 +455,7 @@ HEREDOC
 
   [[ !  "${output}"   =~ \
 .*\<p\>Content\ paragraph\ one\.\</p\>${_NEWLINE}\
-.*\<p\> \</p\>${_NEWLINE}\
+.*\<p\>\ \</p\>${_NEWLINE}\
 .*\<p\>Content\ paragraph\ three\.\</p\>                    ]]
 }
 
