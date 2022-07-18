@@ -5,225 +5,225 @@ load test_helper
 
 # checkboxes ##################################################################
 
-# @test "'_render' with todo item displays marked-up done / closed checkbox." {
-#   {
-#     "${_NB}" init
+@test "'_render' with todo item displays marked-up done / closed checkbox." {
+  {
+    "${_NB}" init
 
-#     "${_NB}" add "Example One.todo.md" --content "# [x] Example todo one."
-#   }
+    "${_NB}" add "Example One.todo.md" --content "# [x] Example todo one."
+  }
 
-#   run "${_NB}" helpers render  "${NB_DIR}/home/Example One.todo.md"
+  run "${_NB}" helpers render  "${NB_DIR}/home/Example One.todo.md"
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-#   [[    "${status}"    ==  0                    ]]
-#   [[    "${output}"    =~  \<\!DOCTYPE\ html\>  ]]
+  [[    "${status}"    ==  0                    ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>  ]]
 
-#   [[    "${output}"    =~  \
-# \#\ \<span\ class=\"muted\"\>\[\</span\>\<span\ class=\"identifier\"\>x\</span\>      ]]
-#   [[    "${output}"    =~  \
-# \<span\ class=\"identifier\"\>x\<\/span\>\<span\ class=\"muted\"\>\]\<\/span\>        ]]
-# }
+  [[    "${output}"    =~  \
+\#\ \<span\ class=\"muted\"\>\[\</span\>\<span\ class=\"identifier\"\>x\</span\>      ]]
+  [[    "${output}"    =~  \
+\<span\ class=\"identifier\"\>x\<\/span\>\<span\ class=\"muted\"\>\]\<\/span\>        ]]
+}
 
-# @test "'_render' with todo item displays marked-up undone / open checkbox (space)." {
-#   {
-#     "${_NB}" init
+@test "'_render' with todo item displays marked-up undone / open checkbox (space)." {
+  {
+    "${_NB}" init
 
-#     "${_NB}" add "Example One.todo.md" --content "# [ ] Example todo one."
-#   }
+    "${_NB}" add "Example One.todo.md" --content "# [ ] Example todo one."
+  }
 
-#   run "${_NB}" helpers render  "${NB_DIR}/home/Example One.todo.md"
+  run "${_NB}" helpers render  "${NB_DIR}/home/Example One.todo.md"
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-#   [[    "${status}"    ==  0                    ]]
-#   [[    "${output}"    =~  \<\!DOCTYPE\ html\>  ]]
+  [[    "${status}"    ==  0                    ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>  ]]
 
-#   [[    "${output}"    =~  \
-# \#\ \<span\ class=\"muted\"\>\[\</span\>\<span\ class=\"identifier\"\>${_S}\</span\>  ]]
-#   [[    "${output}"    =~  \
-# \<span\ class=\"identifier\"\>${_S}\<\/span\>\<span\ class=\"muted\"\>\]\<\/span\>    ]]
-# }
+  [[    "${output}"    =~  \
+\#\ \<span\ class=\"muted\"\>\[\</span\>\<span\ class=\"identifier\"\>${_S}\</span\>  ]]
+  [[    "${output}"    =~  \
+\<span\ class=\"identifier\"\>${_S}\<\/span\>\<span\ class=\"muted\"\>\]\<\/span\>    ]]
+}
 
-# @test "'_render' with todo item displays marked-up undone / open checkbox (no space)." {
-#   {
-#     "${_NB}" init
+@test "'_render' with todo item displays marked-up undone / open checkbox (no space)." {
+  {
+    "${_NB}" init
 
-#     "${_NB}" add "Example One.todo.md" --content "# [] Example todo one."
-#   }
+    "${_NB}" add "Example One.todo.md" --content "# [] Example todo one."
+  }
 
-#   run "${_NB}" helpers render  "${NB_DIR}/home/Example One.todo.md"
+  run "${_NB}" helpers render  "${NB_DIR}/home/Example One.todo.md"
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-#   [[    "${status}"    ==  0                    ]]
-#   [[    "${output}"    =~  \<\!DOCTYPE\ html\>  ]]
+  [[    "${status}"    ==  0                    ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>  ]]
 
-#   [[    "${output}"    =~  \
-# \#\ \<span\ class=\"muted\"\>\[\</span\>\<span\ class=\"identifier\"\>${_S}\</span\>  ]]
-#   [[    "${output}"    =~  \
-# \<span\ class=\"identifier\"\>${_S}\<\/span\>\<span\ class=\"muted\"\>\]\<\/span\>    ]]
-# }
+  [[    "${output}"    =~  \
+\#\ \<span\ class=\"muted\"\>\[\</span\>\<span\ class=\"identifier\"\>${_S}\</span\>  ]]
+  [[    "${output}"    =~  \
+\<span\ class=\"identifier\"\>${_S}\<\/span\>\<span\ class=\"muted\"\>\]\<\/span\>    ]]
+}
 
-# @test "'_render --pandoc' with todo item displays marked-up done / closed checkbox." {
-#   {
-#     "${_NB}" init
+@test "'_render --pandoc' with todo item displays marked-up done / closed checkbox." {
+  {
+    "${_NB}" init
 
-#     "${_NB}" add "Example One.todo.md" --content "# [x] Example todo one."
-#   }
+    "${_NB}" add "Example One.todo.md" --content "# [x] Example todo one."
+  }
 
-#   run "${_NB}" helpers render  "${NB_DIR}/home/Example One.todo.md" --pandoc
+  run "${_NB}" helpers render  "${NB_DIR}/home/Example One.todo.md" --pandoc
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-#   [[    "${status}"    ==  0                    ]]
-#   [[    "${output}"    =~  \<\!DOCTYPE\ html\>  ]]
+  [[    "${status}"    ==  0                    ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>  ]]
 
-#   [[    "${output}"    =~  \
-# \<h1\ id=\"x-example-todo-one.\"\>\<span\ class=\"muted\"\>\[\</span\>              ]]
-#   [[    "${output}"    =~  \
-# \[\</span\>\<span\ class=\"identifier\"\>x\</span\>                                 ]]
-#   [[    "${output}"    =~  \
-# \<span\ class=\"identifier\"\>x\<\/span\>\<span\ class=\"muted\"\>\]\<\/span\>      ]]
-# }
+  [[    "${output}"    =~  \
+\<h1\ id=\"x-example-todo-one.\"\>\<span\ class=\"muted\"\>\[\</span\>              ]]
+  [[    "${output}"    =~  \
+\[\</span\>\<span\ class=\"identifier\"\>x\</span\>                                 ]]
+  [[    "${output}"    =~  \
+\<span\ class=\"identifier\"\>x\<\/span\>\<span\ class=\"muted\"\>\]\<\/span\>      ]]
+}
 
-# @test "'_render --pandoc' with todo item displays marked-up undone / open checkbox (space)." {
-#   {
-#     "${_NB}" init
+@test "'_render --pandoc' with todo item displays marked-up undone / open checkbox (space)." {
+  {
+    "${_NB}" init
 
-#     "${_NB}" add "Example One.todo.md" --content "# [ ] Example todo one."
-#   }
+    "${_NB}" add "Example One.todo.md" --content "# [ ] Example todo one."
+  }
 
-#   run "${_NB}" helpers render  "${NB_DIR}/home/Example One.todo.md" --pandoc
+  run "${_NB}" helpers render  "${NB_DIR}/home/Example One.todo.md" --pandoc
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-#   [[    "${status}"    ==  0                    ]]
-#   [[    "${output}"    =~  \<\!DOCTYPE\ html\>  ]]
+  [[    "${status}"    ==  0                    ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>  ]]
 
-#   [[    "${output}"    =~  \
-# \<h1\ id=\"example-todo-one.\"\>\<span\ class=\"muted\"\>\[\</span\>                ]]
-#   [[    "${output}"    =~  \
-# \[\</span\>\<span\ class=\"identifier\"\>${_S}\</span\>                             ]]
-#   [[    "${output}"    =~  \
-# \<span\ class=\"identifier\"\>${_S}\<\/span\>\<span\ class=\"muted\"\>\]\<\/span\>  ]]
-# }
+  [[    "${output}"    =~  \
+\<h1\ id=\"example-todo-one.\"\>\<span\ class=\"muted\"\>\[\</span\>                ]]
+  [[    "${output}"    =~  \
+\[\</span\>\<span\ class=\"identifier\"\>${_S}\</span\>                             ]]
+  [[    "${output}"    =~  \
+\<span\ class=\"identifier\"\>${_S}\<\/span\>\<span\ class=\"muted\"\>\]\<\/span\>  ]]
+}
 
-# @test "'_render --pandoc' with todo item displays marked-up undone / open checkbox (no space)." {
-#   {
-#     "${_NB}" init
+@test "'_render --pandoc' with todo item displays marked-up undone / open checkbox (no space)." {
+  {
+    "${_NB}" init
 
-#     "${_NB}" add "Example One.todo.md" --content "# [] Example todo one."
-#   }
+    "${_NB}" add "Example One.todo.md" --content "# [] Example todo one."
+  }
 
-#   run "${_NB}" helpers render  "${NB_DIR}/home/Example One.todo.md" --pandoc
+  run "${_NB}" helpers render  "${NB_DIR}/home/Example One.todo.md" --pandoc
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-#   [[    "${status}"    ==  0                    ]]
-#   [[    "${output}"    =~  \<\!DOCTYPE\ html\>  ]]
+  [[    "${status}"    ==  0                    ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>  ]]
 
-#   [[    "${output}"    =~  \
-# \<h1\ id=\"example-todo-one.\"\>\<span\ class=\"muted\"\>\[\</span\>                ]]
-#   [[    "${output}"    =~  \
-# \[\</span\>\<span\ class=\"identifier\"\>${_S}\</span\>                             ]]
-#   [[    "${output}"    =~  \
-# \<span\ class=\"identifier\"\>${_S}\<\/span\>\<span\ class=\"muted\"\>\]\<\/span\>  ]]
-# }
+  [[    "${output}"    =~  \
+\<h1\ id=\"example-todo-one.\"\>\<span\ class=\"muted\"\>\[\</span\>                ]]
+  [[    "${output}"    =~  \
+\[\</span\>\<span\ class=\"identifier\"\>${_S}\</span\>                             ]]
+  [[    "${output}"    =~  \
+\<span\ class=\"identifier\"\>${_S}\<\/span\>\<span\ class=\"muted\"\>\]\<\/span\>  ]]
+}
 
-# # <title> #####################################################################
+# <title> #####################################################################
 
-# @test "'_render --title <title>' sets HTML '<title></title>' to <title>." {
-#   {
-#     "${_NB}" init
+@test "'_render --title <title>' sets HTML '<title></title>' to <title>." {
+  {
+    "${_NB}" init
 
-#     "${_NB}" add  "Example File One.md"   \
-#       --title     "Example Title One"     \
-#       --content   "Example content one."
-#   }
+    "${_NB}" add  "Example File One.md"   \
+      --title     "Example Title One"     \
+      --content   "Example content one."
+  }
 
-#   run "${_NB}" helpers render             \
-#     "${NB_DIR}/home/Example File.md"      \
-#     --title "Example HTML Title"
+  run "${_NB}" helpers render             \
+    "${NB_DIR}/home/Example File.md"      \
+    --title "Example HTML Title"
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-#   [[    "${status}"    ==  0                                        ]]
-#   [[    "${output}"    =~  \<\!DOCTYPE\ html\>                      ]]
-#   [[    "${output}"    =~  \<title\>Example\ HTML\ Title\</title\>  ]]
-#   [[ !  "${output}"    =~  \<title\>nb\</title\>                    ]]
-# }
+  [[    "${status}"    ==  0                                        ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                      ]]
+  [[    "${output}"    =~  \<title\>Example\ HTML\ Title\</title\>  ]]
+  [[ !  "${output}"    =~  \<title\>nb\</title\>                    ]]
+}
 
-# @test "'_render' without '--title' sets HTML '<title></title>' to default." {
-#   {
-#     "${_NB}" init
+@test "'_render' without '--title' sets HTML '<title></title>' to default." {
+  {
+    "${_NB}" init
 
-#     "${_NB}" add  "Example File One.md"   \
-#       --title     "Example Title One"     \
-#       --content   "Example content one."
-#   }
+    "${_NB}" add  "Example File One.md"   \
+      --title     "Example Title One"     \
+      --content   "Example content one."
+  }
 
-#   run "${_NB}" helpers render             \
-#     "${NB_DIR}/home/Example File.md"
+  run "${_NB}" helpers render             \
+    "${NB_DIR}/home/Example File.md"
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-#   [[    "${status}"    ==  0                      ]]
-#   [[    "${output}"    =~  \<\!DOCTYPE\ html\>    ]]
-#   [[    "${output}"    =~  \<title\>nb\</title\>  ]]
-# }
+  [[    "${status}"    ==  0                      ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>    ]]
+  [[    "${output}"    =~  \<title\>nb\</title\>  ]]
+}
 
-# @test "'_render --title <title> --pandoc' sets HTML '<title></title>' to <title>." {
-#   {
-#     "${_NB}" init
+@test "'_render --title <title> --pandoc' sets HTML '<title></title>' to <title>." {
+  {
+    "${_NB}" init
 
-#     "${_NB}" add  "Example File One.md"   \
-#       --title     "Example Title One"     \
-#       --content   "Example content one."
-#   }
+    "${_NB}" add  "Example File One.md"   \
+      --title     "Example Title One"     \
+      --content   "Example content one."
+  }
 
-#   run "${_NB}" helpers render             \
-#     "${NB_DIR}/home/Example File.md"      \
-#     --pandoc                              \
-#     --title "Example HTML Title"
+  run "${_NB}" helpers render             \
+    "${NB_DIR}/home/Example File.md"      \
+    --pandoc                              \
+    --title "Example HTML Title"
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-#   [[    "${status}"    ==  0                                        ]]
-#   [[    "${output}"    =~  \<\!DOCTYPE\ html\>                      ]]
-#   [[    "${output}"    =~  \<title\>Example\ HTML\ Title\</title\>  ]]
-#   [[ !  "${output}"    =~  \<title\>nb\</title\>                    ]]
-# }
+  [[    "${status}"    ==  0                                        ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>                      ]]
+  [[    "${output}"    =~  \<title\>Example\ HTML\ Title\</title\>  ]]
+  [[ !  "${output}"    =~  \<title\>nb\</title\>                    ]]
+}
 
-# @test "'_render --pandoc' without '--title' sets HTML '<title></title>' to default." {
-#   {
-#     "${_NB}" init
+@test "'_render --pandoc' without '--title' sets HTML '<title></title>' to default." {
+  {
+    "${_NB}" init
 
-#     "${_NB}" add  "Example File One.md"   \
-#       --title     "Example Title One"     \
-#       --content   "Example content one."
-#   }
+    "${_NB}" add  "Example File One.md"   \
+      --title     "Example Title One"     \
+      --content   "Example content one."
+  }
 
-#   run "${_NB}" helpers render             \
-#     "${NB_DIR}/home/Example File.md"      \
-#     --pandoc
+  run "${_NB}" helpers render             \
+    "${NB_DIR}/home/Example File.md"      \
+    --pandoc
 
-#   printf "\${status}: '%s'\\n" "${status}"
-#   printf "\${output}: '%s'\\n" "${output}"
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
 
-#   [[    "${status}"    ==  0                      ]]
-#   [[    "${output}"    =~  \<\!DOCTYPE\ html\>    ]]
-#   [[    "${output}"    =~  \<title\>nb\</title\>  ]]
-# }
+  [[    "${status}"    ==  0                      ]]
+  [[    "${output}"    =~  \<\!DOCTYPE\ html\>    ]]
+  [[    "${output}"    =~  \<title\>nb\</title\>  ]]
+}
 
 # empty <p> elements ##########################################################
 
