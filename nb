@@ -10983,7 +10983,7 @@ HEREDOC
   local _only_body=0
   local _pandoc_arguments=("--highlight-style=zenburn")
   local _source_extension="${NB_DEFAULT_EXTENSION:-md}"
-  local _strip_bookmark_images=0
+  local _filter_bookmark_content=0
   local _use_pandoc=0
 
   while ((${#}))
@@ -10991,7 +10991,7 @@ HEREDOC
     case "${1:-}" in
       "")         :                                           ;;
       --body)     _only_body=1                                ;;
-      --bookmark) _strip_bookmark_images=1                    ;;
+      --bookmark) _filter_bookmark_content=1                  ;;
       --from)     _from="${2:?}" && _use_pandoc=1   && shift  ;;
       --*pandoc)  _use_pandoc=1                               ;;
       --source*)  _source_extension="${2:?}"        && shift  ;;
@@ -11182,31 +11182,37 @@ HEREDOC
 HEREDOC
     fi
   } | {
-    if ((_strip_bookmark_images))
+    if ((_filter_bookmark_content))
     then
-      local _strip_images=0
+      local _in_content=0
 
       {
         local               __line=
         while IFS= read -r  __line
         do
-          if ! ((_strip_images))  &&
+          if ! ((_in_content))  &&
              [[ "${__line:-}" =~  ^\<h2\ id=\"content\"|^\<h2\ id=\"page-content\" ]]
           then
-            _strip_images=1
+            _in_content=1
           fi
 
-          if ((_strip_images))
+          if ((_in_content))
           then
-            printf "%s-img-strip-%s%s\\n" "${_ME}" "${_ME}" "${__line:-}"
+            # add line marker
+            printf "%s-content-%s%s\\n" "${_ME}" "${_ME}" "${__line:-}"
           else
             printf "%s\\n" "${__line:-}"
           fi
         done
       } | {
-        LC_ALL=C sed -E -e "/^${_ME}-img-strip-${_ME}/ s/<img[^>]*>//g"
+        # strip bookmark <img> images
+        LC_ALL=C sed -E -e "/^${_ME}-content-${_ME}/ s/<img[^>]*>//g"
       } | {
-        LC_ALL=C sed -E -e "s/^${_ME}-img-strip-${_ME}//g"
+        # remove empty <p> paragraph elements
+        LC_ALL=C sed -E -e "/^${_ME}-content-${_ME}/ s/.*<p>[ ]*<\/p>$//g"
+      } | {
+        # remove line marker
+        LC_ALL=C sed -E -e "s/^${_ME}-content-${_ME}//g"
       }
     else
       cat
