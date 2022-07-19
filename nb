@@ -17624,6 +17624,11 @@ Can't show archives. Export archive and expand to edit.\\n"
        [[ "${_tool:-sc-im}"   == "sc-im"    ]]
   then
     sc-im "${_target_path}"
+  elif _contains "${_target_path##*.}" "csv" "psv" "tsv"              &&
+       _command_exists "tv"                                           &&
+       _contains "${_tool:-tv}" "tv" "tidy-viewer" "tidyviewer"
+  then
+    tv "${_target_path}"
   elif ! _file_is_text "${_target_path}"    &&
      ! {
        ((_render))                          &&

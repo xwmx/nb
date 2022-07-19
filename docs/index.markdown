@@ -234,6 +234,7 @@ Also supported for various enhancements:
 [`sc-im`](https://github.com/andmarti1424/sc-im),
 [`term-image`](https://github.com/AnonymouX47/term-image),
 [`termpdf.py`](https://github.com/dsanson/termpdf.py),
+[Tidy-Viewer (`tv`)](https://github.com/alexhallam/tv),
 [vifm](https://vifm.info/),
 [VisiData](https://www.visidata.org/)
 
@@ -1407,6 +1408,7 @@ Supported file types and tools include:
 - Excel, CSV, TSV, and data files:
   - [VisiData](https://www.visidata.org/)
   - [`sc-im`](https://github.com/andmarti1424/sc-im)
+  - [Tidy-Viewer (`tv`)](https://github.com/alexhallam/tv),
 - EPUB ebooks:
   - [Pandoc](https://pandoc.org/) with
     [`w3m`](https://en.wikipedia.org/wiki/W3m) or
