@@ -203,7 +203,7 @@ Also supported for various enhancements:
 
 [Ack](https://beyondgrep.com/),
 [`afplay`](https://ss64.com/osx/afplay.html),
-[Ag - The Silver Searcher](https://github.com/ggreer/the_silver_searcher),
+[The Silver Searcher (`ag`)](https://github.com/ggreer/the_silver_searcher),
 [`catimg`](https://github.com/posva/catimg),
 [`exa`](https://github.com/ogham/exa),
 [`ffplay`](https://ffmpeg.org/ffplay.html),
@@ -214,7 +214,7 @@ Also supported for various enhancements:
 [kitty's `icat` kitten](https://sw.kovidgoyal.net/kitty/kittens/icat.html),
 [Links](https://en.wikipedia.org/wiki/Links_(web_browser)),
 [Lynx](https://en.wikipedia.org/wiki/Lynx_(web_browser)),
-[Midnight Commander](https://en.wikipedia.org/wiki/Midnight_Commander),
+[Midnight Commander (`mc`)](https://en.wikipedia.org/wiki/Midnight_Commander),
 [`mpg123`](https://en.wikipedia.org/wiki/Mpg123),
 [MPlayer](https://en.wikipedia.org/wiki/MPlayer),
 [ncat](https://nmap.org/ncat/),
