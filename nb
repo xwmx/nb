@@ -17705,7 +17705,14 @@ Can't show archives. Export archive and expand to edit.\\n"
           cat
         fi
       }
-    elif _command_exists "catimg" &&  _file_is_image "${_target_path}"
+    elif _command_exists "viu"                        &&
+         _file_is_image "${_target_path}"             &&
+         [[   "${_tool:-viu}"  == "viu"           ]]
+    then
+      viu "${_target_path}"
+    elif _command_exists "catimg"                     &&
+         _file_is_image "${_target_path}"             &&
+         [[   "${_tool:-catimg}"  == "catimg"     ]]
     then
       catimg "${_target_path}"
     elif _command_exists "magick"                     &&

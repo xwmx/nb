@@ -236,6 +236,7 @@ Also supported for various enhancements:
 [`termpdf.py`](https://github.com/dsanson/termpdf.py),
 [Tidy-Viewer (`tv`)](https://github.com/alexhallam/tv),
 [vifm](https://vifm.info/),
+[`viu`](https://github.com/atanunq/viu),
 [VisiData](https://www.visidata.org/)
 
 #### macOS / Homebrew
@@ -1398,6 +1399,7 @@ Supported file types and tools include:
     [iTerm2](https://www.iterm2.com/)
   - [kitty's `icat` kitten](https://sw.kovidgoyal.net/kitty/kittens/icat.html)
   - [`term-image`](https://github.com/AnonymouX47/term-image)
+  - [`viu`](https://github.com/atanunq/viu)
 - Folders / Directories:
   - [`ranger`](https://ranger.github.io/)
   - [Midnight Commander (`mc`)](https://en.wikipedia.org/wiki/Midnight_Commander)
@@ -1408,7 +1410,7 @@ Supported file types and tools include:
 - Excel, CSV, TSV, and data files:
   - [VisiData](https://www.visidata.org/)
   - [`sc-im`](https://github.com/andmarti1424/sc-im)
-  - [Tidy-Viewer (`tv`)](https://github.com/alexhallam/tv),
+  - [Tidy-Viewer (`tv`)](https://github.com/alexhallam/tv)
 - EPUB ebooks:
   - [Pandoc](https://pandoc.org/) with
     [`w3m`](https://en.wikipedia.org/wiki/W3m) or
@@ -3353,6 +3355,7 @@ supported tools and configurations, including:
   [iTerm2](https://www.iterm2.com/)
 - [kitty's `icat` kitten](https://sw.kovidgoyal.net/kitty/kittens/icat.html)
 - [`term-image`](https://github.com/AnonymouX47/term-image)
+- [`viu`](https://github.com/atanunq/viu)
 
 #### Inline Images
 
