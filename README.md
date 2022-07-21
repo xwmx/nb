@@ -396,6 +396,8 @@ the [`nb update`](#update) subcommand.
   <a href="#nb">&nbsp;↑&nbsp;</a>
 </div>
 
+<p align="center"></p><!-- spacer -->
+
 To get started, simply run:
 
 ```bash
