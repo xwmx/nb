@@ -252,10 +252,10 @@ th {
 } // .highlight
 
 .main-content {
-  padding:                  1rem 2rem;
+  padding:                  1rem 2rem 0;
 
   @media (min-width: 50rem) {
-    padding:                1rem 2.5rem;
+    padding:                1rem 2.5rem 0;
   }
 
   a {
