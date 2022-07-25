@@ -244,11 +244,11 @@ _tput() {
         return 0
         ;;
       setaf|smul)
-        ((${_COLOR_ENABLED:-1})) || return 0
+        ((${_COLOR_ENABLED:-1}))  || return 0
         ;;
     esac
 
-    tput "${@:-}" 2>/dev/null || {
+    tput "${@:-}" 2>/dev/null     || {
       case "${1:-}" in
         sgr0)
           tput me
@@ -265,7 +265,7 @@ _tput() {
     case "${1:-}" in
       cols|lines)
         {
-          stty size 2>/dev/null || printf "20 80\\n"
+          stty size 2>/dev/null   || printf "20 80\\n"
         } | if [[ "${1:-}" == "cols" ]]
             then
               cut -d " " -f 2
