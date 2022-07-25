@@ -9390,9 +9390,3 @@ tests with globbing, e.g., `bats test/browse*` and `bats test/folders*`.
   <br/>
   <br/>
 </div>
-
-<div align="center">
-  <span>
-  <a href="#top">&nbsp;↑&nbsp;</a>
-  </span>
-</div>
