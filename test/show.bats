@@ -744,6 +744,24 @@ HEREDOC
 
 # `show <id> --indicators` ####################################################
 
+@test "'show <id> --indicators' exits with status 0 and prints includes pinned indicator." {
+  {
+    "${_NB}" init
+    "${_NB}" add "example.bookmark.md" --content "<https://example.test>"
+    "${_NB}" pin 1
+  }
+
+  run "${_NB}" show 1 --indicators
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}" -eq 0   ]]
+  [[    "${output}" =~  📌  ]]
+  [[    "${output}" =~  🔖  ]]
+  [[ !  "${output}" =~  🔒  ]]
+}
+
 @test "'show <id> --indicators' exits with status 0 and prints bookmark indicator." {
   {
     "${_NB}" init
@@ -756,6 +774,7 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
 
   [[    "${status}" -eq 0   ]]
+  [[ !  "${output}" =~  📌  ]]
   [[    "${output}" =~  🔖  ]]
   [[ !  "${output}" =~  🔒  ]]
 }
@@ -772,6 +791,7 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
 
   [[    "${status}" -eq 0   ]]
+  [[ !  "${output}" =~  📌  ]]
   [[ !  "${output}" =~  🔖  ]]
   [[    "${output}" =~  🔒  ]]
 }
@@ -790,6 +810,7 @@ HEREDOC
   printf "\${output}: '%s'\\n" "${output}"
 
   [[    "${status}" -eq 0   ]]
+  [[ !  "${output}" =~  📌  ]]
   [[    "${output}" =~  🔖  ]]
   [[    "${output}" =~  🔒  ]]
 }

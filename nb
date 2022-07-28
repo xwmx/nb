@@ -17051,10 +17051,21 @@ _show() {
     local _path="${1:-}"
 
     case "${2:-}" in
-      --done) _done=1   ;;
+      --done) _done=1 ;;
     esac
 
-    if [[ -d "${_path}" ]]
+    local _pindex_path="${_path%/*}/.pindex"
+
+    if [[ -e "${_pindex_path}"  ]]
+    then
+      # shellcheck disable=SC2046
+      if _contains "${_path##*/}" $(cat "${_pindex_path}")
+      then
+        _indicators+="${_NB_INDICATOR_PINNED:-}"
+      fi
+    fi
+
+    if [[ -d "${_path}"         ]]
     then
       _indicators+="${_NB_INDICATOR_FOLDER:-}"
     elif _file_is_bookmark "${_path}"
