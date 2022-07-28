@@ -11123,7 +11123,7 @@ HEREDOC
   function initializeAceEditor() {
     var aceModeList = ace.require("ace/ext/modelist");
 
-    var textarea = document.querySelector('textarea');
+    var textarea    = document.querySelector('textarea');
 
     if (!textarea) return;
 
