@@ -13355,7 +13355,7 @@ _bookmark() {
 
     [[ -f "${_temp_file:-}" ]]  &&  rm -f "${_temp_file:?}"
 
-    exit 0
+    return 0
   fi
 }
 _alias_subcommand "bookmark" "bk"
@@ -14682,6 +14682,45 @@ $(_color_primary "Shortcut Alias"):
 HEREDOC
 }
 _import() {
+  # _import_create_bookmark()
+  #
+  # Usage:
+  #   _import_create_bookmark <line>
+  _import_create_bookmark() {
+    local _line="${2:?}"
+    local _target_selector="${1:-}"
+
+    # _warn printf "target selector: %s\\n" "${_target_selector}"
+    local _url=
+    _url="$(sed -E -e 's/.*HREF="(.*)" ADD_DATE.*/\1/g' <<< "${_line}")"
+
+    local _title=
+    _title="$(sed -E -e 's/.*>(.*)<\/A>/\1/g' <<< "${_line}")"
+
+    local _add_timestamp=
+    _add_timestamp="$(sed -E -e 's/.*ADD_DATE="(.*)">.*<\/A>/\1/g' <<< "${_line}")"
+
+    local _target_filename=
+    _target_filename="$(
+      if hash "gdate" 2>/dev/null
+      then # GNU prefixed
+        gdate -d "@${_add_timestamp}" "+%Y%m%d%H%M%S"
+      elif date --version >/dev/null 2>&1
+      then # GNU
+        date -d "@${_add_timestamp}" "+%Y%m%d%H%M%S"
+      else # BSD
+        date -r "@${_add_timestamp}" "+%Y%m%d%H%M%S"
+      fi
+    )"
+
+    _bookmark                           \
+      "${_target_selector}"             \
+      "${_url}"                         \
+      --filename  "${_target_filename}" \
+      --skip-folder-prompt              \
+      --title     "${_title}"
+  }
+
   # _import_validate_path()
   #
   # Usage:
@@ -14771,6 +14810,9 @@ _import() {
   for   __arg in "${@:-}"
   do
     case "${__arg}" in
+      bookmark|bookmarks)
+        _subcommand="bookmarks"
+        ;;
       copy|download|move)
         _subcommand="${__arg}"
         ;;
@@ -14801,6 +14843,11 @@ _import() {
        [[ -n "${_url:-}"                      ]]
     then
       _selector="${__source_and_target_identifier:-}"
+    elif [[ "${_subcommand}" == bookmarks                     ]] &&
+         [[ ! "${__source_and_target_identifier}" =~ ^/       ]] &&
+         [[ "${__source_and_target_identifier}"   =~ :$|/$    ]]
+    then
+      _selector="${__source_and_target_identifier}"
     elif [[ "${_subcommand}" =~ ^copy$|^move$                 ]] &&
          [[ ! "${__source_and_target_identifier}" =~ ^/       ]] &&
          {
@@ -14818,17 +14865,23 @@ _import() {
     fi
   done
 
+  local _notebook_name=
   local _notebook_path=
   local _selector_path=
 
   if [[ "${_selector:-}" =~ :     ]]
   then
+    _notebook_name="$(
+      _notebooks show "${_selector%%:*}" --name 2>/dev/null \
+        || _notebooks current --name
+    )"
     _notebook_path="$(
       _notebooks show "${_selector%%:*}" --path 2>/dev/null \
         || _notebooks current --path
-    )"
+      )"
     _selector_path="${_selector#*:}"
   else
+    _notebook_name="$(_notebooks current --name)"
     _notebook_path="$(_notebooks current --path)"
     _selector_path="${_selector:-}"
   fi
@@ -14839,6 +14892,66 @@ _import() {
   local _target_relative_path=
 
   case "${_subcommand}" in
+    bookmarks)
+      local _target_folder_relative_path=
+      _target_folder_relative_path="$(
+        _selector_resolve_folders "${_selector_path}" --build || :
+      )"
+
+      if [[ -z "${_selector:-}" ]]
+      then
+        _selector="$(_notebooks current --name):"
+      fi
+
+      local __path=
+      for   __path in "${_paths[@]:-}"
+      do
+        _import_validate_path "${__path:-}"
+
+        local               __line=
+        while IFS= read -r  __line || [[ -n "${__line:-}"           ]]
+        do
+          if [[ "${__line}" =~ ^[[:space:]]*\<DT\>                  ]]
+          then
+            if [[ "${__line}" =~ PERSONAL_TOOLBAR_FOLDER=\"true\"   ]]
+            then
+              _target_folder_relative_path="${_target_folder_relative_path}toolbar/"
+            elif [[ "${__line}" =~ \<DT\>\<A.*\>.*\</A\>            ]]
+            then
+              # if [[ -n "${_target_folder_relative_path:-}"          ]]
+              # then
+              #   _target_folder_relative_path="${_target_folder_relative_path#/}"
+              #   _target_folder_relative_path="${_target_folder_relative_path}/"
+              # fi
+
+              _import_create_bookmark                               \
+                "${_notebook_name}:${_target_folder_relative_path}" \
+                "${__line}" || :
+            elif [[ "${__line}" =~ \<DT\>\<H3.*\>.*\</H3\>          ]]
+            then
+              local _parent_folder_name=
+              _parent_folder_name="$(
+                sed -E -e 's/.*>(.*)<\/H3>.*/\1/g' <<< "${__line}"
+              )"
+
+              _target_folder_relative_path="${_target_folder_relative_path}${_parent_folder_name}/"
+            fi
+          elif [[ "${__line}" =~ \</DL\>\<p\>                       ]]
+          then
+            # _warn echo "BEFORE: ${_target_folder_relative_path}"
+            _target_folder_relative_path="${_target_folder_relative_path%/}"
+
+            if [[ "${_target_folder_relative_path:-}" =~ \/         ]]
+            then
+              _target_folder_relative_path="${_target_folder_relative_path%/*}/"
+            else
+              _target_folder_relative_path=
+            fi
+            # _warn echo "AFTER: ${_target_folder_relative_path}"
+          fi
+        done < "${__path}"
+      done
+      ;;
     copy)
       local __path=
       for   __path in "${_paths[@]:-}"
