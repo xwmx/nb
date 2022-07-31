@@ -38,9 +38,11 @@ load test_helper
 Added:\ .*[.*toolbar/1.*].*\ 🔖\ .*toolbar/20220731115400\.bookmark\.md.*\ \"Example\ Com\" ]]
 
   [[ "${lines[1]}"  =~ \
-Added:\ .*[.*toolbar/Example\ Bookmark\ Folder/Example\ Nested\ Folder/1.*].*\ 🔖\                                ]]
+Added:\ .*[.*toolbar/Example\ Bookmark\ Folder/Example\ Nested\ Folder/1.*].*\ 🔖\          ]]
   [[ "${lines[1]}"  =~ \
-🔖\ .*toolbar/Example\ Bookmark\ Folder/Example\ Nested\ Folder/20220731115404\.bookmark\.md.*\ \"Example\ Org\"  ]]
+🔖\ .*toolbar/Example\ Bookmark\ Folder/Example\ Nested\ Folder/                            ]]
+  [[ "${lines[1]}"  =~ \
+Example\ Nested\ Folder/20220731115404\.bookmark\.md.*\ \"Example\ Org\"                    ]]
 
   [[ "${lines[2]}"  =~ \
 Added:\ .*[.*toolbar/Example\ Bookmark\ Folder/1.*].*\ 🔖\                                  ]]
@@ -60,9 +62,11 @@ Added:\ .*[.*Example\ Folder\ Other/1.*].*\ 🔖\                               
 🔖\ .*Example\ Folder\ Other/20220731120222\.bookmark\.md.*\ \"Example\ Edu\ Other\"        ]]
 
   [[ "${lines[7]}"  =~ \
-Added:\ .*[.*Example\ Folder\ Other/Example\ Nested\ Folder\ Other/1.*].*\ 🔖\                                      ]]
+Added:\ .*[.*Example\ Folder\ Other/Example\ Nested\ Folder\ Other/1.*].*\ 🔖\              ]]
   [[ "${lines[7]}"  =~ \
-🔖\ .*Example\ Folder\ Other/Example\ Nested\ Folder\ Other/20220731120214\.bookmark\.md.*\ \"Example\ Com\ Other\" ]]
+🔖\ .*Example\ Folder\ Other/Example\ Nested\ Folder\ Other/                                ]]
+  [[ "${lines[7]}"  =~ \
+Example\ Nested\ Folder\ Other/20220731120214\.bookmark\.md.*\ \"Example\ Com\ Other\"      ]]
 
   # Adds files.
 
