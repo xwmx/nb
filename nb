@@ -14720,20 +14720,6 @@ _import() {
       --title     "${_title}"
   }
 
-  # _import_validate_path()
-  #
-  # Usage:
-  #   _import_validate_path <path>
-  _import_validate_path() {
-    if [[     -z "${1:-}" ]]
-    then
-      _exit_1 _help "import"
-    elif [[ ! -e "${1:-}" ]]
-    then
-      _exit_1 printf "File not found: %s\\n" "$(_color_primary "${1:-}")"
-    fi
-  }
-
   # _import_init_target_relative_path()
   #
   # Usage:
@@ -14787,6 +14773,20 @@ _import() {
     printf "%s\\n" "$(
       _notebooks show "${_notebook_path}" --filename "${_target_relative_path}"
     )"
+  }
+
+  # _import_validate_path()
+  #
+  # Usage:
+  #   _import_validate_path <path>
+  _import_validate_path() {
+    if [[     -z "${1:-}" ]]
+    then
+      _exit_1 _help "import"
+    elif [[ ! -e "${1:-}" ]]
+    then
+      _exit_1 printf "File not found: %s\\n" "$(_color_primary "${1:-}")"
+    fi
   }
 
   local _convert=0
