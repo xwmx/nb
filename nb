@@ -14918,12 +14918,6 @@ _import() {
               _target_folder_relative_path="${_target_folder_relative_path}toolbar/"
             elif [[ "${__line}" =~ \<DT\>\<A.*\>.*\</A\>            ]]
             then
-              # if [[ -n "${_target_folder_relative_path:-}"          ]]
-              # then
-              #   _target_folder_relative_path="${_target_folder_relative_path#/}"
-              #   _target_folder_relative_path="${_target_folder_relative_path}/"
-              # fi
-
               _import_create_bookmark                               \
                 "${_notebook_name}:${_target_folder_relative_path}" \
                 "${__line}" || :
@@ -14938,7 +14932,6 @@ _import() {
             fi
           elif [[ "${__line}" =~ \</DL\>\<p\>                       ]]
           then
-            # _warn echo "BEFORE: ${_target_folder_relative_path}"
             _target_folder_relative_path="${_target_folder_relative_path%/}"
 
             if [[ "${_target_folder_relative_path:-}" =~ \/         ]]
@@ -14947,7 +14940,6 @@ _import() {
             else
               _target_folder_relative_path=
             fi
-            # _warn echo "AFTER: ${_target_folder_relative_path}"
           fi
         done < "${__path}"
       done
