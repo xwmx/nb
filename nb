@@ -14690,7 +14690,6 @@ _import() {
     local _line="${2:?}"
     local _target_selector="${1:-}"
 
-    # _warn printf "target selector: %s\\n" "${_target_selector}"
     local _url=
     _url="$(sed -E -e 's/.*HREF="(.*)" ADD_DATE.*/\1/g' <<< "${_line}")"
 
