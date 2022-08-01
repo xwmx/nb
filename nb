@@ -14690,14 +14690,20 @@ _import() {
     local _line="${2:?}"
     local _target_selector="${1:-}"
 
-    local _url=
-    _url="$(sed -E -e 's/.*HREF="(.*)" ADD_DATE.*/\1/g' <<< "${_line}")"
+    local _add_timestamp=
+    _add_timestamp="$(
+      sed -E -e 's/.*ADD_DATE="([[:digit:]]+)".*/\1/g'  <<< "${_line}"
+    )"
 
     local _title=
-    _title="$(sed -E -e 's/.*>(.*)<\/A>/\1/g' <<< "${_line}")"
+    _title="$(
+      sed -E -e 's/.*>(.*)<\/A>/\1/g'                   <<< "${_line}"
+    )"
 
-    local _add_timestamp=
-    _add_timestamp="$(sed -E -e 's/.*ADD_DATE="(.*)">.*<\/A>/\1/g' <<< "${_line}")"
+    local _url=
+    _url="$(
+      sed -E -e 's/.*HREF="(.*)" ADD_DATE.*/\1/g'       <<< "${_line}"
+    )"
 
     local _target_filename=
     _target_filename="$(
