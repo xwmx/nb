@@ -14717,8 +14717,8 @@ _import() {
 
     local _tag_list=
     _tag_list="$(
-      grep -q 'TAGS=\"'                                 <<< "${_line}" &&
-      sed -E -e 's/.*TAGS=\"([^\"]+)\".*/\1/g'          <<< "${_line}" || :
+      grep -q 'TAGS=\"'                             <<< "${_line}" &&
+      sed -E -e 's/.*TAGS=\"([^\"]+)\".*/\1/g'      <<< "${_line}" || :
     )"
 
     if [[ -n "${_tag_list:-}"         ]]
@@ -14728,7 +14728,7 @@ _import() {
 
     local _title=
     _title="$(
-      sed -E -e 's/.*>(.*)<\/A>/\1/g'                     <<< "${_line}"
+      sed -E -e 's/.*>(.*)<\/A>/\1/g'               <<< "${_line}"
     )"
 
     if [[ -n "${_title:-}"            ]]
@@ -14738,7 +14738,7 @@ _import() {
 
     local _url=
     _url="$(
-      sed -E -e 's/.*HREF=\"(.*)\" ADD_DATE.*/\1/g'       <<< "${_line}"
+      sed -E -e 's/.*HREF=\"(.*)\" ADD_DATE.*/\1/g' <<< "${_line}"
     )"
 
     _bookmark                         \
