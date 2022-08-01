@@ -14703,12 +14703,12 @@ _import() {
     _target_filename="$(
       if hash "gdate" 2>/dev/null
       then # GNU prefixed
-        gdate -d "@${_add_timestamp}" "+%Y%m%d%H%M%S"
+        gdate -u -d "@${_add_timestamp}" "+%Y%m%d%H%M%S"
       elif date --version >/dev/null 2>&1
       then # GNU
-        date -d "@${_add_timestamp}"  "+%Y%m%d%H%M%S"
+        date -u -d "@${_add_timestamp}"  "+%Y%m%d%H%M%S"
       else # BSD
-        date -r "${_add_timestamp}"   "+%Y%m%d%H%M%S"
+        date -u -r "${_add_timestamp}"   "+%Y%m%d%H%M%S"
       fi
     )"
 

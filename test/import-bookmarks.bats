@@ -35,52 +35,52 @@ load test_helper
   [[ "${#lines[@]}" -eq 8 ]]
 
   [[ "${lines[0]}"  =~ \
-Added:\ .*[.*toolbar/1.*].*\ 🔖\ .*toolbar/20220731115400\.bookmark\.md.*\ \"Example\ Com\" ]]
+Added:\ .*[.*toolbar/1.*].*\ 🔖\ .*toolbar/20220731185400\.bookmark\.md.*\ \"Example\ Com\" ]]
 
   [[ "${lines[1]}"  =~ \
 Added:\ .*[.*toolbar/Example\ Bookmark\ Folder/Example\ Nested\ Folder/1.*].*\ 🔖\          ]]
   [[ "${lines[1]}"  =~ \
 🔖\ .*toolbar/Example\ Bookmark\ Folder/Example\ Nested\ Folder/                            ]]
   [[ "${lines[1]}"  =~ \
-Example\ Nested\ Folder/20220731115404\.bookmark\.md.*\ \"Example\ Org\"                    ]]
+Example\ Nested\ Folder/20220731185404\.bookmark\.md.*\ \"Example\ Org\"                    ]]
 
   [[ "${lines[2]}"  =~ \
 Added:\ .*[.*toolbar/Example\ Bookmark\ Folder/1.*].*\ 🔖\                                  ]]
   [[ "${lines[2]}"  =~ \
-🔖\ .*toolbar/Example\ Bookmark\ Folder/20220731115402\.bookmark\.md.*\ \"Example\ Net\"    ]]
+🔖\ .*toolbar/Example\ Bookmark\ Folder/20220731185402\.bookmark\.md.*\ \"Example\ Net\"    ]]
 
   [[ "${lines[3]}"  =~ \
-Added:\ .*[.*toolbar/3.*].*\ 🔖\ .*toolbar/20220731115602\.bookmark\.md.*\ \"Example\ Edu\" ]]
+Added:\ .*[.*toolbar/3.*].*\ 🔖\ .*toolbar/20220731185602\.bookmark\.md.*\ \"Example\ Edu\" ]]
   [[ "${lines[4]}"  =~ \
-Added:\ .*[.*2.*].*\ 🔖\ .*20220731120230\.bookmark\.md.*\ \"Example\ Org\ Other\"          ]]
+Added:\ .*[.*2.*].*\ 🔖\ .*20220731190230\.bookmark\.md.*\ \"Example\ Org\ Other\"          ]]
   [[ "${lines[5]}"  =~ \
-Added:\ .*[.*3.*].*\ 🔖\ .*20220731120235\.bookmark\.md.*\ \"Example\ Net\ Other\"          ]]
+Added:\ .*[.*3.*].*\ 🔖\ .*20220731190235\.bookmark\.md.*\ \"Example\ Net\ Other\"          ]]
 
   [[ "${lines[6]}"  =~ \
 Added:\ .*[.*Example\ Folder\ Other/1.*].*\ 🔖\                                             ]]
   [[ "${lines[6]}"  =~ \
-🔖\ .*Example\ Folder\ Other/20220731120222\.bookmark\.md.*\ \"Example\ Edu\ Other\"        ]]
+🔖\ .*Example\ Folder\ Other/20220731190222\.bookmark\.md.*\ \"Example\ Edu\ Other\"        ]]
 
   [[ "${lines[7]}"  =~ \
 Added:\ .*[.*Example\ Folder\ Other/Example\ Nested\ Folder\ Other/1.*].*\ 🔖\              ]]
   [[ "${lines[7]}"  =~ \
 🔖\ .*Example\ Folder\ Other/Example\ Nested\ Folder\ Other/                                ]]
   [[ "${lines[7]}"  =~ \
-Example\ Nested\ Folder\ Other/20220731120214\.bookmark\.md.*\ \"Example\ Com\ Other\"      ]]
+Example\ Nested\ Folder\ Other/20220731190214\.bookmark\.md.*\ \"Example\ Com\ Other\"      ]]
 
   # Adds files.
 
-  [[ -e "${NB_DIR}/home/toolbar/20220731115400.bookmark.md"                                               ]]
-  [[ -e "${NB_DIR}/home/toolbar/Example Bookmark Folder/Example Nested Folder/20220731115404.bookmark.md" ]]
-  [[ -e "${NB_DIR}/home/toolbar/Example Bookmark Folder/20220731115402.bookmark.md"                       ]]
-  [[ -e "${NB_DIR}/home/toolbar/20220731115602.bookmark.md"                                               ]]
-  [[ -e "${NB_DIR}/home/20220731120230.bookmark.md"                                                       ]]
-  [[ -e "${NB_DIR}/home/20220731120235.bookmark.md"                                                       ]]
-  [[ -e "${NB_DIR}/home/Example Folder Other/20220731120222.bookmark.md"                                  ]]
-  [[ -e "${NB_DIR}/home/Example Folder Other/Example Nested Folder Other/20220731120214.bookmark.md"      ]]
+  [[ -e "${NB_DIR}/home/toolbar/20220731185400.bookmark.md"                                               ]]
+  [[ -e "${NB_DIR}/home/toolbar/Example Bookmark Folder/Example Nested Folder/20220731185404.bookmark.md" ]]
+  [[ -e "${NB_DIR}/home/toolbar/Example Bookmark Folder/20220731185402.bookmark.md"                       ]]
+  [[ -e "${NB_DIR}/home/toolbar/20220731185602.bookmark.md"                                               ]]
+  [[ -e "${NB_DIR}/home/20220731190230.bookmark.md"                                                       ]]
+  [[ -e "${NB_DIR}/home/20220731190235.bookmark.md"                                                       ]]
+  [[ -e "${NB_DIR}/home/Example Folder Other/20220731190222.bookmark.md"                                  ]]
+  [[ -e "${NB_DIR}/home/Example Folder Other/Example Nested Folder Other/20220731190214.bookmark.md"      ]]
 
   diff                                                          \
-    <(cat "${NB_DIR}/home/toolbar/20220731115400.bookmark.md")  \
+    <(cat "${NB_DIR}/home/toolbar/20220731185400.bookmark.md")  \
     <(cat << HEREDOC
 # Example Com
 
@@ -102,7 +102,7 @@ HEREDOC
     )
 
   diff                                                                                                  \
-    <(cat "${NB_DIR}/home/Example Folder Other/Example Nested Folder Other/20220731120214.bookmark.md") \
+    <(cat "${NB_DIR}/home/Example Folder Other/Example Nested Folder Other/20220731190214.bookmark.md") \
     <(cat << HEREDOC
 # Example Com Other
 
