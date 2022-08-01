@@ -14690,19 +14690,11 @@ _import() {
     local _line="${2:?}"
     local _target_selector="${1:-}"
 
+    local _bookmark_options=(--skip-folder-prompt)
+
     local _add_timestamp=
     _add_timestamp="$(
-      sed -E -e 's/.*ADD_DATE="([[:digit:]]+)".*/\1/g'  <<< "${_line}"
-    )"
-
-    local _title=
-    _title="$(
-      sed -E -e 's/.*>(.*)<\/A>/\1/g'                   <<< "${_line}"
-    )"
-
-    local _url=
-    _url="$(
-      sed -E -e 's/.*HREF="(.*)" ADD_DATE.*/\1/g'       <<< "${_line}"
+      sed -E -e 's/.*ADD_DATE=\"([[:digit:]]+)\".*/\1/g'  <<< "${_line}"
     )"
 
     local _target_filename=
@@ -14718,12 +14710,41 @@ _import() {
       fi
     )"
 
-    _bookmark                           \
-      "${_target_selector}"             \
-      "${_url}"                         \
-      --filename  "${_target_filename}" \
-      --skip-folder-prompt              \
-      --title     "${_title}"
+    if [[ -n "${_target_filename:-}"  ]]
+    then
+      _bookmark_options+=(--filename "${_target_filename}")
+    fi
+
+    local _tag_list=
+    _tag_list="$(
+      grep -q 'TAGS=\"'                                 <<< "${_line}" &&
+      sed -E -e 's/.*TAGS=\"([^\"]+)\".*/\1/g'          <<< "${_line}" || :
+    )"
+
+    if [[ -n "${_tag_list:-}"         ]]
+    then
+      _bookmark_options+=(--tags "${_tag_list}")
+    fi
+
+    local _title=
+    _title="$(
+      sed -E -e 's/.*>(.*)<\/A>/\1/g'                     <<< "${_line}"
+    )"
+
+    if [[ -n "${_title:-}"            ]]
+    then
+      _bookmark_options+=(--title "${_title}")
+    fi
+
+    local _url=
+    _url="$(
+      sed -E -e 's/.*HREF=\"(.*)\" ADD_DATE.*/\1/g'       <<< "${_line}"
+    )"
+
+    _bookmark                         \
+      "${_target_selector}"           \
+      "${_url}"                       \
+      "${_bookmark_options[@]}"
   }
 
   # _import_init_target_relative_path()

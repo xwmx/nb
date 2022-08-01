@@ -141,6 +141,10 @@ Added:\ .*[.*Other\ Bookmarks/3.*].*\ 🔖\                                     
 
 <file://${NB_TEST_BASE_PATH}/fixtures/example.org.html#menu>
 
+## Tags
+
+#tag2 #tag6 #tag7
+
 ## Content
 
 # Example Domain
@@ -158,6 +162,10 @@ HEREDOC
 # Example Net Menu
 
 <file://${NB_TEST_BASE_PATH}/fixtures/example.net.html#menu>
+
+## Tags
+
+#tag1 #tag4 #tag5
 
 ## Content
 
