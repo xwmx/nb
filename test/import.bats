@@ -1803,16 +1803,16 @@ Folder/example.md.*\ \"Example\ Title\"\ from\ .*${_TMP_DIR}/fixtures/example.md
 
   # Prints output:
 
-  [[ "${lines[0]}" =~ \
-Imported\ .*[.*1.*].*\ .*example.com-og.html.*\ from\ .*${_TMP_DIR}/fixtures/example.com-og.html                              ]]
-  [[ "${lines[1]}" =~ \
-Imported\ .*[.*2.*].*\ .*example.com-titles-newlines.html.*\ from\ .*${_TMP_DIR}/fixtures/example.com-titles-newlines.html    ]]
-  [[ "${lines[2]}" =~ \
-Imported\ .*[.*3.*].*\ .*example.com-titles.html.*\ from\ .*${_TMP_DIR}/fixtures/example.com-titles.html                      ]]
-  [[ "${lines[3]}" =~ \
-Imported\ .*[.*4.*].*\ .*example.com.html.*\ from\ .*${_TMP_DIR}/fixtures/example.com.html                                    ]]
-  [[ "${lines[4]}" =~ \
-Imported\ .*[.*5.*].*\ .*example.com.md.*\ from\ .*${_TMP_DIR}/fixtures/example.com.md                                        ]]
+  [[ "${output}" =~ \
+Imported\ .*[.*[0-9].*].*\ .*example.com-og.html.*\ from\ .*${_TMP_DIR}/fixtures/example.com-og.html                            ]]
+  [[ "${output}" =~ \
+Imported\ .*[.*[0-9].*].*\ .*example.com-titles-newlines.html.*\ from\ .*${_TMP_DIR}/fixtures/example.com-titles-newlines.html  ]]
+  [[ "${output}" =~ \
+Imported\ .*[.*[0-9].*].*\ .*example.com-titles.html.*\ from\ .*${_TMP_DIR}/fixtures/example.com-titles.html                    ]]
+  [[ "${output}" =~ \
+Imported\ .*[.*[0-9].*].*\ .*example.com.html.*\ from\ .*${_TMP_DIR}/fixtures/example.com.html                                  ]]
+  [[ "${output}" =~ \
+Imported\ .*[.*[0-9].*].*\ .*example.com.md.*\ from\ .*${_TMP_DIR}/fixtures/example.com.md                                      ]]
 }
 
 @test "'import' with piped \`ls\` imports files." {
@@ -1862,16 +1862,16 @@ Imported\ .*[.*5.*].*\ .*example.com.md.*\ from\ .*${_TMP_DIR}/fixtures/example.
 
   # Prints output:
 
-  [[ "${lines[0]}" =~ \
-Imported\ .*[.*1.*].*\ .*example.com-og.html.*\ from\ .*example.com-og.html                           ]]
-  [[ "${lines[1]}" =~ \
-Imported\ .*[.*2.*].*\ .*example.com-titles-newlines.html.*\ from\ .*example.com-titles-newlines.html ]]
-  [[ "${lines[2]}" =~ \
-Imported\ .*[.*3.*].*\ .*example.com-titles.html.*\ from\ .*example.com-titles.html                   ]]
-  [[ "${lines[3]}" =~ \
-Imported\ .*[.*4.*].*\ .*example.com.html.*\ from\ .*example.com.html                                 ]]
-  [[ "${lines[4]}" =~ \
-Imported\ .*[.*5.*].*\ .*example.com.md.*\ from\ .*example.com.md                                     ]]
+  [[ "${output}" =~ \
+Imported\ .*[.*[0-9].*].*\ .*example.com-og.html.*\ from\ .*example.com-og.html                           ]]
+  [[ "${output}" =~ \
+Imported\ .*[.*[0-9].*].*\ .*example.com-titles-newlines.html.*\ from\ .*example.com-titles-newlines.html ]]
+  [[ "${output}" =~ \
+Imported\ .*[.*[0-9].*].*\ .*example.com-titles.html.*\ from\ .*example.com-titles.html                   ]]
+  [[ "${output}" =~ \
+Imported\ .*[.*[0-9].*].*\ .*example.com.html.*\ from\ .*example.com.html                                 ]]
+  [[ "${output}" =~ \
+Imported\ .*[.*[0-9].*].*\ .*example.com.md.*\ from\ .*example.com.md                                     ]]
 }
 
 # <path> ######################################################################
