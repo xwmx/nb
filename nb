@@ -14685,7 +14685,7 @@ _import() {
   # _import_create_bookmark()
   #
   # Usage:
-  #   _import_create_bookmark <line>
+  #   _import_create_bookmark <target-selector> <line>
   _import_create_bookmark() {
     local _line="${2:?}"
     local _target_selector="${1:-}"
