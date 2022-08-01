@@ -15256,6 +15256,7 @@ _move() {
     _target_file_name="$(
       date -r "${_source_notebook_path}/${_source_relative_path}" "+%Y%m%d%H%M%S"
     )"
+
     local _target_file_type="${_source_file_type:-"${NB_DEFAULT_EXTENSION}"}"
 
     _target_basename="${_target_file_name}.${_target_file_type}"
