@@ -165,7 +165,7 @@ sudo apt-get install bats   -y
 sudo apt-get install elinks -y
 sudo apt-get install lynx   -y
 sudo apt-get install ncat   -y
-sudo apt-get install python-pygments -y
+sudo apt-get install python3-pygments -y
 sudo apt-get install w3m    -y
 
 # install latest pandoc
