@@ -329,3 +329,137 @@ HEREDOC
 
   git -C "${NB_DIR}/home" log | grep -q '\[nb\] Add'
 }
+
+@test "'import bookmarks <path>' imports edge bookmarks." {
+  {
+    "${_NB}" init
+
+    {
+      cat "${NB_TEST_BASE_PATH}/fixtures/example-edge-bookmarks.html"
+    } | {
+      sed                                                                                     \
+        -e "s|https://example.com\/|file://${NB_TEST_BASE_PATH}/fixtures/example.com.html|g"  \
+        -e "s|https://example.org\/|file://${NB_TEST_BASE_PATH}/fixtures/example.org.html|g"  \
+        -e "s|https://example.net\/|file://${NB_TEST_BASE_PATH}/fixtures/example.net.html|g"  \
+        -e "s|https://example.edu\/|file://${NB_TEST_BASE_PATH}/fixtures/example.edu.html|g"
+    } | {
+      cat > "${_TMP_DIR}/example-edge-bookmarks-local.html"
+    }
+  }
+
+  run "${_NB}" import bookmarks \
+    "${_TMP_DIR}/example-edge-bookmarks-local.html"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0 ]]
+
+  [[ "${#lines[@]}" -eq 8 ]]
+
+  [[ "${lines[0]}"  =~ \
+Added:\ .*[.*toolbar/Bookmarks/1.*].*\ 🔖\ .*toolbar/Bookmarks/20220731185400\.bookmark\.md.*\ \"Example\ Com\" ]]
+
+  [[ "${lines[1]}"  =~ \
+Added:\ .*[.*toolbar/Bookmarks/Example\ Bookmark\ Folder/Example\ Nested\ Folder/1.*].*\ 🔖\          ]]
+  [[ "${lines[1]}"  =~ \
+🔖\ .*toolbar/Bookmarks/Example\ Bookmark\ Folder/Example\ Nested\ Folder/                            ]]
+  [[ "${lines[1]}"  =~ \
+Example\ Nested\ Folder/20220731185404\.bookmark\.md.*\ \"Example\ Org\"                              ]]
+
+  [[ "${lines[2]}"  =~ \
+Added:\ .*[.*toolbar/Bookmarks/Example\ Bookmark\ Folder/1.*].*\ 🔖\                                  ]]
+  [[ "${lines[2]}"  =~ \
+🔖\ .*toolbar/Bookmarks/Example\ Bookmark\ Folder/20220731185402\.bookmark\.md.*\ \"Example\ Net\"    ]]
+
+  [[ "${lines[3]}"  =~ \
+Added:\ .*[.*toolbar/Bookmarks/3.*].*\ 🔖\ .*toolbar/Bookmarks/20220731185602\.bookmark\.md.*\ \"Example\ Edu\" ]]
+  [[ "${lines[4]}"  =~ \
+Added:\ .*[.*2.*].*\ 🔖\ .*20220731190230\.bookmark\.md.*\ \"Example\ Org\ Other\"      ]]
+  [[ "${lines[5]}"  =~ \
+Added:\ .*[.*3.*].*\ 🔖\ .*20220731190235\.bookmark\.md.*\ \"Example\ Net\ Other\"      ]]
+
+  [[ "${lines[6]}"  =~ \
+Added:\ .*[.*Example\ Folder\ Other/1.*].*\ 🔖\                                         ]]
+  [[ "${lines[6]}"  =~ \
+🔖\ .*Example\ Folder\ Other/20220731190222\.bookmark\.md.*\ \"Example\ Edu\ Other\"    ]]
+
+  [[ "${lines[7]}"  =~ \
+Added:\ .*[.*Example\ Folder\ Other/Example\ Nested\ Folder\ Other/1.*].*\ 🔖\          ]]
+  [[ "${lines[7]}"  =~ \
+🔖\ .*Example\ Folder\ Other/Example\ Nested\ Folder\ Other/                            ]]
+  [[ "${lines[7]}"  =~ \
+Example\ Nested\ Folder\ Other/20220731190214\.bookmark\.md.*\ \"Example\ Com\ Other\"  ]]
+
+  # Adds files.
+
+  [[ -e "${NB_DIR}/home/toolbar/Bookmarks/20220731185400.bookmark.md"                                               ]]
+  [[ -e "${NB_DIR}/home/toolbar/Bookmarks/Example Bookmark Folder/Example Nested Folder/20220731185404.bookmark.md" ]]
+  [[ -e "${NB_DIR}/home/toolbar/Bookmarks/Example Bookmark Folder/20220731185402.bookmark.md"                       ]]
+  [[ -e "${NB_DIR}/home/toolbar/Bookmarks/20220731185602.bookmark.md"                                               ]]
+  [[ -e "${NB_DIR}/home/20220731190230.bookmark.md"                                                                 ]]
+  [[ -e "${NB_DIR}/home/20220731190235.bookmark.md"                                                                 ]]
+  [[ -e "${NB_DIR}/home/Example Folder Other/20220731190222.bookmark.md"                                            ]]
+  [[ -e "${NB_DIR}/home/Example Folder Other/Example Nested Folder Other/20220731190214.bookmark.md"                ]]
+
+  diff                                                          \
+    <(cat "${NB_DIR}/home/toolbar/Bookmarks/20220731185400.bookmark.md")  \
+    <(cat << HEREDOC
+# Example Com
+
+<file://${NB_TEST_BASE_PATH}/fixtures/example.com.html>
+
+## Description
+
+Example description.
+
+## Content
+
+# Example Domain
+
+This domain is for use in illustrative examples in documents. You may use this
+domain in literature without prior coordination or asking for permission.
+
+[More information\...](https://www.iana.org/domains/example)
+HEREDOC
+    )
+
+  diff                                                                                                  \
+    <(cat "${NB_DIR}/home/Example Folder Other/Example Nested Folder Other/20220731190214.bookmark.md") \
+    <(cat << HEREDOC
+# Example Com Other
+
+<file://${NB_TEST_BASE_PATH}/fixtures/example.com.html#example>
+
+## Description
+
+Example description.
+
+## Content
+
+# Example Domain
+
+This domain is for use in illustrative examples in documents. You may use this
+domain in literature without prior coordination or asking for permission.
+
+[More information\...](https://www.iana.org/domains/example)
+HEREDOC
+    )
+
+  # Adds to index.
+
+  [[ -e "${NB_DIR}/home/.index"                               ]]
+
+  diff                                                        \
+    <(ls -t -r "${NB_DIR}/home")                              \
+    <(cat "${NB_DIR}/home/.index")
+
+  # Creates git commit.
+
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
+  do
+    sleep 1
+  done
+
+  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Add'
+}
