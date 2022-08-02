@@ -14741,6 +14741,8 @@ _import() {
       sed -E -e 's/.*HREF=\"(.*)\" ADD_DATE.*/\1/g' <<< "${_line}"
     )"
 
+    _notebooks select "${_target_selector%%:*}"
+
     _bookmark                         \
       "${_target_selector}"           \
       "${_url}"                       \
@@ -14924,9 +14926,10 @@ _import() {
         _selector_resolve_folders "${_selector_path}" --build || :
       )"
 
-      if [[ -z "${_selector:-}" ]]
+      if [[ -n  "${_target_folder_relative_path:-}"     ]] &&
+         [[ !   "${_target_folder_relative_path}" =~ /$ ]]
       then
-        _selector="$(_notebooks current --name):"
+        _target_folder_relative_path="${_target_folder_relative_path}/"
       fi
 
       local __path=
