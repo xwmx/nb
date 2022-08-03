@@ -1246,10 +1246,10 @@ _FILE_TYPES=(archive audio bookmark document folder image text video)
 #
 # An array of filename patterns to ignore, formatted as `sed -e` arguments.
 _IGNORE_PATTERNS=(
-  -e "/~$/d"
-  -e "/^#.*#$/d"
-  -e "/\.swa?p$/d"
-  -e "/^\.#*/d"
+  -e '/~$/d'
+  -e '/^#.*#$/d'
+  -e '/\.swa?p$/d'
+  -e '/^\.#*/d'
 )
 
 # $_MD
