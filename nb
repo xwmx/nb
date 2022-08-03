@@ -12158,7 +12158,8 @@ _add() {
       _target_filename="$(
         printf "%s" "${_title}"           \
           | tr '[:upper:]' '[:lower:]'    \
-          | tr '[:space:]:*/"\\<>?|' '_'
+          | tr '[:space:]:*/\\<>?|' '_'   \
+          | tr "\"" '_'
       )"
     fi
 
@@ -12909,8 +12910,8 @@ _bookmark() {
             _download_from                                                \
               "https://archive.org/wayback/available?url=${_target_url}"  \
               | grep --color=never 'closest'                              \
-              | sed -E 's/.*"closest": {([^}]+)}.*/\1/g'                  \
-              | sed -E 's/.*"url": "([^"]+)".*/\1/g' || printf ""
+              | sed -E "s/.*\"closest\": {([^}]+)}.*/\1/g"                \
+              | sed -E "s/.*\"url\": \"([^\"]+)\".*/\1/g" || printf ""
           )"
 
           if [[ -n "${_wayback_response:-}" ]]
@@ -13182,7 +13183,7 @@ _bookmark() {
       _title="$(
         cat "${_temp_file}"     \
           | LC_ALL=C sed -E -n  \
-            's/.*<meta .*property=.og:title[^>]*content="([^"]+)".*/\1/p' \
+            "s/.*<meta .*property=.og:title[^>]*content=\"([^\"]+)\".*/\1/p" \
             2>/dev/null     ||  :
       )"
     fi
@@ -13212,7 +13213,7 @@ _bookmark() {
     _description="$(
       cat "${_temp_file}"       \
         | LC_ALL=C sed -E -n    \
-            's/.*<meta .*name=.description.[^>]*content="([^"]+)".*/\1/p' \
+            "s/.*<meta .*name=.description.[^>]*content=\"([^\"]+)\".*/\1/p" \
             2>/dev/null     ||  :
     )"
 
@@ -13221,7 +13222,7 @@ _bookmark() {
       _description="$(
         cat "${_temp_file}"     \
           | LC_ALL=C sed -E -n  \
-              's/.*<meta .*property=.og:description[^>]*content="([^"]+)".*/\1/p' \
+              "s/.*<meta .*property=.og:description[^>]*content=\"([^\"]+)\".*/\1/p" \
               2>/dev/null   ||  :
       )"
     fi
@@ -13306,7 +13307,7 @@ _bookmark() {
                   2>/dev/null || cat
               } | {
                 # strip empty list items
-                LC_ALL=C sed -E -e "s/^-[[:space:]]*$//g"
+                LC_ALL=C sed -E -e 's/^-[[:space:]]*$//g'
               }
             else
               cat
@@ -15309,7 +15310,8 @@ _move() {
     _processed_title="$(
       printf "%s" "${_source_title}"        \
         | tr '[:upper:]' '[:lower:]'        \
-        | tr '[:space:]:*/"\\<>?|' '_'
+        | tr '[:space:]:*/\\<>?|' '_'       \
+        | tr "\"" '_'
     )"
 
     local _target_file_type="${_source_file_type:-"${NB_DEFAULT_EXTENSION}"}"
@@ -18831,12 +18833,12 @@ HEREDOC
 
       _encoded_query="$(
         LC_ALL=C sed              \
-          -e 's/&/\&amp;/g'       \
-          -e 's/</\&lt;/g'        \
-          -e 's/>/\&gt;/g'        \
-          -e 's/"/\&quot;/g'      \
-          -e 's/#/\&#35;/g'       \
-          -e 's/'"'"'/\&#39;/g'   <<< "${_query}"
+          -e "s/&/\&amp;/g"       \
+          -e "s/</\&lt;/g"        \
+          -e "s/>/\&gt;/g"        \
+          -e "s/\"/\&quot;/g"     \
+          -e "s/#/\&#35;/g"       \
+          -e "s/\'/\&#39;/g"   <<< "${_query}"
       )"
     fi
 
@@ -19852,7 +19854,10 @@ HEREDOC
                   printf "<br>"
                 fi
 
-                LC_ALL=C sed -E -e "s/</\&lt;/g" -e "s/\//\&#47;/g" -e "s/.*/&<br>/g"
+                LC_ALL=C sed -E       \
+                  -e "s/</\&lt;/g"    \
+                  -e "s/\//\&#47;/g"  \
+                  -e "s/.*/&<br>/g"   # " TODO: vim highlighting bug
               fi
             }
             ;;
