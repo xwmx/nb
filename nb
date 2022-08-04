@@ -18832,13 +18832,13 @@ HEREDOC
       )) || IFS=' ' read -ra _query_arguments <<< "${_query}"
 
       _encoded_query="$(
-        LC_ALL=C sed              \
-          -e "s/&/\&amp;/g"       \
-          -e "s/</\&lt;/g"        \
-          -e "s/>/\&gt;/g"        \
-          -e "s/\"/\&quot;/g"     \
-          -e "s/#/\&#35;/g"       \
-          -e "s/\'/\&#39;/g"   <<< "${_query}"
+        LC_ALL=C sed          \
+          -e "s/&/\&amp;/g"   \
+          -e "s/</\&lt;/g"    \
+          -e "s/>/\&gt;/g"    \
+          -e "s/\"/\&quot;/g" \
+          -e "s/#/\&#35;/g"   \
+          -e "s/'/\&#39;/g"   <<< "${_query}"
       )"
     fi
 
