@@ -19814,8 +19814,8 @@ HEREDOC
           -e "s/>${_ME}-placeholder-${_ME}/>\[\[/g"       \
           -e "s/${_ME}-placeholder-${_ME}</\]\]</g"
       } | {
-        # undo pandoc prepending "file://" to protocol-relative URLs
-        LC_ALL=C sed -E -e "s/file:\/\/\/\//\/\//g"
+        # undo pandoc adding "file://" or "file:///" to protocol-relative URLs
+        LC_ALL=C sed -E -e "s/file:\/\/\/\/\/?/\/\//g"
       } | {
         printf "%s\\n" "$(
           _browse_render_header           \
