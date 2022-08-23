@@ -888,9 +888,9 @@ This is an example excerpt.
 This is an example excerpt.
 
 More example content:
+
 - one
 - two
-- three
 ```
 
 Several classes of file types are represented with emoji
@@ -988,9 +988,9 @@ This is an example excerpt.
 This is an example excerpt.
 
 More example content:
+
 - one
 - two
-- three
 
 ❯ nb --sort
 [1] Demo Title
@@ -2497,7 +2497,7 @@ Use [`nb do`](#do) to mark tasks as done / closed:
 ```bash
 # list tasks in item 9
 ❯ nb tasks 9
-[9] ✔️ [ ] Eample todo nine.
+[9] ✔️ [ ] Example todo nine.
 ----------------------------
 [9 1] [ ] Task one.
 [9 2] [ ] Task two.
@@ -2505,13 +2505,13 @@ Use [`nb do`](#do) to mark tasks as done / closed:
 
 # mark task 2 in item 9 as done / closed
 ❯ nb do 9 2
-[9] ✔️ [ ] Eample todo nine.
+[9] ✔️ [ ] Example todo nine.
 ----------------------------
 Done: [9 2] [x] Task two.
 
 # list tasks in item 9
 ❯ nb tasks 9
-[9] ✔️ [ ] Eample todo nine.
+[9] ✔️ [ ] Example todo nine.
 ----------------------------
 [9 1] [ ] Task one.
 [9 2] [x] Task two.
