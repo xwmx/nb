@@ -17811,7 +17811,9 @@ Can't show archives. Export archive and expand to edit.\\n"
         ls -lah --color=always "${_target_path}" 2>/dev/null  ||
           ls -lah -G "${_target_path}"
       fi
-    elif _command_exists "term-image" && _file_is_image "${_target_path}"
+    elif _command_exists "term-image"     &&
+         _file_is_image "${_target_path}" &&
+         [[   "${_tool:-term-image}"  == "term-image" ]]
     then
       local _render_style="auto"
 
@@ -17846,6 +17848,20 @@ Can't show archives. Export archive and expand to edit.\\n"
          [[   "${_tool:-imgcat}"  == "imgcat"     ]]
     then
       imgcat "${_target_path}"    |   {
+        if _command_exists "less" &&  ! ((_print_output))
+        then
+          less -r --prompt="$(_less_prompt)"
+        else
+          cat
+        fi
+      }
+    elif _command_exists "chafa"                      &&
+         _file_is_image "${_target_path}"             &&
+         [[ ! "${_target_path}"   =~ \.afphoto$   ]]  &&
+         [[ ! "${_target_path}"   =~ \.svg$       ]]  &&
+         [[   "${_tool:-chafa}"   == "chafa"      ]]
+    then
+      chafa "${_target_path}"    |   {
         if _command_exists "less" &&  ! ((_print_output))
         then
           less -r --prompt="$(_less_prompt)"

@@ -211,6 +211,7 @@ Also supported for various enhancements:
 [`afplay`](https://ss64.com/osx/afplay.html),
 [The Silver Searcher (`ag`)](https://github.com/ggreer/the_silver_searcher),
 [`catimg`](https://github.com/posva/catimg),
+[Chafa](https://github.com/hpjansson/chafa),
 [`exa`](https://github.com/ogham/exa),
 [`ffplay`](https://ffmpeg.org/ffplay.html),
 [ImageMagick](https://imagemagick.org/),
@@ -3351,6 +3352,7 @@ can be configured to display images.
 supported tools and configurations, including:
 
 - [`catimg`](https://github.com/posva/catimg)
+- [Chafa](https://github.com/hpjansson/chafa)
 - [ImageMagick](https://imagemagick.org/) with a terminal that
   supports [sixels](https://en.wikipedia.org/wiki/Sixel)
 - [`imgcat`](https://www.iterm2.com/documentation-images.html) with
