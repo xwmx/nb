@@ -6952,7 +6952,7 @@ $(_color_primary "Subcommands"):
              Shortcut Alias: \`o\`
   peek       Open the current notebook directory or notebook <name> in the
              first tool found in the following list:
-             \`ranger\` [1], \`mc\` [2], \`vifm\` [3], \`exa\` [4], or \`ls\`.
+             \`ranger\` [1], \`mc\` [2], \`vifm\` [3], \`joshuto\` [4], \`exa\` [5], or \`ls\`.
              Shortcut Alias: \`p\`
   rename     Rename a notebook. Aliases: \`move\`, \`mv\`
   select     Set the current notebook from a colon-prefixed selector.
@@ -6966,7 +6966,8 @@ $(_color_primary "Subcommands"):
     1. https://ranger.github.io/
     2. https://en.wikipedia.org/wiki/Midnight_Commander
     3. https://vifm.info/
-    4. https://github.com/ogham/exa
+    4. https://github.com/kamiyaa/joshuto
+    5. https://github.com/ogham/exa
 
 $(_color_primary "Description"):
   Manage notebooks.
@@ -15609,12 +15610,14 @@ $(_color_primary "Description"):
   the bookmarked page in your terminal web browser. When the note is in a text
   format or any other file type, \`peek\` is the equivalent of \`show\`. When
   used with a notebook, \`peek\` opens the notebook folder first tool found in
-  the following list: \`ranger\` [1], \`mc\` [2], \`vifm\` [3], \`exa\` [4], or \`ls\`.
+  the following list: \`ranger\` [1], \`mc\` [2], \`vifm\` [3], \`joshuto\` [4],
+  \`exa\` [5], or \`ls\`.
 
     1. https://ranger.github.io/
     2. https://en.wikipedia.org/wiki/Midnight_Commander
     3. https://vifm.info/
-    4. https://github.com/ogham/exa
+    4. https://github.com/kamiyaa/joshuto
+    5. https://github.com/ogham/exa
 
 $(_color_primary "Read More"):
   ${_README_URL}#viewing-bookmarks
