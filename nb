@@ -487,20 +487,6 @@ export NB_AUDIO_TOOL="${NB_AUDIO_TOOL:-}"
 # `$_ME sync`. To disable this behavior, set the value to '0'.
 export NB_AUTO_SYNC="${NB_AUTO_SYNC:-1}"
 
-# $NB_DEFAULT_EXTENSION
-#
-# Default: 'md'
-#
-# Example Values: 'md' 'org'
-export NB_DEFAULT_EXTENSION="${NB_DEFAULT_EXTENSION:-md}"
-
-# $NB_ENCRYPTION_TOOL
-#
-# Default: 'openssl'
-#
-# Supported Values: 'gpg' 'openssl'
-export NB_ENCRYPTION_TOOL="${NB_ENCRYPTION_TOOL:-openssl}"
-
 # $NB_DATA_TOOL
 #
 # Default: '' (first available)
@@ -508,12 +494,26 @@ export NB_ENCRYPTION_TOOL="${NB_ENCRYPTION_TOOL:-openssl}"
 # Example Values: 'visidata', 'sc-im'
 export NB_DATA_TOOL="${NB_DATA_TOOL:-}"
 
+# $NB_DEFAULT_EXTENSION
+#
+# Default: 'md'
+#
+# Example Values: 'md' 'org'
+export NB_DEFAULT_EXTENSION="${NB_DEFAULT_EXTENSION:-md}"
+
 # $NB_DIRECTORY_TOOL
 #
-# Default: '' (browse)
+# Default: '' (nb browse)
 #
 # Example Values: 'ranger', 'mc'
 export NB_DIRECTORY_TOOL="${NB_DIRECTORY_TOOL:-}"
+
+# $NB_ENCRYPTION_TOOL
+#
+# Default: 'openssl'
+#
+# Supported Values: 'gpg' 'openssl'
+export NB_ENCRYPTION_TOOL="${NB_ENCRYPTION_TOOL:-openssl}"
 
 # $NB_FOOTER
 #
