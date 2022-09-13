@@ -17811,14 +17811,14 @@ Can't show archives. Export archive and expand to edit.\\n"
 
   if [[ -z "${_tool:-}" ]]                  &&
      _file_is_image "${_target_path:-}"     &&
-     _contains      "${NB_IMAGE_TOOL:-}"
-        "catimg"        \
-        "chafa"         \
-        "icat"          \
-        "imgcat"        \
-        "magick"        \
-        "timg"          \
-        "term-image"    \
+     _contains      "${NB_IMAGE_TOOL:-}"    \
+        "catimg"                            \
+        "chafa"                             \
+        "icat"                              \
+        "imgcat"                            \
+        "magick"                            \
+        "timg"                              \
+        "term-image"                        \
         "viu"
   then
     _tool="${NB_IMAGE_TOOL:-}"
