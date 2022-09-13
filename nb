@@ -17783,27 +17783,31 @@ Can't show archives. Export archive and expand to edit.\\n"
        [[       "${_target_path:-}" =~ \.docx$|\.epub$|\.odt$ ]]
      } || [[ -d "${_target_path:-}"                           ]]
   then
-    if [[ -d "${_target_path}" ]]
+    if [[ -d "${_target_path}"  ]]
     then
       if _command_exists "ncat"             &&
          _command_exists "pandoc"           &&
-         _web_browser --check
+         _web_browser --check               &&
+         [[ -z "${_tool:-}"     ]]
       then
         cd "${_CURRENT_WORKING_DIR}"
 
         _defer "_browse" "${_target_path}/"
 
         return 0
-      elif _command_exists "ranger" && [[ "${_tool:-ranger}"  == "ranger" ]]
+      elif _command_exists "ranger"   && [[ "${_tool:-ranger}"  == "ranger"   ]]
       then
         ranger "${_target_path}"
-      elif _command_exists "mc"     && [[ "${_tool:-mc}"      == "mc"     ]]
+      elif _command_exists "mc"       && [[ "${_tool:-mc}"      == "mc"       ]]
       then
         mc "${_target_path}"
-      elif _command_exists "vifm"   && [[ "${_tool:-vifm}"    == "vifm"   ]]
+      elif _command_exists "vifm"     && [[ "${_tool:-vifm}"    == "vifm"     ]]
       then
         vifm "${_target_path}"
-      elif _command_exists "exa"    && [[ "${_tool:-exa}"     == "exa"    ]]
+      elif _command_exists "joshuto"  && [[ "${_tool:-joshuto}"  == "joshuto" ]]
+      then
+        joshuto --path "${_target_path}"
+      elif _command_exists "exa"      && [[ "${_tool:-exa}"     == "exa"      ]]
       then
         exa -lah --git "${_target_path}"
       else

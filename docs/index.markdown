@@ -218,6 +218,7 @@ Also supported for various enhancements:
 [GnuPG](https://en.wikipedia.org/wiki/GNU_Privacy_Guard),
 [`highlight`](http://www.andre-simon.de/doku/highlight/en/highlight.php),
 [`imgcat`](https://www.iterm2.com/documentation-images.html),
+[`joshuto`](https://github.com/kamiyaa/joshuto),
 [kitty's `icat` kitten](https://sw.kovidgoyal.net/kitty/kittens/icat.html),
 [Links](https://en.wikipedia.org/wiki/Links_(web_browser)),
 [Lynx](https://en.wikipedia.org/wiki/Lynx_(web_browser)),
@@ -1404,8 +1405,11 @@ Supported file types and tools include:
   - [`term-image`](https://github.com/AnonymouX47/term-image)
   - [`viu`](https://github.com/atanunq/viu)
 - Folders / Directories:
-  - [`ranger`](https://ranger.github.io/)
+  - [`exa`](https://github.com/ogham/exa)
+  - [`joshuto`](https://github.com/kamiyaa/joshuto)
   - [Midnight Commander (`mc`)](https://en.wikipedia.org/wiki/Midnight_Commander)
+  - [`ranger`](https://ranger.github.io/)
+  - [`vifm`](https://vifm.info/)
 - Word Documents:
   - [Pandoc](https://pandoc.org/) with
     [`w3m`](https://en.wikipedia.org/wiki/W3m) or
@@ -7350,7 +7354,7 @@ Subcommands:
              Shortcut Alias: `o`
   peek       Open the current notebook directory or notebook <name> in the
              first tool found in the following list:
-             `ranger` [1], `mc` [2], `vifm` [3], `exa` [4], or `ls`.
+             `ranger` [1], `mc` [2], `vifm` [3], `joshuto` [4], `exa` [5], or `ls`.
              Shortcut Alias: `p`
   rename     Rename a notebook. Aliases: `move`, `mv`
   select     Set the current notebook from a colon-prefixed selector.
@@ -7364,7 +7368,8 @@ Subcommands:
     1. https://ranger.github.io/
     2. https://en.wikipedia.org/wiki/Midnight_Commander
     3. https://vifm.info/
-    4. https://github.com/ogham/exa
+    4. https://github.com/kamiyaa/joshuto
+    5. https://github.com/ogham/exa
 
 Description:
   Manage notebooks.
@@ -7457,11 +7462,14 @@ Description:
   the bookmarked page in your terminal web browser. When the note is in a text
   format or any other file type, `peek` is the equivalent of `show`. When
   used with a notebook, `peek` opens the notebook folder first tool found in
-  the following list: `ranger` [1], `mc` [2], `exa` [3], or `ls`.
+  the following list: `ranger` [1], `mc` [2], `vifm` [3], `joshuto` [4],
+  `exa` [5], or `ls`.
 
     1. https://ranger.github.io/
     2. https://en.wikipedia.org/wiki/Midnight_Commander
-    3. https://github.com/ogham/exa
+    3. https://vifm.info/
+    4. https://github.com/kamiyaa/joshuto
+    5. https://github.com/ogham/exa
 
 Read More:
   https://github.com/xwmx/nb#viewing-bookmarks
