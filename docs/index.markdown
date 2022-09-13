@@ -1401,6 +1401,7 @@ Supported file types and tools include:
   - [`ffplay`](https://ffmpeg.org/ffplay.html)
 - [Images (`$NB_IMAGE_TOOL`)](#-images):
   - [`catimg`](https://github.com/posva/catimg)
+  - [Chafa](https://github.com/hpjansson/chafa)
   - [ImageMagick](https://imagemagick.org/) with a terminal that
     supports [sixels](https://en.wikipedia.org/wiki/Sixel)
   - [`imgcat`](https://www.iterm2.com/documentation-images.html) with
@@ -3368,6 +3369,10 @@ supported tools and configurations, including:
 - [kitty's `icat` kitten](https://sw.kovidgoyal.net/kitty/kittens/icat.html)
 - [`term-image`](https://github.com/AnonymouX47/term-image)
 - [`viu`](https://github.com/atanunq/viu)
+
+A preferred image viewer tool can be
+[configured in your `~/.nbrc` file](#%EF%B8%8F-set--settings) with
+the `$NB_IMAGE_TOOL` variable.
 
 #### Inline Images
 
