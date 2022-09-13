@@ -13533,6 +13533,24 @@ _completions() {
     printf "%s\\n" "${_fish_completion_path:-}"
   }
 
+  _get_zsh_completion_path() {
+      local _zsh_completion_path=
+
+      if [[ -z "${_zsh_completion_path:-}"                 ]] &&
+         [[ -d "/usr/local/share/zsh/site-functions" ]]
+      then
+        _zsh_completion_path="/usr/local/share/zsh/site-functions"
+      fi
+
+      if [[ -z "${_zsh_completion_path:-}"                 ]] &&
+         [[ -d "/usr/share/zsh/site-functions"       ]]
+      then
+        _zsh_completion_path="/usr/share/zsh/site-functions"
+      fi
+
+      printf "%s\\n" "${_zsh_completion_path:-}"
+  }
+
   # Usage: _completions_install [--download]
   _completions_install() {
     local _download=0
@@ -13605,7 +13623,7 @@ HEREDOC
             _completion_target="${_completion_path}/${_FISH_COMP_NAME}"
             ;;
           zsh)
-            _completion_path="/usr/local/share/zsh/site-functions"
+            _completion_path="$(_get_zsh_completion_path)"
             _completion_target="${_completion_path}/${_ZSH_COMP_NAME}"
             ;;
         esac
