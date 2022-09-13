@@ -472,6 +472,13 @@ NB_DIR settings prompt:
 HEREDOC
 fi
 
+# $NB_AUDIO_TOOL
+#
+# Default: '' (first available)
+#
+# Example Values: 'mplayer', 'afplay'
+export NB_AUDIO_TOOL="${NB_AUDIO_TOOL:-}"
+
 # $NB_AUTO_SYNC
 #
 # Default: '1'
@@ -494,6 +501,20 @@ export NB_DEFAULT_EXTENSION="${NB_DEFAULT_EXTENSION:-md}"
 # Supported Values: 'gpg' 'openssl'
 export NB_ENCRYPTION_TOOL="${NB_ENCRYPTION_TOOL:-openssl}"
 
+# $NB_DATA_TOOL
+#
+# Default: '' (first available)
+#
+# Example Values: 'visidata', 'sc-im'
+export NB_DATA_TOOL="${NB_DATA_TOOL:-}"
+
+# $NB_DIRECTORY_TOOL
+#
+# Default: '' (browse)
+#
+# Example Values: 'ranger', 'mc'
+export NB_DIRECTORY_TOOL="${NB_DIRECTORY_TOOL:-}"
+
 # $NB_FOOTER
 #
 # Default: '1'
@@ -514,6 +535,13 @@ export NB_GUI_BROWSER="${NB_GUI_BROWSER:-}"
 #
 # Supported Values: '0' '1' '2' '3'
 export NB_HEADER="${NB_HEADER:-2}"
+
+# $NB_IMAGE_TOOL
+#
+# Default: '' (first available)
+#
+# Example Values: 'imgcat', 'catimg'
+export NB_IMAGE_TOOL="${NB_IMAGE_TOOL:-}"
 
 # $NB_SERVER_HOST
 #
@@ -17760,21 +17788,29 @@ Can't show archives. Export archive and expand to edit.\\n"
   # turn on case-insensitive matching
   shopt -s nocasematch
 
+  if [[ -z "${_tool:-}" ]]                  &&
+     _file_is_image "${_target_path:-}"     &&
+     _contains "${NB_IMAGE_TOOL:-}" "term-image" "imgcat" "chafa"     \
+       "viu" "catimg" "magick" "icat"
+  then
+    _tool="${NB_IMAGE_TOOL:-}"
+  fi
+
   if _contains "${_target_path##*.}"        \
        "csv" "json" "mysql" "postgres"      \
        "sqlite" "tab" "tar" "tsv" "usv" "vds" "xml" "xlsx" "zip"      &&
      _command_exists "vd"                                             &&
-     _contains "${_tool:-vd}" "vd" "visidata"
+     _contains "${_tool:-${NB_DATA_TOOL:-vd}}" "vd" "visidata"
   then
     vd "${_target_path}"
   elif _contains "${_target_path##*.}" "csv" "sc" "tab" "tsv" "xlsx"  &&
        _command_exists "sc-im"                                        &&
-       [[ "${_tool:-sc-im}"   == "sc-im"    ]]
+       [[ "${_tool:-${NB_DATA_TOOL:-sc-im}}" == "sc-im"      ]]
   then
     sc-im "${_target_path}"
   elif _contains "${_target_path##*.}" "csv" "psv" "tsv"              &&
        _command_exists "tv"                                           &&
-       _contains "${_tool:-tv}" "tv" "tidy-viewer" "tidyviewer"
+       _contains "${_tool:-${NB_DATA_TOOL:-tv}}" "tv" "tidy-viewer" "tidyviewer"
   then
     tv "${_target_path}"
   elif ! _file_is_text "${_target_path}"    &&
@@ -17785,6 +17821,13 @@ Can't show archives. Export archive and expand to edit.\\n"
   then
     if [[ -d "${_target_path}"  ]]
     then
+      if [[ -z "${_tool:-}"     ]]          &&
+        _contains "${NB_DIRECTORY_TOOL:-}" "ranger" "mc" "vifm" "joshuto" "exa"  &&
+        _command_exists "${NB_DIRECTORY_TOOL:-}"
+      then
+        _tool="${NB_DIRECTORY_TOOL}"
+      fi
+
       if _command_exists "ncat"             &&
          _command_exists "pandoc"           &&
          _web_browser --check               &&
@@ -17920,18 +17963,18 @@ Can't show archives. Export archive and expand to edit.\\n"
     elif ((${NB_VIDEO_TO_ASCII_ENABLED:-0}))          &&
          _command_exists "video-to-ascii"             &&
          _file_is_video "${_target_path:-}"           &&
-         [[ "${_tool:-"video-to-ascii"}" == "video-to-ascii" ]]
+         [[ "${_tool:-"video-to-ascii"}" == "video-to-ascii"        ]]
     then # https://github.com/joelibaceta/video-to-ascii
       video-to-ascii -f "${_target_path:-}"
     elif _command_exists "mplayer"                    &&
          _file_is_audio "${_target_path}"             &&
-         [[ "${_tool:-mplayer}"   == "mplayer"    ]]
+         [[ "${_tool:-${NB_AUDIO_TOOL:-mplayer}}"   == "mplayer"    ]]
     then
       printf "Playing audio. Press %s to quit.\\n" "$(_color_primary "Ctrl-C")"
       mplayer "${_target_path}"
     elif _command_exists "afplay"                     &&
          _file_is_audio "${_target_path}"             &&
-         [[ "${_tool:-afplay}"    == "afplay"     ]]
+         [[ "${_tool:-${NB_AUDIO_TOOL:-afplay}}"      == "afplay"   ]]
     then
       printf "Playing audio. Press %s to quit.\\n" "$(_color_primary "Ctrl-C")"
       afplay "${_target_path}"
@@ -17939,13 +17982,13 @@ Can't show archives. Export archive and expand to edit.\\n"
          _file_is_audio "${_target_path}"             &&
          [[ "${_tool:-afplay}"    == "afplay"     ]]  &&
          [[ "${_target_path}"     =~ mp[1|2|3]$   ]]  &&
-         [[ "${_tool:-mpg123}"    == "mpg123"     ]]
+         [[ "${_tool:-${NB_AUDIO_TOOL:-mpg123}}"      == "mpg123"   ]]
     then
       printf "Playing audio. Press %s to quit.\\n" "$(_color_primary "Ctrl-C")"
       mpg123 "${_target_path}"
     elif _command_exists "ffplay"                     &&
          _file_is_audio "${_target_path}"             &&
-         [[ "${_tool:-ffplay}"    == "ffplay"     ]]
+         [[ "${_tool:-${NB_AUDIO_TOOL:-ffplay}}"      == "ffplay"   ]]
     then
       printf "Playing audio. Press %s to quit.\\n" "$(_color_primary "Ctrl-C")"
       ffplay -loglevel quiet "${_target_path}"
