@@ -17817,6 +17817,7 @@ Can't show archives. Export archive and expand to edit.\\n"
         "icat"          \
         "imgcat"        \
         "magick"        \
+        "timg"          \
         "term-image"    \
         "viu"
   then
@@ -17935,7 +17936,21 @@ Can't show archives. Export archive and expand to edit.\\n"
          [[ ! "${_target_path}"   =~ \.svg$       ]]  &&
          [[   "${_tool:-chafa}"   == "chafa"      ]]
     then
-      chafa "${_target_path}"    |   {
+      chafa "${_target_path}"     |   {
+        if _command_exists "less" &&  ! ((_print_output))
+        then
+          less -r --prompt="$(_less_prompt)"
+        else
+          cat
+        fi
+      }
+    elif _command_exists "timg"                       &&
+         _file_is_image "${_target_path}"             &&
+         [[ ! "${_target_path}"   =~ \.afphoto$   ]]  &&
+         [[ ! "${_target_path}"   =~ \.svg$       ]]  &&
+         [[   "${_tool:-timg}"    == "timg"       ]]
+    then
+      timg "${_target_path}"      |   {
         if _command_exists "less" &&  ! ((_print_output))
         then
           less -r --prompt="$(_less_prompt)"

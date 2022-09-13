@@ -231,6 +231,7 @@ Also supported for various enhancements:
 [`term-image`](https://github.com/AnonymouX47/term-image),
 [`termpdf.py`](https://github.com/dsanson/termpdf.py),
 [Tidy-Viewer (`tv`)](https://github.com/alexhallam/tv),
+[`timg`](https://github.com/hzeller/timg),
 [vifm](https://vifm.info/),
 [`viu`](https://github.com/atanunq/viu),
 [VisiData](https://www.visidata.org/)
@@ -1402,6 +1403,7 @@ Supported file types and tools include:
     [iTerm2](https://www.iterm2.com/)
   - [kitty's `icat` kitten](https://sw.kovidgoyal.net/kitty/kittens/icat.html)
   - [`term-image`](https://github.com/AnonymouX47/term-image)
+  - [`timg`](https://github.com/hzeller/timg)
   - [`viu`](https://github.com/atanunq/viu)
 - Folders, Directories, Notebooks (`$NB_DIRECTORY_TOOL`):
   - [`exa`](https://github.com/ogham/exa)
@@ -3362,6 +3364,7 @@ supported tools and configurations, including:
   [iTerm2](https://www.iterm2.com/)
 - [kitty's `icat` kitten](https://sw.kovidgoyal.net/kitty/kittens/icat.html)
 - [`term-image`](https://github.com/AnonymouX47/term-image)
+- [`timg`](https://github.com/hzeller/timg)
 - [`viu`](https://github.com/atanunq/viu)
 
 A preferred image viewer tool can be
