@@ -1377,19 +1377,23 @@ nb show example.md --render
 ```
 
 [`nb show`](#show) also supports previewing other file types in the terminal,
-depending on the tools available in the environment.
+depending on the tools available in the environment. `nb` provides
+configuration variables that can be
+[configured in your `~/.nbrc` file](#%EF%B8%8F-set--settings) to prefer
+specific tools for certain file types.
+
 Supported file types and tools include:
 
 - PDF files:
   - [`termpdf.py`](https://github.com/dsanson/termpdf.py)
     with [kitty](https://sw.kovidgoyal.net/kitty/)
   - [`pdftotext`](https://en.wikipedia.org/wiki/Pdftotext)
-- Audio files:
+- Audio files (`$NB_AUDIO_TOOL`):
   - [`mplayer`](https://en.wikipedia.org/wiki/MPlayer)
   - [`afplay`](https://ss64.com/osx/afplay.html)
   - [`mpg123`](https://en.wikipedia.org/wiki/Mpg123)
   - [`ffplay`](https://ffmpeg.org/ffplay.html)
-- [Images](#-images):
+- [Images (`$NB_IMAGE_TOOL`)](#-images):
   - [`catimg`](https://github.com/posva/catimg)
   - [ImageMagick](https://imagemagick.org/) with a terminal that
     supports [sixels](https://en.wikipedia.org/wiki/Sixel)
@@ -1398,7 +1402,7 @@ Supported file types and tools include:
   - [kitty's `icat` kitten](https://sw.kovidgoyal.net/kitty/kittens/icat.html)
   - [`term-image`](https://github.com/AnonymouX47/term-image)
   - [`viu`](https://github.com/atanunq/viu)
-- Folders / Directories:
+- Folders, Directories, Notebooks (`$NB_DIRECTORY_TOOL`):
   - [`exa`](https://github.com/ogham/exa)
   - [`joshuto`](https://github.com/kamiyaa/joshuto)
   - [Midnight Commander (`mc`)](https://en.wikipedia.org/wiki/Midnight_Commander)
@@ -1408,7 +1412,7 @@ Supported file types and tools include:
   - [Pandoc](https://pandoc.org/) with
     [`w3m`](https://en.wikipedia.org/wiki/W3m) or
     [`links`](https://en.wikipedia.org/wiki/Links_(web_browser))
-- Excel, CSV, TSV, and data files:
+- Excel, CSV, TSV, and data files (`$NB_DATA_TOOL`):
   - [VisiData](https://www.visidata.org/)
   - [`sc-im`](https://github.com/andmarti1424/sc-im)
   - [Tidy-Viewer (`tv`)](https://github.com/alexhallam/tv)
