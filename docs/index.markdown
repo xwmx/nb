@@ -1384,8 +1384,11 @@ nb show example.md --render
 ```
 
 [`nb show`](#show) also supports previewing other file types in the terminal,
-depending on the tools available in the environment. `nb` provides
-configuration variables that can be
+depending on the tools available in the environment. To prefer specific tools
+for certain file types, `nb` provides configuration variables that can be
+set in your `~/.nbrc` file,
+which can be opened in your editor with [`nb settings edit`](#settings).
+
 [configured in your `~/.nbrc` file](#%EF%B8%8F-set--settings) to prefer
 specific tools for certain file types.
 
@@ -3373,9 +3376,9 @@ supported tools and configurations, including:
 - [`timg`](https://github.com/hzeller/timg)
 - [`viu`](https://github.com/atanunq/viu)
 
-A preferred image viewer tool can be
-[configured in your `~/.nbrc` file](#%EF%B8%8F-set--settings) with
-the `$NB_IMAGE_TOOL` variable.
+A preferred image viewer tool can be set with the `$NB_IMAGE_TOOL` variable
+in your `~/.nbrc` file,
+which can be opened in your editor with [`nb settings edit`](#settings).
 
 #### Inline Images
 
