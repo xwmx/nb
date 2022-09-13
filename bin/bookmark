@@ -112,7 +112,7 @@ HEREDOC
           "${PAGER}"
         elif hash "less" 2>/dev/null
         then
-          less              \
+          less -R           \
             --CLEAR-SCREEN  \
             --prompt="> scroll for more, h for help, or q to quit"
         else
