@@ -1383,9 +1383,6 @@ for certain file types, `nb` provides configuration variables that can be
 set in your `~/.nbrc` file,
 which can be opened in your editor with [`nb settings edit`](#settings).
 
-[configured in your `~/.nbrc` file](#%EF%B8%8F-set--settings) to prefer
-specific tools for certain file types.
-
 Supported file types and tools include:
 
 - PDF files:
