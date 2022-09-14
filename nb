@@ -14308,10 +14308,15 @@ _env() {
           # force install of bat
           apt-get install -y bat -o Dpkg::Options::="--force-overwrite"
 
-          _command_exists "rg"      ||
+          if ! _command_exists "rg"
+          then
             _deb_packages+=("ripgrep 12.1.1 BurntSushi/ripgrep")
-          _command_exists "batcat"  ||
-            _deb_packages+=("bat 0.16.0 sharkdp/bat")
+          fi
+
+          if ! _command_exists "bat" || ! _command_exists "batcat"
+          then
+            _deb_packages+=("bat 0.22.1 sharkdp/bat")
+          fi
 
           local __package=
           for   __package in "${_deb_packages[@]}"
