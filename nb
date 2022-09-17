@@ -24326,7 +24326,7 @@ _todo() {
     [[ -f "${_temp_file_path:?}" ]] && rm -rf "${_temp_file_path:?}"
   }
 
-  local _action="list"
+  local _action=
   local _arguments=()
   local _description=
   local _due_datetime=
@@ -24395,28 +24395,37 @@ _todo() {
 
         case "${1:-}" in
           +|a|add)
-            _action="add"
+            if [[ -z "${_action:-}" ]] || [[ "${_action:-}" == "tasks" ]]
+            then
+              _action="add"
+            fi
             ;;
-          c|closed|done)
+          c|closed|checked|completed|done|finished)
             _filter="closed"
             ;;
-          d|do|close|complete*|finish*|check*)
-            _action="do"
+          d|do|close|complete|finish|check)
+            if [[ -z "${_action:-}" ]] || [[ "${_action:-}" == "tasks" ]]
+            then
+              _action="do"
+            fi
             ;;
           l|list)
-            _action="list"
+            [[ -z "${_action:-}" ]] && _action="list"
             ;;
-          o|open|undone)
+          o|open|incomplete|unchecked|undone|unfinished)
             _filter="open"
             ;;
           tasks)
-            _action="tasks"
+            [[ -z "${_action:-}" ]] && _action="tasks"
             ;;
           todos)
             _only_todos=1
             ;;
-          u|undo|*ncomplete|unfinish|uncheck)
-            _action="undo"
+          u|undo|uncomplete|unfinish|uncheck)
+            if [[ -z "${_action:-}" ]] || [[ "${_action:-}" == "tasks" ]]
+            then
+              _action="undo"
+            fi
             ;;
           *)
             [[ "${_action:-}" != "add"  ]] && _arguments+=("${1:-}")
@@ -24427,6 +24436,11 @@ _todo() {
 
     shift
   done
+
+  if [[ -z "${_action:-}" ]]
+  then
+    _action="list"
+  fi
 
   if [[ "${_SUBCOMMAND:-}"  == "t"      ]] &&
      [[ "${_action:-}"      == "list"   ]] &&
