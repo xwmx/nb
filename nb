@@ -10776,26 +10776,14 @@ textarea,
   line-height:        1.5;
   margin-bottom:      1rem;
   margin-top:         1rem;
-  outline:            1px solid ${_color_background_alt_hex};
+  outline:            1px solid ${_color_background_hex};
   padding:            0;
   vertical-align:     top;
   width:              100%;
 }
 
-.ace_editor {
-  border:             1rem solid ${_color_background_alt_hex};
-}
-
 textarea {
   padding:            1rem;
-}
-
-.ace_scroller.ace_scroll-left {
-  box-shadow:         initial !important;
-}
-
-.ace-twilight .ace_print-margin {
-  background:         none;
 }
 
 #TOC li {
@@ -10859,7 +10847,27 @@ ul.task-list input[type="checkbox"]:checked:before {
  * #efef8f #b7bcd8 #cccc96 #7290b1
  * /
 
-/* Ace Syntax */
+/* Ace Editor & Syntax */
+
+.ace_editor {
+  /* border:             1rem solid ${_color_background_alt_hex}; */
+}
+
+.ace_gutter {
+  padding:            1rem 0;
+}
+
+.ace_gutter-cell {
+  padding:            0 0.5rem;
+}
+
+.ace_content {
+  padding:            1rem 0.5rem;
+}
+
+.ace_scroller.ace_scroll-left {
+  box-shadow:         initial !important;
+}
 
 .ace-twilight .ace_constant,
 .ace-twilight .ace_constant.ace_character,
@@ -10871,11 +10879,27 @@ ul.task-list input[type="checkbox"]:checked:before {
   color:              #9191a1;
 }
 
+.ace-twilight .ace_gutter {
+  background-color:   ${_color_background_hex};
+}
+
+.ace-twilight .ace_indent-guide-active {
+  filter: invert(1) grayscale(100%) brightness(0.75);
+}
+
+.ace-twilight .ace_invisible {
+  color:              #333333;
+}
+
 .ace-twilight .ace_list,
 .ace-twilight .ace_markup.ace_list,
 .ace-twilight .ace_storage,
 .ace-twilight .ace_string.ace_strong {
   color:              #cccc96;
+}
+
+.ace-twilight .ace_print-margin {
+  background:         none;
 }
 
 .ace_separator {
@@ -10889,6 +10913,14 @@ ul.task-list input[type="checkbox"]:checked:before {
 
 .ace-twilight .ace_string {
   color:              ${_color_primary_hex};
+}
+
+.normal-mode  .ace_cursor {
+  background-color:   rgba(255,255,0,0.5);
+}
+
+.normal-mode .ace_hidden-cursors .ace_cursor {
+  border:             1px solid yellow;
 }
 
 /* Pandoc Syntax */
@@ -11196,26 +11228,64 @@ HEREDOC
 
     textarea.style.display  = 'none';
 
-    var editor = ace.edit(editDiv, {
-      autoScrollEditorIntoView: true
-    });
+    var editor = ace.edit(editDiv);
 
-    editor.setShowPrintMargin(false);
-    editor.renderer.setShowGutter(false);
     editor.getSession().setValue(textarea.value);
 
     var mode = aceModeList.getModeForPath('example.${_source_extension:-md}').mode;
     editor.getSession().setMode(mode);
 
+    editor.setOptions({
+      autoScrollEditorIntoView: true,
+      copyWithEmptySelection:   true,
+      displayIndentGuides:      true,
+      fadeFoldWidgets:          true,
+      fixedWidthGutter:         true,
+      highlightActiveLine:      true,
+      navigateWithinSoftTabs:   true,
+      newLineMode:              'unix',
+      printMargin:              false,
+      scrollPastEnd:            0.5,
+      showFoldWidgets:          true,
+      showGutter:               true,
+      showInvisibles:           true,
+      showLineNumbers:          true,
+      useSoftTabs:              true,
+      wrap:                     false
+    });
+
     if ('${_source_extension:-md}' === 'md') {
-      editor.getSession().setUseWrapMode(true);
+      if ('${NB_ACE_MD_GUTTER:-1}' === '1') {
+        editor.setOptions({
+          wrap:                 true
+        });
+      } else {
+        editor.setOptions({
+          wrap:                 true,
+          showFoldWidgets:      false,
+          showLineNumbers:      false,
+          showGutter:           false
+        });
+      }
+    }
+
+    if ('${NB_ACE_SOFT_TABS:-0}' === '0') {
+      editor.setOptions({
+        useSoftTabs:            false
+      })
+    }
+
+    var keyboard = '${NB_ACE_KEYBOARD:-ace}';
+
+    if (['emacs', 'sublime', 'vim', 'vscode'].indexOf(keyboard) !== -1) {
+      editor.setKeyboardHandler('ace/keyboard/' + keyboard);
     }
 
     editor.setTheme('ace/theme/${NB_ACE_THEME:-twilight}');
 
     textarea.form.addEventListener('submit', function() {
       textarea.value = editor.getSession().getValue();
-    })
+    });
   }
 
   (function() {
