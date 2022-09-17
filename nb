@@ -24395,7 +24395,7 @@ _todo() {
 
         case "${1:-}" in
           +|a|add)
-            if [[ -z "${_action:-}" ]] || [[ "${_action:-}" == "tasks" ]]
+            if [[ -z "${_action:-}"     ]]  ||  [[ "${_action:-}" == "tasks" ]]
             then
               _action="add"
             fi
@@ -24404,31 +24404,37 @@ _todo() {
             _filter="closed"
             ;;
           d|do|close|complete|finish|check)
-            if [[ -z "${_action:-}" ]] || [[ "${_action:-}" == "tasks" ]]
+            if [[ -z "${_action:-}"     ]]  ||  [[ "${_action:-}" == "tasks" ]]
             then
               _action="do"
             fi
             ;;
           l|list)
-            [[ -z "${_action:-}" ]] && _action="list"
+            if [[ -z "${_action:-}"     ]]
+            then
+              _action="list"
+            fi
             ;;
           o|open|incomplete|unchecked|undone|unfinished)
             _filter="open"
             ;;
           tasks)
-            [[ -z "${_action:-}" ]] && _action="tasks"
+            if [[ -z "${_action:-}"     ]]
+            then
+              _action="tasks"
+            fi
             ;;
           todos)
             _only_todos=1
             ;;
           u|undo|uncomplete|unfinish|uncheck)
-            if [[ -z "${_action:-}" ]] || [[ "${_action:-}" == "tasks" ]]
+            if [[ -z "${_action:-}"     ]]  ||  [[ "${_action:-}" == "tasks" ]]
             then
               _action="undo"
             fi
             ;;
           *)
-            [[ "${_action:-}" != "add"  ]] && _arguments+=("${1:-}")
+            [[ "${_action:-}" != "add"  ]]  &&  _arguments+=("${1:-}")
             ;;
         esac
         ;;
@@ -24442,8 +24448,8 @@ _todo() {
     _action="list"
   fi
 
-  if [[ "${_SUBCOMMAND:-}"  == "t"      ]] &&
-     [[ "${_action:-}"      == "list"   ]] &&
+  if [[ "${_SUBCOMMAND:-}"  == "t"      ]]  &&
+     [[ "${_action:-}"      == "list"   ]]  &&
      ! ((_only_todos))
   then
     _action="tasks"
@@ -24722,13 +24728,22 @@ _todo() {
         _selector_path="${_selector_path:-}/"
       fi
 
-      local _task_closed_patterns=(-e "- \[x\]")
+      local _task_closed_patterns=(
+        -e "- \[x\]"
+      )
       local _task_open_patterns=(
-        -e "- \[ \]" -e "^- \[\]" -e "[[:space:]]- \[\]"
+        -e "- \[ \]"
+        -e "^- \[\]"
+        -e "[[:space:]]- \[\]"
       )
 
-      local _todo_closed_patterns=(-e "# \[x\]")
-      local _todo_open_patterns=(-e "# \[ \]" -e "# \[\]")
+      local _todo_closed_patterns=(
+        -e "# \[x\]"
+      )
+      local _todo_open_patterns=(
+        -e "# \[ \]"
+        -e "# \[\]"
+      )
 
       {
         _list "${_selector_path:-}"   \
@@ -24780,7 +24795,7 @@ _todo() {
 
           case "${_filter:-}" in
             closed) _filtered_task_patterns=("${_task_closed_patterns[@]:-}") ;;
-            open)   _filtered_task_patterns=("${_task_open_patterns[@]:-}") ;;
+            open)   _filtered_task_patterns=("${_task_open_patterns[@]:-}")   ;;
             *)
               _filtered_task_patterns=(
                 "${_task_closed_patterns[@]:-}"
