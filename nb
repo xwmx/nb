@@ -10915,7 +10915,7 @@ ul.task-list input[type="checkbox"]:checked:before {
   color:              ${_color_primary_hex};
 }
 
-.normal-mode  .ace_cursor {
+.normal-mode .ace_cursor {
   background-color:   rgba(255,255,0,0.5);
 }
 
