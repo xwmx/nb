@@ -11250,6 +11250,7 @@ HEREDOC
       showGutter:               true,
       showInvisibles:           true,
       showLineNumbers:          true,
+      tabSize:                  2,
       useSoftTabs:              true,
       wrap:                     false
     });
