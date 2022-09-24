@@ -196,3 +196,91 @@ load test_helper
 
   git log | grep -v -q 'Commit'
 }
+
+# git config ##################################################################
+
+@test "'_git_required()' recognizes git configuration that uses 'includeIf' when inside the specified directory." {
+  {
+    export HOME="${_TMP_DIR}"
+
+    git config --global user.name   "Example Name"
+    git config --global user.email  "example@example.test"
+
+    cat <<HEREDOC > "${_TMP_DIR}/.gitconfig_conditional_include_example"
+[user]
+  name  = Sample Name
+  email = sample@example.test
+HEREDOC
+
+    cat <<HEREDOC >> "${_TMP_DIR}/.gitconfig"
+[includeIf "gitdir:~/"]
+  path = ${_TMP_DIR}/.gitconfig_conditional_include_example
+HEREDOC
+
+    cat "${_TMP_DIR}/.gitconfig"
+
+    "${_NB}" init
+    "${_NB}" add "Example File.md" --content "Example content."
+  }
+
+  run "${_NB}" show 1 --author
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq  0                                     ]]
+  [[ "${output}" ==   "Sample Name <sample@example.test>"   ]]
+}
+
+@test "'_git_required()' recognizes global git configuration  ignores 'includeIf' when outiside the specified directory." {
+  {
+    export HOME="${_TMP_DIR}"
+
+    git config --global user.name   "Example Name"
+    git config --global user.email  "example@example.test"
+
+    cat <<HEREDOC > "${_TMP_DIR}/.gitconfig_conditional_include_example"
+[user]
+  name  = Sample Name
+  email = sample@example.test
+HEREDOC
+
+    cat <<HEREDOC >> "${_TMP_DIR}/.gitconfig"
+[includeIf "gitdir:~/example-path"]
+  path = ${_TMP_DIR}/.gitconfig_conditional_include_example
+HEREDOC
+
+    cat "${_TMP_DIR}/.gitconfig"
+
+    "${_NB}" init
+    "${_NB}" add "Example File.md" --content "Example content."
+  }
+
+  run "${_NB}" show 1 --author
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq  0                                     ]]
+  [[ "${output}" ==   "Example Name <example@example.test>" ]]
+}
+
+@test "'_git_required()' recognizes global git configuration for the user." {
+  {
+    export HOME="${_TMP_DIR}"
+
+    git config --global user.name   "Example Name"
+    git config --global user.email  "example@example.test"
+
+    "${_NB}" init
+    "${_NB}" add "Example File.md" --content "Example content."
+  }
+
+  run "${_NB}" show 1 --author
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq  0                                     ]]
+  [[ "${output}" ==   "Example Name <example@example.test>" ]]
+}
