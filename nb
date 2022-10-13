@@ -19140,21 +19140,7 @@ HEREDOC
           fi
         fi
 
-        if [[   "${__list_item:-}" =~ ^0\ items.  ]]
-        then
-          printf "%s\\n<br>\\n" "${__list_item}"
 
-          break
-        elif [[ "${__list_item:-}" =~ Not\ found  ]]
-        then
-          printf "%s\\n<br>\\n" "${__list_item//\ in*:/:}"
-
-          break
-        fi
-
-        local _item_selector="${__list_item%%]*}"
-        _item_selector="${_item_selector#[}"
-        _item_selector="${_item_selector//\\/}"
 
         local _display_item="${__list_item:-}"
 
@@ -19180,6 +19166,22 @@ HEREDOC
         # shellcheck disable=SC2140
         _display_item="${_display_item//\[/<span class=\"muted\">[</span><span class=\"identifier\">}"
         _display_item="${_display_item//\]/</span><span class=\"muted\">]</span>}"
+
+        if [[   "${_display_item:-}" =~ ^0${_NBSP}items.  ]]
+        then
+          printf "%s\\n<br>\\n" "${_display_item}"
+
+          break
+        elif [[ "${_display_item:-}" =~ ^Not${_NBSP}found ]]
+        then
+          printf "%s\\n<br>\\n" "${_display_item//${_NBSP}in*:/:}"
+
+          break
+        fi
+
+        local _item_selector="${__list_item%%]*}"
+        _item_selector="${_item_selector#[}"
+        _item_selector="${_item_selector//\\/}"
 
         local _link_selector=
         _link_selector="$(_get_id_selector "${_item_selector}" --notebook)"
