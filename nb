@@ -14392,7 +14392,7 @@ _env() {
           for   __package in "${_dependencies[@]}"
           do
             if ! _command_exists "${__package}" &&
-               apt-cache show "${__package}" | grep -q "Package: ^${__package}"
+               apt-cache show "${__package}" | grep -q "Package: ${__package}"
             then
               _apt_packages+=("${__package}")
             fi
