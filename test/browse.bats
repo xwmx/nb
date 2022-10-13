@@ -477,7 +477,7 @@ href=\"//localhost:6789/\?--columns=.*\&--limit=.*\"\>\<span\ class=\"muted\"\>â
   [[ "${output}"  =~  \
 \<a.*\ href=\"//localhost:6789/home:1/\?--columns=.*\&--limit=.*\"\>Example\ Folder\</a\>\ .*/.*\</strong\>\</nav\>  ]]
 
-  [[ "${output}"  =~  0\ items. ]]
+  [[ "${output}"  =~  0${_NBSP}items. ]]
 
   run "${_NB}" browse 2/ --print
 
