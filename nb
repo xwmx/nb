@@ -3206,7 +3206,7 @@ describe() {
       _exit_1 printf "describe(): <description> required.\\n"
 
     local _name="${2:-}"
-    local _describe_var="____DESCRIBE_${_name}"
+    local _describe_var="____DESCRIBE_${_name//-/_}"
 
     if [[ !   "${_name}" =~ ^\-               ]] &&
        [[     "${_name}" =~ ^[A-Za-z0-9_-]+$  ]] &&
@@ -3222,13 +3222,13 @@ describe() {
   else # set ------------------------------------------------------------------
     if [[ -n "${2:-}"     ]]
     then # argument is present
-      read -r -d '' "____DESCRIBE_${1}" <<HEREDOC
+      read -r -d '' "____DESCRIBE_${1//-/_}" <<HEREDOC
 ${2}
 HEREDOC
 
       eval "_describe_${1}() { printf \"%s\\n\" \"${2:-}\"; }"
     else # no argument is present, so assume piped input
-      local _describe_var="____DESCRIBE_${1}"
+      local _describe_var="____DESCRIBE_${1//-/_}"
 
       read -r -d '' "${_describe_var}"
 
