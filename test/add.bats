@@ -3,6 +3,70 @@
 
 load test_helper
 
+# option parsing ##############################################################
+
+@test "'add --content' with content containing a leading dash (-) successfully creates note." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" add                                    \
+    --content   "-Example content with leading dash." \
+    --filename  "Example Filename.org"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0                        ]]
+
+  [[ -f "${NB_DIR}/home/Example Filename.org" ]]
+
+  diff                                            \
+    <(cat "${NB_DIR}/home/Example Filename.org")  \
+    <(echo "-Example content with leading dash.")
+
+# mock_editor %s/home/Example File\\n" "${NB_DIR}")
+
+  cd "${NB_DIR}/home"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+}
+
+@test "'add' with content containing a leading dash (-) successfully creates note." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" add                        \
+    "-Example content with leading dash." \
+    --filename  "Example Filename.org"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0                        ]]
+
+  [[ -f "${NB_DIR}/home/Example Filename.org" ]]
+
+  diff                                            \
+    <(cat "${NB_DIR}/home/Example Filename.org")  \
+    <(echo "-Example content with leading dash.")
+
+# mock_editor %s/home/Example File\\n" "${NB_DIR}")
+
+  cd "${NB_DIR}/home"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+}
+
 # aliases ####################################################################
 
 @test "'<notebook>:+' creates new note with editor." {

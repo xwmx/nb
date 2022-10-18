@@ -8869,20 +8869,32 @@ _normalize_options() {
     case "${1}" in
       # if option is of type -ab
       -[!-]?*)
-        # loop over each character starting with the second
-        local i=
-        for ((i=1; i < ${#1}; i++))
-        do
-          _character="${1:i:1}"
-          _character_string+="${_character}"
+        if _contains "${_options[${#_options[@]}-1]}" \
+            "--content"                               \
+            "add"                                     \
+            "a"                                       \
+            "+"                                       \
+            "new"
+        then
+          _options+=("${1}")
 
-          if [[ ! "${_character}"     =~ [0-9]  ]] ||
-             [[ ! "${1:$((i + 1)):1}" =~ [0-9]  ]]
-          then
-            _options+=("-${_character_string}")
-            _character_string=
-          fi
-        done
+          shift
+        else
+          # loop over each character starting with the second
+          local i=
+          for ((i=1; i < ${#1}; i++))
+          do
+            _character="${1:i:1}"
+            _character_string+="${_character}"
+
+            if [[ ! "${_character}"     =~ [0-9]  ]] ||
+               [[ ! "${1:$((i + 1)):1}" =~ [0-9]  ]]
+            then
+              _options+=("-${_character_string}")
+              _character_string=
+            fi
+          done
+        fi
         ;;
       # if option is of type --foo=bar, split on first '='
       --?*=*)
@@ -12044,11 +12056,19 @@ _add() {
         _browse=1
         ;;
       -c|--content)
-        [[ -n "${_option_content:-}" ]] && _option_content+="${_NEWLINE}${_NEWLINE}"
-        _option_content+="$(_option_get_value "${1}" "${2:-}")"
-        _defer_arguments+=("${1}" "${2:-}")
+        [[ -n "${_option_content:-}"  ]] && _option_content+="${_NEWLINE}${_NEWLINE}"
 
-        shift
+        if [[ -z "${2:-}"             ]]
+        then
+          _exit_1 printf                          \
+            "%s requires a valid argument.\\n"    \
+            "$(_color_primary "${1:-}")"
+        else
+          _option_content+="${2:-}"
+          _defer_arguments+=("${1}" "${2:-}")
+
+          shift
+        fi
         ;;
       --edit)
         _edit_before_commit=1
