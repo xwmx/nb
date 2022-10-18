@@ -3935,9 +3935,14 @@ _help() {
   then
     _download_from                          \
       "${_REPO_RAW_URL}/README.md"          \
-        | if _command_exists "pandoc" && _web_browser --check
+        | if _command_exists "pandoc"       &&
+             _web_browser --check
           then
-            _pandoc --standard-input --from markdown --to html | _web_browser
+            _pandoc                         \
+              --standard-input              \
+              --from  markdown              \
+              --to    html                  \
+              | _web_browser
 
             return 0
           else
@@ -12751,8 +12756,8 @@ _bookmark() {
           then
             _pandoc                                 \
               --standard-input                      \
-              --from html-native_divs-native_spans  \
-              --to markdown                         \
+              --from  html-native_divs-native_spans \
+              --to    markdown                      \
               | _highlight_syntax_if_available "md"
           else
             cat
@@ -13446,8 +13451,9 @@ _bookmark() {
               {
                 _pandoc                                 \
                   --standard-input                      \
-                  --from html-native_divs-native_spans  \
-                  --to markdown-grid_tables --wrap=none \
+                  --from  html-native_divs-native_spans \
+                  --to    markdown-grid_tables          \
+                  --wrap=none                           \
                   2>/dev/null || cat
               } | {
                 # strip empty list items
@@ -18175,22 +18181,27 @@ Can't show archives. Export archive and expand to edit.\\n"
     elif [[ "${_target_path}" =~ docx$  ]]  &&
          _command_exists "pandoc"
     then
-      pandoc --from docx --to markdown "${_target_path}"        \
-        | sed -E -e 's/\\\[\\\[/\[\[/g' -e 's/\\\]\\\]/\]\]/g'  \
-        | _highlight_syntax_if_available                        \
-        | if ! ((_print_output))
-          then
-            _pager
-          else
-            cat
-          fi
+      pandoc                                \
+        --from  docx                        \
+        --to    markdown                    \
+        "${_target_path}"                   \
+        | sed -E                            \
+          -e 's/\\\[\\\[/\[\[/g'            \
+          -e 's/\\\]\\\]/\]\]/g'            \
+          | _highlight_syntax_if_available  \
+          | if ! ((_print_output))
+            then
+              _pager
+            else
+              cat
+            fi
     elif [[ "${_target_path}" =~ epub$  ]]  &&
          _command_exists "pandoc"           &&
          _web_browser --check
     then
-      pandoc        \
-        --from epub \
-        --to html   \
+      pandoc          \
+        --from  epub  \
+        --to    html  \
         "${_target_path}" | _web_browser
     elif _open_in_gui_app "${_target_path:-}"
     then
@@ -20032,7 +20043,10 @@ HEREDOC
       } | {
         if _command_exists "pandoc"
         then
-          _pandoc --standard-input --from org --to html
+          _pandoc             \
+            --standard-input  \
+            --from  org       \
+            --to    html
         else
           cat
         fi
