@@ -22,6 +22,43 @@ Vagrant.configure("2") do |config|
   # boxes at https://vagrantcloud.com/search.
 
   #############################################################################
+  # Arch Boxes
+
+  $arch_setup = <<-HEREDOC
+# install nvm (https://github.com/nvm-sh/nvm)
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.36.0/install.sh | bash
+
+# add project root to $PATH
+if grep -q -v vagrant "${HOME}/.bashrc"
+then
+  printf "\\nexport PATH=\"/vagrant:\${PATH}\"\\n" >> "${HOME}/.bashrc"
+fi
+
+sudo pacman       \
+  --noconfirm     \
+  -S              \
+  bash-bats       \
+  elinks          \
+  git             \
+  lynx            \
+  nmap            \
+  pandoc          \
+  python-pygments \
+  vim             \
+  w3m
+HEREDOC
+
+  ######
+  # Arch
+  #
+  # https://app.vagrantup.com/archlinux/boxes/archlinux
+
+  # config.vm.define "arch" do |centos7|
+  #   centos7.vm.box = "archlinux/archlinux"
+  #   centos7.vm.provision :shell, inline: $arch_setup, privileged: false
+  # end
+
+  #############################################################################
   # CentOS Boxes
 
   $centos_setup = <<-HEREDOC
