@@ -33,7 +33,9 @@
 # - Subcommands: Group 2 (alphabetical order)
 # - Subcommands: Group 3 (alphabetical order)
 #
-# Target Bash Versions: >= 3.2.57
+# Target Bash Version:              5   (target,   recommended)
+# Minimum Recommended Bash Version: 4   (fallback, recommended)
+# Minimum Tested Bash Version:      3.2 (fallback, deprecated)
 #
 # AGPLv3
 #
@@ -1238,6 +1240,117 @@ trap "_temp cleanup"                        EXIT
 trap "exit"                                 INT
 trap 'printf "\\n"; _temp cleanup; exit 0'  SIGINT
 trap 'printf "\\n"; _temp cleanup; exit 0'  SIGTERM
+
+###############################################################################
+# Configuration Validation
+###############################################################################
+
+# __validate_configuration()
+#
+# Usage:
+#   __validate_configuration
+#
+# Description:
+#   Check the runtime environment and display an error message when running in
+#   an unsupported configuration.
+__validate_configuration() {
+  if ((${NB_BASH_UPDATE_PROMPT_ENABLED:-0}))  || {
+       [[ "${BASH_VERSINFO[0]}" -lt 4     ]]  &&
+       _command_exists "brew"                 &&
+       ((${NB_BASH_UPDATE_PROMPT_ENABLED:-1}))
+     }
+  then
+    local _config_file_path="${NB_DIR}/.nb-bash-3-enabled"
+
+    if [[ -e "${_config_file_path}"       ]]
+    then
+      local _config_file_version=
+      _config_file_version="$(head -n 1 "${_config_file_path:-}")"
+
+      if [[ "${_config_file_version:-}" != "${_VERSION}" ]] ||
+         ((${NB_BASH_UPDATE_PROMPT_ENABLED:-0}))
+      then
+        rm "${_config_file_path:?}"
+      fi
+    fi
+
+    if [[ ! -e "${_config_file_path:-}"   ]]  &&
+       ((${NB_BASH_UPDATE_PROMPT_ENABLED:-1}))
+    then
+      local _color_me=
+      _color_me="$(_color_muted '`')$(_color_primary "${_ME}")$(_color_muted '`')"
+      local _color_y=
+      _color_y="$(_color_muted '"')$(_color_primary "y")$(_color_muted '"')"
+
+      _warn cat <<HEREDOC
+Outdated Bash Version Detected: 3.2
+
+${_color_me} works best with the current version of Bash.
+${_color_me} can update your system to $(_color_primary "Bash 5") via Homebrew
+or you can proceed with Bash 3.2.
+
+Answering ${_color_y} will run the following command:
+
+   $(_color_primary "brew install bash")
+
+HEREDOC
+
+      while true
+      do
+        local __yn=
+
+        if _contains "-y"     "${@:-}" ||
+           _contains "--yes"  "${@:-}"
+        then
+          __yn="y"
+        else
+          IFS='' read -r -e -d $'\n' -p \
+"$(_color_primary "Update to Bash 5?")  $(_color_brackets "y/N") " __yn
+        fi
+
+        case "${__yn}" in
+          [Yy]*)
+            printf "\\n"
+
+            _warn printf "Updating Bash...\\n"
+
+            if brew install bash
+            then
+              printf "\\n"
+
+              _warn printf "Updated! Reload your shell to enable Bash 5.\\n\\n"
+            else
+              printf "\\n"
+
+              _warn printf "Unable to update to Bash 5.\\n\\n"
+            fi
+
+
+            if [[ -e "${_config_file_path:?}" ]]
+            then
+              rm "${_config_file_path:?}"
+            fi
+
+            break
+            ;;
+          *)
+            cat <<HEREDOC > "${_config_file_path:?}"
+${_VERSION}
+
+This presence of this file indicates that Bash 3 support is enabled.
+HEREDOC
+
+            printf "\\n"
+
+            _warn printf "Bash 3.2 support enabled.\\n\\n"
+
+            break
+            ;;
+        esac
+      done
+    fi
+  fi
+}; __validate_configuration
 
 ###############################################################################
 # Helpers: Group 1                                             Helpers: Group 1
