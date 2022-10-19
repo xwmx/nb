@@ -7362,6 +7362,9 @@ HEREDOC
             shift
           fi
           ;;
+        -f|--force|--skip*|-y|--yes)
+          _skip_prompt=1
+          ;;
         --name)
           _name=1
 
@@ -7374,9 +7377,6 @@ HEREDOC
           ;;
         --print|--current)
           _print_current=1
-          ;;
-        --skip*|--force)
-          _skip_prompt=1
           ;;
         --unset)
           _unset=1
@@ -7697,7 +7697,7 @@ HEREDOC
     for   __arg in "${@:-}"
     do
       case "${__arg}" in
-        -f|--force)
+        -f|--force|--skip*|-y|--yes)
           _force=1
           ;;
         *)
@@ -7916,7 +7916,7 @@ HEREDOC
             shift
           fi
           ;;
-        --skip*|--force)
+        -f|--force|--skip*|-y|--yes)
           _skip_prompt=1
           ;;
         *)
@@ -13902,7 +13902,7 @@ _delete() {
   for   __arg in "${@:-}"
   do
     case "${__arg}" in
-      -f|--force)
+      -f|--force|--skip*|-y|--yes)
         _force=1
         ;;
       --prompt-list)
@@ -14598,7 +14598,7 @@ _export() {
   for   __arg in "${@:-}"
   do
     case "${__arg}" in
-      -f|--force)
+      -f|--force|--skip*|-y|--yes)
         _force=1
         ;;
       notebook*)
@@ -15360,7 +15360,7 @@ _move() {
   while ((${#}))
   do
     case "${1:-}" in
-      -f|--force)
+      -f|--force|--skip*|-y|--yes)
         _force=1
         ;;
       --reset)
@@ -21901,7 +21901,7 @@ _plugins() {
   for   __arg in "${@:-}"
   do
     case "${__arg}" in
-      --force)
+      -f|--force|--skip*|-y|--yes)
         _force=1
         ;;
       --path*)
