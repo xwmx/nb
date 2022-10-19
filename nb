@@ -12061,15 +12061,18 @@ _add() {
         _browse=1
         ;;
       -c|--content)
-        [[ -n "${_option_content:-}"  ]] && _option_content+="${_NEWLINE}${_NEWLINE}"
-
-        if [[ -z "${2:-}"             ]]
+        if [[ -z "${2:-}"                   ]]
         then
           _exit_1 printf                          \
             "%s requires a valid argument.\\n"    \
             "$(_color_primary "${1:-}")"
         else
-          _option_content+="${2:-}"
+          if [[ -n "${_option_content:-}"   ]]
+          then
+            _option_content+="${_NEWLINE}${_NEWLINE}"
+          fi
+
+          _option_content+="$(printf "%s\\n" "${2:-}")"
           _defer_arguments+=("${1}" "${2:-}")
 
           shift
@@ -12079,7 +12082,7 @@ _add() {
         _edit_before_commit=1
         ;;
       -e|--encrypt*)
-        if [[ -z "${NB_ENCRYPTION_TOOL:-}" ]]   ||
+        if [[ -z "${NB_ENCRYPTION_TOOL:-}"  ]]  ||
            ! _command_exists "${NB_ENCRYPTION_TOOL:-}"
         then
           _exit_1 printf                        \
