@@ -36,7 +36,7 @@ fi
 
 sudo pacman       \
   --noconfirm     \
-  -S              \
+  -Syu            \
   bash-bats       \
   elinks          \
   git             \
