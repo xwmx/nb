@@ -8874,11 +8874,12 @@ _normalize_options() {
     case "${1}" in
       # if option is of type -ab
       -[!-]?*)
-        if _contains "${_options[${#_options[@]}-1]}" \
-            "--content"                               \
-            "add"                                     \
-            "a"                                       \
-            "+"                                       \
+        if  [[ -n "${_options[*]:-}" ]]                 &&
+            _contains "${_options[${#_options[@]}-1]}"  \
+            "--content"                                 \
+            "add"                                       \
+            "a"                                         \
+            "+"                                         \
             "new"
         then
           _options+=("${1}")
