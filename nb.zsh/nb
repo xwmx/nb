@@ -1,0 +1,6 @@
+#!/usr/bin/env zsh
+
+setopt BASH_REMATCH
+setopt KSH_ARRAYS
+
+source "$(cd "$(dirname "${0}")"; pwd)/../nb"
