@@ -1286,6 +1286,7 @@ __validate_configuration() {
 Outdated Bash Version Detected: 3.2
 
 ${_color_me} works best with the current version of Bash.
+
 ${_color_me} can update your system to $(_color_primary "Bash 5") via Homebrew
 or you can proceed with Bash 3.2.
 
@@ -1312,13 +1313,13 @@ HEREDOC
           [Yy]*)
             printf "\\n"
 
-            _warn printf "Updating Bash...\\n"
+            _warn printf "Updating Bash%s\\n" "$(_color_muted "...")"
 
             if brew install bash
             then
               printf "\\n"
 
-              _warn printf "Updated! Reload your shell to enable Bash 5.\\n\\n"
+              _warn printf "Updated to Bash 5!\\n\\n"
             else
               printf "\\n"
 
