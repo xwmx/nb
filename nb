@@ -1257,7 +1257,8 @@ __validate_configuration() {
   if ((${NB_BASH_UPDATE_PROMPT_ENABLED:-0}))        ||  {
        [[ "${BASH_VERSINFO[0]:-999999999}" -lt 4 ]] &&
        _command_exists "brew"                       &&
-       ((${NB_BASH_UPDATE_PROMPT_ENABLED:-1}))
+       ((${NB_BASH_UPDATE_PROMPT_ENABLED:-1}))      &&
+       [[ -t 1 ]] # command initiated by user
      }
   then
     local _config_file_path="${NB_DIR}/.nb-bash-3-enabled"
