@@ -1313,7 +1313,7 @@ HEREDOC
           [Yy]*)
             printf "\\n"
 
-            _warn printf "Updating Bash%s\\n" "$(_color_muted "...")"
+            _warn printf "Updating Bash%s\\n\\n" "$(_color_muted "...")"
 
             if brew install bash
             then
