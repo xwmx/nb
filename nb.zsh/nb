@@ -3,4 +3,7 @@
 setopt BASH_REMATCH
 setopt KSH_ARRAYS
 
+# no-op placeholder for Bash `shopt`.
+shopt() { :; }
+
 source "$(cd "$(dirname "${0}")"; pwd)/../nb"
