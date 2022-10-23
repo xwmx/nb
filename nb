@@ -8982,7 +8982,7 @@ __load_plugins() {
       [[ -f "${__file}"                           ]] || continue
       [[    "${__file}"  =~ /copy.${_ME}-plugin$  ]] && continue
 
-      source "${__file}"
+      source "${__file}" 2>/dev/null || :
     done
     set -f
   fi
