@@ -23127,8 +23127,7 @@ HEREDOC
       do
         if [[   "${__local_branch:-}" =~ ^\ \ remotes/              ]] &&
            [[ ! "${__local_branch:-}" =~ ^\ \ remotes/origin/HEAD   ]] &&
-           [[ ! "${__local_branch:-}" =~ \
-                  ^\ \ remotes/origin/${_updated_current_branch}$   ]]
+           [[ ! "${__local_branch:-}" =~ ^\ \ remotes/origin/${_updated_current_branch}$ ]]
         then
           git -C "${_notebook_path}" branch               \
             --delete --remotes "${__local_branch#\ \ remotes/}" &>/dev/null
