@@ -252,6 +252,12 @@ Installing `nb` with Homebrew also installs
 the recommended dependencies above
 and completion scripts for Bash, Zsh, and Fish.
 
+Install the latest development version from the respository with:
+
+```bash
+brew install xwmx/taps/nb --head
+```
+
 #### Ubuntu, Windows WSL, and others
 
 ##### npm
