@@ -1293,7 +1293,7 @@ or you can proceed with $(_color_muted "Bash 3.2").
 
 Answering $(_color_primary "y") or $(_color_primary "yes") will run the following command:
 
-   $(_color_primary "brew install bash")
+  $(_color_primary "brew install bash")
 HEREDOC
       } | _warn printf "%s\\n" "$(cat)"
 
