@@ -9005,7 +9005,7 @@ __load_plugins() {
 #
 # Source:
 #   https://github.com/e36freak/templates/blob/master/options
-export _NORMALIZED_OPTIONS=()
+_NORMALIZED_OPTIONS=()
 _normalize_options() {
   local _character=
   local _character_string=
@@ -9593,7 +9593,7 @@ _id_brackets_color()  { _color_brackets "${@:-}"; }
 # $_DEFERRED_COMMAND
 #
 # The function and arguments to run after the script has loaded.
-export _DEFERRED_COMMAND=()
+_DEFERRED_COMMAND=()
 
 # _defer()
 #
