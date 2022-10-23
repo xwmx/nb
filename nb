@@ -3694,7 +3694,7 @@ HEREDOC
         while true
         do
           local __name=
-          IFS='' read -r -e -d $'\n' -p "$(_color_primary "Name"): " __name
+          IFS='' read -r -e -d $'\n' -p "$(_color_primary "Name"):  " __name
 
           if [[ -n "${__name:-}"  ]]
           then
