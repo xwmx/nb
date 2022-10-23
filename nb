@@ -2149,7 +2149,7 @@ _get_id_selector() {
     IFS="/" read -ra _selector_segments <<< "${_selector_relative_path:-}"
 
     local i=
-    for ((i=0; i < "${#_selector_segments[@]}"; i++))
+    for ((i=0; i < ${#_selector_segments[@]}; i++))
     do
       local _segment_id=
 
@@ -6349,7 +6349,7 @@ _ls() {
     printf "\\n"
 
     local i=
-    for ((i=0; i < "${#_commands_raw[@]}"; i++))
+    for ((i=0; i < ${#_commands_raw[@]}; i++))
     do
       if [[ -z "${_footer_test_line}"                 ]]
       then # first item in line
@@ -6719,7 +6719,7 @@ _ls() {
       return 0
     else
       local i=
-      for ((i=0; i < "${#_delegate_arguments[@]}"; i++))
+      for ((i=0; i < ${#_delegate_arguments[@]}; i++))
       do
         case "${_delegate_arguments[i]:-}" in
           --ar*|--unar*)
@@ -7273,7 +7273,7 @@ _notebooks() {
             _print_line "-----------------------"
 
             local i=
-            for ((i=0; i < "${#_remote_branches[@]}"; i++))
+            for ((i=0; i < ${#_remote_branches[@]}; i++))
             do
               printf "%s %s\\n"                 \
                 "$(_color_brackets "$((i+1))")" \
@@ -8275,7 +8275,7 @@ HEREDOC
     fi
 
     local i=
-    for ((i=0; i < "${#_notebook_names[@]}"; i++))
+    for ((i=0; i < ${#_notebook_names[@]}; i++))
     do
       if [[ -e "${_notebook_paths[i]}/.git"                 ]]
       then # it's a git repository.
@@ -12324,7 +12324,7 @@ _add() {
   local _selector_folder_relative_path=
 
   local i=
-  for ((i=0; i < "${#_arguments[@]}"; i++))
+  for ((i=0; i < ${#_arguments[@]}; i++))
   do
     local _argument_content=
 
@@ -16349,7 +16349,7 @@ _search() {
   fi
 
   local i=
-  for ((i=0; i < "${#_arguments[@]}"; i++))
+  for ((i=0; i < ${#_arguments[@]}; i++))
   do
     local _maybe_path=
 
@@ -16923,7 +16923,7 @@ _search() {
                 if [[ "${__search_group}" == "index" ]]
                 then
                   local i=
-                  for ((i=0; i < "${#_queries[@]}"; i++))
+                  for ((i=0; i < ${#_queries[@]}; i++))
                   do
                     [[ -n "${_queries[i]:-}"  ]] || continue
 
@@ -17354,7 +17354,7 @@ _search() {
           _query_message="${_query}"
         else
           local i=
-          for ((i=0; i < "${#_queries[@]}"; i++))
+          for ((i=0; i < ${#_queries[@]}; i++))
           do
             if ((i))
             then
@@ -19932,7 +19932,7 @@ HEREDOC
         local _url_path="${_notebook_name}:"
 
         local i=
-        for ((i=0; i < "${#_selector_folders[@]}"; i++))
+        for ((i=0; i < ${#_selector_folders[@]}; i++))
         do
           _url_path+="${_selector_folder_ids[i]:-}/"
 
@@ -20503,7 +20503,7 @@ HEREDOC
     local _subcommand_options=("${@:-}")
 
     local i=
-    for ((i=0; i < "${#_subcommand_options[@]}"; i++))
+    for ((i=0; i < ${#_subcommand_options[@]}; i++))
     do
       if [[   "${_subcommand_options[i]}"           =~ \--  ]] &&
          [[ ! "${_subcommand_options[$((i+1))]:--}" =~ ^-   ]]
@@ -21313,7 +21313,7 @@ HEREDOC
   fi
 
   local i=
-  for ((i=0; i < "${#_subcommand_options[@]}"; i++))
+  for ((i=0; i < ${#_subcommand_options[@]}; i++))
   do
     [[ -z "${#_subcommand_options[i]}" ]] && continue
 
@@ -22979,7 +22979,7 @@ HEREDOC
         printf "Remote branches:\\n\\n"
 
         local i=
-        for ((i=0; i < "${#_remote_branches[@]}"; i++))
+        for ((i=0; i < ${#_remote_branches[@]}; i++))
         do
           printf "%s %s\\n"                       \
             "$(_color_brackets "$((i+1))")"       \
