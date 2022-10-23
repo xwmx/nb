@@ -1135,7 +1135,7 @@ _NB_TEMP_DIRECTORY="$(mktemp -d)"
 # $_NB_TEMP_PIDS
 #
 # A list of PIDS that should be terminated on exit.
-export _NB_TEMP_PIDS=
+_NB_TEMP_PIDS=()
 
 # _temp()
 #
@@ -1187,11 +1187,8 @@ _temp() {
         rm -rf "${_NB_TEMP_DIRECTORY:?}"
       fi
 
-      local _pids=()
-      IFS=$'\n' read -ra _pids <<< "${_NB_TEMP_PIDS:-}"
-
       local __pid=
-      for   __pid in "${_pids[@]:-}"
+      for   __pid in "${_NB_TEMP_PIDS[@]:-}"
       do
         [[ -n "${__pid:-}" ]] || continue
 
@@ -1239,8 +1236,7 @@ _temp() {
       printf "%s\\n" "${_temp_file_path:-}"
       ;;
     pid)
-      _NB_TEMP_PIDS+="${2:?}"
-      _NB_TEMP_PIDS+=$'\n'
+      _NB_TEMP_PIDS+=("${2:?}")
       ;;
   esac
 }
