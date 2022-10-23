@@ -1254,7 +1254,7 @@ trap 'printf "\\n"; _temp cleanup; exit 0'  SIGTERM
 #   Check the runtime environment and display an error message when running in
 #   an unsupported configuration.
 __validate_configuration() {
-  if ((${NB_BASH_UPDATE_PROMPT_ENABLED:-0}))  || {
+  if ((${NB_BASH_UPDATE_PROMPT_ENABLED:-0}))  ||  {
        [[ "${BASH_VERSINFO[0]}" -lt 4     ]]  &&
        _command_exists "brew"                 &&
        ((${NB_BASH_UPDATE_PROMPT_ENABLED:-1}))
@@ -1279,8 +1279,6 @@ __validate_configuration() {
     then
       local _color_me=
       _color_me="$(_color_muted '`')$(_color_primary "${_ME}")$(_color_muted '`')"
-      local _color_y=
-      _color_y="$(_color_muted '"')$(_color_primary "y")$(_color_muted '"')"
 
       _warn cat <<HEREDOC
 Outdated Bash Version Detected: 3.2
@@ -1290,7 +1288,7 @@ ${_color_me} works best with the current version of Bash.
 ${_color_me} can update your system to $(_color_primary "Bash 5") via Homebrew
 or you can proceed with Bash 3.2.
 
-Answering ${_color_y} will run the following command:
+Answering $(_color_primary "y") will run the following command:
 
    $(_color_primary "brew install bash")
 
@@ -1319,7 +1317,9 @@ HEREDOC
             then
               printf "\\n"
 
-              _warn printf "Updated to Bash 5!\\n\\n"
+              _warn printf "%s to %s!\\n\\n"  \
+                "$(_color_primary "Updated")" \
+                "$(_color_primary "Bash 5")"
             else
               printf "\\n"
 
