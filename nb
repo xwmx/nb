@@ -1375,7 +1375,7 @@ HEREDOC
       done
     fi
   fi
-}; __validate_configuration
+}; __validate_configuration "${@:-}"
 
 ###############################################################################
 # Helpers: Group 1                                             Helpers: Group 1
@@ -9674,7 +9674,7 @@ _main() {
       if [[ ! -e "${NB_DIR}"            ]] ||
          [[ ! -e "${NB_NOTEBOOK_PATH}"  ]]
       then
-        _init
+        _init "${@:-}"
 
         _ls || true # returns 0 due to empty repository.
 
