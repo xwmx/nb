@@ -1878,11 +1878,11 @@ _get_content() {
         if [[ "${__line}" =~ ^([[:space:]]*#[[:space:]]+)   ]] &&
            ! ((_in_code_block))
         then # line starts with an atx-style H1
-          _title="${__line#"${BASH_REMATCH[1]}"}"
+          _title="${__line#"${BASH_REMATCH[1]:-}"}"
 
           if [[ "${_title}" =~ ([[:space:]]+#[[:space:]]*)$ ]]
           then
-            _title="${_title%"${BASH_REMATCH[1]}"}"
+            _title="${_title%"${BASH_REMATCH[1]:-}"}"
           fi
 
           # `sed` alternative
