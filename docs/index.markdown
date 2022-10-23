@@ -245,7 +245,7 @@ Also supported for various enhancements:
 #### macOS / Homebrew
 
 ```bash
-brew install nb
+brew install xwmx/taps/nb
 ```
 
 Installing `nb` with Homebrew also installs
