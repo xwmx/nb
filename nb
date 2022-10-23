@@ -8967,7 +8967,7 @@ _alias_subcommand "subcommands" "commands"
 # $NB_PLUGIN_SUBCOMMANDS
 #
 # The list of subcommands exposed by plugins.
-export NB_PLUGIN_SUBCOMMANDS=()
+NB_PLUGIN_SUBCOMMANDS=()
 
 # User defined plugins can be installed in the $NB_DIR/.plugins directory.
 # Plugins have a .nb-plugin or .nb-theme extension and are written in a
