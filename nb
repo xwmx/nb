@@ -58,6 +58,9 @@
 #
 # More Information:
 #   https://github.com/xwmx/bash-boilerplate#bash-strict-mode
+#   https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html
+#   https://www.gnu.org/software/bash/manual/html_node/The-Shopt-Builtin.html
+#   https://tldp.org/LDP/abs/html/options.html
 ###############################################################################
 
 set -o errexit
@@ -66,6 +69,8 @@ set -o nounset
 set -o pipefail
 
 set +o noclobber
+
+shopt -s extglob
 
 IFS=$'\n\t'
 
@@ -1488,8 +1493,12 @@ _alias_subcommand() {
     return 1
   fi
 
+  shopt -u extglob
+
   eval "_describe_${_alias}() { _describe_${_subcommand}  \"\${@:-}\"; }"
   eval "_${_alias}()          { _${_subcommand}           \"\${@:-}\"; }"
+
+  shopt -s extglob
 }
 
 # _file_is_archive()
