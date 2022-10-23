@@ -1254,15 +1254,15 @@ trap 'printf "\\n"; _temp cleanup; exit 0'  SIGTERM
 #   Check the runtime environment and display an error message when running in
 #   an unsupported configuration.
 __validate_configuration() {
-  if ((${NB_BASH_UPDATE_PROMPT_ENABLED:-0}))  ||  {
-       [[ "${BASH_VERSINFO[0]}" -lt 4     ]]  &&
-       _command_exists "brew"                 &&
+  if ((${NB_BASH_UPDATE_PROMPT_ENABLED:-0}))        ||  {
+       [[ "${BASH_VERSINFO[0]:-999999999}" -lt 4 ]] &&
+       _command_exists "brew"                       &&
        ((${NB_BASH_UPDATE_PROMPT_ENABLED:-1}))
      }
   then
     local _config_file_path="${NB_DIR}/.nb-bash-3-enabled"
 
-    if [[ -e "${_config_file_path}"       ]]
+    if [[ -e "${_config_file_path}"     ]]
     then
       local _config_file_version=
       _config_file_version="$(head -n 1 "${_config_file_path:-}")"
@@ -1274,7 +1274,7 @@ __validate_configuration() {
       fi
     fi
 
-    if [[ ! -e "${_config_file_path:-}"   ]]  &&
+    if [[ ! -e "${_config_file_path:-}" ]]  &&
        ((${NB_BASH_UPDATE_PROMPT_ENABLED:-1}))
     then
       local _color_me=
