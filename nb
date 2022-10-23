@@ -1280,19 +1280,22 @@ __validate_configuration() {
       local _color_me=
       _color_me="$(_color_muted '`')$(_color_primary "${_ME}")$(_color_muted '`')"
 
-      _warn cat <<HEREDOC
-Outdated Bash Version Detected: 3.2
+      {
+        printf "Update Bash\\n"
+        printf "%s\\n" "$(_color_muted  "-------------")"
 
+        cat <<HEREDOC
 ${_color_me} works best with the current version of Bash.
 
-${_color_me} can update your system to $(_color_primary "Bash 5") via Homebrew
-or you can proceed with Bash 3.2.
+${_color_me} can $(_color_primary "update") your system to $(_color_primary "Bash 5") via Homebrew
+or you can proceed with $(_color_muted "Bash 3.2").
 
-Answering $(_color_primary "y") will run the following command:
+Answering $(_color_primary "y") or $(_color_primary "yes") will run the following command:
 
    $(_color_primary "brew install bash")
 
 HEREDOC
+      } | _warn printf "%s\\n" "$(cat)"
 
       while true
       do
@@ -1303,8 +1306,10 @@ HEREDOC
         then
           __yn="y"
         else
-          IFS='' read -r -e -d $'\n' -p \
-"$(_color_primary "Update to Bash 5?")  $(_color_brackets "y/N") " __yn
+          printf "%s\\n" "$(_color_muted "------------------------")"
+
+          IFS='' read -r -e -d $'\n' -p   \
+"$(_color_primary "Update") to Bash 5?  $(_color_brackets "y/N") " __yn
         fi
 
         case "${__yn}" in
