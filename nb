@@ -1293,7 +1293,6 @@ or you can proceed with $(_color_muted "Bash 3.2").
 Answering $(_color_primary "y") or $(_color_primary "yes") will run the following command:
 
    $(_color_primary "brew install bash")
-
 HEREDOC
       } | _warn printf "%s\\n" "$(cat)"
 
@@ -1322,9 +1321,15 @@ HEREDOC
             then
               printf "\\n"
 
-              _warn printf "%s to %s!\\n\\n"  \
-                "$(_color_primary "Updated")" \
-                "$(_color_primary "Bash 5")"
+              {
+                printf "%s\\n"    "$(_color_muted  "------------------")"
+                printf "  %s to %s!\\n"         \
+                  "$(_color_primary "Updated")" \
+                  "$(_color_primary "Bash 5")"
+                printf "  %s\\n"  "$(_color_muted  "------------------")"
+              } | _warn printf "%s\\n" "$(cat)"
+
+              printf "\\n"
             else
               printf "\\n"
 
@@ -1348,7 +1353,13 @@ HEREDOC
 
             printf "\\n"
 
-            _warn printf "Bash 3.2 support enabled.\\n\\n"
+            {
+              printf "%s\\n" "$(_color_muted    "-------------------------")"
+              printf                          "  Bash 3.2 support enabled.\\n"
+              printf "%s\\n" "$(_color_muted  "  -------------------------")"
+            } | _warn printf "%s\\n" "$(cat)"
+
+            printf "\\n"
 
             break
             ;;
