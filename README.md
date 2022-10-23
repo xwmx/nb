@@ -1785,7 +1785,7 @@ to a [`## Related`](#-related) section using the
 option:
 
 ```bash
-nb https://example.com --related example:123 -r https://example.com
+nb https://example.com --related example:123 -r https://example.net
 ```
 ```markdown
 # Example Title (example.com)
@@ -1798,7 +1798,7 @@ Example description.
 
 ## Related
 
-- [[sample:123]]
+- [[example:123]]
 - <https://example.net>
 
 ## Content
