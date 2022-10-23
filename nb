@@ -1250,22 +1250,30 @@ trap 'printf "\\n"; _temp cleanup; exit 0'  SIGTERM
 # Configuration Validation
 ###############################################################################
 
-# __validate_configuration()
+# _validate_configuration()
 #
 # Usage:
-#   __validate_configuration
+#   _validate_configuration
 #
 # Description:
 #   Check the runtime environment and display an error message when running in
 #   an unsupported configuration.
-__validate_configuration() {
-  if ((${NB_BASH_UPDATE_PROMPT_ENABLED:-0}))        ||  {
-       [[ "${BASH_VERSINFO[0]:-999999999}" -lt 4 ]] &&
-       _command_exists "brew"                       &&
-       ((${NB_BASH_UPDATE_PROMPT_ENABLED:-1}))      &&
-       [[ -t 1 ]] # command initiated by user
+_validate_configuration() {
+  if { ((${NB_BASH_UPDATE_PROMPT_ENABLED:-0}))        ||
+       {
+         [[ "${BASH_VERSINFO[0]:-999999999}" -lt 4 ]] &&
+         ((${NB_BASH_UPDATE_PROMPT_ENABLED:-1}))
+       }
+     }                                                &&
+     _command_exists "brew"                           &&
+     {
+       # command initiated by user
+       [[ -t 1                          ]]            ||
+       ((${NB_TEST_MOCK_TTY:-0}))
      }
   then
+    # _warn echo "${NB_BASH_UPDATE_PROMPT_ENABLED:-}"
+
     local _config_file_path="${NB_DIR}/.nb-bash-3-enabled"
 
     if [[ -e "${_config_file_path}"     ]]
@@ -1375,7 +1383,12 @@ HEREDOC
       done
     fi
   fi
-}; __validate_configuration "${@:-}"
+}
+
+if [[ -e "${NB_DIR:-}" ]]
+then
+  _validate_configuration "${@:-}"
+fi
 
 ###############################################################################
 # Helpers: Group 1                                             Helpers: Group 1
@@ -5110,11 +5123,12 @@ More Information:
 HEREDOC
   fi
 
-  _print_welcome                                    &&
-    _init_print_header                  1>/dev/null &&
-    _init_create_nb_dir                 1>/dev/null &&
-    _init_create_rc_file                1>/dev/null &&
-    _init_create_home_notebook "${@:-}"
+  _print_welcome                            &&
+    _init_print_header          1>/dev/null &&
+    _init_create_nb_dir         1>/dev/null &&
+    _init_create_rc_file        1>/dev/null &&
+    _validate_configuration     "${@:-}"    &&
+    _init_create_home_notebook  "${@:-}"
 }
 
 # list · ############################################################### · list
