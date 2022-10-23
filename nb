@@ -3254,7 +3254,7 @@ _spinner() {
 #   0 (success, true)  If the string is recognized as an email address.
 #   1 (error,  false)  if not.
 _string_is_email() {
-  [[ "${1:-}" =~ ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$ ]]
+  [[ "${1:-}" =~ ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]+$ ]]
 }
 
 # _string_is_url()
