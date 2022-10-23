@@ -25103,8 +25103,8 @@ _todo() {
 
           {
             grep --color=never          \
-              -e "\- \[[[:space:]]*\] " \
-              -e "\- \[x\] "            \
+              -e "- \[[[:space:]]*\] " \
+              -e "- \[x\] "            \
               "${__item_path:-}" || :
           } | {
             local _counter=0
