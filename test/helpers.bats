@@ -342,7 +342,7 @@ load test_helper
 
 # `_highlight_syntax_if_available()` ####################################################
 
-@test "'_highlight_syntax_if_available <path>' highlights a file at <path≥." {
+@test "'_highlight_syntax_if_available <path>' high lights a file at <path>." {
   {
     "${_NB}" init
     "${_NB}" add "example.md" --content "# Example"
