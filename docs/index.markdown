@@ -266,6 +266,14 @@ brew install xwmx/taps/nb --head
 npm install -g nb.sh
 ```
 
+`nb` is also available in
+[homebrew-core](https://github.com/Homebrew/homebrew-core) with
+macOS Bash, so installing the `bash` formula with it is recommended:
+
+```bash
+brew install nb bash
+```
+
 After `npm` installation completes, run
 `sudo "$(which nb)" completions install`
 to install Bash and Zsh completion scripts (recommended).
