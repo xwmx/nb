@@ -615,10 +615,32 @@ identifier\"\>home:2\</span\>\<span\ class=\"muted\"\>\]\</span\>\ Title\ Two\
   [[    "${status}"  -eq  0 ]]
 
   printf "%s\\n" "${output}" | grep   -q \
-    "Not found: non-matching-query"
+    "Not${_NBSP}found:${_NBSP}non-matching-query"
 
   printf "%s\\n" "${output}" | grep   -q \
     "placeholder=\"search\"${_NEWLINE}type=\"text\"${_NEWLINE}value=\"non-matching-query\">"
+}
+
+@test "'browse --container --query' with no match displays message with encoded query." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md" --title "Title One" --content "Content one."
+    "${_NB}" add "File Two.md" --title "Title Two" --content "Content abcde two."
+  }
+
+  run "${_NB}" browse --container --query "<script>alert(document.cookie)</script>"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq  0 ]]
+
+  printf "%s\\n" "${output}" | grep   -q \
+    "Not${_NBSP}found:${_NBSP}&#60;script&#62;alert&#40;document.cookie&#41;&#60;/script&#62;"
+
+  printf "%s\\n" "${output}" | grep   -q \
+    "placeholder=\"search\"${_NEWLINE}type=\"text\"${_NEWLINE}value=\"<script>alert(document.cookie)</script>\">"
 }
 
 # search form #################################################################

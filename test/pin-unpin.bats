@@ -362,7 +362,7 @@ load test_helper
 
   # prints output
 
-  [[ "${output}" =~ Pinned:\ .*[.*1.*].*\ .*File\ One.md      ]]
+  [[ "${output}" =~ Pinned:\ .*[.*1.*].*\ 📌\ .*File\ One.md    ]]
 
   # creates git commit
 
@@ -410,7 +410,7 @@ load test_helper
 
   # prints output
 
-  [[ "${output}" =~ Pinned:\ .*[.*2.*].*\ .*File\ Two.md    ]]
+  [[ "${output}" =~ Pinned:\ .*[.*2.*].*\ 📌\ .*File\ Two.md  ]]
 
   # creates git commit
 
@@ -452,13 +452,14 @@ load test_helper
     <(printf "%s\\n" "File Two.md") \
     <(cat "${NB_DIR}/home/.pindex")
 
-  [[    "$(wc -l < "${NB_DIR}/home/.pindex")"  -eq 1            ]]
-  [[ !  "$(cat "${NB_DIR}/home/.pindex")"      =~  File\ One.md ]]
-  [[    "$(cat "${NB_DIR}/home/.pindex")"      =~  File\ Two.md ]]
+  [[    "$(wc -l < "${NB_DIR}/home/.pindex")"  -eq 1              ]]
+  [[ !  "$(cat "${NB_DIR}/home/.pindex")"      =~  File\ One.md   ]]
+  [[    "$(cat "${NB_DIR}/home/.pindex")"      =~  File\ Two.md   ]]
 
   # prints output
 
-  [[    "${output}" =~ Unpinned:\ .*[.*1.*].*\ .*File\ One.md ]]
+  [[    "${output}" =~ Unpinned:\ .*[.*1.*].*\ .*File\ One.md     ]]
+  [[ !  "${output}" =~ Unpinned:\ .*[.*1.*].*\ 📌\ .*File\ One.md ]]
 
   # creates git commit
 
@@ -532,7 +533,7 @@ load test_helper
 
   # prints output
 
-  [[ "${output}" =~ Pinned:\ .*[.*1.*].*\ .*File\ One.md      ]]
+  [[ "${output}" =~ Pinned:\ .*[.*1.*].*\ 📌\ .*File\ One.md    ]]
 
   # creates git commit
 
@@ -588,7 +589,7 @@ load test_helper
 
   # prints output
 
-  [[ "${output}" =~ Pinned:\ .*[.*1.*].*\ .*File\ One.md      ]]
+  [[ "${output}" =~ Pinned:\ .*[.*1.*].*\ 📌\ .*File\ One.md    ]]
 
   # creates git commit
 
@@ -644,7 +645,7 @@ load test_helper
 
   # prints output
 
-  [[ "${output}" =~ Pinned:\ .*[.*1.*].*\ .*File\ One.md      ]]
+  [[ "${output}" =~ Pinned:\ .*[.*1.*].*\ 📌\ .*File\ One.md    ]]
 
   # creates git commit
 
@@ -667,7 +668,7 @@ load test_helper
 
   [[ "${lines[0]}"  =~  \.*[.*1.*].*\ 📌\ Title\ One  ]]
   [[ "${lines[1]}"  =~  \.*[.*3.*].*\ Title\ Three    ]]
-  [[ "${lines[2]}"  =~  \.*[.*2.*].*\ Title\ Two      ]] 
+  [[ "${lines[2]}"  =~  \.*[.*2.*].*\ Title\ Two      ]]
 }
 
 @test "'pin <folder-name>' adds a folder to the parent folder's .pindex." {
@@ -701,7 +702,7 @@ load test_helper
 
   # prints output
 
-  [[ "${output}" =~ Pinned:\ .*[.*3.*].*\ .*Example\ Folder     ]]
+  [[ "${output}" =~ Pinned:\ .*[.*3.*].*\ 📌\ .*Example\ Folder   ]]
 
   # creates git commit
 
@@ -759,7 +760,7 @@ load test_helper
 
   # prints output
 
-  [[ "${output}" =~ Pinned:\ .*[.*3.*].*\ .*Example\ Folder       ]]
+  [[ "${output}" =~ Pinned:\ .*[.*3.*].*\ 📌\ .*Example\ Folder     ]]
 
   # creates git commit
 
@@ -816,7 +817,7 @@ load test_helper
 
   # prints output
 
-  [[ "${output}" =~ Pinned:\ .*[.*Example\ Folder/1.*].*\ .*File\ One.md  ]]
+  [[ "${output}" =~ Pinned:\ .*[.*Example\ Folder/1.*].*\ 📌\ .*File\ One.md  ]]
 
   # creates git commit
 
@@ -878,12 +879,12 @@ load test_helper
     <(printf "%s\\n" "File One.md") \
     <(cat "${NB_DIR}/Example Notebook/Example Folder/.pindex")
 
-  [[ "$(wc -l < "${NB_DIR}/Example Notebook/Example Folder/.pindex")"  -eq 1                      ]]
-  [[ "$(cat "${NB_DIR}/Example Notebook/Example Folder/.pindex")"      =~  ^File\ One.md$         ]]
+  [[ "$(wc -l < "${NB_DIR}/Example Notebook/Example Folder/.pindex")"  -eq 1                    ]]
+  [[ "$(cat "${NB_DIR}/Example Notebook/Example Folder/.pindex")"      =~  ^File\ One.md$       ]]
 
   # prints output
 
-  [[ "${output}" =~ Pinned:\ .*[.*Example\ Notebook:Example\ Folder/1.*].*\ .*File\ One.md  ]]
+  [[ "${output}" =~ Pinned:\ .*[.*Example\ Notebook:Example\ Folder/1.*].*\ 📌\ .*File\ One.md  ]]
 
   # creates git commit
 
@@ -961,7 +962,8 @@ load test_helper
 
   # prints output
 
-  [[ "${output}" =~ Unpinned:\ .*[.*1.*].*\ .*File\ One.md ]]
+  [[    "${output}" =~ Unpinned:\ .*[.*1.*].*\ .*File\ One.md     ]]
+  [[ !  "${output}" =~ Unpinned:\ .*[.*1.*].*\ 📌\ .*File\ One.md ]]
 
   # creates git commit
 
@@ -1033,7 +1035,8 @@ load test_helper
 
   # prints output
 
-  [[ "${output}" =~ Unpinned:\ .*[.*1.*].*\ .*File\ One.md ]]
+  [[    "${output}" =~ Unpinned:\ .*[.*1.*].*\ .*File\ One.md     ]]
+  [[ !  "${output}" =~ Unpinned:\ .*[.*1.*].*\ 📌\ .*File\ One.md ]]
 
   # creates git commit
 
@@ -1104,7 +1107,8 @@ load test_helper
 
   # prints output
 
-  [[ "${output}" =~ Unpinned:\ .*[.*1.*].*\ .*File\ One.md ]]
+  [[    "${output}" =~ Unpinned:\ .*[.*1.*].*\ .*File\ One.md     ]]
+  [[ !  "${output}" =~ Unpinned:\ .*[.*1.*].*\ 📌\ .*File\ One.md ]]
 
   # creates git commit
 
@@ -1175,7 +1179,8 @@ load test_helper
 
   # prints output
 
-  [[ "${output}" =~ Unpinned:\ .*[.*1.*].*\ .*File\ One.md ]]
+  [[    "${output}" =~ Unpinned:\ .*[.*1.*].*\ .*File\ One.md     ]]
+  [[ !  "${output}" =~ Unpinned:\ .*[.*1.*].*\ 📌\ .*File\ One.md ]]
 
   # creates git commit
 
@@ -1249,7 +1254,8 @@ load test_helper
 
   # prints output
 
-  [[ "${output}" =~ Unpinned:\ .*[.*3.*].*\ .*Example\ Folder ]]
+  [[    "${output}" =~ Unpinned:\ .*[.*3.*].*\ .*Example\ Folder      ]]
+  [[ !  "${output}" =~ Unpinned:\ .*[.*3.*].*\ 📌\ .*Example\ Folder  ]]
 
   # creates git commit
 
@@ -1324,7 +1330,8 @@ load test_helper
 
   # prints output
 
-  [[ "${output}" =~ Unpinned:\ .*[.*3.*].*\ .*Example\ Folder ]]
+  [[    "${output}" =~ Unpinned:\ .*[.*3.*].*\ .*Example\ Folder      ]]
+  [[ !  "${output}" =~ Unpinned:\ .*[.*3.*].*\ 📌\ .*Example\ Folder  ]]
 
   # creates git commit
 
@@ -1396,7 +1403,8 @@ load test_helper
 
   # prints output
 
-  [[ "${output}" =~ Unpinned:\ .*[.*Example\ Folder/1.*].*\ .*Example\ Folder/File\ One.md ]]
+  [[    "${output}" =~ Unpinned:\ .*[.*Example\ Folder/1.*].*\ .*Example\ Folder/File\ One.md     ]]
+  [[ !  "${output}" =~ Unpinned:\ .*[.*Example\ Folder/1.*].*\ 📌\ .*Example\ Folder/File\ One.md ]]
 
   # creates git commit
 
@@ -1472,8 +1480,9 @@ load test_helper
 
   # prints output
 
-  [[ "${lines[0]}" =~ Unpinned:\ .*[.*Example\ Notebook:Example\ Folder/1.*].*\ .*Example ]]
-  [[ "${lines[0]}" =~ Example\ Notebook:Example\ Folder/File\ One.md                      ]]
+  [[    "${lines[0]}" =~ Unpinned:\ .*[.*Example\ Notebook:Example\ Folder/1.*].*\ .*Example      ]]
+  [[    "${lines[0]}" =~ Example\ Notebook:Example\ Folder/File\ One.md                           ]]
+  [[ !  "${lines[0]}" =~ Unpinned:\ .*[.*Example\ Notebook:Example\ Folder/1.*].*\ 📌\ .*Example  ]]
 
   # creates git commit
 

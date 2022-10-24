@@ -632,7 +632,7 @@ abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"  ==  0         ]]
+  [[ "${status}"  ==  0               ]]
 
   [[ "${output}"  =~  \
 \<nav\ class=\"header-crumbs\"\>\<strong\>\<a.*\ href=\"//localhost:6789/\?--columns=.*\&--limit=.*\"\>\<span\ class=\"muted\"\>❯\</span\>nb\</a\>  ]]
@@ -641,7 +641,7 @@ abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
   [[ "${output}"  =~  \
 \<a.*\ href=\"//localhost:6789/home:1/\?--columns.*\&--limit=.*\"\>Example\ Folder\</a\>\ .*/.*\</nav\> ]]
 
-  [[ "${output}"  =~  0\ items. ]]
+  [[ "${output}"  =~  0${_NBSP}items. ]]
 }
 
 @test "'browse <notebook>:' with empty notebook prints message and header." {
@@ -658,14 +658,14 @@ abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"  ==  0         ]]
+  [[ "${status}"  ==  0               ]]
 
   [[ "${output}"  =~  \
 \<nav\ class=\"header-crumbs\"\>\<strong\>\<a.*\ href=\"//localhost:6789/\?--columns.*\&--limit=.*\"\>\<span\ class=\"muted\"\>❯\</span\>nb\</a\> ]]
   [[ "${output}"  =~  \
 .*·.*\ \<a.*\ href=\"//localhost:6789/Example%20Notebook:\?--columns=.*\&--limit=.*\"\>Example\ Notebook\</a\>.*\</nav\>  ]]
 
-  [[ "${output}"  =~  0\ items. ]]
+  [[ "${output}"  =~  0${_NBSP}items. ]]
 }
 
 # notebooks and folder (containers) ###########################################

@@ -3,6 +3,45 @@
 
 load test_helper
 
+# edge cases ##################################################################
+
+@test "'todo add check <multi-word> <description>' exits with 0, creates new todo with 'check <multi-word> <description>' as title, creates commit." {
+
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" todo add check example multi-word description.
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"      -eq 0                   ]]
+
+
+  _files=($(ls "${NB_DIR}/home/"))
+
+  printf "\${_files[*]}: '%s'\\n" "${_files[*]:-}"
+
+  [[ "${#_files[@]}"  -eq 1                   ]]
+  [[ "${_files[0]}"   =~  ^[0-9]+\.todo\.md$  ]]
+
+  cat "${NB_DIR}/home/${_files[0]}"
+
+  diff                                        \
+    <(cat "${NB_DIR}/home/${_files[0]}")      \
+    <(printf "# [ ] check example multi-word description.\\n")
+
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git -C "${NB_DIR}/home" log | grep -q '\[nb\] Add'
+
+  [[ "${output}"      =~  \
+Added:\ .*\[.*1.*\].*\ ✔️\ \ .*[0-9]+\.todo\.md.*\ \".*\[\ \].*\ check\ example\ multi-word\ description\.\"  ]]
+}
+
 # `add todo` ##################################################################
 
 @test "'add todo <title> --related <URL> --related <selector> --tag <tag>' exits with 0, creates new todo with <title> as title, related items, and tag, creates commit." {

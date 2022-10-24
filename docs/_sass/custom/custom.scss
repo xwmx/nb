@@ -41,6 +41,10 @@ a:not([class]):hover {
   background:               none;
 }
 
+a:not([class]) {
+  text-decoration:          none;
+}
+
 a:not([class]):hover {
   text-decoration:          underline;
 }
@@ -145,6 +149,11 @@ input[type='text'] {
   background-color:         $body-background-color;
 }
 
+p {
+  margin-bottom:            1rem;
+  margin-top:               0;
+}
+
 pre {
   font-size:                1.2rem;
   line-height:              1rem;
@@ -247,10 +256,10 @@ th {
 } // .highlight
 
 .main-content {
-  padding:                  1rem 2rem;
+  padding:                  1rem 2rem 0;
 
   @media (min-width: 50rem) {
-    padding:                1rem 2.5rem;
+    padding:                1rem 2.5rem 0;
   }
 
   a {

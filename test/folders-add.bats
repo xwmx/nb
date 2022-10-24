@@ -554,6 +554,106 @@ load test_helper
   [[ "${output}" =~ Example\ Folder/example-filename.md ]]
 }
 
+@test "'add <folder>/ <filename> --folder-prompt' (slash) with affirmative prompt response creates new file with <filename> in new <folder>." {
+  {
+    "${_NB}" init
+
+    [[ ! -e "${NB_DIR:-}/home/Example Folder"                     ]]
+    [[ ! -e "${NB_DIR:-}/home/Example Folder/.index"              ]]
+    [[ ! -e "${NB_DIR:-}/home/Example Folder/example-filename.md" ]]
+  }
+
+  run "${_NB}" add Example\ Folder/ "example-filename.md" --folder-prompt <<< "y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0 ]]
+
+  # Creates folder and files:
+
+  [[   -e "${NB_DIR:-}/home/Example Folder"                     ]]
+  [[   -e "${NB_DIR:-}/home/Example Folder/.index"              ]]
+  [[   -e "${NB_DIR:-}/home/Example Folder/example-filename.md" ]]
+
+  # Commits to git:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)"   ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add: Example Folder/example-filename.md'
+
+  # Adds to index:
+
+  [[ -e "${NB_DIR}/home/.index"                 ]]
+  [[ -e "${NB_DIR}/home/Example Folder/.index"  ]]
+
+  diff                      \
+    <(ls "${NB_DIR}/home")  \
+    <(cat "${NB_DIR}/home/.index")
+
+  diff                                    \
+    <(ls "${NB_DIR}/home/Example Folder") \
+    <(cat "${NB_DIR}/home/Example Folder/.index")
+
+  # Prints output:
+
+  [[ "${output}" =~ Added:                              ]]
+  [[ "${output}" =~ Example\ Folder/example-filename.md ]]
+}
+
+@test "'add <folder>/ <filename> --folder-prompt' (slash) with negative prompt response creates new file with <filename> in new <folder>." {
+  {
+    "${_NB}" init
+
+    [[ ! -e "${NB_DIR:-}/home/Example Folder"                     ]]
+    [[ ! -e "${NB_DIR:-}/home/Example Folder/.index"              ]]
+    [[ ! -e "${NB_DIR:-}/home/Example Folder/example-filename.md" ]]
+  }
+
+  run "${_NB}" add Example\ Folder/ "example-filename.md" --folder-prompt <<< "n${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0 ]]
+
+  # Does not create folder and files:
+
+  [[ ! -e "${NB_DIR:-}/home/Example Folder"                     ]]
+  [[ ! -e "${NB_DIR:-}/home/Example Folder/.index"              ]]
+  [[ ! -e "${NB_DIR:-}/home/Example Folder/example-filename.md" ]]
+
+  # Does not commit to git:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git -C "${NB_DIR}/home" status --porcelain)"   ]]
+  do
+    sleep 1
+  done
+  git log | grep -v -q '\[nb\] Add: Example Folder/example-filename.md'
+
+  # Does not add to index:
+
+  [[    -e "${NB_DIR}/home/.index"                    ]]
+  [[ !  -e "${NB_DIR}/home/Example Folder/.index"     ]]
+
+  diff                      \
+    <(ls "${NB_DIR}/home")  \
+    <(cat "${NB_DIR}/home/.index")
+
+  diff                                    \
+    <(ls "${NB_DIR}/home/Example Folder") \
+    <(cat "${NB_DIR}/home/Example Folder/.index")
+
+  # Prints output:
+
+  [[ "${output}" =~ Creating\ new\ folder:\ .*Example\ Folder ]]
+  [[ "${output}" =~ Exiting\.\.\.                             ]]
+}
+
 @test "'add <name-1> <name-2> --type folder' (no slash) creates new folder with <name-1>." {
   {
     "${_NB}" init

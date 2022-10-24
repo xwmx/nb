@@ -28,15 +28,6 @@ disable=SC2002
 # https://github.com/koalaman/shellcheck/wiki/SC2015
 disable=SC2015
 
-# Disable SC2030 and SC2031
-#
-# These are being triggered by simple variable references in conditionals in
-# subshells with ShellCheck 0.7.2. TODO: Resolve.
-#
-# https://github.com/koalaman/shellcheck/wiki/SC2030
-# https://github.com/koalaman/shellcheck/wiki/SC2031
-disable=SC2030,SC2031
-
 # Disable SC2088
 #
 # "${HOME}" is preferred in this project, so tildes in quotes are intended as
@@ -52,7 +43,7 @@ disable=SC2088
 # without arguments.
 #
 # https://github.com/koalaman/shellcheck/wiki/SC2120
-disable=SC2120
+# disable=SC2120
 
 # Disable SC2206 and SC2207
 #

@@ -4,21 +4,26 @@ title: nb · command line and local web plain text note-taking, bookmarking, arc
 permalink: /
 ---
 
-<p align="center">
+<p align="center"></p><!-- spacer -->
+
+<div align="center">
   <img  src="https://raw.githubusercontent.com/xwmx/nb/master/docs/assets/images/nb.png"
         alt="nb"
         width="200">
-</p>
+</div>
 
-<p align="center">
+<p align="center"></p><!-- spacer -->
+
+<div align="center">
   <a href="https://github.com/xwmx/nb/actions" rel="nofollow">
     <img  src="https://img.shields.io/github/workflow/status/xwmx/nb/nb%20%C2%B7%20Test%20Suite"
           alt="Build Status"
           style="max-width:100%;">
   </a>
-</p>
+</div>
 
-<br>
+<div align="center">&nbsp;</div><!-- spacer -->
+<br/>
 
 `nb` is a command line and local web
 note‑taking, bookmarking, archiving,
@@ -60,11 +65,11 @@ including macOS and Windows via WSL.
 [Optional dependencies](#optional) can be installed to enhance functionality,
 but `nb` works great without them.
 
-<p align="center">
+<div align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/nb-theme-nb-home.png"
         alt="home"
         width="450">
-</p>
+</div>
 
 `nb` is also a powerful [bookmarking](#-bookmarks) system featuring:
 
@@ -84,11 +89,11 @@ and saved
 into normal Markdown documents made for humans,
 so bookmarks are easy to view and edit just like any other note.
 
-<p align="center">
+<div align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/gui-terminal-browse.png"
         alt="nb browse"
         width="500">
-</p>
+</div>
 
 `nb` uses [Git](https://git-scm.com/) in the background to
 automatically record changes and sync notebooks with remote repositories.
@@ -96,11 +101,11 @@ automatically record changes and sync notebooks with remote repositories.
 sync notebooks using a general purpose syncing utility like Dropbox
 so notes can be edited in other apps on any device.
 
-<p align="center">
+<div align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/terminal-empty.png"
         alt="nb list empty"
         width="450">
-</p>
+</div>
 
 `nb` is designed to be portable, future-focused, and vendor independent,
 providing a full-featured and intuitive experience within
@@ -118,30 +123,47 @@ or dozens of notebooks containing thousands of notes, bookmarks, and other items
 `nb` can be used a little, a lot, once in a while, or for just a subset of features.
 `nb` is flexible.
 
-<p align="center">
+<div align="center">&nbsp;</div><!-- spacer -->
+
+<div align="center">
+  <sub>
   📝
   🔖
-  🔒
   🔍
-  📔
-</p>
+  🌍
+  🔒
+  ✅
+  🔄
+  🎨
+  📚
+  📌
+  📂
+  🌄
+  </sub>
+</div>
 
-<br/>
+<p align="center">&nbsp;</p><!-- spacer -->
 
-<h1 align="center" id="nb"><code>nb</code></h1>
+<div align="center">
+  <h1 align="center" id="nb"><code>nb</code></h1>
+</div>
 
-<p align="center">
+<div align="center">
   <a href="#installation">Installation</a>&nbsp;·
   <a href="#overview">Overview</a>&nbsp;&nbsp;
-</p>
+</div>
 
-<p align="center">
+<p align="center"></p><!-- spacer -->
+
+<div align="center">
   <a href="#help">Help</a>
-</p>
+</div>
 
-<p align="center">
+<p align="center"></p><!-- spacer -->
+
+<div align="center">
   <a href="#top">&nbsp;↑&nbsp;</a>
-</p>
+</div>
 
 ### Installation
 
@@ -187,18 +209,20 @@ Also supported for various enhancements:
 
 [Ack](https://beyondgrep.com/),
 [`afplay`](https://ss64.com/osx/afplay.html),
-[Ag - The Silver Searcher](https://github.com/ggreer/the_silver_searcher),
+[The Silver Searcher (`ag`)](https://github.com/ggreer/the_silver_searcher),
 [`catimg`](https://github.com/posva/catimg),
+[Chafa](https://github.com/hpjansson/chafa),
 [`exa`](https://github.com/ogham/exa),
 [`ffplay`](https://ffmpeg.org/ffplay.html),
 [ImageMagick](https://imagemagick.org/),
 [GnuPG](https://en.wikipedia.org/wiki/GNU_Privacy_Guard),
 [`highlight`](http://www.andre-simon.de/doku/highlight/en/highlight.php),
 [`imgcat`](https://www.iterm2.com/documentation-images.html),
+[`joshuto`](https://github.com/kamiyaa/joshuto),
 [kitty's `icat` kitten](https://sw.kovidgoyal.net/kitty/kittens/icat.html),
 [Links](https://en.wikipedia.org/wiki/Links_(web_browser)),
 [Lynx](https://en.wikipedia.org/wiki/Lynx_(web_browser)),
-[Midnight Commander](https://en.wikipedia.org/wiki/Midnight_Commander),
+[Midnight Commander (`mc`)](https://en.wikipedia.org/wiki/Midnight_Commander),
 [`mpg123`](https://en.wikipedia.org/wiki/Mpg123),
 [MPlayer](https://en.wikipedia.org/wiki/MPlayer),
 [ncat](https://nmap.org/ncat/),
@@ -209,19 +233,38 @@ Also supported for various enhancements:
 [Ranger](https://ranger.github.io/),
 [readability-cli](https://gitlab.com/gardenappl/readability-cli),
 [`rga` / ripgrep-all](https://github.com/phiresky/ripgrep-all),
+[`sc-im`](https://github.com/andmarti1424/sc-im),
+[`term-image`](https://github.com/AnonymouX47/term-image),
 [`termpdf.py`](https://github.com/dsanson/termpdf.py),
-[vifm](https://vifm.info/)
+[Tidy-Viewer (`tv`)](https://github.com/alexhallam/tv),
+[`timg`](https://github.com/hzeller/timg),
+[vifm](https://vifm.info/),
+[`viu`](https://github.com/atanunq/viu),
+[VisiData](https://www.visidata.org/)
 
 #### macOS / Homebrew
 
 ```bash
-brew tap xwmx/taps
-brew install nb
+brew install xwmx/taps/nb
 ```
 
 Installing `nb` with Homebrew also installs
 the recommended dependencies above
-and completion scripts for Bash and Zsh.
+and completion scripts for Bash, Zsh, and Fish.
+
+Install the latest development version from the respository with:
+
+```bash
+brew install xwmx/taps/nb --head
+```
+
+`nb` is also available in
+[homebrew-core](https://github.com/Homebrew/homebrew-core) with
+macOS Bash, so installing the `bash` formula with it is recommended:
+
+```bash
+brew install nb bash
+```
 
 #### Ubuntu, Windows WSL, and others
 
@@ -308,6 +351,14 @@ To install with [bpkg](https://github.com/bpkg/bpkg):
 bpkg install xwmx/nb
 ```
 
+##### basher
+
+To install with [basher](https://www.basher.it/):
+
+```bash
+basher install xwmx/nb
+```
+
 #### Tab Completion
 
 Bash, Fish, and Zsh tab completion should be enabled
@@ -327,7 +378,7 @@ the [`nb update`](#update) subcommand.
 
 ## Overview
 
-<p align="center">
+<div align="center">
   <a href="#-notes"><code>📝</code>&nbsp;Notes</a>&nbsp;·
   <a href="#adding">Adding</a>&nbsp;·
   <a href="#listing--filtering">Listing</a>&nbsp;·
@@ -360,11 +411,15 @@ the [`nb update`](#update) subcommand.
   <a href="#help">Help</a>&nbsp;·
   <a href="#specifications">Specifications</a>&nbsp;·
   <a href="#tests">Tests</a>
-</p>
+</div>
 
-<p align="center">
+<p align="center"></p><!-- spacer -->
+
+<div align="center">
   <a href="#nb">&nbsp;↑&nbsp;</a>
-</p>
+</div>
+
+<p align="center"></p><!-- spacer -->
 
 To get started, simply run:
 
@@ -726,11 +781,11 @@ For more information, see [Browsing](#-browsing).
 
 To list notes and notebooks, run [`nb ls`](#ls) (shortcut alias: `nb`):
 
-<p align="center">
+<div align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/nb-theme-utility-home.png"
         alt="nb ls"
         width="450">
-</p>
+</div>
 
 Notebooks are listed above the line,
 with the current notebook highlighted and/or underlined,
@@ -856,9 +911,9 @@ This is an example excerpt.
 This is an example excerpt.
 
 More example content:
+
 - one
 - two
-- three
 ```
 
 Several classes of file types are represented with emoji
@@ -956,9 +1011,9 @@ This is an example excerpt.
 This is an example excerpt.
 
 More example content:
+
 - one
 - two
-- three
 
 ❯ nb --sort
 [1] Demo Title
@@ -1343,32 +1398,47 @@ nb show example.md --render
 ```
 
 [`nb show`](#show) also supports previewing other file types in the terminal,
-depending on the tools available in the environment.
+depending on the tools available in the environment. To prefer specific tools
+for certain file types, `nb` provides configuration variables that can be
+set in your `~/.nbrc` file,
+which can be opened in your editor with [`nb settings edit`](#settings).
+
 Supported file types and tools include:
 
 - PDF files:
   - [`termpdf.py`](https://github.com/dsanson/termpdf.py)
     with [kitty](https://sw.kovidgoyal.net/kitty/)
   - [`pdftotext`](https://en.wikipedia.org/wiki/Pdftotext)
-- Audio files:
+- Audio files (`$NB_AUDIO_TOOL`):
   - [`mplayer`](https://en.wikipedia.org/wiki/MPlayer)
   - [`afplay`](https://ss64.com/osx/afplay.html)
   - [`mpg123`](https://en.wikipedia.org/wiki/Mpg123)
   - [`ffplay`](https://ffmpeg.org/ffplay.html)
-- [Images](#-images):
+- [Images (`$NB_IMAGE_TOOL`)](#-images):
+  - [`catimg`](https://github.com/posva/catimg)
+  - [Chafa](https://github.com/hpjansson/chafa)
   - [ImageMagick](https://imagemagick.org/) with a terminal that
     supports [sixels](https://en.wikipedia.org/wiki/Sixel)
   - [`imgcat`](https://www.iterm2.com/documentation-images.html) with
     [iTerm2](https://www.iterm2.com/)
   - [kitty's `icat` kitten](https://sw.kovidgoyal.net/kitty/kittens/icat.html)
-  - [`catimg`](https://github.com/posva/catimg)
-- Folders / Directories:
-  - [`ranger`](https://ranger.github.io/)
+  - [`term-image`](https://github.com/AnonymouX47/term-image)
+  - [`timg`](https://github.com/hzeller/timg)
+  - [`viu`](https://github.com/atanunq/viu)
+- Folders, Directories, Notebooks (`$NB_DIRECTORY_TOOL`):
+  - [`exa`](https://github.com/ogham/exa)
+  - [`joshuto`](https://github.com/kamiyaa/joshuto)
   - [Midnight Commander (`mc`)](https://en.wikipedia.org/wiki/Midnight_Commander)
+  - [`ranger`](https://ranger.github.io/)
+  - [`vifm`](https://vifm.info/)
 - Word Documents:
   - [Pandoc](https://pandoc.org/) with
     [`w3m`](https://en.wikipedia.org/wiki/W3m) or
     [`links`](https://en.wikipedia.org/wiki/Links_(web_browser))
+- Excel, CSV, TSV, and data files (`$NB_DATA_TOOL`):
+  - [VisiData](https://www.visidata.org/)
+  - [`sc-im`](https://github.com/andmarti1424/sc-im)
+  - [Tidy-Viewer (`tv`)](https://github.com/alexhallam/tv)
 - EPUB ebooks:
   - [Pandoc](https://pandoc.org/) with
     [`w3m`](https://en.wikipedia.org/wiki/W3m) or
@@ -1605,11 +1675,11 @@ For more information, see [Browsing](#-browsing).
 create, annotate, view, search, [browse](#-browsing), and manage
 collections of bookmarks.
 
-<p align="center">
+<div align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/nb-bookmarks-gui-gui-terminal.png"
         alt="nb bookmarks"
         width="450">
-</p>
+</div>
 
 Bookmarks in `nb` are stored as
 [simple structured Markdown files](#nb-markdown-bookmark-file-format)
@@ -1729,7 +1799,7 @@ to a [`## Related`](#-related) section using the
 option:
 
 ```bash
-nb https://example.com --related example:123 -r https://example.com
+nb https://example.com --related example:123 -r https://example.net
 ```
 ```markdown
 # Example Title (example.com)
@@ -1742,7 +1812,7 @@ Example description.
 
 ## Related
 
-- [[sample:123]]
+- [[example:123]]
 - <https://example.net>
 
 ## Content
@@ -1824,11 +1894,11 @@ opened.
 
 #### Listing and Filtering Bookmarks
 
-<p align="center">
+<div align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/nb-bookmarks-gui-terminal-terminal.png"
         alt="nb bookmark lists"
         width="500">
-</p>
+</div>
 
 Bookmarks are included in
 `nb`,
@@ -2459,22 +2529,22 @@ Use [`nb do`](#do) to mark tasks as done / closed:
 ```bash
 # list tasks in item 9
 ❯ nb tasks 9
-[9] ✔️ [ ] Eample todo nine.
-----------------------------
+[9] ✔️ [ ] Example todo nine.
+-----------------------------
 [9 1] [ ] Task one.
 [9 2] [ ] Task two.
 [9 3] [ ] Task three.
 
 # mark task 2 in item 9 as done / closed
 ❯ nb do 9 2
-[9] ✔️ [ ] Eample todo nine.
-----------------------------
+[9] ✔️ [ ] Example todo nine.
+-----------------------------
 Done: [9 2] [x] Task two.
 
 # list tasks in item 9
 ❯ nb tasks 9
-[9] ✔️ [ ] Eample todo nine.
-----------------------------
+[9] ✔️ [ ] Example todo nine.
+-----------------------------
 [9 1] [ ] Task one.
 [9 2] [x] Task two.
 [9 3] [ ] Task three.
@@ -2799,11 +2869,11 @@ Use [`nb browse`](#browse) (shortcut: [`nb b`](#browse)) to
 browse, view, edit, and search linked notes, bookmarks, notebooks, folders,
 and other items using terminal and GUI web browsers.
 
-<p align="center">
+<div align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/gui-gui-terminal-browse.png"
         alt="nb browse"
         width="500">
-</p>
+</div>
 
 [`nb browse`](#browse) includes an embedded, terminal-first web application
 that renders
@@ -2945,11 +3015,11 @@ arrow (`↓`) link to view or download the original file.
 
 #### `browse edit`
 
-<p align="center">
+<div align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/gui-terminal-browse-edit.png"
         alt="nb browse edit"
         width="500">
-</p>
+</div>
 
 Items in text formats can be edited within terminal and GUI web browsers using
 the `edit` link on the item page or by opening the item with
@@ -3306,12 +3376,20 @@ can be configured to display images.
 [`nb show`](#show) can display images directly in the terminal with
 supported tools and configurations, including:
 
+- [`catimg`](https://github.com/posva/catimg)
+- [Chafa](https://github.com/hpjansson/chafa)
 - [ImageMagick](https://imagemagick.org/) with a terminal that
   supports [sixels](https://en.wikipedia.org/wiki/Sixel)
 - [`imgcat`](https://www.iterm2.com/documentation-images.html) with
   [iTerm2](https://www.iterm2.com/)
 - [kitty's `icat` kitten](https://sw.kovidgoyal.net/kitty/kittens/icat.html)
-- [`catimg`](https://github.com/posva/catimg)
+- [`term-image`](https://github.com/AnonymouX47/term-image)
+- [`timg`](https://github.com/hzeller/timg)
+- [`viu`](https://github.com/atanunq/viu)
+
+A preferred image viewer tool can be set with the `$NB_IMAGE_TOOL` variable
+in your `~/.nbrc` file,
+which can be opened in your editor with [`nb settings edit`](#settings).
 
 #### Inline Images
 
@@ -3374,7 +3452,7 @@ organized in normal system directories in normal git repositories,
 | tags              | [#tags](#-tagging)                              |
 | metadata          | [front matter](#front-matter)                   |
 | cross-references  |  <a href="#-linking">[[wiki-style links]]</a>   |
-| fast note-taking  | [`nb add`](#adding) / [`nb <url>`](#-bookmarks) |
+| fast note-taking  | [`nb add`](#adding)/[`nb <url>`](#-bookmarks)   |
 
 For more information about Zettelkasten, see
 [Wikipedia](https://en.wikipedia.org/wiki/Zettelkasten).
@@ -5057,11 +5135,11 @@ viewing and editing items in text formats with
 [`nb browse --gui`](#browse---gui),
 which incorporates the color theme's primary color into the syntax theme:
 
-<p align="center">
+<div align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/nb-web-pandoc-ruby-utility.png"
         alt="nb syntax highlighting"
         width="500">
-</p>
+</div>
 
 #### Indicators
 
@@ -5628,22 +5706,24 @@ For more commands and options, run
 [`nb help`](#nb-help) or
 [`nb help <subcommand>`](#subcommands)
 
-<p align="center">
+<div align="center">
   <img  src="https://xwmx.github.io/misc/nb/images/gui-browse-themes.png"
         alt="nb browse themes"
         width="700">
-</p>
+</div>
 
 ### Help
 
-<p align="center">
+<div align="center">
   <a href="#nb-help">nb</a>&nbsp;·
   <a href="#bookmark-help">bookmark</a>&nbsp;·
   <a href="#subcommands">subcommands</a>&nbsp;·
   <a href="#plugin-help">plugins</a>
-</p>
+</div>
 
-<p align="center">
+<p align="center"></p><!-- spacer -->
+
+<div align="center">
   <a href="#add">add</a>&nbsp;·
   <a href="#archive">archive</a>&nbsp;·
   <a href="#bookmark">bookmark</a>&nbsp;·
@@ -5688,11 +5768,13 @@ For more commands and options, run
   <a href="#update">update</a>&nbsp;·
   <a href="#use">use</a>&nbsp;·
   <a href="#version">version</a>
-</p>
+</div>
 
-<p align="center">
+<p align="center"></p><!-- spacer -->
+
+<div align="center">
   <a href="#overview">&nbsp;↑&nbsp;</a>
-</p>
+</div>
 
 #### `nb help`
 
@@ -6042,7 +6124,7 @@ For more information, see: `nb help`.
 
 ### Subcommands
 
-<p align="center">
+<div align="center">
   <a href="#add">add</a>&nbsp;·
   <a href="#archive">archive</a>&nbsp;·
   <a href="#bookmark">bookmark</a>&nbsp;·
@@ -6087,11 +6169,13 @@ For more information, see: `nb help`.
   <a href="#update">update</a>&nbsp;·
   <a href="#use">use</a>&nbsp;·
   <a href="#version">version</a>
-</p>
+</div>
 
-<p align="center">
+<p align="center"></p><!-- spacer -->
+
+<div align="center">
   <a href="#overview">&nbsp;↑&nbsp;</a>
-</p>
+</div>
 
 #### `add`
 
@@ -6542,6 +6626,10 @@ Examples:
   nb 3 d
   nb d example:12
   nb example:12 d
+
+Aliases:
+  nb rm
+  nb trash
 
 Shortcut Aliases:
   nb d
@@ -7292,7 +7380,7 @@ Subcommands:
              Shortcut Alias: `o`
   peek       Open the current notebook directory or notebook <name> in the
              first tool found in the following list:
-             `ranger` [1], `mc` [2], `vifm` [3], `exa` [4], or `ls`.
+             `ranger` [1], `mc` [2], `vifm` [3], `joshuto` [4], `exa` [5], or `ls`.
              Shortcut Alias: `p`
   rename     Rename a notebook. Aliases: `move`, `mv`
   select     Set the current notebook from a colon-prefixed selector.
@@ -7306,7 +7394,8 @@ Subcommands:
     1. https://ranger.github.io/
     2. https://en.wikipedia.org/wiki/Midnight_Commander
     3. https://vifm.info/
-    4. https://github.com/ogham/exa
+    4. https://github.com/kamiyaa/joshuto
+    5. https://github.com/ogham/exa
 
 Description:
   Manage notebooks.
@@ -7399,11 +7488,14 @@ Description:
   the bookmarked page in your terminal web browser. When the note is in a text
   format or any other file type, `peek` is the equivalent of `show`. When
   used with a notebook, `peek` opens the notebook folder first tool found in
-  the following list: `ranger` [1], `mc` [2], `exa` [3], or `ls`.
+  the following list: `ranger` [1], `mc` [2], `vifm` [3], `joshuto` [4],
+  `exa` [5], or `ls`.
 
     1. https://ranger.github.io/
     2. https://en.wikipedia.org/wiki/Midnight_Commander
-    3. https://github.com/ogham/exa
+    3. https://vifm.info/
+    4. https://github.com/kamiyaa/joshuto
+    5. https://github.com/ogham/exa
 
 Read More:
   https://github.com/xwmx/nb#viewing-bookmarks
@@ -8548,18 +8640,20 @@ See Also:
   </sup>
 </p>
 
-<p align="center">
+<div align="center">
   <a href="#backlink">backlink</a>&nbsp;·
   <a href="#bump">bump</a>&nbsp;·
   <a href="#clip">clip</a>&nbsp;·
   <a href="#ebook">ebook</a>&nbsp;·
   <a href="#example">example</a>&nbsp;·
   <a href="#weather">weather</a>
-</p>
+</div>
 
-<p align="center">
+<p align="center"></p><!-- spacer -->
+
+<div align="center">
   <a href="#help">&nbsp;↑&nbsp;</a>
-</p>
+</div>
 
 #### `backlink`
 
@@ -8772,15 +8866,17 @@ Shortcut Alias:
 
 ## Specifications
 
-<p align="center">
+<div align="center">
   <a href="#nb-markdown-bookmark-file-format">Bookmark File Format</a>&nbsp;·
   <a href="#nb-markdown-todo-file-format">Todo File Format</a>&nbsp;·
   <a href="#nb-notebook-specification">Notebook Specification</a>
-</p>
+</div>
 
-<p align="center">
+<p align="center"></p><!-- spacer -->
+
+<div align="center">
   <a href="#help">&nbsp;↑&nbsp;</a>
-</p>
+</div>
 
 ### `nb` Markdown Bookmark File Format
 
@@ -9291,27 +9387,42 @@ and the [recommended dependencies](#optional),
 then run `bats test` within the project root directory. Run groups of
 tests with globbing, e.g., `bats test/browse*` and `bats test/folders*`.
 
-<p align="center">
+<div align="center">
+  <span>
   <a href="#overview">&nbsp;↑&nbsp;</a>
-</p>
+  </span>
+
+  <br/>
+</div>
 
 ---
 
-<p align="center">
+<div align="center">
+  <span>
   Copyright (c) 2015-present ·
   <a href="https://www.williammelody.com/">William Melody</a> ·
   <a href="https://github.com/xwmx/nb/blob/master/LICENSE">AGPLv3</a>
-</p>
+  </span>
 
-<p align="center">
+  <br/>
+  <br/>
+</div>
+
+<div align="center">
+  <span>
   <a href="https://xwmx.github.io/nb">xwmx.github.io/nb</a>&nbsp;·
   <a href="https://github.com/xwmx/nb">github.com/xwmx/nb</a>
-</p>
+  </span>
 
-<p align="center">
+  <br/>
+  <br/>
+</div>
+
+<div align="center">
+  <span>
   📝🔖🔒🔍📔
-</p>
+  </span>
 
-<p align="center">
-  <a href="#top">&nbsp;↑&nbsp;</a>
-</p>
+  <br/>
+  <br/>
+</div>

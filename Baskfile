@@ -73,13 +73,20 @@ g:web() {
     _exit_1 printf "Front matter not found.\\n"
   fi
 
-  cat << HEREDOC > "${_target_file:?}"
+  {
+    cat ./README.md
+  } | {
+    # remove last 6 lines
+    sed -n -e ':a' -e "1,6"'!{P;N;D;};N;ba'
+  } | {
+    cat << HEREDOC > "${_target_file:?}"
 ---
 ${_front_matter_lines[*]}
 ---
 
-$(cat ./README.md)
+$(cat)
 HEREDOC
+  }
 
   printf "Rebuilt: %s\\n" "${_target_file:?}"
 }

@@ -2,7 +2,7 @@
 
 ## Homebrew
 
-Installing via Homebrew with `brew install xwmx/taps/nb` will also
+Installing via Homebrew with `brew install nb` will also
 install the completion scripts.
 
 A one-time setup might be needed to [enable completion for all Homebrew

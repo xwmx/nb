@@ -9,10 +9,16 @@ load test_helper
     "${_NB}" init
 
     declare _global_email=
-    _global_email="$(git -C "${NB_DIR}/home" config --global user.email)"
+    _global_email="$(
+      git -C "${NB_DIR}/home" config --global user.email  ||
+      git -C "${NB_DIR}/home" config user.email           || :
+    )"
 
     declare _global_name=
-    _global_name="$(git -C "${NB_DIR}/home" config --global user.name)"
+    _global_name="$(
+      git -C "${NB_DIR}/home" config --global user.name   ||
+      git -C "${NB_DIR}/home" config user.name            || :
+    )"
 
     "${_NB}" add "Example File.md" --content "Example content."
   }
@@ -121,7 +127,7 @@ load test_helper
 @test "'show --url' with URL-less bookmark exits with 1 and prints error." {
   {
     "${_NB}" init
-    "${_NB}" add "Example File.md" --content "Example content."
+    "${_NB}" add "Example File.bookmark.md" --content "Example content."
   }
 
   run "${_NB}" show 1 --url
@@ -180,6 +186,48 @@ https://example.com
 
   [[ "${status}" -eq  0                   ]]
   [[ "${output}" ==   "${_BOOKMARK_URL}"  ]]
+}
+
+@test "'show --url' with gemini:// protocol bookmark prints bookmark URL." {
+  {
+    "${_NB}" init
+    "${_NB}" bookmark "gemini://example.com/"
+  }
+
+  run "${_NB}" show 1 --url
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq  0                         ]]
+  [[ "${output}" ==   "gemini://example.com/"   ]]
+}
+
+@test "'show --url' with whitespace around URL prints bookmark URL." {
+  {
+    "${_NB}" init
+    "${_NB}" add                                \
+      --filename  "example.bookmark.md"         \
+      --content   "$(cat <<HEREDOC
+# Example Bookmark Title (example.com)
+
+    <https://example.com>   
+
+## Content
+
+Example content.
+HEREDOC
+
+      )"
+  }
+
+  run "${_NB}" show 1 --url
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq  0                         ]]
+  [[ "${output}" ==   "https://example.com"     ]]
 }
 
 # `show <notebook>` ###########################################################
@@ -696,6 +744,24 @@ https://example.com
 
 # `show <id> --indicators` ####################################################
 
+@test "'show <id> --indicators' exits with status 0 and prints includes pinned indicator." {
+  {
+    "${_NB}" init
+    "${_NB}" add "example.bookmark.md" --content "<https://example.test>"
+    "${_NB}" pin 1
+  }
+
+  run "${_NB}" show 1 --indicators
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}" -eq 0   ]]
+  [[    "${output}" =~  📌  ]]
+  [[    "${output}" =~  🔖  ]]
+  [[ !  "${output}" =~  🔒  ]]
+}
+
 @test "'show <id> --indicators' exits with status 0 and prints bookmark indicator." {
   {
     "${_NB}" init
@@ -708,6 +774,7 @@ https://example.com
   printf "\${output}: '%s'\\n" "${output}"
 
   [[    "${status}" -eq 0   ]]
+  [[ !  "${output}" =~  📌  ]]
   [[    "${output}" =~  🔖  ]]
   [[ !  "${output}" =~  🔒  ]]
 }
@@ -724,6 +791,7 @@ https://example.com
   printf "\${output}: '%s'\\n" "${output}"
 
   [[    "${status}" -eq 0   ]]
+  [[ !  "${output}" =~  📌  ]]
   [[ !  "${output}" =~  🔖  ]]
   [[    "${output}" =~  🔒  ]]
 }
@@ -742,6 +810,7 @@ https://example.com
   printf "\${output}: '%s'\\n" "${output}"
 
   [[    "${status}" -eq 0   ]]
+  [[ !  "${output}" =~  📌  ]]
   [[    "${output}" =~  🔖  ]]
   [[    "${output}" =~  🔒  ]]
 }
