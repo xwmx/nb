@@ -41,7 +41,6 @@ load test_helper
     || true
 }
 
-
 @test "'_highlight_syntax_if_available()' with <path> highlights as extension." {
   {
     "${_NB}" init
