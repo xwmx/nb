@@ -258,20 +258,20 @@ Install the latest development version from the respository with:
 brew install xwmx/taps/nb --head
 ```
 
-#### Ubuntu, Windows WSL, and others
-
-##### npm
-
-```bash
-npm install -g nb.sh
-```
-
 `nb` is also available in
 [homebrew-core](https://github.com/Homebrew/homebrew-core) with
 macOS Bash, so installing the `bash` formula with it is recommended:
 
 ```bash
 brew install nb bash
+```
+
+#### Ubuntu, Windows WSL, and others
+
+##### npm
+
+```bash
+npm install -g nb.sh
 ```
 
 After `npm` installation completes, run
