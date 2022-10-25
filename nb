@@ -10460,10 +10460,13 @@ _render() {
       tpl ts tsx vb vba vbscript vim xml xsl xslt yaml yml zsh
     )
 
-    _code_extensions+=($(
-      pandoc --list-highlight-languages   \
-        | sed -e "/html/d" -e "/latex/d" -e "/markdown/d"
-    ))
+    if ((_use_pandoc))
+    then
+      _code_extensions+=($(
+        pandoc --list-highlight-languages \
+          | sed -e "/html/d" -e "/latex/d" -e "/markdown/d"
+      ))
+    fi
 
     local _source_extension="${_input_file_path##*\.}"
 
