@@ -16,6 +16,21 @@ _setup_notebooks() {
   cd "${NB_DIR}" || return 1
 }
 
+# edge cases ##################################################################
+
+@test "'noteboos init' with uninitialized configuration initializes configuration" {
+  run "${_NB}" notebooks init
+
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 0                                       ]]
+  [[ !  "${output}"   =~  repository\ \'init\'\ does\ not\ exist  ]]
+  [[ !  "${output}"   =~  Not\ found                              ]]
+  [[    "${output}"   =~  0\ items.                               ]]
+}
+
 # nested repositories #########################################################
 
 @test "'notebooks init <relative path>' with nested git repositories and positive prompt response prints warning and succeeds." {

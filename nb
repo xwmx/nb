@@ -5005,7 +5005,8 @@ _init() {
           fi
           ;;
         *)
-          if   [[ -z "${_remote_url:-}"     ]]
+          if   [[ -z "${_remote_url:-}"     ]] &&
+               _string_is_url "${1:-}"
           then
             _remote_url="${1:-}"
           elif [[ -z "${_remote_branch:-}"  ]]
