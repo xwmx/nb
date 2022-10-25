@@ -1272,8 +1272,6 @@ _validate_configuration() {
        ((${NB_TEST_MOCK_TTY:-0}))
      }
   then
-    # _warn echo "${NB_BASH_UPDATE_PROMPT_ENABLED:-}"
-
     local _config_file_path="${NB_DIR}/.nb-bash-3-enabled"
 
     if [[ -e "${_config_file_path}"     ]]
