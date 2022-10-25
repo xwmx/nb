@@ -19335,22 +19335,30 @@ HEREDOC
 
         local _display_item="${__list_item:-}"
 
-        local _35="#35;"
-        local _36="#36;"
-        local _40="#40;"
-        local _41="#41;"
-        local _60="#60;"
-        local _62="#62;"
-        local _64="#64;"
+        local _maybe_escaped_ampersand='\&'
+
+        if [[ "${BASH_VERSINFO[0]:-999999999}" -lt 5 ]] &&
+           [[ "${BASH_VERSINFO[1]:-999999999}" -lt 2 ]]
+        then
+          _maybe_escaped_ampersand="&"
+        fi
+
+        local _35="${_maybe_escaped_ampersand}#35;"
+        local _36="${_maybe_escaped_ampersand}#36;"
+        local _40="${_maybe_escaped_ampersand}#40;"
+        local _41="${_maybe_escaped_ampersand}#41;"
+        local _60="${_maybe_escaped_ampersand}#60;"
+        local _62="${_maybe_escaped_ampersand}#62;"
+        local _64="${_maybe_escaped_ampersand}#64;"
 
         _display_item="${_display_item//'&'/&amp;}"
-        _display_item="${_display_item//'#'/\&${_35}}"
-        _display_item="${_display_item//'$'/\&${_36}}"
-        _display_item="${_display_item//'('/\&${_40}}"
-        _display_item="${_display_item//')'/\&${_41}}"
-        _display_item="${_display_item//'<'/\&${_60}}"
-        _display_item="${_display_item//'>'/\&${_62}}"
-        _display_item="${_display_item//'@'/\&${_64}}"
+        _display_item="${_display_item//'#'/${_35}}"
+        _display_item="${_display_item//'$'/${_36}}"
+        _display_item="${_display_item//'('/${_40}}"
+        _display_item="${_display_item//')'/${_41}}"
+        _display_item="${_display_item//'<'/${_60}}"
+        _display_item="${_display_item//'>'/${_62}}"
+        _display_item="${_display_item//'@'/${_64}}"
         _display_item="${_display_item//\\\ /${_NBSP}}"
         _display_item="${_display_item//' '/${_NBSP}}"
 
