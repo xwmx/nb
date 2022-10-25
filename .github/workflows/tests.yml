@@ -55,15 +55,21 @@ jobs:
     steps:
       - uses: actions/checkout@v2.1.0
       - uses: uraimo/run-on-arch-action@v2
+        # https://github.com/marketplace/actions/run-on-architecture
         name: Run commands
         id: runcmd
         with:
           arch:   aarch64
-          distro: ubuntu2004
+          distro: ubuntu20.04
 
           # Not required, but speeds up builds by storing container images in
           # a GitHub package registry.
           # githubToken: ${{ github.token }}
+
+          # Set an output parameter `uname` for use in subsequent steps
+          run: |
+            uname -a
+            echo ::set-output name=uname::$(uname -a)
       - name: "Setup"
         run: |
           sudo apt-get update
@@ -100,6 +106,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2.1.0
       - uses: uraimo/run-on-arch-action@v2
+        # https://github.com/marketplace/actions/run-on-architecture
         name: Run commands
         id: runcmd
         with:
@@ -109,6 +116,11 @@ jobs:
           # Not required, but speeds up builds by storing container images in
           # a GitHub package registry.
           # githubToken: ${{ github.token }}
+
+          # Set an output parameter `uname` for use in subsequent steps
+          run: |
+            uname -a
+            echo ::set-output name=uname::$(uname -a)
       - name: "Setup"
         run: |
           sudo apt-get update
