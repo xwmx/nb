@@ -19333,26 +19333,24 @@ HEREDOC
           fi
         fi
 
-
-
         local _display_item="${__list_item:-}"
 
-        local _35="&#35;"
-        local _36="&#36;"
-        local _40="&#40;"
-        local _41="&#41;"
-        local _60="&#60;"
-        local _62="&#62;"
-        local _64="&#64;"
+        local _35="#35;"
+        local _36="#36;"
+        local _40="#40;"
+        local _41="#41;"
+        local _60="#60;"
+        local _62="#62;"
+        local _64="#64;"
 
         _display_item="${_display_item//'&'/&amp;}"
-        _display_item="${_display_item//'#'/${_35}}"
-        _display_item="${_display_item//'$'/${_36}}"
-        _display_item="${_display_item//'('/${_40}}"
-        _display_item="${_display_item//')'/${_41}}"
-        _display_item="${_display_item//'<'/${_60}}"
-        _display_item="${_display_item//'>'/${_62}}"
-        _display_item="${_display_item//'@'/${_64}}"
+        _display_item="${_display_item//'#'/\&${_35}}"
+        _display_item="${_display_item//'$'/\&${_36}}"
+        _display_item="${_display_item//'('/\&${_40}}"
+        _display_item="${_display_item//')'/\&${_41}}"
+        _display_item="${_display_item//'<'/\&${_60}}"
+        _display_item="${_display_item//'>'/\&${_62}}"
+        _display_item="${_display_item//'@'/\&${_64}}"
         _display_item="${_display_item//\\\ /${_NBSP}}"
         _display_item="${_display_item//' '/${_NBSP}}"
 

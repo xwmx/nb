@@ -2,6 +2,26 @@
 
 load test_helper
 
+# escaping / HTML entities ####################################################
+
+@test "'browse --container' renders filenames with parenthesis." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example Filename (1).md" --content "Example content one."
+  }
+
+  run "${_NB}" browse --container
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq  0                                         ]]
+
+  [[ !  "${output}"   =~  Example\ Filename\ \(\#40\;1\)\#41\;\.md  ]]
+  [[    "${output}"   =~  Example\ Filename\ \&\#40\;1\&\#41\;\.md  ]]
+}
+
 # todos #######################################################################
 
 @test "'browse --container' displays marked-up checkboxes in todo titles." {
