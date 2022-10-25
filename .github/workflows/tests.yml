@@ -94,7 +94,7 @@ jobs:
       # - name: "Run nb.go bats tests"
       #   run:  script -q -e -c "bats test"
 
-  test-ubuntu-aarch64:
+  test-ubuntu-armv7:
     name: "Test: Ubuntu armv7"
     runs-on: ubuntu-20.04
     steps:
