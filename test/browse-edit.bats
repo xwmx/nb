@@ -2,6 +2,33 @@
 
 load test_helper
 
+@test "'browse edit <id>' with todo item does not mark up done / closed checkbox in textareas." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example One.todo.md" --content "# [x] Example todo one."
+
+    declare _raw_url_pattern="//localhost:6789/--original/home/Example One.todo.md"
+  }
+
+  run "${_NB}" browse edit 1 --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   ==  0                                                       ]]
+  [[    "${output}"   =~  \<\!DOCTYPE\ html\>                                     ]]
+
+  [[    "${output}"   =~  \<nav\ class=\"header-crumbs\"\>                        ]]
+  [[    "${output}"   =~  \</span\>\ \<a.*\ href=\"${_raw_url_pattern}\"\>↓\</a\> ]]
+
+  [[    "${output}"   =~  \#\ \[x\]\ Example\ todo\ one\.                         ]]
+  [[ !  "${output}"   =~  \
+\<span\ class=\"muted\"\>\[\</span\>\<span\ class=\"identifier\"\>x\</span\>      ]]
+  [[ !  "${output}"   =~  \
+\<span\ class=\"identifier\"\>x\<\/span\>\<span\ class=\"muted\"\>\]\<\/span\>    ]]
+}
+
 # HTML <title> ################################################################
 
 @test "'browse edit <folder>/<folder>/<file>' with local notebook sets HTML <title> to CLI command." {
