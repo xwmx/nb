@@ -11523,9 +11523,9 @@ HEREDOC
     local _checkbox_pattern_close="<\/span><span class=\"muted\">\]<\/span>"
 
     LC_ALL=C sed -E                                                               \
-      -e "s/\[x\]/${_checkbox_pattern_open}x${_checkbox_pattern_close}/g"         \
-      -e "s/\[ \]/${_checkbox_pattern_open}${_NBSP}${_checkbox_pattern_close}/g"  \
-      -e "s/\[\]/${_checkbox_pattern_open}${_NBSP}${_checkbox_pattern_close}/g"
+      -e "1, /\<textarea\>/ s/\[x\]/${_checkbox_pattern_open}x${_checkbox_pattern_close}/g"         \
+      -e "1, /\<textarea\>/ s/\[ \]/${_checkbox_pattern_open}${_NBSP}${_checkbox_pattern_close}/g"  \
+      -e "1, /\<textarea\>/ s/\[\]/${_checkbox_pattern_open}${_NBSP}${_checkbox_pattern_close}/g"
   }
 }
 
