@@ -4,11 +4,12 @@ load test_helper
 
 # escaping / HTML entities ####################################################
 
-@test "'browse --container' renders filenames with parenthesis." {
+@test "'browse --container' renders filenames and titles with parenthesis." {
   {
     "${_NB}" init
 
     "${_NB}" add  "Example Filename (1).md" --content "Example content one."
+    "${_NB}" add  "Example Filename (2).md" --title   "Example Title (2)."
   }
 
   run "${_NB}" browse --container
@@ -20,6 +21,9 @@ load test_helper
 
   [[ !  "${output}"   =~  Example\ Filename\ \(\#40\;1\)\#41\;\.md  ]]
   [[    "${output}"   =~  Example\ Filename\ \&\#40\;1\&\#41\;\.md  ]]
+
+  [[ !  "${output}"   =~  Example\ Title\ \(\#40\;2\)\#41\;\.       ]]
+  [[    "${output}"   =~  Example\ Title\ \&\#40\;2\&\#41\;\.       ]]
 }
 
 # todos #######################################################################
