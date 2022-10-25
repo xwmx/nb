@@ -20257,10 +20257,10 @@ HEREDOC
                   printf "<br>"
                 fi
 
-                LC_ALL=C sed -E       \
-                  -e "s/</\&lt;/g"    \
-                  -e "s/\//\&#47;/g"  \
-                  -e "s/.*/&<br>/g"   # " TODO: vim highlighting bug
+                LC_ALL=C sed -E                               \
+                  -e "/<span class=\"muted\"/!s/</\&lt;/g"    \
+                  -e "/<span class=\"muted\"/!s/\//\&#47;/g"  \
+                  -e "s/.*/&<br>/g" # " TODO: vim highlighting bug
               fi
             }
             ;;
