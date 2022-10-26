@@ -253,8 +253,8 @@ brew install xwmx/taps/nb --head
 ```
 
 `nb` is also available in
-[homebrew-core](https://github.com/Homebrew/homebrew-core) with
-macOS Bash, so installing the `bash` formula with it is recommended:
+[homebrew-core](https://github.com/Homebrew/homebrew-core).
+Installing it together with the `bash` formula is recommended:
 
 ```bash
 brew install nb bash

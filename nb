@@ -81,7 +81,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.0.0"
+_VERSION="7.0.1"
 
 # $_ME
 #
@@ -1272,8 +1272,6 @@ _validate_configuration() {
        ((${NB_TEST_MOCK_TTY:-0}))
      }
   then
-    # _warn echo "${NB_BASH_UPDATE_PROMPT_ENABLED:-}"
-
     local _config_file_path="${NB_DIR}/.nb-bash-3-enabled"
 
     if [[ -e "${_config_file_path}"     ]]
@@ -5005,7 +5003,8 @@ _init() {
           fi
           ;;
         *)
-          if   [[ -z "${_remote_url:-}"     ]]
+          if   [[ -z "${_remote_url:-}"     ]] &&
+               _string_is_url "${1:-}"
           then
             _remote_url="${1:-}"
           elif [[ -z "${_remote_branch:-}"  ]]
@@ -10461,10 +10460,13 @@ _render() {
       tpl ts tsx vb vba vbscript vim xml xsl xslt yaml yml zsh
     )
 
-    _code_extensions+=($(
-      pandoc --list-highlight-languages   \
-        | sed -e "/html/d" -e "/latex/d" -e "/markdown/d"
-    ))
+    if ((_use_pandoc))
+    then
+      _code_extensions+=($(
+        pandoc --list-highlight-languages \
+          | sed -e "/html/d" -e "/latex/d" -e "/markdown/d"
+      ))
+    fi
 
     local _source_extension="${_input_file_path##*\.}"
 
@@ -11522,10 +11524,10 @@ HEREDOC
     local _checkbox_pattern_open="<span class=\"muted\">[<\/span><span class=\"identifier\">"
     local _checkbox_pattern_close="<\/span><span class=\"muted\">\]<\/span>"
 
-    LC_ALL=C sed -E                                                               \
-      -e "s/\[x\]/${_checkbox_pattern_open}x${_checkbox_pattern_close}/g"         \
-      -e "s/\[ \]/${_checkbox_pattern_open}${_NBSP}${_checkbox_pattern_close}/g"  \
-      -e "s/\[\]/${_checkbox_pattern_open}${_NBSP}${_checkbox_pattern_close}/g"
+    LC_ALL=C sed -E                                                                       \
+-e "1, /<textarea/ s/\[x\]/${_checkbox_pattern_open}x${_checkbox_pattern_close}/g"        \
+-e "1, /<textarea/ s/\[ \]/${_checkbox_pattern_open}${_NBSP}${_checkbox_pattern_close}/g" \
+-e "1, /<textarea/ s/\[\]/${_checkbox_pattern_open}${_NBSP}${_checkbox_pattern_close}/g"
   }
 }
 
@@ -19331,17 +19333,25 @@ HEREDOC
           fi
         fi
 
-
-
         local _display_item="${__list_item:-}"
 
-        local _35="&#35;"
-        local _36="&#36;"
-        local _40="&#40;"
-        local _41="&#41;"
-        local _60="&#60;"
-        local _62="&#62;"
-        local _64="&#64;"
+        local _maybe_escaped_ampersand='\&'
+
+        if [[ "${BASH_VERSINFO[0]:-999999999}"  -lt 5   ]]  ||  {
+             [[ "${BASH_VERSINFO[0]:-999999999}"  ==  5 ]]  &&
+             [[ "${BASH_VERSINFO[1]:-999999999}"  -lt 2 ]]
+           }
+        then
+          _maybe_escaped_ampersand="&"
+        fi
+
+        local _35="${_maybe_escaped_ampersand}#35;"
+        local _36="${_maybe_escaped_ampersand}#36;"
+        local _40="${_maybe_escaped_ampersand}#40;"
+        local _41="${_maybe_escaped_ampersand}#41;"
+        local _60="${_maybe_escaped_ampersand}#60;"
+        local _62="${_maybe_escaped_ampersand}#62;"
+        local _64="${_maybe_escaped_ampersand}#64;"
 
         _display_item="${_display_item//'&'/&amp;}"
         _display_item="${_display_item//'#'/${_35}}"
@@ -20255,10 +20265,10 @@ HEREDOC
                   printf "<br>"
                 fi
 
-                LC_ALL=C sed -E       \
-                  -e "s/</\&lt;/g"    \
-                  -e "s/\//\&#47;/g"  \
-                  -e "s/.*/&<br>/g"   # " TODO: vim highlighting bug
+                LC_ALL=C sed -E                               \
+                  -e "/<span class=\"muted\"/!s/</\&lt;/g"    \
+                  -e "/<span class=\"muted\"/!s/\//\&#47;/g"  \
+                  -e "s/.*/&<br>/g" # " TODO: vim highlighting bug
               fi
             }
             ;;

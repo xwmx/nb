@@ -634,10 +634,12 @@ identifier\"\>home:2\</span\>\<span\ class=\"muted\"\>\]\</span\>\ Title\ Two\
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
+  declare _amp='\&'
+
   [[    "${status}"  -eq  0 ]]
 
   printf "%s\\n" "${output}" | grep   -q \
-    "Not${_NBSP}found:${_NBSP}&#60;script&#62;alert&#40;document.cookie&#41;&#60;/script&#62;"
+    "Not${_NBSP}found:${_NBSP}${_amp}#60;script${_amp}#62;alert${_amp}#40;document.cookie${_amp}#41;${_amp}#60;/script${_amp}#62;"
 
   printf "%s\\n" "${output}" | grep   -q \
     "placeholder=\"search\"${_NEWLINE}type=\"text\"${_NEWLINE}value=\"<script>alert(document.cookie)</script>\">"
