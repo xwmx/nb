@@ -19337,8 +19337,10 @@ HEREDOC
 
         local _maybe_escaped_ampersand='\&'
 
-        if [[ "${BASH_VERSINFO[0]:-999999999}" -le 5 ]] &&
-           [[ "${BASH_VERSINFO[1]:-999999999}" -lt 2 ]]
+        if [[ "${BASH_VERSINFO[0]:-999999999}"  -lt 5   ]]  ||  {
+             [[ "${BASH_VERSINFO[0]:-999999999}"  ==  5 ]]  &&
+             [[ "${BASH_VERSINFO[1]:-999999999}"  -lt 2 ]]
+           }
         then
           _maybe_escaped_ampersand="&"
         fi

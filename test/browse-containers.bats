@@ -4,7 +4,7 @@ load test_helper
 
 # escaping / HTML entities ####################################################
 
-@test "'browse --container' renders filenames and titles with parenthesis." {
+@test "'browse --container' renders filenames and titles with parentheses." {
   {
     "${_NB}" init
 
@@ -14,16 +14,20 @@ load test_helper
 
   run "${_NB}" browse --container
 
+  declare _amp='\&'
+
+  printf "\${_amp}:   '%s'\\n" "${_amp}"
+
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[    "${status}"  -eq  0                                         ]]
+  [[    "${status}"  -eq  0                                                   ]]
 
-  [[ !  "${output}"   =~  Example\ Filename\ \(\#40\;1\)\#41\;\.md  ]]
-  [[    "${output}"   =~  Example\ Filename\ \&\#40\;1\&\#41\;\.md  ]]
+  [[ !  "${output}"   =~  Example\ Filename\ \(\#40\;1\)\#41\;\.md            ]]
+  [[    "${output}"   =~  Example\ Filename\ ${_amp}\#40\;1${_amp}\#41\;\.md  ]]
 
-  [[ !  "${output}"   =~  Example\ Title\ \(\#40\;2\)\#41\;\.       ]]
-  [[    "${output}"   =~  Example\ Title\ \&\#40\;2\&\#41\;\.       ]]
+  [[ !  "${output}"   =~  Example\ Title\ \(\#40\;2\)\#41\;\.                 ]]
+  [[    "${output}"   =~  Example\ Title\ ${_amp}\#40\;2${_amp}\#41\;\.       ]]
 }
 
 # todos #######################################################################
