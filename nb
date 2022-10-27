@@ -6707,6 +6707,9 @@ _ls() {
           fi
         fi
         ;;
+      \#*)
+        _delegate_arguments+=(--tag "${1}")
+        ;;
       *:*)
         local _selector_id=
         _selector_id="$(_selector_get_identifier "${1}")"
@@ -6770,7 +6773,10 @@ _ls() {
             ;;
           --tag*)
             ((_all)) && _delegate_arguments+=("--all")
-            _defer "_search"  "${_arguments[@]:-}" "${_delegate_arguments[@]:-}"
+            _defer "_search"                \
+              "${_arguments[@]:-}"          \
+              "${_delegate_arguments[@]:-}" \
+              --list
 
             return 0
             ;;
