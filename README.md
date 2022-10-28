@@ -1123,6 +1123,27 @@ NB_LIMIT set to 3
 [1] Example One
 ```
 
+List [#tagged](#tagging) items by passing `\#escaped` or `"#quoted"` hashtags
+or tags specified with the `--tags`. Multiple tags perform an `AND`
+query:
+
+```bash
+# list items in the current notebook tagged with #tag1, escaped
+nb \#tag1
+
+# list items in the "example" notebook tagged with #tag2, quoted
+nb example: "#tag2"
+
+# list items in all notebooks tagged with #tag1, long option
+nb \#tag1 --all
+
+# list items in the current notebook tagged with #tag1 AND #tag2
+nb \#tag1 "#tag2"
+
+# list items in all notebooks tagged with #tag2 AND #tag3, short option
+nb --tags tag2,tag3 -a
+```
+
 [`nb ls`](#ls) is a combination of
 [`nb notebooks`](#notebooks) and [`nb list`](#list)
 in one view and accepts the same arguments as [`nb list`](#list),
@@ -2677,7 +2698,7 @@ nb sample:123 --tags
 ```
 
 List tagged items by passing `\#escaped` or `"#quoted"` hashtags or tags
-specified with the `--tags` option:
+specified with the `--tags` option to `nb` / `nb ls`:
 
 ```bash
 # list items in the current notebook tagged with #tag1, escaped
