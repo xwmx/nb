@@ -2676,6 +2676,36 @@ nb example/ --tags
 nb sample:123 --tags
 ```
 
+List tagged items by passing `\#escaped` or `"#quoted"` hashtags or tags
+specified with the `--tags` option:
+
+```bash
+# list items in the current notebook tagged with #tag1, escaped
+nb \#tag1
+
+# list items in the "example" notebook tagged with #tag2, quoted
+nb example: "#tag2"
+
+# list items in all notebooks tagged with #tag3, long option
+nb --tags tag3 --all
+
+# list items in all notebooks tagged with #tag3, short option
+nb --tags tag3 -a
+```
+
+Combine multiple tags to search for items containing all specified tags:
+
+```bash
+# list items in the current notebook tagged with #tag1 AND #tag2
+nb \#tag1 "#tag2"
+
+# list items in the current notebook tagged with #tag2 AND #tag3
+nb --tags tag2,tag3
+
+# list items in all notebooks tagged with #tag1 AND #tag2 AND #tag3 AND #tag4
+nb \#tag1 "#tag2" --tags tag3,tag4 --all
+```
+
 Tagged items can be [searched](#-search) with
 [`nb search`](#search) / [`nb q`](#search):
 
