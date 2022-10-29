@@ -9353,9 +9353,9 @@ Set to "auto" to automatically limit output to the current terminal height.
 Subtract an auto limit offset for multiline prompts with `auto-<number>`.
 
 Supported Values:
-  - \<number\>
-  - auto-\<number\>
-  - auto-\<number\>
+  - <number>
+  - auto-<number>
+  - auto-<number>
 
 Example Values:
   - 15
