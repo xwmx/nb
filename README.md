@@ -150,7 +150,7 @@ or dozens of notebooks containing thousands of notes, bookmarks, and other items
 <p align="center"></p><!-- spacer -->
 
 <div align="center">
-  <a href="#help">Help</a>
+  <a href="#-help">Help</a>
 </div>
 
 <p align="center"></p><!-- spacer -->
@@ -402,7 +402,7 @@ the [`nb update`](#update) subcommand.
   <a href="#01-metadata"><code>01</code>&nbsp;Metadata</a>&nbsp;·
   <a href="#-interactive-shell"><code>❯</code>&nbsp;Shell</a>&nbsp;·
   <a href="#shortcut-aliases">Shortcuts</a>&nbsp;·
-  <a href="#help">Help</a>&nbsp;·
+  <a href="#-help"><code>?</code>&nbsp;Help</a>&nbsp;·
   <a href="#-variables"><code>$</code>&nbsp;Variables</a>&nbsp;·
   <a href="#specifications">Specifications</a>&nbsp;·
   <a href="#tests">Tests</a>
@@ -5759,7 +5759,7 @@ For more commands and options, run
         width="700">
 </div>
 
-### Help
+### `?` Help
 
 <div align="center">
   <a href="#nb-help">nb</a>&nbsp;·
@@ -5786,7 +5786,7 @@ For more commands and options, run
   <a href="#export">export</a>&nbsp;·
   <a href="#folders">folders</a>&nbsp;·
   <a href="#git">git</a>&nbsp;·
-  <a href="#help-1">help</a>&nbsp;·
+  <a href="#help">help</a>&nbsp;·
   <a href="#history">history</a>&nbsp;·
   <a href="#import">import</a>&nbsp;·
   <a href="#init">init</a>&nbsp;·
@@ -5826,8 +5826,8 @@ For more commands and options, run
 
 #### `nb help`
 
-[↑](#help) · See also:
-[`help`](#help-1)
+[↑](#-help) · See also:
+[`help`](#help)
 
 ```text
 __          _
@@ -6057,7 +6057,7 @@ More Information:
 
 #### `bookmark help`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Bookmarks](#-bookmarks),
 [`bookmark`](#bookmark),
 [`browse`](#browse)
@@ -6187,7 +6187,7 @@ For more information, see: `nb help`.
   <a href="#folders">folders</a>&nbsp;·
   <a href="#export">export</a>&nbsp;·
   <a href="#git">git</a>&nbsp;·
-  <a href="#help-1">help</a>&nbsp;·
+  <a href="#help">help</a>&nbsp;·
   <a href="#history">history</a>&nbsp;·
   <a href="#import">import</a>&nbsp;·
   <a href="#init">init</a>&nbsp;·
@@ -6227,7 +6227,7 @@ For more information, see: `nb help`.
 
 #### `add`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Adding](#adding),
 [`bookmark`](#bookmark),
 [`browse`](#browse),
@@ -6323,7 +6323,7 @@ Shortcut Aliases:
 
 #### `archive`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Archiving Notebooks](#archiving-notebooks),
 [`notebooks`](#notebooks),
 [`status`](#status),
@@ -6356,7 +6356,7 @@ Shortcut Alias:
 
 #### `bookmark`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Bookmarks](#-bookmarks),
 [`browse`](#browse),
 [`open`](#open),
@@ -6465,7 +6465,7 @@ Shortcut Aliases:
 
 #### `browse`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Browsing](#-browsing),
 [Images](#-images),
 [Linking](#-linking),
@@ -6568,7 +6568,7 @@ Shortcut Alias:
 
 #### `completions`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Tab Completion](https://github.com/xwmx/nb/tree/master/etc),
 [`env`](#env)
 
@@ -6591,7 +6591,7 @@ See Also:
 
 #### `copy`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Moving & Renaming](#-moving--renaming),
 [`move`](#move)
 
@@ -6620,7 +6620,7 @@ Alias:
 
 #### `count`
 
-[↑&nbsp;](#help)
+[↑&nbsp;](#-help)
 
 ```text
 Usage:
@@ -6633,7 +6633,7 @@ Description:
 
 #### `delete`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Deleting](#deleting),
 [`add`](#add),
 [`browse`](#browse),
@@ -6686,7 +6686,7 @@ Shortcut Aliases:
 
 #### `do`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Todos](#-todos),
 [Tasks](#%EF%B8%8F-tasks),
 [`tasks`](#tasks),
@@ -6717,7 +6717,7 @@ Examples:
 
 #### `edit`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Editing](#editing),
 [`add`](#add),
 [`browse`](#browse),
@@ -6781,7 +6781,7 @@ Shortcut Alias:
 
 #### `env`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Installation](#installation),
 [`completions`](#completions),
 [`init`](#init),
@@ -6811,7 +6811,7 @@ See Also:
 
 #### `export`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Import / Export](#%EF%B8%8F-import--export),
 [`browse`](#browse),
 [`import`](#import)
@@ -6868,7 +6868,7 @@ Examples:
 
 #### `folders`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Folders](#-folders),
 [`add`](#add),
 [`delete`](#delete),
@@ -6912,7 +6912,7 @@ Shortcut Alias:
 
 #### `git`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Git Sync](#-git-sync),
 [History](#-revision-history),
 [`history`](#history),
@@ -6955,7 +6955,7 @@ Examples:
 
 #### `help`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [`nb help`](#nb-help)
 
 ```text
@@ -6986,7 +6986,7 @@ Shortcut Alias:
 
 #### `history`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [History](#-revision-history),
 [Git Sync](#-git-sync),
 [`git`](#git),
@@ -7027,7 +7027,7 @@ Examples:
 
 #### `import`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Import / Export](#%EF%B8%8F-import--export),
 [Images](#-images),
 [`add`](#add),
@@ -7076,7 +7076,7 @@ Shortcut Alias:
 
 #### `init`
 
-[↑](#help) · See also: [`notebooks`](#notebooks)
+[↑](#-help) · See also: [`notebooks`](#notebooks)
 
 ```text
 Usage:
@@ -7107,7 +7107,7 @@ Examples:
 
 #### `list`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Listing & Filtering](#listing--filtering),
 [`browse`](#browse),
 [`ls`](#ls),
@@ -7184,7 +7184,7 @@ Examples:
 
 #### `ls`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Listing & Filtering](#listing--filtering),
 [`browse`](#browse),
 [`list`](#list),
@@ -7282,7 +7282,7 @@ Shortcut Alias:
 
 #### `move`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Moving & Renaming](#-moving--renaming),
 [`copy`](#copy),
 [`delete`](#delete),
@@ -7353,7 +7353,7 @@ Shortcut Alias:
 
 #### `notebooks`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Notebooks](#-notebooks),
 [`archive`](#archive),
 [`history`](#history),
@@ -7475,7 +7475,7 @@ Shortcut Aliases:
 
 #### `open`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Viewing Bookmarks](#viewing-bookmarks),
 [Images](#-images),
 [`bookmark`](#bookmark),
@@ -7520,7 +7520,7 @@ Shortcut Alias:
 
 #### `peek`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Viewing Bookmarks](#viewing-bookmarks),
 [`bookmark`](#bookmark),
 [`browse`](#browse),
@@ -7575,7 +7575,7 @@ Shortcut Alias:
 
 #### `pin`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Pinning](#-pinning),
 [`browse`](#browse),
 [`list`](#list),
@@ -7605,7 +7605,7 @@ Examples:
 
 #### `plugins`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Plugins](#-plugins),
 [Plugin Help](#plugin-help),
 [`subcommands`](#subcommands-1)
@@ -7643,7 +7643,7 @@ Alias:
 
 #### `remote`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Git Sync](#-git-sync),
 [History](#-revision-history),
 [`history`](#history),
@@ -7694,7 +7694,7 @@ Examples:
 
 #### `run`
 
-[↑](#help) · See also: [`git`](#git), [`shell`](#shell)
+[↑](#-help) · See also: [`git`](#git), [`shell`](#shell)
 
 ```text
 Usage:
@@ -7715,7 +7715,7 @@ Examples:
 
 #### `search`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Search](#-search),
 [`browse`](#browse),
 [`list`](#list),
@@ -7806,7 +7806,7 @@ Shortcut Alias:
 
 #### `settings`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [`set` & `settings`](#%EF%B8%8F-set--settings),
 [`unset`](#unset)
 
@@ -7865,7 +7865,7 @@ Alias:
 
 ##### `auto_sync`
 
-[↑](#help) · See also: [Git Sync](#-git-sync)
+[↑](#-help) · See also: [Git Sync](#-git-sync)
 
 ```text
 [1]  auto_sync
@@ -7879,7 +7879,7 @@ Alias:
 
 ##### `color_primary`
 
-[↑](#help) · See also: [Color Themes](#-color-themes), [Custom Color Themes](#custom-color-themes)
+[↑](#-help) · See also: [Color Themes](#-color-themes), [Custom Color Themes](#custom-color-themes)
 
 ```text
 [2]  color_primary
@@ -7893,7 +7893,7 @@ Alias:
 
 ##### `color_secondary`
 
-[↑](#help) · See also: [Color Themes](#-color-themes), [Custom Color Themes](#custom-color-themes)
+[↑](#-help) · See also: [Color Themes](#-color-themes), [Custom Color Themes](#custom-color-themes)
 
 ```text
 [3]  color_secondary
@@ -7906,7 +7906,7 @@ Alias:
 
 ##### `color_theme`
 
-[↑](#help) · See also: [Color Themes](#-color-themes)
+[↑](#-help) · See also: [Color Themes](#-color-themes)
 
 ```text
 [4]  color_theme
@@ -7944,7 +7944,7 @@ Alias:
 
 ##### `default_extension`
 
-[↑](#help) · See also: [Adding](#adding)
+[↑](#-help) · See also: [Adding](#adding)
 
 ```text
 [5]  default_extension
@@ -7958,7 +7958,7 @@ Alias:
 
 ##### `editor`
 
-[↑](#help) · See also: [Editing](#editing), [Adding](#adding)
+[↑](#-help) · See also: [Editing](#editing), [Adding](#adding)
 
 ```text
 [6]  editor
@@ -7982,7 +7982,7 @@ Alias:
 
 ##### `encryption_tool`
 
-[↑](#help) · See also: [Password-Protected Encrypted Notes and Bookmarks](#password-protected-encrypted-notes-and-bookmarks)
+[↑](#-help) · See also: [Password-Protected Encrypted Notes and Bookmarks](#password-protected-encrypted-notes-and-bookmarks)
 
 ```text
 [7]  encryption_tool
@@ -7995,7 +7995,7 @@ Alias:
 
 ##### `footer`
 
-[↑](#help) · See also: [Listing & Filtering](#listing--filtering)
+[↑](#-help) · See also: [Listing & Filtering](#listing--filtering)
 
 ```text
 [8]  footer
@@ -8008,7 +8008,7 @@ Alias:
 
 ##### `header`
 
-[↑](#help) · See also: [Listing & Filtering](#listing--filtering)
+[↑](#-help) · See also: [Listing & Filtering](#listing--filtering)
 
 ```text
 [9]  header
@@ -8030,7 +8030,7 @@ Alias:
 
 ##### `limit`
 
-[↑](#help) · See also: [Listing & Filtering](#listing--filtering)
+[↑](#-help) · See also: [Listing & Filtering](#listing--filtering)
 
 ```text
 [10] limit
@@ -8050,7 +8050,7 @@ Alias:
 
 ##### `nb_dir`
 
-[↑&nbsp;](#help)
+[↑&nbsp;](#-help)
 
 ```text
 [11] nb_dir
@@ -8065,7 +8065,7 @@ Alias:
 
 ##### `syntax_theme`
 
-[↑](#help) · See also: [Terminal Syntax Highlighting](#terminal-syntax-highlighting-theme)
+[↑](#-help) · See also: [Terminal Syntax Highlighting](#terminal-syntax-highlighting-theme)
 
 ```text
 [12] syntax_theme
@@ -8105,7 +8105,7 @@ Alias:
 
 #### `shell`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Interactive Shell](#-interactive-shell),
 [`run`](#run)
 
@@ -8147,7 +8147,7 @@ Example:
 
 #### `show`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Viewing](#viewing),
 [Images](#-images),
 [`browse`](#browse),
@@ -8252,7 +8252,7 @@ Shortcut Alias:
 
 #### `status`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Git Sync](#-git-sync),
 [History](#-revision-history),
 [`archive`](#archive),
@@ -8291,7 +8291,7 @@ Shortcut Alias:
 
 #### `subcommands`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Plugins](#-plugins),
 [`plugins`](#plugins)
 
@@ -8322,7 +8322,7 @@ See Also:
 
 #### `sync`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Git Sync](#-git-sync),
 [History](#-revision-history),
 [`history`](#history),
@@ -8381,7 +8381,7 @@ Examples:
 
 #### `tasks`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Tasks](#%EF%B8%8F-tasks),
 [Todos](#-todos),
 [`do`](#do),
@@ -8420,7 +8420,7 @@ Shortcut Alias:
 
 #### `todo`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Todos](#-todos),
 [`do`](#do),
 [`tasks`](#tasks),
@@ -8485,7 +8485,7 @@ Shortcut Alias:
 
 #### `unarchive`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Archiving Notebooks](#archiving-notebooks),
 [`archive`](#archive),
 [`notebooks`](#notebooks),
@@ -8518,7 +8518,7 @@ Shortcut Alias:
 
 #### `undo`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Todos](#-todos),
 [Tasks](#%EF%B8%8F-tasks),
 [`do`](#do),
@@ -8549,7 +8549,7 @@ Examples:
 
 #### `unpin`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Pinning](#-pinning),
 [`browse`](#browse),
 [`list`](#list),
@@ -8579,7 +8579,7 @@ Examples:
 
 #### `unset`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [`set` & `settings`](#%EF%B8%8F-set--settings),
 [`settings`](#settings)
 
@@ -8608,7 +8608,7 @@ Alias:
 
 #### `update`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Installation](#installation),
 [`env`](#env),
 [`version`](#version)
@@ -8635,7 +8635,7 @@ See Also:
 
 #### `use`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Notebooks](#-notebooks),
 [`notebooks`](#notebooks)
 
@@ -8661,7 +8661,7 @@ Shortcut Alias:
 
 #### `version`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Installation](#installation),
 [`env`](#env),
 [`update`](#update)
@@ -8682,7 +8682,7 @@ See Also:
 
 <p>
   <sup>
-    <a href="#help">↑</a> ·
+    <a href="#-help">↑</a> ·
     <a href="#-plugins">Plugins</a>,
     <a href="#plugins"><code>nb plugins</code></a>
   </sup>
@@ -8700,7 +8700,7 @@ See Also:
 <p align="center"></p><!-- spacer -->
 
 <div align="center">
-  <a href="#help">&nbsp;↑&nbsp;</a>
+  <a href="#-help">&nbsp;↑&nbsp;</a>
 </div>
 
 #### `backlink`
@@ -8914,7 +8914,7 @@ Shortcut Alias:
 
 ### `$` Variables
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [`set` & `settings`](#%EF%B8%8F-set--settings),
 [`settings`](#settings)
 
@@ -9230,7 +9230,7 @@ The location of the .nbrc configuration file.
 <p align="center"></p><!-- spacer -->
 
 <div align="center">
-  <a href="#help">&nbsp;↑&nbsp;</a>
+  <a href="#-help">&nbsp;↑&nbsp;</a>
 </div>
 
 ### `nb` Markdown Bookmark File Format
