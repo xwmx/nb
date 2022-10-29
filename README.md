@@ -1430,7 +1430,7 @@ Supported file types and tools include:
   - [`afplay`](https://ss64.com/osx/afplay.html)
   - [`mpg123`](https://en.wikipedia.org/wiki/Mpg123)
   - [`ffplay`](https://ffmpeg.org/ffplay.html)
-- [Images (`$NB_IMAGE_TOOL`)](#-images):
+- [Images](#-images) ([`$NB_IMAGE_TOOL`](#nb_image_tool)):
   - [`catimg`](https://github.com/posva/catimg)
   - [Chafa](https://github.com/hpjansson/chafa)
   - [ImageMagick](https://imagemagick.org/) with a terminal that
@@ -1441,7 +1441,7 @@ Supported file types and tools include:
   - [`term-image`](https://github.com/AnonymouX47/term-image)
   - [`timg`](https://github.com/hzeller/timg)
   - [`viu`](https://github.com/atanunq/viu)
-- Folders, Directories, Notebooks (`$NB_DIRECTORY_TOOL`):
+- Folders, Directories, Notebooks ([`$NB_DIRECTORY_TOOL`](#nb_directory_tool)):
   - [`exa`](https://github.com/ogham/exa)
   - [`joshuto`](https://github.com/kamiyaa/joshuto)
   - [Midnight Commander (`mc`)](https://en.wikipedia.org/wiki/Midnight_Commander)
@@ -1451,7 +1451,7 @@ Supported file types and tools include:
   - [Pandoc](https://pandoc.org/) with
     [`w3m`](https://en.wikipedia.org/wiki/W3m) or
     [`links`](https://en.wikipedia.org/wiki/Links_(web_browser))
-- Excel, CSV, TSV, and data files (`$NB_DATA_TOOL`):
+- Excel, CSV, TSV, and data files ([`$NB_DATA_TOOL`](#nb_data_tool)):
   - [VisiData](https://www.visidata.org/)
   - [`sc-im`](https://github.com/andmarti1424/sc-im)
   - [Tidy-Viewer (`tv`)](https://github.com/alexhallam/tv)
@@ -3434,8 +3434,8 @@ supported tools and configurations, including:
 - [`timg`](https://github.com/hzeller/timg)
 - [`viu`](https://github.com/atanunq/viu)
 
-A preferred image viewer tool can be set with the `$NB_IMAGE_TOOL` variable
-in your `~/.nbrc` file,
+A preferred image viewer tool can be set with the
+[`$NB_IMAGE_TOOL`](#nb_image_tool) variable in your `~/.nbrc` file,
 which can be opened in your editor with [`nb settings edit`](#settings).
 
 #### Inline Images
@@ -3700,7 +3700,7 @@ home
 `nb` can also be configured to pin notes that contain
 a specified [#hashtag](#-tagging) or other search pattern.
 To enable tag / search-based pinning,
-set the `$NB_PINNED_PATTERN` environment variable to
+set the [`$NB_PINNED_PATTERN`](#nb_pinned_pattern) environment variable to
 the desired [#tag](#-tagging) or pattern.
 
 For example, to treat all items tagged with `#pinned` as pinned items,
@@ -4368,7 +4368,7 @@ which is `~/.nb` by default.
 
 `nb` also supports creating and working with local notebooks.
 Local notebooks are notebooks that are
-anywhere on the system outside of `NB_DIR`.
+anywhere on the system outside of [`NB_DIR`](#nb_dir-1).
 Any folder can be an `nb` local notebook, which is just a normal folder
 that has been initialized as a git repository and contains an `nb` .index file.
 Initializing a folder as an `nb` local notebook is a very easy way to
@@ -9366,6 +9366,18 @@ Example Values:
   - 15
   - auto
   - auto-2
+```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
+#### `$NB_PINNED_PATTERN`
+
+```text
+Example Value: '#pinned'
 ```
 
 <p>
