@@ -409,7 +409,7 @@ the [`nb update`](#update) subcommand.
   <a href="#-interactive-shell"><code>❯</code>&nbsp;Shell</a>&nbsp;·
   <a href="#shortcut-aliases">Shortcuts</a>&nbsp;·
   <a href="#help">Help</a>&nbsp;·
-  <a href="#variables">Variables</a>&nbsp;·
+  <a href="#-variables"><code>$</code>&nbsp;Variables</a>&nbsp;·
   <a href="#specifications">Specifications</a>&nbsp;·
   <a href="#tests">Tests</a>
 </div>
@@ -5215,7 +5215,7 @@ To turn off an indicator, assign the variable to an empty string:
 export NB_INDICATOR_PINNED=""
 ```
 
-Available indicator variables with default values:
+Available indicator [variables](#-variables) with default values:
 
 ```bash
 export  NB_INDICATOR_AUDIO="🔉"
@@ -5771,7 +5771,7 @@ For more commands and options, run
   <a href="#nb-help">nb</a>&nbsp;·
   <a href="#bookmark-help">bookmark</a>&nbsp;·
   <a href="#subcommands">subcommands</a>&nbsp;·
-  <a href="#variables">variables</a>&nbsp;·
+  <a href="#-variables">variables</a>&nbsp;·
   <a href="#plugin-help">plugins</a>
 </div>
 
@@ -8918,7 +8918,11 @@ Shortcut Alias:
   nb w
 ```
 
-### Variables
+### `$` Variables
+
+[↑](#help) · See also:
+[`set` & `settings`](#%EF%B8%8F-set--settings),
+[`settings`](#settings)
 
 [Settings](#%EF%B8%8F-set--settings) are set in the `~/.nbrc` configuration
 file using environment variables. Settings can be set through the `nb`
