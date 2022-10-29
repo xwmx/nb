@@ -9459,6 +9459,8 @@ The location of the .nbrc configuration file.
   <a href="#-help">&nbsp;↑&nbsp;</a>
 </div>
 
+<p align="center"></p><!-- spacer -->
+
 ### `nb` Markdown Bookmark File Format
 
 <p>
