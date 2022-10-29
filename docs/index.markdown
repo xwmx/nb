@@ -8922,7 +8922,7 @@ Shortcut Alias:
 <p>
   <sup>
     <a href="#overview">↑</a> ·
-    <a href="#-plugins"><code>set</code>&<code>settings</code></a>,
+    <a href="#%EF%B8%8F-set--settings"><code>set</code>&<code>settings</code></a>,
     <a href="#settings"><code>nb settings</code></a>
   </sup>
 </p>
