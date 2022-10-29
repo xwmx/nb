@@ -1425,7 +1425,7 @@ Supported file types and tools include:
   - [`termpdf.py`](https://github.com/dsanson/termpdf.py)
     with [kitty](https://sw.kovidgoyal.net/kitty/)
   - [`pdftotext`](https://en.wikipedia.org/wiki/Pdftotext)
-- Audio files (`$NB_AUDIO_TOOL`):
+- Audio files ([`$NB_AUDIO_TOOL`](#nb_audio_tool)):
   - [`mplayer`](https://en.wikipedia.org/wiki/MPlayer)
   - [`afplay`](https://ss64.com/osx/afplay.html)
   - [`mpg123`](https://en.wikipedia.org/wiki/Mpg123)

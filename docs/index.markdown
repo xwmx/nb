@@ -1131,8 +1131,8 @@ NB_LIMIT set to 3
 ```
 
 List [#tagged](#tagging) items by passing `\#escaped` or `"#quoted"` hashtags
-or tags specified with the `--tags`. Multiple tags perform an `AND`
-query:
+or tags specified with the [`--tags`](#ls) option. Multiple tags perform an 
+`AND` query:
 
 ```bash
 # list items in the current notebook tagged with #tag1, escaped
@@ -1431,7 +1431,7 @@ Supported file types and tools include:
   - [`termpdf.py`](https://github.com/dsanson/termpdf.py)
     with [kitty](https://sw.kovidgoyal.net/kitty/)
   - [`pdftotext`](https://en.wikipedia.org/wiki/Pdftotext)
-- Audio files (`$NB_AUDIO_TOOL`):
+- Audio files ([`$NB_AUDIO_TOOL`](#nb_audio_tool)):
   - [`mplayer`](https://en.wikipedia.org/wiki/MPlayer)
   - [`afplay`](https://ss64.com/osx/afplay.html)
   - [`mpg123`](https://en.wikipedia.org/wiki/Mpg123)
@@ -2705,7 +2705,7 @@ nb sample:123 --tags
 ```
 
 List tagged items by passing `\#escaped` or `"#quoted"` hashtags or tags
-specified with the `--tags` option to `nb` / `nb ls`:
+specified with the [`--tags`](#ls) option to [`nb`](#ls) / [`nb ls`](#ls):
 
 ```bash
 # list items in the current notebook tagged with #tag1, escaped
@@ -9965,6 +9965,12 @@ Description:
   ids are preserved across systems.
 ```
 
+<p>
+  <sup>
+    <a href="#nb-notebook-specification">↑</a>
+  </sup>
+</p>
+
 #### `.pindex` Files
 
 Any folder may contain an optional plain text file named `.pindex`
@@ -9973,11 +9979,23 @@ be treated as [pinned](#-pinning), meaning they appear first in some
 list operations, including `nb` and [`nb ls`](#ls). Entries are added to a
 `.pindex` file with [`nb pin`](#pin) and removed with [`nb unpin`](#unpin).
 
+<p>
+  <sup>
+    <a href="#nb-notebook-specification">↑</a>
+  </sup>
+</p>
+
 #### Archived Notebooks
 
 A notebook is considered [archived](#archiving-notebooks)
 when it contains a file named `.archived`
 at the root level of the notebook directory.
+
+<p>
+  <sup>
+    <a href="#nb-notebook-specification">↑</a>
+  </sup>
+</p>
 
 ## Tests
 
