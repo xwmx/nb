@@ -5765,7 +5765,6 @@ For more commands and options, run
   <a href="#nb-help">nb</a>&nbsp;·
   <a href="#bookmark-help">bookmark</a>&nbsp;·
   <a href="#subcommands">subcommands</a>&nbsp;·
-  <a href="#-variables">variables</a>&nbsp;·
   <a href="#plugin-help">plugins</a>
 </div>
 
@@ -8914,9 +8913,13 @@ Shortcut Alias:
 
 ### `$` Variables
 
-[↑](#-help) · See also:
-[`set` & `settings`](#%EF%B8%8F-set--settings),
-[`settings`](#settings)
+<p>
+  <sup>
+    <a href="#overview">↑</a> ·
+    <a href="#-plugins"><code>set</code>&<code>settings</code></a>,
+    <a href="#settings"><code>nb settings</code></a>
+  </sup>
+</p>
 
 [Settings](#%EF%B8%8F-set--settings) are set in the `~/.nbrc` configuration
 file using environment variables. Settings can be set through the `nb`
