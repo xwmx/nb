@@ -9947,6 +9947,12 @@ Description:
   ids are preserved across systems.
 ```
 
+<p>
+  <sup>
+    <a href="#nb-notebook-specification">↑</a>
+  </sup>
+</p>
+
 #### `.pindex` Files
 
 Any folder may contain an optional plain text file named `.pindex`
@@ -9955,11 +9961,23 @@ be treated as [pinned](#-pinning), meaning they appear first in some
 list operations, including `nb` and [`nb ls`](#ls). Entries are added to a
 `.pindex` file with [`nb pin`](#pin) and removed with [`nb unpin`](#unpin).
 
+<p>
+  <sup>
+    <a href="#nb-notebook-specification">↑</a>
+  </sup>
+</p>
+
 #### Archived Notebooks
 
 A notebook is considered [archived](#archiving-notebooks)
 when it contains a file named `.archived`
 at the root level of the notebook directory.
+
+<p>
+  <sup>
+    <a href="#nb-notebook-specification">↑</a>
+  </sup>
+</p>
 
 ## Tests
 
