@@ -403,6 +403,7 @@ the [`nb update`](#update) subcommand.
   <a href="#-interactive-shell"><code>❯</code>&nbsp;Shell</a>&nbsp;·
   <a href="#shortcut-aliases">Shortcuts</a>&nbsp;·
   <a href="#help">Help</a>&nbsp;·
+  <a href="#variables">Variables</a>&nbsp;·
   <a href="#specifications">Specifications</a>&nbsp;·
   <a href="#tests">Tests</a>
 </div>
@@ -5764,6 +5765,7 @@ For more commands and options, run
   <a href="#nb-help">nb</a>&nbsp;·
   <a href="#bookmark-help">bookmark</a>&nbsp;·
   <a href="#subcommands">subcommands</a>&nbsp;·
+  <a href="#variables">variables</a>&nbsp;·
   <a href="#plugin-help">plugins</a>
 </div>
 
@@ -8908,6 +8910,309 @@ Examples:
 
 Shortcut Alias:
   nb w
+```
+
+### Variables
+
+[Settings](#%EF%B8%8F-set--settings) are set in the `~/.nbrc` configuration
+file using environment variables. Settings can be set through the `nb`
+using [`set` & `settings`](#%EF%B8%8F-set--settings) or by
+assigning a value to the variable directly in the `~/.nbrc` file, which
+can be opened in your `$EDITOR` with [`nb settings edit`]().
+
+Example assignment:
+
+```bash
+export NB_INDICATOR_PINNED="🔮"
+```
+
+Available variables include:
+
+#### `$EDITOR`
+
+```text
+The terminal editor command for editing items.
+```
+
+#### `$NB_ACE_ENABLED`
+
+```text
+Default: '0'
+
+Example Values: '0', '1'
+```
+
+#### `$NB_ACE_MD_GUTTER`
+
+```text
+Default: '1'
+
+Example Values: '0', '1'
+```
+
+#### `$NB_ACE_SOFT_TABS`
+
+```text
+Default: '0'
+
+Example Values: '0', '1'
+```
+
+#### `$NB_ACE_KEYBOARD`
+
+```text
+Default: 'ace'
+
+Example Values: 'emacs', 'sublime', 'vim', 'vscode'
+```
+
+#### `$NB_AUDIO_TOOL`
+
+```text
+Default: '' (first available)
+
+Example Values: `mplayer`, `afplay`
+```
+
+#### `$NB_AUTO_SYNC`
+
+```text
+Default: '1'
+
+When set to '1', each `_git checkpoint()` call will automativally run
+`$_ME sync`. To disable this behavior, set the value to '0'.
+```
+
+#### `$NB_COLOR_PRIMARY`
+
+```text
+Default: Value depends on terminal capabilities.
+
+Set highlighting color. This should be set to an xterm color number, usually
+a value between 1 and 256. For a table of common colors and their numbers
+run:
+  nb settings colors
+
+Supported Values: [0..255+]
+```
+
+#### `$NB_COLOR_SECONDARY`
+
+```text
+Default: '8'
+
+Color for lines and other accents. This should be set to an xterm color
+number, usually a value between 1 and 256. For a table of common colors and
+their numbers, run:
+  nb settings colors
+
+Supported Values: [0..255+]
+```
+
+#### `$NB_COLOR_THEME`
+
+```text
+Default: 'nb'
+
+The color theme.
+```
+
+#### `$NB_DATA_TOOL`
+
+```text
+Default: '' (first available)
+
+Example Values: 'visidata', 'sc-im'
+```
+
+#### `$NB_DEFAULT_EXTENSION`
+
+```text
+Default: 'md'
+
+Example Values: 'md' 'org'
+```
+
+#### `$NB_DIR`
+
+```text
+Default: `$HOME/.nb`
+
+The location of the directory that contains the notebooks.
+```
+
+#### `$NB_DIRECTORY_TOOL`
+
+```text
+Default: '' (nb browse)
+
+Example Values: 'ranger', 'mc'
+```
+
+#### `$NB_ENCRYPTION_TOOL`
+
+```text
+Default: 'openssl'
+
+Supported Values: 'gpg' 'openssl'
+```
+
+#### `$NB_FOOTER`
+
+```text
+Default: '1'
+
+Supported Values: '0' '1'
+```
+
+#### `$NB_GUI_BROWSER`
+
+```text
+Default: ''
+
+Example Value: 'firefox'
+```
+
+#### `$NB_HEADER`
+
+```text
+Default: '2'
+
+Supported Values: '0' '1' '2' '3'
+```
+
+#### `$NB_IMAGE_TOOL`
+
+```text
+Default: '' (first available)
+
+Example Values: 'imgcat', 'catimg'
+```
+
+#### `$NB_INDICATOR_AUDIO`
+
+```text
+Default: 🔉
+```
+
+#### `$NB_INDICATOR_BOOKMARK`
+
+```text
+Default: 🔖
+```
+
+#### `$NB_INDICATOR_DOCUMENT`
+
+```text
+Default: 📄
+```
+
+#### `$NB_INDICATOR_EBOOK`
+
+```text
+Default: 📖
+```
+
+#### `$NB_INDICATOR_ENCRYPTED`
+
+```text
+Default: 🔒
+```
+
+#### `$NB_INDICATOR_FOLDER`
+
+```text
+Default: 📂
+```
+
+#### `$NB_INDICATOR_IMAGE`
+
+```text
+Default: 🌄
+```
+
+#### `$NB_INDICATOR_PINNED`
+
+```text
+Default: 📌
+```
+
+#### `$NB_INDICATOR_TODO`
+
+```text
+Default: ✔️
+```
+
+#### `$NB_INDICATOR_TODO_DONE`
+
+```text
+Default: ✅
+```
+
+#### `$NB_INDICATOR_VIDEO`
+
+```text
+Default: 📹
+```
+
+#### `$NB_LIMIT`
+
+```text
+Default: '15'
+
+Set to a positive number to limit the output of `nb` and `nls` to that value.
+Set to "auto" to automatically limit output to the current terminal height.
+Subtract an auto limit offset for multiline prompts with `auto-<number>`.
+
+Supported Values:
+  - \<number\>
+  - auto-\<number\>
+  - auto-\<number\>
+
+Example Values:
+  - 15
+  - auto
+  - auto-2
+```
+
+#### `$NB_SERVER_HOST`
+
+```text
+Default: 'localhost'
+```
+
+#### `$NB_SERVER_HOST`
+
+```text
+Default: 'localhost'
+```
+
+#### `$NB_SERVER_PORT`
+
+```text
+Default: '6789'
+```
+
+#### `$NB_SYNTAX_THEME`
+
+```text
+Default: 'base16'
+
+Supported Values: Theme names listed with `bat --list-themes`
+```
+
+#### `$NB_USER_AGENT`
+
+```text
+Default: '' (`curl` or `wget` default user agent)
+```
+
+#### `$NBRC_PATH`
+
+```text
+Default: `$HOME/.nbrc`
+
+The location of the .nbrc configuration file.
 ```
 
 ## Specifications
