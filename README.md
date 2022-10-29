@@ -7807,6 +7807,7 @@ Shortcut Alias:
 
 [↑](#-help) · See also:
 [`set` & `settings`](#%EF%B8%8F-set--settings),
+[Variables](#-variables),
 [`unset`](#unset)
 
 ```text
