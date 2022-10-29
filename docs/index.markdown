@@ -8941,6 +8941,12 @@ Example assignment:
 export NB_INDICATOR_PINNED="🔮"
 ```
 
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
 #### `$EDITOR`
 
 ```text
