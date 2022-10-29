@@ -8922,7 +8922,7 @@ Shortcut Alias:
 file using environment variables. Settings can be set through the `nb`
 using [`set` & `settings`](#%EF%B8%8F-set--settings) or by
 assigning a value to the variable directly in the `~/.nbrc` file, which
-can be opened in your `$EDITOR` with [`nb settings edit`]().
+can be opened in your `$EDITOR` with [`nb settings edit`](#settings).
 
 Example assignment:
 
