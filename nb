@@ -359,8 +359,10 @@ _debug() {
 _exit_1() {
   {
     [[ "${1:-}" == "_help" ]] || printf "%s " "$(_tput setaf 1)!$(_tput sgr0)"
+
     "${@}"
   } 1>&2
+
   exit 1
 }
 
@@ -376,6 +378,7 @@ _exit_1() {
 _warn() {
   {
     printf "%s " "$(_tput setaf 1)!$(_tput sgr0)"
+
     "${@}"
   } 1>&2
 }
