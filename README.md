@@ -8937,6 +8937,11 @@ Available variables include:
 ```text
 The terminal editor command for editing items.
 ```
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 #### `$NB_ACE_ENABLED`
 
@@ -8945,6 +8950,11 @@ Default: '0'
 
 Example Values: '0', '1'
 ```
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 #### `$NB_ACE_MD_GUTTER`
 
@@ -8954,6 +8964,12 @@ Default: '1'
 Example Values: '0', '1'
 ```
 
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
 #### `$NB_ACE_SOFT_TABS`
 
 ```text
@@ -8961,6 +8977,12 @@ Default: '0'
 
 Example Values: '0', '1'
 ```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 #### `$NB_ACE_KEYBOARD`
 
@@ -8970,6 +8992,12 @@ Default: 'ace'
 Example Values: 'emacs', 'sublime', 'vim', 'vscode'
 ```
 
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
 #### `$NB_AUDIO_TOOL`
 
 ```text
@@ -8977,6 +9005,12 @@ Default: '' (first available)
 
 Example Values: `mplayer`, `afplay`
 ```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 #### `$NB_AUTO_SYNC`
 
@@ -8986,6 +9020,12 @@ Default: '1'
 When set to '1', each `_git checkpoint()` call will automativally run
 `$_ME sync`. To disable this behavior, set the value to '0'.
 ```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 #### `$NB_COLOR_PRIMARY`
 
@@ -9000,6 +9040,12 @@ run:
 Supported Values: [0..255+]
 ```
 
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
 #### `$NB_COLOR_SECONDARY`
 
 ```text
@@ -9013,6 +9059,12 @@ their numbers, run:
 Supported Values: [0..255+]
 ```
 
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
 #### `$NB_COLOR_THEME`
 
 ```text
@@ -9020,6 +9072,12 @@ Default: 'nb'
 
 The color theme.
 ```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 #### `$NB_DATA_TOOL`
 
@@ -9029,6 +9087,12 @@ Default: '' (first available)
 Example Values: 'visidata', 'sc-im'
 ```
 
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
 #### `$NB_DEFAULT_EXTENSION`
 
 ```text
@@ -9036,6 +9100,12 @@ Default: 'md'
 
 Example Values: 'md' 'org'
 ```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 #### `$NB_DIR`
 
@@ -9045,6 +9115,12 @@ Default: `$HOME/.nb`
 The location of the directory that contains the notebooks.
 ```
 
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
 #### `$NB_DIRECTORY_TOOL`
 
 ```text
@@ -9052,6 +9128,12 @@ Default: '' (nb browse)
 
 Example Values: 'ranger', 'mc'
 ```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 #### `$NB_ENCRYPTION_TOOL`
 
@@ -9061,6 +9143,12 @@ Default: 'openssl'
 Supported Values: 'gpg' 'openssl'
 ```
 
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
 #### `$NB_FOOTER`
 
 ```text
@@ -9068,6 +9156,12 @@ Default: '1'
 
 Supported Values: '0' '1'
 ```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 #### `$NB_GUI_BROWSER`
 
@@ -9077,6 +9171,12 @@ Default: ''
 Example Value: 'firefox'
 ```
 
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
 #### `$NB_HEADER`
 
 ```text
@@ -9084,6 +9184,12 @@ Default: '2'
 
 Supported Values: '0' '1' '2' '3'
 ```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 #### `$NB_IMAGE_TOOL`
 
@@ -9093,11 +9199,23 @@ Default: '' (first available)
 Example Values: 'imgcat', 'catimg'
 ```
 
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
 #### `$NB_INDICATOR_AUDIO`
 
 ```text
 Default: 🔉
 ```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 #### `$NB_INDICATOR_BOOKMARK`
 
@@ -9105,11 +9223,23 @@ Default: 🔉
 Default: 🔖
 ```
 
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
 #### `$NB_INDICATOR_DOCUMENT`
 
 ```text
 Default: 📄
 ```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 #### `$NB_INDICATOR_EBOOK`
 
@@ -9117,11 +9247,23 @@ Default: 📄
 Default: 📖
 ```
 
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
 #### `$NB_INDICATOR_ENCRYPTED`
 
 ```text
 Default: 🔒
 ```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 #### `$NB_INDICATOR_FOLDER`
 
@@ -9129,11 +9271,23 @@ Default: 🔒
 Default: 📂
 ```
 
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
 #### `$NB_INDICATOR_IMAGE`
 
 ```text
 Default: 🌄
 ```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 #### `$NB_INDICATOR_PINNED`
 
@@ -9141,11 +9295,23 @@ Default: 🌄
 Default: 📌
 ```
 
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
 #### `$NB_INDICATOR_TODO`
 
 ```text
 Default: ✔️
 ```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 #### `$NB_INDICATOR_TODO_DONE`
 
@@ -9153,11 +9319,23 @@ Default: ✔️
 Default: ✅
 ```
 
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
 #### `$NB_INDICATOR_VIDEO`
 
 ```text
 Default: 📹
 ```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 #### `$NB_LIMIT`
 
@@ -9179,23 +9357,47 @@ Example Values:
   - auto-2
 ```
 
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
 #### `$NB_SERVER_HOST`
 
 ```text
 Default: 'localhost'
 ```
 
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
 #### `$NB_SERVER_HOST`
 
 ```text
 Default: 'localhost'
 ```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 #### `$NB_SERVER_PORT`
 
 ```text
 Default: '6789'
 ```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 #### `$NB_SYNTAX_THEME`
 
@@ -9205,11 +9407,23 @@ Default: 'base16'
 Supported Values: Theme names listed with `bat --list-themes`
 ```
 
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
 #### `$NB_USER_AGENT`
 
 ```text
 Default: '' (`curl` or `wget` default user agent)
 ```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 #### `$NBRC_PATH`
 
@@ -9218,6 +9432,12 @@ Default: `$HOME/.nbrc`
 
 The location of the .nbrc configuration file.
 ```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 ## Specifications
 
