@@ -4909,6 +4909,7 @@ to download the original file:
 <p>
   <sup>
     <a href="#overview">↑</a> ·
+    <a href="#-variables">Variables</a>,
     <a href="#settings"><code>nb settings</code></a>,
     <a href="#unset"><code>nb unset</code></a>
   </sup>
