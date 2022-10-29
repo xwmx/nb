@@ -8930,13 +8930,12 @@ Example assignment:
 export NB_INDICATOR_PINNED="🔮"
 ```
 
-Available variables include:
-
 #### `$EDITOR`
 
 ```text
 The terminal editor command for editing items.
 ```
+
 <p>
   <sup>
     <a href="#-variables">↑</a>
@@ -8950,6 +8949,7 @@ Default: '0'
 
 Example Values: '0', '1'
 ```
+
 <p>
   <sup>
     <a href="#-variables">↑</a>
