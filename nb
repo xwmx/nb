@@ -81,7 +81,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.1.0"
+_VERSION="7.1.1"
 
 # $_ME
 #
@@ -359,8 +359,10 @@ _debug() {
 _exit_1() {
   {
     [[ "${1:-}" == "_help" ]] || printf "%s " "$(_tput setaf 1)!$(_tput sgr0)"
+
     "${@}"
   } 1>&2
+
   exit 1
 }
 
@@ -376,6 +378,7 @@ _exit_1() {
 _warn() {
   {
     printf "%s " "$(_tput setaf 1)!$(_tput sgr0)"
+
     "${@}"
   } 1>&2
 }
@@ -1464,6 +1467,7 @@ export _URL_PATTERNS=(
   "doi:10\.[^[:space:]]+"
   "(msnim|things):[^[:space:]]+\?[^[:space:]]+"
   "(feed|mvn|paparazzi|view-source):https?://[^[:space:]]+"
+  "git@[^[:space:]]+:[^[:space:]]+"
   "gtalk:chat[^[:space:]]+"
   "(im|mailto|reload|sips?|xmpp):[^[:space:]]+@[^[:space:]]+"
   "jar:[^[:space:]]+!/[^[:space:]]+"

@@ -156,7 +156,7 @@ or dozens of notebooks containing thousands of notes, bookmarks, and other items
 <p align="center"></p><!-- spacer -->
 
 <div align="center">
-  <a href="#help">Help</a>
+  <a href="#-help">Help</a>
 </div>
 
 <p align="center"></p><!-- spacer -->
@@ -408,8 +408,8 @@ the [`nb update`](#update) subcommand.
   <a href="#01-metadata"><code>01</code>&nbsp;Metadata</a>&nbsp;·
   <a href="#-interactive-shell"><code>❯</code>&nbsp;Shell</a>&nbsp;·
   <a href="#shortcut-aliases">Shortcuts</a>&nbsp;·
-  <a href="#help">Help</a>&nbsp;·
-  <a href="#variables">Variables</a>&nbsp;·
+  <a href="#-help"><code>?</code>&nbsp;Help</a>&nbsp;·
+  <a href="#-variables"><code>$</code>&nbsp;Variables</a>&nbsp;·
   <a href="#specifications">Specifications</a>&nbsp;·
   <a href="#tests">Tests</a>
 </div>
@@ -1131,23 +1131,23 @@ NB_LIMIT set to 3
 ```
 
 List [#tagged](#tagging) items by passing `\#escaped` or `"#quoted"` hashtags
-or tags specified with the `--tags`. Multiple tags perform an `AND`
-query:
+or tags specified with the [`--tags`](#ls) option. Multiple tags perform an 
+`AND` query:
 
 ```bash
-# list items in the current notebook tagged with #tag1, escaped
+# list items in the current notebook tagged with "#tag1", escaped
 nb \#tag1
 
-# list items in the "example" notebook tagged with #tag2, quoted
+# list items in the "example" notebook tagged with "#tag2", quoted
 nb example: "#tag2"
 
-# list items in all notebooks tagged with #tag1, long option
+# list items in all notebooks tagged with "#tag1", long option
 nb \#tag1 --all
 
-# list items in the current notebook tagged with #tag1 AND #tag2
+# list items in the current notebook tagged with "#tag1" AND "#tag2"
 nb \#tag1 "#tag2"
 
-# list items in all notebooks tagged with #tag2 AND #tag3, short option
+# list items in all notebooks tagged with "#tag2" AND "#tag3", short option
 nb --tags tag2,tag3 -a
 ```
 
@@ -1431,12 +1431,12 @@ Supported file types and tools include:
   - [`termpdf.py`](https://github.com/dsanson/termpdf.py)
     with [kitty](https://sw.kovidgoyal.net/kitty/)
   - [`pdftotext`](https://en.wikipedia.org/wiki/Pdftotext)
-- Audio files (`$NB_AUDIO_TOOL`):
+- Audio files ([`$NB_AUDIO_TOOL`](#nb_audio_tool)):
   - [`mplayer`](https://en.wikipedia.org/wiki/MPlayer)
   - [`afplay`](https://ss64.com/osx/afplay.html)
   - [`mpg123`](https://en.wikipedia.org/wiki/Mpg123)
   - [`ffplay`](https://ffmpeg.org/ffplay.html)
-- [Images (`$NB_IMAGE_TOOL`)](#-images):
+- [Images](#-images) ([`$NB_IMAGE_TOOL`](#nb_image_tool)):
   - [`catimg`](https://github.com/posva/catimg)
   - [Chafa](https://github.com/hpjansson/chafa)
   - [ImageMagick](https://imagemagick.org/) with a terminal that
@@ -1447,7 +1447,7 @@ Supported file types and tools include:
   - [`term-image`](https://github.com/AnonymouX47/term-image)
   - [`timg`](https://github.com/hzeller/timg)
   - [`viu`](https://github.com/atanunq/viu)
-- Folders, Directories, Notebooks (`$NB_DIRECTORY_TOOL`):
+- Folders, Directories, Notebooks ([`$NB_DIRECTORY_TOOL`](#nb_directory_tool)):
   - [`exa`](https://github.com/ogham/exa)
   - [`joshuto`](https://github.com/kamiyaa/joshuto)
   - [Midnight Commander (`mc`)](https://en.wikipedia.org/wiki/Midnight_Commander)
@@ -1457,7 +1457,7 @@ Supported file types and tools include:
   - [Pandoc](https://pandoc.org/) with
     [`w3m`](https://en.wikipedia.org/wiki/W3m) or
     [`links`](https://en.wikipedia.org/wiki/Links_(web_browser))
-- Excel, CSV, TSV, and data files (`$NB_DATA_TOOL`):
+- Excel, CSV, TSV, and data files ([`$NB_DATA_TOOL`](#nb_data_tool)):
   - [VisiData](https://www.visidata.org/)
   - [`sc-im`](https://github.com/andmarti1424/sc-im)
   - [Tidy-Viewer (`tv`)](https://github.com/alexhallam/tv)
@@ -2705,32 +2705,32 @@ nb sample:123 --tags
 ```
 
 List tagged items by passing `\#escaped` or `"#quoted"` hashtags or tags
-specified with the `--tags` option to `nb` / `nb ls`:
+specified with the [`--tags`](#ls) option to [`nb`](#ls) / [`nb ls`](#ls):
 
 ```bash
-# list items in the current notebook tagged with #tag1, escaped
+# list items in the current notebook tagged with "#tag1", escaped
 nb \#tag1
 
-# list items in the "example" notebook tagged with #tag2, quoted
+# list items in the "example" notebook tagged with "#tag2", quoted
 nb example: "#tag2"
 
-# list items in all notebooks tagged with #tag3, long option
+# list items in all notebooks tagged with "#tag3", long option
 nb --tags tag3 --all
 
-# list items in all notebooks tagged with #tag3, short option
+# list items in all notebooks tagged with "#tag3", short option
 nb --tags tag3 -a
 ```
 
 Combine multiple tags to search for items containing all specified tags:
 
 ```bash
-# list items in the current notebook tagged with #tag1 AND #tag2
+# list items in the current notebook tagged with "#tag1" AND "#tag2"
 nb \#tag1 "#tag2"
 
-# list items in the current notebook tagged with #tag2 AND #tag3
+# list items in the current notebook tagged with "#tag2" AND "#tag3"
 nb --tags tag2,tag3
 
-# list items in all notebooks tagged with #tag1 AND #tag2 AND #tag3 AND #tag4
+# list items in all notebooks tagged with "#tag1" AND "#tag2" AND "#tag3" AND "#tag4"
 nb \#tag1 "#tag2" --tags tag3,tag4 --all
 ```
 
@@ -3440,8 +3440,8 @@ supported tools and configurations, including:
 - [`timg`](https://github.com/hzeller/timg)
 - [`viu`](https://github.com/atanunq/viu)
 
-A preferred image viewer tool can be set with the `$NB_IMAGE_TOOL` variable
-in your `~/.nbrc` file,
+A preferred image viewer tool can be set with the
+[`$NB_IMAGE_TOOL`](#nb_image_tool) variable in your `~/.nbrc` file,
 which can be opened in your editor with [`nb settings edit`](#settings).
 
 #### Inline Images
@@ -3706,7 +3706,7 @@ home
 `nb` can also be configured to pin notes that contain
 a specified [#hashtag](#-tagging) or other search pattern.
 To enable tag / search-based pinning,
-set the `$NB_PINNED_PATTERN` environment variable to
+set the [`$NB_PINNED_PATTERN`](#nb_pinned_pattern) environment variable to
 the desired [#tag](#-tagging) or pattern.
 
 For example, to treat all items tagged with `#pinned` as pinned items,
@@ -4374,7 +4374,7 @@ which is `~/.nb` by default.
 
 `nb` also supports creating and working with local notebooks.
 Local notebooks are notebooks that are
-anywhere on the system outside of `NB_DIR`.
+anywhere on the system outside of [`NB_DIR`](#nb_dir-1).
 Any folder can be an `nb` local notebook, which is just a normal folder
 that has been initialized as a git repository and contains an `nb` .index file.
 Initializing a folder as an `nb` local notebook is a very easy way to
@@ -4915,6 +4915,7 @@ to download the original file:
 <p>
   <sup>
     <a href="#overview">↑</a> ·
+    <a href="#-variables">Variables</a>,
     <a href="#settings"><code>nb settings</code></a>,
     <a href="#unset"><code>nb unset</code></a>
   </sup>
@@ -5215,7 +5216,7 @@ To turn off an indicator, assign the variable to an empty string:
 export NB_INDICATOR_PINNED=""
 ```
 
-Available indicator variables with default values:
+Available indicator [variables](#-variables) with default values:
 
 ```bash
 export  NB_INDICATOR_AUDIO="🔉"
@@ -5765,13 +5766,12 @@ For more commands and options, run
         width="700">
 </div>
 
-### Help
+### `?` Help
 
 <div align="center">
   <a href="#nb-help">nb</a>&nbsp;·
   <a href="#bookmark-help">bookmark</a>&nbsp;·
   <a href="#subcommands">subcommands</a>&nbsp;·
-  <a href="#variables">variables</a>&nbsp;·
   <a href="#plugin-help">plugins</a>
 </div>
 
@@ -5792,7 +5792,7 @@ For more commands and options, run
   <a href="#export">export</a>&nbsp;·
   <a href="#folders">folders</a>&nbsp;·
   <a href="#git">git</a>&nbsp;·
-  <a href="#help-1">help</a>&nbsp;·
+  <a href="#help">help</a>&nbsp;·
   <a href="#history">history</a>&nbsp;·
   <a href="#import">import</a>&nbsp;·
   <a href="#init">init</a>&nbsp;·
@@ -5832,8 +5832,8 @@ For more commands and options, run
 
 #### `nb help`
 
-[↑](#help) · See also:
-[`help`](#help-1)
+[↑](#-help) · See also:
+[`help`](#help)
 
 ```text
 __          _
@@ -6063,7 +6063,7 @@ More Information:
 
 #### `bookmark help`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Bookmarks](#-bookmarks),
 [`bookmark`](#bookmark),
 [`browse`](#browse)
@@ -6193,7 +6193,7 @@ For more information, see: `nb help`.
   <a href="#folders">folders</a>&nbsp;·
   <a href="#export">export</a>&nbsp;·
   <a href="#git">git</a>&nbsp;·
-  <a href="#help-1">help</a>&nbsp;·
+  <a href="#help">help</a>&nbsp;·
   <a href="#history">history</a>&nbsp;·
   <a href="#import">import</a>&nbsp;·
   <a href="#init">init</a>&nbsp;·
@@ -6233,7 +6233,7 @@ For more information, see: `nb help`.
 
 #### `add`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Adding](#adding),
 [`bookmark`](#bookmark),
 [`browse`](#browse),
@@ -6329,7 +6329,7 @@ Shortcut Aliases:
 
 #### `archive`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Archiving Notebooks](#archiving-notebooks),
 [`notebooks`](#notebooks),
 [`status`](#status),
@@ -6362,7 +6362,7 @@ Shortcut Alias:
 
 #### `bookmark`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Bookmarks](#-bookmarks),
 [`browse`](#browse),
 [`open`](#open),
@@ -6471,7 +6471,7 @@ Shortcut Aliases:
 
 #### `browse`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Browsing](#-browsing),
 [Images](#-images),
 [Linking](#-linking),
@@ -6574,7 +6574,7 @@ Shortcut Alias:
 
 #### `completions`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Tab Completion](https://github.com/xwmx/nb/tree/master/etc),
 [`env`](#env)
 
@@ -6597,7 +6597,7 @@ See Also:
 
 #### `copy`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Moving & Renaming](#-moving--renaming),
 [`move`](#move)
 
@@ -6626,7 +6626,7 @@ Alias:
 
 #### `count`
 
-[↑&nbsp;](#help)
+[↑&nbsp;](#-help)
 
 ```text
 Usage:
@@ -6639,7 +6639,7 @@ Description:
 
 #### `delete`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Deleting](#deleting),
 [`add`](#add),
 [`browse`](#browse),
@@ -6692,7 +6692,7 @@ Shortcut Aliases:
 
 #### `do`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Todos](#-todos),
 [Tasks](#%EF%B8%8F-tasks),
 [`tasks`](#tasks),
@@ -6723,7 +6723,7 @@ Examples:
 
 #### `edit`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Editing](#editing),
 [`add`](#add),
 [`browse`](#browse),
@@ -6787,7 +6787,7 @@ Shortcut Alias:
 
 #### `env`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Installation](#installation),
 [`completions`](#completions),
 [`init`](#init),
@@ -6817,7 +6817,7 @@ See Also:
 
 #### `export`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Import / Export](#%EF%B8%8F-import--export),
 [`browse`](#browse),
 [`import`](#import)
@@ -6874,7 +6874,7 @@ Examples:
 
 #### `folders`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Folders](#-folders),
 [`add`](#add),
 [`delete`](#delete),
@@ -6918,7 +6918,7 @@ Shortcut Alias:
 
 #### `git`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Git Sync](#-git-sync),
 [History](#-revision-history),
 [`history`](#history),
@@ -6961,7 +6961,7 @@ Examples:
 
 #### `help`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [`nb help`](#nb-help)
 
 ```text
@@ -6992,7 +6992,7 @@ Shortcut Alias:
 
 #### `history`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [History](#-revision-history),
 [Git Sync](#-git-sync),
 [`git`](#git),
@@ -7033,7 +7033,7 @@ Examples:
 
 #### `import`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Import / Export](#%EF%B8%8F-import--export),
 [Images](#-images),
 [`add`](#add),
@@ -7082,7 +7082,7 @@ Shortcut Alias:
 
 #### `init`
 
-[↑](#help) · See also: [`notebooks`](#notebooks)
+[↑](#-help) · See also: [`notebooks`](#notebooks)
 
 ```text
 Usage:
@@ -7113,7 +7113,7 @@ Examples:
 
 #### `list`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Listing & Filtering](#listing--filtering),
 [`browse`](#browse),
 [`ls`](#ls),
@@ -7190,7 +7190,7 @@ Examples:
 
 #### `ls`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Listing & Filtering](#listing--filtering),
 [`browse`](#browse),
 [`list`](#list),
@@ -7288,7 +7288,7 @@ Shortcut Alias:
 
 #### `move`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Moving & Renaming](#-moving--renaming),
 [`copy`](#copy),
 [`delete`](#delete),
@@ -7359,7 +7359,7 @@ Shortcut Alias:
 
 #### `notebooks`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Notebooks](#-notebooks),
 [`archive`](#archive),
 [`history`](#history),
@@ -7481,7 +7481,7 @@ Shortcut Aliases:
 
 #### `open`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Viewing Bookmarks](#viewing-bookmarks),
 [Images](#-images),
 [`bookmark`](#bookmark),
@@ -7526,7 +7526,7 @@ Shortcut Alias:
 
 #### `peek`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Viewing Bookmarks](#viewing-bookmarks),
 [`bookmark`](#bookmark),
 [`browse`](#browse),
@@ -7581,7 +7581,7 @@ Shortcut Alias:
 
 #### `pin`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Pinning](#-pinning),
 [`browse`](#browse),
 [`list`](#list),
@@ -7611,7 +7611,7 @@ Examples:
 
 #### `plugins`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Plugins](#-plugins),
 [Plugin Help](#plugin-help),
 [`subcommands`](#subcommands-1)
@@ -7649,7 +7649,7 @@ Alias:
 
 #### `remote`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Git Sync](#-git-sync),
 [History](#-revision-history),
 [`history`](#history),
@@ -7700,7 +7700,7 @@ Examples:
 
 #### `run`
 
-[↑](#help) · See also: [`git`](#git), [`shell`](#shell)
+[↑](#-help) · See also: [`git`](#git), [`shell`](#shell)
 
 ```text
 Usage:
@@ -7721,7 +7721,7 @@ Examples:
 
 #### `search`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Search](#-search),
 [`browse`](#browse),
 [`list`](#list),
@@ -7812,8 +7812,9 @@ Shortcut Alias:
 
 #### `settings`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [`set` & `settings`](#%EF%B8%8F-set--settings),
+[Variables](#-variables),
 [`unset`](#unset)
 
 ```text
@@ -7871,7 +7872,7 @@ Alias:
 
 ##### `auto_sync`
 
-[↑](#help) · See also: [Git Sync](#-git-sync)
+[↑](#-help) · See also: [Git Sync](#-git-sync)
 
 ```text
 [1]  auto_sync
@@ -7885,7 +7886,7 @@ Alias:
 
 ##### `color_primary`
 
-[↑](#help) · See also: [Color Themes](#-color-themes), [Custom Color Themes](#custom-color-themes)
+[↑](#-help) · See also: [Color Themes](#-color-themes), [Custom Color Themes](#custom-color-themes)
 
 ```text
 [2]  color_primary
@@ -7899,7 +7900,7 @@ Alias:
 
 ##### `color_secondary`
 
-[↑](#help) · See also: [Color Themes](#-color-themes), [Custom Color Themes](#custom-color-themes)
+[↑](#-help) · See also: [Color Themes](#-color-themes), [Custom Color Themes](#custom-color-themes)
 
 ```text
 [3]  color_secondary
@@ -7912,7 +7913,7 @@ Alias:
 
 ##### `color_theme`
 
-[↑](#help) · See also: [Color Themes](#-color-themes)
+[↑](#-help) · See also: [Color Themes](#-color-themes)
 
 ```text
 [4]  color_theme
@@ -7950,7 +7951,7 @@ Alias:
 
 ##### `default_extension`
 
-[↑](#help) · See also: [Adding](#adding)
+[↑](#-help) · See also: [Adding](#adding)
 
 ```text
 [5]  default_extension
@@ -7964,7 +7965,7 @@ Alias:
 
 ##### `editor`
 
-[↑](#help) · See also: [Editing](#editing), [Adding](#adding)
+[↑](#-help) · See also: [Editing](#editing), [Adding](#adding)
 
 ```text
 [6]  editor
@@ -7988,7 +7989,7 @@ Alias:
 
 ##### `encryption_tool`
 
-[↑](#help) · See also: [Password-Protected Encrypted Notes and Bookmarks](#password-protected-encrypted-notes-and-bookmarks)
+[↑](#-help) · See also: [Password-Protected Encrypted Notes and Bookmarks](#password-protected-encrypted-notes-and-bookmarks)
 
 ```text
 [7]  encryption_tool
@@ -8001,7 +8002,7 @@ Alias:
 
 ##### `footer`
 
-[↑](#help) · See also: [Listing & Filtering](#listing--filtering)
+[↑](#-help) · See also: [Listing & Filtering](#listing--filtering)
 
 ```text
 [8]  footer
@@ -8014,7 +8015,7 @@ Alias:
 
 ##### `header`
 
-[↑](#help) · See also: [Listing & Filtering](#listing--filtering)
+[↑](#-help) · See also: [Listing & Filtering](#listing--filtering)
 
 ```text
 [9]  header
@@ -8036,7 +8037,7 @@ Alias:
 
 ##### `limit`
 
-[↑](#help) · See also: [Listing & Filtering](#listing--filtering)
+[↑](#-help) · See also: [Listing & Filtering](#listing--filtering)
 
 ```text
 [10] limit
@@ -8056,7 +8057,7 @@ Alias:
 
 ##### `nb_dir`
 
-[↑&nbsp;](#help)
+[↑&nbsp;](#-help)
 
 ```text
 [11] nb_dir
@@ -8071,7 +8072,7 @@ Alias:
 
 ##### `syntax_theme`
 
-[↑](#help) · See also: [Terminal Syntax Highlighting](#terminal-syntax-highlighting-theme)
+[↑](#-help) · See also: [Terminal Syntax Highlighting](#terminal-syntax-highlighting-theme)
 
 ```text
 [12] syntax_theme
@@ -8111,7 +8112,7 @@ Alias:
 
 #### `shell`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Interactive Shell](#-interactive-shell),
 [`run`](#run)
 
@@ -8153,7 +8154,7 @@ Example:
 
 #### `show`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Viewing](#viewing),
 [Images](#-images),
 [`browse`](#browse),
@@ -8258,7 +8259,7 @@ Shortcut Alias:
 
 #### `status`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Git Sync](#-git-sync),
 [History](#-revision-history),
 [`archive`](#archive),
@@ -8297,7 +8298,7 @@ Shortcut Alias:
 
 #### `subcommands`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Plugins](#-plugins),
 [`plugins`](#plugins)
 
@@ -8328,7 +8329,7 @@ See Also:
 
 #### `sync`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Git Sync](#-git-sync),
 [History](#-revision-history),
 [`history`](#history),
@@ -8387,7 +8388,7 @@ Examples:
 
 #### `tasks`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Tasks](#%EF%B8%8F-tasks),
 [Todos](#-todos),
 [`do`](#do),
@@ -8426,7 +8427,7 @@ Shortcut Alias:
 
 #### `todo`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Todos](#-todos),
 [`do`](#do),
 [`tasks`](#tasks),
@@ -8491,7 +8492,7 @@ Shortcut Alias:
 
 #### `unarchive`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Archiving Notebooks](#archiving-notebooks),
 [`archive`](#archive),
 [`notebooks`](#notebooks),
@@ -8524,7 +8525,7 @@ Shortcut Alias:
 
 #### `undo`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Todos](#-todos),
 [Tasks](#%EF%B8%8F-tasks),
 [`do`](#do),
@@ -8555,7 +8556,7 @@ Examples:
 
 #### `unpin`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Pinning](#-pinning),
 [`browse`](#browse),
 [`list`](#list),
@@ -8585,7 +8586,7 @@ Examples:
 
 #### `unset`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [`set` & `settings`](#%EF%B8%8F-set--settings),
 [`settings`](#settings)
 
@@ -8614,7 +8615,7 @@ Alias:
 
 #### `update`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Installation](#installation),
 [`env`](#env),
 [`version`](#version)
@@ -8641,7 +8642,7 @@ See Also:
 
 #### `use`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Notebooks](#-notebooks),
 [`notebooks`](#notebooks)
 
@@ -8667,7 +8668,7 @@ Shortcut Alias:
 
 #### `version`
 
-[↑](#help) · See also:
+[↑](#-help) · See also:
 [Installation](#installation),
 [`env`](#env),
 [`update`](#update)
@@ -8688,7 +8689,7 @@ See Also:
 
 <p>
   <sup>
-    <a href="#help">↑</a> ·
+    <a href="#-help">↑</a> ·
     <a href="#-plugins">Plugins</a>,
     <a href="#plugins"><code>nb plugins</code></a>
   </sup>
@@ -8706,7 +8707,7 @@ See Also:
 <p align="center"></p><!-- spacer -->
 
 <div align="center">
-  <a href="#help">&nbsp;↑&nbsp;</a>
+  <a href="#-help">&nbsp;↑&nbsp;</a>
 </div>
 
 #### `backlink`
@@ -8918,13 +8919,21 @@ Shortcut Alias:
   nb w
 ```
 
-### Variables
+### `$` Variables
+
+<p>
+  <sup>
+    <a href="#overview">↑</a> ·
+    <a href="#%EF%B8%8F-set--settings"><code>set</code>&<code>settings</code></a>,
+    <a href="#settings"><code>nb settings</code></a>
+  </sup>
+</p>
 
 [Settings](#%EF%B8%8F-set--settings) are set in the `~/.nbrc` configuration
 file using environment variables. Settings can be set through the `nb`
 using [`set` & `settings`](#%EF%B8%8F-set--settings) or by
 assigning a value to the variable directly in the `~/.nbrc` file, which
-can be opened in your `$EDITOR` with [`nb settings edit`]().
+can be opened in your `$EDITOR` with [`nb settings edit`](#settings).
 
 Example assignment:
 
@@ -8932,13 +8941,23 @@ Example assignment:
 export NB_INDICATOR_PINNED="🔮"
 ```
 
-Available variables include:
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 #### `$EDITOR`
 
 ```text
 The terminal editor command for editing items.
 ```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 #### `$NB_ACE_ENABLED`
 
@@ -8948,6 +8967,12 @@ Default: '0'
 Example Values: '0', '1'
 ```
 
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
 #### `$NB_ACE_MD_GUTTER`
 
 ```text
@@ -8955,6 +8980,12 @@ Default: '1'
 
 Example Values: '0', '1'
 ```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 #### `$NB_ACE_SOFT_TABS`
 
@@ -8964,6 +8995,12 @@ Default: '0'
 Example Values: '0', '1'
 ```
 
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
 #### `$NB_ACE_KEYBOARD`
 
 ```text
@@ -8971,6 +9008,12 @@ Default: 'ace'
 
 Example Values: 'emacs', 'sublime', 'vim', 'vscode'
 ```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 #### `$NB_AUDIO_TOOL`
 
@@ -8980,6 +9023,12 @@ Default: '' (first available)
 Example Values: `mplayer`, `afplay`
 ```
 
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
 #### `$NB_AUTO_SYNC`
 
 ```text
@@ -8988,6 +9037,12 @@ Default: '1'
 When set to '1', each `_git checkpoint()` call will automativally run
 `$_ME sync`. To disable this behavior, set the value to '0'.
 ```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 #### `$NB_COLOR_PRIMARY`
 
@@ -9002,6 +9057,12 @@ run:
 Supported Values: [0..255+]
 ```
 
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
 #### `$NB_COLOR_SECONDARY`
 
 ```text
@@ -9015,6 +9076,12 @@ their numbers, run:
 Supported Values: [0..255+]
 ```
 
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
 #### `$NB_COLOR_THEME`
 
 ```text
@@ -9022,6 +9089,12 @@ Default: 'nb'
 
 The color theme.
 ```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 #### `$NB_DATA_TOOL`
 
@@ -9031,6 +9104,12 @@ Default: '' (first available)
 Example Values: 'visidata', 'sc-im'
 ```
 
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
 #### `$NB_DEFAULT_EXTENSION`
 
 ```text
@@ -9038,6 +9117,12 @@ Default: 'md'
 
 Example Values: 'md' 'org'
 ```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 #### `$NB_DIR`
 
@@ -9047,6 +9132,12 @@ Default: `$HOME/.nb`
 The location of the directory that contains the notebooks.
 ```
 
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
 #### `$NB_DIRECTORY_TOOL`
 
 ```text
@@ -9054,6 +9145,12 @@ Default: '' (nb browse)
 
 Example Values: 'ranger', 'mc'
 ```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 #### `$NB_ENCRYPTION_TOOL`
 
@@ -9063,6 +9160,12 @@ Default: 'openssl'
 Supported Values: 'gpg' 'openssl'
 ```
 
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
 #### `$NB_FOOTER`
 
 ```text
@@ -9070,6 +9173,12 @@ Default: '1'
 
 Supported Values: '0' '1'
 ```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 #### `$NB_GUI_BROWSER`
 
@@ -9079,6 +9188,12 @@ Default: ''
 Example Value: 'firefox'
 ```
 
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
 #### `$NB_HEADER`
 
 ```text
@@ -9086,6 +9201,12 @@ Default: '2'
 
 Supported Values: '0' '1' '2' '3'
 ```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 #### `$NB_IMAGE_TOOL`
 
@@ -9095,11 +9216,23 @@ Default: '' (first available)
 Example Values: 'imgcat', 'catimg'
 ```
 
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
 #### `$NB_INDICATOR_AUDIO`
 
 ```text
 Default: 🔉
 ```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 #### `$NB_INDICATOR_BOOKMARK`
 
@@ -9107,11 +9240,23 @@ Default: 🔉
 Default: 🔖
 ```
 
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
 #### `$NB_INDICATOR_DOCUMENT`
 
 ```text
 Default: 📄
 ```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 #### `$NB_INDICATOR_EBOOK`
 
@@ -9119,11 +9264,23 @@ Default: 📄
 Default: 📖
 ```
 
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
 #### `$NB_INDICATOR_ENCRYPTED`
 
 ```text
 Default: 🔒
 ```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 #### `$NB_INDICATOR_FOLDER`
 
@@ -9131,11 +9288,23 @@ Default: 🔒
 Default: 📂
 ```
 
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
 #### `$NB_INDICATOR_IMAGE`
 
 ```text
 Default: 🌄
 ```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 #### `$NB_INDICATOR_PINNED`
 
@@ -9143,11 +9312,23 @@ Default: 🌄
 Default: 📌
 ```
 
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
 #### `$NB_INDICATOR_TODO`
 
 ```text
 Default: ✔️
 ```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 #### `$NB_INDICATOR_TODO_DONE`
 
@@ -9155,11 +9336,23 @@ Default: ✔️
 Default: ✅
 ```
 
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
 #### `$NB_INDICATOR_VIDEO`
 
 ```text
 Default: 📹
 ```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 #### `$NB_LIMIT`
 
@@ -9171,9 +9364,9 @@ Set to "auto" to automatically limit output to the current terminal height.
 Subtract an auto limit offset for multiline prompts with `auto-<number>`.
 
 Supported Values:
-  - \<number\>
-  - auto-\<number\>
-  - auto-\<number\>
+  - <number>
+  - auto-<number>
+  - auto-<number>
 
 Example Values:
   - 15
@@ -9181,23 +9374,59 @@ Example Values:
   - auto-2
 ```
 
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
+#### `$NB_PINNED_PATTERN`
+
+```text
+Example Value: '#pinned'
+```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
 #### `$NB_SERVER_HOST`
 
 ```text
 Default: 'localhost'
 ```
 
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
 #### `$NB_SERVER_HOST`
 
 ```text
 Default: 'localhost'
 ```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 #### `$NB_SERVER_PORT`
 
 ```text
 Default: '6789'
 ```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 #### `$NB_SYNTAX_THEME`
 
@@ -9207,11 +9436,23 @@ Default: 'base16'
 Supported Values: Theme names listed with `bat --list-themes`
 ```
 
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
 #### `$NB_USER_AGENT`
 
 ```text
 Default: '' (`curl` or `wget` default user agent)
 ```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 #### `$NBRC_PATH`
 
@@ -9220,6 +9461,12 @@ Default: `$HOME/.nbrc`
 
 The location of the .nbrc configuration file.
 ```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 ## Specifications
 
@@ -9232,8 +9479,10 @@ The location of the .nbrc configuration file.
 <p align="center"></p><!-- spacer -->
 
 <div align="center">
-  <a href="#help">&nbsp;↑&nbsp;</a>
+  <a href="#-help">&nbsp;↑&nbsp;</a>
 </div>
+
+<p align="center"></p><!-- spacer -->
 
 ### `nb` Markdown Bookmark File Format
 
@@ -9716,6 +9965,12 @@ Description:
   ids are preserved across systems.
 ```
 
+<p>
+  <sup>
+    <a href="#nb-notebook-specification">↑</a>
+  </sup>
+</p>
+
 #### `.pindex` Files
 
 Any folder may contain an optional plain text file named `.pindex`
@@ -9724,11 +9979,23 @@ be treated as [pinned](#-pinning), meaning they appear first in some
 list operations, including `nb` and [`nb ls`](#ls). Entries are added to a
 `.pindex` file with [`nb pin`](#pin) and removed with [`nb unpin`](#unpin).
 
+<p>
+  <sup>
+    <a href="#nb-notebook-specification">↑</a>
+  </sup>
+</p>
+
 #### Archived Notebooks
 
 A notebook is considered [archived](#archiving-notebooks)
 when it contains a file named `.archived`
 at the root level of the notebook directory.
+
+<p>
+  <sup>
+    <a href="#nb-notebook-specification">↑</a>
+  </sup>
+</p>
 
 ## Tests
 

@@ -3,6 +3,14 @@
 load test_helper
 
 @test "'_string_is_url()' matches URLs." {
+  run "${_NB}" helpers string_is_url "git@example.com:user/repo.git"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[      "${status}" -eq 0 ]]
+  [[  -z  "${output}"       ]]
+
   run "${_NB}" helpers string_is_url "aaa://host.example.com:1813;transport=udp;protocol=radius"
 
   printf "\${status}: '%s'\\n" "${status}"
