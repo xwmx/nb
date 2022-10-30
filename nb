@@ -1467,6 +1467,7 @@ export _URL_PATTERNS=(
   "doi:10\.[^[:space:]]+"
   "(msnim|things):[^[:space:]]+\?[^[:space:]]+"
   "(feed|mvn|paparazzi|view-source):https?://[^[:space:]]+"
+  "git@[^[:space:]]+:[^[:space:]]+"
   "gtalk:chat[^[:space:]]+"
   "(im|mailto|reload|sips?|xmpp):[^[:space:]]+@[^[:space:]]+"
   "jar:[^[:space:]]+!/[^[:space:]]+"
