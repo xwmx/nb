@@ -4368,7 +4368,7 @@ which is `~/.nb` by default.
 
 `nb` also supports creating and working with local notebooks.
 Local notebooks are notebooks that are
-anywhere on the system outside of [`NB_DIR`](#nb_dir-1).
+anywhere on the system outside of [`$NB_DIR`](#nb_dir-1).
 Any folder can be an `nb` local notebook, which is just a normal folder
 that has been initialized as a git repository and contains an `nb` .index file.
 Initializing a folder as an `nb` local notebook is a very easy way to
