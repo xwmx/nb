@@ -9398,18 +9398,6 @@ Default: 'localhost'
   </sup>
 </p>
 
-##### `$NB_SERVER_HOST`
-
-```text
-Default: 'localhost'
-```
-
-<p>
-  <sup>
-    <a href="#-variables">↑</a>
-  </sup>
-</p>
-
 ##### `$NB_SERVER_PORT`
 
 ```text
