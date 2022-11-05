@@ -11065,8 +11065,15 @@ ul.task-list input[type="checkbox"]:checked:before {
   color:              #9191a1;
 }
 
+.ace-tm .ace_gutter,
+.ace-tm .ace_gutter-active-line,
 .ace-twilight .ace_gutter {
+  color:              #E2E2E2;
   background-color:   ${_color_background_hex};
+}
+
+.ace-tm .ace_gutter-active-line {
+  filter:             brightness(1.25);
 }
 
 .ace-twilight .ace_indent-guide-active {
