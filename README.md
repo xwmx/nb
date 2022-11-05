@@ -4368,7 +4368,7 @@ which is `~/.nb` by default.
 
 `nb` also supports creating and working with local notebooks.
 Local notebooks are notebooks that are
-anywhere on the system outside of [`NB_DIR`](#nb_dir-1).
+anywhere on the system outside of [`$NB_DIR`](#nb_dir-1).
 Any folder can be an `nb` local notebook, which is just a normal folder
 that has been initialized as a git repository and contains an `nb` .index file.
 Initializing a folder as an `nb` local notebook is a very easy way to
@@ -8941,7 +8941,7 @@ export NB_INDICATOR_PINNED="🔮"
   </sup>
 </p>
 
-#### `$EDITOR`
+##### `$EDITOR`
 
 ```text
 The terminal editor command for editing items.
@@ -8953,7 +8953,7 @@ The terminal editor command for editing items.
   </sup>
 </p>
 
-#### `$NB_ACE_ENABLED`
+##### `$NB_ACE_ENABLED`
 
 ```text
 Default: '0'
@@ -8967,7 +8967,7 @@ Example Values: '0', '1'
   </sup>
 </p>
 
-#### `$NB_ACE_MD_GUTTER`
+##### `$NB_ACE_MD_GUTTER`
 
 ```text
 Default: '1'
@@ -8981,7 +8981,7 @@ Example Values: '0', '1'
   </sup>
 </p>
 
-#### `$NB_ACE_SOFT_TABS`
+##### `$NB_ACE_SOFT_TABS`
 
 ```text
 Default: '0'
@@ -8995,7 +8995,7 @@ Example Values: '0', '1'
   </sup>
 </p>
 
-#### `$NB_ACE_KEYBOARD`
+##### `$NB_ACE_KEYBOARD`
 
 ```text
 Default: 'ace'
@@ -9009,7 +9009,7 @@ Example Values: 'emacs', 'sublime', 'vim', 'vscode'
   </sup>
 </p>
 
-#### `$NB_AUDIO_TOOL`
+##### `$NB_AUDIO_TOOL`
 
 ```text
 Default: '' (first available)
@@ -9023,7 +9023,7 @@ Example Values: `mplayer`, `afplay`
   </sup>
 </p>
 
-#### `$NB_AUTO_SYNC`
+##### `$NB_AUTO_SYNC`
 
 ```text
 Default: '1'
@@ -9038,7 +9038,7 @@ When set to '1', each `_git checkpoint()` call will automativally run
   </sup>
 </p>
 
-#### `$NB_COLOR_PRIMARY`
+##### `$NB_COLOR_PRIMARY`
 
 ```text
 Default: Value depends on terminal capabilities.
@@ -9057,7 +9057,7 @@ Supported Values: [0..255+]
   </sup>
 </p>
 
-#### `$NB_COLOR_SECONDARY`
+##### `$NB_COLOR_SECONDARY`
 
 ```text
 Default: '8'
@@ -9076,7 +9076,7 @@ Supported Values: [0..255+]
   </sup>
 </p>
 
-#### `$NB_COLOR_THEME`
+##### `$NB_COLOR_THEME`
 
 ```text
 Default: 'nb'
@@ -9090,7 +9090,7 @@ The color theme.
   </sup>
 </p>
 
-#### `$NB_DATA_TOOL`
+##### `$NB_DATA_TOOL`
 
 ```text
 Default: '' (first available)
@@ -9104,7 +9104,7 @@ Example Values: 'visidata', 'sc-im'
   </sup>
 </p>
 
-#### `$NB_DEFAULT_EXTENSION`
+##### `$NB_DEFAULT_EXTENSION`
 
 ```text
 Default: 'md'
@@ -9118,7 +9118,7 @@ Example Values: 'md' 'org'
   </sup>
 </p>
 
-#### `$NB_DIR`
+##### `$NB_DIR`
 
 ```text
 Default: `$HOME/.nb`
@@ -9132,7 +9132,7 @@ The location of the directory that contains the notebooks.
   </sup>
 </p>
 
-#### `$NB_DIRECTORY_TOOL`
+##### `$NB_DIRECTORY_TOOL`
 
 ```text
 Default: '' (nb browse)
@@ -9146,7 +9146,7 @@ Example Values: 'ranger', 'mc'
   </sup>
 </p>
 
-#### `$NB_ENCRYPTION_TOOL`
+##### `$NB_ENCRYPTION_TOOL`
 
 ```text
 Default: 'openssl'
@@ -9160,7 +9160,7 @@ Supported Values: 'gpg' 'openssl'
   </sup>
 </p>
 
-#### `$NB_FOOTER`
+##### `$NB_FOOTER`
 
 ```text
 Default: '1'
@@ -9174,7 +9174,7 @@ Supported Values: '0' '1'
   </sup>
 </p>
 
-#### `$NB_GUI_BROWSER`
+##### `$NB_GUI_BROWSER`
 
 ```text
 Default: ''
@@ -9188,7 +9188,7 @@ Example Value: 'firefox'
   </sup>
 </p>
 
-#### `$NB_HEADER`
+##### `$NB_HEADER`
 
 ```text
 Default: '2'
@@ -9202,7 +9202,7 @@ Supported Values: '0' '1' '2' '3'
   </sup>
 </p>
 
-#### `$NB_IMAGE_TOOL`
+##### `$NB_IMAGE_TOOL`
 
 ```text
 Default: '' (first available)
@@ -9216,7 +9216,7 @@ Example Values: 'imgcat', 'catimg'
   </sup>
 </p>
 
-#### `$NB_INDICATOR_AUDIO`
+##### `$NB_INDICATOR_AUDIO`
 
 ```text
 Default: 🔉
@@ -9228,7 +9228,7 @@ Default: 🔉
   </sup>
 </p>
 
-#### `$NB_INDICATOR_BOOKMARK`
+##### `$NB_INDICATOR_BOOKMARK`
 
 ```text
 Default: 🔖
@@ -9240,7 +9240,7 @@ Default: 🔖
   </sup>
 </p>
 
-#### `$NB_INDICATOR_DOCUMENT`
+##### `$NB_INDICATOR_DOCUMENT`
 
 ```text
 Default: 📄
@@ -9252,7 +9252,7 @@ Default: 📄
   </sup>
 </p>
 
-#### `$NB_INDICATOR_EBOOK`
+##### `$NB_INDICATOR_EBOOK`
 
 ```text
 Default: 📖
@@ -9264,7 +9264,7 @@ Default: 📖
   </sup>
 </p>
 
-#### `$NB_INDICATOR_ENCRYPTED`
+##### `$NB_INDICATOR_ENCRYPTED`
 
 ```text
 Default: 🔒
@@ -9276,7 +9276,7 @@ Default: 🔒
   </sup>
 </p>
 
-#### `$NB_INDICATOR_FOLDER`
+##### `$NB_INDICATOR_FOLDER`
 
 ```text
 Default: 📂
@@ -9288,7 +9288,7 @@ Default: 📂
   </sup>
 </p>
 
-#### `$NB_INDICATOR_IMAGE`
+##### `$NB_INDICATOR_IMAGE`
 
 ```text
 Default: 🌄
@@ -9300,7 +9300,7 @@ Default: 🌄
   </sup>
 </p>
 
-#### `$NB_INDICATOR_PINNED`
+##### `$NB_INDICATOR_PINNED`
 
 ```text
 Default: 📌
@@ -9312,7 +9312,7 @@ Default: 📌
   </sup>
 </p>
 
-#### `$NB_INDICATOR_TODO`
+##### `$NB_INDICATOR_TODO`
 
 ```text
 Default: ✔️
@@ -9324,7 +9324,7 @@ Default: ✔️
   </sup>
 </p>
 
-#### `$NB_INDICATOR_TODO_DONE`
+##### `$NB_INDICATOR_TODO_DONE`
 
 ```text
 Default: ✅
@@ -9336,7 +9336,7 @@ Default: ✅
   </sup>
 </p>
 
-#### `$NB_INDICATOR_VIDEO`
+##### `$NB_INDICATOR_VIDEO`
 
 ```text
 Default: 📹
@@ -9348,7 +9348,7 @@ Default: 📹
   </sup>
 </p>
 
-#### `$NB_LIMIT`
+##### `$NB_LIMIT`
 
 ```text
 Default: '15'
@@ -9374,7 +9374,7 @@ Example Values:
   </sup>
 </p>
 
-#### `$NB_PINNED_PATTERN`
+##### `$NB_PINNED_PATTERN`
 
 ```text
 Example Value: '#pinned'
@@ -9386,7 +9386,7 @@ Example Value: '#pinned'
   </sup>
 </p>
 
-#### `$NB_SERVER_HOST`
+##### `$NB_SERVER_HOST`
 
 ```text
 Default: 'localhost'
@@ -9398,19 +9398,7 @@ Default: 'localhost'
   </sup>
 </p>
 
-#### `$NB_SERVER_HOST`
-
-```text
-Default: 'localhost'
-```
-
-<p>
-  <sup>
-    <a href="#-variables">↑</a>
-  </sup>
-</p>
-
-#### `$NB_SERVER_PORT`
+##### `$NB_SERVER_PORT`
 
 ```text
 Default: '6789'
@@ -9422,7 +9410,7 @@ Default: '6789'
   </sup>
 </p>
 
-#### `$NB_SYNTAX_THEME`
+##### `$NB_SYNTAX_THEME`
 
 ```text
 Default: 'base16'
@@ -9436,7 +9424,7 @@ Supported Values: Theme names listed with `bat --list-themes`
   </sup>
 </p>
 
-#### `$NB_USER_AGENT`
+##### `$NB_USER_AGENT`
 
 ```text
 Default: '' (`curl` or `wget` default user agent)
@@ -9448,7 +9436,7 @@ Default: '' (`curl` or `wget` default user agent)
   </sup>
 </p>
 
-#### `$NBRC_PATH`
+##### `$NBRC_PATH`
 
 ```text
 Default: `$HOME/.nbrc`

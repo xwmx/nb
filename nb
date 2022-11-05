@@ -81,7 +81,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.1.1"
+_VERSION="7.1.2"
 
 # $_ME
 #
@@ -1303,7 +1303,7 @@ _validate_configuration() {
 ${_color_me} works best with the current version of Bash.
 
 ${_color_me} can $(_color_primary "update") your system to $(_color_primary "Bash 5") via Homebrew
-or you can proceed with $(_color_muted "Bash 3.2").
+or you can proceed with Bash 3.2.
 
 Answering $(_color_primary "y") or $(_color_primary "yes") will run the following command:
 
@@ -3627,7 +3627,7 @@ _git() {
     then
       (
         {
-          # only sync when the index is dirty
+          # only commit when the index is dirty
           if _git dirty "${_notebook_path}"
           then
             _git_checkpoint_commit "${_notebook_path}" "${_message}" &>/dev/null
@@ -3644,10 +3644,12 @@ _git() {
     if ((_show_spinner))
     then
       _spinner  ${!}
-    fi
 
-    wait        ${!}
-    return      ${?}
+      wait      ${!}
+      return    ${?}
+    else
+      return    0
+    fi
   }
 
   # _git_dirty()
@@ -11065,8 +11067,15 @@ ul.task-list input[type="checkbox"]:checked:before {
   color:              #9191a1;
 }
 
+.ace-tm .ace_gutter,
+.ace-tm .ace_gutter-active-line,
 .ace-twilight .ace_gutter {
+  color:              #E2E2E2;
   background-color:   ${_color_background_hex};
+}
+
+.ace-tm .ace_gutter-active-line {
+  filter:             brightness(1.25);
 }
 
 .ace-twilight .ace_indent-guide-active {
