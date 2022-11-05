@@ -1303,7 +1303,7 @@ _validate_configuration() {
 ${_color_me} works best with the current version of Bash.
 
 ${_color_me} can $(_color_primary "update") your system to $(_color_primary "Bash 5") via Homebrew
-or you can proceed with $(_color_muted "Bash 3.2").
+or you can proceed with Bash 3.2.
 
 Answering $(_color_primary "y") or $(_color_primary "yes") will run the following command:
 
