@@ -3627,7 +3627,7 @@ _git() {
     then
       (
         {
-          # only sync when the index is dirty
+          # only commit when the index is dirty
           if _git dirty "${_notebook_path}"
           then
             _git_checkpoint_commit "${_notebook_path}" "${_message}" &>/dev/null
@@ -3644,10 +3644,12 @@ _git() {
     if ((_show_spinner))
     then
       _spinner  ${!}
-    fi
 
-    wait        ${!}
-    return      ${?}
+      wait      ${!}
+      return    ${?}
+    else
+      return    0
+    fi
   }
 
   # _git_dirty()
