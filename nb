@@ -9043,7 +9043,10 @@ _normalize_options() {
       -[!-]?*)
         if  [[ -n "${_options[*]:-}" ]]                 &&
             _contains "${_options[${#_options[@]}-1]}"  \
+            "--append"                                  \
             "--content"                                 \
+            "--overwrite"                               \
+            "--prepend"                                 \
             "add"                                       \
             "a"                                         \
             "+"                                         \
@@ -14277,6 +14280,7 @@ HEREDOC
 }
 _edit() {
   local _content=
+  local _content_option_present=0
   local _edit_before_commit=0
   local _edit_type="append"
   local _local_editor=
@@ -14286,13 +14290,15 @@ _edit() {
   do
     case "${1:-}" in
       -c|--content)
+        _content_option_present=1
+
         if [[ -z "${2:-}"                   ]]
         then
           _exit_1 printf                          \
             "%s requires a valid argument.\\n"    \
             "$(_color_primary "${1:-}")"
         else
-          if [[ -n "${_option_content:-}"   ]]
+          if [[ -n "${_content:-}"          ]]
           then
             _content+="${_NEWLINE}${_NEWLINE}"
           fi
@@ -14310,16 +14316,27 @@ _edit() {
 
         shift
         ;;
-      --overwrite)
-        _edit_type="overwrite"
+      --append|--overwrite|--prepend)
+        _edit_type="${1#--}"
+
+        if [[ -n  "${2:-}"                  ]] &&
+           [[ !   "${2:-}" =~ ^--[A-z0-9]+  ]] &&
+           ! _contains "${2:-}" "-c" "-e"
+        then
+          if [[ -n "${_content:-}"          ]]
+          then
+            _content+="${_NEWLINE}"
+          fi
+
+          _content+="$(printf "%s\\n" "${2:-}")"
+
+          shift
+        fi
         ;;
       --password)
         _password="$(_option_get_value "${1}" "${2:-}")"
 
         shift
-        ;;
-      --prepend)
-        _edit_type="prepend"
         ;;
       *)
         if [[ -z "${_selector:-}" ]]
@@ -14409,7 +14426,12 @@ _edit() {
           _prepend_temp="$(_temp file)"
 
           cat                       >   "${_prepend_temp:?}"
-          printf "\\n"              >>  "${_prepend_temp:?}"
+
+          if ((_content_option_present))
+          then
+            printf "\\n"            >>  "${_prepend_temp:?}"
+          fi
+
           cat "${_target_file}"     >>  "${_prepend_temp:?}"
 
           cat "${_prepend_temp:?}"  >   "${_target_file}"
@@ -14419,8 +14441,12 @@ _edit() {
             rm  "${_prepend_temp:?}"
           fi
         else
-          printf "\\n"  >>  "${_target_file}"
-          cat           >>  "${_target_file}"
+          if ((_content_option_present))
+          then
+            printf "\\n"  >>  "${_target_file}"
+          fi
+
+          cat             >>  "${_target_file}"
         fi
       }
     fi

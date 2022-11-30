@@ -308,7 +308,7 @@ load test_helper
   [[ "$(_get_hash "${NB_DIR}/home/${_filename}")" != "${_original_hash}" ]]
 
   [[ "$("${_NB}" show 1 --no-color --password=example)"  =~ \
-\#\ Example${_NEWLINE}${_NEWLINE}\#\#\ Piped  ]]
+\#\ Example${_NEWLINE}\#\#\ Piped         ]]
 
   # Creates git commit:
 
@@ -316,7 +316,7 @@ load test_helper
 
   printf "git log --stat:\\n%s\\n" "$(git log --stat)"
 
-  while [[ -n "$(git status --porcelain)"     ]]
+  while [[ -n "$(git status --porcelain)" ]]
   do
     sleep 1
   done
@@ -528,15 +528,252 @@ HEREDOC
   [[ "${output}" =~ requires\ a\ valid\ argument ]]
 }
 
-# --overwite & --prepend  #####################################################
+# --append, --overwite, & --prepend  ##########################################
 
-@test "'edit --prepend --content <content>' prepends <content> to file." {
+@test "'edit --append --content <content>' appends <content> to file with extra newline." {
   {
     "${_NB}" init
     "${_NB}" add                        \
       --filename "Example Filename.md"  \
       --content  "Example initial content."
   }
+
+  ##########
+  # edit 1 #
+
+  run "${_NB}" edit 1 --append --content "Example new content."
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0 ]]
+
+  # Updates file:
+
+  cat "${NB_DIR}/home/Example Filename.md"
+
+  diff                                          \
+    <(cat "${NB_DIR}/home/Example Filename.md") \
+    <(cat <<HEREDOC
+Example initial content.
+
+Example new content.
+HEREDOC
+)
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Edit'
+
+  # Prints output:
+
+  [[ "${output}" =~ Updated:              ]]
+  [[ "${output}" =~ [0-9]+                ]]
+  [[ "${output}" =~ Example\ Filename.md  ]]
+
+  ##########
+  # edit 2 #
+
+  run "${_NB}" edit 1 --append --content "Example new content two."
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0 ]]
+
+  # Updates file:
+
+  diff                                          \
+    <(cat "${NB_DIR}/home/Example Filename.md") \
+    <(cat <<HEREDOC
+Example initial content.
+
+Example new content.
+
+Example new content two.
+HEREDOC
+)
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Edit'
+
+  # Prints output:
+
+  [[ "${output}" =~ Updated:              ]]
+  [[ "${output}" =~ [0-9]+                ]]
+  [[ "${output}" =~ Example\ Filename.md  ]]
+}
+
+@test "'edit --append <content>' appends <content> to file without extra newline." {
+  {
+    "${_NB}" init
+    "${_NB}" add                        \
+      --filename "Example Filename.md"  \
+      --content  "Example initial content."
+  }
+
+  ##########
+  # edit 1 #
+
+  run "${_NB}" edit 1 --append "Example new content."
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0 ]]
+
+  # Updates file:
+
+  cat "${NB_DIR}/home/Example Filename.md"
+
+  diff                                          \
+    <(cat "${NB_DIR}/home/Example Filename.md") \
+    <(cat <<HEREDOC
+Example initial content.
+Example new content.
+HEREDOC
+)
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Edit'
+
+  # Prints output:
+
+  [[ "${output}" =~ Updated:              ]]
+  [[ "${output}" =~ [0-9]+                ]]
+  [[ "${output}" =~ Example\ Filename.md  ]]
+
+  ##########
+  # edit 2 #
+
+  run "${_NB}" edit 1 --append "Example new content two."
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0 ]]
+
+  # Updates file:
+
+  cat "${NB_DIR}/home/Example Filename.md"
+
+  diff                                          \
+    <(cat "${NB_DIR}/home/Example Filename.md") \
+    <(cat <<HEREDOC
+Example initial content.
+Example new content.
+Example new content two.
+HEREDOC
+)
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Edit'
+
+  # Prints output:
+
+  [[ "${output}" =~ Updated:              ]]
+  [[ "${output}" =~ [0-9]+                ]]
+  [[ "${output}" =~ Example\ Filename.md  ]]
+
+  ##########
+  # edit 3 #
+
+  run "${_NB}" edit 1 --append "- Example new content three."
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0 ]]
+
+  # Updates file:
+
+  cat "${NB_DIR}/home/Example Filename.md"
+
+  diff                                          \
+    <(cat "${NB_DIR}/home/Example Filename.md") \
+    <(cat <<HEREDOC
+Example initial content.
+Example new content.
+Example new content two.
+- Example new content three.
+HEREDOC
+)
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Edit'
+
+  # Prints output:
+
+  [[ "${output}" =~ Updated:              ]]
+  [[ "${output}" =~ [0-9]+                ]]
+  [[ "${output}" =~ Example\ Filename.md  ]]
+}
+
+
+@test "'edit --prepend --content <content>' prepends <content> to file with extra newline." {
+  {
+    "${_NB}" init
+    "${_NB}" add                        \
+      --filename "Example Filename.md"  \
+      --content  "Example initial content."
+  }
+
+  ##########
+  # edit 1 #
 
   run "${_NB}" edit 1 --prepend --content "Example new content."
 
@@ -554,6 +791,187 @@ HEREDOC
     <(cat <<HEREDOC
 Example new content.
 
+Example initial content.
+HEREDOC
+)
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Edit'
+
+  # Prints output:
+
+  [[ "${output}" =~ Updated:              ]]
+  [[ "${output}" =~ [0-9]+                ]]
+  [[ "${output}" =~ Example\ Filename.md  ]]
+
+  ##########
+  # edit 2 #
+
+  run "${_NB}" edit 1 --prepend --content "Example new content two."
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0 ]]
+
+  # Updates file:
+
+  diff                                          \
+    <(cat "${NB_DIR}/home/Example Filename.md") \
+    <(cat <<HEREDOC
+Example new content two.
+
+Example new content.
+
+Example initial content.
+HEREDOC
+)
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Edit'
+
+  # Prints output:
+
+  [[ "${output}" =~ Updated:              ]]
+  [[ "${output}" =~ [0-9]+                ]]
+  [[ "${output}" =~ Example\ Filename.md  ]]
+}
+
+@test "'edit --prepend <content>' prepends <content> to file without extra newline." {
+  {
+    "${_NB}" init
+    "${_NB}" add                        \
+      --filename "Example Filename.md"  \
+      --content  "Example initial content."
+  }
+
+  ##########
+  # edit 1 #
+
+  run "${_NB}" edit 1 --prepend "Example new content."
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0 ]]
+
+  # Updates file:
+
+  cat "${NB_DIR}/home/Example Filename.md"
+
+  diff                                          \
+    <(cat "${NB_DIR}/home/Example Filename.md") \
+    <(cat <<HEREDOC
+Example new content.
+Example initial content.
+HEREDOC
+)
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Edit'
+
+  # Prints output:
+
+  [[ "${output}" =~ Updated:              ]]
+  [[ "${output}" =~ [0-9]+                ]]
+  [[ "${output}" =~ Example\ Filename.md  ]]
+
+  ##########
+  # edit 2 #
+
+  run "${_NB}" edit 1 --prepend "Example new content two."
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0 ]]
+
+  # Updates file:
+
+  cat "${NB_DIR}/home/Example Filename.md"
+
+  diff                                          \
+    <(cat "${NB_DIR}/home/Example Filename.md") \
+    <(cat <<HEREDOC
+Example new content two.
+Example new content.
+Example initial content.
+HEREDOC
+)
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Edit'
+
+  # Prints output:
+
+  [[ "${output}" =~ Updated:              ]]
+  [[ "${output}" =~ [0-9]+                ]]
+  [[ "${output}" =~ Example\ Filename.md  ]]
+
+  ##########
+  # edit 3 #
+
+  run "${_NB}" edit 1 --prepend "- Example new content three."
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0 ]]
+
+  # Updates file:
+
+  cat "${NB_DIR}/home/Example Filename.md"
+
+  diff                                          \
+    <(cat "${NB_DIR}/home/Example Filename.md") \
+    <(cat <<HEREDOC
+- Example new content three.
+Example new content two.
+Example new content.
 Example initial content.
 HEREDOC
 )
@@ -600,7 +1018,6 @@ HEREDOC
     <(cat "${NB_DIR}/home/Example Filename.md") \
     <(cat <<HEREDOC
 ## Piped Content
-
 Example initial content.
 HEREDOC
 )
