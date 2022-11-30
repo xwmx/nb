@@ -9067,11 +9067,15 @@ _normalize_options() {
               _character_string=
             fi
           done
+
+          shift
         fi
         ;;
       # if option is of type --foo=bar, split on first '='
       --?*=*)
         _options+=("${1%%=*}" "${1#*=}")
+
+        shift
         ;;
       # end of options, stop breaking them up
       --)
@@ -9086,10 +9090,10 @@ _normalize_options() {
       # otherwise, nothing special
       *)
         _options+=("${1}")
+
+        shift
         ;;
     esac
-
-    shift
   done
 
   _NORMALIZED_OPTIONS=("${_options[@]}")
@@ -14282,9 +14286,21 @@ _edit() {
   do
     case "${1:-}" in
       -c|--content)
-        _content="$(_option_get_value "${1}" "${2:-}")"
+        if [[ -z "${2:-}"                   ]]
+        then
+          _exit_1 printf                          \
+            "%s requires a valid argument.\\n"    \
+            "$(_color_primary "${1:-}")"
+        else
+          if [[ -n "${_option_content:-}"   ]]
+          then
+            _content+="${_NEWLINE}${_NEWLINE}"
+          fi
 
-        shift
+          _content+="$(printf "%s\\n" "${2:-}")"
+
+          shift
+        fi
         ;;
       --edit)
         _edit_before_commit=1

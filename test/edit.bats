@@ -380,6 +380,75 @@ load test_helper
 
 # --content option ############################################################
 
+@test "'edit' with --content option and content with leading dash appends new content." {
+  {
+    "${_NB}" init
+    "${_NB}" add --title "Example Title" --content "Example initial content."
+  }
+
+  run "${_NB}" edit 1 --content "- Example new content with dash."
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0 ]]
+
+  # Updates note file:
+
+  diff                                        \
+    <(cat "${NB_DIR}/home/example_title.md")  \
+    <(cat <<HEREDOC
+# Example Title
+
+Example initial content.
+
+- Example new content with dash.
+HEREDOC
+)
+
+  run "${_NB}" edit 1 --content "- Sample new content with dash."
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0 ]]
+
+  # Updates note file:
+
+  diff                                        \
+    <(cat "${NB_DIR}/home/example_title.md")  \
+    <(cat <<HEREDOC
+# Example Title
+
+Example initial content.
+
+- Example new content with dash.
+
+- Sample new content with dash.
+HEREDOC
+)
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Edit'
+
+  # Prints output:
+
+  [[ "${lines[0]}" =~ Updated:\ .*[.*1.*].*\ .*example_title.md.*\ \"Example\ Title\" ]]
+}
+
 @test "'edit' with --content option appends new content." {
   {
     "${_NB}" init
