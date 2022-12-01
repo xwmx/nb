@@ -9043,14 +9043,14 @@ _normalize_options() {
       -[!-]?*)
         if  [[ -n "${_options[*]:-}" ]]                 &&
             _contains "${_options[${#_options[@]}-1]}"  \
-            "--append"                                  \
-            "--content"                                 \
-            "--overwrite"                               \
-            "--prepend"                                 \
-            "add"                                       \
-            "a"                                         \
-            "+"                                         \
-            "new"
+              "--append"                                \
+              "--content"                               \
+              "--overwrite"                             \
+              "--prepend"                               \
+              "add"                                     \
+              "a"                                       \
+              "+"                                       \
+              "new"
         then
           _options+=("${1}")
 
