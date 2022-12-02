@@ -20289,8 +20289,37 @@ HEREDOC
         _notebooks current --path
     )"
 
-    if [[ "${_source_path:-}" =~ \.org$   ]] &&
-       _file_is_text "${_source_path:-}"
+    if [[ "${_source_path:-}" =~ (\.asciidoc$|\.adoc$)  ]]    &&
+       _file_is_text "${_source_path:-}"                      &&
+       _command_exists "asciidoctor"
+    then
+      {
+        asciidoctor           \
+          -o -                \
+          --no-header-footer  \
+          "${_source_path:-}"
+      } | {
+        printf "%s\\n" "$(
+          _browse_render_header           \
+            "${_source_path}"             \
+            "${_header_options[@]:-}"
+        )"
+
+        printf "<div class=\"main\">\\n"
+
+        cat
+
+        printf "</div>\\n"
+      } | {
+        _resolve_links                    \
+          "${_notebook_path}"             \
+          "${_pagination_options[@]:-}"   \
+          --browse
+      } | {
+        _render --title "${_html_title}"
+      }
+    elif [[ "${_source_path:-}" =~ \.org$               ]]    &&
+         _file_is_text "${_source_path:-}"
     then # resolve Org [[wiki-style links]] before rendering to HTML
       {
         cat "${_source_path}"

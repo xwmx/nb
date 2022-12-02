@@ -1,0 +1,14 @@
+= Example AsciiDoc Title
+
+Example AsciiDoc content.
+
+[[example-inline-anchor]]Example Inline Anchor
+
+Sample subsequent AsciiDoc content containing [[wiki-style link]] inline.
+
+[[wiki-style link]] Demo content.
+
+- one
+- two
+- [[wiki-style link]]
+- four
