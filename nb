@@ -18489,7 +18489,23 @@ Can't show archives. Export archive and expand to edit.\\n"
       local _rendered_temp_file_path=
       _rendered_temp_file_path="$(_temp file ".html" --touch)"
 
-      if [[ "${_target_path}" =~ \.org  ]]
+      if [[ "${_target_path:-}" =~ (\.asciidoc$|\.adoc$)    ]]  &&
+         _file_is_text "${_target_path:-}"                      &&
+         _command_exists "asciidoctor"
+      then
+        {
+          asciidoctor           \
+            -o -                \
+            --no-header-footer  \
+            "${_target_path:-}"
+        } | {
+          _resolve_links "${_notebook_path}"
+        } | {
+          _render
+        } | {
+          cat >> "${_rendered_temp_file_path}"
+        }
+      elif [[ "${_target_path}" =~ \.org                    ]]
       then # resolve Org [[wiki-style links]] before rendering to HTML
         {
           cat "${_target_path}"
@@ -18511,7 +18527,7 @@ Can't show archives. Export archive and expand to edit.\\n"
         } | {
           cat >> "${_rendered_temp_file_path}"
         }
-      else # render non-Org to HTML before resolving [[wiki-style links]]
+      else
         {
           _render "${_target_path}" --pandoc --body
         } | {
