@@ -1706,6 +1706,8 @@ _file_is_image() {
 # Resources:
 #   Markdown: https://superuser.com/a/285878
 export _TEXT_FILE_EXTENSIONS=(
+  adoc
+  asciidoc
   bash
   bib
   coffee
@@ -1830,7 +1832,8 @@ _file_is_video() {
 #   Print the title or first line of the text document at <path>. When a title
 #   is not found, print the first line, prefixed with '__first_line:'.
 #
-#   Supports both Markdown h1 styles, YAML front matter, Org Mode, and LaTeX.
+#   Supports both Markdown h1 styles, YAML front matter, Org Mode, LaTeX,
+#   and AsciiDoc.
 #
 #   - Markdown
 #     - Supported:
@@ -1849,6 +1852,9 @@ _file_is_video() {
 #   - LaTeX
 #     - Supported:
 #       - \title{This is a Title}
+#   - AsciiDoc
+#     - Supported:
+#       - = This is a Title
 _get_content() {
   local _counter=0
   local _first_line=
@@ -2027,6 +2033,34 @@ _get_content() {
 
           if [[ ! "${__line}" =~ ^\#  ]] &&
              [[ "${_counter}" -gt 10  ]]
+          then
+            break
+          fi
+        else
+          continue
+        fi
+      done < "${_path}"
+    elif [[ "${_path}"    =~ (\.adoc$|\.asciidoc$)  ]]
+    then
+      local               __line=
+      while IFS= read -r  __line  ||  [[ -n "${__line:-}" ]]
+      do
+        _counter="$((_counter+1))"
+
+        if [[ "${__line}" =~  ^=\     ]]
+        then
+          _title="${__line#= }"
+
+          break
+        elif [[ -n "${__line:-}"      ]]
+        then
+          if [[ -z "${_first_line:-}" ]]
+          then
+            _first_line="${__line}"
+          fi
+
+          if [[ ! "${__line}" =~ ^=\  ]] &&
+             [[ "${_counter}" -gt 20  ]]
           then
             break
           fi

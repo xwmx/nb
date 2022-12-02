@@ -73,27 +73,31 @@ HEREDOC
   [[ !  "${output}"  =~  Markdown\ Title ]]
 }
 
-@test "'_get_content() --title' detects and returns titles." {
+@test "'_get_content() --title' detects and returns markdown titles." {
   {
     "${_NB}" init
+
     cat <<HEREDOC | "${_NB}" add "one.md"
 # Title One
 line two
 line three
 line four
 HEREDOC
+
     cat <<HEREDOC | "${_NB}" add "two.md"
 line one
 line two
 line three
 line four
 HEREDOC
+
     cat <<HEREDOC | "${_NB}" add "three.md"
 # Title Three
 line two
 line three
 line four
 HEREDOC
+
     cat <<HEREDOC | "${_NB}" add "four.md"
 ---
 summary: Example Summary
@@ -104,6 +108,7 @@ line six
 line seven
 line eight
 HEREDOC
+
     cat <<HEREDOC | "${_NB}" add "five.md"
 ---
 summary: Example Summary
@@ -115,6 +120,7 @@ line seven
 line eight
 line nine
 HEREDOC
+
     cat <<HEREDOC | "${_NB}" add "six.md"
 ---
 summary: Example Summary
@@ -124,6 +130,7 @@ line five
 line six
 line seven
 HEREDOC
+
     cat <<HEREDOC | "${_NB}" add "seven.md"
 Title Seven
 ===========
@@ -132,6 +139,7 @@ line four
 line five
 line six
 HEREDOC
+
     cat <<HEREDOC | "${_NB}" add "eight.md"
 ---
 summary: Example Summary
@@ -145,6 +153,7 @@ line nine
 line ten
 line eleven
 HEREDOC
+
     cat <<HEREDOC | "${_NB}" add "nine.md"
 ---
 summary: Example Summary
@@ -157,12 +166,14 @@ line nine
 line ten
 line eleven
 HEREDOC
+
     cat <<HEREDOC | "${_NB}" add "ten.md"
 # Title Ten #
 line two
 line three
 line four
 HEREDOC
+
     cat <<HEREDOC | "${_NB}" add "eleven.md"
 [](https://example.com/example.png)
 
@@ -171,6 +182,7 @@ line two
 line three
 line four
 HEREDOC
+
     # shellcheck disable=SC2006
     cat <<HEREDOC | "${_NB}" add "twelve.md"
 [](https://example.com/example.png)
@@ -184,13 +196,44 @@ line two
 line three
 line four
 HEREDOC
-    cat <<HEREDOC | "${_NB}" add "thirteen.org"
+
+    _files=($(ls "${NB_DIR}/home/"))
+  }
+
+  run "${_NB}" list --no-color --reverse
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
+
+  [[ ${status} -eq 0                                        ]]
+  [[ "${lines[0]}"  == "[1]  Title One"                     ]]
+  [[ "${lines[1]}"  == "[2]  two.md · \"line one\""         ]]
+  [[ "${lines[2]}"  == "[3]  Title Three"                   ]]
+  [[ "${lines[3]}"  == "[4]  Title Four"                    ]]
+  [[ "${lines[4]}"  == "[5]  Title Five"                    ]]
+  [[ "${lines[5]}"  == "[6]  six.md · \"line five\""        ]]
+  [[ "${lines[6]}"  == "[7]  Title Seven"                   ]]
+  [[ "${lines[7]}"  == "[8]  Title Eight"                   ]]
+  [[ "${lines[8]}"  == "[9]  Title Nine"                    ]]
+  [[ "${lines[9]}"  == "[10] Title Ten"                     ]]
+  [[ "${lines[10]}" == "[11] Title Eleven"                  ]]
+  [[ "${lines[11]}" == "[12] Title Twelve"                  ]]
+}
+
+@test "'_get_content() --title' detects and returns org titles." {
+  {
+    "${_NB}" init
+
+    cat <<HEREDOC | "${_NB}" add "one.org"
 #+TITLE: Example Org Title
 
 line three
 line four
 HEREDOC
-    cat <<HEREDOC | "${_NB}" add "fourteen.org"
+
+    cat <<HEREDOC | "${_NB}" add "two.org"
 #+TITLE: Example
 #+TITLE: Multi-Line
 #+TITLE: Org Title
@@ -198,7 +241,8 @@ HEREDOC
 line three
 line four
 HEREDOC
-    cat <<HEREDOC | "${_NB}" add "fifteen.org"
+
+    cat <<HEREDOC | "${_NB}" add "three.org"
 # -*- mode: org; coding: utf-8; -*-
 * Header Information                                               :noexport:
 #+TITLE: Example
@@ -209,7 +253,28 @@ HEREDOC
 line three
 line four
 HEREDOC
-    cat <<HEREDOC | "${_NB}" add "sixteen.latex"
+
+    _files=($(ls "${NB_DIR}/home/"))
+  }
+
+  run "${_NB}" list --no-color --reverse
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
+
+  [[ ${status} -eq 0                                      ]]
+  [[ "${lines[0]}"  == "[1] Example Org Title"            ]]
+  [[ "${lines[1]}"  == "[2] Example Multi-Line Org Title" ]]
+  [[ "${lines[2]}"  == "[3] Example Multi-Line Org Title" ]]
+}
+
+@test "'_get_content() --title' detects and returns LaTeX titles." {
+  {
+    "${_NB}" init
+
+    cat <<HEREDOC | "${_NB}" add "one.latex"
 \documentclass{article}
 \usepackage{graphicx}
 
@@ -247,6 +312,7 @@ Write your conclusion here.
 
 \end{document}
 HEREDOC
+
     _files=($(ls "${NB_DIR}/home/"))
   }
 
@@ -257,23 +323,41 @@ HEREDOC
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
   printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
 
-  [[ ${status} -eq 0                                        ]]
-  [[ "${lines[0]}"  == "[1]  Title One"                     ]]
-  [[ "${lines[1]}"  == "[2]  two.md · \"line one\""         ]]
-  [[ "${lines[2]}"  == "[3]  Title Three"                   ]]
-  [[ "${lines[3]}"  == "[4]  Title Four"                    ]]
-  [[ "${lines[4]}"  == "[5]  Title Five"                    ]]
-  [[ "${lines[5]}"  == "[6]  six.md · \"line five\""        ]]
-  [[ "${lines[6]}"  == "[7]  Title Seven"                   ]]
-  [[ "${lines[7]}"  == "[8]  Title Eight"                   ]]
-  [[ "${lines[8]}"  == "[9]  Title Nine"                    ]]
-  [[ "${lines[9]}"  == "[10] Title Ten"                     ]]
-  [[ "${lines[10]}" == "[11] Title Eleven"                  ]]
-  [[ "${lines[11]}" == "[12] Title Twelve"                  ]]
-  [[ "${lines[12]}" == "[13] Example Org Title"             ]]
-  [[ "${lines[13]}" == "[14] Example Multi-Line Org Title"  ]]
-  [[ "${lines[14]}" == "[15] Example Multi-Line Org Title"  ]]
-  [[ "${lines[15]}" == "[16] Introduction to \LaTeX{}"      ]]
+  [[ ${status} -eq 0                                  ]]
+  [[ "${lines[0]}"  == "[1] Introduction to \LaTeX{}" ]]
+}
+
+@test "'_get_content() --title' detects and returns AsciiDoc titles." {
+  {
+    "${_NB}" init
+
+    cat <<HEREDOC | "${_NB}" add "one.asciidoc"
+= Example AsciiDoc Title
+
+Example AsciiDoc content.
+HEREDOC
+
+    sleep 1
+
+    cat <<HEREDOC | "${_NB}" add "two.adoc"
+= Sample AsciiDoc Title
+
+Sample AsciiDoc content.
+HEREDOC
+
+    _files=($(ls "${NB_DIR}/home/"))
+  }
+
+  run "${_NB}" list --no-color --reverse
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
+  printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
+
+  [[ ${status} -eq 0                                ]]
+  [[ "${lines[0]}"  == "[1] Example AsciiDoc Title" ]]
+  [[ "${lines[1]}"  == "[2] Sample AsciiDoc Title"  ]]
 }
 
 @test "'_get_content()' returns first line when no title." {
