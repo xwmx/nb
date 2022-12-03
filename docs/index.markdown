@@ -49,7 +49,8 @@ and more, in a single portable script.
 `nb` creates notes in text-based formats like
 [Markdown](https://en.wikipedia.org/wiki/Markdown),
 [Org](https://orgmode.org/),
-and [LaTeX](https://www.latex-project.org/),
+[LaTeX](https://www.latex-project.org/),
+and [AsciiDoc](https://asciidoc.org/),
 can work with files in any format,
 can import and export notes to many document formats,
 and can create private, password-protected encrypted notes and bookmarks.
@@ -209,6 +210,7 @@ Also supported for various enhancements:
 
 [Ack](https://beyondgrep.com/),
 [`afplay`](https://ss64.com/osx/afplay.html),
+[`asciidoctor`](https://asciidoctor.org/),
 [The Silver Searcher (`ag`)](https://github.com/ggreer/the_silver_searcher),
 [`catimg`](https://github.com/posva/catimg),
 [Chafa](https://github.com/hpjansson/chafa),
@@ -830,8 +832,10 @@ title: Demo Title
 ---
 ```
 
-[Org](https://orgmode.org/) and [LaTeX](https://www.latex-project.org/)
-titles are recognized in `.org` and `.latex` files:
+[Org](https://orgmode.org/),
+[LaTeX](https://www.latex-project.org/),
+and [AsciiDoc](https://asciidoc.org/)
+titles are recognized in `.org`,`.latex`, and `.asciidoc` / `.adoc` files:
 
 ```text
 #+TITLE: Example Org Title
@@ -839,6 +843,10 @@ titles are recognized in `.org` and `.latex` files:
 
 ```latex
 \title{Example LaTeX Title}
+```
+
+```asciidoc
+= Example AsciiDoc Title
 ```
 
 Once defined, titles are displayed in place of the filename and first line
@@ -3323,6 +3331,11 @@ to enhance privacy and avoid leaking information:
 - All pages include the `<meta name="referrer" content="no-referrer" />` tag.
 - Links include a `rel="noopener noreferrer"` attribute.
 - `lynx` is opened with the `-noreferer` option.
+
+#### `browse` AsciiDoc
+
+To [`browse`](#browse) items in [AsciiDoc](https://asciidoc.org/) format,
+install [`asciidoctor`](https://asciidoctor.org/).
 
 #### Shortcut Alias: `nb b`
 
