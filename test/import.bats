@@ -1283,7 +1283,7 @@ Folder/example.md.*\ \"Example\ Title\"\ from\ .*${_TMP_DIR}/fixtures/example.md
   printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
   printf "\${#_files[@]}: '%s'\\n" "${#_files[@]}"
 
-  [[ "${#_files[@]}"  -eq 22 ]]
+  [[ "${#_files[@]}"  -eq 23 ]]
 
   grep -q '# Example Title' "${NB_DIR}/home/Example Destination/Example Folder"/*
 
