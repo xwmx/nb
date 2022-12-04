@@ -1,1 +1,5 @@
 .vagrant
+nb.*
+!nb.go
+!nb.ksh
+!nb.zsh

@@ -81,7 +81,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.1.2"
+_VERSION="7.2.0"
 
 # $_ME
 #
@@ -1706,6 +1706,8 @@ _file_is_image() {
 # Resources:
 #   Markdown: https://superuser.com/a/285878
 export _TEXT_FILE_EXTENSIONS=(
+  adoc
+  asciidoc
   bash
   bib
   coffee
@@ -1830,7 +1832,8 @@ _file_is_video() {
 #   Print the title or first line of the text document at <path>. When a title
 #   is not found, print the first line, prefixed with '__first_line:'.
 #
-#   Supports both Markdown h1 styles, YAML front matter, Org Mode, and LaTeX.
+#   Supports both Markdown h1 styles, YAML front matter, Org Mode, LaTeX,
+#   and AsciiDoc.
 #
 #   - Markdown
 #     - Supported:
@@ -1849,6 +1852,9 @@ _file_is_video() {
 #   - LaTeX
 #     - Supported:
 #       - \title{This is a Title}
+#   - AsciiDoc
+#     - Supported:
+#       - = This is a Title
 _get_content() {
   local _counter=0
   local _first_line=
@@ -2027,6 +2033,34 @@ _get_content() {
 
           if [[ ! "${__line}" =~ ^\#  ]] &&
              [[ "${_counter}" -gt 10  ]]
+          then
+            break
+          fi
+        else
+          continue
+        fi
+      done < "${_path}"
+    elif [[ "${_path}"    =~ (\.adoc$|\.asciidoc$)  ]]
+    then
+      local               __line=
+      while IFS= read -r  __line  ||  [[ -n "${__line:-}" ]]
+      do
+        _counter="$((_counter+1))"
+
+        if [[ "${__line}" =~  ^=\     ]]
+        then
+          _title="${__line#= }"
+
+          break
+        elif [[ -n "${__line:-}"      ]]
+        then
+          if [[ -z "${_first_line:-}" ]]
+          then
+            _first_line="${__line}"
+          fi
+
+          if [[ ! "${__line}" =~ ^=\  ]] &&
+             [[ "${_counter}" -gt 20  ]]
           then
             break
           fi
@@ -9043,11 +9077,14 @@ _normalize_options() {
       -[!-]?*)
         if  [[ -n "${_options[*]:-}" ]]                 &&
             _contains "${_options[${#_options[@]}-1]}"  \
-            "--content"                                 \
-            "add"                                       \
-            "a"                                         \
-            "+"                                         \
-            "new"
+              "--append"                                \
+              "--content"                               \
+              "--overwrite"                             \
+              "--prepend"                               \
+              "add"                                     \
+              "a"                                       \
+              "+"                                       \
+              "new"
         then
           _options+=("${1}")
 
@@ -9067,11 +9104,15 @@ _normalize_options() {
               _character_string=
             fi
           done
+
+          shift
         fi
         ;;
       # if option is of type --foo=bar, split on first '='
       --?*=*)
         _options+=("${1%%=*}" "${1#*=}")
+
+        shift
         ;;
       # end of options, stop breaking them up
       --)
@@ -9086,10 +9127,10 @@ _normalize_options() {
       # otherwise, nothing special
       *)
         _options+=("${1}")
+
+        shift
         ;;
     esac
-
-    shift
   done
 
   _NORMALIZED_OPTIONS=("${_options[@]}")
@@ -14273,6 +14314,7 @@ HEREDOC
 }
 _edit() {
   local _content=
+  local _content_option_present=0
   local _edit_before_commit=0
   local _edit_type="append"
   local _local_editor=
@@ -14282,9 +14324,23 @@ _edit() {
   do
     case "${1:-}" in
       -c|--content)
-        _content="$(_option_get_value "${1}" "${2:-}")"
+        _content_option_present=1
 
-        shift
+        if [[ -z "${2:-}"                   ]]
+        then
+          _exit_1 printf                          \
+            "%s requires a valid argument.\\n"    \
+            "$(_color_primary "${1:-}")"
+        else
+          if [[ -n "${_content:-}"          ]]
+          then
+            _content+="${_NEWLINE}${_NEWLINE}"
+          fi
+
+          _content+="$(printf "%s\\n" "${2:-}")"
+
+          shift
+        fi
         ;;
       --edit)
         _edit_before_commit=1
@@ -14294,16 +14350,27 @@ _edit() {
 
         shift
         ;;
-      --overwrite)
-        _edit_type="overwrite"
+      --append|--overwrite|--prepend)
+        _edit_type="${1#--}"
+
+        if [[ -n  "${2:-}"                  ]] &&
+           [[ !   "${2:-}" =~ ^--[A-z0-9]+  ]] &&
+           ! _contains "${2:-}" "-c" "-e"
+        then
+          if [[ -n "${_content:-}"          ]]
+          then
+            _content+="${_NEWLINE}"
+          fi
+
+          _content+="$(printf "%s\\n" "${2:-}")"
+
+          shift
+        fi
         ;;
       --password)
         _password="$(_option_get_value "${1}" "${2:-}")"
 
         shift
-        ;;
-      --prepend)
-        _edit_type="prepend"
         ;;
       *)
         if [[ -z "${_selector:-}" ]]
@@ -14393,7 +14460,12 @@ _edit() {
           _prepend_temp="$(_temp file)"
 
           cat                       >   "${_prepend_temp:?}"
-          printf "\\n"              >>  "${_prepend_temp:?}"
+
+          if ((_content_option_present))
+          then
+            printf "\\n"            >>  "${_prepend_temp:?}"
+          fi
+
           cat "${_target_file}"     >>  "${_prepend_temp:?}"
 
           cat "${_prepend_temp:?}"  >   "${_target_file}"
@@ -14403,8 +14475,12 @@ _edit() {
             rm  "${_prepend_temp:?}"
           fi
         else
-          printf "\\n"  >>  "${_target_file}"
-          cat           >>  "${_target_file}"
+          if ((_content_option_present))
+          then
+            printf "\\n"  >>  "${_target_file}"
+          fi
+
+          cat             >>  "${_target_file}"
         fi
       }
     fi
@@ -18413,7 +18489,23 @@ Can't show archives. Export archive and expand to edit.\\n"
       local _rendered_temp_file_path=
       _rendered_temp_file_path="$(_temp file ".html" --touch)"
 
-      if [[ "${_target_path}" =~ \.org  ]]
+      if [[ "${_target_path:-}" =~ (\.asciidoc$|\.adoc$)    ]]  &&
+         _file_is_text "${_target_path:-}"                      &&
+         _command_exists "asciidoctor"
+      then
+        {
+          asciidoctor           \
+            -o -                \
+            --no-header-footer  \
+            "${_target_path:-}"
+        } | {
+          _resolve_links "${_notebook_path}"
+        } | {
+          _render
+        } | {
+          cat >> "${_rendered_temp_file_path}"
+        }
+      elif [[ "${_target_path}" =~ \.org                    ]]
       then # resolve Org [[wiki-style links]] before rendering to HTML
         {
           cat "${_target_path}"
@@ -18435,7 +18527,7 @@ Can't show archives. Export archive and expand to edit.\\n"
         } | {
           cat >> "${_rendered_temp_file_path}"
         }
-      else # render non-Org to HTML before resolving [[wiki-style links]]
+      else
         {
           _render "${_target_path}" --pandoc --body
         } | {
@@ -20213,8 +20305,37 @@ HEREDOC
         _notebooks current --path
     )"
 
-    if [[ "${_source_path:-}" =~ \.org$   ]] &&
-       _file_is_text "${_source_path:-}"
+    if [[ "${_source_path:-}" =~ (\.asciidoc$|\.adoc$)  ]]    &&
+       _file_is_text "${_source_path:-}"                      &&
+       _command_exists "asciidoctor"
+    then
+      {
+        asciidoctor           \
+          -o -                \
+          --no-header-footer  \
+          "${_source_path:-}"
+      } | {
+        printf "%s\\n" "$(
+          _browse_render_header           \
+            "${_source_path}"             \
+            "${_header_options[@]:-}"
+        )"
+
+        printf "<div class=\"main\">\\n"
+
+        cat
+
+        printf "</div>\\n"
+      } | {
+        _resolve_links                    \
+          "${_notebook_path}"             \
+          "${_pagination_options[@]:-}"   \
+          --browse
+      } | {
+        _render --title "${_html_title}"
+      }
+    elif [[ "${_source_path:-}" =~ \.org$               ]]    &&
+         _file_is_text "${_source_path:-}"
     then # resolve Org [[wiki-style links]] before rendering to HTML
       {
         cat "${_source_path}"

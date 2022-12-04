@@ -34,6 +34,50 @@ load test_helper
 \<span\ class=\"fu\"\>puts\</span\>\ \<span\ class=\"st\"\>\&quot\;Hello\ World\&quot\;\</span\> ]]
 }
 
+# .asciidoc ###################################################################
+
+@test "'show' with .asciidoc file renders an HTML page with wiki-style links resolved to file URLs." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example File.md"             \
+      --title     "Example Title"               \
+      --content   "Example content."
+
+    "${_NB}" add  "Example Folder/File One.asciidoc" \
+      --title     "Title One"                   \
+      --content   "$(cat <<HEREDOC
+= Example AsciiDoc Title
+
+Example content. [[Example Title]]
+HEREDOC
+      )"
+  }
+
+  run "${_NB}" show 2/1 --render --print --raw
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    ==  0                   ]]
+  [[ "${output}"    =~  \<\!DOCTYPE\ html\> ]]
+
+  # TODO: .org / org mode titles in pandoc HTML output?
+  # [[ "${output}"    =~  \<h1\ id=\"title-one\"\>Title\ One\</h1\> ]]
+
+  printf "%s\\n" "${output}" | grep -q \
+"<p>Example content. <a.* href=\"file://${NB_DIR}/home/Example%20File.md\">"
+
+  printf "%s\\n" "${output}" | grep -q \
+"\[\[Example Title\]\]</a></p>"
+
+  printf "%s\\n" "${output}" | grep -q \
+"<h1 .*>Example AsciiDoc Title</h1>"
+
+  printf "%s\\n" "${output}" | grep -q -v \
+"<p>= Example AsciiDoc Title</p>"
+}
+
 # .org ########################################################################
 
 @test "'show' with .org file renders an HTML page with wiki-style links resolved to file URLs." {
@@ -58,7 +102,7 @@ load test_helper
   [[ "${output}"    =~  \<\!DOCTYPE\ html\> ]]
 
   # TODO: .org / org mode titles in pandoc HTML output?
-  # [[ "${output}"    =~  \<h1\ id=\"title-one\"\>Title\ One\</h1\>                     ]]
+  # [[ "${output}"    =~  \<h1\ id=\"title-one\"\>Title\ One\</h1\> ]]
 
   printf "%s\\n" "${output}" | grep -q \
 "<p>Example content. <a.* href=\"file://${NB_DIR}/home/Example%20File.md\">"
