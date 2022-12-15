@@ -16,7 +16,7 @@ permalink: /
 
 <div align="center">
   <a href="https://github.com/xwmx/nb/actions" rel="nofollow">
-    <img  src="https://img.shields.io/github/workflow/status/xwmx/nb/nb%20%C2%B7%20Test%20Suite"
+    <img  src="https://img.shields.io/github/actions/workflow/status/xwmx/nb/tests.yml?branch=master"
           alt="Build Status"
           style="max-width:100%;">
   </a>
