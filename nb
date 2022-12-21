@@ -9167,7 +9167,6 @@ _SUBCOMMANDS=(
   br
   browse
   browser
-  bs
   close
   commands
   completions
@@ -9335,7 +9334,6 @@ _GIT_SUBCOMMANDS=(
   br
   browse
   browser
-  bs
   close
   copy
   count
