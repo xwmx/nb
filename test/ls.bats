@@ -34,10 +34,11 @@ HEREDOC
     "${_NB}" add "File One.md"    --content "Content one. #tag3"
     "${_NB}" add "File Two.md"    --content "Content two. #tag1"
     "${_NB}" add "File Three.md"  --content "Content three. tag1 #tag2"
-    "${_NB}" add "File Four.md"   --content "Content #tag1 four. #tag2"
+    "${_NB}" add "File Four.md"   --content "Content #tag1 #tag4 four. #tag5"
     "${_NB}" add "File Five.md"   --content "Content five."
     "${_NB}" add "File Six.md"    --content "Content six. #tag2"
     "${_NB}" add "File Seven.md"  --content "Content #tag2 Seven. #tag3 #tag1"
+    "${_NB}" add "File Eight.md"  --content "#tag6 #tag7"
   }
 
   run "${_NB}" --tags
@@ -46,12 +47,16 @@ HEREDOC
   printf "\${output}:   '%s'\\n" "${output}"
   printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
 
-  [[    "${status}"     -eq 0       ]]
-  [[    "${#lines[@]}"  -eq 3       ]]
+  [[    "${status}"     -eq 0     ]]
+  [[    "${#lines[@]}"  -eq 7     ]]
 
-  [[    "${lines[0]}"   =~  \#tag1  ]]
-  [[    "${lines[1]}"   =~  \#tag2  ]]
-  [[    "${lines[2]}"   =~  \#tag3  ]]
+  [[    "${output}"   =~  \#tag1  ]]
+  [[    "${output}"   =~  \#tag2  ]]
+  [[    "${output}"   =~  \#tag3  ]]
+  [[    "${output}"   =~  \#tag4  ]]
+  [[    "${output}"   =~  \#tag5  ]]
+  [[    "${output}"   =~  \#tag6  ]]
+  [[    "${output}"   =~  \#tag7  ]]
 }
 
 @test "'--tag tag1,'#tag2' exits with status 0 and prints matches as an AND query." {
