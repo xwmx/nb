@@ -21394,6 +21394,7 @@ HEREDOC
         [[ -n "${_search_query:-}" ]] && _search_query="${_search_query:-} "
 
         _search_query+="$(_option_get_tags "${1:-}" "${2:-}")"
+        _subcommand_options+=("${1:-}" "${2:-}")
 
         shift
         ;;
@@ -21499,7 +21500,7 @@ HEREDOC
       local _field="${_subcommand_options[i]:-}"
       local _value="${_subcommand_options[$((i+1))]:--}"
 
-      _arguments+=("${_field}" "${_value}")
+      _arguments+=("${_value}")
       _url_params+=("${_field}=$(_get_uri --encode "${_value}")")
 
       i="$((i+1))"
@@ -22127,6 +22128,9 @@ _helpers() {
       ;;
     *print*welcome|welcome)
       _print_welcome                  "${_options[@]:-}"
+      ;;
+    *option*|*get*tag*)
+      _option_get_tags                "${_options[@]:-}"
       ;;
     render)
       _render                         "${_options[@]:-}"

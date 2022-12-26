@@ -674,7 +674,7 @@ HEREDOC
   printf "%s\\n" "${output}" | grep -q \
 "value=\"add\">"
 
-  printf "%s\\n" "${output}" | grep -q \
+  printf "%s\\n" "${output}" | rg --multiline -q \
 "rows=\".*\"># Example Title${_NEWLINE}${_NEWLINE}#tag1 #tag2${_NEWLINE}${_NEWLINE}Example content.${_NEWLINE}</textarea>"
 
   printf "%s\\n" "${output}" | grep -q -v \
@@ -720,7 +720,7 @@ HEREDOC
   printf "%s\\n" "${output}" | grep -q \
 "value=\"add\">"
 
-  printf "%s\\n" "${output}" | grep -q \
+  printf "%s\\n" "${output}" | rg --multiline -q \
 "rows=\".*\"># Example Title${_NEWLINE}${_NEWLINE}#tag1 #tag2${_NEWLINE}${_NEWLINE}Example content.${_NEWLINE}</textarea>"
 
   printf "%s\\n" "${output}" | grep -q -v \
@@ -769,7 +769,7 @@ HEREDOC
   printf "%s\\n" "${output}" | grep -q \
 "value=\"add\">"
 
-  printf "%s\\n" "${output}" | grep -q \
+  printf "%s\\n" "${output}" | rg --multiline -q \
 "rows=\".*\"># Example Title${_NEWLINE}${_NEWLINE}#tag1 #tag2${_NEWLINE}${_NEWLINE}Example content.${_NEWLINE}</textarea>"
 
   printf "%s\\n" "${output}" | grep -q -v \
@@ -817,7 +817,7 @@ HEREDOC
   printf "%s\\n" "${output}" | grep -q \
 "value=\"add\">"
 
-  printf "%s\\n" "${output}" | grep -q \
+  printf "%s\\n" "${output}" | rg --multiline -q \
 "rows=\".*\"># Example Title${_NEWLINE}${_NEWLINE}#tag1 #tag2${_NEWLINE}${_NEWLINE}Example content.${_NEWLINE}</textarea>"
 
   printf "%s\\n" "${output}" | grep -q -v \
@@ -957,8 +957,8 @@ HEREDOC
     "href=\"//localhost:6789/?--columns=20&--limit=30\"><span class=\"muted\">❯</span>nb</a> "
 
   printf "%s\\n" "${output}" | grep -q "rows=\"32\">"
-  printf "%s\\n" "${output}" | grep -q \
-    "<form${_NEWLINE}action=\"/home:?--add&--columns=20&--limit=30"
+  printf "%s\\n" "${output}" | rg --multiline -q \
+    "<form${_NEWLINE}.*${_NEWLINE}.*action=\"/home:\?--add&--columns=.*&--limit=.*"
 
   printf "%s\\n" "${output}" | grep -q \
 "value=\"add\">"
@@ -1076,8 +1076,8 @@ HEREDOC
 
   [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*\+     ]]
 
-  printf "%s\\n" "${output}" | grep -q \
-"<form${_NEWLINE}action=\"/home:?--add"
+  printf "%s\\n" "${output}" | rg --multiline -q \
+"<form${_NEWLINE}.*${_NEWLINE}.*action=\"/home:\?--add"
 
   printf "%s\\n" "${output}" | grep -q \
 "value=\"add\">"
