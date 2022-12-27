@@ -43,20 +43,21 @@ HEREDOC
 
   run "${_NB}" --tags
 
-  printf "\${status}:   '%s'\\n" "${status}"
-  printf "\${output}:   '%s'\\n" "${output}"
-  printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${lines[0]}:   '%s'\\n" "${lines[0]}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[    "${status}"     -eq 0     ]]
-  [[    "${#lines[@]}"  -eq 7     ]]
+  [[    "${status}"     -eq 0     ]] || false
+  [[    "${#lines[@]}"  -eq 7     ]] || false
 
-  [[    "${output}"   =~  \#tag1  ]]
-  [[    "${output}"   =~  \#tag2  ]]
-  [[    "${output}"   =~  \#tag3  ]]
-  [[    "${output}"   =~  \#tag4  ]]
-  [[    "${output}"   =~  \#tag5  ]]
-  [[    "${output}"   =~  \#tag6  ]]
-  [[    "${output}"   =~  \#tag7  ]]
+  [[    "${output}"   =~  \#tag1  ]] || false
+  [[    "${output}"   =~  \#tag2  ]] || false
+  [[    "${output}"   =~  \#tag3  ]] || false
+  [[    "${output}"   =~  \#tag4  ]] || false
+  [[    "${output}"   =~  \#tag5  ]] || false
+  [[    "${output}"   =~  \#tag6  ]] || false
+  [[    "${output}"   =~  \#tag7  ]] || false
 }
 
 @test "'--tag tag1,'#tag2' exits with status 0 and prints matches as an AND query." {
