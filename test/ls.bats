@@ -48,16 +48,16 @@ HEREDOC
   printf "\${lines[0]}:   '%s'\\n" "${lines[0]}"
   printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
-  [[    "${status}"     -eq 0     ]] || false
-  [[    "${#lines[@]}"  -eq 7     ]] || false
+  [[    "${status}"     -eq 0     ]]
+  [[    "${#lines[@]}"  -eq 7     ]]
 
-  [[    "${output}"   =~  \#tag1  ]] || false
-  [[    "${output}"   =~  \#tag2  ]] || false
-  [[    "${output}"   =~  \#tag3  ]] || false
-  [[    "${output}"   =~  \#tag4  ]] || false
-  [[    "${output}"   =~  \#tag5  ]] || false
-  [[    "${output}"   =~  \#tag6  ]] || false
-  [[    "${output}"   =~  \#tag7  ]] || false
+  print "%s\\n" "${output}" | grep -q "\#tag1"
+  print "%s\\n" "${output}" | grep -q "\#tag2"
+  print "%s\\n" "${output}" | grep -q "\#tag3"
+  print "%s\\n" "${output}" | grep -q "\#tag5"
+  print "%s\\n" "${output}" | grep -q "\#tag5"
+  print "%s\\n" "${output}" | grep -q "\#tag6"
+  print "%s\\n" "${output}" | grep -q "\#tag7"
 }
 
 @test "'--tag tag1,'#tag2' exits with status 0 and prints matches as an AND query." {
