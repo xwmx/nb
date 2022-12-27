@@ -19312,6 +19312,12 @@ HEREDOC
 
           shift
           ;;
+        -t|--tag*)
+          if _option_value_is_present "${2:-}"
+          then
+            shift
+          fi
+          ;;
         --terminal)
           _terminal_browser=1
           _pagination_options+=("${1:-}")
@@ -21391,9 +21397,13 @@ HEREDOC
         _only_serve=1
         ;;
       -t|--tag*)
-        [[ -n "${_search_query:-}" ]] && _search_query="${_search_query:-} "
+        if [[ -n "${_search_query:-}" ]]
+        then
+          _search_query="${_search_query:-} "
+        fi
 
         _search_query+="$(_option_get_tags "${1:-}" "${2:-}")"
+
         _subcommand_options+=("${1:-}" "${2:-}")
 
         shift
@@ -21505,7 +21515,6 @@ HEREDOC
 
       i="$((i+1))"
     else
-      _arguments+=("${_subcommand_options[i]:-}")
       _url_params+=("${_subcommand_options[i]:-}")
     fi
   done
