@@ -16565,9 +16565,7 @@ _search() {
     if ((_GIT_ENABLED))                           &&
        [[ "${_git_major_version:-}"   -gt 2   ]]  ||  {
          [[ "${_git_major_version:-}" ==  2   ]]  &&
-         [[ "${_git_minor_version:-}" -ge 19  ]]  &&
-         [[ "${_git_minor_version:-}" -lt 39  ]]
-         # TODO: grep 2.39+ matching
+         [[ "${_git_minor_version:-}" -ge 19  ]]
     }
     then # git 2.19+ has --only-matching option
       _use_git_grep=1
@@ -16579,7 +16577,7 @@ _search() {
       "-I"
       "--ignore-case"
       "--only-matching"
-      -e '\s#[A-Za-z0-9_-]+'
+      -e '[[:space:]]#[A-Za-z0-9_-]+'
       -e '^#[A-Za-z0-9_-]+'
     )
 
