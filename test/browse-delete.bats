@@ -297,8 +297,8 @@ Location:\ \/\/localhost:6789\/local:\?${_expected_param_pattern} ]]
   printf "%s\\n" "${output}" | grep -q \
 "<h2 align=\"center\">deleting</h2>"
 
-  printf "%s\\n" "${output}" | grep -q \
-"<p align=\"center\">${_NEWLINE}  <a rel=\"noopener noreferrer\" href=\"//localhost:6789/local:1?${_expected_param_pattern}\">\[1\] Example\ File.md \"Example Title\"</a>${_NEWLINE}</p>"
+  printf "%s\\n" "${output}" | rg --multiline -q \
+"<p align=\"center\">${_NEWLINE}.*<a rel=\"noopener noreferrer\" href=\"//localhost:6789/local:1\?${_expected_param_pattern}\">${_NEWLINE}.*\[1\] Example File.md \"Example Title\"${_NEWLINE}.*</a>${_NEWLINE}.*</p>"
 
   printf "%s\\n" "${output}" | grep -q \
 "action=\"/local:1?--delete&${_expected_param_pattern}\""
@@ -369,8 +369,8 @@ Location:\ \/\/localhost:6789\/local:\?${_expected_param_pattern} ]]
   printf "%s\\n" "${output}" | grep -q \
 "<h2 align=\"center\">deleting</h2>"
 
-  printf "%s\\n" "${output}" | grep -q \
-"<p align=\"center\">${_NEWLINE}  <a rel=\"noopener noreferrer\" href=\"//localhost:6789/home:1?--columns=.*&--limit=.*\">\[1\] Example\ File.md \"Example Title\"</a>${_NEWLINE}</p>"
+  printf "%s\\n" "${output}" | rg --multiline -q \
+"<p align=\"center\">${_NEWLINE}.*<a rel=\"noopener noreferrer\" href=\"//localhost:6789/home:1\?--columns=.*&--limit=.*\">${_NEWLINE}.*\[1\] Example File.md \"Example Title\"${_NEWLINE}.*</a>${_NEWLINE}.*</p>"
 
   printf "%s\\n" "${output}" | grep -q \
 "action=\"/home:1?--delete&--columns=.*&--limit=.*\""
@@ -432,8 +432,8 @@ Location:\ \/\/localhost:6789\/local:\?${_expected_param_pattern} ]]
   [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1      ]]
   [[ "${output}"    =~  header-crumbs.*↓                          ]]
 
-  printf "%s\\n" "${output}" | grep -q \
-"<form${_NEWLINE}action=\"/home:1?--delete"
+  printf "%s\\n" "${output}" | rg --multiline -q \
+"<form${_NEWLINE}.*${_NEWLINE}.*action=\"/home:1\?--delete"
 
   printf "%s\\n" "${output}" | grep -q \
 "value=\"delete\">"
@@ -467,7 +467,7 @@ Location:\ \/\/localhost:6789\/local:\?${_expected_param_pattern} ]]
 "<h2 align=\"center\">deleting</h2>"
 
   printf "%s\\n" "${output}" | grep -q \
-"<p align=\"center\">${_NEWLINE}<a rel=\"noopener noreferrer\" href=\"//localhost:6789/home:1?--columns=.*&--limit=.*\">\[1\] Example\ File.md \"Example Title\"</a>${_NEWLINE}</p>"
+"<p align=\"center\">${_NEWLINE}.*<a rel=\"noopener noreferrer\" href=\"//localhost:6789/home:1?--columns=.*&--limit=.*\">${_NEWLINE}.*\[1\] Example File.md \"Example Title\"${_NEWLINE}.*</a>${_NEWLINE}</p>"
 
   printf "%s\\n" "${output}" | grep -q \
 "action=\"/home:1?--delete&--columns=.*&--limit=.*\""

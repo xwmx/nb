@@ -198,8 +198,8 @@ load test_helper
 
   [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1      ]]
 
-  printf "%s\\n" "${output}" | grep -q \
-"<form${_NEWLINE}action=\"/home:1?--edit"
+  printf "%s\\n" "${output}" | rg --multiline -q \
+"<form${_NEWLINE}.*${_NEWLINE}.*action=\"/home:1\?--edit"
 
   printf "%s\\n" "${output}" | grep -q \
 "value=\"save\"> <span class=\"muted\">·</span> <span class=\"muted last-saved\">last: .*</span>"
@@ -266,8 +266,8 @@ load test_helper
 
   [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*local.*\ .*:.*\ .*1     ]]
 
-  printf "%s\\n" "${output}" | grep -q \
-"<form${_NEWLINE}action=\"/local:1?--edit&--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
+  printf "%s\\n" "${output}" | rg --multiline -q \
+"<form${_NEWLINE}.*${_NEWLINE}.*action=\"/local:1\?--edit&.*--local=${_TMP_DIR//$'/'/%2F}%2FLocal%20Notebook"
 
   printf "%s\\n" "${output}" | grep -q \
 "value=\"save\"> <span class=\"muted\">·</span> <span class=\"muted last-saved\">last: .*</span>"
@@ -575,7 +575,7 @@ action=\"/local:1/1\?--edit\&--columns=.*\&--limit=.*\&--local=${_TMP_DIR//$'/'/
     "<p>Example content. <a"
 
   printf "%s\\n" "${output}"  | grep -v -q \
-    "<form${_NEWLINE}action=\"/home:1?--edit&--columns=20&--limit=30"
+    "<form"
 }
 
 @test "GET to --edit URL with --columns parameter uses value for textarea, form URL parameters, and header links and retains leading tab." {
@@ -634,8 +634,8 @@ action=\"/local:1/1\?--edit\&--columns=.*\&--limit=.*\&--local=${_TMP_DIR//$'/'/
     "href=\"//localhost:6789/?--columns=20&--limit=30\"><span class=\"muted\">❯</span>nb</a> "
 
   printf "%s\\n" "${output}" | grep -q "rows=\"32\"># Example Title"
-  printf "%s\\n" "${output}" | grep -q \
-    "<form${_NEWLINE}action=\"/home:1?--edit&--columns=20&--limit=30"
+  printf "%s\\n" "${output}" | rg --multiline -q \
+    "<form${_NEWLINE}.*${_NEWLINE}.*action=\"/home:1\?--edit&--columns=.*&--limit=.*"
 
   printf "%s\\n" "${output}" | grep -q \
 "value=\"save\"> <span class=\"muted\">·</span> <span class=\"muted last-saved\">last: .*</span>"
@@ -782,8 +782,8 @@ action=\"/local:1/1\?--edit\&--columns=.*\&--limit=.*\&--local=${_TMP_DIR//$'/'/
 
   [[ "${output}"    =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1      ]]
 
-  printf "%s\\n" "${output}" | grep -q \
-"<form${_NEWLINE}action=\"/home:1?--edit"
+  printf "%s\\n" "${output}" | rg --multiline -q \
+"<form${_NEWLINE}.*${_NEWLINE}.*action=\"/home:1\?--edit"
 
   printf "%s\\n" "${output}" | grep -q \
 "value=\"save\"> <span class=\"muted\">·</span> <span class=\"muted last-saved\">last: .*</span>"
@@ -809,8 +809,8 @@ action=\"/local:1/1\?--edit\&--columns=.*\&--limit=.*\&--local=${_TMP_DIR//$'/'/
 
   [[    "${output}"  =~  ❯.*nb.*\ .*·.*\ .*home.*\ .*:.*\ .*1 ]]
 
-  printf "%s\\n" "${output}" | grep -q \
-"<form${_NEWLINE}action=\"/home:1?--edit"
+  printf "%s\\n" "${output}" | rg --multiline -q \
+"<form${_NEWLINE}.*${_NEWLINE}.*action=\"/home:1\?--edit"
 
   printf "%s\\n" "${output}" | grep -q \
 "value=\"save\"> <span class=\"muted\">·</span> <span class=\"muted last-saved\">last: .*</span>"
