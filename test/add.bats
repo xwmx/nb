@@ -368,7 +368,7 @@ HEREDOC
   printf "%s\\n" "${output}" | grep -q \
 "value=\"add\">"
 
-  printf "%s\\n" "${output}" | grep -q \
+  printf "%s\\n" "${output}" | rg --multiline -q \
 "rows=\".*\"># Example Title${_NEWLINE}${_NEWLINE}#tag1 #tag2${_NEWLINE}${_NEWLINE}Example content.${_NEWLINE}</textarea>"
 
   printf "%s\\n" "${output}" | grep -q -v \

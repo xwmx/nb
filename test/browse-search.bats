@@ -29,7 +29,7 @@ load test_helper
       --content "Content #tag2 #tag3 five."
   }
 
-  run "${_NB}" browse --container -t tag2 --or -t tag3
+  run "${_NB}" browse --container -q \#tag2 --or \#tag3
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"

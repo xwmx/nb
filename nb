@@ -81,7 +81,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.2.0"
+_VERSION="7.2.1"
 
 # $_ME
 #
@@ -9167,7 +9167,6 @@ _SUBCOMMANDS=(
   br
   browse
   browser
-  bs
   close
   commands
   completions
@@ -9335,7 +9334,6 @@ _GIT_SUBCOMMANDS=(
   br
   browse
   browser
-  bs
   close
   copy
   count
@@ -16579,7 +16577,7 @@ _search() {
       "-I"
       "--ignore-case"
       "--only-matching"
-      -e '\s#[A-Za-z0-9_-]+'
+      -e '[[:space:]]#[A-Za-z0-9_-]+'
       -e '^#[A-Za-z0-9_-]+'
     )
 
@@ -19314,6 +19312,12 @@ HEREDOC
 
           shift
           ;;
+        -t|--tag*)
+          if _option_value_is_present "${2:-}"
+          then
+            shift
+          fi
+          ;;
         --terminal)
           _terminal_browser=1
           _pagination_options+=("${1:-}")
@@ -21393,9 +21397,14 @@ HEREDOC
         _only_serve=1
         ;;
       -t|--tag*)
-        [[ -n "${_search_query:-}" ]] && _search_query="${_search_query:-} "
+        if [[ -n "${_search_query:-}" ]]
+        then
+          _search_query="${_search_query:-} "
+        fi
 
         _search_query+="$(_option_get_tags "${1:-}" "${2:-}")"
+
+        _subcommand_options+=("${1:-}" "${2:-}")
 
         shift
         ;;
@@ -21501,12 +21510,11 @@ HEREDOC
       local _field="${_subcommand_options[i]:-}"
       local _value="${_subcommand_options[$((i+1))]:--}"
 
-      _arguments+=("${_field}" "${_value}")
+      _arguments+=("${_value}")
       _url_params+=("${_field}=$(_get_uri --encode "${_value}")")
 
       i="$((i+1))"
     else
-      _arguments+=("${_subcommand_options[i]:-}")
       _url_params+=("${_subcommand_options[i]:-}")
     fi
   done
@@ -22129,6 +22137,9 @@ _helpers() {
       ;;
     *print*welcome|welcome)
       _print_welcome                  "${_options[@]:-}"
+      ;;
+    *option*|*get*tag*)
+      _option_get_tags                "${_options[@]:-}"
       ;;
     render)
       _render                         "${_options[@]:-}"
