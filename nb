@@ -501,7 +501,7 @@ export NB_AUTO_SYNC="${NB_AUTO_SYNC:-1}"
 #
 # Default: value of $BROWSER
 #
-# Example Values: 'visidata', 'sc-im'
+# Example Values: 'links', 'w3m'
 export NB_BROWSER="${NB_BROWSER:-${BROWSER:-}}"
 
 # $NB_DATA_TOOL
