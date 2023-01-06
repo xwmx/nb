@@ -9,8 +9,8 @@ load test_helper
   printf "\${output}:       '%s'\\n" "${output}"
   printf "\$(tput colors):  '%s'\\n" "$(tput colors)"
 
-  [[ "${status}"  -eq 0       ]]
-  [[ "${output}"  =~  EDITOR  ]]
+  [[ "${status}"  -eq 0         ]]
+  [[ "${output}"  =~  NB_EDITOR ]]
 }
 
 # EDITOR ######################################################################
@@ -21,7 +21,16 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[4]}" =~ EDITOR=example-editor ]]
+  [[ "${lines[4]}" =~ NB_EDITOR=example-editor    ]]
+}
+
+@test "'env' with NB_EDITOR sets editor." {
+  EDITOR='' NB_EDITOR='example-nb-editor' VISUAL='' run "${_NB}" env
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${lines[4]}" =~ NB_EDITOR=example-nb-editor ]]
 }
 
 @test "'env' with VISUAL sets editor." {
@@ -30,5 +39,5 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[4]}" =~ EDITOR=example-visual ]]
+  [[ "${lines[4]}" =~ NB_EDITOR=example-visual    ]]
 }

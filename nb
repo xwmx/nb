@@ -525,13 +525,6 @@ export NB_DEFAULT_EXTENSION="${NB_DEFAULT_EXTENSION:-md}"
 # Example Values: 'ranger', 'mc'
 export NB_DIRECTORY_TOOL="${NB_DIRECTORY_TOOL:-}"
 
-# $NB_EDITOR
-#
-# Default: value of $EDITOR
-#
-# Example Values: 'vim', `code`'
-export NB_EDITOR="${NB_EDITOR:-${EDITOR:-}}"
-
 # $NB_ENCRYPTION_TOOL
 #
 # Default: 'openssl'
@@ -625,6 +618,13 @@ esac
 
 # $EDITOR ############################################################# $EDITOR
 
+# $NB_EDITOR
+#
+# Default: value of $EDITOR or $VISUAL
+#
+# Example Values: 'vim', `code`'
+NB_EDITOR="${NB_EDITOR:-${EDITOR:-${VISUAL:-}}}"
+
 __set_editor() {
   local _editors=(
     code
@@ -641,21 +641,16 @@ __set_editor() {
 
   if [[   -z "${NB_EDITOR:-}" ]]
   then
-    if [[ -n "${VISUAL:-}"    ]]
-    then
-      EDITOR="${VISUAL}"
-    else
-      local __editor=
-      for   __editor in "${_editors[@]}"
-      do
-        if hash "${__editor}" 2>/dev/null
-        then
-          EDITOR="${__editor}"
+    local __editor=
+    for   __editor in "${_editors[@]}"
+    do
+      if hash "${__editor}" 2>/dev/null
+      then
+        NB_EDITOR="${__editor}"
 
-          break
-        fi
-      done
-    fi
+        break
+      fi
+    done
 
     if [[ -z "${NB_EDITOR:-}" ]]
     then
