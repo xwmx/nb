@@ -525,6 +525,13 @@ export NB_DEFAULT_EXTENSION="${NB_DEFAULT_EXTENSION:-md}"
 # Example Values: 'ranger', 'mc'
 export NB_DIRECTORY_TOOL="${NB_DIRECTORY_TOOL:-}"
 
+# $NB_EDITOR
+#
+# Default: value of $EDITOR
+#
+# Example Values: 'vim', `code`'
+export NB_EDITOR="${NB_EDITOR:-${EDITOR:-}}"
+
 # $NB_ENCRYPTION_TOOL
 #
 # Default: 'openssl'
@@ -618,11 +625,6 @@ esac
 
 # $EDITOR ############################################################# $EDITOR
 
-# $EDITOR
-#
-# The terminal editor command for editing items.
-export EDITOR="${EDITOR:-}"
-
 __set_editor() {
   local _editors=(
     code
@@ -637,9 +639,9 @@ __set_editor() {
     emacs
   )
 
-  if [[   -z "${EDITOR:-}" ]]
+  if [[   -z "${NB_EDITOR:-}" ]]
   then
-    if [[ -n "${VISUAL:-}" ]]
+    if [[ -n "${VISUAL:-}"    ]]
     then
       EDITOR="${VISUAL}"
     else
@@ -655,7 +657,7 @@ __set_editor() {
       done
     fi
 
-    if [[ -z "${EDITOR:-}" ]]
+    if [[ -z "${NB_EDITOR:-}" ]]
     then
       cat <<HEREDOC
 Command line text editor not found. Set the \$EDITOR variable in your
@@ -10060,14 +10062,14 @@ _edit_file() {
     fi
   fi
 
-  local _editor_command="${EDITOR}"
+  local _editor_command="${NB_EDITOR}"
 
   # turn on case-insensitive matching
   shopt -s nocasematch
 
   if ((_wait))
   then
-    case "${EDITOR}" in
+    case "${NB_EDITOR}" in
       *gvim*|*mvim*)
         _editor_command="${_editor_command} -f"
         ;;
@@ -10077,22 +10079,22 @@ _edit_file() {
     esac
   fi
 
-  if [[ -d "${_file_path}" ]] &&
-     [[ "${EDITOR}" =~ vim ]]
+  if [[ -d "${_file_path}"    ]] &&
+     [[ "${NB_EDITOR}" =~ vim ]]
   then
     cd "${_file_path}" && "${_editor_command:-}"
   else
-    if [[ "${EDITOR}" =~ typora   ]] &&
-       [[ ! -f "${_file_path:-}"  ]]
+    if [[ "${NB_EDITOR}" =~ typora  ]] &&
+       [[ ! -f "${_file_path:-}"    ]]
     then
       touch "${_file_path:-}"
     fi
 
     eval "${_editor_command} \"${_file_path}\""
 
-    if [[ "${EDITOR}" =~ (typora|open\ -a) ]]
+    if [[ "${NB_EDITOR}" =~ (typora|open\ -a) ]]
     then
-      printf "Editing with %s\\n" "$(_color_primary "${EDITOR}")"
+      printf "Editing with %s\\n" "$(_color_primary "${NB_EDITOR}")"
 
       while true
       do
@@ -12208,7 +12210,7 @@ $(_color_primary "Description"):
   Create a new note or folder.
 
   If no arguments are passed, a new blank note file is opened with \`\$EDITOR\`,
-  currently set to: ${EDITOR}
+  currently set to: ${NB_EDITOR}
 
   If a non-option argument is passed, \`${_ME}\` will treat it as a <filename≥
   if a file extension is found. If no file extension is found,  \`${_ME}\` will
@@ -14280,7 +14282,7 @@ $(_color_primary "Options"):
                            existing content.
 
 $(_color_primary "Description"):
-  Open the specified note in \`\$EDITOR\`, currently set to: ${EDITOR}
+  Open the specified note in \`\$EDITOR\`, currently set to: ${NB_EDITOR}
 
   Content piped to \`${_ME} edit\` or passed using the \`--content\` option
   is appended to the file without opening it in the editor, unless the
@@ -14746,7 +14748,7 @@ _env() {
       printf "_MY_PATH=%s\\n" "${_MY_PATH:-}"
       printf "NB_NOTEBOOK_PATH=%s\\n" "${NB_NOTEBOOK_PATH:-}"
       printf "NB_BROWSER=%s\\n" "${NB_BROWSER:-}"
-      printf "EDITOR=%s\\n" "${EDITOR:-}"
+      printf "NB_EDITOR=%s\\n" "${NB_EDITOR:-}"
       printf "PAGER=%s\\n" "${PAGER:-}"
       printf "NB_AUTO_SYNC=%s\\n" "${NB_AUTO_SYNC:-}"
       printf "NB_DIR=%s\\n" "${NB_DIR:-}"
