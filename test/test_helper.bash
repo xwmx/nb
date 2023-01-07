@@ -304,14 +304,31 @@ _get_hash() {
   fi
 }
 
-# _color_primary()
-#
-# Usage:
-#   _color_primary <string> [--underline]
+# color variables
+
 export _TPUT_COLOR_PRIMARY=   && _TPUT_COLOR_PRIMARY="$(tput setaf 3)"
 export _TPUT_SETAF_8=         && _TPUT_SETAF_8="$(tput setaf 8)"
 export _TPUT_SGR0=            && _TPUT_SGR0="$(tput sgr0)"
 export _TPUT_SMUL=            && _TPUT_SMUL="$(tput smul)"
+
+# _color_muted()
+#
+# Usage:
+#   _color_muted <string>
+#
+# Print the given string with the muted color.
+_color_muted() {
+  printf "%s%s%s%s"     \
+    "${_TPUT_SGR0}"     \
+    "${_TPUT_SETAF_8}"  \
+    "${1:-}"            \
+    "${_TPUT_SGR0}"
+}
+
+# _color_primary()
+#
+# Usage:
+#   _color_primary <string> [--underline]
 _color_primary() {
   local _input="${1:-}"
 
