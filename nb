@@ -6528,6 +6528,13 @@ _ls() {
     local _current_notebook_name=
     _current_notebook_name="$(_notebooks current)"
 
+    local _highlight_archived=0
+
+    if [[ -e "${NB_NOTEBOOK_PATH:-}/.archived" ]]
+    then
+      _highlight_archived=1
+    fi
+
     {
       local _archived_count=0
       local _unarchived_notebook_names=()
@@ -6569,7 +6576,11 @@ _ls() {
       do
         local _maybe_highlighted_notebook_name=
 
-        if [[ "${_current_notebook_name}" == "${__header_name}" ]]
+        if [[ "${_current_notebook_name}" == "${__header_name}" ]] ||
+           {
+             ((_highlight_archived))                               &&
+             [[ "${__header_name:-}"      =~ ^\[.*\]            ]]
+           }
         then
           _maybe_highlighted_notebook_name="$(
             _color_primary "${__header_name:-}" --underline
