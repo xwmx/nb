@@ -6638,7 +6638,7 @@ _ls() {
         _print_padding "${_line_raw}" "${_COLUMNS}" "${_centered}"
       )"
 
-      printf "%s%s\\n" "${_padding:-}" "${_line_hi:-}"
+      printf "%s%s%s\\n" "${_TPUT_SGR0}" "${_padding:-}" "${_line_hi:-}"
       _output_line_raw="${_padding}${_line_raw}\\n"
 
       _wrap off
