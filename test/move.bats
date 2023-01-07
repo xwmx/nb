@@ -595,27 +595,26 @@ Moved\ to:\ .*[.*Sample\ Folder/5.*].*\ .*Sample\ Folder/Example\ File\ Two.md  
     "${_NB}" init
     "${_NB}" notebooks add "one"
     "${_NB}" use "one"
-    "${_NB}" add
-
-    _filename=$("${_NB}" list -n 1 --no-id --filenames | head -1)
-
-    echo "\${_filename:-}: ${_filename:-}"
+    "${_NB}" add "example.md" --content "Example content."
 
     "${_NB}" use "home"
 
-    [[ -n "${_filename}"                ]]
-    [[ -e "${NB_DIR}/one/${_filename}"  ]]
+    [[    -e "${NB_DIR}/one/example.md"   ]]
+    [[ !  -e "${NB_DIR}/home/example.md"  ]]
   }
 
-  run "${_NB}" one:"${_filename}" move home: --force
+  run "${_NB}" one:example.md move home: --force
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
   [[ "${status}" -eq 0                    ]]
   [[ "${output}" =~ Moved\ to             ]]
-  [[ "${output}" =~ home:[A-Za-z0-9]*     ]]
-  [[ "${output}" =~ home:[A-Za-z0-9]+.md  ]]
+  [[ "${output}" =~ home:example.md       ]]
+
+  [[ !  -e "${NB_DIR}/one/example.md"     ]]
+  [[    -e "${NB_DIR}/home/example.md"    ]]
+
 }
 
 @test "'<filename> <notebook>:move <notebook>:' with <filename> argument moves note." {
