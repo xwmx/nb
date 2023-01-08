@@ -608,6 +608,15 @@ case "${NB_LIMIT:-}" in
     export _AUTO_LIMIT="${NB_LIMIT#auto}"
     _AUTO_LIMIT="${_AUTO_LIMIT:-0}"
 
+    export _AUTO_LIMIT_MAX="${NB_LIMIT#*^}"
+
+    if [[ -n "${_AUTO_LIMIT_MAX:-}" ]]
+    then
+      _AUTO_LIMIT="${_AUTO_LIMIT%^*}"
+    else
+      _AUTO_LIMIT_MAX=1
+    fi
+
     export NB_LIMIT="${NB_LIMIT}"
     ;;
   *)
@@ -6945,6 +6954,11 @@ _ls() {
     ))"
 
     [[ "${_auto_limit_amount}" -gt 0 ]] || _auto_limit_amount=1
+
+    if [[ "${_AUTO_LIMIT_MAX:-1}" -lt "${_auto_limit_amount:-1}" ]]
+    then
+      _auto_limit_amount="${_AUTO_LIMIT_MAX}"
+    fi
 
     _list_options+=("--limit" "${_auto_limit_amount:-1}")
   fi
@@ -23789,11 +23803,12 @@ HEREDOC
 
         return 1
       fi
-    elif [[ "${1:-}" == 'NB_LIMIT'            ]]
+    elif [[ "${1:-}" == 'NB_LIMIT'                ]]
     then
-      if [[ "${2:-}" =~ ^[0-9]+$              ]]  ||
-         [[ "${2:-}" =~ ^auto$                ]]  ||
-         [[ "${2:-}" =~ ^auto[+|-][0-9]+$     ]]
+      if [[ "${2:-}" =~ ^[0-9]+$                  ]]  ||
+         [[ "${2:-}" =~ ^auto$                    ]]  ||
+         [[ "${2:-}" =~ ^auto[+|-][0-9]+\^[0-9]+$ ]]  ||
+         [[ "${2:-}" =~ ^auto\^[0-9]+$            ]]
       then
         return 0
       else
