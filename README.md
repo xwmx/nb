@@ -9051,6 +9051,20 @@ When set to '1', each `_git checkpoint()` call will automativally run
   </sup>
 </p>
 
+##### `$NB_BROWSER`
+
+```text
+Default: value of $BROWSER
+
+Example Values: 'links', 'w3m'
+```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
 ##### `$NB_COLOR_PRIMARY`
 
 ```text
