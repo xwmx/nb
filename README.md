@@ -8937,44 +8937,50 @@ Shortcut Alias:
 </p>
 
 <div align="center">
-  <a href="#editor-1">$EDITOR</a>&nbsp;·
-  <a href="#nb_ace_enabled">$NB_ACE_ENABLED</a>&nbsp;·
-  <a href="#nb_ace_md_gutter">$NB_ACE_MD_GUTTER</a>&nbsp;·
-  <a href="#nb_ace_soft_tabs">$NB_ACE_SOFT_TABS</a>&nbsp;·
-  <a href="#nb_ace_keyboard">$NB_ACE_KEYBOARD</a>&nbsp;·
-  <a href="#nb_audio_tool">$NB_AUDIO_TOOL</a>&nbsp;·
-  <a href="#nb_auto_sync">$NB_AUTO_SYNC</a>&nbsp;·
-  <a href="#nb_browser">$NB_BROWSER</a>&nbsp;·
-  <a href="#nb_color_primary">$NB_COLOR_PRIMARY</a>&nbsp;·
-  <a href="#nb_color_secondary">$NB_COLOR_SECONDARY</a>&nbsp;·
-  <a href="#nb_color_theme">$NB_COLOR_THEME</a>&nbsp;·
-  <a href="#nb_data_tool">$NB_DATA_TOOL</a>&nbsp;·
-  <a href="#nb_default_extension">$NB_DEFAULT_EXTENSION</a>&nbsp;·
-  <a href="#nb_dir-1">$NB_DIR</a>&nbsp;·
-  <a href="#nb_directory_tool">$NB_DIRECTORY_TOOL</a>&nbsp;·
-  <a href="#nb_encryption_tool">$NB_ENCRYPTION_TOOL</a>&nbsp;·
-  <a href="#nb_footer">$NB_FOOTER</a>&nbsp;·
-  <a href="#nb_gui_browser">$NB_GUI_BROWSER</a>&nbsp;·
-  <a href="#nb_header">$NB_HEADER</a>&nbsp;·
-  <a href="#nb_image_tool">$NB_IMAGE_TOOL</a>&nbsp;·
-  <a href="#nb_indicator_audio">$NB_INDICATOR_AUDIO</a>&nbsp;·
-  <a href="#nb_indicator_bookmark">$NB_INDICATOR_BOOKMARK</a>&nbsp;·
-  <a href="#nb_indicator_document">$NB_INDICATOR_DOCUMENT</a>&nbsp;·
-  <a href="#nb_indicator_ebook">$NB_INDICATOR_EBOOK</a>&nbsp;·
-  <a href="#nb_indicator_encrypted">$NB_INDICATOR_ENCRYPTED</a>&nbsp;·
-  <a href="#nb_indicator_folder">$NB_INDICATOR_FOLDER</a>&nbsp;·
-  <a href="#nb_indicator_image">$NB_INDICATOR_IMAGE</a>&nbsp;·
-  <a href="#nb_indicator_pinned">$NB_INDICATOR_PINNED</a>&nbsp;·
-  <a href="#nb_indicator_todo">$NB_INDICATOR_TODO</a>&nbsp;·
-  <a href="#nb_indicator_todo_done">$NB_INDICATOR_TODO_DONE</a>&nbsp;·
-  <a href="#nb_indicator_video">$NB_INDICATOR_VIDEO</a>&nbsp;·
-  <a href="#nb_limit">$NB_LIMIT</a>&nbsp;·
-  <a href="#nb_pinned_pattern">$NB_PINNED_PATTERN</a>&nbsp;·
-  <a href="#nb_server_host">$NB_SERVER_HOST</a>&nbsp;·
-  <a href="#nb_server_port">$NB_SERVER_PORT</a>&nbsp;·
-  <a href="#nb_syntax_theme">$NB_SYNTAX_THEME</a>&nbsp;·
-  <a href="#nb_user_agent">$NB_USER_AGENT</a>&nbsp;·
-  <a href="#nbrc_path">$NBRC_PATH</a>
+  <a href="#editor-1"><code>$EDITOR</code></a>&nbsp;·
+  <a href="#nb_ace_enabled"><code>$NB_ACE_ENABLED</code></a>&nbsp;·
+  <a href="#nb_ace_md_gutter"><code>$NB_ACE_MD_GUTTER</code></a>&nbsp;·
+  <a href="#nb_ace_soft_tabs"><code>$NB_ACE_SOFT_TABS</code></a>&nbsp;·
+  <a href="#nb_ace_keyboard"><code>$NB_ACE_KEYBOARD</code></a>&nbsp;·
+  <a href="#nb_audio_tool"><code>$NB_AUDIO_TOOL</code></a>&nbsp;·
+  <a href="#nb_auto_sync"><code>$NB_AUTO_SYNC</code></a>&nbsp;·
+  <a href="#nb_browser"><code>$NB_BROWSER</code></a>&nbsp;·
+  <a href="#nb_color_primary"><code>$NB_COLOR_PRIMARY</code></a>&nbsp;·
+  <a href="#nb_color_secondary"><code>$NB_COLOR_SECONDARY</code></a>&nbsp;·
+  <a href="#nb_color_theme"><code>$NB_COLOR_THEME</code></a>&nbsp;·
+  <a href="#nb_data_tool"><code>$NB_DATA_TOOL</code></a>&nbsp;·
+  <a href="#nb_default_extension"><code>$NB_DEFAULT_EXTENSION</code></a>&nbsp;·
+  <a href="#nb_dir-1"><code>$NB_DIR</code></a>&nbsp;·
+  <a href="#nb_directory_tool"><code>$NB_DIRECTORY_TOOL</code></a>&nbsp;·
+  <a href="#nb_encryption_tool"><code>$NB_ENCRYPTION_TOOL</code></a>&nbsp;·
+  <a href="#nb_footer"><code>$NB_FOOTER</code></a>&nbsp;·
+  <a href="#nb_gui_browser"><code>$NB_GUI_BROWSER</code></a>&nbsp;·
+  <a href="#nb_header"><code>$NB_HEADER</code></a>&nbsp;·
+  <a href="#nb_image_tool"><code>$NB_IMAGE_TOOL</code></a>&nbsp;·
+  <a href="#nb_indicator_audio"><code>$NB_INDICATOR_AUDIO</code></a>&nbsp;·
+  <a href="#nb_indicator_bookmark"><code>$NB_INDICATOR_BOOKMARK</code></a>&nbsp;·
+  <a href="#nb_indicator_document"><code>$NB_INDICATOR_DOCUMENT</code></a>&nbsp;·
+  <a href="#nb_indicator_ebook"><code>$NB_INDICATOR_EBOOK</code></a>&nbsp;·
+  <a href="#nb_indicator_encrypted"><code>$NB_INDICATOR_ENCRYPTED</code></a>&nbsp;·
+  <a href="#nb_indicator_folder"><code>$NB_INDICATOR_FOLDER</code></a>&nbsp;·
+  <a href="#nb_indicator_image"><code>$NB_INDICATOR_IMAGE</code></a>&nbsp;·
+  <a href="#nb_indicator_pinned"><code>$NB_INDICATOR_PINNED</code></a>&nbsp;·
+  <a href="#nb_indicator_todo"><code>$NB_INDICATOR_TODO</code></a>&nbsp;·
+  <a href="#nb_indicator_todo_done"><code>$NB_INDICATOR_TODO_DONE</code></a>&nbsp;·
+  <a href="#nb_indicator_video"><code>$NB_INDICATOR_VIDEO</code></a>&nbsp;·
+  <a href="#nb_limit"><code>$NB_LIMIT</code></a>&nbsp;·
+  <a href="#nb_pinned_pattern"><code>$NB_PINNED_PATTERN</code></a>&nbsp;·
+  <a href="#nb_server_host"><code>$NB_SERVER_HOST</code></a>&nbsp;·
+  <a href="#nb_server_port"><code>$NB_SERVER_PORT</code></a>&nbsp;·
+  <a href="#nb_syntax_theme"><code>$NB_SYNTAX_THEME</code></a>&nbsp;·
+  <a href="#nb_user_agent"><code>$NB_USER_AGENT</code></a>&nbsp;·
+  <a href="#nbrc_path"><code>$NBRC_PATH</code></a>
+</div>
+
+<p align="center"></p><!-- spacer -->
+
+<div align="center">
+  <a href="#overview">&nbsp;↑&nbsp;</a>
 </div>
 
 [Settings](#%EF%B8%8F-set--settings) are set in the `~/.nbrc` configuration
