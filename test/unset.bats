@@ -35,8 +35,8 @@ load test_helper
   printf ".nbrc:\\n'%s'\\n" "$(cat "${NBRC_PATH}")"
 
   [[    "${status}"             -eq 0                           ]]
-  [[ !  "$(cat "${NBRC_PATH}")" =~  'EDITOR="sample"'           ]]
-  [[ !  "$(cat "${NBRC_PATH}")" =~  'EDITOR="sample"'           ]]
+  [[ !  "$(cat "${NBRC_PATH}")" =~  'NB_EDITOR="sample"'        ]]
+  [[ !  "$(cat "${NBRC_PATH}")" =~  'NB_EDITOR="sample"'        ]]
   [[    "${output}"             =~  EDITOR                      ]]
   [[    "${output}"             =~  restored\ to\ the\ default  ]]
   [[ !  "${output}"             =~  sample                      ]]
@@ -86,13 +86,15 @@ load test_helper
 
   run "${_NB}" unset EDITOR
 
-  printf "\${status}: '%s'\\n" "${status}"
-  printf "\${output}: '%s'\\n" "${output}"
-  printf ".nbrc:\\n'%s'\\n" "$(cat "${NBRC_PATH}")"
+  printf "\${status}: '%s'\\n"        "${status}"
+  printf "\${output}: '%s'\\n"        "${output}"
+  printf ".nbrc:\\n'%s'\\n"           "$(cat "${NBRC_PATH}")"
+  printf "env:\\n'%s'\\n"             "$("${_NB}" env)"
+  printf "set get editor:\\n'%s'\\n"  "$(EDITOR='' "${_NB}" set get editor)"
 
   [[    "${status}"             -eq 0                           ]]
-  [[ !  "$(cat "${NBRC_PATH}")" =~  'EDITOR="sample"'           ]]
-  [[ !  "$(cat "${NBRC_PATH}")" =~  'EDITOR="sample"'           ]]
+  [[ !  "$(cat "${NBRC_PATH}")" =~  'NB_EDITOR="sample"'        ]]
+  [[ !  "$(cat "${NBRC_PATH}")" =~  'NB_EDITOR="sample"'        ]]
   [[    "${output}"             =~  EDITOR                      ]]
   [[    "${output}"             =~  restored\ to\ the\ default  ]]
   [[ !  "${output}"             =~  sample                      ]]

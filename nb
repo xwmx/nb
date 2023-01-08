@@ -81,7 +81,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.2.1"
+_VERSION="7.3.0"
 
 # $_ME
 #
@@ -497,6 +497,13 @@ export NB_AUDIO_TOOL="${NB_AUDIO_TOOL:-}"
 # `$_ME sync`. To disable this behavior, set the value to '0'.
 export NB_AUTO_SYNC="${NB_AUTO_SYNC:-1}"
 
+# $NB_BROWSER
+#
+# Default: value of $BROWSER
+#
+# Example Values: 'links', 'w3m'
+export NB_BROWSER="${NB_BROWSER:-${BROWSER:-}}"
+
 # $NB_DATA_TOOL
 #
 # Default: '' (first available)
@@ -611,10 +618,12 @@ esac
 
 # $EDITOR ############################################################# $EDITOR
 
-# $EDITOR
+# $NB_EDITOR
 #
-# The terminal editor command for editing items.
-export EDITOR="${EDITOR:-}"
+# Default: value of $EDITOR or $VISUAL
+#
+# Example Values: 'vim', `code`'
+NB_EDITOR="${NB_EDITOR:-${EDITOR:-${VISUAL:-}}}"
 
 __set_editor() {
   local _editors=(
@@ -630,25 +639,20 @@ __set_editor() {
     emacs
   )
 
-  if [[   -z "${EDITOR:-}" ]]
+  if [[   -z "${NB_EDITOR:-}" ]]
   then
-    if [[ -n "${VISUAL:-}" ]]
-    then
-      EDITOR="${VISUAL}"
-    else
-      local __editor=
-      for   __editor in "${_editors[@]}"
-      do
-        if hash "${__editor}" 2>/dev/null
-        then
-          EDITOR="${__editor}"
+    local __editor=
+    for   __editor in "${_editors[@]}"
+    do
+      if hash "${__editor}" 2>/dev/null
+      then
+        NB_EDITOR="${__editor}"
 
-          break
-        fi
-      done
-    fi
+        break
+      fi
+    done
 
-    if [[ -z "${EDITOR:-}" ]]
+    if [[ -z "${NB_EDITOR:-}" ]]
     then
       cat <<HEREDOC
 Command line text editor not found. Set the \$EDITOR variable in your
@@ -6524,6 +6528,13 @@ _ls() {
     local _current_notebook_name=
     _current_notebook_name="$(_notebooks current)"
 
+    local _highlight_archived=0
+
+    if [[ -e "${NB_NOTEBOOK_PATH:-}/.archived" ]]
+    then
+      _highlight_archived=1
+    fi
+
     {
       local _archived_count=0
       local _unarchived_notebook_names=()
@@ -6565,7 +6576,11 @@ _ls() {
       do
         local _maybe_highlighted_notebook_name=
 
-        if [[ "${_current_notebook_name}" == "${__header_name}" ]]
+        if [[ "${_current_notebook_name}" == "${__header_name}" ]] ||
+           {
+             ((_highlight_archived))                               &&
+             [[ "${__header_name:-}"      =~ ^\[.*\]            ]]
+           }
         then
           _maybe_highlighted_notebook_name="$(
             _color_primary "${__header_name:-}" --underline
@@ -6623,7 +6638,7 @@ _ls() {
         _print_padding "${_line_raw}" "${_COLUMNS}" "${_centered}"
       )"
 
-      printf "%s%s\\n" "${_padding:-}" "${_line_hi:-}"
+      printf "%s%s%s\\n" "${_TPUT_SGR0}" "${_padding:-}" "${_line_hi:-}"
       _output_line_raw="${_padding}${_line_raw}\\n"
 
       _wrap off
@@ -10053,14 +10068,14 @@ _edit_file() {
     fi
   fi
 
-  local _editor_command="${EDITOR}"
+  local _editor_command="${NB_EDITOR}"
 
   # turn on case-insensitive matching
   shopt -s nocasematch
 
   if ((_wait))
   then
-    case "${EDITOR}" in
+    case "${NB_EDITOR}" in
       *gvim*|*mvim*)
         _editor_command="${_editor_command} -f"
         ;;
@@ -10070,22 +10085,22 @@ _edit_file() {
     esac
   fi
 
-  if [[ -d "${_file_path}" ]] &&
-     [[ "${EDITOR}" =~ vim ]]
+  if [[ -d "${_file_path}"    ]] &&
+     [[ "${NB_EDITOR}" =~ vim ]]
   then
     cd "${_file_path}" && "${_editor_command:-}"
   else
-    if [[ "${EDITOR}" =~ typora   ]] &&
-       [[ ! -f "${_file_path:-}"  ]]
+    if [[ "${NB_EDITOR}" =~ typora  ]] &&
+       [[ ! -f "${_file_path:-}"    ]]
     then
       touch "${_file_path:-}"
     fi
 
     eval "${_editor_command} \"${_file_path}\""
 
-    if [[ "${EDITOR}" =~ (typora|open\ -a) ]]
+    if [[ "${NB_EDITOR}" =~ (typora|open\ -a) ]]
     then
-      printf "Editing with %s\\n" "$(_color_primary "${EDITOR}")"
+      printf "Editing with %s\\n" "$(_color_primary "${NB_EDITOR}")"
 
       while true
       do
@@ -12045,9 +12060,9 @@ _web_browser() {
     esac
   done
 
-  if [[ -n "${BROWSER:-}" ]]
+  if [[ -n "${NB_BROWSER:-}" ]]
   then
-    _web_browser_command=("${BROWSER}")
+    _web_browser_command=("${NB_BROWSER}")
   else
     if _command_exists "w3m"
     then
@@ -12201,7 +12216,7 @@ $(_color_primary "Description"):
   Create a new note or folder.
 
   If no arguments are passed, a new blank note file is opened with \`\$EDITOR\`,
-  currently set to: ${EDITOR}
+  currently set to: ${NB_EDITOR}
 
   If a non-option argument is passed, \`${_ME}\` will treat it as a <filename≥
   if a file extension is found. If no file extension is found,  \`${_ME}\` will
@@ -14273,7 +14288,7 @@ $(_color_primary "Options"):
                            existing content.
 
 $(_color_primary "Description"):
-  Open the specified note in \`\$EDITOR\`, currently set to: ${EDITOR}
+  Open the specified note in \`\$EDITOR\`, currently set to: ${NB_EDITOR}
 
   Content piped to \`${_ME} edit\` or passed using the \`--content\` option
   is appended to the file without opening it in the editor, unless the
@@ -14735,24 +14750,24 @@ _env() {
       _completions uninstall
       ;;
     *)
-      printf "_ME=%s\\n" "${_ME:-}"
-      printf "_MY_PATH=%s\\n" "${_MY_PATH:-}"
-      printf "NB_NOTEBOOK_PATH=%s\\n" "${NB_NOTEBOOK_PATH:-}"
-      printf "BROWSER=%s\\n" "${BROWSER:-}"
-      printf "EDITOR=%s\\n" "${EDITOR:-}"
-      printf "PAGER=%s\\n" "${PAGER:-}"
-      printf "NB_AUTO_SYNC=%s\\n" "${NB_AUTO_SYNC:-}"
-      printf "NB_DIR=%s\\n" "${NB_DIR:-}"
+      printf "_ME=%s\\n"                  "${_ME:-}"
+      printf "_MY_PATH=%s\\n"             "${_MY_PATH:-}"
+      printf "NB_NOTEBOOK_PATH=%s\\n"     "${NB_NOTEBOOK_PATH:-}"
+      printf "NB_BROWSER=%s\\n"           "${NB_BROWSER:-}"
+      printf "NB_EDITOR=%s\\n"            "${NB_EDITOR:-}"
+      printf "PAGER=%s\\n"                "${PAGER:-}"
+      printf "NB_AUTO_SYNC=%s\\n"         "${NB_AUTO_SYNC:-}"
+      printf "NB_DIR=%s\\n"               "${NB_DIR:-}"
       printf "NB_DEFAULT_EXTENSION=%s\\n" "${NB_DEFAULT_EXTENSION:-}"
-      printf "NB_ENCRYPTION_TOOL=%s\\n" "${NB_ENCRYPTION_TOOL:-}"
-      printf "NB_COLOR_PRIMARY=%s\\n" "${NB_COLOR_PRIMARY:-}"
-      printf "NB_COLOR_SECONDARY=%s\\n" "${NB_COLOR_SECONDARY:-}"
-      printf "NB_COLOR_THEME=%s\\n" "${NB_COLOR_THEME:-}"
-      printf "NB_FOOTER=%s\\n" "${NB_FOOTER:-}"
-      printf "NB_HEADER=%s\\n" "${NB_HEADER:-}"
-      printf "NB_LIMIT=%s\\n"  "${NB_LIMIT:-}"
-      printf "NB_SYNTAX_THEME=%s\\n"  "${NB_SYNTAX_THEME:-}"
-      printf "NBRC_PATH=%s\\n" "${NBRC_PATH:-}"
+      printf "NB_ENCRYPTION_TOOL=%s\\n"   "${NB_ENCRYPTION_TOOL:-}"
+      printf "NB_COLOR_PRIMARY=%s\\n"     "${NB_COLOR_PRIMARY:-}"
+      printf "NB_COLOR_SECONDARY=%s\\n"   "${NB_COLOR_SECONDARY:-}"
+      printf "NB_COLOR_THEME=%s\\n"       "${NB_COLOR_THEME:-}"
+      printf "NB_FOOTER=%s\\n"            "${NB_FOOTER:-}"
+      printf "NB_HEADER=%s\\n"            "${NB_HEADER:-}"
+      printf "NB_LIMIT=%s\\n"             "${NB_LIMIT:-}"
+      printf "NB_SYNTAX_THEME=%s\\n"      "${NB_SYNTAX_THEME:-}"
+      printf "NBRC_PATH=%s\\n"            "${NBRC_PATH:-}"
       printf "ack:        %s\\n" "$(command -v ack)"
       printf "ag:         %s\\n" "$(command -v ag)"
       printf "bat:        %s\\n" "$(command -v bat)"
@@ -14779,8 +14794,8 @@ _env() {
       printf "tig:        %s\\n" "$(command -v tig)"
       printf "w3m:        %s\\n" "$(command -v w3m)"
       printf "vim:        %s\\n" "$(command -v vim)"
-      printf "bash --version: %s\\n" "$(bash --version | head -1)"
-      printf "uname -a: %s\\n" "$(uname -a)"
+      printf "bash --version: %s\\n"  "$(bash --version | head -1)"
+      printf "uname -a: %s\\n"        "$(uname -a)"
       ;;
   esac
 }
@@ -19416,7 +19431,7 @@ HEREDOC
 
       if ((_terminal_browser))
       then
-        case "${BROWSER:-}" in
+        case "${NB_BROWSER:-}" in
           # TODO: improve
           *elinks*) _truncate_length="$((_columns - 23))" ;;
           *links*)  _truncate_length="$((_columns - 5))"  ;;
@@ -21530,10 +21545,10 @@ HEREDOC
   then
     if [[ -z "${_browse_limit:-}"  ]]
     then # set per page based on terminal height
-      if [[ "${BROWSER:-}" =~ links   ]]
+      if [[   "${NB_BROWSER:-}" =~ links  ]]
       then
         _browse_limit="$(($(_tput lines) - 9))"
-      elif [[ "${BROWSER:-}" =~ lynx  ]]
+      elif [[ "${NB_BROWSER:-}" =~ lynx   ]]
       then
         _browse_limit="$(($(_tput lines) - 10))"
       else

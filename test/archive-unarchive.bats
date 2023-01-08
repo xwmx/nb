@@ -77,15 +77,15 @@ load test_helper
 
   cd "${_TMP_DIR}"
 
-  run "${_NB}" ls
+  run "${_NB}" ls --no-color
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0                                                         ]]
+  [[ "${status}"    -eq 0                                               ]]
 
-  [[ "${lines[0]}"  =~  ^[[:space:]][[:space:]]*.*home.*\ .*·.*\ \[1\ archived\]$ ]]
-  [[ "${output}"    =~  0\ items\.                                                ]]
+  [[ "${lines[0]}"  =~  [[:space:]][[:space:]]home\ ·\ \[1\ archived\]  ]]
+  [[ "${output}"    =~  0\ items\.                                      ]]
 }
 
 @test "'archive' exits with 0 and archives 'home' when it's the current notebook." {
@@ -122,15 +122,15 @@ load test_helper
 
   cd "${_TMP_DIR}"
 
-  run "${_NB}" ls
+  run "${_NB}" ls --no-color
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0                                         ]]
+  [[ "${status}"    -eq 0                                     ]]
 
-  [[ "${lines[0]}"  =~  ^[[:space:]][[:space:]]*\[1\ archived\]$  ]]
-  [[ "${output}"    =~  0\ items\.                                ]]
+  [[ "${lines[0]}"  =~  [[:space:]][[:space:]]\[1\ archived\] ]]
+  [[ "${output}"    =~  0\ items\.                            ]]
 }
 
 @test "'archive' exits with 0 and archives the current notebook." {
@@ -170,15 +170,15 @@ load test_helper
 
   cd "${_TMP_DIR}"
 
-  run "${_NB}" ls
+  run "${_NB}" ls --no-color
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0                                                         ]]
+  [[ "${status}"    -eq 0                                               ]]
 
-  [[ "${lines[0]}"  =~  ^[[:space:]][[:space:]]*.*home.*\ .*·.*\ \[1\ archived\]$ ]]
-  [[ "${output}"    =~  0\ items\.                                                ]]
+  [[ "${lines[0]}"  =~  [[:space:]][[:space:]]home\ ·\ \[1\ archived\]  ]]
+  [[ "${output}"    =~  0\ items\.                                      ]]
 }
 
 @test "'archive <name>' exits with 0 and archives notebook <name>." {
@@ -217,15 +217,15 @@ load test_helper
 
   cd "${_TMP_DIR}"
 
-  run "${_NB}" ls
+  run "${_NB}" ls --no-color
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0                                                         ]]
+  [[ "${status}"    -eq 0                                               ]]
 
-  [[ "${lines[0]}"  =~  ^[[:space:]][[:space:]]*.*home.*\ .*·.*\ \[1\ archived\]$ ]]
-  [[ "${output}"    =~  0\ items\.                                                ]]
+  [[ "${lines[0]}"  =~  [[:space:]][[:space:]]home\ ·\ \[1\ archived\]  ]]
+  [[ "${output}"    =~  0\ items\.                                      ]]
 }
 
 @test "'archive' does not create git commit if already archived." {
