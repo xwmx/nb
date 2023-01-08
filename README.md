@@ -8936,6 +8936,47 @@ Shortcut Alias:
   </sup>
 </p>
 
+<div align="center">
+  <a href="#editor-1">$EDITOR</a>&nbsp;·
+  <a href="#nb_ace_enabled">$NB_ACE_ENABLED</a>&nbsp;·
+  <a href="#nb_ace_md_gutter">$NB_ACE_MD_GUTTER</a>&nbsp;·
+  <a href="#nb_ace_soft_tabs">$NB_ACE_SOFT_TABS</a>&nbsp;·
+  <a href="#nb_ace_keyboard">$NB_ACE_KEYBOARD</a>&nbsp;·
+  <a href="#nb_audio_tool">$NB_AUDIO_TOOL</a>&nbsp;·
+  <a href="#nb_auto_sync">$NB_AUTO_SYNC</a>&nbsp;·
+  <a href="#nb_browser">$NB_BROWSER</a>&nbsp;·
+  <a href="#nb_color_primary">$NB_COLOR_PRIMARY</a>&nbsp;·
+  <a href="#nb_color_secondary">$NB_COLOR_SECONDARY</a>&nbsp;·
+  <a href="#nb_color_theme">$NB_COLOR_THEME</a>&nbsp;·
+  <a href="#nb_data_tool">$NB_DATA_TOOL</a>&nbsp;·
+  <a href="#nb_default_extension">$NB_DEFAULT_EXTENSION</a>&nbsp;·
+  <a href="#nb_dir-1">$NB_DIR</a>&nbsp;·
+  <a href="#nb_directory_tool">$NB_DIRECTORY_TOOL</a>&nbsp;·
+  <a href="#nb_encryption_tool">$NB_ENCRYPTION_TOOL</a>&nbsp;·
+  <a href="#nb_footer">$NB_FOOTER</a>&nbsp;·
+  <a href="#nb_gui_browser">$NB_GUI_BROWSER</a>&nbsp;·
+  <a href="#nb_header">$NB_HEADER</a>&nbsp;·
+  <a href="#nb_image_tool">$NB_IMAGE_TOOL</a>&nbsp;·
+  <a href="#nb_indicator_audio">$NB_INDICATOR_AUDIO</a>&nbsp;·
+  <a href="#nb_indicator_bookmark">$NB_INDICATOR_BOOKMARK</a>&nbsp;·
+  <a href="#nb_indicator_document">$NB_INDICATOR_DOCUMENT</a>&nbsp;·
+  <a href="#nb_indicator_ebook">$NB_INDICATOR_EBOOK</a>&nbsp;·
+  <a href="#nb_indicator_encrypted">$NB_INDICATOR_ENCRYPTED</a>&nbsp;·
+  <a href="#nb_indicator_folder">$NB_INDICATOR_FOLDER</a>&nbsp;·
+  <a href="#nb_indicator_image">$NB_INDICATOR_IMAGE</a>&nbsp;·
+  <a href="#nb_indicator_pinned">$NB_INDICATOR_PINNED</a>&nbsp;·
+  <a href="#nb_indicator_todo">$NB_INDICATOR_TODO</a>&nbsp;·
+  <a href="#nb_indicator_todo_done">$NB_INDICATOR_TODO_DONE</a>&nbsp;·
+  <a href="#nb_indicator_video">$NB_INDICATOR_VIDEO</a>&nbsp;·
+  <a href="#nb_limit">$NB_LIMIT</a>&nbsp;·
+  <a href="#nb_pinned_pattern">$NB_PINNED_PATTERN</a>&nbsp;·
+  <a href="#nb_server_host">$NB_SERVER_HOST</a>&nbsp;·
+  <a href="#nb_server_port">$NB_SERVER_PORT</a>&nbsp;·
+  <a href="#nb_syntax_theme">$NB_SYNTAX_THEME</a>&nbsp;·
+  <a href="#nb_user_agent">$NB_USER_AGENT</a>&nbsp;·
+  <a href="#nbrc_path">$NBRC_PATH</a>
+</div>
+
 [Settings](#%EF%B8%8F-set--settings) are set in the `~/.nbrc` configuration
 file using environment variables. Settings can be set through `nb`
 using [`set` & `settings`](#%EF%B8%8F-set--settings) or by
