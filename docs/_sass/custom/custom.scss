@@ -119,10 +119,28 @@ code,
 div.highlighter-rouge,
 .highlight {
   background-color:         $code-block-background-color;
+
+  :not(pre,figure) > & {
+    border:                 none;
+  }
 }
+
+
 
 div.highlighter-rouge {
   padding:                  1rem;
+
+  button {
+    // TODO
+    display:                none;
+  }
+}
+
+div.highlighter-rouge,
+div.listingblock {
+  div.highlight {
+    padding:                0;
+  }
 }
 
 h1, h2, h3, h4, h5, h6 {
