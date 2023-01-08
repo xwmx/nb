@@ -8989,6 +8989,8 @@ Shortcut Alias:
   <a href="#overview">&nbsp;↑&nbsp;</a>
 </div>
 
+<p align="center"></p><!-- spacer -->
+
 [Settings](#%EF%B8%8F-set--settings) are set in the `~/.nbrc` configuration
 file using environment variables. Settings can be set through `nb`
 using [`set` & `settings`](#%EF%B8%8F-set--settings) or by
