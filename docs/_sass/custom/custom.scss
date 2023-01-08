@@ -118,9 +118,9 @@ code {
 code,
 div.highlighter-rouge,
 .highlight {
-  background-color:         $code-block-background-color;
-
+  &,
   :not(pre,figure) > & {
+    background-color:       $code-block-background-color;
     border:                 none;
   }
 }
