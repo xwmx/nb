@@ -12,13 +12,14 @@
 
 /* #1a1a1a #1b1b1b #1e1f25 #4da6dc #65bcfb #6cb2b5 #222327 #232529 */
 
-$body-background-color:       #15181d;
-$body-color:                  #c5c7cf;
-$code-block-background-color: #1c1f25;
-$muted-color:                 #636363;
-$hr-color:                    lighten($body-background-color, 10%);
-$link-color:                  #5e8bd0;
-$side-bar-background-color:   #0f1217;
+$body-background-color:         #15181d;
+$body-color:                    #c5c7cf;
+$code-block-background-color:   #1c1f25;
+$code-inline-background-color:  #2a303b;
+$muted-color:                   #636363;
+$hr-color:                      lighten($body-background-color, 10%);
+$link-color:                    #5e8bd0;
+$side-bar-background-color:     #0f1217;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Styles
@@ -91,12 +92,15 @@ code {
     white-space:            nowrap;
   }
 
-  a   &,
-  dl  &,
+  a &,
+  a:visited &,
+  dl &,
+  h1 &,
   sup &,
-  ul  &,
+  ul &,
   &.highlighter-rouge {
-    background-color:       lighten($body-background-color, 10%);
+    background-color:       $code-inline-background-color;
+    border:                 0;
     font-size:              0.85em;
     vertical-align:         middle;
   }
@@ -115,26 +119,26 @@ code {
   }
 }
 
-code,
-div.highlighter-rouge,
-.highlight {
-  &,
-  :not(pre,figure) > & {
-    background-color:       $code-block-background-color;
-    border:                 none;
-  }
+code.highlighter-rouge {
+  background-color:         $code-inline-background-color !important;
+  border:                   none;
 }
-
-
 
 div.highlighter-rouge {
-  padding:                  1rem;
+  // &,
+  // code,
+  // pre {
+  & {
+    background-color:         $code-block-background-color;
+    border:                   none;
+    padding:                  1rem;
 
-  button {
-    // TODO
-    display:                none;
-  }
-}
+    button {
+      // TODO
+      display:                none;
+    }
+  } // &, code, pre
+} // code, div.highlighter-rouge
 
 div.highlighter-rouge,
 div.listingblock {
