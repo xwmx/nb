@@ -603,18 +603,23 @@ export _GIT_ENABLED="${_GIT_ENABLED:-1}"
 #   - 15
 #   - auto
 #   - auto-2
+
+export _AUTO_LIMIT=
+export _AUTO_LIMIT_MAX=
+
 case "${NB_LIMIT:-}" in
   auto*)
-    export _AUTO_LIMIT="${NB_LIMIT#auto}"
+    _AUTO_LIMIT="${NB_LIMIT#auto}"
     _AUTO_LIMIT="${_AUTO_LIMIT:-0}"
 
-    export _AUTO_LIMIT_MAX="${NB_LIMIT#*^}"
+    if [[ "${NB_LIMIT:-}" =~ \^     ]]
+    then
+      _AUTO_LIMIT_MAX="${NB_LIMIT#*^}"
+    fi
 
     if [[ -n "${_AUTO_LIMIT_MAX:-}" ]]
     then
       _AUTO_LIMIT="${_AUTO_LIMIT%^*}"
-    else
-      _AUTO_LIMIT_MAX=1
     fi
 
     export NB_LIMIT="${NB_LIMIT}"
@@ -6955,7 +6960,8 @@ _ls() {
 
     [[ "${_auto_limit_amount}" -gt 0 ]] || _auto_limit_amount=1
 
-    if [[ "${_AUTO_LIMIT_MAX:-1}" -lt "${_auto_limit_amount:-1}" ]]
+    if [[ -n "${_AUTO_LIMIT_MAX:-}"  ]] &&
+       [[    "${_AUTO_LIMIT_MAX:-}" -lt "${_auto_limit_amount:-1}" ]]
     then
       _auto_limit_amount="${_AUTO_LIMIT_MAX}"
     fi
