@@ -610,6 +610,7 @@ export _AUTO_LIMIT_MAX=
 case "${NB_LIMIT:-}" in
   auto*)
     _AUTO_LIMIT="${NB_LIMIT#auto}"
+    _AUTO_LIMIT="${_AUTO_LIMIT%^*}"
     _AUTO_LIMIT="${_AUTO_LIMIT:-0}"
 
     if [[ "${NB_LIMIT:-}" =~ \^     ]]
