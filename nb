@@ -618,11 +618,6 @@ case "${NB_LIMIT:-}" in
       _AUTO_LIMIT_MAX="${NB_LIMIT#*^}"
     fi
 
-    if [[ -n "${_AUTO_LIMIT_MAX:-}" ]]
-    then
-      _AUTO_LIMIT="${_AUTO_LIMIT%^*}"
-    fi
-
     export NB_LIMIT="${NB_LIMIT}"
     ;;
   *)
