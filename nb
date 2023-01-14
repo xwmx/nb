@@ -3689,7 +3689,7 @@ _git() {
       ) &
     fi
 
-    if ((_show_spinner))
+    if ((_show_spinner)) && ! _piped_input
     then
       _spinner  ${!}
 
