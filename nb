@@ -203,11 +203,18 @@ _resolve_symlink() {
 #   https://stackoverflow.com/q/43171648
 #   https://stackoverflow.com/a/16746032
 _sed_i() {
-  if sed --help >/dev/null 2>&1
+  local _usage=
+
+  if _usage="$(sed --help 2>&1)"
   then # GNU
-    sed -i    "${@}"
+    sed -i      "${@}"
   else # BSD
-    sed -i '' "${@}"
+    if [[ "${_usage:-}" =~ unknown\ option ]]
+    then # OpenBSD
+      sed -i''  "${@}"
+    else # FreeBSD, macOS
+      sed -i '' "${@}"
+    fi
   fi
 }
 
