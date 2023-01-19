@@ -128,15 +128,16 @@ HEREDOC
   # FreeBSD Boxes
 
   $freebsd_setup = <<-HEREDOC
-# TODO
+sudo pkg update -f
+sudo pkg install -y git
 HEREDOC
 
   ##############
-  # FreeBSD 12.2
+  # FreeBSD 12.5
 
-  # config.vm.define "freebsd122" do |freebsd122|
-  #   freebsd122.vm.box = "freebsd/FreeBSD-12.2-STABLE"
-  #   freebsd122.vm.provision :shell, inline: $freebsd_setup, privileged: false
+  # config.vm.define "freebsd124" do |freebsd124|
+  #   freebsd124.vm.box = "freebsd/FreeBSD-12.4-STABLE"
+  #   freebsd124.vm.provision :shell, inline: $freebsd_setup, privileged: false
   # end
 
   #############################################################################
