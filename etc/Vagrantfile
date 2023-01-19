@@ -178,6 +178,21 @@ HEREDOC
   # end
 
   #############################################################################
+  # OpenBSD Boxes
+
+  $openbsd_setup = <<-HEREDOC
+# TODO
+# pkg_add git
+HEREDOC
+
+  # https://app.vagrantup.com/generic/boxes/openbsd7
+  # https://app.vagrantup.com/roboxes/boxes/openbsd7
+  # config.vm.define "openbsd7" do |openbsd7|
+  #   openbsd7.vm.box = "generic/openbsd7"
+  #   openbsd7.vm.provision :shell, inline: $openbsd_setup, privileged: false
+  # end
+
+  #############################################################################
   # Ubuntu Boxes:
   #
   # https://app.vagrantup.com/ubuntu
