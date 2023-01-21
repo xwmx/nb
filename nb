@@ -10932,6 +10932,11 @@ header {
   padding-top:        0.5rem;
 }
 
+.math.display:focus,
+.MathJax:focus {
+  outline:            none;
+}
+
 .item-list {
   margin-top:         0;
 }
@@ -11068,12 +11073,6 @@ div.column {
 div.hanging-indent {
   margin-left:        1.5em;
   text-indent:        -1.5em;
-}
-
-.display.math {
-  display:            block;
-  margin:             0.5rem auto;
-  text-align:         center;
 }
 
 span.smallcaps {
