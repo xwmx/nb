@@ -19437,6 +19437,14 @@ HEREDOC
       _url_params+="--local=${_encoded_local_notebook_path:-}"
     fi
 
+    local _maybe_columns_input=
+
+    if ((${_columns:-}))
+    then
+      _maybe_columns_input="\
+<input type=\"hidden\" name=\"--columns\"   value=\"${_columns}\">"
+    fi
+
     local _current_selector=
     local _maybe_local_input=
 
@@ -19608,6 +19616,7 @@ HEREDOC
 <i></i>
 <input type="hidden" name="--limit" value="${_limit}">
 <input type="hidden" name="--page"  value="${_current_page}">
+${_maybe_columns_input:-}
 ${_maybe_local_input:-}</form>
 <br>
 HEREDOC
