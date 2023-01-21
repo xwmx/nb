@@ -14792,7 +14792,6 @@ _env() {
           fi
           ;;
       esac
-
       ;;
     uninstall)
       _completions uninstall
