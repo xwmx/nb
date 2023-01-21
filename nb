@@ -11473,11 +11473,6 @@ HEREDOC
     then
       if ((${NB_ACE_ENABLED:-0}))
       then
-        if [[ ! -e "${NB_DIR}/.assets/ace-builds" ]] && ! ((${NB_TESTING:-0}))
-        then
-          _env install --ace
-        fi
-
         cat <<HEREDOC
 <script src="/--ace/ace.js"></script>
 <script src="/--ace/ext-modelist.js"></script>
@@ -11579,11 +11574,6 @@ HEREDOC
 
       if ((${NB_MATHJAX_ENABLED:-0}))
       then
-        if [[ ! -e "${NB_DIR}/.assets/MathJax" ]] && ! ((${NB_TESTING:-0}))
-        then
-          _env install --mathjax
-        fi
-
         cat <<HEREDOC
 <script id="MathJax-script" async src="/--mathjax/tex-chtml.js"></script>
 HEREDOC
@@ -14770,35 +14760,38 @@ _env() {
         fi
       fi
 
-      # install ace editor
+      # install assets
 
-      if ((${NB_ACE_ENABLED:-0})) && [[ ! -e "${NB_DIR}/.assets/ace-builds" ]]
-      then
-        if [[ ! -e "${NB_DIR}/.assets" ]]
-        then
-          mkdir "${NB_DIR}/.assets"
-        fi
+      case "${2:-}" in
+        --ace)
+          if [[ ! -e "${NB_DIR}/.assets/ace-builds" ]]
+          then
+            if [[ ! -e "${NB_DIR}/.assets"          ]]
+            then
+              mkdir "${NB_DIR}/.assets"
+            fi
 
-        cd "${NB_DIR}/.assets" ||
-          _exit_1 printf "Unable to \`cd\` to %s\\n" "${NB_DIR}/.assets"
+            cd "${NB_DIR}/.assets" ||
+              _exit_1 printf "Unable to \`cd\` to %s\\n" "${NB_DIR}/.assets"
 
-        git clone https://github.com/ajaxorg/ace-builds.git
-      fi
+            git clone https://github.com/ajaxorg/ace-builds.git
+          fi
+          ;;
+        --mathjax)
+          if [[ ! -e "${NB_DIR}/.assets/MathJax"    ]]
+          then
+            if [[ ! -e "${NB_DIR}/.assets"          ]]
+            then
+              mkdir "${NB_DIR}/.assets"
+            fi
 
-      # install MathJax editor
+            cd "${NB_DIR}/.assets" ||
+              _exit_1 printf "Unable to \`cd\` to %s\\n" "${NB_DIR}/.assets"
 
-      if ((${NB_MATHJAX_ENABLED:-0})) && [[ ! -e "${NB_DIR}/.assets/MathJax" ]]
-      then
-        if [[ ! -e "${NB_DIR}/.assets" ]]
-        then
-          mkdir "${NB_DIR}/.assets"
-        fi
-
-        cd "${NB_DIR}/.assets" ||
-          _exit_1 printf "Unable to \`cd\` to %s\\n" "${NB_DIR}/.assets"
-
-        git clone https://github.com/mathjax/MathJax.git
-      fi
+            git clone https://github.com/mathjax/MathJax.git
+          fi
+          ;;
+      esac
 
       ;;
     uninstall)
@@ -21549,6 +21542,30 @@ $(_color_primary "https://nmap.org/ncat/")
 HEREDOC
 
     exit 0
+  fi
+
+  # install enabled assets
+
+  if   ((${NB_ACE_ENABLED:-0}))     &&
+     ! ((${NB_TESTING:-0}))         &&
+     [[ ! -e "${NB_DIR}/.assets/ace-builds" ]]
+  then
+    printf "Installing %s%s\\n"         \
+      "$(_color_primary "Ace Editor")"  \
+      "$(_color_muted "...")"
+
+    _env install --ace
+  fi
+
+  if   ((${NB_MATHJAX_ENABLED:-0})) &&
+     ! ((${NB_TESTING:-0}))         &&
+     [[ ! -e "${NB_DIR}/.assets/MathJax"    ]]
+  then
+    printf "Installing %s%s\\n"         \
+      "$(_color_primary "MathJax")"     \
+      "$(_color_muted "...")"
+
+    _env install --mathjax
   fi
 
   # build initial request URL parameters and arguments
