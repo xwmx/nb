@@ -13705,7 +13705,11 @@ _bookmark() {
           } | {
             if _command_exists "readable" && ((_readability_enabled))
             then
-              readable --base "${_url}" 2>/dev/null || cat
+              readable            \
+                --base "${_url}"  \
+                --insane          \
+                --quiet           \
+                2>/dev/null || cat
             else
               cat
             fi
