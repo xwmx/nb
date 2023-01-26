@@ -13707,7 +13707,6 @@ _bookmark() {
             then
               readable            \
                 --base "${_url}"  \
-                --insane          \
                 --quiet           \
                 2>/dev/null || cat
             else
