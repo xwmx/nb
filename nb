@@ -22558,34 +22558,35 @@ _remote() {
   local _skip_preamble=0
   local _subcommand=
 
-  local __arg=
-  for   __arg in "${@:-}"
+  while ((${#}))
   do
-    case "${__arg:-}" in
+    case "${1:-}" in
       --skip*confirm*)  _skip_confirmation=1    ;;
       --skip*preamble)  _skip_preamble=1        ;;
       --url|url)        _only_url=1             ;;
       *)
         case "${_subcommand:-}" in
-          '') _subcommand="${__arg:-}"          ;;
+          '') _subcommand="${1:-}"              ;;
           add|branches|set)
             if [[   -z "${_new_remote_url:-}"   ]]
             then
-              _new_remote_url="${__arg:-}"
+              _new_remote_url="${1:-}"
             elif [[ -z "${_new_branch:-}"       ]]
             then
-              _new_branch="${__arg:-}"
+              _new_branch="${1:-}"
             fi
             ;;
           delete|reset)
-            _remote_branch_name="${__arg:-}"
+            _remote_branch_name="${1:-}"
             ;;
           rename)
-            _rename_arguments+=("${__arg:-}")
+            _rename_arguments+=("${1:-}")
             ;;
         esac
         ;;
     esac
+
+    shift
   done
 
   local _notebook_path=
