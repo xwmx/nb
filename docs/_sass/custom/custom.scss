@@ -211,6 +211,12 @@ th {
   }
 }
 
+.highlight,
+.highlight pre,
+pre.highlight {
+  background:               none;
+}
+
 .highlight {
   .c  {
     color:                  #7c7992;
