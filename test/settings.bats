@@ -1035,6 +1035,23 @@ skip "Determine how to test interactive prompt."
   [[ "$("${_NB}" settings get NB_LIMIT)" == "auto-5"  ]]
 }
 
+@test "'settings set limit' with valid 'auto-5^10' argument sets and exits." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" settings set limit auto-5^10
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0                                    ]]
+  [[ "${output}" =~ NB_LIMIT                            ]]
+  [[ "${output}" =~ set\ to\                            ]]
+  [[ "${output}" =~ auto\-5\^10                         ]]
+  [[ "$("${_NB}" settings get NB_LIMIT)" == "auto-5^10" ]]
+}
+
 @test "'settings set limit' with valid 'auto+5' argument sets and exits." {
   {
     "${_NB}" init
@@ -1050,6 +1067,40 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ set\ to\                          ]]
   [[ "${output}" =~ auto\+5                           ]]
   [[ "$("${_NB}" settings get NB_LIMIT)" == "auto+5"  ]]
+}
+
+@test "'settings set limit' with valid 'auto+5^10' argument sets and exits." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" settings set limit auto-5^10
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0                                    ]]
+  [[ "${output}" =~ NB_LIMIT                            ]]
+  [[ "${output}" =~ set\ to\                            ]]
+  [[ "${output}" =~ auto\-5\^10                         ]]
+  [[ "$("${_NB}" settings get NB_LIMIT)" == "auto-5^10" ]]
+}
+
+@test "'settings set limit' with valid 'auto^10' argument sets and exits." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" settings set limit auto^10
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0                                    ]]
+  [[ "${output}" =~ NB_LIMIT                            ]]
+  [[ "${output}" =~ set\ to\                            ]]
+  [[ "${output}" =~ auto\^10                            ]]
+  [[ "$("${_NB}" settings get NB_LIMIT)" == "auto^10"   ]]
 }
 
 @test "'settings set limit' with valid number argument sets and exits." {

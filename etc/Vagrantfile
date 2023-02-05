@@ -128,15 +128,16 @@ HEREDOC
   # FreeBSD Boxes
 
   $freebsd_setup = <<-HEREDOC
-# TODO
+sudo pkg update -f
+sudo pkg install -y git
 HEREDOC
 
   ##############
-  # FreeBSD 12.2
+  # FreeBSD 12.5
 
-  # config.vm.define "freebsd122" do |freebsd122|
-  #   freebsd122.vm.box = "freebsd/FreeBSD-12.2-STABLE"
-  #   freebsd122.vm.provision :shell, inline: $freebsd_setup, privileged: false
+  # config.vm.define "freebsd124" do |freebsd124|
+  #   freebsd124.vm.box = "freebsd/FreeBSD-12.4-STABLE"
+  #   freebsd124.vm.provision :shell, inline: $freebsd_setup, privileged: false
   # end
 
   #############################################################################
@@ -174,6 +175,21 @@ HEREDOC
   # config.vm.define "nixos1803" do |nixos1803|
   #   nixos1803.vm.box = "nixos/nixos-18.03-i686"
   #   nixos1803.vm.provision :shell, inline: $nixos_setup, privileged: false
+  # end
+
+  #############################################################################
+  # OpenBSD Boxes
+
+  $openbsd_setup = <<-HEREDOC
+# TODO
+# pkg_add git
+HEREDOC
+
+  # https://app.vagrantup.com/generic/boxes/openbsd7
+  # https://app.vagrantup.com/roboxes/boxes/openbsd7
+  # config.vm.define "openbsd7" do |openbsd7|
+  #   openbsd7.vm.box = "generic/openbsd7"
+  #   openbsd7.vm.provision :shell, inline: $openbsd_setup, privileged: false
   # end
 
   #############################################################################
