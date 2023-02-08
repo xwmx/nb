@@ -9468,7 +9468,7 @@ Example Values:
   </sup>
 </p>
 
-##### `$NB_ACE_MATHJAX_ENABLED`
+##### `$NB_MATHJAX_ENABLED`
 
 ```text
 Default: '0'
