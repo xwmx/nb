@@ -11516,6 +11516,7 @@ HEREDOC
       navigateWithinSoftTabs:   true,
       newLineMode:              'unix',
       printMargin:              false,
+      relativeLineNumbers:      false,
       scrollPastEnd:            0.5,
       showFoldWidgets:          true,
       showGutter:               true,
@@ -11539,6 +11540,12 @@ HEREDOC
           showGutter:           false
         });
       }
+    }
+
+    if ('${NB_ACE_RELATIVE_LINE_NUMBERS:-0}' === '1') {
+      editor.setOptions({
+        relativeLineNumbers:    true
+      })
     }
 
     if ('${NB_ACE_SOFT_TABS:-0}' === '0') {
