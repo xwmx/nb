@@ -8947,6 +8947,7 @@ Shortcut Alias:
     <a href="#editor-1"><code>$EDITOR</code></a>&nbsp;·
     <a href="#nb_ace_enabled"><code>$NB_ACE_ENABLED</code></a>&nbsp;·
     <a href="#nb_ace_md_gutter"><code>$NB_ACE_MD_GUTTER</code></a>&nbsp;·
+    <a href="#nb_ace_relative_line_numbers"><code>$NB_ACE_RELATIVE_LINE_NUMBERS</code></a>&nbsp;·
     <a href="#nb_ace_soft_tabs"><code>$NB_ACE_SOFT_TABS</code></a>&nbsp;·
     <a href="#nb_ace_keyboard"><code>$NB_ACE_KEYBOARD</code></a>&nbsp;·
     <a href="#nb_audio_tool"><code>$NB_AUDIO_TOOL</code></a>&nbsp;·
@@ -8976,6 +8977,7 @@ Shortcut Alias:
     <a href="#nb_indicator_todo_done"><code>$NB_INDICATOR_TODO_DONE</code></a>&nbsp;·
     <a href="#nb_indicator_video"><code>$NB_INDICATOR_VIDEO</code></a>&nbsp;·
     <a href="#nb_limit"><code>$NB_LIMIT</code></a>&nbsp;·
+    <a href="#nb_mathjax_enabled"><code>$NB_MATHJAX_ENABLED</code></a>&nbsp;·
     <a href="#nb_pinned_pattern"><code>$NB_PINNED_PATTERN</code></a>&nbsp;·
     <a href="#nb_server_host"><code>$NB_SERVER_HOST</code></a>&nbsp;·
     <a href="#nb_server_port"><code>$NB_SERVER_PORT</code></a>&nbsp;·
@@ -9041,6 +9043,20 @@ Example Values: '0', '1'
 
 ```text
 Default: '1'
+
+Example Values: '0', '1'
+```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
+##### `$NB_ACE_RELATIVE_LINE_NUMBERS`
+
+```text
+Default: '0'
 
 Example Values: '0', '1'
 ```
@@ -9450,6 +9466,20 @@ Example Values:
   - 15
   - auto
   - auto-2
+```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
+##### `$NB_ACE_MATHJAX_ENABLED`
+
+```text
+Default: '0'
+
+Example Values: '0', '1'
 ```
 
 <p>
