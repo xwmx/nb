@@ -5,4 +5,4 @@ alias local="typeset"
 # no-op placeholder for Bash `shopt`.
 shopt() { :; }
 
-source "$(cd "$(dirname "${0}")"; pwd)/../nb"
+source "$(CDPATH= cd -- "${0%/*}"; pwd)/../nb"
