@@ -17165,7 +17165,6 @@ _search() {
                   cat
                 fi
               } | {
-
                 if [[ "${__search_group}" == "index" ]]
                 then
                   local i=
