@@ -47,6 +47,41 @@ _setup_search() {
 
 # --not option ################################################################
 
+@test "'search --not <query>' lists items NOT matchin query, omitting content." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "File One.md"   \
+      --title     "Title One"     \
+      --content   "Sample Content One Sample Phrase Alpha."
+
+    "${_NB}" add  "File Two.md"   \
+      --title     "Title Two"     \
+      --content   "Example Content Two Example Phrase Beta."
+
+    "${_NB}" add  "File Three.md" \
+      --title     "Title Three"   \
+      --content   "Example Content Three Example Phrase Alpha."
+
+    "${_NB}" add  "File Four.md"  \
+      --title     "Title Four"    \
+      --content   "Example Content Four Example Phrase Beta."
+  }
+
+  run "${_NB}" search --not "example"
+
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
+
+  [[    "${status}"     -eq 0                                                 ]]
+
+  [[    "${#lines[@]}"  -eq 1                                                 ]]
+
+  [[    "${lines[0]}"   =~ [.*1.*].*\ Title\ One                              ]]
+  [[ -z "${lines[1]}"                                                         ]]
+}
+
 @test "'search --and <query1> --and <query2> --not <query3>' lists items matching query1 AND query2 and NOT query3." {
   {
     "${_NB}" init
