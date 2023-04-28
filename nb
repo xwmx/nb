@@ -16784,7 +16784,8 @@ _search() {
     return 0
   fi
 
-  if [[ -z "${_and_queries[*]:-}" ]] && [[ -z "${_not_queries[*]:-}" ]]
+  if [[ -z "${_and_queries[*]:-}" ]] &&
+     [[ -z "${_not_queries[*]:-}" ]]
   then
     _exit_1 _help "search"
   fi
