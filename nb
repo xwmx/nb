@@ -81,7 +81,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.4.1"
+_VERSION="7.5.0"
 
 # $_ME
 #
@@ -4364,7 +4364,7 @@ $(_color_primary "Usage"):
   ${_ME} remote set <url> [<branch-name>]
   ${_ME} run <command> [<arguments>...]
   ${_ME} search ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
-            <query>... [-a | --all] [--and <query>] [--or <query>]
+            <query>... [-a | --all] [--and <query>] [--not <query>] [--or <query>]
             [-l | --list] [--path] [-t <tag1>,<tag2>... | --tag <tag1>,<tag2>...]
             [-t | --tags] [--type <type> | --<type>] [--utility <name>]
   ${_ME} set [<name> [<value>] | <number> [<value>]]
@@ -9972,6 +9972,7 @@ _download_from() {
       --silent
       --location
       --connect-timeout "${_timeout}"
+      --header "Accept-Encoding: *"
       "${_url}"
     )
 
@@ -9995,6 +9996,7 @@ _download_from() {
       --quiet
       --connect-timeout="${_timeout}"
       --dns-timeout="${_timeout}"
+      --header="Accept-Encoding: *"
       "${_url}"
     )
 
@@ -11516,6 +11518,7 @@ HEREDOC
       navigateWithinSoftTabs:   true,
       newLineMode:              'unix',
       printMargin:              false,
+      relativeLineNumbers:      false,
       scrollPastEnd:            0.5,
       showFoldWidgets:          true,
       showGutter:               true,
@@ -11539,6 +11542,12 @@ HEREDOC
           showGutter:           false
         });
       }
+    }
+
+    if ('${NB_ACE_RELATIVE_LINE_NUMBERS:-0}' === '1') {
+      editor.setOptions({
+        relativeLineNumbers:    true
+      })
     }
 
     if ('${NB_ACE_SOFT_TABS:-0}' === '0') {
@@ -16283,7 +16292,7 @@ _describe_search() {
   cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} search ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
-            <query>... [-a | --all] [--and <query>] [--or <query>]
+            <query>... [-a | --all] [--and <query>] [--not <query>] [--or <query>]
             [-l | --list] [--path] [-t <tag1>,<tag2>... | --tag <tag1>,<tag2>...]
             [-t | --tags] [--type <type> | --<type>] [--utility <name>]
 
@@ -16292,7 +16301,8 @@ $(_color_primary "Options"):
   --and <query>                 Add a AND query.
   -l, --list                    Print the id, filename, and title listing for
                                 each matching file, without the excerpt.
-  --or <query>                  Add an OR query.
+  --not <query>                 Add a NOT query.
+  --or  <query>                 Add an OR query.
   --path                        Print the full path for each matching file.
   -t, --tag <tag1>,<tag2>...    A comma-separated list of tags.
   -t, --tags                    List all tags found in the notebook.
@@ -16308,7 +16318,8 @@ $(_color_primary "Description"):
   Multiple query arguments are treated as AND queries, returning items that
   match all queries. AND queries can also be specified with the --and <query>
   option. The --or <query> option can be used to specify an OR query,
-  returning items that match at least one of the queries.
+  returning items that match at least one of the queries. --not <query>
+  excludes items matching <query>.
 
   \`${_ME} search\` is powered by Git's built-in \`git grep\` tool. \`${_ME}\` also
   supports performing searches with alternative search tools using the
@@ -16347,6 +16358,9 @@ $(_color_primary "Examples"):
   ${_ME} search "Example|Sample"
   ${_ME} search "Example" --or "Sample"
 
+  # search for items matching both "Example" AND "Sample", and NOT "Demo"
+  ${_ME} search "Example" --and "Sample" --not "Demo"
+
   # search with a regular expression
   ${_ME} search "\d\d\d-\d\d\d\d"
 
@@ -16371,6 +16385,7 @@ _search() {
 
   local _all=0
   local _and_queries=()
+  local _not_queries=()
   local _arguments=()
   local _last_path=
   local _limit=0
@@ -16397,15 +16412,10 @@ _search() {
       -a|--all)
         _all=1
         ;;
-      --and|--or)
-        local _option_and=1
+      --and|--not|--or)
+        local _operator="${1#--}"
 
-        if [[ "${1:-}" == "--or"  ]]
-        then
-          _option_and=0
-        fi
-
-        if [[ "${2:-}" == "-e"    ]]
+        if [[ "${2:-}" == "-e" ]]
         then
           shift
         fi
@@ -16419,18 +16429,24 @@ _search() {
             _option_get_tags "${1:-}" "${2:-}"
           )"
 
-          if ((_option_and))
+          if [[   "${_operator:-}" == "and" ]]
           then
             _and_queries+=(${_option_tags[@]:-})
+          elif [[ "${_operator:-}" == "not" ]]
+          then
+            _not_queries+=(${_option_tags[@]:-})
           else
             _or_queries+=(${_option_tags[@]:-})
           fi
 
           shift
         else
-          if ((_option_and))
+          if [[   "${_operator:-}" == "and" ]]
           then
             _and_queries+=("$(_option_get_value "--and" "${2:-}")")
+          elif [[ "${_operator:-}" == "not" ]]
+          then
+            _not_queries+=("$(_option_get_value "--not" "${2:-}")")
           else
             _or_queries+=("$(_option_get_value "--or" "${2:-}")")
           fi
@@ -16775,7 +16791,8 @@ _search() {
     return 0
   fi
 
-  if [[ -z "${_and_queries[*]:-}" ]]
+  if [[ -z "${_and_queries[*]:-}" ]] &&
+     [[ -z "${_not_queries[*]:-}" ]]
   then
     _exit_1 _help "search"
   fi
@@ -16807,6 +16824,12 @@ _search() {
 
   local _query=
   _query="$(_join "|" "${_queries[@]:-}")"
+
+  if [[ -z "${_query:-}"          ]] &&
+     [[ -n "${_not_queries[*]:-}" ]]
+  then
+    _only_list=1
+  fi
 
   {
     local __target_path=
@@ -17034,7 +17057,7 @@ _search() {
             _search_paths+=("${__target_path%\/*}/.index")
           fi
 
-          if [[ "${#_queries[@]}"   -le 1 ]]
+          if [[ "${#_queries[@]}" == 1 ]]
           then
             GIT_PAGER='' git -C "${_notebook_path}"     \
               grep                                      \
@@ -17092,6 +17115,48 @@ _search() {
                       --text                          \
                       "${_search_args_no_color[@]:-}" \
                       -e "${__and_query:-}"           \
+                        || return 0  # Don't fail out within a single scope.
+                  } > "${_this_pipe:-}" &
+
+                  _last_pipe="${_this_pipe:-}"
+                done
+
+                if [[ -p "${_last_pipe:-}"    ]]
+                then
+                  <"${_last_pipe:-}" cat
+                else
+                  cat
+                fi
+              } | {
+                local _last_pipe=
+                local _this_pipe=
+
+                local __not_query=
+                for   __not_query in "${_not_queries[@]:-}"
+                do
+                  [[ -n "${__not_query:-}"    ]] || continue
+
+                  _this_pipe=$(_temp file --touch) && {
+                    rm -f   "${_this_pipe}"
+                    mkfifo  "${_this_pipe}"
+                  }
+
+                  if [[ -p "${_last_pipe:-}"  ]]
+                  then
+                    <"${_last_pipe:-}" cat
+                  else
+                    cat
+                  fi | {
+                    GIT_PAGER='' xargs "${_xargs[@]}" \
+                      git -C "${_notebook_path}"      \
+                      grep                            \
+                      --extended-regexp               \
+                      --files-without-match           \
+                      --ignore-case                   \
+                      --null                          \
+                      --text                          \
+                      "${_search_args_no_color[@]:-}" \
+                      -e "${__not_query:-}"           \
                         || return 0  # Don't fail out within a single scope.
                   } > "${_this_pipe:-}" &
 
