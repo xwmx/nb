@@ -9972,6 +9972,7 @@ _download_from() {
       --silent
       --location
       --connect-timeout "${_timeout}"
+      --header "Accept-Encoding: *"
       "${_url}"
     )
 
@@ -9995,6 +9996,7 @@ _download_from() {
       --quiet
       --connect-timeout="${_timeout}"
       --dns-timeout="${_timeout}"
+      --header="Accept-Encoding: *"
       "${_url}"
     )
 
