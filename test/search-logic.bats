@@ -45,6 +45,8 @@ _setup_search() {
   [[    "${lines[6]}"   =~  3.*:.*Example.*\ Content\ .*Two.*\ .*Example.*\ Phrase. ]]
 }
 
+# --not option ################################################################
+
 @test "'search --and <query1> --and <query2> --not <query3>' lists items matching query1 AND query2 and NOT query3." {
   {
     "${_NB}" init
@@ -60,7 +62,6 @@ _setup_search() {
     "${_NB}" add  "File Three.md" \
       --title     "Title Three"   \
       --content   "Example Content Three Example Phrase Alpha."
-
 
     "${_NB}" add  "File Four.md"  \
       --title     "Title Four"    \
