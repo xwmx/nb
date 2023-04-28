@@ -16378,6 +16378,7 @@ _search() {
 
   local _all=0
   local _and_queries=()
+  local _not_queries=()
   local _arguments=()
   local _last_path=
   local _limit=0
@@ -16404,15 +16405,10 @@ _search() {
       -a|--all)
         _all=1
         ;;
-      --and|--or)
-        local _option_and=1
+      --and|--not|--or)
+        local _operator="${1#--}"
 
-        if [[ "${1:-}" == "--or"  ]]
-        then
-          _option_and=0
-        fi
-
-        if [[ "${2:-}" == "-e"    ]]
+        if [[ "${2:-}" == "-e" ]]
         then
           shift
         fi
@@ -16426,18 +16422,24 @@ _search() {
             _option_get_tags "${1:-}" "${2:-}"
           )"
 
-          if ((_option_and))
+          if [[   "${_operator:-}" == "and" ]]
           then
             _and_queries+=(${_option_tags[@]:-})
+          elif [[ "${_operator:-}" == "not" ]]
+          then
+            _not_queries+=(${_option_tags[@]:-})
           else
             _or_queries+=(${_option_tags[@]:-})
           fi
 
           shift
         else
-          if ((_option_and))
+          if [[   "${_operator:-}" == "and" ]]
           then
             _and_queries+=("$(_option_get_value "--and" "${2:-}")")
+          elif [[ "${_operator:-}" == "not" ]]
+          then
+            _not_queries+=("$(_option_get_value "--not" "${2:-}")")
           else
             _or_queries+=("$(_option_get_value "--or" "${2:-}")")
           fi
@@ -17112,6 +17114,49 @@ _search() {
                   cat
                 fi
               } | {
+                local _last_pipe=
+                local _this_pipe=
+
+                local __not_query=
+                for   __not_query in "${_not_queries[@]:-}"
+                do
+                  [[ -n "${__not_query:-}"    ]] || continue
+
+                  _this_pipe=$(_temp file --touch) && {
+                    rm -f   "${_this_pipe}"
+                    mkfifo  "${_this_pipe}"
+                  }
+
+                  if [[ -p "${_last_pipe:-}"  ]]
+                  then
+                    <"${_last_pipe:-}" cat
+                  else
+                    cat
+                  fi | {
+                    GIT_PAGER='' xargs "${_xargs[@]}" \
+                      git -C "${_notebook_path}"      \
+                      grep                            \
+                      --extended-regexp               \
+                      --files-without-match           \
+                      --ignore-case                   \
+                      --null                          \
+                      --text                          \
+                      "${_search_args_no_color[@]:-}" \
+                      -e "${__not_query:-}"           \
+                        || return 0  # Don't fail out within a single scope.
+                  } > "${_this_pipe:-}" &
+
+                  _last_pipe="${_this_pipe:-}"
+                done
+
+                if [[ -p "${_last_pipe:-}"    ]]
+                then
+                  <"${_last_pipe:-}" cat
+                else
+                  cat
+                fi
+              } | {
+
                 if [[ "${__search_group}" == "index" ]]
                 then
                   local i=
