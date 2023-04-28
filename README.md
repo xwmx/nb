@@ -3784,8 +3784,8 @@ nb search "example|sample"
 # search for "example" OR "sample" with option
 nb search "example" --or "sample"
 
-  # search for items matching both "Example" AND "Sample", and NOT "Demo"
-  nb search "Example" --and "Sample" --not "Demo"
+# search for items matching both "Example" AND "Sample", and NOT "Demo"
+nb search "Example" --and "Sample" --not "Demo"
 
 # search items containing the hashtag "#example"
 nb search "#example"
