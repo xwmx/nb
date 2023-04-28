@@ -4364,7 +4364,7 @@ $(_color_primary "Usage"):
   ${_ME} remote set <url> [<branch-name>]
   ${_ME} run <command> [<arguments>...]
   ${_ME} search ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
-            <query>... [-a | --all] [--and <query>] [--or <query>]
+            <query>... [-a | --all] [--and <query>] [--not <query>] [--or <query>]
             [-l | --list] [--path] [-t <tag1>,<tag2>... | --tag <tag1>,<tag2>...]
             [-t | --tags] [--type <type> | --<type>] [--utility <name>]
   ${_ME} set [<name> [<value>] | <number> [<value>]]
@@ -16292,7 +16292,7 @@ _describe_search() {
   cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} search ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
-            <query>... [-a | --all] [--and <query>] [--or <query>]
+            <query>... [-a | --all] [--and <query>] [--not <query>] [--or <query>]
             [-l | --list] [--path] [-t <tag1>,<tag2>... | --tag <tag1>,<tag2>...]
             [-t | --tags] [--type <type> | --<type>] [--utility <name>]
 
@@ -16301,7 +16301,8 @@ $(_color_primary "Options"):
   --and <query>                 Add a AND query.
   -l, --list                    Print the id, filename, and title listing for
                                 each matching file, without the excerpt.
-  --or <query>                  Add an OR query.
+  --not <query>                 Add a NOT query.
+  --or  <query>                 Add an OR query.
   --path                        Print the full path for each matching file.
   -t, --tag <tag1>,<tag2>...    A comma-separated list of tags.
   -t, --tags                    List all tags found in the notebook.
@@ -16317,7 +16318,8 @@ $(_color_primary "Description"):
   Multiple query arguments are treated as AND queries, returning items that
   match all queries. AND queries can also be specified with the --and <query>
   option. The --or <query> option can be used to specify an OR query,
-  returning items that match at least one of the queries.
+  returning items that match at least one of the queries. --not <query>
+  excludes items matching <query>.
 
   \`${_ME} search\` is powered by Git's built-in \`git grep\` tool. \`${_ME}\` also
   supports performing searches with alternative search tools using the
@@ -16355,6 +16357,9 @@ $(_color_primary "Examples"):
   # search for items matching "Example" OR "Sample"
   ${_ME} search "Example|Sample"
   ${_ME} search "Example" --or "Sample"
+
+  # search for items matching both "Example" AND "Sample", and NOT "Demo"
+  ${_ME} search "Example" --and "Sample" --not "Demo"
 
   # search with a regular expression
   ${_ME} search "\d\d\d-\d\d\d\d"

@@ -3763,7 +3763,7 @@ To bump an item to the top of the list without pinning, use the
 
 Use [`nb search`](#search) (shortcut: [`nb q`](#search)) to
 perform full text searches, with support for regular expressions,
-[#tags](#-tagging), and both `AND` and `OR` queries:
+[#tags](#-tagging), and `AND`, `OR`, and `NOT` queries:
 
 ```bash
 # search current notebook for "example query"
@@ -3789,6 +3789,9 @@ nb search "example|sample"
 
 # search for "example" OR "sample" with option
 nb search "example" --or "sample"
+
+  # search for items matching both "Example" AND "Sample", and NOT "Demo"
+  nb search "Example" --and "Sample" --not "Demo"
 
 # search items containing the hashtag "#example"
 nb search "#example"
@@ -3875,6 +3878,18 @@ nb q "example" --or "sample"
 ```bash
 nb q "example" --or "sample" --and "demo"
 # equivalent: example|sample AND demo|sample
+```
+
+`NOT` queries exclude items that match the specified query and are
+specified with [`--not <query>`](#search), which can be used with
+`--and` and `--or`:
+
+```bash
+# search for items that match "Example", excluding items that also match "Sample"
+nb search "Example" --not "Sample"
+
+# search for items matching both "Example" AND "Sample", and NOT "Demo"
+nb search "Example" --and "Sample" --not "Demo"
 ```
 
 Search for [#tags](#-tagging) with flexible
@@ -5970,7 +5985,7 @@ Usage:
   nb remote set <url> [<branch-name>]
   nb run <command> [<arguments>...]
   nb search ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
-            <query>... [-a | --all] [--and <query>] [--or <query>]
+            <query>... [-a | --all] [--and <query>] [--not <query>] [--or <query>]
             [-l | --list] [--path] [-t <tag1>,<tag2>... | --tag <tag1>,<tag2>...]
             [-t | --tags] [--type <type> | --<type>] [--utility <name>]
   nb set [<name> [<value>] | <number> [<value>]]
@@ -7743,7 +7758,7 @@ Examples:
 ```text
 Usage:
   nb search ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
-            <query>... [-a | --all] [--and <query>] [--or <query>]
+            <query>... [-a | --all] [--and <query>] [--not <query>] [--or <query>]
             [-l | --list] [--path] [-t <tag1>,<tag2>... | --tag <tag1>,<tag2>...]
             [-t | --tags] [--type <type> | --<type>] [--utility <name>]
 
@@ -7752,7 +7767,8 @@ Options:
   --and <query>                 Add a AND query.
   -l, --list                    Print the id, filename, and title listing for
                                 each matching file, without the excerpt.
-  --or <query>                  Add an OR query.
+  --not <query>                 Add a NOT query.
+  --or  <query>                 Add an OR query.
   --path                        Print the full path for each matching file.
   -t, --tag <tag1>,<tag2>...    A comma-separated list of tags.
   -t, --tags                    List all tags found in the notebook.
@@ -7768,7 +7784,8 @@ Description:
   Multiple query arguments are treated as AND queries, returning items that
   match all queries. AND queries can also be specified with the --and <query>
   option. The --or <query> option can be used to specify an OR query,
-  returning items that match at least one of the queries.
+  returning items that match at least one of the queries. --not <query>
+  excludes items matching <query>.
 
   `nb search` is powered by Git's built-in `git grep` tool. `nb` also
   supports performing searches with alternative search tools using the
@@ -7806,6 +7823,9 @@ Examples:
   # search for items matching "Example" OR "Sample"
   nb search "Example|Sample"
   nb search "Example" --or "Sample"
+
+  # search for items matching both "Example" AND "Sample", and NOT "Demo"
+  nb search "Example" --and "Sample" --not "Demo"
 
   # search with a regular expression
   nb search "\d\d\d-\d\d\d\d"
