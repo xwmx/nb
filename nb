@@ -13588,6 +13588,12 @@ _bookmark() {
     then
       _title="$(
         cat "${_temp_file}"                   \
+          | if _command_exists 'iconv'
+            then
+              iconv -c -t utf-8
+            else
+              cat
+            fi                                \
           | awk '/<title[^>]*>/,/<\/title>/'  \
           | LC_ALL=C sed -e '/<\/title>/ q'   \
           | LC_ALL=C sed -e 's/<\/title>.*//' \
