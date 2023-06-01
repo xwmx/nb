@@ -5427,9 +5427,11 @@ _list() {
       local _selector_notebook_path=
       _selector_notebook_path="$(_notebooks show "${__argument}" --path)"
 
-      if [[ -n "${_selector_notebook_path:-}"                   ]] &&
-         [[ "${_selector_notebook_path}" == "${_notebook_path}" ]]
-      then # argument is the notebook selected during program option parsing
+      if [[ -n "${_selector_notebook_path:-}" ]]
+      then
+        _notebooks select "${_selector_notebook_path}"
+        _notebook_path="${_selector_notebook_path}"
+
         _selector="${__argument}"
       else
         _filter_patterns+=("${__argument}")
@@ -24946,6 +24948,7 @@ _todo() {
   local _option_title=
   local _related_identifiers=()
   local _tag_list=
+  local _task_list_options=()
   local _tasks=()
 
   while ((${#}))
@@ -24960,6 +24963,9 @@ _todo() {
         _due_datetime="$(_option_get_value "${1:-}" "${2:-}")"
 
         shift
+        ;;
+      --recursive|--tree)
+        _task_list_options+=("--recursive")
         ;;
       -r|--via|--also|--related)
         _related_identifiers+=("$(_option_get_value "${1:-}" "${2:-}")")
@@ -25356,12 +25362,13 @@ _todo() {
       )
 
       {
-        _list "${_selector_path:-}"   \
-          --error-on-empty            \
-          --no-id                     \
-          --no-indicator              \
-          --path                      \
-          --type md                   \
+        _list "${_selector_path:-}"     \
+          --error-on-empty              \
+          --no-id                       \
+          --no-indicator                \
+          --path                        \
+          --type md                     \
+          "${_task_list_options[@]:-}"  \
           2>/dev/null || printf ""
       } | {
         local _first=1

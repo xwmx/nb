@@ -3,6 +3,345 @@
 
 load test_helper
 
+# selectors and listing #######################################################
+
+@test "'tasks <notebook>:' with empty notebook exits with 1 and prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+  }
+
+  run "${_NB}" tasks Example\ Notebook:
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 1               ]]
+  [[    "${#lines[@]}"  -eq 1               ]]
+
+  [[    "${lines[0]}"   =~  \!.*\ 0\ tasks. ]]
+}
+
+@test "'tasks <notebook>:' exits with 0 and lists todos and tasks at root level of <notebook>." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" use "Example Notebook"
+
+    "${_NB}" add                                        \
+      --filename "Example Folder/One.todo.md"           \
+      --content "$(cat <<HEREDOC
+# [ ] Example todo description one.
+
+- [ ] todo one task one.
+- [ ] todo one task two.
+HEREDOC
+      )"
+
+    sleep 1
+
+    "${_NB}" add                                        \
+      --filename "Example Folder/Two.todo.md"           \
+      --content "$(cat <<HEREDOC
+# [ ] Example todo description two.
+
+- [ ] todo two task one.
+- [x] todo two task two.
+HEREDOC
+      )"
+
+    sleep 1
+
+    "${_NB}" add                                        \
+      --filename "Example Folder/Three.todo.md"         \
+      --content "$(cat <<HEREDOC
+# [x] Example todo description three.
+
+- [x] todo three task one.
+- [x] todo three task two.
+HEREDOC
+      )"
+
+    sleep 1
+
+    "${_NB}" add                                        \
+      --content "# Example description four."           \
+      --filename "Example Folder/Four.md"
+
+    "${_NB}" add                                        \
+      --content "# [ ] Sample todo description one."    \
+      --filename "Sample Folder/One.todo.md"
+
+    "${_NB}" add                                        \
+      --filename "One.todo.md"                          \
+      --content "$(cat <<HEREDOC
+# [x] Root todo description one.
+
+- [x] root todo one task one.
+- [x] root todo one task two.
+HEREDOC
+      )"
+
+    "${_NB}" add                                        \
+      --filename "Two.todo.md"                          \
+      --content "$(cat <<HEREDOC
+# [ ] Root todo description two.
+
+- [ ] root todo two task one.
+- [x] root todo two task two.
+HEREDOC
+      )"
+
+    "${_NB}" use "home"
+  }
+
+  run "${_NB}" tasks Example\ Notebook:
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 0       ]]
+
+  [[ !  "${output}"   =~  Four    ]]
+
+  [[    "${lines[0]}"   =~  \
+.*\[.*Example\ Notebook:4.*\].*\ ✔️\ .*\[.*\ .*\].*\ Root\ todo\ description\ two\.  ]]
+  [[    "${lines[1]}"   =~  ---                                                     ]]
+  [[    "${lines[2]}"   =~  \
+.*\[.*Example\ Notebook:4\ 1.*\].*\ .*\[.*\ .*\].*\ root\ todo\ two\ task\ one\.    ]]
+  [[    "${lines[3]}"   =~  \
+.*\[.*Example\ Notebook:4\ 2.*\].*\ .*\[.*x.*\].*\ root\ todo\ two\ task\ two\.     ]]
+
+  [[    "${lines[4]}"   =~  \
+.*\[.*Example\ Notebook:3.*\].*\ ✅\ .*\[.*\x.*\].*\ Root\ todo\ description\ one\. ]]
+  [[    "${lines[5]}"   =~  ---                                                     ]]
+  [[    "${lines[6]}"   =~  \
+.*\[.*Example\ Notebook:3\ 1.*\].*\ .*\[.*\x.*\].*\ root\ todo\ one\ task\ one\.    ]]
+  [[    "${lines[7]}"   =~  \
+.*\[.*Example\ Notebook:3\ 2.*\].*\ .*\[.*x.*\].*\ root\ todo\ one\ task\ two\.     ]]
+}
+
+@test "'tasks <notebook>: --recursive' exits with 0 and lists todos and tasks recursively in <notebook>." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" use "Example Notebook"
+
+    "${_NB}" add                                        \
+      --filename "Example Folder/One.todo.md"           \
+      --content "$(cat <<HEREDOC
+# [ ] Example todo description one.
+
+- [ ] todo one task one.
+- [ ] todo one task two.
+HEREDOC
+      )"
+
+    sleep 1
+
+    "${_NB}" add                                        \
+      --filename "Example Folder/Two.todo.md"           \
+      --content "$(cat <<HEREDOC
+# [ ] Example todo description two.
+
+- [ ] todo two task one.
+- [x] todo two task two.
+HEREDOC
+      )"
+
+    sleep 1
+
+    "${_NB}" add                                        \
+      --filename "Example Folder/Three.todo.md"         \
+      --content "$(cat <<HEREDOC
+# [x] Example todo description three.
+
+- [x] todo three task one.
+- [x] todo three task two.
+HEREDOC
+      )"
+
+    sleep 1
+
+    "${_NB}" add                                        \
+      --content "# Example description four."           \
+      --filename "Example Folder/Four.md"
+
+    "${_NB}" add                                        \
+      --content "# [ ] Sample todo description one."    \
+      --filename "Sample Folder/One.todo.md"
+
+    "${_NB}" add                                        \
+      --filename "One.todo.md"                          \
+      --content "$(cat <<HEREDOC
+# [x] Root todo description one.
+
+- [x] root todo one task one.
+- [x] root todo one task two.
+HEREDOC
+      )"
+
+    "${_NB}" add                                        \
+      --filename "Two.todo.md"                          \
+      --content "$(cat <<HEREDOC
+# [ ] Root todo description two.
+
+- [ ] root todo two task one.
+- [x] root todo two task two.
+HEREDOC
+      )"
+
+    "${_NB}" use "home"
+  }
+
+  run "${_NB}" tasks Example\ Notebook: --recursive
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 0       ]]
+
+
+  [[    "${lines[0]}"   =~  \
+.*\[.*Example\ Notebook:Sample\ Folder/1.*\].*\ ✔️\ .*\[.*\ .*\].*\ Sample\ todo\ description\ one\. ]]
+
+  [[    "${lines[1]}"   =~  \
+.*\[.*Example\ Notebook:Example\ Folder/3.*\].*\ ✅\ .*\[.*x.*\].*\ Example\ todo\ description\ three\. ]]
+  [[    "${lines[2]}"   =~  ---                                                                         ]]
+  [[    "${lines[3]}"   =~  \
+.*\[.*Example\ Notebook:Example\ Folder/3\ 1.*\].*\ .*\[.*x.*\].*\ todo\ three\ task\ one\. ]]
+  [[    "${lines[4]}"   =~  \
+.*\[.*Example\ Notebook:Example\ Folder/3\ 2.*\].*\ .*\[.*x.*\].*\ todo\ three\ task\ two\. ]]
+
+  [[    "${lines[5]}"   =~  \
+.*\[.*Example\ Notebook:Example\ Folder/2.*\].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ two\.     ]]
+  [[    "${lines[6]}"   =~  ---                                                                         ]]
+  [[    "${lines[7]}"   =~  \
+.*\[.*Example\ Notebook:Example\ Folder/2\ 1.*\].*\ .*\[.*\ .*\].*\ todo\ two\ task\ one\.  ]]
+  [[    "${lines[8]}"   =~  \
+.*\[.*Example\ Notebook:Example\ Folder/2\ 2.*\].*\ .*\[.*x.*\].*\ todo\ two\ task\ two\.   ]]
+
+  [[    "${lines[9]}"   =~  \
+.*\[.*Example\ Notebook:Example\ Folder/1.*\].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ one\.     ]]
+  [[    "${lines[10]}"   =~  ---                                                                        ]]
+  [[    "${lines[11]}"  =~  \
+.*\[.*Example\ Notebook:Example\ Folder/1\ 1.*\].*\ .*\[.*\ .*\].*\ todo\ one\ task\ one\.  ]]
+  [[    "${lines[12]}"  =~  \
+.*\[.*Example\ Notebook:Example\ Folder/1\ 2.*\].*\ .*\[.*\ .*\].*\ todo\ one\ task\ two\.  ]]
+
+  [[    "${lines[13]}"   =~  \
+.*\[.*Example\ Notebook:4.*\].*\ ✔️\ .*\[.*\ .*\].*\ Root\ todo\ description\ two\.  ]]
+  [[    "${lines[14]}"   =~  ---                                                    ]]
+  [[    "${lines[15]}"   =~  \
+.*\[.*Example\ Notebook:4\ 1.*\].*\ .*\[.*\ .*\].*\ root\ todo\ two\ task\ one\.    ]]
+  [[    "${lines[16]}"   =~  \
+.*\[.*Example\ Notebook:4\ 2.*\].*\ .*\[.*x.*\].*\ root\ todo\ two\ task\ two\.     ]]
+
+  [[    "${lines[17]}"   =~  \
+.*\[.*Example\ Notebook:3.*\].*\ ✅\ .*\[.*\x.*\].*\ Root\ todo\ description\ one\. ]]
+  [[    "${lines[18]}"   =~  ---                                                    ]]
+  [[    "${lines[19]}"   =~  \
+.*\[.*Example\ Notebook:3\ 1.*\].*\ .*\[.*\x.*\].*\ root\ todo\ one\ task\ one\.    ]]
+  [[    "${lines[20]}"   =~  \
+.*\[.*Example\ Notebook:3\ 2.*\].*\ .*\[.*x.*\].*\ root\ todo\ one\ task\ two\.     ]]
+}
+
+@test "'tasks <notebook>:<folder>/' exits with 0 and lists todos and tasks in <folder>." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+
+    "${_NB}" use "Example Notebook"
+
+    "${_NB}" add                                        \
+      --filename "Example Folder/One.todo.md"           \
+      --content "$(cat <<HEREDOC
+# [ ] Example todo description one.
+
+- [ ] todo one task one.
+- [ ] todo one task two.
+HEREDOC
+      )"
+
+    sleep 1
+
+    "${_NB}" add                                        \
+      --filename "Example Folder/Two.todo.md"           \
+      --content "$(cat <<HEREDOC
+# [ ] Example todo description two.
+
+- [ ] todo two task one.
+- [x] todo two task two.
+HEREDOC
+      )"
+
+    sleep 1
+
+    "${_NB}" add                                        \
+      --filename "Example Folder/Three.todo.md"         \
+      --content "# [x] Example todo description three." \
+      --content "$(cat <<HEREDOC
+# [x] Example todo description three.
+
+- [x] todo three task one.
+- [x] todo three task two.
+HEREDOC
+      )"
+
+    sleep 1
+
+    "${_NB}" add                                        \
+      --content "# Example description four."           \
+      --filename "Example Folder/Four.md"
+
+    "${_NB}" add                                        \
+      --content "# [ ] Sample todo description one."    \
+      --filename "Sample Folder/One.todo.md"
+
+    "${_NB}" use "home"
+  }
+
+  run "${_NB}" tasks Example\ Notebook:Example\ Folder/
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 0       ]]
+
+  [[ !  "${output}"   =~  Four    ]]
+  [[ !  "${output}"   =~  Sample  ]]
+
+  [[    "${lines[0]}"   =~  \
+.*\[.*Example\ Notebook:Example\ Folder/3.*\].*\ ✅\ .*\[.*x.*\].*\ Example\ todo\ description\ three\. ]]
+  [[    "${lines[1]}"   =~  ---                                                                         ]]
+  [[    "${lines[2]}"   =~  \
+.*\[.*Example\ Notebook:Example\ Folder/3\ 1.*\].*\ .*\[.*x.*\].*\ todo\ three\ task\ one\. ]]
+  [[    "${lines[3]}"   =~  \
+.*\[.*Example\ Notebook:Example\ Folder/3\ 2.*\].*\ .*\[.*x.*\].*\ todo\ three\ task\ two\. ]]
+
+  [[    "${lines[4]}"   =~  \
+.*\[.*Example\ Notebook:Example\ Folder/2.*\].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ two\.     ]]
+  [[    "${lines[5]}"   =~  ---                                                                         ]]
+  [[    "${lines[6]}"   =~  \
+.*\[.*Example\ Notebook:Example\ Folder/2\ 1.*\].*\ .*\[.*\ .*\].*\ todo\ two\ task\ one\.  ]]
+  [[    "${lines[7]}"   =~  \
+.*\[.*Example\ Notebook:Example\ Folder/2\ 2.*\].*\ .*\[.*x.*\].*\ todo\ two\ task\ two\.   ]]
+
+  [[    "${lines[8]}"   =~  \
+.*\[.*Example\ Notebook:Example\ Folder/1.*\].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ one\.     ]]
+  [[    "${lines[9]}"   =~  ---                                                                         ]]
+  [[    "${lines[10]}"  =~  \
+.*\[.*Example\ Notebook:Example\ Folder/1\ 1.*\].*\ .*\[.*\ .*\].*\ todo\ one\ task\ one\.  ]]
+  [[    "${lines[11]}"  =~  \
+.*\[.*Example\ Notebook:Example\ Folder/1\ 2.*\].*\ .*\[.*\ .*\].*\ todo\ one\ task\ two\.  ]]
+}
+
 # line wrapping ###############################################################
 
 @test "'tasks <folder>/<id> <task-number>' exits with 0 and lists individual tasks with wrapping." {
