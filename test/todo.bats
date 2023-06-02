@@ -5,6 +5,38 @@ load test_helper
 
 # todos #######################################################################
 
+@test "'todos' with empty notebook exits with 1 and prints message." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" todos
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 1                         ]]
+  [[    "${#lines[@]}"  -eq 1                         ]]
+
+  [[    "${lines[0]}"   =~  \!.*\ No\ todos\ found\.  ]]
+}
+
+@test "'todos open' with empty notebook exits with 1 and prints message." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" todos open
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 1                               ]]
+  [[    "${#lines[@]}"  -eq 1                               ]]
+
+  [[    "${lines[0]}"   =~  \!.*\ No\ open\ todos\ found\.  ]]
+}
+
 @test "'todos <notebook>:' with empty notebook exits with 1 and prints message." {
   {
     "${_NB}" init
@@ -21,6 +53,24 @@ load test_helper
   [[    "${#lines[@]}"  -eq 1                         ]]
 
   [[    "${lines[0]}"   =~  \!.*\ No\ todos\ found\.  ]]
+}
+
+@test "'todos open <notebook>:' with empty notebook exits with 1 and prints message." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+  }
+
+  run "${_NB}" todos open Example\ Notebook:
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"     -eq 1                               ]]
+  [[    "${#lines[@]}"  -eq 1                               ]]
+
+  [[    "${lines[0]}"   =~  \!.*\ No\ open\ todos\ found\.  ]]
 }
 
 @test "'todos <notebook>:<folder>/' exits with 0 and lists todos." {

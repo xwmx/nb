@@ -25265,7 +25265,7 @@ _todo() {
       ;;
     list)
       {
-        _list "${_arguments[@]:-}" --type todo 2>/dev/null
+        _list "${_arguments[@]:-}" --error-on-empty --type todo 2>/dev/null
       } | {
         case "${_filter:-}" in
           closed)
