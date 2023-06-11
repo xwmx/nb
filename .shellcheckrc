@@ -38,7 +38,7 @@ disable=SC2088
 
 # Disable SC2120
 #
-# This is being triggered on `_ls`, which is passed arguments in `_nb_main()`.
+# This is being triggered on `_ls`, which is passed arguments in `_main()`.
 # This is likely being triggered because `_ls` is called separately explicitly
 # without arguments.
 #
@@ -52,3 +52,10 @@ disable=SC2088
 # https://github.com/koalaman/shellcheck/wiki/SC2206
 # https://github.com/koalaman/shellcheck/wiki/SC2207
 disable=SC2206,SC2207
+
+# Disable SC2317
+#
+# Many commands are invoked indirectly.
+#
+# https://www.shellcheck.net/wiki/SC2317
+disable=SC2317
