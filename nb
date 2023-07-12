@@ -21070,8 +21070,7 @@ HEREDOC
     local _request_uri_base="${_request_uri%\?--*}" # strip parameters
     local _target_selector="${_request_uri_base#\/}"
 
-    _target_selector="${_target_selector//"\%20"/ }"
-    _target_selector="${_target_selector//"%20"/ }"
+    _target_selector="$(_get_uri --decode "${_target_selector:-}")"
 
     local _response_url_params=
 
