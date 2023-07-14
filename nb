@@ -19302,7 +19302,7 @@ _browse() {
       fi
     fi
 
-    local _html_title="${_ME} browse add ${_selector}"
+    local _html_title="${_ME} browse add ${_selector// /\\ }"
     local _rows=30
     local _text_area_columns="${_columns:-}"
     local _url_params=
