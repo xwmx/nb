@@ -81,7 +81,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.5.2"
+_VERSION="7.5.3"
 
 # $_ME
 #
@@ -10459,7 +10459,7 @@ _get_uri() {
     _input="${_input//+/ }"
     _input="${_input//$'\r'}"
 
-    printf "%b" "${_input//%/\\x}"
+    printf "%b\\n" "${_input//%/\\x}"
   }
 
   # Usage: _get_uri_encode <string>
@@ -19302,7 +19302,7 @@ _browse() {
       fi
     fi
 
-    local _html_title="${_ME} browse add ${_selector// /\\\ }"
+    local _html_title="${_ME} browse add ${_selector// /\\ }"
     local _rows=30
     local _text_area_columns="${_columns:-}"
     local _url_params=
@@ -21070,8 +21070,7 @@ HEREDOC
     local _request_uri_base="${_request_uri%\?--*}" # strip parameters
     local _target_selector="${_request_uri_base#\/}"
 
-    _target_selector="${_target_selector//"\%20"/ }"
-    _target_selector="${_target_selector//"%20"/ }"
+    _target_selector="$(_get_uri --decode "${_target_selector:-}")"
 
     local _response_url_params=
 
@@ -21810,9 +21809,9 @@ HEREDOC
       _printable_response="$(
         if ((_print_headers))
         then
-          curl -s -I      "${_request_url//\ /\%20}"  || :
+          curl -s -I      "${_request_url//' '/%20}"  || :
         else
-          _download_from  "${_request_url//\ /\%20}"  || :
+          _download_from  "${_request_url//' '/%20}"  || :
         fi
       )"
 

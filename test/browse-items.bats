@@ -35,6 +35,40 @@ load test_helper
 "<h1 id=\"example-title\">Example Title</h1>"
 }
 
+@test "'browse' responds to request with selector containing non-ascii characters." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example File.md"     \
+      --title     "Example Noté Title"  \
+      --content   "Example noté content."
+
+    (ncat                               \
+      --exec "${_NB} browse --respond"  \
+      --listen                          \
+      --source-port "6789"              \
+      2>/dev/null) &
+
+    sleep 1
+  }
+
+  run curl -sS -D - "http://localhost:6789/home:Example%20Noté%20Title"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    ==  0                   ]]
+  [[ "${output}"    =~  \<\!DOCTYPE\ html\> ]]
+
+  [[ "${output}"    =~  header\-crumbs.*↓   ]]
+
+  printf "%s\\n" "${output}" | grep -q \
+"<h1 id=\"example-noté-title\">Example Noté Title</h1>"
+
+  printf "%s\\n" "${output}" | grep -q \
+"<p>Example noté content.</p>"
+}
+
 # todos #######################################################################
 
 @test "'browse <id>' with todo item displays marked-up done / closed checkbox." {
