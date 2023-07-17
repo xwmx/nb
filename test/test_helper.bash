@@ -11,7 +11,7 @@
 # bats_require_minimum_version
 #
 # https://github.com/bats-core/bats-core/blob/master/docs/source/writing-tests.md
-if ! bats_version_lt "${BATS_VERSION}" "1.7.0"
+if hash "bats_require_minimum_version" &>/dev/null
 then
   bats_require_minimum_version 1.5.0
 fi
