@@ -8,6 +8,11 @@
 # https://github.com/sstephenson/bats
 ###############################################################################
 
+# bats_require_minimum_version
+#
+# https://github.com/bats-core/bats-core/blob/master/docs/source/writing-tests.md
+bats_require_minimum_version 1.5.0
+
 # _setup()
 #
 # Usage:
