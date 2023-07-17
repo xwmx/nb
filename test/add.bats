@@ -377,6 +377,96 @@ HEREDOC
 
 # --title option ##############################################################
 
+@test "'add --title' with .adoc file creates file with AsciiDoc title." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" add --title "Example Title" --filename "Example File.adoc"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0      ]]
+
+  [[ -f "${NB_DIR}/home/Example File.adoc" ]]
+
+  diff                                        \
+    <(cat "${NB_DIR}/home/Example File.adoc") \
+    <(printf "\
+= Example Title
+
+# mock_editor %s/home/Example File\\n" "${NB_DIR}")
+
+  cd "${NB_DIR}/home"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+}
+
+@test "'add --title' with .asciidoc file creates file with AsciiDoc title." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" add --title "Example Title" --filename "Example File.asciidoc"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0  ]]
+
+  [[ -f "${NB_DIR}/home/Example File.asciidoc"    ]]
+
+  diff                                            \
+    <(cat "${NB_DIR}/home/Example File.asciidoc") \
+    <(printf "\
+= Example Title
+
+# mock_editor %s/home/Example File\\n" "${NB_DIR}")
+
+  cd "${NB_DIR}/home"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+}
+
+@test "'add --title' with .adocx123 file (partially matching non-recognized extension) creates file with default markdown title." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" add --title "Example Title" --filename "Example File.adocx"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0      ]]
+
+  [[ -f "${NB_DIR}/home/Example File.adocx"     ]]
+
+  diff                                          \
+    <(cat "${NB_DIR}/home/Example File.adocx")  \
+    <(printf "\
+# Example Title
+
+# mock_editor %s/home/Example File\\n" "${NB_DIR}")
+
+  cd "${NB_DIR}/home"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+}
+
 @test "'add --title' with .org file creates file with .org title." {
   {
     "${_NB}" init

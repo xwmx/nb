@@ -12768,12 +12768,17 @@ _add() {
 
     if [[ -n "${_title}"                  ]]
     then
-      if [[ "${_target_path:-}" =~ .org$  ]]
-      then
-        local _title_prefix="#+TITLE:"
-      else
-        local _title_prefix="#"
-      fi
+      case "${_target_path:-}" in
+        *.adoc|*.asciidoc)
+          _title_prefix="="
+          ;;
+        *.org)
+          _title_prefix="#+TITLE:"
+          ;;
+        *)
+          _title_prefix="#"
+          ;;
+      esac
 
       printf "%s\\n\\n" "${_title_prefix} ${_title}" >> "${_target_path}"
     fi
