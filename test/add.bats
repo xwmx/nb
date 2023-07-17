@@ -2046,7 +2046,7 @@ HEREDOC
   cd "${NB_DIR}/home" || return 1
 
   [[ -n "$(ls example.org)" ]]
-  ! grep -q '# mock_editor' "${NB_DIR}/home"/*
+  run ! grep -q '# mock_editor' "${NB_DIR}/home"/*
   grep -q 'sample.md' "${NB_DIR}/home"/*
 
   while [[ -n "$(git status --porcelain)" ]]
