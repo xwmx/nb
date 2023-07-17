@@ -3,6 +3,144 @@
 
 load test_helper
 
+# extension setting ###########################################################
+
+@test "'add' extension set to .adoc creates AsciiDoc file with formatted title." {
+  {
+    "${_NB}" init
+
+    "${_NB}" set default_extension "adoc"
+  }
+
+  run "${_NB}" add --content "Example content." --title "Example Title"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0                          ]]
+
+  [[ -f "${NB_DIR}/home/example_title.adoc"     ]]
+
+  diff                                          \
+    <(cat "${NB_DIR}/home/example_title.adoc")  \
+    <(cat <<HEREDOC
+= Example Title
+
+Example content.
+HEREDOC
+)
+
+  cd "${NB_DIR}/home"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+}
+
+@test "'add' extension set to .asciidoc creates AsciiDoc file with formatted title." {
+  {
+    "${_NB}" init
+
+    "${_NB}" set default_extension "asciidoc"
+  }
+
+  run "${_NB}" add --content "Example content." --title "Example Title"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0                              ]]
+
+  [[ -f "${NB_DIR}/home/example_title.asciidoc"     ]]
+
+  diff                                              \
+    <(cat "${NB_DIR}/home/example_title.asciidoc")  \
+    <(cat <<HEREDOC
+= Example Title
+
+Example content.
+HEREDOC
+)
+
+  cd "${NB_DIR}/home"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+}
+
+@test "'add' extension set to .md creates Markdown file with formatted title." {
+  {
+    "${_NB}" init
+
+    "${_NB}" set default_extension "md"
+  }
+
+  run "${_NB}" add --content "Example content." --title "Example Title"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0                        ]]
+
+  [[ -f "${NB_DIR}/home/example_title.md"     ]]
+
+  diff                                        \
+    <(cat "${NB_DIR}/home/example_title.md")  \
+    <(cat <<HEREDOC
+# Example Title
+
+Example content.
+HEREDOC
+)
+
+  cd "${NB_DIR}/home"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+}
+
+@test "'add' extension set to .org creates AsciiDoc file with formatted title." {
+  {
+    "${_NB}" init
+
+    "${_NB}" set default_extension "org"
+  }
+
+  run "${_NB}" add --content "Example content." --title "Example Title"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0                          ]]
+
+  [[ -f "${NB_DIR}/home/example_title.org"      ]]
+
+  diff                                          \
+    <(cat "${NB_DIR}/home/example_title.org")   \
+    <(cat <<HEREDOC
+#+TITLE: Example Title
+
+Example content.
+HEREDOC
+)
+
+  cd "${NB_DIR}/home"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+}
+
 # option parsing ##############################################################
 
 @test "'add --content' with content containing a leading dash (-) successfully creates note." {
