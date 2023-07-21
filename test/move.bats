@@ -2,6 +2,234 @@
 
 load test_helper
 
+# multiple files and globbing #################################################
+
+@test "'move <id> <id> <id> <notebook-1>:<id> <notebook-2>:<folder>/' with multiple selectors moves files." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example File One.md"    --content "Example content one."
+    "${_NB}" add "Example File Two.md"    --content "Example content two."
+    "${_NB}" add "Example File Three.md"  --content "Example content three."
+
+    "${_NB}" notebooks add "Sample Notebook"
+
+    "${_NB}" add "Sample Notebook:Sample File One.md" --content "Sample content one."
+
+    "${_NB}" notebooks add "Demo Notebook"
+
+    "${_NB}" add folder "Demo Notebook:Demo Folder"
+
+    [[   -f "${NB_DIR}/home/Example File One.md"                        ]]
+    [[   -f "${NB_DIR}/home/Example File Two.md"                        ]]
+    [[   -f "${NB_DIR}/home/Example File Three.md"                      ]]
+    [[   -f "${NB_DIR}/Sample Notebook/Sample File One.md"              ]]
+    [[   -d "${NB_DIR}/Demo Notebook/Demo Folder"                       ]]
+    [[ ! -e "${NB_DIR}/Demo Notebook/Demo Folder/Example File One.md"   ]]
+    [[ ! -e "${NB_DIR}/Demo Notebook/Demo Folder/Example File Two.md"   ]]
+    [[ ! -e "${NB_DIR}/Demo Notebook/Demo Folder/Example File Three.md" ]]
+    [[ ! -e "${NB_DIR}/Demo Notebook/Demo Folder/Sample File One.md"    ]]
+  }
+
+  run "${_NB}" move     \
+    "1"                 \
+    "2"                 \
+    "3"                 \
+    "Sample Notebook:1" \
+    "Demo Notebook:Demo Folder/" <<< "y${_NEWLINE}y${_NEWLINE}y${_NEWLINE}y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Moves files:
+
+  [[ ! -e "${NB_DIR}/home/Example File One.md"                        ]]
+  [[ ! -e "${NB_DIR}/home/Example File Two.md"                        ]]
+  [[ ! -e "${NB_DIR}/home/Example File Three.md"                      ]]
+  [[ ! -e "${NB_DIR}/Sample Notebook/Sample File One.md"              ]]
+  [[   -d "${NB_DIR}/Demo Notebook/Demo Folder"                       ]]
+  [[   -f "${NB_DIR}/Demo Notebook/Demo Folder/Example File One.md"   ]]
+  [[   -f "${NB_DIR}/Demo Notebook/Demo Folder/Example File Two.md"   ]]
+  [[   -f "${NB_DIR}/Demo Notebook/Demo Folder/Example File Three.md" ]]
+  [[   -f "${NB_DIR}/Demo Notebook/Demo Folder/Sample File One.md"    ]]
+
+  # Creates git commits:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log
+  git log | grep -q '\[nb\] Delete: Example File One.md'
+  git log | grep -q '\[nb\] Delete: Example File Two.md'
+  git log | grep -q '\[nb\] Delete: Example File Three.md'
+
+  cd "${NB_DIR}/Sample Notebook" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log
+  git log | grep -q '\[nb\] Delete: Sample File One.md'
+
+  cd "${NB_DIR}/Demo Notebook" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add: Demo Folder/Example File One.md'
+  git log | grep -q '\[nb\] Add: Demo Folder/Example File Two.md'
+  git log | grep -q '\[nb\] Add: Demo Folder/Example File Three.md'
+  git log | grep -q '\[nb\] Add: Demo Folder/Sample File One.md'
+
+  # Prints output:
+
+  [[ "${lines[0]}"  =~    \
+Moving:\ \ \ .*\[.*1.*\].*\ .*Example\ File\ One.md                     ]]
+  [[ "${lines[1]}"  =~    \
+To:\ \ \ \ \ \ \ .*Demo\ Notebook:Demo\ Folder/Example\ File\ One.md    ]]
+  [[ "${lines[2]}"  =~    \
+Moved\ to:\ .*Demo\ Notebook:Demo\ Folder/Example\ File\ One.md         ]]
+
+  [[ "${lines[3]}"  =~    \
+Moving:\ \ \ .*\[.*2.*\].*\ .*Example\ File\ Two.md                     ]]
+  [[ "${lines[4]}"  =~    \
+To:\ \ \ \ \ \ \ .*Demo\ Notebook:Demo\ Folder/Example\ File\ Two.md    ]]
+  [[ "${lines[5]}"  =~    \
+Moved\ to:\ .*Demo\ Notebook:Demo\ Folder/Example\ File\ Two.md         ]]
+
+  [[ "${lines[6]}"  =~    \
+Moving:\ \ \ .*\[.*3.*\].*\ .*Example\ File\ Three.md                   ]]
+  [[ "${lines[7]}"  =~    \
+To:\ \ \ \ \ \ \ .*Demo\ Notebook:Demo\ Folder/Example\ File\ Three.md  ]]
+  [[ "${lines[8]}"  =~    \
+Moved\ to:\ .*Demo\ Notebook:Demo\ Folder/Example\ File\ Three.md       ]]
+
+  [[ "${lines[9]}"  =~    \
+Moving:\ \ \ .*\[.*Sample\ Notebook:1.*\].*\ .*Sample\ File\ One.md     ]]
+  [[ "${lines[10]}"  =~   \
+To:\ \ \ \ \ \ \ .*Demo\ Notebook:Demo\ Folder/Sample\ File\ One.md     ]]
+  [[ "${lines[11]}"  =~   \
+Moved\ to:\ .*Demo\ Notebook:Demo\ Folder/Sample\ File\ One.md          ]]
+}
+
+# TODO
+# @test "'move * <notebook-1>:<id> <notebook-2>:<folder>/' with multiple selectors moves files." {
+#   {
+#     "${_NB}" init
+
+#     "${_NB}" add "Example File One.md"    --content "Example content one."
+#     "${_NB}" add "Example File Two.md"    --content "Example content two."
+#     "${_NB}" add "Example File Three.md"  --content "Example content three."
+
+#     "${_NB}" notebooks add "Sample Notebook"
+
+#     "${_NB}" add "Sample Notebook:Sample File One.md" --content "Sample content one."
+
+#     "${_NB}" notebooks add "Demo Notebook"
+
+#     "${_NB}" add folder "Demo Notebook:Demo Folder"
+
+#     [[   -f "${NB_DIR}/home/Example File One.md"                        ]]
+#     [[   -f "${NB_DIR}/home/Example File Two.md"                        ]]
+#     [[   -f "${NB_DIR}/home/Example File Three.md"                      ]]
+#     [[   -f "${NB_DIR}/Sample Notebook/Sample File One.md"              ]]
+#     [[   -d "${NB_DIR}/Demo Notebook/Demo Folder"                       ]]
+#     [[ ! -e "${NB_DIR}/Demo Notebook/Demo Folder/Example File One.md"   ]]
+#     [[ ! -e "${NB_DIR}/Demo Notebook/Demo Folder/Example File Two.md"   ]]
+#     [[ ! -e "${NB_DIR}/Demo Notebook/Demo Folder/Example File Three.md" ]]
+#     [[ ! -e "${NB_DIR}/Demo Notebook/Demo Folder/Sample File One.md"    ]]
+#   }
+
+#   run "${_NB}" move *   \
+#     "Sample Notebook:1" \
+#     "Demo Notebook:Demo Folder/" <<< "y${_NEWLINE}y${_NEWLINE}y${_NEWLINE}y${_NEWLINE}"
+
+#   printf "\${status}: '%s'\\n" "${status}"
+#   printf "\${output}: '%s'\\n" "${output}"
+
+#   # Returns status 0:
+
+#   [[ ${status} -eq 0 ]]
+
+#   # Moves files:
+
+#   [[ ! -e "${NB_DIR}/home/Example File One.md"                        ]]
+#   [[ ! -e "${NB_DIR}/home/Example File Two.md"                        ]]
+#   [[ ! -e "${NB_DIR}/home/Example File Three.md"                      ]]
+#   [[ ! -e "${NB_DIR}/Sample Notebook/Sample File One.md"              ]]
+#   [[   -d "${NB_DIR}/Demo Notebook/Demo Folder"                       ]]
+#   [[   -f "${NB_DIR}/Demo Notebook/Demo Folder/Example File One.md"   ]]
+#   [[   -f "${NB_DIR}/Demo Notebook/Demo Folder/Example File Two.md"   ]]
+#   [[   -f "${NB_DIR}/Demo Notebook/Demo Folder/Example File Three.md" ]]
+#   [[   -f "${NB_DIR}/Demo Notebook/Demo Folder/Sample File One.md"    ]]
+
+#   # Creates git commits:
+
+#   cd "${NB_DIR}/home" || return 1
+#   while [[ -n "$(git status --porcelain)" ]]
+#   do
+#     sleep 1
+#   done
+#   git log
+#   git log | grep -q '\[nb\] Delete: Example File One.md'
+#   git log | grep -q '\[nb\] Delete: Example File Two.md'
+#   git log | grep -q '\[nb\] Delete: Example File Three.md'
+
+#   cd "${NB_DIR}/Sample Notebook" || return 1
+#   while [[ -n "$(git status --porcelain)" ]]
+#   do
+#     sleep 1
+#   done
+#   git log
+#   git log | grep -q '\[nb\] Delete: Sample File One.md'
+
+#   cd "${NB_DIR}/Demo Notebook" || return 1
+#   while [[ -n "$(git status --porcelain)" ]]
+#   do
+#     sleep 1
+#   done
+#   git log | grep -q '\[nb\] Add: Demo Folder/Example File One.md'
+#   git log | grep -q '\[nb\] Add: Demo Folder/Example File Two.md'
+#   git log | grep -q '\[nb\] Add: Demo Folder/Example File Three.md'
+#   git log | grep -q '\[nb\] Add: Demo Folder/Sample File One.md'
+
+#   # Prints output:
+
+#   [[ "${lines[0]}"  =~    \
+# Moving:\ \ \ .*\[.*1.*\].*\ .*Example\ File\ One.md                     ]]
+#   [[ "${lines[1]}"  =~    \
+# To:\ \ \ \ \ \ \ .*Demo\ Notebook:Demo\ Folder/Example\ File\ One.md    ]]
+#   [[ "${lines[2]}"  =~    \
+# Moved\ to:\ .*Demo\ Notebook:Demo\ Folder/Example\ File\ One.md         ]]
+
+#   [[ "${lines[3]}"  =~    \
+# Moving:\ \ \ .*\[.*2.*\].*\ .*Example\ File\ Two.md                     ]]
+#   [[ "${lines[4]}"  =~    \
+# To:\ \ \ \ \ \ \ .*Demo\ Notebook:Demo\ Folder/Example\ File\ Two.md    ]]
+#   [[ "${lines[5]}"  =~    \
+# Moved\ to:\ .*Demo\ Notebook:Demo\ Folder/Example\ File\ Two.md         ]]
+
+#   [[ "${lines[6]}"  =~    \
+# Moving:\ \ \ .*\[.*3.*\].*\ .*Example\ File\ Three.md                   ]]
+#   [[ "${lines[7]}"  =~    \
+# To:\ \ \ \ \ \ \ .*Demo\ Notebook:Demo\ Folder/Example\ File\ Three.md  ]]
+#   [[ "${lines[8]}"  =~    \
+# Moved\ to:\ .*Demo\ Notebook:Demo\ Folder/Example\ File\ Three.md       ]]
+
+#   [[ "${lines[9]}"  =~    \
+# Moving:\ \ \ .*\[.*Sample\ Notebook:1.*\].*\ .*Sample\ File\ One.md     ]]
+#   [[ "${lines[10]}"  =~   \
+# To:\ \ \ \ \ \ \ .*Demo\ Notebook:Demo\ Folder/Sample\ File\ One.md     ]]
+#   [[ "${lines[11]}"  =~   \
+# Moved\ to:\ .*Demo\ Notebook:Demo\ Folder/Sample\ File\ One.md          ]]
+# }
+
 # argument ordering ###########################################################
 
 @test "'move <folder>/<id> <notebook>:<folder>/' moves file." {
