@@ -81,7 +81,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.5.5"
+_VERSION="7.5.6"
 
 # $_ME
 #
@@ -9974,7 +9974,7 @@ _download_from() {
       --silent
       --location
       --connect-timeout "${_timeout}"
-      --header "Accept-Encoding: *"
+      --compressed
       "${_url}"
     )
 
@@ -9999,6 +9999,7 @@ _download_from() {
       --connect-timeout="${_timeout}"
       --dns-timeout="${_timeout}"
       --header="Accept-Encoding: *"
+      --compression=auto
       "${_url}"
     )
 

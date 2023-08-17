@@ -5,6 +5,8 @@
 
 # rubocop:disable all
 
+# NOTE: Uncomment box config block for `vagrant up` / `vagrant provision`.
+
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
 # backwards compatibility). Please don't change it unless you know what
@@ -94,6 +96,38 @@ HEREDOC
   # end
 
   #############################################################################
+  # EndeavorOS Boxes
+
+  $endeavor_setup = <<-HEREDOC
+# install nvm (https://github.com/nvm-sh/nvm)
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.36.0/install.sh | bash
+
+# add project root to $PATH
+if grep -q -v vagrant "${HOME}/.bashrc"
+then
+  printf "\\nexport PATH=\"/vagrant:\${PATH}\"\\n" >> "${HOME}/.bashrc"
+fi
+
+sudo pacman       \
+  --noconfirm     \
+  -Syu            \
+  bash-bats       \
+  elinks          \
+  git             \
+  lynx            \
+  nmap            \
+  pandoc          \
+  python-pygments \
+  vim             \
+  w3m
+HEREDOC
+
+  # config.vm.define "endeavor" do |endeavor|
+  #   endeavor.vm.box = "altafsaljooq/EndeavousOS"
+  #   endeavor.vm.provision :shell, inline: $endeavor_setup, privileged: false
+  # end
+
+  #############################################################################
   # Fedora Boxes
 
   $fedora_setup = <<-HEREDOC
@@ -120,8 +154,19 @@ fi
 HEREDOC
 
   ###########
+  # Fedora 38
+
+  # https://app.vagrantup.com/fedora/boxes/38-cloud-base
+  # config.vm.define "fedora38" do |fedora38|
+  #   fedora38.vm.box         = "fedora/38-cloud-base"
+  #   fedora38.vm.box_version = "38.20230413.1"
+  #   fedora38.vm.provision :shell, inline: $fedora_setup, privileged: false
+  # end
+
+  ###########
   # Fedora 36
 
+  # https://app.vagrantup.com/fedora/boxes/36-cloud-base
   # config.vm.define "fedora36" do |fedora36|
   #   fedora36.vm.box         = "fedora/36-cloud-base"
   #   fedora36.vm.box_version = "36-20220504.1"
@@ -161,6 +206,16 @@ then
   printf "\\nexport PATH=\"/vagrant:\${PATH}\"\\n" >> "${HOME}/.bashrc"
 fi
 HEREDOC
+
+  #############
+  # NixOS 23.05
+
+  # https://license.hashicorp.com/boxen/boxes/nixos-23.05-x86_64
+  # config.vm.define "nixos2305" do |nixos2305|
+  #   nixos2305.vm.box         = "boxen/nixos-23.05-x86_64"
+  #   nixos2305.vm.box_version = "2023.8.14.0"
+  #   nixos2305.vm.provision :shell, inline: $nixos_setup, privileged: false
+  # end
 
   #############
   # NixOS 20.03
