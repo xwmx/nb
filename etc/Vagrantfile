@@ -94,6 +94,38 @@ HEREDOC
   # end
 
   #############################################################################
+  # EndeavorOS Boxes
+
+  $endeavor_setup = <<-HEREDOC
+# install nvm (https://github.com/nvm-sh/nvm)
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.36.0/install.sh | bash
+
+# add project root to $PATH
+if grep -q -v vagrant "${HOME}/.bashrc"
+then
+  printf "\\nexport PATH=\"/vagrant:\${PATH}\"\\n" >> "${HOME}/.bashrc"
+fi
+
+sudo pacman       \
+  --noconfirm     \
+  -Syu            \
+  bash-bats       \
+  elinks          \
+  git             \
+  lynx            \
+  nmap            \
+  pandoc          \
+  python-pygments \
+  vim             \
+  w3m
+HEREDOC
+
+  # config.vm.define "endeavor" do |endeavor|
+  #   endeavor.vm.box = "altafsaljooq/EndeavousOS"
+  #   endeavor.vm.provision :shell, inline: $endeavor_setup, privileged: false
+  # end
+
+  #############################################################################
   # Fedora Boxes
 
   $fedora_setup = <<-HEREDOC
