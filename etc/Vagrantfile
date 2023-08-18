@@ -31,6 +31,11 @@ Vagrant.configure("2") do |config|
   # Arch Boxes
 
   $arch_setup = <<-HEREDOC
+sudo su root
+
+# https://bbs.archlinux.org/viewtopic.php?id=282796
+pacman --noconfirm -Sy archlinux-keyring && pacman --noconfirm -Syu
+
 # install nvm (https://github.com/nvm-sh/nvm)
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.36.0/install.sh | bash
 
@@ -45,10 +50,11 @@ sudo pacman       \
   -Syu            \
   bash-bats       \
   elinks          \
+  fish            \
   git             \
   lynx            \
   nmap            \
-  pandoc          \
+  pandoc-cli      \
   python-pygments \
   vim             \
   w3m
@@ -59,9 +65,9 @@ HEREDOC
   #
   # https://app.vagrantup.com/archlinux/boxes/archlinux
 
-  # config.vm.define "arch" do |centos7|
-  #   centos7.vm.box = "archlinux/archlinux"
-  #   centos7.vm.provision :shell, inline: $arch_setup, privileged: false
+  # config.vm.define "arch" do |arch|
+  #   arch.vm.box = "archlinux/archlinux"
+  #   arch.vm.provision :shell, inline: $arch_setup, privileged: false
   # end
 
   #############################################################################
@@ -98,33 +104,11 @@ HEREDOC
   #############################################################################
   # EndeavorOS Boxes
 
-  $endeavor_setup = <<-HEREDOC
-# install nvm (https://github.com/nvm-sh/nvm)
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.36.0/install.sh | bash
-
-# add project root to $PATH
-if grep -q -v vagrant "${HOME}/.bashrc"
-then
-  printf "\\nexport PATH=\"/vagrant:\${PATH}\"\\n" >> "${HOME}/.bashrc"
-fi
-
-sudo pacman       \
-  --noconfirm     \
-  -Syu            \
-  bash-bats       \
-  elinks          \
-  git             \
-  lynx            \
-  nmap            \
-  pandoc          \
-  python-pygments \
-  vim             \
-  w3m
-HEREDOC
+  # NOTE: uses $arch_setup
 
   # config.vm.define "endeavor" do |endeavor|
   #   endeavor.vm.box = "altafsaljooq/EndeavousOS"
-  #   endeavor.vm.provision :shell, inline: $endeavor_setup, privileged: false
+  #   endeavor.vm.provision :shell, inline: $arch_setup, privileged: false
   # end
 
   #############################################################################
