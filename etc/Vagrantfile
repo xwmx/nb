@@ -65,10 +65,10 @@ HEREDOC
   #
   # https://app.vagrantup.com/archlinux/boxes/archlinux
 
-  config.vm.define "arch" do |arch|
-    arch.vm.box = "archlinux/archlinux"
-    arch.vm.provision :shell, inline: $arch_setup, privileged: false
-  end
+  # config.vm.define "arch" do |arch|
+  #   arch.vm.box = "archlinux/archlinux"
+  #   arch.vm.provision :shell, inline: $arch_setup, privileged: false
+  # end
 
   #############################################################################
   # CentOS Boxes
