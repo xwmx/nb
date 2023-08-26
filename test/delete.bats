@@ -464,7 +464,7 @@ Deleted\:\ \ .*[.*Example\ Folder/4.*].*\ .*File\ Four.md.*\ \"Title\ Four\"   ]
   do
     sleep 1
   done
-  ! git log | grep -q '\[nb\] Delete'
+  git log | grep -q -v '\[nb\] Delete'
 
   # Prints help information:
 
