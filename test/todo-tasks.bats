@@ -172,9 +172,13 @@ HEREDOC
       --content "# Example description four."           \
       --filename "Example Folder/Four.md"
 
+    sleep 1
+
     "${_NB}" add                                        \
       --content "# [ ] Sample todo description one."    \
       --filename "Sample Folder/One.todo.md"
+
+    sleep 1
 
     "${_NB}" add                                        \
       --filename "One.todo.md"                          \
@@ -185,6 +189,8 @@ HEREDOC
 - [x] root todo one task two.
 HEREDOC
       )"
+
+    sleep 1
 
     "${_NB}" add                                        \
       --filename "Two.todo.md"                          \
