@@ -81,7 +81,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.5.7"
+_VERSION="7.5.8"
 
 # $_ME
 #
@@ -5619,7 +5619,7 @@ _list() {
   if ((_recursive))
   then
     {
-      find "${_list_path}" -type d -not -path '*/\.*'
+      find "${_list_path}" -type d -not -path '*/\.*' | sort
     } | {
       local         __folder_path=
       while read -r __folder_path
@@ -14205,35 +14205,72 @@ _delete() {
     _exit_1 _help "delete"
   fi
 
+  local _notebook_paths=()
+  local _notebook_selectors=()
   local _target_paths=()
+  local _target_selectors=()
 
   local __selector=
   for   __selector in "${_selectors[@]:-}"
   do
-    [[ -z "${__selector:-}" ]]  && continue
+    [[ -z "${__selector:-}"       ]]  && continue
 
     local _selector_path=
-    _selector_path="$(_show "${__selector:-}" --path)"
+    _selector_path="$(_show "${__selector:-}" --path 2>/dev/null || :)"
 
-    if [[ -n "${_selector_path:-}"    ]]
+    local _selector_notebook_path=
+    _selector_notebook_path="$(_notebooks show "${__selector:-}" --path 2>/dev/null || :)"
+
+    if [[ -n "${_selector_path}" ]]
     then
-      _target_paths+=("${_selector_path:-}")
+      if [[ "${_selector_path:-}" == "${_selector_notebook_path:-}" ]]
+      then
+        _notebook_paths+=("${_selector_notebook_path}")
+        _notebook_selectors+=("${__selector}")
+      else
+        _target_paths+=("${_selector_path}")
+        _target_selectors+=("${__selector}")
+      fi
+    elif [[ -n "${_selector_notebook_path:-}"  ]]
+    then
+      _notebook_paths+=("${_selector_notebook_path}")
+      _notebook_selectors+=("${__selector}")
     else
       _exit_1 printf "Not found: %s\\n" "$(_color_primary "${__selector}")"
     fi
   done
 
+  local __notebook_selector=
+  for   __notebook_selector in "${_notebook_selectors[@]:-}"
+  do
+    [[ -z "${__notebook_selector:-}" ]]  && continue
+
+    if ((_force))
+    then
+      _notebooks delete "${__notebook_selector}" --force
+    else
+      _notebooks delete "${__notebook_selector}"
+    fi
+  done
+
+  if ! ((${#_target_paths[@]}))
+  then
+    return
+  fi
+
   if ((_print_prompt_list))     || ! ((_force))
   then
-    if [[ "${#_selectors[@]}"   == 1  ]]
+    if [[ "${#_target_paths[@]}"   == 1  ]]
     then
-      printf "Deleting: %s\\n" "$(_show "${_selectors[0]:-}" --info-line)"
+      printf "Deleting: %s\\n" "$(_show "${_target_selectors[0]:-}" --info-line)"
     else
       printf "Deleting:\\n"
 
       local __prompt_selector=
       for   __prompt_selector in "${_target_paths[@]:-}"
       do
+        [[ -z "${__prompt_selector:-}" ]] && continue
+
         printf "%s\\n" "$(_show "${__prompt_selector:-}" --info-line)"
       done
 

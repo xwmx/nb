@@ -151,14 +151,15 @@ jobs:
   #     # - name: "Run nb.go bats tests"
   #     #   run:  script -q -e -c "bats test"
 
-  test-macos-11:
-    name: "Test: macOS Big Sur 11.0"
-    runs-on: macos-11.0
+  test-macos-12:
+    name: "Test: macOS 12 Monterey"
+    runs-on: macos-12
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
       - name: "Setup"
         run: |
           brew update
+          brew install python@3.11 --overwrite
           brew install bat
           brew install bats-core
           brew install expect
@@ -180,6 +181,35 @@ jobs:
       #   run: cd nb.go && go test
       # - name: "Run nb.go bats test"
       #   run: unbuffer bats test
+  # test-macos-11:
+  #   name: "Test: macOS Big Sur 11.0"
+  #   runs-on: macos-11.0
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: "Setup"
+  #       run: |
+  #         brew update
+  #         brew install bat
+  #         brew install bats-core
+  #         brew install expect
+  #         brew install gpg
+  #         brew install nmap
+  #         brew install pandoc
+  #         brew install ripgrep
+  #         brew install w3m
+  #         gem install asciidoctor
+  #         git config --global user.name   "Example Name"
+  #         git config --global user.email  "example@example.com"
+  #     - name: "Set $TERM=xterm"
+  #       run:  printf "TERM=xterm\\n" >> $GITHUB_ENV
+  #     - name: "Run bats tests"
+  #       run:  unbuffer bats test
+  #     # - name: "Install Go"
+  #     #   uses: actions/setup-go@v2
+  #     # - name: "Run go test"
+  #     #   run: cd nb.go && go test
+  #     # - name: "Run nb.go bats test"
+  #     #   run: unbuffer bats test
   # test-macos-10-15:
   #   name: "Test: macOS Catalina 10.15"
   #   runs-on: macos-10.15

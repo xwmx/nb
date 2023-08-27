@@ -2,6 +2,80 @@
 
 load test_helper
 
+# notebooks ###################################################################
+
+_setup_notebooks() {
+  "${_NB}" init
+
+  mkdir -p "${NB_DIR}/Example Notebook"
+  cd "${NB_DIR}/Example Notebook" || return 1
+
+  git init
+
+  git remote add origin "${_GIT_REMOTE_URL}"
+
+  touch "${NB_DIR}/Example Notebook/.index"
+
+  cd "${NB_DIR}" || return 1
+}
+
+@test "'delete <notebook>' with non-affirmative prompt response prints message and exits." {
+  {
+    _setup_notebooks
+  }
+
+  run "${_NB}" delete "Example Notebook" <<< "n${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0                  ]]
+
+  [[ "${output}" =~ \
+Deleting\ .*Example\ Notebook.*\.|Moving\ to\ Trash:\ .*Example\ Notebook.* ]]
+  [[ "${output}" =~ Exiting.*\.\.\.   ]]
+
+  [[ -e "${NB_DIR}/Example Notebook"  ]]
+}
+
+@test "'delete <notebook>:' exits with 0 and deletes notebook." {
+  {
+    _setup_notebooks
+
+    [[   -e "${NB_DIR}/Example Notebook"      ]]
+  }
+
+  run "${_NB}" delete "Example Notebook:" <<< "Example Notebook${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0                          ]]
+  [[ "${output}" =~ Notebook\ deleted\:       ]]
+  [[ "${output}" =~ Example\ Notebook         ]]
+  [[ ! -e "${NB_DIR}/Example Notebook"        ]]
+  [[ "$(cat "${NB_DIR}/.current")" == "home"  ]]
+}
+
+@test "'delete <notebook>' exits with 0 and deletes notebook." {
+  {
+    _setup_notebooks
+
+    [[   -e "${NB_DIR}/Example Notebook"      ]]
+  }
+
+  run "${_NB}" delete "Example Notebook" --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0                          ]]
+  [[ "${output}" =~ Notebook\ deleted\:       ]]
+  [[ "${output}" =~ Example\ Notebook         ]]
+  [[ ! -e "${NB_DIR}/Exampl Notebook"         ]]
+  [[ "$(cat "${NB_DIR}/.current")" == "home"  ]]
+}
+
 # aliases #####################################################################
 
 @test "'<notebook>:trash <id>' deletes properly without errors." {
@@ -464,7 +538,7 @@ Deleted\:\ \ .*[.*Example\ Folder/4.*].*\ .*File\ Four.md.*\ \"Title\ Four\"   ]
   do
     sleep 1
   done
-  ! git log | grep -q '\[nb\] Delete'
+  git log | grep -q -v '\[nb\] Delete'
 
   # Prints help information:
 
