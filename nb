@@ -5619,7 +5619,7 @@ _list() {
   if ((_recursive))
   then
     {
-      find "${_list_path}" -type d -not -path '*/\.*'
+      find "${_list_path}" -type d -not -path '*/\.*' | sort
     } | {
       local         __folder_path=
       while read -r __folder_path

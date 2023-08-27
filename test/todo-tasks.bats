@@ -212,33 +212,32 @@ HEREDOC
 
   [[    "${status}"   -eq 0       ]]
 
-
   [[    "${lines[0]}"   =~  \
-.*\[.*Example\ Notebook:Sample\ Folder/1.*\].*\ ✔️\ .*\[.*\ .*\].*\ Sample\ todo\ description\ one\. ]]
-
-  [[    "${lines[1]}"   =~  \
 .*\[.*Example\ Notebook:Example\ Folder/3.*\].*\ ✅\ .*\[.*x.*\].*\ Example\ todo\ description\ three\. ]]
-  [[    "${lines[2]}"   =~  ---                                                                         ]]
-  [[    "${lines[3]}"   =~  \
+  [[    "${lines[1]}"   =~  ---                                                                         ]]
+  [[    "${lines[2]}"   =~  \
 .*\[.*Example\ Notebook:Example\ Folder/3\ 1.*\].*\ .*\[.*x.*\].*\ todo\ three\ task\ one\. ]]
-  [[    "${lines[4]}"   =~  \
+  [[    "${lines[3]}"   =~  \
 .*\[.*Example\ Notebook:Example\ Folder/3\ 2.*\].*\ .*\[.*x.*\].*\ todo\ three\ task\ two\. ]]
 
-  [[    "${lines[5]}"   =~  \
+  [[    "${lines[4]}"   =~  \
 .*\[.*Example\ Notebook:Example\ Folder/2.*\].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ two\.     ]]
-  [[    "${lines[6]}"   =~  ---                                                                         ]]
-  [[    "${lines[7]}"   =~  \
+  [[    "${lines[5]}"   =~  ---                                                                         ]]
+  [[    "${lines[6]}"   =~  \
 .*\[.*Example\ Notebook:Example\ Folder/2\ 1.*\].*\ .*\[.*\ .*\].*\ todo\ two\ task\ one\.  ]]
-  [[    "${lines[8]}"   =~  \
+  [[    "${lines[7]}"   =~  \
 .*\[.*Example\ Notebook:Example\ Folder/2\ 2.*\].*\ .*\[.*x.*\].*\ todo\ two\ task\ two\.   ]]
 
-  [[    "${lines[9]}"   =~  \
+  [[    "${lines[8]}"   =~  \
 .*\[.*Example\ Notebook:Example\ Folder/1.*\].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ one\.     ]]
-  [[    "${lines[10]}"   =~  ---                                                                        ]]
-  [[    "${lines[11]}"  =~  \
+  [[    "${lines[9]}"   =~  ---                                                                         ]]
+  [[    "${lines[10]}"  =~  \
 .*\[.*Example\ Notebook:Example\ Folder/1\ 1.*\].*\ .*\[.*\ .*\].*\ todo\ one\ task\ one\.  ]]
-  [[    "${lines[12]}"  =~  \
+  [[    "${lines[11]}"  =~  \
 .*\[.*Example\ Notebook:Example\ Folder/1\ 2.*\].*\ .*\[.*\ .*\].*\ todo\ one\ task\ two\.  ]]
+
+  [[    "${lines[12]}"   =~  \
+.*\[.*Example\ Notebook:Sample\ Folder/1.*\].*\ ✔️\ .*\[.*\ .*\].*\ Sample\ todo\ description\ one\.     ]]
 
   [[    "${lines[13]}"   =~  \
 .*\[.*Example\ Notebook:4.*\].*\ ✔️\ .*\[.*\ .*\].*\ Root\ todo\ description\ two\.  ]]
