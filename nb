@@ -81,7 +81,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.5.8"
+_VERSION="7.5.9"
 
 # $_ME
 #
@@ -3299,18 +3299,13 @@ _spinner() {
         "${_TPUT_SETAF_8}"        \
         "${_TPUT_SGR0}"
 
-      printf "\b\b\b\b\b\b\b\b"
+      printf "\b\b\b\b"
     fi
 
     sleep ${_delay}
 
     _spin_string="${_temp}${_spin_string%"${_temp}"}"
   done
-
-  if ((_COLOR_ENABLED))
-  then
-    printf "        \b\b\b\b\b\b\b\b"
-  fi
 
   return 0
 }
