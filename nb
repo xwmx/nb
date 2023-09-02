@@ -81,7 +81,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.5.8"
+_VERSION="7.5.9"
 
 # $_ME
 #
