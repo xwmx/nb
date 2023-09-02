@@ -3299,18 +3299,13 @@ _spinner() {
         "${_TPUT_SETAF_8}"        \
         "${_TPUT_SGR0}"
 
-      printf "\b\b\b\b\b\b\b\b"
+      printf "\b\b\b\b"
     fi
 
     sleep ${_delay}
 
     _spin_string="${_temp}${_spin_string%"${_temp}"}"
   done
-
-  if ((_COLOR_ENABLED))
-  then
-    printf "        \b\b\b\b\b\b\b\b"
-  fi
 
   return 0
 }
@@ -3680,7 +3675,7 @@ _git() {
 
     if ((NB_AUTO_SYNC))
     then
-      (
+      ( sleep 2
         {
           # only commit when the index is dirty
           if _git dirty "${_notebook_path}"
@@ -3690,7 +3685,7 @@ _git() {
         } || :
       ) &
     else
-      (
+      ( sleep 2
         _git_checkpoint_commit "${_notebook_path}" "${_message}" &>/dev/null ||
           return 0
       ) &
