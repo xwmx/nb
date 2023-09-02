@@ -38,7 +38,7 @@ _nb_subcommands() {
     do
       if [[ -e "${_base_cache_path:?}-${__suffix:?}" ]]
       then
-        rm -f  "${_base_cache_path:?}-${__suffix:?}"
+        \rm -f  "${_base_cache_path:?}-${__suffix:?}"
       fi
     done
 
@@ -101,7 +101,7 @@ _nb_subcommands() {
 
       if [[ -f "${_cache_path:?}" ]]
       then
-        rm -f "${_cache_path:?}"
+        \rm -f "${_cache_path:?}"
       fi
 
       touch "${_cache_path:?}"
