@@ -236,7 +236,7 @@ Also supported for various enhancements:
 [readability-cli](https://gitlab.com/gardenappl/readability-cli),
 [`rga` / ripgrep-all](https://github.com/phiresky/ripgrep-all),
 [`sc-im`](https://github.com/andmarti1424/sc-im),
-[`term-image`](https://github.com/AnonymouX47/term-image),
+[`termvisage`](https://github.com/AnonymouX47/termvisage),
 [`termpdf.py`](https://github.com/dsanson/termpdf.py),
 [Tidy-Viewer (`tv`)](https://github.com/alexhallam/tv),
 [`timg`](https://github.com/hzeller/timg),
@@ -1452,7 +1452,7 @@ Supported file types and tools include:
   - [`imgcat`](https://www.iterm2.com/documentation-images.html) with
     [iTerm2](https://www.iterm2.com/)
   - [kitty's `icat` kitten](https://sw.kovidgoyal.net/kitty/kittens/icat.html)
-  - [`term-image`](https://github.com/AnonymouX47/term-image)
+  - [`termvisage`](https://github.com/AnonymouX47/termvisage)
   - [`timg`](https://github.com/hzeller/timg)
   - [`viu`](https://github.com/atanunq/viu)
 - Folders, Directories, Notebooks ([`$NB_DIRECTORY_TOOL`](#nb_directory_tool)):
@@ -3449,7 +3449,7 @@ supported tools and configurations, including:
 - [`imgcat`](https://www.iterm2.com/documentation-images.html) with
   [iTerm2](https://www.iterm2.com/)
 - [kitty's `icat` kitten](https://sw.kovidgoyal.net/kitty/kittens/icat.html)
-- [`term-image`](https://github.com/AnonymouX47/term-image)
+- [`termvisage`](https://github.com/AnonymouX47/termvisage)
 - [`timg`](https://github.com/hzeller/timg)
 - [`viu`](https://github.com/atanunq/viu)
 

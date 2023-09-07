@@ -18381,7 +18381,7 @@ Can't show archives. Export archive and expand to edit.\\n"
         "imgcat"                            \
         "magick"                            \
         "timg"                              \
-        "term-image"                        \
+        "termvisage"                        \
         "viu"
   then
     _tool="${NB_IMAGE_TOOL:-}"
@@ -18449,9 +18449,9 @@ Can't show archives. Export archive and expand to edit.\\n"
         ls -lah --color=always "${_target_path}" 2>/dev/null  ||
           ls -lah -G "${_target_path}"
       fi
-    elif _command_exists "term-image"     &&
+    elif _command_exists "termvisage"     &&
          _file_is_image "${_target_path}" &&
-         [[   "${_tool:-term-image}"  == "term-image" ]]
+         [[   "${_tool:-termvisage}"  == "termvisage" ]]
     then
       local _render_style="auto"
 
@@ -18466,7 +18466,7 @@ Can't show archives. Export archive and expand to edit.\\n"
         _render_style="kitty"
       fi
 
-      term-image "${_target_path}"  \
+      termvisage "${_target_path}"  \
         --cli                       \
         --force-style               \
         --quiet                     \
