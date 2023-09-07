@@ -214,7 +214,7 @@ Also supported for various enhancements:
 [The Silver Searcher (`ag`)](https://github.com/ggreer/the_silver_searcher),
 [`catimg`](https://github.com/posva/catimg),
 [Chafa](https://github.com/hpjansson/chafa),
-[`exa`](https://github.com/ogham/exa),
+[`eza`](https://github.com/eza-community/eza),
 [`ffplay`](https://ffmpeg.org/ffplay.html),
 [ImageMagick](https://imagemagick.org/),
 [GnuPG](https://en.wikipedia.org/wiki/GNU_Privacy_Guard),
@@ -1456,7 +1456,7 @@ Supported file types and tools include:
   - [`timg`](https://github.com/hzeller/timg)
   - [`viu`](https://github.com/atanunq/viu)
 - Folders, Directories, Notebooks ([`$NB_DIRECTORY_TOOL`](#nb_directory_tool)):
-  - [`exa`](https://github.com/ogham/exa)
+  - [`eza`](https://github.com/eza-community/eza)
   - [`joshuto`](https://github.com/kamiyaa/joshuto)
   - [Midnight Commander (`mc`)](https://en.wikipedia.org/wiki/Midnight_Commander)
   - [`ranger`](https://ranger.github.io/)
@@ -7462,7 +7462,7 @@ Subcommands:
              Shortcut Alias: `o`
   peek       Open the current notebook directory or notebook <name> in the
              first tool found in the following list:
-             `ranger` [1], `mc` [2], `vifm` [3], `joshuto` [4], `exa` [5], or `ls`.
+             `ranger` [1], `mc` [2], `vifm` [3], `joshuto` [4], `eza` [5], or `ls`.
              Shortcut Alias: `p`
   rename     Rename a notebook. Aliases: `move`, `mv`
   select     Set the current notebook from a colon-prefixed selector.
@@ -7477,7 +7477,7 @@ Subcommands:
     2. https://en.wikipedia.org/wiki/Midnight_Commander
     3. https://vifm.info/
     4. https://github.com/kamiyaa/joshuto
-    5. https://github.com/ogham/exa
+    5. https://github.com/eza-community/eza
 
 Description:
   Manage notebooks.
@@ -7571,13 +7571,13 @@ Description:
   format or any other file type, `peek` is the equivalent of `show`. When
   used with a notebook, `peek` opens the notebook folder first tool found in
   the following list: `ranger` [1], `mc` [2], `vifm` [3], `joshuto` [4],
-  `exa` [5], or `ls`.
+  `eza` [5], or `ls`.
 
     1. https://ranger.github.io/
     2. https://en.wikipedia.org/wiki/Midnight_Commander
     3. https://vifm.info/
     4. https://github.com/kamiyaa/joshuto
-    5. https://github.com/ogham/exa
+    5. https://github.com/eza-community/eza
 
 Read More:
   https://github.com/xwmx/nb#viewing-bookmarks

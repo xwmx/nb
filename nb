@@ -7193,7 +7193,7 @@ $(_color_primary "Subcommands"):
              Shortcut Alias: \`o\`
   peek       Open the current notebook directory or notebook <name> in the
              first tool found in the following list:
-             \`ranger\` [1], \`mc\` [2], \`vifm\` [3], \`joshuto\` [4], \`exa\` [5], or \`ls\`.
+             \`ranger\` [1], \`mc\` [2], \`vifm\` [3], \`joshuto\` [4], \`eza\` [5], or \`ls\`.
              Shortcut Alias: \`p\`
   rename     Rename a notebook. Aliases: \`move\`, \`mv\`
   select     Set the current notebook from a colon-prefixed selector.
@@ -7208,7 +7208,7 @@ $(_color_primary "Subcommands"):
     2. https://en.wikipedia.org/wiki/Midnight_Commander
     3. https://vifm.info/
     4. https://github.com/kamiyaa/joshuto
-    5. https://github.com/ogham/exa
+    5. https://github.com/eza-community/eza
 
 $(_color_primary "Description"):
   Manage notebooks.
@@ -16136,13 +16136,13 @@ $(_color_primary "Description"):
   format or any other file type, \`peek\` is the equivalent of \`show\`. When
   used with a notebook, \`peek\` opens the notebook folder first tool found in
   the following list: \`ranger\` [1], \`mc\` [2], \`vifm\` [3], \`joshuto\` [4],
-  \`exa\` [5], or \`ls\`.
+  \`eza\` [5], or \`ls\`.
 
     1. https://ranger.github.io/
     2. https://en.wikipedia.org/wiki/Midnight_Commander
     3. https://vifm.info/
     4. https://github.com/kamiyaa/joshuto
-    5. https://github.com/ogham/exa
+    5. https://github.com/eza-community/eza
 
 $(_color_primary "Read More"):
   ${_README_URL}#viewing-bookmarks
@@ -18413,7 +18413,14 @@ Can't show archives. Export archive and expand to edit.\\n"
     if [[ -d "${_target_path}"  ]]
     then
       if [[ -z "${_tool:-}"     ]]          &&
-        _contains "${NB_DIRECTORY_TOOL:-}" "ranger" "mc" "vifm" "joshuto" "exa"  &&
+        _contains "${NB_DIRECTORY_TOOL:-}"  \
+          "ranger"                          \
+          "mc"                              \
+          "vifm"                            \
+          "joshuto"                         \
+          "eza"                             \
+          "lsd"                             \
+          "exa"                             &&
         _command_exists "${NB_DIRECTORY_TOOL:-}"
       then
         _tool="${NB_DIRECTORY_TOOL}"
@@ -18441,8 +18448,23 @@ Can't show archives. Export archive and expand to edit.\\n"
       elif _command_exists "joshuto"  && [[ "${_tool:-joshuto}"  == "joshuto" ]]
       then
         joshuto --path "${_target_path}"
+      elif _command_exists "eza"      && [[ "${_tool:-eza}"     == "eza"      ]]
+      then
+        eza                         \
+          -1labm                    \
+          --icons                   \
+          --color=always            \
+          --color-scale             \
+          --git                     \
+          --git-ignore              \
+          --group-directories-first \
+          --no-user                 \
+          --sort=name               \
+          --time-style=long-iso     \
+          "${_target_path}"
       elif _command_exists "exa"      && [[ "${_tool:-exa}"     == "exa"      ]]
       then
+        # TODO: remove in favor of eza
         exa -lah --git "${_target_path}"
       else
         # gnu || bsd
