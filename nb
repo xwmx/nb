@@ -18446,7 +18446,7 @@ Can't show archives. Export archive and expand to edit.\\n"
       elif _command_exists "vifm"     && [[ "${_tool:-vifm}"    == "vifm"     ]]
       then
         vifm "${_target_path}"
-      elif _command_exists "joshuto"  && [[ "${_tool:-joshuto}"  == "joshuto" ]]
+      elif _command_exists "joshuto"  && [[ "${_tool:-joshuto}" == "joshuto"  ]]
       then
         local _joshuto_version=
         _joshuto_version="$(joshuto --version)"
