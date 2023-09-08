@@ -18381,8 +18381,8 @@ Can't show archives. Export archive and expand to edit.\\n"
         "icat"                              \
         "imgcat"                            \
         "magick"                            \
-        "timg"                              \
         "termvisage"                        \
+        "timg"                              \
         "viu"
   then
     _tool="${NB_IMAGE_TOOL:-}"
