@@ -18448,7 +18448,20 @@ Can't show archives. Export archive and expand to edit.\\n"
         vifm "${_target_path}"
       elif _command_exists "joshuto"  && [[ "${_tool:-joshuto}"  == "joshuto" ]]
       then
-        joshuto --path "${_target_path}"
+        local _joshuto_version=
+        _joshuto_version="$(joshuto --version)"
+        _joshuto_version="${_joshuto_version#*-}"
+
+        local _joshuto_major_minor="${_joshuto_version%.*}"
+
+        if  [[  "${_joshuto_major_minor%.*}"  -le "0" ]] &&
+            [[  "${_joshuto_major_minor#*.}"  -le "9" ]] &&
+            [[  "${_joshuto_version##*.}"     -lt "5" ]]
+        then
+          joshuto --path "${_target_path}"
+        else
+          joshuto "${_target_path}"
+        fi
       elif _command_exists "lsd"      && [[ "${_tool:-lsd}"     == "lsd"      ]]
       then
         lsd                                       \
