@@ -214,7 +214,7 @@ Also supported for various enhancements:
 [The Silver Searcher (`ag`)](https://github.com/ggreer/the_silver_searcher),
 [`catimg`](https://github.com/posva/catimg),
 [Chafa](https://github.com/hpjansson/chafa),
-[`exa`](https://github.com/ogham/exa),
+[`eza`](https://github.com/eza-community/eza),
 [`ffplay`](https://ffmpeg.org/ffplay.html),
 [ImageMagick](https://imagemagick.org/),
 [GnuPG](https://en.wikipedia.org/wiki/GNU_Privacy_Guard),
@@ -222,6 +222,7 @@ Also supported for various enhancements:
 [`imgcat`](https://www.iterm2.com/documentation-images.html),
 [`joshuto`](https://github.com/kamiyaa/joshuto),
 [kitty's `icat` kitten](https://sw.kovidgoyal.net/kitty/kittens/icat.html),
+[`lsd`](https://github.com/lsd-rs/lsd),
 [Links](https://en.wikipedia.org/wiki/Links_(web_browser)),
 [Lynx](https://en.wikipedia.org/wiki/Lynx_(web_browser)),
 [Midnight Commander (`mc`)](https://en.wikipedia.org/wiki/Midnight_Commander),
@@ -236,7 +237,7 @@ Also supported for various enhancements:
 [readability-cli](https://gitlab.com/gardenappl/readability-cli),
 [`rga` / ripgrep-all](https://github.com/phiresky/ripgrep-all),
 [`sc-im`](https://github.com/andmarti1424/sc-im),
-[`term-image`](https://github.com/AnonymouX47/term-image),
+[`termvisage`](https://github.com/AnonymouX47/termvisage),
 [`termpdf.py`](https://github.com/dsanson/termpdf.py),
 [Tidy-Viewer (`tv`)](https://github.com/alexhallam/tv),
 [`timg`](https://github.com/hzeller/timg),
@@ -1452,12 +1453,13 @@ Supported file types and tools include:
   - [`imgcat`](https://www.iterm2.com/documentation-images.html) with
     [iTerm2](https://www.iterm2.com/)
   - [kitty's `icat` kitten](https://sw.kovidgoyal.net/kitty/kittens/icat.html)
-  - [`term-image`](https://github.com/AnonymouX47/term-image)
+  - [`termvisage`](https://github.com/AnonymouX47/termvisage)
   - [`timg`](https://github.com/hzeller/timg)
   - [`viu`](https://github.com/atanunq/viu)
 - Folders, Directories, Notebooks ([`$NB_DIRECTORY_TOOL`](#nb_directory_tool)):
-  - [`exa`](https://github.com/ogham/exa)
+  - [`eza`](https://github.com/eza-community/eza)
   - [`joshuto`](https://github.com/kamiyaa/joshuto)
+  - [`lsd`](https://github.com/lsd-rs/lsd)
   - [Midnight Commander (`mc`)](https://en.wikipedia.org/wiki/Midnight_Commander)
   - [`ranger`](https://ranger.github.io/)
   - [`vifm`](https://vifm.info/)
@@ -3449,7 +3451,7 @@ supported tools and configurations, including:
 - [`imgcat`](https://www.iterm2.com/documentation-images.html) with
   [iTerm2](https://www.iterm2.com/)
 - [kitty's `icat` kitten](https://sw.kovidgoyal.net/kitty/kittens/icat.html)
-- [`term-image`](https://github.com/AnonymouX47/term-image)
+- [`termvisage`](https://github.com/AnonymouX47/termvisage)
 - [`timg`](https://github.com/hzeller/timg)
 - [`viu`](https://github.com/atanunq/viu)
 
@@ -7462,7 +7464,8 @@ Subcommands:
              Shortcut Alias: `o`
   peek       Open the current notebook directory or notebook <name> in the
              first tool found in the following list:
-             `ranger` [1], `mc` [2], `vifm` [3], `joshuto` [4], `exa` [5], or `ls`.
+             `ranger` [1], `mc` [2], `vifm` [3], `joshuto` [4], `lsd` [5],
+             `eza` [6], or `ls`.
              Shortcut Alias: `p`
   rename     Rename a notebook. Aliases: `move`, `mv`
   select     Set the current notebook from a colon-prefixed selector.
@@ -7477,7 +7480,8 @@ Subcommands:
     2. https://en.wikipedia.org/wiki/Midnight_Commander
     3. https://vifm.info/
     4. https://github.com/kamiyaa/joshuto
-    5. https://github.com/ogham/exa
+    5. https://github.com/lsd-rs/lsd
+    6. https://github.com/eza-community/eza
 
 Description:
   Manage notebooks.
@@ -7571,13 +7575,14 @@ Description:
   format or any other file type, `peek` is the equivalent of `show`. When
   used with a notebook, `peek` opens the notebook folder first tool found in
   the following list: `ranger` [1], `mc` [2], `vifm` [3], `joshuto` [4],
-  `exa` [5], or `ls`.
+  `lsd` [5], eza` [6], or `ls`.
 
     1. https://ranger.github.io/
     2. https://en.wikipedia.org/wiki/Midnight_Commander
     3. https://vifm.info/
     4. https://github.com/kamiyaa/joshuto
-    5. https://github.com/ogham/exa
+    5. https://github.com/lsd-rs/lsd
+    6. https://github.com/eza-community/eza
 
 Read More:
   https://github.com/xwmx/nb#viewing-bookmarks
