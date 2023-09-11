@@ -4151,6 +4151,7 @@ _help() {
               --standard-input              \
               --from  markdown              \
               --to    html                  \
+              2>/dev/null                   \
               | _web_browser
 
             return 0
