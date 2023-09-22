@@ -1154,7 +1154,7 @@ HEREDOC
 
   [[    "${status}"   -eq 0                   ]]
 
-  [[    "${output}"   =~  🔖\ Bookmark\ Title  ]]
+  [[    "${output}"   =~  🔖\ Bookmark\ Title ]]
 }
 
 # `search --bookmarks` #################################################
