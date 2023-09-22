@@ -217,6 +217,7 @@ Also supported for various enhancements:
 [`eza`](https://github.com/eza-community/eza),
 [`ffplay`](https://ffmpeg.org/ffplay.html),
 [ImageMagick](https://imagemagick.org/),
+[`glow`](https://github.com/charmbracelet/glow),
 [GnuPG](https://en.wikipedia.org/wiki/GNU_Privacy_Guard),
 [`highlight`](http://www.andre-simon.de/doku/highlight/en/highlight.php),
 [`imgcat`](https://www.iterm2.com/documentation-images.html),
@@ -225,6 +226,9 @@ Also supported for various enhancements:
 [`lsd`](https://github.com/lsd-rs/lsd),
 [Links](https://en.wikipedia.org/wiki/Links_(web_browser)),
 [Lynx](https://en.wikipedia.org/wiki/Lynx_(web_browser)),
+[`mdcat`](https://github.com/swsnr/mdcat),
+[`mdless`](https://github.com/ttscoff/mdless),
+[`mdv`](https://github.com/axiros/terminal_markdown_viewer),
 [Midnight Commander (`mc`)](https://en.wikipedia.org/wiki/Midnight_Commander),
 [`mpg123`](https://en.wikipedia.org/wiki/Mpg123),
 [MPlayer](https://en.wikipedia.org/wiki/MPlayer),
@@ -255,7 +259,7 @@ Installing `nb` with Homebrew also installs
 the recommended dependencies above
 and completion scripts for Bash, Zsh, and Fish.
 
-Install the latest development version from the respository with:
+Install the latest development version from the repository with:
 
 ```bash
 brew install xwmx/taps/nb --head
@@ -1436,6 +1440,12 @@ which can be opened in your editor with [`nb settings edit`](#settings).
 
 Supported file types and tools include:
 
+- Markdown files ([`$NB_MARKDOWN_TOOL`](#nb_markdown_tool)):
+  - [`bat`](https://github.com/sharkdp/bat)
+  - [`glow`](https://github.com/charmbracelet/glow)
+  - [`mdcat`](https://github.com/swsnr/mdcat)
+  - [`mdless`](https://github.com/ttscoff/mdless)
+  - [`mdv`](https://github.com/axiros/terminal_markdown_viewer)
 - PDF files:
   - [`termpdf.py`](https://github.com/dsanson/termpdf.py)
     with [kitty](https://sw.kovidgoyal.net/kitty/)
@@ -2370,7 +2380,7 @@ Added: [5] ✔️ [ ] Example todo five.
 
 [Tags](#-tagging), [links](#-linking), and URLs can be
 [browsed](#-browsing)
-in terminal and GUI web browers with [`nb browse`](#browse).
+in terminal and GUI web browsers with [`nb browse`](#browse).
 
 #### Listing Todos
 
@@ -5502,7 +5512,7 @@ Notebooks are identified by the notebook name followed by a colon.
 Folder and item identifiers without a notebook name refer to
 items within the current notebook.
 When a selector consists of notebook name and colon
-with no folder path or item identifer,
+with no folder path or item identifier,
 the command runs in the root folder of the notebook:
 
 ```bash
@@ -5562,7 +5572,7 @@ selector refers to the folder itself:
 
 For more information about folders, see [Folders](#-folders).
 
-An item is identified by id, filename, or title, optionally preceeded by
+An item is identified by id, filename, or title, optionally preceded by
 notebook name or folder path:
 
 ```bash
@@ -7446,7 +7456,7 @@ Options:
 Subcommands:
   (default)  List notebooks.
   add        Create a new global notebook. When <remote-url> is specified,
-             create one ore more new global notebook by cloning selected
+             create one or more new global notebook by cloning selected
              or specified <branch>es from <remote-url>.
              Aliases: `nb notebooks create`, `nb notebooks new`
   archive    Set the current notebook or notebook <name> to "archived" status.
@@ -9003,6 +9013,7 @@ Shortcut Alias:
     <a href="#nb_indicator_video"><code>$NB_INDICATOR_VIDEO</code></a>&nbsp;·
     <a href="#nb_limit"><code>$NB_LIMIT</code></a>&nbsp;·
     <a href="#nb_mathjax_enabled"><code>$NB_MATHJAX_ENABLED</code></a>&nbsp;·
+    <a href="#nb_markdown_tool"><code>$NB_MARKDOWN_TOOL</code></a>&nbsp;·
     <a href="#nb_pinned_pattern"><code>$NB_PINNED_PATTERN</code></a>&nbsp;·
     <a href="#nb_server_host"><code>$NB_SERVER_HOST</code></a>&nbsp;·
     <a href="#nb_server_port"><code>$NB_SERVER_PORT</code></a>&nbsp;·
@@ -9505,6 +9516,20 @@ Example Values:
 Default: '0'
 
 Example Values: '0', '1'
+```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
+##### `$NB_MARKDOWN_TOOL`
+
+```text
+Default: '' (default pager)
+
+Supported Values: 'bat', 'glow', 'mdcat', 'mdless', 'mdv'
 ```
 
 <p>

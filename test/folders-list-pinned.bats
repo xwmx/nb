@@ -175,6 +175,8 @@ load test_helper
       --title     "root three"  \
       --content   "Content three. #pinned"
 
+    sleep 1
+
     "${_NB}" add  "Example Folder/one.md"   \
       --title     "nested one"              \
       --content   "Content one. #pinned"

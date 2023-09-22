@@ -2,6 +2,39 @@
 
 load test_helper
 
+# filename handling ###########################################################
+
+@test "'list' prints normally with uncommon filenames." {
+  {
+    "${_NB}" init
+    "${_NB}" add "File [] One.md"   --title "Title One"
+    "${_NB}" add "File [Two].md"    --title "Title Two"
+    "${_NB}" add "File [ Three.md"  --title "Title Three"
+    "${_NB}" add "File ] Four.md"   --title "Title Four"
+    "${_NB}" add "File () Five.md"  --title "Title Five"
+    "${_NB}" add "File (Six).md"    --title "Title Six"
+    "${_NB}" add "File ( Seven.md"  --title "Title Seven"
+    "${_NB}" add "File ) Eight.md"  --title "Title Eight"
+  }
+
+  run "${_NB}" list
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0                           ]]
+  [[ "${#lines[@]}" -eq 8                           ]]
+
+  [[ "${lines[0]}"  =~  \.*[.*8.*].*\ Title\ Eight  ]]
+  [[ "${lines[1]}"  =~  \.*[.*7.*].*\ Title\ Seven  ]]
+  [[ "${lines[2]}"  =~  \.*[.*6.*].*\ Title\ Six    ]]
+  [[ "${lines[3]}"  =~  \.*[.*5.*].*\ Title\ Five   ]]
+  [[ "${lines[4]}"  =~  \.*[.*4.*].*\ Title\ Four   ]]
+  [[ "${lines[5]}"  =~  \.*[.*3.*].*\ Title\ Three  ]]
+  [[ "${lines[6]}"  =~  \.*[.*2.*].*\ Title\ Two    ]]
+  [[ "${lines[7]}"  =~  \.*[.*1.*].*\ Title\ One    ]]
+}
+
 # temporary files #############################################################
 
 @test "'list' ignores common temporary files." {

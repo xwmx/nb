@@ -98,6 +98,30 @@ _search_all_setup() {
 #     <(printf "Content #example Seven. #tag3 #tag1")
 # }
 
+# filename handling ###########################################################
+
+@test "'search <query>' with uncommon filename exits with status 0 and prints output." {
+  {
+    _setup_search
+
+    "${_NB}" rename "File One.md" "File [] One.md"  --force
+    "${_NB}" rename "File Two.md" "File ] Two.md"   --force
+  }
+
+  run "${_NB}" search "sample phrase"
+
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
+  printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
+
+  [[    "${status}"   -eq 0                                       ]]
+
+  [[ !  "${lines[0]}" =~  File\ \[\]\ One.md                      ]]
+  [[    "${lines[0]}" =~  Title\ One                              ]]
+  [[    "${lines[1]}" =~  -*-                                     ]]
+  [[    "${lines[2]}" =~  Sample\ Content\ One\ .*Sample\ Phrase  ]]
+}
+
 # temporary files #############################################################
 
 @test "'search' skips common temporary files." {
@@ -1114,7 +1138,7 @@ _search_all_setup() {
     _setup_search
 
   cat <<HEREDOC | "${_NB}" add "fourth.bookmark.md"
-# Boomark Title
+# Bookmark Title
 
 <https://example.com/>
 
@@ -1130,7 +1154,7 @@ HEREDOC
 
   [[    "${status}"   -eq 0                   ]]
 
-  [[    "${output}"   =~  🔖\ Boomark\ Title  ]]
+  [[    "${output}"   =~  🔖\ Bookmark\ Title ]]
 }
 
 # `search --bookmarks` #################################################

@@ -104,7 +104,7 @@ HEREDOC
   [[ "$(cat "${NB_DIR}/home/Example Folder/Sample Folder/.index")" == \
        "$(ls -t -r "${NB_DIR}/home/Example Folder/Sample Folder")" ]]
 
-  # Verify the absense of a .index file in the notebook parent:
+  # Verify the absence of a .index file in the notebook parent:
 
   [[ ! -e "${NB_DIR}/home/../.index" ]]
 }
@@ -214,7 +214,7 @@ HEREDOC
   [[ "$(cat "${NB_DIR}/home/Example Folder/Sample Folder/.index")" == \
        "$(ls -t -r "${NB_DIR}/home/Example Folder/Sample Folder")" ]]
 
-  # Verify the absense of a .index file in the notebook parent:
+  # Verify the absence of a .index file in the notebook parent:
 
   [[ ! -e "${NB_DIR}/home/../.index" ]]
 }

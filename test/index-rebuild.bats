@@ -66,7 +66,7 @@ HEREDOC
     "${_NB}" add "second.md" --title "two"
     "${_NB}" add "third.md"  --title "three"
 
-    "${_NB}" edit "second.md" --content "New conent."
+    "${_NB}" edit "second.md" --content "New content."
 
     echo "" > "${NB_DIR}/home/.index"
 
