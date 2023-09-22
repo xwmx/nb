@@ -25181,7 +25181,7 @@ _todo() {
           todos)
             _only_todos=1
             ;;
-          u|undo|incomplete|unfinish|uncheck)
+          u|undo|uncomplete|unfinish|uncheck)
             if [[ -z "${_action:-}"     ]]  ||  [[ "${_action:-}" == "tasks" ]]
             then
               _action="undo"
