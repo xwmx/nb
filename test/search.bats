@@ -1138,7 +1138,7 @@ _search_all_setup() {
     _setup_search
 
   cat <<HEREDOC | "${_NB}" add "fourth.bookmark.md"
-# Boomark Title
+# Bookmark Title
 
 <https://example.com/>
 
@@ -1154,7 +1154,7 @@ HEREDOC
 
   [[    "${status}"   -eq 0                   ]]
 
-  [[    "${output}"   =~  🔖\ Boomark\ Title  ]]
+  [[    "${output}"   =~  🔖\ Bookmark\ Title  ]]
 }
 
 # `search --bookmarks` #################################################

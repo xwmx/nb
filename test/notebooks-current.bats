@@ -182,7 +182,7 @@ _setup_notebooks() {
   [[ "${output}" == "${NB_DIR}/home"  ]]
 }
 
-@test "'notebooks current --path' exits with 0 and prints the currrent notebook path with not valid notebook selector." {
+@test "'notebooks current --path' exits with 0 and prints the current notebook path with not valid notebook selector." {
   {
     _setup_notebooks
     printf "%s\\n" "one" > "${NB_DIR}/.current"
@@ -196,7 +196,7 @@ _setup_notebooks() {
   [[ "${output}" == "${NB_DIR}/one" ]]
 }
 
-@test "'notebooks current --path' exits with 0 and prints the currrent notebook path with not valid path." {
+@test "'notebooks current --path' exits with 0 and prints the current notebook path with not valid path." {
   {
     _setup_notebooks
     printf "%s\\n" "one" > "${NB_DIR}/.current"

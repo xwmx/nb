@@ -65,7 +65,7 @@ load test_helper
 
 # `nb` (pre-init) #############################################################
 
-@test "'nb' (pre-init) exits with status 0 and prints 'ls' ouput." {
+@test "'nb' (pre-init) exits with status 0 and prints 'ls' output." {
   {
     printf "\${NB_DIR}: %s\\n" "${NB_DIR}"
     printf "\${NBRC_PATH}: %s\\n" "${NBRC_PATH}"

@@ -862,7 +862,7 @@ export _NB_COLOR_THEMES=(
 )
 
 # User defined themes can be installed in the $NB_DIR/.plugins directory.
-# Themes have an .nb-theme extension and contain a single if statment
+# Themes have an .nb-theme extension and contain a single if statement
 # assigning the color environment variables to tput ANSI color numbers.
 #
 # Example:
@@ -2455,7 +2455,7 @@ _highlight_syntax_if_available() {
 #
 # Description:
 #   Print a string containing all <list-item> arguments separated by
-#   <delimeter>.
+#   <delimiter>.
 #
 # Example:
 #   _join "${_delimeter}" "${_list[@]}"
@@ -5498,7 +5498,7 @@ _list() {
             _selector="${__argument%\/}"
             _selector_basename="${_selector_relative_path##*\/}"
           fi
-        else # argument has a trailing slash and does not match an exsting path
+        else # argument has a trailing slash and does not match an existing path
           _filter_patterns+=("${__argument}")
         fi
       elif [[ "${__argument:-}" =~ /            ]]
@@ -7185,7 +7185,7 @@ $(_color_primary "Options"):
 $(_color_primary "Subcommands"):
   (default)  List notebooks.
   add        Create a new global notebook. When <remote-url> is specified,
-             create one ore more new global notebook by cloning selected
+             create one or more new global notebook by cloning selected
              or specified <branch>es from <remote-url>.
              Aliases: \`${_ME} notebooks create\`, \`${_ME} notebooks new\`
   archive    Set the current notebook or notebook <name> to "archived" status.
@@ -17049,7 +17049,7 @@ _search() {
             then
               if [[ "${#_arguments[@]}" -le 1 ]]
               then
-                # Print .index with null byte delimeter so it's included in
+                # Print .index with null byte delimiter so it's included in
                 # the list of files to search.
                 printf "%s/.index\0%s" "${__target_path%\/*}" "${__target_path}"
               else
@@ -17057,7 +17057,7 @@ _search() {
               fi
             elif [[ "${_max_depth}" == 1      ]]
             then
-              # Print .index with null byte delimeter so it's included in
+              # Print .index with null byte delimiter so it's included in
               # the list of files to search.
               printf "%s/.index\0" "${__target_path}"
               find "${__target_path}"/*   \
@@ -25181,7 +25181,7 @@ _todo() {
           todos)
             _only_todos=1
             ;;
-          u|undo|uncomplete|unfinish|uncheck)
+          u|undo|incomplete|unfinish|uncheck)
             if [[ -z "${_action:-}"     ]]  ||  [[ "${_action:-}" == "tasks" ]]
             then
               _action="undo"

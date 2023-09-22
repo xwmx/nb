@@ -259,7 +259,7 @@ Installing `nb` with Homebrew also installs
 the recommended dependencies above
 and completion scripts for Bash, Zsh, and Fish.
 
-Install the latest development version from the respository with:
+Install the latest development version from the repository with:
 
 ```bash
 brew install xwmx/taps/nb --head
@@ -2380,7 +2380,7 @@ Added: [5] ✔️ [ ] Example todo five.
 
 [Tags](#-tagging), [links](#-linking), and URLs can be
 [browsed](#-browsing)
-in terminal and GUI web browers with [`nb browse`](#browse).
+in terminal and GUI web browsers with [`nb browse`](#browse).
 
 #### Listing Todos
 
@@ -5512,7 +5512,7 @@ Notebooks are identified by the notebook name followed by a colon.
 Folder and item identifiers without a notebook name refer to
 items within the current notebook.
 When a selector consists of notebook name and colon
-with no folder path or item identifer,
+with no folder path or item identifier,
 the command runs in the root folder of the notebook:
 
 ```bash
@@ -5572,7 +5572,7 @@ selector refers to the folder itself:
 
 For more information about folders, see [Folders](#-folders).
 
-An item is identified by id, filename, or title, optionally preceeded by
+An item is identified by id, filename, or title, optionally preceded by
 notebook name or folder path:
 
 ```bash
@@ -7456,7 +7456,7 @@ Options:
 Subcommands:
   (default)  List notebooks.
   add        Create a new global notebook. When <remote-url> is specified,
-             create one ore more new global notebook by cloning selected
+             create one or more new global notebook by cloning selected
              or specified <branch>es from <remote-url>.
              Aliases: `nb notebooks create`, `nb notebooks new`
   archive    Set the current notebook or notebook <name> to "archived" status.

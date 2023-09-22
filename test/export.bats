@@ -157,7 +157,7 @@ load test_helper
   [[ "${output}" =~ sample.md   ]]
 }
 
-@test "'export' with valid <id> and <path> with diffferent file type converts." {
+@test "'export' with valid <id> and <path> with different file type converts." {
   {
     "${_NB}" init
     "${_NB}" add "# Export Example"

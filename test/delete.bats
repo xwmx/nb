@@ -425,7 +425,7 @@ Deleted\:\ \ .*[.*Example\ Folder/4.*].*\ .*File\ Four.md.*\ \"Title\ Four\"   ]
 
 # multiple selectors ##########################################################
 
-@test "'delete <scope>:<selector>...' with multile arguments deletes all." {
+@test "'delete <scope>:<selector>...' with multiple arguments deletes all." {
   {
     "${_NB}" init
     "${_NB}" notebooks add "Notebook One"
