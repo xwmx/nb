@@ -18828,7 +18828,12 @@ Can't show archives. Export archive and expand to edit.\\n"
           cat "${_target_path}"
         } | {
           if _contains "${_target_extension:-}" "markdown" "md" &&
-             _contains "${NB_MARKDOWN_TOOL:-}" "bat" "glow" "mdcat" "mdless"
+             _contains "${NB_MARKDOWN_TOOL:-}" \
+               "bat" \
+               "glow" \
+               "mdcat" \
+               "mdless" \
+               "mdv"
           then
             if [[   "${NB_MARKDOWN_TOOL:-}" == "bat"    ]]
             then
@@ -18842,6 +18847,9 @@ Can't show archives. Export archive and expand to edit.\\n"
             elif [[ "${NB_MARKDOWN_TOOL:-}" == "mdless" ]]
             then
               mdless
+            elif [[ "${NB_MARKDOWN_TOOL:-}" == "mdv"    ]]
+            then
+              mdv "${_target_path}" | _pager
             fi
           else
             {
