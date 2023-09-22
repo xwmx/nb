@@ -217,6 +217,7 @@ Also supported for various enhancements:
 [`eza`](https://github.com/eza-community/eza),
 [`ffplay`](https://ffmpeg.org/ffplay.html),
 [ImageMagick](https://imagemagick.org/),
+[`glow`](https://github.com/charmbracelet/glow),
 [GnuPG](https://en.wikipedia.org/wiki/GNU_Privacy_Guard),
 [`highlight`](http://www.andre-simon.de/doku/highlight/en/highlight.php),
 [`imgcat`](https://www.iterm2.com/documentation-images.html),
@@ -225,6 +226,8 @@ Also supported for various enhancements:
 [`lsd`](https://github.com/lsd-rs/lsd),
 [Links](https://en.wikipedia.org/wiki/Links_(web_browser)),
 [Lynx](https://en.wikipedia.org/wiki/Lynx_(web_browser)),
+[`mdcat`](https://github.com/swsnr/mdcat),
+[`mdless`](https://github.com/ttscoff/mdless),
 [Midnight Commander (`mc`)](https://en.wikipedia.org/wiki/Midnight_Commander),
 [`mpg123`](https://en.wikipedia.org/wiki/Mpg123),
 [MPlayer](https://en.wikipedia.org/wiki/MPlayer),
@@ -1436,6 +1439,11 @@ which can be opened in your editor with [`nb settings edit`](#settings).
 
 Supported file types and tools include:
 
+- Markdown files ([`$NB_MARKDOWN_TOOL`](#nb_markdown_tool)):
+  - [`bat`](https://github.com/sharkdp/bat)
+  - [`glow`](https://github.com/charmbracelet/glow)
+  - [`mdcat`](https://github.com/swsnr/mdcat)
+  - [`mdless`](https://github.com/ttscoff/mdless)
 - PDF files:
   - [`termpdf.py`](https://github.com/dsanson/termpdf.py)
     with [kitty](https://sw.kovidgoyal.net/kitty/)
@@ -9003,6 +9011,7 @@ Shortcut Alias:
     <a href="#nb_indicator_video"><code>$NB_INDICATOR_VIDEO</code></a>&nbsp;·
     <a href="#nb_limit"><code>$NB_LIMIT</code></a>&nbsp;·
     <a href="#nb_mathjax_enabled"><code>$NB_MATHJAX_ENABLED</code></a>&nbsp;·
+    <a href="#nb_markdown_tool"><code>$NB_MARKDOWN_TOOL</code></a>&nbsp;·
     <a href="#nb_pinned_pattern"><code>$NB_PINNED_PATTERN</code></a>&nbsp;·
     <a href="#nb_server_host"><code>$NB_SERVER_HOST</code></a>&nbsp;·
     <a href="#nb_server_port"><code>$NB_SERVER_PORT</code></a>&nbsp;·
@@ -9505,6 +9514,20 @@ Example Values:
 Default: '0'
 
 Example Values: '0', '1'
+```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
+##### `$NB_MARKDOWN_TOOL`
+
+```text
+Default: '' (default pager)
+
+Supported Values: 'bat', 'glow', 'mdcat', 'mdless'
 ```
 
 <p>

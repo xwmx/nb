@@ -18827,18 +18827,38 @@ Can't show archives. Export archive and expand to edit.\\n"
         {
           cat "${_target_path}"
         } | {
-          # fold to current width
-          LC_ALL=C sed -E                                    \
-              -e "s/^([[:space:]]*-) /\1${_ME}-ph-${_ME}/g"  \
-              -e "s/^([[:space:]]*\*) /\1${_ME}-ph-${_ME}/g" \
-          | LC_ALL=C fold -s -w "${_COLUMNS}"                \
-          | LC_ALL=C sed -E                                  \
-              -e "s/^([[:space:]]*-)${_ME}-ph-${_ME}/\1 /g"  \
-              -e "s/^([[:space:]]*\*)${_ME}-ph-${_ME}/\1 /g"
-        } | {
-          _highlight_syntax_if_available "${_target_extension:-}"
-        } | {
-          _pager
+          if _contains "${_target_extension:-}" "markdown" "md" &&
+             _contains "${NB_MARKDOWN_TOOL:-}" "bat" "glow" "mdcat" "mdless"
+          then
+            if [[   "${NB_MARKDOWN_TOOL:-}" == "bat"    ]]
+            then
+              bat --language "${_target_extension:-md}"
+            elif [[ "${NB_MARKDOWN_TOOL:-}" == "glow"   ]]
+            then
+              glow --pager
+            elif [[ "${NB_MARKDOWN_TOOL:-}" == "mdcat"  ]]
+            then
+              mdcat --paginate
+            elif [[ "${NB_MARKDOWN_TOOL:-}" == "mdless" ]]
+            then
+              mdless
+            fi
+          else
+            {
+              # fold to current terminal width and preserve list formatting
+              LC_ALL=C sed -E                                    \
+                  -e "s/^([[:space:]]*-) /\1${_ME}-ph-${_ME}/g"  \
+                  -e "s/^([[:space:]]*\*) /\1${_ME}-ph-${_ME}/g" \
+              | LC_ALL=C fold -s -w "${_COLUMNS}"                \
+              | LC_ALL=C sed -E                                  \
+                  -e "s/^([[:space:]]*-)${_ME}-ph-${_ME}/\1 /g"  \
+                  -e "s/^([[:space:]]*\*)${_ME}-ph-${_ME}/\1 /g"
+            } | {
+              _highlight_syntax_if_available "${_target_extension:-}"
+            } | {
+              _pager
+            }
+          fi
         }
       fi
     fi
