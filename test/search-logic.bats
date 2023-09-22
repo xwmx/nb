@@ -47,7 +47,7 @@ _setup_search() {
 
 # --not option ################################################################
 
-@test "'search --not <query>' lists items NOT matchin query, omitting content." {
+@test "'search --not <query>' lists items NOT matching query, omitting content." {
   {
     "${_NB}" init
 

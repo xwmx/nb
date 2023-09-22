@@ -528,7 +528,7 @@ load test_helper
           [.*Example\ Notebook:Example\ Folder/1.*].*\ Title\ One                 ]]
 }
 
-@test "'list /full/path/to/folder' (no slash) in diferrent notebook exits with 0 and lists folder item only." {
+@test "'list /full/path/to/folder' (no slash) in different notebook exits with 0 and lists folder item only." {
   {
     "${_NB}" init
 
