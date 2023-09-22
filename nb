@@ -4713,7 +4713,12 @@ _index() {
         #   | cut -d: -f2
         # grep -n "^${1:-}$" "${2:-}"                         | cut -d: -f1
         # rg --color=never --line-number "^${1:-}$" "${2:-}"  | cut -d: -f1
-        sed -n "/^${1:-}$/=" "${2:-}"
+
+        local _basename="${1:-}"
+        _basename="${_basename//\[/\\\[}"
+        _basename="${_basename//\]/\\\]}"
+
+        sed -n "/^${_basename:-}$/=" "${2:-}"
       }
 
       local _basename="${2:-}"
@@ -5990,15 +5995,19 @@ ${_title_basename_or_path_color/\[$' '\]/${_TPUT_SETAF_8}[ ]${_TPUT_SGR0}}"
         _info_line="${_item_info}"
         _info_line_color="${_item_info_color}"
       else
+        local _escaped_basename="${__basename}"
+        _escaped_basename="${_escaped_basename//\[/\\\[}"
+        _escaped_basename="${_escaped_basename//\]/\\\]}"
+
         local _item_id=
         # use `sed` directly instead of `_index get_id` for performance
-        _item_id="$(sed -n "/^${__basename:-}$/=" "${_list_path:-}/.index")"
+        _item_id="$(sed -n "/^${_escaped_basename:-}$/=" "${_list_path:-}/.index")"
 
         if [[ -z "${_item_id:-}" ]]
         then
           _index reconcile "${_list_path:-}" --ancestors --commit
 
-          _item_id="$(sed -n "/^${__basename:-}$/=" "${_list_path:-}/.index")"
+          _item_id="$(sed -n "/^${_escaped_basename:-}$/=" "${_list_path:-}/.index")"
         fi
 
         local _item_identifier="${_maybe_selector_context:-}${_item_id:-}"
