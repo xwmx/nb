@@ -58,6 +58,32 @@ HEREDOC
     --content   "Sample Content One #other-tag1 Sample Phrase."
 }
 
+# filename handlng ############################################################
+
+@test "'--tags' with uncommon filenames lists all unique, readable tags in current notebook." {
+  {
+    _setup_tagged_items
+
+    "${_NB}" rename "File One.md"           "File [] One.md"          --force
+    "${_NB}" rename "File Two.bookmark.md"  "File ] Two.bookmark.md"  --force
+  }
+
+  run "${_NB}" --tags
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0             ]]
+  [[ "${#lines[@]}" -eq 6             ]]
+
+  [[ "${output}"    =~  \#nested-tag1 ]]
+  [[ "${output}"    =~  \#nested-tag2 ]]
+  [[ "${output}"    =~  \#tag1        ]]
+  [[ "${output}"    =~  \#tag2        ]]
+  [[ "${output}"    =~  \#tag3        ]]
+  [[ "${output}"    =~  \#low-tag     ]]
+}
+
 # _GIT_ENABLED=0 ##############################################################
 
 @test "'--tags' with _GIT_ENABLED=0 lists all unique, readable tags in <item>." {
