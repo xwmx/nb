@@ -18827,27 +18827,30 @@ Can't show archives. Export archive and expand to edit.\\n"
         {
           cat "${_target_path}"
         } | {
+          local _markdown_tool="${_tool:-${NB_MARKDOWN_TOOL:-}}"
+
           if _contains "${_target_extension:-}" "markdown" "md" &&
-             _contains "${NB_MARKDOWN_TOOL:-}" \
+             _command_exists "${_markdown_tool:-}"              &&
+             _contains "${_markdown_tool:-}"                    \
                "bat" \
                "glow" \
                "mdcat" \
                "mdless" \
                "mdv"
           then
-            if [[   "${NB_MARKDOWN_TOOL:-}" == "bat"    ]]
+            if [[   "${_markdown_tool:-}" == "bat"    ]]
             then
               bat --language "${_target_extension:-md}"
-            elif [[ "${NB_MARKDOWN_TOOL:-}" == "glow"   ]]
+            elif [[ "${_markdown_tool:-}" == "glow"   ]]
             then
               glow --pager
-            elif [[ "${NB_MARKDOWN_TOOL:-}" == "mdcat"  ]]
+            elif [[ "${_markdown_tool:-}" == "mdcat"  ]]
             then
               mdcat --paginate
-            elif [[ "${NB_MARKDOWN_TOOL:-}" == "mdless" ]]
+            elif [[ "${_markdown_tool:-}" == "mdless" ]]
             then
               mdless
-            elif [[ "${NB_MARKDOWN_TOOL:-}" == "mdv"    ]]
+            elif [[ "${_markdown_tool:-}" == "mdv"    ]]
             then
               mdv "${_target_path}" | _pager
             fi
