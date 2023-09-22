@@ -228,6 +228,7 @@ Also supported for various enhancements:
 [Lynx](https://en.wikipedia.org/wiki/Lynx_(web_browser)),
 [`mdcat`](https://github.com/swsnr/mdcat),
 [`mdless`](https://github.com/ttscoff/mdless),
+[`mdv`](https://github.com/axiros/terminal_markdown_viewer),
 [Midnight Commander (`mc`)](https://en.wikipedia.org/wiki/Midnight_Commander),
 [`mpg123`](https://en.wikipedia.org/wiki/Mpg123),
 [MPlayer](https://en.wikipedia.org/wiki/MPlayer),
@@ -1444,6 +1445,7 @@ Supported file types and tools include:
   - [`glow`](https://github.com/charmbracelet/glow)
   - [`mdcat`](https://github.com/swsnr/mdcat)
   - [`mdless`](https://github.com/ttscoff/mdless)
+  - [`mdv`](https://github.com/axiros/terminal_markdown_viewer)
 - PDF files:
   - [`termpdf.py`](https://github.com/dsanson/termpdf.py)
     with [kitty](https://sw.kovidgoyal.net/kitty/)
@@ -9527,7 +9529,7 @@ Example Values: '0', '1'
 ```text
 Default: '' (default pager)
 
-Supported Values: 'bat', 'glow', 'mdcat', 'mdless'
+Supported Values: 'bat', 'glow', 'mdcat', 'mdless', 'mdv'
 ```
 
 <p>
