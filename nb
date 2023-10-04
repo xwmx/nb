@@ -3640,14 +3640,14 @@ _git() {
 
     local _message=
     local _notebook_path=
-    local _show_spinner=0
+    local _wait=0
 
     local __arg=
     for   __arg in "${@:-}"
     do
       case "${__arg}" in
-        --spinner)
-          _show_spinner=1
+        --spinner|--wait)
+          _wait=1
           ;;
         *)
           if [[ -z "${_notebook_path}"  ]] &&
@@ -3691,9 +3691,12 @@ _git() {
       ) &
     fi
 
-    if ((_show_spinner)) && ! _piped_input
+    if ((_wait))
     then
-      _spinner  ${!}
+      if ! _piped_input
+      then # interative shell
+        _spinner  ${!}
+      fi
 
       wait      ${!}
       return    ${?}
@@ -9796,7 +9799,7 @@ _main() {
         then
           _index reconcile
 
-          _git checkpoint "${NB_NOTEBOOK_PATH}" --spinner
+          _git checkpoint "${NB_NOTEBOOK_PATH}" --wait
         elif _git autosyncable "${NB_NOTEBOOK_PATH}"
         then
           (_git checkpoint "${NB_NOTEBOOK_PATH}" &>/dev/null) &
@@ -24835,10 +24838,10 @@ HEREDOC
     if ((_sync_all))
     then # sync without prompt in background
       GIT_TERMINAL_PROMPT=0 NB_AUTO_SYNC=1 \
-        _git checkpoint "${NB_NOTEBOOK_PATH}" "[${_ME}] Sync" --spinner
+        _git checkpoint "${NB_NOTEBOOK_PATH}" "[${_ME}] Sync" --wait
     else # sync with prompt in foreground
       GIT_TERMINAL_PROMPT=1 NB_AUTO_SYNC=0 \
-        _git checkpoint "${NB_NOTEBOOK_PATH}" "[${_ME}] Sync" --spinner
+        _git checkpoint "${NB_NOTEBOOK_PATH}" "[${_ME}] Sync" --wait
 
       _git sync "${NB_NOTEBOOK_PATH}"
 
