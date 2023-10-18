@@ -15036,9 +15036,9 @@ _export() {
     then
       if [[ -n "${_args[*]:-}"    ]]
       then
-        pandoc "${_notebook_path}/${_relative_path}" "${_args[@]:-}"
+        _pandoc "${_notebook_path}/${_relative_path}" "${_args[@]:-}"
       else
-        pandoc "${_notebook_path}/${_relative_path}"
+        _pandoc "${_notebook_path}/${_relative_path}"
       fi
     else
       _exit_1 printf "Pandoc required. https://pandoc.org/\\n"
@@ -15088,13 +15088,13 @@ _export() {
     then
       if [[ -n "${_args[*]:-}"    ]]
       then
-        pandoc                                    \
+        _pandoc                                   \
           -o "${_target_path}"                    \
           --standalone                            \
           "${_notebook_path}/${_relative_path}"   \
           "${_args[@]:-}"
       else
-        pandoc                    \
+        _pandoc                   \
           -o "${_target_path}"    \
           --standalone            \
           "${_notebook_path}/${_relative_path}"
