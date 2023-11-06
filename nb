@@ -10661,13 +10661,13 @@ _render() {
 
     # Set custom JS
     local _custom_js=""
-    if [[ "${NB_CUSTOM_JS}"]]; then
-      _custom_js="<script src='{NB_CUSTOM_JS}'></script>"
+    if [[ -n "${NB_CUSTOM_JS}" ]]; then
+      _custom_js="<script src='${NB_CUSTOM_JS}'></script>"
     fi
 
     # Set custom CSS
     local _custom_css=""
-    if [[ "${NB_CUSTOM_CSS}"]]; then
+    if [[ -n "${NB_CUSTOM_JS}" ]]; then
       _custom_css="<link rel='stylesheet' href='${NB_CUSTOM_CSS}'>"
     fi
 
