@@ -10659,6 +10659,18 @@ _render() {
       esac
     fi
 
+    # Set custom JS
+    local _custom_js=""
+    if [[ "${NB_CUSTOM_JS-}" ]]; then
+      _custom_js="<script src='${NB_CUSTOM_JS}'></script>"
+    fi
+
+    # Set custom CSS
+    local _custom_css=""
+    if [[ "${NB_CUSTOM_CSS-}" ]]; then
+      _custom_css="<link rel='stylesheet' href='${NB_CUSTOM_CSS}'/>"
+    fi
+
     cat <<HEREDOC
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
@@ -11338,6 +11350,8 @@ document.addEventListener('keydown', function(event) {
   }
 });
 </script>
+${_custom_css}
+${_custom_js}
 <meta name="referrer" content="no-referrer" />
 </head>
 <body>
