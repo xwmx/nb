@@ -18,11 +18,11 @@ load test_helper
 
   [[    "${status}"  -eq  0                           ]]
 
-  [[ !  "${output}"  =~   \<link\ rel=\'stylesheet\'  ]]
+  [[ !  "${output}"  =~   \<link\ rel=\"stylesheet\"  ]]
   [[ !  "${output}"  =~   \<script\ src=              ]]
 }
 
-@test "'browse' includes custom css and javascript tags when assigned." {
+@test "'browse' includes custom css and javascript tags with NB_CUSTOM_CSS and NB_CUSTOM_JS assigned." {
   {
     "${_NB}" init
 
@@ -44,12 +44,26 @@ load test_helper
 
   [[    "${status}"  -eq  0 ]]
 
-  [[ !  "${output}"  =~   \<link\ rel=\'stylesheet\'  ]]
+  [[ !  "${output}"  =~   \<link\ rel=\"stylesheet\"  ]]
   [[ !  "${output}"  =~   \<script\ src=              ]]
   [[    "${output}"  =~   \
 \<style\>${_NEWLINE}.example\ {\ color:\ blue\;\ }${_NEWLINE}\</style\>  ]]
   [[    "${output}"  =~   \
 \<script\>${_NEWLINE}function\ example\(\)\ {\ console.log\(\"Example.\"\)\;\ }${_NEWLINE}\</script\> ]]
+}
+
+@test "'browse' includes custom css and javascript tags with NB_CUSTOM_CSS and NB_CUSTOM_JAVASCRIPT assigned." {
+  {
+    "${_NB}" init
+
+    sleep 1
+
+    declare _custom_css=".example { color: blue; }"
+    declare _custom_js="function example() { console.log(\"Example.\"); }"
+
+    declare _custom_css_url="//--original/home/example.css"
+    declare _custom_js_url="//--original/home/example.js"
+  }
 
   NB_CUSTOM_CSS="${_custom_css:-}"          \
     NB_CUSTOM_JAVASCRIPT="${_custom_js:-}"  \
@@ -60,12 +74,26 @@ load test_helper
 
   [[    "${status}"  -eq  0 ]]
 
-  [[ !  "${output}"  =~   \<link\ rel=\'stylesheet\'  ]]
+  [[ !  "${output}"  =~   \<link\ rel=\"stylesheet\"  ]]
   [[ !  "${output}"  =~   \<script\ src=              ]]
   [[    "${output}"  =~   \
 \<style\>${_NEWLINE}.example\ {\ color:\ blue\;\ }${_NEWLINE}\</style\> ]]
   [[    "${output}"  =~   \
 \<script\>${_NEWLINE}function\ example\(\)\ {\ console.log\(\"Example.\"\)\;\ }${_NEWLINE}\</script\> ]]
+}
+
+@test "'browse' includes custom css and javascript tags with NB_CUSTOM_CSS_URL and NB_CUSTOM_JS_URL assigned." {
+  {
+    "${_NB}" init
+
+    sleep 1
+
+    declare _custom_css=".example { color: blue; }"
+    declare _custom_js="function example() { console.log(\"Example.\"); }"
+
+    declare _custom_css_url="//--original/home/example.css"
+    declare _custom_js_url="//--original/home/example.js"
+  }
 
   NB_CUSTOM_CSS_URL="${_custom_css_url:-}"  \
     NB_CUSTOM_JS_URL="${_custom_js_url:-}"  \
@@ -77,13 +105,27 @@ load test_helper
   [[    "${status}"  -eq  0 ]]
 
   [[    "${output}"  =~   \
-\<link\ rel=\'stylesheet\'\ href=\'//--original/home/example.css\'/\>   ]]
+\<link\ rel=\"stylesheet\"\ href=\"//--original/home/example.css\"/\>   ]]
   [[    "${output}"  =~   \
-\<script\ src=\'//--original/home/example.js\'\>\</script\>             ]]
+\<script\ src=\"//--original/home/example.js\"\>\</script\>             ]]
   [[ !  "${output}"  =~   \
 \<style\>${_NEWLINE}.example\ {\ color:\ blue\;\ }${_NEWLINE}\</style\> ]]
   [[ !  "${output}"  =~   \
 \<script\>${_NEWLINE}function\ example\(\)\ {\ console.log\(\"Example.\"\)\;\ }${_NEWLINE}\</script\> ]]
+}
+
+@test "'browse' includes custom css and javascript tags with NB_CUSTOM_CSS_URL and NB_CUSTOM_JAVASCRIPT_URL assigned." {
+  {
+    "${_NB}" init
+
+    sleep 1
+
+    declare _custom_css=".example { color: blue; }"
+    declare _custom_js="function example() { console.log(\"Example.\"); }"
+
+    declare _custom_css_url="//--original/home/example.css"
+    declare _custom_js_url="//--original/home/example.js"
+  }
 
   NB_CUSTOM_CSS_URL="${_custom_css_url:-}"          \
     NB_CUSTOM_JAVASCRIPT_URL="${_custom_js_url:-}"  \
@@ -95,9 +137,9 @@ load test_helper
   [[    "${status}"  -eq  0 ]]
 
   [[    "${output}"  =~   \
-\<link\ rel=\'stylesheet\'\ href=\'//--original/home/example.css\'/\>   ]]
+\<link\ rel=\"stylesheet\"\ href=\"//--original/home/example.css\"/\>   ]]
   [[    "${output}"  =~   \
-\<script\ src=\'//--original/home/example.js\'\>\</script\>             ]]
+\<script\ src=\"//--original/home/example.js\"\>\</script\>             ]]
   [[ !  "${output}"  =~   \
 \<style\>${_NEWLINE}.example\ {\ color:\ blue\;\ }${_NEWLINE}\</style\> ]]
   [[ !  "${output}"  =~   \

@@ -10674,7 +10674,7 @@ _render() {
     if [[ -n "${_custom_javascript_url:-}"  ]]
     then
       _custom_javascript_url_element="\
-<script src='${_custom_javascript_url:-}'></script>"
+<script src=\"${_custom_javascript_url:-}\"></script>"
     fi
 
     if [[ -n "${_custom_css:-}"             ]]
@@ -10686,7 +10686,7 @@ _render() {
     if [[ -n "${_custom_css_url:-}"         ]]
     then
       _custom_css_url_element="\
-<link rel='stylesheet' href='${_custom_css_url:-}'/>"
+<link rel=\"stylesheet\" href=\"${_custom_css_url:-}\"/>"
     fi
 
     cat <<HEREDOC
