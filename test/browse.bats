@@ -47,9 +47,9 @@ load test_helper
   [[ !  "${output}"  =~   \<link\ rel=\"stylesheet\"  ]]
   [[ !  "${output}"  =~   \<script\ src=              ]]
   [[    "${output}"  =~   \
-\<style\>${_NEWLINE}.example\ {\ color:\ blue\;\ }${_NEWLINE}\</style\>  ]]
+\<style\>${_NEWLINE}.example\ \{\ color:\ blue\;\ \}${_NEWLINE}\</style\>  ]]
   [[    "${output}"  =~   \
-\<script\>${_NEWLINE}function\ example\(\)\ {\ console.log\(\"Example.\"\)\;\ }${_NEWLINE}\</script\> ]]
+\<script\>${_NEWLINE}function\ example\(\)\ \{\ console.log\(\"Example.\"\)\;\ \}${_NEWLINE}\</script\> ]]
 }
 
 @test "'browse' includes custom css and javascript tags with NB_CUSTOM_CSS and NB_CUSTOM_JAVASCRIPT assigned." {
@@ -77,9 +77,9 @@ load test_helper
   [[ !  "${output}"  =~   \<link\ rel=\"stylesheet\"  ]]
   [[ !  "${output}"  =~   \<script\ src=              ]]
   [[    "${output}"  =~   \
-\<style\>${_NEWLINE}.example\ {\ color:\ blue\;\ }${_NEWLINE}\</style\> ]]
+\<style\>${_NEWLINE}.example\ \{\ color:\ blue\;\ \}${_NEWLINE}\</style\> ]]
   [[    "${output}"  =~   \
-\<script\>${_NEWLINE}function\ example\(\)\ {\ console.log\(\"Example.\"\)\;\ }${_NEWLINE}\</script\> ]]
+\<script\>${_NEWLINE}function\ example\(\)\ \{\ console.log\(\"Example.\"\)\;\ \}${_NEWLINE}\</script\> ]]
 }
 
 @test "'browse' includes custom css and javascript tags with NB_CUSTOM_CSS_URL and NB_CUSTOM_JS_URL assigned." {
@@ -105,13 +105,13 @@ load test_helper
   [[    "${status}"  -eq  0 ]]
 
   [[    "${output}"  =~   \
-\<link\ rel=\"stylesheet\"\ href=\"//--original/home/example.css\"/\>   ]]
+\<link\ rel=\"stylesheet\"\ href=\"//--original/home/example.css\"/\>     ]]
   [[    "${output}"  =~   \
-\<script\ src=\"//--original/home/example.js\"\>\</script\>             ]]
+\<script\ src=\"//--original/home/example.js\"\>\</script\>               ]]
   [[ !  "${output}"  =~   \
-\<style\>${_NEWLINE}.example\ {\ color:\ blue\;\ }${_NEWLINE}\</style\> ]]
+\<style\>${_NEWLINE}.example\ \{\ color:\ blue\;\ \}${_NEWLINE}\</style\> ]]
   [[ !  "${output}"  =~   \
-\<script\>${_NEWLINE}function\ example\(\)\ {\ console.log\(\"Example.\"\)\;\ }${_NEWLINE}\</script\> ]]
+\<script\>${_NEWLINE}function\ example\(\)\ \{\ console.log\(\"Example.\"\)\;\ \}${_NEWLINE}\</script\> ]]
 }
 
 @test "'browse' includes custom css and javascript tags with NB_CUSTOM_CSS_URL and NB_CUSTOM_JAVASCRIPT_URL assigned." {
@@ -137,13 +137,13 @@ load test_helper
   [[    "${status}"  -eq  0 ]]
 
   [[    "${output}"  =~   \
-\<link\ rel=\"stylesheet\"\ href=\"//--original/home/example.css\"/\>   ]]
+\<link\ rel=\"stylesheet\"\ href=\"//--original/home/example.css\"/\>     ]]
   [[    "${output}"  =~   \
-\<script\ src=\"//--original/home/example.js\"\>\</script\>             ]]
+\<script\ src=\"//--original/home/example.js\"\>\</script\>               ]]
   [[ !  "${output}"  =~   \
-\<style\>${_NEWLINE}.example\ {\ color:\ blue\;\ }${_NEWLINE}\</style\> ]]
+\<style\>${_NEWLINE}.example\ \{\ color:\ blue\;\ \}${_NEWLINE}\</style\> ]]
   [[ !  "${output}"  =~   \
-\<script\>${_NEWLINE}function\ example\(\)\ {\ console.log\(\"Example.\"\)\;\ }${_NEWLINE}\</script\> ]]
+\<script\>${_NEWLINE}function\ example\(\)\ \{\ console.log\(\"Example.\"\)\;\ \}${_NEWLINE}\</script\> ]]
 }
 
 # configuration ###############################################################
