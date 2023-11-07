@@ -2,6 +2,69 @@
 
 load test_helper
 
+# vustom css and javascript ####################################################
+
+@test "'browse' omits custom css or javascript tags by default." {
+  {
+    "${_NB}" init
+
+    sleep 1
+  }
+
+  run "${_NB}" browse --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq  0                           ]]
+
+  [[ !  "${output}"  =~   \<link\ rel=\'stylesheet\'  ]]
+  [[ !  "${output}"  =~   \<script\ src=              ]]
+}
+
+@test "'browse' includes custom css and javascript tags when assigned." {
+  {
+    "${_NB}" init
+
+    sleep 1
+
+    declare _custom_css=".example { color: blue; }"
+    declare _custom_js=
+    _custom_js="$(cat <<HEREDOC
+function example() { console.log("Example."); }
+HEREDOC
+    )"
+  }
+
+  NB_CUSTOM_CSS="${_custom_css:-}"  \
+    NB_CUSTOM_JS="${_custom_js:-}"  \
+    run "${_NB}" browse --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq  0 ]]
+
+  [[    "${output}"  =~   \
+\<link\ rel=\'stylesheet\'\ href=\'.example\ {\ color:\ blue\;\ }\'/\>                    ]]
+  [[    "${output}"  =~   \
+\<script\ src=\'function\ example\(\)\ {\ console.log\(\"Example.\"\)\;\ }\'\>\</script\> ]]
+
+  NB_CUSTOM_CSS="${_custom_css:-}"          \
+    NB_CUSTOM_JAVASCRIPT="${_custom_js:-}"  \
+    run "${_NB}" browse --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq  0 ]]
+
+  [[    "${output}"  =~   \
+\<link\ rel=\'stylesheet\'\ href=\'.example\ {\ color:\ blue\;\ }\'/\>                    ]]
+  [[    "${output}"  =~   \
+\<script\ src=\'function\ example\(\)\ {\ console.log\(\"Example.\"\)\;\ }\'\>\</script\> ]]
+}
+
 # configuration ###############################################################
 
 @test "'browse' sets the server hostname to localhost by default." {

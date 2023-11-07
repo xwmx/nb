@@ -10597,6 +10597,10 @@ _render() {
 
   # Usage: _render_print_head [--title <title>]
   _render_print_head() {
+    local _custom_css="${NB_CUSTOM_CSS:-}"
+    local _custom_css_element=
+    local _custom_javascript="${NB_CUSTOM_JAVASCRIPT:-${NB_CUSTOM_JS:-}}"
+    local _custom_javascript_element=
     local _html_title="${_ME}"
 
     if [[ "${1:-}" == "--title" ]] && [[ -n "${2:-}" ]]
@@ -10659,16 +10663,14 @@ _render() {
       esac
     fi
 
-    # Set custom JS
-    local _custom_js=""
-    if [[ "${NB_CUSTOM_JS-}" ]]; then
-      _custom_js="<script src='${NB_CUSTOM_JS}'></script>"
+    if [[ -n "${_custom_javascript:-}"  ]]
+    then
+      _custom_javascript_element="<script src='${_custom_javascript:-}'></script>"
     fi
 
-    # Set custom CSS
-    local _custom_css=""
-    if [[ "${NB_CUSTOM_CSS-}" ]]; then
-      _custom_css="<link rel='stylesheet' href='${NB_CUSTOM_CSS}'/>"
+    if [[ -n "${_custom_css:-}"         ]]
+    then
+      _custom_css_element="<link rel='stylesheet' href='${_custom_css:-}'/>"
     fi
 
     cat <<HEREDOC
@@ -11350,8 +11352,8 @@ document.addEventListener('keydown', function(event) {
   }
 });
 </script>
-${_custom_css}
-${_custom_js}
+${_custom_css_element:-}
+${_custom_javascript_element:-}
 <meta name="referrer" content="no-referrer" />
 </head>
 <body>
