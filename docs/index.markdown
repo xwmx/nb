@@ -9239,6 +9239,12 @@ A style sheet to be included inline in a `<style>` element on pages
 rendered by `nb browse`.
 ```
 
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
 ##### `NB_CUSTOM_CSS_URL`
 
 ```text
@@ -9248,6 +9254,12 @@ A URL to a style sheet to be included in a `<link rel="stylesheet">`
 element on pages rendered by `nb browse`.
 ```
 
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
 ##### `NB_CUSTOM_JAVASCRIPT`
 
 ```text
@@ -9256,6 +9268,12 @@ Default: ''
 A block of JavaScript code to be included inline in a `<script>` element
 on pages rendered by `nb browse`.
 ```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
 
 ##### `NB_CUSTOM_JAVASCRIPT_URL`
 
