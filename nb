@@ -12725,7 +12725,6 @@ _add() {
 
         local _password=
         IFS='' read -r -e -d $'\n' -s _password </dev/tty
-        printf "\\n" # print newline to stop `read`
 
         if [[ -z "${_password:-}"               ]]
         then
@@ -12739,7 +12738,6 @@ _add() {
 
         local _password_confirmation=
         IFS='' read -r -e -d $'\n' -s _password_confirmation </dev/tty
-        printf "\\n" # print newline to stop `read`
 
         if [[ "${_password}" != "${_password_confirmation}" ]]
         then
@@ -14566,8 +14564,6 @@ _edit() {
         printf "%s: " "$(_color_primary "Password")"
 
         IFS='' read -r -e -d $'\n' -s _password </dev/tty
-
-        printf "\\n" # print newline to stop `read`
 
         if [[ -z "${_password}"                   ]]
         then
@@ -18354,7 +18350,6 @@ ${_title/\[$' '\]/${_TPUT_SETAF_8}[ ]${_TPUT_SGR0}}"
 
       local _password=
       IFS='' read -r -e -d $'\n' -s _password </dev/tty
-      printf "\\n" # print newline to stop `read`
 
       if [[ -z "${_password}"                 ]]
       then
