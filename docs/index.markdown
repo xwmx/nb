@@ -8991,6 +8991,10 @@ Shortcut Alias:
     <a href="#nb_color_primary"><code>$NB_COLOR_PRIMARY</code></a>&nbsp;·
     <a href="#nb_color_secondary"><code>$NB_COLOR_SECONDARY</code></a>&nbsp;·
     <a href="#nb_color_theme"><code>$NB_COLOR_THEME</code></a>&nbsp;·
+    <a href="#nb_custom_css"><code>$NB_CUSTOM_CSS</code></a>&nbsp;·
+    <a href="#nb_custom_css_url"><code>$NB_CUSTOM_CSS_URL</code></a>&nbsp;·
+    <a href="#nb_custom_javascript"><code>$NB_CUSTOM_JAVASCRIPT</code></a>&nbsp;·
+    <a href="#nb_custom_javascript_url"><code>$NB_CUSTOM_JAVASCRIPT_URL</code></a>&nbsp;·
     <a href="#nb_data_tool"><code>$NB_DATA_TOOL</code></a>&nbsp;·
     <a href="#nb_default_extension"><code>$NB_DEFAULT_EXTENSION</code></a>&nbsp;·
     <a href="#nb_dir-1"><code>$NB_DIR</code></a>&nbsp;·
@@ -9218,6 +9222,48 @@ Supported Values: [0..255+]
 Default: 'nb'
 
 The color theme.
+```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
+##### `NB_CUSTOM_CSS`
+
+```text
+Default: ''
+
+A style sheet to be included inline in a `<style>` element on pages
+rendered by `nb browse`.
+```
+
+##### `NB_CUSTOM_CSS_URL`
+
+```text
+Default: ''
+
+A URL to a style sheet to be included in a `<link rel="stylesheet">`
+element on pages rendered by `nb browse`.
+```
+
+##### `NB_CUSTOM_JAVASCRIPT`
+
+```text
+Default: ''
+
+A block of JavaScript code to be included inline in a `<script>` element
+on pages rendered by `nb browse`.
+```
+
+##### `NB_CUSTOM_JAVASCRIPT_URL`
+
+```text
+Default: ''
+
+A URL to a JavaScript file to be included in a `<script src=//url>`
+element on pages rendered by `nb browse`.
 ```
 
 <p>
