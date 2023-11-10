@@ -282,6 +282,14 @@ git config --global user.email  "example@example.test"
 HEREDOC
 
   ##############
+  # Ubuntu 24.04
+
+  # config.vm.define "ubuntu2404" do |ubuntu2404|
+  #   ubuntu2404.vm.box = "ubuntu/noble64"
+  #   ubuntu2404.vm.provision :shell, inline: $ubuntu_setup, privileged: false
+  # end
+
+  ##############
   # Ubuntu 22.10
 
   # config.vm.define "ubuntu2210" do |ubuntu2210|

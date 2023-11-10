@@ -81,7 +81,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.7.1"
+_VERSION="7.8.0"
 
 # $_ME
 #
@@ -1669,7 +1669,6 @@ _file_is_encrypted() {
         then
           [[ "$(file "${_file_path:-}"      \
                   --exclude=apptype         \
-                  --exclude=encoding        \
                   --exclude=tokens          \
                   --exclude=cdf             \
                   --exclude=compress        \
@@ -1783,7 +1782,6 @@ _file_is_text() {
         then
           [[ "$(file "${_file_path:-}"      \
                   --exclude=apptype         \
-                  --exclude=encoding        \
                   --exclude=tokens          \
                   --exclude=cdf             \
                   --exclude=compress        \
@@ -10597,6 +10595,12 @@ _render() {
 
   # Usage: _render_print_head [--title <title>]
   _render_print_head() {
+    local _custom_css="${NB_CUSTOM_CSS:-}"
+    local _custom_css_element=
+    local _custom_css_url="${NB_CUSTOM_CSS_URL:-}"
+    local _custom_javascript="${NB_CUSTOM_JAVASCRIPT:-${NB_CUSTOM_JS:-}}"
+    local _custom_javascript_element=
+    local _custom_javascript_url="${NB_CUSTOM_JAVASCRIPT_URL:-${NB_CUSTOM_JS_URL:-}}"
     local _html_title="${_ME}"
 
     if [[ "${1:-}" == "--title" ]] && [[ -n "${2:-}" ]]
@@ -10657,6 +10661,30 @@ _render() {
         \#5f87ff) _color_primary_hex="#7593eb" ;;
         \#ffff5f) _color_primary_hex="#ebeb75" ;;
       esac
+    fi
+
+    if [[ -n "${_custom_javascript:-}"      ]]
+    then
+      _custom_javascript_element="\
+<script>${_NEWLINE}${_custom_javascript:-}${_NEWLINE}</script>"
+    fi
+
+    if [[ -n "${_custom_javascript_url:-}"  ]]
+    then
+      _custom_javascript_url_element="\
+<script src=\"${_custom_javascript_url:-}\"></script>"
+    fi
+
+    if [[ -n "${_custom_css:-}"             ]]
+    then
+      _custom_css_element="\
+<style>${_NEWLINE}${_custom_css:-}${_NEWLINE}</style>"
+    fi
+
+    if [[ -n "${_custom_css_url:-}"         ]]
+    then
+      _custom_css_url_element="\
+<link rel=\"stylesheet\" href=\"${_custom_css_url:-}\"/>"
     fi
 
     cat <<HEREDOC
@@ -11338,6 +11366,10 @@ document.addEventListener('keydown', function(event) {
   }
 });
 </script>
+${_custom_css_url_element:-}
+${_custom_javascript_url_element:-}
+${_custom_css_element:-}
+${_custom_javascript_element:-}
 <meta name="referrer" content="no-referrer" />
 </head>
 <body>
@@ -12693,7 +12725,6 @@ _add() {
 
         local _password=
         IFS='' read -r -e -d $'\n' -s _password </dev/tty
-        printf "\\n" # print newline to stop `read`
 
         if [[ -z "${_password:-}"               ]]
         then
@@ -12707,7 +12738,6 @@ _add() {
 
         local _password_confirmation=
         IFS='' read -r -e -d $'\n' -s _password_confirmation </dev/tty
-        printf "\\n" # print newline to stop `read`
 
         if [[ "${_password}" != "${_password_confirmation}" ]]
         then
@@ -14535,8 +14565,6 @@ _edit() {
 
         IFS='' read -r -e -d $'\n' -s _password </dev/tty
 
-        printf "\\n" # print newline to stop `read`
-
         if [[ -z "${_password}"                   ]]
         then
           _exit_1 printf "Password required.\\n"
@@ -15036,9 +15064,9 @@ _export() {
     then
       if [[ -n "${_args[*]:-}"    ]]
       then
-        pandoc "${_notebook_path}/${_relative_path}" "${_args[@]:-}"
+        _pandoc "${_notebook_path}/${_relative_path}" "${_args[@]:-}"
       else
-        pandoc "${_notebook_path}/${_relative_path}"
+        _pandoc "${_notebook_path}/${_relative_path}"
       fi
     else
       _exit_1 printf "Pandoc required. https://pandoc.org/\\n"
@@ -15088,13 +15116,13 @@ _export() {
     then
       if [[ -n "${_args[*]:-}"    ]]
       then
-        pandoc                                    \
+        _pandoc                                   \
           -o "${_target_path}"                    \
           --standalone                            \
           "${_notebook_path}/${_relative_path}"   \
           "${_args[@]:-}"
       else
-        pandoc                    \
+        _pandoc                   \
           -o "${_target_path}"    \
           --standalone            \
           "${_notebook_path}/${_relative_path}"
@@ -18322,7 +18350,6 @@ ${_title/\[$' '\]/${_TPUT_SETAF_8}[ ]${_TPUT_SGR0}}"
 
       local _password=
       IFS='' read -r -e -d $'\n' -s _password </dev/tty
-      printf "\\n" # print newline to stop `read`
 
       if [[ -z "${_password}"                 ]]
       then
