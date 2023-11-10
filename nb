@@ -1669,7 +1669,6 @@ _file_is_encrypted() {
         then
           [[ "$(file "${_file_path:-}"      \
                   --exclude=apptype         \
-                  --exclude=encoding        \
                   --exclude=tokens          \
                   --exclude=cdf             \
                   --exclude=compress        \
@@ -1783,7 +1782,6 @@ _file_is_text() {
         then
           [[ "$(file "${_file_path:-}"      \
                   --exclude=apptype         \
-                  --exclude=encoding        \
                   --exclude=tokens          \
                   --exclude=cdf             \
                   --exclude=compress        \
