@@ -14363,27 +14363,28 @@ _delete() {
     then
       _pin unpin "${_notebook_path}/${_relative_path}" &> /dev/null || :
 
-      if [[ -d "${_notebook_path}/${_relative_path}"            ]]  &&
+            if [[ -d "${_notebook_path}/${_relative_path}" ]] &&
          [[ -z "$(ls -A "${_notebook_path}/${_relative_path}")" ]]
       then
         rm -r "${_notebook_path:?}/${_relative_path:?}"
       else
-        if git -C "${_notebook_path:?}" check-ignore    \
-             "${_notebook_path:?}/${_relative_path:?}" 1>/dev/null
+        if [[ -z "${_GIT_ENABLED}" ]] && 
+           git -C "${_notebook_path:?}" check-ignore "${_notebook_path:?}/${_relative_path:?}" 1>/dev/null
         then
           rm -r "${_notebook_path:?}/${_relative_path:?}"
+        elif [[ -z "${_GIT_ENABLED}" ]]; then
+          git -C "${_notebook_path:?}" rm -r "${_notebook_path:?}/${_relative_path:?}" 1>/dev/null
         else
-          git -C "${_notebook_path:?}" rm -r            \
-            "${_notebook_path:?}/${_relative_path:?}" 1>/dev/null
+          rm -r "${_notebook_path:?}/${_relative_path:?}" 
         fi
       fi
-
-      if [[ ! -e "${_notebook_path}/${_relative_path}"  ]]
+      
+      if [[ ! -e "${_notebook_path}/${_relative_path}" ]]
       then
         _index delete "${_basename}" "${_folder_path}"
-
+      
         _git checkpoint "${_notebook_path}" "[${_ME}] Delete: ${_relative_path}"
-
+      
         printf "Deleted:  %s\\n" "${_info_line}"
       fi
     else
