@@ -16631,7 +16631,7 @@ _search() {
     shift
   done
 
-  if [[ -z $_search_utility ]]; then
+  if [[ -z $_search_utility ]] && [[ -n $NB_SEARCH_UTILITY ]]; then
     _search_utility=$NB_SEARCH_UTILITY
   fi
 
