@@ -2271,7 +2271,7 @@ See [`bookmark help`](#bookmark-help) for more information.
   </sup>
 </p>
 
-Use [`nb todo`](#todo) (shortcut: [`nb t`](#todo))
+Use [`nb todo`](#todo) (shortcut: [`nb to`](#todo))
 to create, list, and update todos.
 `nb` todos are [structured Markdown documents](#nb-markdown-todo-file-format)
 referencing a single primary todo,
