@@ -8529,7 +8529,7 @@ Alias:
   nb todos
 
 Shortcut Alias:
-  nb t
+  nb to
 ```
 
 #### `unarchive`

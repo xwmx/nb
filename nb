@@ -25023,7 +25023,7 @@ $(_color_primary "Alias"):
   ${_ME} todos
 
 $(_color_primary "Shortcut Alias"):
-  ${_ME} t
+  ${_ME} to
 HEREDOC
 }
 _todo() {
