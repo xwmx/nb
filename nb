@@ -1086,7 +1086,7 @@ export _LOCAL_NOTEBOOK_PATH=
 #   __set_notebook_paths
 #
 # Description:
-#   Set the the notebook path variables to reflect the current environment.
+#   Set the notebook path variables to reflect the current environment.
 __set_notebook_paths() {
   __set_local_notebook_path() {
     if [[ "${PWD}" == "/" ]]
