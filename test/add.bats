@@ -635,13 +635,13 @@ HEREDOC
   git log | grep -q '\[nb\] Add'
 }
 
-@test "'add' with --title option exits with 0, creates new note with \$EDITOR, creates commit." {
+@test "'add --title <title>' exits with 0, creates new note with \$EDITOR, creates commit." {
   {
     "${_NB}" init
   }
 
   run "${_NB}" add \
-    --title "Example Title: A*string•with/a\\bunch|of?invalid<filename\"characters>"
+    --title " [ ] Example Title: A*string•with/a\\bunch|of?invalid<filename\"characters>"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -665,7 +665,7 @@ HEREDOC
   diff                                    \
     <(cat "${NB_DIR}/home/${_files[0]}")  \
     <(printf "\
-# Example Title: A*string•with/a\\\\bunch|of?invalid<filename\"characters>
+#  [ ] Example Title: A*string•with/a\\\\bunch|of?invalid<filename\"characters>
 
 # mock_editor %s/home/%s\\n" "${NB_DIR}" "${_files[0]%.md}")
 
@@ -702,8 +702,8 @@ HEREDOC
     "${_NB}" init
   }
 
-  run "${_NB}" add                                                                    \
-    --title "Example Title: A*string•with/a\\bunch|of?invalid<filename\"characters>"  \
+  run "${_NB}" add                                                                          \
+    --title   " [ ] Example Title: A*string•with/a\\bunch|of?invalid<filename\"characters>" \
     --content "Example: content."
 
   printf "\${status}: '%s'\\n" "${status}"
@@ -728,7 +728,7 @@ HEREDOC
   diff                                    \
     <(cat "${NB_DIR}/home/${_files[0]}")  \
     <(printf "\
-# Example Title: A*string•with/a\\\\bunch|of?invalid<filename\"characters>
+#  [ ] Example Title: A*string•with/a\\\\bunch|of?invalid<filename\"characters>
 
 Example: content.\\n")
 

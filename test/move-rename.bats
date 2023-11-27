@@ -275,8 +275,8 @@ Moved\ to:\ .*[.*1.*].*\ .*example_title__a_string•with_a_bunch_of_invalid_fil
   {
     "${_NB}" init
 
-    "${_NB}" add  "Example File.bookmark.md"                                                \
-      --title     "Example Title: A*string•with/a\\bunch|of?invalid<filename\"characters>"  \
+    "${_NB}" add  "Example File.bookmark.md"                                                    \
+      --title     " [ ] Example Title: A*string•with/a\\bunch|of?invalid<filename\"characters>" \
       --content   "<https://example.test>"
   }
 
@@ -307,23 +307,23 @@ Moved\ to:\ .*[.*1.*].*\ .*example_title__a_string•with_a_bunch_of_invalid_fil
   # Prints output:
 
   [[ "${lines[0]}" =~ \
-Moving:\ \ \ .*[.*1.*].*\ .*Example\ File\.bookmark.md.*\ \"Example\ Title:\  ]]
+Moving:\ \ \ .*[.*1.*].*\ .*Example\ File\.bookmark.md.*\ \"\[\ \]\ Example\ Title:\  ]]
   [[ "${lines[0]}" =~ \
-Title:\ A\*string•with/a\\bunch\|of\?invalid\<filename\"characters\>\"        ]]
+Title:\ A\*string•with/a\\bunch\|of\?invalid\<filename\"characters\>\"                ]]
   [[ "${lines[1]}" =~ \
 To:\ \ \ \ \ \ \ .*example_title__a_string•with_a_bunch_of_invalid_filename_characters_.bookmark.md           ]]
   [[ "${lines[2]}" =~ \
 Moved\ to:\ .*[.*1.*].*\ .*example_title__a_string•with_a_bunch_of_invalid_filename_characters_.bookmark.md.* ]]
   [[ "${lines[2]}" =~ \
- \"Example\ Title:\ A\*string•with/a\\bunch\|of\?invalid\<filename\"characters\>\"          ]]
+ \"\[\ \]\ Example\ Title:\ A\*string•with/a\\bunch\|of\?invalid\<filename\"characters\>\"  ]]
 }
 
 @test "'move --to-title' with title and root-level note renames to title." {
   {
     "${_NB}" init
 
-    "${_NB}" add  "Example File.md"                                                         \
-      --title     "Example Title: A*string•with/a\\bunch|of?invalid<filename\"characters>"  \
+    "${_NB}" add  "Example File.md"                                                             \
+      --title     " [ ] Example Title: A*string•with/a\\bunch|of?invalid<filename\"characters>" \
       --content   "Example content."
   }
 
@@ -354,15 +354,15 @@ Moved\ to:\ .*[.*1.*].*\ .*example_title__a_string•with_a_bunch_of_invalid_fil
   # Prints output:
 
   [[ "${lines[0]}" =~ \
-Moving:\ \ \ .*[.*1.*].*\ .*Example\ File\.md.*\ \"Example\ Title:\     ]]
+Moving:\ \ \ .*[.*1.*].*\ .*Example\ File\.md.*\ \"\[\ \]\ Example\ Title:\   ]]
   [[ "${lines[0]}" =~ \
-Title:\ A\*string•with/a\\bunch\|of\?invalid\<filename\"characters\>\"  ]]
+Title:\ A\*string•with/a\\bunch\|of\?invalid\<filename\"characters\>\"        ]]
   [[ "${lines[1]}" =~ \
 To:\ \ \ \ \ \ \ .*example_title__a_string•with_a_bunch_of_invalid_filename_characters_.md            ]]
   [[ "${lines[2]}" =~ \
 Moved\ to:\ .*[.*1.*].*\ .*example_title__a_string•with_a_bunch_of_invalid_filename_characters_.md.*  ]]
   [[ "${lines[2]}" =~ \
- \"Example\ Title:\ A\*string•with/a\\bunch\|of\?invalid\<filename\"characters\>\"                    ]]
+ \"\[\ \]\ Example\ Title:\ A\*string•with/a\\bunch\|of\?invalid\<filename\"characters\>\"            ]]
 }
 
 @test "'move --to-title' prints message with file with no title." {
