@@ -224,6 +224,54 @@ Moved\ to:\ .*[.*Example\ Folder/1.*].*\ .*Example\ Folder/Example\ File\.js.*  
 
 # --to title / --to-title #####################################################
 
+@test "'move --to title' with brackets in existing filename renames todo." {
+  # NOTE: https://github.com/xwmx/nb/issues/292
+  {
+    "${_NB}" init
+
+    "${_NB}" add --filename "[ ] Example Filename.md" --title "Example Title"
+
+
+    _files=($(ls "${NB_DIR}/home/"))
+    printf "\${_files[0]}: '%s'\\n" "${_files[0]}"
+
+    [[    -f "${NB_DIR}/home/[ ] Example Filename.md"  ]]
+    [[ !  -f "${NB_DIR}/home/example_title.md"         ]]
+  }
+
+  run "${_NB}" rename 1 --to title <<< "y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0                                ]]
+
+  # Moves file:
+
+  [[ !  -f "${NB_DIR}/home/[ ] Example Filename.md" ]]
+  [[    -f "${NB_DIR}/home/example_title.md"        ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)"             ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Move'
+
+  # Prints output:
+
+#   [[ "${lines[0]}" =~ \
+# Moving:\ \ \ .*[.*2.*].*\ ✔️\ \ .*example_one-1.todo.md.*\ \".*[.*\ .*].*\ Example\ Two\"  ]]
+#   [[ "${lines[1]}" =~ \
+# To:\ \ \ \ \ \ \ .*example_two.todo.md.*                                                  ]]
+#   [[ "${lines[2]}" =~ \
+# Moved\ to:\ .*[.*2.*].*\ .*example_two.todo.md.*\ \".*[.*\ .*].*\ Example\ Two\"          ]]
+}
+
 @test "'move --to title' with duplicated, renamed todo renames title." {
   # NOTE: https://github.com/xwmx/nb/issues/292
   {

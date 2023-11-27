@@ -4661,6 +4661,9 @@ _index() {
         _exit_1 _help index
       fi
 
+      _basename="${_basename//'['/\\[}"
+      _basename="${_basename//']'/\\]}"
+
       if grep -q "^${_basename}$" "${_index_path}"
       then
         _sed_i -e "s/^${_basename}$//g" "${_index_path}"
@@ -4943,6 +4946,9 @@ _index() {
       then
         _exit_1 _help index
       fi
+
+      _old_basename="${_old_basename//'['/\\[}"
+      _old_basename="${_old_basename//']'/\\]}"
 
       if grep -q "^${_old_basename}$" "${_index_path}"
       then

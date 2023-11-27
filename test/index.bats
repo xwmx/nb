@@ -277,6 +277,21 @@ load test_helper
   [[ "$(cat "${NB_DIR}/home/.index")" == "" ]]
 }
 
+@test "'index delete <filename>' with brackets and spaces in filename deletes an item from the index." {
+  {
+    "${_NB}" init
+    "${_NB}" add "[ ] first.md"  --title "one"
+  }
+
+  run "${_NB}" index delete "$(ls "${NB_DIR}/home")"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0                      ]]
+  [[ "$(cat "${NB_DIR}/home/.index")" == "" ]]
+}
+
 @test "'index delete' with no argument returns 1 and prints help." {
   {
     "${_NB}" init
@@ -330,6 +345,24 @@ load test_helper
   {
     "${_NB}" init
     "${_NB}" add "# one"
+  }
+
+  run "${_NB}" index update "$(ls "${NB_DIR}/home")" "example.md"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  printf \
+    "$(cat \"\$\{NB_DIR\}/home/.index\"): '%s'\\n" \
+    "$(cat "${NB_DIR}/home/.index")"
+
+  [[ "${status}" -eq 0                                ]]
+  [[ "$(cat "${NB_DIR}/home/.index")" == "example.md" ]]
+}
+
+@test "'index update <old> <new>' with brackets and spaces in <old> filename updates the index." {
+  {
+    "${_NB}" init
+    "${_NB}" add "[ ] first.md" --title "# one"
   }
 
   run "${_NB}" index update "$(ls "${NB_DIR}/home")" "example.md"
