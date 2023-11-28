@@ -81,7 +81,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.8.0"
+_VERSION="7.9.0"
 
 # $_ME
 #
@@ -1086,7 +1086,7 @@ export _LOCAL_NOTEBOOK_PATH=
 #   __set_notebook_paths
 #
 # Description:
-#   Set the the notebook path variables to reflect the current environment.
+#   Set the notebook path variables to reflect the current environment.
 __set_notebook_paths() {
   __set_local_notebook_path() {
     if [[ "${PWD}" == "/" ]]
@@ -4661,6 +4661,9 @@ _index() {
         _exit_1 _help index
       fi
 
+      _basename="${_basename//'['/\\[}"
+      _basename="${_basename//']'/\\]}"
+
       if grep -q "^${_basename}$" "${_index_path}"
       then
         _sed_i -e "s/^${_basename}$//g" "${_index_path}"
@@ -4943,6 +4946,9 @@ _index() {
       then
         _exit_1 _help index
       fi
+
+      _old_basename="${_old_basename//'['/\\[}"
+      _old_basename="${_old_basename//']'/\\]}"
 
       if grep -q "^${_old_basename}$" "${_index_path}"
       then
@@ -10354,6 +10360,25 @@ _get_http_status() {
   fi
 }
 
+# _get_sanitized_filename()
+#
+# Usage:
+#   _get_sanitized_file_name <input>
+#
+# Description:
+#   Get a santized filename derived from an input string, such as a title.
+_get_sanitized_filename() {
+  printf "%s" "${1:-}"                          \
+    | sed -E                                    \
+        -e 's/^[[:space:]]+//g'                 \
+        -e 's/[[:space:]]+$//g'                 \
+        -e 's/\[[[:space:]]*\][[:space:]]*//g'  \
+        -e 's/\[x\][[:space:]]*//g'             \
+    | tr '[:upper:]' '[:lower:]'                \
+    | tr '[:space:]:*/\\<>?|' '_'               \
+    | tr "\"" '_'
+}
+
 # _get_unique_path()
 #
 # Usage:
@@ -12619,12 +12644,7 @@ _add() {
     if [[ -n "${_title:-}" ]] &&
        ! _contains "${_file_type:-}" "folder" "directory"
     then
-      _target_filename="$(
-        printf "%s" "${_title}"           \
-          | tr '[:upper:]' '[:lower:]'    \
-          | tr '[:space:]:*/\\<>?|' '_'   \
-          | tr "\"" '_'
-      )"
+      _target_filename="$(_get_sanitized_filename "${_title}")"
     fi
 
     if [[ -n "${_file_type}"              ]] &&
@@ -15900,17 +15920,12 @@ _move() {
         _exit_1 printf "Title not found.\\n"
       fi
 
-      local _processed_title=
-      _processed_title="$(
-        printf "%s" "${_source_title}"        \
-          | tr '[:upper:]' '[:lower:]'        \
-          | tr '[:space:]:*/\\<>?|' '_'       \
-          | tr "\"" '_'
-      )"
+      local _sanitized_filename=
+      _sanitized_filename="$(_get_sanitized_filename "${_source_title:-}")"
 
       local _target_file_type="${_source_file_type:-"${NB_DEFAULT_EXTENSION}"}"
 
-      _target_basename="${_processed_title}.${_target_file_type}"
+      _target_basename="${_sanitized_filename}.${_target_file_type}"
     elif [[ -n "${_target_selector:-}"        ]] ||
          [[ -n "${_to_target_type:-}"         ]]
     then
@@ -16630,6 +16645,12 @@ _search() {
 
     shift
   done
+
+  if [[ -z "${_search_utility:-}"                       ]] &&
+     [[ -n "${NB_SEARCH_TOOL:-${NB_SEARCH_UTILITY:-}}"  ]]
+  then
+    _search_utility=${NB_SEARCH_TOOL:-${NB_SEARCH_UTILITY:-}}
+  fi
 
   local _current_notebook_path=
   _current_notebook_path="$(_notebooks current --path)"
@@ -25023,7 +25044,7 @@ $(_color_primary "Alias"):
   ${_ME} todos
 
 $(_color_primary "Shortcut Alias"):
-  ${_ME} t
+  ${_ME} to
 HEREDOC
 }
 _todo() {

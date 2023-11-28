@@ -224,6 +224,110 @@ Moved\ to:\ .*[.*Example\ Folder/1.*].*\ .*Example\ Folder/Example\ File\.js.*  
 
 # --to title / --to-title #####################################################
 
+@test "'move --to title' with brackets in existing filename renames todo." {
+  # NOTE: https://github.com/xwmx/nb/issues/292
+  {
+    "${_NB}" init
+
+    "${_NB}" add --filename "[ ] Example Filename.md" --title "Example Title"
+
+
+    _files=($(ls "${NB_DIR}/home/"))
+    printf "\${_files[0]}: '%s'\\n" "${_files[0]}"
+
+    [[    -f "${NB_DIR}/home/[ ] Example Filename.md"  ]]
+    [[ !  -f "${NB_DIR}/home/example_title.md"         ]]
+  }
+
+  run "${_NB}" rename 1 --to title <<< "y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0                                ]]
+
+  # Moves file:
+
+  [[ !  -f "${NB_DIR}/home/[ ] Example Filename.md" ]]
+  [[    -f "${NB_DIR}/home/example_title.md"        ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)"             ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Move'
+
+  # Prints output:
+
+#   [[ "${lines[0]}" =~ \
+# Moving:\ \ \ .*[.*2.*].*\ ✔️\ \ .*example_one-1.todo.md.*\ \".*[.*\ .*].*\ Example\ Two\"  ]]
+#   [[ "${lines[1]}" =~ \
+# To:\ \ \ \ \ \ \ .*example_two.todo.md.*                                                  ]]
+#   [[ "${lines[2]}" =~ \
+# Moved\ to:\ .*[.*2.*].*\ .*example_two.todo.md.*\ \".*[.*\ .*].*\ Example\ Two\"          ]]
+}
+
+@test "'move --to title' with duplicated, renamed todo renames title." {
+  # NOTE: https://github.com/xwmx/nb/issues/292
+  {
+    "${_NB}" init
+
+    "${_NB}" todo add "Example One"
+
+    "${_NB}" rename 1 --to-title <<< "y${_NEWLINE}"
+
+    [[    -f "${NB_DIR}/home/example_one.todo.md"   ]]
+    [[ !  -e "${NB_DIR}/home/example_one-1.todo.md" ]]
+    [[ !  -e "${NB_DIR}/home/example_two.todo.md"   ]]
+
+    "${_NB}" duplicate 1
+
+    [[    -f "${NB_DIR}/home/example_one.todo.md"   ]]
+    [[    -f "${NB_DIR}/home/example_one-1.todo.md" ]]
+    [[ !  -e "${NB_DIR}/home/example_two.todo.md"   ]]
+
+    printf "# [ ] Example Two\\n" > "$("${_NB}" show 2 --path)"
+  }
+
+  run "${_NB}" rename 2 --to title <<< "y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0                                ]]
+
+  # Moves file:
+
+  [[    -f "${NB_DIR}/home/example_one.todo.md"     ]]
+  [[ !  -e "${NB_DIR}/home/example_one-1.todo.md"   ]]
+  [[    -f "${NB_DIR}/home/example_two.todo.md"     ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)"             ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Move'
+
+  # Prints output:
+
+  [[ "${lines[0]}" =~ \
+Moving:\ \ \ .*[.*2.*].*\ ✔️\ \ .*example_one-1.todo.md.*\ \".*[.*\ .*].*\ Example\ Two\"  ]]
+  [[ "${lines[1]}" =~ \
+To:\ \ \ \ \ \ \ .*example_two.todo.md.*                                                  ]]
+  [[ "${lines[2]}" =~ \
+Moved\ to:\ .*[.*2.*].*\ .*example_two.todo.md.*\ \".*[.*\ .*].*\ Example\ Two\"          ]]
+}
+
 @test "'move --to title' with title and root-level bookmark renames to title." {
   {
     "${_NB}" init
@@ -275,8 +379,8 @@ Moved\ to:\ .*[.*1.*].*\ .*example_title__a_string•with_a_bunch_of_invalid_fil
   {
     "${_NB}" init
 
-    "${_NB}" add  "Example File.bookmark.md"                                                \
-      --title     "Example Title: A*string•with/a\\bunch|of?invalid<filename\"characters>"  \
+    "${_NB}" add  "Example File.bookmark.md"                                                    \
+      --title     " [ ] Example Title: A*string•with/a\\bunch|of?invalid<filename\"characters>" \
       --content   "<https://example.test>"
   }
 
@@ -307,23 +411,23 @@ Moved\ to:\ .*[.*1.*].*\ .*example_title__a_string•with_a_bunch_of_invalid_fil
   # Prints output:
 
   [[ "${lines[0]}" =~ \
-Moving:\ \ \ .*[.*1.*].*\ .*Example\ File\.bookmark.md.*\ \"Example\ Title:\  ]]
+Moving:\ \ \ .*[.*1.*].*\ .*Example\ File\.bookmark.md.*\ \"\[\ \]\ Example\ Title:\  ]]
   [[ "${lines[0]}" =~ \
-Title:\ A\*string•with/a\\bunch\|of\?invalid\<filename\"characters\>\"        ]]
+Title:\ A\*string•with/a\\bunch\|of\?invalid\<filename\"characters\>\"                ]]
   [[ "${lines[1]}" =~ \
 To:\ \ \ \ \ \ \ .*example_title__a_string•with_a_bunch_of_invalid_filename_characters_.bookmark.md           ]]
   [[ "${lines[2]}" =~ \
 Moved\ to:\ .*[.*1.*].*\ .*example_title__a_string•with_a_bunch_of_invalid_filename_characters_.bookmark.md.* ]]
   [[ "${lines[2]}" =~ \
- \"Example\ Title:\ A\*string•with/a\\bunch\|of\?invalid\<filename\"characters\>\"          ]]
+ \"\[\ \]\ Example\ Title:\ A\*string•with/a\\bunch\|of\?invalid\<filename\"characters\>\"  ]]
 }
 
 @test "'move --to-title' with title and root-level note renames to title." {
   {
     "${_NB}" init
 
-    "${_NB}" add  "Example File.md"                                                         \
-      --title     "Example Title: A*string•with/a\\bunch|of?invalid<filename\"characters>"  \
+    "${_NB}" add  "Example File.md"                                                             \
+      --title     " [ ] Example Title: A*string•with/a\\bunch|of?invalid<filename\"characters>" \
       --content   "Example content."
   }
 
@@ -354,15 +458,15 @@ Moved\ to:\ .*[.*1.*].*\ .*example_title__a_string•with_a_bunch_of_invalid_fil
   # Prints output:
 
   [[ "${lines[0]}" =~ \
-Moving:\ \ \ .*[.*1.*].*\ .*Example\ File\.md.*\ \"Example\ Title:\     ]]
+Moving:\ \ \ .*[.*1.*].*\ .*Example\ File\.md.*\ \"\[\ \]\ Example\ Title:\   ]]
   [[ "${lines[0]}" =~ \
-Title:\ A\*string•with/a\\bunch\|of\?invalid\<filename\"characters\>\"  ]]
+Title:\ A\*string•with/a\\bunch\|of\?invalid\<filename\"characters\>\"        ]]
   [[ "${lines[1]}" =~ \
 To:\ \ \ \ \ \ \ .*example_title__a_string•with_a_bunch_of_invalid_filename_characters_.md            ]]
   [[ "${lines[2]}" =~ \
 Moved\ to:\ .*[.*1.*].*\ .*example_title__a_string•with_a_bunch_of_invalid_filename_characters_.md.*  ]]
   [[ "${lines[2]}" =~ \
- \"Example\ Title:\ A\*string•with/a\\bunch\|of\?invalid\<filename\"characters\>\"                    ]]
+ \"\[\ \]\ Example\ Title:\ A\*string•with/a\\bunch\|of\?invalid\<filename\"characters\>\"            ]]
 }
 
 @test "'move --to-title' prints message with file with no title." {
