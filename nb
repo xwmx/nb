@@ -2761,6 +2761,9 @@ _pandoc() {
     --standard-input)
       _read_from_standard_input=1
       ;;
+    -*)
+      _pandoc_arguments+=("${1:-}")
+      ;;
     *)
       _path="${1:-}"
       ;;
@@ -2768,7 +2771,7 @@ _pandoc() {
 
   shift
 
-  [[ -n "${1:-}" ]] && _pandoc_arguments=("${@}")
+  [[ -n "${1:-}" ]] && _pandoc_arguments+=("${@}")
 
   if _command_exists "iconv"          &&  {
        ((_read_from_standard_input))  ||  _file_is_text "${_path:-}"
@@ -15137,15 +15140,15 @@ _export() {
       if [[ -n "${_args[*]:-}"    ]]
       then
         _pandoc                                   \
+          "${_notebook_path}/${_relative_path}"   \
           -o "${_target_path}"                    \
           --standalone                            \
-          "${_notebook_path}/${_relative_path}"   \
           "${_args[@]:-}"
       else
-        _pandoc                   \
-          -o "${_target_path}"    \
-          --standalone            \
-          "${_notebook_path}/${_relative_path}"
+        _pandoc                                   \
+          "${_notebook_path}/${_relative_path}"   \
+          -o "${_target_path}"                    \
+          --standalone
       fi
     else
       cp "${_notebook_path}/${_relative_path}" "${_target_path}"

@@ -157,7 +157,7 @@ load test_helper
   [[ "${output}" =~ sample.md   ]]
 }
 
-@test "'export' with valid <id> and <path> with different file type converts." {
+@test "'export' with valid <id> and <path> to HTML file type converts." {
   {
     "${_NB}" init
     "${_NB}" add "# Export Example"
@@ -174,6 +174,28 @@ load test_helper
   [[ "${output}" =~ Exported        ]]
   [[ "${output}" =~ Export\ Example ]]
   [[ "${output}" =~ example.html    ]]
+}
+
+@test "'export' with valid <id> and <path> to PDF file type converts." {
+  {
+    "${_NB}" init
+    "${_NB}" add --title "Export Example"
+  }
+
+  run "${_NB}" export 1 "${_TMP_DIR}/example.pdf"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ -e "${_TMP_DIR}/example.pdf"                         ]]
+  [[ "$(file "${_TMP_DIR}/example.pdf")" =~ PDF\ document ]]
+
+  # Prints output
+
+  [[ "${lines[0]}" =~ \
+^Exported:\ .*\[.*1.*\].*\ .*export_example\.md.*\ \"Export\ Example\"$ ]]
+  [[ "${lines[1]}" =~ \
+^To:\ \ \ \ \ \ \ \ .*${_TMP_DIR}/example.pdf.*$                        ]]
 }
 
 # `notebook` ##################################################################
