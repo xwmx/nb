@@ -176,26 +176,28 @@ load test_helper
   [[ "${output}" =~ example.html    ]]
 }
 
-@test "'export' with valid <id> and <path> to PDF file type converts." {
+@test "'export' with valid <id> and <path> to docx file type converts." {
   {
     "${_NB}" init
     "${_NB}" add --title "Export Example"
   }
 
-  run "${_NB}" export 1 "${_TMP_DIR}/example.pdf"
+  run "${_NB}" export 1 "${_TMP_DIR}/example.docx"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ -e "${_TMP_DIR}/example.pdf"                         ]]
-  [[ "$(file "${_TMP_DIR}/example.pdf")" =~ PDF\ document ]]
+  file "${_TMP_DIR}/example.docx"
+
+  [[ -e "${_TMP_DIR}/example.docx"                            ]]
+  [[ "$(file "${_TMP_DIR}/example.docx")" =~ Microsoft\ Word  ]]
 
   # Prints output
 
   [[ "${lines[0]}" =~ \
 ^Exported:\ .*\[.*1.*\].*\ .*export_example\.md.*\ \"Export\ Example\"$ ]]
   [[ "${lines[1]}" =~ \
-^To:\ \ \ \ \ \ \ \ .*${_TMP_DIR}/example.pdf.*$                        ]]
+^To:\ \ \ \ \ \ \ \ .*${_TMP_DIR}/example.docx.*$                       ]]
 }
 
 # `notebook` ##################################################################
