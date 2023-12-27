@@ -248,7 +248,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install bats -y
           sudo apt-get install ncat -y
-          sudo apt-get install texlive-latex-recommended -y
+          sudo apt-get install texlive -y
           sudo apt-get install python-pygments -y
           sudo apt-get install ripgrep -y
           sudo apt-get install w3m -y
