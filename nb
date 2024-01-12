@@ -9976,6 +9976,7 @@ _decrypt_file() {
 #   Download the file at <url> and print to standard output or <outfile>, if
 #   present.
 _download_from() {
+  local _download_command=
   local _downloaded=0
   local _timeout=15
   local _url="${1:-}"
@@ -9988,58 +9989,96 @@ _download_from() {
 
   local _target_path="${2:-}"
 
-  if _command_exists "curl"
+  if ((${NB_BROWSER_DOWNLOAD_ENABLED:-}))
   then
-    local _curl_options=(
-      --silent
-      --location
-      --connect-timeout "${_timeout}"
-      --compressed
-      "${_url}"
-    )
-
-    [[ -n "${NB_USER_AGENT:-}" ]]   &&
-      _curl_options+=(--user-agent "${NB_USER_AGENT}")
-
-    if [[ -n "${_target_path}" ]]
+    if _command_exists "google-chrome"
     then
-      curl                          \
-        "${_curl_options[@]}"       \
-        --output "${_target_path}"  \
-        && _downloaded=1
-    else
-      curl                          \
-        "${_curl_options[@]}"       \
-        && _downloaded=1
-    fi
-  elif _command_exists "wget"
-  then
-    local _wget_options=(
-      --quiet
-      --connect-timeout="${_timeout}"
-      --dns-timeout="${_timeout}"
-      --compression=auto
-      "${_url}"
-    )
-
-    [[ -n "${NB_USER_AGENT:-}" ]]   &&
-      _wget_options+=(--user-agent="${NB_USER_AGENT}")
-
-    if [[ -n "${_target_path}" ]]
+      _download_command="google-chrome"
+    elif [[ -x "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" ]]
     then
-      wget                          \
-        "${_wget_options[@]}"       \
-        -O "${_target_path}"        \
-        2>/dev/null                 \
-        && _downloaded=1
-    else
-      wget                          \
-        "${_wget_options[@]}"       \
-        -O -                        \
-        2>/dev/null                 \
-        && _downloaded=1
+      _download_command="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
     fi
   fi
+
+  if [[ -z "${_download_command:-}" ]]
+  then
+    if _command_exists "curl"
+    then
+      _download_command="curl"
+    elif _command_exists "wget"
+    then
+      _download_command="wget"
+    fi
+  fi
+
+  case "${_download_command:-}" in
+    *hrome*)
+      {
+        "${_download_command:-}"  \
+          --dump-dom              \
+          --headless              \
+          "${_url}"
+      } | {
+        if [[ -n "${_target_path:-}" ]]
+        then
+          cat > "${_target_path:-}"
+        else
+          cat
+        fi
+      } && _downloaded=1
+      ;;
+    curl*)
+      local _curl_options=(
+        --silent
+        --location
+        --connect-timeout "${_timeout}"
+        --compressed
+        "${_url}"
+      )
+
+      [[ -n "${NB_USER_AGENT:-}" ]]   &&
+        _curl_options+=(--user-agent "${NB_USER_AGENT}")
+
+      if [[ -n "${_target_path}" ]]
+      then
+        curl                          \
+          "${_curl_options[@]}"       \
+          --output "${_target_path}"  \
+          && _downloaded=1
+      else
+        curl                          \
+          "${_curl_options[@]}"       \
+          && _downloaded=1
+      fi
+      ;;
+    wget*)
+      local _wget_options=(
+        --quiet
+        --connect-timeout="${_timeout}"
+        --dns-timeout="${_timeout}"
+        --compression=auto
+        "${_url}"
+      )
+
+      [[ -n "${NB_USER_AGENT:-}" ]]   &&
+        _wget_options+=(--user-agent="${NB_USER_AGENT}")
+
+      if [[ -n "${_target_path}" ]]
+      then
+        wget                          \
+          "${_wget_options[@]}"       \
+          -O "${_target_path}"        \
+          2>/dev/null                 \
+          && _downloaded=1
+      else
+        wget                          \
+          "${_wget_options[@]}"       \
+          -O -                        \
+          2>/dev/null                 \
+          && _downloaded=1
+      fi
+      ;;
+  esac
 
   if ! ((_downloaded))
   then
