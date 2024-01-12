@@ -180,9 +180,9 @@ or dozens of notebooks containing thousands of notes, bookmarks, and other items
 - A text editor with command line support, such as:
   - [Vim](https://en.wikipedia.org/wiki/Vim_\(text_editor\)),
   - [Emacs](https://en.wikipedia.org/wiki/Emacs),
-  - [Helix](https://helix-editor.com/),
   - [Visual Studio Code](https://code.visualstudio.com/),
   - [Sublime Text](https://www.sublimetext.com/),
+  - [Helix](https://helix-editor.com/),
   - [micro](https://github.com/zyedidia/micro),
   - [nano](https://en.wikipedia.org/wiki/GNU_nano),
   - [Atom](https://atom.io/),
