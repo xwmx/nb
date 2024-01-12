@@ -646,6 +646,7 @@ __set_editor() {
   local _editors=(
     code
     subl
+    hx
     micro
     mate
     macdown
@@ -695,6 +696,10 @@ More information about setting \$EDITOR:
     https://en.wikipedia.org/wiki/Emacs
 - TextMate
     https://macromates.com
+- Helix
+    https://helix-editor.com
+- micro
+    https://github.com/zyedidia/micro
 - nano
     https://en.wikipedia.org/wiki/GNU_nano
 - or many of these:
@@ -24320,7 +24325,7 @@ $(
 
 $(
   local __editor=
-  for   __editor in atom code emacs macdown mate micro nano pico subl vi vim
+  for   __editor in atom code emacs hx macdown mate micro nano pico subl vi vim
   do
     if _command_exists "${__editor}"
     then
@@ -24661,6 +24666,7 @@ HEREDOC
               -e '^code'                      \
               -e '^emacs'                     \
               -e '^gvim'                      \
+              -e '^hx'                        \
               -e '^macdown'                   \
               -e '^mate'                      \
               -e '^mvim'                      \

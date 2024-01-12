@@ -180,6 +180,7 @@ or dozens of notebooks containing thousands of notes, bookmarks, and other items
 - A text editor with command line support, such as:
   - [Vim](https://en.wikipedia.org/wiki/Vim_\(text_editor\)),
   - [Emacs](https://en.wikipedia.org/wiki/Emacs),
+  - [Helix](https://helix-editor.com/),
   - [Visual Studio Code](https://code.visualstudio.com/),
   - [Sublime Text](https://www.sublimetext.com/),
   - [micro](https://github.com/zyedidia/micro),
@@ -2277,7 +2278,7 @@ See [`bookmark help`](#bookmark-help) for more information.
   </sup>
 </p>
 
-Use [`nb todo`](#todo) (shortcut: [`nb t`](#todo))
+Use [`nb todo`](#todo) (shortcut: [`nb to`](#todo))
 to create, list, and update todos.
 `nb` todos are [structured Markdown documents](#nb-markdown-todo-file-format)
 referencing a single primary todo,
@@ -4992,6 +4993,7 @@ the setting name or number to [`nb set`](#settings):
          atom
          code
          emacs
+         hx
          macdown
          mate
          micro
@@ -8025,6 +8027,7 @@ Alias:
          atom
          code
          emacs
+         hx
          macdown
          mate
          micro
