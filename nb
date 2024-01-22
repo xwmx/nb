@@ -21719,7 +21719,7 @@ HEREDOC
 
               printf "1\\n" > "${_server_temp_dir}/spawn_new_process"
 
-              nb browse --respond <&"${ACCEPT_FD}" >&"${ACCEPT_FD}"
+              ${_MY_PATH} browse --respond <&"${ACCEPT_FD}" >&"${ACCEPT_FD}"
 
               exec {ACCEPT_FD}>&- # close connection
 
