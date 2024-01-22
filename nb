@@ -10029,9 +10029,18 @@ _download_from() {
     if _command_exists "google-chrome"
     then
       _download_command="google-chrome"
+    elif _command_exists "chromium"
+    then
+      _download_command="chromium"
+    elif _command_exists "chromium-browser"
+    then
+      _download_command="chromium-browser"
     elif [[ -x "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" ]]
     then
       _download_command="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+    elif [[ -x "/Applications/Chromium.app/Contents/MacOS/Chromium"           ]]
+    then
+      _download_command="/Applications/Chromium.app/Contents/MacOS/Chromium"
     fi
   fi
 
