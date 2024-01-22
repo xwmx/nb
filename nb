@@ -21657,8 +21657,6 @@ HEREDOC
             2>/dev/null
         done
       ) &
-    else
-      _exit
     fi
 
     local _pid="${!}"
