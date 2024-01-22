@@ -3300,16 +3300,16 @@ and enable the Ace editor in
 
 #### `browse` Portability
 
-[`nb browse`](#browse) depends on Bash 5.2+ or
+[`nb browse`](#browse) depends on
 [`ncat`](https://nmap.org/ncat/), which is available as part of
 the `ncat` or `nmap` package in most package managers, and
 [`pandoc`](https://pandoc.org/).
 When only `pandoc` is available, the current note is rendered and
 <a href="#-linking">[[wiki-style links]]</a>
 go to unrendered, original files.
-If only `ncat` or Bash 5.2 is available without `pandoc`,
+If only `ncat` is available,
 files in plain text formats are rendered with the original markup unconverted.
-If neither Bash 5.2+, `ncat`, nor `pandoc` is available,
+If neither `ncat` nor `pandoc` is available,
 [`nb browse`](#browse) falls back to the default behavior of [`nb show`](#show).
 
 #### `browse` Privacy
@@ -3318,7 +3318,7 @@ If neither Bash 5.2+, `ncat`, nor `pandoc` is available,
 from the CSS and JavaScript
 all the way down through the HTTP request parsing and response building,
 with no imports, libraries, frameworks, or third-party code
-outside of the few binary dependencies (`bash`, `git`, `pandoc`),
+outside of the few binary dependencies (`bash`, `git`, `ncat`, `pandoc`),
 the Linux / Unix environment,
 and the optional [Ace editor](#ace-editor).
 
@@ -6573,7 +6573,7 @@ Description:
     [[demo:Example Title]]
 
   `browse` supports `w3m` [1] and `links` [2], and depends on
-  Bash 5.2+ or `ncat` [3] and `pandoc` [4]:
+  `ncat` [3] and `pandoc` [4]:
 
     1. https://en.wikipedia.org/wiki/W3m
     2. https://en.wikipedia.org/wiki/Links_(web_browser)

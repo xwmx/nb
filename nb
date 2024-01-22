@@ -19199,7 +19199,7 @@ $(_color_primary "Description"):
     [[demo:Example Title]]
 
   \`browse\` supports \`w3m\` [1] and \`links\` [2], and depends on
-  Bash 5.2+ or \`ncat\` [3] and \`pandoc\` [4]:
+  \`ncat\` [3] and \`pandoc\` [4]:
 
     1. https://en.wikipedia.org/wiki/W3m
     2. https://en.wikipedia.org/wiki/Links_(web_browser)
