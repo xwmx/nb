@@ -21678,6 +21678,7 @@ HEREDOC
         ) &
         ;;
       nc|netcat)
+        # TODO: improve concurrency
         (
           while true
           do
@@ -21691,6 +21692,7 @@ HEREDOC
         ) &
         ;;
       accept|bash)
+        # More info: https://github.com/dzove855/Bash-web-server
         # TODO: improve concurrency
 
         local _bash_root_path="${BASH%/bin/bash}"
