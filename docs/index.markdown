@@ -215,6 +215,7 @@ Also supported for various enhancements:
 [The Silver Searcher (`ag`)](https://github.com/ggreer/the_silver_searcher),
 [`catimg`](https://github.com/posva/catimg),
 [Chafa](https://github.com/hpjansson/chafa),
+[Chromium](https://www.chromium.org) / [Chrome](https://www.google.com/chrome/),
 [`eza`](https://github.com/eza-community/eza),
 [`ffplay`](https://ffmpeg.org/ffplay.html),
 [ImageMagick](https://imagemagick.org/),
@@ -1764,7 +1765,11 @@ with [`nb browse`](#browse).
 When [Pandoc](https://pandoc.org/) is installed,
 the HTML page content is converted to Markdown.
 When [readability-cli](https://gitlab.com/gardenappl/readability-cli)
-is installed, markup is cleaned up to focus on content.
+is installed, markup is cleaned up to focus on content. When
+[Chromium](https://www.chromium.org) or
+[Chrome](https://www.google.com/chrome/) is installed,
+JavaScript-dependent pages are rendered and the resulting markup is
+saved.
 
 In addition to caching the page content,
 you can also include a quote from the page in a
