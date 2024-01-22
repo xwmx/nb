@@ -21658,7 +21658,7 @@ HEREDOC
           done
         ) &
         ;;
-      accept)
+      accept|bash)
         local _bash_root_path="${BASH%/bin/bash}"
 
         if [[ -d "${_bash_root_path}/lib/bash" ]]
