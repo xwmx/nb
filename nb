@@ -21634,54 +21634,56 @@ HEREDOC
   # Description:
   #   Start the HTTP server in the background.
   _browse_serve() {
-    if _command_exists "ncat" && _command_exists "env"
-    then # ncat is present and system is POSIX
-      (
-        ncat                                      \
-          --exec "${_MY_PATH} browse --respond"   \
-          --keep-open                             \
-          --listen                                \
-          "${NB_SERVER_HOST}" "${NB_SERVER_PORT}" \
-          2>/dev/null
-      ) &
-    elif nc --help &>/dev/null
-    then # GNU nc / netcat is present
-      (
-        while true
-        do
-          nc                                      \
-            --exec "${_MY_PATH} browse --respond" \
-            --listen                              \
-            --local-port="${NB_SERVER_PORT}"      \
-            --source="${NB_SERVER_HOST}"          \
+    case "${NB_BROWSE_SERVER_TOOL:-}" in
+      ncat)
+        (
+          ncat                                      \
+            --exec "${_MY_PATH} browse --respond"   \
+            --keep-open                             \
+            --listen                                \
+            "${NB_SERVER_HOST}" "${NB_SERVER_PORT}" \
             2>/dev/null
-        done
-      ) &
-    elif [[ "${BASH_VERSINFO[0]}" -ge 5 ]] &&
-         [[ "${BASH_VERSINFO[1]}" -ge 2 ]]
-    then
-      local _bash_root="${BASH%/bin/bash}"
+        ) &
+        ;;
+      nc|netcat)
+        (
+          while true
+          do
+            nc                                      \
+              --exec "${_MY_PATH} browse --respond" \
+              --listen                              \
+              --local-port="${NB_SERVER_PORT}"      \
+              --source="${NB_SERVER_HOST}"          \
+              2>/dev/null
+          done
+        ) &
+        ;;
+      accept)
+        local _bash_root_path="${BASH%/bin/bash}"
 
-      if [[ -d "${_bash_root}/lib/bash" ]]
-      then
-        export BASH_LOADABLE_PATH="${_bash_root}/lib/bash"
-      fi
+        if [[ -d "${_bash_root_path}/lib/bash" ]]
+        then
+          export BASH_LOADABLE_PATH="${_bash_root_path}/lib/bash"
+        fi
 
-      if [[ -f "${BASH_LOADABLE_PATH:-}/accept" ]]
-      then
-        enable -f "${BASH_LOADABLE_PATH%/}/accept" accept ||
-          _exit_1 printf "%s\\n" "Could not load accept..."
-      fi
+        if [[ -f "${BASH_LOADABLE_PATH:-}/accept" ]]
+        then
+          enable -f "${BASH_LOADABLE_PATH%/}/accept" accept ||
+            _exit_1 printf "%s\\n" "Could not load accept..."
+        fi
 
-      (
-        while true
-        do
-          accept "${NB_SERVER_PORT}" 2>/dev/null
+        (
+          while true
+          do
+            accept "${NB_SERVER_PORT}" 2>/dev/null
 
-          nb browse --respond <&"${ACCEPT_FD}" >&"${ACCEPT_FD}"
-        done
-      ) &
-    fi
+            nb browse --respond <&"${ACCEPT_FD}" >&"${ACCEPT_FD}"
+
+            exec {ACCEPT_FD}>&- # close connection
+          done
+        ) &
+        ;;
+    esac
 
     local _pid="${!}"
 
@@ -21900,11 +21902,27 @@ HEREDOC
     )")
   fi
 
-  if ! _command_exists "ncat" || ! nc --help &>/dev/null
+  if [[ -z "${NB_BROWSE_SERVER_TOOL:-}" ]]
+  then
+    if _command_exists "ncat"  && _command_exists "env"
+    then # ncat is present and system is POSIX
+      NB_BROWSE_SERVER_TOOL="ncat"
+    elif nc --help &/dev/null
+    then # GNU nc / netcat is present
+      NB_BROWSE_SERVER_TOOL="nc"
+    elif [[ "${BASH_VERSINFO[0]}" -ge 5             ]] &&
+         [[ "${BASH_VERSINFO[1]}" -ge 2             ]] &&
+         [[ -f "${BASH%/bin/bash}/lib/bash/accept"  ]]
+    then
+      NB_BROWSE_SERVER_TOOL="accept"
+    fi
+  fi
+
+  if [[ -z "${NB_BROWSE_SERVER_TOOL:-}" ]]
   then
     _show "${_selector:-}" --render
     _warn cat <<HEREDOC
-Install \`ncat\` or \`nc\` / \`netcat\` for full browsing and linking:
+Install \`ncat\`, \`nc\` / \`netcat\`, or Bash 5.2+ for full browsing and linking:
 $(_color_primary "https://nmap.org/ncat/")
 $(_color_primary "https://en.wikipedia.org/wiki/Netcat")
 HEREDOC
