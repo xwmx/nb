@@ -21691,6 +21691,8 @@ HEREDOC
         ) &
         ;;
       accept|bash)
+        # TODO: improve concurrency
+
         local _bash_root_path="${BASH%/bin/bash}"
 
         if [[ -d "${_bash_root_path}/lib/bash" ]]
@@ -21707,11 +21709,28 @@ HEREDOC
         (
           while true
           do
-            accept -r "${NB_SERVER_HOST}" "${NB_SERVER_PORT}" 2>/dev/null
+            local _server_temp_dir=
+            _server_temp_dir="$(mktemp -d)"
 
-            nb browse --respond <&"${ACCEPT_FD}" >&"${ACCEPT_FD}"
+            : > "${_server_temp_dir}/spawn_new_process"
 
-            exec {ACCEPT_FD}>&- # close connection
+            (
+              accept -r "${NB_SERVER_HOST}" "${NB_SERVER_PORT}" 2>/dev/null
+
+              printf "1\\n" > "${_server_temp_dir}/spawn_new_process"
+
+              nb browse --respond <&"${ACCEPT_FD}" >&"${ACCEPT_FD}"
+
+              exec {ACCEPT_FD}>&- # close connection
+
+              [[ -d "${_server_temp_dir:?}" ]] && rm -rf "${_server_temp_dir:?}"
+            ) &
+
+            until [[   -s "${_server_temp_dir}/spawn_new_process" ]] ||
+                  [[ ! -f "${_server_temp_dir}/spawn_new_process" ]]
+            do
+              :
+            done
           done
         ) &
         ;;
