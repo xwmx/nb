@@ -21675,7 +21675,7 @@ HEREDOC
         (
           while true
           do
-            accept "${NB_SERVER_PORT}" 2>/dev/null
+            accept -r "${NB_SERVER_HOST}" "${NB_SERVER_PORT}" 2>/dev/null
 
             nb browse --respond <&"${ACCEPT_FD}" >&"${ACCEPT_FD}"
 
