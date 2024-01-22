@@ -21697,7 +21697,7 @@ HEREDOC
 
         local _bash_root_path="${BASH%/bin/bash}"
 
-        if [[ -d "${_bash_root_path}/lib/bash" ]]
+        if [[ -d "${_bash_root_path}/lib/bash"    ]]
         then
           export BASH_LOADABLE_PATH="${_bash_root_path}/lib/bash"
         fi
