@@ -82,7 +82,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.10.0"
+_VERSION="7.10.1"
 
 # $_ME
 #
@@ -9852,8 +9852,8 @@ export NB_BROWSE_SERVER_TOOL="${NB_BROWSE_SERVER_TOOL:-}"
 __set_browse_server_tool() {
   if [[ -z "${NB_BROWSE_SERVER_TOOL:-}" ]]
   then
-    if _command_exists "ncat"  && _command_exists "env"
-    then # ncat is present and system is POSIX
+    if _command_exists "ncat"
+    then
       NB_BROWSE_SERVER_TOOL="ncat"
     elif _command_exists "nc" && nc --help &>/dev/null
     then # GNU nc / netcat is present
@@ -21728,11 +21728,14 @@ HEREDOC
             (
               accept -r "${NB_SERVER_HOST}" "${NB_SERVER_PORT}" 2>/dev/null
 
-              printf "1\\n" > "${_server_temp_dir}/spawn_new_process"
+              if [[ -n "${ACCEPT_FD:-}" ]]
+              then
+                printf "1\\n" > "${_server_temp_dir}/spawn_new_process"
 
-              "${_MY_PATH}" browse --respond <&"${ACCEPT_FD}" >&"${ACCEPT_FD}"
+                "${_MY_PATH}" browse --respond <&"${ACCEPT_FD}" >&"${ACCEPT_FD}"
 
-              exec {ACCEPT_FD}>&- # close connection
+                exec {ACCEPT_FD}>&- # close connection
+              fi
 
               [[ -d "${_server_temp_dir:?}" ]] && rm -rf "${_server_temp_dir:?}"
             ) &
