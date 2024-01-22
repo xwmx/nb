@@ -9989,7 +9989,10 @@ _download_from() {
 
   local _target_path="${2:-}"
 
-  if ((${NB_BROWSER_DOWNLOAD_ENABLED:-}))
+  if  ((${NB_BROWSER_DOWNLOAD_ENABLED:-1})) && {
+      [[ "${_url}"    =~ .html$         ]]  ||
+      [[ ! "${_url}"  =~ .[a-zA-Z0-9]$  ]]
+  }
   then
     if _command_exists "google-chrome"
     then

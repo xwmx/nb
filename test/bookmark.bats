@@ -1249,6 +1249,9 @@ $(cat "${NB_TEST_BASE_PATH}/fixtures/example.com.md")"
 @test "'bookmark --save-source' creates new note with HTML content." {
   {
     "${_NB}" init
+
+    # Skip browser download to avoid extra whitespace added to output by Chrome.
+    export NB_BROWSER_DOWNLOAD_ENABLED=0
   }
 
   run "${_NB}" bookmark "${_BOOKMARK_URL}" --save-source
