@@ -18570,9 +18570,9 @@ Can't show archives. Export archive and expand to edit.\\n"
         _tool="${NB_DIRECTORY_TOOL}"
       fi
 
-      if _command_exists "ncat"             &&
-         _command_exists "pandoc"           &&
-         _web_browser --check               &&
+      if [[ -n "${NB_BROWSE_SERVER_TOOL:-}" ]]  &&
+         _command_exists "pandoc"               &&
+         _web_browser --check                   &&
          [[ -z "${_tool:-}"     ]]
       then
         cd "${_CURRENT_WORKING_DIR}"
@@ -18842,9 +18842,9 @@ Can't show archives. Export archive and expand to edit.\\n"
         "$(_color_primary "${_ME}")"
     fi
   else # file is text
-    if ((_browse))                  &&
-         _command_exists "ncat"     &&
-         _command_exists "pandoc"   &&
+    if ((_browse))                              &&
+         [[ -n "${NB_BROWSE_SERVER_TOOL:-}" ]]  &&
+         _command_exists "pandoc"               &&
          _web_browser --check
     then
       cd "${_CURRENT_WORKING_DIR}"
