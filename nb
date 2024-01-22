@@ -9847,7 +9847,7 @@ _main "${_ARGUMENTS[@]:-}"
 # Default: '' (automatically assigned)
 #
 # Supported Values: accept, bash, ncat, nc, netcat
-export NB_BROWSE_SERVER_TOOL=
+export NB_BROWSE_SERVER_TOOL="${NB_BROWSE_SERVER_TOOL:-}"
 
 __set_browse_server_tool() {
   if [[ -z "${NB_BROWSE_SERVER_TOOL:-}" ]]
@@ -9855,7 +9855,7 @@ __set_browse_server_tool() {
     if _command_exists "ncat"  && _command_exists "env"
     then # ncat is present and system is POSIX
       NB_BROWSE_SERVER_TOOL="ncat"
-    elif _command_exists "nc" && nc --help &/dev/null
+    elif _command_exists "nc" && nc --help &>/dev/null
     then # GNU nc / netcat is present
       NB_BROWSE_SERVER_TOOL="nc"
     elif [[ "${BASH_VERSINFO[0]}" -ge 5             ]] &&
