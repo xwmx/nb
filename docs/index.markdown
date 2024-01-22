@@ -182,6 +182,7 @@ or dozens of notebooks containing thousands of notes, bookmarks, and other items
   - [Emacs](https://en.wikipedia.org/wiki/Emacs),
   - [Visual Studio Code](https://code.visualstudio.com/),
   - [Sublime Text](https://www.sublimetext.com/),
+  - [Helix](https://helix-editor.com/),
   - [micro](https://github.com/zyedidia/micro),
   - [nano](https://en.wikipedia.org/wiki/GNU_nano),
   - [Atom](https://atom.io/),
@@ -214,6 +215,7 @@ Also supported for various enhancements:
 [The Silver Searcher (`ag`)](https://github.com/ggreer/the_silver_searcher),
 [`catimg`](https://github.com/posva/catimg),
 [Chafa](https://github.com/hpjansson/chafa),
+[Chromium](https://www.chromium.org) / [Chrome](https://www.google.com/chrome/),
 [`eza`](https://github.com/eza-community/eza),
 [`ffplay`](https://ffmpeg.org/ffplay.html),
 [ImageMagick](https://imagemagick.org/),
@@ -1763,7 +1765,11 @@ with [`nb browse`](#browse).
 When [Pandoc](https://pandoc.org/) is installed,
 the HTML page content is converted to Markdown.
 When [readability-cli](https://gitlab.com/gardenappl/readability-cli)
-is installed, markup is cleaned up to focus on content.
+is installed, markup is cleaned up to focus on content. When
+[Chromium](https://www.chromium.org) or
+[Chrome](https://www.google.com/chrome/) is installed,
+JavaScript-dependent pages are rendered and the resulting markup is
+saved.
 
 In addition to caching the page content,
 you can also include a quote from the page in a
@@ -2277,7 +2283,7 @@ See [`bookmark help`](#bookmark-help) for more information.
   </sup>
 </p>
 
-Use [`nb todo`](#todo) (shortcut: [`nb t`](#todo))
+Use [`nb todo`](#todo) (shortcut: [`nb to`](#todo))
 to create, list, and update todos.
 `nb` todos are [structured Markdown documents](#nb-markdown-todo-file-format)
 referencing a single primary todo,
@@ -4992,6 +4998,7 @@ the setting name or number to [`nb set`](#settings):
          atom
          code
          emacs
+         hx
          macdown
          mate
          micro
@@ -8025,6 +8032,7 @@ Alias:
          atom
          code
          emacs
+         hx
          macdown
          mate
          micro

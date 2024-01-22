@@ -29,6 +29,7 @@
 # - Plugins
 # - Option Parsing
 # - _main() / Dispatch
+# - Configuration: Group 2
 # - Helpers: Group 2 (alphabetical order)
 # - Subcommands: Group 2 (alphabetical order)
 # - Subcommands: Group 3 (alphabetical order)
@@ -81,7 +82,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.9.1"
+_VERSION="7.10.0"
 
 # $_ME
 #
@@ -646,6 +647,7 @@ __set_editor() {
   local _editors=(
     code
     subl
+    hx
     micro
     mate
     macdown
@@ -695,6 +697,10 @@ More information about setting \$EDITOR:
     https://en.wikipedia.org/wiki/Emacs
 - TextMate
     https://macromates.com
+- Helix
+    https://helix-editor.com
+- micro
+    https://github.com/zyedidia/micro
 - nano
     https://en.wikipedia.org/wiki/GNU_nano
 - or many of these:
@@ -9831,6 +9837,37 @@ _main() {
 _main "${_ARGUMENTS[@]:-}"
 
 ###############################################################################
+# Configuration: Group 2                                 Configuration: Group 2
+# ----------------------                                 ----------------------
+###############################################################################
+# --------------------------------------------------------------------------- #
+
+# $NB_BROWSE_SERVER_TOOL
+#
+# Default: '' (automatically assigned)
+#
+# Supported Values: accept, bash, ncat, nc, netcat
+export NB_BROWSE_SERVER_TOOL="${NB_BROWSE_SERVER_TOOL:-}"
+
+__set_browse_server_tool() {
+  if [[ -z "${NB_BROWSE_SERVER_TOOL:-}" ]]
+  then
+    if _command_exists "ncat"  && _command_exists "env"
+    then # ncat is present and system is POSIX
+      NB_BROWSE_SERVER_TOOL="ncat"
+    elif _command_exists "nc" && nc --help &>/dev/null
+    then # GNU nc / netcat is present
+      NB_BROWSE_SERVER_TOOL="nc"
+    elif [[ "${BASH_VERSINFO[0]}" -ge 5             ]] &&
+         [[ "${BASH_VERSINFO[1]}" -ge 2             ]] &&
+         [[ -f "${BASH%/bin/bash}/lib/bash/accept"  ]]
+    then
+      NB_BROWSE_SERVER_TOOL="accept"
+    fi
+  fi
+}; __set_browse_server_tool
+
+###############################################################################
 # Helpers: Group 2                                             Helpers: Group 2
 # ----------------                                             ----------------
 ###############################################################################
@@ -9971,6 +10008,7 @@ _decrypt_file() {
 #   Download the file at <url> and print to standard output or <outfile>, if
 #   present.
 _download_from() {
+  local _download_command=
   local _downloaded=0
   local _timeout=15
   local _url="${1:-}"
@@ -9983,58 +10021,108 @@ _download_from() {
 
   local _target_path="${2:-}"
 
-  if _command_exists "curl"
+  if  ((${NB_BROWSER_DOWNLOAD_ENABLED:-1})) && {
+      [[ "${_url}"    =~ .html$         ]]  ||
+      [[ ! "${_url}"  =~ .[a-zA-Z0-9]$  ]]
+  }
   then
-    local _curl_options=(
-      --silent
-      --location
-      --connect-timeout "${_timeout}"
-      --compressed
-      "${_url}"
-    )
-
-    [[ -n "${NB_USER_AGENT:-}" ]]   &&
-      _curl_options+=(--user-agent "${NB_USER_AGENT}")
-
-    if [[ -n "${_target_path}" ]]
+    if _command_exists "google-chrome"
     then
-      curl                          \
-        "${_curl_options[@]}"       \
-        --output "${_target_path}"  \
-        && _downloaded=1
-    else
-      curl                          \
-        "${_curl_options[@]}"       \
-        && _downloaded=1
-    fi
-  elif _command_exists "wget"
-  then
-    local _wget_options=(
-      --quiet
-      --connect-timeout="${_timeout}"
-      --dns-timeout="${_timeout}"
-      --compression=auto
-      "${_url}"
-    )
-
-    [[ -n "${NB_USER_AGENT:-}" ]]   &&
-      _wget_options+=(--user-agent="${NB_USER_AGENT}")
-
-    if [[ -n "${_target_path}" ]]
+      _download_command="google-chrome"
+    elif _command_exists "chromium"
     then
-      wget                          \
-        "${_wget_options[@]}"       \
-        -O "${_target_path}"        \
-        2>/dev/null                 \
-        && _downloaded=1
-    else
-      wget                          \
-        "${_wget_options[@]}"       \
-        -O -                        \
-        2>/dev/null                 \
-        && _downloaded=1
+      _download_command="chromium"
+    elif _command_exists "chromium-browser"
+    then
+      _download_command="chromium-browser"
+    elif [[ -x "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" ]]
+    then
+      _download_command="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+    elif [[ -x "/Applications/Chromium.app/Contents/MacOS/Chromium"           ]]
+    then
+      _download_command="/Applications/Chromium.app/Contents/MacOS/Chromium"
     fi
   fi
+
+  if [[ -z "${_download_command:-}" ]]
+  then
+    if _command_exists "curl"
+    then
+      _download_command="curl"
+    elif _command_exists "wget"
+    then
+      _download_command="wget"
+    fi
+  fi
+
+  case "${_download_command:-}" in
+    *hrome*)
+      {
+        "${_download_command:-}"  \
+          --dump-dom              \
+          --headless              \
+          "${_url}"
+      } | {
+        if [[ -n "${_target_path:-}" ]]
+        then
+          cat > "${_target_path:-}"
+        else
+          cat
+        fi
+      } && _downloaded=1
+      ;;
+    curl*)
+      local _curl_options=(
+        --silent
+        --location
+        --connect-timeout "${_timeout}"
+        --compressed
+        "${_url}"
+      )
+
+      [[ -n "${NB_USER_AGENT:-}" ]]   &&
+        _curl_options+=(--user-agent "${NB_USER_AGENT}")
+
+      if [[ -n "${_target_path}" ]]
+      then
+        curl                          \
+          "${_curl_options[@]}"       \
+          --output "${_target_path}"  \
+          && _downloaded=1
+      else
+        curl                          \
+          "${_curl_options[@]}"       \
+          && _downloaded=1
+      fi
+      ;;
+    wget*)
+      local _wget_options=(
+        --quiet
+        --connect-timeout="${_timeout}"
+        --dns-timeout="${_timeout}"
+        --compression=auto
+        "${_url}"
+      )
+
+      [[ -n "${NB_USER_AGENT:-}" ]]   &&
+        _wget_options+=(--user-agent="${NB_USER_AGENT}")
+
+      if [[ -n "${_target_path}" ]]
+      then
+        wget                          \
+          "${_wget_options[@]}"       \
+          -O "${_target_path}"        \
+          2>/dev/null                 \
+          && _downloaded=1
+      else
+        wget                          \
+          "${_wget_options[@]}"       \
+          -O -                        \
+          2>/dev/null                 \
+          && _downloaded=1
+      fi
+      ;;
+  esac
 
   if ! ((_downloaded))
   then
@@ -18491,9 +18579,9 @@ Can't show archives. Export archive and expand to edit.\\n"
         _tool="${NB_DIRECTORY_TOOL}"
       fi
 
-      if _command_exists "ncat"             &&
-         _command_exists "pandoc"           &&
-         _web_browser --check               &&
+      if [[ -n "${NB_BROWSE_SERVER_TOOL:-}" ]]  &&
+         _command_exists "pandoc"               &&
+         _web_browser --check                   &&
          [[ -z "${_tool:-}"     ]]
       then
         cd "${_CURRENT_WORKING_DIR}"
@@ -18763,9 +18851,9 @@ Can't show archives. Export archive and expand to edit.\\n"
         "$(_color_primary "${_ME}")"
     fi
   else # file is text
-    if ((_browse))                  &&
-         _command_exists "ncat"     &&
-         _command_exists "pandoc"   &&
+    if ((_browse))                              &&
+         [[ -n "${NB_BROWSE_SERVER_TOOL:-}" ]]  &&
+         _command_exists "pandoc"               &&
          _web_browser --check
     then
       cd "${_CURRENT_WORKING_DIR}"
@@ -21587,12 +21675,77 @@ HEREDOC
   # Description:
   #   Start the HTTP server in the background.
   _browse_serve() {
-    (ncat                                     \
-      --exec "${_MY_PATH} browse --respond"   \
-      --keep-open                             \
-      --listen                                \
-      "${NB_SERVER_HOST}" "${NB_SERVER_PORT}" \
-      2>/dev/null) &
+    case "${NB_BROWSE_SERVER_TOOL:-}" in
+      ncat)
+        (
+          ncat                                      \
+            --exec "${_MY_PATH} browse --respond"   \
+            --keep-open                             \
+            --listen                                \
+            "${NB_SERVER_HOST}" "${NB_SERVER_PORT}" \
+            2>/dev/null
+        ) &
+        ;;
+      nc|netcat)
+        # TODO: improve concurrency
+        (
+          while true
+          do
+            nc                                      \
+              --exec "${_MY_PATH} browse --respond" \
+              --listen                              \
+              --local-port="${NB_SERVER_PORT}"      \
+              --source="${NB_SERVER_HOST}"          \
+              2>/dev/null
+          done
+        ) &
+        ;;
+      accept|bash)
+        # More info: https://github.com/dzove855/Bash-web-server
+        # TODO: improve concurrency
+
+        local _bash_root_path="${BASH%/bin/bash}"
+
+        if [[ -d "${_bash_root_path}/lib/bash"    ]]
+        then
+          export BASH_LOADABLE_PATH="${_bash_root_path}/lib/bash"
+        fi
+
+        if [[ -f "${BASH_LOADABLE_PATH:-}/accept" ]]
+        then
+          enable -f "${BASH_LOADABLE_PATH%/}/accept" accept ||
+            _exit_1 printf "%s\\n" "Could not load accept..."
+        fi
+
+        (
+          while true
+          do
+            local _server_temp_dir=
+            _server_temp_dir="$(mktemp -d)"
+
+            : > "${_server_temp_dir}/spawn_new_process"
+
+            (
+              accept -r "${NB_SERVER_HOST}" "${NB_SERVER_PORT}" 2>/dev/null
+
+              printf "1\\n" > "${_server_temp_dir}/spawn_new_process"
+
+              "${_MY_PATH}" browse --respond <&"${ACCEPT_FD}" >&"${ACCEPT_FD}"
+
+              exec {ACCEPT_FD}>&- # close connection
+
+              [[ -d "${_server_temp_dir:?}" ]] && rm -rf "${_server_temp_dir:?}"
+            ) &
+
+            until [[   -s "${_server_temp_dir}/spawn_new_process" ]] ||
+                  [[ ! -f "${_server_temp_dir}/spawn_new_process" ]]
+            do
+              :
+            done
+          done
+        ) &
+        ;;
+    esac
 
     local _pid="${!}"
 
@@ -21811,12 +21964,13 @@ HEREDOC
     )")
   fi
 
-  if ! _command_exists "ncat"
+  if [[ -z "${NB_BROWSE_SERVER_TOOL:-}" ]]
   then
     _show "${_selector:-}" --render
     _warn cat <<HEREDOC
-Install \`ncat\` for full browsing and linking:
+Install \`ncat\`, \`nc\` / \`netcat\`, or Bash 5.2+ for full browsing and linking:
 $(_color_primary "https://nmap.org/ncat/")
+$(_color_primary "https://en.wikipedia.org/wiki/Netcat")
 HEREDOC
 
     exit 0
@@ -24320,7 +24474,7 @@ $(
 
 $(
   local __editor=
-  for   __editor in atom code emacs macdown mate micro nano pico subl vi vim
+  for   __editor in atom code emacs hx macdown mate micro nano pico subl vi vim
   do
     if _command_exists "${__editor}"
     then
@@ -24661,6 +24815,7 @@ HEREDOC
               -e '^code'                      \
               -e '^emacs'                     \
               -e '^gvim'                      \
+              -e '^hx'                        \
               -e '^macdown'                   \
               -e '^mate'                      \
               -e '^mvim'                      \

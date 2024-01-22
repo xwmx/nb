@@ -159,7 +159,7 @@ jobs:
       - name: "Setup"
         run: |
           brew update
-          brew install python@3.11 --overwrite
+          brew install python@3.12 --overwrite
           brew install bat
           brew install bats-core
           brew install expect
@@ -171,6 +171,10 @@ jobs:
           gem install asciidoctor
           git config --global user.name   "Example Name"
           git config --global user.email  "example@example.com"
+      - uses: browser-actions/setup-chrome@v1
+        id: setup-chrome
+      - run: |
+          ${{ steps.setup-chrome.outputs.chrome-path }} --version
       - name: "Set $TERM=xterm"
         run:  printf "TERM=xterm\\n" >> $GITHUB_ENV
       - name: "Run bats tests"
@@ -258,6 +262,10 @@ jobs:
           sudo gem install asciidoctor
           git config --global user.name   "Example Name"
           git config --global user.email  "example@example.com"
+      - uses: browser-actions/setup-chrome@v1
+        id: setup-chrome
+      - run: |
+          ${{ steps.setup-chrome.outputs.chrome-path }} --version
       - name: "Install bats-core"
         run: |
           git clone https://github.com/bats-core/bats-core.git "${HOME}/bats-core" &&
