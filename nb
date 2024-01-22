@@ -21634,12 +21634,32 @@ HEREDOC
   # Description:
   #   Start the HTTP server in the background.
   _browse_serve() {
-    (ncat                                     \
-      --exec "${_MY_PATH} browse --respond"   \
-      --keep-open                             \
-      --listen                                \
-      "${NB_SERVER_HOST}" "${NB_SERVER_PORT}" \
-      2>/dev/null) &
+    if _command_exists "ncat" && _command_exists "env"
+    then # ncat is present and system is POSIX
+      (
+        ncat                                      \
+          --exec "${_MY_PATH} browse --respond"   \
+          --keep-open                             \
+          --listen                                \
+          "${NB_SERVER_HOST}" "${NB_SERVER_PORT}" \
+          2>/dev/null
+      ) &
+    elif nc --help &>/dev/null
+    then # GNU nc / netcat is present
+      (
+        while true
+        do
+          nc                                      \
+            --exec "${_MY_PATH} browse --respond" \
+            --listen                              \
+            --local-port="${NB_SERVER_PORT}"      \
+            --source="${NB_SERVER_HOST}"          \
+            2>/dev/null
+        done
+      ) &
+    else
+      _exit
+    fi
 
     local _pid="${!}"
 
@@ -21858,12 +21878,13 @@ HEREDOC
     )")
   fi
 
-  if ! _command_exists "ncat"
+  if ! _command_exists "ncat" || ! nc --help &>/dev/null
   then
     _show "${_selector:-}" --render
     _warn cat <<HEREDOC
-Install \`ncat\` for full browsing and linking:
+Install \`ncat\` or \`nc\` / \`netcat\` for full browsing and linking:
 $(_color_primary "https://nmap.org/ncat/")
+$(_color_primary "https://en.wikipedia.org/wiki/Netcat")
 HEREDOC
 
     exit 0
