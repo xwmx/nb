@@ -10059,7 +10059,7 @@ _download_from() {
   fi
 
   case "${_download_command:-}" in
-    *hrome*)
+    *hrome*|*hromium*)
       {
         "${_download_command:-}"  \
           --dump-dom              \
