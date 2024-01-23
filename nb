@@ -9855,6 +9855,9 @@ __set_browse_server_tool() {
     if _command_exists "ncat"
     then
       NB_BROWSE_SERVER_TOOL="ncat"
+    # elif _command_exists "socat"
+    # then
+    #   NB_BROWSE_SERVER_TOOL="socat"
     elif _command_exists "nc" && nc --help &>/dev/null
     then # GNU nc / netcat is present
       NB_BROWSE_SERVER_TOOL="nc"
@@ -21698,6 +21701,14 @@ HEREDOC
               --source="${NB_SERVER_HOST}"          \
               2>/dev/null
           done
+        ) &
+        ;;
+      socat)
+        (
+          socat                                                 \
+            tcp-listen:"${NB_SERVER_PORT}",crlf,reuseaddr,fork  \
+            "system:{ ${_MY_PATH} browse --respond; }"          \
+            2>/dev/null
         ) &
         ;;
       accept|bash)
