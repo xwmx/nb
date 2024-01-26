@@ -8990,6 +8990,7 @@ Shortcut Alias:
     <a href="#nb_audio_tool"><code>$NB_AUDIO_TOOL</code></a>&nbsp;·
     <a href="#nb_auto_sync"><code>$NB_AUTO_SYNC</code></a>&nbsp;·
     <a href="#nb_browser"><code>$NB_BROWSER</code></a>&nbsp;·
+    <a href="#nb_browse_server_tool"><code>$NB_BROWSE_SERVER_TOOL</code></a>&nbsp;·
     <a href="#nb_color_primary"><code>$NB_COLOR_PRIMARY</code></a>&nbsp;·
     <a href="#nb_color_secondary"><code>$NB_COLOR_SECONDARY</code></a>&nbsp;·
     <a href="#nb_color_theme"><code>$NB_COLOR_THEME</code></a>&nbsp;·
@@ -9158,6 +9159,23 @@ Default: '1'
 
 When set to '1', each `_git checkpoint()` call will automativally run
 `$_ME sync`. To disable this behavior, set the value to '0'.
+```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
+##### `$NB_BROWSE_SERVER_TOOL`
+
+```text
+Default: first available: 'ncat', 'netcat', 'bash' (5.2+), ''
+
+The tool used to listen on the server host and port and respond to
+incoming requests.
+
+Supported Values: 'accept', 'bash', 'nc', 'ncat', netcat', 'socat'
 ```
 
 <p>
