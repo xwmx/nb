@@ -21705,9 +21705,9 @@ HEREDOC
         ;;
       socat)
         (
-          socat                                                 \
-            tcp-listen:"${NB_SERVER_PORT}",crlf,reuseaddr,fork  \
-            "system:{ ${_MY_PATH} browse --respond; }"          \
+          socat                                           \
+            tcp-listen:"${NB_SERVER_PORT}",reuseaddr,fork \
+            "system:{ ${_MY_PATH} browse --respond; }"    \
             2>/dev/null
         ) &
         ;;
