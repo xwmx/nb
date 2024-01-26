@@ -9852,12 +9852,24 @@ export NB_BROWSE_SERVER_TOOL="${NB_BROWSE_SERVER_TOOL:-}"
 __set_browse_server_tool() {
   if [[ -z "${NB_BROWSE_SERVER_TOOL:-}" ]]
   then
-    if _command_exists "ncat"
-    then
-      NB_BROWSE_SERVER_TOOL="ncat"
-    # elif _command_exists "socat"
-    # then
-    #   NB_BROWSE_SERVER_TOOL="socat"
+    if _command_exists "env"
+    then # posix
+      if _command_exists "ncat"
+      then
+        NB_BROWSE_SERVER_TOOL="ncat"
+      elif _command_exists "socat"
+      then
+        NB_BROWSE_SERVER_TOOL="socat"
+      fi
+    elif ! _command_exists "env"
+    then # non-posix
+      if _command_exists "socat"
+      then
+        NB_BROWSE_SERVER_TOOL="socat"
+      elif _command_exists "ncat"
+      then
+        NB_BROWSE_SERVER_TOOL="ncat"
+      fi
     elif _command_exists "nc" && nc --help &>/dev/null
     then # GNU nc / netcat is present
       NB_BROWSE_SERVER_TOOL="nc"
