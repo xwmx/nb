@@ -9176,7 +9176,7 @@ When set to '1', each `_git checkpoint()` call will automativally run
 ##### `$NB_BROWSE_SERVER_TOOL`
 
 ```text
-Default: first available: 'ncat', 'netcat', 'bash' (5.2+), ''
+Default: first available: 'ncat', 'netcat', 'bash' (5.2+ only), ''
 
 The tool used to listen on the server host and port and respond to
 incoming requests.
