@@ -234,7 +234,8 @@ Also supported for various enhancements:
 [Midnight Commander (`mc`)](https://en.wikipedia.org/wiki/Midnight_Commander),
 [`mpg123`](https://en.wikipedia.org/wiki/Mpg123),
 [MPlayer](https://en.wikipedia.org/wiki/MPlayer),
-[ncat](https://nmap.org/ncat/),
+[`ncat`](https://nmap.org/ncat/),
+[`netcat`](https://netcat.sourceforge.net/),
 [note-link-janitor](https://github.com/andymatuschak/note-link-janitor)
 (via [plugin](https://github.com/xwmx/nb/blob/master/plugins/backlink.nb-plugin)),
 [`pdftotext`](https://en.wikipedia.org/wiki/Pdftotext),
@@ -243,6 +244,7 @@ Also supported for various enhancements:
 [readability-cli](https://gitlab.com/gardenappl/readability-cli),
 [`rga` / ripgrep-all](https://github.com/phiresky/ripgrep-all),
 [`sc-im`](https://github.com/andmarti1424/sc-im),
+[`socat`](https://www.kali.org/tools/socat/),
 [`termvisage`](https://github.com/AnonymouX47/termvisage),
 [`termpdf.py`](https://github.com/dsanson/termpdf.py),
 [Tidy-Viewer (`tv`)](https://github.com/alexhallam/tv),
