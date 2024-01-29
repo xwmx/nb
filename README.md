@@ -195,7 +195,7 @@ uses them to enhance the experience whenever they are available.
 Recommended:
 
 - [`bat`](https://github.com/sharkdp/bat)
-- [`ncat`](https://nmap.org/ncat/)
+- [`ncat`](https://nmap.org/ncat/) or [`socat`](https://www.kali.org/tools/socat/)
 - [`pandoc`](https://pandoc.org/)
 - [`rg`](https://github.com/BurntSushi/ripgrep)
 - [`tig`](https://github.com/jonas/tig)
@@ -3308,15 +3308,17 @@ and enable the Ace editor in
 #### `browse` Portability
 
 [`nb browse`](#browse) depends on
+either [`socat`](https://www.kali.org/tools/socat/)
+or
 [`ncat`](https://nmap.org/ncat/), which is available as part of
 the `ncat` or `nmap` package in most package managers, and
 [`pandoc`](https://pandoc.org/).
 When only `pandoc` is available, the current note is rendered and
 <a href="#-linking">[[wiki-style links]]</a>
 go to unrendered, original files.
-If only `ncat` is available,
+If only `socat` or `ncat` is available without `pandoc`,
 files in plain text formats are rendered with the original markup unconverted.
-If neither `ncat` nor `pandoc` is available,
+If neither `ncat`, `socat`, nor `pandoc` is available,
 [`nb browse`](#browse) falls back to the default behavior of [`nb show`](#show).
 
 #### `browse` Privacy
@@ -3325,7 +3327,8 @@ If neither `ncat` nor `pandoc` is available,
 from the CSS and JavaScript
 all the way down through the HTTP request parsing and response building,
 with no imports, libraries, frameworks, or third-party code
-outside of the few binary dependencies (`bash`, `git`, `ncat`, `pandoc`),
+outside of the few binary dependencies
+(`bash`, `git`, `ncat` / `socat`, `pandoc`),
 the Linux / Unix environment,
 and the optional [Ace editor](#ace-editor).
 
@@ -6580,12 +6583,13 @@ Description:
     [[demo:Example Title]]
 
   `browse` supports `w3m` [1] and `links` [2], and depends on
-  `ncat` [3] and `pandoc` [4]:
+  `ncat` [3] or `socat` [4] and `pandoc` [5]:
 
     1. https://en.wikipedia.org/wiki/W3m
     2. https://en.wikipedia.org/wiki/Links_(web_browser)
     3. https://nmap.org/ncat/
-    4. https://pandoc.org/
+    4. https://www.kali.org/tools/socat/
+    5. https://pandoc.org/
 
 Read More:
   https://github.com/xwmx/nb#-browsing
@@ -9172,7 +9176,7 @@ When set to '1', each `_git checkpoint()` call will automativally run
 ##### `$NB_BROWSE_SERVER_TOOL`
 
 ```text
-Default: first available: 'ncat', 'netcat', 'bash' (5.2+ only), ''
+Default: first available: 'ncat', 'socat', 'netcat', 'bash' (5.2+ only), ''
 
 The tool used to listen on the server host and port and respond to
 incoming requests.

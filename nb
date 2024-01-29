@@ -19238,12 +19238,13 @@ $(_color_primary "Description"):
     [[demo:Example Title]]
 
   \`browse\` supports \`w3m\` [1] and \`links\` [2], and depends on
-  \`ncat\` [3] and \`pandoc\` [4]:
+  \`ncat\` [3] or \`socat\` [4] and \`pandoc\` [5]:
 
     1. https://en.wikipedia.org/wiki/W3m
     2. https://en.wikipedia.org/wiki/Links_(web_browser)
     3. https://nmap.org/ncat/
-    4. https://pandoc.org/
+    4. https://www.kali.org/tools/socat/
+    5. https://pandoc.org/
 
 $(_color_primary "Read More"):
   ${_README_URL}#-browsing
