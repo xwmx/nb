@@ -56,7 +56,7 @@ Sublime Text,
 and any other text editor you like,
 as well as terminal and GUI web browsers.
 `nb` works in any standard Linux / Unix environment,
-including macOS and Windows via WSL.
+including macOS and Windows via WSL, MSYS, and Cygwin.
 [Optional dependencies](#optional) can be installed to enhance functionality,
 but `nb` works great without them.
 
