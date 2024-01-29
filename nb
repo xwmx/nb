@@ -2697,7 +2697,22 @@ _open_in_gui_app() {
 
   [[ -n "${_target:-}" ]] || return 1
 
-  if _command_exists "xdg-open"
+  if [[ -n "${NB_GUI_BROWSER:-}" ]] &&
+     _string_is_url "${_target:-}"
+  then
+    if [[ "${OSTYPE}" =~ cygwin|msys|win32    ]]
+    then
+      start "${NB_GUI_BROWSER:-}" "${_target}"
+    else
+      local _gui_browser_command=("${NB_GUI_BROWSER:-}")
+
+      if _command_exists "${_gui_browser_command[0]:-}" ||
+         [[ -f "${_gui_browser_command[0]:-}" ]]
+      then
+        "${_gui_browser_command[@]:-}" "${_request_url:-}" 2>/dev/null &
+      fi
+    fi
+  elif _command_exists "xdg-open"
   then
     xdg-open "${_target}"
   elif _command_exists "open"
@@ -2706,6 +2721,9 @@ _open_in_gui_app() {
   elif _command_exists "wslview"
   then
     wslview "${_target}"
+  elif [[ "${OSTYPE}" =~ cygwin|msys|win32    ]]
+  then # https://stackoverflow.com/q/3739327
+    rundll32 url.dll,FileProtocolHandler "${_target}"
   else
     return 1
   fi
@@ -22212,20 +22230,7 @@ HEREDOC
       _web_browser "${_request_url:-}"
     elif ((_open_gui))
     then
-      local _gui_browser_command=()
-
-      if [[ -n "${NB_GUI_BROWSER:-}"          ]]
-      then
-        _gui_browser_command=("${NB_GUI_BROWSER:-}")
-      fi
-
-      if _command_exists "${_gui_browser_command[0]:-}" ||
-         [[ -f "${_gui_browser_command[0]:-}" ]]
-      then
-        "${_gui_browser_command[@]:-}" "${_request_url:-}" 2>/dev/null &
-      else
-        _open_in_gui_app "${_request_url:-}"
-      fi
+      _open_in_gui_app "${_request_url:-}"
     fi
 
     if ((_daemon))
