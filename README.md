@@ -3319,9 +3319,9 @@ except for the Ace editor. If only `pandoc` is available,
 the current note is rendered and
 <a href="#-linking">[[wiki-style links]]</a>
 go to unrendered, original files.
-When `socat`,`ncat`, or Bash 5.2 is available without `pandoc`,
+When `socat`,`ncat`, or Bash 5.2+ is available without `pandoc`,
 files in plain text formats are rendered with the original markup unconverted.
-If neither `ncat`, `socat`, nor `pandoc` is available,
+If neither `ncat`, `socat`, Bash 5.2+, nor `pandoc` is available,
 [`nb browse`](#browse) falls back to the default behavior of [`nb show`](#show).
 
 #### `browse` Privacy
