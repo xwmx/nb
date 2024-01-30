@@ -3324,6 +3324,10 @@ files in plain text formats are rendered with the original markup unconverted.
 If neither `ncat`, `socat`, Bash 5.2+, nor `pandoc` is available,
 [`nb browse`](#browse) falls back to the default behavior of [`nb show`](#show).
 
+When `nb` is installed on Windows,
+`socat` ([[MSYS]](https://packages.msys2.org/package/socat),
+[[Cygwin]](https://cygwin.com/packages/summary/socat.html)) is recommended.
+
 #### `browse` Privacy
 
 [`nb browse`](#browse) is completely local and self-contained within `nb`,
