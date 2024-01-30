@@ -3316,8 +3316,8 @@ and enable the Ace editor in
 [`nb browse`](#browse) depends on
 either [`socat`](https://www.kali.org/tools/socat/)
 or
-[`ncat`](https://nmap.org/ncat/), which is available as part of
-the `ncat` or `nmap` package in most package managers, and
+[`ncat`](https://nmap.org/ncat/) (available as part of
+the `ncat` or `nmap` package in most package managers) and
 [`pandoc`](https://pandoc.org/). When neither `socat` nor `ncat` is
 available and the Bash version is 5.2 or higher, [`nb browse`](#browse)
 falls back to a pure Bash implementation that supports all features
