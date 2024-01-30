@@ -62,7 +62,7 @@ Sublime Text,
 and any other text editor you like,
 as well as terminal and GUI web browsers.
 `nb` works in any standard Linux / Unix environment,
-including macOS and Windows via WSL.
+including macOS and Windows via WSL, MSYS, and Cygwin.
 [Optional dependencies](#optional) can be installed to enhance functionality,
 but `nb` works great without them.
 
@@ -201,7 +201,7 @@ uses them to enhance the experience whenever they are available.
 Recommended:
 
 - [`bat`](https://github.com/sharkdp/bat)
-- [`ncat`](https://nmap.org/ncat/)
+- [`ncat`](https://nmap.org/ncat/) or [`socat`](https://www.kali.org/tools/socat/)
 - [`pandoc`](https://pandoc.org/)
 - [`rg`](https://github.com/BurntSushi/ripgrep)
 - [`tig`](https://github.com/jonas/tig)
@@ -234,7 +234,8 @@ Also supported for various enhancements:
 [Midnight Commander (`mc`)](https://en.wikipedia.org/wiki/Midnight_Commander),
 [`mpg123`](https://en.wikipedia.org/wiki/Mpg123),
 [MPlayer](https://en.wikipedia.org/wiki/MPlayer),
-[ncat](https://nmap.org/ncat/),
+[`ncat`](https://nmap.org/ncat/),
+[`netcat`](https://netcat.sourceforge.net/),
 [note-link-janitor](https://github.com/andymatuschak/note-link-janitor)
 (via [plugin](https://github.com/xwmx/nb/blob/master/plugins/backlink.nb-plugin)),
 [`pdftotext`](https://en.wikipedia.org/wiki/Pdftotext),
@@ -243,6 +244,7 @@ Also supported for various enhancements:
 [readability-cli](https://gitlab.com/gardenappl/readability-cli),
 [`rga` / ripgrep-all](https://github.com/phiresky/ripgrep-all),
 [`sc-im`](https://github.com/andmarti1424/sc-im),
+[`socat`](https://www.kali.org/tools/socat/),
 [`termvisage`](https://github.com/AnonymouX47/termvisage),
 [`termpdf.py`](https://github.com/dsanson/termpdf.py),
 [Tidy-Viewer (`tv`)](https://github.com/alexhallam/tv),
@@ -3312,15 +3314,17 @@ and enable the Ace editor in
 #### `browse` Portability
 
 [`nb browse`](#browse) depends on
+either [`socat`](https://www.kali.org/tools/socat/)
+or
 [`ncat`](https://nmap.org/ncat/), which is available as part of
 the `ncat` or `nmap` package in most package managers, and
 [`pandoc`](https://pandoc.org/).
 When only `pandoc` is available, the current note is rendered and
 <a href="#-linking">[[wiki-style links]]</a>
 go to unrendered, original files.
-If only `ncat` is available,
+If only `socat` or `ncat` is available without `pandoc`,
 files in plain text formats are rendered with the original markup unconverted.
-If neither `ncat` nor `pandoc` is available,
+If neither `ncat`, `socat`, nor `pandoc` is available,
 [`nb browse`](#browse) falls back to the default behavior of [`nb show`](#show).
 
 #### `browse` Privacy
@@ -3329,7 +3333,8 @@ If neither `ncat` nor `pandoc` is available,
 from the CSS and JavaScript
 all the way down through the HTTP request parsing and response building,
 with no imports, libraries, frameworks, or third-party code
-outside of the few binary dependencies (`bash`, `git`, `ncat`, `pandoc`),
+outside of the few binary dependencies
+(`bash`, `git`, `ncat` / `socat`, `pandoc`),
 the Linux / Unix environment,
 and the optional [Ace editor](#ace-editor).
 
@@ -6584,12 +6589,13 @@ Description:
     [[demo:Example Title]]
 
   `browse` supports `w3m` [1] and `links` [2], and depends on
-  `ncat` [3] and `pandoc` [4]:
+  `ncat` [3] or `socat` [4] and `pandoc` [5]:
 
     1. https://en.wikipedia.org/wiki/W3m
     2. https://en.wikipedia.org/wiki/Links_(web_browser)
     3. https://nmap.org/ncat/
-    4. https://pandoc.org/
+    4. https://www.kali.org/tools/socat/
+    5. https://pandoc.org/
 
 Read More:
   https://github.com/xwmx/nb#-browsing
@@ -8996,6 +9002,7 @@ Shortcut Alias:
     <a href="#nb_audio_tool"><code>$NB_AUDIO_TOOL</code></a>&nbsp;·
     <a href="#nb_auto_sync"><code>$NB_AUTO_SYNC</code></a>&nbsp;·
     <a href="#nb_browser"><code>$NB_BROWSER</code></a>&nbsp;·
+    <a href="#nb_browse_server_tool"><code>$NB_BROWSE_SERVER_TOOL</code></a>&nbsp;·
     <a href="#nb_color_primary"><code>$NB_COLOR_PRIMARY</code></a>&nbsp;·
     <a href="#nb_color_secondary"><code>$NB_COLOR_SECONDARY</code></a>&nbsp;·
     <a href="#nb_color_theme"><code>$NB_COLOR_THEME</code></a>&nbsp;·
@@ -9164,6 +9171,23 @@ Default: '1'
 
 When set to '1', each `_git checkpoint()` call will automativally run
 `$_ME sync`. To disable this behavior, set the value to '0'.
+```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
+##### `$NB_BROWSE_SERVER_TOOL`
+
+```text
+Default: first available: 'ncat', 'socat', 'netcat', 'bash' (5.2+ only), ''
+
+The tool used to listen on the server host and port and respond to
+incoming requests.
+
+Supported Values: 'accept', 'bash', 'nc', 'ncat', netcat', 'socat'
 ```
 
 <p>

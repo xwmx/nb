@@ -82,7 +82,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.10.2"
+_VERSION="7.10.3"
 
 # $_ME
 #
@@ -2697,7 +2697,22 @@ _open_in_gui_app() {
 
   [[ -n "${_target:-}" ]] || return 1
 
-  if _command_exists "xdg-open"
+  if [[ -n "${NB_GUI_BROWSER:-}" ]] &&
+     _string_is_url "${_target:-}"
+  then
+    if [[ "${OSTYPE}" =~ cygwin|msys|win32    ]]
+    then
+      start "${NB_GUI_BROWSER:-}" "${_target}"
+    else
+      local _gui_browser_command=("${NB_GUI_BROWSER:-}")
+
+      if _command_exists "${_gui_browser_command[0]:-}" ||
+         [[ -f "${_gui_browser_command[0]:-}" ]]
+      then
+        "${_gui_browser_command[@]:-}" "${_request_url:-}" 2>/dev/null &
+      fi
+    fi
+  elif _command_exists "xdg-open"
   then
     xdg-open "${_target}"
   elif _command_exists "open"
@@ -2706,6 +2721,9 @@ _open_in_gui_app() {
   elif _command_exists "wslview"
   then
     wslview "${_target}"
+  elif [[ "${OSTYPE}" =~ cygwin|msys|win32    ]]
+  then # https://stackoverflow.com/q/3739327
+    rundll32 url.dll,FileProtocolHandler "${_target}"
   else
     return 1
   fi
@@ -9850,14 +9868,23 @@ _main "${_ARGUMENTS[@]:-}"
 export NB_BROWSE_SERVER_TOOL="${NB_BROWSE_SERVER_TOOL:-}"
 
 __set_browse_server_tool() {
-  if [[ -z "${NB_BROWSE_SERVER_TOOL:-}" ]]
+  if [[ -z "${NB_BROWSE_SERVER_TOOL:-}"     ]]
   then
-    if _command_exists "ncat"
+    if [[ "${OSTYPE}" =~ cygwin|msys|win32  ]]
+    then
+      if _command_exists "socat"
+      then
+        NB_BROWSE_SERVER_TOOL="socat"
+      elif _command_exists "ncat"
+      then
+        NB_BROWSE_SERVER_TOOL="ncat"
+      fi
+    elif _command_exists "ncat"
     then
       NB_BROWSE_SERVER_TOOL="ncat"
-    # elif _command_exists "socat"
-    # then
-    #   NB_BROWSE_SERVER_TOOL="socat"
+    elif _command_exists "socat"
+    then
+      NB_BROWSE_SERVER_TOOL="socat"
     elif _command_exists "nc" && nc --help &>/dev/null
     then # GNU nc / netcat is present
       NB_BROWSE_SERVER_TOOL="nc"
@@ -19211,12 +19238,13 @@ $(_color_primary "Description"):
     [[demo:Example Title]]
 
   \`browse\` supports \`w3m\` [1] and \`links\` [2], and depends on
-  \`ncat\` [3] and \`pandoc\` [4]:
+  \`ncat\` [3] or \`socat\` [4] and \`pandoc\` [5]:
 
     1. https://en.wikipedia.org/wiki/W3m
     2. https://en.wikipedia.org/wiki/Links_(web_browser)
     3. https://nmap.org/ncat/
-    4. https://pandoc.org/
+    4. https://www.kali.org/tools/socat/
+    5. https://pandoc.org/
 
 $(_color_primary "Read More"):
   ${_README_URL}#-browsing
@@ -21705,9 +21733,9 @@ HEREDOC
         ;;
       socat)
         (
-          socat                                                 \
-            tcp-listen:"${NB_SERVER_PORT}",crlf,reuseaddr,fork  \
-            "system:{ ${_MY_PATH} browse --respond; }"          \
+          socat                                           \
+            tcp-listen:"${NB_SERVER_PORT}",reuseaddr,fork \
+            "system:{ ${_MY_PATH} browse --respond; }"    \
             2>/dev/null
         ) &
         ;;
@@ -22203,20 +22231,7 @@ HEREDOC
       _web_browser "${_request_url:-}"
     elif ((_open_gui))
     then
-      local _gui_browser_command=()
-
-      if [[ -n "${NB_GUI_BROWSER:-}"          ]]
-      then
-        _gui_browser_command=("${NB_GUI_BROWSER:-}")
-      fi
-
-      if _command_exists "${_gui_browser_command[0]:-}" ||
-         [[ -f "${_gui_browser_command[0]:-}" ]]
-      then
-        "${_gui_browser_command[@]:-}" "${_request_url:-}" 2>/dev/null &
-      else
-        _open_in_gui_app "${_request_url:-}"
-      fi
+      _open_in_gui_app "${_request_url:-}"
     fi
 
     if ((_daemon))
