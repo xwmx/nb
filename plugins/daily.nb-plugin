@@ -17,7 +17,7 @@ _subcommands add "daily"
 # Define help and usage text with `_subcommands describe <subcommand> <usage>`.
 _subcommands describe "daily" <<HEREDOC
 Usage:
-  nb daily [<content>] [--print]
+  nb daily [<content>]
 
 Description:
   Add notes to a daily log.
@@ -45,11 +45,8 @@ _daily() {
     then
       printf "Add the first note of the day: %s daily <content>\\n" "${_ME}"
     else
-      _show "${_target_path:-}"
+      _show "${_target_path:-}" --print
     fi
-  elif [[ "${_content:-}" == "--print"  ]]
-  then
-    _show "${_target_path:-}" --print
   else
     local _timestamp=
     _timestamp="$(date "+%H:%M:%S")"
