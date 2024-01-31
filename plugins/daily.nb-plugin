@@ -91,7 +91,7 @@ _daily() {
     then
       local _note_number="${2:-0}"
 
-      if [[ "${_note_number:-}" -gt "${#_daily_note_paths[@]}" ]]
+      if [[ "${_note_number:-}" -ge "${#_daily_note_paths[@]}" ]]
       then
         _exit_1 printf "Not found.\\n"
       fi
