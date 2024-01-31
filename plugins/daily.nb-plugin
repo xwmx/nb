@@ -17,7 +17,7 @@ _subcommands add "daily"
 # Define help and usage text with `_subcommands describe <subcommand> <usage>`.
 _subcommands describe "daily" <<HEREDOC
 Usage:
-  nb daily [<content>]
+  nb daily [<content>] [--print]
 
 Description:
   Add notes to a daily log.
