@@ -271,7 +271,7 @@ Installing it together with the `bash` formula is recommended:
 brew install nb bash
 ```
 
-#### Ubuntu, Windows WSL, and others
+#### Ubuntu, Windows, and others
 
 ##### npm
 
@@ -286,6 +286,10 @@ to install Bash and Zsh completion scripts (recommended).
 On Ubuntu and WSL, you can
 run [`sudo "$(which nb)" env install`](#env)
 to install the optional dependencies.
+
+When `nb` is installed on Windows,
+`socat` ([MSYS](https://packages.msys2.org/package/socat),
+[Cygwin](https://cygwin.com/packages/summary/socat.html)) is recommended.
 
 *`nb` is also available under its original package name,
 [notes.sh](https://www.npmjs.com/package/notes.sh),
