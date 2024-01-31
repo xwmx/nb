@@ -8772,6 +8772,7 @@ See Also:
   <a href="#backlink">backlink</a>&nbsp;·
   <a href="#bump">bump</a>&nbsp;·
   <a href="#clip">clip</a>&nbsp;·
+  <a href="#daily">daily</a>&nbsp;·
   <a href="#ebook">ebook</a>&nbsp;·
   <a href="#example">example</a>&nbsp;·
   <a href="#weather">weather</a>
@@ -8877,6 +8878,34 @@ Examples:
 
   # save the clipboard contents as a new `.cr` file in the "snippets" notebook
   nb snippets:clip .cr
+```
+
+#### `daily`
+
+[↑&nbsp;](#plugin-help)
+
+##### Install
+
+```bash
+nb plugins install https://github.com/xwmx/nb/blob/master/plugins/daily.nb-plugin
+```
+
+##### Help
+
+```text
+Usage:
+  nb daily [<content>] [--prev [<number>]]
+
+Options:
+  --prev [<number>]   List previous days and show day by previous <number>.
+
+Description:
+  Add notes to a daily log.
+
+Examples:
+  nb daily "Example note content."
+  nb daily --prev
+  nb daily --prev 3
 ```
 
 #### `ebook`
