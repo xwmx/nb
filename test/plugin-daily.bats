@@ -4,7 +4,7 @@ load test_helper
 
 # `daily` #####################################################################
 
-@test "'nb daily' with no content exits with 1 and prints help." {
+@test "'nb daily' with no content and no existing note prints message." {
   {
     "${_NB}" init
     "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/daily.nb-plugin"
@@ -15,9 +15,33 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 1               ]]
-  [[ "${lines[0]}"  =~  Usage.*\:       ]]
-  [[ "${lines[1]}"  =~  nb\ daily       ]]
+  [[ "${status}"    -eq 0 ]]
+
+  [[ "${output}"    ==  "Add the first note of the day: nb daily <content>" ]]
+}
+
+@test "'nb daily' with no content and existing note prints note contents." {
+  {
+    "${_NB}" init
+    "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/daily.nb-plugin"
+
+    "${_NB}" daily "Example content one."
+    "${_NB}" daily "Example content two."
+  }
+
+  run "${_NB}" daily
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0 ]]
+
+  "${_NB}" show 1 --print
+
+  [[ "${lines[0]}"  =~  \
+\[[0-9][0-9]:[0-9][0-9]:[0-9][0-9]\]\ Example\ content\ one\. ]]
+  [[ "${lines[1]}"  =~  \
+\[[0-9][0-9]:[0-9][0-9]:[0-9][0-9]\]\ Example\ content\ two\. ]]
 }
 
 @test "'nb daily <content>' without existing note adds new note with content." {

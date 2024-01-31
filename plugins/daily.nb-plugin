@@ -30,11 +30,6 @@ HEREDOC
 _daily() {
   local _content="${1:-}"
 
-  if [[ -z "${_content:-}" ]]
-  then
-    _exit_1 _help "daily"
-  fi
-
   local _notebook_path=
   _notebook_path="$(_notebooks current --path)"
 
@@ -44,15 +39,28 @@ _daily() {
   local _target_path=
   _target_path="${_notebook_path}/${_target_filename}"
 
-  local _timestamp=
-  _timestamp="$(date "+%H:%M:%S")"
-
-  local _timestamped_content="[${_timestamp}] ${_content}"
-
-  if [[ ! -e "${_target_path:-}"  ]]
+  if [[ -z "${_content:-}"              ]]
   then
-    _add --content "${_timestamped_content}" --filename "${_target_filename}"
+    if [[ ! -e "${_target_path:-}"      ]]
+    then
+      printf "Add the first note of the day: %s daily <content>\\n" "${_ME}"
+    else
+      _show "${_target_path:-}"
+    fi
+  elif [[ "${_content:-}" == "--print"  ]]
+  then
+    _show "${_target_path:-}" --print
   else
-    _edit "${_target_filename}" --append "${_timestamped_content}"
+    local _timestamp=
+    _timestamp="$(date "+%H:%M:%S")"
+
+    local _timestamped_content="[${_timestamp}] ${_content}"
+
+    if [[ ! -e "${_target_path:-}"      ]]
+    then
+      _add --content "${_timestamped_content}" --filename "${_target_filename}"
+    else
+      _edit "${_target_filename}" --append "${_timestamped_content}"
+    fi
   fi
 }
