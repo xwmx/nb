@@ -17,18 +17,24 @@ _subcommands add "daily"
 # Define help and usage text with `_subcommands describe <subcommand> <usage>`.
 _subcommands describe "daily" <<HEREDOC
 $(_color_primary "Usage"):
-  nb daily [<content>] [--prev [<number>]]
+  ${_ME} daily [<content>] [--prev [<number>]]
 
 $(_color_primary "Options"):
   --prev [<number>]   List previous days and show day by previous <number>.
 
 $(_color_primary "Description"):
-  Add notes to a daily log.
+  Add notes to a daily log. When called without arguments, the current day's
+  log is displayed. When passed \`<content>\`, a new timestamped entry is added
+  to the current day's log, which is created if it doesn't yet exist.
+
+  Previous day's logs can be listed with the \`--prev\` option. View a previous
+  day's log by passing its \`<number>\` in the list.
 
 $(_color_primary "Examples"):
-  nb daily "Example note content."
-  nb daily --prev
-  nb daily --prev 3
+  ${_ME} daily "Example note content."
+  ${_ME} daily
+  ${_ME} daily --prev
+  ${_ME} daily --prev 3
 HEREDOC
 
 # Define the subcommand as a function, named with a leading underscore.

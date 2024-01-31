@@ -8894,10 +8894,16 @@ Options:
   --prev [<number>]   List previous days and show day by previous <number>.
 
 Description:
-  Add notes to a daily log.
+  Add notes to a daily log. When called without arguments, the current day's
+  log is displayed. When passed `<content>`, a new timestamped entry is added
+  to the current day's log, which is created if it doesn't yet exist.
+
+  Previous day's logs can be listed with the `--prev` option. View a previous
+  day's log by passing its `<number>` in the list.
 
 Examples:
   nb daily "Example note content."
+  nb daily
   nb daily --prev
   nb daily --prev 3
 ```
