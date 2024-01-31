@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+###############################################################################
+# daily.nb-plugin
+#
+# Write to a daily log.
+#
+# Install with:
+#   nb plugin install https://github.com/xwmx/nb/blob/master/plugins/daily.nb-plugin
+#
+# A plugin for `nb`.
+#   https://github.com/xwmx/nb
+###############################################################################
+
+# Add the new subcommand name with `_subcommands add <name>`.
+_subcommands add "daily"
+
+# Define help and usage text with `_subcommands describe <subcommand> <usage>`.
+_subcommands describe "daily" <<HEREDOC
+Usage:
+  nb daily [<content>]
+
+Description:
+  Add notes to a daily log.
+
+Examples:
+  nb daily "Example note content."
+HEREDOC
+
+# Define the subcommand as a function, named with a leading underscore.
+_daily() {
+  local _content="${1:-}"
+
+  if [[ -z "${_content:-}" ]]
+  then
+    _exit_1 _help "daily"
+  fi
+
+  local _notebook_path=
+  _notebook_path="$(_notebooks current --path)"
+
+  local _target_filename=
+  _target_filename="$(date "+%Y%m%d").md"
+
+  local _target_path=
+  _target_path="${_notebook_path}/${_target_filename}"
+
+  local _timestamp=
+  _timestamp="$(date "+%H:%M:%S")"
+
+  local _timestamped_content="[${_timestamp}] ${_content}"
+
+  if [[ ! -e "${_target_path:-}"  ]]
+  then
+    _add --content "${_timestamped_content}" --filename "${_target_filename}"
+  else
+    _edit "${_target_filename}" --append "${_timestamped_content}"
+  fi
+}
