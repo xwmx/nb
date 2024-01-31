@@ -12353,7 +12353,7 @@ HEREDOC
       then
         "${_web_browser_command[@]:-}" -T text/html -dump
       else
-        "${_web_browser_command[@]:-}" -T text/html
+        "${_web_browser_command[@]:-}" -T text/html 2>/dev/null
       fi
 
       return 0
