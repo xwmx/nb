@@ -14944,6 +14944,7 @@ _env() {
             pandoc
             python3-pygments
             ripgrep
+            socat
             tig
             w3m
           )
