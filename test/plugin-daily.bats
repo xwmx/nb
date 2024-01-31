@@ -2,6 +2,110 @@
 
 load test_helper
 
+# `daily --prev` ##############################################################
+
+@test "'nb daily --prev' with no content and no existing note prints message." {
+  {
+    "${_NB}" init
+    "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/daily.nb-plugin"
+  }
+
+  run "${_NB}" daily --prev
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0 ]]
+
+  [[ "${output}"    ==  "Add the first daily note: nb daily <content>" ]]
+}
+
+@test "'nb daily --prev' with existing notes lists notes." {
+  {
+    "${_NB}" init
+    "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/daily.nb-plugin"
+
+    "${_NB}" add                                      \
+      --content   "[01:01:01] Example content one."   \
+      --filename  "43210101.md"
+
+    "${_NB}" add                                      \
+      --content   "[02:02:02] Example content two."   \
+      --filename  "43210202.md"
+
+    "${_NB}" add                                      \
+      --content   "[03:03:03] Example content three." \
+      --filename  "43210303.md"
+  }
+
+  run "${_NB}" daily --prev
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0 ]]
+
+  [[ "${lines[0]}"  =~  \
+.*[.*2.*].*\ \[1\]\ 43210101.md\ ·\ \"\[01:01:01\]\ Example\ content\ one\.\"   ]]
+  [[ "${lines[1]}"  =~  \
+.*[.*1.*].*\ \[2\]\ 43210202.md\ ·\ \"\[02:02:02\]\ Example\ content\ two\.\"   ]]
+  [[ "${lines[2]}"  =~  \
+.*[.*0.*].*\ \[3\]\ 43210303.md\ ·\ \"\[03:03:03\]\ Example\ content\ three\.\" ]]
+}
+
+@test "'nb daily --prev <number>' shows notes." {
+  {
+    "${_NB}" init
+    "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/daily.nb-plugin"
+
+    "${_NB}" add                                      \
+      --content   "[01:01:01] Example content one."   \
+      --filename  "43210101.md"
+
+    "${_NB}" add                                      \
+      --content   "[02:02:02] Example content two."   \
+      --filename  "43210202.md"
+
+    "${_NB}" add                                      \
+      --content   "[03:03:03] Example content three." \
+      --filename  "43210303.md"
+  }
+
+  run "${_NB}" daily --prev 1
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0 ]]
+
+  [[ "${lines[0]}"  =~  \
+.*43210202\.md.*:                       ]]
+  [[ "${lines[1]}"  =~  \
+\[02:02:02\]\ Example\ content\ two\.   ]]
+
+  run "${_NB}" daily --prev 0
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0 ]]
+
+  [[ "${lines[0]}"  =~  \
+.*43210303\.md.*:                       ]]
+  [[ "${lines[1]}"  =~  \
+\[03:03:03\]\ Example\ content\ three\. ]]
+
+  run "${_NB}" daily --prev 42
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 1 ]]
+
+  [[ "${lines[0]}"  =~  \
+.*!.*\ Not\ found\.                     ]]
+}
+
 # `daily` #####################################################################
 
 @test "'nb daily' with no content and no existing note prints message." {
@@ -39,8 +143,10 @@ load test_helper
   "${_NB}" show 1 --print
 
   [[ "${lines[0]}"  =~  \
-\[[0-9][0-9]:[0-9][0-9]:[0-9][0-9]\]\ Example\ content\ one\. ]]
+.*[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]\.md.*:             ]]
   [[ "${lines[1]}"  =~  \
+\[[0-9][0-9]:[0-9][0-9]:[0-9][0-9]\]\ Example\ content\ one\. ]]
+  [[ "${lines[2]}"  =~  \
 \[[0-9][0-9]:[0-9][0-9]:[0-9][0-9]\]\ Example\ content\ two\. ]]
 }
 
