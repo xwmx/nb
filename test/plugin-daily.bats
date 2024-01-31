@@ -150,7 +150,7 @@ load test_helper
 \[[0-9][0-9]:[0-9][0-9]:[0-9][0-9]\]\ Example\ content\ two\. ]]
 }
 
-@test "'nb daily <content>' without existing note adds new note with content." {
+@test "'nb daily \"<content>\"' (with quotes) without existing note adds new note with content." {
   {
     "${_NB}" init
     "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/daily.nb-plugin"
@@ -172,10 +172,33 @@ load test_helper
   [[ "$("${_NB}" show 1 --print | wc -l | awk '$1=$1')" == 1          ]]
   [[ "$("${_NB}" show 1 --print)" =~ \
 \[[0-9][0-9]:[0-9][0-9]:[0-9][0-9]\]\ Example\ content\.              ]]
-
 }
 
-@test "'nb daily <content>' with existing note adds content to existing note." {
+@test "'nb daily <content>' (without quotes) without existing note adds new note with content." {
+  {
+    "${_NB}" init
+    "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/daily.nb-plugin"
+
+    declare _target_filename=
+    _target_filename="$(date "+%Y%m%d").md"
+  }
+
+  run "${_NB}" daily Example note content.
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    ==  0 ]]
+
+  "${_NB}" show 1 --print
+
+  [[ "${output}"    =~  Added:\ .*[.*1.*].*\ .*${_target_filename}    ]]
+  [[ "$("${_NB}" show 1 --print | wc -l | awk '$1=$1')" == 1          ]]
+  [[ "$("${_NB}" show 1 --print)" =~ \
+\[[0-9][0-9]:[0-9][0-9]:[0-9][0-9]\]\ Example\ note\ content\.        ]]
+}
+
+@test "'nb daily \"<content>\"' (with quotes) with existing note adds content to existing note." {
   {
     "${_NB}" init
     "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/daily.nb-plugin"
@@ -187,6 +210,34 @@ load test_helper
   }
 
   run "${_NB}" daily "Example new content."
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    ==  0 ]]
+
+  "${_NB}" show 1 --print
+
+  [[ "${output}"    =~  Updated:\ .*[.*1.*].*\ .*${_target_filename}  ]]
+  [[ "$("${_NB}" show 1 --print | wc -l | awk '$1=$1')" == 2          ]]
+  [[ "$("${_NB}" show 1 --print | sed -n '1p')" =~ \
+\[[0-9][0-9]:[0-9][0-9]:[0-9][0-9]\]\ Example\ initial\ content\.     ]]
+  [[ "$("${_NB}" show 1 --print | sed -n '2p')" =~ \
+\[[0-9][0-9]:[0-9][0-9]:[0-9][0-9]\]\ Example\ new\ content\.         ]]
+}
+
+@test "'nb daily <content>' (without quotes) with existing note adds content to existing note." {
+  {
+    "${_NB}" init
+    "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/daily.nb-plugin"
+
+    declare _target_filename=
+    _target_filename="$(date "+%Y%m%d").md"
+
+    "${_NB}" daily "Example initial content."
+  }
+
+  run "${_NB}" daily Example new content.
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
