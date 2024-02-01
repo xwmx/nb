@@ -22227,12 +22227,15 @@ HEREDOC
       "$(_color_primary "${_request_url_base}")"  \
       "${_display_params//\ /%20}"
 
-    if _web_browser --gui
+    if ! ((_only_serve))
     then
-      _web_browser "${_request_url:-}"
-    elif ((_open_gui))
-    then
-      _open_in_gui_app "${_request_url:-}"
+      if _web_browser --gui
+      then
+        _web_browser "${_request_url:-}"
+      elif ((_open_gui))
+      then
+        _open_in_gui_app "${_request_url:-}"
+      fi
     fi
 
     if ((_daemon))
