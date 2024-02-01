@@ -10091,7 +10091,8 @@ _download_from() {
         "${_download_command:-}"  \
           --dump-dom              \
           --headless              \
-          "${_url}"
+          "${_url}"               \
+          2>/dev/null
       } | {
         if [[ -n "${_target_path:-}" ]]
         then
