@@ -11584,7 +11584,7 @@ HEREDOC
         _pandoc_arguments+=("--from=${_from:-}")
       elif [[ -z "${_prepared_file_path:-}"   ]]
       then
-        _pandoc_arguments+=("--from=markdown+raw_html")
+        _pandoc_arguments+=("--from=markdown+raw_html+east_asian_line_breaks")
       fi
 
       if ((${NB_MATHJAX_ENABLED:-0}))
