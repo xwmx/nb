@@ -9431,7 +9431,7 @@ Default: the value of `$EDITOR`
 The terminal editor command for editing items. Overrides the value of
 `$EDITOR` in the environment.
 
-See also: `$NB_EDITOR`
+See also: `$EDITOR`
 
 Example Values: 'code', 'emacs', 'hx', 'vim'
 ```
