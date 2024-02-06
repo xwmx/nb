@@ -5935,7 +5935,7 @@ Usage:
   nb bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   nb bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
   nb bookmark search <query>
-  nb browse [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
+  nb browse [<notebook>:][<folder-path>/][<id> | <filename> | <title>] [--daemon]
             [-g | --gui] [-n | --notebooks] [-p | --print] [-q | --query <query>]
             [-s | --serve] [-t <tag> | --tag <tag> | --tags <tag1>,<tag2>...]
   nb browse add [<notebook>:][<folder-path>/][<filename>]
@@ -6545,7 +6545,7 @@ Shortcut Aliases:
 
 ```text
 Usage:
-  nb browse [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
+  nb browse [<notebook>:][<folder-path>/][<id> | <filename> | <title>] [--daemon]
             [-g | --gui] [-n | --notebooks] [-p | --print] [-q | --query <query>]
             [-s | --serve] [-t <tag> | --tag <tag> | --tags <tag1>,<tag2>...]
   nb browse add [<notebook>:][<folder-path>/][<filename>]
@@ -6565,11 +6565,12 @@ Subcommands:
 
 Options:
   -c, --content <content>      Add content to the new note.
+  --daemon                     Start the web server. Close with <CTRL-C>.
   -g, --gui                    Open in the system's primary GUI web browser.
   -n, --notebooks              Browse notebooks.
   -p, --print                  Print to standard output.
   -q, --query <query>          Open to the search results for <query>.
-  -s, --serve                  Start the web application server.
+  -s, --serve                  Start the web server. Close with any key.
   -t, --tag <tag>              Search for a tag.
   --tags <tag1>,<tag2>...      A comma-separated list of tags.
   -t, --title <title>          Add a title to the new note.
