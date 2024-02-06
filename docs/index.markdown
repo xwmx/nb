@@ -9060,6 +9060,7 @@ Shortcut Alias:
     <a href="#nb_default_extension"><code>$NB_DEFAULT_EXTENSION</code></a>&nbsp;·
     <a href="#nb_dir-1"><code>$NB_DIR</code></a>&nbsp;·
     <a href="#nb_directory_tool"><code>$NB_DIRECTORY_TOOL</code></a>&nbsp;·
+    <a href="#nb_editor"><code>$NB_EDITOR</code></a>&nbsp;·
     <a href="#nb_encryption_tool"><code>$NB_ENCRYPTION_TOOL</code></a>&nbsp;·
     <a href="#nb_footer"><code>$NB_FOOTER</code></a>&nbsp;·
     <a href="#nb_gui_browser"><code>$NB_GUI_BROWSER</code></a>&nbsp;·
@@ -9118,6 +9119,10 @@ export NB_INDICATOR_PINNED="🔮"
 
 ```text
 The terminal editor command for editing items.
+
+See also: `$NB_EDITOR`
+
+Example Values: 'code', 'emacs', 'hx', 'vim'
 ```
 
 <p>
@@ -9416,6 +9421,25 @@ The location of the directory that contains the notebooks.
 Default: '' (nb browse)
 
 Example Values: 'ranger', 'mc'
+```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
+##### `$NB_EDITOR`
+
+```text
+Default: the value of `$EDITOR`
+
+The terminal editor command for editing items. Overrides the value of
+`$EDITOR` in the environment.
+
+See also: `$NB_EDITOR`
+
+Example Values: 'code', 'emacs', 'hx', 'vim'
 ```
 
 <p>
