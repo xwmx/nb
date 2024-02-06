@@ -2797,6 +2797,11 @@ _pandoc() {
 
   [[ -n "${1:-}" ]] && _pandoc_arguments+=("${@}")
 
+  if [[ -n "${_path:-}" ]]
+  then
+    cd "${_path%/*}"
+  fi
+
   if _command_exists "iconv"          &&  {
        ((_read_from_standard_input))  ||  _file_is_text "${_path:-}"
      }
