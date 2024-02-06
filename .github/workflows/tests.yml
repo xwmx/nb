@@ -159,7 +159,7 @@ jobs:
       - name: "Setup"
         run: |
           brew update
-          brew install python@3.12 --overwrite
+          # brew install python@3.12 --overwrite
           brew install bat
           brew install bats-core
           brew install expect
