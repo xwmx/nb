@@ -1225,7 +1225,7 @@ _temp() {
         kill "${__pid}" 2>/dev/null || :
       done
       ;;
-    directory)
+    dir|directory)
       printf "%s\\n" "${_NB_TEMP_DIRECTORY:-}"
       ;;
     file)
@@ -21765,34 +21765,39 @@ HEREDOC
         fi
 
         (
+          local _server_temp_file=
+          _server_temp_file="$(_temp file --touch)"
+
           while true
           do
-            local _server_temp_dir=
-            _server_temp_dir="$(mktemp -d)"
-
-            : > "${_server_temp_dir}/spawn_new_process"
+            : > "${_server_temp_file:?}"
 
             (
               accept -r "${NB_SERVER_HOST}" "${NB_SERVER_PORT}" 2>/dev/null
 
-              if [[ -n "${ACCEPT_FD:-}" ]]
+              if [[ -n "${ACCEPT_FD:-}"           ]]
               then
-                printf "1\\n" > "${_server_temp_dir}/spawn_new_process"
+                if [[ -f "${_server_temp_file:?}" ]]
+                then
+                  printf "1\\n" >> "${_server_temp_file}"
+                fi
 
                 "${_MY_PATH}" browse --respond <&"${ACCEPT_FD}" >&"${ACCEPT_FD}"
 
                 exec {ACCEPT_FD}>&- # close connection
               fi
-
-              [[ -d "${_server_temp_dir:?}" ]] && rm -rf "${_server_temp_dir:?}"
             ) &
 
-            until [[   -s "${_server_temp_dir}/spawn_new_process" ]] ||
-                  [[ ! -f "${_server_temp_dir}/spawn_new_process" ]]
+            until [[ -s "${_server_temp_file}"    ]]
             do
               :
             done
           done
+
+          if [[ -f "${_server_temp_file:?}"       ]]
+          then
+            rm "${_server_temp_file:?}"
+          fi
         ) &
         ;;
     esac
