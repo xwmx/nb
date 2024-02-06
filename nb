@@ -1795,7 +1795,7 @@ _file_is_text() {
                   --exclude=tar             \
                   -b --mime-type)" =~ ^text ]]
         else
-          return 0
+          [[ -f "${_file_path:-}"           ]]
         fi
     }
 }
