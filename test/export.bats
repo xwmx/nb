@@ -18,7 +18,7 @@ load test_helper
     [[ -f "${NB_DIR}/home/nb.png"           ]]
   }
 
-  run "${_NB}" export pandoc 1 --embed-resources <<< "y${_NEWLINE}"
+  run "${_NB}" export pandoc 1 --self-contained <<< "y${_NEWLINE}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
