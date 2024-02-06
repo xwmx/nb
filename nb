@@ -14773,7 +14773,7 @@ _edit() {
     then
       if [[ -n "${_local_editor}"   ]]
       then
-        EDITOR="${_local_editor}" _edit_file "${_target_file}"
+        NB_EDITOR="${_local_editor}" _edit_file "${_target_file}"
       else
         _edit_file "${_target_file}"
       fi
