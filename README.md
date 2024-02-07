@@ -6036,12 +6036,12 @@ Usage:
   nb todo add [<notebook>:][<folder-path>/][<filename>] <title>
               [--description <description>] [--due <date>]
               [-r (<url> | <selector>) | --related (<url> | <selector>)]
-              [--tags <tag1>,<tag2>...] [--task <title>]...
+              [--tags <tag1>,<tag2>...] [--task <title>...]
   nb todo do   ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
                [<task-number>]
   nb todo undo ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
                [<task-number>]
-  nb todos [<notebook>:][<folder-path>/] [open | closed]
+  nb todos [<notebook>:][<folder-path>/] [open | closed] [--tags <tag1>,<tag2>...]
   nb todos tasks ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
                  [open | closed]
   nb unarchive [<notebook>]
@@ -8506,12 +8506,12 @@ Usage:
   nb todo add [<notebook>:][<folder-path>/][<filename>] <title>
               [--description <description>] [--due <date>]
               [-r (<url> | <selector>) | --related (<url> | <selector>)]
-              [--tags <tag1>,<tag2>...] [--task <title>]...
+              [--tags <tag1>,<tag2>...] [--task <title>...]
   nb todo do   ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
                [<task-number>]
   nb todo undo ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
                [<task-number>]
-  nb todos [<notebook>:][<folder-path>/] [open | closed]
+  nb todos [<notebook>:][<folder-path>/] [open | closed] [--tags <tag1>,<tag2>...]
   nb todos tasks ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
                  [open | closed]
 
