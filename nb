@@ -19873,7 +19873,8 @@ HEREDOC
           --list                          \
           --no-color                      \
           --notebook-selectors            \
-          --page  "${_current_page}"      || :
+          --page  "${_current_page}"      \
+          2>&1 || :
       else
         _list "${_target_path}"           \
           --limit "${_limit}"             \
@@ -19959,8 +19960,9 @@ HEREDOC
           printf "%s\\n<br>\\n" "${_display_item}"
 
           break
-        elif [[ "${_display_item:-}" =~ ^Not${_NBSP}found ]]
+        elif [[ "${_display_item:-}" =~ Not${_NBSP}found ]]
         then
+          _display_item="Not${_display_item#*Not}"
           printf "%s\\n<br>\\n" "${_display_item//${_NBSP}in*:/:}"
 
           break
