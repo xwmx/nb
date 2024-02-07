@@ -19955,12 +19955,12 @@ HEREDOC
         _display_item="${_display_item//\[/<span class=\"muted\">[</span><span class=\"identifier\">}"
         _display_item="${_display_item//\]/</span><span class=\"muted\">]</span>}"
 
-        if [[   "${_display_item:-}" =~ ^0${_NBSP}items.  ]]
+        if [[   "${_display_item:-}" =~ ^0${_NBSP}items.        ]]
         then
           printf "%s\\n<br>\\n" "${_display_item}"
 
           break
-        elif [[ "${_display_item:-}" =~ Not${_NBSP}found ]]
+        elif [[ "${_display_item:-}" =~ ^.*\!.*Not${_NBSP}found ]]
         then
           _display_item="Not${_display_item#*Not}"
           printf "%s\\n<br>\\n" "${_display_item//${_NBSP}in*:/:}"
