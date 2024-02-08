@@ -25374,17 +25374,22 @@ _todo() {
 
         shift
         ;;
-      --tag*)
+      --tag*|\#*)
         [[ -n "${_tag_list_with_commas:-}"  ]] && _tag_list_with_commas+=","
-        _tag_list_with_commas+="$(_option_get_tags "${1}" "${2:-}")"
-
         [[ -n "${_tag_list_with_spaces:-}"  ]] && _tag_list_with_spaces+=" "
 
-        _tag_list_with_spaces+="$(_option_get_tags "${1}" "${2:-}")"
+        if [[ "${1:-}" =~ ^-- ]]
+        then
+          _tag_list_with_commas+="$(_option_get_tags "${1}" "${2:-}")"
+          _tag_list_with_spaces+="$(_option_get_tags "${1}" "${2:-}")"
+          _tags+=("${2:-}")
 
-        _tags+=("${2:-}")
-
-        shift
+          shift
+        else
+          _tag_list_with_commas+="${1:-}"
+          _tag_list_with_spaces+="${1:-}"
+          _tags+=("${1:-}")
+        fi
         ;;
       --task)
         _tasks+=("$(_option_get_value "${1:-}" "${2:-}")")

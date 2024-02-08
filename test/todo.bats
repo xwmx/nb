@@ -123,6 +123,8 @@ load test_helper
 .*\[.*Example\ Notebook:Example\ Folder/1.*\].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ one\.     ]]
 }
 
+# tags ########################################################################
+
 @test "'todos --tags <tag>' exits with 0 and lists todos containing <tag>." {
   {
     "${_NB}" init
@@ -151,6 +153,48 @@ load test_helper
   }
 
   run "${_NB}" todos --tags example-tag
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"   -eq 0     ]]
+
+  [[ !  "${output}"   =~  one   ]]
+  [[ !  "${output}"   =~  three ]]
+  [[ !  "${output}"   =~  four  ]]
+
+  [[    "${lines[0]}" =~  \
+.*\[.*2.*\].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ two\.     ]]
+}
+
+@test "'todos <tag>' exits with 0 and lists todos containing <tag>." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add                                                                            \
+      --content   "# [ ] Example todo description one.${_NEWLINE}${_NEWLINE}#sample-tag"    \
+      --filename  "One.todo.md"
+
+    sleep 1
+
+    "${_NB}" add                                                                            \
+      --content   "# [ ] Example todo description two.${_NEWLINE}${_NEWLINE}#example-tag"   \
+      --filename  "Two.todo.md"
+
+    sleep 1
+
+    "${_NB}" add                                                                            \
+      --content   "# [x] Example todo description three.${_NEWLINE}${_NEWLINE}example-tag"  \
+      --filename  "Three.todo.md"
+
+    sleep 1
+
+    "${_NB}" add                                                                            \
+      --content   "# Example description four.${_NEWLINE}${_NEWLINE}#example-tag"           \
+      --filename  "Four.md"
+  }
+
+  run "${_NB}" todos \#example-tag
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
