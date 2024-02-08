@@ -1,0 +1,152 @@
+#!/usr/bin/env bash
+###############################################################################
+# daily.nb-plugin
+#
+# Write to a daily log.
+#
+# Install with:
+#   nb plugin install https://github.com/xwmx/nb/blob/master/plugins/daily.nb-plugin
+#
+# A plugin for `nb`.
+#   https://github.com/xwmx/nb
+###############################################################################
+
+# Add the new subcommand name with `_subcommands add <name>`.
+_subcommands add "daily"
+
+# Define help and usage text with `_subcommands describe <subcommand> <usage>`.
+_subcommands describe "daily" <<HEREDOC
+$(_color_primary "Usage"):
+  ${_ME} daily [<content>] [--prev [<number>]]
+
+$(_color_primary "Options"):
+  --prev [<number>]   List previous days and show day by previous <number>.
+
+$(_color_primary "Description"):
+  Add notes to a daily log. When called without arguments, the current day's
+  log is displayed. When passed \`<content>\`, a new timestamped entry is added
+  to the current day's log, which is created if it doesn't yet exist.
+
+  Previous day's logs can be listed with the \`--prev\` option. View a previous
+  day's log by passing its \`<number>\` in the list.
+
+$(_color_primary "Examples"):
+  ${_ME} daily "Example note content."
+  ${_ME} daily
+  ${_ME} daily --prev
+  ${_ME} daily --prev 3
+HEREDOC
+
+# Define the subcommand as a function, named with a leading underscore.
+_daily() {
+  # Usage: _daily_show <path>
+  _daily_show() {
+    local _target_path="${1:-}"
+
+    [[ -n "${_target_path:-}" ]] || return 1
+
+    printf "%s:\\n" "$(_color_primary "${_target_path##*\/}")"
+
+    _show "${_target_path:-}" --print
+
+    return 0
+  }
+
+  local _content=("${@:-}")
+
+  local _notebook_path=
+  _notebook_path="$(_notebooks current --path)"
+
+  local _target_filename=
+  _target_filename="$(date "+%Y%m%d").md"
+
+  local _target_path=
+  _target_path="${_notebook_path}/${_target_filename}"
+
+  if [[ -z "${_content[*]:-}"       ]]
+  then
+    if [[ ! -e "${_target_path:-}"  ]]
+    then
+      printf "Add the first note of the day: %s daily <content>\\n" "${_ME}"
+
+      return 0
+    else
+      _daily_show "${_target_path:-}"
+    fi
+  elif _contains "${_content[0]:-}" \
+    "--all" "--ago" "--day" "--days" "--prev" "--previous"
+  then
+    local _daily_note_paths=()
+
+    _daily_note_paths=($(
+      find "${_notebook_path:-}"                                  \
+        -maxdepth 1                                               \
+        -type     f                                               \
+        -name     "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9].md"   \
+        | sort
+    ))
+
+    if ! ((${#_daily_note_paths[@]}))
+    then
+      printf "Add the first daily note: %s daily <content>\\n" "${_ME}"
+
+      return 0
+    fi
+
+    if [[ "${2:-}" =~ ^[0-9]+$ ]]
+    then
+      local _note_number="${2:-0}"
+
+      if [[ "${_note_number:-}" -ge "${#_daily_note_paths[@]}" ]]
+      then
+        _exit_1 printf "Not found.\\n"
+      fi
+
+      _note_number=$((_note_number + 1))
+
+      _target_path="$(
+        printf "%s\\n" "${_daily_note_paths[@]:-}"  \
+          | tail -${_note_number:-}                 \
+          | head -1
+      )"
+
+      _daily_show "${_target_path:-}"
+    else
+      {
+        printf "%s\\n" "${_daily_note_paths[@]:-}"
+      } | {
+        local _counter=
+        _counter=$((${#_daily_note_paths[@]}))
+
+        local               __line=
+        while IFS= read -r  __line || [[ -n "${__line:-}" ]]
+        do
+          _counter=$((_counter - 1))
+
+          {
+            _list "${__line}" --no-color
+          } | {
+            printf "%s %s\\n"                       \
+              "$(_color_brackets "${_counter:-0}")" \
+              "$(cat)"
+          }
+        done
+      }
+    fi
+  else
+    local _timestamp=
+    _timestamp="$(date "+%H:%M:%S")"
+
+    local _formatted_content=
+    _formatted_content="$(_join " " "${_content[@]}")"
+
+    local _timestamped_content="[${_timestamp}] ${_formatted_content}"
+
+    if [[ ! -e "${_target_path:-}"  ]]
+    then
+      _add --content "${_timestamped_content}" --filename "${_target_filename}"
+    else
+      _edit "${_target_filename}" --append "${_timestamped_content}"
+    fi
+  fi
+}

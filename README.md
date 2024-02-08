@@ -271,7 +271,7 @@ Installing it together with the `bash` formula is recommended:
 brew install nb bash
 ```
 
-#### Ubuntu, Windows WSL, and others
+#### Ubuntu, Windows, and others
 
 ##### npm
 
@@ -286,6 +286,10 @@ to install Bash and Zsh completion scripts (recommended).
 On Ubuntu and WSL, you can
 run [`sudo "$(which nb)" env install`](#env)
 to install the optional dependencies.
+
+When `nb` is installed on Windows,
+`socat` ([MSYS](https://packages.msys2.org/package/socat),
+[Cygwin](https://cygwin.com/packages/summary/socat.html)) is recommended.
 
 *`nb` is also available under its original package name,
 [notes.sh](https://www.npmjs.com/package/notes.sh),
@@ -3310,16 +3314,23 @@ and enable the Ace editor in
 [`nb browse`](#browse) depends on
 either [`socat`](https://www.kali.org/tools/socat/)
 or
-[`ncat`](https://nmap.org/ncat/), which is available as part of
-the `ncat` or `nmap` package in most package managers, and
-[`pandoc`](https://pandoc.org/).
-When only `pandoc` is available, the current note is rendered and
+[`ncat`](https://nmap.org/ncat/) (available as part of
+the `ncat` or `nmap` package in most package managers) and
+[`pandoc`](https://pandoc.org/). When neither `socat` nor `ncat` is
+available and the Bash version is 5.2 or higher, [`nb browse`](#browse)
+falls back to a pure Bash implementation that supports all features
+except the Ace editor. When only `pandoc` is available,
+the current note is rendered and
 <a href="#-linking">[[wiki-style links]]</a>
 go to unrendered, original files.
-If only `socat` or `ncat` is available without `pandoc`,
+When `socat`,`ncat`, or Bash 5.2+ is available without `pandoc`,
 files in plain text formats are rendered with the original markup unconverted.
-If neither `ncat`, `socat`, nor `pandoc` is available,
+If neither `ncat`, `socat`, Bash 5.2+, nor `pandoc` is available,
 [`nb browse`](#browse) falls back to the default behavior of [`nb show`](#show).
+
+When `nb` is installed on Windows,
+`socat` ([MSYS](https://packages.msys2.org/package/socat),
+[Cygwin](https://cygwin.com/packages/summary/socat.html)) is recommended.
 
 #### `browse` Privacy
 
@@ -5924,7 +5935,7 @@ Usage:
   nb bookmark (open | peek | url) (<id> | <filename> | <path> | <title>)
   nb bookmark (edit | delete) (<id> | <filename> | <path> | <title>)
   nb bookmark search <query>
-  nb browse [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
+  nb browse [<notebook>:][<folder-path>/][<id> | <filename> | <title>] [--daemon]
             [-g | --gui] [-n | --notebooks] [-p | --print] [-q | --query <query>]
             [-s | --serve] [-t <tag> | --tag <tag> | --tags <tag1>,<tag2>...]
   nb browse add [<notebook>:][<folder-path>/][<filename>]
@@ -6025,12 +6036,12 @@ Usage:
   nb todo add [<notebook>:][<folder-path>/][<filename>] <title>
               [--description <description>] [--due <date>]
               [-r (<url> | <selector>) | --related (<url> | <selector>)]
-              [--tags <tag1>,<tag2>...] [--task <title>]...
+              [--tags <tag1>,<tag2>...] [--task <title>...]
   nb todo do   ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
                [<task-number>]
   nb todo undo ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
                [<task-number>]
-  nb todos [<notebook>:][<folder-path>/] [open | closed]
+  nb todos [<notebook>:][<folder-path>/] [open | closed] [--tags <tag1>,<tag2>...]
   nb todos tasks ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
                  [open | closed]
   nb unarchive [<notebook>]
@@ -6534,7 +6545,7 @@ Shortcut Aliases:
 
 ```text
 Usage:
-  nb browse [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
+  nb browse [<notebook>:][<folder-path>/][<id> | <filename> | <title>] [--daemon]
             [-g | --gui] [-n | --notebooks] [-p | --print] [-q | --query <query>]
             [-s | --serve] [-t <tag> | --tag <tag> | --tags <tag1>,<tag2>...]
   nb browse add [<notebook>:][<folder-path>/][<filename>]
@@ -6554,11 +6565,12 @@ Subcommands:
 
 Options:
   -c, --content <content>      Add content to the new note.
+  --daemon                     Start the web server. Close with <CTRL-C>.
   -g, --gui                    Open in the system's primary GUI web browser.
   -n, --notebooks              Browse notebooks.
   -p, --print                  Print to standard output.
   -q, --query <query>          Open to the search results for <query>.
-  -s, --serve                  Start the web application server.
+  -s, --serve                  Start the web server. Close with any key.
   -t, --tag <tag>              Search for a tag.
   --tags <tag1>,<tag2>...      A comma-separated list of tags.
   -t, --title <title>          Add a title to the new note.
@@ -8494,12 +8506,12 @@ Usage:
   nb todo add [<notebook>:][<folder-path>/][<filename>] <title>
               [--description <description>] [--due <date>]
               [-r (<url> | <selector>) | --related (<url> | <selector>)]
-              [--tags <tag1>,<tag2>...] [--task <title>]...
+              [--tags <tag1>,<tag2>...] [--task <title>...]
   nb todo do   ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
                [<task-number>]
   nb todo undo ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
                [<task-number>]
-  nb todos [<notebook>:][<folder-path>/] [open | closed]
+  nb todos [<notebook>:][<folder-path>/] [open | closed] [--tags <tag1>,<tag2>...]
   nb todos tasks ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
                  [open | closed]
 
@@ -8755,6 +8767,7 @@ See Also:
   <a href="#backlink">backlink</a>&nbsp;·
   <a href="#bump">bump</a>&nbsp;·
   <a href="#clip">clip</a>&nbsp;·
+  <a href="#daily">daily</a>&nbsp;·
   <a href="#ebook">ebook</a>&nbsp;·
   <a href="#example">example</a>&nbsp;·
   <a href="#weather">weather</a>
@@ -8860,6 +8873,40 @@ Examples:
 
   # save the clipboard contents as a new `.cr` file in the "snippets" notebook
   nb snippets:clip .cr
+```
+
+#### `daily`
+
+[↑&nbsp;](#plugin-help)
+
+##### Install
+
+```bash
+nb plugins install https://github.com/xwmx/nb/blob/master/plugins/daily.nb-plugin
+```
+
+##### Help
+
+```text
+Usage:
+  nb daily [<content>] [--prev [<number>]]
+
+Options:
+  --prev [<number>]   List previous days and show day by previous <number>.
+
+Description:
+  Add notes to a daily log. When called without arguments, the current day's
+  log is displayed. When passed `<content>`, a new timestamped entry is added
+  to the current day's log, which is created if it doesn't yet exist.
+
+  Previous day's logs can be listed with the `--prev` option. View a previous
+  day's log by passing its `<number>` in the list.
+
+Examples:
+  nb daily "Example note content."
+  nb daily
+  nb daily --prev
+  nb daily --prev 3
 ```
 
 #### `ebook`
@@ -9008,6 +9055,7 @@ Shortcut Alias:
     <a href="#nb_default_extension"><code>$NB_DEFAULT_EXTENSION</code></a>&nbsp;·
     <a href="#nb_dir-1"><code>$NB_DIR</code></a>&nbsp;·
     <a href="#nb_directory_tool"><code>$NB_DIRECTORY_TOOL</code></a>&nbsp;·
+    <a href="#nb_editor"><code>$NB_EDITOR</code></a>&nbsp;·
     <a href="#nb_encryption_tool"><code>$NB_ENCRYPTION_TOOL</code></a>&nbsp;·
     <a href="#nb_footer"><code>$NB_FOOTER</code></a>&nbsp;·
     <a href="#nb_gui_browser"><code>$NB_GUI_BROWSER</code></a>&nbsp;·
@@ -9066,6 +9114,10 @@ export NB_INDICATOR_PINNED="🔮"
 
 ```text
 The terminal editor command for editing items.
+
+See also: `$NB_EDITOR`
+
+Example Values: 'code', 'emacs', 'hx', 'vim'
 ```
 
 <p>
@@ -9364,6 +9416,25 @@ The location of the directory that contains the notebooks.
 Default: '' (nb browse)
 
 Example Values: 'ranger', 'mc'
+```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
+##### `$NB_EDITOR`
+
+```text
+Default: the value of `$EDITOR`
+
+The terminal editor command for editing items. Overrides the value of
+`$EDITOR` in the environment.
+
+See also: `$EDITOR`
+
+Example Values: 'code', 'emacs', 'hx', 'vim'
 ```
 
 <p>
@@ -10235,7 +10306,7 @@ at the root level of the notebook directory.
 
 ## Tests
 
-With more than 2,000 tests spanning tens of thousands of lines,
+With more than 2,200 tests spanning tens of thousands of lines,
 `nb` is really mostly a
 [test suite](https://github.com/xwmx/nb/tree/master/test).
 Tests run continuously [via GitHub Actions](https://github.com/xwmx/nb/actions)

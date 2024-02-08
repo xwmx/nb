@@ -2,6 +2,39 @@
 
 load test_helper
 
+# embedded resources ##########################################################
+
+@test "'export' with reference to image in same directory embeds image." {
+  {
+    "${_NB}" init
+    "${_NB}" add                                                      \
+      --content   "# Export Example${_NEWLINE}${_NEWLINE}![](nb.png)" \
+      --filename  "Example File.md"
+
+    "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/nb.png"
+
+
+    [[ -f "${NB_DIR}/home/Example File.md"  ]]
+    [[ -f "${NB_DIR}/home/nb.png"           ]]
+  }
+
+  run "${_NB}" export pandoc 1 --self-contained <<< "y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${output}" =~ \<p\>\<img\ src=\"data:image/png\;base64,iVBORw0KGgoAAAA ]]
+
+  run ! diff                      \
+    <(printf "%s\\n" "${output}") \
+    <(cat <<HEREDOC
+[WARNING] Could not fetch resource nb.png
+<h1 id="export-example">Export Example</h1>
+<p><img src="nb.png" /></p>
+HEREDOC
+    )
+}
+
 # existing file ###############################################################
 
 @test "'export' with file at export path prompts user to confirm overwrite." {

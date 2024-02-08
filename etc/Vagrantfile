@@ -192,6 +192,15 @@ fi
 HEREDOC
 
   #############
+  # NixOS 23.11
+
+  # config.vm.define "nixos2311" do |nixos2311|
+  #   nixos2311.vm.box          = "nixbox/nixos"
+  #   nixos2311.vm.box_version  = "23.11"
+  #   nixos2311.vm.provision :shell, inline: $nixos_setup, privileged: false
+  # end
+
+  #############
   # NixOS 23.05
 
   # https://license.hashicorp.com/boxen/boxes/nixos-23.05-x86_64
@@ -265,8 +274,8 @@ sudo apt-get install python3-pygments -y
 sudo apt-get install w3m    -y
 
 # install latest pandoc
-curl -LO https://github.com/jgm/pandoc/releases/download/2.11.2/pandoc-2.11.2-1-amd64.deb
-sudo dpkg -i pandoc-2.11.2-1-amd64.deb
+curl -LO https://github.com/jgm/pandoc/releases/download/3.1.11.1/pandoc-3.1.11.1-1-amd64.deb
+sudo dpkg -i pandoc-3.1.11.1-1-amd64.deb
 
 # install latest bat
 curl -LO https://github.com/sharkdp/bat/releases/download/v0.16.0/bat_0.16.0_amd64.deb
@@ -275,7 +284,7 @@ sudo dpkg -i bat_0.16.0_amd64.deb
 # install latest git
 sudo add-apt-repository ppa:git-core/ppa
 sudo apt update
-sudo apt install git
+sudo apt install git -y
 
 git config --global user.name   "Example Name"
 git config --global user.email  "example@example.test"

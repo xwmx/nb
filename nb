@@ -82,7 +82,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.10.3"
+_VERSION="7.11.0"
 
 # $_ME
 #
@@ -1225,7 +1225,7 @@ _temp() {
         kill "${__pid}" 2>/dev/null || :
       done
       ;;
-    directory)
+    dir|directory)
       printf "%s\\n" "${_NB_TEMP_DIRECTORY:-}"
       ;;
     file)
@@ -1795,7 +1795,7 @@ _file_is_text() {
                   --exclude=tar             \
                   -b --mime-type)" =~ ^text ]]
         else
-          return 0
+          [[ -f "${_file_path:-}"           ]]
         fi
     }
 }
@@ -2796,6 +2796,11 @@ _pandoc() {
   shift
 
   [[ -n "${1:-}" ]] && _pandoc_arguments+=("${@}")
+
+  if [[ -n "${_path:-}" ]]
+  then
+    cd "${_path%/*}"
+  fi
 
   if _command_exists "iconv"          &&  {
        ((_read_from_standard_input))  ||  _file_is_text "${_path:-}"
@@ -4309,7 +4314,7 @@ $(_color_primary "Usage"):
   ${_ME} bookmark (edit | delete | open | peek | url)
               ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
   ${_ME} bookmark search <query>
-  ${_ME} browse [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
+  ${_ME} browse [<notebook>:][<folder-path>/][<id> | <filename> | <title>] [--daemon]
             [-g | --gui] [-n | --notebooks] [-p | --print] [-q | --query <query>]
             [-s | --serve] [-t <tag> | --tag <tag> | --tags <tag1>,<tag2>...]
   ${_ME} browse add [<notebook>:][<folder-path>/][<filename>]
@@ -4410,12 +4415,12 @@ $(_color_primary "Usage"):
   ${_ME} todo add [<notebook>:][<folder-path>/][<filename>] <title>
               [--description <description>] [--due <date>]
               [-r (<url> | <selector>) | --related (<url> | <selector>)]
-              [--tags <tag1>,<tag2>...] [--task <title>]...
+              [--tags <tag1>,<tag2>...] [--task <title>...]
   ${_ME} todo do   ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
                [<task-number>]
   ${_ME} todo undo ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
                [<task-number>]
-  ${_ME} todos [<notebook>:][<folder-path>/] [open | closed]
+  ${_ME} todos [<notebook>:][<folder-path>/] [open | closed] [--tags <tag1>,<tag2>...]
   ${_ME} todos tasks ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
                  [open | closed]
   ${_ME} unarchive [<notebook>]
@@ -10091,7 +10096,8 @@ _download_from() {
         "${_download_command:-}"  \
           --dump-dom              \
           --headless              \
-          "${_url}"
+          "${_url}"               \
+          2>/dev/null
       } | {
         if [[ -n "${_target_path:-}" ]]
         then
@@ -11583,7 +11589,7 @@ HEREDOC
         _pandoc_arguments+=("--from=${_from:-}")
       elif [[ -z "${_prepared_file_path:-}"   ]]
       then
-        _pandoc_arguments+=("--from=markdown+raw_html")
+        _pandoc_arguments+=("--from=markdown+raw_html+east_asian_line_breaks")
       fi
 
       if ((${NB_MATHJAX_ENABLED:-0}))
@@ -12353,7 +12359,7 @@ HEREDOC
       then
         "${_web_browser_command[@]:-}" -T text/html -dump
       else
-        "${_web_browser_command[@]:-}" -T text/html
+        "${_web_browser_command[@]:-}" -T text/html 2>/dev/null
       fi
 
       return 0
@@ -14772,7 +14778,7 @@ _edit() {
     then
       if [[ -n "${_local_editor}"   ]]
       then
-        EDITOR="${_local_editor}" _edit_file "${_target_file}"
+        NB_EDITOR="${_local_editor}" _edit_file "${_target_file}"
       else
         _edit_file "${_target_file}"
       fi
@@ -14944,6 +14950,7 @@ _env() {
             pandoc
             python3-pygments
             ripgrep
+            socat
             tig
             w3m
           )
@@ -17515,6 +17522,9 @@ _search() {
                 [[ "${_type}" =~ (^bookmark$|^bookmarks$)                   ]] &&
                   _file_is_bookmark "${_path}"
                 } || {
+                  [[ "${_type}" =~ (^todo$|^todos$|^task$|^tasks$)          ]] &&
+                  _file_is_todo "${_path}"
+                } || {
                   [[ "${_type}" =~ (^note$|^notes$|^text$)                  ]] &&
                   _file_is_text "${_path}"
                 } || {
@@ -17856,9 +17866,9 @@ _search() {
         then
           return 0
         else
-          printf "Not found in %s: %s\\n"               \
-            "$(_color_primary "${_search_selector:-}")" \
-            "$(_color_primary "${_query_message:-}")"
+          _warn printf "Not found in %s: %s\\n"               \
+                  "$(_color_primary "${_search_selector:-}")" \
+                  "$(_color_primary "${_query_message:-}")"
         fi
       fi
 
@@ -19189,7 +19199,7 @@ _alias_subcommand "archive" "ar"
 _describe_browse() {
   cat <<HEREDOC
 $(_color_primary "Usage"):
-  ${_ME} browse [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
+  ${_ME} browse [<notebook>:][<folder-path>/][<id> | <filename> | <title>] [--daemon]
             [-g | --gui] [-n | --notebooks] [-p | --print] [-q | --query <query>]
             [-s | --serve] [-t <tag> | --tag <tag> | --tags <tag1>,<tag2>...]
   ${_ME} browse add [<notebook>:][<folder-path>/][<filename>]
@@ -19209,11 +19219,12 @@ $(_color_primary "Subcommands"):
 
 $(_color_primary "Options"):
   -c, --content <content>      Add content to the new note.
+  --daemon                     Start the web server. Close with <CTRL-C>.
   -g, --gui                    Open in the system's primary GUI web browser.
   -n, --notebooks              Browse notebooks.
   -p, --print                  Print to standard output.
   -q, --query <query>          Open to the search results for <query>.
-  -s, --serve                  Start the web application server.
+  -s, --serve                  Start the web server. Close with any key.
   -t, --tag <tag>              Search for a tag.
   --tags <tag1>,<tag2>...      A comma-separated list of tags.
   -t, --title <title>          Add a title to the new note.
@@ -19862,7 +19873,8 @@ HEREDOC
           --list                          \
           --no-color                      \
           --notebook-selectors            \
-          --page  "${_current_page}"      || :
+          --page  "${_current_page}"      \
+          2>&1 || :
       else
         _list "${_target_path}"           \
           --limit "${_limit}"             \
@@ -19943,13 +19955,14 @@ HEREDOC
         _display_item="${_display_item//\[/<span class=\"muted\">[</span><span class=\"identifier\">}"
         _display_item="${_display_item//\]/</span><span class=\"muted\">]</span>}"
 
-        if [[   "${_display_item:-}" =~ ^0${_NBSP}items.  ]]
+        if [[   "${_display_item:-}" =~ ^0${_NBSP}items.        ]]
         then
           printf "%s\\n<br>\\n" "${_display_item}"
 
           break
-        elif [[ "${_display_item:-}" =~ ^Not${_NBSP}found ]]
+        elif [[ "${_display_item:-}" =~ ^.*\!.*Not${_NBSP}found ]]
         then
+          _display_item="Not${_display_item#*Not}"
           printf "%s\\n<br>\\n" "${_display_item//${_NBSP}in*:/:}"
 
           break
@@ -21757,34 +21770,39 @@ HEREDOC
         fi
 
         (
+          local _server_temp_file=
+          _server_temp_file="$(_temp file --touch)"
+
           while true
           do
-            local _server_temp_dir=
-            _server_temp_dir="$(mktemp -d)"
-
-            : > "${_server_temp_dir}/spawn_new_process"
+            : > "${_server_temp_file:?}"
 
             (
               accept -r "${NB_SERVER_HOST}" "${NB_SERVER_PORT}" 2>/dev/null
 
-              if [[ -n "${ACCEPT_FD:-}" ]]
+              if [[ -n "${ACCEPT_FD:-}"           ]]
               then
-                printf "1\\n" > "${_server_temp_dir}/spawn_new_process"
+                if [[ -f "${_server_temp_file:?}" ]]
+                then
+                  printf "1\\n" >> "${_server_temp_file}"
+                fi
 
                 "${_MY_PATH}" browse --respond <&"${ACCEPT_FD}" >&"${ACCEPT_FD}"
 
                 exec {ACCEPT_FD}>&- # close connection
               fi
-
-              [[ -d "${_server_temp_dir:?}" ]] && rm -rf "${_server_temp_dir:?}"
             ) &
 
-            until [[   -s "${_server_temp_dir}/spawn_new_process" ]] ||
-                  [[ ! -f "${_server_temp_dir}/spawn_new_process" ]]
+            until [[ -s "${_server_temp_file}"    ]]
             do
               :
             done
           done
+
+          if [[ -f "${_server_temp_file:?}"       ]]
+          then
+            rm "${_server_temp_file:?}"
+          fi
         ) &
         ;;
     esac
@@ -22226,12 +22244,15 @@ HEREDOC
       "$(_color_primary "${_request_url_base}")"  \
       "${_display_params//\ /%20}"
 
-    if _web_browser --gui
+    if ! ((_only_serve))
     then
-      _web_browser "${_request_url:-}"
-    elif ((_open_gui))
-    then
-      _open_in_gui_app "${_request_url:-}"
+      if _web_browser --gui
+      then
+        _web_browser "${_request_url:-}"
+      elif ((_open_gui))
+      then
+        _open_in_gui_app "${_request_url:-}"
+      fi
     fi
 
     if ((_daemon))
@@ -25182,12 +25203,12 @@ $(_color_primary "Usage"):
   ${_ME} todo add [<notebook>:][<folder-path>/][<filename>] <title>
               [--description <description>] [--due <date>]
               [-r (<url> | <selector>) | --related (<url> | <selector>)]
-              [--tags <tag1>,<tag2>...] [--task <title>]...
+              [--tags <tag1>,<tag2>...] [--task <title>...]
   ${_ME} todo do   ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
                [<task-number>]
   ${_ME} todo undo ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
                [<task-number>]
-  ${_ME} todos [<notebook>:][<folder-path>/] [open | closed]
+  ${_ME} todos [<notebook>:][<folder-path>/] [open | closed] [--tags <tag1>,<tag2>...]
   ${_ME} todos tasks ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
                  [open | closed]
 
@@ -25326,7 +25347,9 @@ _todo() {
   local _only_todos=0
   local _option_title=
   local _related_identifiers=()
-  local _tag_list=
+  local _tag_list_with_commas=
+  local _tag_list_with_spaces=
+  local _tags=()
   local _task_list_options=()
   local _tasks=()
 
@@ -25351,11 +25374,22 @@ _todo() {
 
         shift
         ;;
-      --tag*)
-        [[ -n "${_tag_list:-}"  ]] && _tag_list+=" "
-        _tag_list+="$(_option_get_tags "${1}" "${2:-}")"
+      --tag*|\#*)
+        [[ -n "${_tag_list_with_commas:-}"  ]] && _tag_list_with_commas+=","
+        [[ -n "${_tag_list_with_spaces:-}"  ]] && _tag_list_with_spaces+=" "
 
-        shift
+        if [[ "${1:-}" =~ ^-- ]]
+        then
+          _tag_list_with_commas+="$(_option_get_tags "${1}" "${2:-}")"
+          _tag_list_with_spaces+="$(_option_get_tags "${1}" "${2:-}")"
+          _tags+=("${2:-}")
+
+          shift
+        else
+          _tag_list_with_commas+="${1:-}"
+          _tag_list_with_spaces+="${1:-}"
+          _tags+=("${1:-}")
+        fi
         ;;
       --task)
         _tasks+=("$(_option_get_value "${1:-}" "${2:-}")")
@@ -25522,15 +25556,15 @@ _todo() {
         _todo_content+="${_NEWLINE}"
       fi
 
-      if [[ -n "${_tag_list:-}"         ]]
+      if [[ -n "${_tag_list_with_spaces:-}" ]]
       then
         _todo_content+="${_NEWLINE}## Tags${_NEWLINE}"
-        _todo_content+="${_NEWLINE}${_tag_list}${_NEWLINE}"
+        _todo_content+="${_NEWLINE}${_tag_list_with_spaces}${_NEWLINE}"
       fi
 
-      _add                              \
-        --content "${_todo_content:-}"  \
-        --type    "todo.md"             \
+      _add                                  \
+        --content "${_todo_content:-}"      \
+        --type    "todo.md"                 \
         "${_arguments[@]:-}"
       ;;
     do|undo)
@@ -25644,7 +25678,20 @@ _todo() {
       ;;
     list)
       {
-        _list "${_arguments[@]:-}" --error-on-empty --type todo 2>/dev/null
+        if [[ -n "${_tag_list_with_commas:-}"   ]]
+        then
+          _search                               \
+            "${_arguments[@]:-}"                \
+            --tags "${_tag_list_with_commas:-}" \
+            --type todo                         \
+            --list 2>/dev/null
+        else
+          _list                   \
+            "${_arguments[@]:-}"  \
+            --error-on-empty      \
+            --type todo           \
+            2>/dev/null
+        fi
       } | {
         case "${_filter:-}" in
           closed)
@@ -25741,14 +25788,25 @@ _todo() {
       )
 
       {
-        _list "${_selector_path:-}"     \
-          --error-on-empty              \
-          --no-id                       \
-          --no-indicator                \
-          --path                        \
-          --type md                     \
-          "${_task_list_options[@]:-}"  \
-          2>/dev/null || printf ""
+        if [[ -n "${_tag_list_with_commas:-}"   ]]
+        then
+          _search                               \
+            "${_selector_path:-}"               \
+            "${_task_list_options[@]:-}"        \
+            --tags "${_tag_list_with_commas:-}" \
+            --type todo                         \
+            --path
+        else
+          _list "${_selector_path:-}"     \
+            --error-on-empty              \
+            --no-id                       \
+            --no-indicator                \
+            --path                        \
+            --type md                     \
+            "${_task_list_options[@]:-}"  \
+            2>/dev/null || printf ""
+        fi
+
       } | {
         local _first=1
         local _in_task_list_item=0

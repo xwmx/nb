@@ -98,6 +98,30 @@ _search_all_setup() {
 #     <(printf "Content #example Seven. #tag3 #tag1")
 # }
 
+# --type <type> ###############################################################
+
+@test "'search <query> --type <type>' only searches items of type <type>." {
+  {
+    _setup_search
+
+    "${_NB}" rename "File Two.md" --to-todo --force
+  }
+
+  run "${_NB}" search "example" --type todo
+
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
+  printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
+
+  [[    "${status}"     -eq 0                                             ]]
+
+  [[    "${#lines[@]}"  -eq 3                                             ]]
+
+  [[    "${lines[0]}"   =~  Title\ Two                                    ]]
+  [[    "${lines[1]}"   =~  -*-                                           ]]
+  [[    "${lines[2]}"   =~  Example.*\ Content\ Two\ .*Example.*\ Phrase  ]]
+}
+
 # filename handling ###########################################################
 
 @test "'search <query>' with uncommon filename exits with status 0 and prints output." {
