@@ -4,7 +4,7 @@ load test_helper
 
 # embedded resources ##########################################################
 
-@test "'export' with reference to image in same directory embeds image." {
+@test "'export pandoc --self-contained' with reference to image in same directory embeds image." {
   {
     "${_NB}" init
     "${_NB}" add                                                      \
@@ -33,6 +33,28 @@ load test_helper
 <p><img src="nb.png" /></p>
 HEREDOC
     )
+}
+
+@test "'export --self-contained' with reference to image in same directory embeds image." {
+  {
+    "${_NB}" init
+    "${_NB}" add                                                      \
+      --content   "# Export Example${_NEWLINE}${_NEWLINE}![](nb.png)" \
+      --filename  "Example File.md"
+
+    "${_NB}" import "${NB_TEST_BASE_PATH}/fixtures/nb.png"
+
+
+    [[ -f "${NB_DIR}/home/Example File.md"  ]]
+    [[ -f "${NB_DIR}/home/nb.png"           ]]
+  }
+
+  run "${_NB}" export 1 "${_TMP_DIR}/example.html" --self-contained <<< "y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "$(cat "${_TMP_DIR}/example.html")" =~ \<p\>\<img\ src=\"data:image/png\;base64,iVBORw0KGgoAAAA ]]
 }
 
 # existing file ###############################################################
