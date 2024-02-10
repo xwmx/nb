@@ -2,6 +2,72 @@
 
 load test_helper
 
+@test "'browse <selector>' processes markdown with \$NB_BROWSE_MARKDOWN_READER value." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "File One.md"       \
+      --title     "Root Title One"    \
+      --content   "$(<<HEREDOC cat
+Example line one
+Example line two
+
+Example line four
+:smile:
+HEREDOC
+)"
+
+    sleep 1
+  }
+
+  run "${_NB}" browse 1 --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0 ]]
+
+  diff                                                                  \
+    <(printf "%s\\n" "${output}" | sed -ne '/<div class="main">/,$ p')  \
+    <(cat <<HEREDOC
+<div class="main">
+
+<h1 id="root-title-one">Root Title One</h1>
+<p>Example line one
+Example line two</p>
+<p>Example line four
+<span class="emoji" data-emoji="smile">😄</span></p>
+</div>
+</body>
+</html>
+HEREDOC
+)
+
+  NB_BROWSE_MARKDOWN_READER="markdown+hard_line_breaks-emoji" run "${_NB}" browse 1 --print
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0 ]]
+
+  diff                                                                  \
+    <(printf "%s\\n" "${output}" | sed -ne '/<div class="main">/,$ p')  \
+    <(cat <<HEREDOC
+<div class="main">
+
+<h1 id="root-title-one">Root Title One</h1>
+<p>Example line one<br />
+Example line two</p>
+<p>Example line four<br />
+:smile:</p>
+</div>
+</body>
+</html>
+HEREDOC
+)
+
+}
+
 # response handling ###########################################################
 
 @test "'browse' responds to request with no parameters and successfully serves item." {

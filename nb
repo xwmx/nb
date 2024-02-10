@@ -9865,6 +9865,18 @@ _main "${_ARGUMENTS[@]:-}"
 ###############################################################################
 # --------------------------------------------------------------------------- #
 
+# $NB_BROWSE_MARKDOWN_READER
+#
+# Default: 'markdown+emoji+raw_html+east_asian_line_breaks'
+#
+# The Pandoc reader, including extensions, to use for converting Markdown to
+# HTML in `nb browse`.
+#
+# More information:
+# https://pandoc.org/MANUAL.html#extensions
+# https://pandoc.org/MANUAL.html#general-options-1
+export NB_BROWSE_MARKDOWN_READER="${NB_BROWSE_MARKDOWN_READER:-"markdown+emoji+raw_html+east_asian_line_breaks"}"
+
 # $NB_BROWSE_SERVER_TOOL
 #
 # Default: '' (automatically assigned)
@@ -11587,9 +11599,10 @@ HEREDOC
       if [[ -n "${_from:-}"                   ]]
       then
         _pandoc_arguments+=("--from=${_from:-}")
-      elif [[ -z "${_prepared_file_path:-}"   ]]
+      elif [[ -z "${_prepared_file_path:-}"   ]] ||
+           _contains "${_prepared_file_path##*.}" "md" "markdown"
       then
-        _pandoc_arguments+=("--from=markdown+raw_html+east_asian_line_breaks")
+        _pandoc_arguments+=("--from=${NB_BROWSE_MARKDOWN_READER:-}")
       fi
 
       if ((${NB_MATHJAX_ENABLED:-0}))
