@@ -9048,8 +9048,9 @@ Shortcut Alias:
     <a href="#nb_ace_keyboard"><code>$NB_ACE_KEYBOARD</code></a>&nbsp;·
     <a href="#nb_audio_tool"><code>$NB_AUDIO_TOOL</code></a>&nbsp;·
     <a href="#nb_auto_sync"><code>$NB_AUTO_SYNC</code></a>&nbsp;·
-    <a href="#nb_browser"><code>$NB_BROWSER</code></a>&nbsp;·
+    <a href="#nb_browse_markdown_reader"><code>$NB_BROWSE_MARKDOWN_READER</code></a>&nbsp;·
     <a href="#nb_browse_server_tool"><code>$NB_BROWSE_SERVER_TOOL</code></a>&nbsp;·
+    <a href="#nb_browser"><code>$NB_BROWSER</code></a>&nbsp;·
     <a href="#nb_color_primary"><code>$NB_COLOR_PRIMARY</code></a>&nbsp;·
     <a href="#nb_color_secondary"><code>$NB_COLOR_SECONDARY</code></a>&nbsp;·
     <a href="#nb_color_theme"><code>$NB_COLOR_THEME</code></a>&nbsp;·
@@ -9223,6 +9224,27 @@ Default: '1'
 
 When set to '1', each `_git checkpoint()` call will automativally run
 `$_ME sync`. To disable this behavior, set the value to '0'.
+```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
+##### `$NB_BROWSE_MARKDOWN_READER`
+
+```text
+$NB_BROWSE_MARKDOWN_READER
+
+Default: 'markdown+emoji+raw_html+east_asian_line_breaks'
+
+The Pandoc reader, including extensions, to use for converting Markdown to
+HTML in `nb browse`.
+
+More information:
+https://pandoc.org/MANUAL.html#extensions
+https://pandoc.org/MANUAL.html#general-options-1
 ```
 
 <p>
