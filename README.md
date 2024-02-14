@@ -845,7 +845,7 @@ and [AsciiDoc](https://asciidoc.org/)
 titles are recognized in `.org`,`.latex`, and `.asciidoc` / `.adoc` files:
 
 ```text
-#+TITLE: Example Org Title
+#+title: Example Org Title
 ```
 
 ```latex
