@@ -917,6 +917,7 @@ __load_themes() {
 # Set highlighting color. This should be set to an xterm color number, usually
 # a value between 1 and 256. For a table of common colors and their numbers
 # run:
+#
 #   nb settings colors
 #
 # Supported Values: [0..255+]
@@ -939,6 +940,7 @@ __set_color_primary() {
 # Color for lines and other accents. This should be set to an xterm color
 # number, usually a value between 1 and 256. For a table of common colors and
 # their numbers, run:
+#
 #   nb settings colors
 #
 # Supported Values: [0..255+]

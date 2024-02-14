@@ -9237,8 +9237,8 @@ The Pandoc reader, including extensions, to use for converting Markdown to
 HTML in `nb browse`.
 
 More information:
-https://pandoc.org/MANUAL.html#extensions
-https://pandoc.org/MANUAL.html#general-options-1
+  https://pandoc.org/MANUAL.html#extensions
+  https://pandoc.org/MANUAL.html#general-options-1
 ```
 
 <p>
@@ -9286,6 +9286,7 @@ Default: Value depends on terminal capabilities.
 Set highlighting color. This should be set to an xterm color number, usually
 a value between 1 and 256. For a table of common colors and their numbers
 run:
+
   nb settings colors
 
 Supported Values: [0..255+]
@@ -9305,6 +9306,7 @@ Default: '8'
 Color for lines and other accents. This should be set to an xterm color
 number, usually a value between 1 and 256. For a table of common colors and
 their numbers, run:
+
   nb settings colors
 
 Supported Values: [0..255+]
