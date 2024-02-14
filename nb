@@ -1896,6 +1896,9 @@ _get_content() {
     local _only_title=0
   fi
 
+  # turn on case-insensitive matching
+  shopt -s nocasematch
+
   if [[   -z "${_path}" ]]
   then
     return 1
@@ -2047,7 +2050,12 @@ _get_content() {
             _title="${_title} "
           fi
 
-          _title+="$(printf "%s\\n" "${__line}" | LC_ALL=C sed 's/^#+TITLE: //')"
+          _title+="$(
+            printf "%s\\n" "${__line}"    \
+              | LC_ALL=C sed              \
+                  -e 's/^#+TITLE: //'     \
+                  -e 's/^#+title: //'
+          )"
         elif [[ -n "${__line:-}"      ]]
         then
 
@@ -2120,6 +2128,9 @@ _get_content() {
     then
       printf "%s\\n" "__first_line:${_first_line/%$'\r'}"
     fi
+
+    # turn off case-insensitive matching
+    shopt -u nocasematch
   fi
 }
 

@@ -254,6 +254,23 @@ line three
 line four
 HEREDOC
 
+    cat <<HEREDOC | "${_NB}" add "one.org"
+#+title: Example Org Title With Lowercase Export Option
+
+line three
+line four
+HEREDOC
+
+    cat <<HEREDOC | "${_NB}" add "two.org"
+#+title: Example
+#+title: Multi-Line
+#+title: Org Title
+#+title: With Lowercase Export Option
+
+line three
+line four
+HEREDOC
+
     _files=($(ls "${NB_DIR}/home/"))
   }
 
@@ -264,10 +281,12 @@ HEREDOC
   printf "\${#lines[@]}: '%s'\\n" "${#lines[@]}"
   printf "\${_files[@]}: '%s'\\n" "${_files[@]}"
 
-  [[ ${status} -eq 0                                      ]]
-  [[ "${lines[0]}"  == "[1] Example Org Title"            ]]
-  [[ "${lines[1]}"  == "[2] Example Multi-Line Org Title" ]]
-  [[ "${lines[2]}"  == "[3] Example Multi-Line Org Title" ]]
+  [[ "${status}"    -eq 0                                                               ]]
+  [[ "${lines[0]}"  ==  "[1] Example Org Title"                                         ]]
+  [[ "${lines[1]}"  ==  "[2] Example Multi-Line Org Title"                              ]]
+  [[ "${lines[2]}"  ==  "[3] Example Multi-Line Org Title"                              ]]
+  [[ "${lines[3]}"  ==  "[4] Example Org Title With Lowercase Export Option"            ]]
+  [[ "${lines[4]}"  ==  "[5] Example Multi-Line Org Title With Lowercase Export Option" ]]
 }
 
 @test "'_get_content() --title' detects and returns LaTeX titles." {
