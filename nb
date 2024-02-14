@@ -21164,6 +21164,15 @@ HEREDOC
 
       cat
 
+      if ((${NB_BROWSE_SUPPORT_LINKS:-0}))
+      then
+        printf "<br /><div align=\"center\" class=\"muted\">"
+        printf "<a href=\"https://github.com/sponsors/xwmx\">Sponsor</a>\\n"
+        printf "<span class=\"muted\">•</span>\\n"
+        printf "<a href=\"https://www.paypal.com/paypalme/WilliamMelody\">Donate</a>"
+        printf "</div>\\n"
+      fi
+
       printf "</div>\\n"
     } | {
       _render --title "${_ME} browse --notebooks"
