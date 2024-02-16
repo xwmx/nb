@@ -5978,16 +5978,17 @@ Usage:
   nb init [<remote-url> [<branch>]] [--author] [--email <email>]
           [--name <name>]
   nb list [-e [<length>] | --excerpt [<length>]] [--filenames]
-          [-n <limit> | --limit <limit> | --<limit>] [--no-id]
-          [--no-indicator] [-p <number> | --page <number>] [--pager]
+          [-f | --folders-first] [-n <limit> | --limit <limit> | --<limit>]
+          [--no-id] [--no-indicator] [-p <number> | --page <number>] [--pager]
           [--paths] [-s | --sort] [-r | --reverse] [--tags]
           [-t <type> | --type <type> | --<type>]
           [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
   nb ls [-a | --all] [-b | --browse] [-e [<length>] | --excerpt [<length>]]
-        [--filenames] [-g | --gui] [-n <limit> | --limit <limit> | --<limit>]
-        [--no-footer] [--no-header] [--no-id] [--no-indicator]
-        [-p <number> | --page <number>] [--pager] [--paths] [-s | --sort]
-        [-r | --reverse] [--tags] [-t <type> | --type <type> | --<type>]
+        [--filenames] [-f | --folders-first] [-g | --gui]
+        [-n <limit> | --limit <limit> | --<limit>] [--no-footer] [--no-header]
+        [--no-id] [--no-indicator] [-p <number> | --page <number>] [--pager]
+        [--paths] [-s | --sort] [-r | --reverse] [--tags]
+        [-t <type> | --type <type> | --<type>]
         [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
   nb move ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note |
@@ -7189,8 +7190,8 @@ Examples:
 ```text
 Usage:
   nb list [-e [<length>] | --excerpt [<length>]] [--filenames]
-          [-n <limit> | --limit <limit> | --<limit>] [--no-id]
-          [--no-indicator] [-p <number> | --page <number>] [--pager]
+          [-f | --folders-first] [-n <limit> | --limit <limit> | --<limit>]
+          [--no-id] [--no-indicator] [-p <number> | --page <number>] [--pager]
           [--paths] [-s | --sort] [-r | --reverse] [--tags]
           [-t <type> | --type <type> | --<type>]
           [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
@@ -7199,6 +7200,7 @@ Options:
   -e, --excerpt [<length>]        Print an excerpt <length> lines long under
                                   each note's filename [default: 3].
   --filenames                     Print the filename for each note.
+  -f, --folders-first             Print folders before other items.
   -n, --limit <limit>, --<limit>  The maximum number of notes to list.
   --no-id                         Don't include the id in list items.
   --no-indicator                  Don't include the indicator in list items.
@@ -7266,10 +7268,11 @@ Examples:
 ```text
 Usage:
   nb ls [-a | --all] [-b | --browse] [-e [<length>] | --excerpt [<length>]]
-        [--filenames] [-g | --gui] [-n <limit> | --limit <limit> | --<limit>]
-        [--no-footer] [--no-header] [--no-id] [--no-indicator]
-        [-p <number> | --page <number>] [--pager] [--paths] [-s | --sort]
-        [-r | --reverse] [--tags] [-t <type> | --type <type> | --<type>]
+        [--filenames] [-f | --folders-first] [-g | --gui]
+        [-n <limit> | --limit <limit> | --<limit>] [--no-footer] [--no-header]
+        [--no-id] [--no-indicator] [-p <number> | --page <number>] [--pager]
+        [--paths] [-s | --sort] [-r | --reverse] [--tags]
+        [-t <type> | --type <type> | --<type>]
         [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
 
 Options:
@@ -7280,6 +7283,7 @@ Options:
   -e, --excerpt [<length>]        Print an excerpt <length> lines long under
                                   each note's filename [default: 3].
   --filenames                     Print the filename for each note.
+  -f, --folders-first             Print folders before other items.
   -g, --gui                       Open the specified item or current notebook
                                   with `browse` in a GUI web browser.
   -n, --limit <limit>, --<limit>  The maximum number of listed items.
@@ -9064,6 +9068,7 @@ Shortcut Alias:
     <a href="#nb_directory_tool"><code>$NB_DIRECTORY_TOOL</code></a>&nbsp;·
     <a href="#nb_editor"><code>$NB_EDITOR</code></a>&nbsp;·
     <a href="#nb_encryption_tool"><code>$NB_ENCRYPTION_TOOL</code></a>&nbsp;·
+    <a href="#nb_folders_first"><code>$NB_FOLDERS_FIRST</code></a>&nbsp;·
     <a href="#nb_footer"><code>$NB_FOOTER</code></a>&nbsp;·
     <a href="#nb_gui_browser"><code>$NB_GUI_BROWSER</code></a>&nbsp;·
     <a href="#nb_header"><code>$NB_HEADER</code></a>&nbsp;·
@@ -9479,6 +9484,23 @@ Example Values: 'code', 'emacs', 'hx', 'vim'
 Default: 'openssl'
 
 Supported Values: 'gpg' 'openssl'
+```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
+##### `$NB_FOLDERS_FIRST`
+
+```text
+Default: '0'
+
+When set to '1', folders are printed before other items in `nb`, `nb ls`,
+and `nb browse`.
+
+Supported Values: '0' '1'
 ```
 
 <p>

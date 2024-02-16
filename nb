@@ -4364,16 +4364,17 @@ $(_color_primary "Usage"):
   ${_ME} init [<remote-url> [<branch>]] [--author] [--email <email>]
           [--name <name>]
   ${_ME} list [-e [<length>] | --excerpt [<length>]] [--filenames]
-          [-n <limit> | --limit <limit> | --<limit>] [--no-id]
-          [--no-indicator] [-p <number> | --page <number>] [--pager]
+          [-f | --folders-first] [-n <limit> | --limit <limit> | --<limit>]
+          [--no-id] [--no-indicator] [-p <number> | --page <number>] [--pager]
           [--paths] [-s | --sort] [-r | --reverse] [--tags]
           [-t <type> | --type <type> | --<type>]
           [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
   ${_ME} ls [-a | --all] [-b | --browse] [-e [<length>] | --excerpt [<length>]]
-        [--filenames] [-g | --gui] [-n <limit> | --limit <limit> | --<limit>]
-        [--no-footer] [--no-header] [--no-id] [--no-indicator]
-        [-p <number> | --page <number>] [--pager] [--paths] [-s | --sort]
-        [-r | --reverse] [--tags] [-t <type> | --type <type> | --<type>]
+        [--filenames] [-f | --folders-first] [-g | --gui]
+        [-n <limit> | --limit <limit> | --<limit>] [--no-footer] [--no-header]
+        [--no-id] [--no-indicator] [-p <number> | --page <number>] [--pager]
+        [--paths] [-s | --sort] [-r | --reverse] [--tags]
+        [-t <type> | --type <type> | --<type>]
         [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
   ${_ME} move ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note |
@@ -5250,8 +5251,8 @@ _describe_list() {
   cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} list [-e [<length>] | --excerpt [<length>]] [--filenames]
-          [-n <limit> | --limit <limit> | --<limit>] [--no-id]
-          [--no-indicator] [-p <number> | --page <number>] [--pager]
+          [-f | --folders-first] [-n <limit> | --limit <limit> | --<limit>]
+          [--no-id] [--no-indicator] [-p <number> | --page <number>] [--pager]
           [--paths] [-s | --sort] [-r | --reverse] [--tags]
           [-t <type> | --type <type> | --<type>]
           [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
@@ -5260,6 +5261,7 @@ $(_color_primary "Options"):
   -e, --excerpt [<length>]        Print an excerpt <length> lines long under
                                   each note's filename [default: 3].
   --filenames                     Print the filename for each note.
+  -f, --folders-first             Print folders before other items.
   -n, --limit <limit>, --<limit>  The maximum number of notes to list.
   --no-id                         Don't include the id in list items.
   --no-indicator                  Don't include the indicator in list items.
@@ -6327,10 +6329,11 @@ _describe_ls() {
   cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} ls [-a | --all] [-b | --browse] [-e [<length>] | --excerpt [<length>]]
-        [--filenames] [-g | --gui] [-n <limit> | --limit <limit> | --<limit>]
-        [--no-footer] [--no-header] [--no-id] [--no-indicator]
-        [-p <number> | --page <number>] [--pager] [--paths] [-s | --sort]
-        [-r | --reverse] [--tags] [-t <type> | --type <type> | --<type>]
+        [--filenames] [-f | --folders-first] [-g | --gui]
+        [-n <limit> | --limit <limit> | --<limit>] [--no-footer] [--no-header]
+        [--no-id] [--no-indicator] [-p <number> | --page <number>] [--pager]
+        [--paths] [-s | --sort] [-r | --reverse] [--tags]
+        [-t <type> | --type <type> | --<type>]
         [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
 
 $(_color_primary "Options"):
@@ -6341,6 +6344,7 @@ $(_color_primary "Options"):
   -e, --excerpt [<length>]        Print an excerpt <length> lines long under
                                   each note's filename [default: 3].
   --filenames                     Print the filename for each note.
+  -f, --folders-first             Print folders before other items.
   -g, --gui                       Open the specified item or current notebook
                                   with \`browse\` in a GUI web browser.
   -n, --limit <limit>, --<limit>  The maximum number of listed items.
