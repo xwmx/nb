@@ -170,7 +170,7 @@ load test_helper
 .*[.*1.*].*\ File\ One\.md\ \·\ \"Example\ content\ one\.\"     ]]
 }
 
-@test "'NB_LS_FOLDERS_FIRST=1 list' has no effect." {
+@test "'NB_FOLDERS_FIRST=1 list' has no effect." {
   {
     "${_NB}" init
 
@@ -200,7 +200,7 @@ load test_helper
   [[ "${lines[4]}"  =~  \
 .*[.*1.*].*\ File\ One\.md\ \·\ \"Example\ content\ one\.\"     ]]
 
-  NB_LS_FOLDERS_FIRST=1 run "${_NB}" list
+  NB_FOLDERS_FIRST=1 run "${_NB}" list
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"

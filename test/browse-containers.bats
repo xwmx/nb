@@ -30,6 +30,55 @@ load test_helper
   [[    "${output}"   =~  Example\ Title\ ${_amp}\#40\;2${_amp}\#41\;\.       ]]
 }
 
+# folderst first ##############################################################
+
+@test "'NB_FOLDERS_FIRST=1 browse' prints folders first." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md"    --content "Example content one."
+    "${_NB}" folder add "Folder One"
+    "${_NB}" add "File Two.md"    --content "Example content two."
+    "${_NB}" add "File Three.md"  --content "Example content three."
+    "${_NB}" folder add "Folder Two"
+
+    export NB_FOOTER=0
+    export NB_HEADER=0
+  }
+
+  run printf "%s\\n" "$("${_NB}" browse --container | awk '/<p class="item-list">/,/<\/p>/')"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0 ]]
+  [[ "${#lines[@]}" -eq 7 ]]
+
+  [[ "${lines[0]}" =~ \<p\ class=\"item-list\"\>                                                ]]
+  [[ "${lines[1]}" =~ \<a.*home:5.*📂\ Folder\ Two\</a\>\<br\>                                  ]]
+  [[ "${lines[2]}" =~ \<a.*home:4.*File\ Three.md\ ·\ \"Example\ content\ three.\"\</a\>\<br\>  ]]
+  [[ "${lines[3]}" =~ \<a.*home:3.*File\ Two.md\ ·\ \"Example\ content\ two.\"\</a\>\<br\>      ]]
+  [[ "${lines[4]}" =~ \<a.*home:2.*📂\ Folder\ One\</a\>\<br\>                                  ]]
+  [[ "${lines[5]}" =~ \<a.*home:1.*File\ One.md\ ·\ \"Example\ content\ one.\"\</a\>\<br\>      ]]
+  [[ "${lines[6]}" =~ \</p\>                                                                    ]]
+
+  run printf "%s\\n" "$(NB_FOLDERS_FIRST=1 "${_NB}" browse --container | awk '/<p class="item-list">/,/<\/p>/')"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0 ]]
+  [[ "${#lines[@]}" -eq 7 ]]
+
+  [[ "${lines[0]}" =~ \<p\ class=\"item-list\"\>                                                ]]
+  [[ "${lines[1]}" =~ \<a.*home:5.*📂\ Folder\ Two\</a\>\<br\>                                  ]]
+  [[ "${lines[2]}" =~ \<a.*home:2.*📂\ Folder\ One\</a\>\<br\>                                  ]]
+  [[ "${lines[3]}" =~ \<a.*home:4.*File\ Three.md\ ·\ \"Example\ content\ three.\"\</a\>\<br\>  ]]
+  [[ "${lines[4]}" =~ \<a.*home:3.*File\ Two.md\ ·\ \"Example\ content\ two.\"\</a\>\<br\>      ]]
+  [[ "${lines[5]}" =~ \<a.*home:1.*File\ One.md\ ·\ \"Example\ content\ one.\"\</a\>\<br\>      ]]
+  [[ "${lines[6]}" =~ \</p\>                                                                    ]]
+}
+
 # todos #######################################################################
 
 @test "'browse --container' displays marked-up checkboxes in todo titles." {

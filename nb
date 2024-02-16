@@ -6768,7 +6768,7 @@ _ls() {
   local _delegate_arguments=()
   local _fast_exit=0
   local _filter_patterns=()
-  local _folders_first="${NB_LS_FOLDERS_FIRST:-0}"
+  local _folders_first="${NB_FOLDERS_FIRST:-0}"
   local _header_flags=()
   local _limit=
   local _maybe_type=
@@ -19939,12 +19939,20 @@ HEREDOC
           --page  "${_current_page}"      \
           2>&1 || :
       else
-        _list "${_target_path}"           \
-          --limit "${_limit}"             \
-          --no-color                      \
-          --notebook-selectors            \
-          --page  "${_current_page}"      \
+        local _list_options=(
+          --limit "${_limit}"
+          --no-color
+          --notebook-selectors
+          --page  "${_current_page}"
           --with-pinned
+        )
+
+        if ((${NB_FOLDERS_FIRST:-0}))
+        then
+          _list_options+=("--folders-first")
+        fi
+
+        _list "${_target_path}" "${_list_options[@]:-}"
       fi
     } | {
       local _truncate_length=9999
