@@ -5317,6 +5317,7 @@ HEREDOC
 _list() {
   local _error_on_empty=0
   local _excerpt_length=3
+  local _folders_first="${NB_LIST_FOLDERS_FIRST:-0}"
   local _force_line_wrap=0
   local _limit=
   local _line_wrap=1
@@ -5363,6 +5364,9 @@ _list() {
       --filename*)
         _list_filenames=1
         _recursive_arguments+=("--filenames")
+        ;;
+      --folders-first|--ff|-ff|--f|-f)
+        _folders_first=1
         ;;
       --limit|-n|--num|--number|--per*)
         if _option_value_is_present "${2:-}"
@@ -5796,7 +5800,25 @@ _list() {
 
       if ! ((_only_pinned))
       then
-        _list_files "${_list_path}" "${_list_files_options[@]:-}" || :
+        if ((_folders_first))
+        then
+          _list_files "${_list_path}" "${_list_files_options[@]:-}" --type folder || :
+
+          {
+            _list_files "${_list_path}" "${_list_files_options[@]:-}" || :
+          } | {
+            local         __line=
+            while read -r __line
+            do
+              if [[ ! -d "${_list_path}/${__line}" ]]
+              then
+                printf "%s\\n" "${__line}"
+              fi
+            done
+          }
+        else
+          _list_files "${_list_path}" "${_list_files_options[@]:-}" || :
+        fi
       fi
     fi
   } | {
@@ -6743,6 +6765,7 @@ _ls() {
   local _delegate_arguments=()
   local _fast_exit=0
   local _filter_patterns=()
+  local _folders_first="${NB_LIST_FOLDERS_FIRST:-0}"
   local _header_flags=()
   local _limit=
   local _maybe_type=
@@ -6776,6 +6799,9 @@ _ls() {
         ;;
       --*exit*)
         _fast_exit=1
+        ;;
+      --folders-first|--ff|-ff|--f|-f)
+        _folders_first=1
         ;;
       -g|--gui)
         _delegate_to_browse=1
@@ -6929,6 +6955,11 @@ _ls() {
   if ((_with_pinned))
   then
     _list_options+=("--with-pinned")
+  fi
+
+  if ((_folders_first))
+  then
+    _list_options+=("--folders-first")
   fi
 
   local _selector_relative_path="${_selector#*:}"
