@@ -149,7 +149,7 @@ HEREDOC
 .*[.*1.*].*\ File\ One\.md\ \·\ \"Example\ content\ one\.\"     ]]
 }
 
-@test "'NB_LIST_FOLDERS_FIRST=1 ls' prints folders first." {
+@test "'NB_LS_FOLDERS_FIRST=1 ls' prints folders first." {
   {
     "${_NB}" init
 
@@ -182,7 +182,7 @@ HEREDOC
   [[ "${lines[4]}"  =~  \
 .*[.*1.*].*\ File\ One\.md\ \·\ \"Example\ content\ one\.\"     ]]
 
-  NB_LIST_FOLDERS_FIRST=1 run "${_NB}" ls
+  NB_LS_FOLDERS_FIRST=1 run "${_NB}" ls
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -199,6 +199,59 @@ HEREDOC
   [[ "${lines[3]}"  =~  \
 .*[.*3.*].*\ File\ Two\.md\ \·\ \"Example\ content\ two\.\"     ]]
 
+  [[ "${lines[4]}"  =~  \
+.*[.*1.*].*\ File\ One\.md\ \·\ \"Example\ content\ one\.\"     ]]
+}
+
+@test "'NB_LS_FOLDERS_FIRST=1 ls --no-folders-first' prints without folders first." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md"    --content "Example content one."
+    "${_NB}" folder add "Folder One"
+    "${_NB}" add "File Two.md"    --content "Example content two."
+    "${_NB}" add "File Three.md"  --content "Example content three."
+    "${_NB}" folder add "Folder Two"
+
+    export NB_FOOTER=0
+    export NB_HEADER=0
+  }
+
+  run "${_NB}" ls
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0 ]]
+  [[ "${#lines[@]}" -eq 5 ]]
+
+  [[ "${lines[0]}"  =~  \
+.*[.*5.*].*\ 📂\ Folder\ Two                                    ]]
+  [[ "${lines[1]}"  =~  \
+.*[.*4.*].*\ File\ Three\.md\ \·\ \"Example\ content\ three\.\" ]]
+  [[ "${lines[2]}"  =~  \
+.*[.*3.*].*\ File\ Two\.md\ \·\ \"Example\ content\ two\.\"     ]]
+  [[ "${lines[3]}"  =~  \
+.*[.*2.*].*\ 📂\ Folder\ One                                    ]]
+  [[ "${lines[4]}"  =~  \
+.*[.*1.*].*\ File\ One\.md\ \·\ \"Example\ content\ one\.\"     ]]
+
+  NB_LS_FOLDERS_FIRST=1 run "${_NB}" ls --no-folders-first
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0 ]]
+  [[ "${#lines[@]}" -eq 5 ]]
+
+  [[ "${lines[0]}"  =~  \
+.*[.*5.*].*\ 📂\ Folder\ Two                                    ]]
+  [[ "${lines[1]}"  =~  \
+.*[.*4.*].*\ File\ Three\.md\ \·\ \"Example\ content\ three\.\" ]]
+  [[ "${lines[2]}"  =~  \
+.*[.*3.*].*\ File\ Two\.md\ \·\ \"Example\ content\ two\.\"     ]]
+  [[ "${lines[3]}"  =~  \
+.*[.*2.*].*\ 📂\ Folder\ One                                    ]]
   [[ "${lines[4]}"  =~  \
 .*[.*1.*].*\ File\ One\.md\ \·\ \"Example\ content\ one\.\"     ]]
 }

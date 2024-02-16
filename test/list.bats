@@ -170,7 +170,7 @@ load test_helper
 .*[.*1.*].*\ File\ One\.md\ \·\ \"Example\ content\ one\.\"     ]]
 }
 
-@test "'NB_LIST_FOLDERS_FIRST=1 list' prints folders first." {
+@test "'NB_LS_FOLDERS_FIRST=1 list' has no effect." {
   {
     "${_NB}" init
 
@@ -200,7 +200,7 @@ load test_helper
   [[ "${lines[4]}"  =~  \
 .*[.*1.*].*\ File\ One\.md\ \·\ \"Example\ content\ one\.\"     ]]
 
-  NB_LIST_FOLDERS_FIRST=1 run "${_NB}" list
+  NB_LS_FOLDERS_FIRST=1 run "${_NB}" list
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -211,12 +211,11 @@ load test_helper
   [[ "${lines[0]}"  =~  \
 .*[.*5.*].*\ 📂\ Folder\ Two                                    ]]
   [[ "${lines[1]}"  =~  \
-.*[.*2.*].*\ 📂\ Folder\ One                                    ]]
-  [[ "${lines[2]}"  =~  \
 .*[.*4.*].*\ File\ Three\.md\ \·\ \"Example\ content\ three\.\" ]]
-  [[ "${lines[3]}"  =~  \
+  [[ "${lines[2]}"  =~  \
 .*[.*3.*].*\ File\ Two\.md\ \·\ \"Example\ content\ two\.\"     ]]
-
+  [[ "${lines[3]}"  =~  \
+.*[.*2.*].*\ 📂\ Folder\ One                                    ]]
   [[ "${lines[4]}"  =~  \
 .*[.*1.*].*\ File\ One\.md\ \·\ \"Example\ content\ one\.\"     ]]
 }

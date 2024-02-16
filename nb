@@ -5317,7 +5317,7 @@ HEREDOC
 _list() {
   local _error_on_empty=0
   local _excerpt_length=3
-  local _folders_first="${NB_LIST_FOLDERS_FIRST:-0}"
+  local _folders_first=0
   local _force_line_wrap=0
   local _limit=
   local _line_wrap=1
@@ -5365,7 +5365,7 @@ _list() {
         _list_filenames=1
         _recursive_arguments+=("--filenames")
         ;;
-      --folders-first|--ff|-ff|--f|-f)
+      --folders*first|--ff|-ff|--f|-f)
         _folders_first=1
         ;;
       --limit|-n|--num|--number|--per*)
@@ -5378,6 +5378,9 @@ _list() {
         ;;
       --no*color)
         _COLOR_ENABLED=0
+        ;;
+      --no*folders*first|--no*ff|-no*ff|--no*f|-no*f)
+        _folders_first=0
         ;;
       --no-id*|--noid*|--no*index)
         _no_id=1
@@ -6765,7 +6768,7 @@ _ls() {
   local _delegate_arguments=()
   local _fast_exit=0
   local _filter_patterns=()
-  local _folders_first="${NB_LIST_FOLDERS_FIRST:-0}"
+  local _folders_first="${NB_LS_FOLDERS_FIRST:-0}"
   local _header_flags=()
   local _limit=
   local _maybe_type=
@@ -6817,6 +6820,9 @@ _ls() {
         ;;
       -l)
         : # Ignore accidental ls -l  due to muscle memory.
+        ;;
+      --no*folders*first|--no*ff|-no*ff|--no*f|-no*f)
+        _folders_first=0
         ;;
       --no*footer)
         NB_FOOTER=0
