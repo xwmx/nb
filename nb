@@ -25794,7 +25794,7 @@ _todo() {
         local         __line=
         while read -r __line
         do
-          _counter+=1
+          _counter=$((_counter+1))
 
           printf "%s\\n" "${__line:-}"
         done
