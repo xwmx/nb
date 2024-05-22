@@ -4582,6 +4582,7 @@ _describe_index() {
 $(_color_primary "Usage"):
   ${_ME} index add <filename>
   ${_ME} index delete <filename>
+  ${_ME} index edit
   ${_ME} index get_basename <id>
   ${_ME} index get_id <filename>
   ${_ME} index get_max_id
@@ -4600,6 +4601,7 @@ $(_color_primary "Options"):
 $(_color_primary "Subcommands"):
   add           Add <filename> to the index.
   delete        Delete <filename> from the index.
+  edit          Open the index file in \`\$EDITOR\`.
   get_basename  Print the filename / basename at the specified <id>.
   get_id        Get the id for <filename>.
   get_max_id    Get the maximum id for the folder.
@@ -4631,7 +4633,7 @@ _index() {
   local _subcommand="${1:-}"
 
   case "${_subcommand:-}" in
-    get_max_id|show|verify)
+    edit|get_max_id|show|verify)
       _folder_path="${2:-}"
       ;;
     rebuild|reconcile)
@@ -4681,7 +4683,7 @@ _index() {
       add)
         _index reconcile "${_folder_path}" --ancestors
         ;;
-      rebuild|reconcile)
+      edit|rebuild|reconcile)
         :
         ;;
       *)
@@ -4728,6 +4730,11 @@ _index() {
       else
         return 1
       fi
+      ;;
+    edit)
+      _edit_file "${_index_path}" --no-wait
+
+      return 0
       ;;
     get_basename)
       # Usage: _index_get_basename <id> <index-path>

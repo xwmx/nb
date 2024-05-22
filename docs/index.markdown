@@ -10282,6 +10282,7 @@ so ids are preserved across systems.
 Usage:
   nb index add <filename>
   nb index delete <filename>
+  nb index edit
   nb index get_basename <id>
   nb index get_id <filename>
   nb index get_max_id
@@ -10300,6 +10301,7 @@ Options:
 Subcommands:
   add           Add <filename> to the index.
   delete        Delete <filename> from the index.
+  edit          Open the index file in `$EDITOR`.
   get_basename  Print the filename / basename at the specified <id>.
   get_id        Get the id for <filename>.
   get_max_id    Get the maximum id for the folder.
