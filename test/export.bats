@@ -96,7 +96,7 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${output}" =~ \<p\>\<img\ src=\"data:image/png\;base64,iVBORw0KGgoAAAA ]]
+  [[ "${output}" =~ \<p\>\<img\ role=\"img\"\ src=\"data:image/png\;base64,iVBORw0KGgoAAAA ]]
 
   run ! diff                      \
     <(printf "%s\\n" "${output}") \
@@ -127,7 +127,7 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "$(cat "${_TMP_DIR}/example.html")" =~ \<p\>\<img\ src=\"data:image/png\;base64,iVBORw0KGgoAAAA ]]
+  [[ "$(cat "${_TMP_DIR}/example.html")" =~ \<p\>\<img\ role=\"img\"\ src=\"data:image/png\;base64,iVBORw0KGgoAAAA ]]
 }
 
 # existing file ###############################################################
