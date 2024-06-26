@@ -16981,14 +16981,12 @@ _search() {
     fi
 
     local _grep_arguments=(
-      "--extended-regexp"
+      "-P"
       "-I"
       "--ignore-case"
       "--only-matching"
-      -e '[[:space:]]#[A-Za-z0-9_-]+'
-      -e '^#[A-Za-z0-9_-]+'
+      -e '(^|\s)#[A-Za-z0-9_-]+'
     )
-
     {
       local __target_path=
       for   __target_path in "${_target_paths[@]:-}"
