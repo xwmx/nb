@@ -16980,13 +16980,26 @@ _search() {
       _use_git_grep=1
     fi
 
-    local _grep_arguments=(
-      "-P"
-      "-I"
-      "--ignore-case"
-      "--only-matching"
-      -e '(^|\s)#[A-Za-z0-9_-]+'
-    )
+    if ((_use_git_grep))
+    then
+      local _grep_arguments=(
+        "-P"
+        "-I"
+        "--ignore-case"
+        "--only-matching"
+        -e '(^|[[:space:]])#[A-Za-z0-9_-]+'
+      )
+    else
+      local _grep_arguments=(
+        "--extended-regexp"
+        "-I"
+        "--ignore-case"
+        "--only-matching"
+        -e '[[:space:]]#[A-Za-z0-9_-]+'
+        -e '^#[A-Za-z0-9_-]+'
+      )
+    fi
+
     {
       local __target_path=
       for   __target_path in "${_target_paths[@]:-}"
