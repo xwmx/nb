@@ -9054,6 +9054,7 @@ Shortcut Alias:
     <a href="#nb_auto_sync"><code>$NB_AUTO_SYNC</code></a>&nbsp;·
     <a href="#nb_browse_markdown_reader"><code>$NB_BROWSE_MARKDOWN_READER</code></a>&nbsp;·
     <a href="#nb_browse_server_tool"><code>$NB_BROWSE_SERVER_TOOL</code></a>&nbsp;·
+    <a href="#nb_browse_support_links"><code>$NB_BROWSE_SUPPORT_LINKS</code></a>&nbsp;·
     <a href="#nb_browser"><code>$NB_BROWSER</code></a>&nbsp;·
     <a href="#nb_color_primary"><code>$NB_COLOR_PRIMARY</code></a>&nbsp;·
     <a href="#nb_color_secondary"><code>$NB_COLOR_SECONDARY</code></a>&nbsp;·
@@ -9267,6 +9268,22 @@ The tool used to listen on the server host and port and respond to
 incoming requests.
 
 Supported Values: 'accept', 'bash', 'nc', 'ncat', netcat', 'socat'
+```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
+##### `$NB_BROWSE_SUPPORT_LINKS`
+
+```text
+Default: '1'
+
+Set to '0' to hide the support links in `nb browse`.
+
+Supported Values: '0' '1'
 ```
 
 <p>
