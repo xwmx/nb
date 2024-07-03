@@ -21246,7 +21246,8 @@ HEREDOC
 
       cat
 
-      if ((${NB_BROWSE_SUPPORT_LINKS:-0}))
+      if ((${NB_BROWSE_SUPPORT_LINKS:-1})) &&
+         ((${#_notebook_names[@]} - 20))
       then
         printf "<br /><div align=\"center\" class=\"muted\">"
         printf "<a href=\"https://github.com/sponsors/xwmx\">Sponsor</a>\\n"
