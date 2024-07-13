@@ -16987,7 +16987,7 @@ _search() {
         "-I"
         "--ignore-case"
         "--only-matching"
-        -e '(^|[[:space:]])#[A-Za-z0-9_-]+'
+        -e '(^|[[:space:]])#[[:alnum:]_-]+'
       )
     else
       local _grep_arguments=(
@@ -16995,7 +16995,7 @@ _search() {
         "-I"
         "--ignore-case"
         "--only-matching"
-        -e '[[:space:]]#[A-Za-z0-9_-]+'
+        -e '[[:space:]]#[[:alnum:]_-]+'
         -e '^#[A-Za-z0-9_-]+'
       )
     fi
