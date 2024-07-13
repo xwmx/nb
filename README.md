@@ -1771,6 +1771,14 @@ is installed, markup is cleaned up to focus on content. When
 JavaScript-dependent pages are rendered and the resulting markup is
 saved.
 
+Many shells automatically escape special characters in URLs. If a
+URL contains characters that are preventing it from being saved in full,
+URLs can also be enclosed in quotes when passed to `nb`:
+
+```bash
+nb "https://example.com#sample-anchor"
+```
+
 In addition to caching the page content,
 you can also include a quote from the page in a
 [`## Quote`](#-quote) section
