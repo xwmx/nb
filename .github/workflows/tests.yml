@@ -273,6 +273,11 @@ jobs:
           sudo ./install.sh /usr/local
       - name: "Set $TERM=xterm"
         run:  printf "TERM=xterm\\n" >> $GITHUB_ENV
+      - name: "Print encoding variables"
+        run: |
+          echo "'$LANG'"
+          echo "'$LC_ALL'"
+          echo "'$LC_TYPE'"
       - name: "Run bats tests"
         run:  script -q -e -c "bats test"
       # - name: "Install Go"
