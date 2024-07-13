@@ -2,8 +2,6 @@
 
 load test_helper
 
-# tags ########################################################################
-
 @test "'search -t tag1 --and -t tag2,'#tag3' exits with status 0 and prints matches as an AND query." {
   {
     "${_NB}" init
@@ -12,7 +10,7 @@ load test_helper
     "${_NB}" add "File Two.md"    --content "Content two. #tag1"
     "${_NB}" add "File Three.md"  --content "Content three. tag1 #tag2"
     "${_NB}" add "File Four.md"   --content "Content #tag1 four. #tag2"
-    "${_NB}" add "File Five.md"   --content "Content five."
+    "${_NB}" add "File Five.md"   --content "Content five. #tag3ButNotReally #tag4"
     "${_NB}" add "File Six.md"    --content "Content six. #tag2"
     "${_NB}" add "File Seven.md"  --content "Content #tag2 Seven. #tag3 #tag1"
   }
@@ -41,7 +39,7 @@ load test_helper
     "${_NB}" add "File Two.md"    --content "Content two. #tag1"
     "${_NB}" add "File Three.md"  --content "Content three. tag1 #tag2"
     "${_NB}" add "File Four.md"   --content "Content #tag1 four. #tag2"
-    "${_NB}" add "File Five.md"   --content "Content five."
+    "${_NB}" add "File Five.md"   --content "Content five. #tag3ButNotReally #tag4"
     "${_NB}" add "File Six.md"    --content "Content six. #tag2"
     "${_NB}" add "File Seven.md"  --content "Content #tag2 Seven. #tag1"
   }
@@ -100,7 +98,7 @@ load test_helper
     "${_NB}" add "File Two.md"    --content "Content two.   #tag1"
     "${_NB}" add "File Three.md"  --content "Content three. tag1"
     "${_NB}" add "File Four.md"   --content "Content four.  #tag1"
-    "${_NB}" add "File Five.md"   --content "Content five."
+    "${_NB}" add "File Five.md"   --content "Content five.  #tag3ButNotReally"
     "${_NB}" add "File Six.md"    --content "Content six.   #tag2"
   }
 
@@ -138,7 +136,7 @@ load test_helper
     "${_NB}" add "File Two.md"    --content "Content two. #tag1"
     "${_NB}" add "File Three.md"  --content "Content three. tag1 #tag2"
     "${_NB}" add "File Four.md"   --content "Content #tag1 four. #tag2"
-    "${_NB}" add "File Five.md"   --content "Content five."
+    "${_NB}" add "File Five.md"   --content "Content five. #tag3ButNotReally #tag4"
     "${_NB}" add "File Six.md"    --content "Content six. #tag2"
     "${_NB}" add "File Seven.md"  --content "Content #tag2 Seven. #tag1"
   }
@@ -172,7 +170,7 @@ load test_helper
     "${_NB}" add "File Two.md"    --content "Content two. #tag1"
     "${_NB}" add "File Three.md"  --content "Content three. tag1 #tag2"
     "${_NB}" add "File Four.md"   --content "Content #tag1 four. #tag2"
-    "${_NB}" add "File Five.md"   --content "Content five."
+    "${_NB}" add "File Five.md"   --content "Content five. #tag3ButNotReally #tag4"
     "${_NB}" add "File Six.md"    --content "Content six. #tag2"
     "${_NB}" add "File Seven.md"  --content "Content #tag2 Seven. #tag1"
   }
@@ -206,7 +204,7 @@ load test_helper
     "${_NB}" add "File Two.md"    --content "Content two. #tag1"
     "${_NB}" add "File Three.md"  --content "Content three. tag1 #tag2"
     "${_NB}" add "File Four.md"   --content "Content #tag1 four. #tag2"
-    "${_NB}" add "File Five.md"   --content "Content five."
+    "${_NB}" add "File Five.md"   --content "Content five. #tag3ButNotReally #tag4"
     "${_NB}" add "File Six.md"    --content "Content six. #tag2"
     "${_NB}" add "File Seven.md"  --content "Content #tag2 Seven. #tag1"
   }
@@ -240,7 +238,7 @@ load test_helper
     "${_NB}" add "File Two.md"    --content "Content two. #tag1"
     "${_NB}" add "File Three.md"  --content "Content three. tag1 #tag2"
     "${_NB}" add "File Four.md"   --content "Content #tag1 four. #tag2"
-    "${_NB}" add "File Five.md"   --content "Content five."
+    "${_NB}" add "File Five.md"   --content "Content five. #tag3ButNotReally #tag4"
     "${_NB}" add "File Six.md"    --content "Content six. #tag2"
     "${_NB}" add "File Seven.md"  --content "Content #tag2 Seven. #tag1"
   }

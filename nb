@@ -17141,7 +17141,12 @@ _search() {
   local __and_query=
   for   __and_query in "${_and_queries[@]:-}"
   do
-    [[ -n "${__and_query:-}"      ]] || continue
+    [[ -n "${__and_query:-}"            ]] || continue
+
+    if [[ "${_and_query:-}" =~ ^\#      ]]
+    then
+      _and_query="${_and_query}$"
+    fi
 
     if ((${#_or_queries[@]}))
     then
@@ -17150,7 +17155,12 @@ _search() {
       local __or_query=
       for   __or_query in "${_or_queries[@]:-}"
       do
-        [[ -n "${__or_query:-}"   ]] || continue
+        [[ -n "${__or_query:-}"         ]] || continue
+
+        if [[ "${__or_query:-}" =~ ^\#  ]]
+        then
+          __or_query="${__or_query}$"
+        fi
 
         _or_query_string="${_or_query_string}|${__or_query}"
       done
