@@ -278,6 +278,11 @@ jobs:
           echo "'$LANG'"
           echo "'$LC_ALL'"
           echo "'$LC_TYPE'"
+      - name: "Set encoding variables"
+        run: |
+          export LANG="C.utf-8"
+          export LC_ALL="C.utf-8"
+          export LC_TYPE="C.utf-8"
       - name: "Run bats tests"
         run:  script -q -e -c "bats test"
       # - name: "Install Go"
