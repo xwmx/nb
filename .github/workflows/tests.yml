@@ -244,6 +244,10 @@ jobs:
   test-ubuntu-latest:
     name: "Test: Ubuntu 20.04"
     runs-on: ubuntu-20.04
+    env:
+      LANG: C.UTF-8
+      LC_ALL: C.UTF-8
+      LC_TYPE: C.UTF-8
     steps:
       - uses: actions/checkout@v1
       - name: "Setup"
@@ -274,16 +278,6 @@ jobs:
       - name: "Set $TERM=xterm"
         run:  printf "TERM=xterm\\n" >> $GITHUB_ENV
       - name: "Print encoding variables"
-        run: |
-          echo "'$LANG'"
-          echo "'$LC_ALL'"
-          echo "'$LC_TYPE'"
-      - name: "Set encoding variables"
-        run: |
-          export LANG="C.UTF-8"
-          export LC_ALL="C.UTF-8"
-          export LC_TYPE="C.UTF-8"
-      - name: "Print encoding variables (again)"
         run: |
           echo "'$LANG'"
           echo "'$LC_ALL'"
