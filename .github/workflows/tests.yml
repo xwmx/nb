@@ -255,7 +255,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install bats -y
           sudo apt-get install ncat -y
-          sudo apt-get install python-pygments -y
+          sudo apt-get install python3-pygments -y
           sudo apt-get install ripgrep -y
           sudo apt-get install w3m -y
           curl -LO https://github.com/jgm/pandoc/releases/download/3.2/pandoc-3.2-1-amd64.deb
