@@ -260,8 +260,8 @@ jobs:
           sudo apt-get install w3m -y
           curl -LO https://github.com/jgm/pandoc/releases/download/3.2/pandoc-3.2-1-amd64.deb
           sudo dpkg -i pandoc-3.2-1-amd64.deb
-          curl -LO https://github.com/sharkdp/bat/releases/download/v0.16.0/bat_0.16.0_amd64.deb
-          sudo dpkg -i bat_0.16.0_amd64.deb
+          curl -LO https://github.com/sharkdp/bat/releases/download/v0.24.0/bat_0.24.0_amd64.deb
+          sudo dpkg -i bat_0.24.0_amd64.deb
           sudo gem install asciidoctor
           git config --global user.name   "Example Name"
           git config --global user.email  "example@example.com"
