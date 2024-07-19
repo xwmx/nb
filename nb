@@ -16983,7 +16983,7 @@ _search() {
     if ((_use_git_grep))
     then
       local _grep_arguments=(
-        "-P"
+        "--extended-regexp"
         "-I"
         "--ignore-case"
         "--only-matching"
