@@ -2734,7 +2734,7 @@ _open_in_gui_app() {
       if _command_exists "${_gui_browser_command[0]:-}" ||
          [[ -f "${_gui_browser_command[0]:-}" ]]
       then
-        "${_gui_browser_command[@]:-}" "${_request_url:-}" 2>/dev/null &
+        "${_gui_browser_command[@]:-}" "${_target:-}" 2>/dev/null &
       fi
     fi
   elif _command_exists "xdg-open"
