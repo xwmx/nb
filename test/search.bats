@@ -100,6 +100,82 @@ _search_all_setup() {
 
 # --type <type> ###############################################################
 
+@test "'search <query> --type note' only searches items of type note." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add                                    \
+        --content   "# Example File One Content"    \
+        --filename  "File One.md"
+
+    "${_NB}" add                                    \
+        --content   "<http://example.test/>"        \
+        --filename  "File Two.bookmark.md"
+
+    "${_NB}" add                                    \
+        --content   "# Example File Three Content"  \
+        --filename  "File Three.md"
+
+    "${_NB}" add                                    \
+        --content   "<http://example.test/>"        \
+        --filename  "File Four.bookmark.md"
+  }
+
+  run "${_NB}" search "example" --type note
+
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  # printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
+
+  [[    "${status}"     -eq 0                       ]]
+
+  [[    "${#lines[@]}"  -eq 6                       ]]
+
+  [[    "${lines[0]}"   =~  Example\ File\ One      ]]
+  [[    "${lines[1]}"   =~  -*-                     ]]
+  [[    "${lines[2]}"   =~  Example.*\ File\ One    ]]
+
+  [[ !  "${output}"     =~ example.*\.test          ]]
+}
+
+@test "'search <query> --type text' only searches items of type text." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add                                    \
+        --content   "# Example File One Content"    \
+        --filename  "File One.md"
+
+    "${_NB}" add                                    \
+        --content   "<http://example.test/>"        \
+        --filename  "File Two.bookmark.md"
+
+    "${_NB}" add                                    \
+        --content   "# Example File Three Content"  \
+        --filename  "File Three.md"
+
+    "${_NB}" add                                    \
+        --content   "<http://example.test/>"        \
+        --filename  "File Four.bookmark.md"
+  }
+
+  run "${_NB}" search "example" --type text
+
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  # printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
+
+  [[    "${status}"     -eq 0                       ]]
+
+  [[    "${#lines[@]}"  -eq 12                      ]]
+
+  [[    "${lines[0]}"   =~  File\ Four.bookmark.md  ]]
+  [[    "${lines[1]}"   =~  -*-                     ]]
+  [[    "${lines[2]}"   =~  example.*\.test         ]]
+}
+
 @test "'search <query> --type <type>' only searches items of type <type>." {
   {
     _setup_search

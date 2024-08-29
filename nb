@@ -17633,8 +17633,9 @@ _search() {
                   [[ "${_type}" =~ (^todo$|^todos$|^task$|^tasks$)          ]] &&
                   _file_is_todo "${_path}"
                 } || {
-                  [[ "${_type}" =~ (^note$|^notes$|^text$)                  ]] &&
-                  _file_is_text "${_path}"
+                  [[ "${_type}" =~ (^note$|^notes$)                         ]] &&
+                  _file_is_text "${_path}"                                     &&
+                  [[ ! "${_path:-}" =~ (.bookmark.md$|-bookmark.md$)        ]]
                 } || {
                   [[ "${_type}" =~ (^folder$|^folders$)                     ]] &&
                   [[ "$(dirname "${_path}")" != "${__target_path}"          ]]
@@ -17653,6 +17654,9 @@ _search() {
                 } || {
                   [[ "${_type}" =~ (^image$|^images$|^picture$|^pictures$)  ]] &&
                   _file_is_image "${_path}"
+                } || {
+                  [[ "${_type}" =~ ^text$                                   ]] &&
+                  _file_is_text "${_path}"
                 } || {
                   [[ "${_type}" =~ (^video$|^videos$)                       ]] &&
                   _file_is_video "${_path}"
