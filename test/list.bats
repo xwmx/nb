@@ -2,6 +2,224 @@
 
 load test_helper
 
+# folders first ###############################################################
+
+@test "'list --folders-first' prints folders first while preserving pinning." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md"    --content "Example content one."
+    "${_NB}" folder add "Folder One"
+    "${_NB}" add "File Two.md"    --content "Example content two."
+    "${_NB}" add "File Three.md"  --content "Example content three."
+    "${_NB}" folder add "Folder Two"
+    "${_NB}" add "File Four.md"   --content "Example content four."
+    "${_NB}" folder add "Folder Three"
+
+    "${_NB}" pin "Folder Two"
+    "${_NB}" pin "File Three.md"
+  }
+
+  run "${_NB}" list --with-pinned
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0 ]]
+  [[ "${#lines[@]}" -eq 7 ]]
+
+  [[ "${lines[0]}"  =~  \
+.*[.*5.*].*\ 📌\ 📂\ Folder\ Two                                    ]]
+  [[ "${lines[1]}"  =~  \
+.*[.*4.*].*\ 📌\ File\ Three\.md\ \·\ \"Example\ content\ three\.\" ]]
+  [[ "${lines[2]}"  =~  \
+.*[.*7.*].*\ 📂\ Folder\ Three                                      ]]
+  [[ "${lines[3]}"  =~  \
+.*[.*6.*].*\ File\ Four\.md\ \·\ \"Example\ content\ four\.\"       ]]
+  [[ "${lines[4]}"  =~  \
+.*[.*3.*].*\ File\ Two\.md\ \·\ \"Example\ content\ two\.\"         ]]
+  [[ "${lines[5]}"  =~  \
+.*[.*2.*].*\ 📂\ Folder\ One                                        ]]
+  [[ "${lines[6]}"  =~  \
+.*[.*1.*].*\ File\ One\.md\ \·\ \"Example\ content\ one\.\"         ]]
+
+  run "${_NB}" list --folders-first --with-pinned
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0 ]]
+  [[ "${#lines[@]}" -eq 7 ]]
+
+  [[ "${lines[0]}"  =~  \
+.*[.*5.*].*\ 📌\ 📂\ Folder\ Two                                    ]]
+  [[ "${lines[1]}"  =~  \
+.*[.*4.*].*\ 📌\ File\ Three\.md\ \·\ \"Example\ content\ three\.\" ]]
+  [[ "${lines[2]}"  =~  \
+.*[.*7.*].*\ 📂\ Folder\ Three                                      ]]
+  [[ "${lines[3]}"  =~  \
+.*[.*2.*].*\ 📂\ Folder\ One                                        ]]
+  [[ "${lines[4]}"  =~  \
+.*[.*6.*].*\ File\ Four\.md\ \·\ \"Example\ content\ four\.\"       ]]
+  [[ "${lines[5]}"  =~  \
+.*[.*3.*].*\ File\ Two\.md\ \·\ \"Example\ content\ two\.\"         ]]
+
+  [[ "${lines[6]}"  =~  \
+.*[.*1.*].*\ File\ One\.md\ \·\ \"Example\ content\ one\.\"         ]]
+}
+
+@test "'list --folders-first' prints folders first." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md"    --content "Example content one."
+    "${_NB}" folder add "Folder One"
+    "${_NB}" add "File Two.md"    --content "Example content two."
+    "${_NB}" add "File Three.md"  --content "Example content three."
+    "${_NB}" folder add "Folder Two"
+  }
+
+  run "${_NB}" list
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0 ]]
+  [[ "${#lines[@]}" -eq 5 ]]
+
+  [[ "${lines[0]}"  =~  \
+.*[.*5.*].*\ 📂\ Folder\ Two                                    ]]
+  [[ "${lines[1]}"  =~  \
+.*[.*4.*].*\ File\ Three\.md\ \·\ \"Example\ content\ three\.\" ]]
+  [[ "${lines[2]}"  =~  \
+.*[.*3.*].*\ File\ Two\.md\ \·\ \"Example\ content\ two\.\"     ]]
+  [[ "${lines[3]}"  =~  \
+.*[.*2.*].*\ 📂\ Folder\ One                                    ]]
+  [[ "${lines[4]}"  =~  \
+.*[.*1.*].*\ File\ One\.md\ \·\ \"Example\ content\ one\.\"     ]]
+
+  run "${_NB}" list --folders-first
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0 ]]
+  [[ "${#lines[@]}" -eq 5 ]]
+
+  [[ "${lines[0]}"  =~  \
+.*[.*5.*].*\ 📂\ Folder\ Two                                    ]]
+  [[ "${lines[1]}"  =~  \
+.*[.*2.*].*\ 📂\ Folder\ One                                    ]]
+  [[ "${lines[2]}"  =~  \
+.*[.*4.*].*\ File\ Three\.md\ \·\ \"Example\ content\ three\.\" ]]
+  [[ "${lines[3]}"  =~  \
+.*[.*3.*].*\ File\ Two\.md\ \·\ \"Example\ content\ two\.\"     ]]
+
+  [[ "${lines[4]}"  =~  \
+.*[.*1.*].*\ File\ One\.md\ \·\ \"Example\ content\ one\.\"     ]]
+}
+
+@test "'list --ff' prints folders first." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md"    --content "Example content one."
+    "${_NB}" folder add "Folder One"
+    "${_NB}" add "File Two.md"    --content "Example content two."
+    "${_NB}" add "File Three.md"  --content "Example content three."
+    "${_NB}" folder add "Folder Two"
+  }
+
+  run "${_NB}" list
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0 ]]
+  [[ "${#lines[@]}" -eq 5 ]]
+
+  [[ "${lines[0]}"  =~  \
+.*[.*5.*].*\ 📂\ Folder\ Two                                    ]]
+  [[ "${lines[1]}"  =~  \
+.*[.*4.*].*\ File\ Three\.md\ \·\ \"Example\ content\ three\.\" ]]
+  [[ "${lines[2]}"  =~  \
+.*[.*3.*].*\ File\ Two\.md\ \·\ \"Example\ content\ two\.\"     ]]
+  [[ "${lines[3]}"  =~  \
+.*[.*2.*].*\ 📂\ Folder\ One                                    ]]
+  [[ "${lines[4]}"  =~  \
+.*[.*1.*].*\ File\ One\.md\ \·\ \"Example\ content\ one\.\"     ]]
+
+  run "${_NB}" list --ff
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0 ]]
+  [[ "${#lines[@]}" -eq 5 ]]
+
+  [[ "${lines[0]}"  =~  \
+.*[.*5.*].*\ 📂\ Folder\ Two                                    ]]
+  [[ "${lines[1]}"  =~  \
+.*[.*2.*].*\ 📂\ Folder\ One                                    ]]
+  [[ "${lines[2]}"  =~  \
+.*[.*4.*].*\ File\ Three\.md\ \·\ \"Example\ content\ three\.\" ]]
+  [[ "${lines[3]}"  =~  \
+.*[.*3.*].*\ File\ Two\.md\ \·\ \"Example\ content\ two\.\"     ]]
+
+  [[ "${lines[4]}"  =~  \
+.*[.*1.*].*\ File\ One\.md\ \·\ \"Example\ content\ one\.\"     ]]
+}
+
+@test "'NB_FOLDERS_FIRST=1 list' has no effect." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md"    --content "Example content one."
+    "${_NB}" folder add "Folder One"
+    "${_NB}" add "File Two.md"    --content "Example content two."
+    "${_NB}" add "File Three.md"  --content "Example content three."
+    "${_NB}" folder add "Folder Two"
+  }
+
+  run "${_NB}" list
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0 ]]
+  [[ "${#lines[@]}" -eq 5 ]]
+
+  [[ "${lines[0]}"  =~  \
+.*[.*5.*].*\ 📂\ Folder\ Two                                    ]]
+  [[ "${lines[1]}"  =~  \
+.*[.*4.*].*\ File\ Three\.md\ \·\ \"Example\ content\ three\.\" ]]
+  [[ "${lines[2]}"  =~  \
+.*[.*3.*].*\ File\ Two\.md\ \·\ \"Example\ content\ two\.\"     ]]
+  [[ "${lines[3]}"  =~  \
+.*[.*2.*].*\ 📂\ Folder\ One                                    ]]
+  [[ "${lines[4]}"  =~  \
+.*[.*1.*].*\ File\ One\.md\ \·\ \"Example\ content\ one\.\"     ]]
+
+  NB_FOLDERS_FIRST=1 run "${_NB}" list
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    -eq 0 ]]
+  [[ "${#lines[@]}" -eq 5 ]]
+
+  [[ "${lines[0]}"  =~  \
+.*[.*5.*].*\ 📂\ Folder\ Two                                    ]]
+  [[ "${lines[1]}"  =~  \
+.*[.*4.*].*\ File\ Three\.md\ \·\ \"Example\ content\ three\.\" ]]
+  [[ "${lines[2]}"  =~  \
+.*[.*3.*].*\ File\ Two\.md\ \·\ \"Example\ content\ two\.\"     ]]
+  [[ "${lines[3]}"  =~  \
+.*[.*2.*].*\ 📂\ Folder\ One                                    ]]
+  [[ "${lines[4]}"  =~  \
+.*[.*1.*].*\ File\ One\.md\ \·\ \"Example\ content\ one\.\"     ]]
+}
+
 # filename handling ###########################################################
 
 @test "'list' prints normally with uncommon filenames." {

@@ -2,6 +2,79 @@
 
 load test_helper
 
+# edge cases ##################################################################
+
+@test "'export pandoc' with front matter title containing a colon requires quotes around title." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add                      \
+        --filename  "Example File.md" \
+        --content   "$(cat <<HEREDOC
+---
+title: 20240101010101 - Example Title Prefix: Example Title Content
+public: true
+date: 2024-01-01T01:01:01.010101+00:00
+id: 20240101010101
+---
+
+# Example Title Content
+
+<https://example.com>
+HEREDOC
+)"
+  }
+
+  run "${_NB}" export 1 "${_TMP_DIR}/example.html"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    ==  0               ]]
+
+  [[ ! -e "${_TMP_DIR}/example.html"    ]]
+
+  [[    "${output}" =~ YAML             ]]
+
+  [[ !  "${output}" =~ Exported         ]]
+  [[ !  "${output}" =~ Example\ File    ]]
+
+  {
+    "${_NB}" add                      \
+        --filename  "Example File.md" \
+        --content   "$(cat <<HEREDOC
+---
+title: "20240101010101 - Example Title Prefix: Example Title Content"
+public: true
+date: 2024-01-01T01:01:01.010101+00:00
+id: 20240101010101
+---
+
+# Example Title Content
+
+<https://example.com>
+HEREDOC
+)"
+  }
+
+  run "${_NB}" export 2 "${_TMP_DIR}/example.html"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"    ==  0               ]]
+
+  cat "${_TMP_DIR}/example.html"
+
+  [[ -e "${_TMP_DIR}/example.html"      ]]
+  grep -q 'DOCTYPE html' "${_TMP_DIR}/example.html"
+
+  [[ !  "${output}" =~ YAML             ]]
+
+  [[    "${output}" =~ Exported         ]]
+  [[    "${output}" =~ Example\ File-1  ]]
+}
+
 # embedded resources ##########################################################
 
 @test "'export pandoc --self-contained' with reference to image in same directory embeds image." {
@@ -23,7 +96,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${output}" =~ \<p\>\<img\ src=\"data:image/png\;base64,iVBORw0KGgoAAAA ]]
+  [[ "${output}" =~ \<p\>\<img\ role=\"img\"\ src=\"data:image/png\;base64,iVBORw0KGgoAAAA ]]
 
   run ! diff                      \
     <(printf "%s\\n" "${output}") \
@@ -54,7 +127,7 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "$(cat "${_TMP_DIR}/example.html")" =~ \<p\>\<img\ src=\"data:image/png\;base64,iVBORw0KGgoAAAA ]]
+  [[ "$(cat "${_TMP_DIR}/example.html")" =~ \<p\>\<img\ role=\"img\"\ src=\"data:image/png\;base64,iVBORw0KGgoAAAA ]]
 }
 
 # existing file ###############################################################

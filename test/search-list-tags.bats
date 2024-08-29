@@ -20,7 +20,7 @@ Example Content Two #tag3 Example #tag1 Phrase.
 
 More content.
 
-#low-tag
+#lõw-tag
 
 ## Content
 
@@ -81,7 +81,7 @@ HEREDOC
   [[ "${output}"    =~  \#tag1        ]]
   [[ "${output}"    =~  \#tag2        ]]
   [[ "${output}"    =~  \#tag3        ]]
-  [[ "${output}"    =~  \#low-tag     ]]
+  [[ "${output}"    =~  \#lõw-tag     ]]
 }
 
 # _GIT_ENABLED=0 ##############################################################
@@ -104,7 +104,7 @@ HEREDOC
   [[ "${output}"    =~  \#tag1        ]]
   [[ "${output}"    =~  \#tag2        ]]
   [[ "${output}"    =~  \#tag3        ]]
-  [[ "${output}"    =~  \#low-tag     ]]
+  [[ "${output}"    =~  \#lõw-tag     ]]
 }
 
 # edge cases ##################################################################
@@ -225,7 +225,7 @@ HEREDOC
 
   [[ "${lines[0]}"  =~  \#tag3        ]]
   [[ "${lines[1]}"  =~  \#tag1        ]]
-  [[ "${lines[2]}"  =~  \#low-tag     ]]
+  [[ "${lines[2]}"  =~  \#lõw-tag     ]]
 }
 
 @test "'<folder>/ --tags' lists all unique tags in <folder>." {
@@ -263,7 +263,7 @@ HEREDOC
   [[ "${lines[2]}"  =~  \#tag1        ]]
   [[ "${lines[3]}"  =~  \#tag2        ]]
   [[ "${lines[4]}"  =~  \#tag3        ]]
-  [[ "${lines[5]}"  =~  \#low-tag     ]]
+  [[ "${lines[5]}"  =~  \#lõw-tag     ]]
 }
 
 @test "'--tags --all' lists all unique tags in all notebooks." {
@@ -284,7 +284,7 @@ HEREDOC
   [[ "${lines[2]}"  =~  \#nested-tag2 ]]
   [[ "${lines[3]}"  =~  \#tag1        ]]
   [[ "${lines[4]}"  =~  \#tag2        ]]
-  [[ "${lines[6]}"  =~  \#low-tag     ]]
+  [[ "${lines[6]}"  =~  \#lõw-tag     ]]
   [[ "${lines[5]}"  =~  \#tag3        ]]
 }
 
@@ -305,7 +305,7 @@ HEREDOC
 
   [[ "${lines[0]}"  =~  \#tag3        ]]
   [[ "${lines[1]}"  =~  \#tag1        ]]
-  [[ "${lines[2]}"  =~  \#low-tag     ]]
+  [[ "${lines[2]}"  =~  \#lõw-tag     ]]
 }
 
 @test "'list <folder>/ --tags' lists all unique tags in <folder>." {
@@ -343,7 +343,7 @@ HEREDOC
   [[ "${lines[2]}"  =~  \#tag1        ]]
   [[ "${lines[3]}"  =~  \#tag2        ]]
   [[ "${lines[4]}"  =~  \#tag3        ]]
-  [[ "${lines[5]}"  =~  \#low-tag     ]]
+  [[ "${lines[5]}"  =~  \#lõw-tag     ]]
 }
 
 @test "'list --tags --all' lists all unique tags in all notebooks." {
@@ -365,7 +365,7 @@ HEREDOC
   [[ "${lines[3]}"  =~  \#tag1        ]]
   [[ "${lines[4]}"  =~  \#tag2        ]]
   [[ "${lines[5]}"  =~  \#tag3        ]]
-  [[ "${lines[6]}"  =~  \#low-tag     ]]
+  [[ "${lines[6]}"  =~  \#lõw-tag     ]]
 }
 
 # `search` ####################################################################
@@ -385,7 +385,7 @@ HEREDOC
 
   [[ "${lines[0]}"  =~  \#tag3        ]]
   [[ "${lines[1]}"  =~  \#tag1        ]]
-  [[ "${lines[2]}"  =~  \#low-tag     ]]
+  [[ "${lines[2]}"  =~  \#lõw-tag     ]]
 }
 
 @test "'search <folder>/ --tags' lists all unique tags in <folder>." {
@@ -423,7 +423,7 @@ HEREDOC
   [[ "${lines[2]}"  =~  \#tag1        ]]
   [[ "${lines[3]}"  =~  \#tag2        ]]
   [[ "${lines[4]}"  =~  \#tag3        ]]
-  [[ "${lines[5]}"  =~  \#low-tag     ]]
+  [[ "${lines[5]}"  =~  \#lõw-tag     ]]
 }
 
 @test "'search --tags --all' lists all unique tags in all notebooks." {
@@ -445,5 +445,5 @@ HEREDOC
   [[ "${lines[3]}"  =~  \#tag1        ]]
   [[ "${lines[4]}"  =~  \#tag2        ]]
   [[ "${lines[5]}"  =~  \#tag3        ]]
-  [[ "${lines[6]}"  =~  \#low-tag     ]]
+  [[ "${lines[6]}"  =~  \#lõw-tag     ]]
 }

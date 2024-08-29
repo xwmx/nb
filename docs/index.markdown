@@ -851,7 +851,7 @@ and [AsciiDoc](https://asciidoc.org/)
 titles are recognized in `.org`,`.latex`, and `.asciidoc` / `.adoc` files:
 
 ```text
-#+TITLE: Example Org Title
+#+title: Example Org Title
 ```
 
 ```latex
@@ -1776,6 +1776,14 @@ is installed, markup is cleaned up to focus on content. When
 [Chrome](https://www.google.com/chrome/) is installed,
 JavaScript-dependent pages are rendered and the resulting markup is
 saved.
+
+Many shells automatically escape special characters in URLs. If a
+URL contains characters that are preventing it from being saved in full,
+URLs can also be enclosed in quotes when passed to `nb`:
+
+```bash
+nb "https://example.com#sample-anchor"
+```
 
 In addition to caching the page content,
 you can also include a quote from the page in a
@@ -5978,16 +5986,17 @@ Usage:
   nb init [<remote-url> [<branch>]] [--author] [--email <email>]
           [--name <name>]
   nb list [-e [<length>] | --excerpt [<length>]] [--filenames]
-          [-n <limit> | --limit <limit> | --<limit>] [--no-id]
-          [--no-indicator] [-p <number> | --page <number>] [--pager]
+          [-f | --folders-first] [-n <limit> | --limit <limit> | --<limit>]
+          [--no-id] [--no-indicator] [-p <number> | --page <number>] [--pager]
           [--paths] [-s | --sort] [-r | --reverse] [--tags]
           [-t <type> | --type <type> | --<type>]
           [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
   nb ls [-a | --all] [-b | --browse] [-e [<length>] | --excerpt [<length>]]
-        [--filenames] [-g | --gui] [-n <limit> | --limit <limit> | --<limit>]
-        [--no-footer] [--no-header] [--no-id] [--no-indicator]
-        [-p <number> | --page <number>] [--pager] [--paths] [-s | --sort]
-        [-r | --reverse] [--tags] [-t <type> | --type <type> | --<type>]
+        [--filenames] [-f | --folders-first] [-g | --gui]
+        [-n <limit> | --limit <limit> | --<limit>] [--no-footer] [--no-header]
+        [--no-id] [--no-indicator] [-p <number> | --page <number>] [--pager]
+        [--paths] [-s | --sort] [-r | --reverse] [--tags]
+        [-t <type> | --type <type> | --<type>]
         [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
   nb move ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note |
@@ -7189,8 +7198,8 @@ Examples:
 ```text
 Usage:
   nb list [-e [<length>] | --excerpt [<length>]] [--filenames]
-          [-n <limit> | --limit <limit> | --<limit>] [--no-id]
-          [--no-indicator] [-p <number> | --page <number>] [--pager]
+          [-f | --folders-first] [-n <limit> | --limit <limit> | --<limit>]
+          [--no-id] [--no-indicator] [-p <number> | --page <number>] [--pager]
           [--paths] [-s | --sort] [-r | --reverse] [--tags]
           [-t <type> | --type <type> | --<type>]
           [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
@@ -7199,6 +7208,7 @@ Options:
   -e, --excerpt [<length>]        Print an excerpt <length> lines long under
                                   each note's filename [default: 3].
   --filenames                     Print the filename for each note.
+  -f, --folders-first             Print folders before other items.
   -n, --limit <limit>, --<limit>  The maximum number of notes to list.
   --no-id                         Don't include the id in list items.
   --no-indicator                  Don't include the indicator in list items.
@@ -7266,10 +7276,11 @@ Examples:
 ```text
 Usage:
   nb ls [-a | --all] [-b | --browse] [-e [<length>] | --excerpt [<length>]]
-        [--filenames] [-g | --gui] [-n <limit> | --limit <limit> | --<limit>]
-        [--no-footer] [--no-header] [--no-id] [--no-indicator]
-        [-p <number> | --page <number>] [--pager] [--paths] [-s | --sort]
-        [-r | --reverse] [--tags] [-t <type> | --type <type> | --<type>]
+        [--filenames] [-f | --folders-first] [-g | --gui]
+        [-n <limit> | --limit <limit> | --<limit>] [--no-footer] [--no-header]
+        [--no-id] [--no-indicator] [-p <number> | --page <number>] [--pager]
+        [--paths] [-s | --sort] [-r | --reverse] [--tags]
+        [-t <type> | --type <type> | --<type>]
         [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
 
 Options:
@@ -7280,6 +7291,7 @@ Options:
   -e, --excerpt [<length>]        Print an excerpt <length> lines long under
                                   each note's filename [default: 3].
   --filenames                     Print the filename for each note.
+  -f, --folders-first             Print folders before other items.
   -g, --gui                       Open the specified item or current notebook
                                   with `browse` in a GUI web browser.
   -n, --limit <limit>, --<limit>  The maximum number of listed items.
@@ -9050,6 +9062,7 @@ Shortcut Alias:
     <a href="#nb_auto_sync"><code>$NB_AUTO_SYNC</code></a>&nbsp;·
     <a href="#nb_browse_markdown_reader"><code>$NB_BROWSE_MARKDOWN_READER</code></a>&nbsp;·
     <a href="#nb_browse_server_tool"><code>$NB_BROWSE_SERVER_TOOL</code></a>&nbsp;·
+    <a href="#nb_browse_support_links"><code>$NB_BROWSE_SUPPORT_LINKS</code></a>&nbsp;·
     <a href="#nb_browser"><code>$NB_BROWSER</code></a>&nbsp;·
     <a href="#nb_color_primary"><code>$NB_COLOR_PRIMARY</code></a>&nbsp;·
     <a href="#nb_color_secondary"><code>$NB_COLOR_SECONDARY</code></a>&nbsp;·
@@ -9064,6 +9077,7 @@ Shortcut Alias:
     <a href="#nb_directory_tool"><code>$NB_DIRECTORY_TOOL</code></a>&nbsp;·
     <a href="#nb_editor"><code>$NB_EDITOR</code></a>&nbsp;·
     <a href="#nb_encryption_tool"><code>$NB_ENCRYPTION_TOOL</code></a>&nbsp;·
+    <a href="#nb_folders_first"><code>$NB_FOLDERS_FIRST</code></a>&nbsp;·
     <a href="#nb_footer"><code>$NB_FOOTER</code></a>&nbsp;·
     <a href="#nb_gui_browser"><code>$NB_GUI_BROWSER</code></a>&nbsp;·
     <a href="#nb_header"><code>$NB_HEADER</code></a>&nbsp;·
@@ -9243,8 +9257,8 @@ The Pandoc reader, including extensions, to use for converting Markdown to
 HTML in `nb browse`.
 
 More information:
-https://pandoc.org/MANUAL.html#extensions
-https://pandoc.org/MANUAL.html#general-options-1
+  https://pandoc.org/MANUAL.html#extensions
+  https://pandoc.org/MANUAL.html#general-options-1
 ```
 
 <p>
@@ -9262,6 +9276,22 @@ The tool used to listen on the server host and port and respond to
 incoming requests.
 
 Supported Values: 'accept', 'bash', 'nc', 'ncat', netcat', 'socat'
+```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
+##### `$NB_BROWSE_SUPPORT_LINKS`
+
+```text
+Default: '1'
+
+Set to '0' to hide the 'Donate' and 'Sponsor' links in `nb browse`.
+
+Supported Values: '0' '1'
 ```
 
 <p>
@@ -9292,6 +9322,7 @@ Default: Value depends on terminal capabilities.
 Set highlighting color. This should be set to an xterm color number, usually
 a value between 1 and 256. For a table of common colors and their numbers
 run:
+
   nb settings colors
 
 Supported Values: [0..255+]
@@ -9311,6 +9342,7 @@ Default: '8'
 Color for lines and other accents. This should be set to an xterm color
 number, usually a value between 1 and 256. For a table of common colors and
 their numbers, run:
+
   nb settings colors
 
 Supported Values: [0..255+]
@@ -9477,6 +9509,23 @@ Example Values: 'code', 'emacs', 'hx', 'vim'
 Default: 'openssl'
 
 Supported Values: 'gpg' 'openssl'
+```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
+##### `$NB_FOLDERS_FIRST`
+
+```text
+Default: '0'
+
+When set to '1', folders are printed before other items in `nb`, `nb ls`,
+and `nb browse`.
+
+Supported Values: '0' '1'
 ```
 
 <p>
@@ -10258,6 +10307,7 @@ so ids are preserved across systems.
 Usage:
   nb index add <filename>
   nb index delete <filename>
+  nb index edit
   nb index get_basename <id>
   nb index get_id <filename>
   nb index get_max_id
@@ -10276,6 +10326,7 @@ Options:
 Subcommands:
   add           Add <filename> to the index.
   delete        Delete <filename> from the index.
+  edit          Open the index file in `$EDITOR`.
   get_basename  Print the filename / basename at the specified <id>.
   get_id        Get the id for <filename>.
   get_max_id    Get the maximum id for the folder.

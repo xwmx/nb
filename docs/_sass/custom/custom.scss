@@ -407,7 +407,8 @@ pre.highlight {
   padding:                  0;
 }
 
-.main-header {
+.main-header,
+.side-bar + .main .main-header {
   background-color:         $body-background-color;
   border:                   0;
 

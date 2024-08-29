@@ -234,14 +234,36 @@ HEREDOC
 
   $openbsd_setup = <<-HEREDOC
 # TODO
+# sudo su
+# echo "https://ftp.eu.OpenBSD.org/pub/OpenBSD" > /etc/installurl
 # pkg_add git
+# pkg_add bash
+# pkg_add vim
 HEREDOC
 
+  ###########
+  # OpenBSD 7
+
+  # https://app.vagrantup.com/fnichol/boxes/openbsd-7.0
   # https://app.vagrantup.com/generic/boxes/openbsd7
   # https://app.vagrantup.com/roboxes/boxes/openbsd7
+  # https://app.vagrantup.com/twingly/boxes/openbsd-7.1-amd64
   # config.vm.define "openbsd7" do |openbsd7|
-  #   openbsd7.vm.box = "generic/openbsd7"
+  #   # openbsd7.vm.box = "fnichol/openbsd-7.0"
+  #   # openbsd7.vm.box = "generic/openbsd7"
+  #   # openbsd7.vm.box = "jcmdln/openbsd"
+  #   # openbsd7.vm.box = "roboxes/openbsd7"
+  #   openbsd7.vm.box = "twingly/openbsd-7.1-amd64"
   #   openbsd7.vm.provision :shell, inline: $openbsd_setup, privileged: false
+  # end
+
+  ###########
+  # OpenBSD 6
+
+  # https://app.vagrantup.com/twingly/boxes/openbsd-6.9-amd64
+  # config.vm.define "openbsd6" do |openbsd6|
+  #   openbsd6.vm.box = "twingly/openbsd-6.9-amd64"
+  #   openbsd6.vm.provision :shell, inline: $openbsd_setup, privileged: false
   # end
 
   #############################################################################

@@ -82,7 +82,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.12.1"
+_VERSION="7.14.0"
 
 # $_ME
 #
@@ -917,6 +917,7 @@ __load_themes() {
 # Set highlighting color. This should be set to an xterm color number, usually
 # a value between 1 and 256. For a table of common colors and their numbers
 # run:
+#
 #   nb settings colors
 #
 # Supported Values: [0..255+]
@@ -939,6 +940,7 @@ __set_color_primary() {
 # Color for lines and other accents. This should be set to an xterm color
 # number, usually a value between 1 and 256. For a table of common colors and
 # their numbers, run:
+#
 #   nb settings colors
 #
 # Supported Values: [0..255+]
@@ -2356,6 +2358,18 @@ _get_visible_length() {
   printf "%s\\n" "${_calculated_length:-0}"
 }
 
+# _grep_supports_color()
+#
+# Usage:
+#   _grep_supports_color
+#
+# Exit / Error / Return Status:
+#   0 (success, true)  If grep supports the --color option.
+#   1 (error,  false)  if not.
+_grep_supports_color() {
+  printf "\\n" | grep --color=never "" >/dev/null 2>&1
+}
+
 # _highlight_syntax_if_available()
 #
 # Usage:
@@ -2593,12 +2607,12 @@ _list_files() {
 
       case "${_type}" in
         bookmark|bookmarks)
-          grep --color=never    \
+          grep                  \
             -e '\.bookmark\.'   \
             -e '\-bookmark\.'
           ;;
         book|books)
-          grep --color=never -e 'epub$'
+          grep -e 'epub$'
           ;;
         note|notes)
           for __extension in "${_TEXT_FILE_EXTENSIONS[@]}"
@@ -2606,9 +2620,9 @@ _list_files() {
             _grep_patterns+=("-e" "${__extension}$")
           done
 
-          grep --color=never "${_grep_patterns[@]}" \
-            | grep --color=never -v                 \
-                -e '\.bookmark\.'                   \
+          grep "${_grep_patterns[@]}" \
+            | grep -v                 \
+                -e '\.bookmark\.'     \
                 -e '\-bookmark\.'
           ;;
         folder|folders|directory|directories)
@@ -2627,7 +2641,7 @@ _list_files() {
             _grep_patterns+=("-e" "${__extension}$" "-e" "${__extension}.enc$")
           done
 
-          grep --color=never "${_grep_patterns[@]}"
+          grep "${_grep_patterns[@]}"
           ;;
         audio|music)
           for __extension in "${_AUDIO_FILE_EXTENSIONS[@]}"
@@ -2635,7 +2649,7 @@ _list_files() {
             _grep_patterns+=("-e" "${__extension}$" "-e" "${__extension}.enc$")
           done
 
-          grep --color=never "${_grep_patterns[@]}"
+          grep "${_grep_patterns[@]}"
           ;;
         document|documents|doc|docs)
           for __extension in "${_DOCUMENT_FILE_EXTENSIONS[@]}"
@@ -2643,7 +2657,7 @@ _list_files() {
             _grep_patterns+=("-e" "\.${__extension}$" "-e" "\.${__extension}\.enc$")
           done
 
-          grep --color=never "${_grep_patterns[@]}"
+          grep "${_grep_patterns[@]}"
           ;;
         encrypted)
           for __extension in "${_ENCRYPTED_FILE_EXTENSIONS[@]}"
@@ -2651,7 +2665,7 @@ _list_files() {
             _grep_patterns+=("-e" "\.${__extension}$")
           done
 
-          grep --color=never "${_grep_patterns[@]}"
+          grep "${_grep_patterns[@]}"
           ;;
         image|images|picture|pictures)
           for __extension in "${_IMAGE_FILE_EXTENSIONS[@]}"
@@ -2659,7 +2673,7 @@ _list_files() {
             _grep_patterns+=("-e" "\.${__extension}$" "-e" "\.${__extension}\.enc$")
           done
 
-          grep --color=never "${_grep_patterns[@]}"
+          grep "${_grep_patterns[@]}"
           ;;
         text|txt)
           for __extension in "${_TEXT_FILE_EXTENSIONS[@]}"
@@ -2667,7 +2681,7 @@ _list_files() {
             _grep_patterns+=("-e" "\.${__extension}$")
           done
 
-          grep --color=never "${_grep_patterns[@]}"
+          grep "${_grep_patterns[@]}"
           ;;
         todo|todos)
           for __extension in "${_TODO_FILE_EXTENSIONS[@]}"
@@ -2675,7 +2689,7 @@ _list_files() {
             _grep_patterns+=("-e" "\.${__extension}$")
           done
 
-          grep --color=never "${_grep_patterns[@]}"
+          grep "${_grep_patterns[@]}"
           ;;
         video|videos)
           for __extension in "${_VIDEO_FILE_EXTENSIONS[@]}"
@@ -2683,10 +2697,10 @@ _list_files() {
             _grep_patterns+=("-e" "\.${__extension}$" "-e" "\.${__extension}\.enc$")
           done
 
-          grep --color=never "${_grep_patterns[@]}"
+          grep "${_grep_patterns[@]}"
           ;;
         *)
-          grep --color=never -e "\.${_type}$"
+          grep -e "\.${_type}$"
           ;;
       esac
     else
@@ -2720,7 +2734,7 @@ _open_in_gui_app() {
       if _command_exists "${_gui_browser_command[0]:-}" ||
          [[ -f "${_gui_browser_command[0]:-}" ]]
       then
-        "${_gui_browser_command[@]:-}" "${_request_url:-}" 2>/dev/null &
+        "${_gui_browser_command[@]:-}" "${_target:-}" 2>/dev/null &
       fi
     fi
   elif _command_exists "xdg-open"
@@ -3382,7 +3396,7 @@ _string_is_url() {
     _url_match_patterns+=(-e "^${__url_match_pattern}$")
   done
 
-  printf "%s\\n" "${1:-}" | grep -E -q --color=never "${_url_match_patterns[@]:-}"
+  printf "%s\\n" "${1:-}" | grep -E -q "${_url_match_patterns[@]:-}" &>/dev/null
 }
 
 # _wrap()
@@ -4362,16 +4376,17 @@ $(_color_primary "Usage"):
   ${_ME} init [<remote-url> [<branch>]] [--author] [--email <email>]
           [--name <name>]
   ${_ME} list [-e [<length>] | --excerpt [<length>]] [--filenames]
-          [-n <limit> | --limit <limit> | --<limit>] [--no-id]
-          [--no-indicator] [-p <number> | --page <number>] [--pager]
+          [-f | --folders-first] [-n <limit> | --limit <limit> | --<limit>]
+          [--no-id] [--no-indicator] [-p <number> | --page <number>] [--pager]
           [--paths] [-s | --sort] [-r | --reverse] [--tags]
           [-t <type> | --type <type> | --<type>]
           [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
   ${_ME} ls [-a | --all] [-b | --browse] [-e [<length>] | --excerpt [<length>]]
-        [--filenames] [-g | --gui] [-n <limit> | --limit <limit> | --<limit>]
-        [--no-footer] [--no-header] [--no-id] [--no-indicator]
-        [-p <number> | --page <number>] [--pager] [--paths] [-s | --sort]
-        [-r | --reverse] [--tags] [-t <type> | --type <type> | --<type>]
+        [--filenames] [-f | --folders-first] [-g | --gui]
+        [-n <limit> | --limit <limit> | --<limit>] [--no-footer] [--no-header]
+        [--no-id] [--no-indicator] [-p <number> | --page <number>] [--pager]
+        [--paths] [-s | --sort] [-r | --reverse] [--tags]
+        [-t <type> | --type <type> | --<type>]
         [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
   ${_ME} move ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           ([<notebook>:][<path>] | --reset | --to-bookmark | --to-note |
@@ -4567,6 +4582,7 @@ _describe_index() {
 $(_color_primary "Usage"):
   ${_ME} index add <filename>
   ${_ME} index delete <filename>
+  ${_ME} index edit
   ${_ME} index get_basename <id>
   ${_ME} index get_id <filename>
   ${_ME} index get_max_id
@@ -4585,6 +4601,7 @@ $(_color_primary "Options"):
 $(_color_primary "Subcommands"):
   add           Add <filename> to the index.
   delete        Delete <filename> from the index.
+  edit          Open the index file in \`\$EDITOR\`.
   get_basename  Print the filename / basename at the specified <id>.
   get_id        Get the id for <filename>.
   get_max_id    Get the maximum id for the folder.
@@ -4616,7 +4633,7 @@ _index() {
   local _subcommand="${1:-}"
 
   case "${_subcommand:-}" in
-    get_max_id|show|verify)
+    edit|get_max_id|show|verify)
       _folder_path="${2:-}"
       ;;
     rebuild|reconcile)
@@ -4666,7 +4683,7 @@ _index() {
       add)
         _index reconcile "${_folder_path}" --ancestors
         ;;
-      rebuild|reconcile)
+      edit|rebuild|reconcile)
         :
         ;;
       *)
@@ -4713,6 +4730,11 @@ _index() {
       else
         return 1
       fi
+      ;;
+    edit)
+      _edit_file "${_index_path}" --no-wait
+
+      return 0
       ;;
     get_basename)
       # Usage: _index_get_basename <id> <index-path>
@@ -5248,8 +5270,8 @@ _describe_list() {
   cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} list [-e [<length>] | --excerpt [<length>]] [--filenames]
-          [-n <limit> | --limit <limit> | --<limit>] [--no-id]
-          [--no-indicator] [-p <number> | --page <number>] [--pager]
+          [-f | --folders-first] [-n <limit> | --limit <limit> | --<limit>]
+          [--no-id] [--no-indicator] [-p <number> | --page <number>] [--pager]
           [--paths] [-s | --sort] [-r | --reverse] [--tags]
           [-t <type> | --type <type> | --<type>]
           [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
@@ -5258,6 +5280,7 @@ $(_color_primary "Options"):
   -e, --excerpt [<length>]        Print an excerpt <length> lines long under
                                   each note's filename [default: 3].
   --filenames                     Print the filename for each note.
+  -f, --folders-first             Print folders before other items.
   -n, --limit <limit>, --<limit>  The maximum number of notes to list.
   --no-id                         Don't include the id in list items.
   --no-indicator                  Don't include the indicator in list items.
@@ -5315,6 +5338,7 @@ HEREDOC
 _list() {
   local _error_on_empty=0
   local _excerpt_length=3
+  local _folders_first=0
   local _force_line_wrap=0
   local _limit=
   local _line_wrap=1
@@ -5362,6 +5386,9 @@ _list() {
         _list_filenames=1
         _recursive_arguments+=("--filenames")
         ;;
+      --folders*first|--ff|-ff|--f|-f)
+        _folders_first=1
+        ;;
       --limit|-n|--num|--number|--per*)
         if _option_value_is_present "${2:-}"
         then
@@ -5372,6 +5399,9 @@ _list() {
         ;;
       --no*color)
         _COLOR_ENABLED=0
+        ;;
+      --no*folders*first|--no*ff|-no*ff|--no*f|-no*f)
+        _folders_first=0
         ;;
       --no-id*|--noid*|--no*index)
         _no_id=1
@@ -5794,7 +5824,25 @@ _list() {
 
       if ! ((_only_pinned))
       then
-        _list_files "${_list_path}" "${_list_files_options[@]:-}" || :
+        if ((_folders_first))
+        then
+          _list_files "${_list_path}" "${_list_files_options[@]:-}" --type folder || :
+
+          {
+            _list_files "${_list_path}" "${_list_files_options[@]:-}" || :
+          } | {
+            local         __line=
+            while read -r __line
+            do
+              if [[ ! -d "${_list_path}/${__line}" ]]
+              then
+                printf "%s\\n" "${__line}"
+              fi
+            done
+          }
+        else
+          _list_files "${_list_path}" "${_list_files_options[@]:-}" || :
+        fi
       fi
     fi
   } | {
@@ -6300,10 +6348,11 @@ _describe_ls() {
   cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} ls [-a | --all] [-b | --browse] [-e [<length>] | --excerpt [<length>]]
-        [--filenames] [-g | --gui] [-n <limit> | --limit <limit> | --<limit>]
-        [--no-footer] [--no-header] [--no-id] [--no-indicator]
-        [-p <number> | --page <number>] [--pager] [--paths] [-s | --sort]
-        [-r | --reverse] [--tags] [-t <type> | --type <type> | --<type>]
+        [--filenames] [-f | --folders-first] [-g | --gui]
+        [-n <limit> | --limit <limit> | --<limit>] [--no-footer] [--no-header]
+        [--no-id] [--no-indicator] [-p <number> | --page <number>] [--pager]
+        [--paths] [-s | --sort] [-r | --reverse] [--tags]
+        [-t <type> | --type <type> | --<type>]
         [<notebook>:][<folder-path>/][<id> | <filename> | <path> | <query>]
 
 $(_color_primary "Options"):
@@ -6314,6 +6363,7 @@ $(_color_primary "Options"):
   -e, --excerpt [<length>]        Print an excerpt <length> lines long under
                                   each note's filename [default: 3].
   --filenames                     Print the filename for each note.
+  -f, --folders-first             Print folders before other items.
   -g, --gui                       Open the specified item or current notebook
                                   with \`browse\` in a GUI web browser.
   -n, --limit <limit>, --<limit>  The maximum number of listed items.
@@ -6741,6 +6791,7 @@ _ls() {
   local _delegate_arguments=()
   local _fast_exit=0
   local _filter_patterns=()
+  local _folders_first="${NB_FOLDERS_FIRST:-0}"
   local _header_flags=()
   local _limit=
   local _maybe_type=
@@ -6775,6 +6826,9 @@ _ls() {
       --*exit*)
         _fast_exit=1
         ;;
+      --folders-first|--ff|-ff|--f|-f)
+        _folders_first=1
+        ;;
       -g|--gui)
         _delegate_to_browse=1
         _delegate_arguments+=("${1}")
@@ -6789,6 +6843,9 @@ _ls() {
         ;;
       -l)
         : # Ignore accidental ls -l  due to muscle memory.
+        ;;
+      --no*folders*first|--no*ff|-no*ff|--no*f|-no*f)
+        _folders_first=0
         ;;
       --no*footer)
         NB_FOOTER=0
@@ -6927,6 +6984,11 @@ _ls() {
   if ((_with_pinned))
   then
     _list_options+=("--with-pinned")
+  fi
+
+  if ((_folders_first))
+  then
+    _list_options+=("--folders-first")
   fi
 
   local _selector_relative_path="${_selector#*:}"
@@ -11903,7 +11965,6 @@ _resolve_links() {
         2>/dev/null || :
     else
       grep                    \
-        --color=never         \
         --extended-regexp     \
         -h                    \
         --only-matching       \
@@ -13547,7 +13608,7 @@ _bookmark() {
           _wayback_response="$(
             _download_from                                                \
               "https://archive.org/wayback/available?url=${_target_url}"  \
-              | grep --color=never 'closest'                              \
+              | grep 'closest'                                            \
               | sed -E "s/.*\"closest\": {([^}]+)}.*/\1/g"                \
               | sed -E "s/.*\"url\": \"([^\"]+)\".*/\1/g" || printf ""
           )"
@@ -16919,15 +16980,25 @@ _search() {
       _use_git_grep=1
     fi
 
-    local _grep_arguments=(
-      "--color=never"
-      "--extended-regexp"
-      "-I"
-      "--ignore-case"
-      "--only-matching"
-      -e '[[:space:]]#[A-Za-z0-9_-]+'
-      -e '^#[A-Za-z0-9_-]+'
-    )
+    if ((_use_git_grep))
+    then
+      local _grep_arguments=(
+        "--extended-regexp"
+        "-I"
+        "--ignore-case"
+        "--only-matching"
+        -e '(^|[[:space:]])#[[:alnum:]_-]+'
+      )
+    else
+      local _grep_arguments=(
+        "--extended-regexp"
+        "-I"
+        "--ignore-case"
+        "--only-matching"
+        -e '[[:space:]]#[[:alnum:]_-]+'
+        -e '^#[A-Za-z0-9_-]+'
+      )
+    fi
 
     {
       local __target_path=
@@ -17070,7 +17141,12 @@ _search() {
   local __and_query=
   for   __and_query in "${_and_queries[@]:-}"
   do
-    [[ -n "${__and_query:-}"      ]] || continue
+    [[ -n "${__and_query:-}"            ]] || continue
+
+    if [[ "${_and_query:-}" =~ ^\#      ]]
+    then
+      _and_query="${_and_query}$"
+    fi
 
     if ((${#_or_queries[@]}))
     then
@@ -17079,7 +17155,12 @@ _search() {
       local __or_query=
       for   __or_query in "${_or_queries[@]:-}"
       do
-        [[ -n "${__or_query:-}"   ]] || continue
+        [[ -n "${__or_query:-}"         ]] || continue
+
+        if [[ "${__or_query:-}" =~ ^\#  ]]
+        then
+          __or_query="${__or_query}$"
+        fi
 
         _or_query_string="${_or_query_string}|${__or_query}"
       done
@@ -17240,11 +17321,14 @@ _search() {
               || return 0 # Don't fail out within a single scope.
         elif _search_with "grep" "${_search_utility:-}"
         then
-          if ((_COLOR_ENABLED))
+          if _grep_supports_color
           then
-            _search_args+=("--color=always")
-          else
-            _search_args+=("--color=never")
+            if ((_COLOR_ENABLED))
+            then
+              _search_args+=("--color=always")
+            else
+              _search_args+=("--color=never")
+            fi
           fi
 
           set +f
@@ -17549,8 +17633,9 @@ _search() {
                   [[ "${_type}" =~ (^todo$|^todos$|^task$|^tasks$)          ]] &&
                   _file_is_todo "${_path}"
                 } || {
-                  [[ "${_type}" =~ (^note$|^notes$|^text$)                  ]] &&
-                  _file_is_text "${_path}"
+                  [[ "${_type}" =~ (^note$|^notes$)                         ]] &&
+                  _file_is_text "${_path}"                                     &&
+                  [[ ! "${_path:-}" =~ (.bookmark.md$|-bookmark.md$)        ]]
                 } || {
                   [[ "${_type}" =~ (^folder$|^folders$)                     ]] &&
                   [[ "$(dirname "${_path}")" != "${__target_path}"          ]]
@@ -17569,6 +17654,9 @@ _search() {
                 } || {
                   [[ "${_type}" =~ (^image$|^images$|^picture$|^pictures$)  ]] &&
                   _file_is_image "${_path}"
+                } || {
+                  [[ "${_type}" =~ ^text$                                   ]] &&
+                  _file_is_text "${_path}"
                 } || {
                   [[ "${_type}" =~ (^video$|^videos$)                       ]] &&
                   _file_is_video "${_path}"
@@ -18556,7 +18644,7 @@ ${_title/\[$' '\]/${_TPUT_SETAF_8}[ ]${_TPUT_SGR0}}"
 
     local _target_url=
     _target_url="$(
-      grep -E --color=never           \
+      grep -E                         \
         "${_url_match_patterns[@]:-}" \
         "${_target_path}"             \
         | head -n 1                   \
@@ -19900,12 +19988,20 @@ HEREDOC
           --page  "${_current_page}"      \
           2>&1 || :
       else
-        _list "${_target_path}"           \
-          --limit "${_limit}"             \
-          --no-color                      \
-          --notebook-selectors            \
-          --page  "${_current_page}"      \
+        local _list_options=(
+          --limit "${_limit}"
+          --no-color
+          --notebook-selectors
+          --page  "${_current_page}"
           --with-pinned
+        )
+
+        if ((${NB_FOLDERS_FIRST:-0}))
+        then
+          _list_options+=("--folders-first")
+        fi
+
+        _list "${_target_path}" "${_list_options[@]:-}"
       fi
     } | {
       local _truncate_length=9999
@@ -21163,6 +21259,16 @@ HEREDOC
       printf "<div class=\"main\">\\n"
 
       cat
+
+      if ((${NB_BROWSE_SUPPORT_LINKS:-1})) &&
+         ((${#_notebook_names[@]} - 20))
+      then
+        printf "<br /><div align=\"center\" class=\"muted\">"
+        printf "<a href=\"https://github.com/sponsors/xwmx\">Sponsor</a>\\n"
+        printf "<span class=\"muted\">•</span>\\n"
+        printf "<a href=\"https://www.paypal.com/paypalme/WilliamMelody\">Donate</a>"
+        printf "</div>\\n"
+      fi
 
       printf "</div>\\n"
     } | {
@@ -24884,7 +24990,6 @@ HEREDOC
       elif _command_name="$(
         printf "%s\\n" "${_normalized_input}" \
           | grep                              \
-              --color=never                   \
               --only-matching                 \
               -e '^code'                      \
               -e '^emacs'                     \
@@ -25734,7 +25839,7 @@ _todo() {
         local         __line=
         while read -r __line
         do
-          _counter+=1
+          _counter=$((_counter+1))
 
           printf "%s\\n" "${__line:-}"
         done
@@ -25955,9 +26060,9 @@ _todo() {
             --visible-length "${_extra_length:-0}"
 
           {
-            grep --color=never          \
-              -e "- \[[[:space:]]*\] " \
-              -e "- \[x\] "            \
+            grep                        \
+              -e "- \[[[:space:]]*\] "  \
+              -e "- \[x\] "             \
               "${__item_path:-}" || :
           } | {
             local _counter=0
