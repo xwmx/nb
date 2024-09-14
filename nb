@@ -25333,6 +25333,7 @@ $(_color_primary "Usage"):
               [--description <description>] [--due <date>]
               [-r (<url> | <selector>) | --related (<url> | <selector>)]
               [--tags <tag1>,<tag2>...] [--task <title>...]
+  ${_ME} todo delete ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
   ${_ME} todo do   ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
                [<task-number>]
   ${_ME} todo undo ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
@@ -25352,6 +25353,8 @@ $(_color_primary "Subcommands"):
   (default)   List todos.
   add         Add a new todo.
               Shortcut Aliases: \`${_ME} todo a\`, \`${_ME} todo +\`
+  delete      Delete a todo.
+              Shortcut Aliases: \`${_ME} todo d\`, \`${_ME} todo -\`
   do          Mark a todo or task as done.
   tasks       List tasks in todos, notebooks, folders, and other item.
   undo        Unmark a todo or task as done.
@@ -25552,7 +25555,7 @@ _todo() {
         fi
 
         case "${1:-}" in
-          +|a|add)
+          add|+|a)
             if [[ -z "${_action:-}"     ]]  ||  [[ "${_action:-}" == "tasks" ]]
             then
               _action="add"
@@ -25560,6 +25563,19 @@ _todo() {
             ;;
           c|closed|checked|completed|done|finished)
             _filter="closed"
+            ;;
+          delete|d|-)
+            # _warn echo "1: '${1:-}' 2: '${2:-}'"
+            if [[ -z "${2:-}" ]]
+            then
+              _help "todo"
+
+              return 1
+            fi
+
+            _delete "${2:-}" "${3:-}"
+
+            return 0
             ;;
           d|do|close|complete|finish|check)
             if [[ -z "${_action:-}"     ]]  ||  [[ "${_action:-}" == "tasks" ]]

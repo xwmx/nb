@@ -8519,6 +8519,7 @@ Usage:
               [--description <description>] [--due <date>]
               [-r (<url> | <selector>) | --related (<url> | <selector>)]
               [--tags <tag1>,<tag2>...] [--task <title>...]
+  nb todo delete ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
   nb todo do   ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
                [<task-number>]
   nb todo undo ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
@@ -8538,6 +8539,8 @@ Subcommands:
   (default)   List todos.
   add         Add a new todo.
               Shortcut Aliases: `nb todo a`, `nb todo +`
+  delete      Delete a todo.
+              Shortcut Aliases: `nb todo d`, `nb todo -`
   do          Mark a todo or task as done.
   tasks       List tasks in todos, notebooks, folders, and other item.
   undo        Unmark a todo or task as done.
