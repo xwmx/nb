@@ -25565,7 +25565,6 @@ _todo() {
             _filter="closed"
             ;;
           delete|d|-)
-            # _warn echo "1: '${1:-}' 2: '${2:-}'"
             if [[ -z "${2:-}" ]]
             then
               _help "todo"
