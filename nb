@@ -25354,7 +25354,7 @@ $(_color_primary "Subcommands"):
   add         Add a new todo.
               Shortcut Aliases: \`${_ME} todo a\`, \`${_ME} todo +\`
   delete      Delete a todo.
-              Shortcut Aliases: \`${_ME} todo d\`, \`${_ME} todo -\`
+              Shortcut Alias: \`${_ME} todo -\`
   do          Mark a todo or task as done.
   tasks       List tasks in todos, notebooks, folders, and other item.
   undo        Unmark a todo or task as done.
@@ -25564,7 +25564,7 @@ _todo() {
           c|closed|checked|completed|done|finished)
             _filter="closed"
             ;;
-          delete|d|-)
+          delete|-)
             if [[ -z "${2:-}" ]]
             then
               _help "todo"
