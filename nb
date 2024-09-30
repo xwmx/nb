@@ -2524,8 +2524,12 @@ _less_prompt() {
 
   if [[ "${_COLUMNS}" -gt 81 ]]
   then
+# NOTE: Multibyte unicode characters not rendering in recent versions of less.
+# TODO: Resolve unicode rendering and revert prompt.
+#     _prompt="\
+# > scroll for more, f / b to jump ↓ / ↑, h for help, or q to quit"
     _prompt="\
-> scroll for more, f / b to jump ↓ / ↑, h for help, or q to quit"
+> scroll for more, f / b to jump forward / back, h for help, or q to quit"
   fi
 
   printf "%s\\n" "${_prompt}"
