@@ -2519,17 +2519,27 @@ _join() {
 # Description:
 #   The prompt to display in `less`.
 _less_prompt() {
+  # TODO: remove when less 668 or higher is widely available
+  local _less_version=
+  _less_version="$(less --version | head -1)"
+  _less_version="${_less_version#* }"
+  _less_version="${_less_version%% *}"
+
   local _prompt="\
 > scroll for more, h for help, or q to quit"
 
   if [[ "${_COLUMNS}" -gt 81 ]]
   then
-# NOTE: Multibyte unicode characters not rendering in recent versions of less.
-# TODO: Resolve unicode rendering and revert prompt.
-#     _prompt="\
-# > scroll for more, f / b to jump ↓ / ↑, h for help, or q to quit"
-    _prompt="\
+    # TODO: remove when less 668 or higher is widely available
+    if [[ "${_less_version:-}" -gt "653" ]] &&
+       [[ "${_less_version:-}" -lt "668" ]]
+    then # render prompt without multibyte characters
+      _prompt="\
 > scroll for more, f / b to jump forward / back, h for help, or q to quit"
+    else
+      _prompt="\
+> scroll for more, f / b to jump ↓ / ↑, h for help, or q to quit"
+    fi
   fi
 
   printf "%s\\n" "${_prompt}"
