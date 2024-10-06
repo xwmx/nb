@@ -18823,7 +18823,8 @@ Can't show archives. Export archive and expand to edit.\\n"
     then
       local _render_style="auto"
 
-      if    [[ -n "${VIMRUNTIME:-}"                   ]]
+      if    [[ -n "${VIMRUNTIME:-}"                   ]] ||
+            [[ -n "${MYVIMRC:-}"                      ]]
       then
         _render_style="block"
       elif  [[    "${TERM_PROGRAM:-}" == "iTerm.app"  ]]
