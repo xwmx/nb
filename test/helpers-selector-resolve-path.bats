@@ -62,7 +62,7 @@ load test_helper
   [[ -z "${output:-}"       ]]
 }
 
-# resolve paths ###############################################################
+# <id> ########################################################################
 
 @test "'_selector_resolve_path()' resolves selector with root-level id file path." {
   {
@@ -119,6 +119,71 @@ load test_helper
 
 
   run "${_NB}" helpers selector_resolve_path "2/Example File.md" --full
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0                                               ]]
+  [[ "${output}"  ==  "${NB_DIR}/home/Example Folder/Example File.md" ]]
+}
+
+# <title> #####################################################################
+
+@test "'_selector_resolve_path()' resolves selector with root-level title file path." {
+  {
+    "${_NB}" init
+    "${_NB}" add "A Folder" --type folder
+    "${_NB}" add "Example File.md" \
+      --content "# Example Title"
+
+    [[ -f "${NB_DIR}/home/Example File.md"  ]]
+
+    [[ -d "${NB_DIR}/home/A Folder"         ]]
+  }
+
+  run "${_NB}" helpers selector_resolve_path "Example Title"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0                     ]]
+  [[ "${output}"  ==  "Example File.md"     ]]
+
+  run "${_NB}" helpers selector_resolve_path 2 --full
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0                                 ]]
+  [[ "${output}"  ==  "${NB_DIR}/home/Example File.md"  ]]
+}
+
+@test "'_selector_resolve_path()' resolves selector with first-level folder id file path and title." {
+  {
+    "${_NB}" init
+    "${_NB}" add "A Folder" --type folder
+    "${_NB}" add "Example Folder/A Nested Folder" --type folder
+
+    "${_NB}" add "Example Folder/Example File.md" \
+      --content "# Example Title"
+
+    [[ -f "${NB_DIR}/home/Example Folder/Example File.md" ]]
+
+    [[ -d "${NB_DIR}/home/A Folder"                       ]]
+    [[ -d "${NB_DIR}/home/Example Folder"                 ]]
+    [[ -d "${NB_DIR}/home/Example Folder/A Nested Folder" ]]
+  }
+
+  run "${_NB}" helpers selector_resolve_path "2/Example Title"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0                                 ]]
+  [[ "${output}"  ==  "Example Folder/Example File.md"  ]]
+
+
+  run "${_NB}" helpers selector_resolve_path "2/Example Title" --full
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
