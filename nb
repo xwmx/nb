@@ -82,7 +82,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.14.0"
+_VERSION="7.14.1"
 
 # $_ME
 #
@@ -2519,13 +2519,27 @@ _join() {
 # Description:
 #   The prompt to display in `less`.
 _less_prompt() {
+  # TODO: remove when less 668 or higher is widely available
+  local _less_version=
+  _less_version="$(less --version | head -1)"
+  _less_version="${_less_version#* }"
+  _less_version="${_less_version%% *}"
+
   local _prompt="\
 > scroll for more, h for help, or q to quit"
 
   if [[ "${_COLUMNS}" -gt 81 ]]
   then
-    _prompt="\
+    # TODO: remove when less 668 or higher is widely available
+    if [[ "${_less_version:-}" -gt "653" ]] &&
+       [[ "${_less_version:-}" -lt "668" ]]
+    then # render prompt without multibyte characters
+      _prompt="\
+> scroll for more, f / b to jump forward / back, h for help, or q to quit"
+    else
+      _prompt="\
 > scroll for more, f / b to jump ↓ / ↑, h for help, or q to quit"
+    fi
   fi
 
   printf "%s\\n" "${_prompt}"
@@ -18809,7 +18823,8 @@ Can't show archives. Export archive and expand to edit.\\n"
     then
       local _render_style="auto"
 
-      if    [[ -n "${VIMRUNTIME:-}"                   ]]
+      if    [[ -n "${VIMRUNTIME:-}"                   ]] ||
+            [[ -n "${MYVIMRC:-}"                      ]]
       then
         _render_style="block"
       elif  [[    "${TERM_PROGRAM:-}" == "iTerm.app"  ]]
@@ -25333,6 +25348,7 @@ $(_color_primary "Usage"):
               [--description <description>] [--due <date>]
               [-r (<url> | <selector>) | --related (<url> | <selector>)]
               [--tags <tag1>,<tag2>...] [--task <title>...]
+  ${_ME} todo delete ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
   ${_ME} todo do   ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
                [<task-number>]
   ${_ME} todo undo ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
@@ -25352,6 +25368,8 @@ $(_color_primary "Subcommands"):
   (default)   List todos.
   add         Add a new todo.
               Shortcut Aliases: \`${_ME} todo a\`, \`${_ME} todo +\`
+  delete      Delete a todo.
+              Shortcut Alias: \`${_ME} todo -\`
   do          Mark a todo or task as done.
   tasks       List tasks in todos, notebooks, folders, and other item.
   undo        Unmark a todo or task as done.
@@ -25552,7 +25570,7 @@ _todo() {
         fi
 
         case "${1:-}" in
-          +|a|add)
+          add|+|a)
             if [[ -z "${_action:-}"     ]]  ||  [[ "${_action:-}" == "tasks" ]]
             then
               _action="add"
@@ -25560,6 +25578,18 @@ _todo() {
             ;;
           c|closed|checked|completed|done|finished)
             _filter="closed"
+            ;;
+          delete|-)
+            if [[ -z "${2:-}" ]]
+            then
+              _help "todo"
+
+              return 1
+            fi
+
+            _delete "${2:-}" "${3:-}"
+
+            return 0
             ;;
           d|do|close|complete|finish|check)
             if [[ -z "${_action:-}"     ]]  ||  [[ "${_action:-}" == "tasks" ]]
