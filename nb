@@ -3296,8 +3296,14 @@ _selector_resolve_path() {
                 _get_content "${_folder_path}/${__filename}" --title
               )"
 
-              if [[ -n "${_title}"                    ]] &&
-                 [[ "${_title}" == "${_maybe_title}"  ]]
+              if [[ -n "${_title}"                              ]] &&
+                 {
+                   [[ "${_title}" == "${_maybe_title}"          ]] ||
+                   {
+                     [[ "${__filename}"   =~ todo\.md$          ]] &&
+                     [[ "${_maybe_title}" == "${_title##*] }"   ]]
+                   }
+                 }
               then
                 local _full_path="${_folder_path}/${__filename}"
 
