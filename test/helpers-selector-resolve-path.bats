@@ -236,6 +236,6 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"  -eq 0                                               ]]
+  [[ "${status}"  -eq 0                                                         ]]
   [[ "${output}"  ==  "${NB_DIR}/home/Example Folder/Example Todo File.todo.md" ]]
 }
