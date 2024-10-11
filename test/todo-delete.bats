@@ -282,7 +282,7 @@ load test_helper
     [[   -e "${NB_DIR}/home/Example Folder/Example File.todo.md"  ]]
   }
 
-  run "${_NB}" delete "home:Example Folder/Example Title" --force
+  run "${_NB}" delete "home:Example Folder/Example todo description." --force
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -330,7 +330,7 @@ load test_helper
     [[   -e "${NB_DIR}/home/Example Folder/Sample Folder/Example File.todo.md"  ]]
   }
 
-  run "${_NB}" delete "home:Example Folder/Sample Folder/Example Title" --force
+  run "${_NB}" delete "home:Example Folder/Sample Folder/Example todo description." --force
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
