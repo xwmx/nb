@@ -25,6 +25,8 @@ load test_helper
       --content "# [x] Example todo description three." \
       --filename "Example Folder/Three.todo.md"
 
+    _original_index="$(cat "${NB_DIR}/Example Notebook/.index")"
+
     "${_NB}" use "home"
   }
 
@@ -78,6 +80,8 @@ load test_helper
     "${_NB}" add                                        \
       --content "# [x] Example todo description three." \
       --filename "Three.todo.md"
+
+    _original_index="$(cat "${NB_DIR}/home/.index")"
   }
 
   run "${_NB}" todo delete 3 <<< "y${NEWLINE}"
