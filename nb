@@ -14523,7 +14523,11 @@ _delete() {
         _target_paths+=("${_selector_path}")
         _target_selectors+=("${__selector}")
       fi
-    elif [[ -n "${_selector_notebook_path:-}"  ]]
+    elif [[ -n "${_selector_notebook_path:-}" ]] &&
+         {
+           [[ -z  "${__selector##*:}"         ]] ||
+           [[ !   "${__selector:-}" =~ :      ]]
+         }
     then
       _notebook_paths+=("${_selector_notebook_path}")
       _notebook_selectors+=("${__selector}")
