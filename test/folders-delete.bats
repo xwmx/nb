@@ -93,6 +93,55 @@ load test_helper
   [[ "${#lines[@]}" -eq 1                     ]]
 }
 
+@test "'delete notebook:folder/<filename>' with invalid filename returns with error and message." {
+  {
+    "${_NB}" init
+    "${_NB}" add "Sample File.bookmark.md"                  \
+      --content "<https://example.test>"
+
+    "${_NB}" add "Example Folder/Example File.bookmark.md"  \
+      --content "<https://example.test>"
+
+    "${_NB}" notebooks add "one"
+    "${_NB}" notebooks use "one"
+
+    [[ "$("${_NB}" notebooks current)" == "one" ]]
+
+    [[   -e "${NB_DIR}/home/Example Folder/Example File.bookmark.md"  ]]
+
+  }
+
+  run "${_NB}" delete "home:Example Folder/not-valid" --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 1:
+
+  [[ ${status} -eq 1 ]]
+
+  # Does not delete file:
+
+  [[   -e "${NB_DIR}/home/Example Folder/Example File.bookmark.md"  ]]
+
+
+  # Does not create git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)"   ]]
+  do
+    sleep 1
+  done
+  git log
+  git log | grep -q -v '\[nb\] Delete: .*Example Folder/Example File.bookmark.md'
+
+  # Prints output:
+
+  [[ "${output}" =~ Not\ found:               ]]
+  [[ "${output}" =~ Example\ Folder/not-valid ]]
+  [[ "${#lines[@]}" -eq 1                     ]]
+}
+
 # <filename> ##################################################################
 
 @test "'delete folder/<filename>' deletes properly without errors." {
@@ -545,7 +594,7 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Deleted:                                                    ]]
+  [[ "${output}" =~ Deleted:                                                  ]]
   [[ "${output}" =~ Example\ Folder/Sample\ Folder/1                          ]]
   [[ "${output}" =~ 🔖                                                        ]]
   [[ "${output}" =~ Example\ Folder/Sample\ Folder/Example\ File.bookmark.md  ]]

@@ -8540,7 +8540,7 @@ Subcommands:
   add         Add a new todo.
               Shortcut Aliases: `nb todo a`, `nb todo +`
   delete      Delete a todo.
-              Shortcut Aliases: `nb todo d`, `nb todo -`
+              Shortcut Aliases: `nb todo -`
   do          Mark a todo or task as done.
   tasks       List tasks in todos, notebooks, folders, and other item.
   undo        Unmark a todo or task as done.

@@ -82,7 +82,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.14.1"
+_VERSION="7.14.3"
 
 # $_ME
 #
@@ -3296,8 +3296,14 @@ _selector_resolve_path() {
                 _get_content "${_folder_path}/${__filename}" --title
               )"
 
-              if [[ -n "${_title}"                    ]] &&
-                 [[ "${_title}" == "${_maybe_title}"  ]]
+              if [[ -n "${_title}"                              ]] &&
+                 {
+                   [[ "${_title}" == "${_maybe_title}"          ]] ||
+                   {
+                     [[ "${__filename}"   =~ todo\.md$          ]] &&
+                     [[ "${_maybe_title}" == "${_title##*] }"   ]]
+                   }
+                 }
               then
                 local _full_path="${_folder_path}/${__filename}"
 
@@ -10155,10 +10161,12 @@ _download_from() {
 
   local _target_path="${2:-}"
 
-  if  ((${NB_BROWSER_DOWNLOAD_ENABLED:-1})) && {
-      [[ "${_url}"    =~ .html$         ]]  ||
-      [[ ! "${_url}"  =~ .[a-zA-Z0-9]$  ]]
-  }
+  if  ((${NB_BROWSER_DOWNLOAD_ENABLED:-1}))     &&
+      {
+        [[ "${_url}"    =~ .html$         ]]    ||
+        [[ ! "${_url}"  =~ .[a-zA-Z0-9]$  ]]
+      }                                         &&
+      [[ ! "${_url}" =~ ^https://www.reddit.com ]]
   then
     if _command_exists "google-chrome"
     then
@@ -14515,7 +14523,11 @@ _delete() {
         _target_paths+=("${_selector_path}")
         _target_selectors+=("${__selector}")
       fi
-    elif [[ -n "${_selector_notebook_path:-}"  ]]
+    elif [[ -n "${_selector_notebook_path:-}" ]] &&
+         {
+           [[ -z  "${__selector##*:}"         ]] ||
+           [[ !   "${__selector:-}" =~ :      ]]
+         }
     then
       _notebook_paths+=("${_selector_notebook_path}")
       _notebook_selectors+=("${__selector}")
