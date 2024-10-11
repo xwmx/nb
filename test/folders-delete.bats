@@ -545,7 +545,7 @@ load test_helper
 
   # Prints output:
 
-  [[ "${output}" =~ Deleted:                                                    ]]
+  [[ "${output}" =~ Deleted:                                                  ]]
   [[ "${output}" =~ Example\ Folder/Sample\ Folder/1                          ]]
   [[ "${output}" =~ 🔖                                                        ]]
   [[ "${output}" =~ Example\ Folder/Sample\ Folder/Example\ File.bookmark.md  ]]
