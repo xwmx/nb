@@ -179,7 +179,7 @@ load test_helper
 
 # <title> #####################################################################
 
-@test "'delete folder/<title>' deletes properly without errors." {
+@test "'todo delete folder/<title>' deletes properly without errors." {
   {
     "${_NB}" init
     "${_NB}" add "Sample File.todo.md"                  \
@@ -222,7 +222,7 @@ load test_helper
   [[ "${output}" =~ Example\ Folder/Example\ File.todo.md ]]
 }
 
-@test "'delete folder/folder/<title>' deletes properly without errors." {
+@test "'todo delete folder/folder/<title>' deletes properly without errors." {
   {
     "${_NB}" init
     "${_NB}" add "Sample File.todo.md"                                \
@@ -265,7 +265,7 @@ load test_helper
   [[ "${output}" =~ Example\ Folder/Sample\ Folder/Example\ File.todo.md  ]]
 }
 
-@test "'delete notebook:folder/<title>' deletes properly without errors." {
+@test "'todo delete notebook:folder/<title>' deletes properly without errors." {
   {
     "${_NB}" init
     "${_NB}" add "Sample File.tod.md"                  \
@@ -313,7 +313,7 @@ load test_helper
   [[ "${output}" =~ home:Example\ Folder/Example\ File.todo.md  ]]
 }
 
-@test "'delete notebook:folder/folder/<title>' deletes properly without errors." {
+@test "'todo delete notebook:folder/folder/<title>' deletes properly without errors." {
   {
     "${_NB}" init
     "${_NB}" add "Sample File.todo.md"                                \
