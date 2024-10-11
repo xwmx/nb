@@ -202,7 +202,7 @@ load test_helper
 
   # Deletes  file:
 
-  [[ ! -e "${NB_DIR}/home/Example Folder/Example File.todo.md" ]]
+  [[ ! -e "${NB_DIR}/home/Example Folder/Example File.todo.md"  ]]
 
   # Creates git commit:
 
@@ -220,4 +220,143 @@ load test_helper
   [[ "${output}" =~ Example\ Folder/1                     ]]
   [[ "${output}" =~ ✔️                                     ]]
   [[ "${output}" =~ Example\ Folder/Example\ File.todo.md ]]
+}
+
+@test "'delete folder/folder/<title>' deletes properly without errors." {
+  {
+    "${_NB}" init
+    "${_NB}" add "Sample File.todo.md"                                \
+      --content "# [ ] Sample todo description."
+
+    "${_NB}" add "Example Folder/Sample Folder/Example File.todo.md"  \
+      --content "# [ ] Example todo description."
+
+    [[   -e "${NB_DIR}/home/Example Folder/Sample Folder/Example File.todo.md"  ]]
+  }
+
+  run "${_NB}" delete "Example Folder/Sample Folder/Example todo description." --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Deletes file:
+
+  [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/Example File.todo.md"    ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log
+  git log | grep -q '\[nb\] Delete: .*Example Folder/Sample Folder/Example File.todo.md'
+
+  # Prints output:
+
+  [[ "${output}" =~ Deleted:                                              ]]
+  [[ "${output}" =~ Example\ Folder/Sample\ Folder/1                      ]]
+  [[ "${output}" =~ ✔️                                                     ]]
+  [[ "${output}" =~ Example\ Folder/Sample\ Folder/Example\ File.todo.md  ]]
+}
+
+@test "'delete notebook:folder/<title>' deletes properly without errors." {
+  {
+    "${_NB}" init
+    "${_NB}" add "Sample File.tod.md"                  \
+      --content "# [ ] Sample todo description."
+
+    "${_NB}" add "Example Folder/Example File.todo.md"  \
+      --content "# [ ] Example todo description."
+
+    "${_NB}" notebooks add "one"
+    "${_NB}" notebooks use "one"
+
+    [[ "$("${_NB}" notebooks current)" == "one" ]]
+
+    [[   -e "${NB_DIR}/home/Example Folder/Example File.todo.md"  ]]
+  }
+
+  run "${_NB}" delete "home:Example Folder/Example Title" --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Deletes file:
+
+  [[ ! -e "${NB_DIR}/home/Example Folder/Example File.todo.md"    ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log
+  git log | grep -q '\[nb\] Delete: .*Example Folder/Example File.todo.md'
+
+  # Prints output:
+
+  [[ "${output}" =~ Deleted:                                    ]]
+  [[ "${output}" =~ home:Example\ Folder/1                      ]]
+  [[ "${output}" =~ ✔️                                           ]]
+  [[ "${output}" =~ home:Example\ Folder/Example\ File.todo.md  ]]
+}
+
+@test "'delete notebook:folder/folder/<title>' deletes properly without errors." {
+  {
+    "${_NB}" init
+    "${_NB}" add "Sample File.todo.md"                                \
+      --content "# [ ] Sample todo description."
+
+    "${_NB}" add "Example Folder/Sample Folder/Example File.todo.md"  \
+      --content "# [ ] Example todo description."
+
+    "${_NB}" notebooks add "one"
+    "${_NB}" notebooks use "one"
+
+    [[ "$("${_NB}" notebooks current)" == "one" ]]
+
+    [[   -e "${NB_DIR}/home/Example Folder/Sample Folder/Example File.todo.md"  ]]
+  }
+
+  run "${_NB}" delete "home:Example Folder/Sample Folder/Example Title" --force
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Deletes file:
+
+  [[ ! -e "${NB_DIR}/home/Example Folder/Sample Folder/Example File.todo.md"    ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log
+  git log | grep -q '\[nb\] Delete: .*Example Folder/Sample Folder/Example File.todo.md'
+
+  # Prints output:
+
+  [[ "${output}" =~ Deleted:                                                  ]]
+  [[ "${output}" =~ home:Example\ Folder/Sample\ Folder/1                     ]]
+  [[ "${output}" =~ ✔️                                                         ]]
+  [[ "${output}" =~ home:Example\ Folder/Sample\ Folder/Example\ File.todo.md ]]
 }
