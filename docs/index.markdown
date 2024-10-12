@@ -9292,7 +9292,7 @@ Supported Values: 'accept', 'bash', 'nc', 'ncat', netcat', 'socat'
 ```text
 Default: '1'
 
-Set to '0' to show the 'Donate' and 'Sponsor' links in `nb browse`.
+Set to '0' to hide the 'Donate' and 'Sponsor' links in `nb browse`.
 
 Supported Values: '0' '1'
 ```
