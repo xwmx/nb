@@ -16057,7 +16057,10 @@ _move() {
         :
         ;;
       *)
-        _selectors+=("${1:-}")
+        if [[ -n "${1:-}" ]]
+        then
+          _selectors+=("${1:-}")
+        fi
         ;;
     esac
 
@@ -16081,7 +16084,9 @@ _move() {
     else
       _source_selectors+=("${_selectors[@]}")
     fi
-  else
+  elif [[ -z "${_to_target_type:-}" ]] &&
+       [[ -z "${_reset:-}"          ]]
+  then
     _exit_1 _help "move"
   fi
 

@@ -659,7 +659,42 @@ Moved\ to:\ .*[.*Sample\ Folder/5.*].*\ .*Sample\ Folder/Example\ File\ Two.md  
 
 # no argument #################################################################
 
-@test "'move' with no arguments exits with status 1." {
+@test "'move' with no arguments exits with status 1 and prints help." {
+  {
+    "${_NB}" init
+    "${_NB}" add "example.md" --content "Example content."
+    "${_NB}" notebooks add "destination"
+  }
+
+  run "${_NB}" move
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Exits with 1:
+
+  [[ "${status}" -eq 1 ]]
+
+  # Does not delete file:
+
+  [[ -e "${NB_DIR}/home/example.md" ]]
+
+  # Does not create git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  ! git log | grep '\[nb\] Delete'
+
+  # Prints help:
+
+  [[ "${lines[0]}" =~ Usage.*\: ]]
+  [[ "${lines[1]}" =~ nb\ move  ]]
+}
+
+@test "'move --force' with no arguments exits with status 1 and prints help." {
   {
     "${_NB}" init
     "${_NB}" add "example.md" --content "Example content."
