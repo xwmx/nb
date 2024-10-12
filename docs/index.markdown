@@ -9290,9 +9290,9 @@ Supported Values: 'accept', 'bash', 'nc', 'ncat', netcat', 'socat'
 ##### `$NB_BROWSE_SUPPORT_LINKS`
 
 ```text
-Default: '1'
+Default: '0'
 
-Set to '0' to hide the 'Donate' and 'Sponsor' links in `nb browse`.
+Set to '1' to show the 'Donate' and 'Sponsor' links in `nb browse`.
 
 Supported Values: '0' '1'
 ```

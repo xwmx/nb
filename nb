@@ -21292,7 +21292,7 @@ HEREDOC
 
       cat
 
-      if ((${NB_BROWSE_SUPPORT_LINKS:-1})) &&
+      if ((${NB_BROWSE_SUPPORT_LINKS:-0})) &&
          ((${#_notebook_names[@]} - 20))
       then
         printf "<br /><div align=\"center\" class=\"muted\">"
