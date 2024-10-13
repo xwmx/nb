@@ -82,7 +82,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.14.3"
+_VERSION="7.14.4"
 
 # $_ME
 #
@@ -16057,7 +16057,10 @@ _move() {
         :
         ;;
       *)
-        _selectors+=("${1:-}")
+        if [[ -n "${1:-}" ]]
+        then
+          _selectors+=("${1:-}")
+        fi
         ;;
     esac
 
@@ -16081,7 +16084,9 @@ _move() {
     else
       _source_selectors+=("${_selectors[@]}")
     fi
-  else
+  elif [[ -z "${_to_target_type:-}" ]] &&
+       [[ -z "${_reset:-}"          ]]
+  then
     _exit_1 _help "move"
   fi
 
@@ -21288,7 +21293,7 @@ HEREDOC
       cat
 
       if ((${NB_BROWSE_SUPPORT_LINKS:-1})) &&
-         ((${#_notebook_names[@]} - 20))
+         ((${#_notebook_names[@]} - 40))
       then
         printf "<br /><div align=\"center\" class=\"muted\">"
         printf "<a href=\"https://github.com/sponsors/xwmx\">Sponsor</a>\\n"
