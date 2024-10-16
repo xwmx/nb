@@ -2524,6 +2524,7 @@ _less_prompt() {
   _less_version="$(less --version | head -1)"
   _less_version="${_less_version#* }"
   _less_version="${_less_version%% *}"
+  _less_version="${_less_version%%.*}"
 
   local _prompt="\
 > scroll for more, h for help, or q to quit"
