@@ -238,8 +238,8 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}" -eq  0                                     ]]
-  [[ "${output}" ==   "Sample Name <sample@example.test>"   ]]
+  [[ "${status}" -eq  0                                       ]]
+  [[ "${output}" ==   "Sample Name <sample@example.test>"     ]]
 
   run "${_NB}" show Example\ Notebook:1 --author
 
