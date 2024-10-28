@@ -645,6 +645,7 @@ NB_EDITOR="${NB_EDITOR:-${EDITOR:-${VISUAL:-}}}"
 
 __set_editor() {
   local _editors=(
+    editor
     code
     subl
     hx
