@@ -267,6 +267,7 @@ load test_helper
     "${_NB}" run touch "Example Temp Three.md.swp"
     "${_NB}" run touch "Example Temp Four.md.swap"
     "${_NB}" run touch ".#Example Temp Five.md"
+    "${_NB}" run touch "Example Temp Six_ltex.json"
 
     "${_NB}" add "File Three.md" --content "Example content three."
   }

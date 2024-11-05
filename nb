@@ -1460,6 +1460,7 @@ _IGNORE_PATTERNS=(
   -e '/^#.*#$/d'
   -e '/\.swa?p$/d'
   -e '/^\.#*/d'
+  -e '/.*_ltex\.json$/d' # ltex-utils.nvim
 )
 
 # $_MD
