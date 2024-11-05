@@ -82,7 +82,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.14.5"
+_VERSION="7.14.6"
 
 # $_ME
 #
@@ -645,6 +645,7 @@ NB_EDITOR="${NB_EDITOR:-${EDITOR:-${VISUAL:-}}}"
 
 __set_editor() {
   local _editors=(
+    editor
     code
     subl
     hx
@@ -1459,6 +1460,7 @@ _IGNORE_PATTERNS=(
   -e '/^#.*#$/d'
   -e '/\.swa?p$/d'
   -e '/^\.#*/d'
+  -e '/.*_ltex\.json$/d' # ltex-utils.nvim
 )
 
 # $_MD
