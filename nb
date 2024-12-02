@@ -4352,7 +4352,7 @@ $(_color_primary "Usage"):
   ${_ME} add todo [<todo-options>...]
   ${_ME} archive [<notebook>]
   ${_ME} bookmark [<ls-options>...]
-  ${_ME} bookmark [<notebook>:][<folder-path>/] <url>
+  ${_ME} bookmark [<notebook>:][<folder-path>/] <url>...
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
               [-f <filename> | --filename <filename>] [--no-request]
               [-q <quote> | --quote <quote>] [--save-source]
@@ -13195,7 +13195,7 @@ _describe_bookmark() {
   cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} bookmark [<ls-options>...]
-  ${_ME} bookmark [<notebook>:][<folder-path>/] <url>
+  ${_ME} bookmark [<notebook>:][<folder-path>/] <url>...
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
               [-f <filename> | --filename <filename>] [--no-request]
               [-q <quote> | --quote <quote>] [--save-source]

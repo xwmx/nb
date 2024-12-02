@@ -5933,7 +5933,7 @@ Usage:
   nb add todo [<todo-options>...]
   nb archive [<notebook>]
   nb bookmark [<ls-options>...]
-  nb bookmark [<notebook>:][<folder-path>/] <url>
+  nb bookmark [<notebook>:][<folder-path>/] <url>...
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
               [-f <filename> | --filename <filename>] [--no-request]
               [-q <quote> | --quote <quote>] [--save-source]
@@ -6438,7 +6438,7 @@ Shortcut Alias:
 ```text
 Usage:
   nb bookmark [<ls-options>...]
-  nb bookmark [<notebook>:][<folder-path>/] <url>
+  nb bookmark [<notebook>:][<folder-path>/] <url>...
               [-c <comment> | --comment <comment>] [--edit] [-e | --encrypt]
               [-f <filename> | --filename <filename>] [--no-request]
               [-q <quote> | --quote <quote>] [--save-source]
