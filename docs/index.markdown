@@ -1954,6 +1954,16 @@ nb https://example.com --encrypt
 Encrypted bookmarks require a password before they can be viewed or
 opened.
 
+Multiple URLs can be bookmarked with a single command by passing
+multiple `<url>` arguments. Additional arguments will be reused for
+each bookmark:
+
+```bash
+❯ nb https://example.com https://example.net --tags tag1,tag2 --filename example
+Added: [1] 🔖 example.bookmark.md "Example Domain (example.com)"
+Added: [2] 🔖 example-1.bookmark.md "Example Domain (example.net)"
+```
+
 #### Listing and Filtering Bookmarks
 
 <div align="center">
