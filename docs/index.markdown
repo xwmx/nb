@@ -1955,8 +1955,8 @@ Encrypted bookmarks require a password before they can be viewed or
 opened.
 
 Multiple URLs can be bookmarked with a single command by passing
-multiple `<url>` arguments. Additional arguments will be reused for
-each bookmark:
+multiple [`<url>`](#bookmark) arguments. Additional arguments will be reused
+for each bookmark:
 
 ```bash
 ❯ nb https://example.com https://example.net --tags tag1,tag2 --filename example
