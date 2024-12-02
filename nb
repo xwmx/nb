@@ -13349,12 +13349,14 @@ _bookmark() {
   local _comment=
   local _edit_before_commit=0
   local _encrypt=0
+  local _non_url_arguments=()
   local _password=
   local _quote=
   local _readability_enabled=1
   local _related_identifiers=()
   local _request_page=1
   local _save_source=0
+  local _secondary_urls=()
   local _selector=
   local _skip_content=0
   local _skip_folder_prompt=0
@@ -13363,6 +13365,20 @@ _bookmark() {
   local _target_filename=
   local _title=
   local _url=
+
+  local _previous_arg=
+
+  local __arg=
+  for   __arg in "${@:-}"
+  do
+    if [[ "${_previous_arg:-}" =~ ^-- ]] ||
+       ! _string_is_url "${__arg:-}"
+    then
+      _non_url_arguments+=("${__arg:-}")
+    fi
+
+    _previous_arg="${__arg:-}"
+  done
 
   while ((${#}))
   do
@@ -13473,10 +13489,14 @@ _bookmark() {
         ;;
       *)
         if [[ ! "${_subcommand:-}"  =~ (^list$|^search$)  ]] &&
-           [[ -z "${_url:-}"                              ]] &&
            _string_is_url "${1}"
         then
-          _url="${1}"
+          if [[ -z "${_url:-}" ]]
+          then
+            _url="${1}"
+          else
+            _secondary_urls+=("${1}")
+          fi
         elif [[ -z "${_subcommand:-}"                     ]] ||
              [[ "${_subcommand}"    =~ (^list$|^search$)  ]]
         then
@@ -13706,6 +13726,17 @@ _bookmark() {
   fi
 
   # `bookmark <url>`
+  if ((${#_secondary_urls[@]}))
+  then
+    local __url=
+    for   __url in "${_url}" "${_secondary_urls[@]}"
+    do
+      # shellcheck disable=SC2046
+      _bookmark "${__url}" $(printf "%s\\n" "${_non_url_arguments[@]}")
+    done
+
+    return 0
+  fi
 
   local _temp_file=
   _temp_file="$(_temp file)"
