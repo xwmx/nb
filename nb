@@ -82,7 +82,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.15.0"
+_VERSION="7.15.1"
 
 # $_ME
 #
@@ -13500,6 +13500,11 @@ _bookmark() {
         elif [[ -z "${_subcommand:-}"                     ]] ||
              [[ "${_subcommand}"    =~ (^list$|^search$)  ]]
         then
+          if [[ "${1:-}" =~ (:|^/) ]] && [[ -z "${_selector:-}" ]]
+          then
+            _selector="${1:-}"
+          fi
+
           _arguments+=("${1}")
         fi
         ;;
@@ -13726,6 +13731,7 @@ _bookmark() {
   fi
 
   # `bookmark <url>`
+
   if ((${#_secondary_urls[@]}))
   then
     local __url=
@@ -13746,6 +13752,11 @@ _bookmark() {
     printf "%s\\n" "${_download_url}"       \
       | sed 's/https:\/\/twitter.com/https:\/\/mobile.twitter.com/g'
   )"
+
+  if [[ "${_selector}" =~ (:|^/)  ]]
+  then
+    _notebooks select "${_selector}"
+  fi
 
   local _relative_folder_path=
   local _relative_path=
