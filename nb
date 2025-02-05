@@ -19205,6 +19205,7 @@ Can't show archives. Export archive and expand to edit.\\n"
              _contains "${_markdown_tool:-}"                    \
                "bat" \
                "glow" \
+               "lowdown" \
                "mdcat" \
                "mdless" \
                "mdv"
@@ -19215,6 +19216,9 @@ Can't show archives. Export archive and expand to edit.\\n"
             elif [[ "${_markdown_tool:-}" == "glow"   ]]
             then
               glow --pager
+            elif [[ "${_markdown_tool:-}" == "lowdown" ]]
+            then
+              lowdown -Tterm | _pager
             elif [[ "${_markdown_tool:-}" == "mdcat"  ]]
             then
               mdcat --paginate
