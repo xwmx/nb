@@ -225,6 +225,7 @@ Also supported for various enhancements:
 [`imgcat`](https://www.iterm2.com/documentation-images.html),
 [`joshuto`](https://github.com/kamiyaa/joshuto),
 [kitty's `icat` kitten](https://sw.kovidgoyal.net/kitty/kittens/icat.html),
+[`lowdown`](https://kristaps.bsd.lv/lowdown),
 [`lsd`](https://github.com/lsd-rs/lsd),
 [Links](https://en.wikipedia.org/wiki/Links_(web_browser)),
 [Lynx](https://en.wikipedia.org/wiki/Lynx_(web_browser)),
@@ -1451,6 +1452,7 @@ Supported file types and tools include:
 - Markdown files ([`$NB_MARKDOWN_TOOL`](#nb_markdown_tool)):
   - [`bat`](https://github.com/sharkdp/bat)
   - [`glow`](https://github.com/charmbracelet/glow)
+  - [`lowdown`](https://kristaps.bsd.lv/lowdown)
   - [`mdcat`](https://github.com/swsnr/mdcat)
   - [`mdless`](https://github.com/ttscoff/mdless)
   - [`mdv`](https://github.com/axiros/terminal_markdown_viewer)
@@ -9780,7 +9782,7 @@ Example Values: '0', '1'
 ```text
 Default: '' (default pager)
 
-Supported Values: 'bat', 'glow', 'mdcat', 'mdless', 'mdv'
+Supported Values: 'bat', 'glow', 'lowdown', 'mdcat', 'mdless', 'mdv'
 ```
 
 <p>
