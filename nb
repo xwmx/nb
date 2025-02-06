@@ -82,7 +82,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.15.1"
+_VERSION="7.16.0"
 
 # $_ME
 #
@@ -19205,6 +19205,7 @@ Can't show archives. Export archive and expand to edit.\\n"
              _contains "${_markdown_tool:-}"                    \
                "bat" \
                "glow" \
+               "lowdown" \
                "mdcat" \
                "mdless" \
                "mdv"
@@ -19215,6 +19216,9 @@ Can't show archives. Export archive and expand to edit.\\n"
             elif [[ "${_markdown_tool:-}" == "glow"   ]]
             then
               glow --pager
+            elif [[ "${_markdown_tool:-}" == "lowdown" ]]
+            then
+              lowdown -Tterm | _pager
             elif [[ "${_markdown_tool:-}" == "mdcat"  ]]
             then
               mdcat --paginate
@@ -24635,20 +24639,33 @@ HEREDOC
       if ! hash bat 2>/dev/null
       then
         printf "bat required: https://github.com/sharkdp/bat\\n"
+      elif [[ -z "${2:-}"                     ]]
+      then
+        return 1
       else
         local _theme_list=
         _theme_list=($(bat --list-themes --color never))
 
-        if _contains "${2:-}" "${_theme_list[@]}"
-        then
-          return 0
-        else
-          _warn printf                                    \
-            "%s must be one of the available themes.\\n"  \
-            "${1}"
+        local __theme=
+        for   __theme in "${_theme_list[@]}"
+        do
+          if [[ "${2}" =~ \(                  ]]
+          then
+            if [[ "${2}" == "${__theme:-}"    ]]
+            then
+              return 0
+            fi
+          elif [[ "${2}" =~ ^${__theme%% (*}  ]]
+          then
+            return 0
+          fi
+        done
 
-          return 1
-        fi
+        _warn printf                                    \
+          "%s must be one of the available themes.\\n"  \
+          "${1}"
+
+        return 1
       fi
     else
       return 0

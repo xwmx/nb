@@ -1184,7 +1184,7 @@ skip "Determine how to test interactive prompt."
   [[ "$("${_NB}" settings get NB_SYNTAX_THEME)" == "Monokai Extended" ]]
 }
 
-@test "'settings set syntax' with valid argument sets and exits." {
+@test "'settings set syntax' with valid 'Solarized (dark)' argument sets and exits." {
   {
     "${_NB}" init
   }
@@ -1199,6 +1199,23 @@ skip "Determine how to test interactive prompt."
   [[ "${output}" =~ set\ to\                                          ]]
   [[ "${output}" =~ Solarized\ \(dark\)                               ]]
   [[ "$("${_NB}" settings get NB_SYNTAX_THEME)" == "Solarized (dark)" ]]
+}
+
+@test "'settings set syntax' with valid 'Solarized (light)' argument sets and exits." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" settings set syntax "Solarized (light)"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ ${status} -eq 0                                                    ]]
+  [[ "${output}" =~ NB_SYNTAX_THEME                                     ]]
+  [[ "${output}" =~ set\ to\                                            ]]
+  [[ "${output}" =~ Solarized\ \(light\)                                ]]
+  [[ "$("${_NB}" settings get NB_SYNTAX_THEME)" == "Solarized (light)"  ]]
 }
 
 @test "'settings set NB_SYNTAX_THEME' with invalid argument exits with error." {
