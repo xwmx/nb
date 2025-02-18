@@ -19220,9 +19220,9 @@ Can't show archives. Export archive and expand to edit.\\n"
               lowdown)
                 lowdown                         \
                   -Tterm                        \
-                  --term-width="${_COLUMNS}"    \
                   --term-columns="${_COLUMNS}"  \
                   --term-hmargin=1              \
+                  --term-width="${_COLUMNS}"    \
                   | _pager
                 ;;
               mdcat)
