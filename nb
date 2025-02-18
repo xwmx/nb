@@ -2780,7 +2780,7 @@ _open_in_gui_app() {
 #   Display standard input in the preferred pager, `less`, `bat`, or `cat`.
 _pager() {
   local _less_options=()
-  _less_options=(-R --CLEAR-SCREEN --prompt="$(_less_prompt)")
+  _less_options=(-R --CLEAR-SCREEN --prompt="$(_less_prompt)" --mouse)
 
   if [[ -n  "${PAGER:-}"          ]]
   then
