@@ -19203,20 +19203,37 @@ Can't show archives. Export archive and expand to edit.\\n"
           if _contains "${_target_extension:-}" "markdown" "md" &&
              _command_exists "${_markdown_tool:-}"              &&
              _contains "${_markdown_tool:-}"                    \
-               "bat" \
-               "glow" \
-               "lowdown" \
-               "mdcat" \
-               "mdless" \
+               "bat"                                            \
+               "glow"                                           \
+               "lowdown"                                        \
+               "mdcat"                                          \
+               "mdless"                                         \
                "mdv"
           then
             case "${_markdown_tool:-}" in
-              "bat") bat --language "${_target_extension:-md}" ;;
-              "glow") glow --pager ;;
-              "lowdown") COLS=$(tput cols); lowdown -Tterm --term-width="$COLS" --term-columns="$COLS" --term-hmargin=1 | _pager ;;
-              "mdcat") mdcat --paginate ;;
-              "mdless") mdless ;;
-              "mdv") mdv "${_target_path}" | _pager ;;
+              bat)
+                bat --language "${_target_extension:-md}"
+                ;;
+              glow)
+                glow --pager
+                ;;
+              lowdown)
+                lowdown                         \
+                  -Tterm                        \
+                  --term-width="${_COLUMNS}"    \
+                  --term-columns="${_COLUMNS}"  \
+                  --term-hmargin=1              \
+                  | _pager
+                ;;
+              mdcat)
+                mdcat --paginate
+                ;;
+              mdless)
+                mdless
+                ;;
+              mdv)
+                mdv "${_target_path}" | _pager
+                ;;
             esac
           else
             {
