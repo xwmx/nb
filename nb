@@ -82,7 +82,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.16.0"
+_VERSION="7.16.1"
 
 # $_ME
 #
@@ -2780,7 +2780,7 @@ _open_in_gui_app() {
 #   Display standard input in the preferred pager, `less`, `bat`, or `cat`.
 _pager() {
   local _less_options=()
-  _less_options=(-R --CLEAR-SCREEN --prompt="$(_less_prompt)")
+  _less_options=(-R --CLEAR-SCREEN --prompt="$(_less_prompt)" --mouse)
 
   if [[ -n  "${PAGER:-}"          ]]
   then
@@ -19203,32 +19203,38 @@ Can't show archives. Export archive and expand to edit.\\n"
           if _contains "${_target_extension:-}" "markdown" "md" &&
              _command_exists "${_markdown_tool:-}"              &&
              _contains "${_markdown_tool:-}"                    \
-               "bat" \
-               "glow" \
-               "lowdown" \
-               "mdcat" \
-               "mdless" \
+               "bat"                                            \
+               "glow"                                           \
+               "lowdown"                                        \
+               "mdcat"                                          \
+               "mdless"                                         \
                "mdv"
           then
-            if [[   "${_markdown_tool:-}" == "bat"    ]]
-            then
-              bat --language "${_target_extension:-md}"
-            elif [[ "${_markdown_tool:-}" == "glow"   ]]
-            then
-              glow --pager
-            elif [[ "${_markdown_tool:-}" == "lowdown" ]]
-            then
-              lowdown -Tterm | _pager
-            elif [[ "${_markdown_tool:-}" == "mdcat"  ]]
-            then
-              mdcat --paginate
-            elif [[ "${_markdown_tool:-}" == "mdless" ]]
-            then
-              mdless
-            elif [[ "${_markdown_tool:-}" == "mdv"    ]]
-            then
-              mdv "${_target_path}" | _pager
-            fi
+            case "${_markdown_tool:-}" in
+              bat)
+                bat --language "${_target_extension:-md}"
+                ;;
+              glow)
+                glow --pager
+                ;;
+              lowdown)
+                lowdown                         \
+                  -Tterm                        \
+                  --term-columns="${_COLUMNS}"  \
+                  --term-hmargin=1              \
+                  --term-width="${_COLUMNS}"    \
+                  | _pager
+                ;;
+              mdcat)
+                mdcat --paginate
+                ;;
+              mdless)
+                mdless
+                ;;
+              mdv)
+                mdv "${_target_path}" | _pager
+                ;;
+            esac
           else
             {
               # fold to current terminal width and preserve list formatting
