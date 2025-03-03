@@ -1147,7 +1147,7 @@ NB_LIMIT set to 3
 ```
 
 List [#tagged](#tagging) items by passing `\#escaped` or `"#quoted"` hashtags
-or tags specified with the [`--tags`](#ls) option. Multiple tags perform an 
+or tags specified with the [`--tags`](#ls) option. Multiple tags perform an
 `AND` query:
 
 ```bash
@@ -1698,7 +1698,7 @@ Items can be deleted within terminal and GUI web browsers using
 [4] example_file.md "Example Title"
 
               [delete]
- 
+
 ```
 
 For more information, see [Browsing](#-browsing).
@@ -3221,7 +3221,7 @@ to delete an item:
 [4] example_file.md "Example Title"
 
               [delete]
- 
+
 ```
 
 #### `browse` Search
@@ -4983,7 +4983,7 @@ to download the original file:
 ❯nb · home : 123 · ↓ | +
 
     example.pdf
- 
+
 ```
 
 ### ⚙️ `set` & `settings`
@@ -7832,8 +7832,8 @@ Options:
   -t, --tags                    List all tags found in the notebook.
   --type <type>, --<type>       Search items of <type>. <type> can be a file
                                 extension or one of the following types:
-                                note, bookmark, document, archive, image,
-                                video, audio, folder, text
+                                archive, audio, book, bookmark, document,
+                                folder, image, note, text, video
   --utility <name>              The name of the search utility to search with.
 
 Description:
