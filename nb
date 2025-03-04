@@ -16707,8 +16707,8 @@ $(_color_primary "Options"):
   -t, --tags                    List all tags found in the notebook.
   --type <type>, --<type>       Search items of <type>. <type> can be a file
                                 extension or one of the following types:
-                                note, bookmark, document, archive, image,
-                                video, audio, folder, text
+                                archive, audio, book, bookmark, document,
+                                folder, image, note, text, video
   --utility <name>              The name of the search utility to search with.
 
 $(_color_primary "Description"):
