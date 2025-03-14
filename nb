@@ -16678,7 +16678,9 @@ _run() {
 
   if ! _command_exists "${1:-}"
   then
-    _exit_1 printf "Command not found: %s\\n" "$(_color_primary "${1:-}")"
+    _warn printf "Command not found: %s\\n" "$(_color_primary "${1:-}")"
+
+    exit 127
   fi
 
   ("${@}")
