@@ -140,7 +140,10 @@ _daily() {
     local _formatted_content=
     _formatted_content="$(_join " " "${_content[@]}")"
 
-    local _timestamped_content="[${_timestamp}] ${_formatted_content}"
+    local _timestamped_content="
+### [${_timestamp}]
+* ${_formatted_content}
+"
 
     if [[ ! -e "${_target_path:-}"  ]]
     then
