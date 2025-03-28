@@ -22247,9 +22247,10 @@ HEREDOC
   then
     _show "${_selector:-}" --render
     _warn cat <<HEREDOC
-Install \`ncat\`, \`nc\` / \`netcat\`, or Bash 5.2+ for full browsing and linking:
+Install \`ncat\`, \`nc\` / \`netcat\` or \`socat\` or Bash 5.2+ for full browsing and linking:
 $(_color_primary "https://nmap.org/ncat/")
 $(_color_primary "https://en.wikipedia.org/wiki/Netcat")
+$(_color_primary "http://www.dest-unreach.org/socat/")
 HEREDOC
 
     exit 0
