@@ -563,6 +563,7 @@ __set_notebook_paths() {
 
 if [[ -e "${NB_NOTEBOOK_PATH}/.nbrc" ]]
 then
+  # shellcheck disable=SC1091
   source "${NB_NOTEBOOK_PATH}/.nbrc"
 fi
 
