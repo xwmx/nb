@@ -559,6 +559,13 @@ __set_notebook_paths() {
   fi
 }; __set_notebook_paths
 
+# Source notebook configuration file.
+
+if [[ -e "${NB_NOTEBOOK_PATH}/.nbrc" ]]
+then
+  source "${NB_NOTEBOOK_PATH}/.nbrc"
+fi
+
 # Base Configuration ####################################### Base Configuration
 
 # $NB_AUDIO_TOOL
