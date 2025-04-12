@@ -1046,10 +1046,10 @@ Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\ new\ name,\ or\ pr
     "${_NB}" add "Example Home File.md" --content "Example home content."
 
     declare _global_email=
-    _global_email="$(git -C "${NB_DIR}/home" config --global user.email)"
+    _global_email="$(git -C "${NB_DIR}/home" config --global --includes user.email)"
 
     declare _global_name=
-    _global_name="$(git -C "${NB_DIR}/home" config --global user.name)"
+    _global_name="$(git -C "${NB_DIR}/home" config --global --includes user.name)"
 
     diff                                            \
       <("${_NB}" git log -1 --stat | sed -n '2 p')  \
@@ -1103,10 +1103,10 @@ Enter\ a\ new\ value,\ .*unset.*\ to\ use\ the\ global\ value,                ]]
     "${_NB}" add "Example Home File.md" --content "Example home content."
 
     declare _global_email=
-    _global_email="$(git -C "${NB_DIR}/home" config --global user.email)"
+    _global_email="$(git -C "${NB_DIR}/home" config --global --includes user.email)"
 
     declare _global_name=
-    _global_name="$(git -C "${NB_DIR}/home" config --global user.name)"
+    _global_name="$(git -C "${NB_DIR}/home" config --global --includes user.name)"
 
     diff                                            \
       <("${_NB}" git log -1 --stat | sed -n '2 p')  \
@@ -1156,10 +1156,10 @@ Enter\ a\ new\ value,\ .*unset.*\ to\ use\ the\ global\ value,                ]]
     "${_NB}" add "Example Home File.md" --content "Example home content."
 
     declare _global_email=
-    _global_email="$(git -C "${NB_DIR}/home" config --global user.email)"
+    _global_email="$(git -C "${NB_DIR}/home" config --global --includes user.email)"
 
     declare _global_name=
-    _global_name="$(git -C "${NB_DIR}/home" config --global user.name)"
+    _global_name="$(git -C "${NB_DIR}/home" config --global --includes user.name)"
 
     diff                                            \
       <("${_NB}" git log -1 --stat | sed -n '2 p')  \
@@ -1210,10 +1210,10 @@ Enter\ a\ new\ value,\ .*unset.*\ to\ use\ the\ global\ value,                ]]
     "${_NB}" add "Example Home File.md" --content "Example home content."
 
     declare _global_email=
-    _global_email="$(git -C "${NB_DIR}/home" config --global user.email)"
+    _global_email="$(git -C "${NB_DIR}/home" config --global --includes user.email)"
 
     declare _global_name=
-    _global_name="$(git -C "${NB_DIR}/home" config --global user.name)"
+    _global_name="$(git -C "${NB_DIR}/home" config --global --includes user.name)"
 
     diff                                            \
       <("${_NB}" git log -1 --stat | sed -n '2 p')  \

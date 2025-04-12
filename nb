@@ -3884,7 +3884,7 @@ HEREDOC
 
           if [[ -n "${__name:-}"  ]]
           then
-            git config --global user.name "${__name}"
+            git config --global --includes user.name "${__name}"
 
             break
           fi
@@ -3900,7 +3900,7 @@ HEREDOC
 
           if [[ -n "${__email:-}" ]]
           then
-            git config --global user.email "${__email}"
+            git config --global --includes user.email "${__email}"
 
             break
           fi
@@ -7810,12 +7810,12 @@ HEREDOC
 
     local _global_email=
     _global_email="$(
-      git -C "${_notebook_path:-}" config --global user.email || :
+      git -C "${_notebook_path:-}" config --global --includes user.email || :
     )"
 
     local _global_name=
     _global_name="$(
-      git -C "${_notebook_path:-}" config --global user.name  || :
+      git -C "${_notebook_path:-}" config --global --includes user.name  || :
     )"
 
     local _local_email=
