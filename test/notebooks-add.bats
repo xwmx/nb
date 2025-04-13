@@ -239,14 +239,12 @@ Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\ new\ name,\ or\ pr
   [[    "${lines[1]}"   =~  \
 Cloning\ into\ \'${NB_DIR}/nonexistent-branch\'                               ]]
   [[    "${lines[2]}"   =~  \
-warning:\ Could\ not\ find\ remote\ branch\ nonexistent\-branch\ to\ clone\.  ]]
-  [[    "${lines[3]}"   =~  \
 fatal:\ Remote\ branch\ nonexistent\-branch\ not\ found\ in\ upstream\ origin ]]
-  [[    "${lines[4]}"   =~  [^-]------------------------------------[^-]      ]]
-  [[    "${lines[5]}"   =~  \
+  [[    "${lines[3]}"   =~  [^-]------------------------------------[^-]      ]]
+  [[    "${lines[4]}"   =~  \
 Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\ new\ name,\ or\ press\ .*q.*\ to\ quit\. ]]
-  [[    "${lines[6]}"   =~  Cloning\ into\ \'${NB_DIR}/example-branch-1\'     ]]
-  [[    "${lines[7]}"   =~  Added\ notebook\:\ .*example-branch-1.*           ]]
+  [[    "${lines[5]}"   =~  Cloning\ into\ \'${NB_DIR}/example-branch-1\'     ]]
+  [[    "${lines[6]}"   =~  Added\ notebook\:\ .*example-branch-1.*           ]]
 
   cd "${NB_DIR}" && find . -maxdepth 1 | wc -l
   cd "${NB_DIR}" && find . -maxdepth 1
