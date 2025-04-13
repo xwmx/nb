@@ -19227,7 +19227,7 @@ Can't show archives. Export archive and expand to edit.\\n"
                 bat --language "${_target_extension:-md}"
                 ;;
               glow)
-                glow --pager
+                glow --tui
                 ;;
               lowdown)
                 lowdown                         \
