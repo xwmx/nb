@@ -302,12 +302,6 @@ jobs:
         id: setup-chrome
       - run: |
           ${{ steps.setup-chrome.outputs.chrome-path }} --version
-      - name: "Install bats-core"
-        run: |
-          git clone https://github.com/bats-core/bats-core.git "${HOME}/bats-core" &&
-            cd "${HOME}/bats-core"
-          git checkout 2e2e5df6adf0b846b411b6b2f7bb654cbc3e2c4e
-          sudo ./install.sh /usr/local
       - name: "Set $TERM=xterm"
         run:  printf "TERM=xterm\\n" >> $GITHUB_ENV
       - name: "Print encoding variables"
