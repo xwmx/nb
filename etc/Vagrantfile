@@ -143,6 +143,14 @@ sudo apt install git -y
 
 git config --global user.name   "Example Name"
 git config --global user.email  "example@example.test"
+
+# set locale
+sudo apt-get clean
+sudo apt-get update
+sudo apt-get install locales -y
+sudo locale-gen en_US.UTF-8
+
+printf "%s\\n" "LANG=en_US.UTF-8" | sudo tee /etc/default/locale > /dev/null
 HEREDOC
 
   # config.vm.define "debian12" do |debian12|
