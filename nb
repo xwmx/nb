@@ -19213,6 +19213,7 @@ Can't show archives. Export archive and expand to edit.\\n"
           local _markdown_tool="${_tool:-${NB_MARKDOWN_TOOL:-}}"
 
           if _contains "${_target_extension:-}" "markdown" "md" &&
+             [[ ! "${_markdown_tool:-}" =~ \                 ]] &&
              _command_exists "${_markdown_tool:-}"              &&
              _contains "${_markdown_tool:-}"                    \
                "bat"                                            \
@@ -19247,6 +19248,14 @@ Can't show archives. Export archive and expand to edit.\\n"
                 mdv "${_target_path}" | _pager
                 ;;
             esac
+          elif _contains "${_target_extension:-}" "markdown" "md" &&
+               [[ "${_markdown_tool:-}" =~ \                      ]]
+          then
+            local _markdown_command=
+
+            IFS=' ' read -r -a _markdown_command <<< "${_markdown_tool:-}"
+
+            "${_markdown_command[@]}" "${_target_path}"
           else
             {
               # fold to current terminal width and preserve list formatting
