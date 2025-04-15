@@ -40,11 +40,12 @@ load test_helper
     "${_NB}" init
   }
 
-  run "${_NB}" run not-a-valid-command
+  run -127 "${_NB}" run not-a-valid-command
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"  -eq 1                                           ]]
-  [[ "${output}"  =~  Command\ not\ found:\ .*not-a-valid-command ]]
+  [[ "${status}"  -eq 127 ]]
+  [[ "${output}"  =~  Command\ not\ found:\ .*not-a-valid-command ]] ||
+    [[ "${output}"  =~  bash:\ line\ 1:\ not-a-valid-command:\ command\ not\ found ]]
 }

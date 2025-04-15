@@ -102,6 +102,63 @@ HEREDOC
   # end
 
   #############################################################################
+  # Debian Boxes
+
+  $debian_setup = <<-HEREDOC
+# install node and npm
+# sudo apt update -y
+# sudo apt install nodejs -y
+# sudo apt install npm -y
+
+# install nvm (https://github.com/nvm-sh/nvm)
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.36.0/install.sh | bash
+
+# add project root to $PATH
+if grep -q -v vagrant "${HOME}/.bashrc"
+then
+  printf "\\nexport PATH=\"/vagrant:\${PATH}\"\\n" >> "${HOME}/.bashrc"
+fi
+
+# install dependencies
+sudo apt-get update
+sudo apt-get install bats   -y
+sudo apt-get install elinks -y
+sudo apt-get install lynx   -y
+sudo apt-get install ncat   -y
+sudo apt-get install python3-pygments -y
+sudo apt-get install w3m    -y
+
+# install latest pandoc
+curl -LO https://github.com/jgm/pandoc/releases/download/3.1.11.1/pandoc-3.1.11.1-1-amd64.deb
+sudo dpkg -i pandoc-3.1.11.1-1-amd64.deb
+
+# install latest bat
+curl -LO https://github.com/sharkdp/bat/releases/download/v0.16.0/bat_0.16.0_amd64.deb
+sudo dpkg -i bat_0.16.0_amd64.deb
+
+# install latest git
+sudo add-apt-repository ppa:git-core/ppa
+sudo apt update
+sudo apt install git -y
+
+git config --global user.name   "Example Name"
+git config --global user.email  "example@example.test"
+
+# set locale
+sudo apt-get clean
+sudo apt-get update
+sudo apt-get install locales -y
+sudo locale-gen en_US.UTF-8
+
+printf "%s\\n" "LANG=en_US.UTF-8" | sudo tee /etc/default/locale > /dev/null
+HEREDOC
+
+  # config.vm.define "debian12" do |debian12|
+  #   debian12.vm.box = "debian/bookworm64"
+  #   debian12.vm.provision :shell, inline: $debian_setup, privileged: false
+  # end
+
+  #############################################################################
   # EndeavorOS Boxes
 
   # NOTE: uses $arch_setup

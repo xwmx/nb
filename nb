@@ -82,7 +82,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.16.1"
+_VERSION="7.17.0"
 
 # $_ME
 #
@@ -455,7 +455,7 @@ then
   source "${NBRC_PATH}"
 fi
 
-# Base Configuration ####################################### Base Configuration
+# NB_DIR ############################################################### NB_DIR
 
 # $NB_DIR
 #
@@ -489,6 +489,85 @@ NB_DIR settings prompt:
   ${_ME} settings nb_dir
 HEREDOC
 fi
+
+# Current Notebook ########################################### Current Notebook
+
+# $NB_NOTEBOOK_PATH
+#
+# Default: `$NB_DIR/home`
+#
+# The path to the current notebook.
+export NB_NOTEBOOK_PATH="${NB_NOTEBOOK_PATH:-"${NB_DIR}/home"}"
+
+# $_GLOBAL_NOTEBOOK_PATH
+#
+# The path of the current global notebook.
+export _GLOBAL_NOTEBOOK_PATH=
+
+# $_LOCAL_NOTEBOOK_PATH
+#
+# The path of the local notebook, if one is found. The current working
+# directory and all parents are searched.
+export _LOCAL_NOTEBOOK_PATH=
+
+# __set_notebook_paths()
+#
+# Usage:
+#   __set_notebook_paths
+#
+# Description:
+#   Set the notebook path variables to reflect the current environment.
+__set_notebook_paths() {
+  __set_local_notebook_path() {
+    if [[ "${PWD}" == "/" ]]
+    then
+      cd "${_CURRENT_WORKING_DIR}"
+
+      return 0
+    elif [[ -d "${PWD}/.git"    ]] &&
+         [[ -f "${PWD}/.index"  ]]
+    then
+      _LOCAL_NOTEBOOK_PATH="${PWD}"
+
+      cd "${_CURRENT_WORKING_DIR}"
+
+      return 0
+    else
+      cd ..
+      __set_local_notebook_path
+    fi
+  }; __set_local_notebook_path
+
+  __set_global_notebook_path() {
+    if [[   -e "${NB_DIR}/.current"                 ]]
+    then
+      local _global_notebook_name=
+      _global_notebook_name="$(<"${NB_DIR}/.current")"
+
+      if [[ -d "${NB_DIR}/${_global_notebook_name}" ]]
+      then
+        _GLOBAL_NOTEBOOK_PATH="${NB_DIR}/${_global_notebook_name}"
+      fi
+    fi
+  }; __set_global_notebook_path
+
+  if [[     -n "${_LOCAL_NOTEBOOK_PATH:-}"          ]]
+  then
+    NB_NOTEBOOK_PATH="${_LOCAL_NOTEBOOK_PATH}"
+  else
+    NB_NOTEBOOK_PATH="${_GLOBAL_NOTEBOOK_PATH}"
+  fi
+}; __set_notebook_paths
+
+# Source notebook configuration file.
+
+if [[ -e "${NB_NOTEBOOK_PATH}/.nbrc" ]]
+then
+  # shellcheck disable=SC1091
+  source "${NB_NOTEBOOK_PATH}/.nbrc"
+fi
+
+# Base Configuration ####################################### Base Configuration
 
 # $NB_AUDIO_TOOL
 #
@@ -1068,75 +1147,6 @@ _color_secondary() {
 
 # Unset CLICOLOR_FORCE to avoid unexpected color output in `ls` et al.
 unset CLICOLOR_FORCE
-
-# Current Notebook ########################################### Current Notebook
-
-# $NB_NOTEBOOK_PATH
-#
-# Default: `$NB_DIR/home`
-#
-# The path to the current notebook.
-export NB_NOTEBOOK_PATH="${NB_NOTEBOOK_PATH:-"${NB_DIR}/home"}"
-
-# $_GLOBAL_NOTEBOOK_PATH
-#
-# The path of the current global notebook.
-export _GLOBAL_NOTEBOOK_PATH=
-
-# $_LOCAL_NOTEBOOK_PATH
-#
-# The path of the local notebook, if one is found. The current working
-# directory and all parents are searched.
-export _LOCAL_NOTEBOOK_PATH=
-
-# __set_notebook_paths()
-#
-# Usage:
-#   __set_notebook_paths
-#
-# Description:
-#   Set the notebook path variables to reflect the current environment.
-__set_notebook_paths() {
-  __set_local_notebook_path() {
-    if [[ "${PWD}" == "/" ]]
-    then
-      cd "${_CURRENT_WORKING_DIR}"
-
-      return 0
-    elif [[ -d "${PWD}/.git"    ]] &&
-         [[ -f "${PWD}/.index"  ]]
-    then
-      _LOCAL_NOTEBOOK_PATH="${PWD}"
-
-      cd "${_CURRENT_WORKING_DIR}"
-
-      return 0
-    else
-      cd ..
-      __set_local_notebook_path
-    fi
-  }; __set_local_notebook_path
-
-  __set_global_notebook_path() {
-    if [[   -e "${NB_DIR}/.current"                 ]]
-    then
-      local _global_notebook_name=
-      _global_notebook_name="$(<"${NB_DIR}/.current")"
-
-      if [[ -d "${NB_DIR}/${_global_notebook_name}" ]]
-      then
-        _GLOBAL_NOTEBOOK_PATH="${NB_DIR}/${_global_notebook_name}"
-      fi
-    fi
-  }; __set_global_notebook_path
-
-  if [[     -n "${_LOCAL_NOTEBOOK_PATH:-}"          ]]
-  then
-    NB_NOTEBOOK_PATH="${_LOCAL_NOTEBOOK_PATH}"
-  else
-    NB_NOTEBOOK_PATH="${_GLOBAL_NOTEBOOK_PATH}"
-  fi
-}; __set_notebook_paths
 
 # Cache & Temp ################################################### Cache & Temp
 
@@ -3874,7 +3884,7 @@ HEREDOC
 
           if [[ -n "${__name:-}"  ]]
           then
-            git config --global user.name "${__name}"
+            git config --global --includes user.name "${__name}"
 
             break
           fi
@@ -3890,7 +3900,7 @@ HEREDOC
 
           if [[ -n "${__email:-}" ]]
           then
-            git config --global user.email "${__email}"
+            git config --global --includes user.email "${__email}"
 
             break
           fi
@@ -7800,12 +7810,12 @@ HEREDOC
 
     local _global_email=
     _global_email="$(
-      git -C "${_notebook_path:-}" config --global user.email || :
+      git -C "${_notebook_path:-}" config --global --includes user.email || :
     )"
 
     local _global_name=
     _global_name="$(
-      git -C "${_notebook_path:-}" config --global user.name  || :
+      git -C "${_notebook_path:-}" config --global --includes user.name  || :
     )"
 
     local _local_email=
@@ -16678,7 +16688,9 @@ _run() {
 
   if ! _command_exists "${1:-}"
   then
-    _exit_1 printf "Command not found: %s\\n" "$(_color_primary "${1:-}")"
+    _warn printf "Command not found: %s\\n" "$(_color_primary "${1:-}")"
+
+    exit 127
   fi
 
   ("${@}")
@@ -16707,8 +16719,8 @@ $(_color_primary "Options"):
   -t, --tags                    List all tags found in the notebook.
   --type <type>, --<type>       Search items of <type>. <type> can be a file
                                 extension or one of the following types:
-                                note, bookmark, document, archive, image,
-                                video, audio, folder, text
+                                archive, audio, book, bookmark, document,
+                                folder, image, note, text, video
   --utility <name>              The name of the search utility to search with.
 
 $(_color_primary "Description"):
@@ -19201,6 +19213,7 @@ Can't show archives. Export archive and expand to edit.\\n"
           local _markdown_tool="${_tool:-${NB_MARKDOWN_TOOL:-}}"
 
           if _contains "${_target_extension:-}" "markdown" "md" &&
+             [[ ! "${_markdown_tool:-}" =~ \                 ]] &&
              _command_exists "${_markdown_tool:-}"              &&
              _contains "${_markdown_tool:-}"                    \
                "bat"                                            \
@@ -19215,7 +19228,7 @@ Can't show archives. Export archive and expand to edit.\\n"
                 bat --language "${_target_extension:-md}"
                 ;;
               glow)
-                glow --pager
+                glow --tui
                 ;;
               lowdown)
                 lowdown                         \
@@ -19235,6 +19248,14 @@ Can't show archives. Export archive and expand to edit.\\n"
                 mdv "${_target_path}" | _pager
                 ;;
             esac
+          elif _contains "${_target_extension:-}" "markdown" "md" &&
+               [[ "${_markdown_tool:-}" =~ \                      ]]
+          then
+            local _markdown_command=
+
+            IFS=' ' read -r -a _markdown_command <<< "${_markdown_tool:-}"
+
+            "${_markdown_command[@]}" "${_target_path}"
           else
             {
               # fold to current terminal width and preserve list formatting
@@ -22245,9 +22266,10 @@ HEREDOC
   then
     _show "${_selector:-}" --render
     _warn cat <<HEREDOC
-Install \`ncat\`, \`nc\` / \`netcat\`, or Bash 5.2+ for full browsing and linking:
+Install \`ncat\`, \`nc\` / \`netcat\` or \`socat\` or Bash 5.2+ for full browsing and linking:
 $(_color_primary "https://nmap.org/ncat/")
 $(_color_primary "https://en.wikipedia.org/wiki/Netcat")
+$(_color_primary "http://www.dest-unreach.org/socat/")
 HEREDOC
 
     exit 0
