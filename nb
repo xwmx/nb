@@ -19234,7 +19234,6 @@ Can't show archives. Export archive and expand to edit.\\n"
                 lowdown                         \
                   -Tterm                        \
                   --term-columns="${_COLUMNS}"  \
-                  --term-hmargin=1              \
                   --term-width="${_COLUMNS}"    \
                   | _pager
                 ;;
