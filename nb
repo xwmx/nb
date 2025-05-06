@@ -13071,20 +13071,22 @@ _add() {
       fi
     fi
 
+    local _title_prefix=
+
+    case "${_target_path:-}" in
+      *.adoc|*.asciidoc)
+        _title_prefix="="
+        ;;
+      *.org)
+        _title_prefix="#+TITLE:"
+        ;;
+      *)
+        _title_prefix="#"
+        ;;
+    esac
+
     if [[ -n "${_title}"                  ]]
     then
-      case "${_target_path:-}" in
-        *.adoc|*.asciidoc)
-          _title_prefix="="
-          ;;
-        *.org)
-          _title_prefix="#+TITLE:"
-          ;;
-        *)
-          _title_prefix="#"
-          ;;
-      esac
-
       printf "%s\\n\\n" "${_title_prefix} ${_title}" >> "${_target_path}"
     fi
 
