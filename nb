@@ -13075,6 +13075,13 @@ _add() {
       fi
     fi
 
+    local _piped_content=
+
+    if _piped_input && ! ((_skip_standard_input))
+    then
+      _piped_content="$(cat)"
+    fi
+
     local _title_prefix=
 
     case "${_target_path:-}" in
@@ -13102,7 +13109,7 @@ _add() {
 
       if [[ -n "${_tag_list:-}"           ]]
       then
-        printf "%s\\n" "${_tag_list}" >> "${_target_path}"
+        printf "%s\\n" "${_tag_list}"         >> "${_target_path}"
         _print_spacing=1
       fi
 
@@ -13116,18 +13123,17 @@ _add() {
 
       if [[ -n "${_option_content:-}"     ]]
       then # argument content
-        ((_print_spacing)) && printf "\\n"  >> "${_target_path}"
+        ((_print_spacing)) && printf "\\n"    >> "${_target_path}"
 
-        printf "%s\\n" "${_option_content}" >> "${_target_path}"
+        printf "%s\\n" "${_option_content}"   >> "${_target_path}"
         _print_spacing=1
       fi
 
-      if _piped_input && ! ((_skip_standard_input))
+      if [[ -n "${_piped_content:-}"      ]]
       then # piped input
-        ((_print_spacing)) &&
-          printf "\\n"  >> "${_target_path}"
+        ((_print_spacing)) && printf "\\n"    >> "${_target_path}"
 
-        cat             >> "${_target_path}"
+        printf "%s\\n" "${_piped_content}"    >> "${_target_path}"
       fi
     fi
 
