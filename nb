@@ -12636,6 +12636,7 @@ _add() {
   local _password=
   local _skip_standard_input=0
   local _tag_list=
+  local _template=
   local _title=
 
   while ((${#}))
@@ -12710,6 +12711,9 @@ _add() {
         _defer_arguments+=("${1}" "${2:-}")
 
         shift
+        ;;
+      --template)
+        _template="$(_option_get_value "${1}" "${2:-}")"
         ;;
       -t|--title|--name)
         # TODO: Detect tag list for dynamic -t for --titles and --tags?
@@ -13085,41 +13089,46 @@ _add() {
         ;;
     esac
 
-    if [[ -n "${_title}"                  ]]
+    if [[ -n "${_template:-}"             ]]
     then
-      printf "%s\\n\\n" "${_title_prefix} ${_title}" >> "${_target_path}"
-    fi
+      : # TODO
+    else
+      if [[ -n "${_title}"                ]]
+      then
+        printf "%s\\n\\n" "${_title_prefix} ${_title}" >> "${_target_path}"
+      fi
 
-    local _print_spacing=0
+      local _print_spacing=0
 
-    if [[ -n "${_tag_list:-}"             ]]
-    then
-      printf "%s\\n" "${_tag_list}" >> "${_target_path}"
-      _print_spacing=1
-    fi
+      if [[ -n "${_tag_list:-}"           ]]
+      then
+        printf "%s\\n" "${_tag_list}" >> "${_target_path}"
+        _print_spacing=1
+      fi
 
-    if [[ -n "${_selector_content:-}"     ]]
-    then # argument content
-      ((_print_spacing)) && printf "\\n"    >> "${_target_path}"
+      if [[ -n "${_selector_content:-}"   ]]
+      then # argument content
+        ((_print_spacing)) && printf "\\n"    >> "${_target_path}"
 
-      printf "%s\\n" "${_selector_content}" >> "${_target_path}"
-      _print_spacing=1
-    fi
+        printf "%s\\n" "${_selector_content}" >> "${_target_path}"
+        _print_spacing=1
+      fi
 
-    if [[ -n "${_option_content:-}"       ]]
-    then # argument content
-      ((_print_spacing)) && printf "\\n"  >> "${_target_path}"
+      if [[ -n "${_option_content:-}"     ]]
+      then # argument content
+        ((_print_spacing)) && printf "\\n"  >> "${_target_path}"
 
-      printf "%s\\n" "${_option_content}" >> "${_target_path}"
-      _print_spacing=1
-    fi
+        printf "%s\\n" "${_option_content}" >> "${_target_path}"
+        _print_spacing=1
+      fi
 
-    if _piped_input && ! ((_skip_standard_input))
-    then # piped input
-      ((_print_spacing)) &&
-        printf "\\n"  >> "${_target_path}"
+      if _piped_input && ! ((_skip_standard_input))
+      then # piped input
+        ((_print_spacing)) &&
+          printf "\\n"  >> "${_target_path}"
 
-      cat             >> "${_target_path}"
+        cat             >> "${_target_path}"
+      fi
     fi
 
     if ((_edit_before_commit))                ||
