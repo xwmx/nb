@@ -715,8 +715,8 @@ Supported tags include:
   <a href="#add"><code>add --tags &#60;tag1>,&#60;tag2></code></a></dd>
   <dt><code>{{content}}</code></dt>
   <dd>The note content, as specified with
-  <a href="#add"><code>add <content></code></a>,
-  <a href="#add"><code>add --content <content></code></a>,
+  <a href="#add"><code>add &#60;content></code></a>,
+  <a href="#add"><code>add --content &#60;content></code></a>,
   and piped content.</dd>
 </dl>
 
