@@ -712,13 +712,13 @@ nb add --template "{{title}} • {{content}}"
 Supported tags include:
 
 <dl>
-  <dt><code><!-- {% raw %} -->{{title}}<!-- {% endraw %} --></code></dt>
+  <dt><code>&#x007B;{title}}</code></dt>
   <dd>The note title, as specified with
-  <a href="#add"><code>add --title <title></code></a></dd>
-  <dt><code><!-- {% raw %} -->{{tags}}<!-- {% endraw %} --></code></dt>
+  <a href="#add"><code>add --title &#60;title></code></a></dd>
+  <dt><code>&#x007B;&#x007B;tags}}</code></dt>
   <dd>A list of hashtags, as specified with
   <a href="#add"><code>add --tags &#60;tag1>,&#60;tag2></code></a></dd>
-  <dt><code><!-- {% raw %} -->{{content}}<!-- {% endraw %} --></code></dt>
+  <dt><code>&#x007B;{content}}</code></dt>
   <dd>The note content, as specified with
   <a href="#add"><code>add &#60;content></code></a>,
   <a href="#add"><code>add --content &#60;content></code></a>,
