@@ -32,7 +32,7 @@ load test_helper
 
 ## Tag List
 
-{{tag_list}}
+{{tags}}
 HEREDOC
 
     printf "export NB_DEFAULT_TEMPLATE=\"%s\"\\n" "${_template_path}" >> "${NBRC_PATH}"
@@ -106,7 +106,7 @@ HEREDOC
 
 ## Tag List
 
-{{tag_list}}
+{{tags}}
 HEREDOC
   }
 
@@ -178,7 +178,7 @@ HEREDOC
 
 ## Tag List
 
-{{tag_list}}
+{{tags}}
 HEREDOC
   }
 
@@ -251,7 +251,7 @@ HEREDOC
 
 ## Tag List
 
-{{tag_list}}
+{{tags}}
 HEREDOC
 
     printf "export NB_DEFAULT_TEMPLATE=\"%s\"\\n" "${_template_path}" >> "${NBRC_PATH}"
@@ -328,7 +328,7 @@ export NB_DEFAULT_TEMPLATE="\
 
 ## Tag List
 
-{{tag_list}}"
+{{tags}}"
 HEREDOC
   }
 
@@ -415,7 +415,7 @@ HEREDOC
 
 ## Tag List
 
-{{tag_list}}
+{{tags}}
 HEREDOC
 
     printf "export NB_DEFAULT_TEMPLATE=\"%s\"\\n" "${_template_path}" >> "${NBRC_PATH}"
@@ -506,7 +506,7 @@ HEREDOC
 
 ## Tag List
 
-{{tag_list}}
+{{tags}}
 HEREDOC
   }
 
@@ -599,7 +599,7 @@ HEREDOC
 
 ## Tag List
 
-{{tag_list}}
+{{tags}}
 HEREDOC
     )" <<< "Example piped content."
 

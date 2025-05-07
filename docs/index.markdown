@@ -700,7 +700,7 @@ or path to a template file with [`add --template <template>`](#add):
 
 ```bash
 # create a new note based on a template specified by path
-nb add --template /path/to/example.template
+nb add --template /path/to/example/template
 
 # create a new note based on a template defined as a string
 nb add --template "{{title}} • {{content}}"
@@ -716,7 +716,7 @@ Supported tags include:
   <dt><code>{{title}}</code></dt>
   <dd>The note title, as specified with
   <a href="#add"><code>add --title <title></code></a></dd>
-  <dt><code>{{tag_list}}</code></dt>
+  <dt><code>{{tags}}</code></dt>
   <dd>A list of hashtags, as specified with
   <a href="#add"><code>add --tags &#60;tag1>,&#60;tag2></code></a></dd>
   <dt><code>{{content}}</code></dt>
@@ -731,7 +731,7 @@ An example complete template could look like the following:
 ```
 {{title_prefix}} {{title}}
 
-{{tag_list}}
+{{tags}}
 
 {{content}}
 ```

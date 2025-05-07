@@ -13190,7 +13190,7 @@ _add() {
         LC_ALL=C sed -E                                       \
           -e 's/{{title_prefix}}/${_title_prefix}/g'          \
           -e 's/{{title}}/${_title}/g'                        \
-          -e 's/{{tag_list}}/${_tag_list}/g'                  \
+          -e 's/{{tags}}/${_tag_list}/g'                      \
           -e 's/{{content}}/${_content}/g'                    \
           -e 's/{{selector_content}}/${_selector_content}/g'  \
           -e 's/{{option_content}}/${_option_content}/g'      \
