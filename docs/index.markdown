@@ -710,9 +710,6 @@ nb add --template "{{title}} • {{content}}"
 Supported tags include:
 
 <dl>
-  <dt><code>{{title_prefix}}</code></dt>
-  <dd>The markup used to indicate the title for the file format, e.g.,
-  <code>#</code> for Markdown and <code>=</code> for AsciiDoc.</dd>
   <dt><code>{{title}}</code></dt>
   <dd>The note title, as specified with
   <a href="#add"><code>add --title <title></code></a></dd>
@@ -726,10 +723,10 @@ Supported tags include:
   and piped content.</dd>
 </dl>
 
-An example complete template could look like the following:
+An example complete markdown template could look like the following:
 
 ```
-{{title_prefix}} {{title}}
+# {{title}}
 
 {{tags}}
 
