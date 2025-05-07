@@ -19705,9 +19705,10 @@ _browse() {
 
       local _new_info_line=
       _new_info_line="$(
-        printf "%b\\n" "${_prepared_encoded_content:-}" \
-          | tr -d $'\r'                                 \
-          | _add "${_add_options[@]:-}"
+        _add "${_add_options[@]:-}" --content "$(
+          printf "%b\\n" "${_prepared_encoded_content:-}" \
+            | tr -d $'\r'
+        )" --skip-standard-input
       )"
 
       local _new_selector="${_new_info_line#*[}"
