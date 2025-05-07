@@ -13109,44 +13109,41 @@ _add() {
         ;;
     esac
 
-    # combine content
+    # prepare content
 
-    local _content=
-    local _include_spacing=0
+    local _content_temp_file_path=
+    _content_temp_file_path="$(_temp file --touch)"
+
+    local _piped_content_temp_file_path=
+    _piped_content_temp_file_path="$(_temp file --touch)"
+
+    local _print_content_spacing=0
 
     if [[ -n "${_selector_content:-}"   ]]
     then # argument content
-      _content="${_selector_content}"
-      _include_spacing=1
+      printf "%s\\n" "${_selector_content}"   >> "${_content_temp_file_path}"
+      _print_content_spacing=1
     fi
 
     if [[ -n "${_option_content:-}"     ]]
-    then # option content
-      if ((_include_spacing))
-      then
-        _content="${_content}${_NEWLINE}${_NEWLINE}"
-      fi
+    then # argument content
+      ((_print_content_spacing)) &&
+        printf "\\n"                          >> "${_content_temp_file_path}"
 
-      _content="${_content}${_option_content}"
-      _include_spacing=1
+      printf "%s\\n" "${_option_content}"     >> "${_content_temp_file_path}"
+      _print_content_spacing=1
     fi
-
-    local _piped_content=
 
     if _piped_input && ! ((_skip_standard_input))
-    then
-      _piped_content="$(cat)"
-    fi
-
-    if [[ -n "${_piped_content:-}"      ]]
     then # piped input
-      if ((_include_spacing))
-      then
-        _content="${_content}${_NEWLINE}${_NEWLINE}"
-      fi
+      ((_print_content_spacing)) &&
+        printf "\\n"                          >> "${_content_temp_file_path}"
 
-      _content="${_content}${_piped_content}"
+      cat                                     >> "${_piped_content_temp_file_path}"
+      cat "${_piped_content_temp_file_path}"  >> "${_content_temp_file_path}"
     fi
+
+    # set template
 
     if [[ -z "${_template:-}"           ]]  &&
        [[ -n "${NB_DEFAULT_TEMPLATE:-}" ]]
@@ -13172,14 +13169,19 @@ _add() {
         _print_spacing=1
       fi
 
-      if [[ -n "${_content:-}"          ]]
-      then # argument content
+      if [[ -s "${_content_temp_file_path:-}"          ]]
+      then
         ((_print_spacing)) && printf "\\n"  >> "${_target_path}"
 
-        printf "%s\\n" "${_content}"        >> "${_target_path}"
-        _print_spacing=1
+        cat "${_content_temp_file_path}"    >> "${_target_path}"
       fi
     else # template
+      local _template_content=
+      _template_content="$(cat "${_content_temp_file_path}")"
+
+      local _piped_template_content=
+      _piped_template_content="$(cat "${_piped_content_temp_file_path}")"
+
       {
         if [[ -f "${_template}" ]] && _file_is_text "${_template}"
         then
@@ -13192,10 +13194,10 @@ _add() {
           -e 's/{{title_prefix}}/${_title_prefix}/g'          \
           -e 's/{{title}}/${_title}/g'                        \
           -e 's/{{tags}}/${_tag_list}/g'                      \
-          -e 's/{{content}}/${_content}/g'                    \
+          -e 's/{{content}}/${_template_content}/g'           \
           -e 's/{{selector_content}}/${_selector_content}/g'  \
           -e 's/{{option_content}}/${_option_content}/g'      \
-          -e 's/{{piped_content}}/${_piped_content}/g'
+          -e 's/{{piped_content}}/${_piped_template_content}/g'
       } | {
         eval "echo \"$(cat)\""
       } >> "${_target_path}"
