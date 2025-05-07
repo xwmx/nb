@@ -5945,7 +5945,7 @@ Usage:
          [-b | --browse] [-c <content> | --content <content>] [--edit]
          [-e | --encrypt] [-f <filename> | --filename <filename>]
          [--folder <folder-path>] [--tags <tag1>,<tag2>...]
-         [-t <title> | --title <title>] [--type <type>]
+         [--template <template>] [-t <title> | --title <title>] [--type <type>]
   nb add bookmark [<bookmark-options>...]
   nb add folder [<name>]
   nb add todo [<todo-options>...]
@@ -6334,7 +6334,7 @@ Usage:
          [-b | --browse] [-c <content> | --content <content>] [--edit]
          [-e | --encrypt] [-f <filename> | --filename <filename>]
          [--folder <folder-path>] [--tags <tag1>,<tag2>...]
-         [-t <title> | --title <title>] [--type <type>]
+         [--template <template>] [-t <title> | --title <title>] [--type <type>]
   nb add bookmark [<bookmark-options>...]
   nb add folder [<name>]
   nb add todo [<todo-options>...]
@@ -6348,6 +6348,7 @@ Options:
   -f, --filename <filename>   The filename for the new note.
   --folder <folder-path>      Add within the folder located at <folder-path>.
   --tags <tag1>,<tag2>...     A comma-separated list of tags.
+  --template <template>       A string template or path to a template file.
   -t, --title <title>         The title for a new note. If `--title` is
                               present, the filename is derived from the
                               title, unless `--filename` is specified.
