@@ -692,6 +692,7 @@ you aren't dependent on `nb` to decrypt your files.
 Create a note based on a template by assigning a template string
 or path to a template file with [`add --template <template>`](#add):
 
+<!-- {% raw %} -->
 ```bash
 # create a new note based on a template specified by path
 nb add --template /path/to/example/template
@@ -699,10 +700,12 @@ nb add --template /path/to/example/template
 # create a new note based on a template defined as a string
 nb add --template "{{title}} • {{content}}"
 ```
+<!-- {% endraw %} -->
 
 `nb` template tags are enclosed in double curly brackets.
 Supported tags include:
 
+<!-- {% raw %} -->
 <dl>
   <dt><code>{{title}}</code></dt>
   <dd>The note title, as specified with
@@ -716,9 +719,11 @@ Supported tags include:
   <a href="#add"><code>add --content &#60;content></code></a>,
   and piped content.</dd>
 </dl>
+<!-- {% endraw %} -->
 
 An example complete markdown template could look like the following:
 
+<!-- {% raw %} -->
 ```
 # {{title}}
 
@@ -726,11 +731,13 @@ An example complete markdown template could look like the following:
 
 {{content}}
 ```
+<!-- {% endraw %} -->
 
 A default template can be configured by assigning a string or path
 to the [`$NB_DEFAULT_TEMPLATE`](#nb_default_template) variable
 in your `~/.nbrc` file:
 
+<!-- {% raw %} -->
 ```bash
 # set the default template to a path
 export NB_DEFAULT_TEMPLATE="/path/to/example/template"
@@ -738,6 +745,7 @@ export NB_DEFAULT_TEMPLATE="/path/to/example/template"
 # set the default template with a string
 export NB_DEFAULT_TEMPLATE="{{title}} • {{content}}"
 ```
+<!-- {% endraw %} -->
 
 Use [`nb add --no-template`](#add) to skip using a template when
 one is assigned.
