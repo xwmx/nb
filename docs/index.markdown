@@ -6002,7 +6002,7 @@ Usage:
   nb add [<notebook>:][<folder-path>/][<filename>] [<content>]
          [-b | --browse] [-c <content> | --content <content>] [--edit]
          [-e | --encrypt] [-f <filename> | --filename <filename>]
-         [--folder <folder-path>] [--tags <tag1>,<tag2>...]
+         [--folder <folder-path>] [--no-template] [--tags <tag1>,<tag2>...]
          [--template <template>] [-t <title> | --title <title>] [--type <type>]
   nb add bookmark [<bookmark-options>...]
   nb add folder [<name>]
@@ -6391,7 +6391,7 @@ Usage:
   nb add [<notebook>:][<folder-path>/][<filename>] [<content>]
          [-b | --browse] [-c <content> | --content <content>] [--edit]
          [-e | --encrypt] [-f <filename> | --filename <filename>]
-         [--folder <folder-path>] [--tags <tag1>,<tag2>...]
+         [--folder <folder-path>] [--no-template] [--tags <tag1>,<tag2>...]
          [--template <template>] [-t <title> | --title <title>] [--type <type>]
   nb add bookmark [<bookmark-options>...]
   nb add folder [<name>]
@@ -6405,6 +6405,7 @@ Options:
   -e, --encrypt               Encrypt the note with a password.
   -f, --filename <filename>   The filename for the new note.
   --folder <folder-path>      Add within the folder located at <folder-path>.
+  --no-template               Skip the template when one is assigned.
   --tags <tag1>,<tag2>...     A comma-separated list of tags.
   --template <template>       A string template or path to a template file.
   -t, --title <title>         The title for a new note. If `--title` is
