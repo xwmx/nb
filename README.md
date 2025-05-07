@@ -729,7 +729,7 @@ An example complete markdown template could look like the following:
 
 A default template can be configured by assigning a string or path
 to the [`$NB_DEFAULT_TEMPLATE`](#nb_default_template) variable
-in the `.nbrc` file:
+in your `~/.nbrc` file:
 
 ```bash
 # set the default template to a path
