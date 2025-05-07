@@ -12630,6 +12630,7 @@ _add() {
   local _encrypt=0
   local _file_type="${NB_DEFAULT_EXTENSION}"
   local _folder_prompt=0
+  local _no_template=0
   local _option_content=
   local _option_folder_relative_path=
   local _option_relative_path=
@@ -12697,6 +12698,9 @@ _add() {
       --no*color)
         _COLOR_ENABLED=0
         ;;
+      --no*template|--skip*template)
+        _no_template=1
+        ;;
       --password)
         _password="$(_option_get_value "${1}" "${2:-}")"
 
@@ -12713,8 +12717,10 @@ _add() {
         shift
         ;;
       --template)
-        _template="$(_option_get_value "${1}" "${2:-}")"
+        _template="${2:-}"
         _defer_arguments+=("${1}" "${2:-}")
+
+        [[ -z "${2:-}" ]] && _no_template=1
 
         shift
         ;;
@@ -13131,7 +13137,7 @@ _add() {
       _content="${_content}${_piped_content}"
     fi
 
-    if [[ -z "${_template:-}"           ]] &&
+    if [[ -z "${_template:-}"           ]]  &&
        [[ -n "${NB_DEFAULT_TEMPLATE:-}" ]]
     then
       _template="${NB_DEFAULT_TEMPLATE}"
@@ -13139,28 +13145,9 @@ _add() {
 
     # build document
 
-    if [[ -n "${_template:-}"           ]]
-    then
-      {
-        if [[ -f "${_template}" ]] && _file_is_text "${_template}"
-        then
-          cat "${_template}"
-        else
-          printf "%s\\n" "${_template}"
-        fi
-      } | {
-        LC_ALL=C sed -E                                       \
-          -e 's/{{title_prefix}}/${_title_prefix}/g'          \
-          -e 's/{{title}}/${_title}/g'                        \
-          -e 's/{{tag_list}}/${_tag_list}/g'                  \
-          -e 's/{{content}}/${_content}/g'                    \
-          -e 's/{{selector_content}}/${_selector_content}/g'  \
-          -e 's/{{option_content}}/${_option_content}/g'      \
-          -e 's/{{piped_content}}/${_piped_content}/g'
-      } | {
-        eval "echo \"$(cat)\""
-      } >> "${_target_path}"
-    else
+    if [[ -z "${_template:-}"           ]] ||
+       ((_no_template))
+    then # no template
       if [[ -n "${_title}"              ]]
       then
         printf "%s\\n\\n" "${_title_prefix} ${_title}" >> "${_target_path}"
@@ -13181,6 +13168,26 @@ _add() {
         printf "%s\\n" "${_content}"        >> "${_target_path}"
         _print_spacing=1
       fi
+    else # template
+      {
+        if [[ -f "${_template}" ]] && _file_is_text "${_template}"
+        then
+          cat "${_template}"
+        else
+          printf "%s\\n" "${_template}"
+        fi
+      } | {
+        LC_ALL=C sed -E                                       \
+          -e 's/{{title_prefix}}/${_title_prefix}/g'          \
+          -e 's/{{title}}/${_title}/g'                        \
+          -e 's/{{tag_list}}/${_tag_list}/g'                  \
+          -e 's/{{content}}/${_content}/g'                    \
+          -e 's/{{selector_content}}/${_selector_content}/g'  \
+          -e 's/{{option_content}}/${_option_content}/g'      \
+          -e 's/{{piped_content}}/${_piped_content}/g'
+      } | {
+        eval "echo \"$(cat)\""
+      } >> "${_target_path}"
     fi
 
     if ((_edit_before_commit))              ||
