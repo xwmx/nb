@@ -9089,6 +9089,7 @@ Shortcut Alias:
     <a href="#nb_custom_javascript_url"><code>$NB_CUSTOM_JAVASCRIPT_URL</code></a>&nbsp;·
     <a href="#nb_data_tool"><code>$NB_DATA_TOOL</code></a>&nbsp;·
     <a href="#nb_default_extension"><code>$NB_DEFAULT_EXTENSION</code></a>&nbsp;·
+    <a href="#nb_default_template"><code>$NB_DEFAULT_TEMPLATE</code></a>&nbsp;·
     <a href="#nb_dir-1"><code>$NB_DIR</code></a>&nbsp;·
     <a href="#nb_directory_tool"><code>$NB_DIRECTORY_TOOL</code></a>&nbsp;·
     <a href="#nb_editor"><code>$NB_EDITOR</code></a>&nbsp;·
@@ -9464,6 +9465,22 @@ Example Values: 'visidata', 'sc-im'
 Default: 'md'
 
 Example Values: 'md' 'org'
+```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
+##### `$NB_DEFAULT_TEMPLATE`
+
+```text
+Default: ''
+
+A string template or a path to a template file.
+
+Example Values: '/path/to/template/file' '# {{title}} {{content}}'
 ```
 
 <p>

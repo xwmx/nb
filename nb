@@ -605,6 +605,15 @@ export NB_DATA_TOOL="${NB_DATA_TOOL:-}"
 # Example Values: 'md' 'org'
 export NB_DEFAULT_EXTENSION="${NB_DEFAULT_EXTENSION:-md}"
 
+# $NB_DEFAULT_TEMPLATE
+#
+# Default: ''
+#
+# A string template or a path to a template file.
+#
+# Example Values: '/path/to/template/file' '# {{title}} {{content}}'
+export NB_DEFAULT_TEMPLATE="${NB_DEFAULT_TEMPLATE:-}"
+
 # $NB_DIRECTORY_TOOL
 #
 # Default: '' (nb browse)
