@@ -696,7 +696,7 @@ you aren't dependent on `nb` to decrypt your files.
 ##### Templates
 
 Create a note based on a template by assigning a template string
-or file path to a template with [`add --template <template>`](#add).
+or path to a template file with [`add --template <template>`](#add):
 
 ```bash
 # create a new note based on a template specified by path
@@ -709,10 +709,18 @@ nb add --template "{{title}} • {{content}}"
 `nb` template tags are enclosed in double curly brackets.
 Supported tags include:
 
-- `{{title_prefix}}`
-- `{{title}}`
-- `{{tag_list}}`
-- `{{content}}`
+<dl>
+  <dt><code>{{title_prefix}}</code></dt>
+  <dd>The markup used to indicate the title for the file format, e.g.,
+  `#` for Markdown and `=` for AsciiDoc.</dd>
+  <dt><code>{{title}}</code></dt>
+  <dd>The note title, as specified with [`add --title <title>`](#add)</dd>
+  <dt><code>{{tag_list}}</code></dt>
+  <dd>A list of hashtags, as specified with [`add --tags <tag1>,<tag2>`](#add)</dd>
+  <dt><code>{{content}}</code></dt>
+  <dd>The note content, as specified with [`add <content>`](#add), [`add
+  --content <content>`], and piped content.</dd>
+</dl>
 
 An example complete template could look like the following:
 
