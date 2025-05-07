@@ -687,6 +687,52 @@ Encrypted notes can be decrypted
 using the OpenSSL and GPG command line tools directly, so
 you aren't dependent on `nb` to decrypt your files.
 
+##### Templates
+
+Create a note based on a template by assigning a template string
+or file path to a template with [`add --template <template>`](#add).
+
+```bash
+# create a new note based on a template specified by path
+nb add --template /path/to/example.template
+
+# create a new note based on a template defined as a string
+nb add --template "{{title}} • {{content}}"
+```
+
+`nb` template tags are enclosed in double curly brackets.
+Supported tags include:
+
+- `{{title_prefix}}`
+- `{{title}}`
+- `{{tag_list}}`
+- `{{content}}`
+
+An example complete template could look like the following:
+
+```
+{{title_prefix}} {{title}}
+
+{{tag_list}}
+
+{{content}}
+```
+
+A default template can be configured by assigning a string or path
+to the [`$NB_DEFAULT_TEMPLATE`](#nb_default_template) variable
+in the `.nbrc` file:
+
+```bash
+# create a new note based on a template specified by path
+export NB_DEFAULT_TEMPLATE="/path/to/example.template"
+
+# create a new note based on a template defined as a sring
+export NB_DEFAULT_TEMPLATE="{{title}} • {{content}}"
+```
+
+Use [`nb add --no-template`](#add) to skip using a template when
+one is assigned.
+
 ##### Shortcut Aliases: `nb a`, `nb +`
 
 `nb` includes shortcuts for many commands, including
