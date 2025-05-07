@@ -736,7 +736,7 @@ in the `.nbrc` file:
 
 ```bash
 # create a new note based on a template specified by path
-export NB_DEFAULT_TEMPLATE="/path/to/example.template"
+export NB_DEFAULT_TEMPLATE="/path/to/example/template"
 
 # create a new note based on a template defined as a sring
 export NB_DEFAULT_TEMPLATE="{{title}} • {{content}}"
