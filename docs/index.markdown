@@ -711,21 +711,19 @@ nb add --template "{{title}} • {{content}}"
 `nb` template tags are enclosed in double curly brackets.
 Supported tags include:
 
-<!-- {% raw %} -->
 <dl>
-  <dt><code>{{title}}</code></dt>
+  <dt><code><!-- {% raw %} -->{{title}}<!-- {% endraw %} --></code></dt>
   <dd>The note title, as specified with
   <a href="#add"><code>add --title <title></code></a></dd>
-  <dt><code>{{tags}}</code></dt>
+  <dt><code><!-- {% raw %} -->{{tags}}<!-- {% endraw %} --></code></dt>
   <dd>A list of hashtags, as specified with
   <a href="#add"><code>add --tags &#60;tag1>,&#60;tag2></code></a></dd>
-  <dt><code>{{content}}</code></dt>
+  <dt><code><!-- {% raw %} -->{{content}}<!-- {% endraw %} --></code></dt>
   <dd>The note content, as specified with
   <a href="#add"><code>add &#60;content></code></a>,
   <a href="#add"><code>add --content &#60;content></code></a>,
   and piped content.</dd>
 </dl>
-<!-- {% endraw %} -->
 
 An example complete markdown template could look like the following:
 
