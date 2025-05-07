@@ -732,10 +732,10 @@ to the [`$NB_DEFAULT_TEMPLATE`](#nb_default_template) variable
 in the `.nbrc` file:
 
 ```bash
-# create a new note based on a template specified by path
+# set the default template to a path
 export NB_DEFAULT_TEMPLATE="/path/to/example/template"
 
-# create a new note based on a template defined as a sring
+# set the default template with a string
 export NB_DEFAULT_TEMPLATE="{{title}} • {{content}}"
 ```
 
