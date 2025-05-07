@@ -13190,14 +13190,14 @@ _add() {
           printf "%s\\n" "${_template}"
         fi
       } | {
-        LC_ALL=C sed -E                                       \
-          -e 's/{{title_prefix}}/${_title_prefix}/g'          \
-          -e 's/{{title}}/${_title}/g'                        \
-          -e 's/{{tags}}/${_tag_list}/g'                      \
-          -e 's/{{content}}/${_template_content}/g'           \
-          -e 's/{{selector_content}}/${_selector_content}/g'  \
-          -e 's/{{option_content}}/${_option_content}/g'      \
-          -e 's/{{piped_content}}/${_piped_template_content}/g'
+        LC_ALL=C sed -E                                         \
+          -e 's/\{\{title_prefix}}/${_title_prefix}/g'          \
+          -e 's/\{\{title}}/${_title}/g'                        \
+          -e 's/\{\{tags}}/${_tag_list}/g'                      \
+          -e 's/\{\{content}}/${_template_content}/g'           \
+          -e 's/\{\{selector_content}}/${_selector_content}/g'  \
+          -e 's/\{\{option_content}}/${_option_content}/g'      \
+          -e 's/\{\{piped_content}}/${_piped_template_content}/g'
       } | {
         eval "echo \"$(cat)\""
       } >> "${_target_path}"
