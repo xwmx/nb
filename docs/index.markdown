@@ -2,6 +2,7 @@
 layout: home
 title: nb · command line and local web plain text note-taking, bookmarking, archiving, and knowledge base application
 permalink: /
+render_with_liquid: false
 ---
 
 <p align="center"></p><!-- spacer -->
@@ -694,7 +695,6 @@ using the OpenSSL and GPG command line tools directly, so
 you aren't dependent on `nb` to decrypt your files.
 
 ##### Templates
-{% raw %}
 
 Create a note based on a template by assigning a template string
 or path to a template file with [`add --template <template>`](#add):
@@ -749,7 +749,6 @@ export NB_DEFAULT_TEMPLATE="{{title}} • {{content}}"
 Use [`nb add --no-template`](#add) to skip using a template when
 one is assigned.
 
-{% endraw %}
 ##### Shortcut Aliases: `nb a`, `nb +`
 
 `nb` includes shortcuts for many commands, including
