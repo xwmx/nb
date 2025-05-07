@@ -712,7 +712,7 @@ Supported tags include:
   <a href="#add"><code>add --title <title></code></a></dd>
   <dt><code>{{tag_list}}</code></dt>
   <dd>A list of hashtags, as specified with
-  <a href="#add"><code>add --tags <tag1>,<tag2></code></a></dd>
+  <a href="#add"><code>add --tags &#60;tag1>,&#60;tag2></code></a></dd>
   <dt><code>{{content}}</code></dt>
   <dd>The note content, as specified with
   <a href="#add"><code>add <content></code></a>,
