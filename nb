@@ -13143,7 +13143,7 @@ _add() {
       cat "${_piped_content_temp_file_path}"  >> "${_content_temp_file_path}"
     fi
 
-    # set template
+    # set default template
 
     if [[ -z "${_template:-}"           ]]  &&
        [[ -n "${NB_DEFAULT_TEMPLATE:-}" ]]
