@@ -14,6 +14,8 @@ load test_helper
     cat <<HEREDOC > "${_template_path}"
 {{title_prefix}} - Example Template Title - {{title}}
 
+{{date +"%Y-%m-%d"}}
+
 ## Full Content
 
 {{content}}
@@ -88,6 +90,8 @@ HEREDOC
     cat <<HEREDOC > "${_template_path}"
 {{title_prefix}} - Example Template Title - {{title}}
 
+{{date +"%Y-%m-%d"}}
+
 ## Full Content
 
 {{content}}
@@ -159,6 +163,8 @@ HEREDOC
 
     cat <<HEREDOC > "${_template_path}"
 {{title_prefix}} - Example Template Title - {{title}}
+
+{{date +"%Y-%m-%d"}}
 
 ## Full Content
 
@@ -310,6 +316,8 @@ HEREDOC
 export NB_DEFAULT_TEMPLATE="\
 {{title_prefix}} - Example Template Title - {{title}}
 
+{{date +"%Y-%m-%d"}}
+
 ## Full Content
 
 {{content}}
@@ -352,6 +360,8 @@ HEREDOC
     <(cat "${NB_DIR}/home/example_title.md")  \
     <(cat <<HEREDOC
 # - Example Template Title - Example Title
+
+$(date +"%Y-%m-%d")
 
 ## Full Content
 
@@ -397,6 +407,8 @@ HEREDOC
     cat <<HEREDOC > "${_template_path}"
 {{title_prefix}} - Example Template Title - {{title}}
 
+{{date +"%Y-%m-%d"}}
+
 ## Full Content
 
 {{content}}
@@ -441,6 +453,8 @@ HEREDOC
     <(cat "${NB_DIR}/home/example_title.md")  \
     <(cat <<HEREDOC
 # - Example Template Title - Example Title
+
+$(date +"%Y-%m-%d")
 
 ## Full Content
 
@@ -488,6 +502,8 @@ HEREDOC
     cat <<HEREDOC > "${_template_path}"
 {{title_prefix}} - Example Template Title - {{title}}
 
+{{date +"%Y-%m-%d"}}
+
 ## Full Content
 
 {{content}}
@@ -531,6 +547,8 @@ HEREDOC
     <(cat "${NB_DIR}/home/example_title.md")  \
     <(cat <<HEREDOC
 # - Example Template Title - Example Title
+
+$(date +"%Y-%m-%d")
 
 ## Full Content
 
@@ -581,6 +599,8 @@ HEREDOC
     --template "$(cat <<HEREDOC
 {{title_prefix}} - Example Template Title - {{title}}
 
+{{date +"%Y-%m-%d"}}
+
 ## Full Content
 
 {{content}}
@@ -616,6 +636,8 @@ HEREDOC
     <(cat "${NB_DIR}/home/example_title.md")  \
     <(cat <<HEREDOC
 # - Example Template Title - Example Title
+
+$(date +"%Y-%m-%d")
 
 ## Full Content
 
