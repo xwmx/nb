@@ -724,7 +724,7 @@ Supported tags include:
   <a href="#add"><code>add --content &#60;content></code></a>,
   and piped content.</dd>
   <dt><code>&#x007B;{date}}</code></dt>
-  <dd>The ouput of the system's <code>date</code>. Use the
+  <dd>The ouput of the system's <code>date</code> command. Use the
   <a href="https://man7.org/linux/man-pages/man1/date.1.html"><code>date</code>
   command options</a> to control formatting, e.g.,
   <code>&#x007B;{date +"%Y-%m-%d"}}</code>.
