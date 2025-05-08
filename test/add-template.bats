@@ -16,6 +16,8 @@ load test_helper
 
 {{date +"%Y-%m-%d"}}
 
+\$(printf "Example command substitution output.")
+
 ## Full Content
 
 {{content}}
@@ -92,6 +94,8 @@ HEREDOC
 
 {{date +"%Y-%m-%d"}}
 
+\$(printf "Example command substitution output.")
+
 ## Full Content
 
 {{content}}
@@ -166,6 +170,8 @@ HEREDOC
 
 {{date +"%Y-%m-%d"}}
 
+\$(printf "Example command substitution output.")
+
 ## Full Content
 
 {{content}}
@@ -238,6 +244,10 @@ HEREDOC
 
     cat <<HEREDOC > "${_template_path}"
 {{title_prefix}} - Example Template Title - {{title}}
+
+{{date +"%Y-%m-%d"}}
+
+\$(printf "Example command substitution output.")
 
 ## Full Content
 
@@ -318,6 +328,8 @@ export NB_DEFAULT_TEMPLATE="\
 
 {{date +"%Y-%m-%d"}}
 
+\$(printf "Example command substitution output.")
+
 ## Full Content
 
 {{content}}
@@ -362,6 +374,8 @@ HEREDOC
 # - Example Template Title - Example Title
 
 $(date +"%Y-%m-%d")
+
+Example command substitution output.
 
 ## Full Content
 
@@ -409,6 +423,8 @@ HEREDOC
 
 {{date +"%Y-%m-%d"}}
 
+\$(printf "Example command substitution output.")
+
 ## Full Content
 
 {{content}}
@@ -455,6 +471,8 @@ HEREDOC
 # - Example Template Title - Example Title
 
 $(date +"%Y-%m-%d")
+
+Example command substitution output.
 
 ## Full Content
 
@@ -504,6 +522,8 @@ HEREDOC
 
 {{date +"%Y-%m-%d"}}
 
+\$(printf "Example command substitution output.")
+
 ## Full Content
 
 {{content}}
@@ -549,6 +569,8 @@ HEREDOC
 # - Example Template Title - Example Title
 
 $(date +"%Y-%m-%d")
+
+Example command substitution output.
 
 ## Full Content
 
@@ -601,6 +623,8 @@ HEREDOC
 
 {{date +"%Y-%m-%d"}}
 
+\$(printf "Example command substitution output.")
+
 ## Full Content
 
 {{content}}
@@ -638,6 +662,8 @@ HEREDOC
 # - Example Template Title - Example Title
 
 $(date +"%Y-%m-%d")
+
+Example command substitution output.
 
 ## Full Content
 
