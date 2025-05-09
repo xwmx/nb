@@ -693,6 +693,79 @@ Encrypted notes can be decrypted
 using the OpenSSL and GPG command line tools directly, so
 you aren't dependent on `nb` to decrypt your files.
 
+##### Templates
+
+Create a note based on a template by assigning a template string
+or path to a template file with [`add --template <template>`](#add):
+
+<!-- {% raw %} -->
+```bash
+# create a new note based on a template specified by path
+nb add --template /path/to/example/template
+
+# create a new note based on a template defined as a string
+nb add --template "{{title}} • {{content}}"
+```
+<!-- {% endraw %} -->
+
+`nb` template tags are enclosed in double curly brackets.
+Supported tags include:
+
+<dl>
+  <dt><code>&#x007B;{title}}</code></dt>
+  <dd>The note title, as specified with
+  <a href="#add"><code>add --title &#60;title></code></a></dd>
+  <dt><code>&#x007B;&#x007B;tags}}</code></dt>
+  <dd>A list of hashtags, as specified with
+  <a href="#add"><code>add --tags &#60;tag1>,&#60;tag2></code></a></dd>
+  <dt><code>&#x007B;{content}}</code></dt>
+  <dd>The note content, as specified with
+  <a href="#add"><code>add &#60;content></code></a>,
+  <a href="#add"><code>add --content &#60;content></code></a>,
+  and piped content.</dd>
+  <dt><code>&#x007B;{date}}</code></dt>
+  <dd>The ouput of the system's <code>date</code> command. Use the
+  <a href="https://man7.org/linux/man-pages/man1/date.1.html"><code>date</code>
+  command options</a> to control formatting, e.g.,
+  <code>&#x007B;{date +"%Y-%m-%d"}}</code>.
+ </dd>
+</dl>
+
+An example complete markdown template could look like the following:
+
+<!-- {% raw %} -->
+```
+# {{title}}
+
+{{date +"%Y-%m-%d"}}
+
+{{tags}}
+
+{{content}}
+```
+<!-- {% endraw %} -->
+
+Templates are Bash strings processed with `eval`, so you can use
+command substitution (`$(echo "Example command")`) to include
+the output from command line tools and shell code.
+
+A default template can be configured by assigning a string or path
+to the [`$NB_DEFAULT_TEMPLATE`](#nb_default_template) variable
+in your `~/.nbrc` file:
+
+<!-- {% raw %} -->
+```bash
+# set the default template to a path
+export NB_DEFAULT_TEMPLATE="/path/to/example/template"
+
+# set the default template with a string
+export NB_DEFAULT_TEMPLATE="{{title}} • {{content}}"
+```
+<!-- {% endraw %} -->
+
+Use [`nb add --no-template`](#add) to skip using a template when
+one is assigned.
+
 ##### Shortcut Aliases: `nb a`, `nb +`
 
 `nb` includes shortcuts for many commands, including
@@ -5944,8 +6017,8 @@ Usage:
   nb add [<notebook>:][<folder-path>/][<filename>] [<content>]
          [-b | --browse] [-c <content> | --content <content>] [--edit]
          [-e | --encrypt] [-f <filename> | --filename <filename>]
-         [--folder <folder-path>] [--tags <tag1>,<tag2>...]
-         [-t <title> | --title <title>] [--type <type>]
+         [--folder <folder-path>] [--no-template] [--tags <tag1>,<tag2>...]
+         [--template <template>] [-t <title> | --title <title>] [--type <type>]
   nb add bookmark [<bookmark-options>...]
   nb add folder [<name>]
   nb add todo [<todo-options>...]
@@ -6333,8 +6406,8 @@ Usage:
   nb add [<notebook>:][<folder-path>/][<filename>] [<content>]
          [-b | --browse] [-c <content> | --content <content>] [--edit]
          [-e | --encrypt] [-f <filename> | --filename <filename>]
-         [--folder <folder-path>] [--tags <tag1>,<tag2>...]
-         [-t <title> | --title <title>] [--type <type>]
+         [--folder <folder-path>] [--no-template] [--tags <tag1>,<tag2>...]
+         [--template <template>] [-t <title> | --title <title>] [--type <type>]
   nb add bookmark [<bookmark-options>...]
   nb add folder [<name>]
   nb add todo [<todo-options>...]
@@ -6347,7 +6420,9 @@ Options:
   -e, --encrypt               Encrypt the note with a password.
   -f, --filename <filename>   The filename for the new note.
   --folder <folder-path>      Add within the folder located at <folder-path>.
+  --no-template               Skip the template when one is assigned.
   --tags <tag1>,<tag2>...     A comma-separated list of tags.
+  --template <template>       A string template or path to a template file.
   -t, --title <title>         The title for a new note. If `--title` is
                               present, the filename is derived from the
                               title, unless `--filename` is specified.
@@ -9088,6 +9163,7 @@ Shortcut Alias:
     <a href="#nb_custom_javascript_url"><code>$NB_CUSTOM_JAVASCRIPT_URL</code></a>&nbsp;·
     <a href="#nb_data_tool"><code>$NB_DATA_TOOL</code></a>&nbsp;·
     <a href="#nb_default_extension"><code>$NB_DEFAULT_EXTENSION</code></a>&nbsp;·
+    <a href="#nb_default_template"><code>$NB_DEFAULT_TEMPLATE</code></a>&nbsp;·
     <a href="#nb_dir-1"><code>$NB_DIR</code></a>&nbsp;·
     <a href="#nb_directory_tool"><code>$NB_DIRECTORY_TOOL</code></a>&nbsp;·
     <a href="#nb_editor"><code>$NB_EDITOR</code></a>&nbsp;·
@@ -9463,6 +9539,22 @@ Example Values: 'visidata', 'sc-im'
 Default: 'md'
 
 Example Values: 'md' 'org'
+```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
+##### `$NB_DEFAULT_TEMPLATE`
+
+```text
+Default: ''
+
+A string template or a path to a template file.
+
+Example Values: '/path/to/template/file' '# {{title}} {{content}}'
 ```
 
 <p>

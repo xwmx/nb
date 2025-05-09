@@ -82,7 +82,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.17.0"
+_VERSION="7.18.0"
 
 # $_ME
 #
@@ -604,6 +604,15 @@ export NB_DATA_TOOL="${NB_DATA_TOOL:-}"
 #
 # Example Values: 'md' 'org'
 export NB_DEFAULT_EXTENSION="${NB_DEFAULT_EXTENSION:-md}"
+
+# $NB_DEFAULT_TEMPLATE
+#
+# Default: ''
+#
+# A string template or a path to a template file.
+#
+# Example Values: '/path/to/template/file' '# {{title}} {{content}}'
+export NB_DEFAULT_TEMPLATE="${NB_DEFAULT_TEMPLATE:-}"
 
 # $NB_DIRECTORY_TOOL
 #
@@ -4355,8 +4364,8 @@ $(_color_primary "Usage"):
   ${_ME} add [<notebook>:][<folder-path>/][<filename>] [<content>]
          [-b | --browse] [-c <content> | --content <content>] [--edit]
          [-e | --encrypt] [-f <filename> | --filename <filename>]
-         [--folder <folder-path>] [--tags <tag1>,<tag2>...]
-         [-t <title> | --title <title>] [--type <type>]
+         [--folder <folder-path>] [--no-template] [--tags <tag1>,<tag2>...]
+         [--template <template>] [-t <title> | --title <title>] [--type <type>]
   ${_ME} add bookmark [<bookmark-options>...]
   ${_ME} add folder [<name>]
   ${_ME} add todo [<todo-options>...]
@@ -12543,8 +12552,8 @@ $(_color_primary "Usage"):
   ${_ME} add [<notebook>:][<folder-path>/][<filename>] [<content>]
          [-b | --browse] [-c <content> | --content <content>] [--edit]
          [-e | --encrypt] [-f <filename> | --filename <filename>]
-         [--folder <folder-path>] [--tags <tag1>,<tag2>...]
-         [-t <title> | --title <title>] [--type <type>]
+         [--folder <folder-path>] [--no-template] [--tags <tag1>,<tag2>...]
+         [--template <template>] [-t <title> | --title <title>] [--type <type>]
   ${_ME} add bookmark [<bookmark-options>...]
   ${_ME} add folder [<name>]
   ${_ME} add todo [<todo-options>...]
@@ -12557,7 +12566,9 @@ $(_color_primary "Options"):
   -e, --encrypt               Encrypt the note with a password.
   -f, --filename <filename>   The filename for the new note.
   --folder <folder-path>      Add within the folder located at <folder-path>.
+  --no-template               Skip the template when one is assigned.
   --tags <tag1>,<tag2>...     A comma-separated list of tags.
+  --template <template>       A string template or path to a template file.
   -t, --title <title>         The title for a new note. If \`--title\` is
                               present, the filename is derived from the
                               title, unless \`--filename\` is specified.
@@ -12630,12 +12641,14 @@ _add() {
   local _encrypt=0
   local _file_type="${NB_DEFAULT_EXTENSION}"
   local _folder_prompt=0
+  local _no_template=0
   local _option_content=
   local _option_folder_relative_path=
   local _option_relative_path=
   local _password=
   local _skip_standard_input=0
   local _tag_list=
+  local _template=
   local _title=
 
   while ((${#}))
@@ -12696,6 +12709,9 @@ _add() {
       --no*color)
         _COLOR_ENABLED=0
         ;;
+      --no*template|--skip*template)
+        _no_template=1
+        ;;
       --password)
         _password="$(_option_get_value "${1}" "${2:-}")"
 
@@ -12708,6 +12724,14 @@ _add() {
         [[ -n "${_tag_list:-}" ]] && _tag_list+=" "
         _tag_list+="$(_option_get_tags "${1}" "${2:-}")"
         _defer_arguments+=("${1}" "${2:-}")
+
+        shift
+        ;;
+      --template)
+        _template="${2:-}"
+        _defer_arguments+=("${1}" "${2:-}")
+
+        [[ -z "${2:-}" ]] && _no_template=1
 
         shift
         ;;
@@ -13071,60 +13095,121 @@ _add() {
       fi
     fi
 
-    if [[ -n "${_title}"                  ]]
-    then
-      case "${_target_path:-}" in
-        *.adoc|*.asciidoc)
-          _title_prefix="="
-          ;;
-        *.org)
-          _title_prefix="#+TITLE:"
-          ;;
-        *)
-          _title_prefix="#"
-          ;;
-      esac
+    local _title_prefix=
 
-      printf "%s\\n\\n" "${_title_prefix} ${_title}" >> "${_target_path}"
-    fi
+    case "${_target_path:-}" in
+      *.adoc|*.asciidoc)
+        _title_prefix="="
+        ;;
+      *.org)
+        _title_prefix="#+TITLE:"
+        ;;
+      *)
+        _title_prefix="#"
+        ;;
+    esac
 
-    local _print_spacing=0
+    # prepare content
 
-    if [[ -n "${_tag_list:-}"             ]]
-    then
-      printf "%s\\n" "${_tag_list}" >> "${_target_path}"
-      _print_spacing=1
-    fi
+    local _content_temp_file_path=
+    _content_temp_file_path="$(_temp file --touch)"
 
-    if [[ -n "${_selector_content:-}"     ]]
+    local _piped_content_temp_file_path=
+    _piped_content_temp_file_path="$(_temp file --touch)"
+
+    local _print_content_spacing=0
+
+    if [[ -n "${_selector_content:-}"   ]]
     then # argument content
-      ((_print_spacing)) && printf "\\n"    >> "${_target_path}"
-
-      printf "%s\\n" "${_selector_content}" >> "${_target_path}"
-      _print_spacing=1
+      printf "%s\\n" "${_selector_content}"   >> "${_content_temp_file_path}"
+      _print_content_spacing=1
     fi
 
-    if [[ -n "${_option_content:-}"       ]]
+    if [[ -n "${_option_content:-}"     ]]
     then # argument content
-      ((_print_spacing)) && printf "\\n"  >> "${_target_path}"
+      ((_print_content_spacing)) &&
+        printf "\\n"                          >> "${_content_temp_file_path}"
 
-      printf "%s\\n" "${_option_content}" >> "${_target_path}"
-      _print_spacing=1
+      printf "%s\\n" "${_option_content}"     >> "${_content_temp_file_path}"
+      _print_content_spacing=1
     fi
 
     if _piped_input && ! ((_skip_standard_input))
     then # piped input
-      ((_print_spacing)) &&
-        printf "\\n"  >> "${_target_path}"
+      ((_print_content_spacing)) &&
+        printf "\\n"                          >> "${_content_temp_file_path}"
 
-      cat             >> "${_target_path}"
+      cat                                     >> "${_piped_content_temp_file_path}"
+      cat "${_piped_content_temp_file_path}"  >> "${_content_temp_file_path}"
     fi
 
-    if ((_edit_before_commit))                ||
+    # set default template
+
+    if [[ -z "${_template:-}"           ]]  &&
+       [[ -n "${NB_DEFAULT_TEMPLATE:-}" ]]
+    then
+      _template="${NB_DEFAULT_TEMPLATE}"
+    fi
+
+    # build document
+
+    if [[ -z "${_template:-}"           ]] ||
+       ((_no_template))
+    then # no template
+      if [[ -n "${_title}"              ]]
+      then
+        printf "%s\\n\\n" "${_title_prefix} ${_title}" >> "${_target_path}"
+      fi
+
+      local _print_spacing=0
+
+      if [[ -n "${_tag_list:-}"         ]]
+      then
+        printf "%s\\n" "${_tag_list}"       >> "${_target_path}"
+        _print_spacing=1
+      fi
+
+      if [[ -s "${_content_temp_file_path:-}"          ]]
+      then
+        ((_print_spacing)) && printf "\\n"  >> "${_target_path}"
+
+        cat "${_content_temp_file_path}"    >> "${_target_path}"
+      fi
+    else # template
+      local _template_content=
+      _template_content="$(cat "${_content_temp_file_path}")"
+
+      local _piped_template_content=
+      _piped_template_content="$(cat "${_piped_content_temp_file_path}")"
+
+      {
+        if [[ -f "${_template}" ]] && _file_is_text "${_template}"
+        then
+          cat "${_template}"
+        else
+          printf "%s\\n" "${_template}"
+        fi
+      } | {
+        # shellcheck disable=SC2016
+        LC_ALL=C sed -E                                           \
+          -e 's/\{\{title_prefix}}/${_title_prefix}/g'            \
+          -e 's/\{\{title}}/${_title}/g'                          \
+          -e 's/\{\{tags}}/${_tag_list}/g'                        \
+          -e 's/\{\{content}}/${_template_content}/g'             \
+          -e 's/\{\{selector_content}}/${_selector_content}/g'    \
+          -e 's/\{\{option_content}}/${_option_content}/g'        \
+          -e 's/\{\{piped_content}}/${_piped_template_content}/g' \
+          -e 's/\{\{(date[^}]+)}}/$(\1)/g'
+      } | {
+        eval "echo \"$(cat)\""
+      } >> "${_target_path}"
+    fi
+
+    if ((_edit_before_commit))              ||
        {
-         ! _piped_input                       &&
-         [[ -z "${_selector_content:-}"   ]]  &&
-         [[ -z "${_option_content:-}"     ]]
+         ! _piped_input                     &&
+         [[ -z "${_selector_content:-}" ]]  &&
+         [[ -z "${_option_content:-}"   ]]
        }
     then
       _edit_file "${_target_path}"
@@ -19234,7 +19319,6 @@ Can't show archives. Export archive and expand to edit.\\n"
                 lowdown                         \
                   -Tterm                        \
                   --term-columns="${_COLUMNS}"  \
-                  --term-hmargin=1              \
                   --term-width="${_COLUMNS}"    \
                   | _pager
                 ;;
@@ -19623,9 +19707,10 @@ _browse() {
 
       local _new_info_line=
       _new_info_line="$(
-        printf "%b\\n" "${_prepared_encoded_content:-}" \
-          | tr -d $'\r'                                 \
-          | _add "${_add_options[@]:-}"
+        _add "${_add_options[@]:-}" --content "$(
+          printf "%b\\n" "${_prepared_encoded_content:-}" \
+            | tr -d $'\r'
+        )" --skip-standard-input
       )"
 
       local _new_selector="${_new_info_line#*[}"

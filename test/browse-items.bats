@@ -1166,6 +1166,7 @@ HEREDOC
   [[ "${status}"    ==  0                   ]]
   [[ "${output}"    =~  \<\!DOCTYPE\ html\> ]]
 
+  pandoc --from odt --to html "${NB_DIR}/home/Example Folder/File One.odt"
 
   [[ "${output}"    =~  header-crumbs.*↓    ]]
 
