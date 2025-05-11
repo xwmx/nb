@@ -1568,6 +1568,40 @@ _alias_subcommand() {
   shopt -s extglob
 }
 
+# _ba()
+#
+# Usage:
+#   _bat [--command-exists] [<bat options>]
+#
+# Description:
+#   Wrapper for `bat`, aka `batcat` on debian.
+#
+# Exit / Error / Return Status (--command-exists):
+#   0 (success, true)  If a `bat` or `batcat` exacutable is found on the system.
+#   1 (error,  false)  if not.
+_BAT_COMMAND=
+_bat() {
+  if _command_exists "batcat"
+  then
+    _BAT_COMMAND="batcat"
+  elif _command_exists "bat"
+  then
+    _BAT_COMMAND="bat"
+  fi
+
+  if [[ "${1:-}" == "--command-exists"  ]]
+  then
+    if [[ -n "${_BAT_COMMAND:-}"        ]]
+    then
+      return 0
+    else
+      return 1
+    fi
+  fi
+
+  "${_BAT_COMMAND}" "${@}"
+}
+
 # _file_is_archive()
 #
 # Usage:
@@ -2434,7 +2468,7 @@ _highlight_syntax_if_available() {
     return 0
   fi
 
-  if hash "bat" 2>/dev/null
+  if _bat --command-exists
   then
     local _arguments=()
 
@@ -2445,7 +2479,7 @@ _highlight_syntax_if_available() {
     then
       _arguments+=("--language" "${_extension}")
 
-      if ! printf "" | bat  --color     always          \
+      if ! printf "" | _bat  --color     always          \
                             --language  "${_extension}" \
                             --paging    never           \
                             --plain                     \
@@ -2457,7 +2491,7 @@ _highlight_syntax_if_available() {
       fi
     fi
 
-    bat "${_arguments[@]}"  \
+    _bat "${_arguments[@]}"  \
       --color   always      \
       --paging  never       \
       --plain               \
@@ -2815,9 +2849,9 @@ _pager() {
   elif _command_exists "less"
   then
     less "${_less_options[@]:-}"
-  elif _command_exists "bat"
+  elif _bat --command-exists
   then
-    bat --style numbers,grid
+    _bat --style numbers,grid
   else
     cat
   fi
@@ -19302,6 +19336,7 @@ Can't show archives. Export archive and expand to edit.\\n"
              _command_exists "${_markdown_tool:-}"              &&
              _contains "${_markdown_tool:-}"                    \
                "bat"                                            \
+               "batcat"                                         \
                "glow"                                           \
                "lowdown"                                        \
                "mdcat"                                          \
@@ -19309,8 +19344,8 @@ Can't show archives. Export archive and expand to edit.\\n"
                "mdv"
           then
             case "${_markdown_tool:-}" in
-              bat)
-                bat --language "${_target_extension:-md}"
+              bat|batcat)
+                _bat --language "${_target_extension:-md}"
                 ;;
               glow)
                 glow --tui
@@ -24749,7 +24784,7 @@ HEREDOC
       fi
     elif [[ "${1:-}" == 'NB_SYNTAX_THEME'     ]]
     then
-      if ! hash bat 2>/dev/null
+      if ! _bat --command-exists
       then
         printf "bat required: https://github.com/sharkdp/bat\\n"
       elif [[ -z "${2:-}"                     ]]
@@ -24757,7 +24792,7 @@ HEREDOC
         return 1
       else
         local _theme_list=
-        _theme_list=($(bat --list-themes --color never))
+        _theme_list=($(_bat --list-themes --color never))
 
         local __theme=
         for   __theme in "${_theme_list[@]}"
@@ -24933,10 +24968,10 @@ $(
     $(_color_secondary " ------------")
      The syntax highlighting theme. View examples with:
 
-         $(_color_primary 'bat --list-themes')
+         $(_color_primary "${_BAT_COMMAND} --list-themes")
 
 $(
-  if ! hash "bat" 2>/dev/null
+  if ! _bat --command-exists
   then
     printf "     Install \`bat\` to enable themes: https://github.com/sharkdp/bat\\n"
   else
@@ -24944,7 +24979,7 @@ $(
     printf "\\n"
 
     local __theme=
-    for   __theme in $(bat --list-themes --color never)
+    for   __theme in $(_bat --list-themes --color never)
     do
       printf "         %s\\n" "$(_color_primary "${__theme}")"
     done
