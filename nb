@@ -1568,7 +1568,7 @@ _alias_subcommand() {
   shopt -s extglob
 }
 
-# _ba()
+# _bat()
 #
 # Usage:
 #   _bat [--command-exists] [<bat options>]
