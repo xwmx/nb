@@ -22776,7 +22776,7 @@ _copy() {
     # Print the source contents and pipe to `_add`:
     _show "${_source_notebook_path}/${_source_relative_path}"     \
       --no-color --print                                          \
-      | _add "${_target_notebook_path}/${_target_relative_path}"
+      | _add "${_target_notebook_path}/${_target_relative_path}" --no-template
   else
     local _copy_arguments=(
       "${_source_notebook_path}/${_source_relative_path}"
