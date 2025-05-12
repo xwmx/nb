@@ -14246,6 +14246,7 @@ _bookmark() {
       "${_relative_path}"
       --content "${_bookmark_content}"
       --skip-standard-input
+      --no-template
     )
 
     ((_encrypt))                &&  _add_options+=("--encrypt")

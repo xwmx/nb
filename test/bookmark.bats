@@ -2,6 +2,86 @@
 
 load test_helper
 
+# templates ###################################################################
+
+@test "'bookmark <url>' with assigned \$NB_DEFAULT_TEMPLATE skips the template." {
+  {
+    "${_NB}" init
+
+    export NB_DEFAULT_TEMPLATE="Example template with no template tags."
+  }
+
+  run "${_NB}"                    \
+    "${_BOOKMARK_URL}"            \
+    --tags tag1,tag2              \
+    --filename "example"          \
+    --related http://example.org  \
+    --related sample:123          \
+    --related "[[demo:456]]"      \
+    --related "Example Title"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0 ]]
+
+  # Creates new bookmark file with content:
+
+  [[ -f "${NB_DIR}/home/example.bookmark.md" ]]
+
+  diff                                          \
+    <(cat "${NB_DIR}/home/example.bookmark.md") \
+    <(cat <<HEREDOC
+# Example Domain
+
+<file://${NB_TEST_BASE_PATH}/fixtures/example.com.html>
+
+## Description
+
+Example description.
+
+## Related
+
+- <http://example.org>
+- [[sample:123]]
+- [[demo:456]]
+- [[Example Title]]
+
+## Tags
+
+#tag1 #tag2
+
+## Content
+
+$(cat "${NB_TEST_BASE_PATH}/fixtures/example.com.md")
+HEREDOC
+)
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  # Adds to index:
+
+  [[ -e "${NB_DIR}/home/.index" ]]
+
+  diff                      \
+    <(ls "${NB_DIR}/home")  \
+    <(cat "${NB_DIR}/home/.index")
+
+  # Prints output:
+
+  [[ "${lines[0]}" =~ Added:\ .*[.*1.*].*\ .*example.bookmark.md ]]
+}
+
+
 # dupe detection ##############################################################
 
 @test "'bookmark folder/ <url>' with existing bookmark at notebook root does not display prompt." {
