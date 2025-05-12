@@ -25952,6 +25952,7 @@ _todo() {
       _add                                  \
         --content "${_todo_content:-}"      \
         --type    "todo.md"                 \
+        --no-template                       \
         "${_arguments[@]:-}"
       ;;
     do|undo)
