@@ -10219,8 +10219,9 @@ _download_from() {
 
   if  ((${NB_BROWSER_DOWNLOAD_ENABLED:-1}))     &&
       {
-        [[ "${_url}"    =~ .html$         ]]    ||
-        [[ ! "${_url}"  =~ .[a-zA-Z0-9]$  ]]
+        [[ "${_url}"    =~ \.html$          ]]  ||
+        [[ "${_url}"    =~ \.php$           ]]  ||
+        [[ ! "${_url}"  =~ \.[a-zA-Z0-9]+$  ]]
       }                                         &&
       [[ ! "${_url}" =~ ^https://www.reddit.com ]]
   then
@@ -10241,7 +10242,8 @@ _download_from() {
       _download_command="/Applications/Chromium.app/Contents/MacOS/Chromium"
     fi
   fi
-
+_warn echo "${_download_command:-}"
+exit 0
   if [[ -z "${_download_command:-}" ]]
   then
     if _command_exists "curl"
