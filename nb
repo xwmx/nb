@@ -4522,9 +4522,10 @@ $(_color_primary "Usage"):
                [<task-number>]
   ${_ME} todo undo ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
                [<task-number>]
-  ${_ME} todos [<notebook>:][<folder-path>/] [open | closed] [--tags <tag1>,<tag2>...]
+  ${_ME} todos [<notebook>:][<folder-path>/] [open | closed] [--pager]
+               [--tags <tag1>,<tag2>...]
   ${_ME} todos tasks ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
-                 [open | closed]
+                 [open | closed] [--pager]
   ${_ME} unarchive [<notebook>]
   ${_ME} undo ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           [<task-number>]
@@ -25537,7 +25538,10 @@ _describe_tasks() {
   cat <<HEREDOC
 $(_color_primary "Usage"):
   ${_ME} tasks ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
-           [open | closed]
+           [open | closed] [--pager]
+
+$(_color_primary "Options"):
+  --pager  Display output in the pager.
 
 $(_color_primary "Description"):
   List tasks in todos, notebooks, folders, and other items.
@@ -25583,13 +25587,15 @@ $(_color_primary "Usage"):
                [<task-number>]
   ${_ME} todo undo ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
                [<task-number>]
-  ${_ME} todos [<notebook>:][<folder-path>/] [open | closed] [--tags <tag1>,<tag2>...]
+  ${_ME} todos [<notebook>:][<folder-path>/] [open | closed] [--pager]
+               [--tags <tag1>,<tag2>...]
   ${_ME} todos tasks ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
-                 [open | closed]
+                 [open | closed] [--pager]
 
 $(_color_primary "Options"):
   --description <description>         Description for the todo.
   --due <date>                        Due date and / or time for the todo.
+  --pager                             Display output in the pager.
   -r, --related (<url> | <selector>)  Related URL or selector.
   --tags <tag1>,<tag2>...             Comma-separated list of tags.
   --task <title>                      Task to add to the tasklist.
@@ -25729,6 +25735,7 @@ _todo() {
   local _tags=()
   local _task_list_options=()
   local _tasks=()
+  local _use_pager=0
 
   while ((${#}))
   do
@@ -25742,6 +25749,9 @@ _todo() {
         _due_datetime="$(_option_get_value "${1:-}" "${2:-}")"
 
         shift
+        ;;
+      --pager|--less)
+        _use_pager=1
         ;;
       --recursive|--tree)
         _task_list_options+=("--recursive")
@@ -26407,7 +26417,12 @@ _todo() {
 
           return 1
         fi
-      }
+      } | if ((_use_pager))
+      then
+        _pager
+      else
+        cat
+      fi
       ;;
   esac
 }

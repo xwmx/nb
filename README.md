@@ -6135,9 +6135,10 @@ Usage:
                [<task-number>]
   nb todo undo ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
                [<task-number>]
-  nb todos [<notebook>:][<folder-path>/] [open | closed] [--tags <tag1>,<tag2>...]
+  nb todos [<notebook>:][<folder-path>/] [open | closed] [--pager]
+               [--tags <tag1>,<tag2>...]
   nb todos tasks ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
-                 [open | closed]
+                 [open | closed] [--pager]
   nb unarchive [<notebook>]
   nb undo ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           [<task-number>]
@@ -8565,7 +8566,10 @@ Examples:
 ```text
 Usage:
   nb tasks ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
-           [open | closed]
+           [open | closed] [--pager]
+
+Options:
+  --pager  Display output in the pager.
 
 Description:
   List tasks in todos, notebooks, folders, and other items.
@@ -8611,13 +8615,15 @@ Usage:
                [<task-number>]
   nb todo undo ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
                [<task-number>]
-  nb todos [<notebook>:][<folder-path>/] [open | closed] [--tags <tag1>,<tag2>...]
+  nb todos [<notebook>:][<folder-path>/] [open | closed] [--pager]
+               [--tags <tag1>,<tag2>...]
   nb todos tasks ([<notebook>:][<folder-path>/][<id> | <filename> | <description>])
-                 [open | closed]
+                 [open | closed] [--pager]
 
 Options:
   --description <description>         Description for the todo.
   --due <date>                        Due date and / or time for the todo.
+  --pager                             Display output in the pager.
   -r, --related (<url> | <selector>)  Related URL or selector.
   --tags <tag1>,<tag2>...             Comma-separated list of tags.
   --task <title>                      Task to add to the tasklist.
