@@ -26196,7 +26196,6 @@ _todo() {
             "${_task_list_options[@]:-}"  \
             2>/dev/null || printf ""
         fi
-
       } | {
         local _first=1
         local _in_task_list_item=0
