@@ -82,7 +82,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.18.1"
+_VERSION="7.18.2"
 
 # $_ME
 #
@@ -1568,7 +1568,7 @@ _alias_subcommand() {
   shopt -s extglob
 }
 
-# _ba()
+# _bat()
 #
 # Usage:
 #   _bat [--command-exists] [<bat options>]
@@ -14246,6 +14246,7 @@ _bookmark() {
       "${_relative_path}"
       --content "${_bookmark_content}"
       --skip-standard-input
+      --no-template
     )
 
     ((_encrypt))                &&  _add_options+=("--encrypt")
@@ -22775,7 +22776,7 @@ _copy() {
     # Print the source contents and pipe to `_add`:
     _show "${_source_notebook_path}/${_source_relative_path}"     \
       --no-color --print                                          \
-      | _add "${_target_notebook_path}/${_target_relative_path}"
+      | _add "${_target_notebook_path}/${_target_relative_path}" --no-template
   else
     local _copy_arguments=(
       "${_source_notebook_path}/${_source_relative_path}"
@@ -25951,6 +25952,7 @@ _todo() {
       _add                                  \
         --content "${_todo_content:-}"      \
         --type    "todo.md"                 \
+        --no-template                       \
         "${_arguments[@]:-}"
       ;;
     do|undo)
