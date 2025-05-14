@@ -4446,8 +4446,8 @@ $(_color_primary "Usage"):
   ${_ME} help [<subcommand>] [-p | --print]
   ${_ME} help [-c | --colors] | [-r | --readme] | [-s | --short] [-p | --print]
   ${_ME} history [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
-  ${_ME} import [copy | download | move] (<path>... | <url>) [--convert]
-            [<notebook>:][<folder-path>/][<filename>]
+  ${_ME} import [bookmarks | copy | download | move] (<path>... | <url>)
+            [--convert] [<notebook>:][<folder-path>/][<filename>]
   ${_ME} import notebook <path> [<name>]
   ${_ME} init [<remote-url> [<branch>]] [--author] [--email <email>]
           [--name <name>]
@@ -15692,22 +15692,23 @@ _history() {
 _describe_import() {
   cat <<HEREDOC
 $(_color_primary "Usage"):
-  ${_ME} import [copy | download | move] (<path>... | <url>) [--convert]
-            [<notebook>:][<folder-path>/][<filename>]
+  ${_ME} import [bookmarks | copy | download | move] (<path>... | <url>)
+            [--convert] [<notebook>:][<folder-path>/][<filename>]
   ${_ME} import notebook <path> [<name>]
 
 $(_color_primary "Options"):
   --convert  Convert HTML content to Markdown.
 
 $(_color_primary "Subcommands"):
-  (default) Copy or download the file(s) at <path> or <url>.
-  copy      Copy the file(s) at <path> into the current notebook.
-  download  Download the file at <url> into the current notebook.
-  move      Move the file(s) at <path> into the current notebook.
-  notebook  Import the local notebook at <path> to make it global.
+  (default)  Copy or download the file(s) at <path> or <url>.
+  bookmarks  Import bookmarks from a Chrome, Firefox, or Edge export file.
+  copy       Copy the file(s) at <path> into the current notebook.
+  download   Download the file at <url> into the current notebook.
+  move       Move the file(s) at <path> into the current notebook.
+  notebook   Import the local notebook at <path> to make it global.
 
 $(_color_primary "Description"):
-  Copy, move, or download files into the current notebook or import
+  Copy, move, or download files into \`nb\`, import bookmarks, or import
   a local notebook to make it global.
 
 $(_color_primary "Read More"):
