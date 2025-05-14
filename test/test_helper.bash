@@ -75,11 +75,6 @@ _setup() {
   # Turn off auto-sync.
   export NB_AUTO_SYNC=0
 
-  # $NB_BROWSER_DOWNLOAD_ENABLED
-  #
-  # Turn off downloading pages with the browser.
-  export NB_BROWSER_DOWNLOAD_ENABLED=0
-
   # $NB_COLOR_PRIMARY
   #
   # Set to a value compatible with CI terminals.
@@ -89,6 +84,11 @@ _setup() {
   #
   # The location of the directory that contains the notebooks.
   export NB_DIR="${_TMP_DIR}/notebooks"
+
+  # $NB_DOWNLOAD_TOOL
+  #
+  # Only use curl for downloads..
+  export NB_DOWNLOAD_TOOL="curl"
 
   # $NB_PINNED_PATTERN
   #
