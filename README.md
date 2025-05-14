@@ -1842,9 +1842,9 @@ the HTML page content is converted to Markdown.
 When [readability-cli](https://gitlab.com/gardenappl/readability-cli)
 is installed, markup is cleaned up to focus on content. When
 [Chromium](https://www.chromium.org) or
-[Chrome](https://www.google.com/chrome/) is installed,
-JavaScript-dependent pages are rendered and the resulting markup is
-saved.
+[Chrome](https://www.google.com/chrome/) is installed on the system,
+`nb` automatically renders JavaScript-dependent pages
+and saves the resulting markup.
 
 Many shells automatically escape special characters in URLs. If a
 URL contains characters that are preventing it from being saved in full,
