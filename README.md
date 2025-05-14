@@ -5005,8 +5005,8 @@ home
 #### Importing Bookmarks
 
 Bookmarks exported from Chrome, Firefox, and Edge can be imported with
-[`nb import bookmarks <path/to/export/file>`](#import). A new `nb` bookmark
-file will be created for each bookmark.
+[`nb import bookmarks`](#import). A new `nb` bookmark file is created for
+each bookmark.
 
 #### Exporting
 
