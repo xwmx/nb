@@ -10205,7 +10205,7 @@ _decrypt_file() {
 #   Download the file at <url> and print to standard output or <outfile>, if
 #   present.
 _download_from() {
-  local _download_command=
+  local _download_command="${NB_DOWNLOAD_TOOL:-}"
   local _downloaded=0
   local _timeout=15
   local _url="${1:-}"
@@ -10218,7 +10218,7 @@ _download_from() {
 
   local _target_path="${2:-}"
 
-  if  ((${NB_BROWSER_DOWNLOAD_ENABLED:-1}))     &&
+  if  [[ -z "${_download_command:-}"        ]]  &&
       {
         [[ "${_url}"    =~ \.html$          ]]  ||
         [[ "${_url}"    =~ \.php$           ]]  ||
