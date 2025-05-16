@@ -4948,6 +4948,8 @@ that could inform a strategy for handling any such cases automatically.
   </sup>
 </p>
 
+#### Importing
+
 Files of any type can be imported into a notebook using
 [`nb import`](#import) (shortcut: [`nb i`](#import)).
 [`nb edit`](#edit) and [`nb open`](#open) open files in
@@ -5005,6 +5007,14 @@ home
 [2] 🔉 example-audio.mp3
 [1] 📂 Example Folder
 ```
+
+#### Importing Bookmarks
+
+Bookmarks exported from Chrome, Firefox, and Edge can be imported with
+[`nb import bookmarks`](#import). A new `nb` bookmark file is created for
+each bookmark.
+
+#### Exporting
 
 Notes, bookmarks, and other files can be exported using [`nb export`](#export).
 If [Pandoc](https://pandoc.org/) is installed,
@@ -6065,8 +6075,8 @@ Usage:
   nb help [<subcommand>] [-p | --print]
   nb help [-c | --colors] | [-r | --readme] | [-s | --short] [-p | --print]
   nb history [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
-  nb import [copy | download | move] (<path>... | <url>) [--convert]
-            [<notebook>:][<folder-path>/][<filename>]
+  nb import [bookmarks | copy | download | move] (<path>... | <url>)
+            [--convert] [<notebook>:][<folder-path>/][<filename>]
   nb import notebook <path> [<name>]
   nb init [<remote-url> [<branch>]] [--author] [--email <email>]
           [--name <name>]
@@ -7203,19 +7213,24 @@ Examples:
 
 ```text
 Usage:
-  nb import [copy | download | move] (<path>... | <url>) [--convert]
-            [<notebook>:][<folder-path>/][<filename>]
+  nb import [bookmarks | copy | download | move] (<path>... | <url>)
+            [--convert] [<notebook>:][<folder-path>/][<filename>]
   nb import notebook <path> [<name>]
 
 Options:
   --convert  Convert HTML content to Markdown.
 
 Subcommands:
-  (default) Copy or download the file(s) at <path> or <url>.
-  copy      Copy the file(s) at <path> into the current notebook.
-  download  Download the file at <url> into the current notebook.
-  move      Move the file(s) at <path> into the current notebook.
-  notebook  Import the local notebook at <path> to make it global.
+  (default)  Copy or download the file(s) at <path> or <url>.
+  bookmarks  Import bookmarks from a Chrome, Firefox, or Edge export file.
+  copy       Copy the file(s) at <path> into the current notebook.
+  download   Download the file at <url> into the current notebook.
+  move       Move the file(s) at <path> into the current notebook.
+  notebook   Import the local notebook at <path> to make it global.
+
+Description:
+  Copy, move, or download files into `nb`, import bookmarks, or import
+  a local notebook to make it global.
 
 Description:
   Copy, move, or download files into the current notebook or import

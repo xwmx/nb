@@ -82,7 +82,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.19.0"
+_VERSION="7.19.1"
 
 # $_ME
 #
@@ -4276,7 +4276,7 @@ _help() {
 
   if ((_readme))
   then
-    _download_from                          \
+    _download_from --no-chrome              \
       "${_REPO_RAW_URL}/README.md"          \
         | if _command_exists "pandoc"       &&
              _web_browser --check
@@ -4446,8 +4446,8 @@ $(_color_primary "Usage"):
   ${_ME} help [<subcommand>] [-p | --print]
   ${_ME} help [-c | --colors] | [-r | --readme] | [-s | --short] [-p | --print]
   ${_ME} history [<notebook>:][<folder-path>/][<id> | <filename> | <title>]
-  ${_ME} import [copy | download | move] (<path>... | <url>) [--convert]
-            [<notebook>:][<folder-path>/][<filename>]
+  ${_ME} import [bookmarks | copy | download | move] (<path>... | <url>)
+            [--convert] [<notebook>:][<folder-path>/][<filename>]
   ${_ME} import notebook <path> [<name>]
   ${_ME} init [<remote-url> [<branch>]] [--author] [--email <email>]
           [--name <name>]
@@ -10199,7 +10199,7 @@ _decrypt_file() {
 # _download_from()
 #
 # Usage:
-#   _download_from <url> [<outfile>]
+#   _download_from <url> [<outfile>] [--no-chrome]
 #
 # Description:
 #   Download the file at <url> and print to standard output or <outfile>, if
@@ -10207,8 +10207,30 @@ _decrypt_file() {
 _download_from() {
   local _download_command="${NB_DOWNLOAD_TOOL:-}"
   local _downloaded=0
+  local _no_chrome=0
+  local _target_path=
   local _timeout=15
-  local _url="${1:-}"
+  local _url=
+
+  while ((${#}))
+  do
+    case "${1:-}" in
+      --no*chrome|--skip*chrome)
+        _no_chrome=1
+        ;;
+      *)
+        if [[   -z "${_url:-}"          ]]
+        then
+          _url="${1:-}"
+        elif [[ -z "${_target_path:-}"  ]]
+        then
+          _target_path="${1:-}"
+        fi
+        ;;
+    esac
+
+    shift
+  done
 
   if [[ -z "${_url}" ]] ||
      [[ !  "${_url}" =~ (^https\:|^http\:|^file\:|^ftp\:|^sftp\:) ]]
@@ -10216,9 +10238,8 @@ _download_from() {
     return 1
   fi
 
-  local _target_path="${2:-}"
-
-  if  [[ -z "${_download_command:-}"        ]]  &&
+  if  ! ((_no_chrome))                          &&
+      [[ -z "${_download_command:-}"        ]]  &&
       {
         [[ "${_url}"    =~ \.html$          ]]  ||
         [[ "${_url}"    =~ \.php$           ]]  ||
@@ -10242,6 +10263,11 @@ _download_from() {
     then
       _download_command="/Applications/Chromium.app/Contents/MacOS/Chromium"
     fi
+  fi
+
+  if ((_no_chrome)) && [[ "${_download_command:-}" =~ hrome|hromium ]]
+  then
+    _download_command=
   fi
 
   if [[ -z "${_download_command:-}" ]]
@@ -13787,7 +13813,7 @@ _bookmark() {
         then
           local _wayback_response=
           _wayback_response="$(
-            _download_from                                                \
+            _download_from --no-chrome                                    \
               "https://archive.org/wayback/available?url=${_target_url}"  \
               | grep 'closest'                                            \
               | sed -E "s/.*\"closest\": {([^}]+)}.*/\1/g"                \
@@ -14469,7 +14495,7 @@ _completions() {
           _completion_source="$(_temp file)"
           local _completion_url="${_REPO_RAW_URL}/etc/${_ME}-completion.${__shell}"
 
-          if ! _download_from "${_completion_url}" "${_completion_source}"
+          if ! _download_from "${_completion_url}" "${_completion_source}" --no-chrome
           then
             _exit_1 printf "Unable to download completion script from %s\\n" \
               "${_completion_source}"
@@ -15666,22 +15692,23 @@ _history() {
 _describe_import() {
   cat <<HEREDOC
 $(_color_primary "Usage"):
-  ${_ME} import [copy | download | move] (<path>... | <url>) [--convert]
-            [<notebook>:][<folder-path>/][<filename>]
+  ${_ME} import [bookmarks | copy | download | move] (<path>... | <url>)
+            [--convert] [<notebook>:][<folder-path>/][<filename>]
   ${_ME} import notebook <path> [<name>]
 
 $(_color_primary "Options"):
   --convert  Convert HTML content to Markdown.
 
 $(_color_primary "Subcommands"):
-  (default) Copy or download the file(s) at <path> or <url>.
-  copy      Copy the file(s) at <path> into the current notebook.
-  download  Download the file at <url> into the current notebook.
-  move      Move the file(s) at <path> into the current notebook.
-  notebook  Import the local notebook at <path> to make it global.
+  (default)  Copy or download the file(s) at <path> or <url>.
+  bookmarks  Import bookmarks from a Chrome, Firefox, or Edge export file.
+  copy       Copy the file(s) at <path> into the current notebook.
+  download   Download the file at <url> into the current notebook.
+  move       Move the file(s) at <path> into the current notebook.
+  notebook   Import the local notebook at <path> to make it global.
 
 $(_color_primary "Description"):
-  Copy, move, or download files into the current notebook or import
+  Copy, move, or download files into \`nb\`, import bookmarks, or import
   a local notebook to make it global.
 
 $(_color_primary "Read More"):
@@ -22581,9 +22608,9 @@ HEREDOC
       _printable_response="$(
         if ((_print_headers))
         then
-          curl -s -I      "${_request_url//' '/%20}"  || :
+          curl -s -I      "${_request_url//' '/%20}"              || :
         else
-          _download_from  "${_request_url//' '/%20}"  || :
+          _download_from  "${_request_url//' '/%20}" --no-chrome  || :
         fi
       )"
 
@@ -22645,7 +22672,7 @@ HEREDOC
 
   # make a final request to clear any listening process
 
-  (sleep 0.5 && _download_from "${_request_url_base}" &>/dev/null) &
+  (sleep 0.5 && _download_from "${_request_url_base}" --no-chrome &>/dev/null) &
 
   exit 0
 }
@@ -23247,7 +23274,7 @@ _plugins() {
           )"
         fi
 
-        if _download_from "${_url}" "${NB_DIR}/.plugins/${_basename}"
+        if _download_from "${_url}" "${NB_DIR}/.plugins/${_basename}" --no-chrome
         then
           printf "Plugin installed:\\n%s\\n"  \
             "$(_color_primary "${NB_DIR}/.plugins/${_basename}")"
@@ -26589,7 +26616,7 @@ HEREDOC
     local _temp_file=
     _temp_file="$(_temp file)"
 
-    if ! _download_from "${_nb_url}" "${_temp_file}"
+    if ! _download_from "${_nb_url}" "${_temp_file}" --no-chrome
     then
       _exit_1 printf "Unable to download update.\\n"
     fi
