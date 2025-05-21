@@ -258,6 +258,24 @@ fi
 HEREDOC
 
   #############
+  # NixOS 24.11
+
+  # config.vm.define "nixos2411" do |nixos2411|
+  #   nixos2411.vm.box          = "boxen/nixos-24.11"
+  #   nixos2411.vm.box_version  = "2025.04.02.21"
+  #   nixos2411.vm.provision :shell, inline: $nixos_setup, privileged: false
+  # end
+
+  #############
+  # NixOS 24.05
+
+  # config.vm.define "nixos2405" do |nixos2405|
+  #   nixos2405.vm.box          = "nixbox/nixos"
+  #   nixos2405.vm.box_version  = "24.05"
+  #   nixos2405.vm.provision :shell, inline: $nixos_setup, privileged: false
+  # end
+
+  #############
   # NixOS 23.11
 
   # config.vm.define "nixos2311" do |nixos2311|
