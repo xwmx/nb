@@ -10,6 +10,8 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code # to upload release assets
+        uses: actions/checkout@v4
       - id: major_version
         run: >
           echo major_version=$(
@@ -21,7 +23,7 @@ jobs:
             echo ${{ github.ref }} | grep -c 'rc'
           ) >> $GITHUB_OUTPUT
       - name: Create release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           prerelease: ${{ steps.major_version.outputs.major_version == 0 || steps.is_release_candidate.outputs.is_release_candidate == 1 }}
           generate_release_notes: true
