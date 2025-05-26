@@ -135,21 +135,27 @@ _daily() {
     fi
   else
     local _timestamp=
-    _timestamp="$(date "+%H:%M:%S")"
+    _timestamp="$(date "${NB_DAILY_TIMESTAMP_FORMAT:-"+%H:%M:%S"}")"
+
+    local _datestamp=
+    _datestamp="$(date "${NB_DAILY_DATESTAMP_FORMAT:-"+%Y-%m-%d"}")"
 
     local _formatted_content=
     _formatted_content="$(_join " " "${_content[@]}")"
 
-    local _timestamped_content="
-### [${_timestamp}]
-* ${_formatted_content}
-"
+    local _timestamped_content="\
+## ${_timestamp}
+
+${_formatted_content}"
 
     if [[ ! -e "${_target_path:-}"  ]]
     then
-      _add --content "${_timestamped_content}" --filename "${_target_filename}"
+      _add                                  \
+        --content "${_timestamped_content}" \
+        --filename "${_target_filename}"    \
+        --title     "Daily ${_datestamp:-}"
     else
-      _edit "${_target_filename}" --append "${_timestamped_content}"
+      _edit "${_target_filename}" --append "${_NEWLINE}${_timestamped_content}"
     fi
   fi
 }
