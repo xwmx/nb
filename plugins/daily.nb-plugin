@@ -41,11 +41,21 @@ HEREDOC
 _daily() {
   # Usage: _daily_show <path>
   _daily_show() {
+    local _info_line=
     local _target_path="${1:-}"
 
     [[ -n "${_target_path:-}" ]] || return 1
 
-    printf "%s:\\n" "$(_color_primary "${_target_path##*\/}")"
+    _info_line="$(_show "${_target_path:-}" --info-line)"
+
+    if [[ "${_info_line}" =~ Daily ]]
+    then
+      _info_line="${_info_line%% \"Daily*}"
+    else
+      _info_line="${_info_line%% \" · \"*}"
+    fi
+
+    printf "%s\\n" "${_info_line}:"
 
     _show "${_target_path:-}" --print
 

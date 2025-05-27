@@ -117,42 +117,42 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0   ]]
+  [[ "${status}"    -eq 0     ]]
 
   [[ "${lines[0]}"  =~  \
-.*43210202\.md.*:           ]]
+.*\[.*2.*\].*43210202\.md.*:  ]]
   [[ "${lines[1]}"  =~  \
-.*\#.*Daily\ 4321-02-02     ]]
+.*\#.*Daily\ 4321-02-02       ]]
   [[ "${lines[2]}"  =~  \
-.*\#\#.*02:02:02            ]]
+.*\#\#.*02:02:02              ]]
   [[ "${lines[3]}"  =~  \
-Example\ content\ two\.     ]]
+Example\ content\ two\.       ]]
 
   run "${_NB}" daily --prev 0
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0   ]]
+  [[ "${status}"    -eq 0     ]]
 
   [[ "${lines[0]}"  =~  \
-.*43210303\.md.*:           ]]
+.*\[.*3.*\].*43210303\.md.*:  ]]
   [[ "${lines[1]}"  =~  \
-.*\#.*Daily\ 4321-03-03     ]]
+.*\#.*Daily\ 4321-03-03       ]]
   [[ "${lines[2]}"  =~  \
-.*\#\#.*03:03:03            ]]
+.*\#\#.*03:03:03              ]]
   [[ "${lines[3]}"  =~  \
-Example\ content\ three\.   ]]
+Example\ content\ three\.     ]]
 
   run "${_NB}" daily --prev 42
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 1   ]]
+  [[ "${status}"    -eq 1     ]]
 
   [[ "${lines[0]}"  =~  \
-.*!.*\ Not\ found\.         ]]
+.*!.*\ Not\ found\.           ]]
 }
 
 # `daily` #####################################################################
