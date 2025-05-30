@@ -13528,13 +13528,11 @@ _bookmark() {
   then
     _content_cleanup_tool="${NB_BOOKMARK_CONTENT_CLEANUP_TOOL}"
   fi
-  _debug echo "\${_content_cleanup_tool}: '${_content_cleanup_tool:-}'"
 
   if [[ -n "${NB_BOOKMARK_CONTENT_CONVERSION_TOOL+x}" ]]
   then
     _content_conversion_tool="${NB_BOOKMARK_CONTENT_CONVERSION_TOOL}"
   fi
-  _debug echo "\${_content_conversion_tool}: '${_content_conversion_tool:-}'"
 
   local _previous_arg=
 
@@ -13689,6 +13687,9 @@ _bookmark() {
 
     shift
   done
+
+  _debug echo "\${_content_cleanup_tool}: '${_content_cleanup_tool:-}'"
+  _debug echo "\${_content_conversion_tool}: '${_content_conversion_tool:-}'"
 
   # `bookmark list`
 
