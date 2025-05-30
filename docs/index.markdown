@@ -9171,6 +9171,8 @@ Shortcut Alias:
     <a href="#nb_ace_keyboard"><code>$NB_ACE_KEYBOARD</code></a>&nbsp;·
     <a href="#nb_audio_tool"><code>$NB_AUDIO_TOOL</code></a>&nbsp;·
     <a href="#nb_auto_sync"><code>$NB_AUTO_SYNC</code></a>&nbsp;·
+    <a href="#nb_bookmark_content_cleanup_tool"><code>$NB_BOOKMARK_CONTENT_CLEANUP_TOOL</code></a>&nbsp;·
+    <a href="#nb_bookmark_content_conversion_tool"><code>$NB_BOOKMARK_CONTENT_CONVERSION_TOOL</code></a>&nbsp;·
     <a href="#nb_browse_markdown_reader"><code>$NB_BROWSE_MARKDOWN_READER</code></a>&nbsp;·
     <a href="#nb_browse_server_tool"><code>$NB_BROWSE_SERVER_TOOL</code></a>&nbsp;·
     <a href="#nb_browse_support_links"><code>$NB_BROWSE_SUPPORT_LINKS</code></a>&nbsp;·
@@ -9350,6 +9352,51 @@ Default: '1'
 
 When set to '1', each `_git checkpoint()` call will automativally run
 `$_ME sync`. To disable this behavior, set the value to '0'.
+```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
+##### `$NB_BOOKMARK_CONTENT_CLEANUP_TOOL`
+
+```text
+Default: 'readability'
+
+The tool used to clean up HTML content before conversion to markdown
+when creating bookmarks.
+
+Supported Tools:
+
+- https://www.npmjs.com/package/readability-cli
+- https://github.com/eafer/rdrview
+
+Supported Values: '', 'rdrview', 'readability'
+```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
+##### `$NB_BOOKMARK_CONTENT_CONVERSION_TOOL`
+
+```text
+Default: 'pandoc'
+
+The tool used to convert HTML content to markdown when creating
+bookmarks.
+
+Supported Tools:
+
+- https://github.com/JohannesKaufmann/html-to-markdown
+- https://github.com/microsoft/markitdown
+- https://pandoc.org
+
+Supported Values: '', 'html-to-markdown', 'markitdown', 'pandoc'
 ```
 
 <p>
