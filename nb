@@ -13504,7 +13504,7 @@ _bookmark() {
   local _arguments=()
   local _bookmark_content=
   local _comment=
-  local _content_cleanup_tool="readable"
+  local _content_cleanup_tool="readability"
   local _content_conversion_tool="pandoc"
   local _edit_before_commit=0
   local _encrypt=0
