@@ -13509,7 +13509,7 @@ _bookmark() {
   local _non_url_arguments=()
   local _password=
   local _quote=
-  local _readability_enabled=1
+  local _readability_enabled="${NB_BOOKMARK_READABILITY_ENABLED:-1}"
   local _related_identifiers=()
   local _request_page=1
   local _save_source=0
@@ -14213,14 +14213,25 @@ _bookmark() {
     then
       local _processed_content=
 
-      if _command_exists "pandoc"   || _command_exists "readable"
+      if  {
+            ((${NB_BOOKMARK_PANDOC_ENABLED:-1})) &&
+            _command_exists "pandoc"
+          } || {
+            ((${NB_BOOKMARK_READABILITY_ENABLED:-"${_readability_enabled:-1}"})) &&
+            _command_exists "readable"
+          } || {
+            ((${NB_BOOKMARK_RDRVIEW_ENABLED:-0}))     ||
+            ((${NB_BOOKMARK_MARKITDOWN_ENABLED:-0}))  ||
+            ((${NB_BOOKMARK_HTML_TO_MARKDOWN_ENABLED:-0}))
+          }
       then
         _processed_content="$(
           {
             cat "${_temp_file}"
           } | {
-            if _command_exists "readable" && ((_readability_enabled))
-            then
+            if _command_exists "readable"       &&
+               ((${NB_BOOKMARK_READABILITY_ENABLED:-"${_readability_enabled:-1}"}))
+            then # https://www.npmjs.com/package/readability-cli
               readable            \
                 --base "${_url}"  \
                 --quiet           \
@@ -14229,8 +14240,25 @@ _bookmark() {
               cat
             fi
           } | {
-            if _command_exists "pandoc"
-            then
+            if _command_exists "rdrview"        &&
+               ((${NB_BOOKMARK_RDRVIEW_ENABLED:-0}))
+            then # https://github.com/eafer/rdrview
+              rdrview -H -u "${_url}"
+            else
+              cat
+            fi
+          } | {
+            if _command_exists "markitdown"     &&
+               ((${NB_BOOKMARK_MARKITDOWN_ENABLED:-0}))
+            then # https://github.com/microsoft/markitdown
+              markitdown
+            else
+              cat
+            fi
+          } | {
+            if _command_exists "pandoc"         &&
+               ((${NB_BOOKMARK_PANDOC_ENABLED:-1}))
+            then # https://pandoc.org
               {
                 _pandoc                                 \
                   --standard-input                      \
@@ -14242,6 +14270,14 @@ _bookmark() {
                 # strip empty list items
                 LC_ALL=C sed -E -e 's/^-[[:space:]]*$//g'
               }
+            else
+              cat
+            fi
+          } | {
+            if _command_exists "html2markdown"  &&
+               ((${NB_BOOKMARK_HTML_TO_MARKDOWN_ENABLED:-0}))
+            then # https://github.com/JohannesKaufmann/html-to-markdown
+              html2markdown
             else
               cat
             fi
