@@ -13451,7 +13451,7 @@ $(_color_primary "Shortcut Aliases"):
 HEREDOC
 }
 _bookmark() {
-    # Usage: _bookmark_cleanup_tag_content <string>
+  # Usage: _bookmark_cleanup_tag_content <string>
   _bookmark_cleanup_tag_content() {
     local _character_removal_pattern=
     _character_removal_pattern="$(
