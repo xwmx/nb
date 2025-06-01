@@ -9527,7 +9527,7 @@ The color theme.
   </sup>
 </p>
 
-##### `NB_CUSTOM_CSS`
+##### `$NB_CUSTOM_CSS`
 
 ```text
 Default: ''
@@ -9542,7 +9542,7 @@ rendered by `nb browse`.
   </sup>
 </p>
 
-##### `NB_CUSTOM_CSS_URL`
+##### `$NB_CUSTOM_CSS_URL`
 
 ```text
 Default: ''
@@ -9557,7 +9557,7 @@ element on pages rendered by `nb browse`.
   </sup>
 </p>
 
-##### `NB_CUSTOM_JAVASCRIPT`
+##### `$NB_CUSTOM_JAVASCRIPT`
 
 ```text
 Default: ''
@@ -9572,7 +9572,7 @@ on pages rendered by `nb browse`.
   </sup>
 </p>
 
-##### `NB_CUSTOM_JAVASCRIPT_URL`
+##### `$NB_CUSTOM_JAVASCRIPT_URL`
 
 ```text
 Default: ''
