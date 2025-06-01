@@ -89,7 +89,7 @@ HEREDOC
 
   [[    "${lines[0]}"   =~  \
 .*\[.*Example\ Folder/3.*\].*\ ✅\ .*\[.*x.*\].*\ Example\ todo\ description\ three\. ]]
-  [[    "${lines[1]}"   =~  ---                                                                         ]]
+  [[    "${lines[1]}"   =~  ---                                           ]]
   [[    "${lines[2]}"   =~  \
 .*\[.*Example\ Folder/3\ 1.*\].*\ .*\[.*x.*\].*\ todo\ three\ task\ one\. ]]
   [[    "${lines[3]}"   =~  \
@@ -97,7 +97,7 @@ HEREDOC
 
   [[    "${lines[4]}"   =~  \
 .*\[.*Example\ Folder/2.*\].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ two\.     ]]
-  [[    "${lines[5]}"   =~  ---                                                                         ]]
+  [[    "${lines[5]}"   =~  ---                                           ]]
   [[    "${lines[6]}"   =~  \
 .*\[.*Example\ Folder/2\ 1.*\].*\ .*\[.*\ .*\].*\ todo\ two\ task\ one\.  ]]
   [[    "${lines[7]}"   =~  \
@@ -105,7 +105,7 @@ HEREDOC
 
   [[    "${lines[8]}"   =~  \
 .*\[.*Example\ Folder/1.*\].*\ ✔️\ \ .*\[\ \].*\ Example\ todo\ description\ one\.     ]]
-  [[    "${lines[9]}"   =~  ---                                                                         ]]
+  [[    "${lines[9]}"   =~  ---                                           ]]
   [[    "${lines[10]}"  =~  \
 .*\[.*Example\ Folder/1\ 1.*\].*\ .*\[.*\ .*\].*\ todo\ one\ task\ one\.  ]]
   [[    "${lines[11]}"  =~  \
