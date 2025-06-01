@@ -3,7 +3,7 @@
 
 load test_helper
 
-# recursive
+# recursive ###################################################################
 
 @test "'tasks --recursive' exits with 0 and lists todos and tasks recursively in the current notebook." {
   {
