@@ -184,7 +184,7 @@ sudo dnf -y install python3-pygments
 sudo dnf -y install w3m
 
 # install nvm (https://github.com/nvm-sh/nvm)
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.36.0/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
 
 # add project root to $PATH
 if [[ -f "${HOME}/.bashrc" ]] && grep -q -v vagrant "${HOME}/.bashrc"
@@ -193,6 +193,15 @@ then
   printf "\\nexport PATH=\"/vagrant:\${PATH}\"\\n" >> "${HOME}/.bashrc"
 fi
 HEREDOC
+
+  ###########
+  # Fedora 41
+
+  # https://app.vagrantup.com/fedora/boxes/41-cloud-base
+  # config.vm.define "fedora41" do |fedora41|
+  #   fedora41.vm.box = "fedora/41-cloud-base"
+  #   fedora41.vm.provision :shell, inline: $fedora_setup, privileged: false
+  # end
 
   ###########
   # Fedora 38
@@ -247,6 +256,24 @@ then
   printf "\\nexport PATH=\"/vagrant:\${PATH}\"\\n" >> "${HOME}/.bashrc"
 fi
 HEREDOC
+
+  #############
+  # NixOS 24.11
+
+  # config.vm.define "nixos2411" do |nixos2411|
+  #   nixos2411.vm.box          = "boxen/nixos-24.11"
+  #   nixos2411.vm.box_version  = "2025.04.02.21"
+  #   nixos2411.vm.provision :shell, inline: $nixos_setup, privileged: false
+  # end
+
+  #############
+  # NixOS 24.05
+
+  # config.vm.define "nixos2405" do |nixos2405|
+  #   nixos2405.vm.box          = "nixbox/nixos"
+  #   nixos2405.vm.box_version  = "24.05"
+  #   nixos2405.vm.provision :shell, inline: $nixos_setup, privileged: false
+  # end
 
   #############
   # NixOS 23.11

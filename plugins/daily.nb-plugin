@@ -41,11 +41,21 @@ HEREDOC
 _daily() {
   # Usage: _daily_show <path>
   _daily_show() {
+    local _info_line=
     local _target_path="${1:-}"
 
     [[ -n "${_target_path:-}" ]] || return 1
 
-    printf "%s:\\n" "$(_color_primary "${_target_path##*\/}")"
+    _info_line="$(_show "${_target_path:-}" --info-line)"
+
+    if [[ "${_info_line}" =~ Daily ]]
+    then
+      _info_line="${_info_line%% \"Daily*}"
+    else
+      _info_line="${_info_line%% \" · \"*}"
+    fi
+
+    printf "%s\\n" "${_info_line}:"
 
     _show "${_target_path:-}" --print
 
@@ -83,7 +93,8 @@ _daily() {
         -maxdepth 1                                               \
         -type     f                                               \
         -name     "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9].md"   \
-        | sort
+        | sort                                                    \
+        | sed '1!G;h;$!d' # https://stackoverflow.com/a/744093
     ))
 
     if ! ((${#_daily_note_paths[@]}))
@@ -102,27 +113,18 @@ _daily() {
         _exit_1 printf "Not found.\\n"
       fi
 
-      _note_number=$((_note_number + 1))
-
-      _target_path="$(
-        printf "%s\\n" "${_daily_note_paths[@]:-}"  \
-          | tail -${_note_number:-}                 \
-          | head -1
-      )"
+      _target_path="${_daily_note_paths[${_note_number}]}"
 
       _daily_show "${_target_path:-}"
     else
       {
         printf "%s\\n" "${_daily_note_paths[@]:-}"
       } | {
-        local _counter=
-        _counter=$((${#_daily_note_paths[@]}))
+        local _counter=0
 
         local               __line=
         while IFS= read -r  __line || [[ -n "${__line:-}" ]]
         do
-          _counter=$((_counter - 1))
-
           {
             _list "${__line}" --no-color
           } | {
@@ -130,23 +132,34 @@ _daily() {
               "$(_color_brackets "${_counter:-0}")" \
               "$(cat)"
           }
+
+          _counter=$((_counter + 1))
         done
       }
     fi
   else
     local _timestamp=
-    _timestamp="$(date "+%H:%M:%S")"
+    _timestamp="$(date "${NB_DAILY_TIMESTAMP_FORMAT:-"+%H:%M:%S"}")"
+
+    local _datestamp=
+    _datestamp="$(date "${NB_DAILY_DATESTAMP_FORMAT:-"+%Y-%m-%d"}")"
 
     local _formatted_content=
     _formatted_content="$(_join " " "${_content[@]}")"
 
-    local _timestamped_content="[${_timestamp}] ${_formatted_content}"
+    local _timestamped_content="\
+## ${_timestamp}
+
+${_formatted_content}"
 
     if [[ ! -e "${_target_path:-}"  ]]
     then
-      _add --content "${_timestamped_content}" --filename "${_target_filename}"
+      _add                                  \
+        --content "${_timestamped_content}" \
+        --filename "${_target_filename}"    \
+        --title     "Daily ${_datestamp:-}"
     else
-      _edit "${_target_filename}" --append "${_timestamped_content}"
+      _edit "${_target_filename}" --append "${_NEWLINE}${_timestamped_content}"
     fi
   fi
 }

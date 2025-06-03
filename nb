@@ -82,7 +82,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.19.1"
+_VERSION="7.20.0"
 
 # $_ME
 #
@@ -13451,7 +13451,7 @@ $(_color_primary "Shortcut Aliases"):
 HEREDOC
 }
 _bookmark() {
-    # Usage: _bookmark_cleanup_tag_content <string>
+  # Usage: _bookmark_cleanup_tag_content <string>
   _bookmark_cleanup_tag_content() {
     local _character_removal_pattern=
     _character_removal_pattern="$(
@@ -13504,12 +13504,13 @@ _bookmark() {
   local _arguments=()
   local _bookmark_content=
   local _comment=
+  local _content_cleanup_tool="readability"
+  local _content_conversion_tool="pandoc"
   local _edit_before_commit=0
   local _encrypt=0
   local _non_url_arguments=()
   local _password=
   local _quote=
-  local _readability_enabled=1
   local _related_identifiers=()
   local _request_page=1
   local _save_source=0
@@ -13522,6 +13523,16 @@ _bookmark() {
   local _target_filename=
   local _title=
   local _url=
+
+  if [[ -n "${NB_BOOKMARK_CONTENT_CLEANUP_TOOL+x}"    ]]
+  then
+    _content_cleanup_tool="${NB_BOOKMARK_CONTENT_CLEANUP_TOOL}"
+  fi
+
+  if [[ -n "${NB_BOOKMARK_CONTENT_CONVERSION_TOOL+x}" ]]
+  then
+    _content_conversion_tool="${NB_BOOKMARK_CONTENT_CONVERSION_TOOL}"
+  fi
 
   local _previous_arg=
 
@@ -13545,6 +13556,16 @@ _bookmark() {
 
         shift
         ;;
+      --content*cleanup*tool)
+        _content_cleanup_tool="${2:-}"
+
+        shift
+        ;;
+      --content*conversion*tool)
+        _content_conversion_tool="${2:-}"
+
+        shift
+        ;;
       --download|--fetch|--online|--request)
         _request_page=1
         ;;
@@ -13561,9 +13582,6 @@ _bookmark() {
         ;;
       --no*download|--no*fetch|--no*request|--offline)
         _request_page=0
-        ;;
-      --no*readab*|--skip*readab*)
-        _readability_enabled=0
         ;;
       --password)
         _password="$(_option_get_value "${1}" "${2:-}")"
@@ -13669,6 +13687,9 @@ _bookmark() {
 
     shift
   done
+
+  _debug echo "\${_content_cleanup_tool}: '${_content_cleanup_tool:-}'"
+  _debug echo "\${_content_conversion_tool}: '${_content_conversion_tool:-}'"
 
   # `bookmark list`
 
@@ -14213,14 +14234,27 @@ _bookmark() {
     then
       local _processed_content=
 
-      if _command_exists "pandoc"   || _command_exists "readable"
+      if  {
+            [[ "${_content_conversion_tool:-}"  == "pandoc"   ]] &&
+            _command_exists "pandoc"
+          } || {
+            [[ "${_content_cleanup_tool:-}"     =~ readab     ]] &&
+            _command_exists "readable"
+          } || {
+            [[ "${_content_cleanup_tool}"       == "rdrview"  ]] ||
+            _contains "${_content_conversion_tool}" \
+                      "html2markdown"               \
+                      "html-to-markdown"            \
+                      "markitdown"
+          }
       then
         _processed_content="$(
           {
             cat "${_temp_file}"
           } | {
-            if _command_exists "readable" && ((_readability_enabled))
-            then
+            if [[ "${_content_cleanup_tool:-}"  =~ readab     ]] &&
+               _command_exists "readable"
+            then # https://www.npmjs.com/package/readability-cli
               readable            \
                 --base "${_url}"  \
                 --quiet           \
@@ -14229,8 +14263,25 @@ _bookmark() {
               cat
             fi
           } | {
-            if _command_exists "pandoc"
-            then
+            if [[ "${_content_cleanup_tool}"    == "rdrview"  ]] &&
+               _command_exists "rdrview"
+            then # https://github.com/eafer/rdrview
+              rdrview -H -u "${_url}"
+            else
+              cat
+            fi
+          } | {
+            if [[ "${_content_conversion_tool:-}"  == "markitdown"  ]] &&
+               _command_exists "markitdown"
+            then # https://github.com/microsoft/markitdown
+              markitdown
+            else
+              cat
+            fi
+          } | {
+            if [[ "${_content_conversion_tool:-}"  == "pandoc"      ]]
+               _command_exists "pandoc"
+            then # https://pandoc.org
               {
                 _pandoc                                 \
                   --standard-input                      \
@@ -14242,6 +14293,16 @@ _bookmark() {
                 # strip empty list items
                 LC_ALL=C sed -E -e 's/^-[[:space:]]*$//g'
               }
+            else
+              cat
+            fi
+          } | {
+            if _contains  "${_content_conversion_tool}" \
+                          "html2markdown"               \
+                          "html-to-markdown"            &&
+               _command_exists "html2markdown"
+            then # https://github.com/JohannesKaufmann/html-to-markdown
+              html2markdown
             else
               cat
             fi

@@ -25,18 +25,40 @@ load test_helper
     "${_NB}" init
     "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/daily.nb-plugin"
 
-    "${_NB}" add                                      \
-      --content   "[01:01:01] Example content one."   \
-      --filename  "43210101.md"
+    "${_NB}" add                    \
+      --filename  "43210101.md"     \
+      --content   "$(cat <<HEREDOC
+# Daily 4321-01-01
 
-    "${_NB}" add                                      \
-      --content   "[02:02:02] Example content two."   \
-      --filename  "43210202.md"
+## 01:01:01
 
-    "${_NB}" add                                      \
-      --content   "[03:03:03] Example content three." \
-      --filename  "43210303.md"
-  }
+Example content one.
+HEREDOC
+      )"
+
+    "${_NB}" add                    \
+      --filename  "43210202.md"     \
+      --content   "$(cat <<HEREDOC
+# Daily 4321-02-02
+
+## 02:02:02
+
+Example content two.
+HEREDOC
+      )"
+
+
+    "${_NB}" add                    \
+      --filename  "43210303.md"     \
+      --content   "$(cat <<HEREDOC
+# Daily 4321-03-03
+
+## 03:03:03
+
+Example content three.
+HEREDOC
+      )"
+    }
 
   run "${_NB}" daily --prev
 
@@ -45,12 +67,9 @@ load test_helper
 
   [[ "${status}"    -eq 0 ]]
 
-  [[ "${lines[0]}"  =~  \
-.*[.*2.*].*\ \[1\]\ 43210101.md\ ·\ \"\[01:01:01\]\ Example\ content\ one\.\"   ]]
-  [[ "${lines[1]}"  =~  \
-.*[.*1.*].*\ \[2\]\ 43210202.md\ ·\ \"\[02:02:02\]\ Example\ content\ two\.\"   ]]
-  [[ "${lines[2]}"  =~  \
-.*[.*0.*].*\ \[3\]\ 43210303.md\ ·\ \"\[03:03:03\]\ Example\ content\ three\.\" ]]
+  [[ "${lines[0]}"  =~  .*[.*0.*].*\ \[3\]\ Daily\ 4321-03-03 ]]
+  [[ "${lines[1]}"  =~  .*[.*1.*].*\ \[2\]\ Daily\ 4321-02-02 ]]
+  [[ "${lines[2]}"  =~  .*[.*2.*].*\ \[1\]\ Daily\ 4321-01-01 ]]
 }
 
 @test "'nb daily --prev <number>' shows notes." {
@@ -58,17 +77,39 @@ load test_helper
     "${_NB}" init
     "${_NB}" plugins install "${NB_TEST_BASE_PATH}/../plugins/daily.nb-plugin"
 
-    "${_NB}" add                                      \
-      --content   "[01:01:01] Example content one."   \
-      --filename  "43210101.md"
+    "${_NB}" add                    \
+      --filename  "43210101.md"     \
+      --content   "$(cat <<HEREDOC
+# Daily 4321-01-01
 
-    "${_NB}" add                                      \
-      --content   "[02:02:02] Example content two."   \
-      --filename  "43210202.md"
+## 01:01:01
 
-    "${_NB}" add                                      \
-      --content   "[03:03:03] Example content three." \
-      --filename  "43210303.md"
+Example content one.
+HEREDOC
+      )"
+
+    "${_NB}" add                    \
+      --filename  "43210202.md"     \
+      --content   "$(cat <<HEREDOC
+# Daily 4321-02-02
+
+## 02:02:02
+
+Example content two.
+HEREDOC
+      )"
+
+
+    "${_NB}" add                    \
+      --filename  "43210303.md"     \
+      --content   "$(cat <<HEREDOC
+# Daily 4321-03-03
+
+## 03:03:03
+
+Example content three.
+HEREDOC
+      )"
   }
 
   run "${_NB}" daily --prev 1
@@ -76,34 +117,42 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0 ]]
+  [[ "${status}"    -eq 0     ]]
 
   [[ "${lines[0]}"  =~  \
-.*43210202\.md.*:                       ]]
+.*\[.*2.*\].*43210202\.md.*:  ]]
   [[ "${lines[1]}"  =~  \
-\[02:02:02\]\ Example\ content\ two\.   ]]
+.*\#.*Daily\ 4321-02-02       ]]
+  [[ "${lines[2]}"  =~  \
+.*\#\#.*02:02:02              ]]
+  [[ "${lines[3]}"  =~  \
+Example\ content\ two\.       ]]
 
   run "${_NB}" daily --prev 0
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0 ]]
+  [[ "${status}"    -eq 0     ]]
 
   [[ "${lines[0]}"  =~  \
-.*43210303\.md.*:                       ]]
+.*\[.*3.*\].*43210303\.md.*:  ]]
   [[ "${lines[1]}"  =~  \
-\[03:03:03\]\ Example\ content\ three\. ]]
+.*\#.*Daily\ 4321-03-03       ]]
+  [[ "${lines[2]}"  =~  \
+.*\#\#.*03:03:03              ]]
+  [[ "${lines[3]}"  =~  \
+Example\ content\ three\.     ]]
 
   run "${_NB}" daily --prev 42
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 1 ]]
+  [[ "${status}"    -eq 1     ]]
 
   [[ "${lines[0]}"  =~  \
-.*!.*\ Not\ found\.                     ]]
+.*!.*\ Not\ found\.           ]]
 }
 
 # `daily` #####################################################################
@@ -140,14 +189,18 @@ load test_helper
 
   [[ "${status}"    -eq 0 ]]
 
-  "${_NB}" show 1 --print
-
   [[ "${lines[0]}"  =~  \
-.*[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]\.md.*:             ]]
+.*[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]\.md.*:     ]]
   [[ "${lines[1]}"  =~  \
-\[[0-9][0-9]:[0-9][0-9]:[0-9][0-9]\]\ Example\ content\ one\. ]]
+\#.*Daily.*[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9] ]]
   [[ "${lines[2]}"  =~  \
-\[[0-9][0-9]:[0-9][0-9]:[0-9][0-9]\]\ Example\ content\ two\. ]]
+\#\#.*[0-9][0-9]:[0-9][0-9]:[0-9][0-9]                ]]
+  [[ "${lines[3]}"  =~  \
+Example\ content\ one\.                               ]]
+  [[ "${lines[4]}"  =~  \
+\#\#.*[0-9][0-9]:[0-9][0-9]:[0-9][0-9]                ]]
+  [[ "${lines[5]}"  =~  \
+Example\ content\ two\.                               ]]
 }
 
 @test "'nb daily \"<content>\"' (with quotes) without existing note adds new note with content." {
@@ -168,10 +221,11 @@ load test_helper
 
   "${_NB}" show 1 --print
 
-  [[ "${output}"    =~  Added:\ .*[.*1.*].*\ .*${_target_filename}    ]]
-  [[ "$("${_NB}" show 1 --print | wc -l | awk '$1=$1')" == 1          ]]
+  [[ "${output}"    =~  Added:\ .*[.*1.*].*\ .*${_target_filename}  ]]
+  [[ "$("${_NB}" show 1 --print | wc -l | awk '$1=$1')" == 5        ]]
   [[ "$("${_NB}" show 1 --print)" =~ \
-\[[0-9][0-9]:[0-9][0-9]:[0-9][0-9]\]\ Example\ content\.              ]]
+\#\#.*[0-9][0-9]:[0-9][0-9]:[0-9][0-9]                              ]]
+  [[ "$("${_NB}" show 1 --print)" =~ Example\ content\.             ]]
 }
 
 @test "'nb daily <content>' (without quotes) without existing note adds new note with content." {
@@ -192,10 +246,11 @@ load test_helper
 
   "${_NB}" show 1 --print
 
-  [[ "${output}"    =~  Added:\ .*[.*1.*].*\ .*${_target_filename}    ]]
-  [[ "$("${_NB}" show 1 --print | wc -l | awk '$1=$1')" == 1          ]]
+  [[ "${output}"    =~  Added:\ .*[.*1.*].*\ .*${_target_filename}  ]]
+  [[ "$("${_NB}" show 1 --print | wc -l | awk '$1=$1')" == 5        ]]
   [[ "$("${_NB}" show 1 --print)" =~ \
-\[[0-9][0-9]:[0-9][0-9]:[0-9][0-9]\]\ Example\ note\ content\.        ]]
+\#\#.*[0-9][0-9]:[0-9][0-9]:[0-9][0-9]                              ]]
+  [[ "$("${_NB}" show 1 --print)" =~ Example\ note\ content\.       ]]
 }
 
 @test "'nb daily \"<content>\"' (with quotes) with existing note adds content to existing note." {
@@ -219,11 +274,17 @@ load test_helper
   "${_NB}" show 1 --print
 
   [[ "${output}"    =~  Updated:\ .*[.*1.*].*\ .*${_target_filename}  ]]
-  [[ "$("${_NB}" show 1 --print | wc -l | awk '$1=$1')" == 2          ]]
-  [[ "$("${_NB}" show 1 --print | sed -n '1p')" =~ \
-\[[0-9][0-9]:[0-9][0-9]:[0-9][0-9]\]\ Example\ initial\ content\.     ]]
-  [[ "$("${_NB}" show 1 --print | sed -n '2p')" =~ \
-\[[0-9][0-9]:[0-9][0-9]:[0-9][0-9]\]\ Example\ new\ content\.         ]]
+
+  "${_NB}" show 1 --print --no-color | grep -q \
+"# Daily \d\d\d\d-\d\d-\d\d
+
+## \d\d:\d\d:\d\d
+
+Example initial content.
+
+## \d\d:\d\d:\d\d
+
+Example new content."
 }
 
 @test "'nb daily <content>' (without quotes) with existing note adds content to existing note." {
@@ -247,11 +308,17 @@ load test_helper
   "${_NB}" show 1 --print
 
   [[ "${output}"    =~  Updated:\ .*[.*1.*].*\ .*${_target_filename}  ]]
-  [[ "$("${_NB}" show 1 --print | wc -l | awk '$1=$1')" == 2          ]]
-  [[ "$("${_NB}" show 1 --print | sed -n '1p')" =~ \
-\[[0-9][0-9]:[0-9][0-9]:[0-9][0-9]\]\ Example\ initial\ content\.     ]]
-  [[ "$("${_NB}" show 1 --print | sed -n '2p')" =~ \
-\[[0-9][0-9]:[0-9][0-9]:[0-9][0-9]\]\ Example\ new\ content\.         ]]
+
+  "${_NB}" show 1 --print --no-color | grep -q \
+"# Daily \d\d\d\d-\d\d-\d\d
+
+## \d\d:\d\d:\d\d
+
+Example initial content.
+
+## \d\d:\d\d:\d\d
+
+Example new content."
 }
 
 # help ########################################################################
