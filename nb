@@ -3975,6 +3975,7 @@ HEREDOC
 
     local _remote_url=
 
+    echo "about to get remote url"
     if ! _remote_url="$(git -C "${_notebook_path}" remote get-url origin 2>/dev/null)" ||
        [[ -z "${_remote_url:-}"     ]]
     then
