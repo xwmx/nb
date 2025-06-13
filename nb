@@ -445,7 +445,7 @@ _option_value_is_present() {
 if [[ -n "${XDG_CONFIG_HOME}" ]]; then
   # If XDG_CONFIG_HOME exists put .nbrc config file in a subdirectory.
   mkdir -p "${XDG_CONFIG_HOME}/${_ME%%.*}" &&
-  export NBRC_PATH="${NBRC_PATH:-"${XDG_CONFIG_HOME}/${_ME%%.*}/.${_ME}rc"}"
+  export NBRC_PATH="${NBRC_PATH:-"${XDG_CONFIG_HOME}/${_ME%%.*}/${_ME}rc"}"
 else
   # Otherwise, use the default path
   export NBRC_PATH="${NBRC_PATH:-"${HOME}/.${_ME}rc"}"
