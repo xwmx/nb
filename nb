@@ -438,7 +438,8 @@ _option_value_is_present() {
 
 # $NBRC_PATH
 #
-# Default: `$HOME/.nbrc`
+# Default: `$HOME/.nbrc`, or `$XDG_CONFIG_HOME/nb/config` if `XDG_CONFIG_HOME`
+#          is defined and `$HOME/.nbrc` does not already exist
 #
 # Check if XDG_CONFIG_HOME exists
 if [[ -n "${XDG_CONFIG_HOME}" ]]; then
