@@ -82,7 +82,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.20.0"
+_VERSION="7.20.1"
 
 # $_ME
 #
@@ -2807,15 +2807,15 @@ _open_in_gui_app() {
         "${_gui_browser_command[@]:-}" "${_target:-}" 2>/dev/null &
       fi
     fi
+  elif _command_exists "wslview"
+  then
+    wslview "${_target}"
   elif _command_exists "xdg-open"
   then
     xdg-open "${_target}"
   elif _command_exists "open"
   then
     open "${_target}"
-  elif _command_exists "wslview"
-  then
-    wslview "${_target}"
   elif [[ "${OSTYPE}" =~ cygwin|msys|win32    ]]
   then # https://stackoverflow.com/q/3739327
     rundll32 url.dll,FileProtocolHandler "${_target}"
