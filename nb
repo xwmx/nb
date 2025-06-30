@@ -440,16 +440,28 @@ _option_value_is_present() {
 #
 # Default: `$HOME/.nbrc`, or `$XDG_CONFIG_HOME/nb/config` if `XDG_CONFIG_HOME`
 #          is defined and `$HOME/.nbrc` does not already exist
-#
-# Check if XDG_CONFIG_HOME exists
-if [[ -n "${XDG_CONFIG_HOME}" ]]; then
-  # If XDG_CONFIG_HOME exists put .nbrc config file in a subdirectory.
-  mkdir -p "${XDG_CONFIG_HOME}/${_ME%%.*}" &&
-  export NBRC_PATH="${NBRC_PATH:-"${XDG_CONFIG_HOME}/${_ME%%.*}/${_ME}rc"}"
+
+# This is the old way of determining the global nbrc path, to preserve
+# backwards compatibility. I propose deprecating it.
+_deprec_default_nbrc="${HOME}/.${_ME}rc"
+
+# This is the new, XDG-compliant default location
+_xdg_default_nbrc="${XDG_CONFIG_HOME:-${HOME}/.config}/${_ME%%.*}/${_ME}rc"
+
+# Choose a default path to use
+if [[ -e "${_deprec_default_nbrc}" ]]; then
+  # If the old default nbrc file exists, use it
+  _nbrc_path="${_deprec_default_nbrc}"
+  # TODO: Potentially output a warning here that this location is deprecated.
 else
-  # Otherwise, use the default path
-  export NBRC_PATH="${NBRC_PATH:-"${HOME}/.${_ME}rc"}"
+  # Otherwise, use the new, XDG-compliant default path
+  _nbrc_path="${_xdg_default_nbrc}"
 fi
+
+# In either case, defer to a potential external definition of NBRC_PATH
+export NBRC_PATH="${NBRC_PATH:-${_nbrc_path}}"
+# TODO: Create the path to the nbrc file if it does not exist yet. Perhaps do
+#       this in the _init_create_rc_file function.
 
 # Handle symlinked NBRC_PATH.
 if [[ -L "${NBRC_PATH}" ]]
