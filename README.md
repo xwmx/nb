@@ -8059,11 +8059,9 @@ Alias:
 ```text
 [1]  auto_sync
      ---------
-    If set to "1", operations like `add`, `edit`, and `delete`
-    will trigger a git commit that syncs notebook changes to
-    the remote repository.
-
-    To disable this behavior, set this value to "0".
+     By default, operations that trigger a git commit like `add`, `edit`,
+     and `delete` will sync notebook changes to the remote repository, if
+     the notebook's remote is set. To disable this behavior, set this to "0".
 
      • Default Value: 1
 ```
