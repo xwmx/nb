@@ -8067,7 +8067,7 @@ Alias:
      ---------
      By default, operations that trigger a git commit like `add`, `edit`,
      and `delete` will sync notebook changes to the remote repository, if
-     one is set. To disable this behavior, set this to "0".
+     the notebook's remote is set. To disable this behavior, set this to "0".
 
      • Default Value: 1
 ```
