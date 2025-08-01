@@ -5768,9 +5768,9 @@ timestamp is used for sorting.
 
 `nb` also uses plain text files to store ids and state information in
 git, including
-[`.index` files](https://github.com/xwmx/nb#index-files),
-[`.pindex` files](https://github.com/xwmx/nb#pindex-files),
-and [`.archived` files](https://github.com/xwmx/nb#archived-notebooks).
+[`.index` files](#index-files),
+[`.pindex` files](#pindex-files),
+and [`.archived` files](#archived-notebooks).
 
 #### Front Matter
 
