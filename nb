@@ -8969,7 +8969,8 @@ HEREDOC
            [[ -n "${_local_notebook_path:-}"        ]]
         then
           _notebook_path="${_local_notebook_path%/}"
-        elif [[ -d "${NB_DIR}/${_selector_notebook:-}/.git"    ]] &&
+        elif [[ -d "${NB_DIR}/${_selector_notebook:-}/.git"    ]] ||
+             [[ -e "${NB_DIR}/${_selector_notebook:-}/.git"    ]] &&
              [[ -f "${NB_DIR}/${_selector_notebook:-}/.index"  ]]
         then
           _notebook_path="${NB_DIR}/${_selector_notebook%/}"
