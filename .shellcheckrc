@@ -59,3 +59,11 @@ disable=SC2206,SC2207
 #
 # https://www.shellcheck.net/wiki/SC2317
 disable=SC2317
+
+# Disable SC2317 and SC2329
+#
+# Many commands are invoked indirectly.
+#
+# https://www.shellcheck.net/wiki/SC2317
+# https://www.shellcheck.net/wiki/SC2329
+disable=SC2317,SC2329
