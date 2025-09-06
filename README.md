@@ -9903,7 +9903,7 @@ Default: 📹
 ```text
 Default: '15'
 
-Set to a positive number to limit the output of `nb` and `nls` to that value.
+Set to a positive number to limit the output of `nb` and `nb ls` to that value.
 Set to "auto" to automatically limit output to the current terminal height.
 Set a maximum auto limit with `auto^<max>`, e.g., `auto^15`.
 Subtract an auto limit offset for multiline prompts with `auto-<offset>`.
