@@ -15028,11 +15028,11 @@ _edit() {
       --append|--overwrite|--prepend)
         _edit_type="${1#--}"
 
-        if [[ -n  "${2:-}"                  ]] &&
-           [[ !   "${2:-}" =~ ^--[A-z0-9]+  ]] &&
+        if [[ -n  "${2:-}"                    ]] &&
+           [[ !   "${2:-}" =~ ^--[A-Za-z0-9]+ ]] &&
            ! _contains "${2:-}" "-c" "-e"
         then
-          if [[ -n "${_content:-}"          ]]
+          if [[ -n "${_content:-}"            ]]
           then
             _content+="${_NEWLINE}"
           fi
