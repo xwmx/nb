@@ -14997,6 +14997,7 @@ _edit() {
   local _edit_type="append"
   local _local_editor=
   local _password=
+  local _selector=
 
   while ((${#}))
   do
