@@ -11178,9 +11178,11 @@ blockquote {
 }
 
 code {
+  background-color:   ${_color_background_alt_hex};
   font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
   font-size:          85%;
   margin:             0;
+  padding:            0.2em 0.4em;
   white-space:        pre-wrap;
 }
 
@@ -11199,6 +11201,7 @@ pre.sourceCode {
 
 pre code {
   overflow:           visible;
+  padding:            0;
 }
 
 hr  {
