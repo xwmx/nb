@@ -206,7 +206,7 @@ _resolve_symlink() {
 _sed_i() {
   local _usage=
 
-  if _usage="$(sed --help 2>&1)"
+  if _usage="$(sed --help 2>&1 || false)"
   then # GNU
     sed -i      "${@}"
   else # BSD
