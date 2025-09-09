@@ -4444,7 +4444,8 @@ $(_color_primary "Usage"):
         [<task-number>]
   ${_ME} edit ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           [-c <content> | --content <content>] [--edit]
-          [-e <editor> | --editor <editor>] [--overwrite] [--prepend]
+          [-e <editor> | --editor <editor>] [-l|--last] [--overwrite]
+          [--prepend]
   ${_ME} export ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             <path> [-f | --force] [<pandoc options>...]
   ${_ME} export notebook <name> [<path>]
@@ -14939,7 +14940,8 @@ _describe_edit() {
 $(_color_primary "Usage"):
   ${_ME} edit ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           [-c <content> | --content <content>] [--edit]
-          [-e <editor> | --editor <editor>] [--overwrite] [--prepend]
+          [-e <editor> | --editor <editor>] [-l|--last] [--overwrite]
+          [--prepend]
 
 $(_color_primary "Options"):
   -c, --content <content>  Content to add to the item.
@@ -14947,6 +14949,7 @@ $(_color_primary "Options"):
                            content is piped or passed as an argument.
   -e, --editor <editor>    Edit the note with <editor>, overriding the editor
                            specified in the \`\$EDITOR\` environment variable.
+  -l, --last               Edit the last modified item.
   --overwrite              Overwrite existing content with <content> and
                            standard input.
   --prepend                Prepend <content> and standard input before
@@ -14995,6 +14998,7 @@ _edit() {
   local _content_option_present=0
   local _edit_before_commit=0
   local _edit_type="append"
+  local _edit_last_item=0
   local _local_editor=
   local _password=
   local _selector=
@@ -15046,6 +15050,9 @@ _edit() {
           shift
         fi
         ;;
+      -l|--last)
+        _edit_last_item=1;
+        ;;
       --password)
         _password="$(_option_get_value "${1}" "${2:-}")"
 
@@ -15062,7 +15069,25 @@ _edit() {
     shift
   done
 
-  [[ -z "${_selector:-}" ]] && _exit_1 _help "edit"
+  if ((_edit_last_item)) && [[ -z "${_selector:-}" ]]
+  then
+    _selector="$(
+      _list             \
+        --empty         \
+        --filenames     \
+        --limit 1       \
+        --no-color      \
+        --no-id         \
+        --no-indicator  \
+        --page 1        \
+        2>/dev/null || :
+    )"
+  fi
+
+  if [[ -z "${_selector:-}" ]]
+  then
+    _exit_1 _help "edit"
+  fi
 
   local _relative_path=
   _relative_path="$(_show "${_selector:-}" --relative-path)"

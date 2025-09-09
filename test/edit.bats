@@ -1131,6 +1131,216 @@ HEREDOC
   [[ "${output}" =~ Example\ Filename.md  ]]
 }
 
+# --last option ###############################################################
+
+@test "'edit --last' with empty repo exits and prints help." {
+  {
+    "${_NB}" init
+  }
+
+  run "${_NB}" edit --last
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 1:
+
+  [[ ${status} -eq 1 ]]
+
+  # Does not create git commit:
+
+  cd "${NB_DIR}/home" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
+  if [[ -n "$(git status --porcelain)" ]]
+  then
+    sleep 1
+  fi
+  ! git log | grep -q '\[nb\] Edit'
+
+  # Prints help information:
+
+  [[ "${lines[0]}" =~ Usage.*\:     ]]
+  [[ "${lines[1]}" =~ \ \ nb\ edit  ]]
+}
+
+@test "'edit --last' edits last modified item." {
+  {
+    "${_NB}" init
+    "${_NB}" add "Example initial content one." --filename "example one.md"
+    sleep 0.5
+    "${_NB}" add "Example initial content two." --filename "example two.md"
+    sleep 0.5
+    "${_NB}" add "Example initial content three." --filename "example three.md"
+
+    declare _original_content_one="$(cat "${NB_DIR}/home/example one.md")"
+    declare _original_content_two="$(cat "${NB_DIR}/home/example two.md")"
+    declare _original_content_three="$(cat "${NB_DIR}/home/example three.md")"
+
+    declare -a _items_unedited=($(
+      "${_NB}" list  \
+        --empty     \
+        --filenames \
+        --no-color  \
+        --no-id     \
+        2>/dev/null || :))
+
+    printf "\$_items_unedited[0]: %s\\n" "${_items_unedited[0]}"
+    printf "\$_items_unedited[1]: %s\\n" "${_items_unedited[1]}"
+    printf "\$_items_unedited[2]: %s\\n" "${_items_unedited[2]}"
+
+    [[ "${_items_unedited[0]}" == "example three.md" ]]
+    [[ "${_items_unedited[1]}" == "example two.md"   ]]
+    [[ "${_items_unedited[2]}" == "example one.md"   ]]
+
+    run "${_NB}" edit "example two.md" --content "edit one"
+
+    declare -a _items_after_edit_one=($(
+      "${_NB}" list  \
+        --empty     \
+        --filenames \
+        --no-color  \
+        --no-id     \
+        2>/dev/null || :))
+
+    printf "\$_items_after_edit_one[0]: %s\\n" "${_items_after_edit_one[0]}"
+    printf "\$_items_after_edit_one[1]: %s\\n" "${_items_after_edit_one[1]}"
+    printf "\$_items_after_edit_one[2]: %s\\n" "${_items_after_edit_one[2]}"
+
+    [[ "${_items_after_edit_one[0]}" == "example two.md"    ]]
+    [[ "${_items_after_edit_one[1]}" == "example three.md"  ]]
+    [[ "${_items_after_edit_one[2]}" == "example one.md"    ]]
+
+
+    [[    "$(cat "${NB_DIR}/home/example two.md")" =~ edit\ one   ]]
+    [[ !  "$(cat "${NB_DIR}/home/example two.md")" =~ mock_editor ]]
+  }
+
+  run "${_NB}" edit --last
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Updates note file:
+
+  printf "cat %s:\\n%s\\n" "${NB_DIR}/home/example two.md" \
+    "$(cat "${NB_DIR}/home/example two.md")"
+
+  [[ "$(cat "${NB_DIR}/home/example two.md")" =~ edit\ one   ]]
+  [[ "$(cat "${NB_DIR}/home/example two.md")" =~ mock_editor ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Edit'
+
+  # Prints output:
+
+  [[ "${output}" =~ Updated:        ]]
+  [[ "${output}" =~ [0-9]+          ]]
+  [[ "${output}" =~ example\ two.md ]]
+}
+
+@test "'edit -l' edits last modified item." {
+  {
+    "${_NB}" init
+    "${_NB}" add "Example initial content one." --filename "example one.md"
+    sleep 0.5
+    "${_NB}" add "Example initial content two." --filename "example two.md"
+    sleep 0.5
+    "${_NB}" add "Example initial content three." --filename "example three.md"
+
+    declare _original_content_one="$(cat "${NB_DIR}/home/example one.md")"
+    declare _original_content_two="$(cat "${NB_DIR}/home/example two.md")"
+    declare _original_content_three="$(cat "${NB_DIR}/home/example three.md")"
+
+    declare -a _items_unedited=($(
+      "${_NB}" list  \
+        --empty     \
+        --filenames \
+        --no-color  \
+        --no-id     \
+        2>/dev/null || :))
+
+    printf "\$_items_unedited[0]: %s\\n" "${_items_unedited[0]}"
+    printf "\$_items_unedited[1]: %s\\n" "${_items_unedited[1]}"
+    printf "\$_items_unedited[2]: %s\\n" "${_items_unedited[2]}"
+
+    [[ "${_items_unedited[0]}" == "example three.md" ]]
+    [[ "${_items_unedited[1]}" == "example two.md"   ]]
+    [[ "${_items_unedited[2]}" == "example one.md"   ]]
+
+    run "${_NB}" edit "example two.md" --content "edit one"
+
+    declare -a _items_after_edit_one=($(
+      "${_NB}" list  \
+        --empty     \
+        --filenames \
+        --no-color  \
+        --no-id     \
+        2>/dev/null || :))
+
+    printf "\$_items_after_edit_one[0]: %s\\n" "${_items_after_edit_one[0]}"
+    printf "\$_items_after_edit_one[1]: %s\\n" "${_items_after_edit_one[1]}"
+    printf "\$_items_after_edit_one[2]: %s\\n" "${_items_after_edit_one[2]}"
+
+    [[ "${_items_after_edit_one[0]}" == "example two.md"    ]]
+    [[ "${_items_after_edit_one[1]}" == "example three.md"  ]]
+    [[ "${_items_after_edit_one[2]}" == "example one.md"    ]]
+
+
+    [[    "$(cat "${NB_DIR}/home/example two.md")" =~ edit\ one   ]]
+    [[ !  "$(cat "${NB_DIR}/home/example two.md")" =~ mock_editor ]]
+  }
+
+  run "${_NB}" edit -l
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Updates note file:
+
+  printf "cat %s:\\n%s\\n" "${NB_DIR}/home/example two.md" \
+    "$(cat "${NB_DIR}/home/example two.md")"
+
+  [[ "$(cat "${NB_DIR}/home/example two.md")" =~ edit\ one   ]]
+  [[ "$(cat "${NB_DIR}/home/example two.md")" =~ mock_editor ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Edit'
+
+  # Prints output:
+
+  [[ "${output}" =~ Updated:        ]]
+  [[ "${output}" =~ [0-9]+          ]]
+  [[ "${output}" =~ example\ two.md ]]
+}
+
 # <selector> ##################################################################
 
 @test "'edit <selector>' with empty repo exits with 1 and prints message." {
