@@ -1179,7 +1179,7 @@ HEREDOC
     declare _original_content_three="$(cat "${NB_DIR}/home/example three.md")"
 
     declare -a _items_unedited=($(
-      "${_NB}" list  \
+      "${_NB}" list \
         --empty     \
         --filenames \
         --no-color  \
@@ -1197,7 +1197,7 @@ HEREDOC
     run "${_NB}" edit "example two.md" --content "edit one"
 
     declare -a _items_after_edit_one=($(
-      "${_NB}" list  \
+      "${_NB}" list \
         --empty     \
         --filenames \
         --no-color  \
@@ -1267,7 +1267,7 @@ HEREDOC
     declare _original_content_three="$(cat "${NB_DIR}/home/example three.md")"
 
     declare -a _items_unedited=($(
-      "${_NB}" list  \
+      "${_NB}" list \
         --empty     \
         --filenames \
         --no-color  \
@@ -1285,7 +1285,7 @@ HEREDOC
     run "${_NB}" edit "example two.md" --content "edit one"
 
     declare -a _items_after_edit_one=($(
-      "${_NB}" list  \
+      "${_NB}" list \
         --empty     \
         --filenames \
         --no-color  \
