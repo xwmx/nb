@@ -1358,6 +1358,9 @@ Edit the last modified item with [`--last`](#edit) / [`-l`](#edit):
 ```bash
 # edit the last modified item
 nb edit --last
+
+# edit the last modified item, short option
+nb edit -l
 ```
 
 ##### Editing Encrypted Notes
@@ -1392,6 +1395,9 @@ nb example:12 e
 
 # edit note 12 in the notebook named "example", alternative
 nb example:e 12
+
+# edit the last modified item, short option
+nb e -l
 ```
 
 For [`nb edit`](#edit) help information, run [`nb help edit`](#edit).
