@@ -10580,34 +10580,51 @@ _encrypt_file() {
 # Description:
 #   Print the name of the tool to use to decrypt the file at <path>.
 _get_decryption_tool() {
+  local _decryption_tool=
   local _encrypted_path="${1:-}"
 
-  if ! _command_exists "file"
+  if _command_exists "file"
   then
-    _exit_1 cat <<HEREDOC
-The \`file\` utility is required for decryption and is not found on this system.
-HEREDOC
-  fi
+    local _file_command_response=
+    _file_command_response="$(file "${_encrypted_path}" 2>/dev/null || :)"
 
-  local _file_command_response=
-  _file_command_response="$(file "${_encrypted_path}" 2>/dev/null || :)"
-
-  local _decryption_tool=
-
-  if [[   "${_file_command_response}" =~ (GPG|PGP)  ]]
-  then
-    _decryption_tool="gpg"
-  elif [[ "${_file_command_response}" =~ openssl    ]]
-  then
-    _decryption_tool="openssl"
-  elif [[ "${_file_command_response}" =~ data       ]]
-  then
-    local         __first_line=
-    IFS=  read -r __first_line < "${_encrypted_path}"
-
-    if [[ "${__first_line:-}" =~ age-encryption     ]]
+    if [[   "${_file_command_response}" =~ (GPG|PGP)  ]]
     then
+      _decryption_tool="gpg"
+    elif [[ "${_file_command_response}" =~ openssl    ]]
+    then
+      _decryption_tool="openssl"
+    elif [[ "${_file_command_response}" =~ data       ]]
+    then
+      local         __first_line=
+      IFS=  read -r __first_line < "${_encrypted_path}"
+
+      if [[ "${__first_line:-}" =~ age-encryption     ]]
+      then
+        _decryption_tool="age"
+      fi
+    fi
+  else
+    # Read the first line and first 16 bytes (for binary signatures)
+    local _first_line=
+    IFS= read -r _first_line < "${_encrypted_path}"
+
+    local _first_bytes=
+    _first_bytes="$(head -c 16 "${_encrypted_path}" | xxd -p)"
+
+    if [[ "${_first_line}" == age-encryption* ]]
+    then # age
       _decryption_tool="age"
+    elif [[ "${_first_line}" == "-----BEGIN PGP MESSAGE-----" ]] ||
+         [[ "${_first_line}" == "-----BEGIN GPG MESSAGE-----" ]]
+    then # GPG/PGP ASCII armored header
+      _decryption_tool="gpg"
+    elif [[ "${_first_bytes}" =~ ^8c ]] || [[ "${_first_bytes}" =~ ^99 ]]
+    then # GPG binary (magic number: 0x8c/0x99 at start, but can be more complicated)
+      _decryption_tool="gpg"
+    elif head -c 8 "${_encrypted_path}" | grep -q "^Salted__"
+    then # OpenSSL (Salted__ in ASCII at start)
+      _decryption_tool="openssl"
     fi
   fi
 
