@@ -6078,7 +6078,7 @@ Usage:
         [<task-number>]
   nb edit ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           [-c <content> | --content <content>] [--edit]
-          [-e <editor> | --editor <editor>] [-l|--last] [--overwrite]
+          [-e <editor> | --editor <editor>] [-l | --last] [--overwrite]
           [--prepend]
   nb export ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             <path> [-f | --force] [<pandoc options>...]
@@ -6924,7 +6924,7 @@ Examples:
 Usage:
   nb edit ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           [-c <content> | --content <content>] [--edit]
-          [-e <editor> | --editor <editor>] [-l|--last] [--overwrite]
+          [-e <editor> | --editor <editor>] [-l | --last] [--overwrite]
           [--prepend]
 
 Options:
