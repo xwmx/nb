@@ -15107,7 +15107,7 @@ _edit() {
           shift
         fi
         ;;
-      -l|--last)
+      -l|--last*)
         _edit_last_item=1;
         ;;
       --password)
