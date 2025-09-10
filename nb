@@ -12218,7 +12218,10 @@ _resolve_links() {
         local               __line=
         while IFS= read -r  __line
         do
-          if [[ "${__line:-}" =~ (\<nav|\<code)     ]]
+          if ! ((_linkable)) && [[ "${__line:-}" =~ ^[[:space:]]*\<body ]]
+          then
+            _linkable=1
+          elif [[ "${__line:-}" =~ ^[[:space:]]*(<p[[:space:]]*>)?(<pre[[:space:]]*>)?\<(nav|code) ]]
           then
             _linkable=0
           fi
@@ -12230,17 +12233,21 @@ _resolve_links() {
             printf "%s\\n" "${__line:-}"
           fi
 
-          if [[ "${__line:-}" =~ (\<\/nav|\<\/code) ]]
+          if [[ "${__line:-}" =~ \<\/(nav|code)[[:space:]]*\>(</pre[[:space:]]*>)?(</p[[:space:]]*>)?[[:space:]]*$ ]]
           then
             _linkable=1
           fi
         done
+      } | {
+        LC_ALL=C sed -E -e 's/(<code[^>]*>[^<]*)\[\[([^<]*<\/code>)/\1__LEFTDBLBRACKET__\2/g'
       } | {
         # wrap [[wiki-style links]] in HTML links and add missing notebooks
         sed -E                                                                                    \
 -e "/^${_ME}-linkable-${_ME}/ s/${_link_match_pattern}/${_replacement_pattern}/g"                 \
 -e "/^${_ME}-linkable-${_ME}/ s/${_labeled_link_match_pattern}/${_labeled_replacement_pattern}/g" \
 -e "/^${_ME}-linkable-${_ME}/ s/${_notebookless_pattern}/${_notebookless_replacement_pattern}/g"
+      } | {
+        LC_ALL=C sed -E -e 's/__LEFTDBLBRACKET__/[[/g'
       } | {
         LC_ALL=C sed -E -e "s/^${_ME}-linkable-${_ME}//g"
       }

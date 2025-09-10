@@ -248,11 +248,17 @@ load test_helper
 
 [[3]]
 
-<code>
+\`\`\`
+code-one
 [[4]]
-</code>
+code-two
+\`\`\`
 
-[[5]]
+Example content line [[5]] without inline code.
+
+Example content line [[6]] with \`[[7]]\` inline code.
+
+[[8]]
 HEREDOC
 )"
 
@@ -315,16 +321,22 @@ HEREDOC
 "<p><a href=\"//localhost:6789/home:3?--columns=70&--limit=2\">\[\[3\]\]</a></p>"
 
   printf "%s\\n" "${output}" | grep -q  \
-"<p><code>"
+"<pre><code>"
 
   printf "%s\\n" "${output}" | grep -q  \
-"\[\[4\]\]"
+"^\[\[4\]\]$"
 
   printf "%s\\n" "${output}" | grep -q  \
-"</code></p>"
+"</code></pre>"
 
   printf "%s\\n" "${output}" | grep -q  \
-"<p><a href=\"//localhost:6789/home:5?--columns=70&--limit=2\">\[\[5\]\]</a></p>"
+"<p>Example content line <a href=\"//localhost:6789/home:5?--columns=70&--limit=2\">\[\[5\]\]</a> without inline code.</p>"
+
+  printf "%s\\n" "${output}" | grep -q  \
+"<p>Example content line <a href=\"//localhost:6789/home:6?--columns=70&--limit=2\">\[\[6\]\]</a> with <code>\[\[7\]\]</code> inline code.</p>"
+
+  printf "%s\\n" "${output}" | grep -q  \
+"<p><a href=\"//localhost:6789/home:8?--columns=70&--limit=2\">\[\[8\]\]</a></p>"
 }
 
 # .html #######################################################################
