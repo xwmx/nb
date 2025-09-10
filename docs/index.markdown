@@ -1319,6 +1319,9 @@ nb example:12 edit
 
 # edit note 12 in the notebook named "example", alternative
 nb example:edit 12
+
+# edit the last modified item
+nb edit --last
 ```
 
 [`edit`](#edit) and other subcommands that take an identifier
@@ -1349,6 +1352,16 @@ and the [`--prepend`](#edit) option to prepend the new content before existing c
 When content is piped or specified with [`--content <content>`](#edit),
 use the [`--edit`](#edit) flag to open the file in the editor
 before the change is committed.
+
+Edit the last modified item with [`--last`](#edit) / [`-l`](#edit):
+
+```bash
+# edit the last modified item
+nb edit --last
+
+# edit the last modified item, short option
+nb edit -l
+```
 
 ##### Editing Encrypted Notes
 
@@ -1382,6 +1395,9 @@ nb example:12 e
 
 # edit note 12 in the notebook named "example", alternative
 nb example:e 12
+
+# edit the last modified item, short option
+nb e -l
 ```
 
 For [`nb edit`](#edit) help information, run [`nb help edit`](#edit).
@@ -6062,7 +6078,8 @@ Usage:
         [<task-number>]
   nb edit ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           [-c <content> | --content <content>] [--edit]
-          [-e <editor> | --editor <editor>] [--overwrite] [--prepend]
+          [-e <editor> | --editor <editor>] [-l|--last] [--overwrite]
+          [--prepend]
   nb export ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             <path> [-f | --force] [<pandoc options>...]
   nb export notebook <name> [<path>]
@@ -6907,7 +6924,8 @@ Examples:
 Usage:
   nb edit ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           [-c <content> | --content <content>] [--edit]
-          [-e <editor> | --editor <editor>] [--overwrite] [--prepend]
+          [-e <editor> | --editor <editor>] [-l|--last] [--overwrite]
+          [--prepend]
 
 Options:
   -c, --content <content>  Content to add to the item.
@@ -6915,6 +6933,7 @@ Options:
                            content is piped or passed as an argument.
   -e, --editor <editor>    Edit the note with <editor>, overriding the editor
                            specified in the `$EDITOR` environment variable.
+  -l, --last               Edit the last modified item.
   --overwrite              Overwrite existing content with <content> and
                            standard input.
   --prepend                Prepend <content> and standard input before

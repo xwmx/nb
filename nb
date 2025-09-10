@@ -82,7 +82,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.20.2"
+_VERSION="7.21.0"
 
 # $_ME
 #
@@ -206,7 +206,7 @@ _resolve_symlink() {
 _sed_i() {
   local _usage=
 
-  if _usage="$(sed --help 2>&1)"
+  if _usage="$(sed --help 2>&1 || false)"
   then # GNU
     sed -i      "${@}"
   else # BSD
@@ -4444,7 +4444,8 @@ $(_color_primary "Usage"):
         [<task-number>]
   ${_ME} edit ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           [-c <content> | --content <content>] [--edit]
-          [-e <editor> | --editor <editor>] [--overwrite] [--prepend]
+          [-e <editor> | --editor <editor>] [-l|--last] [--overwrite]
+          [--prepend]
   ${_ME} export ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             <path> [-f | --force] [<pandoc options>...]
   ${_ME} export notebook <name> [<path>]
@@ -10581,6 +10582,13 @@ _encrypt_file() {
 _get_decryption_tool() {
   local _encrypted_path="${1:-}"
 
+  if ! _command_exists "file"
+  then
+    _exit_1 cat <<HEREDOC
+The \`file\` utility is required for decryption and is not found on this system.
+HEREDOC
+  fi
+
   local _file_command_response=
   _file_command_response="$(file "${_encrypted_path}" 2>/dev/null || :)"
 
@@ -11178,9 +11186,11 @@ blockquote {
 }
 
 code {
+  background-color:   ${_color_background_alt_hex};
   font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
   font-size:          85%;
   margin:             0;
+  padding:            0.2em 0.4em;
   white-space:        pre-wrap;
 }
 
@@ -11199,6 +11209,7 @@ pre.sourceCode {
 
 pre code {
   overflow:           visible;
+  padding:            0;
 }
 
 hr  {
@@ -12147,6 +12158,26 @@ _resolve_links() {
     esac
   fi
 
+  # hashtag patterns
+
+  local _hashtag_match_pattern="(^|${_ME}-linkable-${_ME}|[>|\ ])\#([A-Za-z0-9_\-]+)"
+  local _hashtag_replacement_url="\/\/${NB_SERVER_HOST}:${NB_SERVER_PORT}\/${_notebook_name}:"
+
+  case "${_url_params_pattern:-}" in
+    '') _hashtag_replacement_url+="?--query=%23\\2"                         ;;
+    *)  _hashtag_replacement_url+="${_url_params_pattern}\&--query=%23\\2"  ;;
+  esac
+
+  local _hashtag_pattern=
+
+  case "${_input_type:-}" in
+    html) _hashtag_pattern="<a\ href=\"${_hashtag_replacement_url//' '/%20}\">\#\\2<\/a>" ;;
+    org)  _hashtag_pattern="[[${_hashtag_replacement_url//' '/%20}][\#\\2]]"              ;;
+    *)    _hashtag_pattern="\#\\2"                                                        ;;
+  esac
+
+  # temp file
+
   local _input_temp_file_path=
   _input_temp_file_path="$(_temp file ".${_input_type}" --touch)"
 
@@ -12157,33 +12188,11 @@ _resolve_links() {
   } | {
     # link #hashtags to internal search URLs
 
-    if ! ((_for_browsing))
+    if ! ((_for_browsing)) || [[ "${_input_type:-}" == "html" ]]
     then
       cat
     else
-      local _replacement_url="\/\/${NB_SERVER_HOST}:${NB_SERVER_PORT}\/${_notebook_name}:"
-
-      case "${_url_params_pattern:-}" in
-        '') _replacement_url+="?--query=%23\\2"                         ;;
-        *)  _replacement_url+="${_url_params_pattern}\&--query=%23\\2"  ;;
-      esac
-
-      local _pattern=
-
-      case "${_input_type:-}" in
-        html) _pattern="<a\ href=\"${_replacement_url//' '/%20}\">\#\\2<\/a>" ;;
-        org)  _pattern="[[${_replacement_url//' '/%20}][\#\\2]]"              ;;
-        *)    _pattern="\#\\2"                                                ;;
-      esac
-
-      if [[ "${_input_type:-}" == "html" ]] &&
-         grep -q "<\/body>" "${_input_temp_file_path}"
-      then
-        LC_ALL=C sed -E \
-          -e "/<body>/,/<\/body>/ s/(^|[>|\ ])\#([A-Za-z0-9_\-]+)/\1${_pattern}/g"
-      else
-        LC_ALL=C sed -E -e "s/(^|[>|\ ])\#([A-Za-z0-9_\-]+)/\1${_pattern}/g"
-      fi
+      LC_ALL=C sed -E -e "s/${_hashtag_match_pattern}/\1${_hashtag_pattern}/g"
     fi
   } | {
     # resolve and link [[wiki-style links]]
@@ -12208,15 +12217,31 @@ _resolve_links() {
       local _notebookless_pattern="${_host_port_pattern}\/([^:?\"-]+[\?\"])"
       local _notebookless_replacement_pattern="${_host_port_pattern}\/${_notebook_name}:\1"
 
-      local _linkable=1
+      local _linkable_initial=1
+
+      if grep -q "<\/body>" "${_input_temp_file_path}"
+      then
+        _linkable_initial=0
+      fi
 
       {
+        local _linkable="${_linkable_initial}"
+
         local               __line=
         while IFS= read -r  __line
         do
-          if [[ "${__line:-}" =~ (\<nav|\<code)     ]]
+          if ((_linkable))
           then
-            _linkable=0
+            if [[ "${__line:-}" =~ ^[[:space:]]*(<p[[:space:]]*>)?(<pre[[:space:]]*>)?\<(nav|code) ]]
+            then
+              _linkable=0
+            fi
+          elif ! ((_linkable))
+          then
+            if [[ "${__line:-}" =~ ^[[:space:]]*\<body ]]
+            then
+              _linkable=1
+            fi
           fi
 
           if ((_linkable))
@@ -12226,17 +12251,36 @@ _resolve_links() {
             printf "%s\\n" "${__line:-}"
           fi
 
-          if [[ "${__line:-}" =~ (\<\/nav|\<\/code) ]]
+          if ((_linkable))
           then
-            _linkable=1
+            if [[ "${__line:-}" =~ ^[[:space:]]*\</body ]]
+            then
+              _linkable=0
+            fi
+          else
+            if [[ "${__line:-}" =~ \<\/(nav|code)[[:space:]]*\>(</pre[[:space:]]*>)?(</p[[:space:]]*>)?[[:space:]]*$ ]]
+            then
+              _linkable=1
+            fi
           fi
         done
+      } | {
+        # Replace [[ with placeholder INSIDE <code>...</code> (including <p><code>)
+        LC_ALL=C sed -E -e 's/(<code[^>]*>[^<]*)\[\[([^<]*<\/code>)/\1__LEFTDBLBRACKET__\2/g' \
+                        -e 's/(<p[[:space:]]*><code[^>]*>[^<]*)\[\[([^<]*<\/code>[[:space:]]*<\/p>)/\1__LEFTDBLBRACKET__\2/g'
+      } | {
+        # Replace # with placeholder INSIDE <code>...</code> (including <p><code>)
+        LC_ALL=C sed -E -e 's/(<code[^>]*>[^<]*)\#([^<]*<\/code>)/\1__HASH_PLACEHOLDER__\2/g' \
+                        -e 's/(<p[[:space:]]*><code[^>]*>[^<]*)\#([^<]*<\/code>[[:space:]]*<\/p>)/\1__HASH_PLACEHOLDER__\2/g'
       } | {
         # wrap [[wiki-style links]] in HTML links and add missing notebooks
         sed -E                                                                                    \
 -e "/^${_ME}-linkable-${_ME}/ s/${_link_match_pattern}/${_replacement_pattern}/g"                 \
 -e "/^${_ME}-linkable-${_ME}/ s/${_labeled_link_match_pattern}/${_labeled_replacement_pattern}/g" \
--e "/^${_ME}-linkable-${_ME}/ s/${_notebookless_pattern}/${_notebookless_replacement_pattern}/g"
+-e "/^${_ME}-linkable-${_ME}/ s/${_notebookless_pattern}/${_notebookless_replacement_pattern}/g"  \
+-e "/^${_ME}-linkable-${_ME}/ s/${_hashtag_match_pattern}/\1${_hashtag_pattern}/g"
+      } | {
+        LC_ALL=C sed -E -e 's/__LEFTDBLBRACKET__/[[/g' -e 's/__HASH_PLACEHOLDER__/#/g'
       } | {
         LC_ALL=C sed -E -e "s/^${_ME}-linkable-${_ME}//g"
       }
@@ -14936,7 +14980,8 @@ _describe_edit() {
 $(_color_primary "Usage"):
   ${_ME} edit ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           [-c <content> | --content <content>] [--edit]
-          [-e <editor> | --editor <editor>] [--overwrite] [--prepend]
+          [-e <editor> | --editor <editor>] [-l|--last] [--overwrite]
+          [--prepend]
 
 $(_color_primary "Options"):
   -c, --content <content>  Content to add to the item.
@@ -14944,6 +14989,7 @@ $(_color_primary "Options"):
                            content is piped or passed as an argument.
   -e, --editor <editor>    Edit the note with <editor>, overriding the editor
                            specified in the \`\$EDITOR\` environment variable.
+  -l, --last               Edit the last modified item.
   --overwrite              Overwrite existing content with <content> and
                            standard input.
   --prepend                Prepend <content> and standard input before
@@ -14992,8 +15038,10 @@ _edit() {
   local _content_option_present=0
   local _edit_before_commit=0
   local _edit_type="append"
+  local _edit_last_item=0
   local _local_editor=
   local _password=
+  local _selector=
 
   while ((${#}))
   do
@@ -15028,11 +15076,11 @@ _edit() {
       --append|--overwrite|--prepend)
         _edit_type="${1#--}"
 
-        if [[ -n  "${2:-}"                  ]] &&
-           [[ !   "${2:-}" =~ ^--[A-z0-9]+  ]] &&
+        if [[ -n  "${2:-}"                    ]] &&
+           [[ !   "${2:-}" =~ ^--[A-Za-z0-9]+ ]] &&
            ! _contains "${2:-}" "-c" "-e"
         then
-          if [[ -n "${_content:-}"          ]]
+          if [[ -n "${_content:-}"            ]]
           then
             _content+="${_NEWLINE}"
           fi
@@ -15041,6 +15089,9 @@ _edit() {
 
           shift
         fi
+        ;;
+      -l|--last)
+        _edit_last_item=1;
         ;;
       --password)
         _password="$(_option_get_value "${1}" "${2:-}")"
@@ -15058,7 +15109,25 @@ _edit() {
     shift
   done
 
-  [[ -z "${_selector:-}" ]] && _exit_1 _help "edit"
+  if ((_edit_last_item)) && [[ -z "${_selector:-}" ]]
+  then
+    _selector="$(
+      _list             \
+        --empty         \
+        --filenames     \
+        --limit 1       \
+        --no-color      \
+        --no-id         \
+        --no-indicator  \
+        --page 1        \
+        2>/dev/null || :
+    )"
+  fi
+
+  if [[ -z "${_selector:-}" ]]
+  then
+    _exit_1 _help "edit"
+  fi
 
   local _relative_path=
   _relative_path="$(_show "${_selector:-}" --relative-path)"
