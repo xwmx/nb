@@ -10582,6 +10582,13 @@ _encrypt_file() {
 _get_decryption_tool() {
   local _encrypted_path="${1:-}"
 
+  if ! _command_exists "file"
+  then
+    _exit_1 cat <<HEREDOC
+The \`file\` utility is required for decryption and is not found on this system.
+HEREDOC
+  fi
+
   local _file_command_response=
   _file_command_response="$(file "${_encrypted_path}" 2>/dev/null || :)"
 
