@@ -15108,7 +15108,14 @@ _edit() {
         fi
         ;;
       -l|--last*)
-        _edit_last_item=1;
+        if [[ "${2:-}" =~ ^[0-9]+$  ]]
+        then
+          _edit_last_item="${2:-}"
+
+          shift
+        else
+          _edit_last_item=1
+        fi
         ;;
       --password)
         _password="$(_option_get_value "${1}" "${2:-}")"
@@ -15116,7 +15123,7 @@ _edit() {
         shift
         ;;
       *)
-        if [[ -z "${_selector:-}" ]]
+        if [[ -z "${_selector:-}"   ]]
         then
           _selector="${1:-}"
         fi
@@ -15129,14 +15136,14 @@ _edit() {
   if ((_edit_last_item)) && [[ -z "${_selector:-}" ]]
   then
     _selector="$(
-      _list             \
-        --empty         \
-        --filenames     \
-        --limit 1       \
-        --no-color      \
-        --no-id         \
-        --no-indicator  \
-        --page 1        \
+      _list                             \
+        --empty                         \
+        --filenames                     \
+        --limit 1                       \
+        --no-color                      \
+        --no-id                         \
+        --no-indicator                  \
+        --page "${_edit_last_item:-1}"  \
         2>/dev/null || :
     )"
   fi
