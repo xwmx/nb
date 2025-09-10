@@ -241,24 +241,29 @@ load test_helper
       --title     "Sample Nested Title One"                   \
       --content   "$(cat <<HEREDOC
 [[1]]
+#one
 
 <nav>
 [[2]]
+#two
 </nav>
 
 [[3]]
+#three
 
 \`\`\`
 code-one
 [[4]]
+#four
 code-two
 \`\`\`
 
-Example content line [[5]] without inline code.
+Example content line [[5]] #five without inline code.
 
-Example content line [[6]] with \`[[7]]\` inline code.
+Example content line [[6]] #six with \`[[7]] #seven\` inline code.
 
 [[8]]
+#eight
 HEREDOC
 )"
 
@@ -312,31 +317,43 @@ HEREDOC
 "<h1 id=\"sample-nested-title-one\">Sample Nested Title One</h1>"
 
   printf "%s\\n" "${output}" | grep -q  \
-"<p><a href=\"//localhost:6789/home:1?--columns=70&--limit=2\">\[\[1\]\]</a></p>"
+"<p><a href=\"//localhost:6789/home:1?--columns=70&--limit=2\">\[\[1\]\]</a>"
+
+  printf "%s\\n" "${output}" | grep -q  \
+"<a href=\"//localhost:6789/home:?--columns=70&--limit=2&--query=%23one\">#one</a></p>"
 
   printf "%s\\n" "${output}" | grep -q  \
 "<nav>${_NEWLINE}\[\[2\]\]${_NEWLINE}</nav>"
 
   printf "%s\\n" "${output}" | grep -q  \
-"<p><a href=\"//localhost:6789/home:3?--columns=70&--limit=2\">\[\[3\]\]</a></p>"
+"<p><a href=\"//localhost:6789/home:3?--columns=70&--limit=2\">\[\[3\]\]</a>"
 
   printf "%s\\n" "${output}" | grep -q  \
-"<pre><code>"
+"<a href=\"//localhost:6789/home:?--columns=70&--limit=2&--query=%23three\">#three</a></p>"
+
+  printf "%s\\n" "${output}" | grep -q  \
+"<pre><code>code-one"
 
   printf "%s\\n" "${output}" | grep -q  \
 "^\[\[4\]\]$"
 
   printf "%s\\n" "${output}" | grep -q  \
-"</code></pre>"
+"^#four$"
 
   printf "%s\\n" "${output}" | grep -q  \
-"<p>Example content line <a href=\"//localhost:6789/home:5?--columns=70&--limit=2\">\[\[5\]\]</a> without inline code.</p>"
+"code-two</code></pre>"
 
   printf "%s\\n" "${output}" | grep -q  \
-"<p>Example content line <a href=\"//localhost:6789/home:6?--columns=70&--limit=2\">\[\[6\]\]</a> with <code>\[\[7\]\]</code> inline code.</p>"
+"<p>Example content line <a href=\"//localhost:6789/home:5?--columns=70&--limit=2\">\[\[5\]\]</a> <a href=\"//localhost:6789/home:?--columns=70&--limit=2&--query=%23five\">#five</a> without inline code.</p>"
 
   printf "%s\\n" "${output}" | grep -q  \
-"<p><a href=\"//localhost:6789/home:8?--columns=70&--limit=2\">\[\[8\]\]</a></p>"
+"<p>Example content line <a href=\"//localhost:6789/home:6?--columns=70&--limit=2\">\[\[6\]\]</a> <a href=\"//localhost:6789/home:?--columns=70&--limit=2&--query=%23six\">#six</a> with <code>\[\[7\]\] #seven</code> inline code.</p>"
+
+  printf "%s\\n" "${output}" | grep -q  \
+"<p><a href=\"//localhost:6789/home:8?--columns=70&--limit=2\">\[\[8\]\]</a>"
+
+  printf "%s\\n" "${output}" | grep -q  \
+"<a href=\"//localhost:6789/home:?--columns=70&--limit=2&--query=%23eight\">#eight</a></p>"
 }
 
 # .html #######################################################################
