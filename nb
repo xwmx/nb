@@ -12210,28 +12210,28 @@ _resolve_links() {
       local _notebookless_pattern="${_host_port_pattern}\/([^:?\"-]+[\?\"])"
       local _notebookless_replacement_pattern="${_host_port_pattern}\/${_notebook_name}:\1"
 
-      local _linkable=1
+      local _linkable_initial=1
 
       if grep -q "<\/body>" "${_input_temp_file_path}"
       then
-        _linkable=0
+        _linkable_initial=0
       fi
 
       {
+        local _linkable="${_linkable_initial}"
+
         local               __line=
         while IFS= read -r  __line
         do
           if ((_linkable))
           then
-            if [[ "${__line:-}" =~ ^[[:space:]]*\</body ]] ||
-               [[ "${__line:-}" =~ ^[[:space:]]*(<p[[:space:]]*>)?(<pre[[:space:]]*>)?\<(nav|code) ]]
+            if [[ "${__line:-}" =~ ^[[:space:]]*(<p[[:space:]]*>)?(<pre[[:space:]]*>)?\<(nav|code) ]]
             then
               _linkable=0
             fi
           elif ! ((_linkable))
           then
-            if [[ "${__line:-}" =~ ^[[:space:]]*\<body ]] ||
-               [[ "${__line:-}" =~ \<\/(nav|code)[[:space:]]*\>(</pre[[:space:]]*>)?(</p[[:space:]]*>)?[[:space:]]*$ ]]
+            if [[ "${__line:-}" =~ ^[[:space:]]*\<body ]]
             then
               _linkable=1
             fi
@@ -12242,6 +12242,19 @@ _resolve_links() {
             printf "%s-linkable-%s%s\\n" "${_ME}" "${_ME}" "${__line:-}"
           else
             printf "%s\\n" "${__line:-}"
+          fi
+
+          if ((_linkable))
+          then
+            if [[ "${__line:-}" =~ ^[[:space:]]*\</body ]]
+            then
+              _linkable=0
+            fi
+          else
+            if [[ "${__line:-}" =~ \<\/(nav|code)[[:space:]]*\>(</pre[[:space:]]*>)?(</p[[:space:]]*>)?[[:space:]]*$ ]]
+            then
+              _linkable=1
+            fi
           fi
         done
       } | {
