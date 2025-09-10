@@ -4444,7 +4444,7 @@ $(_color_primary "Usage"):
         [<task-number>]
   ${_ME} edit ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           [-c <content> | --content <content>] [--edit]
-          [-e <editor> | --editor <editor>] [-l|--last] [--overwrite]
+          [-e <editor> | --editor <editor>] [-l | --last] [--overwrite]
           [--prepend]
   ${_ME} export ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             <path> [-f | --force] [<pandoc options>...]
@@ -14997,7 +14997,7 @@ _describe_edit() {
 $(_color_primary "Usage"):
   ${_ME} edit ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
           [-c <content> | --content <content>] [--edit]
-          [-e <editor> | --editor <editor>] [-l|--last] [--overwrite]
+          [-e <editor> | --editor <editor>] [-l | --last] [--overwrite]
           [--prepend]
 
 $(_color_primary "Options"):
