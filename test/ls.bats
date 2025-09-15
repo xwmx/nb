@@ -304,6 +304,7 @@ HEREDOC
     "${_NB}" add "File Five.md"   --content "Content five."
     "${_NB}" add "File Six.md"    --content "Content six. #tag2"
     "${_NB}" add "File Seven.md"  --content "Content #tag2 Seven. #tag3 #tag1"
+    "${_NB}" add "тестовый.md"    --content "#тест"
   }
 
   run "${_NB}" --tag tag1,'#tag2'
@@ -332,6 +333,7 @@ HEREDOC
     "${_NB}" add "File Five.md"   --content "Content five."
     "${_NB}" add "File Six.md"    --content "Content six. #tag2"
     "${_NB}" add "File Seven.md"  --content "Content #tag2 Seven. #tag3 #tag1"
+    "${_NB}" add "тестовый.md"    --content "#тест"
   }
 
   run "${_NB}" \#tag1 "#tag2"
