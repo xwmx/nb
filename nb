@@ -14180,7 +14180,17 @@ _bookmark() {
 
   if _file_is_text "${_temp_file}"
   then
-    if [[ -z "${_title}"    ]]
+    if [[ -z "${_title:-}"  ]] &&
+       [[ "${_url:-}" =~ ^https://www.reddit.com ]]
+    then
+      _title="$(
+        cat "${_temp_file}"                   \
+          | grep '<shreddit-title title="'    \
+          | sed -n 's/.*<shreddit-title title="\([^"]*\)".*/\1/p'
+      )"
+    fi
+
+    if [[ -z "${_title:-}"  ]]
     then
       _title="$(
         cat "${_temp_file}"                   \
