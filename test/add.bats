@@ -3,6 +3,45 @@
 
 load test_helper
 
+# encoding ####################################################################
+
+@test "'add --filename <filename>' with non-ASCII decomposed filename normalizes it to precomposed format." {
+  {
+    "${_NB}" init
+  }
+
+  # NOTE: filename is in decomposed format for normalization testing.
+  run "${_NB}" add          \
+        --content   "#тест" \
+        --filename  "тестовый.md"
+
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
+
+  [[    "${status}"     -eq 0 ]]
+
+  [[    "${#lines[@]}"  -eq 1                                   ]]
+  [[    "${lines[0]}"   =~  Added:\ .*[.*1.*].*\ .*тестовый.md  ]]
+
+  [[ -f "${NB_DIR}/home/тестовый.md"      ]]
+
+  diff                                    \
+    <(cat "${NB_DIR}/home/тестовый.md")   \
+    <(cat <<HEREDOC
+#тест
+HEREDOC
+)
+
+  cd "${NB_DIR}/home"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+}
+
 # extension setting ###########################################################
 
 @test "'add' extension set to .adoc creates AsciiDoc file with formatted title." {

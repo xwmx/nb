@@ -13064,6 +13064,26 @@ _add() {
     fi
   fi
 
+  # use python or perl to normalize encoding of filename
+  if _command_exists "python3" || _command_exists "perl"
+  then
+    _target_filename="$(
+      {
+        printf "%s" "${_target_filename}"
+      } | {
+        if _command_exists "python3"
+        then
+          python3 -c "import sys,unicodedata; print(unicodedata.normalize('NFC', sys.stdin.read()), end='')"
+        elif _command_exists "perl"
+        then
+          perl -MUnicode::Normalize -CS -ne 'print NFC($_)'
+        else
+          cat
+        fi
+      }
+    )"
+  fi
+
   # Folder
   # ------
 
@@ -18168,7 +18188,7 @@ _search() {
               _relative_path="${_relative_folder_path}/${_filename}"
             fi
 
-            _id="$(_index get_id "${_filename}" "${_folder_path}" || :)"
+            _id="$(_index get_id "${_filename}" "${_folder_path}")"
 
             if ((_filename_hit))
             then

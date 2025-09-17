@@ -104,9 +104,10 @@ _search_all_setup() {
   {
     "${_NB}" init
 
+    # NOTE: filename is in decomposed format for normalization testing.
     "${_NB}" add            \
         --content   "#тест" \
-        --filename  "тестовый.md"
+        --filename  "тестовый.md"
   }
 
   run "${_NB}" search "#тест"
