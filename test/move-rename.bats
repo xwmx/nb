@@ -7,6 +7,8 @@ _setup_rename() {
   "${_NB}" add "initial example name.md"
 }
 
+# encoding ####################################################################
+
 @test "'move <target>' with decomposed non-ASCII filename normalizes to precomposed format." {
   {
     "${_NB}" init
