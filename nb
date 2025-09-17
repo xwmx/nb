@@ -18162,6 +18162,9 @@ _search() {
               _relative_path="${_relative_folder_path}/${_filename}"
             fi
 
+            # normalize filenames with octal escape sequences from git grep
+            _filename="$(printf "%b\\n" "${_filename}")"
+
             _id="$(_index get_id "${_filename}" "${_folder_path}")"
 
             if ((_filename_hit))
