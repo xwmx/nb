@@ -10714,29 +10714,6 @@ _get_http_status() {
   fi
 }
 
-# _get_normalized_filename()
-#
-# Usage:
-#   _get_normalized_filename <input>
-#
-# Description:
-#   Use python3 or perl to normalize encoding of filename when available..
-_get_normalized_filename() {
-  {
-    printf "%s" "${1:-}"
-  } | {
-    if _command_exists "python3"
-    then
-      python3 -c "import sys,unicodedata; print(unicodedata.normalize('NFC', sys.stdin.read()), end='')"
-    elif _command_exists "perl"
-    then
-      perl -MUnicode::Normalize -CS -ne 'print NFC($_)'
-    else
-      cat
-    fi
-  }
-}
-
 # _get_sanitized_filename()
 #
 # Usage:
@@ -10901,6 +10878,29 @@ _get_uri() {
     http%3A%2F*|https%3A%2F*) _get_uri_decode "${1:-}"  ;;
     http://*|https://*)       _get_uri_encode "${1:-}"  ;;
   esac
+}
+
+# _normalize_encoding()
+#
+# Usage:
+#   _normalize_encoding <input>
+#
+# Description:
+#   Use python3 or perl to normalize encoding of a string.
+_normalize_encoding() {
+  {
+    printf "%s" "${1:-}"
+  } | {
+    if _command_exists "python3"
+    then
+      python3 -c "import sys,unicodedata; print(unicodedata.normalize('NFC', sys.stdin.read()), end='')"
+    elif _command_exists "perl"
+    then
+      perl -MUnicode::Normalize -CS -ne 'print NFC($_)'
+    else
+      cat
+    fi
+  }
 }
 
 # _option_get_tags()
@@ -13087,7 +13087,7 @@ _add() {
     fi
   fi
 
-  _target_filename="$(_get_normalized_filename "${_target_filename}")"
+  _target_filename="$(_normalize_encoding "${_target_filename}")"
 
   # Folder
   # ------
@@ -16623,7 +16623,7 @@ _move() {
       _exit_1 _help "move"
     fi
 
-    _target_basename="$(_get_normalized_filename "${_target_basename}")"
+    _target_basename="$(_normalize_encoding "${_target_basename}")"
 
     if [[ -z  "${_target_selector_relative_path:-}" ]]
     then
