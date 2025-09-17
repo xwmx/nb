@@ -18139,6 +18139,12 @@ _search() {
             _relative_folder_path="${_relative_folder_path#"${_notebook_path}"}"
 
             _filename="$(basename "${_path}")"
+
+            # normalize filenames with octal escape sequences from git grep
+            _filename="$(printf "%b\\n" "${_filename}")"
+            _filename="${_filename%\"}"
+            _filename="${_filename#\"}"
+
             _filename_color="${_filename}"
 
             # Use ".index" to match filenames.
@@ -18162,10 +18168,7 @@ _search() {
               _relative_path="${_relative_folder_path}/${_filename}"
             fi
 
-            # normalize filenames with octal escape sequences from git grep
-            _filename="$(printf "%b\\n" "${_filename}")"
-
-            _id="$(_index get_id "${_filename}" "${_folder_path}")"
+            _id="$(_index get_id "${_filename}" "${_folder_path}" || :)"
 
             if ((_filename_hit))
             then
