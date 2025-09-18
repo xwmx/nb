@@ -82,7 +82,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.21.2"
+_VERSION="7.21.3"
 
 # $_ME
 #
@@ -583,6 +583,14 @@ export NB_AUDIO_TOOL="${NB_AUDIO_TOOL:-}"
 # When set to '1', each `_git checkpoint()` call will automativally run
 # `$_ME sync`. To disable this behavior, set the value to '0'.
 export NB_AUTO_SYNC="${NB_AUTO_SYNC:-1}"
+
+# $NB_AUTO_SYNC_SECONDS
+#
+# Default: '60'
+#
+# The minimum number of seconds between automatic Git sync operations when
+# `$NB_AUTO_SYNC` is enabled.
+export NB_AUTO_SYNC_SECONDS="${NB_AUTO_SYNC_SECONDS:-60}"
 
 # $NB_BROWSER
 #
@@ -3730,7 +3738,12 @@ _git() {
       return 0
     fi
 
-    if _maybe_fetch_timestamp="$(
+    if [[ -s "${_notebook_path}/.git/nb/last_sync_state_checked" ]]
+    then
+      _last_fetch_timestamp="$(
+        cat "${_notebook_path}/.git/nb/last_sync_state_checked" 2>/dev/null
+      )"
+    elif _maybe_fetch_timestamp="$(
          stat -c %Y "${_notebook_path}/.git/FETCH_HEAD" 2>/dev/null
        )"
     then # GNU
@@ -3752,7 +3765,7 @@ _git() {
     local _diff=
     _diff=$((_current_timestamp-_last_fetch_timestamp))
 
-    [[ "${_diff}" -gt 60 ]]
+    [[ "${_diff}" -gt "${NB_AUTO_SYNC_SECONDS:-60}" ]]
   }
 
   # _git_checkpoint()
@@ -3889,7 +3902,28 @@ _git() {
       _notebook_path="$(_notebooks current --path)"
     fi
 
-    git -C "${_notebook_path}" status | grep -q 'diverged'
+    # get the current branch name
+    local _branch=
+    _branch="$(
+      git -C "${_notebook_path}" rev-parse --abbrev-ref HEAD
+    )"
+
+    # get the local branch HEAD SHA
+    local _local_head=
+    _local_head="$(
+      git -C "${_notebook_path}" rev-parse "${_branch}"
+    )"
+
+    # get the remote branch HEAD SHA
+    local _remote_head=
+    _remote_head="$(
+      git -C "${_notebook_path}" ls-remote origin "refs/heads/${_branch}" 2>/dev/null | awk '{print $1}'
+    )"
+
+    mkdir -p "${_notebook_path}/.git/nb"
+    date +%s > "${_notebook_path}/.git/nb/last_sync_state_checked"
+
+    [[ -n "${_remote_head:-}" ]] && [[ "${_local_head}" != "${_remote_head}" ]]
   }
 
   # _git_required()
@@ -9998,9 +10032,9 @@ _main() {
           _index reconcile
 
           _git checkpoint "${NB_NOTEBOOK_PATH}" --wait
-        elif _git autosyncable "${NB_NOTEBOOK_PATH}"
+        elif _git autosyncable "${NB_NOTEBOOK_PATH}" && _git out_of_sync
         then
-          (_git checkpoint "${NB_NOTEBOOK_PATH}" &>/dev/null) &
+          _git checkpoint "${NB_NOTEBOOK_PATH}" --wait
         fi
       fi
 
