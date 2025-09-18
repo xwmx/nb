@@ -584,6 +584,14 @@ export NB_AUDIO_TOOL="${NB_AUDIO_TOOL:-}"
 # `$_ME sync`. To disable this behavior, set the value to '0'.
 export NB_AUTO_SYNC="${NB_AUTO_SYNC:-1}"
 
+# $NB_AUTO_SYNC_SECONDS
+#
+# Default: '60'
+#
+# The minimum number of seconds between automatic Git sync operations when
+# `$NB_AUTO_SYNC` is enabled.
+export NB_AUTO_SYNC_SECONDS="${NB_AUTO_SYNC_SECONDS:-60}"
+
 # $NB_BROWSER
 #
 # Default: value of $BROWSER
@@ -3757,7 +3765,7 @@ _git() {
     local _diff=
     _diff=$((_current_timestamp-_last_fetch_timestamp))
 
-    [[ "${_diff}" -gt "${NB_AUTO_SYNC_SECONDS:-30}" ]]
+    [[ "${_diff}" -gt "${NB_AUTO_SYNC_SECONDS:-60}" ]]
   }
 
   # _git_checkpoint()

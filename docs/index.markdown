@@ -9197,6 +9197,7 @@ Shortcut Alias:
     <a href="#nb_ace_keyboard"><code>$NB_ACE_KEYBOARD</code></a>&nbsp;·
     <a href="#nb_audio_tool"><code>$NB_AUDIO_TOOL</code></a>&nbsp;·
     <a href="#nb_auto_sync"><code>$NB_AUTO_SYNC</code></a>&nbsp;·
+    <a href="#nb_auto_sync_seconds"><code>$NB_AUTO_SYNC_SECONDS</code></a>&nbsp;·
     <a href="#nb_bookmark_content_cleanup_tool"><code>$NB_BOOKMARK_CONTENT_CLEANUP_TOOL</code></a>&nbsp;·
     <a href="#nb_bookmark_content_conversion_tool"><code>$NB_BOOKMARK_CONTENT_CONVERSION_TOOL</code></a>&nbsp;·
     <a href="#nb_browse_markdown_reader"><code>$NB_BROWSE_MARKDOWN_READER</code></a>&nbsp;·
@@ -9378,6 +9379,21 @@ Default: '1'
 
 When set to '1', each `_git checkpoint()` call will automativally run
 `$_ME sync`. To disable this behavior, set the value to '0'.
+```
+
+<p>
+  <sup>
+    <a href="#-variables">↑</a>
+  </sup>
+</p>
+
+##### `$NB_AUTO_SYNC_SECONDS`
+
+```text
+Default: '60'
+
+The minimum number of seconds between automatic Git sync operations when
+`$NB_AUTO_SYNC` is enabled.
 ```
 
 <p>
