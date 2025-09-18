@@ -3752,7 +3752,7 @@ _git() {
     local _diff=
     _diff=$((_current_timestamp-_last_fetch_timestamp))
 
-    [[ "${_diff}" -gt 60 ]]
+    [[ "${_diff}" -gt "${NB_AUTO_SYNC_SECONDS:-60}" ]]
   }
 
   # _git_checkpoint()
