@@ -9395,7 +9395,7 @@ Default: '60'
 The minimum number of seconds between automatic Git sync operations when
 `$NB_AUTO_SYNC` is enabled.
 
-Supported Values: any positive integer
+Supported Values: '0' or any positive integer
 ```
 
 <p>
