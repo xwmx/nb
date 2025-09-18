@@ -9363,7 +9363,7 @@ Example Values: 'emacs', 'sublime', 'vim', 'vscode'
 ```text
 Default: '' (first available)
 
-Example Values: `mplayer`, `afplay`
+Example Values: 'mplayer', 'afplay'
 ```
 
 <p>
@@ -9394,6 +9394,8 @@ Default: '60'
 
 The minimum number of seconds between automatic Git sync operations when
 `$NB_AUTO_SYNC` is enabled.
+
+Supported Values: any positive integer
 ```
 
 <p>
