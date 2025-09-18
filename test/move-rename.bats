@@ -7,6 +7,51 @@ _setup_rename() {
   "${_NB}" add "initial example name.md"
 }
 
+# encoding ####################################################################
+
+@test "'move <target>' with decomposed non-ASCII filename normalizes to precomposed format." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add  "Example File.md" --content   "Example content."
+  }
+
+  run "${_NB}" move 1 "тестовый.md" <<< "y${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Moves file:
+
+  _files=($(ls "${NB_DIR}/home/"))
+
+  [[ "${#_files[@]}" == 1             ]]
+  [[ "${_files[0]}" ==  "тестовый.md" ]] # precomposed
+  [[ "${_files[0]}" !=  "тестовый.md" ]] # decomposed
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Move'
+
+  # Prints output:
+
+  [[ "${lines[0]}" =~ \
+Moving:\ \ \ .*[.*1.*].*\ .*Example\ File\.md.* ]]
+  [[ "${lines[1]}" =~ \
+To:\ \ \ \ \ \ \ .*тестовый\.md.*               ]]
+  [[ "${lines[2]}" =~ \
+Moved\ to:\ .*[.*1.*].*\ .*тестовый\.md.*       ]]
+}
+
 # only extension ##############################################################
 
 @test "'move .<extension>' with root-level note changes the file extension while retaining the name." {

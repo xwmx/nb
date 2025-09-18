@@ -270,6 +270,7 @@ HEREDOC
     "${_NB}" add "File Six.md"    --content "Content six. #tag2"
     "${_NB}" add "File Seven.md"  --content "Content #tag2 Seven. #tag3 #tag1"
     "${_NB}" add "File Eight.md"  --content "#tag6 #tag7"
+    "${_NB}" add "тестовый.md"    --content "#тест"
   }
 
   run "${_NB}" --tags
@@ -280,7 +281,7 @@ HEREDOC
   printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
 
   [[    "${status}"     -eq 0     ]]
-  [[    "${#lines[@]}"  -eq 7     ]]
+  [[    "${#lines[@]}"  -eq 8     ]]
 
   printf "%s\\n" "${output}" | grep -q "\#tag1"
   printf "%s\\n" "${output}" | grep -q "\#tag2"
@@ -289,6 +290,7 @@ HEREDOC
   printf "%s\\n" "${output}" | grep -q "\#tag5"
   printf "%s\\n" "${output}" | grep -q "\#tag6"
   printf "%s\\n" "${output}" | grep -q "\#tag7"
+  printf "%s\\n" "${output}" | grep -q "\#тест"
 }
 
 @test "'--tag tag1,'#tag2' exits with status 0 and prints matches as an AND query." {
@@ -302,6 +304,7 @@ HEREDOC
     "${_NB}" add "File Five.md"   --content "Content five."
     "${_NB}" add "File Six.md"    --content "Content six. #tag2"
     "${_NB}" add "File Seven.md"  --content "Content #tag2 Seven. #tag3 #tag1"
+    "${_NB}" add "тестовый.md"    --content "#тест"
   }
 
   run "${_NB}" --tag tag1,'#tag2'
@@ -330,6 +333,7 @@ HEREDOC
     "${_NB}" add "File Five.md"   --content "Content five."
     "${_NB}" add "File Six.md"    --content "Content six. #tag2"
     "${_NB}" add "File Seven.md"  --content "Content #tag2 Seven. #tag3 #tag1"
+    "${_NB}" add "тестовый.md"    --content "#тест"
   }
 
   run "${_NB}" \#tag1 "#tag2"

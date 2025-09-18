@@ -98,6 +98,33 @@ _search_all_setup() {
 #     <(printf "Content #example Seven. #tag3 #tag1")
 # }
 
+# encoding ####################################################################
+
+@test "'search <query>' with non-ASCII filename and query succeeds." {
+  {
+    "${_NB}" init
+
+    # NOTE: filename is in decomposed format for normalization testing.
+    "${_NB}" add            \
+        --content   "#тест" \
+        --filename  "тестовый.md"
+  }
+
+  run "${_NB}" search "#тест"
+
+  printf "\${status}:     '%s'\\n" "${status}"
+  printf "\${output}:     '%s'\\n" "${output}"
+  printf "\${#lines[@]}:  '%s'\\n" "${#lines[@]}"
+
+  [[    "${status}"     -eq 0                         ]]
+
+  [[    "${#lines[@]}"  -eq 3                         ]]
+
+  [[    "${lines[0]}"   =~  .*[.*1.*].*\ тестовый.md  ]]
+  [[    "${lines[1]}"   =~  -*-                       ]]
+  [[    "${lines[2]}"   =~  1.*:.*\#тест              ]]
+}
+
 # --type <type> ###############################################################
 
 @test "'search <query> --type note' only searches items of type note." {
