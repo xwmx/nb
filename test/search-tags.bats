@@ -2,6 +2,77 @@
 
 load test_helper
 
+@test "'search -t tag1/child-1/grandchild-1' exits with status 0 and prints matches." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "File One.md"    --content "Content one. #tag3"
+    "${_NB}" add "File Two.md"    --content "Content two. #tag1"
+    "${_NB}" add "File Three.md"  --content "Content three. tag1 #tag2"
+    "${_NB}" add "File Four.md"   --content "Content #tag1 four. #tag2/child-2/grandchild-2"
+    "${_NB}" add "File Five.md"   --content "Content five. #tag3ButNotReally #tag4"
+    "${_NB}" add "File Six.md"    --content "Content six. #tag2/child-2/grandchild-2"
+    "${_NB}" add "File Seven.md"  --content "Content #tag2/child-2/grandchild-2 Seven. #tag3/child-3/grandchild-3 #tag1/child-1/grandchild-1"
+  }
+
+  run "${_NB}" search -t tag1
+
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
+  printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
+
+  [[    "${status}"     -eq 0 ]]
+  [[    "${#lines[@]}"  -eq 9 ]]
+
+[[    "${lines[0]}"   =~  \
+.*\[.*4.*\].*File\ Four.md\ ·\ \"Content\ #tag1\ four.\ #tag2/child-2/grandchild-2\"  ]]
+[[    "${lines[1]}"   =~  ^.*\-{67,}.*$                                               ]]
+[[    "${lines[2]}"   =~  \
+1.*:.*Content\ .*#tag1.*\ four.\ #tag2/child-2/grandchild-2                           ]]
+
+[[    "${lines[3]}"   =~  \
+.*\[.*7.*\].*File\ Seven.md\ ·\ \"Content\ #tag2/child-2/grandchild-2\ Seven.\ #tag3/child-3/grandchild-3\ #tag1/child-1/grandchild-1\" ]]
+[[    "${lines[4]}"   =~  ^.*\-{99,}.*$                                                                                                 ]]
+[[    "${lines[5]}"   =~  \
+1.*:.*Content\ #tag2/child-2/grandchild-2\ Seven.\ #tag3/child-3/grandchild-3\ .*#tag1.*/child-1/grandchild-1                           ]]
+
+[[    "${lines[6]}"   =~  \
+.*\[.*2.*\].*File\ Two.md\ ·\ \"Content\ two.\ #tag1\"  ]]
+[[    "${lines[7]}"   =~  ^.*\-{38,}.*$                 ]]
+[[    "${lines[8]}"   =~  \
+1.*:.*Content\ two.\ .*#tag1.*                          ]]
+
+  run "${_NB}" search -t tag1/child-1
+
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
+  printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
+
+  [[    "${status}"     -eq 0 ]]
+  [[    "${#lines[@]}"  -eq 3 ]]
+
+[[    "${lines[0]}"   =~  \
+.*\[.*7.*\].*File\ Seven.md\ ·\ \"Content\ #tag2/child-2/grandchild-2\ Seven.\ #tag3/child-3/grandchild-3\ #tag1/child-1/grandchild-1\" ]]
+[[    "${lines[1]}"   =~  ^.*\-{99,}.*$                                                                                                 ]]
+[[    "${lines[2]}"   =~  \
+1.*:.*Content\ #tag2/child-2/grandchild-2\ Seven.\ #tag3/child-3/grandchild-3\ .*#tag1/child-1.*/grandchild-1                           ]]
+
+  run "${_NB}" search -t tag1/child-1/grandchild-1
+
+  printf "\${status}:   '%s'\\n" "${status}"
+  printf "\${output}:   '%s'\\n" "${output}"
+  printf "\${lines[0]}: '%s'\\n" "${lines[0]}"
+
+  [[    "${status}"     -eq 0 ]]
+  [[    "${#lines[@]}"  -eq 3 ]]
+
+[[    "${lines[0]}"   =~  \
+.*\[.*7.*\].*File\ Seven.md\ ·\ \"Content\ #tag2/child-2/grandchild-2\ Seven.\ #tag3/child-3/grandchild-3\ #tag1/child-1/grandchild-1\" ]]
+[[    "${lines[1]}"   =~  ^.*\-{99,}.*$                                                                                                 ]]
+[[    "${lines[2]}"   =~  \
+1.*:.*Content\ #tag2/child-2/grandchild-2\ Seven.\ #tag3/child-3/grandchild-3\ .*#tag1/child-1/grandchild-1.*                           ]]
+}
+
 @test "'search -t tag1 --and -t tag2,'#tag3' exits with status 0 and prints matches as an AND query." {
   {
     "${_NB}" init
