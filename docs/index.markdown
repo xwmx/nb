@@ -2749,9 +2749,38 @@ for more information.
   </sup>
 </p>
 
-`nb` recognizes `#hashtags` defined anywhere within a document.
-A hashtag is defined in `nb` as a `#` character followed by any number of
-letters, numbers, underscores, and dashes.
+Tagging is a flexible and powerful way to organize, filter, and discover your
+notes, bookmarks, and todos in `nb`. Tags in `nb` are written as `#hashtags`
+and can be placed anywhere within a document. A hashtag is defined as a `#`
+character followed by any number of letters, numbers, underscores, or dashes,
+allowing you to create custom categories or keywords tailored to your workflow.
+Tagging lets you group related items, quickly search for topics, set up ad hoc
+collections, and create multi-dimensional taxonomies that complement notebooks
+and folders. Tags can be added when creating or editing items, or embedded
+directly in your note content.
+
+#### Nested Tagging
+
+In addition to standard hashtags, `nb` supports hierarchical tags using
+slashes, such as `#project/design/ui`. This enables an organizational structure
+where tags can represent parent-child relationships. For example, tagging a
+note with `#topic/subtopic/detail` lets you group related notes at different
+levels of specificity.
+
+When searching for tags, nested tags are matched by prefix:
+- Searching for `#project` matches notes tagged with `#project`,
+  `#project/design`, and `#project/design/ui`.
+- Searching for `#project/design` matches `#project/design` and any deeper
+  descendants like `#project/design/ui`.
+- Searching for an exact nested tag like `#project/design/ui` matches only
+  that tag.
+- Searching for a branch that doesn't exist, such as `#project/ui` when only
+  `#project/design/ui` exists, will match nothing.
+
+This makes it easy to filter, organize, and browse notes and bookmarks using
+either broad or specific tag queries.
+
+#### Adding Tags
 
 Notes and bookmarks can be tagged when they are created using the
 `--tags <tag1>,<tag2>...` option,
@@ -2829,6 +2858,8 @@ are placed in a [`## Tags`](#-tags-1) section:
 
 #tag1 #tag2
 ```
+
+#### Listing and Searching Tags
 
 Use [`nb --tags`](#nb-help), [`nb ls --tags`](#ls),
 and [`nb list --tags`](#list)
@@ -2921,6 +2952,8 @@ nb q -t tag1 --or --tags tag2,tag3
 # search for items tagged with "#tag1" OR "#tag2" OR "#tag3"
 nb q \#tag1 --or -t tag2 --or "#tag3"
 ```
+
+#### Browsing Tags
 
 Linked tags can be [browsed](#-browsing) with [`nb browse`](#browse),
 providing another dimension of browsability in terminal and GUI web browsers,
