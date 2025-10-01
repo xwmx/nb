@@ -36,6 +36,8 @@ load test_helper
     _content+="Labeled link two: [[Root Title One|Sample label.]] • "
     _content+="Tag one: #tag_1 • "
     _content+="Tag two: #tag-2 • "
+    _content+="Tag three: #tag-3/nested-1 • "
+    _content+="Tag four: #tag-4/nested-2/nested-3 • "
     _content+="Tag not valid: 123#not-valid-tag • "
     _content+="Org mode link: [[http://example.com]] • "
     _content+="Org mode link with description: [[http://example.com][Example Description (more)]] • "
@@ -90,6 +92,12 @@ load test_helper
 "Tag two: \[\[//localhost:6789/local:${_expected_params}&--query=%23tag-2\]\[#tag-2\]\] •"
 
   printf "%s\\n" "${output}" | grep -q  \
+"Tag three: \[\[//localhost:6789/local:${_expected_params}&--query=%23tag-3\/nested-1\]\[#tag-3\/nested-1\]\] •"
+
+  printf "%s\\n" "${output}" | grep -q  \
+"Tag four: \[\[//localhost:6789/local:${_expected_params}&--query=%23tag-4\/nested-2\/nested-3\]\[#tag-4\/nested-2\/nested-3\]\] •"
+
+  printf "%s\\n" "${output}" | grep -q  \
 "Tag not valid: 123#not-valid-tag •"
 
   printf "%s\\n" "${output}" | grep -q  \
@@ -133,6 +141,8 @@ load test_helper
     _content+="Labeled link two: [[Root Title One|Sample label.]] • "
     _content+="Tag one: #tag_1 • "
     _content+="Tag two: #tag-2 • "
+    _content+="Tag three: #tag-3/nested-1 • "
+    _content+="Tag four: #tag-4/nested-2/nested-3 • "
     _content+="Tag not valid: 123#not-valid-tag • "
     _content+="${_NEWLINE}${_NEWLINE}#tag3${_NEWLINE}${_NEWLINE}"
     _content+="#tag4 #tag5 #tag6 #tag7${_NEWLINE}${_NEWLINE}"
@@ -198,6 +208,12 @@ load test_helper
 
   printf "%s\\n" "${output}" | grep -q  \
 "Tag two: <a.* href=\"//localhost:6789/local:${_expected_params}&--query=%23tag-2\">#tag-2</a> •"
+
+  printf "%s\\n" "${output}" | grep -q  \
+"Tag three: <a.* href=\"//localhost:6789/local:${_expected_params}&--query=%23tag-3/nested-1\">#tag-3/nested-1</a> •"
+
+  printf "%s\\n" "${output}" | grep -q  \
+"Tag four: <a.* href=\"//localhost:6789/local:${_expected_params}&--query=%23tag-4/nested-2/nested-3\">#tag-4/nested-2/nested-3</a> •"
 
   printf "%s\\n" "${output}" | grep -q  \
 "Tag not valid: 123#not-valid-tag •"
@@ -369,6 +385,8 @@ HEREDOC
     _content+="Labeled link two: [[Root Title One|Sample label.]] • "
     _content+="Tag one: #tag_1 • "
     _content+="Tag two: #tag-2 • "
+    _content+="Tag three: #tag-3/nested-1 • "
+    _content+="Tag four: #tag-4/nested-2/nested-3 • "
     _content+="Tag not valid: 123#not-valid-tag • "
     _content+="${_NEWLINE}${_NEWLINE}#tag3${_NEWLINE}${_NEWLINE}"
     _content+="#tag4 #tag5 #tag6 #tag7${_NEWLINE}${_NEWLINE}"
@@ -434,6 +452,12 @@ HEREDOC
 "Tag two: <a.* href=\"//localhost:6789/home:?--columns=70&--limit=2&--query=%23tag-2\">#tag-2</a> •"
 
   printf "%s\\n" "${output}" | grep -q  \
+"Tag three: <a.* href=\"//localhost:6789/home:?--columns=70&--limit=2&--query=%23tag-3/nested-1\">#tag-3/nested-1</a> •"
+
+  printf "%s\\n" "${output}" | grep -q  \
+"Tag four: <a.* href=\"//localhost:6789/home:?--columns=70&--limit=2&--query=%23tag-4/nested-2/nested-3\">#tag-4/nested-2/nested-3</a> •"
+
+  printf "%s\\n" "${output}" | grep -q  \
 "Tag not valid: 123#not-valid-tag •"
 
   printf "%s\\n" "${output}" | grep -q  \
@@ -475,6 +499,8 @@ HEREDOC
     _content+="Labeled link two: [[Root Title One|Sample label.]] • "
     _content+="Tag one: #tag_1 • "
     _content+="Tag two: #tag-2 • "
+    _content+="Tag three: #tag-3/nested-1 • "
+    _content+="Tag four: #tag-4/nested-2/nested-3 • "
     _content+="Tag not valid: 123#not-valid-tag • "
     _content+="${_NEWLINE}${_NEWLINE}#tag3${_NEWLINE}${_NEWLINE}"
     _content+="#tag4 #tag5 #tag6 #tag7${_NEWLINE}${_NEWLINE}"
@@ -537,6 +563,12 @@ HEREDOC
 "Tag two: <a.* href=\"//localhost:6789/home:?--query=%23tag-2\">#tag-2</a> •"
 
   printf "%s\\n" "${output}" | grep -q  \
+"Tag three: <a.* href=\"//localhost:6789/home:?--query=%23tag-3/nested-1\">#tag-3/nested-1</a> •"
+
+  printf "%s\\n" "${output}" | grep -q  \
+"Tag four: <a.* href=\"//localhost:6789/home:?--query=%23tag-4/nested-2/nested-3\">#tag-4/nested-2/nested-3</a> •"
+
+  printf "%s\\n" "${output}" | grep -q  \
 "Tag not valid: 123#not-valid-tag •"
 
   printf "%s\\n" "${output}" | grep -q  \
@@ -572,6 +604,8 @@ HEREDOC
     _content+="Labeled link two: [[Root Title One|Sample label.]] • "
     _content+="Tag one: #tag_1 • "
     _content+="Tag two: #tag-2 • "
+    _content+="Tag three: #tag-3/nested-1 • "
+    _content+="Tag four: #tag-4/nested-2/nested-3 • "
     _content+="Tag not valid: 123#not-valid-tag • "
     _content+="${_NEWLINE}${_NEWLINE}#tag3${_NEWLINE}${_NEWLINE}"
     _content+="#tag4 #tag5 #tag6 #tag7${_NEWLINE}${_NEWLINE}"
@@ -635,6 +669,12 @@ HEREDOC
       "Tag two: <a.* href=\"//localhost:6789/home:?--query=%23tag-2\">#tag-2</a> •"
 
   printf "%s\\n" "${output}" | grep -q  \
+      "Tag three: <a.* href=\"//localhost:6789/home:?--query=%23tag-3/nested-1\">#tag-3/nested-1</a> •"
+
+  printf "%s\\n" "${output}" | grep -q  \
+      "Tag four: <a.* href=\"//localhost:6789/home:?--query=%23tag-4/nested-2/nested-3\">#tag-4/nested-2/nested-3</a> •"
+
+  printf "%s\\n" "${output}" | grep -q  \
       "Tag not valid: 123#not-valid-tag •"
 
   printf "%s\\n" "${output}" | grep -q  \
@@ -673,6 +713,8 @@ HEREDOC
     _content+="Labeled link two: [[Root Title One|Sample label.]] • "
     _content+="Tag one: #tag_1 • "
     _content+="Tag two: #tag-2 • "
+    _content+="Tag three: #tag-3/nested-1 • "
+    _content+="Tag four: #tag-4/nested-2/nested-3 • "
     _content+="Tag not valid: 123#not-valid-tag • "
     _content+="${_NEWLINE}${_NEWLINE}#tag3${_NEWLINE}${_NEWLINE}"
     _content+="#tag4 #tag5 #tag6 #tag7${_NEWLINE}${_NEWLINE}"
@@ -731,6 +773,12 @@ HEREDOC
 
   printf "%s\\n" "${output}" | grep -q  \
       "Tag two: #tag-2 •"
+
+  printf "%s\\n" "${output}" | grep -q  \
+      "Tag three: #tag-3/nested-1 •"
+
+  printf "%s\\n" "${output}" | grep -q  \
+      "Tag four: #tag-4/nested-2/nested-3 •"
 
   printf "%s\\n" "${output}" | grep -q  \
       "Tag not valid: 123#not-valid-tag •"

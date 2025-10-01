@@ -82,7 +82,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.21.3"
+_VERSION="7.22.0"
 
 # $_ME
 #
@@ -12234,7 +12234,7 @@ _resolve_links() {
 
   # hashtag patterns
 
-  local _hashtag_match_pattern="(^|${_ME}-linkable-${_ME}|[>|\ ])\#([A-Za-z0-9_\-]+)"
+  local _hashtag_match_pattern="(^|${_ME}-linkable-${_ME}|[>|\ ])\#([A-Za-z0-9_\/\-]+)"
   local _hashtag_replacement_url="\/\/${NB_SERVER_HOST}:${NB_SERVER_PORT}\/${_notebook_name}:"
 
   case "${_url_params_pattern:-}" in
@@ -17462,7 +17462,7 @@ _search() {
         "-I"
         "--ignore-case"
         "--only-matching"
-        -e '(^|[[:space:]])#[[:alnum:]_-]+'
+        -e '(^|[[:space:]])#[[:alnum:]/_-]+'
       )
     else
       local _grep_arguments=(
@@ -17470,8 +17470,8 @@ _search() {
         "-I"
         "--ignore-case"
         "--only-matching"
-        -e '[[:space:]]#[[:alnum:]_-]+'
-        -e '^#[A-Za-z0-9_-]+'
+        -e '[[:space:]]#[[:alnum:]/_-]+'
+        -e '^#[A-Za-z0-9/_-]+'
       )
     fi
 

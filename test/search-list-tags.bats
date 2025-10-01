@@ -22,6 +22,8 @@ More content.
 
 #lõw-tag
 
+Even more content with #parent-tag/child-tag/grandchild-tag in the middle.
+
 ## Content
 
 #content-tag
@@ -73,15 +75,16 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0             ]]
-  [[ "${#lines[@]}" -eq 6             ]]
+  [[ "${status}"    -eq 0                                     ]]
+  [[ "${#lines[@]}" -eq 7                                     ]]
 
-  [[ "${output}"    =~  \#nested-tag1 ]]
-  [[ "${output}"    =~  \#nested-tag2 ]]
-  [[ "${output}"    =~  \#tag1        ]]
-  [[ "${output}"    =~  \#tag2        ]]
-  [[ "${output}"    =~  \#tag3        ]]
-  [[ "${output}"    =~  \#lõw-tag     ]]
+  [[ "${output}"    =~  \#nested-tag1                         ]]
+  [[ "${output}"    =~  \#nested-tag2                         ]]
+  [[ "${output}"    =~  \#tag1                                ]]
+  [[ "${output}"    =~  \#tag2                                ]]
+  [[ "${output}"    =~  \#tag3                                ]]
+  [[ "${output}"    =~  \#lõw-tag                             ]]
+  [[ "${output}"    =~  \#parent-tag/child-tag/grandchild-tag ]]
 }
 
 # _GIT_ENABLED=0 ##############################################################
@@ -96,15 +99,16 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0             ]]
-  [[ "${#lines[@]}" -eq 6             ]]
+  [[ "${status}"    -eq 0                                     ]]
+  [[ "${#lines[@]}" -eq 7                                     ]]
 
-  [[ "${output}"    =~  \#nested-tag1 ]]
-  [[ "${output}"    =~  \#nested-tag2 ]]
-  [[ "${output}"    =~  \#tag1        ]]
-  [[ "${output}"    =~  \#tag2        ]]
-  [[ "${output}"    =~  \#tag3        ]]
-  [[ "${output}"    =~  \#lõw-tag     ]]
+  [[ "${output}"    =~  \#nested-tag1                         ]]
+  [[ "${output}"    =~  \#nested-tag2                         ]]
+  [[ "${output}"    =~  \#tag1                                ]]
+  [[ "${output}"    =~  \#tag2                                ]]
+  [[ "${output}"    =~  \#tag3                                ]]
+  [[ "${output}"    =~  \#lõw-tag                             ]]
+  [[ "${output}"    =~  \#parent-tag/child-tag/grandchild-tag ]]
 }
 
 # edge cases ##################################################################
@@ -220,12 +224,13 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0             ]]
-  [[ "${#lines[@]}" -eq 3             ]]
+  [[ "${status}"    -eq 0                                     ]]
+  [[ "${#lines[@]}" -eq 4                                     ]]
 
-  [[ "${lines[0]}"  =~  \#tag3        ]]
-  [[ "${lines[1]}"  =~  \#tag1        ]]
-  [[ "${lines[2]}"  =~  \#lõw-tag     ]]
+  [[ "${lines[0]}"  =~  \#tag3                                ]]
+  [[ "${lines[1]}"  =~  \#tag1                                ]]
+  [[ "${lines[2]}"  =~  \#lõw-tag                             ]]
+  [[ "${output}"    =~  \#parent-tag/child-tag/grandchild-tag ]]
 }
 
 @test "'<folder>/ --tags' lists all unique tags in <folder>." {
@@ -255,15 +260,16 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0             ]]
-  [[ "${#lines[@]}" -eq 6             ]]
+  [[ "${status}"    -eq 0                                     ]]
+  [[ "${#lines[@]}" -eq 7                                     ]]
 
-  [[ "${lines[0]}"  =~  \#nested-tag1 ]]
-  [[ "${lines[1]}"  =~  \#nested-tag2 ]]
-  [[ "${lines[2]}"  =~  \#tag1        ]]
-  [[ "${lines[3]}"  =~  \#tag2        ]]
-  [[ "${lines[4]}"  =~  \#tag3        ]]
-  [[ "${lines[5]}"  =~  \#lõw-tag     ]]
+  [[ "${lines[0]}"  =~  \#nested-tag1                         ]]
+  [[ "${lines[1]}"  =~  \#nested-tag2                         ]]
+  [[ "${lines[2]}"  =~  \#tag1                                ]]
+  [[ "${lines[3]}"  =~  \#tag2                                ]]
+  [[ "${lines[4]}"  =~  \#tag3                                ]]
+  [[ "${lines[5]}"  =~  \#lõw-tag                             ]]
+  [[ "${lines[6]}"  =~  \#parent-tag/child-tag/grandchild-tag ]]
 }
 
 @test "'--tags --all' lists all unique tags in all notebooks." {
@@ -276,16 +282,17 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0             ]]
-  [[ "${#lines[@]}" -eq 7             ]]
+  [[ "${status}"    -eq 0                                     ]]
+  [[ "${#lines[@]}" -eq 8                                     ]]
 
-  [[ "${lines[0]}"  =~  \#other-tag1  ]]
-  [[ "${lines[1]}"  =~  \#nested-tag1 ]]
-  [[ "${lines[2]}"  =~  \#nested-tag2 ]]
-  [[ "${lines[3]}"  =~  \#tag1        ]]
-  [[ "${lines[4]}"  =~  \#tag2        ]]
-  [[ "${lines[6]}"  =~  \#lõw-tag     ]]
-  [[ "${lines[5]}"  =~  \#tag3        ]]
+  [[ "${lines[0]}"  =~  \#other-tag1                          ]]
+  [[ "${lines[1]}"  =~  \#nested-tag1                         ]]
+  [[ "${lines[2]}"  =~  \#nested-tag2                         ]]
+  [[ "${lines[3]}"  =~  \#tag1                                ]]
+  [[ "${lines[4]}"  =~  \#tag2                                ]]
+  [[ "${lines[5]}"  =~  \#tag3                                ]]
+  [[ "${lines[6]}"  =~  \#lõw-tag                             ]]
+  [[ "${lines[7]}"  =~  \#parent-tag/child-tag/grandchild-tag ]]
 }
 
 # `list` ######################################################################
@@ -300,12 +307,13 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0             ]]
-  [[ "${#lines[@]}" -eq 3             ]]
+  [[ "${status}"    -eq 0                                     ]]
+  [[ "${#lines[@]}" -eq 4                                     ]]
 
-  [[ "${lines[0]}"  =~  \#tag3        ]]
-  [[ "${lines[1]}"  =~  \#tag1        ]]
-  [[ "${lines[2]}"  =~  \#lõw-tag     ]]
+  [[ "${lines[0]}"  =~  \#tag3                                ]]
+  [[ "${lines[1]}"  =~  \#tag1                                ]]
+  [[ "${lines[2]}"  =~  \#lõw-tag                             ]]
+  [[ "${lines[3]}"  =~  \#parent-tag/child-tag/grandchild-tag ]]
 }
 
 @test "'list <folder>/ --tags' lists all unique tags in <folder>." {
@@ -335,15 +343,16 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0             ]]
-  [[ "${#lines[@]}" -eq 6             ]]
+  [[ "${status}"    -eq 0                                     ]]
+  [[ "${#lines[@]}" -eq 7                                     ]]
 
-  [[ "${lines[0]}"  =~  \#nested-tag1 ]]
-  [[ "${lines[1]}"  =~  \#nested-tag2 ]]
-  [[ "${lines[2]}"  =~  \#tag1        ]]
-  [[ "${lines[3]}"  =~  \#tag2        ]]
-  [[ "${lines[4]}"  =~  \#tag3        ]]
-  [[ "${lines[5]}"  =~  \#lõw-tag     ]]
+  [[ "${lines[0]}"  =~  \#nested-tag1                         ]]
+  [[ "${lines[1]}"  =~  \#nested-tag2                         ]]
+  [[ "${lines[2]}"  =~  \#tag1                                ]]
+  [[ "${lines[3]}"  =~  \#tag2                                ]]
+  [[ "${lines[4]}"  =~  \#tag3                                ]]
+  [[ "${lines[5]}"  =~  \#lõw-tag                             ]]
+  [[ "${lines[6]}"  =~  \#parent-tag/child-tag/grandchild-tag ]]
 }
 
 @test "'list --tags --all' lists all unique tags in all notebooks." {
@@ -356,16 +365,17 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0             ]]
-  [[ "${#lines[@]}" -eq 7             ]]
+  [[ "${status}"    -eq 0                                     ]]
+  [[ "${#lines[@]}" -eq 8                                     ]]
 
-  [[ "${lines[0]}"  =~  \#other-tag1  ]]
-  [[ "${lines[1]}"  =~  \#nested-tag1 ]]
-  [[ "${lines[2]}"  =~  \#nested-tag2 ]]
-  [[ "${lines[3]}"  =~  \#tag1        ]]
-  [[ "${lines[4]}"  =~  \#tag2        ]]
-  [[ "${lines[5]}"  =~  \#tag3        ]]
-  [[ "${lines[6]}"  =~  \#lõw-tag     ]]
+  [[ "${lines[0]}"  =~  \#other-tag1                          ]]
+  [[ "${lines[1]}"  =~  \#nested-tag1                         ]]
+  [[ "${lines[2]}"  =~  \#nested-tag2                         ]]
+  [[ "${lines[3]}"  =~  \#tag1                                ]]
+  [[ "${lines[4]}"  =~  \#tag2                                ]]
+  [[ "${lines[5]}"  =~  \#tag3                                ]]
+  [[ "${lines[6]}"  =~  \#lõw-tag                             ]]
+  [[ "${lines[7]}"  =~  \#parent-tag/child-tag/grandchild-tag ]]
 }
 
 # `search` ####################################################################
@@ -380,12 +390,13 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0             ]]
-  [[ "${#lines[@]}" -eq 3             ]]
+  [[ "${status}"    -eq 0                                     ]]
+  [[ "${#lines[@]}" -eq 4                                     ]]
 
-  [[ "${lines[0]}"  =~  \#tag3        ]]
-  [[ "${lines[1]}"  =~  \#tag1        ]]
-  [[ "${lines[2]}"  =~  \#lõw-tag     ]]
+  [[ "${lines[0]}"  =~  \#tag3                                ]]
+  [[ "${lines[1]}"  =~  \#tag1                                ]]
+  [[ "${lines[2]}"  =~  \#lõw-tag                             ]]
+  [[ "${lines[3]}"  =~  \#parent-tag/child-tag/grandchild-tag ]]
 }
 
 @test "'search <folder>/ --tags' lists all unique tags in <folder>." {
@@ -415,15 +426,16 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0             ]]
-  [[ "${#lines[@]}" -eq 6             ]]
+  [[ "${status}"    -eq 0                                     ]]
+  [[ "${#lines[@]}" -eq 7                                     ]]
 
-  [[ "${lines[0]}"  =~  \#nested-tag1 ]]
-  [[ "${lines[1]}"  =~  \#nested-tag2 ]]
-  [[ "${lines[2]}"  =~  \#tag1        ]]
-  [[ "${lines[3]}"  =~  \#tag2        ]]
-  [[ "${lines[4]}"  =~  \#tag3        ]]
-  [[ "${lines[5]}"  =~  \#lõw-tag     ]]
+  [[ "${lines[0]}"  =~  \#nested-tag1                         ]]
+  [[ "${lines[1]}"  =~  \#nested-tag2                         ]]
+  [[ "${lines[2]}"  =~  \#tag1                                ]]
+  [[ "${lines[3]}"  =~  \#tag2                                ]]
+  [[ "${lines[4]}"  =~  \#tag3                                ]]
+  [[ "${lines[5]}"  =~  \#lõw-tag                             ]]
+  [[ "${lines[6]}"  =~  \#parent-tag/child-tag/grandchild-tag ]]
 }
 
 @test "'search --tags --all' lists all unique tags in all notebooks." {
@@ -436,14 +448,15 @@ HEREDOC
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${status}"    -eq 0             ]]
-  [[ "${#lines[@]}" -eq 7             ]]
+  [[ "${status}"    -eq 0                                     ]]
+  [[ "${#lines[@]}" -eq 8                                     ]]
 
-  [[ "${lines[0]}"  =~  \#other-tag1  ]]
-  [[ "${lines[1]}"  =~  \#nested-tag1 ]]
-  [[ "${lines[2]}"  =~  \#nested-tag2 ]]
-  [[ "${lines[3]}"  =~  \#tag1        ]]
-  [[ "${lines[4]}"  =~  \#tag2        ]]
-  [[ "${lines[5]}"  =~  \#tag3        ]]
-  [[ "${lines[6]}"  =~  \#lõw-tag     ]]
+  [[ "${lines[0]}"  =~  \#other-tag1                          ]]
+  [[ "${lines[1]}"  =~  \#nested-tag1                         ]]
+  [[ "${lines[2]}"  =~  \#nested-tag2                         ]]
+  [[ "${lines[3]}"  =~  \#tag1                                ]]
+  [[ "${lines[4]}"  =~  \#tag2                                ]]
+  [[ "${lines[5]}"  =~  \#tag3                                ]]
+  [[ "${lines[6]}"  =~  \#lõw-tag                             ]]
+  [[ "${lines[7]}"  =~  \#parent-tag/child-tag/grandchild-tag ]]
 }
