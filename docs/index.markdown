@@ -2750,13 +2750,18 @@ for more information.
 </p>
 
 Tagging is a flexible and powerful way to organize, filter, and discover your
-notes, bookmarks, and todos in `nb`. Tags in `nb` are written as `#hashtags`
+notes, bookmarks, and todos in `nb`.
+
+Tags in `nb` are written as `#hashtags`
 and can be placed anywhere within a document. A hashtag is defined as a `#`
 character followed by any number of letters, numbers, underscores, or dashes,
 allowing you to create custom categories or keywords tailored to your workflow.
+
 Tagging lets you group related items, quickly search for topics, set up ad hoc
 collections, and create multi-dimensional taxonomies that complement notebooks
-and folders. Tags can be added when creating or editing items, or embedded
+and folders.
+
+Tags can be added when creating or editing items, or embedded
 directly in your note content.
 
 #### Nested Tagging
