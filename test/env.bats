@@ -21,7 +21,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[4]}" =~ NB_EDITOR=example-editor    ]]
+  [[ "${lines[29]}" =~ NB_EDITOR=example-editor     ]]
 }
 
 @test "'env' with NB_EDITOR sets editor." {
@@ -30,7 +30,7 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[4]}" =~ NB_EDITOR=example-nb-editor ]]
+  [[ "${lines[29]}" =~ NB_EDITOR=example-nb-editor  ]]
 }
 
 @test "'env' with VISUAL sets editor." {
@@ -39,5 +39,5 @@ load test_helper
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${lines[4]}" =~ NB_EDITOR=example-visual    ]]
+  [[ "${lines[29]}" =~ NB_EDITOR=example-visual     ]]
 }

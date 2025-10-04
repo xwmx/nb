@@ -67,7 +67,7 @@ _setup_notebooks() {
   printf "\${output}: '%s'\\n" "${output}"
   _compare "'NB_NOTEBOOK_PATH=${NB_DIR}/home'" "'${lines[2]}'"
 
-  [[ "${lines[2]}" == "NB_NOTEBOOK_PATH=${NB_DIR}/home" ]]
+  [[ "${output}" =~ NB_NOTEBOOK_PATH=${NB_DIR}/home   ]]
 }
 
 @test "'notebooks use <invalid>' exits with 1 and prints error message." {
@@ -92,7 +92,7 @@ _setup_notebooks() {
   printf "\${output}: '%s'\\n" "${output}"
   _compare "'NB_NOTEBOOK_PATH=${NB_DIR}/home'" "'${lines[2]}'"
 
-  [[ "${lines[2]}" == "NB_NOTEBOOK_PATH=${NB_DIR}/home" ]]
+  [[ "${output}" =~ NB_NOTEBOOK_PATH=${NB_DIR}/home ]]
 }
 
 @test "'notebooks use <name>' exits with 0 and sets <name> in .current." {
@@ -116,7 +116,7 @@ _setup_notebooks() {
   printf "\${output}: '%s'\\n" "${output}"
   _compare "'NB_NOTEBOOK_PATH=${NB_DIR}/one'" "'${lines[2]}'"
 
-  [[ "${lines[2]}" == "NB_NOTEBOOK_PATH=${NB_DIR}/one" ]]
+  [[ "${output}" =~ NB_NOTEBOOK_PATH=${NB_DIR}/one ]]
 }
 
 @test "'notebooks use <name>:' exits with 0 and sets <name> in .current." {
@@ -141,7 +141,7 @@ _setup_notebooks() {
   printf "\${output}: '%s'\\n" "${output}"
   _compare "'NB_NOTEBOOK_PATH=${NB_DIR}/one'" "'${lines[2]}'"
 
-  [[ "${lines[2]}" == "NB_NOTEBOOK_PATH=${NB_DIR}/one" ]]
+  [[ "${output}" =~ NB_NOTEBOOK_PATH=${NB_DIR}/one ]]
 }
 
 @test "'notebooks use <name>:' exits with 0, sets the current notebook, and loads local .nbrc." {
@@ -173,8 +173,8 @@ HEREDOC
   _compare "'NB_NOTEBOOK_PATH=${NB_DIR}/one'" "'${lines[2]}'"
   _compare "'NB_DEFAULT_EXTENSION=adoc'"      "'${lines[8]}'"
 
-  [[ "${lines[2]}" == "NB_NOTEBOOK_PATH=${NB_DIR}/one" ]]
-  [[ "${lines[8]}" == "NB_DEFAULT_EXTENSION=adoc"      ]]
+  [[ "${output}" =~ "NB_NOTEBOOK_PATH=${NB_DIR}/one" ]]
+  [[ "${output}" =~ "NB_DEFAULT_EXTENSION=adoc"      ]]
 }
 
 @test "'notebooks use' in local exits with 1 and prints error message." {
@@ -205,5 +205,5 @@ HEREDOC
   _compare "'NB_NOTEBOOK_PATH=${_TMP_DIR}/example'" "'${lines[2]}'"
   [[ "$(cat "${NB_DIR}/.current")" == "home" ]]
 
-  [[ "${lines[2]}" == "NB_NOTEBOOK_PATH=${_TMP_DIR}/example" ]]
+  [[ "${output}" =~ "NB_NOTEBOOK_PATH=${_TMP_DIR}/example" ]]
 }

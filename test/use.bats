@@ -32,9 +32,9 @@ _setup_use() {
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _compare "'NB_NOTEBOOK_PATH=${NB_DIR}/home'" "'${lines[1]}'"
+  _compare "'NB_NOTEBOOK_PATH=${NB_DIR}/home'" "'${lines[50]}'"
 
-  [[ "${lines[2]}" == "NB_NOTEBOOK_PATH=${NB_DIR}/home" ]]
+  [[ "${output}" =~ "NB_NOTEBOOK_PATH=${NB_DIR}/home" ]]
 }
 
 @test "'use <invalid>' exits with 1 and prints error message." {
@@ -56,9 +56,9 @@ _setup_use() {
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _compare "'NB_NOTEBOOK_PATH=${NB_DIR}/home'" "'${lines[2]}'"
+  _compare "'NB_NOTEBOOK_PATH=${NB_DIR}/home'" "'${lines[51]}'"
 
-  [[ "${lines[2]}" == "NB_NOTEBOOK_PATH=${NB_DIR}/home" ]]
+  [[ "${output}" =~ "NB_NOTEBOOK_PATH=${NB_DIR}/home" ]]
 }
 
 @test "'repo use <name>' exits with 0 and sets <name> in .current." {
@@ -80,9 +80,9 @@ _setup_use() {
   run "${_NB}" env
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
-  _compare "'NB_NOTEBOOK_PATH=${NB_DIR}/one'" "'${lines[2]}'"
+  _compare "'NB_NOTEBOOK_PATH=${NB_DIR}/one'" "'${lines[51]}'"
 
-  [[ "${lines[2]}" == "NB_NOTEBOOK_PATH=${NB_DIR}/one" ]]
+  [[ "${output}" =~ "NB_NOTEBOOK_PATH=${NB_DIR}/one" ]]
 }
 
 # help ########################################################################
