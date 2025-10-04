@@ -74,7 +74,7 @@ be available.
 Place the completion script in `/etc/bash_completion.d/`:
 
 ```bash
-sudo curl -L https://raw.githubusercontent.com/xwmx/nb/master/etc/nb-completion.bash -o etc/bash_completion.d/nb
+sudo curl -L https://raw.githubusercontent.com/xwmx/nb/master/etc/nb-completion.bash -o /etc/bash_completion.d/nb
 ```
 
 #### macOS
