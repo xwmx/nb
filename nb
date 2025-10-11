@@ -5520,6 +5520,9 @@ _list() {
           shift
         fi
         ;;
+      --color)
+        _COLOR_ENABLED=1
+        ;;
       --no*color)
         _COLOR_ENABLED=0
         ;;
@@ -8551,7 +8554,7 @@ HEREDOC
     for   __arg in "${@:-}"
     do
       case "${__arg}" in
-        --archived|--global|--local|--name*|--no*color|--path*|--unarchived)
+        --archived|--global|--local|--name*|--color|--no*color|--path*|--unarchived)
           _options+=("${__arg}")
           ;;
       esac
@@ -8568,6 +8571,9 @@ HEREDOC
           ;;
         --name*)
           _only_names=1
+          ;;
+        --color)
+          _notebook_color_enabled=1
           ;;
         --no*color)
           _notebook_color_enabled=0
@@ -8944,6 +8950,9 @@ HEREDOC
           ;;
         --name)
           _only_name=1
+          ;;
+        --color)
+          _notebook_color_enabled=1
           ;;
         --no*color)
           _notebook_color_enabled=0
@@ -9748,6 +9757,9 @@ _parse_options() {
         ;;
       --debug)
         _USE_DEBUG=1
+        ;;
+      --color)
+        _COLOR_ENABLED=1
         ;;
       --no*color)
         _COLOR_ENABLED=0
@@ -12896,6 +12908,9 @@ _add() {
         ;;
       --folder*prompt)
         _folder_prompt=1
+        ;;
+      --color)
+        _COLOR_ENABLED=1
         ;;
       --no*color)
         _COLOR_ENABLED=0
@@ -17303,6 +17318,9 @@ _search() {
       -l|--list)
         _only_list=1
         ;;
+      --color)
+        _COLOR_ENABLED=1
+        ;;
       --no*color)
         _COLOR_ENABLED=0
         ;;
@@ -18747,6 +18765,9 @@ _show() {
         _limit="$(_option_get_value "${1}" "${2:-}")"
 
         shift
+        ;;
+      --color)
+        _COLOR_ENABLED=1
         ;;
       --no*color|--raw)
         _COLOR_ENABLED=0
