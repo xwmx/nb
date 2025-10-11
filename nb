@@ -5483,6 +5483,12 @@ _list() {
   local _use_pager=0
   local _with_pinned=0
 
+  if [ -t 1 ]; then
+    _COLOR_ENABLED=1
+  else
+    _COLOR_ENABLED=0
+  fi
+
   while ((${#}))
   do
     case "${1:-}" in
@@ -8550,6 +8556,12 @@ HEREDOC
     local _options=()
     local _query_names=()
 
+    if [ -t 1 ]; then
+      _notebook_color_enabled=1
+    else
+      _notebook_color_enabled=0
+    fi
+
     local __arg=
     for   __arg in "${@:-}"
     do
@@ -8938,6 +8950,12 @@ HEREDOC
     local _print_unique_file_path=0
     local _selector=
     local _test_archived=0
+
+    if [ -t 1 ]; then
+      _notebook_color_enabled=1
+    else
+      _notebook_color_enabled=0
+    fi
 
     while ((${#}))
     do
@@ -9714,6 +9732,12 @@ _parse_options() {
   local _current_option=
   local _non_option_arguments=()
   local _previous_option=
+
+  if [ -t 1 ]; then
+    _COLOR_ENABLED=1
+  else
+    _COLOR_ENABLED=0
+  fi
 
   while ((${#}))
   do
@@ -12853,6 +12877,12 @@ _add() {
   local _tag_list=
   local _template=
   local _title=
+
+  if [ -t 1 ]; then
+    _COLOR_ENABLED=1
+  else
+    _COLOR_ENABLED=0
+  fi
 
   while ((${#}))
   do
@@ -17262,6 +17292,12 @@ _search() {
   local _sort=0
   local _type=
 
+  if [ -t 1 ]; then
+    _COLOR_ENABLED=1
+  else
+    _COLOR_ENABLED=0
+  fi
+
   while ((${#}))
   do
     case "${1:-}" in
@@ -18728,6 +18764,12 @@ _show() {
   local _tool=
   local _type=
   local _unresolved_arguments=()
+
+  if [ -t 1 ]; then
+    _COLOR_ENABLED=1
+  else
+    _COLOR_ENABLED=0
+  fi
 
   while ((${#}))
   do
