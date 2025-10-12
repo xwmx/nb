@@ -8566,7 +8566,7 @@ HEREDOC
     for   __arg in "${@:-}"
     do
       case "${__arg}" in
-        --archived|--global|--local|--name*|--color|--no*color|--path*|--unarchived)
+        --archived|--color|--global|--local|--name*|--no*color|--path*|--unarchived)
           _options+=("${__arg}")
           ;;
       esac
