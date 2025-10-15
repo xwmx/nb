@@ -5495,6 +5495,9 @@ _list() {
       -a|--all)
         _limit=
         ;;
+      --color)
+        _COLOR_ENABLED=1
+        ;;
       -e|--excerpt)
         _print_excerpt=1
         _recursive_arguments+=("--excerpt")
@@ -5525,9 +5528,6 @@ _list() {
 
           shift
         fi
-        ;;
-      --color)
-        _COLOR_ENABLED=1
         ;;
       --no*color)
         _COLOR_ENABLED=0
@@ -8575,6 +8575,9 @@ HEREDOC
         --ar|--archived)
           _only_archived=1
           ;;
+        --color)
+          _notebook_color_enabled=1
+          ;;
         --global)
           _only_global=1
           ;;
@@ -8583,9 +8586,6 @@ HEREDOC
           ;;
         --name*)
           _only_names=1
-          ;;
-        --color)
-          _notebook_color_enabled=1
           ;;
         --no*color)
           _notebook_color_enabled=0
@@ -8963,14 +8963,14 @@ HEREDOC
         --archived)
           _test_archived=1
           ;;
+        --color)
+          _notebook_color_enabled=1
+          ;;
         --escaped)
           _print_escaped_name=1
           ;;
         --name)
           _only_name=1
-          ;;
-        --color)
-          _notebook_color_enabled=1
           ;;
         --no*color)
           _notebook_color_enabled=0
@@ -9779,11 +9779,11 @@ _parse_options() {
             ;;
         esac
         ;;
-      --debug)
-        _USE_DEBUG=1
-        ;;
       --color)
         _COLOR_ENABLED=1
+        ;;
+      --debug)
+        _USE_DEBUG=1
         ;;
       --no*color)
         _COLOR_ENABLED=0
@@ -12890,6 +12890,9 @@ _add() {
       -b|-br|--browse)
         _browse=1
         ;;
+      --color)
+        _COLOR_ENABLED=1
+        ;;
       -c|--content)
         if [[ -z "${2:-}"                   ]]
         then
@@ -12938,9 +12941,6 @@ _add() {
         ;;
       --folder*prompt)
         _folder_prompt=1
-        ;;
-      --color)
-        _COLOR_ENABLED=1
         ;;
       --no*color)
         _COLOR_ENABLED=0
@@ -17346,6 +17346,9 @@ _search() {
           shift
         fi
         ;;
+      --color)
+        _COLOR_ENABLED=1
+        ;;
       --limit|-n|--num|--number|--per*)
         _limit="$(_option_get_value "${1}" "${2:-}")"
 
@@ -17353,9 +17356,6 @@ _search() {
         ;;
       -l|--list)
         _only_list=1
-        ;;
-      --color)
-        _COLOR_ENABLED=1
         ;;
       --no*color)
         _COLOR_ENABLED=0
@@ -18784,6 +18784,9 @@ _show() {
       -b|--br|--browse)
         _browse=1
         ;;
+      --color)
+        _COLOR_ENABLED=1
+        ;;
       --filename|--basename)
         _print_filename=1
         _skip_notebook_fallback=1
@@ -18807,9 +18810,6 @@ _show() {
         _limit="$(_option_get_value "${1}" "${2:-}")"
 
         shift
-        ;;
-      --color)
-        _COLOR_ENABLED=1
         ;;
       --no*color|--raw)
         _COLOR_ENABLED=0
