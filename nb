@@ -7568,15 +7568,15 @@ _notebooks() {
       if [[ -n "${_name:-}"               ]] &&
          ! ((${#_option_selected_remote_branches[@]}))
       then
-        git clone "${_git_options[@]:-}"                  \
-          "${_remote_url}"                                \
+        git clone "${_git_options[@]:-}"  \
+          "${_remote_url}"                \
           "${NB_DIR}/${_name}"
-      elif [[ -n "${_name:-}"                             ]] &&
-           [[ "${#_option_selected_remote_branches[@]}" -eq 1    ]]
+      elif [[ -n "${_name:-}"                                 ]] &&
+           [[ "${#_option_selected_remote_branches[@]}" -eq 1 ]]
       then
-        git clone "${_git_options[@]:-}"                  \
-          --branch "${_option_selected_remote_branches[0]:-}"    \
-          "${_remote_url}"                                \
+        git clone "${_git_options[@]:-}"                      \
+          --branch "${_option_selected_remote_branches[0]:-}" \
+          "${_remote_url}"                                    \
           "${NB_DIR}/${_name}"
       else
         local _current_notebook_path=
