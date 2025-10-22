@@ -2406,15 +2406,15 @@ _get_last_modified_timestamp() {
 
   if ! _stat_output="$(
        stat -c %Y "${_path}" 2>/dev/null
-     )"
-  then # GNU
+     )" # GNU
+  then
     if ! _stat_output="$(
          gstat -c %Y "${_path}" 2>/dev/null
-       )"
-    then # GNU prefixed
+       )" # GNU prefixed
+    then
       _stat_output="$(
         stat -f '%m' "${_path}"
-      )"
+      )" # BSD/macOS
     fi
   fi
 
