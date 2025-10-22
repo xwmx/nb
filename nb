@@ -15470,7 +15470,7 @@ _env() {
   local _subcommand="${1:-}"
 
   case "${_subcommand}" in
-    install)
+    install|update)
       if ! _contains "${2:-}" "--ace" "--mathjax"
       then # skip to next section if `_env install --ace`
         # packages: curl pandoc pygments w3m ripgrep tig
@@ -15584,6 +15584,11 @@ _env() {
               _exit_1 printf "Unable to \`cd\` to %s\\n" "${NB_DIR}/.assets"
 
             git clone https://github.com/mathjax/MathJax.git
+          else
+            cd "${NB_DIR}/.assets/MathJax" ||
+              _exit_1 printf "Unable to \`cd\` to %s\\n" "${NB_DIR}/.assets/MathJax"
+
+            git -C "${NB_DIR}/.assets/MathJax" pull origin
           fi
           ;;
       esac
@@ -21963,8 +21968,17 @@ HEREDOC
     then
       local _target_relative_path="${_request_uri#/--mathjax/}"
 
-      _browse_respond_with 200 \
-        "${NB_DIR}/.assets/MathJax/es5/${_target_relative_path}"
+      if [[   -e "${NB_DIR}/.assets/MathJax/es5/${_target_relative_path}"   ]]
+      then
+        _browse_respond_with 200 \
+          "${NB_DIR}/.assets/MathJax/es5/${_target_relative_path}"
+      elif [[ -e "${NB_DIR}/.assets/MathJax/${_target_relative_path}"  ]]
+      then
+        _browse_respond_with 200 \
+          "${NB_DIR}/.assets/MathJax/${_target_relative_path}"
+      else
+        _browse_respond_with 404
+      fi
 
       return 0
     fi
@@ -22321,6 +22335,9 @@ HEREDOC
       elif [[ "${_path}" =~ \.svg$    ]]
       then
         _response_headers+=("Content-Type: image/svg+xml")
+     elif [[ "${_path}" =~ \.js$      ]]
+      then
+        _response_headers+=("Content-Type: application/javascript")
       else
         if _command_exists "file"
         then
