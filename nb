@@ -22786,26 +22786,69 @@ HEREDOC
 
   # install enabled assets
 
-  if   ((${NB_ACE_ENABLED:-0}))     &&
-     ! ((${NB_TESTING:-0}))         &&
-     [[ ! -e "${NB_DIR}/.assets/ace-builds" ]]
+  if ! ((${NB_TESTING:-0}))
   then
-    printf "Installing %s%s\\n"         \
-      "$(_color_primary "Ace Editor")"  \
-      "$(_color_muted "...")"
+    if ((${NB_ACE_ENABLED:-0}))
+    then
+      if [[ ! -e "${NB_DIR}/.assets/ace-builds" ]]
+      then
+        printf "Installing %s%s\\n"         \
+          "$(_color_primary "Ace Editor")"  \
+          "$(_color_muted "...")"
 
-    _env install --ace
-  fi
+        _env install --ace
+      elif [[ -e "${NB_DIR}/.assets/ace-builds/.git/FETCH_HEAD" ]]
+      then
+        local _ace_last_modified=
+        _ace_last_modified="$(
+          _get_last_modified_timestamp "${NB_DIR}/.assets/ace-builds/.git/FETCH_HEAD"
+        )"
 
-  if   ((${NB_MATHJAX_ENABLED:-0})) &&
-     ! ((${NB_TESTING:-0}))         &&
-     [[ ! -e "${NB_DIR}/.assets/MathJax"    ]]
-  then
-    printf "Installing %s%s\\n"         \
-      "$(_color_primary "MathJax")"     \
-      "$(_color_muted "...")"
+        local _my_last_modified=
+        _my_last_modified="$(
+          _get_last_modified_timestamp "${_MY_PATH}"
+        )"
 
-    _env install --mathjax
+        if (( _my_last_modified > _ace_last_modified ))
+        then
+          printf "Updating %s%s\\n"           \
+            "$(_color_primary "Ace Editor")"  \
+            "$(_color_muted "...")"
+
+          _env install --ace
+        fi
+      fi
+    fi
+
+    if   ((${NB_MATHJAX_ENABLED:-0})) &&
+       [[ ! -e "${NB_DIR}/.assets/MathJax"    ]]
+    then
+      printf "Installing %s%s\\n"         \
+        "$(_color_primary "MathJax")"     \
+        "$(_color_muted "...")"
+
+      _env install --mathjax
+    elif [[ -e "${NB_DIR}/.assets/MathJax/.git/FETCH_HEAD"      ]]
+    then
+      local _mathjax_last_modified=
+      _mathjax_last_modified="$(
+        _get_last_modified_timestamp "${NB_DIR}/.assets/MathJax/.git/FETCH_HEAD"
+      )"
+
+      local _my_last_modified=
+      _my_last_modified="$(
+        _get_last_modified_timestamp "${_MY_PATH}"
+      )"
+
+      if (( _my_last_modified > _mathjax_last_modified ))
+      then
+        printf "Updating %s%s\\n"         \
+          "$(_color_primary "MathJax")"   \
+          "$(_color_muted "...")"
+
+        _env install --mathjax
+      fi
+    fi
   fi
 
   # build initial request URL parameters and arguments
