@@ -6112,6 +6112,7 @@ Usage:
           [-c <content> | --content <content>] [--edit]
           [-e <editor> | --editor <editor>] [-l | --last] [--overwrite]
           [--prepend]
+  nb env [[install | update] [--ace | --mathjax]]
   nb export ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             <path> [-f | --force] [<pandoc options>...]
   nb export notebook <name> [<path>]
@@ -6229,6 +6230,7 @@ Subcommands:
   delete       Delete a note.
   do           Mark a todo or task as done.
   edit         Edit a note.
+  env          Print environment information and install dependencies.
   export       Export a note to a variety of different formats.
   folders      Add, delete, and list folders.
   git          Run `git` commands within the current notebook.
@@ -7019,10 +7021,20 @@ Shortcut Alias:
 
 ```text
 Usage:
-  nb env [install]
+  nb env [[install | update] [--ace | --mathjax]]
 
 Subcommands:
-  install  Install dependencies on supported systems.
+  (default) Print environment and configuration information.
+  install   Install dependencies on supported systems.
+  update    Update dependencies.
+
+Options:
+  --ace     Install or update Ace editor [1][2].
+  --mathjax Install or update MathJax [3].
+
+    1. https://github.com/ajaxorg/ace
+    2. https://github.com/ajaxorg/ace-builds
+    3. https://github.com/mathjax/MathJax
 
 Description:
   Print program environment and configuration information, or install

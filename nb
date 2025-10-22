@@ -4480,6 +4480,7 @@ $(_color_primary "Usage"):
           [-c <content> | --content <content>] [--edit]
           [-e <editor> | --editor <editor>] [-l | --last] [--overwrite]
           [--prepend]
+  ${_ME} env [[install | update] [--ace | --mathjax]]
   ${_ME} export ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             <path> [-f | --force] [<pandoc options>...]
   ${_ME} export notebook <name> [<path>]
@@ -4602,6 +4603,7 @@ $(_color_primary "Subcommands"):
   delete       Delete a note.
   do           Mark a todo or task as done.
   edit         Edit a note.
+  env          Print environment information and install dependencies.
   export       Export a note to a variety of different formats.
   folders      Add, delete, and list folders.
   git          Run \`git\` commands within the current notebook.
@@ -15388,10 +15390,20 @@ _alias_subcommand "edit" "e"
 _describe_env() {
   cat <<HEREDOC
 $(_color_primary "Usage"):
-  ${_ME} env [install]
+  ${_ME} env [[install | update] [--ace | --mathjax]]
 
 $(_color_primary "Subcommands"):
-  install  Install dependencies on supported systems.
+  (default) Print environment and configuration information.
+  install   Install dependencies on supported systems.
+  update    Update dependencies.
+
+$(_color_primary "Options"):
+  --ace     Install or update Ace editor [1][2].
+  --mathjax Install or update MathJax [3].
+
+    1. https://github.com/ajaxorg/ace
+    2. https://github.com/ajaxorg/ace-builds
+    3. https://github.com/mathjax/MathJax
 
 $(_color_primary "Description"):
   Print program environment and configuration information, or install
