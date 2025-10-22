@@ -2404,6 +2404,11 @@ _get_last_modified_timestamp() {
 
   [[ -z "${_path:-}" ]] && return 1
 
+  if [[ -L "${_path}" ]]
+  then
+    _path="$(_resolve_symlink "${_path}")"
+  fi
+
   if ! _stat_output="$(
        stat -c %Y "${_path}" 2>/dev/null
      )" # GNU
@@ -23467,6 +23472,9 @@ _helpers() {
       ;;
     *http*)
       _get_http_status                "${_options[@]:-}"
+      ;;
+    *last*mod*)
+      _get_last_modified_timestamp    "${_options[@]:-}"
       ;;
     *unique*basename*|*unique*relative*)
       _get_unique_relative_path       "${_options[@]:-}"
