@@ -305,12 +305,12 @@ copy and paste one of the following multi-line commands:
 # install using wget
 sudo wget https://raw.github.com/xwmx/nb/master/nb -O /usr/local/bin/nb &&
   sudo chmod +x /usr/local/bin/nb &&
-  sudo nb completions install
+  sudo nb completions install --download
 
 # install using curl
 sudo curl -L https://raw.github.com/xwmx/nb/master/nb -o /usr/local/bin/nb &&
   sudo chmod +x /usr/local/bin/nb &&
-  sudo nb completions install
+  sudo nb completions install --download
 ```
 
 On Ubuntu and WSL, you can
