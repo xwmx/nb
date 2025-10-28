@@ -15872,9 +15872,9 @@ _env() {
         if _command_exists "w3m"
         then
           printf "\\n"
-          printf "w3m --version\\n"
-          printf -- "-------------\\n"
-          printf "%s\\n" "$(w3m --version 2>&1)"
+          printf "w3m -version\\n"
+          printf -- "------------\\n"
+          printf "%s\\n" "$(w3m -version 2>&1)"
         fi
       fi
       ;;
