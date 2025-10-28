@@ -15813,6 +15813,30 @@ _env() {
           printf "%s\\n"  "$('/Applications/Chromium.app/Contents/MacOS/Chromium' --version 2>&1)"
         fi
 
+        if _command_exists "awk"
+        then
+          printf "\\n"
+          printf "awk --version\\n"
+          printf -- "-------------\\n"
+          printf "%s\\n" "$(awk --version 2>&1)"
+        fi
+
+        if _command_exists "grep"
+        then
+          printf "\\n"
+          printf "grep --version\\n"
+          printf -- "--------------\\n"
+          printf "%s\\n" "$(grep --version 2>&1)"
+        fi
+
+        if _command_exists "sed"
+        then
+          printf "\\n"
+          printf "sed --version\\n"
+          printf -- "-------------\\n"
+          printf "%s\\n" "$(sed --version 2>&1)"
+        fi
+
         if _command_exists "nc"
         then
           printf "\\n"
@@ -15835,6 +15859,14 @@ _env() {
           printf "pandoc --version\\n"
           printf -- "----------------\\n"
           printf "%s\\n" "$(pandoc --version 2>&1)"
+        fi
+
+        if _command_exists "socat"
+        then
+          printf "\\n"
+          printf "socat -V\\n"
+          printf -- "--------\\n"
+          printf "%s\\n" "$(socat -V 2>&1)"
         fi
 
         if _command_exists "w3m"
