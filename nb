@@ -15757,14 +15757,17 @@ _env() {
         printf "bash --version\\n"
         printf -- "--------------\\n"
         printf "%s\\n" "$(bash --version | head -1)"
+
         printf "\\n"
         printf "git --version\\n"
         printf -- "-------------\\n"
         printf "%s\\n" "$(git --version | head -1)"
+
         printf "\\n"
         printf "uname -a\\n"
         printf -- "--------\\n"
         printf "%s\\n" "$(uname -a)"
+
         printf "\\n"
         printf "locale\\n"
         printf -- "------\\n"
