@@ -16398,12 +16398,12 @@ _import() {
     then
       _selector="${__source_and_target_identifier:-}"
     elif [[ "${_subcommand}" == bookmarks                     ]] &&
-         [[ ! "${__source_and_target_identifier}" =~ ^/       ]] &&
+         [[ ! "${__source_and_target_identifier}" =~ (^/|^~/) ]] &&
          [[ "${__source_and_target_identifier}"   =~ (:$|/$)  ]]
     then
       _selector="${__source_and_target_identifier}"
     elif [[ "${_subcommand}" =~ (^copy$|^move$)               ]] &&
-         [[ ! "${__source_and_target_identifier}" =~ ^/       ]] &&
+         [[ ! "${__source_and_target_identifier}" =~ (^/|^~/) ]] &&
          {
            [[ -n "${_local_notebook_path}"                    ]] ||
            [[ ! -e "${PWD}/${__source_and_target_identifier}" ]]
@@ -16415,7 +16415,14 @@ _import() {
     then
       _target_notebook_name="${__source_and_target_identifier:-}"
     else
-      _paths+=("${__source_and_target_identifier:-}")
+      if [[ "${__source_and_target_identifier:-}" =~ ^~/ ]]
+      then
+        _paths+="$(
+          printf "%s\\n" "${__source_and_target_identifier:-}" | sed "s,^~,${HOME},g"
+        )"
+      else
+        _paths+=("${__source_and_target_identifier:-}")
+      fi
     fi
   done
 
