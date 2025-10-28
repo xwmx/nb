@@ -82,7 +82,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.22.1"
+_VERSION="7.23.0"
 
 # $_ME
 #
@@ -2391,12 +2391,54 @@ _get_id_selector() {
   printf "%s\\n" "${_id_selector:-}"
 }
 
+# _get_last_modified_timestamp()
+#
+# Usage:
+#   _get_last_modified_timestamp <path>
+#
+# Description:
+#   Print the last modified timestamp for the file at <path>.
+_get_last_modified_timestamp() {
+  local _path="${1:-}"
+  local _stat_output=
+
+  [[ -z "${_path:-}" ]] && return 1
+
+  if [[ -L "${_path}" ]]
+  then
+    _path="$(_resolve_symlink "${_path}")"
+  fi
+
+  if ! _stat_output="$(
+       stat -c %Y "${_path}" 2>/dev/null
+     )" # GNU
+  then
+    if ! _stat_output="$(
+         gstat -c %Y "${_path}" 2>/dev/null
+       )" # GNU prefixed
+    then
+      _stat_output="$(
+        stat -f '%m' "${_path}"
+      )" # BSD/macOS
+    fi
+  fi
+
+  if [[ -n "${_stat_output:-}" ]]
+  then
+    printf "%s\\n" "${_stat_output}"
+
+    return 0
+  else
+    return 1
+  fi
+}
+
 # _get_visible_length()
 #
 # Usage:
 #   _get_visible_length <string> [<extra-length>]
 #
-# Describe:
+# Description:
 #   Calculate the apparent length of <string>, with byte and character
 #   calculations for handling unicode characters.
 #
@@ -3715,7 +3757,6 @@ _git() {
     ((_GIT_ENABLED)) || return 1
 
     local _last_fetch_timestamp=
-    local _maybe_fetch_timestamp=
     local _notebook_path="${1:-}"
 
     if [[ -z "${_notebook_path}" ]]
@@ -3743,19 +3784,12 @@ _git() {
       _last_fetch_timestamp="$(
         cat "${_notebook_path}/.git/nb/last_sync_state_checked" 2>/dev/null
       )"
-    elif _maybe_fetch_timestamp="$(
-         stat -c %Y "${_notebook_path}/.git/FETCH_HEAD" 2>/dev/null
-       )"
-    then # GNU
-      _last_fetch_timestamp="${_maybe_fetch_timestamp}"
-    elif _maybe_fetch_timestamp="$(
-           gstat -c %Y "${_notebook_path}/.git/FETCH_HEAD" 2>/dev/null
-         )"
-    then # GNU prefixed
-      _last_fetch_timestamp="${_maybe_fetch_timestamp}"
-    else
+    fi
+
+    if [[ -z "${_last_fetch_timestamp:-}" ]]
+    then
       _last_fetch_timestamp="$(
-        stat -f '%m' "${_notebook_path}/.git/FETCH_HEAD"
+        _get_last_modified_timestamp "${_notebook_path}/.git/FETCH_HEAD"
       )"
     fi
 
@@ -4480,6 +4514,8 @@ $(_color_primary "Usage"):
           [-c <content> | --content <content>] [--edit]
           [-e <editor> | --editor <editor>] [-l | --last] [--overwrite]
           [--prepend]
+  ${_ME} env [-l | --long]
+  ${_ME} env [install | update] [--ace | --mathjax]
   ${_ME} export ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             <path> [-f | --force] [<pandoc options>...]
   ${_ME} export notebook <name> [<path>]
@@ -4602,6 +4638,7 @@ $(_color_primary "Subcommands"):
   delete       Delete a note.
   do           Mark a todo or task as done.
   edit         Edit a note.
+  env          Print environment information and install dependencies.
   export       Export a note to a variety of different formats.
   folders      Add, delete, and list folders.
   git          Run \`git\` commands within the current notebook.
@@ -7568,15 +7605,15 @@ _notebooks() {
       if [[ -n "${_name:-}"               ]] &&
          ! ((${#_option_selected_remote_branches[@]}))
       then
-        git clone "${_git_options[@]:-}"                  \
-          "${_remote_url}"                                \
+        git clone "${_git_options[@]:-}"  \
+          "${_remote_url}"                \
           "${NB_DIR}/${_name}"
-      elif [[ -n "${_name:-}"                             ]] &&
-           [[ "${#_option_selected_remote_branches[@]}" -eq 1    ]]
+      elif [[ -n "${_name:-}"                                 ]] &&
+           [[ "${#_option_selected_remote_branches[@]}" -eq 1 ]]
       then
-        git clone "${_git_options[@]:-}"                  \
-          --branch "${_option_selected_remote_branches[0]:-}"    \
-          "${_remote_url}"                                \
+        git clone "${_git_options[@]:-}"                      \
+          --branch "${_option_selected_remote_branches[0]:-}" \
+          "${_remote_url}"                                    \
           "${NB_DIR}/${_name}"
       else
         local _current_notebook_path=
@@ -15388,10 +15425,22 @@ _alias_subcommand "edit" "e"
 _describe_env() {
   cat <<HEREDOC
 $(_color_primary "Usage"):
-  ${_ME} env [install]
+  ${_ME} env [-l | --long]
+  ${_ME} env [install | update] [--ace | --mathjax]
 
 $(_color_primary "Subcommands"):
-  install  Install dependencies on supported systems.
+  (default) Print environment and configuration information.
+  install   Install dependencies on supported systems.
+  update    Update dependencies.
+
+$(_color_primary "Options"):
+  --ace       Install or update Ace editor [1][2].
+  -l, --long  Print additional environmental information.
+  --mathjax   Install or update MathJax [3].
+
+    1. https://github.com/ajaxorg/ace
+    2. https://github.com/ajaxorg/ace-builds
+    3. https://github.com/mathjax/MathJax
 
 $(_color_primary "Description"):
   Print program environment and configuration information, or install
@@ -15470,7 +15519,7 @@ _env() {
   local _subcommand="${1:-}"
 
   case "${_subcommand}" in
-    install)
+    install|update)
       if ! _contains "${2:-}" "--ace" "--mathjax"
       then # skip to next section if `_env install --ace`
         # packages: curl pandoc pygments w3m ripgrep tig
@@ -15570,6 +15619,20 @@ _env() {
               _exit_1 printf "Unable to \`cd\` to %s\\n" "${NB_DIR}/.assets"
 
             git clone https://github.com/ajaxorg/ace-builds.git
+          else
+            cd "${NB_DIR}/.assets/ace-builds" ||
+              _exit_1 printf "Unable to \`cd\` to %s\\n" "${NB_DIR}/.assets/ace-builds"
+
+            git -C "${NB_DIR}/.assets/ace-builds" pull origin
+
+            local _git_status_output=
+            _git_status_output="$(git -C "${NB_DIR}/.assets/ace-builds" status --porcelain)"
+
+            if [[ -n "${_git_status_output:-}"      ]] &&
+               ! grep -qv '^ D demo/' <<< "$_git_status_output"
+            then # reset repository if there are stray deleted demo files.
+              git -C "${NB_DIR}/.assets/ace-builds" reset --hard HEAD
+            fi
           fi
           ;;
         --mathjax)
@@ -15584,6 +15647,11 @@ _env() {
               _exit_1 printf "Unable to \`cd\` to %s\\n" "${NB_DIR}/.assets"
 
             git clone https://github.com/mathjax/MathJax.git
+          else
+            cd "${NB_DIR}/.assets/MathJax" ||
+              _exit_1 printf "Unable to \`cd\` to %s\\n" "${NB_DIR}/.assets/MathJax"
+
+            git -C "${NB_DIR}/.assets/MathJax" pull origin
           fi
           ;;
       esac
@@ -15621,6 +15689,7 @@ _env() {
       printf "NB_DEFAULT_TEMPLATE=%s\\n"                  "${NB_DEFAULT_TEMPLATE:-}"
       printf "NB_DIR=%s\\n"                               "${NB_DIR:-}"
       printf "NB_DIRECTORY_TOOL=%s\\n"                    "${NB_DIRECTORY_TOOL:-}"
+      printf "NB_DOWNLOAD_TOOL=%s\\n"                     "${NB_DOWNLOAD_TOOL:-}"
       printf "NB_EDITOR=%s\\n"                            "${NB_EDITOR:-}"
       printf "NB_ENCRYPTION_TOOL=%s\\n"                   "${NB_ENCRYPTION_TOOL:-}"
       printf "NB_FOLDERS_FIRST=%s\\n"                     "${NB_FOLDERS_FIRST:-}"
@@ -15650,37 +15719,164 @@ _env() {
       printf "NB_SYNTAX_THEME=%s\\n"                      "${NB_SYNTAX_THEME:-}"
       printf "NBRC_PATH=%s\\n"                            "${NBRC_PATH:-}"
       printf "PAGER=%s\\n"                                "${PAGER:-}"
-      printf "\\n"
-      printf "ack:        %s\\n" "$(command -v ack)"
-      printf "ag:         %s\\n" "$(command -v ag)"
-      printf "bat:        %s\\n" "$(command -v bat)"
-      printf "code:       %s\\n" "$(command -v code)"
-      printf "curl:       %s\\n" "$(command -v curl)"
-      printf "emacs:      %s\\n" "$(command -v emacs)"
-      printf "git:        %s\\n" "$(command -v git)"
-      printf "gvim:       %s\\n" "$(command -v gvim)"
-      printf "gpg:        %s\\n" "$(command -v gpg)"
-      printf "highlight:  %s\\n" "$(command -v highlight)"
-      printf "less:       %s\\n" "$(command -v less)"
-      printf "lynx:       %s\\n" "$(command -v lynx)"
-      printf "macdown:    %s\\n" "$(command -v macdown)"
-      printf "mate:       %s\\n" "$(command -v mate)"
-      printf "mvim:       %s\\n" "$(command -v mvim)"
-      printf "nano:       %s\\n" "$(command -v nano)"
-      printf "nc:         %s\\n" "$(command -v ncat)"
-      printf "ncat:       %s\\n" "$(command -v nc)"
-      printf "nvim:       %s\\n" "$(command -v nvim)"
-      printf "openssl:    %s\\n" "$(command -v openssl)"
-      printf "pandoc:     %s\\n" "$(command -v pandoc)"
-      printf "pygments:   %s\\n" "$(command -v pygmentize)"
-      printf "readable:   %s\\n" "$(command -v readable)"
-      printf "rg:         %s\\n" "$(command -v rg)"
-      printf "subl:       %s\\n" "$(command -v subl)"
-      printf "tig:        %s\\n" "$(command -v tig)"
-      printf "w3m:        %s\\n" "$(command -v w3m)"
-      printf "vim:        %s\\n" "$(command -v vim)"
-      printf "bash --version: %s\\n"  "$(bash --version | head -1)"
-      printf "uname -a: %s\\n"        "$(uname -a)"
+
+      if _contains "${1:-}" "--long" "-l"
+      then
+        printf "\\n"
+        printf "ack:        %s\\n" "$(command -v ack)"
+        printf "ag:         %s\\n" "$(command -v ag)"
+        printf "bat:        %s\\n" "$(command -v bat)"
+        printf "code:       %s\\n" "$(command -v code)"
+        printf "curl:       %s\\n" "$(command -v curl)"
+        printf "emacs:      %s\\n" "$(command -v emacs)"
+        printf "git:        %s\\n" "$(command -v git)"
+        printf "gvim:       %s\\n" "$(command -v gvim)"
+        printf "gpg:        %s\\n" "$(command -v gpg)"
+        printf "highlight:  %s\\n" "$(command -v highlight)"
+        printf "less:       %s\\n" "$(command -v less)"
+        printf "lynx:       %s\\n" "$(command -v lynx)"
+        printf "macdown:    %s\\n" "$(command -v macdown)"
+        printf "mate:       %s\\n" "$(command -v mate)"
+        printf "mvim:       %s\\n" "$(command -v mvim)"
+        printf "nano:       %s\\n" "$(command -v nano)"
+        printf "nc:         %s\\n" "$(command -v ncat)"
+        printf "ncat:       %s\\n" "$(command -v nc)"
+        printf "nvim:       %s\\n" "$(command -v nvim)"
+        printf "openssl:    %s\\n" "$(command -v openssl)"
+        printf "pandoc:     %s\\n" "$(command -v pandoc)"
+        printf "pygments:   %s\\n" "$(command -v pygmentize)"
+        printf "readable:   %s\\n" "$(command -v readable)"
+        printf "rg:         %s\\n" "$(command -v rg)"
+        printf "subl:       %s\\n" "$(command -v subl)"
+        printf "tig:        %s\\n" "$(command -v tig)"
+        printf "w3m:        %s\\n" "$(command -v w3m)"
+        printf "wget:       %s\\n" "$(command -v wget)"
+        printf "vim:        %s\\n" "$(command -v vim)"
+
+        printf "\\n"
+        printf "bash --version\\n"
+        printf -- "--------------\\n"
+        printf "%s\\n" "$(bash --version | head -1)"
+
+        printf "\\n"
+        printf "git --version\\n"
+        printf -- "-------------\\n"
+        printf "%s\\n" "$(git --version | head -1)"
+
+        printf "\\n"
+        printf "uname -a\\n"
+        printf -- "--------\\n"
+        printf "%s\\n" "$(uname -a)"
+
+        printf "\\n"
+        printf "locale\\n"
+        printf -- "------\\n"
+        printf "%s\\n" "$(locale)"
+
+        if _command_exists "google-chrome"
+        then
+          printf "\\n"
+          printf "google-chrome --version\\n"
+          printf -- "-----------------------\\n"
+          printf "%s\\n"  "$(google-chrome --version 2>&1)"
+        fi
+
+        if _command_exists "chromium"
+        then
+          printf "\\n"
+          printf "chromium --version\\n"
+          printf -- "------------------\\n"
+          printf "%s\\n"  "$(chromium --version 2>&1)"
+        fi
+
+        if _command_exists "chromium-browser"
+        then
+          printf "\\n"
+          printf "chromium-browser --version\\n"
+          printf -- "--------------------------\\n"
+          printf "%s\\n"  "$(chromium-browser --version 2>&1)"
+        fi
+
+        if [[ -x "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" ]]
+        then
+          printf "\\n"
+          printf "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome --version\\n"
+          printf -- "----------------------------------------------------------------------\\n"
+          printf "%s\\n"  "$('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' --version 2>&1)"
+        fi
+
+        if [[ -x "/Applications/Chromium.app/Contents/MacOS/Chromium"           ]]
+        then
+          printf "\\n"
+          printf "/Applications/Chromium.app/Contents/MacOS/Chromium --version\\n"
+          printf -- "------------------------------------------------------------\\n"
+          printf "%s\\n"  "$('/Applications/Chromium.app/Contents/MacOS/Chromium' --version 2>&1)"
+        fi
+
+        if _command_exists "awk"
+        then
+          printf "\\n"
+          printf "awk --version\\n"
+          printf -- "-------------\\n"
+          printf "%s\\n" "$(awk --version 2>&1)"
+        fi
+
+        if _command_exists "grep"
+        then
+          printf "\\n"
+          printf "grep --version\\n"
+          printf -- "--------------\\n"
+          printf "%s\\n" "$(grep --version 2>&1)"
+        fi
+
+        if _command_exists "sed"
+        then
+          printf "\\n"
+          printf "sed --version\\n"
+          printf -- "-------------\\n"
+          printf "%s\\n" "$(sed --version 2>&1)"
+        fi
+
+        if _command_exists "nc"
+        then
+          printf "\\n"
+          printf "nc --version\\n"
+          printf -- "------------\\n"
+          printf "%s\\n"  "$(nc --version 2>&1)"
+        fi
+
+        if _command_exists "ncat"
+        then
+          printf "\\n"
+          printf "ncat --version\\n"
+          printf -- "--------------\\n"
+          printf "%s\\n"  "$(ncat --version 2>&1)"
+        fi
+
+        if _command_exists "pandoc"
+        then
+          printf "\\n"
+          printf "pandoc --version\\n"
+          printf -- "----------------\\n"
+          printf "%s\\n" "$(pandoc --version 2>&1)"
+        fi
+
+        if _command_exists "socat"
+        then
+          printf "\\n"
+          printf "socat -V\\n"
+          printf -- "--------\\n"
+          printf "%s\\n" "$(socat -V 2>&1)"
+        fi
+
+        if _command_exists "w3m"
+        then
+          printf "\\n"
+          printf "w3m --version\\n"
+          printf -- "-------------\\n"
+          printf "%s\\n" "$(w3m --version 2>&1)"
+        fi
+      fi
       ;;
   esac
 }
@@ -16202,12 +16398,12 @@ _import() {
     then
       _selector="${__source_and_target_identifier:-}"
     elif [[ "${_subcommand}" == bookmarks                     ]] &&
-         [[ ! "${__source_and_target_identifier}" =~ ^/       ]] &&
+         [[ ! "${__source_and_target_identifier}" =~ (^/|^~/) ]] &&
          [[ "${__source_and_target_identifier}"   =~ (:$|/$)  ]]
     then
       _selector="${__source_and_target_identifier}"
     elif [[ "${_subcommand}" =~ (^copy$|^move$)               ]] &&
-         [[ ! "${__source_and_target_identifier}" =~ ^/       ]] &&
+         [[ ! "${__source_and_target_identifier}" =~ (^/|^~/) ]] &&
          {
            [[ -n "${_local_notebook_path}"                    ]] ||
            [[ ! -e "${PWD}/${__source_and_target_identifier}" ]]
@@ -16219,7 +16415,14 @@ _import() {
     then
       _target_notebook_name="${__source_and_target_identifier:-}"
     else
-      _paths+=("${__source_and_target_identifier:-}")
+      if [[ "${__source_and_target_identifier:-}" =~ ^~/ ]]
+      then
+        _paths+="$(
+          printf "%s\\n" "${__source_and_target_identifier:-}" | sed "s,^~,${HOME},g"
+        )"
+      else
+        _paths+=("${__source_and_target_identifier:-}")
+      fi
     fi
   done
 
@@ -21963,8 +22166,17 @@ HEREDOC
     then
       local _target_relative_path="${_request_uri#/--mathjax/}"
 
-      _browse_respond_with 200 \
-        "${NB_DIR}/.assets/MathJax/es5/${_target_relative_path}"
+      if [[   -e "${NB_DIR}/.assets/MathJax/es5/${_target_relative_path}"   ]]
+      then
+        _browse_respond_with 200 \
+          "${NB_DIR}/.assets/MathJax/es5/${_target_relative_path}"
+      elif [[ -e "${NB_DIR}/.assets/MathJax/${_target_relative_path}"  ]]
+      then
+        _browse_respond_with 200 \
+          "${NB_DIR}/.assets/MathJax/${_target_relative_path}"
+      else
+        _browse_respond_with 404
+      fi
 
       return 0
     fi
@@ -22321,6 +22533,9 @@ HEREDOC
       elif [[ "${_path}" =~ \.svg$    ]]
       then
         _response_headers+=("Content-Type: image/svg+xml")
+     elif [[ "${_path}" =~ \.js$      ]]
+      then
+        _response_headers+=("Content-Type: application/javascript")
       else
         if _command_exists "file"
         then
@@ -22703,7 +22918,7 @@ HEREDOC
   then
     _show "${_selector:-}" --render
     _warn cat <<HEREDOC
-Install \`ncat\`, \`nc\` / \`netcat\` or \`socat\` or Bash 5.2+ for full browsing and linking:
+Install \`ncat\`, GNU \`nc\` / \`netcat\`, \`socat\`, or Bash 5.2+ for full browsing and linking:
 $(_color_primary "https://nmap.org/ncat/")
 $(_color_primary "https://en.wikipedia.org/wiki/Netcat")
 $(_color_primary "http://www.dest-unreach.org/socat/")
@@ -22714,26 +22929,69 @@ HEREDOC
 
   # install enabled assets
 
-  if   ((${NB_ACE_ENABLED:-0}))     &&
-     ! ((${NB_TESTING:-0}))         &&
-     [[ ! -e "${NB_DIR}/.assets/ace-builds" ]]
+  if ! ((${NB_TESTING:-0}))
   then
-    printf "Installing %s%s\\n"         \
-      "$(_color_primary "Ace Editor")"  \
-      "$(_color_muted "...")"
+    if ((${NB_ACE_ENABLED:-0}))
+    then
+      if [[ ! -e "${NB_DIR}/.assets/ace-builds" ]]
+      then
+        printf "Installing %s%s\\n"         \
+          "$(_color_primary "Ace Editor")"  \
+          "$(_color_muted "...")"
 
-    _env install --ace
-  fi
+        _env install --ace
+      elif [[ -e "${NB_DIR}/.assets/ace-builds/.git/FETCH_HEAD" ]]
+      then
+        local _ace_last_modified=
+        _ace_last_modified="$(
+          _get_last_modified_timestamp "${NB_DIR}/.assets/ace-builds/.git/FETCH_HEAD"
+        )"
 
-  if   ((${NB_MATHJAX_ENABLED:-0})) &&
-     ! ((${NB_TESTING:-0}))         &&
-     [[ ! -e "${NB_DIR}/.assets/MathJax"    ]]
-  then
-    printf "Installing %s%s\\n"         \
-      "$(_color_primary "MathJax")"     \
-      "$(_color_muted "...")"
+        local _my_last_modified=
+        _my_last_modified="$(
+          _get_last_modified_timestamp "${_MY_PATH}"
+        )"
 
-    _env install --mathjax
+        if (( _my_last_modified > _ace_last_modified ))
+        then
+          printf "Updating %s%s\\n"           \
+            "$(_color_primary "Ace Editor")"  \
+            "$(_color_muted "...")"
+
+          _env install --ace
+        fi
+      fi
+    fi
+
+    if   ((${NB_MATHJAX_ENABLED:-0})) &&
+       [[ ! -e "${NB_DIR}/.assets/MathJax"    ]]
+    then
+      printf "Installing %s%s\\n"         \
+        "$(_color_primary "MathJax")"     \
+        "$(_color_muted "...")"
+
+      _env install --mathjax
+    elif [[ -e "${NB_DIR}/.assets/MathJax/.git/FETCH_HEAD"      ]]
+    then
+      local _mathjax_last_modified=
+      _mathjax_last_modified="$(
+        _get_last_modified_timestamp "${NB_DIR}/.assets/MathJax/.git/FETCH_HEAD"
+      )"
+
+      local _my_last_modified=
+      _my_last_modified="$(
+        _get_last_modified_timestamp "${_MY_PATH}"
+      )"
+
+      if (( _my_last_modified > _mathjax_last_modified ))
+      then
+        printf "Updating %s%s\\n"         \
+          "$(_color_primary "MathJax")"   \
+          "$(_color_muted "...")"
+
+        _env install --mathjax
+      fi
+    fi
   fi
 
   # build initial request URL parameters and arguments
@@ -23352,6 +23610,9 @@ _helpers() {
       ;;
     *http*)
       _get_http_status                "${_options[@]:-}"
+      ;;
+    *last*mod*)
+      _get_last_modified_timestamp    "${_options[@]:-}"
       ;;
     *unique*basename*|*unique*relative*)
       _get_unique_relative_path       "${_options[@]:-}"
