@@ -6118,7 +6118,8 @@ Usage:
           [-c <content> | --content <content>] [--edit]
           [-e <editor> | --editor <editor>] [-l | --last] [--overwrite]
           [--prepend]
-  nb env [[install | update] [--ace | --mathjax]]
+  nb env [-l | --long]
+  nb env [install | update] [--ace | --mathjax]
   nb export ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             <path> [-f | --force] [<pandoc options>...]
   nb export notebook <name> [<path>]
@@ -7027,7 +7028,8 @@ Shortcut Alias:
 
 ```text
 Usage:
-  nb env [[install | update] [--ace | --mathjax]]
+  nb env [-l | --long]
+  nb env [install | update] [--ace | --mathjax]
 
 Subcommands:
   (default) Print environment and configuration information.
@@ -7035,8 +7037,9 @@ Subcommands:
   update    Update dependencies.
 
 Options:
-  --ace     Install or update Ace editor [1][2].
-  --mathjax Install or update MathJax [3].
+  --ace       Install or update Ace editor [1][2].
+  -l, --long  Print additional environmental information.
+  --mathjax   Install or update MathJax [3].
 
     1. https://github.com/ajaxorg/ace
     2. https://github.com/ajaxorg/ace-builds

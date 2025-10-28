@@ -4514,7 +4514,8 @@ $(_color_primary "Usage"):
           [-c <content> | --content <content>] [--edit]
           [-e <editor> | --editor <editor>] [-l | --last] [--overwrite]
           [--prepend]
-  ${_ME} env [[install | update] [--ace | --mathjax]]
+  ${_ME} env [-l | --long]
+  ${_ME} env [install | update] [--ace | --mathjax]
   ${_ME} export ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
             <path> [-f | --force] [<pandoc options>...]
   ${_ME} export notebook <name> [<path>]
@@ -15424,7 +15425,8 @@ _alias_subcommand "edit" "e"
 _describe_env() {
   cat <<HEREDOC
 $(_color_primary "Usage"):
-  ${_ME} env [[install | update] [--ace | --mathjax]]
+  ${_ME} env [-l | --long]
+  ${_ME} env [install | update] [--ace | --mathjax]
 
 $(_color_primary "Subcommands"):
   (default) Print environment and configuration information.
@@ -15432,8 +15434,9 @@ $(_color_primary "Subcommands"):
   update    Update dependencies.
 
 $(_color_primary "Options"):
-  --ace     Install or update Ace editor [1][2].
-  --mathjax Install or update MathJax [3].
+  --ace       Install or update Ace editor [1][2].
+  -l, --long  Print additional environmental information.
+  --mathjax   Install or update MathJax [3].
 
     1. https://github.com/ajaxorg/ace
     2. https://github.com/ajaxorg/ace-builds
@@ -15686,6 +15689,7 @@ _env() {
       printf "NB_DEFAULT_TEMPLATE=%s\\n"                  "${NB_DEFAULT_TEMPLATE:-}"
       printf "NB_DIR=%s\\n"                               "${NB_DIR:-}"
       printf "NB_DIRECTORY_TOOL=%s\\n"                    "${NB_DIRECTORY_TOOL:-}"
+      printf "NB_DOWNLOAD_TOOL=%s\\n"                     "${NB_DOWNLOAD_TOOL:-}"
       printf "NB_EDITOR=%s\\n"                            "${NB_EDITOR:-}"
       printf "NB_ENCRYPTION_TOOL=%s\\n"                   "${NB_ENCRYPTION_TOOL:-}"
       printf "NB_FOLDERS_FIRST=%s\\n"                     "${NB_FOLDERS_FIRST:-}"
@@ -15715,37 +15719,129 @@ _env() {
       printf "NB_SYNTAX_THEME=%s\\n"                      "${NB_SYNTAX_THEME:-}"
       printf "NBRC_PATH=%s\\n"                            "${NBRC_PATH:-}"
       printf "PAGER=%s\\n"                                "${PAGER:-}"
-      printf "\\n"
-      printf "ack:        %s\\n" "$(command -v ack)"
-      printf "ag:         %s\\n" "$(command -v ag)"
-      printf "bat:        %s\\n" "$(command -v bat)"
-      printf "code:       %s\\n" "$(command -v code)"
-      printf "curl:       %s\\n" "$(command -v curl)"
-      printf "emacs:      %s\\n" "$(command -v emacs)"
-      printf "git:        %s\\n" "$(command -v git)"
-      printf "gvim:       %s\\n" "$(command -v gvim)"
-      printf "gpg:        %s\\n" "$(command -v gpg)"
-      printf "highlight:  %s\\n" "$(command -v highlight)"
-      printf "less:       %s\\n" "$(command -v less)"
-      printf "lynx:       %s\\n" "$(command -v lynx)"
-      printf "macdown:    %s\\n" "$(command -v macdown)"
-      printf "mate:       %s\\n" "$(command -v mate)"
-      printf "mvim:       %s\\n" "$(command -v mvim)"
-      printf "nano:       %s\\n" "$(command -v nano)"
-      printf "nc:         %s\\n" "$(command -v ncat)"
-      printf "ncat:       %s\\n" "$(command -v nc)"
-      printf "nvim:       %s\\n" "$(command -v nvim)"
-      printf "openssl:    %s\\n" "$(command -v openssl)"
-      printf "pandoc:     %s\\n" "$(command -v pandoc)"
-      printf "pygments:   %s\\n" "$(command -v pygmentize)"
-      printf "readable:   %s\\n" "$(command -v readable)"
-      printf "rg:         %s\\n" "$(command -v rg)"
-      printf "subl:       %s\\n" "$(command -v subl)"
-      printf "tig:        %s\\n" "$(command -v tig)"
-      printf "w3m:        %s\\n" "$(command -v w3m)"
-      printf "vim:        %s\\n" "$(command -v vim)"
-      printf "bash --version: %s\\n"  "$(bash --version | head -1)"
-      printf "uname -a: %s\\n"        "$(uname -a)"
+
+      if _contains "${1:-}" "--long" "-l"
+      then
+        printf "\\n"
+        printf "ack:        %s\\n" "$(command -v ack)"
+        printf "ag:         %s\\n" "$(command -v ag)"
+        printf "bat:        %s\\n" "$(command -v bat)"
+        printf "code:       %s\\n" "$(command -v code)"
+        printf "curl:       %s\\n" "$(command -v curl)"
+        printf "emacs:      %s\\n" "$(command -v emacs)"
+        printf "git:        %s\\n" "$(command -v git)"
+        printf "gvim:       %s\\n" "$(command -v gvim)"
+        printf "gpg:        %s\\n" "$(command -v gpg)"
+        printf "highlight:  %s\\n" "$(command -v highlight)"
+        printf "less:       %s\\n" "$(command -v less)"
+        printf "lynx:       %s\\n" "$(command -v lynx)"
+        printf "macdown:    %s\\n" "$(command -v macdown)"
+        printf "mate:       %s\\n" "$(command -v mate)"
+        printf "mvim:       %s\\n" "$(command -v mvim)"
+        printf "nano:       %s\\n" "$(command -v nano)"
+        printf "nc:         %s\\n" "$(command -v ncat)"
+        printf "ncat:       %s\\n" "$(command -v nc)"
+        printf "nvim:       %s\\n" "$(command -v nvim)"
+        printf "openssl:    %s\\n" "$(command -v openssl)"
+        printf "pandoc:     %s\\n" "$(command -v pandoc)"
+        printf "pygments:   %s\\n" "$(command -v pygmentize)"
+        printf "readable:   %s\\n" "$(command -v readable)"
+        printf "rg:         %s\\n" "$(command -v rg)"
+        printf "subl:       %s\\n" "$(command -v subl)"
+        printf "tig:        %s\\n" "$(command -v tig)"
+        printf "w3m:        %s\\n" "$(command -v w3m)"
+        printf "wget:       %s\\n" "$(command -v wget)"
+        printf "vim:        %s\\n" "$(command -v vim)"
+
+        printf "\\n"
+        printf "bash --version\\n"
+        printf -- "--------------\\n"
+        printf "%s\\n" "$(bash --version | head -1)"
+        printf "\\n"
+        printf "git --version\\n"
+        printf -- "-------------\\n"
+        printf "%s\\n" "$(git --version | head -1)"
+        printf "\\n"
+        printf "uname -a\\n"
+        printf -- "--------\\n"
+        printf "%s\\n" "$(uname -a)"
+        printf "\\n"
+        printf "locale\\n"
+        printf -- "------\\n"
+        printf "%s\\n" "$(locale)"
+
+        if _command_exists "google-chrome"
+        then
+          printf "\\n"
+          printf "google-chrome --version\\n"
+          printf -- "-----------------------\\n"
+          printf "%s\\n"  "$(google-chrome --version 2>&1)"
+        fi
+
+        if _command_exists "chromium"
+        then
+          printf "\\n"
+          printf "chromium --version\\n"
+          printf -- "------------------\\n"
+          printf "%s\\n"  "$(chromium --version 2>&1)"
+        fi
+
+        if _command_exists "chromium-browser"
+        then
+          printf "\\n"
+          printf "chromium-browser --version\\n"
+          printf -- "--------------------------\\n"
+          printf "%s\\n"  "$(chromium-browser --version 2>&1)"
+        fi
+
+        if [[ -x "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" ]]
+        then
+          printf "\\n"
+          printf "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome --version\\n"
+          printf -- "----------------------------------------------------------------------\\n"
+          printf "%s\\n"  "$('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' --version 2>&1)"
+        fi
+
+        if [[ -x "/Applications/Chromium.app/Contents/MacOS/Chromium"           ]]
+        then
+          printf "\\n"
+          printf "/Applications/Chromium.app/Contents/MacOS/Chromium --version\\n"
+          printf -- "------------------------------------------------------------\\n"
+          printf "%s\\n"  "$('/Applications/Chromium.app/Contents/MacOS/Chromium' --version 2>&1)"
+        fi
+
+        if _command_exists "nc"
+        then
+          printf "\\n"
+          printf "nc --version\\n"
+          printf -- "------------\\n"
+          printf "%s\\n"  "$(nc --version 2>&1)"
+        fi
+
+        if _command_exists "ncat"
+        then
+          printf "\\n"
+          printf "ncat --version\\n"
+          printf -- "--------------\\n"
+          printf "%s\\n"  "$(ncat --version 2>&1)"
+        fi
+
+        if _command_exists "pandoc"
+        then
+          printf "\\n"
+          printf "pandoc --version\\n"
+          printf -- "----------------\\n"
+          printf "%s\\n" "$(pandoc --version 2>&1)"
+        fi
+
+        if _command_exists "w3m"
+        then
+          printf "\\n"
+          printf "w3m --version\\n"
+          printf -- "-------------\\n"
+          printf "%s\\n" "$(w3m --version 2>&1)"
+        fi
+      fi
       ;;
   esac
 }
