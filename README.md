@@ -3239,6 +3239,17 @@ Word `.docx` documents, and
 files are converted into HTML and rendered in the browser. Use the down
 arrow (`↓`) link to view or download the original file.
 
+[MathJax](https://www.mathjax.org/) support can be enabled by setting
+the [`$NB_MATHJAX_ENABLED`](https://github.com/xwmx/nb#nb_mathjax_enabled)
+variable in your `~/.nbrc` file:
+
+```bash
+export NB_MATHJAX_ENABLED=1
+```
+
+With this variable set, `nb` will automatically download and install MathJax
+from [GitHub](https://github.com/mathjax/MathJax)).
+
 #### `browse edit`
 
 <div align="center">
@@ -3443,7 +3454,9 @@ including block selection and
 [syntax highlighting](#gui-web-syntax-highlighting).
 
 To use Ace as the editor for [`nb browse --gui`](#browse),
-add the following line to your `~/.nbrc` file:
+add the following line to set the
+[`$NB_ACE_ENABLED`](https://github.com/xwmx/nb#nb_ace_enabled)
+variable in your `~/.nbrc` file:
 
 ```bash
 export NB_ACE_ENABLED=1
