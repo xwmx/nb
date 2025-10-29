@@ -3248,7 +3248,8 @@ export NB_MATHJAX_ENABLED=1
 ```
 
 With this variable set, `nb` will automatically download and install MathJax
-from [GitHub](https://github.com/mathjax/MathJax)).
+from [GitHub](https://github.com/mathjax/MathJax) and enable it when items
+are viewed in [`nb browse --gui`](#browse).
 
 #### `browse edit`
 
