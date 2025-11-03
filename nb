@@ -494,10 +494,10 @@ fi
 
 # $NB_NOTEBOOK_PATH
 #
-# Default: `$NB_DIR/home`
+# Default: ''
 #
 # The path to the current notebook.
-export NB_NOTEBOOK_PATH="${NB_NOTEBOOK_PATH:-"${NB_DIR}/home"}"
+export NB_NOTEBOOK_PATH="${NB_NOTEBOOK_PATH:-}"
 
 # $_GLOBAL_NOTEBOOK_PATH
 #
@@ -539,7 +539,10 @@ __set_notebook_paths() {
   }; __set_local_notebook_path
 
   __set_global_notebook_path() {
-    if [[   -e "${NB_DIR}/.current"                 ]]
+    if [[ -n "${NB_NOTEBOOK_PATH:-}"  ]]
+    then
+      _GLOBAL_NOTEBOOK_PATH="${NB_NOTEBOOK_PATH}"
+    elif [[ -e "${NB_DIR}/.current"   ]]
     then
       local _global_notebook_name=
       _global_notebook_name="$(<"${NB_DIR}/.current")"
@@ -548,10 +551,12 @@ __set_notebook_paths() {
       then
         _GLOBAL_NOTEBOOK_PATH="${NB_DIR}/${_global_notebook_name}"
       fi
+    else
+      _GLOBAL_NOTEBOOK_PATH="${NB_DIR}/home"
     fi
   }; __set_global_notebook_path
 
-  if [[     -n "${_LOCAL_NOTEBOOK_PATH:-}"          ]]
+  if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}" ]]
   then
     NB_NOTEBOOK_PATH="${_LOCAL_NOTEBOOK_PATH}"
   else
@@ -15719,6 +15724,9 @@ _env() {
       printf "NB_SYNTAX_THEME=%s\\n"                      "${NB_SYNTAX_THEME:-}"
       printf "NBRC_PATH=%s\\n"                            "${NBRC_PATH:-}"
       printf "PAGER=%s\\n"                                "${PAGER:-}"
+      printf "_LOCAL_NOTEBOOK_PATH=%s\\n"                 "${_LOCAL_NOTEBOOK_PATH:-}"
+      printf "_GLOBAL_NOTEBOOK_PATH=%s\\n"                "${_GLOBAL_NOTEBOOK_PATH:-}"
+      printf "_CURRENT_WORKING_DIR=%s\\n"                 "${_CURRENT_WORKING_DIR:-}"
 
       if _contains "${1:-}" "--long" "-l"
       then
