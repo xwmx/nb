@@ -3,7 +3,161 @@
 
 load test_helper
 
-# current notebook resolution #################################################
+# edge cases ##################################################################
+
+@test "'nb' resolves current notebook to other existing notebook when home is deleted." {
+  {
+    _setup_remote_repo
+
+    [[ ! -e "${NB_DIR}" ]]
+  }
+
+  # initialize with first run
+
+  run "${_NB}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0 ]]
+
+  printf "%s\\n" "${output}" | grep "Welcome.*to"
+
+  [[    -d "${NB_DIR}/home"         ]]
+  [[ !  -d "${NB_DIR}/Notebook One" ]]
+
+  run "${_NB}" env
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0 ]]
+
+  printf "%s\\n" "${output}" | grep "^NB_NOTEBOOK_PATH=${NB_DIR}/home$"
+  printf "%s\\n" "${output}" | grep "^_LOCAL_NOTEBOOK_PATH=$"
+  printf "%s\\n" "${output}" | grep "^_GLOBAL_NOTEBOOK_PATH=${NB_DIR}/home$"
+
+  [[    -d "${NB_DIR}/home"         ]]
+  [[ !  -d "${NB_DIR}/Notebook One" ]]
+
+  # create new notebook
+
+  run "${_NB}" notebooks add "Notebook One"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0 ]]
+
+  printf "%s\\n" "${output}" | grep "Added notebook:.*Notebook One"
+
+  [[    -d "${NB_DIR}/home"         ]]
+  [[    -d "${NB_DIR}/Notebook One" ]]
+
+  run "${_NB}" env
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0 ]]
+
+  printf "%s\\n" "${output}" | grep "^NB_NOTEBOOK_PATH=${NB_DIR}/home$"
+  printf "%s\\n" "${output}" | grep "^_LOCAL_NOTEBOOK_PATH=$"
+  printf "%s\\n" "${output}" | grep "^_GLOBAL_NOTEBOOK_PATH=${NB_DIR}/home$"
+
+  [[    -d "${NB_DIR}/home"         ]]
+  [[    -d "${NB_DIR}/Notebook One" ]]
+
+  # delete home notebook
+
+  run "${_NB}" delete home <<< "home"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0 ]]
+
+  printf "%s\\n" "${output}" | grep -E "Deleting|Trash"
+
+  [[ !  -d "${NB_DIR}/home"         ]]
+  [[    -d "${NB_DIR}/Notebook One" ]]
+
+  run "${_NB}" env
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0 ]]
+
+  printf "%s\\n" "${output}" | grep "^NB_NOTEBOOK_PATH=${NB_DIR}/Notebook One$"
+  printf "%s\\n" "${output}" | grep "^_LOCAL_NOTEBOOK_PATH=$"
+  printf "%s\\n" "${output}" | grep "^_GLOBAL_NOTEBOOK_PATH=${NB_DIR}/Notebook One$"
+
+  [[ !  -d "${NB_DIR}/home"         ]]
+  [[    -d "${NB_DIR}/Notebook One" ]]
+}
+
+@test "'nb' resolves current notebook to blank when home is deleted and no other notebooks exist." {
+  {
+    _setup_remote_repo
+
+    [[ ! -e "${NB_DIR}" ]]
+  }
+
+  # initialize with first run
+
+  run "${_NB}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0 ]]
+
+  printf "%s\\n" "${output}" | grep "Welcome.*to"
+
+  [[ -d "${NB_DIR}/home" ]]
+
+  run "${_NB}" env
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0 ]]
+
+  printf "%s\\n" "${output}" | grep "^NB_NOTEBOOK_PATH=${NB_DIR}/home$"
+  printf "%s\\n" "${output}" | grep "^_LOCAL_NOTEBOOK_PATH=$"
+  printf "%s\\n" "${output}" | grep "^_GLOBAL_NOTEBOOK_PATH=${NB_DIR}/home$"
+
+  [[ -d "${NB_DIR}/home" ]]
+
+  # delete home notebook
+
+  run "${_NB}" delete home <<< "home"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0 ]]
+
+  printf "%s\\n" "${output}" | grep -E "Deleting|Trash"
+
+  [[ ! -d "${NB_DIR}/home" ]]
+
+  run "${_NB}" env
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}" -eq 0 ]]
+
+  printf "%s\\n" "${output}" | grep "^NB_NOTEBOOK_PATH=$"
+  printf "%s\\n" "${output}" | grep "^_LOCAL_NOTEBOOK_PATH=$"
+  printf "%s\\n" "${output}" | grep "^_GLOBAL_NOTEBOOK_PATH=$"
+
+  [[ ! -d "${NB_DIR}/home" ]]
+}
+
+# notebook resolution #########################################################
 
 @test "'nb' resolves current notebook." {
   {
