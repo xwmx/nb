@@ -82,7 +82,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.23.0"
+_VERSION="7.23.1"
 
 # $_ME
 #
@@ -15872,9 +15872,9 @@ _env() {
         if _command_exists "w3m"
         then
           printf "\\n"
-          printf "w3m --version\\n"
-          printf -- "-------------\\n"
-          printf "%s\\n" "$(w3m --version 2>&1)"
+          printf "w3m -version\\n"
+          printf -- "------------\\n"
+          printf "%s\\n" "$(w3m -version 2>&1)"
         fi
       fi
       ;;
@@ -22636,9 +22636,9 @@ HEREDOC
         ;;
       socat)
         (
-          socat                                           \
-            tcp-listen:"${NB_SERVER_PORT}",reuseaddr,fork \
-            "system:{ ${_MY_PATH} browse --respond; }"    \
+          socat                                                                               \
+            tcp-listen:"${NB_SERVER_PORT}",bind="${NB_SERVER_HOST:-localhost}",reuseaddr,fork \
+            "system:{ ${_MY_PATH} browse --respond; }"                                        \
             2>/dev/null
         ) &
         ;;
