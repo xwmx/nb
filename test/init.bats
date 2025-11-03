@@ -302,7 +302,7 @@ Enter\ a\ new\ value,\ .*unset.*\ to\ use\ the\ global\ value,                ]]
   [[ "${status}" -eq 1 ]]
 }
 
-@test "'init' exits with status 0 when '\$NB_NOTEBOOK_PATH' / '\$NB_DIR/home' exists." {
+@test "'init' exits with status 1 a prints error output when '\$NB_NOTEBOOK_PATH' / '\$NB_DIR/home' exists." {
   {
     mkdir -p "${NB_DIR}/home"
 
@@ -314,8 +314,12 @@ Enter\ a\ new\ value,\ .*unset.*\ to\ use\ the\ global\ value,                ]]
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ !  "${output}" =~  exists  ]]
-  [[    "${status}" -eq 0       ]]
+  [[ "${status}" -eq 1 ]]
+
+  [[ "${lines[0]}" =~  \!.*nb.*already\ initialized.\ To\ initialize\ a\ local\ notebook,\ use: ]]
+  [[ "${lines[1]}" =~  nb\ notebooks\ init  ]]
+  [[ "${lines[2]}" =~  More\ Information:   ]]
+  [[ "${lines[3]}" =~  nb\ help\ notebooks  ]]
 }
 
 @test "'init' creates '\$NB_DIR' and '\$NB_NOTEBOOK_PATH' / '\$NB_DIR/home' directories." {
