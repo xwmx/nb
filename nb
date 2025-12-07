@@ -24484,7 +24484,12 @@ $(_color_primary "${_delete_action} branch on remote?") ($(_color_primary "${_cu
 
       if [[ -z "${_new_branch:-}"     ]]
       then
-        _new_branch="${_current_branch}"
+        # Detect remote's default branch, fallback to local branch name
+        _new_branch="$(
+          git ls-remote --symref "${_new_remote_url}" HEAD 2>/dev/null \
+            | awk '/^ref:/ {sub(/refs\/heads\//, "", $2); print $2}'
+        )"
+        _new_branch="${_new_branch:-${_current_branch}}"
       fi
 
       if ! ((_skip_preamble))
