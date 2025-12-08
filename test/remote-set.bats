@@ -464,7 +464,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
     "${_NB}" git branch -m "sample-branch"
   }
 
-  run "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}1${_NEWLINE}q${_NEWLINE}"
+  run "${_NB}" remote set "${_GIT_REMOTE_URL}" "sample-branch" <<< "y${_NEWLINE}1${_NEWLINE}q${_NEWLINE}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -500,7 +500,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
     "${_NB}" git branch -m "sample-branch"
   }
 
-  run "${_NB}" remote set "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}q${_NEWLINE}"
+  run "${_NB}" remote set "${_GIT_REMOTE_URL}" "sample-branch" <<< "y${_NEWLINE}q${_NEWLINE}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
