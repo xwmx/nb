@@ -8834,23 +8834,24 @@ HEREDOC
       fi
     elif [[ "${_subcommand:-}"  =~ (^peek$|^p$) ]]
     then
-      if _command_exists "ranger"
-      then
-        ranger "${_notebook_path}"
-      elif _command_exists "mc"
-      then
-        mc "${_notebook_path}"
-      elif _command_exists "vifm"
-      then
-        vifm "${_notebook_path}"
-      elif _command_exists "exa"
-      then
-        exa -lah --git "${_notebook_path}"
-      else
-        # gnu || bsd
-        ls -lah --color=always "${_notebook_path}" 2>/dev/null ||
-          ls -lah -G "${_notebook_path}"
-      fi
+			"${NB_DIRECTORY_TOOL}" "${_notebook_path}"
+      # if _command_exists "ranger"
+      # then
+      #   ranger "${_notebook_path}"
+      # elif _command_exists "mc"
+      # then
+      #   mc "${_notebook_path}"
+      # elif _command_exists "vifm"
+      # then
+      #   vifm "${_notebook_path}"
+      # elif _command_exists "exa"
+      # then
+      #   exa -lah --git "${_notebook_path}"
+      # else
+      #   # gnu || bsd
+      #   ls -lah --color=always "${_notebook_path}" 2>/dev/null ||
+      #     ls -lah -G "${_notebook_path}"
+      # fi
     else
       local _dotfile_path="${_notebook_path}/.archived"
 
