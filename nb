@@ -8835,8 +8835,8 @@ HEREDOC
     elif [[ "${_subcommand:-}"  =~ (^peek$|^p$) ]]
     then
       if [[ -n "${NB_DIRECTORY_TOOL}" ]]
-			then
-				"${NB_DIRECTORY_TOOL}" "${_notebook_path}"
+      then
+        "${NB_DIRECTORY_TOOL}" "${_notebook_path}"
       elif _command_exists "ranger"
       then
         ranger "${_notebook_path}"
