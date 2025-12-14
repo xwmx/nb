@@ -9220,7 +9220,7 @@ HEREDOC
   fi
 
   case "${_subcommand}" in
-    a|add|create|new)
+    a|add|create|new|+)
       shift
 
       _notebooks_add      "${@:-}"
@@ -9246,7 +9246,7 @@ HEREDOC
 
       _notebooks_current  "${@:-}"
       ;;
-    d|delete)
+    d|delete|remove|rm|trash|-)
       _notebooks_delete   "${_name:-}" "${3:-}"
       ;;
     list)
@@ -13791,7 +13791,7 @@ _bookmark() {
 
         shift
         ;;
-      delete)
+      d|delete|remove|rm|trash|-)
         _delete "${2:-}" "${3:-}"
 
         return 0
@@ -22762,7 +22762,7 @@ HEREDOC
         _daemon=1
         _only_serve=1
         ;;
-      d|delete|-d|--delete|-)
+      d|delete|rm|trash|-d|--delete|-)
         _action="delete"
         ;;
       e|edit|-e|--edit)
@@ -23468,7 +23468,7 @@ _folders() {
       add|a|+)
         _subcommand="add"
         ;;
-      delete|d|rm|-)
+      delete|d|rm|trash|-)
         _subcommand="delete"
         ;;
       list|ls)
@@ -23993,7 +23993,7 @@ _remote() {
               _new_branch="${1:-}"
             fi
             ;;
-          delete|reset)
+          delete|reset|rm|trash)
             _remote_branch_name="${1:-}"
             ;;
           rename)
@@ -26408,7 +26408,7 @@ _todo() {
           c|closed|checked|completed|done|finished)
             _filter="closed"
             ;;
-          delete|-)
+          delete|remove|rm|trash|-)
             if [[ -z "${2:-}" ]]
             then
               _help "todo"
