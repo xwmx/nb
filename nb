@@ -18897,6 +18897,7 @@ _show() {
   }
 
   local _browse=0
+  local _browse_gui=0
   local _check_type=0
   local _limit="${NB_BROWSE_LIMIT:-20}"
   local _list_page=1
@@ -18941,6 +18942,9 @@ _show() {
         ;;
       --folder-path)
         _print_folder_path=1
+        ;;
+      -g|--gui)
+        _browse_gui=1
         ;;
       --id|--index)
         _print_id=1
@@ -19748,6 +19752,7 @@ Can't show archives. Export archive and expand to edit.\\n"
 
       local _browse_arguments=("${_target_path}")
       ((_print_output)) && _browse_arguments+=("--print")
+      ((_browse_gui))   && _browse_arguments+=("--gui")
 
       _defer "_browse" "${_browse_arguments[@]:-}"
 
