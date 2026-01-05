@@ -9223,7 +9223,7 @@ HEREDOC
   fi
 
   case "${_subcommand}" in
-    a|add|create|new)
+    a|add|create|new|+)
       shift
 
       _notebooks_add      "${@:-}"
@@ -9249,7 +9249,7 @@ HEREDOC
 
       _notebooks_current  "${@:-}"
       ;;
-    d|delete)
+    d|delete|remove|rm|trash|-)
       _notebooks_delete   "${_name:-}" "${3:-}"
       ;;
     list)
@@ -13794,7 +13794,7 @@ _bookmark() {
 
         shift
         ;;
-      delete)
+      d|delete|remove|rm|trash|-)
         _delete "${2:-}" "${3:-}"
 
         return 0
@@ -18900,6 +18900,7 @@ _show() {
   }
 
   local _browse=0
+  local _browse_gui=0
   local _check_type=0
   local _limit="${NB_BROWSE_LIMIT:-20}"
   local _list_page=1
@@ -18944,6 +18945,9 @@ _show() {
         ;;
       --folder-path)
         _print_folder_path=1
+        ;;
+      -g|--gui)
+        _browse_gui=1
         ;;
       --id|--index)
         _print_id=1
@@ -19751,6 +19755,7 @@ Can't show archives. Export archive and expand to edit.\\n"
 
       local _browse_arguments=("${_target_path}")
       ((_print_output)) && _browse_arguments+=("--print")
+      ((_browse_gui))   && _browse_arguments+=("--gui")
 
       _defer "_browse" "${_browse_arguments[@]:-}"
 
@@ -22765,7 +22770,7 @@ HEREDOC
         _daemon=1
         _only_serve=1
         ;;
-      d|delete|-d|--delete|-)
+      d|delete|rm|trash|-d|--delete|-)
         _action="delete"
         ;;
       e|edit|-e|--edit)
@@ -23471,7 +23476,7 @@ _folders() {
       add|a|+)
         _subcommand="add"
         ;;
-      delete|d|rm|-)
+      delete|d|rm|trash|-)
         _subcommand="delete"
         ;;
       list|ls)
@@ -23996,7 +24001,7 @@ _remote() {
               _new_branch="${1:-}"
             fi
             ;;
-          delete|reset)
+          delete|reset|rm|trash)
             _remote_branch_name="${1:-}"
             ;;
           rename)
@@ -26411,7 +26416,7 @@ _todo() {
           c|closed|checked|completed|done|finished)
             _filter="closed"
             ;;
-          delete|-)
+          delete|remove|rm|trash|-)
             if [[ -z "${2:-}" ]]
             then
               _help "todo"
