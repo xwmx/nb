@@ -176,7 +176,7 @@ load test_helper
 
   [[ "${#_after_hashes[@]}" -eq 1                                       ]]
 
-  ! _contains "${_after_hashes[0]}" "${_before_hashes[@]}"
+  _contains "${_after_hashes[0]}" "${_before_hashes[@]}" || true
 
   [[ "${_after_hashes[0]}"  != "${_before_hashes[0]}"                   ]]
   [[ "${_after_hashes[0]}"  != "${_before_hashes[1]}"                   ]]
@@ -360,7 +360,7 @@ load test_helper
 
   [[ "${#_after_hashes[@]}" -eq 1                                       ]]
 
-  ! _contains "${_after_hashes[0]}" "${_before_hashes[@]}"
+  _contains "${_after_hashes[0]}" "${_before_hashes[@]}" || true
 
   [[ "${_after_hashes[0]}"  != "${_before_hashes[0]}"                   ]]
   [[ "${_after_hashes[0]}"  != "${_before_hashes[1]}"                   ]]
@@ -442,7 +442,7 @@ load test_helper
 
   [[ "${#_after_hashes[@]}" -eq 1                                       ]]
 
-  ! _contains "${_after_hashes[0]}" "${_before_hashes[@]}"
+  _contains "${_after_hashes[0]}" "${_before_hashes[@]}" || true
 
   [[ "${_after_hashes[0]}"  != "${_before_hashes[0]}"                   ]]
   [[ "${_after_hashes[0]}"  != "${_before_hashes[1]}"                   ]]

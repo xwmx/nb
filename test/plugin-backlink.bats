@@ -143,7 +143,7 @@ Demo content one apricot plum."
   then
     sleep 1
   fi
-  ! git log | grep -q '\[nb\] Backlinked'
+  git log | grep -q -v '\[nb\] Backlinked'
 }
 
 # help ########################################################################

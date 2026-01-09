@@ -370,7 +370,7 @@ load test_helper
   then
     sleep 1
   fi
-  ! git log | grep -q '\[nb\] Edit'
+  git log | grep -q -v '\[nb\] Edit'
 
   # Prints help information:
 
@@ -1157,7 +1157,7 @@ HEREDOC
   then
     sleep 1
   fi
-  ! git log | grep -q '\[nb\] Edit'
+  git log | grep -q -v '\[nb\] Edit'
 
   # Prints help information:
 
@@ -1174,9 +1174,12 @@ HEREDOC
     sleep 0.5
     "${_NB}" add "Example initial content three." --filename "example three.md"
 
-    declare _original_content_one="$(cat "${NB_DIR}/home/example one.md")"
-    declare _original_content_two="$(cat "${NB_DIR}/home/example two.md")"
-    declare _original_content_three="$(cat "${NB_DIR}/home/example three.md")"
+    declare _original_content_one=
+    _original_content_one="$(cat "${NB_DIR}/home/example one.md")"
+    declare _original_content_two=
+    _original_content_two="$(cat "${NB_DIR}/home/example two.md")"
+    declare _original_content_three=
+    _original_content_three="$(cat "${NB_DIR}/home/example three.md")"
 
     declare -a _items_unedited=($(
       "${_NB}" list \
@@ -1262,9 +1265,12 @@ HEREDOC
     sleep 0.5
     "${_NB}" add "Example initial content three." --filename "example three.md"
 
-    declare _original_content_one="$(cat "${NB_DIR}/home/example one.md")"
-    declare _original_content_two="$(cat "${NB_DIR}/home/example two.md")"
-    declare _original_content_three="$(cat "${NB_DIR}/home/example three.md")"
+    declare _original_content_one=
+    _original_content_one="$(cat "${NB_DIR}/home/example one.md")"
+    declare _original_content_two=
+    _original_content_two="$(cat "${NB_DIR}/home/example two.md")"
+    declare _original_content_three=
+    _original_content_three="$(cat "${NB_DIR}/home/example three.md")"
 
     declare -a _items_unedited=($(
       "${_NB}" list \

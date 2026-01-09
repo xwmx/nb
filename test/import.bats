@@ -224,7 +224,7 @@ Imported\ .*[.*1.*].*\ .*example.md.*\ \"Example\ Title\"             ]]
   do
     sleep 1
   done
-  ! git log | grep -q '\[nb\] Import'
+  git log | grep -q -v '\[nb\] Import'
 }
 
 # destination #################################################################

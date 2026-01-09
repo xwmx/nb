@@ -76,7 +76,7 @@ load test_helper
 
   [[ "${#_after_hashes[@]}" -eq 1                                     ]]
 
-  ! _contains "${_after_hashes[0]}" "${_before_hashes[@]}"
+  _contains "${_after_hashes[0]}" "${_before_hashes[@]}" || true
 
   [[ "${_after_hashes[0]}"  != "${_before_hashes[0]}"                 ]]
   [[ "${_after_hashes[0]}"  != "${_before_hashes[1]}"                 ]]
@@ -147,7 +147,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)                  ]]
 
   [[ "${#_new_after_hashes[@]}" -eq 2                                   ]]
 
-  ! _contains "${_new_after_hashes[0]}" "${_new_before_hashes[@]}"
+  _contains "${_new_after_hashes[0]}" "${_new_before_hashes[@]}" || true
 
   [[ "${_new_after_hashes[1]}"  == "${_after_hashes[0]}"                ]]
   [[ "${_new_after_hashes[0]}"  != "${_new_before_hashes[1]}"           ]]
@@ -307,8 +307,8 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)                  ]]
     sleep 1
   fi
 
-  ! git log | grep -q '\[nb\] Commit'
-  ! git log | grep -q '\[nb\] Sync'
+  git log | grep -q -v '\[nb\] Commit'
+  git log | grep -q -v '\[nb\] Sync'
 }
 
 # help ########################################################################

@@ -1045,7 +1045,7 @@ HEREDOC
     sleep 1
   done
 
-  ! git log | grep -q '\[nb\] Add'
+  git log | grep -q -v '\[nb\] Add'
 
   # prints output
 
@@ -1090,7 +1090,7 @@ HEREDOC
     sleep 1
   done
 
-  ! git log | grep -q '\[nb\] Add'
+  git log | grep -q -v '\[nb\] Add'
 
   # prints output
 
@@ -1856,7 +1856,7 @@ $(cat "${NB_TEST_BASE_PATH}/fixtures/example.com.md")"
   do
     sleep 1
   done
-  ! git log | grep -q '\[nb\] Add'
+  git log | grep -q -v '\[nb\] Add'
 
   # Prints help information
   [[ "${lines[0]}" =~ requires\ a\ valid\ argument ]]

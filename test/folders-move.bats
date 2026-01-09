@@ -573,7 +573,7 @@ Title:\ A\*string•with/a\\bunch\|of\?invalid\<filename\"characters\>\"  ]]
   [[ "${lines[1]}" =~ \
 To:\ \ \ \ \ \ \ .*example_title__a_string•with_a_bunch_of_invalid_filename_characters_.md  ]]
   [[ "${lines[2]}" =~ \
-Moved\ to:\ .*[.*1.*].*\ .*${_target_filename}.*  ]]
+Moved\ to:\ .*[.*1.*].*\ .*example_title__a_string•with_a_bunch_of_invalid_filename_characters_.md.*  ]]
   [[ "${lines[2]}" =~ \
  \"Example\ Title:\ A\*string•with/a\\bunch\|of\?invalid\<filename\"characters\>\"  ]]
 }

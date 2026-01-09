@@ -541,9 +541,9 @@ Moved\ to:\ .*[.*1.*].*\ .*example_title__a_string•with_a_bunch_of_invalid_fil
   do
     sleep 1
   done
-  ! git log | grep -q '\[nb\] Move'
-  ! git log | grep -q '\[nb\] Add'
-  ! git log | grep -q '\[nb\] Delete'
+  git log | grep -q -v '\[nb\] Move'
+  git log | grep -q -v '\[nb\] Add'
+  git log | grep -q -v '\[nb\] Delete'
 
   # Prints message:
 
@@ -578,9 +578,9 @@ Moved\ to:\ .*[.*1.*].*\ .*example_title__a_string•with_a_bunch_of_invalid_fil
   do
     sleep 1
   done
-  ! git log | grep -q '\[nb\] Move'
-  ! git log | grep -q '\[nb\] Add'
-  ! git log | grep -q '\[nb\] Delete'
+  git log | grep -q -v '\[nb\] Move'
+  git log | grep -q -v '\[nb\] Add'
+  git log | grep -q -v '\[nb\] Delete'
 
   # Prints message:
 
@@ -1077,9 +1077,9 @@ Moved\ to:\ .*[.*1.*].*\ .*example_title__a_string•with_a_bunch_of_invalid_fil
   do
     sleep 1
   done
-  ! git log | grep -q '\[nb\] Move'
-  ! git log | grep -q '\[nb\] Add'
-  ! git log | grep -q '\[nb\] Delete'
+  git log | grep -q -v '\[nb\] Move'
+  git log | grep -q -v '\[nb\] Add'
+  git log | grep -q -v '\[nb\] Delete'
 
   # Prints help:
 
