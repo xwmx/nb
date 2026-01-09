@@ -26621,6 +26621,9 @@ _todo() {
                 "Unable to mark done: %s\\n"      \
                 "$(_todos tasks "${_selector:-}" "${_task_number}")"
             else
+              local _done_date="## Done: $(date +"%Y-%m-%d")"
+              _sed_i -e "/${_updated_task}/a\\${_done_date}" "${_selector_path}"
+
               _todos tasks "${_selector:-}" "${_task_number}"     \
                 | LC_ALL=C sed "3s/^/Done: /"
 
@@ -26636,6 +26639,9 @@ _todo() {
                 "Unable to mark done: %s\\n"      \
                 "$(_color_primary "${_selector:-}")"
             else
+              local _done_date="## Done: $(date +"%Y-%m-%d")"
+              _sed_i -e "/# \[x\]/a\\${_done_date}" "${_selector_path}"
+
               printf "Done: %s\\n" "$(_list "${_selector}")"
 
               _git checkpoint "${_notebook_path}" \
@@ -26659,6 +26665,8 @@ _todo() {
                 "Unable to undo: %s\\n"           \
                 "$(_todos tasks "${_selector:-}" "${_task_number}")"
             else
+              _sed_i -e "/${_updated_task}/,+1 { /## Done: [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/d }" "${_selector_path}"
+
               _todos tasks "${_selector:-}" "${_task_number}"       \
                 | LC_ALL=C sed "3s/^/Undone: /"
 
@@ -26674,6 +26682,8 @@ _todo() {
                 "Unable to undo: %s\\n"           \
                 "$(_color_primary "${_selector:-}")"
             else
+              _sed_i -e "/# \[ \]/,+1 { /## Done: [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/d }" "${_selector_path}"
+
               printf "Undone: %s\\n" "$(_list "${_selector}")"
 
               _git checkpoint "${_notebook_path}" \
