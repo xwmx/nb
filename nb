@@ -15246,18 +15246,31 @@ _edit() {
     shift
   done
 
+  local _notebook_path=
+  _notebook_path="$(_notebooks current --path)"
+
   if ((_edit_last_item)) && [[ -z "${_selector:-}" ]]
   then
     _selector="$(
-      _list                             \
-        --empty                         \
-        --filenames                     \
-        --limit 1                       \
-        --no-color                      \
-        --no-id                         \
-        --no-indicator                  \
-        --page "${_edit_last_item:-1}"  \
-        2>/dev/null || :
+      if [[ -n "$(ls "${_notebook_path}")" ]]
+      then
+        if stat -f '%m %N' . >/dev/null 2>&1
+        then # macOS (BSD stat)
+          find "${_notebook_path}"                        \
+            -type d -name '.*' -prune -o -type f -print0  \
+            | xargs -0 stat -f '%m %N' 2>/dev/null        \
+            | sort -rn                                    \
+            | head -n 1                                   \
+            | cut -d' ' -f2-
+        else # Linux (GNU stat)
+          find "${_notebook_path}"                        \
+            -type d -name '.*' -prune -o -type f -print0  \
+            | xargs -0 stat -c '%Y %n' 2>/dev/null        \
+            | sort -rn                                    \
+            | head -n 1                                   \
+            | cut -d' ' -f2-
+        fi
+      fi
     )"
   fi
 
@@ -15271,9 +15284,6 @@ _edit() {
 
   local _basename="${_relative_path##*\/}"
   local _folder_path="${_relative_path%\/*}"
-
-  local _notebook_path=
-  _notebook_path="$(_notebooks current --path)"
 
   if [[ -z "${_relative_path:-}"  ]]
   then
