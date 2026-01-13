@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+###############################################################################
+# annotate.nb-plugin
+#
+# An annotate plugin for `nb`.
+#
+# Install with:
+#   nb plugin install https://github.com/xwmx/nb/blob/master/plugins/annotate.nb-plugin
+#
+# https://github.com/xwmx/nb
+###############################################################################
+
+# Add the new subcommand name with `_subcommands add <name>`.
+_subcommands add "annotate"
+
+# Define help and usage text with `_subcommands describe <subcommand> <usage>`.
+_subcommands describe "annotate" <<HEREDOC
+Usage:
+  nb annotate
+
+Description:
+  Print "Hello, World!"
+HEREDOC
+
+# Define the subcommand as a function, named with a leading underscore.
+_annotate() {
+  printf "Hello, World!\\n"
+}
