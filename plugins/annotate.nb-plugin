@@ -71,17 +71,20 @@ _annotate() {
         _add                                  \
           --edit                              \
           --filename "${_annotations_path:-}" \
-          --no-template                       &&
+          --no-template                       \
+          --quiet                             &&
           printf "Annotated: %s\\n" "${_selector_info_line}"
       else
-        _edit "${_annotations_path:-}"        &&
+        _edit "${_annotations_path:-}"        \
+          --quiet                             &&
           printf "Annotated: %s\\n" "${_selector_info_line}"
       fi
       ;;
     delete)
       if [[ -e "${_annotations_path:-}"       ]]
       then
-        _delete "${_annotations_path:-}"      &&
+        _delete "${_annotations_path:-}"      \
+          --quiet                             &&
           printf "Annotations deleted: %s\\n" "${_selector_info_line}"
       else
         _warn printf "No annotations found: %s\\n" \
