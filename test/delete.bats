@@ -2,6 +2,51 @@
 
 load test_helper
 
+# --quiet #####################################################################
+
+@test "'rm <id> --quiet' deletes properly without printing output." {
+  {
+    "${_NB}" init
+    "${_NB}" add "example.md"
+
+    _original_index="$(cat "${NB_DIR}/home/.index")"
+
+    [[ -e "${NB_DIR}/home/example.md"     ]]
+  }
+
+  run "${_NB}" rm 1 --force --quiet
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0                    ]]
+
+  # Deletes file:
+
+  [[ ! -e "${NB_DIR}/home/example.md"     ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Delete'
+
+  # Deletes entry from index:
+
+  [[ -e "${NB_DIR}/home/.index"                                       ]]
+  [[    "$(ls "${NB_DIR}/home")"  == "$(cat "${NB_DIR}/home/.index")" ]]
+  [[    "${_original_index}"      != "$(cat "${NB_DIR}/home/.index")" ]]
+
+  # Prints output:
+
+  [[ -z "${output:-}" ]]
+}
+
 # notebooks ###################################################################
 
 _setup_notebooks() {

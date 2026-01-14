@@ -15101,7 +15101,10 @@ _delete() {
 
         _git checkpoint "${_notebook_path}" "[${_ME}] Delete: ${_relative_path}"
 
-        printf "Deleted:  %s\\n" "${_info_line}"
+        if ! ((_QUIET))
+        then
+          printf "Deleted:  %s\\n" "${_info_line}"
+        fi
       fi
     else
       _exit_1 printf "Selection not found.\\n"
