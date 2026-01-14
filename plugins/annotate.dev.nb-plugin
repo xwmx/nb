@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 ###############################################################################
-# annotate.nb-plugin
+# annotate.dev.nb-plugin
 #
 # An annotate plugin for `nb`.
 #
 # Install with:
-#   nb plugin install https://github.com/xwmx/nb/blob/master/plugins/annotate.nb-plugin
+#   nb plugin install https://github.com/xwmx/nb/blob/master/plugins/annotate.dev.nb-plugin
 #
 # https://github.com/xwmx/nb
 ###############################################################################
