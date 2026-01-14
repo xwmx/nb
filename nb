@@ -12957,6 +12957,9 @@ _add() {
 
         shift
         ;;
+      --quiet)
+        _QUIET=1
+        ;;
       --skip*standard*input)
         _skip_standard_input=1
         ;;
@@ -13771,6 +13774,9 @@ _bookmark() {
         _arguments+=("${1:-}" "${2:-}")
 
         shift
+        ;;
+      --quiet)
+        _QUIET=1
         ;;
       -q|--quote|--excerpt)
         _quote="$(_option_get_value "${1}" "${2:-}")"
@@ -14945,6 +14951,9 @@ _delete() {
       --prompt-list)
         _print_prompt_list=1
         ;;
+      --quiet)
+        _QUIET=1
+        ;;
       *)
         [[ -n "${__arg:-}"  ]]  && _selectors+=("${__arg:-}")
         ;;
@@ -15247,6 +15256,9 @@ _edit() {
         _password="$(_option_get_value "${1}" "${2:-}")"
 
         shift
+        ;;
+      --quiet)
+        _QUIET=1
         ;;
       *)
         if [[ -z "${_selector:-}"   ]]
