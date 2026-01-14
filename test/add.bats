@@ -3,6 +3,57 @@
 
 load test_helper
 
+# --quiet #####################################################################
+
+@test "'add --quiet' creates new note without printing output." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "Example Notebook"
+  }
+
+  run "${_NB}" Example\ Notebook:+  \
+    --title     "Example Title"     \
+    --filename  "File One.md"       \
+    --quiet
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0                              ]]
+
+  # Prints output:
+
+  [[ -z "${output:-}" ]]
+
+  # Creates a new file:
+
+  [[ !  -f "${NB_DIR}/home/File One.md"             ]]
+  [[    -f "${NB_DIR}/Example Notebook/File One.md" ]]
+
+  diff                                              \
+    <(cat "${NB_DIR}/Example Notebook/File One.md") \
+    <(cat <<HEREDOC
+# Example Title
+
+# mock_editor ${NB_DIR}/Example Notebook/File One
+HEREDOC
+)
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/Example Notebook" || return 1
+  printf "\$(git log): '%s'\n" "$(git log)"
+  while [[ -n "$(git status --porcelain)"           ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+}
+
+
 # encoding ####################################################################
 
 @test "'add --filename <filename>' with non-ASCII decomposed filename normalizes it to precomposed format." {

@@ -3,6 +3,46 @@
 
 load test_helper
 
+# --quiet #####################################################################
+
+@test "'<scope>:<selector> edit --quiet' edits  without printing output." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add "one"
+    "${_NB}" one:add "Example initial content."
+
+    _filename=$("${_NB}" one:list -n 1 --no-id --filenames | head -1)
+
+    echo "\${_filename:-}: ${_filename:-}"
+
+    [[ -n "${_filename}"                ]]
+    [[ -e "${NB_DIR}/one/${_filename}"  ]]
+  }
+
+  run "${_NB}" "one:${_filename}" edit --content "Example content." --quiet
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  cat "${NB_DIR}/one/${_filename}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Updates note file:
+
+  printf "EDITOR: '%s'\\n" "${EDITOR:-}"
+
+  printf "cat %s:\\n%s\\n" "${NB_DIR}/one/${_filename}" \
+    "$(cat "${NB_DIR}/one/${_filename}")"
+
+  [[ "$(cat "${NB_DIR}/one/${_filename}")" =~ Example\ content\.  ]]
+
+  # Does not print output:
+
+  [[ -z "${output:-}" ]]
+}
+
 # encrypted ###################################################################
 
 @test "'edit' with openssl -md sha256 encrypted file edits properly without errors." {

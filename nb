@@ -9473,6 +9473,7 @@ _print_normalized_options() {
 
 # Initialize program option variables.
 _ARGUMENTS=()
+_QUIET=0
 _SUBCOMMAND=
 _USE_DEBUG=0
 
@@ -9799,6 +9800,9 @@ _parse_options() {
         ;;
       --no*git|--skip*git)
         _GIT_ENABLED=0
+        ;;
+      --quiet)
+        _QUIET=1
         ;;
       --version)
         if [[ -n "${_SUBCOMMAND:-}"     ]]
@@ -13514,7 +13518,10 @@ _add() {
       _show "${_notebook_path:?}/${_target_unique_relative_path:?}" --info-line
     )"
 
-    printf "Added: %s\\n" "${_info}"
+    if ! ((_QUIET))
+    then
+      printf "Added: %s\\n" "${_info}"
+    fi
   fi
 }
 _alias_subcommand "add" "+"
@@ -15430,7 +15437,10 @@ _edit() {
       local _info=
       _info="$(_show "${_relative_path}" --info-line)"
 
-      printf "Updated: %s\\n" "${_info}"
+      if ! ((_QUIET))
+      then
+        printf "Updated: %s\\n" "${_info}"
+      fi
     fi
   else
     _exit_1 printf "Selection not found.\\n"

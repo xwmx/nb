@@ -2,6 +2,87 @@
 
 load test_helper
 
+# --quiet #####################################################################
+
+@test "'add bookmark' with --quiet option creates new bookmark without printing output." {
+  {
+    "${_NB}" init
+
+    "${_NB}" notebooks add "demo"
+    "${_NB}" notebooks add "sample"
+  }
+
+  run "${_NB}" add bookmark       \
+    "${_BOOKMARK_URL}"            \
+    --tags tag1,tag2              \
+    --filename "example"          \
+    --related http://example.org  \
+    --related sample:123          \
+    --related "[[demo:456]]"      \
+    --related "Example Title"     \
+    --quiet
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ "${status}" -eq 0 ]]
+
+  # Creates new bookmark file with content:
+
+  [[ -f "${NB_DIR}/home/example.bookmark.md" ]]
+
+  diff                                          \
+    <(cat "${NB_DIR}/home/example.bookmark.md") \
+    <(cat <<HEREDOC
+# Example Domain
+
+<file://${NB_TEST_BASE_PATH}/fixtures/example.com.html>
+
+## Description
+
+Example description.
+
+## Related
+
+- <http://example.org>
+- [[sample:123]]
+- [[demo:456]]
+- [[Example Title]]
+
+## Tags
+
+#tag1 #tag2
+
+## Content
+
+$(cat "${NB_TEST_BASE_PATH}/fixtures/example.com.md")
+HEREDOC
+)
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Add'
+
+  # Adds to index:
+
+  [[ -e "${NB_DIR}/home/.index" ]]
+
+  diff                      \
+    <(ls "${NB_DIR}/home")  \
+    <(cat "${NB_DIR}/home/.index")
+
+  # Does not print output:
+
+  [[ -z "${output:-}" ]]
+}
+
 # templates ###################################################################
 
 @test "'bookmark <url>' with assigned \$NB_DEFAULT_TEMPLATE skips the template." {
