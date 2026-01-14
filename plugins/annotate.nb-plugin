@@ -71,6 +71,36 @@ _annotate() {
 
   local _annotations_path="${_annotations_directory_path}/${_annotations_basename}"
 
+  if [[ ! -e "${TMPDIR}/nb-annotate-dev-plugin-enabled" ]]
+  then
+    cat <<HEREDOC
+This plugin is experimental and the implementation could change without notice.
+HEREDOC
+
+    while true
+    do
+      local __yn=
+      IFS='' read -r -e -d $'\n' -p \
+"$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
+
+      case "${__yn}" in
+        [Yy]*)
+          touch "${TMPDIR}/nb-annotate-dev-plugin-enabled"
+
+          break
+          ;;
+        q*|exit)
+          printf "Exiting%s\\n" "$(_color_muted "...")"
+
+          exit 0
+          ;;
+        *)
+          break
+          ;;
+      esac
+    done
+  fi
+
   case "${_subcommand:-}" in
     edit)
       if [[ ! -e "${_annotations_path:-}"     ]]
