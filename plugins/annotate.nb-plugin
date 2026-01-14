@@ -16,11 +16,18 @@ _subcommands add "annotations"
 
 # Define help and usage text with `_subcommands describe <subcommand> <usage>`.
 _subcommands describe "annotate" <<HEREDOC
-Usage:
-  nb annotate
+$(_color_primary "Usage"):
+  nb annotate ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+  nb annotate delete ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+  nb annotate show ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
 
-Description:
-  Print "Hello, World!"
+$(_color_primary "Subcommands"):
+  (default) Add or edit annotations for an item.
+  delete    Delete annotations for an item.
+  show      Show annotations for an item.
+
+$(_color_primary "Description"):
+  Add, edit, show, or delete annotations for an item.
 HEREDOC
 
 # Define the subcommand as a function, named with a leading underscore.
