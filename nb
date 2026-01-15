@@ -12389,21 +12389,25 @@ _resolve_links() {
         done
       } | {
         # Replace [[ with placeholder INSIDE <code>...</code> (including <p><code>)
-        LC_ALL=C sed -E -e 's/(<code[^>]*>[^<]*)\[\[([^<]*<\/code>)/\1__LEFTDBLBRACKET__\2/g' \
-                        -e 's/(<p[[:space:]]*><code[^>]*>[^<]*)\[\[([^<]*<\/code>[[:space:]]*<\/p>)/\1__LEFTDBLBRACKET__\2/g'
+        LC_ALL=C sed -E                                                         \
+          -e 's/(<code[^>]*>[^<]*)\[\[([^<]*<\/code>)/\1__LEFTDBLBRACKET__\2/g' \
+          -e 's/(<p[[:space:]]*><code[^>]*>[^<]*)\[\[([^<]*<\/code>[[:space:]]*<\/p>)/\1__LEFTDBLBRACKET__\2/g'
       } | {
         # Replace # with placeholder INSIDE <code>...</code> (including <p><code>)
-        LC_ALL=C sed -E -e 's/(<code[^>]*>[^<]*)\#([^<]*<\/code>)/\1__HASH_PLACEHOLDER__\2/g' \
-                        -e 's/(<p[[:space:]]*><code[^>]*>[^<]*)\#([^<]*<\/code>[[:space:]]*<\/p>)/\1__HASH_PLACEHOLDER__\2/g'
+        LC_ALL=C sed -E                                                         \
+          -e 's/(<code[^>]*>[^<]*)\#([^<]*<\/code>)/\1__HASH_PLACEHOLDER__\2/g' \
+          -e 's/(<p[[:space:]]*><code[^>]*>[^<]*)\#([^<]*<\/code>[[:space:]]*<\/p>)/\1__HASH_PLACEHOLDER__\2/g'
       } | {
         # wrap [[wiki-style links]] in HTML links and add missing notebooks
-        LC_ALL=C sed -E                                                                                    \
+        LC_ALL=C sed -E                                                                           \
 -e "/^${_ME}-linkable-${_ME}/ s/${_link_match_pattern}/${_replacement_pattern}/g"                 \
 -e "/^${_ME}-linkable-${_ME}/ s/${_labeled_link_match_pattern}/${_labeled_replacement_pattern}/g" \
 -e "/^${_ME}-linkable-${_ME}/ s/${_notebookless_pattern}/${_notebookless_replacement_pattern}/g"  \
 -e "/^${_ME}-linkable-${_ME}/ s/${_hashtag_match_pattern}/\1${_hashtag_pattern}/g"
       } | {
-        LC_ALL=C sed -E -e 's/__LEFTDBLBRACKET__/[[/g' -e 's/__HASH_PLACEHOLDER__/#/g'
+        LC_ALL=C sed -E                   \
+          -e 's/__LEFTDBLBRACKET__/[[/g'  \
+          -e 's/__HASH_PLACEHOLDER__/#/g'
       } | {
         LC_ALL=C sed -E -e "s/^${_ME}-linkable-${_ME}//g"
       }
