@@ -246,9 +246,9 @@ load test_helper
 "<a href=\"//localhost:6789/local:${_expected_params}&--query=%23tag9\">#tag9</a>"
 }
 
-# <nav> and <code> ############################################################
+# <nav>, <code>, and <h2>Content</h2> #########################################
 
-@test "'_resolve_links --browse' with .html skips nav and code sections." {
+@test "'_resolve_links --browse' with non-bookmark .html skips nav and code sections and does not skip <h2>Content</h2>." {
   {
     "${_NB}" init
 
@@ -278,8 +278,12 @@ Example content line [[5]] #five without inline code.
 
 Example content line [[6]] #six with \`[[7]] #seven\` inline code.
 
+## Content
+
 [[8]]
 #eight
+
+#nine
 HEREDOC
 )"
 
@@ -370,6 +374,144 @@ HEREDOC
 
   printf "%s\\n" "${output}" | grep -q  \
 "<a href=\"//localhost:6789/home:?--columns=70&--limit=2&--query=%23eight\">#eight</a></p>"
+
+  printf "%s\\n" "${output}" | grep -q  \
+"<a href=\"//localhost:6789/home:?--columns=70&--limit=2&--query=%23nine\">#nine</a></p>"
+}
+
+@test "'_resolve_links --browse' with bookmark .html skips nav, code sections, and <h2>Content</h2>." {
+  {
+    "${_NB}" init
+
+
+    "${_NB}" add  "Sample Folder/Sample Nested File One.bookmark.md"  \
+      --title     "Sample Nested Title One"                           \
+      --content   "$(cat <<HEREDOC
+# Example Title
+
+https://example.com
+
+[[1]]
+#one
+
+<nav>
+[[2]]
+#two
+</nav>
+
+[[3]]
+#three
+
+\`\`\`
+code-one
+[[4]]
+#four
+code-two
+\`\`\`
+
+Example content line [[5]] #five without inline code.
+
+Example content line [[6]] #six with \`[[7]] #seven\` inline code.
+
+## Content
+
+[[8]]
+#eight
+
+#nine
+HEREDOC
+)"
+
+    "${_NB}" add  "Root File One.md"    \
+      --title     "Root Title One"      \
+      --content   "Root content one."
+
+    "${_NB}" add  "Root File Two.md"    \
+      --title     "Root Title Two"      \
+      --content   "Root content two."
+
+    "${_NB}" add  "Root File Three.md"  \
+      --title     "Root Title Three"    \
+      --content   "Root content three."
+
+    "${_NB}" add  "Root File Four.md"   \
+      --title     "Root Title Four"     \
+      --content   "Root content four."
+
+    "${_NB}" add  "Root File Five.md"   \
+      --title     "Root Title Five"     \
+      --content   "Root content five."
+
+    declare _html_file_path="${_TMP_DIR}/unlinked.html"
+    touch "${_html_file_path:?}"
+
+    cd "${_TMP_DIR}"
+    git init &>/dev/null
+
+    pandoc                              \
+      --from=markdown                   \
+      --to=html                         \
+      --output="${_html_file_path}"     \
+      --wrap=preserve                   \
+      "${NB_DIR}/home/Sample Folder/Sample Nested File One.bookmark.md"
+
+    [[ "$(cat "${_html_file_path}")" =~ \<h1\ id=\"sample-nested-title-one ]]
+  }
+
+  run "${_NB}" helpers resolve_links    \
+    --browse                            \
+    "${NB_DIR}/home"                    \
+    --page 123 --limit 2 --terminal < "${_html_file_path}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[ "${status}"  -eq 0                 ]]
+
+  printf "%s\\n" "${output}" | grep -q  \
+"<h1 id=\"sample-nested-title-one\">Sample Nested Title One</h1>"
+
+  printf "%s\\n" "${output}" | grep -q  \
+"<p><a href=\"//localhost:6789/home:1?--columns=70&--limit=2\">\[\[1\]\]</a>"
+
+  printf "%s\\n" "${output}" | grep -q  \
+"<a href=\"//localhost:6789/home:?--columns=70&--limit=2&--query=%23one\">#one</a></p>"
+
+  printf "%s\\n" "${output}" | grep -q  \
+"<nav>${_NEWLINE}\[\[2\]\]${_NEWLINE}</nav>"
+
+  printf "%s\\n" "${output}" | grep -q  \
+"<p><a href=\"//localhost:6789/home:3?--columns=70&--limit=2\">\[\[3\]\]</a>"
+
+  printf "%s\\n" "${output}" | grep -q  \
+"<a href=\"//localhost:6789/home:?--columns=70&--limit=2&--query=%23three\">#three</a></p>"
+
+  printf "%s\\n" "${output}" | grep -q  \
+"<pre><code>code-one"
+
+  printf "%s\\n" "${output}" | grep -q  \
+"^\[\[4\]\]$"
+
+  printf "%s\\n" "${output}" | grep -q  \
+"^#four$"
+
+  printf "%s\\n" "${output}" | grep -q  \
+"code-two</code></pre>"
+
+  printf "%s\\n" "${output}" | grep -q  \
+"<p>Example content line <a href=\"//localhost:6789/home:5?--columns=70&--limit=2\">\[\[5\]\]</a> <a href=\"//localhost:6789/home:?--columns=70&--limit=2&--query=%23five\">#five</a> without inline code.</p>"
+
+  printf "%s\\n" "${output}" | grep -q  \
+"<p>Example content line <a href=\"//localhost:6789/home:6?--columns=70&--limit=2\">\[\[6\]\]</a> <a href=\"//localhost:6789/home:?--columns=70&--limit=2&--query=%23six\">#six</a> with <code>\[\[7\]\] #seven</code> inline code.</p>"
+
+  printf "%s\\n" "${output}" | grep -q -v \
+"<p><a href=\"//localhost:6789/home:8?--columns=70&--limit=2\">\[\[8\]\]</a>"
+
+  printf "%s\\n" "${output}" | grep -q -v \
+"<a href=\"//localhost:6789/home:?--columns=70&--limit=2&--query=%23eight\">#eight</a></p>"
+
+  printf "%s\\n" "${output}" | grep -q -v \
+"<a href=\"//localhost:6789/home:?--columns=70&--limit=2&--query=%23nine\">#nine</a></p>"
 }
 
 # .html #######################################################################

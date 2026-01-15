@@ -12225,6 +12225,7 @@ _resolve_links() {
     fi
   }
 
+  local _bookmark=0
   local _columns="${NB_BROWSE_COLUMNS:-70}"
   local _for_browsing=0
   local _input_type="html"
@@ -12234,6 +12235,7 @@ _resolve_links() {
   while ((${#}))
   do
     case "${1:-}" in
+      --bookmark) _bookmark=1                                 ;;
       --browse)   _for_browsing=1                             ;;
       --col*)     _columns="${2:?}"                 && shift  ;;
       --limit|-n|--num|--number|--per*)
@@ -12355,7 +12357,10 @@ _resolve_links() {
         do
           if ((_linkable))
           then
-            if [[ "${__line:-}" =~ ^[[:space:]]*(<p[[:space:]]*>)?(<pre[[:space:]]*>)?\<(nav|code) ]]
+            if [[ "${__line:-}" =~ ^[[:space:]]*(<p[[:space:]]*>)?(<pre[[:space:]]*>)?\<(nav|code)  ]]
+            then
+              _linkable=0
+            elif ((_bookmark)) && [[ "${__line:-}" =~ ^[[:space:]]*\<h2[^\<]*\>(Content|Source)     ]]
             then
               _linkable=0
             fi
@@ -19848,7 +19853,12 @@ Can't show archives. Export archive and expand to edit.\\n"
         {
           _render "${_target_path}" --pandoc --body
         } | {
-          _resolve_links "${_notebook_path}"
+          if [[ "${_target_path}" =~ \.bookmark\.md ]]
+          then
+            _resolve_links "${_notebook_path}" --bookmark
+          else
+            _resolve_links "${_notebook_path}"
+          fi
         } | {
           _render
         } | {
