@@ -89,13 +89,10 @@ HEREDOC
 
           break
           ;;
-        q*|exit)
+        *)
           printf "Exiting%s\\n" "$(_color_muted "...")"
 
           exit 0
-          ;;
-        *)
-          break
           ;;
       esac
     done
