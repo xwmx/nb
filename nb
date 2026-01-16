@@ -21901,9 +21901,16 @@ HEREDOC
 
         printf "</div>\\n"
       } | {
-        _resolve_links                    \
-          "${_notebook_path}"             \
-          "${_pagination_options[@]:-}"   \
+        local _resolve_links_options=(${_pagination_options[@]:-})
+
+        if [[ "${_source_path:-}" =~ \.bookmark\.md ]]
+        then
+          _resolve_links_options+=("--bookmark")
+        fi
+
+        _resolve_links                      \
+          "${_notebook_path}"               \
+          "${_resolve_links_options[@]:-}"  \
           --browse
       } | {
         _render --title "${_html_title}"

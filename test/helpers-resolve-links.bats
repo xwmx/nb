@@ -461,7 +461,7 @@ HEREDOC
   run "${_NB}" helpers resolve_links    \
     --browse                            \
     "${NB_DIR}/home"                    \
-    --page 123 --limit 2 --terminal < "${_html_file_path}"
+    --page 123 --limit 2 --terminal --bookmark < "${_html_file_path}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
@@ -504,6 +504,15 @@ HEREDOC
   printf "%s\\n" "${output}" | grep -q  \
 "<p>Example content line <a href=\"//localhost:6789/home:6?--columns=70&--limit=2\">\[\[6\]\]</a> <a href=\"//localhost:6789/home:?--columns=70&--limit=2&--query=%23six\">#six</a> with <code>\[\[7\]\] #seven</code> inline code.</p>"
 
+  printf "%s\\n" "${output}" | grep -q  \
+"<p>\[\[8\]\]"
+
+  printf "%s\\n" "${output}" | grep -q  \
+"#eight</p>"
+
+  printf "%s\\n" "${output}" | grep -q  \
+"<p>#nine</p>"
+
   printf "%s\\n" "${output}" | grep -q -v \
 "<p><a href=\"//localhost:6789/home:8?--columns=70&--limit=2\">\[\[8\]\]</a>"
 
@@ -511,7 +520,7 @@ HEREDOC
 "<a href=\"//localhost:6789/home:?--columns=70&--limit=2&--query=%23eight\">#eight</a></p>"
 
   printf "%s\\n" "${output}" | grep -q -v \
-"<a href=\"//localhost:6789/home:?--columns=70&--limit=2&--query=%23nine\">#nine</a></p>"
+"<p><a href=\"//localhost:6789/home:?--columns=70&--limit=2&--query=%23nine\">#nine</a></p>"
 }
 
 # .html #######################################################################
