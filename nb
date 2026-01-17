@@ -82,7 +82,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.23.2"
+_VERSION="7.24.0"
 
 # $_ME
 #
@@ -8834,7 +8834,10 @@ HEREDOC
       fi
     elif [[ "${_subcommand:-}"  =~ (^peek$|^p$) ]]
     then
-      if _command_exists "ranger"
+      if [[ -n "${NB_DIRECTORY_TOOL:-}" ]]
+      then
+        "${NB_DIRECTORY_TOOL}" "${_notebook_path}"
+      elif _command_exists "ranger"
       then
         ranger "${_notebook_path}"
       elif _command_exists "mc"
@@ -9220,7 +9223,7 @@ HEREDOC
   fi
 
   case "${_subcommand}" in
-    a|add|create|new)
+    a|add|create|new|+)
       shift
 
       _notebooks_add      "${@:-}"
@@ -9246,7 +9249,7 @@ HEREDOC
 
       _notebooks_current  "${@:-}"
       ;;
-    d|delete)
+    d|delete|remove|rm|trash|-)
       _notebooks_delete   "${_name:-}" "${3:-}"
       ;;
     list)
@@ -9470,6 +9473,7 @@ _print_normalized_options() {
 
 # Initialize program option variables.
 _ARGUMENTS=()
+_QUIET=0
 _SUBCOMMAND=
 _USE_DEBUG=0
 
@@ -9796,6 +9800,9 @@ _parse_options() {
         ;;
       --no*git|--skip*git)
         _GIT_ENABLED=0
+        ;;
+      --quiet)
+        _QUIET=1
         ;;
       --version)
         if [[ -n "${_SUBCOMMAND:-}"     ]]
@@ -12218,6 +12225,7 @@ _resolve_links() {
     fi
   }
 
+  local _bookmark=0
   local _columns="${NB_BROWSE_COLUMNS:-70}"
   local _for_browsing=0
   local _input_type="html"
@@ -12227,6 +12235,7 @@ _resolve_links() {
   while ((${#}))
   do
     case "${1:-}" in
+      --bookmark) _bookmark=1                                 ;;
       --browse)   _for_browsing=1                             ;;
       --col*)     _columns="${2:?}"                 && shift  ;;
       --limit|-n|--num|--number|--per*)
@@ -12348,7 +12357,10 @@ _resolve_links() {
         do
           if ((_linkable))
           then
-            if [[ "${__line:-}" =~ ^[[:space:]]*(<p[[:space:]]*>)?(<pre[[:space:]]*>)?\<(nav|code) ]]
+            if [[ "${__line:-}" =~ ^[[:space:]]*(<p[[:space:]]*>)?(<pre[[:space:]]*>)?\<(nav|code)  ]]
+            then
+              _linkable=0
+            elif ((_bookmark)) && [[ "${__line:-}" =~ ^[[:space:]]*\<h2[^\<]*\>(Content|Source)     ]]
             then
               _linkable=0
             fi
@@ -12382,21 +12394,25 @@ _resolve_links() {
         done
       } | {
         # Replace [[ with placeholder INSIDE <code>...</code> (including <p><code>)
-        LC_ALL=C sed -E -e 's/(<code[^>]*>[^<]*)\[\[([^<]*<\/code>)/\1__LEFTDBLBRACKET__\2/g' \
-                        -e 's/(<p[[:space:]]*><code[^>]*>[^<]*)\[\[([^<]*<\/code>[[:space:]]*<\/p>)/\1__LEFTDBLBRACKET__\2/g'
+        LC_ALL=C sed -E                                                         \
+          -e 's/(<code[^>]*>[^<]*)\[\[([^<]*<\/code>)/\1__LEFTDBLBRACKET__\2/g' \
+          -e 's/(<p[[:space:]]*><code[^>]*>[^<]*)\[\[([^<]*<\/code>[[:space:]]*<\/p>)/\1__LEFTDBLBRACKET__\2/g'
       } | {
         # Replace # with placeholder INSIDE <code>...</code> (including <p><code>)
-        LC_ALL=C sed -E -e 's/(<code[^>]*>[^<]*)\#([^<]*<\/code>)/\1__HASH_PLACEHOLDER__\2/g' \
-                        -e 's/(<p[[:space:]]*><code[^>]*>[^<]*)\#([^<]*<\/code>[[:space:]]*<\/p>)/\1__HASH_PLACEHOLDER__\2/g'
+        LC_ALL=C sed -E                                                         \
+          -e 's/(<code[^>]*>[^<]*)\#([^<]*<\/code>)/\1__HASH_PLACEHOLDER__\2/g' \
+          -e 's/(<p[[:space:]]*><code[^>]*>[^<]*)\#([^<]*<\/code>[[:space:]]*<\/p>)/\1__HASH_PLACEHOLDER__\2/g'
       } | {
         # wrap [[wiki-style links]] in HTML links and add missing notebooks
-        LC_ALL=C sed -E                                                                                    \
+        LC_ALL=C sed -E                                                                           \
 -e "/^${_ME}-linkable-${_ME}/ s/${_link_match_pattern}/${_replacement_pattern}/g"                 \
 -e "/^${_ME}-linkable-${_ME}/ s/${_labeled_link_match_pattern}/${_labeled_replacement_pattern}/g" \
 -e "/^${_ME}-linkable-${_ME}/ s/${_notebookless_pattern}/${_notebookless_replacement_pattern}/g"  \
 -e "/^${_ME}-linkable-${_ME}/ s/${_hashtag_match_pattern}/\1${_hashtag_pattern}/g"
       } | {
-        LC_ALL=C sed -E -e 's/__LEFTDBLBRACKET__/[[/g' -e 's/__HASH_PLACEHOLDER__/#/g'
+        LC_ALL=C sed -E                   \
+          -e 's/__LEFTDBLBRACKET__/[[/g'  \
+          -e 's/__HASH_PLACEHOLDER__/#/g'
       } | {
         LC_ALL=C sed -E -e "s/^${_ME}-linkable-${_ME}//g"
       }
@@ -12949,6 +12965,9 @@ _add() {
         _password="$(_option_get_value "${1}" "${2:-}")"
 
         shift
+        ;;
+      --quiet)
+        _QUIET=1
         ;;
       --skip*standard*input)
         _skip_standard_input=1
@@ -13511,7 +13530,10 @@ _add() {
       _show "${_notebook_path:?}/${_target_unique_relative_path:?}" --info-line
     )"
 
-    printf "Added: %s\\n" "${_info}"
+    if ! ((_QUIET))
+    then
+      printf "Added: %s\\n" "${_info}"
+    fi
   fi
 }
 _alias_subcommand "add" "+"
@@ -13762,6 +13784,9 @@ _bookmark() {
 
         shift
         ;;
+      --quiet)
+        _QUIET=1
+        ;;
       -q|--quote|--excerpt)
         _quote="$(_option_get_value "${1}" "${2:-}")"
 
@@ -13791,7 +13816,7 @@ _bookmark() {
 
         shift
         ;;
-      delete)
+      d|delete|remove|rm|trash|-)
         _delete "${2:-}" "${3:-}"
 
         return 0
@@ -14935,6 +14960,9 @@ _delete() {
       --prompt-list)
         _print_prompt_list=1
         ;;
+      --quiet)
+        _QUIET=1
+        ;;
       *)
         [[ -n "${__arg:-}"  ]]  && _selectors+=("${__arg:-}")
         ;;
@@ -15091,7 +15119,10 @@ _delete() {
 
         _git checkpoint "${_notebook_path}" "[${_ME}] Delete: ${_relative_path}"
 
-        printf "Deleted:  %s\\n" "${_info_line}"
+        if ! ((_QUIET))
+        then
+          printf "Deleted:  %s\\n" "${_info_line}"
+        fi
       fi
     else
       _exit_1 printf "Selection not found.\\n"
@@ -15235,6 +15266,9 @@ _edit() {
 
         shift
         ;;
+      --quiet)
+        _QUIET=1
+        ;;
       *)
         if [[ -z "${_selector:-}"   ]]
         then
@@ -15246,18 +15280,31 @@ _edit() {
     shift
   done
 
+  local _notebook_path=
+  _notebook_path="$(_notebooks current --path)"
+
   if ((_edit_last_item)) && [[ -z "${_selector:-}" ]]
   then
     _selector="$(
-      _list                             \
-        --empty                         \
-        --filenames                     \
-        --limit 1                       \
-        --no-color                      \
-        --no-id                         \
-        --no-indicator                  \
-        --page "${_edit_last_item:-1}"  \
-        2>/dev/null || :
+      if [[ -n "$(ls "${_notebook_path}")" ]]
+      then
+        if stat -f '%m %N' . >/dev/null 2>&1
+        then # macOS (BSD stat)
+          find "${_notebook_path}"                        \
+            -type d -name '.*' -prune -o -type f -print0  \
+            | xargs -0 stat -f '%m %N' 2>/dev/null        \
+            | sort -rn                                    \
+            | head -n 1                                   \
+            | cut -d' ' -f2-
+        else # Linux (GNU stat)
+          find "${_notebook_path}"                        \
+            -type d -name '.*' -prune -o -type f -print0  \
+            | xargs -0 stat -c '%Y %n' 2>/dev/null        \
+            | sort -rn                                    \
+            | head -n 1                                   \
+            | cut -d' ' -f2-
+        fi
+      fi
     )"
   fi
 
@@ -15271,9 +15318,6 @@ _edit() {
 
   local _basename="${_relative_path##*\/}"
   local _folder_path="${_relative_path%\/*}"
-
-  local _notebook_path=
-  _notebook_path="$(_notebooks current --path)"
 
   if [[ -z "${_relative_path:-}"  ]]
   then
@@ -15417,7 +15461,10 @@ _edit() {
       local _info=
       _info="$(_show "${_relative_path}" --info-line)"
 
-      printf "Updated: %s\\n" "${_info}"
+      if ! ((_QUIET))
+      then
+        printf "Updated: %s\\n" "${_info}"
+      fi
     fi
   else
     _exit_1 printf "Selection not found.\\n"
@@ -18897,6 +18944,7 @@ _show() {
   }
 
   local _browse=0
+  local _browse_gui=0
   local _check_type=0
   local _limit="${NB_BROWSE_LIMIT:-20}"
   local _list_page=1
@@ -18941,6 +18989,9 @@ _show() {
         ;;
       --folder-path)
         _print_folder_path=1
+        ;;
+      -g|--gui)
+        _browse_gui=1
         ;;
       --id|--index)
         _print_id=1
@@ -19748,6 +19799,7 @@ Can't show archives. Export archive and expand to edit.\\n"
 
       local _browse_arguments=("${_target_path}")
       ((_print_output)) && _browse_arguments+=("--print")
+      ((_browse_gui))   && _browse_arguments+=("--gui")
 
       _defer "_browse" "${_browse_arguments[@]:-}"
 
@@ -19801,7 +19853,12 @@ Can't show archives. Export archive and expand to edit.\\n"
         {
           _render "${_target_path}" --pandoc --body
         } | {
-          _resolve_links "${_notebook_path}"
+          if [[ "${_target_path}" =~ \.bookmark\.md ]]
+          then
+            _resolve_links "${_notebook_path}" --bookmark
+          else
+            _resolve_links "${_notebook_path}"
+          fi
         } | {
           _render
         } | {
@@ -21844,9 +21901,16 @@ HEREDOC
 
         printf "</div>\\n"
       } | {
-        _resolve_links                    \
-          "${_notebook_path}"             \
-          "${_pagination_options[@]:-}"   \
+        local _resolve_links_options=(${_pagination_options[@]:-})
+
+        if [[ "${_source_path:-}" =~ \.bookmark\.md ]]
+        then
+          _resolve_links_options+=("--bookmark")
+        fi
+
+        _resolve_links                      \
+          "${_notebook_path}"               \
+          "${_resolve_links_options[@]:-}"  \
           --browse
       } | {
         _render --title "${_html_title}"
@@ -22762,7 +22826,7 @@ HEREDOC
         _daemon=1
         _only_serve=1
         ;;
-      d|delete|-d|--delete|-)
+      d|delete|rm|trash|-d|--delete|-)
         _action="delete"
         ;;
       e|edit|-e|--edit)
@@ -23468,7 +23532,7 @@ _folders() {
       add|a|+)
         _subcommand="add"
         ;;
-      delete|d|rm|-)
+      delete|d|rm|trash|-)
         _subcommand="delete"
         ;;
       list|ls)
@@ -23993,7 +24057,7 @@ _remote() {
               _new_branch="${1:-}"
             fi
             ;;
-          delete|reset)
+          delete|reset|rm|trash)
             _remote_branch_name="${1:-}"
             ;;
           rename)
@@ -26408,7 +26472,7 @@ _todo() {
           c|closed|checked|completed|done|finished)
             _filter="closed"
             ;;
-          delete|-)
+          delete|remove|rm|trash|-)
             if [[ -z "${2:-}" ]]
             then
               _help "todo"

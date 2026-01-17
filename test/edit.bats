@@ -3,6 +3,46 @@
 
 load test_helper
 
+# --quiet #####################################################################
+
+@test "'<scope>:<selector> edit --quiet' edits  without printing output." {
+  {
+    "${_NB}" init
+    "${_NB}" notebooks add "one"
+    "${_NB}" one:add "Example initial content."
+
+    _filename=$("${_NB}" one:list -n 1 --no-id --filenames | head -1)
+
+    echo "\${_filename:-}: ${_filename:-}"
+
+    [[ -n "${_filename}"                ]]
+    [[ -e "${NB_DIR}/one/${_filename}"  ]]
+  }
+
+  run "${_NB}" "one:${_filename}" edit --content "Example content." --quiet
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+  cat "${NB_DIR}/one/${_filename}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Updates note file:
+
+  printf "EDITOR: '%s'\\n" "${EDITOR:-}"
+
+  printf "cat %s:\\n%s\\n" "${NB_DIR}/one/${_filename}" \
+    "$(cat "${NB_DIR}/one/${_filename}")"
+
+  [[ "$(cat "${NB_DIR}/one/${_filename}")" =~ Example\ content\.  ]]
+
+  # Does not print output:
+
+  [[ -z "${output:-}" ]]
+}
+
 # encrypted ###################################################################
 
 @test "'edit' with openssl -md sha256 encrypted file edits properly without errors." {
@@ -370,7 +410,7 @@ load test_helper
   then
     sleep 1
   fi
-  ! git log | grep -q '\[nb\] Edit'
+  git log | grep -q -v '\[nb\] Edit'
 
   # Prints help information:
 
@@ -1157,7 +1197,7 @@ HEREDOC
   then
     sleep 1
   fi
-  ! git log | grep -q '\[nb\] Edit'
+  git log | grep -q -v '\[nb\] Edit'
 
   # Prints help information:
 
@@ -1173,10 +1213,14 @@ HEREDOC
     "${_NB}" add "Example initial content two." --filename "example two.md"
     sleep 0.5
     "${_NB}" add "Example initial content three." --filename "example three.md"
+    sleep 0.5
 
-    declare _original_content_one="$(cat "${NB_DIR}/home/example one.md")"
-    declare _original_content_two="$(cat "${NB_DIR}/home/example two.md")"
-    declare _original_content_three="$(cat "${NB_DIR}/home/example three.md")"
+    declare _original_content_one=
+    _original_content_one="$(cat "${NB_DIR}/home/example one.md")"
+    declare _original_content_two=
+    _original_content_two="$(cat "${NB_DIR}/home/example two.md")"
+    declare _original_content_three=
+    _original_content_three="$(cat "${NB_DIR}/home/example three.md")"
 
     declare -a _items_unedited=($(
       "${_NB}" list \
@@ -1253,6 +1297,68 @@ HEREDOC
   [[ "${output}" =~ example\ two.md ]]
 }
 
+@test "'edit --last' edits last modified item in subdirectory." {
+  {
+    "${_NB}" init
+
+    "${_NB}" folder add "Example Folder"
+
+    "${_NB}" add "Example initial content one." --filename "example one.md"
+    sleep 0.5
+    "${_NB}" add "Example initial content two." --filename "Example Folder/example two.md"
+    sleep 0.5
+    "${_NB}" add "Example initial content three." --filename "example three.md"
+    sleep 0.5
+
+    declare _original_content_one=
+    _original_content_one="$(cat "${NB_DIR}/home/example one.md")"
+    declare _original_content_two=
+    _original_content_two="$(cat "${NB_DIR}/home/Example Folder/example two.md")"
+    declare _original_content_three=
+    _original_content_three="$(cat "${NB_DIR}/home/example three.md")"
+
+    run "${_NB}" edit "Example Folder/example two.md" --content "edit one"
+
+    [[    "$(cat "${NB_DIR}/home/Example Folder/example two.md")" =~ edit\ one   ]]
+    [[ !  "$(cat "${NB_DIR}/home/Example Folder/example two.md")" =~ mock_editor ]]
+  }
+
+  run "${_NB}" edit --last
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Updates note file:
+
+  printf "cat %s:\\n%s\\n" "${NB_DIR}/home/Example Folder/example two.md" \
+    "$(cat "${NB_DIR}/home/Example Folder/example two.md")"
+
+  [[ "$(cat "${NB_DIR}/home/Example Folder/example two.md")" =~ edit\ one   ]]
+  [[ "$(cat "${NB_DIR}/home/Example Folder/example two.md")" =~ mock_editor ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Edit'
+
+  # Prints output:
+
+  [[ "${output}" =~ Updated:                        ]]
+  [[ "${output}" =~ [0-9]+                          ]]
+  [[ "${output}" =~ Example\ Folder/example\ two.md ]]
+}
+
 @test "'edit -l' edits last modified item." {
   {
     "${_NB}" init
@@ -1261,10 +1367,14 @@ HEREDOC
     "${_NB}" add "Example initial content two." --filename "example two.md"
     sleep 0.5
     "${_NB}" add "Example initial content three." --filename "example three.md"
+    sleep 0.5
 
-    declare _original_content_one="$(cat "${NB_DIR}/home/example one.md")"
-    declare _original_content_two="$(cat "${NB_DIR}/home/example two.md")"
-    declare _original_content_three="$(cat "${NB_DIR}/home/example three.md")"
+    declare _original_content_one=
+    _original_content_one="$(cat "${NB_DIR}/home/example one.md")"
+    declare _original_content_two=
+    _original_content_two="$(cat "${NB_DIR}/home/example two.md")"
+    declare _original_content_three=
+    _original_content_three="$(cat "${NB_DIR}/home/example three.md")"
 
     declare -a _items_unedited=($(
       "${_NB}" list \
@@ -1339,6 +1449,68 @@ HEREDOC
   [[ "${output}" =~ Updated:        ]]
   [[ "${output}" =~ [0-9]+          ]]
   [[ "${output}" =~ example\ two.md ]]
+}
+
+@test "'edit -l' edits last modified item in subdirectory." {
+  {
+    "${_NB}" init
+
+    "${_NB}" folder add "Example Folder"
+
+    "${_NB}" add "Example initial content one." --filename "example one.md"
+    sleep 0.5
+    "${_NB}" add "Example initial content two." --filename "Example Folder/example two.md"
+    sleep 0.5
+    "${_NB}" add "Example initial content three." --filename "example three.md"
+    sleep 0.5
+
+    declare _original_content_one=
+    _original_content_one="$(cat "${NB_DIR}/home/example one.md")"
+    declare _original_content_two=
+    _original_content_two="$(cat "${NB_DIR}/home/Example Folder/example two.md")"
+    declare _original_content_three=
+    _original_content_three="$(cat "${NB_DIR}/home/example three.md")"
+
+    run "${_NB}" edit "Example Folder/example two.md" --content "edit one"
+
+    [[    "$(cat "${NB_DIR}/home/Example Folder/example two.md")" =~ edit\ one   ]]
+    [[ !  "$(cat "${NB_DIR}/home/Example Folder/example two.md")" =~ mock_editor ]]
+  }
+
+  run "${_NB}" edit -l
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  # Returns status 0:
+
+  [[ ${status} -eq 0 ]]
+
+  # Updates note file:
+
+  printf "cat %s:\\n%s\\n" "${NB_DIR}/home/Example Folder/example two.md" \
+    "$(cat "${NB_DIR}/home/Example Folder/example two.md")"
+
+  [[ "$(cat "${NB_DIR}/home/Example Folder/example two.md")" =~ edit\ one   ]]
+  [[ "$(cat "${NB_DIR}/home/Example Folder/example two.md")" =~ mock_editor ]]
+
+  # Creates git commit:
+
+  cd "${NB_DIR}/home" || return 1
+
+  printf "git log --stat:\\n%s\\n" "$(git log --stat)"
+
+  while [[ -n "$(git status --porcelain)" ]]
+  do
+    sleep 1
+  done
+  git log | grep -q '\[nb\] Edit'
+
+  # Prints output:
+
+  [[ "${output}" =~ Updated:                        ]]
+  [[ "${output}" =~ [0-9]+                          ]]
+  [[ "${output}" =~ Example\ Folder/example\ two.md ]]
 }
 
 # <selector> ##################################################################

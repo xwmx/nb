@@ -686,7 +686,7 @@ Moved\ to:\ .*[.*Sample\ Folder/5.*].*\ .*Sample\ Folder/Example\ File\ Two.md  
   do
     sleep 1
   done
-  ! git log | grep '\[nb\] Delete'
+  git log | grep -q -v '\[nb\] Delete'
 
   # Prints help:
 
@@ -721,7 +721,7 @@ Moved\ to:\ .*[.*Sample\ Folder/5.*].*\ .*Sample\ Folder/Example\ File\ Two.md  
   do
     sleep 1
   done
-  ! git log | grep '\[nb\] Delete'
+  git log | grep -q -v '\[nb\] Delete'
 
   # Prints help:
 

@@ -129,13 +129,13 @@ div.highlighter-rouge {
   // code,
   // pre {
   & {
-    background-color:         $code-block-background-color;
-    border:                   none;
-    padding:                  1rem;
+    background-color:       $code-block-background-color;
+    border:                 none;
+    padding:                1rem;
 
     button {
       // TODO
-      display:                none;
+      display:              none;
     }
   } // &, code, pre
 } // code, div.highlighter-rouge
@@ -143,6 +143,7 @@ div.highlighter-rouge {
 div.highlighter-rouge,
 div.listingblock {
   div.highlight {
+    border:                 none;
     padding:                0;
   }
 }

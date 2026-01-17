@@ -1,0 +1,143 @@
+#!/usr/bin/env bash
+###############################################################################
+# annotate.dev.nb-plugin
+#
+# An annotate plugin for `nb`.
+#
+# Install with:
+#   nb plugin install https://github.com/xwmx/nb/blob/master/plugins/annotate.dev.nb-plugin
+#
+# https://github.com/xwmx/nb
+###############################################################################
+
+# Add the new subcommand name with `_subcommands add <name>`.
+_subcommands add "annotate"
+_subcommands add "annotations"
+
+# Define help and usage text with `_subcommands describe <subcommand> <usage>`.
+_subcommands describe "annotate" <<HEREDOC
+$(_color_primary "Usage"):
+  nb annotate ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+  nb annotate delete ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+  nb annotate show ([<notebook>:][<folder-path>/][<id> | <filename> | <title>])
+
+$(_color_primary "Subcommands"):
+  (default) Add or edit annotations for an item.
+  delete    Delete annotations for an item.
+  show      Show annotations for an item.
+
+$(_color_primary "Description"):
+  Add, edit, show, or delete annotations for an item.
+HEREDOC
+
+# Define the subcommand as a function, named with a leading underscore.
+_annotate() {
+  local _selector=
+  local _subcommand="edit"
+
+  local __arg=
+  for   __arg in "${@:-}"
+  do
+    case "${__arg:-}" in
+      '')
+        :
+        ;;
+      add|edit)
+        _subcommand="edit"
+        ;;
+      delete)
+        _subcommand="delete"
+        ;;
+      show)
+        _subcommand="show"
+        ;;
+      *)
+        _selector="${__arg}"
+        ;;
+    esac
+  done
+
+  local _selector_path=
+  _selector_path="$(_show "${_selector:-}" --path 2>/dev/null || :)"
+
+  local _selector_info_line=
+  _selector_info_line="$(_show "${_selector:-}" --info-line 2>/dev/null || :)"
+
+  local _annotations_basename=
+  _annotations_basename=".$(basename ".${_selector_path:-}").annotations.md"
+
+  local _annotations_directory_path=
+  _annotations_directory_path="$(dirname "${_selector_path}")"
+
+  local _annotations_path="${_annotations_directory_path}/${_annotations_basename}"
+
+  if [[ ! -e "${TMPDIR}/nb-annotate-dev-plugin-enabled" ]]
+  then
+    cat <<HEREDOC
+This plugin is experimental and the implementation could change without notice.
+HEREDOC
+
+    while true
+    do
+      local __yn=
+      IFS='' read -r -e -d $'\n' -p \
+"$(_color_primary "Proceed?") $(_color_brackets "y/N") " __yn
+
+      case "${__yn}" in
+        [Yy]*)
+          touch "${TMPDIR}/nb-annotate-dev-plugin-enabled"
+
+          break
+          ;;
+        *)
+          printf "Exiting%s\\n" "$(_color_muted "...")"
+
+          exit 0
+          ;;
+      esac
+    done
+  fi
+
+  case "${_subcommand:-}" in
+    edit)
+      if [[ ! -e "${_annotations_path:-}"     ]]
+      then
+        _add                                  \
+          --edit                              \
+          --filename "${_annotations_path:-}" \
+          --no-template                       \
+          --quiet                             &&
+          printf "Annotated: %s\\n" "${_selector_info_line}"
+      else
+        _edit "${_annotations_path:-}"        \
+          --quiet                             &&
+          printf "Annotated: %s\\n" "${_selector_info_line}"
+      fi
+      ;;
+    delete)
+      if [[ -e "${_annotations_path:-}"       ]]
+      then
+        _delete "${_annotations_path:-}"      \
+          --quiet                             &&
+          printf "Annotations deleted: %s\\n" "${_selector_info_line}"
+      else
+        _warn printf "No annotations found: %s\\n" \
+          "$(_color_primary "${_selector:-}")"
+
+        return 1
+      fi
+      ;;
+    show)
+      if [[ -e "${_annotations_path:-}" ]]
+      then
+        _show "${_annotations_path:-}"
+      else
+        _warn printf "No annotations found: %s\\n" \
+          "$(_color_primary "${_selector:-}")"
+
+        return 1
+      fi
+      ;;
+  esac
+}
+_alias_subcommand "annotate" "annotations"

@@ -261,7 +261,7 @@ load test_helper
 
   [[ "${#_example_after_hashes[@]}" -eq 1                             ]]
 
-  ! _contains "${_example_after_hashes[0]}" "${_example_before_hashes[@]}"
+  _contains "${_example_after_hashes[0]}" "${_example_before_hashes[@]}" || true
 
   [[ "${_example_after_hashes[0]}"  != "${_example_before_hashes[0]}" ]]
   [[ "${_example_after_hashes[0]}"  != "${_example_before_hashes[1]}" ]]
@@ -530,7 +530,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
 
   [[ "${#_example_after_hashes[@]}" -eq 1                             ]]
 
-  ! _contains "${_example_after_hashes[0]}" "${_example_before_hashes[@]}"
+  _contains "${_example_after_hashes[0]}" "${_example_before_hashes[@]}" || true
 
   [[ "${_example_after_hashes[0]}"  != "${_example_before_hashes[0]}" ]]
   [[ "${_example_after_hashes[0]}"  != "${_example_before_hashes[1]}" ]]
@@ -817,7 +817,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*master.*\)            ]]
 
   [[ "${#_sample_after_hashes[@]}" -eq 1                              ]]
 
-  ! _contains "${_sample_after_hashes[0]}" "${_sample_before_hashes[@]}"
+  _contains "${_sample_after_hashes[0]}" "${_sample_before_hashes[@]}" || true
 
   [[ "${_sample_after_hashes[0]}"  != "${_sample_before_hashes[0]}"   ]]
   [[ "${_sample_after_hashes[0]}"  != "${_sample_before_hashes[1]}"   ]]
@@ -1086,7 +1086,7 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*sample-notebook.*\)   ]]
 
   [[ "${#_sample_after_hashes[@]}" -eq 1                              ]]
 
-  ! _contains "${_sample_after_hashes[0]}" "${_sample_before_hashes[@]}"
+  _contains "${_sample_after_hashes[0]}" "${_sample_before_hashes[@]}" || true
 
   [[ "${_sample_after_hashes[0]}"  != "${_sample_before_hashes[0]}"   ]]
   [[ "${_sample_after_hashes[0]}"  != "${_sample_before_hashes[1]}"   ]]

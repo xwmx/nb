@@ -173,7 +173,7 @@ HEREDOC
   _compare "'NB_NOTEBOOK_PATH=${NB_DIR}/one'" "'${lines[2]}'"
   _compare "'NB_DEFAULT_EXTENSION=adoc'"      "'${lines[8]}'"
 
-  [[ "${output}" =~ "NB_NOTEBOOK_PATH=${NB_DIR}/one" ]]
+  [[ "${output}" =~ NB_NOTEBOOK_PATH=${NB_DIR}/one  ]]
   [[ "${output}" =~ "NB_DEFAULT_EXTENSION=adoc"      ]]
 }
 
@@ -205,5 +205,5 @@ HEREDOC
   _compare "'NB_NOTEBOOK_PATH=${_TMP_DIR}/example'" "'${lines[2]}'"
   [[ "$(cat "${NB_DIR}/.current")" == "home" ]]
 
-  [[ "${output}" =~ "NB_NOTEBOOK_PATH=${_TMP_DIR}/example" ]]
+  [[ "${output}" =~ NB_NOTEBOOK_PATH=${_TMP_DIR}/example ]]
 }

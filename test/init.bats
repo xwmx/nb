@@ -127,10 +127,16 @@ load test_helper
   [[ -n "$(git -C "${NB_DIR}/home" config --local user.name   || :)"  ]]
 
   declare _global_email=
-  _global_email="$(git -C "${NB_DIR}/home" config --global user.email)"
+  _global_email="$(
+    git -C "${NB_DIR}/home" config --global user.email \
+      || git config user.email
+  )"
 
   declare _global_name=
-  _global_name="$(git -C "${NB_DIR}/home" config --global user.name)"
+  _global_name="$(
+    git -C "${NB_DIR}/home" config --global user.name \
+      || git config user.name
+  )"
 
   [[ "${lines[8]}"  =~ Current\ author\ for:\ .*home                          ]]
   [[ "${lines[9]}"  =~ [^-]-------------------[^-]                            ]]
@@ -172,10 +178,16 @@ Enter\ a\ new\ value,\ .*unset.*\ to\ use\ the\ global\ value,                ]]
   [[ -n "$(git -C "${NB_DIR}/home" config --local user.name   || :)" ]]
 
   declare _global_email=
-  _global_email="$(git -C "${NB_DIR}/home" config --global user.email)"
+  _global_email="$(
+    git -C "${NB_DIR}/home" config --global user.email \
+      || git config user.email
+  )"
 
   declare _global_name=
-  _global_name="$(git -C "${NB_DIR}/home" config --global user.name)"
+  _global_name="$(
+    git -C "${NB_DIR}/home" config --global user.name \
+      || git config user.name
+  )"
 
   [[ "${lines[8]}"  =~ Current\ author\ for:\ .*home                          ]]
   [[ "${lines[9]}"  =~ [^-]-------------------[^-]                            ]]
@@ -213,10 +225,16 @@ Enter\ a\ new\ value,\ .*unset.*\ to\ use\ the\ global\ value,                ]]
   [[ -z "$(git -C "${NB_DIR}/home" config --local user.name   || :)" ]]
 
   declare _global_email=
-  _global_email="$(git -C "${NB_DIR}/home" config --global user.email)"
+  _global_email="$(
+    git -C "${NB_DIR}/home" config --global user.email \
+      || git config user.email
+  )"
 
   declare _global_name=
-  _global_name="$(git -C "${NB_DIR}/home" config --global user.name)"
+  _global_name="$(
+    git -C "${NB_DIR}/home" config --global user.name \
+      || git config user.name
+  )"
 
   [[ "${lines[8]}"  =~ Current\ author\ for:\ .*home                          ]]
   [[ "${lines[9]}"  =~ [^-]-------------------[^-]                            ]]
@@ -252,10 +270,16 @@ Enter\ a\ new\ value,\ .*unset.*\ to\ use\ the\ global\ value,                ]]
   [[ -n "$(git -C "${NB_DIR}/home" config --local user.name   || :)" ]]
 
   declare _global_email=
-  _global_email="$(git -C "${NB_DIR}/home" config --global user.email)"
+  _global_email="$(
+    git -C "${NB_DIR}/home" config --global user.email \
+      || git config user.email
+  )"
 
   declare _global_name=
-  _global_name="$(git -C "${NB_DIR}/home" config --global user.name)"
+  _global_name="$(
+    git -C "${NB_DIR}/home" config --global user.name \
+      || git config user.name
+  )"
 
   [[ "${lines[8]}"  =~ Current\ author\ for:\ .*home                          ]]
   [[ "${lines[9]}"  =~ [^-]-------------------[^-]                            ]]

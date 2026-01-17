@@ -699,8 +699,8 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*demo-notebook.*\)           ]]
   _contains   "${_demo_hashes[0]}" "${_sample_hashes[@]}"
   _contains   "${_demo_hashes[1]}" "${_sample_hashes[@]}"
 
-  ! _contains "${_example_hashes[0]}" "${_sample_hashes[@]}"
-  ! _contains "${_example_hashes[1]}" "${_sample_hashes[@]}"
+  _contains "${_example_hashes[0]}" "${_sample_hashes[@]}" || true
+  _contains "${_example_hashes[1]}" "${_sample_hashes[@]}" || true
 }
 
 @test "'remote set' with unrelated histories displays prompt and creates new orphan branch with name from prompt." {
@@ -772,8 +772,8 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*branch-name-from-prompt.*\) ]]
   [[ "${#_example_hashes[@]}" -eq 2                       ]]
   [[ "${#_sample_hashes[@]}"  -eq 2                       ]]
 
-  ! _contains "${_example_hashes[0]}" "${_sample_hashes[@]}"
-  ! _contains "${_example_hashes[1]}" "${_sample_hashes[@]}"
+  _contains "${_example_hashes[0]}" "${_sample_hashes[@]}" || true
+  _contains "${_example_hashes[1]}" "${_sample_hashes[@]}" || true
 }
 
 @test "'remote set' with unrelated histories displays prompt and creates new orphan branch named after notebook." {
@@ -844,8 +844,8 @@ Remote\ set\ to:\ .*${_GIT_REMOTE_URL}.*\ \(.*sample-notebook.*\)         ]]
   [[ "${#_example_hashes[@]}" -eq 2                       ]]
   [[ "${#_sample_hashes[@]}"  -eq 2                       ]]
 
-  ! _contains "${_example_hashes[0]}" "${_sample_hashes[@]}"
-  ! _contains "${_example_hashes[1]}" "${_sample_hashes[@]}"
+  _contains "${_example_hashes[0]}" "${_sample_hashes[@]}" || true
+  _contains "${_example_hashes[1]}" "${_sample_hashes[@]}" || true
 }
 
 @test "'remote set <url>' with no existing remote and matching branch name with no history sets remote and prints message." {

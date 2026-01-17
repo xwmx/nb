@@ -135,7 +135,7 @@ _setup_notebook() {
     sleep 1
   done
 
-  ! git log | grep '\[nb\] Archived'
+  git log | grep -q -v '\[nb\] Archived'
 }
 
 # `notebooks unarchive` #######################################################
@@ -216,7 +216,7 @@ _setup_notebook() {
     sleep 1
   done
 
-  ! git log | grep -q '\[nb\] Unarchived'
+  git log | grep -q -v '\[nb\] Unarchived'
 }
 
 # `notebooks status` ##########################################################

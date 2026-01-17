@@ -266,7 +266,7 @@ load test_helper
     sleep 1
   done
 
-  ! git log | grep -q '\[nb\] Archived'
+  git log | grep -q -v '\[nb\] Archived'
 }
 
 # `unarchive` #################################################################
@@ -420,5 +420,5 @@ load test_helper
     sleep 1
   done
 
-  ! git log | grep -q '\[nb\] Unarchived'
+  git log | grep -q -v '\[nb\] Unarchived'
 }

@@ -1052,7 +1052,7 @@ HEREDOC
   {
     _setup_notebooks
 
-    touch "${NB_DIR_1}/home/one.md" 
+    touch "${NB_DIR_1}/home/one.md"
 
     [[ -f "${NB_DIR_1}/home/one.md"   ]]
     [[ ! -f "${NB_DIR_2}/home/one.md" ]]

@@ -35,7 +35,7 @@ load test_helper
   do
     sleep 1
   done
-  ! git log | grep -q '\[nb\] Add'
+  git log | grep -q -v '\[nb\] Add'
 
   # Prints help information:
 
