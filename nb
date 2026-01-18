@@ -15670,12 +15670,12 @@ _env() {
             cd "${NB_DIR}/.assets" ||
               _exit_1 printf "Unable to \`cd\` to %s\\n" "${NB_DIR}/.assets"
 
-            git clone https://github.com/ajaxorg/ace-builds.git
+            git clone https://github.com/ajaxorg/ace-builds.git || return 0
           else
             cd "${NB_DIR}/.assets/ace-builds" ||
               _exit_1 printf "Unable to \`cd\` to %s\\n" "${NB_DIR}/.assets/ace-builds"
 
-            git -C "${NB_DIR}/.assets/ace-builds" pull origin
+            git -C "${NB_DIR}/.assets/ace-builds" pull origin   || return 0
 
             local _git_status_output=
             _git_status_output="$(git -C "${NB_DIR}/.assets/ace-builds" status --porcelain)"
@@ -15698,12 +15698,12 @@ _env() {
             cd "${NB_DIR}/.assets" ||
               _exit_1 printf "Unable to \`cd\` to %s\\n" "${NB_DIR}/.assets"
 
-            git clone https://github.com/mathjax/MathJax.git
+            git clone https://github.com/mathjax/MathJax.git  || return 0
           else
             cd "${NB_DIR}/.assets/MathJax" ||
               _exit_1 printf "Unable to \`cd\` to %s\\n" "${NB_DIR}/.assets/MathJax"
 
-            git -C "${NB_DIR}/.assets/MathJax" pull origin
+            git -C "${NB_DIR}/.assets/MathJax" pull origin    || return 0
           fi
           ;;
       esac
