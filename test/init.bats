@@ -30,7 +30,7 @@ load test_helper
 
     "${_NB}" add "Example File One.md" --content "Example content one."
 
-    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" "example-branch" <<< "y${_NEWLINE}2${_NEWLINE}"
 
     diff                                              \
       <(git -C "${NB_DIR}/Example Notebook" ls-remote \
@@ -76,7 +76,7 @@ load test_helper
 
     "${_NB}" add "Example File One.md" --content "Example content one."
 
-    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" "example-branch" <<< "y${_NEWLINE}2${_NEWLINE}"
 
     diff                                              \
       <(git -C "${NB_DIR}/Example Notebook" ls-remote \
