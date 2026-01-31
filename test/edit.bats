@@ -1209,11 +1209,11 @@ HEREDOC
   {
     "${_NB}" init
     "${_NB}" add "Example initial content one." --filename "example one.md"
-    sleep 0.5
+    sleep 1
     "${_NB}" add "Example initial content two." --filename "example two.md"
-    sleep 0.5
+    sleep 1
     "${_NB}" add "Example initial content three." --filename "example three.md"
-    sleep 0.5
+    sleep 1
 
     declare _original_content_one=
     _original_content_one="$(cat "${NB_DIR}/home/example one.md")"
@@ -1304,11 +1304,11 @@ HEREDOC
     "${_NB}" folder add "Example Folder"
 
     "${_NB}" add "Example initial content one." --filename "example one.md"
-    sleep 0.5
+    sleep 1
     "${_NB}" add "Example initial content two." --filename "Example Folder/example two.md"
-    sleep 0.5
+    sleep 1
     "${_NB}" add "Example initial content three." --filename "example three.md"
-    sleep 0.5
+    sleep 1
 
     declare _original_content_one=
     _original_content_one="$(cat "${NB_DIR}/home/example one.md")"
@@ -1363,11 +1363,11 @@ HEREDOC
   {
     "${_NB}" init
     "${_NB}" add "Example initial content one." --filename "example one.md"
-    sleep 0.5
+    sleep 1
     "${_NB}" add "Example initial content two." --filename "example two.md"
-    sleep 0.5
+    sleep 1
     "${_NB}" add "Example initial content three." --filename "example three.md"
-    sleep 0.5
+    sleep 1
 
     declare _original_content_one=
     _original_content_one="$(cat "${NB_DIR}/home/example one.md")"
@@ -1458,11 +1458,11 @@ HEREDOC
     "${_NB}" folder add "Example Folder"
 
     "${_NB}" add "Example initial content one." --filename "example one.md"
-    sleep 0.5
+    sleep 1
     "${_NB}" add "Example initial content two." --filename "Example Folder/example two.md"
-    sleep 0.5
+    sleep 1
     "${_NB}" add "Example initial content three." --filename "example three.md"
-    sleep 0.5
+    sleep 1
 
     declare _original_content_one=
     _original_content_one="$(cat "${NB_DIR}/home/example one.md")"
