@@ -13661,7 +13661,7 @@ _bookmark() {
       | LC_ALL=C sed -E -e "s/${_character_removal_pattern}//g" \
       | if _command_exists "w3m"
         then
-           w3m -dump -T text/html -cols 99999
+           w3m -dump -T text/html -cols 9999
          else
            cat
         fi
