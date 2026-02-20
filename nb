@@ -6968,7 +6968,7 @@ _ls() {
   while ((${#}))
   do
     case "${1:-}" in
-      --added|--ar|--archived|--unar|--unarchived|--updated)
+      --added*|--created*|--updated*|--ar|--archived|--unar|--unarchived)
         _delegate_arguments+=("${1}")
         ;;
       -a|--all)
@@ -7106,7 +7106,7 @@ _ls() {
 
             return 0
             ;;
-          --added|--updated)
+          --added*|--created*|--updated*)
             if [[ -n "${_selector:-}"     ]]
             then
               _defer "_show" "${_arguments[@]:-}" "${_delegate_arguments[@]:-}"
