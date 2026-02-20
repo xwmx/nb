@@ -18973,7 +18973,7 @@ _show() {
   while ((${#}))
   do
     case "${1:-}" in
-      -a|--added*)
+      -a|--added*|--created*)
         _print_added=1
         _skip_notebook_fallback=1
         ;;
