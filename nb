@@ -19491,10 +19491,10 @@ Can't show archives. Export archive and expand to edit.\\n"
   then
     sc-im "${_target_path}"
   elif _contains "${_target_path##*.}" "csv" "psv" "tsv"              &&
-       _command_exists "tv"                                           &&
-       _contains "${_tool:-${NB_DATA_TOOL:-tv}}" "tv" "tidy-viewer" "tidyviewer"
+       _command_exists "tidy-viewer"                                  &&
+       _contains "${_tool:-${NB_DATA_TOOL:-tidy-viewer}}" "tv" "tidy-viewer" "tidyviewer"
   then
-    tv "${_target_path}"
+    tidy-viewer "${_target_path}"
   elif ! _file_is_text "${_target_path}"    &&
      ! {
        ((_render))                          &&
