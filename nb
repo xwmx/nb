@@ -82,7 +82,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.24.1"
+_VERSION="7.25.0"
 
 # $_ME
 #
@@ -6968,7 +6968,7 @@ _ls() {
   while ((${#}))
   do
     case "${1:-}" in
-      --added|--ar|--archived|--unar|--unarchived|--updated)
+      --added*|--created*|--updated*|--ar|--archived|--unar|--unarchived)
         _delegate_arguments+=("${1}")
         ;;
       -a|--all)
@@ -7106,7 +7106,7 @@ _ls() {
 
             return 0
             ;;
-          --added|--updated)
+          --added*|--created*|--updated*)
             if [[ -n "${_selector:-}"     ]]
             then
               _defer "_show" "${_arguments[@]:-}" "${_delegate_arguments[@]:-}"
@@ -18973,7 +18973,7 @@ _show() {
   while ((${#}))
   do
     case "${1:-}" in
-      -a|--added*)
+      -a|--added*|--created*)
         _print_added=1
         _skip_notebook_fallback=1
         ;;
@@ -19478,23 +19478,38 @@ Can't show archives. Export archive and expand to edit.\\n"
     _tool="${NB_IMAGE_TOOL:-}"
   fi
 
-  if _contains "${_target_path##*.}"        \
-       "csv" "json" "mysql" "postgres"      \
-       "sqlite" "tab" "tar" "tsv" "usv" "vds" "xml" "xlsx" "zip"      &&
-     _command_exists "vd"                                             &&
-     _contains "${_tool:-${NB_DATA_TOOL:-vd}}" "vd" "visidata"
+  if  _contains "${_target_path##*.}"        \
+        "csv" "json" "mysql" "postgres"      \
+        "sqlite" "tab" "tar" "tsv" "usv" "vds" "xml" "xlsx" "zip"     &&
+      _command_exists "vd"                                            &&
+      {
+        _contains "${_tool:-${NB_DATA_TOOL:-vd}}" "vd" "visidata"     ||
+        [[  "${_tool:-${NB_DATA_TOOL:-vd}}" =~ visidata|vd ]]
+      }
   then
-    vd "${_target_path}"
-  elif _contains "${_target_path##*.}" "csv" "sc" "tab" "tsv" "xlsx"  &&
-       _command_exists "sc-im"                                        &&
-       [[ "${_tool:-${NB_DATA_TOOL:-sc-im}}" == "sc-im"      ]]
+    local _visidata_command=
+    IFS=' ' read -ra _visidata_command <<< "${_tool:-${NB_DATA_TOOL:-vd}}"
+
+    "${_visidata_command[@]:-}" "${_target_path}"
+  elif  _contains "${_target_path##*.}" "csv" "sc" "tab" "tsv" "xlsx" &&
+        _command_exists "sc-im"                                       &&
+        [[  "${_tool:-${NB_DATA_TOOL:-sc-im}}" =~ sc-im ]]
   then
-    sc-im "${_target_path}"
-  elif _contains "${_target_path##*.}" "csv" "psv" "tsv"              &&
-       _command_exists "tv"                                           &&
-       _contains "${_tool:-${NB_DATA_TOOL:-tv}}" "tv" "tidy-viewer" "tidyviewer"
+    local _sc_im_command=
+    IFS=' ' read -ra _sc_im_command <<< "${_tool:-${NB_DATA_TOOL:-sc-im}}"
+
+    "${_sc_im_command[@]:-}" "${_target_path}"
+  elif  _contains "${_target_path##*.}" "csv" "psv" "tsv"             &&
+        _command_exists "tidy-viewer"                                 &&
+        {
+          _contains "${_tool:-${NB_DATA_TOOL:-tidy-viewer}}" "tv" "tidy-viewer" "tidyviewer" ||
+          [[  "${_tool:-${NB_DATA_TOOL:-tidy-viewer}}" =~ tidy-*viewer|tv ]]
+        }
   then
-    tv "${_target_path}"
+    local _tidy_viewer_command=
+    IFS=' ' read -ra _tidy_viewer_command <<< "${_tool:-${NB_DATA_TOOL:-tidy-viewer}}"
+
+    "${_tidy_viewer_command[@]:-}" "${_target_path}"
   elif ! _file_is_text "${_target_path}"    &&
      ! {
        ((_render))                          &&
