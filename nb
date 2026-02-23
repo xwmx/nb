@@ -25896,8 +25896,11 @@ HEREDOC
          [[ "${_normalized_input}" =~ ^h$     ]] ||
          [[ "${_normalized_input}" =~ ^h\     ]]
       then
-        eval "\"${_MY_PATH}\" ${_normalized_input}" --shell || :
-      elif [[ "${_normalized_input}" =~ ^echo\ .*   ]]      ||
+        eval "\"${_MY_PATH}\" ${_normalized_input}" --shell   || :
+      elif [[ "${_normalized_input}" =~ ^use|^notebooks\ use  ]]
+      then
+        eval "_${_normalized_input}"
+      elif [[ "${_normalized_input}" =~ ^echo\ .*   ]]        ||
            [[ "${_normalized_input}" =~ ^printf\ .* ]]
       then
         eval "${_normalized_input}"
