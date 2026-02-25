@@ -18530,7 +18530,16 @@ _search() {
               _relative_path="${_relative_folder_path}/${_filename}"
             fi
 
-            _id="$(_index get_id "${_filename}" "${_folder_path}" || :)"
+            local _normalized_filename="${_filename:-}"
+
+            if _command_exists "iconv"
+            then # convert to decomposed (NFD)
+              _normalized_filename="$(
+                printf "%s\\n" "${_filename:-}" | iconv -t UTF-8-MAC
+              )"
+            fi
+
+            _id="$(_index get_id "${_normalized_filename}" "${_folder_path}" || :)"
 
             if ((_filename_hit))
             then
