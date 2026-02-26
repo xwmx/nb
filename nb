@@ -25899,13 +25899,39 @@ HEREDOC
       local _normalized_input=
       _normalized_input="$(
         printf "%s\\n" "${__input}"           \
-          | LC_ALL=C sed -e 's/^n$//'         \
-          | LC_ALL=C sed -e 's/^n //'         \
-          | LC_ALL=C sed -e 's/^nb$//'        \
-          | LC_ALL=C sed -e 's/^nb //'        \
           | LC_ALL=C sed -e 's/^notes$//'     \
           | LC_ALL=C sed -e 's/^notes //'
       )"
+
+      if [[ "${_normalized_input}" =~ ^nb\ .* ]]
+      then
+        local _candidate_subcommand_or_notebook=
+        _candidate_subcommand_or_notebook="$(
+          printf "%s\\n" "${_normalized_input:-}" \
+            | LC_ALL=C sed -E -e 's/nb? ([^[:space:]]*)/\1/'
+        )"
+
+        local _notebook_names=()
+        _notebook_names=($(_notebooks --names --no-color --unarchived))
+
+        local _notebook_subcommand_names=(
+          a add create new archive author current d delete export import init
+          o open p peek rename move mv select status show unarchive u use
+        )
+
+        if  ! _contains     \
+              "${_candidate_subcommand_or_notebook:-}"  \
+              "${_notebook_names[@]:-}"                 \
+            && ! _contains  \
+              "${_candidate_subcommand_or_notebook:-}"  \
+              "${_notebook_subcommand_names[@]}"
+        then
+          _normalized_input="$(
+            printf "%s\\n" "${__input}" \
+              | LC_ALL=C sed -e 's/^nb //'
+          )"
+        fi
+      fi
 
       local _command_name=
 
