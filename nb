@@ -82,7 +82,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.25.0"
+_VERSION="7.25.1"
 
 # $_ME
 #
@@ -409,7 +409,16 @@ _option_get_value() {
 
   if [[ -n "${_value:-}" ]] && [[ ! "${_value:-}" =~ ^- ]]
   then
-    printf "%s\\n" "${_value}"
+    {
+      printf "%s\\n" "${_value}"
+    } | {
+      if _command_exists "iconv"
+      then
+        iconv -c -t utf-8
+      else
+        cat
+      fi
+    }
   else
     _exit_1 printf                          \
       "%s requires a valid argument.\\n"    \
@@ -18530,7 +18539,16 @@ _search() {
               _relative_path="${_relative_folder_path}/${_filename}"
             fi
 
-            _id="$(_index get_id "${_filename}" "${_folder_path}")"
+            local _normalized_filename="${_filename:-}"
+
+            if _command_exists "iconv"
+            then
+              _normalized_filename="$(
+                printf "%s\\n" "${_filename:-}" | iconv -c -t utf-8
+              )"
+            fi
+
+            _id="$(_index get_id "${_normalized_filename}" "${_folder_path}" || :)"
 
             if ((_filename_hit))
             then
@@ -25896,8 +25914,11 @@ HEREDOC
          [[ "${_normalized_input}" =~ ^h$     ]] ||
          [[ "${_normalized_input}" =~ ^h\     ]]
       then
-        eval "\"${_MY_PATH}\" ${_normalized_input}" --shell || :
-      elif [[ "${_normalized_input}" =~ ^echo\ .*   ]]      ||
+        eval "\"${_MY_PATH}\" ${_normalized_input}" --shell   || :
+      elif [[ "${_normalized_input}" =~ ^use|^notebooks\ use  ]]
+      then
+        eval "_${_normalized_input}"
+      elif [[ "${_normalized_input}" =~ ^echo\ .*   ]]        ||
            [[ "${_normalized_input}" =~ ^printf\ .* ]]
       then
         eval "${_normalized_input}"
