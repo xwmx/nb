@@ -409,7 +409,16 @@ _option_get_value() {
 
   if [[ -n "${_value:-}" ]] && [[ ! "${_value:-}" =~ ^- ]]
   then
-    printf "%s\\n" "${_value}"
+    {
+      printf "%s\\n" "${_value}"
+    } | {
+      if _command_exists "iconv"
+      then
+        iconv -c -t utf-8
+      else
+        cat
+      fi
+    }
   else
     _exit_1 printf                          \
       "%s requires a valid argument.\\n"    \
@@ -18533,9 +18542,9 @@ _search() {
             local _normalized_filename="${_filename:-}"
 
             if _command_exists "iconv"
-            then # convert to decomposed (NFD)
+            then
               _normalized_filename="$(
-                printf "%s\\n" "${_filename:-}" | iconv -t UTF-8-MAC
+                printf "%s\\n" "${_filename:-}" | iconv -c -t utf-8
               )"
             fi
 
