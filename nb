@@ -25915,7 +25915,7 @@ HEREDOC
          [[ "${_normalized_input}" =~ ^h\     ]]
       then
         eval "\"${_MY_PATH}\" ${_normalized_input}" --shell   || :
-      elif [[ "${_normalized_input}" =~ ^use|^notebooks\ use  ]]
+      elif [[ "${_normalized_input}" =~ ^u\ .+|^use\ |^notebooks\ use|^notebooks\ u  ]]
       then
         eval "_${_normalized_input}"
       elif [[ "${_normalized_input}" =~ ^echo\ .*   ]]        ||
