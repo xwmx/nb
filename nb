@@ -22717,34 +22717,46 @@ HEREDOC
     case "${NB_BROWSE_SERVER_TOOL:-}" in
       ncat)
         (
+          if ! ((${_USE_DEBUG:-0}))
+          then
+            exec 2>/dev/null
+          fi
+
           ncat                                      \
             --exec "${_MY_PATH} browse --respond"   \
             --keep-open                             \
             --listen                                \
-            "${NB_SERVER_HOST}" "${NB_SERVER_PORT}" \
-            2>/dev/null
+            "${NB_SERVER_HOST}" "${NB_SERVER_PORT}"
         ) &
         ;;
       nc|netcat)
         # TODO: improve concurrency
         (
+          if ! ((${_USE_DEBUG:-0}))
+          then
+            exec 2>/dev/null
+          fi
+
           while true
           do
             nc                                      \
               --exec "${_MY_PATH} browse --respond" \
               --listen                              \
               --local-port="${NB_SERVER_PORT}"      \
-              --source="${NB_SERVER_HOST}"          \
-              2>/dev/null
+              --source="${NB_SERVER_HOST}"
           done
         ) &
         ;;
       socat)
         (
+          if ! ((${_USE_DEBUG:-0}))
+          then
+            exec 2>/dev/null
+          fi
+
           socat                                                                               \
             tcp-listen:"${NB_SERVER_PORT}",bind="${NB_SERVER_HOST:-localhost}",reuseaddr,fork \
-            "system:{ ${_MY_PATH} browse --respond; }"                                        \
-            2>/dev/null
+            "system:{ ${_MY_PATH} browse --respond; }"
         ) &
         ;;
       accept|bash)
