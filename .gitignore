@@ -3,3 +3,4 @@ nb.*
 !nb.go
 !nb.ksh
 !nb.zsh
+/nbproject/private/
