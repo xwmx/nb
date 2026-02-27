@@ -82,7 +82,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.25.1"
+_VERSION="7.25.2"
 
 # $_ME
 #
@@ -9280,7 +9280,7 @@ HEREDOC
     u|use)
       _notebooks_use      "${_name:-}"
       ;;
-    archive|open|o|peek|p|status|unarchive)
+    ar|archive|open|o|peek|p|st|status|unar|unarchive)
       _notebooks_notebook "${_subcommand}" "${_name:-}"
       ;;
     *)
@@ -22717,34 +22717,46 @@ HEREDOC
     case "${NB_BROWSE_SERVER_TOOL:-}" in
       ncat)
         (
+          if ! ((${_USE_DEBUG:-0}))
+          then
+            exec 2>/dev/null
+          fi
+
           ncat                                      \
             --exec "${_MY_PATH} browse --respond"   \
             --keep-open                             \
             --listen                                \
-            "${NB_SERVER_HOST}" "${NB_SERVER_PORT}" \
-            2>/dev/null
+            "${NB_SERVER_HOST}" "${NB_SERVER_PORT}"
         ) &
         ;;
       nc|netcat)
         # TODO: improve concurrency
         (
+          if ! ((${_USE_DEBUG:-0}))
+          then
+            exec 2>/dev/null
+          fi
+
           while true
           do
             nc                                      \
               --exec "${_MY_PATH} browse --respond" \
               --listen                              \
               --local-port="${NB_SERVER_PORT}"      \
-              --source="${NB_SERVER_HOST}"          \
-              2>/dev/null
+              --source="${NB_SERVER_HOST}"
           done
         ) &
         ;;
       socat)
         (
+          if ! ((${_USE_DEBUG:-0}))
+          then
+            exec 2>/dev/null
+          fi
+
           socat                                                                               \
             tcp-listen:"${NB_SERVER_PORT}",bind="${NB_SERVER_HOST:-localhost}",reuseaddr,fork \
-            "system:{ ${_MY_PATH} browse --respond; }"                                        \
-            2>/dev/null
+            "system:{ ${_MY_PATH} browse --respond; }"
         ) &
         ;;
       accept|bash)
@@ -25899,13 +25911,40 @@ HEREDOC
       local _normalized_input=
       _normalized_input="$(
         printf "%s\\n" "${__input}"           \
-          | LC_ALL=C sed -e 's/^n$//'         \
-          | LC_ALL=C sed -e 's/^n //'         \
-          | LC_ALL=C sed -e 's/^nb$//'        \
-          | LC_ALL=C sed -e 's/^nb //'        \
           | LC_ALL=C sed -e 's/^notes$//'     \
           | LC_ALL=C sed -e 's/^notes //'
       )"
+
+      if [[ "${_normalized_input}" =~ ^nb\ .* ]]
+      then
+        local _candidate_subcommand_or_notebook=
+        _candidate_subcommand_or_notebook="$(
+          printf "%s\\n" "${_normalized_input:-}" \
+            | LC_ALL=C sed -E -e 's/nb? ([^[:space:]]*)/\1/'
+        )"
+
+        local _notebook_names=()
+        _notebook_names=($(_notebooks --names --no-color --unarchived))
+
+        local _notebook_subcommand_names=(
+          a add create new ar archive author config configure current
+          d delete rm trash export import init o open p peek
+          rename move mv select st status s show unar unarchive u use
+        )
+
+        if  ! _contains     \
+              "${_candidate_subcommand_or_notebook:-}"  \
+              "${_notebook_names[@]:-}"                 \
+            && ! _contains  \
+              "${_candidate_subcommand_or_notebook:-}"  \
+              "${_notebook_subcommand_names[@]}"
+        then
+          _normalized_input="$(
+            printf "%s\\n" "${__input}" \
+              | LC_ALL=C sed -e 's/^nb //'
+          )"
+        fi
+      fi
 
       local _command_name=
 
@@ -25915,7 +25954,7 @@ HEREDOC
          [[ "${_normalized_input}" =~ ^h\     ]]
       then
         eval "\"${_MY_PATH}\" ${_normalized_input}" --shell   || :
-      elif [[ "${_normalized_input}" =~ ^use|^notebooks\ use  ]]
+      elif [[ "${_normalized_input}" =~ ^u\ .+|^use\ |^notebooks\ use|^notebooks\ u  ]]
       then
         eval "_${_normalized_input}"
       elif [[ "${_normalized_input}" =~ ^echo\ .*   ]]        ||
