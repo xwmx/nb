@@ -6259,6 +6259,13 @@ ${_title_basename_or_path_color/\[$' '\]/${_TPUT_SETAF_8}[ ]${_TPUT_SGR0}}"
         fi
       fi
 
+      if grep -q "## Done:" "${_list_path}/${__basename}" 2>/dev/null
+      then
+        _done_value=$(grep "## Done:" "${_list_path}/${__basename}" | head -1 | sed 's/## Done: //')
+        _item_info="${_item_info} | Done date : ${_done_value}"
+        _item_info_color="${_item_info_color} | Done date : ${_done_value}"
+      fi
+
       local _info_line=
       local _info_line_color=
 
@@ -26742,6 +26749,9 @@ _todo() {
                 "Unable to mark done: %s\\n"      \
                 "$(_todos tasks "${_selector:-}" "${_task_number}")"
             else
+              local _done_date="## Done: $(date +"%Y-%m-%d")"
+              _sed_i -e "/${_updated_task}/a\\${_done_date}" "${_selector_path}"
+
               _todos tasks "${_selector:-}" "${_task_number}"     \
                 | LC_ALL=C sed "3s/^/Done: /"
 
@@ -26757,6 +26767,9 @@ _todo() {
                 "Unable to mark done: %s\\n"      \
                 "$(_color_primary "${_selector:-}")"
             else
+              local _done_date="## Done: $(date +"%Y-%m-%d")"
+              _sed_i -e "/# \[x\]/a\\${_done_date}" "${_selector_path}"
+
               printf "Done: %s\\n" "$(_list "${_selector}")"
 
               _git checkpoint "${_notebook_path}" \
@@ -26780,6 +26793,8 @@ _todo() {
                 "Unable to undo: %s\\n"           \
                 "$(_todos tasks "${_selector:-}" "${_task_number}")"
             else
+              _sed_i -e "/${_updated_task}/,+1 { /## Done: [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/d }" "${_selector_path}"
+
               _todos tasks "${_selector:-}" "${_task_number}"       \
                 | LC_ALL=C sed "3s/^/Undone: /"
 
@@ -26795,6 +26810,8 @@ _todo() {
                 "Unable to undo: %s\\n"           \
                 "$(_color_primary "${_selector:-}")"
             else
+              _sed_i -e "/# \[ \]/,+1 { /## Done: [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/d }" "${_selector_path}"
+
               printf "Undone: %s\\n" "$(_list "${_selector}")"
 
               _git checkpoint "${_notebook_path}" \
@@ -26834,14 +26851,48 @@ _todo() {
         esac
       } | {
         local _counter=0
+        local _todo_tasks=()
+        declare -A _done_with_date_tasks
+        local _done_without_date_tasks=()
 
         local         __line=
         while read -r __line
         do
           _counter=$((_counter+1))
+          if [[ "${__line}" =~ ${NB_INDICATOR_TODO_DONE} ]]
+          then
+            if [[ "${__line}" =~ ([0-9]{4}-[0-9]{2}-[0-9]{2}) ]]
+            then
+              local _date=${BASH_REMATCH[1]}
+              _done_with_date_tasks["${_date}"]+="${__line}"$'\n'
+            else
+              _done_without_date_tasks+=("${__line}")
+            fi
+          else
+            _todo_tasks+=("${__line}")
+          fi
+        done
 
+        echo "TODO :"
+        for __line in "${_todo_tasks[@]}"
+        do
           printf "%s\\n" "${__line:-}"
         done
+
+        for _date in $(printf "%s\n" "${!_done_with_date_tasks[@]}" | sort)
+        do
+          echo "${_date} :"
+          printf "%s" "${_done_with_date_tasks[${_date}]}" | sed 's/| Done date : .*//g'
+        done
+
+        if (( ${#_done_without_date_tasks[@]} > 0 ))
+        then
+          echo "Done without date :"
+          for __line in "${_done_without_date_tasks[@]}"
+          do
+            printf "%s\\n" "${__line:-}"
+          done
+        fi
 
         if ! ((_counter))
         then
