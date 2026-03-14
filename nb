@@ -5874,7 +5874,7 @@ _list() {
   if ((_recursive))
   then
     {
-      find "${_list_path}" -type d -not -path '*/\.*' | sort
+      find "${_list_path}" -mindepth 1 \( -name '.*' -prune \) -o \( -type d -print \) | sort
     } | {
       local         __folder_path=
       while read -r __folder_path
