@@ -82,7 +82,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.25.2"
+_VERSION="7.25.3"
 
 # $_ME
 #
@@ -5874,7 +5874,7 @@ _list() {
   if ((_recursive))
   then
     {
-      find "${_list_path}" -type d -not -path '*/\.*' | sort
+      find "${_list_path}" -mindepth 1 \( -name '.*' -prune \) -o \( -type d -print \) | sort
     } | {
       local         __folder_path=
       while read -r __folder_path
@@ -22717,10 +22717,6 @@ HEREDOC
     case "${NB_BROWSE_SERVER_TOOL:-}" in
       ncat)
         (
-          if ! ((${_USE_DEBUG:-0}))
-          then
-            exec 2>/dev/null
-          fi
 
           ncat                                      \
             --exec "${_MY_PATH} browse --respond"   \
@@ -22732,11 +22728,6 @@ HEREDOC
       nc|netcat)
         # TODO: improve concurrency
         (
-          if ! ((${_USE_DEBUG:-0}))
-          then
-            exec 2>/dev/null
-          fi
-
           while true
           do
             nc                                      \
@@ -22749,11 +22740,6 @@ HEREDOC
         ;;
       socat)
         (
-          if ! ((${_USE_DEBUG:-0}))
-          then
-            exec 2>/dev/null
-          fi
-
           socat                                                                               \
             tcp-listen:"${NB_SERVER_PORT}",bind="${NB_SERVER_HOST:-localhost}",reuseaddr,fork \
             "system:{ ${_MY_PATH} browse --respond; }"
@@ -23254,7 +23240,12 @@ HEREDOC
 
   # start server
 
-  _browse_serve || : # TODO: return status
+  if ((${_USE_DEBUG:-0}))
+  then
+    _browse_serve             || : # TODO: return status
+  else
+    _browse_serve 2>/dev/null || : # TODO: return status
+  fi
 
   # request URL
 
