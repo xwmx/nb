@@ -23240,11 +23240,11 @@ HEREDOC
 
   # start server
 
-  if ! ((${_USE_DEBUG:-0}))
+  if ((${_USE_DEBUG:-0}))
   then
-    _browse_serve 2>/dev/null || : # TODO: return status
-  else
     _browse_serve             || : # TODO: return status
+  else
+    _browse_serve 2>/dev/null || : # TODO: return status
   fi
 
   # request URL
