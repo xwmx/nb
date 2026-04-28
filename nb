@@ -82,7 +82,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.25.3"
+_VERSION="7.25.4"
 
 # $_ME
 #
@@ -14321,7 +14321,7 @@ _bookmark() {
       _title="$(
         cat "${_temp_file}"                   \
           | grep '<shreddit-title title="'    \
-          | sed -n 's/.*<shreddit-title title="\([^"]*\)".*/\1/p'
+          | sed -n 's/.*<shreddit-title title="\([^"]*\)".*/\1/p' || :
       )"
     fi
 
