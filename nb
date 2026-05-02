@@ -5534,11 +5534,20 @@ _list() {
   local _use_pager=0
   local _with_pinned=0
 
+  if [ -t 1 ]; then
+    _COLOR_ENABLED=1
+  else
+    _COLOR_ENABLED=0
+  fi
+
   while ((${#}))
   do
     case "${1:-}" in
       -a|--all)
         _limit=
+        ;;
+      --color)
+        _COLOR_ENABLED=1
         ;;
       -e|--excerpt)
         _print_excerpt=1
@@ -8598,11 +8607,17 @@ HEREDOC
     local _options=()
     local _query_names=()
 
+    if [ -t 1 ]; then
+      _notebook_color_enabled=1
+    else
+      _notebook_color_enabled=0
+    fi
+
     local __arg=
     for   __arg in "${@:-}"
     do
       case "${__arg}" in
-        --archived|--global|--local|--name*|--no*color|--path*|--unarchived)
+        --archived|--color|--global|--local|--name*|--no*color|--path*|--unarchived)
           _options+=("${__arg}")
           ;;
       esac
@@ -8610,6 +8625,9 @@ HEREDOC
       case "${__arg}" in
         --ar|--archived)
           _only_archived=1
+          ;;
+        --color)
+          _notebook_color_enabled=1
           ;;
         --global)
           _only_global=1
@@ -8987,11 +9005,20 @@ HEREDOC
     local _selector=
     local _test_archived=0
 
+    if [ -t 1 ]; then
+      _notebook_color_enabled=1
+    else
+      _notebook_color_enabled=0
+    fi
+
     while ((${#}))
     do
       case "${1:-}" in
         --archived)
           _test_archived=1
+          ;;
+        --color)
+          _notebook_color_enabled=1
           ;;
         --escaped)
           _print_escaped_name=1
@@ -9761,6 +9788,12 @@ _parse_options() {
   local _non_option_arguments=()
   local _previous_option=
 
+  if [ -t 1 ]; then
+    _COLOR_ENABLED=1
+  else
+    _COLOR_ENABLED=0
+  fi
+
   while ((${#}))
   do
     _previous_option="${_current_option:-}"
@@ -9800,6 +9833,9 @@ _parse_options() {
             _SUBCOMMAND="help"
             ;;
         esac
+        ;;
+      --color)
+        _COLOR_ENABLED=1
         ;;
       --debug)
         _USE_DEBUG=1
@@ -12909,11 +12945,20 @@ _add() {
   local _template=
   local _title=
 
+  if [ -t 1 ]; then
+    _COLOR_ENABLED=1
+  else
+    _COLOR_ENABLED=0
+  fi
+
   while ((${#}))
   do
     case "${1:-}" in
       -b|-br|--browse)
         _browse=1
+        ;;
+      --color)
+        _COLOR_ENABLED=1
         ;;
       -c|--content)
         if [[ -z "${2:-}"                   ]]
@@ -17514,6 +17559,12 @@ _search() {
   local _sort=0
   local _type=
 
+  if [ -t 1 ]; then
+    _COLOR_ENABLED=1
+  else
+    _COLOR_ENABLED=0
+  fi
+
   while ((${#}))
   do
     case "${1:-}" in
@@ -17561,6 +17612,9 @@ _search() {
 
           shift
         fi
+        ;;
+      --color)
+        _COLOR_ENABLED=1
         ;;
       --limit|-n|--num|--number|--per*)
         _limit="$(_option_get_value "${1}" "${2:-}")"
@@ -18988,6 +19042,12 @@ _show() {
   local _type=
   local _unresolved_arguments=()
 
+  if [ -t 1 ]; then
+    _COLOR_ENABLED=1
+  else
+    _COLOR_ENABLED=0
+  fi
+
   while ((${#}))
   do
     case "${1:-}" in
@@ -19000,6 +19060,9 @@ _show() {
         ;;
       -b|--br|--browse)
         _browse=1
+        ;;
+      --color)
+        _COLOR_ENABLED=1
         ;;
       --filename|--basename)
         _print_filename=1
