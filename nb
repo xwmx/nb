@@ -6174,8 +6174,8 @@ _list() {
             _first_line="${_maybe_title#__first_line:}"
             _maybe_title=
           else
-            _title_basename_or_path="${_maybe_title}"
-            _title_basename_or_path_color="${_maybe_title}"
+            _title_basename_or_path="$(printf '%s' "${_maybe_title}" | sed 's/ \(created\|done\|due\):[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}//g')"
+            _title_basename_or_path_color="$(printf '%s' "${_maybe_title}" | sed 's/ \(created\|done\|due\):[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}//g')"
           fi
         fi
       fi
@@ -6259,12 +6259,7 @@ ${_title_basename_or_path_color/\[$' '\]/${_TPUT_SETAF_8}[ ]${_TPUT_SGR0}}"
         fi
       fi
 
-      if grep -q "## Done:" "${_list_path}/${__basename}" 2>/dev/null
-      then
-        _done_value=$(grep "## Done:" "${_list_path}/${__basename}" | head -1 | sed 's/## Done: //')
-        _item_info="${_item_info} | Done date : ${_done_value}"
-        _item_info_color="${_item_info_color} | Done date : ${_done_value}"
-      fi
+
 
       local _info_line=
       local _info_line_color=
@@ -26649,13 +26644,9 @@ _todo() {
         _exit_1 _help "todo"
       fi
 
-      local _todo_content="# [ ] ${_title:-}${_NEWLINE}"
+      local _todo_content="# [ ] ${_title:-} created:$(date +"%Y-%m-%d")${_due_datetime:+ due:${_due_datetime}}${_NEWLINE}"
 
-      if [[ -n "${_due_datetime:-}" ]]
-      then
-        _todo_content+="${_NEWLINE}## Due${_NEWLINE}"
-        _todo_content+="${_NEWLINE}${_due_datetime:-}${_NEWLINE}"
-      fi
+
 
       if [[ -n "${_description:-}"  ]]
       then
@@ -26740,8 +26731,8 @@ _todo() {
                 "Unable to mark done: %s\\n"      \
                 "$(_todos tasks "${_selector:-}" "${_task_number}")"
             else
-              local _done_date="## Done: $(date +"%Y-%m-%d")"
-              _sed_i -e "/${_updated_task}/a\\${_done_date}" "${_selector_path}"
+              local _done_date="done:$(date +"%Y-%m-%d")"
+              _sed_i -e "s|${_updated_task}|${_updated_task} ${_done_date}|" "${_selector_path}"
 
               _todos tasks "${_selector:-}" "${_task_number}"     \
                 | LC_ALL=C sed "3s/^/Done: /"
@@ -26758,8 +26749,8 @@ _todo() {
                 "Unable to mark done: %s\\n"      \
                 "$(_color_primary "${_selector:-}")"
             else
-              local _done_date="## Done: $(date +"%Y-%m-%d")"
-              _sed_i -e "/# \[x\]/a\\${_done_date}" "${_selector_path}"
+              local _done_date="done:$(date +"%Y-%m-%d")"
+              _sed_i -e "s/^# \[x\].*$/& ${_done_date}/" "${_selector_path}"
 
               printf "Done: %s\\n" "$(_list "${_selector}")"
 
@@ -26784,7 +26775,7 @@ _todo() {
                 "Unable to undo: %s\\n"           \
                 "$(_todos tasks "${_selector:-}" "${_task_number}")"
             else
-              _sed_i -e "/${_updated_task}/,+1 { /## Done: [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/d }" "${_selector_path}"
+              _sed_i -e "s|\(${_updated_task}\) done:[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}|\1|" "${_selector_path}"
 
               _todos tasks "${_selector:-}" "${_task_number}"       \
                 | LC_ALL=C sed "3s/^/Undone: /"
@@ -26801,7 +26792,7 @@ _todo() {
                 "Unable to undo: %s\\n"           \
                 "$(_color_primary "${_selector:-}")"
             else
-              _sed_i -e "/# \[ \]/,+1 { /## Done: [0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/d }" "${_selector_path}"
+              _sed_i -e "s/\(# \[ \].*\) done:[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}/\1/" "${_selector_path}"
 
               printf "Undone: %s\\n" "$(_list "${_selector}")"
 
@@ -26852,9 +26843,22 @@ _todo() {
           _counter=$((_counter+1))
           if [[ "${__line}" =~ ${NB_INDICATOR_TODO_DONE} ]]
           then
-            if [[ "${__line}" =~ ([0-9]{4}-[0-9]{2}-[0-9]{2}) ]]
+            local _done_date_value=""
+            local _stripped_line="$(printf '%s' "${__line}" | sed 's/\x1b\[[0-9;]*m//g')"
+          if [[ "${_stripped_line}" =~ \[([0-9]+)\] ]]
             then
-              local _date=${BASH_REMATCH[1]}
+              local _item_id="${BASH_REMATCH[1]}"
+              local _item_filename=""
+              local _nb_path="${_notebook_path:-$(_notebooks current --path 2>/dev/null)}"
+              _item_filename="$(LC_ALL=C sed "${_item_id}q;d" "${_nb_path}/.index" 2>/dev/null)"
+              if [[ -n "${_item_filename}" ]]
+              then
+                _done_date_value="$(head -1 "${_nb_path}/${_item_filename}" 2>/dev/null | grep -o 'done:[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}' | sed 's/done://' || true)"
+              fi
+            fi
+            if [[ -n "${_done_date_value}" ]]
+            then
+              local _date="${_done_date_value}"
               _done_with_date_tasks["${_date}"]+="${__line}"$'\n'
             else
               _done_without_date_tasks+=("${__line}")
@@ -26867,13 +26871,13 @@ _todo() {
         echo "TODO :"
         for __line in "${_todo_tasks[@]}"
         do
-          printf "%s\\n" "${__line:-}"
+          printf "%s\\n" "$(printf '%s' "${__line:-}" | sed 's/ \(created\|done\|due\):[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}//g')"
         done
 
         for _date in $(printf "%s\n" "${!_done_with_date_tasks[@]}" | sort)
         do
           echo "${_date} :"
-          printf "%s" "${_done_with_date_tasks[${_date}]}" | sed 's/| Done date : .*//g'
+          printf "%s" "${_done_with_date_tasks[${_date}]}" | sed 's/ \(created\|done\|due\):[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}//g'
         done
 
         if (( ${#_done_without_date_tasks[@]} > 0 ))
@@ -26881,7 +26885,7 @@ _todo() {
           echo "Done without date :"
           for __line in "${_done_without_date_tasks[@]}"
           do
-            printf "%s\\n" "${__line:-}"
+            printf "%s\\n" "$(printf '%s' "${__line:-}" | sed 's/ \(created\|done\|due\):[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}//g')"
           done
         fi
 
