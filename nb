@@ -5509,46 +5509,47 @@ $(_color_primary "Examples"):
   ${_ME} example:list
 HEREDOC
 }
-# _resolve_ids_batch()
-#
-# Usage:
-#   _resolve_ids_batch <index-path> <basename>...
-#
-# Description:
-#   Resolve the 1-indexed `.index` line number ("id") for each <basename>
-#   passed as an argument, in a single linear pass over <index-path> using
-#   `awk`, rather than one `sed`/`grep` invocation (or bash loop) per
-#   basename.
-#
-#   Basenames are read from standard input (one per line) instead of
-#   positional arguments so this scales to large `--all` listings without
-#   hitting argument-list limits.
-#
-#   Prints "<basename>\t<id>" for each requested basename that is found.
-#   Basenames that are not found in the index are omitted from the output.
-_resolve_ids_batch() {
-  local _index_path="${1:-}"
-
-  [[ -z "${_index_path:-}" ]] && return 0
-  [[ -e "${_index_path}"   ]] || return 0
-
-  # ${@} (via stdin here) may contain duplicate basenames (e.g. a pinned
-  # item that also appears in the main pass); awk's `in` check naturally
-  # de-dupes since `want` is a set keyed by basename.
-  awk -v _index_path="${_index_path}" '
-    # First file (stdin): the basenames we need ids for.
-    (NR == FNR) {
-      want[$0] = 1
-      next
-    }
-    # Second file: .index itself. FNR is the 1-indexed line number,
-    # which is the id.
-    ($0 in want) {
-      print $0 "\t" FNR
-    }
-  ' - "${_index_path}"
-}
 _list() {
+  # _list_resolve_ids_batch()
+  #
+  # Usage:
+  #   _list_resolve_ids_batch <index-path> <basename>...
+  #
+  # Description:
+  #   Resolve the 1-indexed `.index` line number ("id") for each <basename>
+  #   passed as an argument, in a single linear pass over <index-path> using
+  #   `awk`, rather than one `sed`/`grep` invocation (or bash loop) per
+  #   basename.
+  #
+  #   Basenames are read from standard input (one per line) instead of
+  #   positional arguments so this scales to large `--all` listings without
+  #   hitting argument-list limits.
+  #
+  #   Prints "<basename>\t<id>" for each requested basename that is found.
+  #   Basenames that are not found in the index are omitted from the output.
+  _list_resolve_ids_batch() {
+    local _index_path="${1:-}"
+
+    [[ -z "${_index_path:-}" ]] && return 0
+    [[ -e "${_index_path}"   ]] || return 0
+
+    # ${@} (via stdin here) may contain duplicate basenames (e.g. a pinned
+    # item that also appears in the main pass); awk's `in` check naturally
+    # de-dupes since `want` is a set keyed by basename.
+    awk -v _index_path="${_index_path}" '
+      # First file (stdin): the basenames we need ids for.
+      (NR == FNR) {
+        want[$0] = 1
+        next
+      }
+      # Second file: .index itself. FNR is the 1-indexed line number,
+      # which is the id.
+      ($0 in want) {
+        print $0 "\t" FNR
+      }
+    ' - "${_index_path}"
+  }
+
   local _error_on_empty=0
   local _excerpt_length=3
   local _folders_first=0
@@ -6395,7 +6396,7 @@ ${_title_basename_or_path_color/\[$' '\]/${_TPUT_SETAF_8}[ ]${_TPUT_SGR0}}"
           _resolved_ids["${__resolved_basename}"]="${__resolved_id}"
         done < <(
           printf "%s\\n" "${_sel_basenames[@]}" \
-            | _resolve_ids_batch "${_list_path:-}/.index"
+            | _list_resolve_ids_batch "${_list_path:-}/.index"
         )
 
         # If every buffered basename resolved, we're done. Otherwise,
