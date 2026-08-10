@@ -5509,6 +5509,45 @@ $(_color_primary "Examples"):
   ${_ME} example:list
 HEREDOC
 }
+# _resolve_ids_batch()
+#
+# Usage:
+#   _resolve_ids_batch <index-path> <basename>...
+#
+# Description:
+#   Resolve the 1-indexed `.index` line number ("id") for each <basename>
+#   passed as an argument, in a single linear pass over <index-path> using
+#   `awk`, rather than one `sed`/`grep` invocation (or bash loop) per
+#   basename.
+#
+#   Basenames are read from standard input (one per line) instead of
+#   positional arguments so this scales to large `--all` listings without
+#   hitting argument-list limits.
+#
+#   Prints "<basename>\t<id>" for each requested basename that is found.
+#   Basenames that are not found in the index are omitted from the output.
+_resolve_ids_batch() {
+  local _index_path="${1:-}"
+
+  [[ -z "${_index_path:-}" ]] && return 0
+  [[ -e "${_index_path}"   ]] || return 0
+
+  # ${@} (via stdin here) may contain duplicate basenames (e.g. a pinned
+  # item that also appears in the main pass); awk's `in` check naturally
+  # de-dupes since `want` is a set keyed by basename.
+  awk -v _index_path="${_index_path}" '
+    # First file (stdin): the basenames we need ids for.
+    (NR == FNR) {
+      want[$0] = 1
+      next
+    }
+    # Second file: .index itself. FNR is the 1-indexed line number,
+    # which is the id.
+    ($0 in want) {
+      print $0 "\t" FNR
+    }
+  ' - "${_index_path}"
+}
 _list() {
   local _error_on_empty=0
   local _excerpt_length=3
@@ -6043,6 +6082,21 @@ _list() {
       _line_wrap=0
     fi
 
+    # Selection-phase buffers.
+    #
+    # `id` resolution is deferred until after the selection loop so it can
+    # be done in a single batched `awk` pass over `.index` (one linear scan
+    # total) instead of one `sed` scan of `.index` per printed item. Only
+    # basenames that actually survive filtering / limit / pagination are
+    # buffered here, so the batch stays bounded by `--limit` in the common
+    # case, and by the full listing only when `--all` is used.
+    local _sel_basenames=()
+    local _sel_indicators=()
+    local _sel_extra_length=()
+    local _sel_title_or_path=()
+    local _sel_title_or_path_color=()
+    local _sel_first_line=()
+
     # begin main loop
 
     local         __basename=
@@ -6244,46 +6298,161 @@ ${_title_basename_or_path_color/\[$' '\]/${_TPUT_SETAF_8}[ ]${_TPUT_SGR0}}"
         fi
       fi
 
-      local _item_info="${_indicators}${_title_basename_or_path}"
-      local _item_info_color="${_indicators}${_title_basename_or_path_color}"
-
-      if ! ((_list_filenames))  &&
-         ! ((_list_paths))      &&
-         ! ((_print_excerpt))   &&
-         [[ "${_title_basename_or_path}" == "${__basename}" ]]
-      then
-        if [[ -n "${_first_line:-}" ]]
-        then
-          _item_info="${_item_info} ${_MD} \"${_first_line}\""
-          _item_info_color="${_item_info_color} ${_MD} \"${_first_line}\""
-        fi
-      fi
-
-      local _info_line=
-      local _info_line_color=
-
       if ((_no_id))
       then
-        _info_line="${_item_info}"
-        _info_line_color="${_item_info_color}"
-      else
-        local _escaped_basename="${__basename}"
-        _escaped_basename="${_escaped_basename//\[/\\\[}"
-        _escaped_basename="${_escaped_basename//\]/\\\]}"
+        # No id needed, so there's nothing to batch: print immediately,
+        # same as before.
+        local _item_info="${_indicators}${_title_basename_or_path}"
+        local _item_info_color="${_indicators}${_title_basename_or_path_color}"
 
-        local _item_id=
-        # use `sed` directly instead of `_index get_id` for performance
-        _item_id="$(LC_ALL=C sed -n "/^${_escaped_basename:-}$/=" "${_list_path:-}/.index")"
-
-        if [[ -z "${_item_id:-}" ]]
+        if ! ((_list_filenames))  &&
+           ! ((_list_paths))      &&
+           ! ((_print_excerpt))   &&
+           [[ "${_title_basename_or_path}" == "${__basename}" ]]
         then
-          _index reconcile "${_list_path:-}" --ancestors --commit
-
-          _item_id="$(LC_ALL=C sed -n "/^${_escaped_basename:-}$/=" "${_list_path:-}/.index")"
+          if [[ -n "${_first_line:-}" ]]
+          then
+            _item_info="${_item_info} ${_MD} \"${_first_line}\""
+            _item_info_color="${_item_info_color} ${_MD} \"${_first_line}\""
+          fi
         fi
 
+        if ! ((_line_wrap))
+        then
+          _wrap off
+        fi
+
+        if ((_COLOR_ENABLED))
+        then
+          printf "%s" "${_item_info_color}"
+        else
+          printf "%s" "${_item_info}"
+        fi
+
+        if ! ((_line_wrap))
+        then
+          _wrap on
+        fi
+
+        # end of line
+        printf "\\n"
+
+        if ((_print_excerpt))                   &&
+           [[ "${_excerpt_length}" =~ ^[0-9] ]] &&
+           _file_is_text "${_list_path}/${__basename}"
+        then # excerpt is specified with a non-zero digit, required by `head`
+          _print_line "${_item_info:-}"         \
+            --no-wrap                           \
+            --visible-length "${_extra_length:-0}"
+
+          if ((${_excerpt_length:-0}))
+          then
+            head -n "${_excerpt_length}" "${_list_path}/${__basename}" \
+              | _highlight_syntax_if_available "${__basename##*.}"
+
+            printf "\\n"
+          fi
+        fi
+      else
+        # id is needed for display. Defer resolution: buffer everything
+        # needed to print this item, and resolve ids for all buffered
+        # items together after the loop, in one batched pass over
+        # `.index` instead of one `sed` scan per item here.
+        _sel_basenames+=("${__basename}")
+        _sel_indicators+=("${_indicators}")
+        _sel_extra_length+=("${_extra_length:-0}")
+        _sel_title_or_path+=("${_title_basename_or_path}")
+        _sel_title_or_path_color+=("${_title_basename_or_path_color}")
+        _sel_first_line+=("${_first_line:-}")
+      fi
+
+      _printed_count=$((_printed_count+1))
+    done
+
+    # end main loop
+
+    # id resolution + print phase
+    #
+    # Resolve ids for every buffered item in a single `awk` pass over
+    # `.index` (one linear scan total), then print. This replaces what
+    # was previously one `sed` scan of `.index` per printed item.
+    if ((${#_sel_basenames[@]}))
+    then
+      declare -A _resolved_ids=()
+
+      local _reconciled_once=0
+      local _resolve_attempt=
+
+      for _resolve_attempt in 1 2
+      do
+        _resolved_ids=()
+
+        local __resolved_line=
+        while IFS=$'\t' read -r __resolved_basename __resolved_id
+        do
+          [[ -z "${__resolved_basename:-}" ]] && continue
+
+          _resolved_ids["${__resolved_basename}"]="${__resolved_id}"
+        done < <(
+          printf "%s\\n" "${_sel_basenames[@]}" \
+            | _resolve_ids_batch "${_list_path:-}/.index"
+        )
+
+        # If every buffered basename resolved, we're done. Otherwise,
+        # the index may be stale -- reconcile once and retry, mirroring
+        # the original per-item fallback behavior.
+        local _all_resolved=1
+        local __check_basename=
+
+        for __check_basename in "${_sel_basenames[@]}"
+        do
+          if [[ -z "${_resolved_ids[${__check_basename}]:-}" ]]
+          then
+            _all_resolved=0
+
+            break
+          fi
+        done
+
+        if ((_all_resolved)) || ((_reconciled_once))
+        then
+          break
+        fi
+
+        _index reconcile "${_list_path:-}" --ancestors --commit
+
+        _reconciled_once=1
+      done
+
+      local _max_identifier="${_maybe_selector_context:-}${_max_id:-}"
+
+      local __i=
+      for ((__i=0; __i < ${#_sel_basenames[@]}; __i++))
+      do
+        local __basename="${_sel_basenames[__i]}"
+        local _indicators="${_sel_indicators[__i]}"
+        local _extra_length="${_sel_extra_length[__i]}"
+        local _title_basename_or_path="${_sel_title_or_path[__i]}"
+        local _title_basename_or_path_color="${_sel_title_or_path_color[__i]}"
+        local _first_line="${_sel_first_line[__i]}"
+
+        local _item_info="${_indicators}${_title_basename_or_path}"
+        local _item_info_color="${_indicators}${_title_basename_or_path_color}"
+
+        if ! ((_list_filenames))  &&
+           ! ((_list_paths))      &&
+           ! ((_print_excerpt))   &&
+           [[ "${_title_basename_or_path}" == "${__basename}" ]]
+        then
+          if [[ -n "${_first_line:-}" ]]
+          then
+            _item_info="${_item_info} ${_MD} \"${_first_line}\""
+            _item_info_color="${_item_info_color} ${_MD} \"${_first_line}\""
+          fi
+        fi
+
+        local _item_id="${_resolved_ids[${__basename}]:-}"
         local _item_identifier="${_maybe_selector_context:-}${_item_id:-}"
-        local _max_identifier="${_maybe_selector_context:-}${_max_id:-}"
 
         local _brackets_identifier="[${_item_identifier:-}]"
         # avoid calling `_color_brackets` for performance
@@ -6304,51 +6473,47 @@ ${_TPUT_SGR0}"
         local _spaces=
         printf -v _spaces '%*s' "${_spaces_length}" ""
 
-        _info_line="${_brackets_identifier}${_spaces}${_item_info}"
-        _info_line_color="${_brackets_identifier_color}${_spaces}${_item_info_color}"
-      fi
+        local _info_line="${_brackets_identifier}${_spaces}${_item_info}"
+        local _info_line_color="${_brackets_identifier_color}${_spaces}${_item_info_color}"
 
-      if ! ((_line_wrap))
-      then
-        _wrap off
-      fi
-
-      if ((_COLOR_ENABLED))
-      then
-        printf "%s" "${_info_line_color}"
-      else
-        printf "%s" "${_info_line}"
-      fi
-
-      if ! ((_line_wrap))
-      then
-        _wrap on
-      fi
-
-      # end of line
-      printf "\\n"
-
-      if ((_print_excerpt))                   &&
-         [[ "${_excerpt_length}" =~ ^[0-9] ]] &&
-         _file_is_text "${_list_path}/${__basename}"
-      then # excerpt is specified with a non-zero digit, required by `head`
-        _print_line "${_info_line:-}"         \
-          --no-wrap                           \
-          --visible-length "${_extra_length:-0}"
-
-        if ((${_excerpt_length:-0}))
+        if ! ((_line_wrap))
         then
-          head -n "${_excerpt_length}" "${_list_path}/${__basename}" \
-            | _highlight_syntax_if_available "${__basename##*.}"
-
-          printf "\\n"
+          _wrap off
         fi
-      fi
 
-      _printed_count=$((_printed_count+1))
-    done
+        if ((_COLOR_ENABLED))
+        then
+          printf "%s" "${_info_line_color}"
+        else
+          printf "%s" "${_info_line}"
+        fi
 
-    # end main loop
+        if ! ((_line_wrap))
+        then
+          _wrap on
+        fi
+
+        # end of line
+        printf "\\n"
+
+        if ((_print_excerpt))                   &&
+           [[ "${_excerpt_length}" =~ ^[0-9] ]] &&
+           _file_is_text "${_list_path}/${__basename}"
+        then # excerpt is specified with a non-zero digit, required by `head`
+          _print_line "${_info_line:-}"         \
+            --no-wrap                           \
+            --visible-length "${_extra_length:-0}"
+
+          if ((${_excerpt_length:-0}))
+          then
+            head -n "${_excerpt_length}" "${_list_path}/${__basename}" \
+              | _highlight_syntax_if_available "${__basename##*.}"
+
+            printf "\\n"
+          fi
+        fi
+      done
+    fi
 
     if [[   -n "${_limit:-}"          ]] && ! ((_paginate))
     then
