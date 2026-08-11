@@ -20256,6 +20256,12 @@ $(_color_primary "Shortcut Alias"):
 HEREDOC
 }
 _browse() {
+  export NB_ACE_ENABLED="${NB_ACE_ENABLED:-0}"
+  export NB_CUSTOM_CSS="${NB_CUSTOM_CSS:-}"
+  export NB_CUSTOM_CSS_URL="${NB_CUSTOM_CSS_URL:-}"
+  export NB_CUSTOM_JS="${NB_CUSTOM_JS:-}"
+  export NB_CUSTOM_JS_URL="${NB_CUSTOM_JS_URL:-}"
+
   # Inspired by bashttpd: https://github.com/avleen/bashttpd
 
   # _browse_http_response_message()
