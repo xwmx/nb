@@ -22719,7 +22719,6 @@ HEREDOC
     case "${NB_BROWSE_SERVER_TOOL:-}" in
       ncat)
         (
-
           ncat                                      \
             --exec "${_MY_PATH} browse --respond"   \
             --keep-open                             \
