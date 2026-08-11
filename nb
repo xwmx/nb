@@ -22740,7 +22740,7 @@ HEREDOC
             --exec "${_MY_PATH} browse --respond"   \
             --keep-open                             \
             --listen                                \
-            "${NB_SERVER_HOST}" "${NB_SERVER_PORT}"
+            "${NB_SERVER_HOST}" "${NB_SERVER_PORT}" || :
         ) &
         ;;
       nc|netcat)
