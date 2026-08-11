@@ -100,6 +100,11 @@ _setup() {
   # The port used for the `browse` server.
   export NB_SERVER_PORT=6789
 
+  # $NB_TESTING
+  #
+  # Always set to 1 within tests.
+  export NB_TESTING=1
+
   #############################################################################
 
   # $_BOOKMARK
