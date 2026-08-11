@@ -1224,6 +1224,11 @@ _NB_TEMP_DIRECTORY="$(mktemp -d)"
 # A list of PIDS that should be terminated on exit.
 _NB_TEMP_PIDS=()
 
+# $_MY_PID
+#
+# The PID of this program.
+_MY_PID="$$"
+
 # _temp()
 #
 # Usage:
@@ -1269,6 +1274,12 @@ _temp() {
       fi
       ;;
     cleanup)
+      # Skip running cleanup if we are in a subshell or child process.
+      if [[ "$$" != "${_MY_PID}" ]]
+      then
+        return 0
+      fi
+
       if _temp_validate_path "${_NB_TEMP_DIRECTORY:?}"
       then
         rm -rf "${_NB_TEMP_DIRECTORY:?}"
