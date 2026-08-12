@@ -182,11 +182,6 @@ jobs:
           nmap --version
           sw_vers
           /usr/libexec/ApplicationFirewall/socketfilterfw --getglobalstate
-      - name: "Test ncat"
-        run: |
-          ncat -l 127.0.0.1 6789 &
-          sleep 1
-          curl -v http://127.0.0.1:6789 || echo "CURL FAILED"
       - name: "Run bats tests"
         # use `script` for a PTY
         run:  script -q /dev/null bats --trace test
