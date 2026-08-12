@@ -22760,7 +22760,7 @@ HEREDOC
 
           if [[ -n "${_NB_TEMP_DIRECTORY:-}" ]]
           then
-            printf "%s\n" "${_ncat_pid}" > "${_NB_TEMP_DIRECTORY}/ncat.pid"
+            printf "%s\\n" "${_ncat_pid}" > "${_NB_TEMP_DIRECTORY}/ncat.pid"
           fi
 
           wait "${_ncat_pid}" 2>/dev/null || true
