@@ -12036,7 +12036,7 @@ HEREDOC
 
     if ! ((_only_body))
     then
-      if ((${NB_ACE_ENABLED:-0})) && ! ((${NB_TESTING:-0}))
+      if ((${NB_ACE_ENABLED:-0}))
       then
         cat <<HEREDOC
 <script src="/--ace/ace.js"></script>
