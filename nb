@@ -22769,13 +22769,11 @@ HEREDOC
       nc|netcat)
         # TODO: improve concurrency
         (
-          local _netcat_command=
+          local _netcat_command="nc"
 
           if _command_exists "netcat"
           then
             _netcat_command="netcat"
-          else
-            _netcat_command="nc"
           fi
 
           while true
