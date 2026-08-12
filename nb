@@ -22769,9 +22769,18 @@ HEREDOC
       nc|netcat)
         # TODO: improve concurrency
         (
+          local _netcat_command=
+
+          if _command_exists "netcat"
+          then
+            _netcat_command="netcat"
+          else
+            _netcat_command="nc"
+          fi
+
           while true
           do
-            nc                                      \
+            "${_netcat_command}"                    \
               --exec "${_MY_PATH} browse --respond" \
               --listen                              \
               --local-port="${NB_SERVER_PORT}"      \
