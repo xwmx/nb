@@ -2,7 +2,70 @@
 
 load test_helper
 
-# vustom css and javascript ####################################################
+# general #####################################################################
+
+@test "'browse' dependencies function as expected." {
+  {
+    "${_NB}" init
+    "${_NB}" add "Example Folder" --type "folder"
+    sleep 1
+  }
+
+  (ncat --exec "${_NB} browse --respond" --listen --source-port "6789" \
+    >"${_TMP_DIR}/ncat.out" 2>"${_TMP_DIR}/ncat.err") &
+  ncat_pid=$!
+
+  sleep 1
+
+  run curl -fsS -D - "http://localhost:6789/home:?--gui"
+
+  status=$?
+  wait "${ncat_pid}" || true
+
+  printf 'ncat stdout:\n'; cat "${_TMP_DIR}/ncat.out"
+  printf 'ncat stderr:\n'; cat "${_TMP_DIR}/ncat.err"
+  printf 'curl status: %s\n' "${status}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq  0           ]]
+
+  [[    "${output}"  =~   \<html.*\>  ]]
+}
+
+@test "'browse --print' prints markup." {
+  {
+    "${_NB}" init
+
+    sleep 1
+
+    echo "${_NB}"
+    echo "$(which "${_NB}")"
+  }
+
+  run "${_NB}" browse --print
+
+  # run timeout 15 "${_NB}" browse --print
+
+  # run bash -c 'timeout 15 "'"${_NB}"'" browse --print'
+
+  # run bash -c '
+  #   set -x
+  #   "'"${_NB}"'" browse --print
+  # '
+
+  # echo $?
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq  0           ]]
+
+  [[    "${output}"  =~   \<html.*\>  ]]
+}
+
+# custom css and javascript ####################################################
 
 @test "'browse' omits custom css or javascript tags by default." {
   {

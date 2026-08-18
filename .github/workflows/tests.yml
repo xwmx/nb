@@ -176,9 +176,15 @@ jobs:
           ${{ steps.setup-chrome.outputs.chrome-path }} --version
       - name: "Set $TERM=xterm"
         run:  printf "TERM=xterm\\n" >> $GITHUB_ENV
+      - name: "Print Environment"
+        run: |
+          ncat --version
+          nmap --version
+          sw_vers
+          /usr/libexec/ApplicationFirewall/socketfilterfw --getglobalstate
       - name: "Run bats tests"
         # use `script` for a PTY
-        run:  script -q /dev/null bats test
+        run:  script -q /dev/null bats --trace test
         # unbuffer implementation:
         # run:  unbuffer bats --trace test
       # - name: "Install Go"

@@ -82,7 +82,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.25.4"
+_VERSION="7.25.5"
 
 # $_ME
 #
@@ -334,6 +334,8 @@ _debug() {
 
   if ((${_USE_DEBUG:-0}))
   then
+    set -x
+
     __DEBUG_COUNTER=$((__DEBUG_COUNTER+1))
     printf "🐛  %s" "${__DEBUG_COUNTER} "
 
@@ -1222,6 +1224,11 @@ _NB_TEMP_DIRECTORY="$(mktemp -d)"
 # A list of PIDS that should be terminated on exit.
 _NB_TEMP_PIDS=()
 
+# $_MY_PID
+#
+# The PID of this program.
+_MY_PID="$$"
+
 # _temp()
 #
 # Usage:
@@ -1267,8 +1274,25 @@ _temp() {
       fi
       ;;
     cleanup)
+      # Skip running cleanup if we are in a subshell or child process.
+      if [[ "$$" != "${_MY_PID}" ]]
+      then
+        return 0
+      fi
+
       if _temp_validate_path "${_NB_TEMP_DIRECTORY:?}"
       then
+        if [[ -f "${_NB_TEMP_DIRECTORY}/ncat.pid" ]]
+        then
+          local _ncat_pid=
+          _ncat_pid="$(cat "${_NB_TEMP_DIRECTORY}/ncat.pid" 2>/dev/null)"
+
+          if [[ -n "${_ncat_pid:-}" ]]
+          then
+            kill -9 "${_ncat_pid}" 2>/dev/null || :
+          fi
+        fi
+
         rm -rf "${_NB_TEMP_DIRECTORY:?}"
       fi
 
@@ -1277,7 +1301,7 @@ _temp() {
       do
         [[ -n "${__pid:-}" ]] || continue
 
-        kill "${__pid}" 2>/dev/null || :
+        kill -9 "${__pid}" 2>/dev/null || :
       done
       ;;
     dir|directory)
@@ -20409,6 +20433,12 @@ $(_color_primary "Shortcut Alias"):
 HEREDOC
 }
 _browse() {
+  export NB_ACE_ENABLED="${NB_ACE_ENABLED:-0}"
+  export NB_CUSTOM_CSS="${NB_CUSTOM_CSS:-}"
+  export NB_CUSTOM_CSS_URL="${NB_CUSTOM_CSS_URL:-}"
+  export NB_CUSTOM_JS="${NB_CUSTOM_JS:-}"
+  export NB_CUSTOM_JS_URL="${NB_CUSTOM_JS_URL:-}"
+
   # Inspired by bashttpd: https://github.com/avleen/bashttpd
 
   # _browse_http_response_message()
@@ -22883,20 +22913,38 @@ HEREDOC
     case "${NB_BROWSE_SERVER_TOOL:-}" in
       ncat)
         (
+          trap '' INT TERM HUP
 
           ncat                                      \
             --exec "${_MY_PATH} browse --respond"   \
             --keep-open                             \
             --listen                                \
-            "${NB_SERVER_HOST}" "${NB_SERVER_PORT}"
+            "${NB_SERVER_HOST}" "${NB_SERVER_PORT}" \
+            < /dev/null >/dev/null 2>&1 &
+
+          local _ncat_pid="${!}"
+
+          if [[ -n "${_NB_TEMP_DIRECTORY:-}" ]]
+          then
+            printf "%s\\n" "${_ncat_pid}" > "${_NB_TEMP_DIRECTORY}/ncat.pid"
+          fi
+
+          wait "${_ncat_pid}" 2>/dev/null || true
         ) &
         ;;
       nc|netcat)
         # TODO: improve concurrency
         (
+          local _netcat_command="nc"
+
+          if _command_exists "netcat"
+          then
+            _netcat_command="netcat"
+          fi
+
           while true
           do
-            nc                                      \
+            "${_netcat_command}"                    \
               --exec "${_MY_PATH} browse --respond" \
               --listen                              \
               --local-port="${NB_SERVER_PORT}"      \
