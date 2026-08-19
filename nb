@@ -7442,6 +7442,7 @@ _ls() {
   # Build list options.
 
   local _list_options=(${_arguments[@]:-})
+  local _resolved_limit=
 
   if ((_with_pinned))
   then
@@ -7457,7 +7458,8 @@ _ls() {
 
   if [[ -n "${_limit:-}"                            ]]
   then
-    _list_options+=("--limit" "${_limit}")
+    _resolved_limit="${_limit}"
+    _list_options+=("--limit" "${_resolved_limit}")
   elif ! ((_all))                                       &&
        [[ -z "${_AUTO_LIMIT:-}"                     ]]  &&
        {
@@ -7469,7 +7471,8 @@ _ls() {
          }
        }
   then
-    _list_options+=("--limit" "${NB_LIMIT}")
+    _resolved_limit="${NB_LIMIT}"
+    _list_options+=("--limit" "${_resolved_limit}")
   fi
 
   # Resolve selector folders before printing header to minimize pause
@@ -7550,7 +7553,8 @@ _ls() {
       _auto_limit_amount="${_AUTO_LIMIT_MAX}"
     fi
 
-    _list_options+=("--limit" "${_auto_limit_amount:-1}")
+    _resolved_limit="${_auto_limit_amount:-1}"
+    _list_options+=("--limit" "${_resolved_limit:-}")
   fi
 
   local _list_error=
@@ -7654,6 +7658,14 @@ _ls() {
       fi
     }
   } | {
+    local _buffer_list=0
+    local _list_output=
+
+    if [[ "${_resolved_limit:-99999}" -lt 250 ]]
+    then
+      _buffer_list=1
+    fi
+
     # Header
     # ------
     #
@@ -7663,8 +7675,11 @@ _ls() {
     # immediately (while List is still computing) and then sitting on
     # screen for a visible gap before the list content catches up, header
     # and list content now appear together in one pass.
-    local _list_output=
-    _list_output="$(cat)"
+
+    if ((_buffer_list))
+    then
+      _list_output="$(cat)"
+    fi
 
     if ((NB_HEADER)) && ((_display_header_and_footer))
     then
@@ -7683,9 +7698,14 @@ _ls() {
       _ls_print_folder_header "${_selector_folder_path:-}"
     fi
 
-    if [[ -n "${_list_output:-}" ]]
+    if ((_buffer_list))
     then
-      printf "%s\\n" "${_list_output}"
+      if [[ -n "${_list_output:-}" ]]
+      then
+        printf "%s\\n" "${_list_output}"
+      fi
+    else
+      cat
     fi
 
   } | {
