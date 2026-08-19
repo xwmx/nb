@@ -5560,7 +5560,7 @@ _list() {
     # ${@} (via stdin here) may contain duplicate basenames (e.g. a pinned
     # item that also appears in the main pass); awk's `in` check naturally
     # de-dupes since `want` is a set keyed by basename.
-    awk -v _index_path="${_index_path}" '
+    LC_ALL=C awk -v _index_path="${_index_path}" '
       # First file (stdin): the basenames we need ids for.
       (NR == FNR) {
         want[$0] = 1
@@ -5572,27 +5572,6 @@ _list() {
         print $0 "\t" FNR
       }
     ' - "${_index_path}"
-  }
-
-  # _list_resolve_id()
-  #
-  # Usage:
-  #   _list_resolve_id <index-path> <basename>
-  #
-  # Description:
-  #   Resolve the id for a single <basename> with exactly one `awk` fork
-  #   and no pipe/subshell overhead -- used for bounded listings, where
-  #   this runs once per printed item, so fork count directly matters.
-  #   `_list_resolve_ids_batch` (stdin-based) is for `--all`, where the
-  #   fork count is amortized across every item instead.
-  _list_resolve_id() {
-    local _index_path="${1:-}"
-    local _basename="${2:-}"
-
-    [[ -z "${_index_path:-}" ]] && return 0
-    [[ -e "${_index_path}"   ]] || return 0
-
-    awk -v _want="${_basename}" '$0 == _want { print NR; exit }' "${_index_path}"
   }
 
   # _list_print_item()
@@ -6500,15 +6479,23 @@ ${_title_basename_or_path_color/\[$' '\]/${_TPUT_SETAF_8}[ ]${_TPUT_SGR0}}"
       elif [[ -n "${_limit:-}" ]]
       then
         # Bounded listing (the common case): resolve this one id and print
-        # immediately, so items stream out as they're ready.
+        # immediately, so items stream out as they're ready. This is the
+        # original per-item lookup (same as upstream, unchanged) -- `sed`
+        # with `LC_ALL=C` outperforms `awk` here (see the alternatives
+        # considered in `_index get_id` above), and at bounded scale
+        # there's no throughput reason to replace it.
+        local _escaped_basename="${__basename}"
+        _escaped_basename="${_escaped_basename//\[/\\\[}"
+        _escaped_basename="${_escaped_basename//\]/\\\]}"
+
         local _item_id=
-        _item_id="$(_list_resolve_id "${_list_path:-}/.index" "${__basename}")"
+        _item_id="$(LC_ALL=C sed -n "/^${_escaped_basename:-}$/=" "${_list_path:-}/.index")"
 
         if [[ -z "${_item_id:-}" ]]
         then
           _index reconcile "${_list_path:-}" --ancestors --commit
 
-          _item_id="$(_list_resolve_id "${_list_path:-}/.index" "${__basename}")"
+          _item_id="$(LC_ALL=C sed -n "/^${_escaped_basename:-}$/=" "${_list_path:-}/.index")"
         fi
 
         _list_print_item                       \
