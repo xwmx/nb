@@ -5574,6 +5574,125 @@ _list() {
     ' - "${_index_path}"
   }
 
+  # _list_resolve_id()
+  #
+  # Usage:
+  #   _list_resolve_id <index-path> <basename>
+  #
+  # Description:
+  #   Resolve the id for a single <basename> with exactly one `awk` fork
+  #   and no pipe/subshell overhead -- used for bounded listings, where
+  #   this runs once per printed item, so fork count directly matters.
+  #   `_list_resolve_ids_batch` (stdin-based) is for `--all`, where the
+  #   fork count is amortized across every item instead.
+  _list_resolve_id() {
+    local _index_path="${1:-}"
+    local _basename="${2:-}"
+
+    [[ -z "${_index_path:-}" ]] && return 0
+    [[ -e "${_index_path}"   ]] || return 0
+
+    awk -v _want="${_basename}" '$0 == _want { print NR; exit }' "${_index_path}"
+  }
+
+  # _list_print_item()
+  #
+  # Usage:
+  #   _list_print_item <basename> <indicators> <extra-length>
+  #                    <title-or-path> <title-or-path-color> <first-line>
+  #                    <item-id>
+  #
+  # Description:
+  #   Format and print a single list item, given an already-resolved id.
+  #   Shared by both the immediate-print path (bounded listings, where ids
+  #   are resolved and printed one at a time so output streams smoothly)
+  #   and the batched-print path (`--all`, where ids are resolved together
+  #   after the main loop to avoid one `.index` scan per item).
+  _list_print_item() {
+    local __basename="${1:-}"
+    local _indicators="${2:-}"
+    local _extra_length="${3:-0}"
+    local _title_basename_or_path="${4:-}"
+    local _title_basename_or_path_color="${5:-}"
+    local _first_line="${6:-}"
+    local _item_id="${7:-}"
+
+    local _item_info="${_indicators}${_title_basename_or_path}"
+    local _item_info_color="${_indicators}${_title_basename_or_path_color}"
+
+    if ! ((_list_filenames))  &&
+       ! ((_list_paths))      &&
+       ! ((_print_excerpt))   &&
+       [[ "${_title_basename_or_path}" == "${__basename}" ]]
+    then
+      if [[ -n "${_first_line:-}" ]]
+      then
+        _item_info="${_item_info} ${_MD} \"${_first_line}\""
+        _item_info_color="${_item_info_color} ${_MD} \"${_first_line}\""
+      fi
+    fi
+
+    local _item_identifier="${_maybe_selector_context:-}${_item_id:-}"
+    local _max_identifier="${_maybe_selector_context:-}${_max_id:-}"
+
+    local _brackets_identifier="[${_item_identifier:-}]"
+    # avoid calling `_color_brackets` for performance
+    local _brackets_identifier_color="\
+${_TPUT_SGR0}\
+${_TPUT_SETAF_8}\
+[\
+${_TPUT_COLOR_PRIMARY}\
+${_item_identifier:-}\
+${_TPUT_SETAF_8}\
+]\
+${_TPUT_SGR0}"
+
+    local _spaces_length=
+    _spaces_length=$(( ${#_max_identifier} - ${#_item_identifier} + 1 ))
+
+    local _spaces=
+    printf -v _spaces '%*s' "${_spaces_length}" ""
+
+    local _info_line="${_brackets_identifier}${_spaces}${_item_info}"
+    local _info_line_color="${_brackets_identifier_color}${_spaces}${_item_info_color}"
+
+    if ! ((_line_wrap))
+    then
+      _wrap off
+    fi
+
+    if ((_COLOR_ENABLED))
+    then
+      printf "%s" "${_info_line_color}"
+    else
+      printf "%s" "${_info_line}"
+    fi
+
+    if ! ((_line_wrap))
+    then
+      _wrap on
+    fi
+
+    printf "\\n"
+
+    if ((_print_excerpt))                   &&
+       [[ "${_excerpt_length}" =~ ^[0-9] ]] &&
+       _file_is_text "${_list_path}/${__basename}"
+    then
+      _print_line "${_info_line:-}"         \
+        --no-wrap                           \
+        --visible-length "${_extra_length:-0}"
+
+      if ((${_excerpt_length:-0}))
+      then
+        head -n "${_excerpt_length}" "${_list_path}/${__basename}" \
+          | _highlight_syntax_if_available "${__basename##*.}"
+
+        printf "\\n"
+      fi
+    fi
+  }
+
   local _error_on_empty=0
   local _excerpt_length=3
   local _folders_first=0
@@ -6378,6 +6497,28 @@ ${_title_basename_or_path_color/\[$' '\]/${_TPUT_SETAF_8}[ ]${_TPUT_SGR0}}"
             printf "\\n"
           fi
         fi
+      elif [[ -n "${_limit:-}" ]]
+      then
+        # Bounded listing (the common case): resolve this one id and print
+        # immediately, so items stream out as they're ready.
+        local _item_id=
+        _item_id="$(_list_resolve_id "${_list_path:-}/.index" "${__basename}")"
+
+        if [[ -z "${_item_id:-}" ]]
+        then
+          _index reconcile "${_list_path:-}" --ancestors --commit
+
+          _item_id="$(_list_resolve_id "${_list_path:-}/.index" "${__basename}")"
+        fi
+
+        _list_print_item                       \
+          "${__basename}"                      \
+          "${_indicators}"                     \
+          "${_extra_length:-0}"                \
+          "${_title_basename_or_path}"         \
+          "${_title_basename_or_path_color}"   \
+          "${_first_line:-}"                   \
+          "${_item_id:-}"
       else
         # id is needed for display. Defer resolution: buffer everything
         # needed to print this item, and resolve ids for all buffered
