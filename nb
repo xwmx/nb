@@ -7656,6 +7656,15 @@ _ls() {
   } | {
     # Header
     # ------
+    #
+    # Read all of List's output before printing anything here. This
+    # doesn't change total time to completion, but it moves *when* the
+    # first visible output appears: instead of the header printing
+    # immediately (while List is still computing) and then sitting on
+    # screen for a visible gap before the list content catches up, header
+    # and list content now appear together in one pass.
+    local _list_output=
+    _list_output="$(cat)"
 
     if ((NB_HEADER)) && ((_display_header_and_footer))
     then
@@ -7674,7 +7683,10 @@ _ls() {
       _ls_print_folder_header "${_selector_folder_path:-}"
     fi
 
-    cat
+    if [[ -n "${_list_output:-}" ]]
+    then
+      printf "%s\\n" "${_list_output}"
+    fi
 
   } | {
     # Footer
