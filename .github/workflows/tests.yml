@@ -184,7 +184,7 @@ jobs:
           /usr/libexec/ApplicationFirewall/socketfilterfw --getglobalstate
       - name: "Run bats tests"
         # use `script` for a PTY
-        run:  script -q /dev/null bats --trace test
+        run:  script -q /dev/null bats test
         # unbuffer implementation:
         # run:  unbuffer bats --trace test
       # - name: "Install Go"
