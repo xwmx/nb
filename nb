@@ -6476,41 +6476,11 @@ ${_title_basename_or_path_color/\[$' '\]/${_TPUT_SETAF_8}[ ]${_TPUT_SGR0}}"
             printf "\\n"
           fi
         fi
-      elif [[ -n "${_limit:-}" ]]
-      then
-        # Bounded listing (the common case): resolve this one id and print
-        # immediately, so items stream out as they're ready. This is the
-        # original per-item lookup (same as upstream, unchanged) -- `sed`
-        # with `LC_ALL=C` outperforms `awk` here (see the alternatives
-        # considered in `_index get_id` above), and at bounded scale
-        # there's no throughput reason to replace it.
-        local _escaped_basename="${__basename}"
-        _escaped_basename="${_escaped_basename//\[/\\\[}"
-        _escaped_basename="${_escaped_basename//\]/\\\]}"
-
-        local _item_id=
-        _item_id="$(LC_ALL=C sed -n "/^${_escaped_basename:-}$/=" "${_list_path:-}/.index")"
-
-        if [[ -z "${_item_id:-}" ]]
-        then
-          _index reconcile "${_list_path:-}" --ancestors --commit
-
-          _item_id="$(LC_ALL=C sed -n "/^${_escaped_basename:-}$/=" "${_list_path:-}/.index")"
-        fi
-
-        _list_print_item                       \
-          "${__basename}"                      \
-          "${_indicators}"                     \
-          "${_extra_length:-0}"                \
-          "${_title_basename_or_path}"         \
-          "${_title_basename_or_path_color}"   \
-          "${_first_line:-}"                   \
-          "${_item_id:-}"
       else
-        # id is needed for display. Defer resolution: buffer everything
-        # needed to print this item, and resolve ids for all buffered
-        # items together after the loop, in one batched pass over
-        # `.index` instead of one `sed` scan per item here.
+        # Defer resolution: buffer everything needed to print this item,
+        # and resolve ids for all buffered items together after the loop,
+        # in one batched pass over `.index` instead of one `sed`/`awk`
+        # fork per item here.
         _sel_basenames+=("${__basename}")
         _sel_indicators+=("${_indicators}")
         _sel_extra_length+=("${_extra_length:-0}")
