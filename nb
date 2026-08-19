@@ -6501,10 +6501,9 @@ ${_title_basename_or_path_color/\[$' '\]/${_TPUT_SETAF_8}[ ]${_TPUT_SGR0}}"
     # was previously one `sed` scan of `.index` per printed item.
     if ((${#_sel_basenames[@]}))
     then
-      declare -A _resolved_ids=()
-
       local _reconciled_once=0
       local _resolve_attempt=
+      local _resolved_ids=()
 
       for _resolve_attempt in 1 2
       do
