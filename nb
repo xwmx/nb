@@ -5549,27 +5549,49 @@ _list() {
   #   positional arguments so this scales to large `--all` listings without
   #   hitting argument-list limits.
   #
-  #   Prints "<basename>\t<id>" for each requested basename that is found.
-  #   Basenames that are not found in the index are omitted from the output.
+  #   Prints one id per input line, in the same order the basenames were
+  #   given -- an empty line for any basename not found in the index. This
+  #   lets the caller zip the output back onto an ordinary indexed bash
+  #   array by position (`_resolved_ids[i]` <-> `i`th requested basename)
+  #   instead of needing an associative array (`declare -A`, bash 4+) to
+  #   look results up by name. The hashing itself still happens in `awk`
+  #   (which always has associative arrays, independent of the bash
+  #   version), not in bash.
   _list_resolve_ids_batch() {
     local _index_path="${1:-}"
 
     [[ -z "${_index_path:-}" ]] && return 0
     [[ -e "${_index_path}"   ]] || return 0
 
-    # ${@} (via stdin here) may contain duplicate basenames (e.g. a pinned
-    # item that also appears in the main pass); awk's `in` check naturally
-    # de-dupes since `want` is a set keyed by basename.
     LC_ALL=C awk -v _index_path="${_index_path}" '
-      # First file (stdin): the basenames we need ids for.
+      # First file (stdin): the basenames we need ids for, one per line.
+      # `order[]` records the request order (duplicates included, so
+      # output lines up 1:1 with input lines); `want[]` is the lookup set
+      # awk uses internally while scanning the index.
       (NR == FNR) {
+        n++
+        order[n] = $0
         want[$0] = 1
         next
       }
       # Second file: .index itself. FNR is the 1-indexed line number,
-      # which is the id.
-      ($0 in want) {
-        print $0 "\t" FNR
+      # which is the id. Only basenames actually being asked for are
+      # recorded, so this is still one linear O(index size) pass
+      # regardless of how many basenames are requested.
+      ($0 in want) && !($0 in ids) {
+        ids[$0] = FNR
+      }
+      END {
+        for (i = 1; i <= n; i++) {
+          if (order[i] in ids)
+          {
+            print ids[order[i]]
+          }
+          else
+          {
+            print ""
+          }
+        }
       }
     ' - "${_index_path}"
   }
@@ -6503,18 +6525,23 @@ ${_title_basename_or_path_color/\[$' '\]/${_TPUT_SETAF_8}[ ]${_TPUT_SGR0}}"
     then
       local _reconciled_once=0
       local _resolve_attempt=
+      # Ordinary indexed array: `_resolved_ids[i]` holds the id for
+      # `_sel_basenames[i]`. `_list_resolve_ids_batch` guarantees its
+      # output lines are in the same order as the basenames it was given,
+      # so this is a straight positional zip -- no associative array
+      # (`declare -A`, bash 4+) needed, and no per-lookup cost either.
       local _resolved_ids=()
 
       for _resolve_attempt in 1 2
       do
         _resolved_ids=()
 
-        local __resolved_line=
-        while IFS=$'\t' read -r __resolved_basename __resolved_id
-        do
-          [[ -z "${__resolved_basename:-}" ]] && continue
+        local __i=0
 
-          _resolved_ids["${__resolved_basename}"]="${__resolved_id}"
+        while IFS= read -r __resolved_id
+        do
+          _resolved_ids[__i]="${__resolved_id}"
+          __i=$((__i+1))
         done < <(
           printf "%s\\n" "${_sel_basenames[@]}" \
             | _list_resolve_ids_batch "${_list_path:-}/.index"
@@ -6524,11 +6551,11 @@ ${_title_basename_or_path_color/\[$' '\]/${_TPUT_SETAF_8}[ ]${_TPUT_SGR0}}"
         # the index may be stale -- reconcile once and retry, mirroring
         # the original per-item fallback behavior.
         local _all_resolved=1
-        local __check_basename=
+        local __check_i=
 
-        for __check_basename in "${_sel_basenames[@]}"
+        for ((__check_i=0; __check_i < ${#_sel_basenames[@]}; __check_i++))
         do
-          if [[ -z "${_resolved_ids[${__check_basename}]:-}" ]]
+          if [[ -z "${_resolved_ids[__check_i]:-}" ]]
           then
             _all_resolved=0
 
@@ -6573,7 +6600,7 @@ ${_title_basename_or_path_color/\[$' '\]/${_TPUT_SETAF_8}[ ]${_TPUT_SGR0}}"
           fi
         fi
 
-        local _item_id="${_resolved_ids[${__basename}]:-}"
+        local _item_id="${_resolved_ids[__i]:-}"
         local _item_identifier="${_maybe_selector_context:-}${_item_id:-}"
 
         local _brackets_identifier="[${_item_identifier:-}]"
