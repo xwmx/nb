@@ -5601,14 +5601,13 @@ _list() {
   # Usage:
   #   _list_print_item <basename> <indicators> <extra-length>
   #                    <title-or-path> <title-or-path-color> <first-line>
-  #                    <item-id>
+  #                    <item-id> <show-id>
   #
   # Description:
-  #   Format and print a single list item, given an already-resolved id.
-  #   Shared by both the immediate-print path (bounded listings, where ids
-  #   are resolved and printed one at a time so output streams smoothly)
-  #   and the batched-print path (`--all`, where ids are resolved together
-  #   after the main loop to avoid one `.index` scan per item).
+  #   Format and print a single list item. Shared by every print path in
+  #   `_list()`: the `--no-id` path (<show-id> 0, no id/brackets needed),
+  #   and the batched-print path (<show-id> 1, ids already resolved for
+  #   the whole listing before this runs).
   _list_print_item() {
     local __basename="${1:-}"
     local _indicators="${2:-}"
@@ -5617,6 +5616,7 @@ _list() {
     local _title_basename_or_path_color="${5:-}"
     local _first_line="${6:-}"
     local _item_id="${7:-}"
+    local _show_id="${8:-1}"
 
     local _item_info="${_indicators}${_title_basename_or_path}"
     local _item_info_color="${_indicators}${_title_basename_or_path_color}"
@@ -5633,12 +5633,17 @@ _list() {
       fi
     fi
 
-    local _item_identifier="${_maybe_selector_context:-}${_item_id:-}"
-    local _max_identifier="${_maybe_selector_context:-}${_max_id:-}"
+    local _info_line="${_item_info}"
+    local _info_line_color="${_item_info_color}"
 
-    local _brackets_identifier="[${_item_identifier:-}]"
-    # avoid calling `_color_brackets` for performance
-    local _brackets_identifier_color="\
+    if ((_show_id))
+    then
+      local _item_identifier="${_maybe_selector_context:-}${_item_id:-}"
+      local _max_identifier="${_maybe_selector_context:-}${_max_id:-}"
+
+      local _brackets_identifier="[${_item_identifier:-}]"
+      # avoid calling `_color_brackets` for performance
+      local _brackets_identifier_color="\
 ${_TPUT_SGR0}\
 ${_TPUT_SETAF_8}\
 [\
@@ -5648,14 +5653,15 @@ ${_TPUT_SETAF_8}\
 ]\
 ${_TPUT_SGR0}"
 
-    local _spaces_length=
-    _spaces_length=$(( ${#_max_identifier} - ${#_item_identifier} + 1 ))
+      local _spaces_length=
+      _spaces_length=$(( ${#_max_identifier} - ${#_item_identifier} + 1 ))
 
-    local _spaces=
-    printf -v _spaces '%*s' "${_spaces_length}" ""
+      local _spaces=
+      printf -v _spaces '%*s' "${_spaces_length}" ""
 
-    local _info_line="${_brackets_identifier}${_spaces}${_item_info}"
-    local _info_line_color="${_brackets_identifier_color}${_spaces}${_item_info_color}"
+      _info_line="${_brackets_identifier}${_spaces}${_item_info}"
+      _info_line_color="${_brackets_identifier_color}${_spaces}${_item_info_color}"
+    fi
 
     if ! ((_line_wrap))
     then
@@ -6445,59 +6451,17 @@ ${_title_basename_or_path_color/\[$' '\]/${_TPUT_SETAF_8}[ ]${_TPUT_SGR0}}"
 
       if ((_no_id))
       then
-        # No id needed, so there's nothing to batch: print immediately,
-        # same as before.
-        local _item_info="${_indicators}${_title_basename_or_path}"
-        local _item_info_color="${_indicators}${_title_basename_or_path_color}"
-
-        if ! ((_list_filenames))  &&
-           ! ((_list_paths))      &&
-           ! ((_print_excerpt))   &&
-           [[ "${_title_basename_or_path}" == "${__basename}" ]]
-        then
-          if [[ -n "${_first_line:-}" ]]
-          then
-            _item_info="${_item_info} ${_MD} \"${_first_line}\""
-            _item_info_color="${_item_info_color} ${_MD} \"${_first_line}\""
-          fi
-        fi
-
-        if ! ((_line_wrap))
-        then
-          _wrap off
-        fi
-
-        if ((_COLOR_ENABLED))
-        then
-          printf "%s" "${_item_info_color}"
-        else
-          printf "%s" "${_item_info}"
-        fi
-
-        if ! ((_line_wrap))
-        then
-          _wrap on
-        fi
-
-        # end of line
-        printf "\\n"
-
-        if ((_print_excerpt))                   &&
-           [[ "${_excerpt_length}" =~ ^[0-9] ]] &&
-           _file_is_text "${_list_path}/${__basename}"
-        then # excerpt is specified with a non-zero digit, required by `head`
-          _print_line "${_item_info:-}"         \
-            --no-wrap                           \
-            --visible-length "${_extra_length:-0}"
-
-          if ((${_excerpt_length:-0}))
-          then
-            head -n "${_excerpt_length}" "${_list_path}/${__basename}" \
-              | _highlight_syntax_if_available "${__basename##*.}"
-
-            printf "\\n"
-          fi
-        fi
+        # No id needed -- `_list_print_item`'s <show-id> arg (0) skips the
+        # bracket/identifier/spacing work entirely.
+        _list_print_item                       \
+          "${__basename}"                      \
+          "${_indicators}"                     \
+          "${_extra_length:-0}"                \
+          "${_title_basename_or_path}"         \
+          "${_title_basename_or_path_color}"   \
+          "${_first_line:-}"                   \
+          ""                                    \
+          0
       else
         # Defer resolution: buffer everything needed to print this item,
         # and resolve ids for all buffered items together after the loop,
@@ -6573,94 +6537,18 @@ ${_title_basename_or_path_color/\[$' '\]/${_TPUT_SETAF_8}[ ]${_TPUT_SGR0}}"
         _reconciled_once=1
       done
 
-      local _max_identifier="${_maybe_selector_context:-}${_max_id:-}"
-
       local __i=
       for ((__i=0; __i < ${#_sel_basenames[@]}; __i++))
       do
-        local __basename="${_sel_basenames[__i]}"
-        local _indicators="${_sel_indicators[__i]}"
-        local _extra_length="${_sel_extra_length[__i]}"
-        local _title_basename_or_path="${_sel_title_or_path[__i]}"
-        local _title_basename_or_path_color="${_sel_title_or_path_color[__i]}"
-        local _first_line="${_sel_first_line[__i]}"
-
-        local _item_info="${_indicators}${_title_basename_or_path}"
-        local _item_info_color="${_indicators}${_title_basename_or_path_color}"
-
-        if ! ((_list_filenames))  &&
-           ! ((_list_paths))      &&
-           ! ((_print_excerpt))   &&
-           [[ "${_title_basename_or_path}" == "${__basename}" ]]
-        then
-          if [[ -n "${_first_line:-}" ]]
-          then
-            _item_info="${_item_info} ${_MD} \"${_first_line}\""
-            _item_info_color="${_item_info_color} ${_MD} \"${_first_line}\""
-          fi
-        fi
-
-        local _item_id="${_resolved_ids[__i]:-}"
-        local _item_identifier="${_maybe_selector_context:-}${_item_id:-}"
-
-        local _brackets_identifier="[${_item_identifier:-}]"
-        # avoid calling `_color_brackets` for performance
-        local _brackets_identifier_color="\
-${_TPUT_SGR0}\
-${_TPUT_SETAF_8}\
-[\
-${_TPUT_COLOR_PRIMARY}\
-${_item_identifier:-}\
-${_TPUT_SETAF_8}\
-]\
-${_TPUT_SGR0}"
-
-        # use calculated number of spaces for nicer formatting
-        local _spaces_length=
-        _spaces_length=$(( ${#_max_identifier} - ${#_item_identifier} + 1 ))
-
-        local _spaces=
-        printf -v _spaces '%*s' "${_spaces_length}" ""
-
-        local _info_line="${_brackets_identifier}${_spaces}${_item_info}"
-        local _info_line_color="${_brackets_identifier_color}${_spaces}${_item_info_color}"
-
-        if ! ((_line_wrap))
-        then
-          _wrap off
-        fi
-
-        if ((_COLOR_ENABLED))
-        then
-          printf "%s" "${_info_line_color}"
-        else
-          printf "%s" "${_info_line}"
-        fi
-
-        if ! ((_line_wrap))
-        then
-          _wrap on
-        fi
-
-        # end of line
-        printf "\\n"
-
-        if ((_print_excerpt))                   &&
-           [[ "${_excerpt_length}" =~ ^[0-9] ]] &&
-           _file_is_text "${_list_path}/${__basename}"
-        then # excerpt is specified with a non-zero digit, required by `head`
-          _print_line "${_info_line:-}"         \
-            --no-wrap                           \
-            --visible-length "${_extra_length:-0}"
-
-          if ((${_excerpt_length:-0}))
-          then
-            head -n "${_excerpt_length}" "${_list_path}/${__basename}" \
-              | _highlight_syntax_if_available "${__basename##*.}"
-
-            printf "\\n"
-          fi
-        fi
+        _list_print_item                              \
+          "${_sel_basenames[__i]}"                     \
+          "${_sel_indicators[__i]}"                    \
+          "${_sel_extra_length[__i]}"                  \
+          "${_sel_title_or_path[__i]}"                 \
+          "${_sel_title_or_path_color[__i]}"            \
+          "${_sel_first_line[__i]}"                     \
+          "${_resolved_ids[__i]:-}"                     \
+          1
       done
     fi
 
