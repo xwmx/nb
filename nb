@@ -6353,11 +6353,11 @@ ${_TPUT_SGR0}"
             _filenames_count="${#_pinned_basenames[@]}"
           else
             # Fast-count remaining lines and adjust for pinned duplicates.
-            local __remaining_count=0
-            __remaining_count="$(wc -l)"
-            __remaining_count="${__remaining_count//[[:space:]]/}"
+            local _remaining_count=0
+            _remaining_count="$(wc -l)"
+            _remaining_count="${_remaining_count//[[:space:]]/}"
 
-            _filenames_count=$((_filenames_count + __remaining_count))
+            _filenames_count=$((_filenames_count + _remaining_count))
 
             if ((_with_pinned))
             then
