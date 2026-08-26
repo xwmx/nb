@@ -6838,7 +6838,14 @@ _ls() {
     local _selector_path="${1:-}"
 
     local _footer_separator_hi=
-    _footer_separator_hi="$(_color_primary "${_footer_separator_raw}")"
+
+    # Inlined: _footer_separator_hi="$(_color_primary "${_footer_separator_raw}")"
+    if ((_COLOR_ENABLED))
+    then
+      _footer_separator_hi="${_TPUT_SGR0}${_TPUT_COLOR_PRIMARY}${_footer_separator_raw}${_TPUT_SGR0}"
+    else
+      _footer_separator_hi="${_footer_separator_raw}"
+    fi
 
     if _notebooks current --selected
     then
@@ -6901,21 +6908,44 @@ _ls() {
       "${_ME} help"
     )
 
-    local _commands_hi=(
-      "$(_color_muted "${_CHEVRON_RIGHT}") $(_color_secondary "${_ME}${_maybe_selector_scope_padded_left}")"
-      "$(_color_secondary "${_commands_raw[1]}")"
-      "$(_color_secondary "${_commands_raw[2]}")"
-      "$(_color_secondary "${_commands_raw[3]}")"
-      "$(_color_secondary "${_commands_raw[4]}")"
-      "$(_color_secondary "${_commands_raw[5]}")"
-      "$(_color_secondary "${_commands_raw[6]}")"
-      "$(_color_secondary "${_commands_raw[7]}")"
-      "$(_color_secondary "${_commands_raw[8]}")"
-      "$(_color_secondary "${_commands_raw[9]}")"
-      "$(_color_secondary "${_commands_raw[10]}")"
-      "$(_color_secondary "${_commands_raw[11]}")"
-      "$(_color_secondary "${_commands_raw[12]}")"
-    )
+    local _commands_hi=()
+
+    # Inlined:
+    # _commands_hi=(
+    #   "$(_color_muted "${_CHEVRON_RIGHT}") $(_color_secondary "${_ME}${_maybe_selector_scope_padded_left}")"
+    #   "$(_color_secondary "${_commands_raw[1]}")"
+    #   "$(_color_secondary "${_commands_raw[2]}")"
+    #   "$(_color_secondary "${_commands_raw[3]}")"
+    #   "$(_color_secondary "${_commands_raw[4]}")"
+    #   "$(_color_secondary "${_commands_raw[5]}")"
+    #   "$(_color_secondary "${_commands_raw[6]}")"
+    #   "$(_color_secondary "${_commands_raw[7]}")"
+    #   "$(_color_secondary "${_commands_raw[8]}")"
+    #   "$(_color_secondary "${_commands_raw[9]}")"
+    #   "$(_color_secondary "${_commands_raw[10]}")"
+    #   "$(_color_secondary "${_commands_raw[11]}")"
+    #   "$(_color_secondary "${_commands_raw[12]}")"
+    # )
+    if ((_COLOR_ENABLED))
+    then
+      _commands_hi=(
+        "${_TPUT_SGR0}${_TPUT_SETAF_8}${_CHEVRON_RIGHT}${_TPUT_SGR0} ${_TPUT_COLOR_SECONDARY}${_ME}${_maybe_selector_scope_padded_left}${_TPUT_SGR0}"
+        "${_TPUT_COLOR_SECONDARY}${_commands_raw[1]}${_TPUT_SGR0}"
+        "${_TPUT_COLOR_SECONDARY}${_commands_raw[2]}${_TPUT_SGR0}"
+        "${_TPUT_COLOR_SECONDARY}${_commands_raw[3]}${_TPUT_SGR0}"
+        "${_TPUT_COLOR_SECONDARY}${_commands_raw[4]}${_TPUT_SGR0}"
+        "${_TPUT_COLOR_SECONDARY}${_commands_raw[5]}${_TPUT_SGR0}"
+        "${_TPUT_COLOR_SECONDARY}${_commands_raw[6]}${_TPUT_SGR0}"
+        "${_TPUT_COLOR_SECONDARY}${_commands_raw[7]}${_TPUT_SGR0}"
+        "${_TPUT_COLOR_SECONDARY}${_commands_raw[8]}${_TPUT_SGR0}"
+        "${_TPUT_COLOR_SECONDARY}${_commands_raw[9]}${_TPUT_SGR0}"
+        "${_TPUT_COLOR_SECONDARY}${_commands_raw[10]}${_TPUT_SGR0}"
+        "${_TPUT_COLOR_SECONDARY}${_commands_raw[11]}${_TPUT_SGR0}"
+        "${_TPUT_COLOR_SECONDARY}${_commands_raw[12]}${_TPUT_SGR0}"
+      )
+    else
+      _commands_hi=("${_commands_raw[@]}")
+    fi
 
     _wrap off
 
@@ -7032,11 +7062,26 @@ _ls() {
     if ! ((_plain))
     then
       _separator=" ${_MD}"
-      _separator_hi="$(_color_muted "${_separator}")"
+
+      # Inlined: _separator_hi="$(_color_muted "${_separator}")"
+      if ((_COLOR_ENABLED))
+      then
+        _separator_hi="${_TPUT_SGR0}${_TPUT_SETAF_8}${_separator}${_TPUT_SGR0}"
+      else
+        _separator_hi="${_separator}"
+      fi
     fi
 
     local _current_notebook_name=
-    _current_notebook_name="$(_notebooks current)"
+
+    # Inlined: _current_notebook_name="$(_notebooks current)"
+    if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"                      ]] &&
+       [[ "${NB_NOTEBOOK_PATH}" == "${_LOCAL_NOTEBOOK_PATH}"  ]]
+    then
+      _current_notebook_name="local"
+    else
+      _current_notebook_name="${NB_NOTEBOOK_PATH##*/}"
+    fi
 
     local _highlight_archived=0
 
