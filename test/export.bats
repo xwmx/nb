@@ -77,7 +77,7 @@ HEREDOC
 
 # embedded resources ##########################################################
 
-@test "'export pandoc --self-contained' with reference to image in same directory embeds image." {
+@test "'export pandoc --embed-resources --standalone' with reference to image in same directory embeds image." {
   {
     "${_NB}" init
     "${_NB}" add                                                      \
@@ -91,12 +91,12 @@ HEREDOC
     [[ -f "${NB_DIR}/home/nb.png"           ]]
   }
 
-  run "${_NB}" export pandoc 1 --self-contained <<< "y${_NEWLINE}"
+  run "${_NB}" export pandoc 1 --embed-resources <<< "y${_NEWLINE}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
 
-  [[ "${output}" =~ \<p\>\<img\ role=\"img\"\ src=\"data:image/png\;base64,iVBORw0KGgoAAAA ]]
+  [[ "${output}" =~ \<p\>\<img\ src=\"data:image/png\;base64,iVBORw0KGgoAAAA ]]
 
   run ! diff                      \
     <(printf "%s\\n" "${output}") \
@@ -108,7 +108,7 @@ HEREDOC
     )
 }
 
-@test "'export --self-contained' with reference to image in same directory embeds image." {
+@test "'export 1 --embed-resources --standalone' with reference to image in same directory embeds image." {
   {
     "${_NB}" init
     "${_NB}" add                                                      \
@@ -122,12 +122,13 @@ HEREDOC
     [[ -f "${NB_DIR}/home/nb.png"           ]]
   }
 
-  run "${_NB}" export 1 "${_TMP_DIR}/example.html" --self-contained <<< "y${_NEWLINE}"
+  run "${_NB}" export 1 "${_TMP_DIR}/example.html" --embed-resources <<< "y${_NEWLINE}"
 
   printf "\${status}: '%s'\\n" "${status}"
   printf "\${output}: '%s'\\n" "${output}"
+  printf "\$(cat \"\${_TMP_DIR}/example.html\"):\\n%s\\n" "$(cat "${_TMP_DIR}/example.html")"
 
-  [[ "$(cat "${_TMP_DIR}/example.html")" =~ \<p\>\<img\ role=\"img\"\ src=\"data:image/png\;base64,iVBORw0KGgoAAAA ]]
+  [[ "$(cat "${_TMP_DIR}/example.html")" =~ \<p\>\<img\ src=\"data:image/png\;base64,iVBORw0KGgoAAAA ]]
 }
 
 # existing file ###############################################################
