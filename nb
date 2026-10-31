@@ -82,7 +82,7 @@ IFS=$'\n\t'
 # $_VERSION
 #
 # The most recent program version.
-_VERSION="7.25.5"
+_VERSION="7.25.6"
 
 # $_ME
 #
@@ -5534,6 +5534,172 @@ $(_color_primary "Examples"):
 HEREDOC
 }
 _list() {
+  # _list_resolve_ids_batch()
+  #
+  # Usage:
+  #   _list_resolve_ids_batch <index-path> <basename>...
+  #
+  # Description:
+  #   Resolve the 1-indexed `.index` line number ("id") for each <basename>
+  #   passed as an argument, in a single linear pass over <index-path> using
+  #   `awk`, rather than one `sed`/`grep` invocation (or bash loop) per
+  #   basename.
+  #
+  #   Basenames are read from standard input (one per line) instead of
+  #   positional arguments so this scales to large `--all` listings without
+  #   hitting argument-list limits.
+  #
+  #   Prints one id per input line, in the same order the basenames were
+  #   given -- an empty line for any basename not found in the index. This
+  #   lets the caller zip the output back onto an ordinary indexed bash
+  #   array by position (`_resolved_ids[i]` <-> `i`th requested basename)
+  #   instead of needing an associative array (`declare -A`, bash 4+) to
+  #   look results up by name. The hashing itself still happens in `awk`
+  #   (which always has associative arrays, independent of the bash
+  #   version), not in bash.
+  _list_resolve_ids_batch() {
+    local _index_path="${1:-}"
+
+    [[ -z "${_index_path:-}" ]] && return 0
+    [[ -e "${_index_path}"   ]] || return 0
+
+    LC_ALL=C awk -v _index_path="${_index_path}" '
+      # First file (stdin): the basenames we need ids for, one per line.
+      # `order[]` records the request order (duplicates included, so
+      # output lines up 1:1 with input lines); `want[]` is the lookup set
+      # awk uses internally while scanning the index.
+      (NR == FNR) {
+        n++
+        order[n] = $0
+        want[$0] = 1
+        next
+      }
+      # Second file: .index itself. FNR is the 1-indexed line number,
+      # which is the id. Only basenames actually being asked for are
+      # recorded, so this is still one linear O(index size) pass
+      # regardless of how many basenames are requested.
+      ($0 in want) && !($0 in ids) {
+        ids[$0] = FNR
+      }
+      END {
+        for (i = 1; i <= n; i++) {
+          if (order[i] in ids)
+          {
+            print ids[order[i]]
+          }
+          else
+          {
+            print ""
+          }
+        }
+      }
+    ' - "${_index_path}"
+  }
+
+  # _list_print_item()
+  #
+  # Usage:
+  #   _list_print_item <basename> <indicators> <extra-length>
+  #                    <title-or-path> <title-or-path-color> <first-line>
+  #                    <item-id> <show-id>
+  #
+  # Description:
+  #   Format and print a single list item. Shared by every print path in
+  #   `_list()`: the `--no-id` path (<show-id> 0, no id/brackets needed),
+  #   and the batched-print path (<show-id> 1, ids already resolved for
+  #   the whole listing before this runs).
+  _list_print_item() {
+    local __basename="${1:-}"
+    local _indicators="${2:-}"
+    local _extra_length="${3:-0}"
+    local _title_basename_or_path="${4:-}"
+    local _title_basename_or_path_color="${5:-}"
+    local _first_line="${6:-}"
+    local _item_id="${7:-}"
+    local _show_id="${8:-1}"
+
+    local _item_info="${_indicators}${_title_basename_or_path}"
+    local _item_info_color="${_indicators}${_title_basename_or_path_color}"
+
+    if ! ((_list_filenames))  &&
+       ! ((_list_paths))      &&
+       ! ((_print_excerpt))   &&
+       [[ "${_title_basename_or_path}" == "${__basename}" ]]
+    then
+      if [[ -n "${_first_line:-}" ]]
+      then
+        _item_info="${_item_info} ${_MD} \"${_first_line}\""
+        _item_info_color="${_item_info_color} ${_MD} \"${_first_line}\""
+      fi
+    fi
+
+    local _info_line="${_item_info}"
+    local _info_line_color="${_item_info_color}"
+
+    if ((_show_id))
+    then
+      local _item_identifier="${_maybe_selector_context:-}${_item_id:-}"
+      local _max_identifier="${_maybe_selector_context:-}${_max_id:-}"
+
+      local _brackets_identifier="[${_item_identifier:-}]"
+      # avoid calling `_color_brackets` for performance
+      local _brackets_identifier_color="\
+${_TPUT_SGR0}\
+${_TPUT_SETAF_8}\
+[\
+${_TPUT_COLOR_PRIMARY}\
+${_item_identifier:-}\
+${_TPUT_SETAF_8}\
+]\
+${_TPUT_SGR0}"
+
+      local _spaces_length=
+      _spaces_length=$(( ${#_max_identifier} - ${#_item_identifier} + 1 ))
+
+      local _spaces=
+      printf -v _spaces '%*s' "${_spaces_length}" ""
+
+      _info_line="${_brackets_identifier}${_spaces}${_item_info}"
+      _info_line_color="${_brackets_identifier_color}${_spaces}${_item_info_color}"
+    fi
+
+    if ! ((_line_wrap))
+    then
+      _wrap off
+    fi
+
+    if ((_COLOR_ENABLED))
+    then
+      printf "%s" "${_info_line_color}"
+    else
+      printf "%s" "${_info_line}"
+    fi
+
+    if ! ((_line_wrap))
+    then
+      _wrap on
+    fi
+
+    printf "\\n"
+
+    if ((_print_excerpt))                   &&
+       [[ "${_excerpt_length}" =~ ^[0-9] ]] &&
+       _file_is_text "${_list_path}/${__basename}"
+    then
+      _print_line "${_info_line:-}"         \
+        --no-wrap                           \
+        --visible-length "${_extra_length:-0}"
+
+      if ((${_excerpt_length:-0}))
+      then
+        head -n "${_excerpt_length}" "${_list_path}/${__basename}" \
+          | _highlight_syntax_if_available "${__basename##*.}"
+
+        printf "\\n"
+      fi
+    fi
+  }
+
   local _error_on_empty=0
   local _excerpt_length=3
   local _folders_first=0
@@ -6067,6 +6233,21 @@ _list() {
       _line_wrap=0
     fi
 
+    # Selection-phase buffers.
+    #
+    # `id` resolution is deferred until after the selection loop so it can
+    # be done in a single batched `awk` pass over `.index` (one linear scan
+    # total) instead of one `sed` scan of `.index` per printed item. Only
+    # basenames that actually survive filtering / limit / pagination are
+    # buffered here, so the batch stays bounded by `--limit` in the common
+    # case, and by the full listing only when `--all` is used.
+    local _sel_basenames=()
+    local _sel_indicators=()
+    local _sel_extra_length=()
+    local _sel_title_or_path=()
+    local _sel_title_or_path_color=()
+    local _sel_first_line=()
+
     # begin main loop
 
     local         __basename=
@@ -6171,9 +6352,19 @@ _list() {
           then
             _filenames_count="${#_pinned_basenames[@]}"
           else
-            _filenames_count="$(
-              _count "${_list_path}" "${_list_files_options[@]:-}"
-            )"
+            # Fast-count remaining lines and adjust for pinned duplicates.
+            local _remaining_count=0
+            _remaining_count="$(wc -l)"
+            _remaining_count="${_remaining_count//[[:space:]]/}"
+
+            _filenames_count=$((_filenames_count + _remaining_count))
+
+            if ((_with_pinned))
+            then
+              _filenames_count=$((
+                _filenames_count - ${#_pinned_basenames_seen[@]}
+              ))
+            fi
           fi
 
           break
@@ -6268,111 +6459,108 @@ ${_title_basename_or_path_color/\[$' '\]/${_TPUT_SETAF_8}[ ]${_TPUT_SGR0}}"
         fi
       fi
 
-      local _item_info="${_indicators}${_title_basename_or_path}"
-      local _item_info_color="${_indicators}${_title_basename_or_path_color}"
-
-      if ! ((_list_filenames))  &&
-         ! ((_list_paths))      &&
-         ! ((_print_excerpt))   &&
-         [[ "${_title_basename_or_path}" == "${__basename}" ]]
-      then
-        if [[ -n "${_first_line:-}" ]]
-        then
-          _item_info="${_item_info} ${_MD} \"${_first_line}\""
-          _item_info_color="${_item_info_color} ${_MD} \"${_first_line}\""
-        fi
-      fi
-
-      local _info_line=
-      local _info_line_color=
-
       if ((_no_id))
       then
-        _info_line="${_item_info}"
-        _info_line_color="${_item_info_color}"
+        # No id needed -- `_list_print_item`'s <show-id> arg (0) skips the
+        # bracket/identifier/spacing work entirely.
+        _list_print_item                       \
+          "${__basename}"                      \
+          "${_indicators}"                     \
+          "${_extra_length:-0}"                \
+          "${_title_basename_or_path}"         \
+          "${_title_basename_or_path_color}"   \
+          "${_first_line:-}"                   \
+          ""                                    \
+          0
       else
-        local _escaped_basename="${__basename}"
-        _escaped_basename="${_escaped_basename//\[/\\\[}"
-        _escaped_basename="${_escaped_basename//\]/\\\]}"
-
-        local _item_id=
-        # use `sed` directly instead of `_index get_id` for performance
-        _item_id="$(LC_ALL=C sed -n "/^${_escaped_basename:-}$/=" "${_list_path:-}/.index")"
-
-        if [[ -z "${_item_id:-}" ]]
-        then
-          _index reconcile "${_list_path:-}" --ancestors --commit
-
-          _item_id="$(LC_ALL=C sed -n "/^${_escaped_basename:-}$/=" "${_list_path:-}/.index")"
-        fi
-
-        local _item_identifier="${_maybe_selector_context:-}${_item_id:-}"
-        local _max_identifier="${_maybe_selector_context:-}${_max_id:-}"
-
-        local _brackets_identifier="[${_item_identifier:-}]"
-        # avoid calling `_color_brackets` for performance
-        local _brackets_identifier_color="\
-${_TPUT_SGR0}\
-${_TPUT_SETAF_8}\
-[\
-${_TPUT_COLOR_PRIMARY}\
-${_item_identifier:-}\
-${_TPUT_SETAF_8}\
-]\
-${_TPUT_SGR0}"
-
-        # use calculated number of spaces for nicer formatting
-        local _spaces_length=
-        _spaces_length=$(( ${#_max_identifier} - ${#_item_identifier} + 1 ))
-
-        local _spaces=
-        printf -v _spaces '%*s' "${_spaces_length}" ""
-
-        _info_line="${_brackets_identifier}${_spaces}${_item_info}"
-        _info_line_color="${_brackets_identifier_color}${_spaces}${_item_info_color}"
-      fi
-
-      if ! ((_line_wrap))
-      then
-        _wrap off
-      fi
-
-      if ((_COLOR_ENABLED))
-      then
-        printf "%s" "${_info_line_color}"
-      else
-        printf "%s" "${_info_line}"
-      fi
-
-      if ! ((_line_wrap))
-      then
-        _wrap on
-      fi
-
-      # end of line
-      printf "\\n"
-
-      if ((_print_excerpt))                   &&
-         [[ "${_excerpt_length}" =~ ^[0-9] ]] &&
-         _file_is_text "${_list_path}/${__basename}"
-      then # excerpt is specified with a non-zero digit, required by `head`
-        _print_line "${_info_line:-}"         \
-          --no-wrap                           \
-          --visible-length "${_extra_length:-0}"
-
-        if ((${_excerpt_length:-0}))
-        then
-          head -n "${_excerpt_length}" "${_list_path}/${__basename}" \
-            | _highlight_syntax_if_available "${__basename##*.}"
-
-          printf "\\n"
-        fi
+        # Defer resolution: buffer everything needed to print this item,
+        # and resolve ids for all buffered items together after the loop,
+        # in one batched pass over `.index` instead of one `sed`/`awk`
+        # fork per item here.
+        _sel_basenames+=("${__basename}")
+        _sel_indicators+=("${_indicators}")
+        _sel_extra_length+=("${_extra_length:-0}")
+        _sel_title_or_path+=("${_title_basename_or_path}")
+        _sel_title_or_path_color+=("${_title_basename_or_path_color}")
+        _sel_first_line+=("${_first_line:-}")
       fi
 
       _printed_count=$((_printed_count+1))
     done
 
     # end main loop
+
+    # id resolution + print phase
+    #
+    # Resolve ids for every buffered item in a single `awk` pass over
+    # `.index` (one linear scan total), then print. This replaces what
+    # was previously one `sed` scan of `.index` per printed item.
+    if ((${#_sel_basenames[@]}))
+    then
+      local _reconciled_once=0
+      local _resolve_attempt=
+      # Ordinary indexed array: `_resolved_ids[i]` holds the id for
+      # `_sel_basenames[i]`. `_list_resolve_ids_batch` guarantees its
+      # output lines are in the same order as the basenames it was given,
+      # so this is a straight positional zip -- no associative array
+      # (`declare -A`, bash 4+) needed, and no per-lookup cost either.
+      local _resolved_ids=()
+
+      for _resolve_attempt in 1 2
+      do
+        _resolved_ids=()
+
+        local __i=0
+
+        while IFS= read -r __resolved_id
+        do
+          _resolved_ids[__i]="${__resolved_id}"
+          __i=$((__i+1))
+        done < <(
+          printf "%s\\n" "${_sel_basenames[@]}" \
+            | _list_resolve_ids_batch "${_list_path:-}/.index"
+        )
+
+        # If every buffered basename resolved, we're done. Otherwise,
+        # the index may be stale -- reconcile once and retry, mirroring
+        # the original per-item fallback behavior.
+        local _all_resolved=1
+        local __check_i=
+
+        for ((__check_i=0; __check_i < ${#_sel_basenames[@]}; __check_i++))
+        do
+          if [[ -z "${_resolved_ids[__check_i]:-}" ]]
+          then
+            _all_resolved=0
+
+            break
+          fi
+        done
+
+        if ((_all_resolved)) || ((_reconciled_once))
+        then
+          break
+        fi
+
+        _index reconcile "${_list_path:-}" --ancestors --commit
+
+        _reconciled_once=1
+      done
+
+      local __i=
+      for ((__i=0; __i < ${#_sel_basenames[@]}; __i++))
+      do
+        _list_print_item                              \
+          "${_sel_basenames[__i]}"                     \
+          "${_sel_indicators[__i]}"                    \
+          "${_sel_extra_length[__i]}"                  \
+          "${_sel_title_or_path[__i]}"                 \
+          "${_sel_title_or_path_color[__i]}"            \
+          "${_sel_first_line[__i]}"                     \
+          "${_resolved_ids[__i]:-}"                     \
+          1
+      done
+    fi
 
     if [[   -n "${_limit:-}"          ]] && ! ((_paginate))
     then
@@ -6650,7 +6838,14 @@ _ls() {
     local _selector_path="${1:-}"
 
     local _footer_separator_hi=
-    _footer_separator_hi="$(_color_primary "${_footer_separator_raw}")"
+
+    # Inlined: _footer_separator_hi="$(_color_primary "${_footer_separator_raw}")"
+    if ((_COLOR_ENABLED))
+    then
+      _footer_separator_hi="${_TPUT_SGR0}${_TPUT_COLOR_PRIMARY}${_footer_separator_raw}${_TPUT_SGR0}"
+    else
+      _footer_separator_hi="${_footer_separator_raw}"
+    fi
 
     if _notebooks current --selected
     then
@@ -6713,21 +6908,44 @@ _ls() {
       "${_ME} help"
     )
 
-    local _commands_hi=(
-      "$(_color_muted "${_CHEVRON_RIGHT}") $(_color_secondary "${_ME}${_maybe_selector_scope_padded_left}")"
-      "$(_color_secondary "${_commands_raw[1]}")"
-      "$(_color_secondary "${_commands_raw[2]}")"
-      "$(_color_secondary "${_commands_raw[3]}")"
-      "$(_color_secondary "${_commands_raw[4]}")"
-      "$(_color_secondary "${_commands_raw[5]}")"
-      "$(_color_secondary "${_commands_raw[6]}")"
-      "$(_color_secondary "${_commands_raw[7]}")"
-      "$(_color_secondary "${_commands_raw[8]}")"
-      "$(_color_secondary "${_commands_raw[9]}")"
-      "$(_color_secondary "${_commands_raw[10]}")"
-      "$(_color_secondary "${_commands_raw[11]}")"
-      "$(_color_secondary "${_commands_raw[12]}")"
-    )
+    local _commands_hi=()
+
+    # Inlined:
+    # _commands_hi=(
+    #   "$(_color_muted "${_CHEVRON_RIGHT}") $(_color_secondary "${_ME}${_maybe_selector_scope_padded_left}")"
+    #   "$(_color_secondary "${_commands_raw[1]}")"
+    #   "$(_color_secondary "${_commands_raw[2]}")"
+    #   "$(_color_secondary "${_commands_raw[3]}")"
+    #   "$(_color_secondary "${_commands_raw[4]}")"
+    #   "$(_color_secondary "${_commands_raw[5]}")"
+    #   "$(_color_secondary "${_commands_raw[6]}")"
+    #   "$(_color_secondary "${_commands_raw[7]}")"
+    #   "$(_color_secondary "${_commands_raw[8]}")"
+    #   "$(_color_secondary "${_commands_raw[9]}")"
+    #   "$(_color_secondary "${_commands_raw[10]}")"
+    #   "$(_color_secondary "${_commands_raw[11]}")"
+    #   "$(_color_secondary "${_commands_raw[12]}")"
+    # )
+    if ((_COLOR_ENABLED))
+    then
+      _commands_hi=(
+        "${_TPUT_SGR0}${_TPUT_SETAF_8}${_CHEVRON_RIGHT}${_TPUT_SGR0} ${_TPUT_COLOR_SECONDARY}${_ME}${_maybe_selector_scope_padded_left}${_TPUT_SGR0}"
+        "${_TPUT_COLOR_SECONDARY}${_commands_raw[1]}${_TPUT_SGR0}"
+        "${_TPUT_COLOR_SECONDARY}${_commands_raw[2]}${_TPUT_SGR0}"
+        "${_TPUT_COLOR_SECONDARY}${_commands_raw[3]}${_TPUT_SGR0}"
+        "${_TPUT_COLOR_SECONDARY}${_commands_raw[4]}${_TPUT_SGR0}"
+        "${_TPUT_COLOR_SECONDARY}${_commands_raw[5]}${_TPUT_SGR0}"
+        "${_TPUT_COLOR_SECONDARY}${_commands_raw[6]}${_TPUT_SGR0}"
+        "${_TPUT_COLOR_SECONDARY}${_commands_raw[7]}${_TPUT_SGR0}"
+        "${_TPUT_COLOR_SECONDARY}${_commands_raw[8]}${_TPUT_SGR0}"
+        "${_TPUT_COLOR_SECONDARY}${_commands_raw[9]}${_TPUT_SGR0}"
+        "${_TPUT_COLOR_SECONDARY}${_commands_raw[10]}${_TPUT_SGR0}"
+        "${_TPUT_COLOR_SECONDARY}${_commands_raw[11]}${_TPUT_SGR0}"
+        "${_TPUT_COLOR_SECONDARY}${_commands_raw[12]}${_TPUT_SGR0}"
+      )
+    else
+      _commands_hi=("${_commands_raw[@]}")
+    fi
 
     _wrap off
 
@@ -6844,11 +7062,26 @@ _ls() {
     if ! ((_plain))
     then
       _separator=" ${_MD}"
-      _separator_hi="$(_color_muted "${_separator}")"
+
+      # Inlined: _separator_hi="$(_color_muted "${_separator}")"
+      if ((_COLOR_ENABLED))
+      then
+        _separator_hi="${_TPUT_SGR0}${_TPUT_SETAF_8}${_separator}${_TPUT_SGR0}"
+      else
+        _separator_hi="${_separator}"
+      fi
     fi
 
     local _current_notebook_name=
-    _current_notebook_name="$(_notebooks current)"
+
+    # Inlined: _current_notebook_name="$(_notebooks current)"
+    if [[ -n "${_LOCAL_NOTEBOOK_PATH:-}"                      ]] &&
+       [[ "${NB_NOTEBOOK_PATH}" == "${_LOCAL_NOTEBOOK_PATH}"  ]]
+    then
+      _current_notebook_name="local"
+    else
+      _current_notebook_name="${NB_NOTEBOOK_PATH##*/}"
+    fi
 
     local _highlight_archived=0
 
@@ -7178,6 +7411,7 @@ _ls() {
   # Build list options.
 
   local _list_options=(${_arguments[@]:-})
+  local _resolved_limit=
 
   if ((_with_pinned))
   then
@@ -7193,7 +7427,8 @@ _ls() {
 
   if [[ -n "${_limit:-}"                            ]]
   then
-    _list_options+=("--limit" "${_limit}")
+    _resolved_limit="${_limit}"
+    _list_options+=("--limit" "${_resolved_limit}")
   elif ! ((_all))                                       &&
        [[ -z "${_AUTO_LIMIT:-}"                     ]]  &&
        {
@@ -7205,7 +7440,8 @@ _ls() {
          }
        }
   then
-    _list_options+=("--limit" "${NB_LIMIT}")
+    _resolved_limit="${NB_LIMIT}"
+    _list_options+=("--limit" "${_resolved_limit}")
   fi
 
   # Resolve selector folders before printing header to minimize pause
@@ -7286,7 +7522,8 @@ _ls() {
       _auto_limit_amount="${_AUTO_LIMIT_MAX}"
     fi
 
-    _list_options+=("--limit" "${_auto_limit_amount:-1}")
+    _resolved_limit="${_auto_limit_amount:-1}"
+    _list_options+=("--limit" "${_resolved_limit:-}")
   fi
 
   local _list_error=
@@ -7390,8 +7627,28 @@ _ls() {
       fi
     }
   } | {
+    local _buffer_list=0
+    local _list_output=
+
+    if [[ "${_resolved_limit:-99999}" -lt 250 ]]
+    then
+      _buffer_list=1
+    fi
+
     # Header
     # ------
+    #
+    # Read all of List's output before printing anything here. This
+    # doesn't change total time to completion, but it moves *when* the
+    # first visible output appears: instead of the header printing
+    # immediately (while List is still computing) and then sitting on
+    # screen for a visible gap before the list content catches up, header
+    # and list content now appear together in one pass.
+
+    if ((_buffer_list))
+    then
+      _list_output="$(cat)"
+    fi
 
     if ((NB_HEADER)) && ((_display_header_and_footer))
     then
@@ -7410,7 +7667,15 @@ _ls() {
       _ls_print_folder_header "${_selector_folder_path:-}"
     fi
 
-    cat
+    if ((_buffer_list))
+    then
+      if [[ -n "${_list_output:-}" ]]
+      then
+        printf "%s\\n" "${_list_output}"
+      fi
+    else
+      cat
+    fi
 
   } | {
     # Footer

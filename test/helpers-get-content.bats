@@ -254,14 +254,14 @@ line three
 line four
 HEREDOC
 
-    cat <<HEREDOC | "${_NB}" add "one.org"
+    cat <<HEREDOC | "${_NB}" add "four.org"
 #+title: Example Org Title With Lowercase Export Option
 
 line three
 line four
 HEREDOC
 
-    cat <<HEREDOC | "${_NB}" add "two.org"
+    cat <<HEREDOC | "${_NB}" add "five.org"
 #+title: Example
 #+title: Multi-Line
 #+title: Org Title
