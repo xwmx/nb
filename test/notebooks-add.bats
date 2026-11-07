@@ -53,7 +53,7 @@ _setup_notebooks() {
 
     printf "Example File One.md created.\\n"
 
-    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" "example-branch" <<< "y${_NEWLINE}2${_NEWLINE}"
 
     diff                                              \
       <(git -C "${NB_DIR}/Example Notebook" ls-remote \
@@ -69,7 +69,7 @@ _setup_notebooks() {
 
     printf "Sample File One.md created.\\n"
 
-    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" "sample-branch" <<< "y${_NEWLINE}2${_NEWLINE}"
 
     diff                                              \
       <(git -C "${NB_DIR}/Sample Notebook" ls-remote  \
@@ -85,7 +85,7 @@ _setup_notebooks() {
 
     printf "Demo File One.md created.\\n"
 
-    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" "demo-branch" <<< "y${_NEWLINE}2${_NEWLINE}"
 
     diff                                              \
       <(git -C "${NB_DIR}/Demo Notebook" ls-remote    \
@@ -183,7 +183,7 @@ Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\ new\ name,\ or\ pr
 
     printf "Example File One.md created.\\n"
 
-    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" "example-branch" <<< "y${_NEWLINE}2${_NEWLINE}"
 
     diff                                              \
       <(git -C "${NB_DIR}/Example Notebook" ls-remote \
@@ -199,7 +199,7 @@ Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\ new\ name,\ or\ pr
 
     printf "Sample File One.md created.\\n"
 
-    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" "sample-branch" <<< "y${_NEWLINE}2${_NEWLINE}"
 
     diff                                              \
       <(git -C "${NB_DIR}/Sample Notebook" ls-remote  \
@@ -215,7 +215,7 @@ Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\ new\ name,\ or\ pr
 
     printf "Demo File One.md created.\\n"
 
-    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" "demo-branch" <<< "y${_NEWLINE}2${_NEWLINE}"
 
     diff                                              \
       <(git -C "${NB_DIR}/Demo Notebook" ls-remote    \
@@ -286,7 +286,7 @@ Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\ new\ name,\ or\ pr
 
     printf "Example File One.md created.\\n"
 
-    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" "example-branch" <<< "y${_NEWLINE}2${_NEWLINE}"
 
     diff                                              \
       <(git -C "${NB_DIR}/Example Notebook" ls-remote \
@@ -302,7 +302,7 @@ Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\ new\ name,\ or\ pr
 
     printf "Sample File One.md created.\\n"
 
-    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" "sample-branch" <<< "y${_NEWLINE}2${_NEWLINE}"
 
     diff                                              \
       <(git -C "${NB_DIR}/Sample Notebook" ls-remote  \
@@ -318,7 +318,7 @@ Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\ new\ name,\ or\ pr
 
     printf "Demo File One.md created.\\n"
 
-    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" "demo-branch" <<< "y${_NEWLINE}2${_NEWLINE}"
 
     diff                                              \
       <(git -C "${NB_DIR}/Demo Notebook" ls-remote    \
@@ -390,7 +390,7 @@ Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\ new\ name,\ or\ pr
 
     "${_NB}" add "Example File One.md" --content "Example content one."
 
-    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" "readme" <<< "y${_NEWLINE}2${_NEWLINE}"
 
     diff                                              \
       <(git -C "${NB_DIR}/Example Notebook" ls-remote \
@@ -424,7 +424,7 @@ Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\ new\ name,\ or\ pr
 
     "${_NB}" add "Example File One.md" --content "Example content one."
 
-    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" "example-branch" <<< "y${_NEWLINE}2${_NEWLINE}"
 
     diff                                              \
       <(git -C "${NB_DIR}/Example Notebook" ls-remote \
@@ -475,7 +475,7 @@ Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\ new\ name,\ or\ pr
 
     "${_NB}" add "Example File One.md" --content "Example content one."
 
-    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" "example-branch" <<< "y${_NEWLINE}2${_NEWLINE}"
 
     diff                                              \
       <(git -C "${NB_DIR}/Example Notebook" ls-remote \
@@ -522,7 +522,7 @@ Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\ new\ name,\ or\ pr
 
     "${_NB}" add "Example File One.md" --content "Example content one."
 
-    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" "example-branch" <<< "y${_NEWLINE}2${_NEWLINE}"
 
     diff                                              \
       <(git -C "${NB_DIR}/Example Notebook" ls-remote \
@@ -577,7 +577,7 @@ HEREDOC
 
     "${_NB}" add "Example File One.md" --content "Example content one."
 
-    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" "example-branch" <<< "y${_NEWLINE}2${_NEWLINE}"
 
     "${_NB}" git status
     "${_NB}" run ls -la
@@ -664,7 +664,7 @@ Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\ new\ name,\ or\ pr
 
     "${_NB}" add "Example File One.md" --content "Example content one."
 
-    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" "example-branch" <<< "y${_NEWLINE}2${_NEWLINE}"
 
     "${_NB}" git status
     "${_NB}" run ls -la
@@ -751,7 +751,7 @@ Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\ new\ name,\ or\ pr
 
     "${_NB}" add "Example File One.md" --content "Example content one."
 
-    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" "example-branch" <<< "y${_NEWLINE}2${_NEWLINE}"
 
     "${_NB}" git status
     "${_NB}" run ls -la
@@ -818,7 +818,7 @@ Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\ new\ name,\ or\ pr
 
     "${_NB}" add "Example File One.md" --content "Example content one."
 
-    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" "example-branch" <<< "y${_NEWLINE}2${_NEWLINE}"
 
     "${_NB}" git status
     "${_NB}" run ls -la
@@ -885,7 +885,7 @@ Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\ new\ name,\ or\ pr
 
     "${_NB}" add "Example File One.md" --content "Example content one."
 
-    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" "example-branch" <<< "y${_NEWLINE}2${_NEWLINE}"
 
     "${_NB}" git status
     "${_NB}" run ls -la
@@ -946,7 +946,7 @@ Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\ new\ name,\ or\ pr
 
     "${_NB}" add "Example File One.md" --content "Example content one."
 
-    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" "example-branch" <<< "y${_NEWLINE}2${_NEWLINE}"
 
     _sed_i "s/master/example-branch/" "${_GIT_REMOTE_PATH}/HEAD"
 
@@ -996,7 +996,7 @@ Press\ .*enter.*\ to\ use\ the\ selected\ name,\ .*type.*\ a\ new\ name,\ or\ pr
 
     "${_NB}" add "Example File One.md" --content "Example content one."
 
-    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" "master" <<< "y${_NEWLINE}2${_NEWLINE}"
 
     diff                                  \
       <(git -C "${NB_DIR}/home" ls-remote \
