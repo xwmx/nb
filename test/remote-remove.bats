@@ -460,7 +460,7 @@ load test_helper
 
     "${_NB}" git branch -m "example-branch"
 
-    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" "example-branch" <<< "y${_NEWLINE}2${_NEWLINE}"
 
     diff                                      \
       <("${_NB}" remote)                      \
@@ -511,7 +511,7 @@ load test_helper
 
     "${_NB}" git branch -m "example-branch"
 
-    "${_NB}" remote add "${_GIT_REMOTE_URL}" <<< "y${_NEWLINE}2${_NEWLINE}"
+    "${_NB}" remote add "${_GIT_REMOTE_URL}" "example-branch" <<< "y${_NEWLINE}2${_NEWLINE}"
 
     diff                                      \
       <("${_NB}" remote)                      \
