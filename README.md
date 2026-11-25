@@ -180,7 +180,7 @@ or dozens of notebooks containing thousands of notes, bookmarks, and other items
   - [micro](https://github.com/zyedidia/micro),
   - [nano](https://en.wikipedia.org/wiki/GNU_nano),
   - [Atom](https://atom.io/),
-  - [TextMate](https://macromates.com/),
+  - [TextMate](https://github.com/textmate/textmate),
   - [MacDown](https://macdown.uranusjr.com/),
   - [some of these](https://github.com/topics/text-editor),
   - [and many of these.](https://en.wikipedia.org/wiki/List_of_text_editors)
