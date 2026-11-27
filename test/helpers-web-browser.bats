@@ -4,6 +4,24 @@ load test_helper
 
 # checks ######################################################################
 
+@test "'_web_browser --check' returns 1 without exiting when no browser is available." {
+  {
+    "${_NB}" init
+  }
+
+  BASH_ENV="${NB_TEST_BASE_PATH}/fixtures/no_browser_env.sh" \
+    run "${_NB}" helpers _web_browser --check
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq 1  ]]
+
+  # The warning is only printed when `_web_browser` is asked to open a browser.
+  # In probe mode the function must return 1 without exiting the process.
+  [[ -z "${output}"         ]]
+}
+
 @test "'_web_browser --gui' return 1 when \$BROWSER is set to 'w3m'." {
   {
     "${_NB}" init

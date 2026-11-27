@@ -195,3 +195,24 @@ load test_helper
   [[    "${output}"  =~  \
 ^Listening:\ .*http://localhost:${NB_SERVER_PORT}.*/Example%20Notebook:Example%20Folder/$ ]]
 }
+
+@test "'browse --serve' starts the server when no web browser is available." {
+  {
+    "${_NB}" init
+
+    "${_NB}" add "Example File.md" --content "Example content."
+
+    sleep 1
+  }
+
+  BASH_ENV="${NB_TEST_BASE_PATH}/fixtures/no_browser_env.sh" \
+    run "${_NB}" browse --serve <<< "${_NEWLINE}"
+
+  printf "\${status}: '%s'\\n" "${status}"
+  printf "\${output}: '%s'\\n" "${output}"
+
+  [[    "${status}"  -eq 0                                ]]
+
+  [[    "${output}"  =~  \
+^Listening:\ .*http://localhost:${NB_SERVER_PORT}.*$      ]]
+}

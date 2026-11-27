@@ -12985,6 +12985,11 @@ _web_browser() {
 
   if [[ -z "${_web_browser_command[*]:-}" ]]
   then
+    if ((_check || _check_gui))
+    then
+      return 1
+    fi
+
     _warn cat <<HEREDOC
 Web browser not found. Try \`w3m\`: $(_color_primary "http://w3m.sourceforge.net")
 HEREDOC
